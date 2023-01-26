@@ -2,217 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFD567C29A
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 02:57:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AECC567C4F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 08:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbjAZB52 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 20:57:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52614 "EHLO
+        id S232090AbjAZHlb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 02:41:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjAZB51 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 20:57:27 -0500
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED965D10C
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 17:57:26 -0800 (PST)
-Received: by mail-pf1-x42e.google.com with SMTP id ay1so166703pfb.7
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 17:57:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VxPlX7ridTSjr3xTSBv816b8kxXLWhsYxn3egdiFlAU=;
-        b=T5iuMU+0gwQSQKg/TuZ+C1Ml1zK5/9liibNu19Wyg5R/AJyC8X3zOFnVis2oZROFpS
-         V453HintodcBn1N3bC5zeNUaNsRzjUSpvKW3u+CobfiAvPk1gryGtXzINcFc1cQHCkld
-         LycniwSpkuD7D5vQNxTOnvgJdPUAnHhbEBPzMgPvbuksClNqTGHHZRGbDOFWKHduNVFW
-         AQj2Apxzwd1eagM9b0gPC0ux/wrZC628aF4UWDFO8CENHwUQ01DT1cOHNyVm2m0k9Yzq
-         GgbQR3uY8upDkvWozqfB0M9bqwdRiavMTdezMqFjhnw5S+mdOQRu31Q1C045T8lKeR55
-         oA4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VxPlX7ridTSjr3xTSBv816b8kxXLWhsYxn3egdiFlAU=;
-        b=hqdEwlhxcK1j4uUXpGhazmRaVomNmnB8T9PIEVyz97mFzcI+pPARcdAvj29LlgnUvo
-         Av/m2YyAvdggcqy7Wtd6csQpwtgNUxrOAHAEbTNSO91lKYAkr3dF90aB8a2TcOM7tEMj
-         lfaYle/vwu3UYnIvB1Jd06UvejvnGtlc4ZDhMF6zqdl8ihsYh5XZvTnATiYuiLlu6rev
-         skSgxij4ENroyPmvb9CxCwnfiTCRujEXuiqvZTuI4sv3xvyTMA7PBtWGmHAxxinXual3
-         1FakQbjsPSTu7MAcC913ep9k0lKIdpKBHIqltGDwobujH1roZ6DnE3QYKc4uPvJjnwm+
-         Xhaw==
-X-Gm-Message-State: AFqh2kpm+knA5jAcdH74WPRwUFtSc2XGs/f59XbVU1L7w1aaCDexBPGm
-        K4eFIBv6j+Tywoiyk9E0bvI=
-X-Google-Smtp-Source: AMrXdXvLSTNEt5a5yyLTxuC447thfZ+Xu2PoOoGxhAUIG5SCnVN88AnYrqCnB0xVwa8hWqbCm5cxEA==
-X-Received: by 2002:a62:ea0e:0:b0:577:d10d:6eab with SMTP id t14-20020a62ea0e000000b00577d10d6eabmr34545089pfh.21.1674698245427;
-        Wed, 25 Jan 2023 17:57:25 -0800 (PST)
-Received: from sol (220-245-168-240.tpgi.com.au. [220.245.168.240])
-        by smtp.gmail.com with ESMTPSA id f64-20020a623843000000b0058bc37f3d1csm4322251pfa.44.2023.01.25.17.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 17:57:24 -0800 (PST)
-Date:   Thu, 26 Jan 2023 09:57:18 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Sascha Hauer <sha@pengutronix.de>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        bartosz.golaszewski@linaro.org, linus.walleij@linaro.org,
-        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de, shawnguo@kernel.org
-Subject: Re: GPIO static allocation warning with v6.2-rcX
-Message-ID: <Y9Hd/mfLkGME6Ed8@sol>
-References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
- <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
- <20230125093548.GB23347@pengutronix.de>
+        with ESMTP id S229630AbjAZHla (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 02:41:30 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AD065F2A
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 23:41:29 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsX-0006uE-DD; Thu, 26 Jan 2023 08:41:01 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsV-000Vax-LD; Thu, 26 Jan 2023 08:40:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsU-00Fy4h-2i; Thu, 26 Jan 2023 08:40:58 +0100
+Date:   Thu, 26 Jan 2023 08:40:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust
+ some dtbs's
+Message-ID: <20230126074055.7za4nfu6n5kgnqlz@pengutronix.de>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+ <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="m3isnjrac4mftej2"
 Content-Disposition: inline
-In-Reply-To: <20230125093548.GB23347@pengutronix.de>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 10:35:48AM +0100, Sascha Hauer wrote:
-> On Mon, Jan 23, 2023 at 03:55:18PM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Jan 20, 2023 at 11:46 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > I stumbled over the following warning while testing the new v6.2-rc4 on
-> > > a imx8mm-evk:
-> > >
-> > > [    1.507131] gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> > > [    1.517786] gpio gpiochip1: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> > > [    1.528273] gpio gpiochip2: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> > > [    1.538739] gpio gpiochip3: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> > > [    1.549195] gpio gpiochip4: Static allocation of GPIO base is deprecated, use dynamic allocation.
-> > >
-> > > The warning was introduced by commit [1] but at least the following
-> > > drivers are parsing the alias for a gpiochip to use it as base:
-> > >  - drivers/gpio/gpio-mxs.c
-> > >  - drivers/gpio/gpio-mxc.c
-> > >  - drivers/gpio/gpio-clps711x.c
-> > >  - drivers/gpio/gpio-mvebu.c
-> > >  - drivers/gpio/gpio-rockchip.c
-> > >  - drivers/gpio/gpio-vf610.c
-> > >  - drivers/gpio/gpio-zynq.c
-> > >
-> > > According commit [2] it seems valid and correct to me to use the alias
-> > > and the user-space may rely on this.
-> > >
-> > > Now my question is how we can get rid of the warning without breaking
-> > > the user-space?
-> > >
-> > > [1] 502df79b86056 gpiolib: Warn on drivers still using static gpiobase allocation
-> > > [2] 7e6086d9e54a1 gpio/mxc: specify gpio base for device tree probe
-> > >
-> > 
-> > The warning is there to remind you that static GPIO base numbers have
-> > been long deprecated and only user-space programs using sysfs will
-> > break if you remove it, everyone else - including user-space programs
-> > using libgpiod or scripts using gpio-tools that are part of the
-> > project - will be fine.
-> > 
-> > Any chance you can port your user-space programs to libgpiod?
-> > 
-> > The warning doesn't break compatibility so I'm not eager to remove it.
-> 
-> Well it's a warning and sooner or later somebody will come along and
-> removes this warning by removing the GPIO controller bases from the dts
-> files which in turn will then break things at least for us, but I
-> suspect for many other people as well.
-> 
-> You are trying to remove the GPIO sysfs API for many years now without
-> success so far, and I doubt that you will succeed in future because the
-> Kernel comes with the promise that userspace won't be broke.
-> 
-> I can understand that you want to get rid of the global GPIO number
-> space. Currently you can't, because there are still hundreds of
-> in-Kernel users of the legacy API. When all these are fixed and the GPIO
-> sysfs API is the only remaining user of the global GPIO number space
-> then we could move the numbering to gpiolib-sysfs.c and no longer bother
-> the core with it. At this point the sysfs API would be a GPIO consumer
-> just like every other consumer and we could leave it there until only
-> the oldest of us remember what it's good for.
-> 
-> Instead of trying to remove the sysfs API I really think it would be a
-> better strategy to push it into a corner where it can stay without
-> being a maintenance burden.
-> 
-> Regarding the usage of libgpiod for our projects: I think one of the
-> major shortcomings is that the character interface doesn't allow to
-> just set a GPIO to a value and leave it in that state without having
-> to keep the process alive. While you may argument that it's cleaner
-> to go to a "safe state" (or "idle state") when the process finishes
-> that's simply not the way how many projects out there work.
 
-You can argue that, but that is not what cdev and the gpiolib subsystem 
-do.
+--m3isnjrac4mftej2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When a line is released cdev and the gpiolib subsystem do not explicitly
-change anything, so the line may well remain in the state it was set.
-The state becomes "undefined" from the user perspective, as the line is
-now accessible to other processes and as the kernel MAY reset it.
-The latter is the case where the line being released is the last
-requested line on a gpiochip, in which case the gpiolib subsystem 
-will release the chip and the chip MAY get reset back to defaults
-(depends on the gpiochip).
+Hello,
 
-Given that, you can get sysfs-like behaviour as long as you hold at least
-one line on a GPIO chip, and that could be a line hogged from DT or an
-other internal kernel user.
+On Tue, Jan 24, 2023 at 08:16:45AM +0100, Neil Armstrong wrote:
+> Le 23/01/2023 =E0 22:22, Heiner Kallweit a =E9crit=A0:
+> > At first adjust some existing dtbs's so that they pass dtbs_check
+> > after switching bindings to yaml.
+>=20
+> Thanks for this patchset, but please drop patches 1, 3 & 4, and take
+> in account the existing compatible usage in your new bindings like
+> I did in my conversion patchset.
+>=20
+> While we did remove some bad compatibles we introduced a few years ago,
+> now the GXBB, GXL & GXM are now stable a aew LTS releases now and
+> a few other projects uses them as-is (U-Boot, BSDs, ...) so changing
+> the compatibles isn't an option anymore... and we can't know which
+> one they use and how the implementation behaves we must document
+> the existing usage without breaking any potential users (including linux).
 
-e.g. I have a RPi4 which has the STATUS_LED_G_CLK line already held so I
-can drive the GPIO5 line, which is on the same chip, just like I could
-with sysfs:
+I only looked into patch #1, and I support dropping it for stronger
+reasons than not breaking things which maybe started to rely on the
+existing contents.
 
-$ gpioinfo STATUS_LED_G_CLK GPIO5
-gpiochip0 5	"GPIO5"         	input
-gpiochip0 42	"STATUS_LED_G_CLK"	output consumer="led0"
+In patch #1 you write:
 
-# set GPIO5 high
-$ gpioset -t0 GPIO5=1
+| amlogic,meson-gx-pwm isn't a valid compatible string, so remove it.
+| See drivers/pwm/pwm-meson.c.
+|=20
+| Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+| ---
+|  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++----
+|  1 file changed, 4 insertions(+), 4 deletions(-)
+|=20
+| diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-gx.dtsi
+| index a79a35e84..75d35dcfe 100644
+| --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+| +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+| @@ -328,14 +328,14 @@ i2c_A: i2c@8500 {
+|                         };
+|=20
+|                         pwm_ab: pwm@8550 {
+| -                               compatible =3D "amlogic,meson-gx-pwm", "a=
+mlogic,meson-gxbb-pwm";
+| +                               compatible =3D "amlogic,meson-gxbb-pwm";
 
-# GPIO5 has been released but is still an output and active:
-$ gpioinfo GPIO5
-gpiochip0 5	"GPIO5"         	output
-$ gpioget --as-is GPIO5
-"GPIO5"=active
+There are two issues:
 
-# set GPIO5 low
-$ gpioset -t0 GPIO5=0
-$ gpioget --as-is GPIO5
-"GPIO5"=inactive
+a) drivers/pwm/pwm-meson.c isn't the reference. The driver doesn't
+   justify which compatibles should be used. You should refer to the
+   binding document instead.
 
-# set GPIO5 high
-$ gpioset -t0 GPIO5=1
-$ gpioget --as-is GPIO5
-"GPIO5"=active
-...
+b) Having the SoC name as an additional compatible (i.e. the status quo
+   before your patch) is an advantage. While it doesn't hurt (apart from
+   making the dtb a tad bigger) it makes it possible to adapt the driver
+   if in the future someone discovers that the PWM component on GX is a
+   tad different from the GXBB one. In that case you can add a check in
+   the driver =E0 la=20
 
-That is using the tools from libgpiod v2, btw, but just for the
-gpioget "--as-is" option to prevent gpioget switching the line to an
-input. The same mechanic works with libgpiod v1.
+   	if (of_device_is_compatible(np, amlogic,meson-gx-pwm))
+		do_the_special_gx_handling()
 
-Would that work for your cases?
+   without having to adapt the device trees then (or use some ugly
+   code that somehow detects if it's running on GX).
 
-Cheers,
-Kent.
+So the driver not handling amlogic,meson-gx-pwm today is fine. I expect
+the fix to be: Include that compatible in the binding.
 
-> Virtually
-> everyone has scripts poking GPIO states into sysfs and currently you
-> can't do this with the character device API. If you want to get rid
-> of the sysfs API then you should work on making the character device
-> API more attractive for users and I think this is one point could use
-> some improvement.
-> 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--m3isnjrac4mftej2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPSLoQACgkQwfwUeK3K
+7Akkowf/emZNlTr/+ucs/fg+qTCWpgwgyYENdpjTH/m4tDB3rg4W1f0KXHt8JgxS
+3CnyjJrJfsBBox0FanIwNYfVHrC8KKaRNpanXiEagq2e1zVGy0xFdJkFMuYeDf0X
+8FbIarmwyjwOu1zFoA5j1txfeS1/wRl2SCMsb4tzg5aQDXe24XRc/rHCfl12DbKY
+g45YU3VopNpinmd7n4UCCbQkH6g+RxOxHd0oErdPW1Ii6bsrAzR1lYaOBJnC1esi
+VgHCOvB8bYAq2Oo3aMYj1l98jPlzfb+rv9ZmA4UbrizTvpequKYECnytV+3cd5gl
+8LkL8MWmS6yGUHEdObMCLR5mNuEfqw==
+=HveX
+-----END PGP SIGNATURE-----
+
+--m3isnjrac4mftej2--
