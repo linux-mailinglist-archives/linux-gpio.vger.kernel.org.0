@@ -2,135 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE2967CCDF
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 14:54:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E596D67CCDA
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 14:54:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231591AbjAZNyi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 08:54:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
+        id S230056AbjAZNy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 08:54:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231704AbjAZNyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 08:54:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD416226A;
-        Thu, 26 Jan 2023 05:53:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AE3A9B81BEA;
-        Thu, 26 Jan 2023 13:53:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98EB3C433EF;
-        Thu, 26 Jan 2023 13:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674741225;
-        bh=W1LnY595Ov6jF+hpZHXAZjn52UQrvhyKdsYdkv/rH60=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hGrguENhWyWwHVtsJzGh4GTTlYEFLeB8iopGwjoPBOAqRsokQc/sxzDHaWysNjHsX
-         jyB/ggwIK8dGtAwiEw4lmFZl3/IsiFaa2KBZyOfSNZnNgkbM+3pF7pkmBxddfkMzY2
-         zy3vaaSFIKVB0bjmwKneIdTWjLjIuq0d1G7cg96KGG1YdukVYLKBTmI1nhd9c30RZo
-         rsERjYQ1rOHAggtqYNLu5C/VDT/4xm3ScmfSPGWWJ3pRuJakMoFrObe2kxdmcdRoNL
-         jbDW2+5pTn2e6HUXw/jPfW7UPnNx7X7A+sJesOxmnXSkskrxuDMvJ3K2o0nirY192A
-         vPxMImCp0iRzg==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Wei Fang <wei.fang@nxp.com>
-Cc:     linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Clark Wang <xiaoning.wang@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fec: convert to gpio descriptor
-Date:   Thu, 26 Jan 2023 14:52:58 +0100
-Message-Id: <20230126135339.3488682-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S229606AbjAZNyJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 08:54:09 -0500
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D802E820
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 05:53:42 -0800 (PST)
+Received: by mail-yb1-xb36.google.com with SMTP id u72so2003728ybi.7
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 05:53:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bpuj4csXn4X99vb3I/8s21NoXDHeQ/0SUOopiJHmpcA=;
+        b=T1OCixkhNVvyqIZG02I05yLXMmu0eRtoy7a1SbHSvmaUaNSxhw1D3/LIvUbLquayXB
+         yV+BtLGzuQfszCSBlQ9R2P2LmFDhBpW5QHj6vNoet2lRvFj8mHM/2tGpoJwDJnX6vfGq
+         9aG1wkd9GjOd0Qo5EMgr5y9lhqsZraSPNFYsOSMgJ90jdp8NZdl4VDBVh7+UXOdvYoUv
+         aLPu8JIpl49wnMfa+jFlLrcWSoWGWtDdAWA31H+OqdURvRn2fO1wKsC98OoirxOfs102
+         psM27Q4jO2ZFe+Mw/uTheQ0YXYL6e1JXsDMIYsioyjJA6+a0xudWPVol+9wiSlfZMCqZ
+         1Ykw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bpuj4csXn4X99vb3I/8s21NoXDHeQ/0SUOopiJHmpcA=;
+        b=VCRkC5QjWqfbDNuev01jy1Atkc6bsvUXI0lDqo00icqWbNq4TGtkljRvNAIh2b6qxQ
+         +TKwgVyWYYZ2eirJIes/oYdCwZnlbzMXA3GMK3WbQFf3FKNDxjPjM7fgWcsRK0eCMf5v
+         woku+MNqNII7v+529PxYjIQKz1c6zIcLq4F+0gGDEdkL8jjXOVTvRrs9GMNfNmEqIW+S
+         b3hWFMk6njwztpygaeJ918UnFncvbpWRC5SFXqNvz3JIpbBIULO8mi7GLFCCAKIpX/ZI
+         +pC8Zq66f14JcDaLaOZusbzSO672urcWdLmiyfyhWtReCCaFe/5gmWe8z7eCudLft2gE
+         9Krg==
+X-Gm-Message-State: AO0yUKWuhHD+BbDyANE/AjtXocdW3WY4w8ybyH0/oAiYx/sH02TgOwkX
+        OodJflhiXdAt7YEnbfDCunLHhBtS8551/56Z6Yb++A==
+X-Google-Smtp-Source: AK7set9K8VEvJWIIsQbzLpHPBdIj6YRdDIIsA2XTX+4WAVIQ5O4wlEhz7CX7+BOEhoz7cif/nbeZ9U+rSHTl2iHnGDQ=
+X-Received: by 2002:a25:f81b:0:b0:80b:821f:b621 with SMTP id
+ u27-20020a25f81b000000b0080b821fb621mr752679ybd.24.1674741217835; Thu, 26 Jan
+ 2023 05:53:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230125143503.1015424-1-bero@baylibre.com> <20230125143503.1015424-5-bero@baylibre.com>
+In-Reply-To: <20230125143503.1015424-5-bero@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Jan 2023 14:53:26 +0100
+Message-ID: <CACRpkdYMif0--zeKe-tccUJvjiQAkbzBq2nCYMS8qU_imZmCmg@mail.gmail.com>
+Subject: Re: [PATCH v9 4/9] dt-bindings: pinctrl: add bindings for Mediatek
+ MT8365 SoC
+To:     =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, lee@kernel.org, matthias.bgg@gmail.com,
+        gregkh@linuxfoundation.org, daniel.lezcano@linaro.org,
+        chunfeng.yun@mediatek.com, angelogioacchino.delregno@collabora.com,
+        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
+        sean.wang@mediatek.com, zhiyong.tao@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jan 25, 2023 at 3:35 PM Bernhard Rosenkr=C3=A4nzer <bero@baylibre.c=
+om> wrote:
 
-The driver can be trivially converted, as it only triggers the gpio
-pin briefly to do a reset, and it already only supports DT.
+> Add devicetree bindings for Mediatek MT8365 pinctrl driver.
+>
+> Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/freescale/fec_main.c | 25 ++++++++++-------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+This patch applied to the pinctrl tree, decreasing the depth of your
+patch stack by 1!
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 5ff45b1a74a5..dee2890fd702 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -56,7 +56,7 @@
- #include <linux/fec.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
--#include <linux/of_gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
- #include <linux/regulator/consumer.h>
-@@ -4035,7 +4035,8 @@ static int fec_enet_init(struct net_device *ndev)
- #ifdef CONFIG_OF
- static int fec_reset_phy(struct platform_device *pdev)
- {
--	int err, phy_reset;
-+	int err;
-+	struct gpio_desc *phy_reset;
- 	bool active_high = false;
- 	int msec = 1, phy_post_delay = 0;
- 	struct device_node *np = pdev->dev.of_node;
-@@ -4048,12 +4049,6 @@ static int fec_reset_phy(struct platform_device *pdev)
- 	if (!err && msec > 1000)
- 		msec = 1;
- 
--	phy_reset = of_get_named_gpio(np, "phy-reset-gpios", 0);
--	if (phy_reset == -EPROBE_DEFER)
--		return phy_reset;
--	else if (!gpio_is_valid(phy_reset))
--		return 0;
--
- 	err = of_property_read_u32(np, "phy-reset-post-delay", &phy_post_delay);
- 	/* valid reset duration should be less than 1s */
- 	if (!err && phy_post_delay > 1000)
-@@ -4061,11 +4056,13 @@ static int fec_reset_phy(struct platform_device *pdev)
- 
- 	active_high = of_property_read_bool(np, "phy-reset-active-high");
- 
--	err = devm_gpio_request_one(&pdev->dev, phy_reset,
--			active_high ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
--			"phy-reset");
--	if (err) {
--		dev_err(&pdev->dev, "failed to get phy-reset-gpios: %d\n", err);
-+	phy_reset = devm_gpiod_get(&pdev->dev, "phy-reset",
-+			active_high ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
-+	if (IS_ERR(phy_reset)) {
-+		err = PTR_ERR(phy_reset);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"failed to get phy-reset-gpios: %d\n", err);
- 		return err;
- 	}
- 
-@@ -4074,7 +4071,7 @@ static int fec_reset_phy(struct platform_device *pdev)
- 	else
- 		usleep_range(msec * 1000, msec * 1000 + 1000);
- 
--	gpio_set_value_cansleep(phy_reset, !active_high);
-+	gpiod_set_value_cansleep(phy_reset, !active_high);
- 
- 	if (!phy_post_delay)
- 		return 0;
--- 
-2.39.0
-
+Yours,
+Linus Walleij
