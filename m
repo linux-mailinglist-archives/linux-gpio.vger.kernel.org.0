@@ -2,79 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE82C67CE56
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 15:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7737267CE5B
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 15:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231584AbjAZOia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 09:38:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
+        id S229446AbjAZOkJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 09:40:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbjAZOi3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 09:38:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6806180;
-        Thu, 26 Jan 2023 06:38:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 58C52B81D15;
-        Thu, 26 Jan 2023 14:38:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 819EEC433D2;
-        Thu, 26 Jan 2023 14:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674743906;
-        bh=J6kTUDHhp3UX3SKN+nHetWZA+yyFDNmaZMGXaU/Kwxo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AYTqRKSW62JnHa+QPvCzuJ7D2W5Sd7w+SS+Gc0kWhW6sBEwV0WEY2ZuHBR5v2yJqW
-         gOTg417S8mg4dOOPMkiJ26ELSOjpVxezlY05fYHilegIrMTy6n/ONSO4VdXuJnQFvO
-         0SVTvHTgCwbRdcR4w7ZNDUiO1wsuOz9YZRme9IUOTMQds93NFLeJSiCYsDN6yw/DBi
-         uxPg6UxNhAGKostehxnl/tu8sS8gzTLppGnOWRvt4QQVO+51Aj4ddhEkv7JfT6SAG5
-         wngRELtMSbB/qu8QwRM3+FhYlIuT7B3E6jv0iwh5yF5ytRm8YliUnKog2E4Tkrr5il
-         Pyu2Yp1gItPMg==
-Date:   Thu, 26 Jan 2023 14:38:18 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>
-Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, linus.walleij@linaro.org, matthias.bgg@gmail.com,
-        gregkh@linuxfoundation.org, daniel.lezcano@linaro.org,
-        chunfeng.yun@mediatek.com, angelogioacchino.delregno@collabora.com,
-        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
-        sean.wang@mediatek.com, zhiyong.tao@mediatek.com
-Subject: Re: [PATCH v9 3/9] dt-bindings: mfd: syscon: Add mt8365-syscfg
-Message-ID: <Y9KQWp1942TDjV1P@google.com>
-References: <20230125143503.1015424-1-bero@baylibre.com>
- <20230125143503.1015424-4-bero@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230125143503.1015424-4-bero@baylibre.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229491AbjAZOkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 09:40:08 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6357B26BB;
+        Thu, 26 Jan 2023 06:40:07 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 0E6763200A69;
+        Thu, 26 Jan 2023 09:40:05 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 26 Jan 2023 09:40:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1674744005; x=1674830405; bh=2y4ifRRBY2
+        zAJdRnpFIN5yh9VL5vAaJGv1a4q1ONRxY=; b=nmLi29PHmhe7Mt1UUCxqHDFwV8
+        Ydw/Al6jYtzGI9Fn5PDw67OEMYW/e54wH36cbLEcUsturGaSxLj0FizjrQ3bIwWh
+        ENEolmTgll+nzxxv7pYkagVf4V0TXti7ixi57adlpY6tUQEI/nKTbQ/4LbM0u9vo
+        mXp2Vlq2cT59FjaFUYykCUhycj85oKkl8efo9a/zJMrJCq/5i1qZer5DOG2679ma
+        4XtVDlYqonTPCKnuH6uw+2yueW/izFLHXBf7Voxgw/toR+Q6GVbvnVNWreRleCdi
+        zh04G1RP6FZuN6DGdEcXRjP63wOLjcUZVMc5IZxJDHne4EZwlU597xY1hNBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1674744005; x=1674830405; bh=2y4ifRRBY2zAJdRnpFIN5yh9VL5v
+        AaJGv1a4q1ONRxY=; b=ZOh7Ea7S7GeZG9kQ6b/qG3acCa+eJqb97eVnHWk+RX1D
+        my+5BC9JVi6PChQIcVRMrklJu3vLN9/pCqXhCMZeHloB1BqxjTSXJlrrD61RQx4U
+        ILHi8l7rvuOYAB8iZ6lWaJLnixKEiQDb2PO7sIpACKeCZpRaaV0C3pi/XpIys+4D
+        J6bgHWMIHvHRVkEUfzw684yeQQKW5nn+uv4gaM4DTV9rwmVLsxAZVGQLLnpBvhyw
+        VSrlc86hHeGtH9svDv64u6BMu3KK2/bKDxuBamOvxBknt4UtX0XKCsjZSAoowFmV
+        Qy3C2NAzylIKm76PJ99awpj2OohXBaohM0GDFlGq/w==
+X-ME-Sender: <xms:xJDSYyPxWsV1TGssLmf5RIN4Fh0wIhUBxRGXfCXDJ1xpcZSlbq3l2Q>
+    <xme:xJDSYw86mKpKCqL4tz6n2qN4xXcTtlFZW3vDH-c9UHDCGhfp0nybr9D00qqlP6tsa
+    9A9MsfVv1rkTdFGQog>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvgedgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:xZDSY5SKLuYNZiZSPZsQR9_ihFm60myxVARhVoI6UHwasfepJqoF4Q>
+    <xmx:xZDSYytlpS9pHzkxrF4e_2doCkeEZI4xnsVkGmJKefX6pcyNfdMgAg>
+    <xmx:xZDSY6d5OKwOOQfMTLo_Cp4goFQTntLsEGF0z90dvT3GS3cOvOEcZw>
+    <xmx:xZDSY7XDXHtwEtBIs7RLo0weclrHAsjjSfdsfKV1pJrvbLSb5nyP2Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E670AB60086; Thu, 26 Jan 2023 09:40:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
+Mime-Version: 1.0
+Message-Id: <f83ae34a-b46a-47c8-817a-d82d43178eba@app.fastmail.com>
+In-Reply-To: <20230126151243.3acc1fe2@xps-13>
+References: <20230126135215.3387820-1-arnd@kernel.org>
+ <20230126151243.3acc1fe2@xps-13>
+Date:   Thu, 26 Jan 2023 15:39:45 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Arnd Bergmann" <arnd@kernel.org>
+Cc:     "Alexander Aring" <alex.aring@gmail.com>,
+        "Stefan Schmidt" <stefan@datenfreihafen.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-wpan@vger.kernel.org, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH] at86rf230: convert to gpio descriptors
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 25 Jan 2023, Bernhard Rosenkränzer wrote:
+On Thu, Jan 26, 2023, at 15:12, Miquel Raynal wrote:
 
-> Document Mediatek mt8365-syscfg
-> 
-> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>> @@ -1682,7 +1650,7 @@ MODULE_DEVICE_TABLE(spi, at86rf230_device_id);
+>>  static struct spi_driver at86rf230_driver = {
+>>  	.id_table = at86rf230_device_id,
+>>  	.driver = {
+>> -		.of_match_table = of_match_ptr(at86rf230_of_match),
+>> +		.of_match_table = at86rf230_of_match,
+>
+> Looks like an unrelated change? Or is it a consequence of "not having
+> any in-tree users of platform_data" that plays a role here?
 
-Applied, thanks
+I probably did it because I thought I had removed the matching #ifdef
+for at86rf230_of_match in the process of making the driver DT-only.
 
--- 
-Lee Jones [李琼斯]
+Without this trivial change, building the driver as built-in with
+CONFIG_OF=n can result in a warning like
+
+drivers/net/ieee802154/at86rf230.c:1632:28: error: unused variable 'at86rf230_of_match' [-Werror,-Wunused-variable]
+
+It looks like this was already removed in a8b66db804f0 ("at86rf230:
+remove #ifdef CONFIG_OF"), which was not technically correct, but
+nobody noticed, including me.
+
+I could split this out as a separate patch, but it's probably
+not worth it.
+
+> Anyhow, the changes in the driver look good, so:
+>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+
+    Arnd
