@@ -2,66 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6BA067C7A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 10:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5299367C828
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:15:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235811AbjAZJmY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 04:42:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48398 "EHLO
+        id S229481AbjAZKPQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 05:15:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234781AbjAZJmX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 04:42:23 -0500
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EEC5CFE4
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 01:42:21 -0800 (PST)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-4b718cab0e4so15598097b3.9
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 01:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8iZFlKhgmSsWsVLepJhcjvfwOv4DN7vG/elxEgpX4nA=;
-        b=jNUqvctcBeK+YEbRx33ScM3vYxxeN0AETcqAdopLjdu/2bd40spBPQcJp/0owJkF2K
-         3zi10wlrzd3WlTZiPBhSl2jcDhgAMm0LYXjNNXd5viwkVsAfjMz2JxaCaVHQmRAB72PT
-         A+PueXc9EjQmDgpgqsUaSinVUQhLrnr7eaqKkA/ZGk/o0h4dP+B21GFKTzEZi3RCej9O
-         yVkCexi+SGBaf6a/hymrrRLUVjBlPNSuPhfXoGLMgq48lGTPimL6M0vnlUjf7/T36q41
-         wGLSR5d0Xd2kOKFxLZoBbaUEeX+Jqsl2yJiw4NAYiMMJAEOKSmIikiqmvJyI7LeWqDMs
-         Qb7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8iZFlKhgmSsWsVLepJhcjvfwOv4DN7vG/elxEgpX4nA=;
-        b=WaTRz0rwQ3nS8TGjYb/L8acNI3Q+WuLdIaD53E4GjK9wmLi8mDmS0wiP8M/eujMNB/
-         5e2a82nany2lmftl2bVUjmsbMj1c17sncaKT4Mbs9w2JIwbAdjcRXiADcy4p7dtWfkTd
-         DQtg258DNa53dYvzOZfALNjhl2aDdSeFAB8hwdOOvKz/xBwgDQj8j2J0ZN2cxLooC/20
-         EXhdlXfwQQD3N3BY4uVgDuhNEyWfmmnYYc0sHhplF0+c547NuTSLpK4i30dYpLT5Pab8
-         Oi0h3DUUH+EEmE0oJLmk6RSdY2WvS75eHgLoQrstfV5hlcxtc/XjJzz0jZQTHzM0/VIl
-         u2Hw==
-X-Gm-Message-State: AFqh2koZamhcoTh44L10ItO4/xtxVSCJGaYGsxWR1FMqWyrANNQxnmTP
-        6QJPTL8azc+zkHh6AkH/NVlKBYuDLLMYeVyn74M4n80M7zG4OfDE
-X-Google-Smtp-Source: AMrXdXvo2eRReRcXV+/gEOPTZAP5EUHoJPff1P20CplmHUF5rmwkBSqytWGmuk74DB3tvomFRhc8L+cazUYSj7v0z7Y=
-X-Received: by 2002:a0d:ce43:0:b0:474:b3f2:8df1 with SMTP id
- q64-20020a0dce43000000b00474b3f28df1mr4143499ywd.434.1674726141168; Thu, 26
- Jan 2023 01:42:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
- <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com> <20230125093548.GB23347@pengutronix.de>
-In-Reply-To: <20230125093548.GB23347@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Jan 2023 10:42:10 +0100
-Message-ID: <CACRpkdbHU1ac=-YhBrRK59pgzGEhu+f62Fq7rbKgHk1YK+4p7g@mail.gmail.com>
-Subject: Re: GPIO static allocation warning with v6.2-rcX
-To:     Sascha Hauer <sha@pengutronix.de>
+        with ESMTP id S236743AbjAZKPE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:15:04 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B526171F
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:15:03 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pKzHX-0005CE-Va; Thu, 26 Jan 2023 11:14:59 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pKzHW-0004Q0-N5; Thu, 26 Jan 2023 11:14:58 +0100
+Date:   Thu, 26 Jan 2023 11:14:58 +0100
+From:   Sascha Hauer <sha@pengutronix.de>
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Marco Felsch <m.felsch@pengutronix.de>,
-        bartosz.golaszewski@linaro.org, christophe.leroy@csgroup.eu,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        shawnguo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        bartosz.golaszewski@linaro.org, linus.walleij@linaro.org,
+        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de, shawnguo@kernel.org
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+Message-ID: <20230126101458.GC23347@pengutronix.de>
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
+ <20230125093548.GB23347@pengutronix.de>
+ <Y9Hd/mfLkGME6Ed8@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9Hd/mfLkGME6Ed8@sol>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,28 +57,104 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 10:35 AM Sascha Hauer <sha@pengutronix.de> wrote:
+On Thu, Jan 26, 2023 at 09:57:18AM +0800, Kent Gibson wrote:
+> On Wed, Jan 25, 2023 at 10:35:48AM +0100, Sascha Hauer wrote:
+> > On Mon, Jan 23, 2023 at 03:55:18PM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Jan 20, 2023 at 11:46 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > >
+> > > > Hi all,
+> > > >
+> > > > I stumbled over the following warning while testing the new v6.2-rc4 on
+> > > > a imx8mm-evk:
+> > > >
+> > > > [    1.507131] gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > > > [    1.517786] gpio gpiochip1: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > > > [    1.528273] gpio gpiochip2: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > > > [    1.538739] gpio gpiochip3: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > > > [    1.549195] gpio gpiochip4: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > > >
+> > > > The warning was introduced by commit [1] but at least the following
+> > > > drivers are parsing the alias for a gpiochip to use it as base:
+> > > >  - drivers/gpio/gpio-mxs.c
+> > > >  - drivers/gpio/gpio-mxc.c
+> > > >  - drivers/gpio/gpio-clps711x.c
+> > > >  - drivers/gpio/gpio-mvebu.c
+> > > >  - drivers/gpio/gpio-rockchip.c
+> > > >  - drivers/gpio/gpio-vf610.c
+> > > >  - drivers/gpio/gpio-zynq.c
+> > > >
+> > > > According commit [2] it seems valid and correct to me to use the alias
+> > > > and the user-space may rely on this.
+> > > >
+> > > > Now my question is how we can get rid of the warning without breaking
+> > > > the user-space?
+> > > >
+> > > > [1] 502df79b86056 gpiolib: Warn on drivers still using static gpiobase allocation
+> > > > [2] 7e6086d9e54a1 gpio/mxc: specify gpio base for device tree probe
+> > > >
+> > > 
+> > > The warning is there to remind you that static GPIO base numbers have
+> > > been long deprecated and only user-space programs using sysfs will
+> > > break if you remove it, everyone else - including user-space programs
+> > > using libgpiod or scripts using gpio-tools that are part of the
+> > > project - will be fine.
+> > > 
+> > > Any chance you can port your user-space programs to libgpiod?
+> > > 
+> > > The warning doesn't break compatibility so I'm not eager to remove it.
+> > 
+> > Well it's a warning and sooner or later somebody will come along and
+> > removes this warning by removing the GPIO controller bases from the dts
+> > files which in turn will then break things at least for us, but I
+> > suspect for many other people as well.
+> > 
+> > You are trying to remove the GPIO sysfs API for many years now without
+> > success so far, and I doubt that you will succeed in future because the
+> > Kernel comes with the promise that userspace won't be broke.
+> > 
+> > I can understand that you want to get rid of the global GPIO number
+> > space. Currently you can't, because there are still hundreds of
+> > in-Kernel users of the legacy API. When all these are fixed and the GPIO
+> > sysfs API is the only remaining user of the global GPIO number space
+> > then we could move the numbering to gpiolib-sysfs.c and no longer bother
+> > the core with it. At this point the sysfs API would be a GPIO consumer
+> > just like every other consumer and we could leave it there until only
+> > the oldest of us remember what it's good for.
+> > 
+> > Instead of trying to remove the sysfs API I really think it would be a
+> > better strategy to push it into a corner where it can stay without
+> > being a maintenance burden.
+> > 
+> > Regarding the usage of libgpiod for our projects: I think one of the
+> > major shortcomings is that the character interface doesn't allow to
+> > just set a GPIO to a value and leave it in that state without having
+> > to keep the process alive. While you may argument that it's cleaner
+> > to go to a "safe state" (or "idle state") when the process finishes
+> > that's simply not the way how many projects out there work.
+> 
+> You can argue that, but that is not what cdev and the gpiolib subsystem 
+> do.
+> 
+> When a line is released cdev and the gpiolib subsystem do not explicitly
+> change anything, so the line may well remain in the state it was set.
+> The state becomes "undefined" from the user perspective, as the line is
+> now accessible to other processes and as the kernel MAY reset it.
+> The latter is the case where the line being released is the last
+> requested line on a gpiochip, in which case the gpiolib subsystem 
+> will release the chip and the chip MAY get reset back to defaults
+> (depends on the gpiochip).
+> 
+> Given that, you can get sysfs-like behaviour as long as you hold at least
+> one line on a GPIO chip, and that could be a line hogged from DT or an
+> other internal kernel user.
 
-> I can understand that you want to get rid of the global GPIO number
-> space. Currently you can't, because there are still hundreds of
-> in-Kernel users of the legacy API.
+Having to hold one line to get a well defined behaviour of another line
+is a kludge or a workaround, not a solution.
 
-It is ~500 and used to be thousands.
-An update on that specifically.
+Sascha
 
-Mainline:
-$ git grep 'linux\/gpio\.h' | wc -l
-505
-
-linux-next:
-$ git grep 'linux\/gpio\.h' | wc -l
-362
-
-This is because Arnd delete a big slew of unmaintained boardfiles which were
-the big offenders.
-
-Now certainly we can fix 362 files soon enough, especially since we have not
-just me, but Dmitry T and Andy S and Arnd working on it in parallel.
-
-Yours,
-Linus Walleij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
