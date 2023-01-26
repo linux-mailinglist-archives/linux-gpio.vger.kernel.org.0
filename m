@@ -2,270 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A0067D123
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 17:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1793067D196
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 17:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231939AbjAZQR4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 11:17:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55698 "EHLO
+        id S231602AbjAZQ1m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 11:27:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232154AbjAZQRy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 11:17:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BB82D163;
-        Thu, 26 Jan 2023 08:17:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8925DB81E95;
-        Thu, 26 Jan 2023 16:17:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC1FC4339B;
-        Thu, 26 Jan 2023 16:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674749863;
-        bh=qoJdV7Hy0K/c3KYKzdd66F4ZCzYzGAgyJAzosdZYTXY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cTckPmHczcg+AmhpY0WopBVBiM4auGprubeGb+ETYLShjMPmJ5mpuaJ5Fb9c3chV7
-         4oAxWJ37kNRL0IUroFpa8oppcSeG4A1V/D4789jqdycoA0h1mZwo6sQluhxF23HL9Q
-         3U0qeWhGPgwjuBxF95V8hBvtfFkf2Kjx05CAFKDYm54iaXuf5l8o1w60oYVYKcbGFD
-         OfqMZY2DuXEYF8x403lWa5nu9rB5e1Ddnk62W2bGW28QMoLwc+I9Y8tDoYSOzJT7zO
-         zqXtMaglx4z6G99tVWYzg5RdC1YaJcxunFnbvfxRr/VGjienZC9y9u/6FTLeKoLfbS
-         WLmQofbj2Pb1Q==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Alexander Aring <alex.aring@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-Cc:     linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ca8210: move to gpio descriptors
-Date:   Thu, 26 Jan 2023 17:17:15 +0100
-Message-Id: <20230126161737.2985704-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232816AbjAZQ13 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 11:27:29 -0500
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79047375F;
+        Thu, 26 Jan 2023 08:26:34 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 876E73200A2D;
+        Thu, 26 Jan 2023 11:25:48 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 26 Jan 2023 11:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1674750348; x=1674836748; bh=NaFVoqTHQH
+        cJ9HsTieBYpGZYHbu5p65aAcMF7VEyI5Y=; b=Gt3QmEPraM1rPycnoOri4/0nGN
+        7mUdA2sAei0oxfsCFgnhOnm1qSIIUDGBcVeLUgKPtgTIuvFozT5ZaBd9df5Jv2zz
+        azFQ0VYqFiA8kqr+uzh+W+psPianbxAPaquRbwKg3SVMFZZAlzsvMoinbqKC/Qyl
+        Pse/y5/pWbrKWvwIFvS5o0DWtjeITeeMy0K7qCVRar6BKI34gJFLZntz4Qi9nLay
+        IBk3D3qVtccFCajKELtxStv0Q0OsSBvTy5IZQj1ZA2jAKhGXBDcWw4cGjn6QDSKr
+        NZ2YHc/o3CU4SvxOVn7RFKJi2JyZcmQ8BaQ15z5NyHCKzY9P/Irbvz0SteYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1674750348; x=1674836748; bh=NaFVoqTHQHcJ9HsTieBYpGZYHbu5
+        p65aAcMF7VEyI5Y=; b=C5WHYpbhjgF/YWASYwjPKeeBI2bGnI6sqQGX8GZyAgMo
+        gwcVJQqX28VGbHYU7fI/wT50bCNs9FqiyD+w4CMQAL0tiasOgbrx9MemErPqX8ZD
+        JmL0kmEiwNuY5GJy1hGh5bwDxobxFtNGWCQ9YwnJonCfYaI7c8voxrrFn4gSNn8m
+        Mz4PD1eYR8hjQHFLLG8r1rOs+/ciSFdU5z+5nxAzjY7OHla3FGxVd/M9r4fmd7Aw
+        l3bp/8UDx395g+RSYiQTh9khlV1sXdEmrLJyh3hQ2k3iwtIjA+ug2xAKEOzClG1U
+        zCvQHAYhzgdzY4DLBm0kHiF2dDXQYxbrPIUC3sZcbg==
+X-ME-Sender: <xms:i6nSY7UiCSclozXycVbFBgBP1UA8KqcX5NTOeEFR7yN6a2-h90e12w>
+    <xme:i6nSYzmB5BB8r6I_kqnEmrxVpzLxmZ5Xkze7-AAB_UdbqGRq7DR4CgMhFF0NG5TrM
+    WsFHUw6vOq0_uQTpKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvgedgkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:i6nSY3aTUANaj2paDIXomCPxZNWrEG4B1kjqr1HE3ah8z3AVy1NiNw>
+    <xmx:i6nSY2U5dleINlyZmm24tEMr_GM0fru-Ukl6pN44kZf1qFUdaH18lA>
+    <xmx:i6nSY1nyRjBJJfqP8_fZZPtzJvmJFYnFVsqSNXkqtrZFbY5sD2IQhQ>
+    <xmx:jKnSY2h9UCDwWxEnc8YyWi-_v66mQ3pM15bW3kJvg0y2vTF6z_EW7A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 675D6B60086; Thu, 26 Jan 2023 11:25:47 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
+Mime-Version: 1.0
+Message-Id: <57e74219-d439-4d10-9bb5-53fe7b30b46f@app.fastmail.com>
+In-Reply-To: <20230126161737.2985704-1-arnd@kernel.org>
+References: <20230126161737.2985704-1-arnd@kernel.org>
+Date:   Thu, 26 Jan 2023 17:25:29 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Arnd Bergmann" <arnd@kernel.org>,
+        "Alexander Aring" <alex.aring@gmail.com>,
+        "Stefan Schmidt" <stefan@datenfreihafen.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Hauke Mehrtens" <hauke@hauke-m.de>, linux-wpan@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ca8210: move to gpio descriptors
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Jan 26, 2023, at 17:17, Arnd Bergmann wrote:
 
-The driver requires DT based probing already, and can
-be simplified by using the modern gpio interfaces.
+>  	if (ret) {
+> -		dev_crit(&spi->dev, "request_irq %d failed\n", pdata->irq_id);
+> -		gpiod_unexport(gpio_to_desc(pdata->gpio_irq));
+> -		gpio_free(pdata->gpio_irq);
+> +		dev_crit(&spi->dev, "request_irq %d failed\n", priv->irq_id);
+> +		gpiod_put(priv->gpio_irq);
+>  	}
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ieee802154/ca8210.c | 93 +++++++++------------------------
- 1 file changed, 24 insertions(+), 69 deletions(-)
+I just realized that this bit depends on the "gpiolib: remove
+legacy gpio_export" patch I sent to the gpio mailing list earlier.
 
-diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-index 5c0be6a3ec5e..2ee2746688ea 100644
---- a/drivers/net/ieee802154/ca8210.c
-+++ b/drivers/net/ieee802154/ca8210.c
-@@ -52,13 +52,11 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio.h>
- #include <linux/ieee802154.h>
- #include <linux/io.h>
- #include <linux/kfifo.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
--#include <linux/of_gpio.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/poll.h>
-@@ -312,6 +310,9 @@ struct ca8210_test {
-  * @promiscuous:            whether the ca8210 is in promiscuous mode or not
-  * @retries:                records how many times the current pending spi
-  *                          transfer has been retried
-+ * @gpio_reset:     	    gpio of ca8210 reset line
-+ * @gpio_irq:       	    gpio number of ca8210 interrupt line
-+ * @irq_id:        	    identifier for the ca8210 irq
-  */
- struct ca8210_priv {
- 	struct spi_device *spi;
-@@ -332,6 +333,9 @@ struct ca8210_priv {
- 	struct completion spi_transfer_complete, sync_exchange_complete;
- 	bool promiscuous;
- 	int retries;
-+	struct gpio_desc *gpio_reset;
-+	struct gpio_desc *gpio_irq;
-+	int irq_id;
- };
- 
- /**
-@@ -351,18 +355,12 @@ struct work_priv_container {
-  * @extclockenable: true if the external clock is to be enabled
-  * @extclockfreq:   frequency of the external clock
-  * @extclockgpio:   ca8210 output gpio of the external clock
-- * @gpio_reset:     gpio number of ca8210 reset line
-- * @gpio_irq:       gpio number of ca8210 interrupt line
-- * @irq_id:         identifier for the ca8210 irq
-  *
-  */
- struct ca8210_platform_data {
- 	bool extclockenable;
- 	unsigned int extclockfreq;
- 	unsigned int extclockgpio;
--	int gpio_reset;
--	int gpio_irq;
--	int irq_id;
- };
- 
- /**
-@@ -628,14 +626,13 @@ static int ca8210_spi_transfer(
-  */
- static void ca8210_reset_send(struct spi_device *spi, unsigned int ms)
- {
--	struct ca8210_platform_data *pdata = spi->dev.platform_data;
- 	struct ca8210_priv *priv = spi_get_drvdata(spi);
- 	long status;
- 
--	gpio_set_value(pdata->gpio_reset, 0);
-+	gpiod_set_value(priv->gpio_reset, 0);
- 	reinit_completion(&priv->ca8210_is_awake);
- 	msleep(ms);
--	gpio_set_value(pdata->gpio_reset, 1);
-+	gpiod_set_value(priv->gpio_reset, 1);
- 	priv->promiscuous = false;
- 
- 	/* Wait until wakeup indication seen */
-@@ -2788,74 +2785,34 @@ static void ca8210_unregister_ext_clock(struct spi_device *spi)
- 	dev_info(&spi->dev, "External clock unregistered\n");
- }
- 
--/**
-- * ca8210_reset_init() - Initialise the reset input to the ca8210
-- * @spi:  Pointer to target ca8210 spi device
-- *
-- * Return: 0 or linux error code
-- */
--static int ca8210_reset_init(struct spi_device *spi)
--{
--	int ret;
--	struct ca8210_platform_data *pdata = spi->dev.platform_data;
--
--	pdata->gpio_reset = of_get_named_gpio(
--		spi->dev.of_node,
--		"reset-gpio",
--		0
--	);
--
--	ret = gpio_direction_output(pdata->gpio_reset, 1);
--	if (ret < 0) {
--		dev_crit(
--			&spi->dev,
--			"Reset GPIO %d did not set to output mode\n",
--			pdata->gpio_reset
--		);
--	}
--
--	return ret;
--}
--
- /**
-  * ca8210_interrupt_init() - Initialise the irq output from the ca8210
-  * @spi:  Pointer to target ca8210 spi device
-  *
-  * Return: 0 or linux error code
-  */
--static int ca8210_interrupt_init(struct spi_device *spi)
-+static int ca8210_interrupt_init(struct spi_device *spi, struct ca8210_priv *priv)
- {
- 	int ret;
--	struct ca8210_platform_data *pdata = spi->dev.platform_data;
- 
--	pdata->gpio_irq = of_get_named_gpio(
--		spi->dev.of_node,
--		"irq-gpio",
--		0
--	);
--
--	pdata->irq_id = gpio_to_irq(pdata->gpio_irq);
--	if (pdata->irq_id < 0) {
--		dev_crit(
--			&spi->dev,
--			"Could not get irq for gpio pin %d\n",
--			pdata->gpio_irq
--		);
--		gpio_free(pdata->gpio_irq);
--		return pdata->irq_id;
-+	priv->gpio_irq = gpiod_get(&spi->dev, "irq", GPIOD_IN);
-+	priv->irq_id = gpiod_to_irq(priv->gpio_irq);
-+	if (priv->irq_id < 0) {
-+		dev_crit(&spi->dev, "Could not get irq for gpio pin\n");
-+		gpiod_put(priv->gpio_irq);
-+		return priv->irq_id;
- 	}
- 
- 	ret = request_irq(
--		pdata->irq_id,
-+		priv->irq_id,
- 		ca8210_interrupt_handler,
- 		IRQF_TRIGGER_FALLING,
- 		"ca8210-irq",
- 		spi_get_drvdata(spi)
- 	);
- 	if (ret) {
--		dev_crit(&spi->dev, "request_irq %d failed\n", pdata->irq_id);
--		gpiod_unexport(gpio_to_desc(pdata->gpio_irq));
--		gpio_free(pdata->gpio_irq);
-+		dev_crit(&spi->dev, "request_irq %d failed\n", priv->irq_id);
-+		gpiod_put(priv->gpio_irq);
- 	}
- 
- 	return ret;
-@@ -3009,7 +2966,7 @@ static void ca8210_test_interface_clear(struct ca8210_priv *priv)
-  */
- static void ca8210_remove(struct spi_device *spi_device)
- {
--	struct ca8210_priv *priv;
-+	struct ca8210_priv *priv = spi_get_drvdata(spi_device);
- 	struct ca8210_platform_data *pdata;
- 
- 	dev_info(&spi_device->dev, "Removing ca8210\n");
-@@ -3020,12 +2977,10 @@ static void ca8210_remove(struct spi_device *spi_device)
- 			ca8210_unregister_ext_clock(spi_device);
- 			ca8210_config_extern_clk(pdata, spi_device, 0);
- 		}
--		free_irq(pdata->irq_id, spi_device->dev.driver_data);
-+		free_irq(priv->irq_id, spi_device->dev.driver_data);
- 		kfree(pdata);
- 		spi_device->dev.platform_data = NULL;
- 	}
--	/* get spi_device private data */
--	priv = spi_get_drvdata(spi_device);
- 	if (priv) {
- 		dev_info(
- 			&spi_device->dev,
-@@ -3114,13 +3069,13 @@ static int ca8210_probe(struct spi_device *spi_device)
- 		dev_crit(&spi_device->dev, "ca8210_dev_com_init failed\n");
- 		goto error;
- 	}
--	ret = ca8210_reset_init(priv->spi);
--	if (ret) {
--		dev_crit(&spi_device->dev, "ca8210_reset_init failed\n");
-+	priv->gpio_reset = gpiod_get(&spi_device->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->gpio_reset)) {
-+		dev_crit(&spi_device->dev, "ca8210 reset init failed\n");
- 		goto error;
- 	}
- 
--	ret = ca8210_interrupt_init(priv->spi);
-+	ret = ca8210_interrupt_init(priv->spi, priv);
- 	if (ret) {
- 		dev_crit(&spi_device->dev, "ca8210_interrupt_init failed\n");
- 		goto error;
--- 
-2.39.0
+We can probably just defer this change until that is merged,
+or alternatively I can rebase this patch to avoid the
+dependency.
 
+   Arnd
