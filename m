@@ -2,119 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8F9267C88E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 335CC67C896
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236211AbjAZK2O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 05:28:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52668 "EHLO
+        id S236303AbjAZKbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 05:31:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235934AbjAZK2N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:28:13 -0500
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA7F126D5;
-        Thu, 26 Jan 2023 02:28:11 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id BC4785C049B;
-        Thu, 26 Jan 2023 05:28:10 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 26 Jan 2023 05:28:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1674728890; x=1674815290; bh=zSxeHsJFyS
-        /kUWqCkulRCicQEyvTrnSPfQJ9Vnyj+Es=; b=SArs0rsYB9RWF5dkIyHLpNFlkb
-        A6B/vxNkxxGSIZTFLSjBZ3SypIMUaOVzeI85EINFh3ByivPJRYOe+ioypqeDiGw+
-        vFWmXKYWXWI+mExnoK9nUfsr0pmc71Q+SjDhVCL6+BUrjo48HzO7OsIcl27WjBWR
-        cSPqgKiTJ3ykqilErfLUd/PNnjcXADql5OGXKHQDG2W6iAbrwpw1db14fRlta/tz
-        JOiWzh5ubJP/Qik+o9hnwaVSlZmrYfo74uFpw8h/qeX1lY8eEkphGwGo4hKQLBjv
-        pLASKGczh9wu1aj0x3KMlca2kgG/A58C9oc5Y5ZAFiF1Klbs6jVwG57OkgMA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1674728890; x=1674815290; bh=zSxeHsJFyS/kUWqCkulRCicQEyvT
-        rnSPfQJ9Vnyj+Es=; b=Sso2PvjhwJF4F5wOQFN0RKyOKVFKUUn3jkb/sRa4lbU/
-        G3LTnT4u7N9evUUEJAhKLDn2CQcZ+27pLH0Uh2vva0EeAZ+jfRrZwIROdbrOK4rz
-        ZdXpKENxRWHgwPdWQML8LfaaJaTxPTPP9WKtxF2myiVe6tVVem6CaunAxqqdag67
-        MUHtcpQ5/00MGTlqvGpox/4HF2qQD7kpQcBLwXtjHAzpUdkahaEgnVl5DNJBfxxS
-        wWdaj8vw7qqHUZKre0WwqJprca4l3f/JXVemKQRWGYgY6udNEChRRQQtAX9mA2dQ
-        P5yeCaQn43WdnrYXNj5MLjpmUcfZsrJlDbjCuZleeA==
-X-ME-Sender: <xms:ulXSY2IN9Nv1gPN-R1KkdRnzvRBB-0ZPol2srvg_1JsoeH7-dbKL3w>
-    <xme:ulXSY-LaPYWQiAyRUZk9YPEXUmogRTpJgorIjWCDSkMpi6bL7rKDWoCUdRu5gwmDE
-    4bF2hrw9V0g1WnTUjo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvgedgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:ulXSY2uWtQkCcCM2c3TBkEnZ51ljindxVTzVqO6hD-WmvgP_5PUGnA>
-    <xmx:ulXSY7aZ_ADi0WKWpa_3hqe1hApgNBPVIm2BQxyCJmgcucLnqGH3vA>
-    <xmx:ulXSY9a6siH1KBZ3Ohq2DpUTANRg3hsAmzKpGit2dAbnY_d_2hqY4g>
-    <xmx:ulXSY7PvcmL-sUHDLv1PSr5snQjhDucgFqi1-2-tzmrF7eyPCXYErw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 4B436B60086; Thu, 26 Jan 2023 05:28:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
-Mime-Version: 1.0
-Message-Id: <7bf72f8f-1936-4b1e-b970-2fe09b6641ca@app.fastmail.com>
-In-Reply-To: <Y9JTPAL7VDXNPy5h@smile.fi.intel.com>
-References: <20230125201020.10948-1-andriy.shevchenko@linux.intel.com>
- <20230125201020.10948-2-andriy.shevchenko@linux.intel.com>
- <ca399c86-5bfc-057b-6f9f-50614b91a9b9@csgroup.eu>
- <05d32a58-c119-4abb-8e62-9d79bd95324f@app.fastmail.com>
- <Y9JTPAL7VDXNPy5h@smile.fi.intel.com>
-Date:   Thu, 26 Jan 2023 11:27:51 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc:     "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Pierluigi Passaro" <pierluigi.p@variscite.com>,
-        "kernel test robot" <lkp@intel.com>
-Subject: Re: [PATCH v1 1/5] gpiolib: fix linker errors when GPIOLIB is disabled
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229481AbjAZKbe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:31:34 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA9934011
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:31:33 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id k16so814005wms.2
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:31:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w5KI1HfwZehVRZCGq9eIEmT6FtE92VCThGr2hKIL1AU=;
+        b=RpcROijhZnixVsRVbtQU7mzqkw6dLIHWg8jcS2pTsxhoIM/nM3CaAheXllwTzvmgLa
+         YV3+iZ8GgBj5rnsJvC4dL0ZaZi+mcipvxWVHj4v3N2nT0/vQrXWwVf4g50EcPPdku6gt
+         JFxr/oXyOb2YFyjenshWTrvIhUIjLQ83h3c5td/ptSdB4l9fvdHoStWGQxohjf25tzVf
+         km9DUcvSzZKxovAsrH2S7UTn8Loto1GxAamJpBtoOmp8B8n/r+EbWWFuHNBU8cinb6gH
+         N4wQDVkdQqE6GUKD2UcMGog4fsF8ZjO+Z0+PLfe10DxqFgnh/Qi0MLr5QVWeUQifsa3T
+         kT+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w5KI1HfwZehVRZCGq9eIEmT6FtE92VCThGr2hKIL1AU=;
+        b=5+cYNgAM6i8fX4N/H78XwZ44zQfMYZzweV8nh1OnNJdOzADc/F8rLWnTX43la9coTU
+         i3iOtsZGhbcbwdKvtYsLnRimiFHHJMsMfQzdPn9atlUR2pB8fW8ykW2PSwdH4GP+RkHf
+         RasYoYmcQoHuwPOyDNw9qQaHDSGzPwPJwsAPQxVpPfATKZ1dzxMyymE8XwAz83iHiNpr
+         Kjxd7rwgZeAtBSBYX5xz9jUqoE3vzmaBKeYOdQ/u31qi/RAnHPH2sl6PYQh2G5B8Pth3
+         UgzZ9r81CCrk8n+IH3R9HwgcEiwCOchzChANHHCIZockgCXYJO0yB1ia9UATxSkpKCK2
+         4f8Q==
+X-Gm-Message-State: AFqh2kqG4h8ELk8H49qpyK0o69/6lx7hIZGl81Q8sHektSVFfoZAobCX
+        Bt543imrH62+09WxqdrRRSF2SnLTpbnxqm5f
+X-Google-Smtp-Source: AMrXdXtg5Jkxnnjlzoz4W7gv8azVosHtM4Vq45Cb7Q+R/cBkuLpo8hAksiaeq5bunaf/ycP/7TddiQ==
+X-Received: by 2002:a05:600c:4a27:b0:3da:fae5:7e2f with SMTP id c39-20020a05600c4a2700b003dafae57e2fmr34777603wmp.3.1674729091567;
+        Thu, 26 Jan 2023 02:31:31 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id i21-20020a1c5415000000b003dc23574bf4sm1088415wmb.7.2023.01.26.02.31.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 02:31:31 -0800 (PST)
+Message-ID: <98938065-2678-bf0e-26fd-3ac8302431b4@linaro.org>
+Date:   Thu, 26 Jan 2023 11:31:29 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [GIT PULL] pinctrl: dt-bindings: qcom: bindings for v6.3
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+References: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023, at 11:17, Andy Shevchenko wrote:
-> On Thu, Jan 26, 2023 at 09:40:18AM +0100, Arnd Bergmann wrote:
->> On Thu, Jan 26, 2023, at 09:14, Christophe Leroy wrote:
->> 
->> All of these should already prevent the link failure through
->> a Kconfig 'depends on GPIOLIB' for the driver, or 'select GPIOLIB'
->> for the platform code. I checked all of the above and they seem fine.
->> If anything else calls the function, I'd add the same dependency
->> there.
->
-> So, you think it's worth to send a few separate fixes as adding that
-> dependency? But doesn't it feel like a papering over the issue with
-> that APIs used in some of the drivers in the first place?
+On 20/01/2023 18:46, Krzysztof Kozlowski wrote:
+> The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+> 
+>   Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.3
+> 
+> for you to fetch changes up to 5b8c304c94d79f44aea8ee273ce70ca380804156:
+> 
+>   dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$" (2023-01-20 18:43:06 +0100)
+> 
+> ----------------------------------------------------------------
+> Qualcomm pinctrl Devicetree bindings changes for v6.3
+> 
+> Set of cleanups and fixes for Qualcomm pin controller bindings, to match
+> existing DTS and correct the schema.
 
-If there are drivers that use the interfaces but shouldn't then
-fixing those drivers is clearly better than adding a dependency,
-but we can decide that when someone sends a patch.
+Hi Linus,
 
-Adding a stub helper that can never be used legitimately
-but turns a build time error into a run time warning seems
-counterproductive to me, as the CI systems are no longer
-able to report these automatically.
+Just reminding about this pull so it won't get lost.
 
-    Arnd
+Best regards,
+Krzysztof
+
