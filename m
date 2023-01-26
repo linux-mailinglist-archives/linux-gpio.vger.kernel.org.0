@@ -2,74 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 335CC67C896
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:31:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A094067C90E
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:50:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236303AbjAZKbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 05:31:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
+        id S236302AbjAZKuQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 05:50:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjAZKbe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:31:34 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA9934011
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:31:33 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id k16so814005wms.2
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:31:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w5KI1HfwZehVRZCGq9eIEmT6FtE92VCThGr2hKIL1AU=;
-        b=RpcROijhZnixVsRVbtQU7mzqkw6dLIHWg8jcS2pTsxhoIM/nM3CaAheXllwTzvmgLa
-         YV3+iZ8GgBj5rnsJvC4dL0ZaZi+mcipvxWVHj4v3N2nT0/vQrXWwVf4g50EcPPdku6gt
-         JFxr/oXyOb2YFyjenshWTrvIhUIjLQ83h3c5td/ptSdB4l9fvdHoStWGQxohjf25tzVf
-         km9DUcvSzZKxovAsrH2S7UTn8Loto1GxAamJpBtoOmp8B8n/r+EbWWFuHNBU8cinb6gH
-         N4wQDVkdQqE6GUKD2UcMGog4fsF8ZjO+Z0+PLfe10DxqFgnh/Qi0MLr5QVWeUQifsa3T
-         kT+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5KI1HfwZehVRZCGq9eIEmT6FtE92VCThGr2hKIL1AU=;
-        b=5+cYNgAM6i8fX4N/H78XwZ44zQfMYZzweV8nh1OnNJdOzADc/F8rLWnTX43la9coTU
-         i3iOtsZGhbcbwdKvtYsLnRimiFHHJMsMfQzdPn9atlUR2pB8fW8ykW2PSwdH4GP+RkHf
-         RasYoYmcQoHuwPOyDNw9qQaHDSGzPwPJwsAPQxVpPfATKZ1dzxMyymE8XwAz83iHiNpr
-         Kjxd7rwgZeAtBSBYX5xz9jUqoE3vzmaBKeYOdQ/u31qi/RAnHPH2sl6PYQh2G5B8Pth3
-         UgzZ9r81CCrk8n+IH3R9HwgcEiwCOchzChANHHCIZockgCXYJO0yB1ia9UATxSkpKCK2
-         4f8Q==
-X-Gm-Message-State: AFqh2kqG4h8ELk8H49qpyK0o69/6lx7hIZGl81Q8sHektSVFfoZAobCX
-        Bt543imrH62+09WxqdrRRSF2SnLTpbnxqm5f
-X-Google-Smtp-Source: AMrXdXtg5Jkxnnjlzoz4W7gv8azVosHtM4Vq45Cb7Q+R/cBkuLpo8hAksiaeq5bunaf/ycP/7TddiQ==
-X-Received: by 2002:a05:600c:4a27:b0:3da:fae5:7e2f with SMTP id c39-20020a05600c4a2700b003dafae57e2fmr34777603wmp.3.1674729091567;
-        Thu, 26 Jan 2023 02:31:31 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id i21-20020a1c5415000000b003dc23574bf4sm1088415wmb.7.2023.01.26.02.31.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jan 2023 02:31:31 -0800 (PST)
-Message-ID: <98938065-2678-bf0e-26fd-3ac8302431b4@linaro.org>
-Date:   Thu, 26 Jan 2023 11:31:29 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [GIT PULL] pinctrl: dt-bindings: qcom: bindings for v6.3
-Content-Language: en-US
+        with ESMTP id S236383AbjAZKuO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:50:14 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A77762798
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:49:31 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pKzou-0002UH-7o; Thu, 26 Jan 2023 11:49:28 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pKzot-0005cb-S0; Thu, 26 Jan 2023 11:49:27 +0100
+Date:   Thu, 26 Jan 2023 11:49:27 +0100
+From:   Sascha Hauer <sha@pengutronix.de>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-References: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        bartosz.golaszewski@linaro.org, christophe.leroy@csgroup.eu,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+        shawnguo@kernel.org
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+Message-ID: <20230126104927.GE23347@pengutronix.de>
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
+ <20230125093548.GB23347@pengutronix.de>
+ <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,29 +57,65 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 20/01/2023 18:46, Krzysztof Kozlowski wrote:
-> The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+On Thu, Jan 26, 2023 at 10:35:22AM +0100, Linus Walleij wrote:
+> On Wed, Jan 25, 2023 at 10:35 AM Sascha Hauer <sha@pengutronix.de> wrote:
 > 
->   Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+> > You are trying to remove the GPIO sysfs API for many years now without
+> > success so far, and I doubt that you will succeed in future because the
+> > Kernel comes with the promise that userspace won't be broke.
 > 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.3
-> 
-> for you to fetch changes up to 5b8c304c94d79f44aea8ee273ce70ca380804156:
-> 
->   dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$" (2023-01-20 18:43:06 +0100)
-> 
-> ----------------------------------------------------------------
-> Qualcomm pinctrl Devicetree bindings changes for v6.3
-> 
-> Set of cleanups and fixes for Qualcomm pin controller bindings, to match
-> existing DTS and correct the schema.
+> I see it more as permanent deprecation and nudging than removal as of now.
 
-Hi Linus,
+I am fine with permanent nudging. The sysfs API is deprecated and it's
+ok to remind people that there's a new API they should use instead, but
+as said, please don't actively break this API. Well to be correct,
+adding this warning is not breaking the API by itself, instead it
+motivates other people to do so, so you're getting there even without
+making your own hands dirty ;)
 
-Just reminding about this pull so it won't get lost.
+> 
+> For some reason people perceive all nudging as militant and as a
+> my-way-or-the-highway style of communication but it's not really intended.
+> OK maybe I am softer now than in the past, one grow humbler with
+> old age.
+> 
+> It will become more interesting once we removed all in-kernel users of
+> the global numberspace, which is well underway. At that point we can
+> move the management of the global numberspace into the sysfs code
+> and distros etc that don't want to use it can compile it out completely.
 
-Best regards,
-Krzysztof
+Perfectly fine with me. As I said: Push the sysfs API into a corner
+where it hurts nobody let it stay there.
 
+> 
+> But the idea was never to slam people to not use something they use and like,
+> it was to offer something new because they want it and like it more.
+> 
+> So using the character device with libgpiod users can:
+> 
+> - Get and set multiple lines at the same time
+> - Do biasing (if supported by HW) pull up/down
+> - Do drive strength (if supported by HW)
+> - Properly listen to IRQ-driven events on lines with real-time timestamps
+>   to ensure strict event order
+> - Use HTE timestamps (new feature!)
+> - libgpiod for the above with C, C++, Python and Rust bindings
+> 
+> By offering those new tasty features only for the character device and not
+> for the sysfs ABI, at least the advanced users are expected to switch over
+> to using the character device.
+
+Ack, perfectly fine with me. Providing new features only for the new API
+is a good way of gently pushing people towards the new API.
+
+What's missing is a way to let a GPIO stay in the current state when I
+release a GPIO chip. Unlike the new features you listed above this is a
+feature that the sysfs API offers and that's important for us.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
