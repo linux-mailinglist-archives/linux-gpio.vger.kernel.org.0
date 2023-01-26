@@ -2,120 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A094067C90E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:50:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF01267CA57
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 12:58:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236302AbjAZKuQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 05:50:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
+        id S231149AbjAZL6g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 06:58:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236383AbjAZKuO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:50:14 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A77762798
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 02:49:31 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1pKzou-0002UH-7o; Thu, 26 Jan 2023 11:49:28 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1pKzot-0005cb-S0; Thu, 26 Jan 2023 11:49:27 +0100
-Date:   Thu, 26 Jan 2023 11:49:27 +0100
-From:   Sascha Hauer <sha@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        bartosz.golaszewski@linaro.org, christophe.leroy@csgroup.eu,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        shawnguo@kernel.org
-Subject: Re: GPIO static allocation warning with v6.2-rcX
-Message-ID: <20230126104927.GE23347@pengutronix.de>
-References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
- <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
- <20230125093548.GB23347@pengutronix.de>
- <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+        with ESMTP id S229631AbjAZL6g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 06:58:36 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DCDD62256
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 03:58:35 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id a11so2754984lfg.0
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 03:58:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jo2uaUWCnGPs2Qiu0WPugIPlQhTGjXEujLrHd3U+iR8=;
+        b=QjL4PulHGFIO8c83oFpPtxXyH7ZRO/AkVUS7MRfV2hgGOLsI/+iH1rEOgZ774AWVJn
+         9tVpeTVWfZyZ7lOar0iFhYPS1xAqu+dBwGgu9Xpz7AUBfaosZ0EdSjYfr9d3kg8+ksMw
+         kLo8kHlu0jasJRcTenReK0thzLOt+jy03yPS2DIbIL61BxfWzylr/29zBEGsEP/KSjWB
+         FyYnUZUVLmXoo/4Z5SvIydvVypwIuf1VQW0uD7iEOMHJmq3d/08um9r0PO1fncFqn+JX
+         AMWRslPQnS8iaqbHRBrGLJVHpGUMXgz0hNYLSEspjonODj60MwMWobATFZFXHkdPnYTW
+         wq2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jo2uaUWCnGPs2Qiu0WPugIPlQhTGjXEujLrHd3U+iR8=;
+        b=BhMtmZd071/hWCgMo1x6tqgsd5wgnTBsdGUEWU7AFQQCGqFZQFKGhXBhk940Sr6+Ad
+         eu73ta+Xg/MBRVPFH7S3sQRn+IzfJqle6Z2dnQgYAlRjGLrbg0WFzRCPXQXcxEUUBtCc
+         zvYKO7utP6icTXZ9aNyLyHLiqZVYfThW5Dq9V6nrbVbcRbUbyQR1jvwywNj3kllCOmo8
+         YX2rCllRgRheOWYDTQgGcWJeQ3CXZiHhJOqpfyiY3/r+FLOPBCk+g7f0V0kQPrgP5D1M
+         KpuuyFr/jdeTMH64CFd7HLomGYlW+kuXdrQ1QHtUopb0/bHgf5XH/itC5U0YRZxqQavd
+         Lulw==
+X-Gm-Message-State: AFqh2ko8Zzl4/mdk0fxdqWwHBHgXzDcEDI+/9nZQnWvczthrQdszHBBW
+        35N3aLd7/YUZ+H1UFz40P4amYTvFY1KVuVE9Szw=
+X-Google-Smtp-Source: AMrXdXu/pG02wzsnkape/vTK5yHMaGZuw8m/pAjci0/7G8m43hWUQFngpssUFEXBlOdKNgjZlYGdevDNoDQKfkmkdgI=
+X-Received: by 2002:a19:760b:0:b0:4cc:586b:183c with SMTP id
+ c11-20020a19760b000000b004cc586b183cmr3896361lff.350.1674734313349; Thu, 26
+ Jan 2023 03:58:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:aa6:c207:0:b0:22a:910d:67f8 with HTTP; Thu, 26 Jan 2023
+ 03:58:32 -0800 (PST)
+Reply-To: kl145177@gmail.com
+From:   Ken Lawson <davidwolfgang046@gmail.com>
+Date:   Thu, 26 Jan 2023 11:58:32 +0000
+Message-ID: <CAFGUgZt8c_7e=RMLkrESRFOPQHb_e7xLa0+a1dCge97Ngq09GQ@mail.gmail.com>
+Subject: I am still surprised why.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM,YOU_INHERIT
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 10:35:22AM +0100, Linus Walleij wrote:
-> On Wed, Jan 25, 2023 at 10:35 AM Sascha Hauer <sha@pengutronix.de> wrote:
-> 
-> > You are trying to remove the GPIO sysfs API for many years now without
-> > success so far, and I doubt that you will succeed in future because the
-> > Kernel comes with the promise that userspace won't be broke.
-> 
-> I see it more as permanent deprecation and nudging than removal as of now.
+Best wishes to you and your family. I am still surprised why you
+decided to abandon your family inheritance fund I just want to inform
+you that the bank authority is not happy about it.
 
-I am fine with permanent nudging. The sysfs API is deprecated and it's
-ok to remind people that there's a new API they should use instead, but
-as said, please don't actively break this API. Well to be correct,
-adding this warning is not breaking the API by itself, instead it
-motivates other people to do so, so you're getting there even without
-making your own hands dirty ;)
+I am currently waiting to hear from you, for more details.
 
-> 
-> For some reason people perceive all nudging as militant and as a
-> my-way-or-the-highway style of communication but it's not really intended.
-> OK maybe I am softer now than in the past, one grow humbler with
-> old age.
-> 
-> It will become more interesting once we removed all in-kernel users of
-> the global numberspace, which is well underway. At that point we can
-> move the management of the global numberspace into the sysfs code
-> and distros etc that don't want to use it can compile it out completely.
-
-Perfectly fine with me. As I said: Push the sysfs API into a corner
-where it hurts nobody let it stay there.
-
-> 
-> But the idea was never to slam people to not use something they use and like,
-> it was to offer something new because they want it and like it more.
-> 
-> So using the character device with libgpiod users can:
-> 
-> - Get and set multiple lines at the same time
-> - Do biasing (if supported by HW) pull up/down
-> - Do drive strength (if supported by HW)
-> - Properly listen to IRQ-driven events on lines with real-time timestamps
->   to ensure strict event order
-> - Use HTE timestamps (new feature!)
-> - libgpiod for the above with C, C++, Python and Rust bindings
-> 
-> By offering those new tasty features only for the character device and not
-> for the sysfs ABI, at least the advanced users are expected to switch over
-> to using the character device.
-
-Ack, perfectly fine with me. Providing new features only for the new API
-is a good way of gently pushing people towards the new API.
-
-What's missing is a way to let a GPIO stay in the current state when I
-release a GPIO chip. Unlike the new features you listed above this is a
-feature that the sysfs API offers and that's important for us.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Yours sincerely,
+Ken Lawson
