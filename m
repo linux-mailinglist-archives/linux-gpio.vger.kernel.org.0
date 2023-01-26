@@ -2,90 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6554167C63F
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 09:52:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0C7D67C768
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 10:35:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236523AbjAZIwJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 03:52:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        id S230178AbjAZJfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 04:35:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236502AbjAZIwH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 03:52:07 -0500
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD6D402FD;
-        Thu, 26 Jan 2023 00:52:01 -0800 (PST)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 4310440041;
-        Thu, 26 Jan 2023 08:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1674723120;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=89IPk7Ub6kTzIYPBJ6dyur64fSCxEPkfLYPQ09yEpxc=;
-        b=PPEN/2NeG6zvvx9ejClgOukuX9YXS0KGjRPIypDFZdaRH1d1COuOIefNOvmnXbQrZqKOzv
-        uf+IvkL9o5jM7EaVRQJtjobq6nZySRq/d0OSG5rWY1gzwwwnhDqGybdcq4sGhAs8etPpYQ
-        gNO+4Sx1Yh076AAH79MGFtWqjKdGOB833FWTwgVRVbjzVSPUSU+0rpiX32cZCWPzl3M2c0
-        fw6hqNDWXDrOOHzp+FhMXdivG91iKYi2BRWuN2h8hkk9oMhomBwFrOUPjU1Nc/7yMtI4Oq
-        s+G5Kn/GRzkXXqdy8mOBRXSdSSgKZH+7KTdZY68Ir9iJNIpyp0cWSfi9xpXSRg==
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Herve Codina <herve.codina@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: add the Renesas IDT821034 codec entry
-Date:   Thu, 26 Jan 2023 09:51:37 +0100
-Message-Id: <20230126085137.375814-4-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230126085137.375814-1-herve.codina@bootlin.com>
-References: <20230126085137.375814-1-herve.codina@bootlin.com>
+        with ESMTP id S229536AbjAZJff (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 04:35:35 -0500
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9871F1AF
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 01:35:34 -0800 (PST)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-4fd37a1551cso15154647b3.13
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 01:35:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Eos5PCq031bBmCjxIREeklYxC5wbGmtX2E8d74k8RI=;
+        b=S5FGjkogHe7LPfKGI+9gUih6CR93txIffyFJyoT0bvWJv15+ynUNH4w1kAy7hxIR0v
+         T3H8pp7dB9iw/BIVFNPc40nUKjyyO9kYl+3qnyFgcMkx1dF+tVRhFo+gm8i2yDMmJw7F
+         +1iMDiKhphQH/sOALu6nJgEpHCmMoafr/vHV748Fb4BegZSCde1Bpdb0MV1DwDvHRIA9
+         HVa0kLOsGu8EMklvCN/pZ87eucmA7l9stnmkRqkLzWF/4JM5VQBTXf5gglV8bR7eqPTW
+         zIjAiu0JkVq2slQc6CojmfrZqICh7k5GT/B394HLB8ST7WN3mkwfwGS6Q9niqy4zSGSS
+         Gz1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Eos5PCq031bBmCjxIREeklYxC5wbGmtX2E8d74k8RI=;
+        b=NB6qKh91S5nO82DTqNxBi8hvzge2WvM1hgNa+aXPMvWB6q3JnuRSeg7VWfX3cNWgrP
+         unhLNVkUiuRN1cljLz7ipIds2g07Xz8WG/khczO0y8DusaqIRR/Ot6kyEUWbZiK9bcE3
+         Y9QUGm6E/UT+7F0P6MHgsTFGheBs1Mf3LqnMV6D7Vrce4mx+XE5XSIglD1Na0NGq06i6
+         xOx+hyrP5BsbC9fnFuucpsG4ggRh+JWm4xR7bNXUT7oxmTk09D6a3XBxGYz961ym2pYK
+         n5fWQmOwrWH7Al7QinkiVXgf/m4UeP1SBddKUejKjRK2stdAiWl3TtBA0JNd/+1vdIVU
+         pcOw==
+X-Gm-Message-State: AO0yUKUP51kqfQaEYpeDnNoKZYL2MPPUbM07UXRNv8R5AHGmfEPwyp/Q
+        7oOhTxti6oePuTQrQNOQkK2gTrGvJ8HuQpWit/cTcw==
+X-Google-Smtp-Source: AK7set81N3qEG51TPrxypBsflo4//wXbBeebKKJ1uQRanxzHfxnU7zNdkGFdc4BSfVXkOylNiKRsmNqMT59aKPWiK0Q=
+X-Received: by 2002:a81:784f:0:b0:506:651b:cd0 with SMTP id
+ t76-20020a81784f000000b00506651b0cd0mr826401ywc.273.1674725733775; Thu, 26
+ Jan 2023 01:35:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com> <20230125093548.GB23347@pengutronix.de>
+In-Reply-To: <20230125093548.GB23347@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Jan 2023 10:35:22 +0100
+Message-ID: <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+To:     Sascha Hauer <sha@pengutronix.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        bartosz.golaszewski@linaro.org, christophe.leroy@csgroup.eu,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+        shawnguo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-After contributing the driver, add myself as the maintainer for the
-Renesas IDT821034 codec.
+On Wed, Jan 25, 2023 at 10:35 AM Sascha Hauer <sha@pengutronix.de> wrote:
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+> You are trying to remove the GPIO sysfs API for many years now without
+> success so far, and I doubt that you will succeed in future because the
+> Kernel comes with the promise that userspace won't be broke.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9dcfadec5aa3..31115a7e01c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17809,6 +17809,13 @@ F:	Documentation/devicetree/bindings/net/renesas,*.yaml
- F:	drivers/net/ethernet/renesas/
- F:	include/linux/sh_eth.h
- 
-+RENESAS IDT821034 ASoC CODEC
-+M:	Herve Codina <herve.codina@bootlin.com>
-+L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
-+F:	sound/soc/codecs/idt821034.c
-+
- RENESAS R-CAR GYROADC DRIVER
- M:	Marek Vasut <marek.vasut@gmail.com>
- L:	linux-iio@vger.kernel.org
--- 
-2.39.0
+I see it more as permanent deprecation and nudging than removal as of now.
 
+For some reason people perceive all nudging as militant and as a
+my-way-or-the-highway style of communication but it's not really intended.
+OK maybe I am softer now than in the past, one grow humbler with
+old age.
+
+It will become more interesting once we removed all in-kernel users of
+the global numberspace, which is well underway. At that point we can
+move the management of the global numberspace into the sysfs code
+and distros etc that don't want to use it can compile it out completely.
+
+But the idea was never to slam people to not use something they use and like,
+it was to offer something new because they want it and like it more.
+
+So using the character device with libgpiod users can:
+
+- Get and set multiple lines at the same time
+- Do biasing (if supported by HW) pull up/down
+- Do drive strength (if supported by HW)
+- Properly listen to IRQ-driven events on lines with real-time timestamps
+  to ensure strict event order
+- Use HTE timestamps (new feature!)
+- libgpiod for the above with C, C++, Python and Rust bindings
+
+By offering those new tasty features only for the character device and not
+for the sysfs ABI, at least the advanced users are expected to switch over
+to using the character device.
+
+It's not like we're unaware about the upsides of the sysfs ABI. Easy to use
+to do quick hacks. Always there. I have been trying to think of e.g. a
+debugfs ABI that would be even easier to use for even quicker hacks, but
+using only local per-gpiochip offsets, see the bottom of the TODO file:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/TODO
+
+Yours,
+Linus Walleij
