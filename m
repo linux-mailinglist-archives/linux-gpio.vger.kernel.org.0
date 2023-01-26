@@ -2,106 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 034B567C846
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:17:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7121567C855
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 11:19:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236355AbjAZKRp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 05:17:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
+        id S237051AbjAZKTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 05:19:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237062AbjAZKRj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:17:39 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E2F14491;
-        Thu, 26 Jan 2023 02:17:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674728232; x=1706264232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6/mVui7KHyg/685hFsXA62gG5MkPwHTsQ8fsOw6kk7o=;
-  b=j58poB+wqVja46qdWNa/H9DDea6SyONu+oXNC262PPzYpehoYZPpDNgg
-   dUuqEcpytvzmL3y8XxxwDrGcT2VSfPhHg6abaK7XRd2ACQWuFji3igkUz
-   IGsJMCaIvxZuPuvOdLiaPDQvokCZxQI5agoQtgRgpvkwQESyea2Qtf8WH
-   HS2hSqb55w97rAnOVgEqS9ca7CdZflIp+Ei/9E585uTaoxubmhevwpU+E
-   ZR8xnDhFHnNi1MqUIBBOpjDaBq1LHy65XO8nBhoWaCAzIhu5NVdWMPlPU
-   ER86munb+p5tbQItq6KyKNjN/xk3GSZo7VNrzkbGl7Z80K1zSMmNUj5TE
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="328029234"
-X-IronPort-AV: E=Sophos;i="5.97,248,1669104000"; 
-   d="scan'208";a="328029234"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 02:16:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="726223665"
-X-IronPort-AV: E=Sophos;i="5.97,248,1669104000"; 
-   d="scan'208";a="726223665"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Jan 2023 02:16:18 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pKzIm-00FKtE-0t;
-        Thu, 26 Jan 2023 12:16:16 +0200
-Date:   Thu, 26 Jan 2023 12:16:16 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 5/5] gpio: Clean up headers
-Message-ID: <Y9JS8HEPMu+/zEFb@smile.fi.intel.com>
-References: <20230125201020.10948-1-andriy.shevchenko@linux.intel.com>
- <20230125201020.10948-6-andriy.shevchenko@linux.intel.com>
- <8454db45-a967-4542-8f16-538043542e14@app.fastmail.com>
+        with ESMTP id S237053AbjAZKSg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 05:18:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B13434323;
+        Thu, 26 Jan 2023 02:18:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 177E661784;
+        Thu, 26 Jan 2023 10:18:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D8D8C433D2;
+        Thu, 26 Jan 2023 10:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674728284;
+        bh=pzciJ25whFPqz74uOlgRGDuqRYmNEoQWXoTcFna1QFY=;
+        h=From:Subject:Date:To:Cc:Reply-To:From;
+        b=hZdxHHaxDaYMkWR4Dsc92+PD4/7yRWaqsMmPZ32h6TDmHzFcbjiVQMcq+w6FDbllr
+         VxaXH3m8wmI7aagAs1K2xEL4tpSpAAiyWIzBeHJtLqxIIbUeLrcZU9+BB9540khTdO
+         1O61qD2E/0SHBPkjLLsBJR09HAWI2uVqcxdZeqxGogLTAFgiJopEZAAimPT9mhAm6u
+         9lgdNvQ4WNDBqvGYBVMt6HVahxhfp1I8Ndsohyt66bx4BD2sQd+aaNxzqi8+hV8jSf
+         J36EpgcHpwMH6LA3KQfcKDAkP3kM9a/c8TqGWu3L8iKKJTUcbbW0UXQe94qSyX9Zxh
+         zYpNbYs1y3l4g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4BC05027;
+        Thu, 26 Jan 2023 10:18:04 +0000 (UTC)
+From:   Niall Leonard via B4 Submission Endpoint 
+        <devnull+nl250060.ncr.com@kernel.org>
+Subject: [PATCH 0/3] Introduce new optional property to mark port as write
+ only
+Date:   Thu, 26 Jan 2023 10:17:21 +0000
+Message-Id: <20230126-gpio-mmio-fix-v1-0-8a20ce0e8275@ncr.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8454db45-a967-4542-8f16-538043542e14@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADFT0mMC/x2NwQqDQAxEf0VybmB3BcX+SukhrlFz2FWSUgTx3
+ xt7GXjMPOYEYxU2eDYnKH/FZKsO8dFAXqkujDI5QwqpDTF1uOyyYSkesxwYqRum0HIeuAd3RjL
+ GUanm9bYK2Yf1LnZl3/+PXu/r+gFGFfWReAAAAA==
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Niall Leonard <nl250060@ncr.com>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1073; i=nl250060@ncr.com;
+ h=from:subject:message-id; bh=pzciJ25whFPqz74uOlgRGDuqRYmNEoQWXoTcFna1QFY=; 
+ =?utf-8?q?b=3DowEBbQKS/ZANAwAKAVGiIrYFD2P/AcsmYgBj0lNaon7z7C7FVt2JLo+UquDFZ?=
+ =?utf-8?q?/RQuxnhLYLH9Iop_+vBmomSJAjMEAAEKAB0WIQSha1EPjh6hUqdtwZNRoiK2BQ9j/?=
+ =?utf-8?q?wUCY9JTWgAKCRBRoiK2BQ9j/31hD/_9kF/j2e0BCq4ghR3YP23h4YUDmJvks7EPxh?=
+ =?utf-8?q?wxUpwTkoC7L8j/o4Yyz4JywsHPgy7IoQVrQTtq4v3N2_iIJsrkLMQ0an2mkLDDJJQ?=
+ =?utf-8?q?yTJ+WgCSAapePZ4dwzAUeuEc07dsjQo3ga1Jgk1eAImi4nD3oyr1oPZkK_qdydor1?=
+ =?utf-8?q?MGIjT9jz/YxqA84ryy2/fQMR/XImwF+p8nVYMCclpY4EXw/1ZHh0Pbvn46EUjooGU?=
+ =?utf-8?q?3fCar6_zrKT4kOeBhq2tN1bfsu8f/r45uUQvd0ayzP5AGewqwsWJ4dEwDTNXS9Zx+?=
+ =?utf-8?q?7tTeSaTiCa5y591ynvsx_LreJiLBI/KiYLV51ZSNiZPA2gsBgfx28or7ctXckxZ+l?=
+ =?utf-8?q?n+Cdo5PR0/cBj5il3LeGIf3FYOrscF92n6_TUfSf8z0Lm5OFzwnKmzfaJAERhZtxE?=
+ =?utf-8?q?kvu6FkNncSDeZyocZKsW8WBvoajuioUpQg68Ffyz6kZqdr9/_nL9CRGXPuyG6p11S?=
+ =?utf-8?q?fVdA5FaX5wNg65qtYTFs8WFyh6ZG6dRHSNFR+3Y40Bmv8RiTFHpc4AS9gp6AR/_JR?=
+ =?utf-8?q?Yto98Jy7h3WkIZKeFihiJb4gzibEpq3xvucFZXN/iU03yfp89IFY2PfhmRxZlif9i?=
+ =?utf-8?q?3ohjqoLpj0B?=
+ tRUlpjZCr+lujPwLp1liYMuRbjv5rExOyMxh0uHSGYMY0p0crJFK88ti6dMg==
+X-Developer-Key: i=nl250060@ncr.com; a=openpgp;
+ fpr=A16B510F8E1EA152A76DC19351A222B6050F63FF
+X-Endpoint-Received: by B4 Submission Endpoint for nl250060@ncr.com/default with auth_id=26
+X-Original-From: Niall Leonard <nl250060@ncr.com>
+Reply-To: <nl250060@ncr.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 09:42:32AM +0100, Arnd Bergmann wrote:
-> On Wed, Jan 25, 2023, at 21:10, Andy Shevchenko wrote:
-> > There is a few things done:
-> > - include only the headers we are direct user of
-> > - when pointer is in use, provide a forward declaration
-> > - add missing headers
-> > - group generic headers and subsystem headers
-> > - sort each group alphabetically
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  include/asm-generic/gpio.h    |  8 --------
-> >  include/linux/gpio.h          |  9 +++------
-> >  include/linux/gpio/consumer.h | 14 ++++++++++----
-> >  include/linux/gpio/driver.h   | 34 ++++++++++++++++++++++++----------
-> >  4 files changed, 37 insertions(+), 28 deletions(-)
-> 
-> This change looks fine, but it conflicts with a slightly
-> broader cleanup that I meant to have already submitted,
-> folding include/asm-generic/gpio.h into linux/gpio.h and
-> removing the driver-side interface from that.
-> 
-> Let me try to dig out my series again, we should be able to
-> either use my version, or merge parts of this patch into it.
+Some electronics do not allow the data regsister to be read.
+Reading the register can corrupt the output. This makes it
+impossible to read the last data written to the port.
+The existing shadow data register 'bgpio_data' can be used to allow
+the last written value to be returned by the read operation in this
+scenario.
+This is enabled for a particular port using a new flag and a new
+device tree property.
 
-Can you share your patches, so I will rebase mine on top and see what's left?
+Signed-off-by: Niall Leonard <nl250060@ncr.com>
+---
+Niall Leonard (3):
+      gpio: dt-bindings: add new property to wd,mbl-gpio bindings
+      gpio: Add new flag BGPIOF_NO_INPUT
+      gpio: mmio: Use new flag BGPIOF_NO_INPUT
 
+ .../devicetree/bindings/gpio/wd,mbl-gpio.txt          |  1 +
+ drivers/gpio/gpio-mmio.c                              | 19 +++++++++++++++++--
+ include/linux/gpio/driver.h                           |  1 +
+ 3 files changed, 19 insertions(+), 2 deletions(-)
+---
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+change-id: 20230126-gpio-mmio-fix-1a69d03ec9e7
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Niall Leonard <nl250060@ncr.com>
 
