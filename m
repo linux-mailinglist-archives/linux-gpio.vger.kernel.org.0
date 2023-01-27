@@ -2,62 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C001267E5E7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 13:58:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACEC567E601
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 14:02:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjA0M6n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 07:58:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
+        id S234368AbjA0NCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 08:02:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbjA0M6m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 07:58:42 -0500
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E5D11656
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:58:15 -0800 (PST)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-501c3a414acso65630217b3.7
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:58:15 -0800 (PST)
+        with ESMTP id S234480AbjA0NCq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 08:02:46 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A70911EB0
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:02:44 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id d8so3925672ybe.9
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vh+bKXtdb/z1QCPxI2/PQtGdcBrzsfUgycixwIlm1Is=;
-        b=Rr8xhv/OSS7204WgMEKkwF53NcpYDuZMgCQvnk07CQgUmvxNYUMA1RASA9ajGe2IUm
-         PGUHbdjtv2Rxm0kppk9PehUhB8HOQE84PDOOidRDcJnHYDTgyjf+cpH98vOqAok2zNb1
-         D+nluFpWnwX6ZTnIy75oPmz0VgkhtWTs/aTq+WlyFKMvwLErBewvb8O2QqnwUH8prP10
-         7JQKsz37fibUYPXt59nDJnw8tr4saHruJxiDb3vmnk+5PSX5EXsUDydoexGlmMJNNvAY
-         XNZeBoaxWxT+BKQK5fxGD+oeCTp8bNrHV5fqp3nlV4iAU7IzNrh/McMlxTE4p28Ja3Os
-         /SHw==
+        bh=DB/VwgUOhDeWeHT3z0pZDhsu54GOVI4oKcLH0pJ6Yjc=;
+        b=CYNu0ZSqCgfpiSSSlH4hBB7pwg6nhfPch4mIi/rF+KmWONMg80ZZqfE9lidSr6gtHY
+         k1v2TAb9cbq0dSGpl5tDxrwJPvB0Ry7LYZ6ue+En2mSE3WCv71eQov9/NleqU9RTaMw3
+         r0ccjtW0sF+Stqx23dcBX+886BAPtTxAP1lbdm5akilsbPLB98/s4elF9wbrL/Dwenfo
+         AP4bzPcAKNplihrq+SeKaOGMix13cf3AvlbuRMNA1qEnWBzaRaNEm2mdig64oMu750dU
+         Dln09sOzEOa9wOyc4z7jAAjh6bNpHYHLqW7xcJM2etO3wNWGy8ZJ1KhFGZ4xbYWuwxfr
+         CWtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Vh+bKXtdb/z1QCPxI2/PQtGdcBrzsfUgycixwIlm1Is=;
-        b=ZR+N229/9RPpvZEihcclRZQ3EsfwRSyoA4rZ9yT1g5w6NVeizfsJNAVHvhnHZJrjzJ
-         68xkeu3UPLU3ngDKCgqrFnoMevgqSQEYsbi1SETo54yR39HKgLYRskSoGzymLLZs2shi
-         U+rSo0v+SkVw8MhSGkPKUbcToFOl9N93GJ4PfDVwQScpyQ6Xfcv8ceiOPniYNDSok0Oh
-         6VzNEB7Y3kriqy0krM9bDm3GFiekNckAuhar5aBkq6nBLkNZUo3+9V8blTfGnJD4+WEB
-         vIZohRSvRs8eKAQrmeSYJqxlU2WPwwZMxuk8q0u6HE0fu1jfu2aNYlb62kNW0PNfrbEd
-         qKuw==
-X-Gm-Message-State: AO0yUKWtrfbi5jJCND2RHznU1MvCOhOtJrC9N0PT++g7iUrz7rySElEg
-        LnUMD+BV6Q36Tz0VmHtcP9yKCvWzxOCak27zIPJXxA==
-X-Google-Smtp-Source: AK7set/pmEFwy14DSxUIoFhgRvUHxwHId97MCz3n4bGfCrxDLXaTZoxTOHGysbJaigoBiETZhxOz45r0mMfJ1dv4PhI=
-X-Received: by 2002:a05:690c:706:b0:506:6952:b9c9 with SMTP id
- bs6-20020a05690c070600b005066952b9c9mr1266249ywb.477.1674824288171; Fri, 27
- Jan 2023 04:58:08 -0800 (PST)
+        bh=DB/VwgUOhDeWeHT3z0pZDhsu54GOVI4oKcLH0pJ6Yjc=;
+        b=fkYXPe4DRj9mQTfDeNAmGHBwrIbcFPTlA49xw/zOnjRCWLIoMf9unrGeOr3jXGoNhY
+         NL2gDsKFxEyz0HNasSAHsYqbZl09OF+Oebdtoo4dShKgpJRJnkIXkVhwSmMOSzanh3VQ
+         2+p0B2cdkqcKfJOlyDp3g5/TF4zquj4022mH3wQW36ug4zXINTjZSYrEvFYbeGic2iiZ
+         iV3hEsMEakolixxKM97gR5tkmI724RW7PeXlMQS6BdCx6WlwotXbyBdYp786xmu0GRZM
+         ndxXw2kTApEAg0B+yOJg+jv+r4DrNHCcPz0GDhkHK/7EKn/mPsEaRahsEdcHUd20HhME
+         CiQQ==
+X-Gm-Message-State: AO0yUKVSblpVtJaB3o9DsHCTsK7veKGi0owdsYMufV6iF35VbSFsVTKs
+        wwmNV/sEl9i09PNMYCh33+fDDXEz+2hzNN5dFSCa2g==
+X-Google-Smtp-Source: AK7set/TTpymxO5qx7/c8vpKBYpS1jQegrvVN6lTGO3M26bGQ2hNBb8NJpV0TgjZOgLF2LXIgn/FyvD2IuM7IlpAhug=
+X-Received: by 2002:a25:f81b:0:b0:80b:821f:b621 with SMTP id
+ u27-20020a25f81b000000b0080b821fb621mr1091077ybd.24.1674824563392; Fri, 27
+ Jan 2023 05:02:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20230126-gpio-mmio-fix-v1-0-8a20ce0e8275@ncr.com> <20230126-gpio-mmio-fix-v1-1-8a20ce0e8275@ncr.com>
-In-Reply-To: <20230126-gpio-mmio-fix-v1-1-8a20ce0e8275@ncr.com>
+References: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Jan 2023 13:57:57 +0100
-Message-ID: <CACRpkdYyRXx-Q4NYEUzpvmBEvyW5b9TVw7DngphhV56VJJCESw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: dt-bindings: add new property to wd,mbl-gpio bindings
-To:     nl250060@ncr.com
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Fri, 27 Jan 2023 14:02:32 +0100
+Message-ID: <CACRpkdbvsgZ+bgJyNt1rU0dcWfZj+qFUt1T0+SqCdVbxyFKkzw@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: dt-bindings: qcom: bindings for v6.3
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -69,23 +70,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Niall,
+On Fri, Jan 20, 2023 at 6:46 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-thanks for your patch!
+> The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+>
+>   Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.3
+>
+> for you to fetch changes up to 5b8c304c94d79f44aea8ee273ce70ca380804156:
+>
+>   dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$" (2023-01-20 18:43:06 +0100)
 
-On Thu, Jan 26, 2023 at 11:18 AM Niall Leonard via B4 Submission
-Endpoint <devnull+nl250060.ncr.com@kernel.org> wrote:
+Pulled into the pinctrl tree for v6.3!
 
->  Optional properties:
->         - no-output: GPIOs are read-only.
-> +       - no-input: GPIOs are write-only. Read is via a shadow register.
-
-"Shadow register" is unclear technical lingo.
-
-Just write "GPIO output registers are write-only"
-
-DT bindings are OS neutral, the fact that Linux and other OS:es need to
-cache ("shadow") this value is an implementation detail.
-
-Yours,
+Thanks!
 Linus Walleij
