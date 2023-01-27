@@ -2,516 +2,417 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E712A67E1AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:32:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B680367E20F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:44:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230493AbjA0KcO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 05:32:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41226 "EHLO
+        id S231955AbjA0KoM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 05:44:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbjA0KcN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:32:13 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0636E13503;
-        Fri, 27 Jan 2023 02:32:10 -0800 (PST)
+        with ESMTP id S232209AbjA0KoH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:44:07 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215DA3D098;
+        Fri, 27 Jan 2023 02:43:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1674815530; x=1706351530;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yaCllG+S731TRBzKDujMxy/7KiwqP7lEbXqiJpb0eDs=;
-  b=sj+UBUi7jlsfHsuwH0pO1fXJc5zaMbh8muI/ZZRL/9W+dzpDAqCFU5tL
-   HS7x0k45pIv76AtwHGzGMrfsQpPLJR/m5QbLd4hJF+aRMc4Rn8089ha23
-   yrGD9MfLU7uMi+sxUMhoWGT3/lohiWbDXW6QU7sZrpJ2A+0zUvednVAKy
-   xxwhmDiKdADpn1PFHTGojX+cPYt3ugQo5nwpLX5UCdVP3MKCXz1Fd2Ld3
-   NREpsrivZdxRQFLrdWvSgVzn/aYH9CuDv9JcjPX8ZGzWsKAYOR2gOYsKA
-   me/8hs1Vo/4W07ajSDnYv+06rMYbFawEeGB8yqRclpGZMFgc1+DPz9mG6
-   g==;
-X-IronPort-AV: E=Sophos;i="5.97,250,1669100400"; 
-   d="scan'208";a="197672246"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2023 03:32:09 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 27 Jan 2023 03:32:09 -0700
-Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
- Transport; Fri, 27 Jan 2023 03:32:07 -0700
-Message-ID: <8028ffe4-c042-e405-ac64-6707c84d5a1f@microchip.com>
-Date:   Fri, 27 Jan 2023 11:32:06 +0100
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674816233; x=1706352233;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LGTflOF4fWi1HUAGFLkyqA5/1RR+9z9QA+WHOaaYg9Y=;
+  b=CTiFY00zx0pbJAPyfMFHY25iF//LcwAr39bzcEWyvgwPACFVtatXVak4
+   Tkx8TqhkhKNgr/7plVGQfs/aGWZszF7adC9UzDq/waFbX+YShGE44fXrO
+   4eNlNIF+mLjSgrcevAgoD8f9NNbTK6/597bBlpbw7FhVh07d3ncYepbc6
+   B+2RjEoAH5LCLowGTwx8Ir44uAa/20u7fmHULVEqXm6ZGkCARndDOQmFU
+   B5YWpCLe+a5Z4zm2HZO6Rh5iQ/wQZmcOLrpgsaXICaUmZiU2aerQ6awr4
+   I/lJe2iHfQ4pUZH9/JmxPEzF3AkHvS6CK8Sw85y83IISCmYVXEzagHglD
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="307407808"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="307407808"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 02:41:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="771531422"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="771531422"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jan 2023 02:41:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pLMAw-00Fv44-1G;
+        Fri, 27 Jan 2023 12:41:42 +0200
+Date:   Fri, 27 Jan 2023 12:41:42 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] gpiolib: remove asm-generic/gpio.h
+Message-ID: <Y9OqZjw8fUb0yAHv@smile.fi.intel.com>
+References: <20230127101149.3475929-1-arnd@kernel.org>
+ <20230127101149.3475929-4-arnd@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] mmc: atmel: convert to gpio descriptos
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Balamanikandan Gunasundar 
-        <Balamanikandan.Gunasundar@microchip.com>
-CC:     <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>
-References: <20230126135034.3320638-1-arnd@kernel.org>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20230126135034.3320638-1-arnd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230127101149.3475929-4-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Arnd,
-
-On 26/01/2023 at 14:50, Arnd Bergmann wrote:
+On Fri, Jan 27, 2023 at 11:11:45AM +0100, Arnd Bergmann wrote:
 > From: Arnd Bergmann <arnd@arndb.de>
 > 
-> All Atmel (now Microchip) machines boot using DT, so the
-> old platform_data for this driver is no longer used by any
-> boards.
-> 
-> Removing the pdata probe lets us simplify the GPIO handling
-> with the use of the descriptor API.
+> The asm-generic/gpio.h file is now always included when
+> using gpiolib, so just move its contents into linux/gpio.h
+> with a few minor simplifications.
 
-Thanks for your patch. I would like to know if it's related to the 
-initiative started by Bala in this series:
-
-https://lore.kernel.org/all/20221226073908.17317-1-balamanikandan.gunasundar@microchip.com/
-
-It's true that it didn't come to a conclusion yet...
-
-Regards,
-   Nicolas
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->   drivers/mmc/host/atmel-mci.c | 179 +++++++++++++++--------------------
->   include/linux/atmel-mci.h    |  46 ---------
->   2 files changed, 77 insertions(+), 148 deletions(-)
->   delete mode 100644 include/linux/atmel-mci.h
+>  MAINTAINERS                     |   1 -
+>  arch/m68k/include/asm/mcfgpio.h |   2 +-
+>  drivers/gpio/gpio-davinci.c     |   2 -
+>  drivers/pinctrl/core.c          |   1 -
+>  include/asm-generic/gpio.h      | 147 --------------------------------
+>  include/linux/gpio.h            |  93 ++++++++++++++++++--
+>  6 files changed, 85 insertions(+), 161 deletions(-)
+>  delete mode 100644 include/asm-generic/gpio.h
 > 
-> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-> index bb9bbf1c927b..40006a960277 100644
-> --- a/drivers/mmc/host/atmel-mci.c
-> +++ b/drivers/mmc/host/atmel-mci.c
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f64c8f15df4b..25f16f825427 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8731,7 +8731,6 @@ F:	Documentation/admin-guide/gpio/
+>  F:	Documentation/devicetree/bindings/gpio/
+>  F:	Documentation/driver-api/gpio/
+>  F:	drivers/gpio/
+> -F:	include/asm-generic/gpio.h
+>  F:	include/dt-bindings/gpio/
+>  F:	include/linux/gpio.h
+>  F:	include/linux/gpio/
+> diff --git a/arch/m68k/include/asm/mcfgpio.h b/arch/m68k/include/asm/mcfgpio.h
+> index 27f32cc81da6..2cefe8445980 100644
+> --- a/arch/m68k/include/asm/mcfgpio.h
+> +++ b/arch/m68k/include/asm/mcfgpio.h
+> @@ -9,7 +9,7 @@
+>  #define mcfgpio_h
+>  
+>  #ifdef CONFIG_GPIOLIB
+> -#include <asm-generic/gpio.h>
+> +#include <linux/gpio.h>
+>  #else
+>  
+>  int __mcfgpio_get_value(unsigned gpio);
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 26b1f7465e09..7fc83057990a 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -24,8 +24,6 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/pm_runtime.h>
+>  
+> -#include <asm-generic/gpio.h>
+> -
+>  #define MAX_REGS_BANKS 5
+>  #define MAX_INT_PER_BANK 32
+>  
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index d6e6c751255f..401886c81344 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
 > @@ -30,7 +30,6 @@
->   #include <linux/mmc/host.h>
->   #include <linux/mmc/sdio.h>
-> 
-> -#include <linux/atmel-mci.h>
->   #include <linux/atmel_pdc.h>
->   #include <linux/pm.h>
->   #include <linux/pm_runtime.h>
-> @@ -40,6 +39,30 @@
->   #include <asm/io.h>
->   #include <asm/unaligned.h>
-> 
-> +#define ATMCI_MAX_NR_SLOTS     2
-> +
-> +/**
-> + * struct mci_slot_pdata - board-specific per-slot configuration
-> + * @bus_width: Number of data lines wired up the slot
-> + * @wp_pin: GPIO pin wired to the write protect sensor
-> + * @detect_is_active_high: The state of the detect pin when it is active
-> + * @non_removable: The slot is not removable, only detect once
-> + *
-> + * If a given slot is not present on the board, @bus_width should be
-> + * set to 0. The other fields are ignored in this case.
-> + *
-> + * Any pins that aren't available should be set to a negative value.
-> + *
-> + * Note that support for multiple slots is experimental -- some cards
-> + * might get upset if we don't get the clock management exactly right.
-> + * But in most cases, it should work just fine.
-> + */
-> +struct mci_slot_pdata {
-> +       unsigned int            bus_width;
-> +       bool                    detect_is_active_high;
-> +       bool                    non_removable;
-> +};
-> +
->   /*
->    * Superset of MCI IP registers integrated in Atmel AT91 Processor
->    * Registers and bitfields marked with [2] are only available in MCI2
-> @@ -388,8 +411,8 @@ struct atmel_mci_slot {
->   #define ATMCI_CARD_NEED_INIT   1
->   #define ATMCI_SHUTDOWN         2
-> 
-> -       int                     detect_pin;
-> -       int                     wp_pin;
-> +       struct gpio_desc        *detect_pin;
-> +       struct gpio_desc        *wp_pin;
->          bool                    detect_is_active_high;
-> 
->          struct timer_list       detect_timer;
-> @@ -593,7 +616,6 @@ static void atmci_init_debugfs(struct atmel_mci_slot *slot)
->                             &host->completed_events);
->   }
-> 
-> -#if defined(CONFIG_OF)
->   static const struct of_device_id atmci_dt_ids[] = {
->          { .compatible = "atmel,hsmci" },
->          { /* sentinel */ }
-> @@ -601,23 +623,13 @@ static const struct of_device_id atmci_dt_ids[] = {
-> 
->   MODULE_DEVICE_TABLE(of, atmci_dt_ids);
-> 
-> -static struct mci_platform_data*
-> -atmci_of_init(struct platform_device *pdev)
-> +static int
-> +atmci_of_init(struct platform_device *pdev, struct mci_slot_pdata *pdata)
->   {
->          struct device_node *np = pdev->dev.of_node;
->          struct device_node *cnp;
-> -       struct mci_platform_data *pdata;
->          u32 slot_id;
-> 
-> -       if (!np) {
-> -               dev_err(&pdev->dev, "device node not found\n");
-> -               return ERR_PTR(-EINVAL);
-> -       }
-> -
-> -       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> -       if (!pdata)
-> -               return ERR_PTR(-ENOMEM);
-> -
->          for_each_child_of_node(np, cnp) {
->                  if (of_property_read_u32(cnp, "reg", &slot_id)) {
->                          dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
-> @@ -633,31 +645,18 @@ atmci_of_init(struct platform_device *pdev)
->                  }
-> 
->                  if (of_property_read_u32(cnp, "bus-width",
-> -                                        &pdata->slot[slot_id].bus_width))
-> -                       pdata->slot[slot_id].bus_width = 1;
-> -
-> -               pdata->slot[slot_id].detect_pin =
-> -                       of_get_named_gpio(cnp, "cd-gpios", 0);
-> +                                        &pdata[slot_id].bus_width))
-> +                       pdata[slot_id].bus_width = 1;
-> 
-> -               pdata->slot[slot_id].detect_is_active_high =
-> +               pdata[slot_id].detect_is_active_high =
->                          of_property_read_bool(cnp, "cd-inverted");
-> 
-> -               pdata->slot[slot_id].non_removable =
-> +               pdata[slot_id].non_removable =
->                          of_property_read_bool(cnp, "non-removable");
-> -
-> -               pdata->slot[slot_id].wp_pin =
-> -                       of_get_named_gpio(cnp, "wp-gpios", 0);
->          }
-> 
-> -       return pdata;
-> -}
-> -#else /* CONFIG_OF */
-> -static inline struct mci_platform_data*
-> -atmci_of_init(struct platform_device *dev)
-> -{
-> -       return ERR_PTR(-EINVAL);
-> +       return 0;
->   }
-> -#endif
-> 
->   static inline unsigned int atmci_get_version(struct atmel_mci *host)
->   {
-> @@ -1509,8 +1508,8 @@ static int atmci_get_ro(struct mmc_host *mmc)
->          int                     read_only = -ENOSYS;
->          struct atmel_mci_slot   *slot = mmc_priv(mmc);
-> 
-> -       if (gpio_is_valid(slot->wp_pin)) {
-> -               read_only = gpio_get_value(slot->wp_pin);
-> +       if (slot->wp_pin) {
-> +               read_only = gpiod_get_value(slot->wp_pin);
->                  dev_dbg(&mmc->class_dev, "card is %s\n",
->                                  read_only ? "read-only" : "read-write");
->          }
-> @@ -1523,8 +1522,8 @@ static int atmci_get_cd(struct mmc_host *mmc)
->          int                     present = -ENOSYS;
->          struct atmel_mci_slot   *slot = mmc_priv(mmc);
-> 
-> -       if (gpio_is_valid(slot->detect_pin)) {
-> -               present = !(gpio_get_value(slot->detect_pin) ^
-> +       if (slot->detect_pin) {
-> +               present = !(gpiod_get_value(slot->detect_pin) ^
->                              slot->detect_is_active_high);
->                  dev_dbg(&mmc->class_dev, "card is %spresent\n",
->                                  present ? "" : "not ");
-> @@ -1637,8 +1636,8 @@ static void atmci_detect_change(struct timer_list *t)
->          if (test_bit(ATMCI_SHUTDOWN, &slot->flags))
->                  return;
-> 
-> -       enable_irq(gpio_to_irq(slot->detect_pin));
-> -       present = !(gpio_get_value(slot->detect_pin) ^
-> +       enable_irq(gpiod_to_irq(slot->detect_pin));
-> +       present = !(gpiod_get_value(slot->detect_pin) ^
->                      slot->detect_is_active_high);
->          present_old = test_bit(ATMCI_CARD_PRESENT, &slot->flags);
-> 
-> @@ -2231,18 +2230,15 @@ static int atmci_init_slot(struct atmel_mci *host,
->          slot = mmc_priv(mmc);
->          slot->mmc = mmc;
->          slot->host = host;
-> -       slot->detect_pin = slot_data->detect_pin;
-> -       slot->wp_pin = slot_data->wp_pin;
->          slot->detect_is_active_high = slot_data->detect_is_active_high;
->          slot->sdc_reg = sdc_reg;
->          slot->sdio_irq = sdio_irq;
-> 
->          dev_dbg(&mmc->class_dev,
-> -               "slot[%u]: bus_width=%u, detect_pin=%d, "
-> -               "detect_is_active_high=%s, wp_pin=%d\n",
-> -               id, slot_data->bus_width, slot_data->detect_pin,
-> -               slot_data->detect_is_active_high ? "true" : "false",
-> -               slot_data->wp_pin);
-> +               "slot[%u]: bus_width=%u, "
-> +               "detect_is_active_high=%s\n",
-> +               id, slot_data->bus_width,
-> +               slot_data->detect_is_active_high ? "true" : "false");
-> 
->          mmc->ops = &atmci_ops;
->          mmc->f_min = DIV_ROUND_UP(host->bus_hz, 512);
-> @@ -2278,30 +2274,29 @@ static int atmci_init_slot(struct atmel_mci *host,
-> 
->          /* Assume card is present initially */
->          set_bit(ATMCI_CARD_PRESENT, &slot->flags);
-> -       if (gpio_is_valid(slot->detect_pin)) {
-> -               if (devm_gpio_request(&host->pdev->dev, slot->detect_pin,
-> -                                     "mmc_detect")) {
-> -                       dev_dbg(&mmc->class_dev, "no detect pin available\n");
-> -                       slot->detect_pin = -EBUSY;
-> -               } else if (gpio_get_value(slot->detect_pin) ^
-> -                               slot->detect_is_active_high) {
-> +
-> +       slot->detect_pin = devm_gpiod_get_optional(&host->pdev->dev, "cd", GPIOD_IN);
-> +       if (!IS_ERR(slot->detect_pin)) {
-> +               dev_dbg(&mmc->class_dev, "no detect pin available\n");
-> +               slot->detect_pin = NULL;
-> +       } else if (slot->detect_pin) {
-> +               if (gpiod_get_value(slot->detect_pin) ^
-> +                   slot->detect_is_active_high) {
->                          clear_bit(ATMCI_CARD_PRESENT, &slot->flags);
->                  }
->          }
-> 
-> -       if (!gpio_is_valid(slot->detect_pin)) {
-> +       if (!slot->detect_pin) {
->                  if (slot_data->non_removable)
->                          mmc->caps |= MMC_CAP_NONREMOVABLE;
->                  else
->                          mmc->caps |= MMC_CAP_NEEDS_POLL;
->          }
-> 
-> -       if (gpio_is_valid(slot->wp_pin)) {
-> -               if (devm_gpio_request(&host->pdev->dev, slot->wp_pin,
-> -                                     "mmc_wp")) {
-> -                       dev_dbg(&mmc->class_dev, "no WP pin available\n");
-> -                       slot->wp_pin = -EBUSY;
-> -               }
-> +       slot->wp_pin = devm_gpiod_get_optional(&host->pdev->dev, "wp", GPIOD_IN);
-> +       if (IS_ERR(slot->wp_pin)) {
-> +               dev_dbg(&mmc->class_dev, "no WP pin available\n");
-> +               slot->wp_pin = NULL;
->          }
-> 
->          host->slot[id] = slot;
-> @@ -2312,18 +2307,18 @@ static int atmci_init_slot(struct atmel_mci *host,
->                  return ret;
->          }
-> 
-> -       if (gpio_is_valid(slot->detect_pin)) {
-> +       if (slot->detect_pin) {
->                  timer_setup(&slot->detect_timer, atmci_detect_change, 0);
-> 
-> -               ret = request_irq(gpio_to_irq(slot->detect_pin),
-> +               ret = request_irq(gpiod_to_irq(slot->detect_pin),
->                                  atmci_detect_interrupt,
->                                  IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
->                                  "mmc-detect", slot);
->                  if (ret) {
->                          dev_dbg(&mmc->class_dev,
->                                  "could not request IRQ %d for detect pin\n",
-> -                               gpio_to_irq(slot->detect_pin));
-> -                       slot->detect_pin = -EBUSY;
-> +                               gpiod_to_irq(slot->detect_pin));
-> +                       slot->detect_pin = NULL;
->                  }
->          }
-> 
-> @@ -2342,10 +2337,8 @@ static void atmci_cleanup_slot(struct atmel_mci_slot *slot,
-> 
->          mmc_remove_host(slot->mmc);
-> 
-> -       if (gpio_is_valid(slot->detect_pin)) {
-> -               int pin = slot->detect_pin;
-> -
-> -               free_irq(gpio_to_irq(pin), slot);
-> +       if (slot->detect_pin) {
-> +               free_irq(gpiod_to_irq(slot->detect_pin), slot);
->                  del_timer_sync(&slot->detect_timer);
->          }
-> 
-> @@ -2357,22 +2350,6 @@ static int atmci_configure_dma(struct atmel_mci *host)
->   {
->          host->dma.chan = dma_request_chan(&host->pdev->dev, "rxtx");
-> 
-> -       if (PTR_ERR(host->dma.chan) == -ENODEV) {
-> -               struct mci_platform_data *pdata = host->pdev->dev.platform_data;
-> -               dma_cap_mask_t mask;
-> -
-> -               if (!pdata || !pdata->dma_filter)
-> -                       return -ENODEV;
-> -
-> -               dma_cap_zero(mask);
-> -               dma_cap_set(DMA_SLAVE, mask);
-> -
-> -               host->dma.chan = dma_request_channel(mask, pdata->dma_filter,
-> -                                                    pdata->dma_slave);
-> -               if (!host->dma.chan)
-> -                       host->dma.chan = ERR_PTR(-ENODEV);
-> -       }
-> -
->          if (IS_ERR(host->dma.chan))
->                  return PTR_ERR(host->dma.chan);
-> 
-> @@ -2450,7 +2427,7 @@ static void atmci_get_cap(struct atmel_mci *host)
-> 
->   static int atmci_probe(struct platform_device *pdev)
->   {
-> -       struct mci_platform_data        *pdata;
-> +       struct mci_slot_pdata           pdata[ATMCI_MAX_NR_SLOTS];
->          struct atmel_mci                *host;
->          struct resource                 *regs;
->          unsigned int                    nr_slots;
-> @@ -2460,23 +2437,21 @@ static int atmci_probe(struct platform_device *pdev)
->          regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->          if (!regs)
->                  return -ENXIO;
-> -       pdata = pdev->dev.platform_data;
-> -       if (!pdata) {
-> -               pdata = atmci_of_init(pdev);
-> -               if (IS_ERR(pdata)) {
-> -                       dev_err(&pdev->dev, "platform data not available\n");
-> -                       return PTR_ERR(pdata);
-> -               }
-> +
-> +       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
-> +       if (!host)
-> +               return -ENOMEM;
-> +
-> +       ret = atmci_of_init(pdev, pdata);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "error parsing DT\n");
-> +               return ret;
->          }
-> 
->          irq = platform_get_irq(pdev, 0);
->          if (irq < 0)
->                  return irq;
-> 
-> -       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
-> -       if (!host)
-> -               return -ENOMEM;
-> -
->          host->pdev = pdev;
->          spin_lock_init(&host->lock);
->          INIT_LIST_HEAD(&host->queue);
-> @@ -2540,16 +2515,16 @@ static int atmci_probe(struct platform_device *pdev)
->          /* We need at least one slot to succeed */
->          nr_slots = 0;
->          ret = -ENODEV;
-> -       if (pdata->slot[0].bus_width) {
-> -               ret = atmci_init_slot(host, &pdata->slot[0],
-> +       if (pdata[0].bus_width) {
-> +               ret = atmci_init_slot(host, &pdata[0],
->                                  0, ATMCI_SDCSEL_SLOT_A, ATMCI_SDIOIRQA);
->                  if (!ret) {
->                          nr_slots++;
->                          host->buf_size = host->slot[0]->mmc->max_req_size;
->                  }
->          }
-> -       if (pdata->slot[1].bus_width) {
-> -               ret = atmci_init_slot(host, &pdata->slot[1],
-> +       if (pdata[1].bus_width) {
-> +               ret = atmci_init_slot(host, &pdata[1],
->                                  1, ATMCI_SDCSEL_SLOT_B, ATMCI_SDIOIRQB);
->                  if (!ret) {
->                          nr_slots++;
-> @@ -2671,7 +2646,7 @@ static struct platform_driver atmci_driver = {
->          .driver         = {
->                  .name           = "atmel_mci",
->                  .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
-> -               .of_match_table = of_match_ptr(atmci_dt_ids),
-> +               .of_match_table = atmci_dt_ids,
->                  .pm             = &atmci_dev_pm_ops,
->          },
->   };
-> diff --git a/include/linux/atmel-mci.h b/include/linux/atmel-mci.h
+>  
+>  #ifdef CONFIG_GPIOLIB
+>  #include "../gpio/gpiolib.h"
+> -#include <asm-generic/gpio.h>
+>  #endif
+>  
+>  #include "core.h"
+> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
 > deleted file mode 100644
-> index 1491af38cc6e..000000000000
-> --- a/include/linux/atmel-mci.h
+> index 22cb8c9efc1d..000000000000
+> --- a/include/asm-generic/gpio.h
 > +++ /dev/null
-> @@ -1,46 +0,0 @@
+> @@ -1,147 +0,0 @@
 > -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __LINUX_ATMEL_MCI_H
-> -#define __LINUX_ATMEL_MCI_H
+> -#ifndef _ASM_GENERIC_GPIO_H
+> -#define _ASM_GENERIC_GPIO_H
 > -
 > -#include <linux/types.h>
-> -#include <linux/dmaengine.h>
+> -#include <linux/errno.h>
 > -
-> -#define ATMCI_MAX_NR_SLOTS     2
+> -#ifdef CONFIG_GPIOLIB
 > -
-> -/**
-> - * struct mci_slot_pdata - board-specific per-slot configuration
-> - * @bus_width: Number of data lines wired up the slot
-> - * @detect_pin: GPIO pin wired to the card detect switch
-> - * @wp_pin: GPIO pin wired to the write protect sensor
-> - * @detect_is_active_high: The state of the detect pin when it is active
-> - * @non_removable: The slot is not removable, only detect once
-> - *
-> - * If a given slot is not present on the board, @bus_width should be
-> - * set to 0. The other fields are ignored in this case.
-> - *
-> - * Any pins that aren't available should be set to a negative value.
-> - *
-> - * Note that support for multiple slots is experimental -- some cards
-> - * might get upset if we don't get the clock management exactly right.
-> - * But in most cases, it should work just fine.
+> -#include <linux/compiler.h>
+> -#include <linux/gpio/driver.h>
+> -#include <linux/gpio/consumer.h>
+> -
+> -/*
+> - * Platforms may implement their GPIO interface with library code,
+> - * at a small performance cost for non-inlined operations and some
+> - * extra memory (for code and for per-GPIO table entries).
 > - */
-> -struct mci_slot_pdata {
-> -       unsigned int            bus_width;
-> -       int                     detect_pin;
-> -       int                     wp_pin;
-> -       bool                    detect_is_active_high;
-> -       bool                    non_removable;
-> -};
 > -
-> -/**
-> - * struct mci_platform_data - board-specific MMC/SDcard configuration
-> - * @dma_slave: DMA slave interface to use in data transfers.
-> - * @slot: Per-slot configuration data.
+> -/*
+> - * At the end we want all GPIOs to be dynamically allocated from 0.
+> - * However, some legacy drivers still perform fixed allocation.
+> - * Until they are all fixed, leave 0-512 space for them.
 > - */
-> -struct mci_platform_data {
-> -       void                    *dma_slave;
-> -       dma_filter_fn           dma_filter;
-> -       struct mci_slot_pdata   slot[ATMCI_MAX_NR_SLOTS];
-> -};
+> -#define GPIO_DYNAMIC_BASE	512
 > -
-> -#endif /* __LINUX_ATMEL_MCI_H */
-> --
+> -struct device;
+> -struct gpio;
+> -struct seq_file;
+> -struct module;
+> -struct device_node;
+> -struct gpio_desc;
+> -
+> -/* Always use the library code for GPIO management calls,
+> - * or when sleeping may be involved.
+> - */
+> -extern int gpio_request(unsigned gpio, const char *label);
+> -extern void gpio_free(unsigned gpio);
+> -
+> -static inline int gpio_direction_input(unsigned gpio)
+> -{
+> -	return gpiod_direction_input(gpio_to_desc(gpio));
+> -}
+> -static inline int gpio_direction_output(unsigned gpio, int value)
+> -{
+> -	return gpiod_direction_output_raw(gpio_to_desc(gpio), value);
+> -}
+> -
+> -static inline int gpio_set_debounce(unsigned gpio, unsigned debounce)
+> -{
+> -	return gpiod_set_debounce(gpio_to_desc(gpio), debounce);
+> -}
+> -
+> -static inline int gpio_get_value_cansleep(unsigned gpio)
+> -{
+> -	return gpiod_get_raw_value_cansleep(gpio_to_desc(gpio));
+> -}
+> -static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+> -{
+> -	return gpiod_set_raw_value_cansleep(gpio_to_desc(gpio), value);
+> -}
+> -
+> -
+> -/* A platform's <asm/gpio.h> code may want to inline the I/O calls when
+> - * the GPIO is constant and refers to some always-present controller,
+> - * giving direct access to chip registers and tight bitbanging loops.
+> - */
+> -static inline int __gpio_get_value(unsigned gpio)
+> -{
+> -	return gpiod_get_raw_value(gpio_to_desc(gpio));
+> -}
+> -static inline void __gpio_set_value(unsigned gpio, int value)
+> -{
+> -	return gpiod_set_raw_value(gpio_to_desc(gpio), value);
+> -}
+> -
+> -static inline int __gpio_cansleep(unsigned gpio)
+> -{
+> -	return gpiod_cansleep(gpio_to_desc(gpio));
+> -}
+> -
+> -static inline int __gpio_to_irq(unsigned gpio)
+> -{
+> -	return gpiod_to_irq(gpio_to_desc(gpio));
+> -}
+> -
+> -extern int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+> -extern int gpio_request_array(const struct gpio *array, size_t num);
+> -extern void gpio_free_array(const struct gpio *array, size_t num);
+> -
+> -/*
+> - * A sysfs interface can be exported by individual drivers if they want,
+> - * but more typically is configured entirely from userspace.
+> - */
+> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> -{
+> -	return gpiod_export(gpio_to_desc(gpio), direction_may_change);
+> -}
+> -
+> -static inline void gpio_unexport(unsigned gpio)
+> -{
+> -	gpiod_unexport(gpio_to_desc(gpio));
+> -}
+> -
+> -#else	/* !CONFIG_GPIOLIB */
+> -
+> -#include <linux/kernel.h>
+> -
+> -/* platforms that don't directly support access to GPIOs through I2C, SPI,
+> - * or other blocking infrastructure can use these wrappers.
+> - */
+> -
+> -static inline int gpio_cansleep(unsigned gpio)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int gpio_get_value_cansleep(unsigned gpio)
+> -{
+> -	might_sleep();
+> -	return __gpio_get_value(gpio);
+> -}
+> -
+> -static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+> -{
+> -	might_sleep();
+> -	__gpio_set_value(gpio, value);
+> -}
+> -
+> -#endif /* !CONFIG_GPIOLIB */
+> -
+> -/*
+> - * "valid" GPIO numbers are nonnegative and may be passed to
+> - * setup routines like gpio_request().  only some valid numbers
+> - * can successfully be requested and used.
+> - *
+> - * Invalid GPIO numbers are useful for indicating no-such-GPIO in
+> - * platform data and other tables.
+> - */
+> -
+> -static inline bool gpio_is_valid(int number)
+> -{
+> -	/* only non-negative numbers are valid */
+> -	return number >= 0;
+> -}
+> -
+> -#endif /* _ASM_GENERIC_GPIO_H */
+> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> index 2b75017b3aad..6719a82eeec5 100644
+> --- a/include/linux/gpio.h
+> +++ b/include/linux/gpio.h
+> @@ -54,26 +54,101 @@ struct gpio {
+>  };
+>  
+>  #ifdef CONFIG_GPIOLIB
+> -#include <asm-generic/gpio.h>
+> +#include <linux/compiler.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+>  
+> -static inline int gpio_get_value(unsigned int gpio)
+> +/*
+> + * "valid" GPIO numbers are nonnegative and may be passed to
+> + * setup routines like gpio_request().  Only some valid numbers
+> + * can successfully be requested and used.
+> + *
+> + * Invalid GPIO numbers are useful for indicating no-such-GPIO in
+> + * platform data and other tables.
+> + */
+> +static inline bool gpio_is_valid(int number)
+> +{
+> +	/* only non-negative numbers are valid */
+> +	return number >= 0;
+> +}
+> +
+> +/*
+> + * Platforms may implement their GPIO interface with library code,
+> + * at a small performance cost for non-inlined operations and some
+> + * extra memory (for code and for per-GPIO table entries).
+> + */
+> +
+> +/*
+> + * At the end we want all GPIOs to be dynamically allocated from 0.
+> + * However, some legacy drivers still perform fixed allocation.
+> + * Until they are all fixed, leave 0-512 space for them.
+> + */
+> +#define GPIO_DYNAMIC_BASE	512
+> +
+> +/* Always use the library code for GPIO management calls,
+> + * or when sleeping may be involved.
+> + */
+> +int gpio_request(unsigned gpio, const char *label);
+> +void gpio_free(unsigned gpio);
+> +
+> +static inline int gpio_direction_input(unsigned gpio)
+> +{
+> +	return gpiod_direction_input(gpio_to_desc(gpio));
+> +}
+> +static inline int gpio_direction_output(unsigned gpio, int value)
+>  {
+> -	return __gpio_get_value(gpio);
+> +	return gpiod_direction_output_raw(gpio_to_desc(gpio), value);
+>  }
+>  
+> -static inline void gpio_set_value(unsigned int gpio, int value)
+> +static inline int gpio_set_debounce(unsigned gpio, unsigned debounce)
+>  {
+> -	__gpio_set_value(gpio, value);
+> +	return gpiod_set_debounce(gpio_to_desc(gpio), debounce);
+>  }
+>  
+> -static inline int gpio_cansleep(unsigned int gpio)
+> +static inline int gpio_get_value_cansleep(unsigned gpio)
+> +{
+> +	return gpiod_get_raw_value_cansleep(gpio_to_desc(gpio));
+> +}
+> +static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+>  {
+> -	return __gpio_cansleep(gpio);
+> +	return gpiod_set_raw_value_cansleep(gpio_to_desc(gpio), value);
+>  }
+>  
+> -static inline int gpio_to_irq(unsigned int gpio)
+> +static inline int gpio_get_value(unsigned gpio)
+> +{
+> +	return gpiod_get_raw_value(gpio_to_desc(gpio));
+> +}
+> +static inline void gpio_set_value(unsigned gpio, int value)
+> +{
+> +	return gpiod_set_raw_value(gpio_to_desc(gpio), value);
+> +}
+> +
+> +static inline int gpio_cansleep(unsigned gpio)
+> +{
+> +	return gpiod_cansleep(gpio_to_desc(gpio));
+> +}
+> +
+> +static inline int gpio_to_irq(unsigned gpio)
+> +{
+> +	return gpiod_to_irq(gpio_to_desc(gpio));
+> +}
+> +
+> +int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+> +int gpio_request_array(const struct gpio *array, size_t num);
+> +void gpio_free_array(const struct gpio *array, size_t num);
+> +
+> +/*
+> + * A sysfs interface can be exported by individual drivers if they want,
+> + * but more typically is configured entirely from userspace.
+> + */
+> +static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> +{
+> +	return gpiod_export(gpio_to_desc(gpio), direction_may_change);
+> +}
+> +
+> +static inline void gpio_unexport(unsigned gpio)
+>  {
+> -	return __gpio_to_irq(gpio);
+> +	gpiod_unexport(gpio_to_desc(gpio));
+>  }
+>  
+>  /* CONFIG_GPIOLIB: bindings for managed devices that want to request gpios */
+> -- 
 > 2.39.0
 > 
 
 -- 
-Nicolas Ferre
+With Best Regards,
+Andy Shevchenko
+
 
