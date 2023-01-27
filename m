@@ -2,88 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B9167DF7D
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 09:51:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2424167DF8A
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 09:53:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232456AbjA0IvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 03:51:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48150 "EHLO
+        id S232680AbjA0IxT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 03:53:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbjA0IvC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 03:51:02 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77471D917
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 00:51:00 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-50660e2d2ffso58581237b3.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 00:51:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ust5T1dOQ0zL+HLLGTDn3zdUYMh/5770ZElRgQ3sPDg=;
-        b=obzjvlT1y9jt6kSminE3izVC8zsG+ufoMFpKAz7oy4XW4QKmvCOTcTHXpYMVmCmgdx
-         fWsV39ysAELR3n/hY0ldJBfN5QUGlIpo1YvPn0O3IUMBLAQ8gycCUwKtgOJYneCL2kpB
-         n6kkcVRyGl3ystC0vK5VQb9YZpsfYah8wElQpMH5ZoQw9lMipH4AWZ+yuEC2LEcnq+U6
-         sH1blQqVQU790uWxsio6IAePBfsKDhlgmQtTGXjBwQjTwkwvoSifmup3B+6NntVoovoH
-         K6PtteRwWGzWKmqKkMSV7uFK+0ubQthmhBIwC3dkdhda/yxh9gcWLRo+yAQuEr86HRiZ
-         bXfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ust5T1dOQ0zL+HLLGTDn3zdUYMh/5770ZElRgQ3sPDg=;
-        b=w11hT7YxoyK8UmOhwbTnlL7d2WItYSBFv91jZKs7qQiAF8CJgA+B5qbDOJgD3D2XQ2
-         wUYp1aY2c2PZM0KTIZuMcVv97Ba6EoiahOFmDIzeE5lv/bJEMidumnit5vhFTxw2Uz8M
-         ZmNI9xiLQB6JTDiNcLkGdjHMstJEg7T7Y0MmeAYHOdV+mZltbWbMOU+WQG6yD/R2LGGW
-         vcpA0ejDHj4GjnQt+Otx1TGUgLIvEmqIKstYNOZV1SeupPrBjj8OLfMhebCTyoA8isMI
-         Zem98XVDqdf8m6ybrlz4/SyZAqfed5tQJz6y3hCgd20l6uCqYa7d2E6wcL0vubUgOxJ0
-         1yGQ==
-X-Gm-Message-State: AFqh2kqG2E/xiGcfNxYJPOyBQyM7s8/b3VQ3znC1in+s1PcvU3TrDsi4
-        0GqRKFNAq0oO5UmO9vdQcb1zl2XQ0tL9JFDIgrcHQg==
-X-Google-Smtp-Source: AMrXdXsm/Hv7McSrHeZXMfE8TeNjNxQAnkGxQwfCfkr1WBI7rjZDVKp4ILbZt75wR8jNHQ/kqB6Fpz/eHIeitvmf610=
-X-Received: by 2002:a81:6842:0:b0:4ff:e4bc:b56f with SMTP id
- d63-20020a816842000000b004ffe4bcb56fmr3524838ywc.488.1674809460124; Fri, 27
- Jan 2023 00:51:00 -0800 (PST)
+        with ESMTP id S231854AbjA0IxS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 03:53:18 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C753DBFF;
+        Fri, 27 Jan 2023 00:53:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674809596; x=1706345596;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N96kW+xetza+QF6MAEJPmzSuLKloyHvRNXkt4jNf/ZE=;
+  b=Cc+VU7aXDDm0fx+/HdB28QDecaPW36MPOl2VBc6Qe5AQiyMo1XtJjz8V
+   FvMUQcZJ9aB5qYInSH88rbGZC5akDweshhyFrVWk+KnqX5Cnab6rvKQLh
+   5sutg4+MHbCQEgnlAT+3EnVzqz2m8tQEWHMEgGtnC7JcvkKzDISe3FvzX
+   7gNhuT+vJp9n0vRCoMEkYQWC7IpHwlqfM5PN8SAeWhrHDj5HH9ewwYiVs
+   2xFW8Q5UrXqmzm8EZ4lHvMzlV5v2bGaB6e86b+IzmffQN/AmFEO9Ykubb
+   +gu8QC9OSym9fTynv5eXs4dj99mB3A5gZKn6NE4VQ1Fp9q3lF7CvDvWQI
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="391596304"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="391596304"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 00:53:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="656531703"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="656531703"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 27 Jan 2023 00:53:13 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pLKTv-00Fsou-1N;
+        Fri, 27 Jan 2023 10:53:11 +0200
+Date:   Fri, 27 Jan 2023 10:53:11 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] gpiolib: move of_gpio_flags into gpiolib-of.c
+Message-ID: <Y9OQ9/3IuVIU8VK7@smile.fi.intel.com>
+References: <20230126132801.2042371-1-arnd@kernel.org>
+ <20230126132801.2042371-9-arnd@kernel.org>
+ <Y9KJpU4rynmTdQMj@smile.fi.intel.com>
+ <21657e6c-1101-4c56-91e3-6b2f6f9e10c9@app.fastmail.com>
 MIME-Version: 1.0
-References: <20230124141541.8290-1-quic_devipriy@quicinc.com> <20230124141541.8290-7-quic_devipriy@quicinc.com>
-In-Reply-To: <20230124141541.8290-7-quic_devipriy@quicinc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Jan 2023 09:50:49 +0100
-Message-ID: <CACRpkdZTMdK06jfuydwSpwMXLAeoL45EL4z2Msn-po+MjUZxNA@mail.gmail.com>
-Subject: Re: [PATCH V1 6/8] dt-bindings: mmc: sdhci-msm: Document the IPQ9574 compatible
-To:     devi priya <quic_devipriy@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, tdas@codeaurora.org, bhupesh.sharma@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com,
-        quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com,
-        quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com,
-        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21657e6c-1101-4c56-91e3-6b2f6f9e10c9@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 3:17 PM devi priya <quic_devipriy@quicinc.com> wrote:
+On Thu, Jan 26, 2023 at 03:47:42PM +0100, Arnd Bergmann wrote:
+> On Thu, Jan 26, 2023, at 15:09, Andy Shevchenko wrote:
+> > On Thu, Jan 26, 2023 at 02:28:01PM +0100, Arnd Bergmann wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >> 
+> >> There is no need for this in the header any more, it's just
+> >> an implementation detail now.
+> >
+> > I have published
+> > https://lore.kernel.org/r/20230112145140.67573-1-andriy.shevchenko@linux.intel.com
+> > Can it be used?
+> 
+> Sure, I added a Reviewed-by: on that now. Your patch will conflict
+> with my patch 7/8, but we can work that out.
 
-> Document the compatible for SDHCI on IPQ9574.
->
-> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+Either Bart takes it independently or you may attach it into your series.
+Bart?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
