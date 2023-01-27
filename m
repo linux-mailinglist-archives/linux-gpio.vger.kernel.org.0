@@ -2,149 +2,261 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BB2C67E1A0
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20F3C67E1A7
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:30:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231592AbjA0KaB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 05:30:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40000 "EHLO
+        id S231659AbjA0Kax (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 05:30:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbjA0K3u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:29:50 -0500
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D5C13503;
-        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
-Received: by mail-oi1-f182.google.com with SMTP id i9so3856357oif.4;
-        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
+        with ESMTP id S231652AbjA0Kav (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:30:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E60303F1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:30:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674815402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
+        b=Ojm5wOF81ESPUKKuMCwQXVbJclOuZzL1ZbSIRDAaGMfUrLX7HRhtdaeDlTuUT1wRgDVSF9
+        PV2xkTL8QSOCXaXGQgzJ6QUzLWBfVEd4nWIxMnL4KaN8lkr4Cn4/T9Odey/of09pCpD2oW
+        fshsK7HtOLMEWtvFwBIfz9OqypOdxpc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-198-dBmpHK1APpKyYS6sAHXAKA-1; Fri, 27 Jan 2023 05:30:00 -0500
+X-MC-Unique: dBmpHK1APpKyYS6sAHXAKA-1
+Received: by mail-ed1-f72.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so3328720edc.20
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:30:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PKruyQW1tJheLO2piiCDKl7s1j50V272W4MEFdOhqCA=;
-        b=00+WBZEp5E7eC76VI9EsDKRtz4ugATiY6ovgMMg5+8PzQAlrpPfvIdodehUMGd0n86
-         qtdHuIn6Hf9dWrjaQ6ZXLe3g2cBht7i0u4e6MnjVp+XmHtqNlbiaeFhg9m/DZURgXkeJ
-         5zRTt4mI7f3XZGXeXo9/u97SvmTw6OhV3sYHc4ds7vtxk9S7DZYkdiloDTZNHRRNN0dr
-         opf8/Kd/An02cPK3pPj5ctk9gz47BfZ8sNfNRf7FaqcuvTBI/IG7ZRGFcQtVilWyf4yG
-         hOhmcLcAvIneUWFdTCV02nxnhIKcTXyjnuCRQOKkUcxaJgDoI2mgfvTAXoqIUy9GQxVx
-         bulw==
-X-Gm-Message-State: AO0yUKWwdXt3Yvo6SNRiUw3mgR9xlU24cMNk8GWoIVDNxPyOsmCtQ8IG
-        rZKRGhSSFZqcpwLknwe8DMGj5Nw3r69cLA==
-X-Google-Smtp-Source: AK7set+qty1T48p73vD/2rNItlz11TA6XIf8lynjnYUo1pcyPxbsdPj1v3HWUIOWXFa6e7SRbVsIfA==
-X-Received: by 2002:a05:6808:d1:b0:35e:7595:30df with SMTP id t17-20020a05680800d100b0035e759530dfmr2415966oic.9.1674815387051;
-        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
-        by smtp.gmail.com with ESMTPSA id f66-20020aca3845000000b0036acbbf9fbasm1399943oia.46.2023.01.27.02.29.46
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
+        b=ZM68zAO09WQ7v6f3MNFwUiOiHekab9AK/STHkXQbVsOe07jHxxXJA0qH2UkTXQwVgz
+         zH0ZE2E9PpY7ig/yVU2xK+PbrHA7YPl3AKiiWnDGb0D1ly1rKK6pPTfS/g6YTvUKsyoi
+         3WeC4N8u8ItVXb79bngoxywsD9xdG91f2XoPO8uFrRNhLjNwyULMiQ42qK670B/+2vuM
+         wTF2mp7FNf53lYRl5a/GB+1O0UXVD4yIOOAjTdmHy7fgv1Y69UGGcFoyHuFF6GP+papz
+         EwAsuJp1l7ir59ed5m376GDl6M5lMnkB4x5S3+L4P8ksjNdKOGe4qBh8tuEMYpimL5lw
+         Kd/A==
+X-Gm-Message-State: AFqh2kr1r5Zuj2c8BP3o4PlLTCA9lJN2yLPY6yYUglk+1pV6oqZmDr3o
+        wpUqSJCQOL5mvY3w7A1sAWMOgP1rqYbkeJbdLpteWTnX8HzdgcRJNMuFqBmD76M/4l4/VJylCP7
+        JntlV0Gi8D9vs6Wo6vZtCuA==
+X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238754ejc.16.1674815399530;
+        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuzyQrTD3dqej2MVPnY3ccbE7JDKPp4j+9aQCkGOpgn6a51CB/LmnLf0aOYkbtDz+HMutse4Q==
+X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238730ejc.16.1674815399304;
+        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ss24-20020a170907039800b00878706e35acsm1976876ejb.95.2023.01.27.02.29.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 02:29:46 -0800 (PST)
-Received: by mail-ot1-f47.google.com with SMTP id g21-20020a9d6495000000b0068bb336141dso98981otl.11;
-        Fri, 27 Jan 2023 02:29:46 -0800 (PST)
-X-Received: by 2002:a0d:f281:0:b0:508:2f2c:8e5f with SMTP id
- b123-20020a0df281000000b005082f2c8e5fmr772773ywf.384.1674815376246; Fri, 27
- Jan 2023 02:29:36 -0800 (PST)
+        Fri, 27 Jan 2023 02:29:58 -0800 (PST)
+Message-ID: <cd2ca584-6914-0882-4cfc-c5edee0adf54@redhat.com>
+Date:   Fri, 27 Jan 2023 11:29:57 +0100
 MIME-Version: 1.0
-References: <20230127001141.407071-1-saravanak@google.com> <20230127001141.407071-9-saravanak@google.com>
- <Y9OcqGTocu8ZlFqy@smile.fi.intel.com> <CAMuHMdXRbiNW9nd_N_=+OTo-uCmy2ePfOmREEHcqLyEn1H=Rhg@mail.gmail.com>
- <Y9OjE+bJquDcCpJ8@smile.fi.intel.com>
-In-Reply-To: <Y9OjE+bJquDcCpJ8@smile.fi.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Jan 2023 11:29:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVpDJmjFebdc5yi421Tyvnh4w5AqZTuA035o4FU_wZRKw@mail.gmail.com>
-Message-ID: <CAMuHMdVpDJmjFebdc5yi421Tyvnh4w5AqZTuA035o4FU_wZRKw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] driver core: fw_devlink: Make cycle detection
- more robust
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v5 07/11] media: v4l2-core: Make the v4l2-core code
+ enable/disable the privacy LED if present
+Content-Language: en-US, nl
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
         Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+References: <20230120114524.408368-1-hdegoede@redhat.com>
+ <20230120114524.408368-8-hdegoede@redhat.com>
+ <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Hi Sakari,
 
-On Fri, Jan 27, 2023 at 11:10 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Fri, Jan 27, 2023 at 10:52:02AM +0100, Geert Uytterhoeven wrote:
-> > On Fri, Jan 27, 2023 at 10:43 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Jan 26, 2023 at 04:11:35PM -0800, Saravana Kannan wrote:
-> > > > + * Check if @sup_handle or any of its ancestors or suppliers direct/indirectly
-> > > > + * depend on @con.  This function can detect multiple cyles between @sup_handle
-> > >
-> > > A single space is enough.
-> >
-> > It's very common to write two spaces after a full stop.
+On 1/20/23 13:51, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Fri, Jan 20, 2023 at 12:45:20PM +0100, Hans de Goede wrote:
+>> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
+>> associated with the sensor and extend the call_s_stream() wrapper to
+>> enable/disable the privacy LED if found.
+>>
+>> This makes the core handle privacy LED control, rather then having to
+>> duplicate this code in all the sensor drivers.
+>>
+>> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v4 (requested by Laurent Pinchart):
+>> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
+>>   make errors other then -ENOENT fail the register() call.
+>> - Move the led_disable_sysfs() call to be done at led_get() time, instead
+>>   of only disabling the sysfs interface when the sensor is streaming.
+>> ---
+>>  drivers/media/v4l2-core/v4l2-fwnode.c | 15 +++++++++++++++
+>>  drivers/media/v4l2-core/v4l2-subdev.c | 18 ++++++++++++++++++
+>>  include/media/v4l2-subdev.h           |  3 +++
+>>  3 files changed, 36 insertions(+)
+>>
+>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>> index c8a2264262bc..cfac1e2ae501 100644
+>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>> @@ -16,6 +16,7 @@
+>>   */
+>>  #include <linux/acpi.h>
+>>  #include <linux/kernel.h>
+>> +#include <linux/leds.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/of.h>
+>>  #include <linux/property.h>
+>> @@ -1295,6 +1296,20 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
+>>  	if (WARN_ON(!sd->dev))
+>>  		return -ENODEV;
+>>  
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
+>> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
+>> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
+>> +
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		mutex_lock(&sd->privacy_led->led_access);
+>> +		led_sysfs_disable(sd->privacy_led);
+>> +		led_trigger_remove(sd->privacy_led);
+>> +		led_set_brightness(sd->privacy_led, 0);
+>> +		mutex_unlock(&sd->privacy_led->led_access);
+>> +	}
+>> +#endif
+>> +
+>>  	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
+>>  	if (!notifier)
+>>  		return -ENOMEM;
+>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+>> index 4988a25bd8f4..f33e943aab3f 100644
+>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+>> @@ -9,6 +9,7 @@
+>>   */
+>>  
+>>  #include <linux/ioctl.h>
+>> +#include <linux/leds.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/module.h>
+>>  #include <linux/slab.h>
+>> @@ -322,6 +323,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>>  {
+>>  	int ret;
+>>  
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		if (enable)
+>> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
+>> +		else
+>> +			led_set_brightness(sd->privacy_led, 0);
+>> +	}
+>> +#endif
+>>  	ret = sd->ops->video->s_stream(sd, enable);
+>>  
+>>  	if (!enable && ret < 0) {
+>> @@ -1050,6 +1059,14 @@ EXPORT_SYMBOL_GPL(__v4l2_subdev_init_finalize);
+>>  
+>>  void v4l2_subdev_cleanup(struct v4l2_subdev *sd)
+> 
+> v4l2_subdev_cleanup() is currently called by drivers using V4L2 subdev
+> state at the moment, making it unsuitable for the purpose of releasing the
+> privacy led.
+> 
+> Could you move this to v4l2_async_unregister_subdev() instead?
 
-See e.g.:
+Good point.
 
-    git grep "\.  [^ ]
+Looking into this also made me realize that I forgot to cleanup
+the LED reference (and re-enable sysfs control) in case of
+errors in v4l2_async_register_subdev_sensor() after getting it.
 
-> > When joining two sentences on separate lines in vim using SHIFT-J,
-> > vim will make sure there are two spaces.
->
-> But is this consistent with all kernel doc comments in the core.c?
+Fixing this requires adding a v4l2_subdev_put_privacy_led()
+helper. At which point it makes sense to also put the code
+to get the led in a v4l2_subdev_get_privacy_led() helper
+and then all privacy-led code lives inside a v4l2-subdev.c
+removing the need for:
 
-Probably there are inconsistencies...
-(Aren't there everywhere?)
+[PATCH v5 06/11] media: v4l2-core: Built async and fwnode code into videodev.ko
 
-> I'm fine with either as long as it's consistent.
+all together :)   So I'll drop that from v6 of this series to
+make the series simpler.
 
-At least the kerneldoc source will look similar to the PDF output
-(LaTeX inserts more space after a full stop automatically ;-).
+Regards,
 
-Gr{oetje,eeting}s,
+Hans
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
+> 
+>>  {
+>> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+>> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+>> +		mutex_lock(&sd->privacy_led->led_access);
+>> +		led_sysfs_enable(sd->privacy_led);
+>> +		mutex_unlock(&sd->privacy_led->led_access);
+>> +		led_put(sd->privacy_led);
+>> +	}
+>> +#endif
+>>  	__v4l2_subdev_state_free(sd->active_state);
+>>  	sd->active_state = NULL;
+>>  }
+>> @@ -1090,6 +1107,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
+>>  	sd->grp_id = 0;
+>>  	sd->dev_priv = NULL;
+>>  	sd->host_priv = NULL;
+>> +	sd->privacy_led = NULL;
+>>  #if defined(CONFIG_MEDIA_CONTROLLER)
+>>  	sd->entity.name = sd->name;
+>>  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
+>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+>> index b15fa9930f30..0547313f98cc 100644
+>> --- a/include/media/v4l2-subdev.h
+>> +++ b/include/media/v4l2-subdev.h
+>> @@ -38,6 +38,7 @@ struct v4l2_subdev;
+>>  struct v4l2_subdev_fh;
+>>  struct tuner_setup;
+>>  struct v4l2_mbus_frame_desc;
+>> +struct led_classdev;
+>>  
+>>  /**
+>>   * struct v4l2_decode_vbi_line - used to decode_vbi_line
+>> @@ -982,6 +983,8 @@ struct v4l2_subdev {
+>>  	 * appropriate functions.
+>>  	 */
+>>  
+>> +	struct led_classdev *privacy_led;
+>> +
+>>  	/*
+>>  	 * TODO: active_state should most likely be changed from a pointer to an
+>>  	 * embedded field. For the time being it's kept as a pointer to more
+> 
+
