@@ -2,104 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10E0367F080
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 22:38:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC4E67F0B8
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 22:58:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbjA0Viw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 16:38:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
+        id S232124AbjA0V6f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 16:58:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjA0Viv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 16:38:51 -0500
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2D81C5AB
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:38:50 -0800 (PST)
-Received: by mail-qk1-x72d.google.com with SMTP id s19so2944260qkg.7
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:38:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EkjlJx23CrkCdR6Z9AlaV1vvEzLjMrV/VSTIV1fEBgE=;
-        b=mdSFmRNUmWQq+PcXXLwJph7CYzqDTSPiartUvARRGxoGc1aVC4POxGBX2FggO/3pu3
-         tQFZhD+2V6mS+vdDTGCdjH8/FrQxi8HRqTTNNPcMu5W5wnxcbINbEwC2uNxi16VqiCrO
-         spk3LNSUUGWq9NS1/ROkCfB5Ox947kYiSkJhopYy57uEk7X1FazkJABT0QaaWtsjwE7r
-         wO/3wn0B/X9ffj10o5BpGlMf6j3OkxuiwccZ79tRyIm09vaB2+BsgheNIk/XNgIon8r0
-         AAe5cGFFuaXLmz3cJvk7X0bAKvEdrCkDma6CLHS4KCzXss+wZOUs7zLIkLGlwB9b1ui4
-         u6Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EkjlJx23CrkCdR6Z9AlaV1vvEzLjMrV/VSTIV1fEBgE=;
-        b=FZH4LHw9O4G2RGG7O4AEOegNdsiXnUQdHO8mwQi8SThUPfunLpbiXNH48vro9unrv4
-         fgTd9Wj611QYXrxegSCgJlz705ZxaY3D4vGH2yW6JF08X+BUmASS5m2cE4Q2H0vYRVsk
-         DdANwcKpVE3hkxJpjDj7p9iW3JZNZsr80DAojeeTK8qS7XXBN9F54HgUggIUm6Jn0bdP
-         GwzhPv8v5vlyCKD5MSVhNxjW5xWfgZfMM2wtu5Dd+i6oWAsvs15AZcGgtOnDishndb51
-         81JiCRnzO4P4Bzbs0S5Ns/1JfZSCpYTsOrJhnlui6JCNIF1Ga+N+gnZTBOZ/sNkMSNwd
-         ggJQ==
-X-Gm-Message-State: AFqh2krgAEjblXdRS6UeBAjwcMEYQvdA/cZNUkip7lXQqFjLCCbyZ+gf
-        3509MqIbtmgBZpJ+5bDEJic+ekTOlsYajPlXAlM=
-X-Google-Smtp-Source: AMrXdXsk2W296jrqnhgL8kKhRiSFwc9CWIOCXF0g3sGOXBKyQYL5TqE8x1jplv4n4pOuAMZpZqMCweE4nKqi6Xud/Ak=
-X-Received: by 2002:ae9:e214:0:b0:708:ee3b:e153 with SMTP id
- c20-20020ae9e214000000b00708ee3be153mr1126380qkc.352.1674855529998; Fri, 27
- Jan 2023 13:38:49 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:622a:2c6:b0:3b6:4a9d:4c83 with HTTP; Fri, 27 Jan 2023
- 13:38:49 -0800 (PST)
-Reply-To: mrsmargaret1960r@gmail.com
-From:   "Mrs. Margaret Christopher" <alkasimabubakar644@gmail.com>
-Date:   Fri, 27 Jan 2023 22:38:49 +0100
-Message-ID: <CAC84WCrZJNgrSfmMM24wp7WU8T7ZCPvgPUyXRBgHx++ro78g4w@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_60,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:72d listed in]
-        [list.dnswl.org]
-        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
-        *      [score: 0.7452]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [alkasimabubakar644[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [alkasimabubakar644[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+        with ESMTP id S232159AbjA0V6d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 16:58:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FEE22030;
+        Fri, 27 Jan 2023 13:58:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0119C61DAD;
+        Fri, 27 Jan 2023 21:58:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6562BC433EF;
+        Fri, 27 Jan 2023 21:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674856712;
+        bh=wCtt8xMlYLqli9/cG/yUmwX2zDvTREfXCwdLYcm8404=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Hlsi5iPNYoZO7/vtqZaRq5aQnrgTvSsSpPBuSCr0yUw2YcSIvhhuZWQJ+28OE5hGO
+         K1O09wwBCmnOZYd9CtPctVqAj8ZAJPNN8LVQwfC42Q3jr4lJYxOgpagu8ZcuccUgGr
+         7H+nSuDgHFQIV7ShcPw2rnBY/CGgCNJZlpT3E1ni8ZoqimwDj4LDU/dks1J49tk/dV
+         rdBMbB+RpPhMVceTh4NhM+SXa7osXFCr9FDx0ms0MKVmpFUk97XNoQrcAbkAH+504A
+         AtHKKYX5tt3o4jwX61+LbUTvqti7nKVjEejtD2o4XPmTsF2WejOFnTDKyamYUv9SpE
+         QRQgvde+KEQRQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 51AC4C39564;
+        Fri, 27 Jan 2023 21:58:32 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.2-rc6
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230127194707.311571-1-brgl@bgdev.pl>
+References: <20230127194707.311571-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230127194707.311571-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.2-rc6
+X-PR-Tracked-Commit-Id: 677d85e1a1ee69fa05ccea83847309484be3781c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 37d0be6a7d7d6fede952c439f8d8b9d1df5c756f
+Message-Id: <167485671232.1722.1287802220609620377.pr-tracker-bot@kernel.org>
+Date:   Fri, 27 Jan 2023 21:58:32 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The pull request you sent on Fri, 27 Jan 2023 20:47:07 +0100:
+
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.2-rc6
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/37d0be6a7d7d6fede952c439f8d8b9d1df5c756f
+
+Thank you!
+
 -- 
-Hello Dear
-
-  Am a dying woman here in the hospital, i was diagnose as a
-Coronavirus patient over  a month ago. I am A business woman who is
-dealing with Gold Exportation, I Am from USA California i have a
-charitable and unfulfilling project that am about to handover to you,
-if you are interested to know more about this project please reply me.
- Hope to hear from you
-
-Best Regard
-Mrs Margaret
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
