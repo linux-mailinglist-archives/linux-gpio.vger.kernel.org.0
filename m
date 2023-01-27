@@ -2,155 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FFEA67E055
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 10:34:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70EA367E05B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 10:35:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232932AbjA0JeN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 04:34:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
+        id S231969AbjA0JfV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 04:35:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232160AbjA0JeN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 04:34:13 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F29529E07;
-        Fri, 27 Jan 2023 01:33:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674812024; x=1706348024;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mwCyMlAJfonCrHYzpmJJHccfkoSdmotmHtS5TBMdU+k=;
-  b=cj6NrjfhKZh3eK2SVTd8241zK827Wf3bQJo/DT2wO19e9p3E7PAWQBy6
-   plnfIBv7LVU+7FvG2jPDZyOEjRtFgMpuU+hbZmtpr/tHVZkSWhOWwED/Y
-   0RFH6/3Rvuv9aR1oEax7PEBqvIbPM415/pcJWfGKwIy5NIESIVgbwcPon
-   KcaSTFAb2Lx75Sp3k6j5uaKfNbR5YOiaMCK7a7RgWIHUYRFk6hPjQKR7/
-   sCxF3duCAovGegqfTM4Sdvm9eA+dlh6GdbPbpNECMDx9sl86ABtHNm2Fp
-   Eel/7TQWKL+Vvj2kp5E5JrYgKXMWVR30pacl6jEFkNdK1SAKRIS9zpZvk
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="306702685"
-X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
-   d="scan'208";a="306702685"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 01:33:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="731791790"
-X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
-   d="scan'208";a="731791790"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jan 2023 01:33:33 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pLL6u-00Ftar-2t;
-        Fri, 27 Jan 2023 11:33:28 +0200
-Date:   Fri, 27 Jan 2023 11:33:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S232160AbjA0JfU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 04:35:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9FD12E;
+        Fri, 27 Jan 2023 01:35:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 10B80B81FFC;
+        Fri, 27 Jan 2023 09:35:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235ECC433EF;
+        Fri, 27 Jan 2023 09:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674812116;
+        bh=LPd2/+DNZCkY5p5deZreyittH8sSRzRvsSNwqIpMuYA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nf2qF5iW5lj87KbIONJvmol6A9SpHMRLErxIiND8HR5I+m7gOhlPosNfV8Vz6OX34
+         dCjpgjj4iVL4WfAioaK2oKhnbH12MGO0Qllo+momxq3pCdKCcBRcb1elbhtOrguvUS
+         7IvEJ0eeXEcecMon+Llk/3T5BO1sNTLAgHF7HyvJk0seSHZYzmnuHkefnS/gIqjahI
+         ExTM4Srqpe9Rk/kZIKa7t7L2Q8UYxadClJJO2VKlWkZzv4kOMoeZVZd8wCScVP833/
+         4YnmsbbmeZbpfyIbWVUrkcMabP/iE7fGMeQr82YMjGhxdzOG8FBf2xU8cg2KtgMsIm
+         veUsXcWJ3yl2A==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 06/11] driver core: fw_devlink: Allow marking a fwnode
- link as being part of a cycle
-Message-ID: <Y9OaaC806Ywg7rM9@smile.fi.intel.com>
-References: <20230127001141.407071-1-saravanak@google.com>
- <20230127001141.407071-7-saravanak@google.com>
+        Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: ep93xx: remove unused variable
+Date:   Fri, 27 Jan 2023 10:35:05 +0100
+Message-Id: <20230127093512.2066158-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127001141.407071-7-saravanak@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 04:11:33PM -0800, Saravana Kannan wrote:
-> To improve detection and handling of dependency cycles, we need to be
-> able to mark fwnode links as being part of cycles. fwnode links marked
-> as being part of a cycle should not block their consumers from probing.
+From: Arnd Bergmann <arnd@arndb.de>
 
-...
+This one was left behind by a previous cleanup patch:
 
-> +	list_for_each_entry(link, &fwnode->suppliers, c_hook) {
-> +		if (link->flags & FWLINK_FLAG_CYCLE)
-> +			continue;
-> +		return link->supplier;
+drivers/gpio/gpio-ep93xx.c: In function 'ep93xx_gpio_add_bank':
+drivers/gpio/gpio-ep93xx.c:366:34: error: unused variable 'ic' [-Werror=unused-variable]
 
-Hmm...
+Fixes: 216f37366e86 ("gpio: ep93xx: Make irqchip immutable")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpio/gpio-ep93xx.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-		if (!(link->flags & FWLINK_FLAG_CYCLE))
-			return link->supplier;
-
-?
-
-> +	}
-> +
-> +	return NULL;
-
-...
-
-> -	if (dev->fwnode && !list_empty(&dev->fwnode->suppliers) &&
-> -	    !fw_devlink_is_permissive()) {
-> -		sup_fw = list_first_entry(&dev->fwnode->suppliers,
-> -					  struct fwnode_link,
-> -					  c_hook)->supplier;
-> +	sup_fw = fwnode_links_check_suppliers(dev->fwnode);
-
-dev_fwnode() ?
-
-...
-
-> -	val = !list_empty(&dev->fwnode->suppliers);
-> +	mutex_lock(&fwnode_link_lock);
-> +	val = !!fwnode_links_check_suppliers(dev->fwnode);
-
-Ditto?
-
-> +	mutex_unlock(&fwnode_link_lock);
-
+diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+index 192be99b1392..6cedf46efec6 100644
+--- a/drivers/gpio/gpio-ep93xx.c
++++ b/drivers/gpio/gpio-ep93xx.c
+@@ -363,8 +363,6 @@ static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
+ 
+ 	girq = &gc->irq;
+ 	if (bank->has_irq || bank->has_hierarchical_irq) {
+-		struct irq_chip *ic;
+-
+ 		gc->set_config = ep93xx_gpio_set_config;
+ 		egc->eic = devm_kcalloc(dev, 1,
+ 					sizeof(*egc->eic),
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.0
 
