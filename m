@@ -2,58 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5697667DA7D
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 01:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B529A67DEDD
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 09:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233049AbjA0ANU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 19:13:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
+        id S232129AbjA0IMD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 03:12:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233238AbjA0AMd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 19:12:33 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE44073763
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:12 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5065604854eso38275607b3.16
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTvFN9zt+7lH55sPjPnCWAMH3CSMYqAujbIJhWhGHpQ=;
-        b=fJbwfbPyLajM8BS9brnvnJPHttuFd4SHDHCbOBlCg/VxAuOvTepr0GZHQM6b84YyRA
-         PGZc1my4gZVIxdJD6+WG1ofD+96uUSWoV1kz9Ju1zqCgLOrV3aoO1spiemr3VfD0NSR+
-         5gWV+AkxCQfqzAMSlm62EBUFx3WVlWwQ/lyg8G5AKjz7E9l+lPVW+VwiXKzhgoOqLEVg
-         e7WijyIAqHKwyCsh9qbehpat436RYGDweSUlBivA6fvPKaCeTPPpCq4q/C+Xd7LjgUB4
-         ZPS7LazL527TUMqI1r0GnvyfXb6faxBKg97hTdSLi3rwGCXSYvoE48EislHpAiUHoVSt
-         zkUw==
+        with ESMTP id S232109AbjA0IMC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 03:12:02 -0500
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D186761FB;
+        Fri, 27 Jan 2023 00:11:58 -0800 (PST)
+Received: by mail-qv1-f42.google.com with SMTP id ll10so2245757qvb.6;
+        Fri, 27 Jan 2023 00:11:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTvFN9zt+7lH55sPjPnCWAMH3CSMYqAujbIJhWhGHpQ=;
-        b=lF599MYz/9RGPhMOv5H/+IlY7YKzyCxxXH3UTUg7tVtZ6PhP4UogEkiFreLqPFwPx/
-         YIWRF53g3q3/6kr0IDTSLnXHH3RDUJ5i59FIlNPBHoNfa29W4edIonu26UOaVW7alnOS
-         vcUexiGVq5AGLmMupnq+2X9gQf3ZtMVrAVSNqu6o7RIPf5DZteUxFF7Slph//6URAi3Y
-         7LIAUFT4GeuaCFR/jsOTiKT0PMbYH/eMdA292ee+WuYQFlqZuZVi1PES0VGLiYJwU7Vt
-         JHtOLx6yK8zxmMchXGT6AF/oKuHWnujgFxMFVtrlUN+S+bFYdkJChI4jPnN6q/l5aQP5
-         D4ow==
-X-Gm-Message-State: AFqh2kriS/bVg/kLWfu6G7amKDTOVhwv7mW/NEfxBLyQMBH4h81OXmj7
-        nyTV73xLxWhrAB+CkyzFRKREUtfs4larbVg=
-X-Google-Smtp-Source: AMrXdXtG7vV8hAqaNOO3XIpSGa1FPirJBe63/y15kC2w6rHGEFHML2nGTZnit7DdBS69wDhESwRkBEUxeDUA7p0=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:c3b4:8b1c:e3ee:3708])
- (user=saravanak job=sendgmr) by 2002:a81:bf41:0:b0:36c:dd56:ce59 with SMTP id
- s1-20020a81bf41000000b0036cdd56ce59mr4682807ywk.321.1674778332239; Thu, 26
- Jan 2023 16:12:12 -0800 (PST)
-Date:   Thu, 26 Jan 2023 16:11:38 -0800
-In-Reply-To: <20230127001141.407071-1-saravanak@google.com>
-Message-Id: <20230127001141.407071-12-saravanak@google.com>
-Mime-Version: 1.0
-References: <20230127001141.407071-1-saravanak@google.com>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-Subject: [PATCH v2 11/11] firmware: arm_scmi: Set fwnode for the scmi_device
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dBAPOHYTkWiPLnj81NzCswXH0Y6077YYaFE4ZOx/zRY=;
+        b=cSJYl8O2nDpMg/CA3iceMsy1oxQllQ9Gjg9Nmq6jJ+kPrr71GxU5PxeL5DfGt3zDfa
+         gPWuMZ3zzRic0MJOJj0flpXENXbJ/OobiqOD0JvpCHn8ift85z/WN5i/QgzRiPA5hLPM
+         T2HEq8Kwkk2eZ3iP3pFF8GllTOLzR0s0cvAPUBAsVGuEdCWMWMeIkplPIRK8pHdQYe6l
+         PiKsuN/lDJ203Wb1mNcQ4y/1RubjH2mQ8pAf0YL2H7BfEHz8otvTonhIBEEVjQBLIQlQ
+         hb/D8yWbwg5rx0mxa1jhaJaCT7iugdUs2vsOlbMTNeFjQkNFXE82Ncf7I2C8yF8XxQIh
+         bveA==
+X-Gm-Message-State: AO0yUKVFCiFEgINkl1Y5vLuqV6A25a2jfGBmvxfvgrjaROJJ7JKy1bO3
+        PKze7f9gQjFmi6bkda7L0W1+DoAsUoqj6AZW
+X-Google-Smtp-Source: AK7set9Bz62Q67ABrWdM7KPzU8QFgHRgxZTAr85sdaX8Gw1YpZ3MjQxtUT3lWXRtAgamQxPpSzFeGA==
+X-Received: by 2002:ad4:48d1:0:b0:537:727f:ac2b with SMTP id v17-20020ad448d1000000b00537727fac2bmr13020372qvx.41.1674807117361;
+        Fri, 27 Jan 2023 00:11:57 -0800 (PST)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id p25-20020a05620a22b900b00706c1f7a608sm190589qkh.89.2023.01.27.00.11.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 00:11:57 -0800 (PST)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-4fda31c3351so56901947b3.11;
+        Fri, 27 Jan 2023 00:11:57 -0800 (PST)
+X-Received: by 2002:a25:37d4:0:b0:80b:8602:f3fe with SMTP id
+ e203-20020a2537d4000000b0080b8602f3femr1568499yba.36.1674807106088; Fri, 27
+ Jan 2023 00:11:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20230127001141.407071-1-saravanak@google.com> <20230127001141.407071-4-saravanak@google.com>
+In-Reply-To: <20230127001141.407071-4-saravanak@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 27 Jan 2023 09:11:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV4B49OM7S-UAxJtfAR8OvG_-S526fGnTA+t+-orytrTw@mail.gmail.com>
+Message-ID: <CAMuHMdV4B49OM7S-UAxJtfAR8OvG_-S526fGnTA+t+-orytrTw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] soc: renesas: Move away from using OF_POPULATED
+ for fw_devlink
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Cristian Marussi <cristian.marussi@arm.com>,
@@ -74,13 +73,11 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Daniel Scally <djrscally@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
+        Tony Lindgren <tony@atomide.com>,
         Linux Kernel Functional Testing <lkft@linaro.org>,
         Naresh Kamboju <naresh.kamboju@linaro.org>,
         Abel Vesa <abel.vesa@linaro.org>,
         Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         John Stultz <jstultz@google.com>,
         Doug Anderson <dianders@chromium.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -97,44 +94,58 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This allows fw_devlink to track and enforce supplier-consumer
-dependencies for scmi_device.
+Hi Saravana,
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/firmware/arm_scmi/bus.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Fri, Jan 27, 2023 at 1:11 AM Saravana Kannan <saravanak@google.com> wrote:
+> The OF_POPULATED flag was set to let fw_devlink know that the device
+> tree node will not have a struct device created for it. This information
+> is used by fw_devlink to avoid deferring the probe of consumers of this
+> device tree node.
+>
+> Let's use fwnode_dev_initialized() instead because it achieves the same
+> effect without using OF specific flags. This allows more generic code to
+> be written in driver core.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-index 35bb70724d44..1d8a6a8d9906 100644
---- a/drivers/firmware/arm_scmi/bus.c
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/of.h>
- 
- #include "common.h"
- 
-@@ -192,6 +193,7 @@ scmi_device_create(struct device_node *np, struct device *parent, int protocol,
- 	scmi_dev->protocol_id = protocol;
- 	scmi_dev->dev.parent = parent;
- 	scmi_dev->dev.of_node = np;
-+	scmi_dev->dev.fwnode = of_fwnode_handle(np);
- 	scmi_dev->dev.bus = &scmi_bus_type;
- 	scmi_dev->dev.release = scmi_device_release;
- 	dev_set_name(&scmi_dev->dev, "scmi_dev.%d", id);
--- 
-2.39.1.456.gfc5497dd1b-goog
+Thanks for your patch!
 
+> --- a/drivers/soc/renesas/rcar-sysc.c
+> +++ b/drivers/soc/renesas/rcar-sysc.c
+> @@ -437,7 +437,7 @@ static int __init rcar_sysc_pd_init(void)
+>
+>         error = of_genpd_add_provider_onecell(np, &domains->onecell_data);
+>         if (!error)
+> -               of_node_set_flag(np, OF_POPULATED);
+> +               fwnode_dev_initialized(&np->fwnode, true);
+
+As drivers/soc/renesas/rmobile-sysc.c is already using this method,
+it should work fine.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.4.
+
+>
+>  out_put:
+>         of_node_put(np);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
