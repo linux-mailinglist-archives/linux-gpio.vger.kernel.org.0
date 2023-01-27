@@ -2,111 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16BBB67E25D
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:57:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 429C567E275
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 12:00:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbjA0K5g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 05:57:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38536 "EHLO
+        id S232670AbjA0LAK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 06:00:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjA0K5e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:57:34 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70160B460
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:57:33 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso8164178pju.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ruibmntxorpsi/De8rV50QCf03hqljj6JIfzRYgivpI=;
-        b=qbMrns75nXWK5lwt2H954k0wM1zep8CkTvk5ZiIuVcqS37eEi3+zU6JBCE4AdrCdTb
-         iYhXQBGfswMhjTtYdRa6TdVM+o2omr+uYtYaVydjF+qpracj9cZ4AJ0GrH42sjR/Ef9z
-         D+Xrm86HJqtmphP2O0HEzpnHlN+kS3VuAcoCOm/POkchj7v0iFtCE+3cUtjmqNGP5MvC
-         4z5T+/TKwRCpKEmHGYX/4IH3/1bcRy2qM9//3sfadeiu44H8dP+CdNivclUo6YGFbi7n
-         UNfB5Lgux4D+2ZziV6gv7n/vsl7FWPVPhqsoFioE8q1MaRepP1dUh8d+wSxIr9RmXNCZ
-         qa7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ruibmntxorpsi/De8rV50QCf03hqljj6JIfzRYgivpI=;
-        b=nv9mVEvEgZHHQhXZYE0KHg+hTwuGNXiASJI9TM61JHEuwBFk3qfGMMX0vymmKTqQZr
-         yq6+5xfjjJtnC7WxeHZW5l1VgoaG4Hyc3O9lozaeHSQRAaQg4SZYgjBASsrBA4cligWE
-         yX0wBGmzWlEeXpHevhbqAGGt+ijoZCOl8aefT64tmWGWEZxfmpyBMFCxXZKQz8/dqTkO
-         /fpsWIdNYzbXud18VGa4gPuVbH84DZHFYUR/fZpd08YZuuId35Uao1VZeVtuJEprFbiM
-         +MkMqkZ7blA4orYIJiTPFfgEYYyt+QzrR3dxIDFJpeh0a3q3QbQlhBYIq2PT/Y8EqIVI
-         TNaQ==
-X-Gm-Message-State: AO0yUKU+5Q2BddoXVuCcKxg2zB4lxYz7jC+Cdj5fPdnHMlTVVguVqyYV
-        A28k+hLf1ZvGZc/yikRArj4DGbzt9831BU0QcPaJrA==
-X-Google-Smtp-Source: AK7set8Id68oohEN2Iqhc4wiq/aX3DpMjhEnOnqOQLoSKPD6+GoFu7V0lL6buhBpZ3AtqLbG+MsIyq8BrfqGM2qN5gU=
-X-Received: by 2002:a17:902:e805:b0:196:1462:3279 with SMTP id
- u5-20020a170902e80500b0019614623279mr1910257plg.17.1674817052923; Fri, 27 Jan
- 2023 02:57:32 -0800 (PST)
+        with ESMTP id S230338AbjA0LAJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 06:00:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F091C40E5;
+        Fri, 27 Jan 2023 02:59:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8592361B04;
+        Fri, 27 Jan 2023 10:59:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D55C43442;
+        Fri, 27 Jan 2023 10:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674817190;
+        bh=/gHWqkY7YRT7jthNZnaDPMsPI2uZxEdBfVoNrDOdKZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZwzB721qVdzr0UDO8Axjrp5yh6NW2gApFj9DeDSSoZxEK5wXhYhUOeyHhlpXtVcam
+         bVvdOFHPokzCdEkbxTqh/WDAsp/OyEWpbQaKjEfcMhV+IiCVUkFfz0HIyJ4O722vHz
+         NPEM9k2rZCE19lW0o0wOHlE3G+eO/NWdEfa6OhlOfT1TXcwEKuVTvhItnv154q28J6
+         qJQvSPO5+wMNbg9/hXjv3/MJrtybRrIFDJA3CP6uu4H/TuUkhxvVYxv4U52S63Dh1F
+         kJ7WYvcwS5ZNmO1SUs9C2v+liis2Sg3i5Ct2IfThIFDhnddX+mJdmYvhcWBH+P8EcD
+         OIcwOKMeWuEjA==
+Date:   Fri, 27 Jan 2023 10:59:43 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 05/11] [RFC] leds: led-class: Add devicetree support
+ to led_get()
+Message-ID: <Y9Oun95Yv85qiktU@google.com>
+References: <20230120114524.408368-1-hdegoede@redhat.com>
+ <20230120114524.408368-6-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20230125104520.89684-1-quic_kathirav@quicinc.com> <20230125104520.89684-9-quic_kathirav@quicinc.com>
-In-Reply-To: <20230125104520.89684-9-quic_kathirav@quicinc.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 27 Jan 2023 11:56:56 +0100
-Message-ID: <CAPDyKFqzpABB=DmvzQUZe3-ye6TT07k_g_i7A_A2QRj9ERcBdA@mail.gmail.com>
-Subject: Re: [PATCH 08/10] dt-bindings: mmc: sdhci-msm: add IPQ5332 compatible
-To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, robimarko@gmail.com, quic_gurus@quicinc.com,
-        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230120114524.408368-6-hdegoede@redhat.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 25 Jan 2023 at 11:46, Kathiravan Thirumoorthy
-<quic_kathirav@quicinc.com> wrote:
->
-> From: Kathiravan T <quic_kathirav@quicinc.com>
->
-> The IPQ5332 supports eMMC with an SDHCI controller. Add the appropriate
-> compatible to the documentation.
->
-> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
+On Fri, 20 Jan 2023, Hans de Goede wrote:
 
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
+> Turn of_led_get() into a more generic __of_led_get() helper function,
+> which can lookup LEDs in devicetree by either name or index.
+> 
+> And use this new helper to add devicetree support to the generic
+> (non devicetree specific) [devm_]led_get() function.
+> 
+> This uses the standard devicetree pattern of adding a -names string array
+> to map names to the indexes for an array of resources.
+> 
+> Note the new led-names property for LED consumers is not added
+> to the devicetree documentation because there seems to be no
+> documentation for the leds property itself to extend it with this.
+> It seems that how LED consumers should be described is not documented
+> at all ATM.
+> 
+> This patch is marked as RFC because of both the missing devicetree
+> documentation and because there are no devicetree users of
+> the generic [devm_]led_get() function for now.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index 6b89238f0565..ead91f95e877 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -34,6 +34,7 @@ properties:
->            - const: qcom,sdhci-msm-v4 # for sdcc versions less than 5.0
->        - items:
->            - enum:
-> +              - qcom,ipq5332-sdhci
->                - qcom,qcs404-sdhci
->                - qcom,sc7180-sdhci
->                - qcom,sc7280-sdhci
-> --
-> 2.34.1
->
+>  drivers/leds/led-class.c | 37 ++++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 9 deletions(-)
+
+Reviewed-by: Lee Jones <lee@kernel.org>
+
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 0c4b8d8d2b4f..2f3af6e30208 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -234,19 +234,18 @@ static struct led_classdev *led_module_get(struct device *led_dev)
+>  	return led_cdev;
+>  }
+>  
+> -/**
+> - * of_led_get() - request a LED device via the LED framework
+> - * @np: device node to get the LED device from
+> - * @index: the index of the LED
+> - *
+> - * Returns the LED device parsed from the phandle specified in the "leds"
+> - * property of a device tree node or a negative error-code on failure.
+> - */
+> -struct led_classdev *of_led_get(struct device_node *np, int index)
+> +static struct led_classdev *__of_led_get(struct device_node *np, int index,
+> +					 const char *name)
+>  {
+>  	struct device *led_dev;
+>  	struct device_node *led_node;
+>  
+> +	/*
+> +	 * For named LEDs, first look up the name in the "led-names" property.
+> +	 * If it cannot be found, then of_parse_phandle() will propagate the error.
+> +	 */
+> +	if (name)
+> +		index = of_property_match_string(np, "led-names", name);
+>  	led_node = of_parse_phandle(np, "leds", index);
+>  	if (!led_node)
+>  		return ERR_PTR(-ENOENT);
+> @@ -256,6 +255,19 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+>  
+>  	return led_module_get(led_dev);
+>  }
+> +
+> +/**
+> + * of_led_get() - request a LED device via the LED framework
+> + * @np: device node to get the LED device from
+> + * @index: the index of the LED
+> + *
+> + * Returns the LED device parsed from the phandle specified in the "leds"
+> + * property of a device tree node or a negative error-code on failure.
+> + */
+> +struct led_classdev *of_led_get(struct device_node *np, int index)
+> +{
+> +	return __of_led_get(np, index, NULL);
+> +}
+>  EXPORT_SYMBOL_GPL(of_led_get);
+>  
+>  /**
+> @@ -329,9 +341,16 @@ EXPORT_SYMBOL_GPL(devm_of_led_get);
+>  struct led_classdev *led_get(struct device *dev, char *con_id)
+>  {
+>  	struct led_lookup_data *lookup;
+> +	struct led_classdev *led_cdev;
+>  	const char *provider = NULL;
+>  	struct device *led_dev;
+>  
+> +	if (dev->of_node) {
+> +		led_cdev = __of_led_get(dev->of_node, -1, con_id);
+> +		if (!IS_ERR(led_cdev) || PTR_ERR(led_cdev) != -ENOENT)
+> +			return led_cdev;
+> +	}
+> +
+>  	mutex_lock(&leds_lookup_lock);
+>  	list_for_each_entry(lookup, &leds_lookup_list, list) {
+>  		if (!strcmp(lookup->dev_id, dev_name(dev)) &&
+> -- 
+> 2.39.0
+> 
+
+-- 
+Lee Jones [李琼斯]
