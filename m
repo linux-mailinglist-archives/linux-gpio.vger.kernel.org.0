@@ -2,126 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC4767F074
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 22:35:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E0367F080
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 22:38:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjA0Vfj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 16:35:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50160 "EHLO
+        id S231193AbjA0Viw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 16:38:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjA0Vfi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 16:35:38 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020C25A351
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:35:38 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id n2so4171316pfo.3
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:35:37 -0800 (PST)
+        with ESMTP id S229832AbjA0Viv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 16:38:51 -0500
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2D81C5AB
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:38:50 -0800 (PST)
+Received: by mail-qk1-x72d.google.com with SMTP id s19so2944260qkg.7
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 13:38:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ct9ck9vkM14O2ZHT6Pqc9iBFx3XHxaDWOS1C2RoVEAU=;
-        b=YcZG93rCx580JM+/kJQjqJNGa6Jgb6/qZiN5/YfvP4kIVBbWkUzJ8hwxXNlx8Ewpwo
-         LqnLq1rlR7zfYs9S4f0XcmnwRYZDOvhEUroawwmqv2wyiiIIaIK8TvTrrGC/9Q5a4i7o
-         /H9LS2x4jHEq2tldPYhckGPvwPm/D6ztPdWkLVVNLbhVASfIVLJ7VdQvtLLDOtAbpZDl
-         mOQv0isg2ZCsQdiIbaXX0WC3KR9suV8MFrv41WyqGXwMi55LYe1tgFvcvKD6WR3wetWZ
-         itqs0kGWR9UYPR5om9kTa4s6pQeQceN/FpGWkJJLYK96iPp3ebtI0ncdPp7Y4tYKAGB9
-         WMvA==
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EkjlJx23CrkCdR6Z9AlaV1vvEzLjMrV/VSTIV1fEBgE=;
+        b=mdSFmRNUmWQq+PcXXLwJph7CYzqDTSPiartUvARRGxoGc1aVC4POxGBX2FggO/3pu3
+         tQFZhD+2V6mS+vdDTGCdjH8/FrQxi8HRqTTNNPcMu5W5wnxcbINbEwC2uNxi16VqiCrO
+         spk3LNSUUGWq9NS1/ROkCfB5Ox947kYiSkJhopYy57uEk7X1FazkJABT0QaaWtsjwE7r
+         wO/3wn0B/X9ffj10o5BpGlMf6j3OkxuiwccZ79tRyIm09vaB2+BsgheNIk/XNgIon8r0
+         AAe5cGFFuaXLmz3cJvk7X0bAKvEdrCkDma6CLHS4KCzXss+wZOUs7zLIkLGlwB9b1ui4
+         u6Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ct9ck9vkM14O2ZHT6Pqc9iBFx3XHxaDWOS1C2RoVEAU=;
-        b=pnEMrS/zB8VkJSAy1nNfwr8h9lfu95q7hNIAgZrDrIA4UV5q1tBEoolq4fEY2o0m02
-         2WAADm2N0kWkMidNBJQ/FtQuujbIKbZTuCuvVm1ys2OtYAIXPzMnRlMgeGDzdnIxq5Vy
-         3186MU0qC5juK7JXKnblAnh5Jm9z+dI+9aLFPytNN8yU2zbPH6/o5T/l1c9Wvwv7UnJJ
-         Y5xE8p7ItNhs+YaFil9Xcu200yhMvrp2IwkQ851FOjTXPJQmlKH458e09sNXcF+HlK1/
-         vMXMFMUF5/LsgWejFEi1f6xmy7BLRz1m5cBoEbK3IC6FE+Ypzu78sCOxyPu5DrNgx3NC
-         l2Pw==
-X-Gm-Message-State: AO0yUKU5tFfKmssnfCJA+io6aarU56MD6LlInh7rUk5xx4NpIGDOfaSP
-        KDfZ/9h466SqtuXNZaCwdVnNUKrTJGZR44PSka/NCw==
-X-Google-Smtp-Source: AK7set8A87a1b6gwb4OnNq2XRUc7qhsa9qKHiaWo49QwN+9e+0qsFtowQYDUOK06dTepf46OknaZKx06adJ0S04TZoY=
-X-Received: by 2002:aa7:91d3:0:b0:592:61cc:5aeb with SMTP id
- z19-20020aa791d3000000b0059261cc5aebmr608421pfa.59.1674855336983; Fri, 27 Jan
- 2023 13:35:36 -0800 (PST)
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EkjlJx23CrkCdR6Z9AlaV1vvEzLjMrV/VSTIV1fEBgE=;
+        b=FZH4LHw9O4G2RGG7O4AEOegNdsiXnUQdHO8mwQi8SThUPfunLpbiXNH48vro9unrv4
+         fgTd9Wj611QYXrxegSCgJlz705ZxaY3D4vGH2yW6JF08X+BUmASS5m2cE4Q2H0vYRVsk
+         DdANwcKpVE3hkxJpjDj7p9iW3JZNZsr80DAojeeTK8qS7XXBN9F54HgUggIUm6Jn0bdP
+         GwzhPv8v5vlyCKD5MSVhNxjW5xWfgZfMM2wtu5Dd+i6oWAsvs15AZcGgtOnDishndb51
+         81JiCRnzO4P4Bzbs0S5Ns/1JfZSCpYTsOrJhnlui6JCNIF1Ga+N+gnZTBOZ/sNkMSNwd
+         ggJQ==
+X-Gm-Message-State: AFqh2krgAEjblXdRS6UeBAjwcMEYQvdA/cZNUkip7lXQqFjLCCbyZ+gf
+        3509MqIbtmgBZpJ+5bDEJic+ekTOlsYajPlXAlM=
+X-Google-Smtp-Source: AMrXdXsk2W296jrqnhgL8kKhRiSFwc9CWIOCXF0g3sGOXBKyQYL5TqE8x1jplv4n4pOuAMZpZqMCweE4nKqi6Xud/Ak=
+X-Received: by 2002:ae9:e214:0:b0:708:ee3b:e153 with SMTP id
+ c20-20020ae9e214000000b00708ee3be153mr1126380qkc.352.1674855529998; Fri, 27
+ Jan 2023 13:38:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20230127001141.407071-1-saravanak@google.com> <Y9Q0culPHGNZkQz9@euler>
-In-Reply-To: <Y9Q0culPHGNZkQz9@euler>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Jan 2023 13:35:00 -0800
-Message-ID: <CAGETcx9oohQ0SeHGQNsbVpitG-freYhbTUm34TbzMQAeLGjSfw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] fw_devlink improvements
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
+Received: by 2002:a05:622a:2c6:b0:3b6:4a9d:4c83 with HTTP; Fri, 27 Jan 2023
+ 13:38:49 -0800 (PST)
+Reply-To: mrsmargaret1960r@gmail.com
+From:   "Mrs. Margaret Christopher" <alkasimabubakar644@gmail.com>
+Date:   Fri, 27 Jan 2023 22:38:49 +0100
+Message-ID: <CAC84WCrZJNgrSfmMM24wp7WU8T7ZCPvgPUyXRBgHx++ro78g4w@mail.gmail.com>
+Subject: Hello Dear
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_60,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:72d listed in]
+        [list.dnswl.org]
+        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
+        *      [score: 0.7452]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [alkasimabubakar644[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [alkasimabubakar644[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 12:30 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
->
-> On Thu, Jan 26, 2023 at 04:11:27PM -0800, Saravana Kannan wrote:
-> > Dmitry, Maxim(s), Miquel, Luca, Doug, Colin, Martin, Jean-Philippe,
-> >
-> > I've Cc-ed you because I had pointed you to v1 of this series + the
-> > patches in that thread at one point or another as a fix to some issue
-> > you were facing. It'd appreciate it if you can test this series and
-> > report any issues, or things it fixed and give Tested-bys.
->
-> I applied this on my working net-next/main development branch and can
-> confirm I am able to successfully boot the Beaglebone Black.
->
-> Tested-by: Colin Foster <colin.foster@in-advantage.com>
+-- 
+Hello Dear
 
-Thanks!
+  Am a dying woman here in the hospital, i was diagnose as a
+Coronavirus patient over  a month ago. I am A business woman who is
+dealing with Gold Exportation, I Am from USA California i have a
+charitable and unfulfilling project that am about to handover to you,
+if you are interested to know more about this project please reply me.
+ Hope to hear from you
 
--Saravana
+Best Regard
+Mrs Margaret
