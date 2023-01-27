@@ -2,85 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33C7767E540
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 13:32:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E31D67E546
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 13:33:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233317AbjA0McQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 07:32:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42262 "EHLO
+        id S231802AbjA0MdV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 07:33:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233075AbjA0McN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 07:32:13 -0500
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845A97ECD
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:32:10 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-501c3a414acso64829237b3.7
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:32:10 -0800 (PST)
+        with ESMTP id S229485AbjA0MdU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 07:33:20 -0500
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBD343467
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:33:18 -0800 (PST)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-50e7a0f0cc8so2804727b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 04:33:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v0if3bG0az4VVrqjrBAgqmkkRSjBuWgCJhmn0kYqVUo=;
-        b=FgWZXTUPi5P9XiCuBQQ7Mban5muT1PCuAYN+0cWoieKvqtgyl0BETa13RIeZruTQcI
-         RMlnL/epMaeKzOQBweNCUpVbgYQafunJr0MAQW3/TvrzRwOexZQDDdWIlMiYv3B3TxCw
-         JAaM3ihmcnwnT6voKtG6v0nmzCa5/Vs1uAlqRdqztT9iXBELBGQOHR+CyaOD+rjUb+pS
-         r6JdwodKRM5lkPtF//UxlDd0AKiRSqjF37It476HLdauFoJe3GYrjo7GgUvsup2sPglI
-         VwPK9Df8V36vQ6HzWHzRR1pRwIpcHi394E26eYHS02OgJpMJMT+PAQhk4Dh9ODBTHfHg
-         y5Sw==
+        bh=rQ0envBKZILqHzUO+F+Zje3FulFWG4VE6MBPBgvm4Fg=;
+        b=RxEhBD/W5Ke3tWjLCBPjfXPbcb2+7ZI9a78+cUTicFF3MMtONaLqwvKFvd6034xFRg
+         TkYVQSiRrDZDSKcWy9SvYN0X61T16Mfx/Wvlw6EiGobxwLy6xh6S9OkjRA0E8uT9F8uS
+         ZcuxIvdynQUoHNLsZddBjjeOy5hGbNB0waWspEcfF9tV7xuqh72LeULKlYFPTY//OXsM
+         9YFUJOW8o/j40kzvXdOlUMWuZMIaUb2iA6jF//rwv1vPwu+U6yeSpVj/wfmsW7+AODHW
+         CFBCbB8UBeijAAQhjAtKMhj8axcFzqOSUY0nv663zNjAG6HfSMSWDLmwNd9FQkCpjis/
+         Kb2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v0if3bG0az4VVrqjrBAgqmkkRSjBuWgCJhmn0kYqVUo=;
-        b=yQzl8jblPodNlG3SexBSQtrXBBSiWfYZzRZocwqHVAdaMuV90Kop2ZBwhtFfGcd2Qs
-         4LksyqKC1hWS24Su8Aycfub8dTDU8g93rvFqPXBUhgIUPzIBxD2ScpBDmscIWRPR9rsy
-         0MPqZzL4z4Qxf7vC3X0OFcZd8aIJEzADNTHXDfv81NRViGVCwdFuD3kSQYFSG5lDh+19
-         eMWT2aownAkBmtH6JUxF2+ITlxHfmZmKjpatbkQvKPRHbb/Z1pXDUk91hNKEs9C7wpxs
-         8ruG5JTd2N/5eL+/YXsAwQlB2SQSqjm14cOlurkyKxzVvuZRTRmU1feXRcClXFS/p6T5
-         31DQ==
-X-Gm-Message-State: AFqh2kpgUYHFJykHRWmW1sJPuS1K48Q5geyVrjqjja7QCgxFTzln94jy
-        JTXLxYxIaz0xGyJxSrIxGIN7ltiMz7jOwC/mtrpvDA==
-X-Google-Smtp-Source: AMrXdXuW9ov/7XYT2FJRuxqTfJG/eiPAHPczrgtkY00TYBLkmPlms6WH7OhqK/K+U7X67YZnbPfgRMOD/fB39Awpptc=
-X-Received: by 2002:a05:690c:39b:b0:4f3:8d0e:edce with SMTP id
- bh27-20020a05690c039b00b004f38d0eedcemr3524525ywb.185.1674822729729; Fri, 27
- Jan 2023 04:32:09 -0800 (PST)
+        bh=rQ0envBKZILqHzUO+F+Zje3FulFWG4VE6MBPBgvm4Fg=;
+        b=MFYIGiORroY0mu2+9OZa4Wku17WbqCPwSrYKza3nDRgMB4l0nZY40xHgIO5POf1Kb/
+         Mhbe48rg0hLii9ZL/0sb4NDMH0GGJWQQgbjTpZwLR8z8AEbzj3LbmkGyo2/6surR+9v5
+         Lqb2ZcR1eh12ffCnOrtBycW/aN17ji+mswcXgKQO/yYo4ympzK9rQAvN2cS60mSYRsT+
+         3C6V19UXpJdUVutttz56KTin8T5Ac1aGsTXPBr99itkjWWHJQdHysfrWPdCDXsjmRuqU
+         wexFdMGQnZTmzzDrDnW1Iab2Hy2my4gzNLcJyFo1UY5fRE4wmXk3zVi93dUP5tK3W/ue
+         h+qA==
+X-Gm-Message-State: AO0yUKV0ZdYDN4QWn6uIaoxa+AlSpO/MMUJEA5x1t1HHU7Epyk1fYcX7
+        YWpIoBmg83T/tZzngj+NEnAwuLdktlLizoYea6mIR168Xd1lHg==
+X-Google-Smtp-Source: AK7set96w+IW8ATycCAAKWTW/ZH9c8VFAZ1lyfXYdCAOBDbMOCUoct9VzwQAx1jXdTkqxZOMmvW57pokn4Dfdjrc7aE=
+X-Received: by 2002:a05:690c:706:b0:506:6952:b9c9 with SMTP id
+ bs6-20020a05690c070600b005066952b9c9mr1258217ywb.477.1674822798220; Fri, 27
+ Jan 2023 04:33:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20230120020536.3229300-1-robh@kernel.org>
-In-Reply-To: <20230120020536.3229300-1-robh@kernel.org>
+References: <20230119231856.52014-1-joel@jms.id.au>
+In-Reply-To: <20230119231856.52014-1-joel@jms.id.au>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Jan 2023 13:31:58 +0100
-Message-ID: <CACRpkdYRmTiwdtghDjLpCwuQFzDEYhJiWStkwuphUUsAiOEwcw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: mediatek: Fix child node name patterns
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+Date:   Fri, 27 Jan 2023 13:33:06 +0100
+Message-ID: <CACRpkdbR1O66L0UHG2cAq-d7smuqFQoAMtSEO2L=3za6ELN7mg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aspeed: Fix confusing types in return value
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 3:05 AM Rob Herring <robh@kernel.org> wrote:
+On Fri, Jan 20, 2023 at 12:19 AM Joel Stanley <joel@jms.id.au> wrote:
 
-> The child node name patterns in Mediatek pinctrl bindings don't match
-> reality. I don't know where '-[0-9]+$' came from, but I don't see any nodes
-> with a matching pattern. Also, patterns such as 'pins' or 'mux' are
-> ambiguous because any prefix or suffix is allowed. If that's desired, it
-> should be explicit.
+> The function signature is int, but we return a bool. Instead return a
+> negative errno as the kerneldoc suggests.
 >
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Fixes: 4d3d0e4272d8 ("pinctrl: Add core support for Aspeed SoCs")
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-Patch applied!
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
