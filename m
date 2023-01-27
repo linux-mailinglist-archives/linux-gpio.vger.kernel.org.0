@@ -2,261 +2,516 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F3C67E1A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:30:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E712A67E1AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:32:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231659AbjA0Kax (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 05:30:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
+        id S230493AbjA0KcO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 05:32:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231652AbjA0Kav (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:30:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E60303F1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674815402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
-        b=Ojm5wOF81ESPUKKuMCwQXVbJclOuZzL1ZbSIRDAaGMfUrLX7HRhtdaeDlTuUT1wRgDVSF9
-        PV2xkTL8QSOCXaXGQgzJ6QUzLWBfVEd4nWIxMnL4KaN8lkr4Cn4/T9Odey/of09pCpD2oW
-        fshsK7HtOLMEWtvFwBIfz9OqypOdxpc=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-198-dBmpHK1APpKyYS6sAHXAKA-1; Fri, 27 Jan 2023 05:30:00 -0500
-X-MC-Unique: dBmpHK1APpKyYS6sAHXAKA-1
-Received: by mail-ed1-f72.google.com with SMTP id v8-20020a056402348800b0049e1913bd43so3328720edc.20
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:30:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=miXkr3yovZC21nPb2F6+DQmin4f6UAgSFtTg/u4u55s=;
-        b=ZM68zAO09WQ7v6f3MNFwUiOiHekab9AK/STHkXQbVsOe07jHxxXJA0qH2UkTXQwVgz
-         zH0ZE2E9PpY7ig/yVU2xK+PbrHA7YPl3AKiiWnDGb0D1ly1rKK6pPTfS/g6YTvUKsyoi
-         3WeC4N8u8ItVXb79bngoxywsD9xdG91f2XoPO8uFrRNhLjNwyULMiQ42qK670B/+2vuM
-         wTF2mp7FNf53lYRl5a/GB+1O0UXVD4yIOOAjTdmHy7fgv1Y69UGGcFoyHuFF6GP+papz
-         EwAsuJp1l7ir59ed5m376GDl6M5lMnkB4x5S3+L4P8ksjNdKOGe4qBh8tuEMYpimL5lw
-         Kd/A==
-X-Gm-Message-State: AFqh2kr1r5Zuj2c8BP3o4PlLTCA9lJN2yLPY6yYUglk+1pV6oqZmDr3o
-        wpUqSJCQOL5mvY3w7A1sAWMOgP1rqYbkeJbdLpteWTnX8HzdgcRJNMuFqBmD76M/4l4/VJylCP7
-        JntlV0Gi8D9vs6Wo6vZtCuA==
-X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238754ejc.16.1674815399530;
-        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuzyQrTD3dqej2MVPnY3ccbE7JDKPp4j+9aQCkGOpgn6a51CB/LmnLf0aOYkbtDz+HMutse4Q==
-X-Received: by 2002:a17:907:7f12:b0:7c1:9eb:845b with SMTP id qf18-20020a1709077f1200b007c109eb845bmr67238730ejc.16.1674815399304;
-        Fri, 27 Jan 2023 02:29:59 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ss24-20020a170907039800b00878706e35acsm1976876ejb.95.2023.01.27.02.29.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 02:29:58 -0800 (PST)
-Message-ID: <cd2ca584-6914-0882-4cfc-c5edee0adf54@redhat.com>
-Date:   Fri, 27 Jan 2023 11:29:57 +0100
+        with ESMTP id S231564AbjA0KcN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:32:13 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0636E13503;
+        Fri, 27 Jan 2023 02:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1674815530; x=1706351530;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yaCllG+S731TRBzKDujMxy/7KiwqP7lEbXqiJpb0eDs=;
+  b=sj+UBUi7jlsfHsuwH0pO1fXJc5zaMbh8muI/ZZRL/9W+dzpDAqCFU5tL
+   HS7x0k45pIv76AtwHGzGMrfsQpPLJR/m5QbLd4hJF+aRMc4Rn8089ha23
+   yrGD9MfLU7uMi+sxUMhoWGT3/lohiWbDXW6QU7sZrpJ2A+0zUvednVAKy
+   xxwhmDiKdADpn1PFHTGojX+cPYt3ugQo5nwpLX5UCdVP3MKCXz1Fd2Ld3
+   NREpsrivZdxRQFLrdWvSgVzn/aYH9CuDv9JcjPX8ZGzWsKAYOR2gOYsKA
+   me/8hs1Vo/4W07ajSDnYv+06rMYbFawEeGB8yqRclpGZMFgc1+DPz9mG6
+   g==;
+X-IronPort-AV: E=Sophos;i="5.97,250,1669100400"; 
+   d="scan'208";a="197672246"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2023 03:32:09 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 27 Jan 2023 03:32:09 -0700
+Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
+ Transport; Fri, 27 Jan 2023 03:32:07 -0700
+Message-ID: <8028ffe4-c042-e405-ac64-6707c84d5a1f@microchip.com>
+Date:   Fri, 27 Jan 2023 11:32:06 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v5 07/11] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Content-Language: en-US, nl
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-References: <20230120114524.408368-1-hdegoede@redhat.com>
- <20230120114524.408368-8-hdegoede@redhat.com>
- <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y8qOYlAm4flqe1tp@paasikivi.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] mmc: atmel: convert to gpio descriptos
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Balamanikandan Gunasundar 
+        <Balamanikandan.Gunasundar@microchip.com>
+CC:     <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>
+References: <20230126135034.3320638-1-arnd@kernel.org>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20230126135034.3320638-1-arnd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sakari,
+Hi Arnd,
 
-On 1/20/23 13:51, Sakari Ailus wrote:
-> Hi Hans,
+On 26/01/2023 at 14:50, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> On Fri, Jan 20, 2023 at 12:45:20PM +0100, Hans de Goede wrote:
->> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
->> associated with the sensor and extend the call_s_stream() wrapper to
->> enable/disable the privacy LED if found.
->>
->> This makes the core handle privacy LED control, rather then having to
->> duplicate this code in all the sensor drivers.
->>
->> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v4 (requested by Laurent Pinchart):
->> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
->>   make errors other then -ENOENT fail the register() call.
->> - Move the led_disable_sysfs() call to be done at led_get() time, instead
->>   of only disabling the sysfs interface when the sensor is streaming.
->> ---
->>  drivers/media/v4l2-core/v4l2-fwnode.c | 15 +++++++++++++++
->>  drivers/media/v4l2-core/v4l2-subdev.c | 18 ++++++++++++++++++
->>  include/media/v4l2-subdev.h           |  3 +++
->>  3 files changed, 36 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->> index c8a2264262bc..cfac1e2ae501 100644
->> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->> @@ -16,6 +16,7 @@
->>   */
->>  #include <linux/acpi.h>
->>  #include <linux/kernel.h>
->> +#include <linux/leds.h>
->>  #include <linux/mm.h>
->>  #include <linux/of.h>
->>  #include <linux/property.h>
->> @@ -1295,6 +1296,20 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->>  	if (WARN_ON(!sd->dev))
->>  		return -ENODEV;
->>  
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
->> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
->> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
->> +
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_disable(sd->privacy_led);
->> +		led_trigger_remove(sd->privacy_led);
->> +		led_set_brightness(sd->privacy_led, 0);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +	}
->> +#endif
->> +
->>  	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
->>  	if (!notifier)
->>  		return -ENOMEM;
->> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->> index 4988a25bd8f4..f33e943aab3f 100644
->> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->> @@ -9,6 +9,7 @@
->>   */
->>  
->>  #include <linux/ioctl.h>
->> +#include <linux/leds.h>
->>  #include <linux/mm.h>
->>  #include <linux/module.h>
->>  #include <linux/slab.h>
->> @@ -322,6 +323,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
->>  {
->>  	int ret;
->>  
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		if (enable)
->> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
->> +		else
->> +			led_set_brightness(sd->privacy_led, 0);
->> +	}
->> +#endif
->>  	ret = sd->ops->video->s_stream(sd, enable);
->>  
->>  	if (!enable && ret < 0) {
->> @@ -1050,6 +1059,14 @@ EXPORT_SYMBOL_GPL(__v4l2_subdev_init_finalize);
->>  
->>  void v4l2_subdev_cleanup(struct v4l2_subdev *sd)
+> All Atmel (now Microchip) machines boot using DT, so the
+> old platform_data for this driver is no longer used by any
+> boards.
 > 
-> v4l2_subdev_cleanup() is currently called by drivers using V4L2 subdev
-> state at the moment, making it unsuitable for the purpose of releasing the
-> privacy led.
-> 
-> Could you move this to v4l2_async_unregister_subdev() instead?
+> Removing the pdata probe lets us simplify the GPIO handling
+> with the use of the descriptor API.
 
-Good point.
+Thanks for your patch. I would like to know if it's related to the 
+initiative started by Bala in this series:
 
-Looking into this also made me realize that I forgot to cleanup
-the LED reference (and re-enable sysfs control) in case of
-errors in v4l2_async_register_subdev_sensor() after getting it.
+https://lore.kernel.org/all/20221226073908.17317-1-balamanikandan.gunasundar@microchip.com/
 
-Fixing this requires adding a v4l2_subdev_put_privacy_led()
-helper. At which point it makes sense to also put the code
-to get the led in a v4l2_subdev_get_privacy_led() helper
-and then all privacy-led code lives inside a v4l2-subdev.c
-removing the need for:
-
-[PATCH v5 06/11] media: v4l2-core: Built async and fwnode code into videodev.ko
-
-all together :)   So I'll drop that from v6 of this series to
-make the series simpler.
+It's true that it didn't come to a conclusion yet...
 
 Regards,
+   Nicolas
 
-Hans
-
-
-
-
-
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/mmc/host/atmel-mci.c | 179 +++++++++++++++--------------------
+>   include/linux/atmel-mci.h    |  46 ---------
+>   2 files changed, 77 insertions(+), 148 deletions(-)
+>   delete mode 100644 include/linux/atmel-mci.h
 > 
->>  {
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_enable(sd->privacy_led);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +		led_put(sd->privacy_led);
->> +	}
->> +#endif
->>  	__v4l2_subdev_state_free(sd->active_state);
->>  	sd->active_state = NULL;
->>  }
->> @@ -1090,6 +1107,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
->>  	sd->grp_id = 0;
->>  	sd->dev_priv = NULL;
->>  	sd->host_priv = NULL;
->> +	sd->privacy_led = NULL;
->>  #if defined(CONFIG_MEDIA_CONTROLLER)
->>  	sd->entity.name = sd->name;
->>  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
->> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->> index b15fa9930f30..0547313f98cc 100644
->> --- a/include/media/v4l2-subdev.h
->> +++ b/include/media/v4l2-subdev.h
->> @@ -38,6 +38,7 @@ struct v4l2_subdev;
->>  struct v4l2_subdev_fh;
->>  struct tuner_setup;
->>  struct v4l2_mbus_frame_desc;
->> +struct led_classdev;
->>  
->>  /**
->>   * struct v4l2_decode_vbi_line - used to decode_vbi_line
->> @@ -982,6 +983,8 @@ struct v4l2_subdev {
->>  	 * appropriate functions.
->>  	 */
->>  
->> +	struct led_classdev *privacy_led;
->> +
->>  	/*
->>  	 * TODO: active_state should most likely be changed from a pointer to an
->>  	 * embedded field. For the time being it's kept as a pointer to more
+> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+> index bb9bbf1c927b..40006a960277 100644
+> --- a/drivers/mmc/host/atmel-mci.c
+> +++ b/drivers/mmc/host/atmel-mci.c
+> @@ -30,7 +30,6 @@
+>   #include <linux/mmc/host.h>
+>   #include <linux/mmc/sdio.h>
 > 
+> -#include <linux/atmel-mci.h>
+>   #include <linux/atmel_pdc.h>
+>   #include <linux/pm.h>
+>   #include <linux/pm_runtime.h>
+> @@ -40,6 +39,30 @@
+>   #include <asm/io.h>
+>   #include <asm/unaligned.h>
+> 
+> +#define ATMCI_MAX_NR_SLOTS     2
+> +
+> +/**
+> + * struct mci_slot_pdata - board-specific per-slot configuration
+> + * @bus_width: Number of data lines wired up the slot
+> + * @wp_pin: GPIO pin wired to the write protect sensor
+> + * @detect_is_active_high: The state of the detect pin when it is active
+> + * @non_removable: The slot is not removable, only detect once
+> + *
+> + * If a given slot is not present on the board, @bus_width should be
+> + * set to 0. The other fields are ignored in this case.
+> + *
+> + * Any pins that aren't available should be set to a negative value.
+> + *
+> + * Note that support for multiple slots is experimental -- some cards
+> + * might get upset if we don't get the clock management exactly right.
+> + * But in most cases, it should work just fine.
+> + */
+> +struct mci_slot_pdata {
+> +       unsigned int            bus_width;
+> +       bool                    detect_is_active_high;
+> +       bool                    non_removable;
+> +};
+> +
+>   /*
+>    * Superset of MCI IP registers integrated in Atmel AT91 Processor
+>    * Registers and bitfields marked with [2] are only available in MCI2
+> @@ -388,8 +411,8 @@ struct atmel_mci_slot {
+>   #define ATMCI_CARD_NEED_INIT   1
+>   #define ATMCI_SHUTDOWN         2
+> 
+> -       int                     detect_pin;
+> -       int                     wp_pin;
+> +       struct gpio_desc        *detect_pin;
+> +       struct gpio_desc        *wp_pin;
+>          bool                    detect_is_active_high;
+> 
+>          struct timer_list       detect_timer;
+> @@ -593,7 +616,6 @@ static void atmci_init_debugfs(struct atmel_mci_slot *slot)
+>                             &host->completed_events);
+>   }
+> 
+> -#if defined(CONFIG_OF)
+>   static const struct of_device_id atmci_dt_ids[] = {
+>          { .compatible = "atmel,hsmci" },
+>          { /* sentinel */ }
+> @@ -601,23 +623,13 @@ static const struct of_device_id atmci_dt_ids[] = {
+> 
+>   MODULE_DEVICE_TABLE(of, atmci_dt_ids);
+> 
+> -static struct mci_platform_data*
+> -atmci_of_init(struct platform_device *pdev)
+> +static int
+> +atmci_of_init(struct platform_device *pdev, struct mci_slot_pdata *pdata)
+>   {
+>          struct device_node *np = pdev->dev.of_node;
+>          struct device_node *cnp;
+> -       struct mci_platform_data *pdata;
+>          u32 slot_id;
+> 
+> -       if (!np) {
+> -               dev_err(&pdev->dev, "device node not found\n");
+> -               return ERR_PTR(-EINVAL);
+> -       }
+> -
+> -       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> -       if (!pdata)
+> -               return ERR_PTR(-ENOMEM);
+> -
+>          for_each_child_of_node(np, cnp) {
+>                  if (of_property_read_u32(cnp, "reg", &slot_id)) {
+>                          dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
+> @@ -633,31 +645,18 @@ atmci_of_init(struct platform_device *pdev)
+>                  }
+> 
+>                  if (of_property_read_u32(cnp, "bus-width",
+> -                                        &pdata->slot[slot_id].bus_width))
+> -                       pdata->slot[slot_id].bus_width = 1;
+> -
+> -               pdata->slot[slot_id].detect_pin =
+> -                       of_get_named_gpio(cnp, "cd-gpios", 0);
+> +                                        &pdata[slot_id].bus_width))
+> +                       pdata[slot_id].bus_width = 1;
+> 
+> -               pdata->slot[slot_id].detect_is_active_high =
+> +               pdata[slot_id].detect_is_active_high =
+>                          of_property_read_bool(cnp, "cd-inverted");
+> 
+> -               pdata->slot[slot_id].non_removable =
+> +               pdata[slot_id].non_removable =
+>                          of_property_read_bool(cnp, "non-removable");
+> -
+> -               pdata->slot[slot_id].wp_pin =
+> -                       of_get_named_gpio(cnp, "wp-gpios", 0);
+>          }
+> 
+> -       return pdata;
+> -}
+> -#else /* CONFIG_OF */
+> -static inline struct mci_platform_data*
+> -atmci_of_init(struct platform_device *dev)
+> -{
+> -       return ERR_PTR(-EINVAL);
+> +       return 0;
+>   }
+> -#endif
+> 
+>   static inline unsigned int atmci_get_version(struct atmel_mci *host)
+>   {
+> @@ -1509,8 +1508,8 @@ static int atmci_get_ro(struct mmc_host *mmc)
+>          int                     read_only = -ENOSYS;
+>          struct atmel_mci_slot   *slot = mmc_priv(mmc);
+> 
+> -       if (gpio_is_valid(slot->wp_pin)) {
+> -               read_only = gpio_get_value(slot->wp_pin);
+> +       if (slot->wp_pin) {
+> +               read_only = gpiod_get_value(slot->wp_pin);
+>                  dev_dbg(&mmc->class_dev, "card is %s\n",
+>                                  read_only ? "read-only" : "read-write");
+>          }
+> @@ -1523,8 +1522,8 @@ static int atmci_get_cd(struct mmc_host *mmc)
+>          int                     present = -ENOSYS;
+>          struct atmel_mci_slot   *slot = mmc_priv(mmc);
+> 
+> -       if (gpio_is_valid(slot->detect_pin)) {
+> -               present = !(gpio_get_value(slot->detect_pin) ^
+> +       if (slot->detect_pin) {
+> +               present = !(gpiod_get_value(slot->detect_pin) ^
+>                              slot->detect_is_active_high);
+>                  dev_dbg(&mmc->class_dev, "card is %spresent\n",
+>                                  present ? "" : "not ");
+> @@ -1637,8 +1636,8 @@ static void atmci_detect_change(struct timer_list *t)
+>          if (test_bit(ATMCI_SHUTDOWN, &slot->flags))
+>                  return;
+> 
+> -       enable_irq(gpio_to_irq(slot->detect_pin));
+> -       present = !(gpio_get_value(slot->detect_pin) ^
+> +       enable_irq(gpiod_to_irq(slot->detect_pin));
+> +       present = !(gpiod_get_value(slot->detect_pin) ^
+>                      slot->detect_is_active_high);
+>          present_old = test_bit(ATMCI_CARD_PRESENT, &slot->flags);
+> 
+> @@ -2231,18 +2230,15 @@ static int atmci_init_slot(struct atmel_mci *host,
+>          slot = mmc_priv(mmc);
+>          slot->mmc = mmc;
+>          slot->host = host;
+> -       slot->detect_pin = slot_data->detect_pin;
+> -       slot->wp_pin = slot_data->wp_pin;
+>          slot->detect_is_active_high = slot_data->detect_is_active_high;
+>          slot->sdc_reg = sdc_reg;
+>          slot->sdio_irq = sdio_irq;
+> 
+>          dev_dbg(&mmc->class_dev,
+> -               "slot[%u]: bus_width=%u, detect_pin=%d, "
+> -               "detect_is_active_high=%s, wp_pin=%d\n",
+> -               id, slot_data->bus_width, slot_data->detect_pin,
+> -               slot_data->detect_is_active_high ? "true" : "false",
+> -               slot_data->wp_pin);
+> +               "slot[%u]: bus_width=%u, "
+> +               "detect_is_active_high=%s\n",
+> +               id, slot_data->bus_width,
+> +               slot_data->detect_is_active_high ? "true" : "false");
+> 
+>          mmc->ops = &atmci_ops;
+>          mmc->f_min = DIV_ROUND_UP(host->bus_hz, 512);
+> @@ -2278,30 +2274,29 @@ static int atmci_init_slot(struct atmel_mci *host,
+> 
+>          /* Assume card is present initially */
+>          set_bit(ATMCI_CARD_PRESENT, &slot->flags);
+> -       if (gpio_is_valid(slot->detect_pin)) {
+> -               if (devm_gpio_request(&host->pdev->dev, slot->detect_pin,
+> -                                     "mmc_detect")) {
+> -                       dev_dbg(&mmc->class_dev, "no detect pin available\n");
+> -                       slot->detect_pin = -EBUSY;
+> -               } else if (gpio_get_value(slot->detect_pin) ^
+> -                               slot->detect_is_active_high) {
+> +
+> +       slot->detect_pin = devm_gpiod_get_optional(&host->pdev->dev, "cd", GPIOD_IN);
+> +       if (!IS_ERR(slot->detect_pin)) {
+> +               dev_dbg(&mmc->class_dev, "no detect pin available\n");
+> +               slot->detect_pin = NULL;
+> +       } else if (slot->detect_pin) {
+> +               if (gpiod_get_value(slot->detect_pin) ^
+> +                   slot->detect_is_active_high) {
+>                          clear_bit(ATMCI_CARD_PRESENT, &slot->flags);
+>                  }
+>          }
+> 
+> -       if (!gpio_is_valid(slot->detect_pin)) {
+> +       if (!slot->detect_pin) {
+>                  if (slot_data->non_removable)
+>                          mmc->caps |= MMC_CAP_NONREMOVABLE;
+>                  else
+>                          mmc->caps |= MMC_CAP_NEEDS_POLL;
+>          }
+> 
+> -       if (gpio_is_valid(slot->wp_pin)) {
+> -               if (devm_gpio_request(&host->pdev->dev, slot->wp_pin,
+> -                                     "mmc_wp")) {
+> -                       dev_dbg(&mmc->class_dev, "no WP pin available\n");
+> -                       slot->wp_pin = -EBUSY;
+> -               }
+> +       slot->wp_pin = devm_gpiod_get_optional(&host->pdev->dev, "wp", GPIOD_IN);
+> +       if (IS_ERR(slot->wp_pin)) {
+> +               dev_dbg(&mmc->class_dev, "no WP pin available\n");
+> +               slot->wp_pin = NULL;
+>          }
+> 
+>          host->slot[id] = slot;
+> @@ -2312,18 +2307,18 @@ static int atmci_init_slot(struct atmel_mci *host,
+>                  return ret;
+>          }
+> 
+> -       if (gpio_is_valid(slot->detect_pin)) {
+> +       if (slot->detect_pin) {
+>                  timer_setup(&slot->detect_timer, atmci_detect_change, 0);
+> 
+> -               ret = request_irq(gpio_to_irq(slot->detect_pin),
+> +               ret = request_irq(gpiod_to_irq(slot->detect_pin),
+>                                  atmci_detect_interrupt,
+>                                  IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
+>                                  "mmc-detect", slot);
+>                  if (ret) {
+>                          dev_dbg(&mmc->class_dev,
+>                                  "could not request IRQ %d for detect pin\n",
+> -                               gpio_to_irq(slot->detect_pin));
+> -                       slot->detect_pin = -EBUSY;
+> +                               gpiod_to_irq(slot->detect_pin));
+> +                       slot->detect_pin = NULL;
+>                  }
+>          }
+> 
+> @@ -2342,10 +2337,8 @@ static void atmci_cleanup_slot(struct atmel_mci_slot *slot,
+> 
+>          mmc_remove_host(slot->mmc);
+> 
+> -       if (gpio_is_valid(slot->detect_pin)) {
+> -               int pin = slot->detect_pin;
+> -
+> -               free_irq(gpio_to_irq(pin), slot);
+> +       if (slot->detect_pin) {
+> +               free_irq(gpiod_to_irq(slot->detect_pin), slot);
+>                  del_timer_sync(&slot->detect_timer);
+>          }
+> 
+> @@ -2357,22 +2350,6 @@ static int atmci_configure_dma(struct atmel_mci *host)
+>   {
+>          host->dma.chan = dma_request_chan(&host->pdev->dev, "rxtx");
+> 
+> -       if (PTR_ERR(host->dma.chan) == -ENODEV) {
+> -               struct mci_platform_data *pdata = host->pdev->dev.platform_data;
+> -               dma_cap_mask_t mask;
+> -
+> -               if (!pdata || !pdata->dma_filter)
+> -                       return -ENODEV;
+> -
+> -               dma_cap_zero(mask);
+> -               dma_cap_set(DMA_SLAVE, mask);
+> -
+> -               host->dma.chan = dma_request_channel(mask, pdata->dma_filter,
+> -                                                    pdata->dma_slave);
+> -               if (!host->dma.chan)
+> -                       host->dma.chan = ERR_PTR(-ENODEV);
+> -       }
+> -
+>          if (IS_ERR(host->dma.chan))
+>                  return PTR_ERR(host->dma.chan);
+> 
+> @@ -2450,7 +2427,7 @@ static void atmci_get_cap(struct atmel_mci *host)
+> 
+>   static int atmci_probe(struct platform_device *pdev)
+>   {
+> -       struct mci_platform_data        *pdata;
+> +       struct mci_slot_pdata           pdata[ATMCI_MAX_NR_SLOTS];
+>          struct atmel_mci                *host;
+>          struct resource                 *regs;
+>          unsigned int                    nr_slots;
+> @@ -2460,23 +2437,21 @@ static int atmci_probe(struct platform_device *pdev)
+>          regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>          if (!regs)
+>                  return -ENXIO;
+> -       pdata = pdev->dev.platform_data;
+> -       if (!pdata) {
+> -               pdata = atmci_of_init(pdev);
+> -               if (IS_ERR(pdata)) {
+> -                       dev_err(&pdev->dev, "platform data not available\n");
+> -                       return PTR_ERR(pdata);
+> -               }
+> +
+> +       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
+> +       if (!host)
+> +               return -ENOMEM;
+> +
+> +       ret = atmci_of_init(pdev, pdata);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "error parsing DT\n");
+> +               return ret;
+>          }
+> 
+>          irq = platform_get_irq(pdev, 0);
+>          if (irq < 0)
+>                  return irq;
+> 
+> -       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
+> -       if (!host)
+> -               return -ENOMEM;
+> -
+>          host->pdev = pdev;
+>          spin_lock_init(&host->lock);
+>          INIT_LIST_HEAD(&host->queue);
+> @@ -2540,16 +2515,16 @@ static int atmci_probe(struct platform_device *pdev)
+>          /* We need at least one slot to succeed */
+>          nr_slots = 0;
+>          ret = -ENODEV;
+> -       if (pdata->slot[0].bus_width) {
+> -               ret = atmci_init_slot(host, &pdata->slot[0],
+> +       if (pdata[0].bus_width) {
+> +               ret = atmci_init_slot(host, &pdata[0],
+>                                  0, ATMCI_SDCSEL_SLOT_A, ATMCI_SDIOIRQA);
+>                  if (!ret) {
+>                          nr_slots++;
+>                          host->buf_size = host->slot[0]->mmc->max_req_size;
+>                  }
+>          }
+> -       if (pdata->slot[1].bus_width) {
+> -               ret = atmci_init_slot(host, &pdata->slot[1],
+> +       if (pdata[1].bus_width) {
+> +               ret = atmci_init_slot(host, &pdata[1],
+>                                  1, ATMCI_SDCSEL_SLOT_B, ATMCI_SDIOIRQB);
+>                  if (!ret) {
+>                          nr_slots++;
+> @@ -2671,7 +2646,7 @@ static struct platform_driver atmci_driver = {
+>          .driver         = {
+>                  .name           = "atmel_mci",
+>                  .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
+> -               .of_match_table = of_match_ptr(atmci_dt_ids),
+> +               .of_match_table = atmci_dt_ids,
+>                  .pm             = &atmci_dev_pm_ops,
+>          },
+>   };
+> diff --git a/include/linux/atmel-mci.h b/include/linux/atmel-mci.h
+> deleted file mode 100644
+> index 1491af38cc6e..000000000000
+> --- a/include/linux/atmel-mci.h
+> +++ /dev/null
+> @@ -1,46 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __LINUX_ATMEL_MCI_H
+> -#define __LINUX_ATMEL_MCI_H
+> -
+> -#include <linux/types.h>
+> -#include <linux/dmaengine.h>
+> -
+> -#define ATMCI_MAX_NR_SLOTS     2
+> -
+> -/**
+> - * struct mci_slot_pdata - board-specific per-slot configuration
+> - * @bus_width: Number of data lines wired up the slot
+> - * @detect_pin: GPIO pin wired to the card detect switch
+> - * @wp_pin: GPIO pin wired to the write protect sensor
+> - * @detect_is_active_high: The state of the detect pin when it is active
+> - * @non_removable: The slot is not removable, only detect once
+> - *
+> - * If a given slot is not present on the board, @bus_width should be
+> - * set to 0. The other fields are ignored in this case.
+> - *
+> - * Any pins that aren't available should be set to a negative value.
+> - *
+> - * Note that support for multiple slots is experimental -- some cards
+> - * might get upset if we don't get the clock management exactly right.
+> - * But in most cases, it should work just fine.
+> - */
+> -struct mci_slot_pdata {
+> -       unsigned int            bus_width;
+> -       int                     detect_pin;
+> -       int                     wp_pin;
+> -       bool                    detect_is_active_high;
+> -       bool                    non_removable;
+> -};
+> -
+> -/**
+> - * struct mci_platform_data - board-specific MMC/SDcard configuration
+> - * @dma_slave: DMA slave interface to use in data transfers.
+> - * @slot: Per-slot configuration data.
+> - */
+> -struct mci_platform_data {
+> -       void                    *dma_slave;
+> -       dma_filter_fn           dma_filter;
+> -       struct mci_slot_pdata   slot[ATMCI_MAX_NR_SLOTS];
+> -};
+> -
+> -#endif /* __LINUX_ATMEL_MCI_H */
+> --
+> 2.39.0
+> 
+
+-- 
+Nicolas Ferre
 
