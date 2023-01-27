@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F9DB67EFA6
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 21:39:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6740667EFAA
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 21:39:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231875AbjA0UjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 15:39:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43756 "EHLO
+        id S231937AbjA0UjM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 15:39:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjA0UjI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 15:39:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7B8525E
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 12:37:47 -0800 (PST)
+        with ESMTP id S231901AbjA0UjK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 15:39:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA42993EB
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 12:37:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674851867;
+        s=mimecast20190719; t=1674851868;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FvC+mJVTxeLB/xxKqNlLzusxS+FDnbgqyFtuEzpY61Y=;
-        b=CaYuQ4l/DtHxsSsrF1Scb/tzjBQzaFDrDpTOPcjcBu3pmM91H8Z4i1rZxFY4HdV11g8NnU
-        zSKnj0uHBd9gVDjSnmhJNwHTxjAOSgB5bT5b+ElebB0wDv18KMZls2FS8bkx0G9GJ6Cwh3
-        Lbylvy8YGgKL9+A6LSImEwrGSWZB3CM=
+        bh=xT+sMb53YKOY8Wu0RJ8DpPc3Z6j34v11O/P+urbWZ3o=;
+        b=b8YLsStkj3zeQd7BdKsG1vjiMVqyu6Xm6YJXQTxlaxJqW5RSOyrux/aOCjKI6BPZYcGEN1
+        w8qaV5eNdxI35JgFP+cPWIcFQ0XLUW4b4qNy+Ubsp6s9K2W119/UomgqEfplOPeCsArbQq
+        5TfDtECorspqiky8Ypti4bMfCSt5z1M=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-441-Cm0Wo-fJPVejEqV3kXS4wA-1; Fri, 27 Jan 2023 15:37:41 -0500
-X-MC-Unique: Cm0Wo-fJPVejEqV3kXS4wA-1
+ us-mta-90-c0UUVRjtM-G4j9FEx979tg-1; Fri, 27 Jan 2023 15:37:43 -0500
+X-MC-Unique: c0UUVRjtM-G4j9FEx979tg-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6626C88B776;
-        Fri, 27 Jan 2023 20:37:39 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A82688B783;
+        Fri, 27 Jan 2023 20:37:43 +0000 (UTC)
 Received: from x1.localdomain.com (unknown [10.39.192.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF3F0492C14;
-        Fri, 27 Jan 2023 20:37:35 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5D1B492C14;
+        Fri, 27 Jan 2023 20:37:39 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <mgross@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present
-Date:   Fri, 27 Jan 2023 21:37:25 +0100
-Message-Id: <20230127203729.10205-2-hdegoede@redhat.com>
+Subject: [PATCH v6 2/5] platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+Date:   Fri, 27 Jan 2023 21:37:26 +0100
+Message-Id: <20230127203729.10205-3-hdegoede@redhat.com>
 In-Reply-To: <20230127203729.10205-1-hdegoede@redhat.com>
 References: <20230127203729.10205-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -61,7 +61,7 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,216 +69,100 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Make v4l2_async_register_subdev_sensor() try to get a privacy LED
-associated with the sensor and extend the call_s_stream() wrapper to
-enable/disable the privacy LED if found.
+Add a helper function to map the type returned by the _DSM
+method to a function name + the default polarity for that function.
 
-This makes the core handle privacy LED control, rather then having to
-duplicate this code in all the sensor drivers.
+And fold the INT3472_GPIO_TYPE_RESET and INT3472_GPIO_TYPE_POWERDOWN
+cases into a single generic case.
 
-Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+This is a preparation patch for further GPIO mapping changes.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v6:
-- Add v4l2_subdev_privacy_led_get()/_put() helpers
-- At least the _put helper is necessary for cleanup on errors later on in
-  v4l2_async_register_subdev_sensor()
-- This puts all the LED related coded into a single file (v4l2-subdev.c)
-  removing the need to build the async + fwnode code into videodev.ko,
-  so that patch is dropped
-- Move the (non-error-exit) cleanup from v4l2_subdev_cleanup() to
-   v4l2_async_unregister_subdev()
+Changes in v3:
+- Add break to default case
 
-Changes in v4 (requested by Laurent Pinchart):
-- Move the led_get() call to v4l2_async_register_subdev_sensor() and
-  make errors other then -ENOENT fail the register() call.
-- Move the led_disable_sysfs() call to be done at led_get() time, instead
-  of only disabling the sysfs interface when the sensor is streaming.
+Changes in v2:
+- Make the helper function doing the type -> function mapping,
+  also return a default polarity for the function.
 ---
- drivers/media/v4l2-core/v4l2-async.c       |  4 ++
- drivers/media/v4l2-core/v4l2-fwnode.c      |  7 ++++
- drivers/media/v4l2-core/v4l2-subdev-priv.h | 14 +++++++
- drivers/media/v4l2-core/v4l2-subdev.c      | 44 ++++++++++++++++++++++
- include/media/v4l2-subdev.h                |  3 ++
- 5 files changed, 72 insertions(+)
- create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
+ drivers/platform/x86/intel/int3472/discrete.c | 45 +++++++++++++++----
+ 1 file changed, 36 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 2f1b718a9189..d7e9ffc7aa23 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -24,6 +24,8 @@
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-subdev.h>
- 
-+#include "v4l2-subdev-priv.h"
-+
- static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
- 				    struct v4l2_subdev *subdev,
- 				    struct v4l2_async_subdev *asd)
-@@ -822,6 +824,8 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
- 	if (!sd->async_list.next)
- 		return;
- 
-+	v4l2_subdev_put_privacy_led(sd);
-+
- 	mutex_lock(&list_lock);
- 
- 	__v4l2_async_nf_unregister(sd->subdev_notifier);
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 3d9533c1b202..049c2f2001ea 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -28,6 +28,8 @@
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-subdev.h>
- 
-+#include "v4l2-subdev-priv.h"
-+
- static const struct v4l2_fwnode_bus_conv {
- 	enum v4l2_fwnode_bus_type fwnode_bus_type;
- 	enum v4l2_mbus_type mbus_type;
-@@ -1302,6 +1304,10 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
- 
- 	v4l2_async_nf_init(notifier);
- 
-+	ret = v4l2_subdev_get_privacy_led(sd);
-+	if (ret < 0)
-+		goto out_cleanup;
-+
- 	ret = v4l2_async_nf_parse_fwnode_sensor(sd->dev, notifier);
- 	if (ret < 0)
- 		goto out_cleanup;
-@@ -1322,6 +1328,7 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
- 	v4l2_async_nf_unregister(notifier);
- 
- out_cleanup:
-+	v4l2_subdev_put_privacy_led(sd);
- 	v4l2_async_nf_cleanup(notifier);
- 	kfree(notifier);
- 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev-priv.h b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-new file mode 100644
-index 000000000000..52391d6d8ab7
---- /dev/null
-+++ b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * V4L2 sub-device pivate header.
-+ *
-+ * Copyright (C) 2023 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#ifndef _V4L2_SUBDEV_PRIV_H_
-+#define _V4L2_SUBDEV_PRIV_H_
-+
-+int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd);
-+void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd);
-+
-+#endif
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 4988a25bd8f4..9fd183628285 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/ioctl.h>
-+#include <linux/leds.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -23,6 +24,8 @@
- #include <media/v4l2-fh.h>
- #include <media/v4l2-event.h>
- 
-+#include "v4l2-subdev-priv.h"
-+
- #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
- static int subdev_fh_init(struct v4l2_subdev_fh *fh, struct v4l2_subdev *sd)
- {
-@@ -322,6 +325,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	int ret;
- 
-+#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-+	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-+		if (enable)
-+			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
-+		else
-+			led_set_brightness(sd->privacy_led, 0);
-+	}
-+#endif
- 	ret = sd->ops->video->s_stream(sd, enable);
- 
- 	if (!enable && ret < 0) {
-@@ -1090,6 +1101,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
- 	sd->grp_id = 0;
- 	sd->dev_priv = NULL;
- 	sd->host_priv = NULL;
-+	sd->privacy_led = NULL;
- #if defined(CONFIG_MEDIA_CONTROLLER)
- 	sd->entity.name = sd->name;
- 	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
-@@ -1105,3 +1117,35 @@ void v4l2_subdev_notify_event(struct v4l2_subdev *sd,
- 	v4l2_subdev_notify(sd, V4L2_DEVICE_NOTIFY_EVENT, (void *)ev);
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index c42c3faa2c32..708d51f9b41d 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -188,6 +188,36 @@ static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(v4l2_subdev_notify_event);
-+
-+int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
-+{
-+#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-+	sd->privacy_led = led_get(sd->dev, "privacy-led");
-+	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
-+		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
-+
-+	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-+		mutex_lock(&sd->privacy_led->led_access);
-+		led_sysfs_disable(sd->privacy_led);
-+		led_trigger_remove(sd->privacy_led);
-+		led_set_brightness(sd->privacy_led, 0);
-+		mutex_unlock(&sd->privacy_led->led_access);
-+	}
-+#endif
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
-+
-+void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd)
-+{
-+#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-+	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-+		mutex_lock(&sd->privacy_led->led_access);
-+		led_sysfs_enable(sd->privacy_led);
-+		mutex_unlock(&sd->privacy_led->led_access);
-+		led_put(sd->privacy_led);
-+	}
-+#endif
-+}
-+EXPORT_SYMBOL_GPL(v4l2_subdev_put_privacy_led);
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index b15fa9930f30..0547313f98cc 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -38,6 +38,7 @@ struct v4l2_subdev;
- struct v4l2_subdev_fh;
- struct tuner_setup;
- struct v4l2_mbus_frame_desc;
-+struct led_classdev;
  
++static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
++{
++	switch (type) {
++	case INT3472_GPIO_TYPE_RESET:
++		*func = "reset";
++		*polarity = GPIO_ACTIVE_LOW;
++		break;
++	case INT3472_GPIO_TYPE_POWERDOWN:
++		*func = "powerdown";
++		*polarity = GPIO_ACTIVE_LOW;
++		break;
++	case INT3472_GPIO_TYPE_CLK_ENABLE:
++		*func = "clk-enable";
++		*polarity = GPIO_ACTIVE_HIGH;
++		break;
++	case INT3472_GPIO_TYPE_PRIVACY_LED:
++		*func = "privacy-led";
++		*polarity = GPIO_ACTIVE_HIGH;
++		break;
++	case INT3472_GPIO_TYPE_POWER_ENABLE:
++		*func = "power-enable";
++		*polarity = GPIO_ACTIVE_HIGH;
++		break;
++	default:
++		*func = "unknown";
++		*polarity = GPIO_ACTIVE_HIGH;
++		break;
++	}
++}
++
  /**
-  * struct v4l2_decode_vbi_line - used to decode_vbi_line
-@@ -982,6 +983,8 @@ struct v4l2_subdev {
- 	 * appropriate functions.
- 	 */
+  * skl_int3472_handle_gpio_resources: Map PMIC resources to consuming sensor
+  * @ares: A pointer to a &struct acpi_resource
+@@ -227,6 +257,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	struct acpi_resource_gpio *agpio;
+ 	union acpi_object *obj;
+ 	const char *err_msg;
++	const char *func;
++	u32 polarity;
+ 	int ret;
+ 	u8 type;
  
-+	struct led_classdev *privacy_led;
+@@ -250,19 +282,14 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 
+ 	type = obj->integer.value & 0xff;
+ 
++	int3472_get_func_and_polarity(type, &func, &polarity);
 +
- 	/*
- 	 * TODO: active_state should most likely be changed from a pointer to an
- 	 * embedded field. For the time being it's kept as a pointer to more
+ 	switch (type) {
+ 	case INT3472_GPIO_TYPE_RESET:
+-		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "reset",
+-						     GPIO_ACTIVE_LOW);
+-		if (ret)
+-			err_msg = "Failed to map reset pin to sensor\n";
+-
+-		break;
+ 	case INT3472_GPIO_TYPE_POWERDOWN:
+-		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, "powerdown",
+-						     GPIO_ACTIVE_LOW);
++		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, polarity);
+ 		if (ret)
+-			err_msg = "Failed to map powerdown pin to sensor\n";
++			err_msg = "Failed to map GPIO pin to sensor\n";
+ 
+ 		break;
+ 	case INT3472_GPIO_TYPE_CLK_ENABLE:
 -- 
 2.39.1
 
