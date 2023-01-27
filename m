@@ -2,119 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9005667E13E
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:15:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB2C67E1A0
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 11:30:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230493AbjA0KPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 05:15:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        id S231592AbjA0KaB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 05:30:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232064AbjA0KPn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:15:43 -0500
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F256A45
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:15:42 -0800 (PST)
-Received: by mail-ua1-x92d.google.com with SMTP id e18so955086uax.2
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 02:15:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0BjRlSRclKXf1VmtMpzRR1oA/s6fAFcFwAGkwCpFmg=;
-        b=QYx2SSysfD4y0jORu8Zi0zppjhqvRrqv0W2u4tcSfYRmb2EgAFSfUt2ulEifUkSb12
-         NvUz5NdyFKVXuRIN5jlQMTIDxntoQcLh8GvPp+kEFzdI6G2Z+fGh1nmMAs52DTEW/saH
-         4xCQT39t1duVAw0uyaI6m3/a4+bBAoZEfdkuxfE2loJkerMQ2MAJYsj7LdKOgOlr5wbj
-         VgVv8PcvBr4gZX0pC6nJt1yhz6wZixSOwx3DnkJyy313CWijA6AFN1UV6VcO1TjirB/o
-         Tz/N+XKBROyCXrVdl054ajLcJgqrlLef2xqS8liwTXOrGzF5RMh3y6Xf2pHY+DTaDr08
-         olUQ==
+        with ESMTP id S231564AbjA0K3u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 05:29:50 -0500
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D5C13503;
+        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
+Received: by mail-oi1-f182.google.com with SMTP id i9so3856357oif.4;
+        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k0BjRlSRclKXf1VmtMpzRR1oA/s6fAFcFwAGkwCpFmg=;
-        b=AKyjdIx0CK275Hu1LHdtQddtSQBEnXkqjzcp9TMqaXtdcOi1qofjx0rOipSGLVBO7V
-         3ANUk2ibKL4VKIsobqvDpzXnavyvFFRl+j8Xy6WpkZznXo9JQj1eZzme85uCIDYVPf/c
-         T9Kj4I8IaEnjSmfE7PMdrp1KXIcKa6+Bmi05H4KI7R2qMYoDSbsmXc/lyvVlM2mIdWAg
-         F9dQqvlI0Mc/oLn44AGTjbEG+QBdaB+LsiDvaLn6LL3elvDo1ggmlAE8X5cxkZe/0pYi
-         svW+AroLKfzeHVdqPhAQb0f/Y3tJWvUVnJQ7uiS2bDqmHBfs5y7rYKGXcLvh/IMVxYPt
-         hZyg==
-X-Gm-Message-State: AO0yUKVpdbJe0778zkfuvBSKUECUn6aFthDRQc3q0kb1koj8n+zdnAie
-        QYVHNw0q1FIzGZOnex54bJXRyAV5FlH3XLI1WUDRjw==
-X-Google-Smtp-Source: AK7set/A4sNlQUZ6cVD076qa1X0VRa1B4Iil9rYhFm7a19E+zdPj4yv1KpPkYc90veF3a2tesUdcMFJWkxQScw8g3qg=
-X-Received: by 2002:ab0:15b0:0:b0:657:6ebc:a2be with SMTP id
- i45-20020ab015b0000000b006576ebca2bemr1205213uae.64.1674814541387; Fri, 27
- Jan 2023 02:15:41 -0800 (PST)
+        bh=PKruyQW1tJheLO2piiCDKl7s1j50V272W4MEFdOhqCA=;
+        b=00+WBZEp5E7eC76VI9EsDKRtz4ugATiY6ovgMMg5+8PzQAlrpPfvIdodehUMGd0n86
+         qtdHuIn6Hf9dWrjaQ6ZXLe3g2cBht7i0u4e6MnjVp+XmHtqNlbiaeFhg9m/DZURgXkeJ
+         5zRTt4mI7f3XZGXeXo9/u97SvmTw6OhV3sYHc4ds7vtxk9S7DZYkdiloDTZNHRRNN0dr
+         opf8/Kd/An02cPK3pPj5ctk9gz47BfZ8sNfNRf7FaqcuvTBI/IG7ZRGFcQtVilWyf4yG
+         hOhmcLcAvIneUWFdTCV02nxnhIKcTXyjnuCRQOKkUcxaJgDoI2mgfvTAXoqIUy9GQxVx
+         bulw==
+X-Gm-Message-State: AO0yUKWwdXt3Yvo6SNRiUw3mgR9xlU24cMNk8GWoIVDNxPyOsmCtQ8IG
+        rZKRGhSSFZqcpwLknwe8DMGj5Nw3r69cLA==
+X-Google-Smtp-Source: AK7set+qty1T48p73vD/2rNItlz11TA6XIf8lynjnYUo1pcyPxbsdPj1v3HWUIOWXFa6e7SRbVsIfA==
+X-Received: by 2002:a05:6808:d1:b0:35e:7595:30df with SMTP id t17-20020a05680800d100b0035e759530dfmr2415966oic.9.1674815387051;
+        Fri, 27 Jan 2023 02:29:47 -0800 (PST)
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
+        by smtp.gmail.com with ESMTPSA id f66-20020aca3845000000b0036acbbf9fbasm1399943oia.46.2023.01.27.02.29.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 02:29:46 -0800 (PST)
+Received: by mail-ot1-f47.google.com with SMTP id g21-20020a9d6495000000b0068bb336141dso98981otl.11;
+        Fri, 27 Jan 2023 02:29:46 -0800 (PST)
+X-Received: by 2002:a0d:f281:0:b0:508:2f2c:8e5f with SMTP id
+ b123-20020a0df281000000b005082f2c8e5fmr772773ywf.384.1674815376246; Fri, 27
+ Jan 2023 02:29:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20230126131033.23011-1-ivoshopov@gmail.com>
-In-Reply-To: <20230126131033.23011-1-ivoshopov@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 27 Jan 2023 11:15:30 +0100
-Message-ID: <CAMRc=MdnfNC1cACq1nZM23fyeFgswj8hgNYk434eueKYSfzrfw@mail.gmail.com>
-Subject: Re: [PATCH] tools: gpio: fix -c option of gpio-event-mon
-To:     Ivo Borisov Shopov <ivoshopov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20230127001141.407071-1-saravanak@google.com> <20230127001141.407071-9-saravanak@google.com>
+ <Y9OcqGTocu8ZlFqy@smile.fi.intel.com> <CAMuHMdXRbiNW9nd_N_=+OTo-uCmy2ePfOmREEHcqLyEn1H=Rhg@mail.gmail.com>
+ <Y9OjE+bJquDcCpJ8@smile.fi.intel.com>
+In-Reply-To: <Y9OjE+bJquDcCpJ8@smile.fi.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 27 Jan 2023 11:29:24 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVpDJmjFebdc5yi421Tyvnh4w5AqZTuA035o4FU_wZRKw@mail.gmail.com>
+Message-ID: <CAMuHMdVpDJmjFebdc5yi421Tyvnh4w5AqZTuA035o4FU_wZRKw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] driver core: fw_devlink: Make cycle detection
+ more robust
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Functional Testing <lkft@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Maxim Kiselev <bigunclemax@gmail.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Jean-Philippe Brucker <jpb@kernel.org>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 2:11 PM Ivo Borisov Shopov <ivoshopov@gmail.com> wrote:
->
-> Following line should listen for a rising edge and exit after the first
-> one since '-c 1' is provided.
->
->     # gpio-event-mon -n gpiochip1 -o 0 -r -c 1
->
-> It works with kernel 4.19 but it doesn't work with 5.10. In 5.10 the
-> above command doesn't exit after the first rising edge it keep listening
-> for an event forever. The '-c 1' is not taken into an account.
-> The problem is in commit 62757c32d5db ("tools: gpio: add multi-line
-> monitoring to gpio-event-mon").
-> Before this commit the iterator 'i' in monitor_device() is used for
-> counting of the events (loops). In the case of the above command (-c 1)
-> we should start from 0 and increment 'i' only ones and hit the 'break'
-> statement and exit the process. But after the above commit counting
-> doesn't start from 0, it start from 1 when we listen on one line.
-> It is because 'i' is used from one more purpose, counting of lines
-> (num_lines) and it isn't restore to 0 after following code
->
->     for (i = 0; i < num_lines; i++)
->         gpiotools_set_bit(&values.mask, i);
->
-> This patch just restore the initial value of the iterator to 0 in
-> order to allow counting of loops to work for any cases.
->
-> Fixes: 62757c32d5db ("tools: gpio: add multi-line monitoring to gpio-event-mon")
-> Signed-off-by: Ivo Borisov Shopov <ivoshopov@gmail.com>
-> ---
->  tools/gpio/gpio-event-mon.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-> index 6c122952c589..5dee2b98ab60 100644
-> --- a/tools/gpio/gpio-event-mon.c
-> +++ b/tools/gpio/gpio-event-mon.c
-> @@ -86,6 +86,7 @@ int monitor_device(const char *device_name,
->                         gpiotools_test_bit(values.bits, i));
->         }
->
-> +       i = 0;
->         while (1) {
->                 struct gpio_v2_line_event event;
->
-> --
-> 2.20.1
->
+Hi Andy,
 
-Queued for fixes with the commit message tweaked.
+On Fri, Jan 27, 2023 at 11:10 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Fri, Jan 27, 2023 at 10:52:02AM +0100, Geert Uytterhoeven wrote:
+> > On Fri, Jan 27, 2023 at 10:43 AM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Thu, Jan 26, 2023 at 04:11:35PM -0800, Saravana Kannan wrote:
+> > > > + * Check if @sup_handle or any of its ancestors or suppliers direct/indirectly
+> > > > + * depend on @con.  This function can detect multiple cyles between @sup_handle
+> > >
+> > > A single space is enough.
+> >
+> > It's very common to write two spaces after a full stop.
 
-Bart
+See e.g.:
+
+    git grep "\.  [^ ]
+
+> > When joining two sentences on separate lines in vim using SHIFT-J,
+> > vim will make sure there are two spaces.
+>
+> But is this consistent with all kernel doc comments in the core.c?
+
+Probably there are inconsistencies...
+(Aren't there everywhere?)
+
+> I'm fine with either as long as it's consistent.
+
+At least the kerneldoc source will look similar to the PDF output
+(LaTeX inserts more space after a full stop automatically ;-).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
