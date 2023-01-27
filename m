@@ -2,124 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EC0267E0A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 10:47:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2A7367E0AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 10:49:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233272AbjA0Jrt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 04:47:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60296 "EHLO
+        id S233328AbjA0Jt3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 04:49:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233306AbjA0Jro (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 04:47:44 -0500
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D0B77529;
-        Fri, 27 Jan 2023 01:47:22 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 27CB55C01E1;
-        Fri, 27 Jan 2023 04:47:19 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 27 Jan 2023 04:47:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1674812839; x=1674899239; bh=tj4fUV0mbS
-        BB8dPKYcWhph5CmlArCZpuWD2qlpLjjUM=; b=NqcZIWOMP02pFJUkQSy+jZGFSa
-        AsLCaB7pvjhiMSRhEQqGuggVpaDVvwRJ9i3rqfGoFpkcyJbqxVo9DPQ10GCqLAEL
-        UeWfkBwHanctycdsMJqxdTT9a5Zv9SOBPA8j5TwtYXlr3Ey+gteDoniAmytk6lDC
-        Sgrw3e+AxKHqbPjC83DPKaRYILqPlDtEHCPZKvpSjLzLWF0Yl2aE1odmqthXZRFi
-        KaCZPNhzNLzxaCvvI4W6A3LGM3zlX6q+7uFUzkwTyG1wOoHIdtJrWTZ0xgKiwo5m
-        CwwwoniL/JaXW67QcOdM61eYGPXEiBi4pkeBIqu2ODg44g4tj3pYz45kxvHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1674812839; x=1674899239; bh=tj4fUV0mbSBB8dPKYcWhph5CmlAr
-        CZpuWD2qlpLjjUM=; b=RIy2/PFL9y+yYZljyekisVGaGB+Wgp131zaDczCJ2uSE
-        lVtMovYYIc6Y/kUhdHiPfoOE+LhIzBkHIM/xDiE+Xb1BT2TxSaYqs6v2KTbRg15M
-        ORCq6NBmulv1ldDOEUgogzFEJPH6iiN8nl3tvEPI1wFAGj4IpdQE73Wp/7L7XlDy
-        Bakdd15ygYkUR8tdzQN5ISRkSzbEHKSAS69cI+r/jyr4bjrsLPkQEXdPTHSFMVvE
-        fZoW14ZvfZ2Vo29oZz4mFRjiQxvHFk95gFCtfRrsjroMGMM309f3JjDMhfBS+l7h
-        JTZnR+OSSEGW40V0WjTVm6rk3tGAld7Llfw8yQYGzg==
-X-ME-Sender: <xms:pp3TY2nS_PQrvG9xrEoOGaSBSGxc3HFolVrxFgyWgofwCkJpezOIHA>
-    <xme:pp3TY90IcsPoLVI8XW61gv2utoWYi-XezC3eTJHdm2-79E0qRp4ybFS9myTe6vq9o
-    WdvDYA5dXNH83XSKow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddviedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:p53TY0qsoHTJWGphgcEsWzpLMYGkXgrLA0e-k_6LepTt6CwfUgwkWg>
-    <xmx:p53TY6lDT0hMf5Dg1bEqbiqE_HmP0m1qfQP-CLMaIsdYdRbRgFimYw>
-    <xmx:p53TY01pmSrgZTWyn3St-jeLHFPH_DM55OHj-n0M1_87woexQh-oXA>
-    <xmx:p53TY-qj15BRA_R24yUUZz8OPq7C2jkrRiDAbrrr1Z1w24Lk52JLvA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id E0922B60086; Fri, 27 Jan 2023 04:47:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
-Mime-Version: 1.0
-Message-Id: <31ed5c19-af81-4665-b8e9-79112a4f88df@app.fastmail.com>
-In-Reply-To: <CAMRc=McAAwdtCo9VCFtSuQm9hDRVWHZUQe+tMC9Fec=1YhJ+Ng@mail.gmail.com>
+        with ESMTP id S232484AbjA0JtK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 04:49:10 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595CF820CC;
+        Fri, 27 Jan 2023 01:49:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674812942; x=1706348942;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WQDah4XnNOj5Pca4shOfSlMJSAErvbAWwt7Xbf4ZdQw=;
+  b=K+xgBR+Npd/PwIjD6nA132BQzEGKsQzkNRw4AfeVpzvWZzlRs168Gr6y
+   jJHNmNXz0IBDvkxgsA4MV8suu6Xx8srFlGdJD11lpkWp6pvZ6tE1Nbbwg
+   QlfrgyB+dUM21bVo0m6ece2BtiWTIbjVTGrzf0Ll/jeiJMV01Wu1QD7ci
+   h+88F79jot5iWF1dcMS3uTD43L3ImOopD4mCFPgLJ6TEwr0pvv3vQzUPb
+   ye7ZNDtugXoZygOzCCyz27mUGMig2WLUVof7vdCDqLliWlU0/o+L0bUBI
+   kIvLlbRgI3j+4Y9yzDQHVy+NEANshRNRbvuPHeBQPPL8JYHyIHRaD08u/
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="328339940"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="328339940"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 01:48:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="731794443"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="731794443"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Jan 2023 01:48:41 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pLLLb-00Ftyd-1f;
+        Fri, 27 Jan 2023 11:48:39 +0200
+Date:   Fri, 27 Jan 2023 11:48:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] gpiolib: move of_gpio_flags into gpiolib-of.c
+Message-ID: <Y9Od984ZJN3clYHH@smile.fi.intel.com>
 References: <20230126132801.2042371-1-arnd@kernel.org>
  <20230126132801.2042371-9-arnd@kernel.org>
  <Y9KJpU4rynmTdQMj@smile.fi.intel.com>
  <21657e6c-1101-4c56-91e3-6b2f6f9e10c9@app.fastmail.com>
  <Y9OQ9/3IuVIU8VK7@smile.fi.intel.com>
  <CAMRc=McAAwdtCo9VCFtSuQm9hDRVWHZUQe+tMC9Fec=1YhJ+Ng@mail.gmail.com>
-Date:   Fri, 27 Jan 2023 10:46:59 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc:     "Arnd Bergmann" <arnd@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] gpiolib: move of_gpio_flags into gpiolib-of.c
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McAAwdtCo9VCFtSuQm9hDRVWHZUQe+tMC9Fec=1YhJ+Ng@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 27, 2023, at 10:43, Bartosz Golaszewski wrote:
+On Fri, Jan 27, 2023 at 10:43:37AM +0100, Bartosz Golaszewski wrote:
 > On Fri, Jan 27, 2023 at 9:53 AM Andy Shevchenko
 > <andriy.shevchenko@linux.intel.com> wrote:
->>
->> On Thu, Jan 26, 2023 at 03:47:42PM +0100, Arnd Bergmann wrote:
->> > On Thu, Jan 26, 2023, at 15:09, Andy Shevchenko wrote:
->> > > On Thu, Jan 26, 2023 at 02:28:01PM +0100, Arnd Bergmann wrote:
->> > >> From: Arnd Bergmann <arnd@arndb.de>
->> > >>
->> > >> There is no need for this in the header any more, it's just
->> > >> an implementation detail now.
->> > >
->> > > I have published
->> > > https://lore.kernel.org/r/20230112145140.67573-1-andriy.shevchenko@linux.intel.com
->> > > Can it be used?
->> >
->> > Sure, I added a Reviewed-by: on that now. Your patch will conflict
->> > with my patch 7/8, but we can work that out.
->>
->> Either Bart takes it independently or you may attach it into your series.
->> Bart?
->>
->
+> > On Thu, Jan 26, 2023 at 03:47:42PM +0100, Arnd Bergmann wrote:
+> > > On Thu, Jan 26, 2023, at 15:09, Andy Shevchenko wrote:
+> > > > On Thu, Jan 26, 2023 at 02:28:01PM +0100, Arnd Bergmann wrote:
+
+...
+
+> > > >> There is no need for this in the header any more, it's just
+> > > >> an implementation detail now.
+> > > >
+> > > > I have published
+> > > > https://lore.kernel.org/r/20230112145140.67573-1-andriy.shevchenko@linux.intel.com
+> > > > Can it be used?
+> > >
+> > > Sure, I added a Reviewed-by: on that now. Your patch will conflict
+> > > with my patch 7/8, but we can work that out.
+> >
+> > Either Bart takes it independently or you may attach it into your series.
+> > Bart?
+> 
 > I applied it to my for-next branch, is that fine?
 
-That's fine, I'll make sure to rebase patch 7 on top of that before
-I resend it. The two are functionally independent but touch adjacent
-lines.
+Good for me, thanks!
+Arnd?
 
-     Arnd
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
