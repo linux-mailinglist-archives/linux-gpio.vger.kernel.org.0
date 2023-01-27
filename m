@@ -2,70 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 275D767E6D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 14:35:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A061867E6D6
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 14:35:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233017AbjA0NfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 08:35:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
+        id S233763AbjA0Nfb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 08:35:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231522AbjA0NfF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 08:35:05 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDA11D92A
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:35:04 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id d8so4033404ybe.9
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:35:04 -0800 (PST)
+        with ESMTP id S231671AbjA0Nfa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 08:35:30 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CB215CA5
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:35:29 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id b1so5944621ybn.11
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 05:35:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cxdDbkfbjax6StuKhKjuEzztvcuIR/QFeGE1cvRqqik=;
-        b=dKziKWKTOTSN3neoeDfIHyuFG/+T+J/G6UhPO9UQsKuMUDXrlYToCd4W+eWtVxOmhX
-         zO1Lza2RbFw+hJTIKFCvaQWbHGk0zW6sWYDFXZIXAZbh4Zfqn9hnXI8kYt0Ea2Wct6ra
-         TlPMZo8DVwjL67y0a534ENw885bxmZAYBQ8Fu/ddfXHKnXPol9Je5zWN5L92DWxS3Wvx
-         BTfIDVwTNczy2aVo1ZwYAqn2TG05mRZRxqIqhDhA+ah7iE1iwldUBHBdr+fWkfCX9LwH
-         qWNxsl4JEP/pUntiNbfU0Nqy1DBZ5fhmS8YTo+MKKjOklPqTVu0BJquJspsUFNelQN0r
-         eHuQ==
+        bh=+JlBczZ+fG7R6JQ9nktDvVYnDGRE115Thkzmewvp3F4=;
+        b=NygA6arAMbHn7P/PnR1WwheGhSmyw6qLAHJj9IB6jRprxCmnETGw/fdT67AlI5AAHt
+         x740bkfwo2MpNcdepS2pC8rcuQW2UHjWNBxbFA45yX4KtGPE1CKfD/kLtlAb+TdQlvHB
+         mkUfOGjqpBDoJh01JY8NINzIMZxMKaIG+bU47OJqg+O2ZrRcHblrGPJoOURpscYBE7jn
+         lVjyWyGHbYxcDeOjnMiLWJNFlANwAeNONVgXUHIDEMcKVbfb1g94Lyd8+HTbz66AGRUY
+         ++JtEpygBZb6JmYQjvBWxYVBDXIDVp15rUE0vymW8kpsGHNn+FH3g6vrkygXqA6plcau
+         uI3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cxdDbkfbjax6StuKhKjuEzztvcuIR/QFeGE1cvRqqik=;
-        b=1aOANxjQHAtIU71QIqh7FmJMV2RdL4gF2UY83CLK/kK8DxnK7PjZ7VDJb2QBob5m6P
-         7NoRwTe9+wg7nFxuvg3wg7RqAdAqux6oPfm5VZLHDZCpyDffQ1qLdd8E3zcgby0AYUe/
-         fn8ztKX0EGkcfyvLFelkFBjujd6TBTpwxEr0MRrjc1B7XM84DeWNHpCDNeQBnNkoae2k
-         kapvOcairxLmU7lWZHDEgZXKQIcQ88PcmzFmyb2q26MlYhIxWH3cGEbXLDO+m9WFYonC
-         tVotIRDCQCI143UIHrZ+i4hqkIySzXsaC4524yKYAjamu1z/Gg1DwnJFaGgAVaIT8m+v
-         Cd6A==
-X-Gm-Message-State: AFqh2kpX07tptq9/y4OD2DglPs6Eau2ohirMvRJ9JL7A8ZPDxMyjvlul
-        OoZ8qjRisqT5LhT3b7gJc4R0EDVA71qTUpq5kzsyWQ==
-X-Google-Smtp-Source: AMrXdXuLgqxGLLAgDbAiFglEdET6adHL4S0ijAmEHgy4fMq9WszDjnSdjSz46NopHVfnKHaxpoRzzrFAGGle4n2J74c=
-X-Received: by 2002:a25:9d88:0:b0:7c0:acd2:6300 with SMTP id
- v8-20020a259d88000000b007c0acd26300mr3768499ybp.520.1674826503269; Fri, 27
- Jan 2023 05:35:03 -0800 (PST)
+        bh=+JlBczZ+fG7R6JQ9nktDvVYnDGRE115Thkzmewvp3F4=;
+        b=j6edLdSbXpYT6R0JIy0lhIYVk89ZWryXQ26n6FLCAhUDUT/lpLu02OuB9qtebyMtL9
+         kqa0ieFzcX0YKR9K2QU9GCoT3HQbi3p/9CEK51dximjaPO/ZrugiUIGFjx8rAtJOQj1U
+         ErgTP9A/0ud9cTlgNt7sm1ge1dtTp/YRRGfe/EUdvcKj8FjL8E2hXq0LIilJ4gMB6DIv
+         InTIBcwvV+QW3hThXQjJ9948V+/1202v/a3c1hTB64JMZlzFMqCY1kHX89B/F7Z5sPHC
+         zvC3GB78VCNHaCbxo4zGO1B/afh4poplwm6q5MvAlFqLkMM6Xf95za3aq3k6BsQsJ/vz
+         sj6g==
+X-Gm-Message-State: AFqh2ko55hQbpUg3ybMJONOIdZiNlviSHHybY1w2HeAnCd6Vd1egXT9B
+        wzdb0sJESUpSRtMcigDX3YI6VYZNXKVeK7kgi4XaxA==
+X-Google-Smtp-Source: AMrXdXs8LpY8+SIRcxq+5MJlyno9csqwNoT4DlT60NMH3d/zyJdHGHyD/Z7d9QKSpoZurSghjMmivfFw6s2gFzi3OJQ=
+X-Received: by 2002:a5b:38b:0:b0:7ca:9b40:72a7 with SMTP id
+ k11-20020a5b038b000000b007ca9b4072a7mr4948223ybp.130.1674826528746; Fri, 27
+ Jan 2023 05:35:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20230127101149.3475929-1-arnd@kernel.org> <20230127101149.3475929-3-arnd@kernel.org>
-In-Reply-To: <20230127101149.3475929-3-arnd@kernel.org>
+References: <20230127101149.3475929-1-arnd@kernel.org> <20230127101149.3475929-4-arnd@kernel.org>
+In-Reply-To: <20230127101149.3475929-4-arnd@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Jan 2023 14:34:52 +0100
-Message-ID: <CACRpkda2WQsGyBaZp2mdjphBppyyF1pwQvqDkBZ1F_q5icwdBg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] gpiolib: coldfire: remove custom asm/gpio.h
+Date:   Fri, 27 Jan 2023 14:35:17 +0100
+Message-ID: <CACRpkdaaAbqL4CWwDK8z=DqJ3V-HQrwzZCXro+hbfw2pqaqAQw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] gpiolib: remove asm-generic/gpio.h
 To:     Arnd Bergmann <arnd@kernel.org>
 Cc:     linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -76,22 +73,10 @@ On Fri, Jan 27, 2023 at 11:12 AM Arnd Bergmann <arnd@kernel.org> wrote:
 
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> Now that coldfire is the only user of a custom asm/gpio.h, it seems
-> better to remove this as well, and have the same interface everywhere.
+> The asm-generic/gpio.h file is now always included when
+> using gpiolib, so just move its contents into linux/gpio.h
+> with a few minor simplifications.
 >
-> For the gpio_get_value()/gpio_set_value()/gpio_to_irq(), gpio_cansleep()
-> functions, the custom version is only a micro-optimization to inline the
-> function for constant GPIO numbers. However, in the coldfire defconfigs,
-> I was unable to find a single instance where this micro-optimization
-> was even used, and according to Geert the only user appears to be the
-> QSPI chip that is disabled everywhere.
->
-> The custom gpio_request_one() function is even less useful, as it is
-> guarded by an #ifdef that is never true.
->
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
