@@ -2,66 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11E4967EFAC
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 21:39:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27D0E67F046
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 22:17:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231901AbjA0UjM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 15:39:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43784 "EHLO
+        id S230516AbjA0VR0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 16:17:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231859AbjA0UjL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 15:39:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECAC23D89
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 12:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674851876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2ppB7ywFgHXA+3xriXOqk+nTwyuMULDNe8dPC5namGk=;
-        b=T6gNtmkvgX2HniHNrHQgy3bwmouvbmMZB0DS+BY3dznzNmmaPlpj/2EKkm+YWRxcTakMi/
-        jlmQriEHCKtxnhhG6yqwkcGdcLKxp5FooWv9buUGkfxJ/WVRIQFpQGoyeC+rNaMJqYD6me
-        EzdQYRtKyBD2V9il6sKVqDjnSRLOfiU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-KppIYMjRPSuY3-oFrGq4_g-1; Fri, 27 Jan 2023 15:37:53 -0500
-X-MC-Unique: KppIYMjRPSuY3-oFrGq4_g-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3410288B77F;
-        Fri, 27 Jan 2023 20:37:52 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8885D492C18;
-        Fri, 27 Jan 2023 20:37:49 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v6 5/5] platform/x86: int3472/discrete: Get the polarity from the _DSM entry
-Date:   Fri, 27 Jan 2023 21:37:29 +0100
-Message-Id: <20230127203729.10205-6-hdegoede@redhat.com>
-In-Reply-To: <20230127203729.10205-1-hdegoede@redhat.com>
-References: <20230127203729.10205-1-hdegoede@redhat.com>
+        with ESMTP id S229701AbjA0VRZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 16:17:25 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA525834AC;
+        Fri, 27 Jan 2023 13:17:01 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id m2so16594604ejb.8;
+        Fri, 27 Jan 2023 13:17:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h26lxS/rC2l6H34/Yb9jlhl/eiLIQrWyvYolxstx9ZU=;
+        b=ZZh9GBEqn54nWJUNtdar2XGzvYDp905CZtKPF/ej70WdbpP7wEG9UwoLXstS3QLAoQ
+         lq6GeQYUXwOYv4qNh09efX+kkCenuzhI0pmarnhYFJ74k3IsKEQGdiLUgCVySoEgNujX
+         a1HXWcJzR3eALGyGlqHE9XcuNTh6EddCDTzF71hkJxyYcPVLD7/MEtZYGB9TVtojSsQI
+         Tte+EQ+7NeE1+CdorD5B0KpMr3h5yJEJTXZP3qaJ2a50y0uilb4kaTK+SJmPBXcyex1u
+         GYxDCTzpl6D6FzU6JQyp1Wx/zQRfo2oT2MtoglNnzuL4aobG1TxATPX6r8tiT5wjjLAO
+         Ex+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h26lxS/rC2l6H34/Yb9jlhl/eiLIQrWyvYolxstx9ZU=;
+        b=05xCixG1d8ESg0SwzL4/bS3Uf7nxq7BD72TXLEiD1ZVGaNc4eqvGQJyC/DySSrByqw
+         3Bh3Uu6OTJvKZXhDVctWE1MBjytMsxZKiobeW0JRmADaDL0Pd1h+p9k3pmkhEr0tr0GT
+         dpRF+sW1lRZVUwrH0Fix3o7exBibHC0QwK/Hc4a2R8AAlAkXryCi7NkqUOEnqK+m20Jc
+         MUf5TP837L11Gz33q2UadDioF2r0IIRDUB1E+Fj0jQU/PvnyDmh7lux3xE/y476BJRly
+         WipQPA5/DEgN7785HSDXo/FRpBaCPLgCC/kc6U9KKrNXdiOAAN8hrhfBRq5NV+ClrzNf
+         Zcdg==
+X-Gm-Message-State: AFqh2kpqxEVbb/Zz4BasxLsyU5xuzlAPGnUNOSGMafdHf2Nlqp51TrkW
+        i+fZYUi8Kol2lR/lFd4cbeQ=
+X-Google-Smtp-Source: AMrXdXtgitUgK1mde2F6rY4Kjvrr6+RQI6BeXmJS2UGgJna9J+wdXlOGjycXivglIOtjunJhYO9Qrw==
+X-Received: by 2002:a17:907:75e7:b0:871:3919:cbea with SMTP id jz7-20020a17090775e700b008713919cbeamr42386843ejc.54.1674854220232;
+        Fri, 27 Jan 2023 13:17:00 -0800 (PST)
+Received: from ?IPV6:2a01:c22:6e0f:9000:c8f2:6e21:84ed:c3a3? (dynamic-2a01-0c22-6e0f-9000-c8f2-6e21-84ed-c3a3.c22.pool.telefonica.de. [2a01:c22:6e0f:9000:c8f2:6e21:84ed:c3a3])
+        by smtp.googlemail.com with ESMTPSA id q18-20020a1709064c9200b0085ff3202ce7sm2869047eju.219.2023.01.27.13.16.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 13:16:59 -0800 (PST)
+Message-ID: <3ffd1889-1966-47a8-9504-d44e452d5a31@gmail.com>
+Date:   Fri, 27 Jan 2023 22:16:50 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
+ binding
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Content-Language: en-US
+In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,112 +84,251 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-According to:
-https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
+Convert Amlogic Meson pinctrl binding to yaml.
 
-Bits 31-24 of the _DSM pin entry integer value codes the active-value,
-that is the actual physical signal (0 or 1) which needs to be output on
-the pin to turn the sensor chip on (to make it active).
-
-So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
-pin needs to be 0 to take the chip out of reset. IOW in this case the reset
-signal is active-high rather then the default active-low.
-
-And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
-pin needs to be 0 to enable the clk. So in this case the clk-en signal
-is active-low rather then the default active-high.
-
-IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
-is inverted.
-
-Add a check for this and also propagate this new polarity to the clock
-registration.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- .../platform/x86/intel/int3472/clk_and_regulator.c  |  5 ++++-
- drivers/platform/x86/intel/int3472/common.h         |  2 +-
- drivers/platform/x86/intel/int3472/discrete.c       | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 4 deletions(-)
+v2:
+- consider that more than one compatible can be set
+- remove bus part from example
+---
+ .../pinctrl/amlogic,meson-pinctrl.yaml        | 124 ++++++++++++++++++
+ .../bindings/pinctrl/meson,pinctrl.txt        |  94 -------------
+ 2 files changed, 124 insertions(+), 94 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
 
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 626e5e86f4e0..1086c3d83494 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -87,7 +87,7 @@ static const struct clk_ops skl_int3472_clock_ops = {
- };
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio)
-+			       struct acpi_resource_gpio *agpio, u32 polarity)
- {
- 	char *path = agpio->resource_source.string_ptr;
- 	struct clk_init_data init = {
-@@ -105,6 +105,9 @@ int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
- 		return dev_err_probe(int3472->dev, PTR_ERR(int3472->clock.ena_gpio),
- 				     "getting clk-enable GPIO\n");
- 
-+	if (polarity == GPIO_ACTIVE_LOW)
-+		gpiod_toggle_active_low(int3472->clock.ena_gpio);
+diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+new file mode 100644
+index 000000000..7ab6e2089
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+@@ -0,0 +1,124 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	/* Ensure the pin is in output mode and non-active state */
- 	gpiod_direction_output(int3472->clock.ena_gpio, 0);
- 
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 0d4fa7d00b5f..61688e450ce5 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -122,7 +122,7 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
- 					 const char **name_ret);
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio);
-+			       struct acpi_resource_gpio *agpio, u32 polarity);
- void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index b7752c2b798d..96963e30ab6c 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -220,11 +220,11 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	struct int3472_discrete_device *int3472 = data;
- 	struct acpi_resource_gpio *agpio;
- 	union acpi_object *obj;
-+	u8 active_value, type;
- 	const char *err_msg;
- 	const char *func;
- 	u32 polarity;
- 	int ret;
--	u8 type;
- 
- 	if (!acpi_gpio_get_io_resource(ares, &agpio))
- 		return 1;
-@@ -248,6 +248,15 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	int3472_get_func_and_polarity(type, &func, &polarity);
- 
-+	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
-+	active_value = obj->integer.value >> 24;
-+	if (!active_value)
-+		polarity ^= GPIO_ACTIVE_LOW;
++title: Amlogic Meson pinmux controller
 +
-+	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
-+		agpio->resource_source.string_ptr, agpio->pin_table[0],
-+		(polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
 +
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 	case INT3472_GPIO_TYPE_POWERDOWN:
-@@ -257,7 +266,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
--		ret = skl_int3472_register_clock(int3472, agpio);
-+		ret = skl_int3472_register_clock(int3472, agpio, polarity);
- 		if (ret)
- 			err_msg = "Failed to register clock\n";
- 
++allOf:
++  - $ref: pinctrl.yaml#
++
++properties:
++  compatible:
++    minItems: 1
++    maxItems: 2
++    oneOf:
++      - items:
++          - enum:
++              - amlogic,meson8-cbus-pinctrl
++              - amlogic,meson8b-cbus-pinctrl
++              - amlogic,meson8m2-cbus-pinctrl
++              - amlogic,meson8-aobus-pinctrl
++              - amlogic,meson8b-aobus-pinctrl
++              - amlogic,meson8m2-aobus-pinctrl
++              - amlogic,meson-gxbb-periphs-pinctrl
++              - amlogic,meson-gxbb-aobus-pinctrl
++              - amlogic,meson-gxl-periphs-pinctrl
++              - amlogic,meson-gxl-aobus-pinctrl
++              - amlogic,meson-axg-periphs-pinctrl
++              - amlogic,meson-axg-aobus-pinctrl
++              - amlogic,meson-g12a-periphs-pinctrl
++              - amlogic,meson-g12a-aobus-pinctrl
++              - amlogic,meson-a1-periphs-pinctrl
++              - amlogic,meson-s4-periphs-pinctrl
++      - items:
++          - const: amlogic,meson8m2-aobus-pinctrl
++          - const: amlogic,meson8-aobus-pinctrl
++      - items:
++          - const: amlogic,meson8m2-cbus-pinctrl
++          - const: amlogic,meson8-cbus-pinctrl
++
++  ranges: true
++
++  "#address-cells":
++    enum: [1, 2]
++
++  "#size-cells":
++    enum: [1, 2]
++
++required:
++  - compatible
++  - ranges
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties:
++  anyOf:
++    - type: object
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++patternProperties:
++  "^bank@[0-9]$":
++    type: object
++    properties:
++      reg:
++        minItems: 5
++        maxItems: 5
++
++      reg-names:
++        items:
++          - const: gpio
++          - const: pull
++          - const: pull-enable
++          - const: mux
++          - const: ds
++
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-ranges:
++        $ref: /schemas/types.yaml#/definitions/phandle
++
++    required:
++      - reg
++      - reg-names
++      - gpio-controller
++      - "#gpio-cells"
++      - gpio-ranges
++
++examples:
++  - |
++    pinctrl {
++      compatible = "amlogic,meson-g12a-periphs-pinctrl";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++
++      bank@40 {
++        reg = <0x0 0x40  0x0 0x4c>,
++              <0x0 0xe8  0x0 0x18>,
++              <0x0 0x120 0x0 0x18>,
++              <0x0 0x2c0 0x0 0x40>,
++              <0x0 0x340 0x0 0x1c>;
++        reg-names = "gpio", "pull", "pull-enable", "mux", "ds";
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&periphs_pinctrl 0 0 86>;
++      };
++
++      cec_ao_a_h_pins: cec_ao_a_h {
++        mux {
++          groups = "cec_ao_a_h";
++          function = "cec_ao_a_h";
++          bias-disable;
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+deleted file mode 100644
+index 8146193bd..000000000
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ /dev/null
+@@ -1,94 +0,0 @@
+-== Amlogic Meson pinmux controller ==
+-
+-Required properties for the root node:
+- - compatible: one of "amlogic,meson8-cbus-pinctrl"
+-		      "amlogic,meson8b-cbus-pinctrl"
+-		      "amlogic,meson8m2-cbus-pinctrl"
+-		      "amlogic,meson8-aobus-pinctrl"
+-		      "amlogic,meson8b-aobus-pinctrl"
+-		      "amlogic,meson8m2-aobus-pinctrl"
+-		      "amlogic,meson-gxbb-periphs-pinctrl"
+-		      "amlogic,meson-gxbb-aobus-pinctrl"
+-		      "amlogic,meson-gxl-periphs-pinctrl"
+-		      "amlogic,meson-gxl-aobus-pinctrl"
+-		      "amlogic,meson-axg-periphs-pinctrl"
+-		      "amlogic,meson-axg-aobus-pinctrl"
+-		      "amlogic,meson-g12a-periphs-pinctrl"
+-		      "amlogic,meson-g12a-aobus-pinctrl"
+-		      "amlogic,meson-a1-periphs-pinctrl"
+-		      "amlogic,meson-s4-periphs-pinctrl"
+- - reg: address and size of registers controlling irq functionality
+-
+-=== GPIO sub-nodes ===
+-
+-The GPIO bank for the controller is represented as a sub-node and it acts as a
+-GPIO controller.
+-
+-Required properties for sub-nodes are:
+- - reg: should contain a list of address and size, one tuple for each entry
+-   in reg-names.
+- - reg-names: an array of strings describing the "reg" entries.
+-   Must contain "mux" and "gpio".
+-   May contain "pull", "pull-enable" and "ds" when appropriate.
+- - gpio-controller: identifies the node as a gpio controller
+- - #gpio-cells: must be 2
+-
+-=== Other sub-nodes ===
+-
+-Child nodes without the "gpio-controller" represent some desired
+-configuration for a pin or a group. Those nodes can be pinmux nodes or
+-configuration nodes.
+-
+-Required properties for pinmux nodes are:
+- - groups: a list of pinmux groups. The list of all available groups
+-   depends on the SoC and can be found in driver sources.
+- - function: the name of a function to activate for the specified set
+-   of groups. The list of all available functions depends on the SoC
+-   and can be found in driver sources.
+-
+-Required properties for configuration nodes:
+- - pins: a list of pin names
+-
+-Configuration nodes support the following generic properties, as
+-described in file pinctrl-bindings.txt:
+- - "bias-disable"
+- - "bias-pull-up"
+- - "bias-pull-down"
+- - "output-enable"
+- - "output-disable"
+- - "output-low"
+- - "output-high"
+-
+-Optional properties :
+- - drive-strength-microamp: Drive strength for the specified pins in uA.
+-			    This property is only valid for G12A and newer.
+-
+-=== Example ===
+-
+-	pinctrl: pinctrl@c1109880 {
+-		compatible = "amlogic,meson8-cbus-pinctrl";
+-		reg = <0xc1109880 0x10>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		gpio: banks@c11080b0 {
+-			reg = <0xc11080b0 0x28>,
+-			      <0xc11080e8 0x18>,
+-			      <0xc1108120 0x18>,
+-			      <0xc1108030 0x30>;
+-			reg-names = "mux", "pull", "pull-enable", "gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-               };
+-
+-		nand {
+-			mux {
+-				groups = "nand_io", "nand_io_ce0", "nand_io_ce1",
+-					 "nand_io_rb0", "nand_ale", "nand_cle",
+-					 "nand_wen_clk", "nand_ren_clk", "nand_dqs",
+-					 "nand_ce2", "nand_ce3";
+-				function = "nand";
+-			};
+-		};
+-	};
 -- 
 2.39.1
+
 
