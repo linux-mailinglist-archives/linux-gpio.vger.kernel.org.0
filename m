@@ -2,164 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA0267EF90
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 21:30:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E84467EFA0
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 21:38:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbjA0Uay (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 15:30:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
+        id S231887AbjA0Ui0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 15:38:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230480AbjA0Uax (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 15:30:53 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2121.outbound.protection.outlook.com [40.107.237.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D22A206A5;
-        Fri, 27 Jan 2023 12:30:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aq7yORho5TbosQc/ShwZuirtUkc2KRNt/zx7LawZIFwxKTPTbLXej9Z85sFVLo2gs2hKxnvf1o2ecXfwUvDVrkbyup84jA0Lkk/1lWN+6saaM3hnC8x7T+cD4z6PFaUsXhTJyJH4KDb9PzKahgyokUXr7EWfUDl9sfWh5/71Fch9UTlVZcX+nZ6MP/ab+c3MWrGyxHhnDQ//SLduG7MQA8/ffJjWuMM5pid3hAEfM3mbVDSBfc1A/uNcnhZyY/X+gbsChrnKldh/MTJlBj3nTmmrlYt+wLBQV2HybYMVDz6gzhsKf5VpBOJGopyEXbdeGbp2vURLBtaWEsNP7Q2VwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oTbj1Xb4UVC/+6jqhwo6TWCNxO8sKjzGIUVhDNL6VRg=;
- b=YUjJb0biEuYmK07zUFU5USsrECvN9rxV5TuySiKet6/euERAstGxrMIIYWjtDh23tKaAxbnLMwYkU1Gxg1y1ZwbB1Bq/zpdjPqe6HGX0mSP1O65lKhiP5/nCzCSXHYJy/pwoJSnwgOEdp/aj6mFDX6UxpGNqbLzjlXZptCWsscsBcuWe0nLFenyfHNrfdr2Jh56sIlH5cBvYEKzF+hQwLH+fnMWREMerhXqMrxrlRPDDjUuyzcupOksmhnCqxy2We7N0yrpctEY88sJxKsUIOwRQx6UrGZJZBVrzaDJL8D9uJqmaY4dYCYZ00VGh9mbKnPtA4GZoQ3f9j+mUi/Xm0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oTbj1Xb4UVC/+6jqhwo6TWCNxO8sKjzGIUVhDNL6VRg=;
- b=Vw2HvjBs8/WSA6YRwtN8vrX7VWRQIGp+Tsr41sDpowJftiOmJlmbODKr37WYdD9qvjuk6utDnUml8XZScGQBkwHcfeMUr7o1RIdPEEgNcMI6v1aVIDWuYecizVBFYFXGb2sDRgsYmPYFLjsja0LvniFZePMkVBpjJdxsRItFDPU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from DM5PR1001MB2345.namprd10.prod.outlook.com (2603:10b6:4:2d::31)
- by DS0PR10MB7480.namprd10.prod.outlook.com (2603:10b6:8:165::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.10; Fri, 27 Jan
- 2023 20:30:48 +0000
-Received: from DM5PR1001MB2345.namprd10.prod.outlook.com
- ([fe80::221:4186:6ea3:9097]) by DM5PR1001MB2345.namprd10.prod.outlook.com
- ([fe80::221:4186:6ea3:9097%7]) with mapi id 15.20.6064.010; Fri, 27 Jan 2023
- 20:30:48 +0000
-Date:   Fri, 27 Jan 2023 12:30:42 -0800
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
+        with ESMTP id S231586AbjA0UiZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 15:38:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909377B7A4
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 12:37:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674851861;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=4OcSJzUj2LKvO6CfVFSR0SD1r9tiU8Fuk05jF+6fhPg=;
+        b=itEn+DoKL0eMxd/1iX0UIycVb7Woflx7Kb6Ldv93/le2aA5K+qY7vgZIRRHIcHxYBHGJxK
+        cPnkuC31NluDuEeekuFMbFUL491Ct1vsCGiJtmqj8EeDvI4uxj1UuOx05G7CXJZ4h9NDUy
+        6pTt8MylM1Ul5spg9+DmdZZHJiwjEzI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-549-M5gWZ24GPhS_vxMdCjl3cQ-1; Fri, 27 Jan 2023 15:37:36 -0500
+X-MC-Unique: M5gWZ24GPhS_vxMdCjl3cQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 803F8802C15;
+        Fri, 27 Jan 2023 20:37:35 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B040E492C14;
+        Fri, 27 Jan 2023 20:37:32 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] fw_devlink improvements
-Message-ID: <Y9Q0culPHGNZkQz9@euler>
-References: <20230127001141.407071-1-saravanak@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127001141.407071-1-saravanak@google.com>
-X-ClientProxiedBy: SJ0PR13CA0016.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::21) To DM5PR1001MB2345.namprd10.prod.outlook.com
- (2603:10b6:4:2d::31)
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v6 0/5] int3472/media privacy LED support
+Date:   Fri, 27 Jan 2023 21:37:24 +0100
+Message-Id: <20230127203729.10205-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR1001MB2345:EE_|DS0PR10MB7480:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01fcbb47-1ce8-4ed7-ce11-08db00a56000
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 61qDKbWgrn5gZw1TfHXsaYOiGt9U/dUYR/ICWJSR0rgV3bHKyDHpyO2HD0IIPuZNzeQ4uG88eHlLgS5w6CvAQM/y+bUq9qU0MO+bTmcums5finaslP4ulHDeoxFl0eSvyNfWz2Lf5dStjdR78NJ1X/fCsK+xNrxK99v346W7dlvyVqud8rfHuhu0d3r8+gneiAQIzPpElHvIcI5kQeeX5bj4vAJ8HOJHRfuCX5urxTWYNuUeVSthTzsDUvFeNwekh7LFH+PGvGIJwvbMiDUPvv3/65nZirTOhHobffcsvxthPhza2kdi7w16EzdZxh/TYFYLGLGwUvGbA05Oh2vN4y1AEjIMHDy8/aiWTr1cW5SBf7dVC4xbbCzut1MLd88U7eUpKLXgQFYeUx2w4p0Uq3nF4o+iI1amjlJhQ61d8YVNaPUb4Nb9pxXsva0gjAg69IYMTY6zX0NFRln1brpOpUmIEr4Xvq+jrpOhRgUsOlv5xFKKPwezN23zOLQ9yeBg/8T5+AaSx9ZGSFfSB8ZZ2DyhGSdOuFGFxjnC5ALRxc24WxOxefXFk4rp2XU5IRBuOBWnXV+FFlZP+Pez2l+bfv7Qm4CJ6pLsSQ5XKsfY6VUmYyXjkyoQu2s52X5brHeYA8OcWCtFO2dQ0EhuFoxDlw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1001MB2345.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(376002)(39830400003)(366004)(136003)(346002)(396003)(451199018)(44832011)(2906002)(7406005)(5660300002)(7416002)(4744005)(8936002)(38100700002)(41300700001)(6666004)(86362001)(6486002)(478600001)(83380400001)(54906003)(316002)(8676002)(66476007)(66946007)(4326008)(6916009)(66556008)(6506007)(9686003)(186003)(6512007)(26005)(33716001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1uVrn+VJFo79GjszOpqr9AylzfmL1BdHb2nCnjXc7gIUipAe2ZQiucm+B3th?=
- =?us-ascii?Q?ynM31A7x8SWOuWAB6uOaVLReNQ+auit7yRoK7DGo0yGlkqXVX1Mtcj3qZ0Cn?=
- =?us-ascii?Q?xHM9i0h8lQBy+B0DIqvlQGd5p2CluLG8KWgZfGRbYaTZp9+DZkWaUUw4eeif?=
- =?us-ascii?Q?1I+n2Kivcf4NCwzDI4HpkNNdZ2MrzuSvHKrLcAN5yCJY5KI8II+Qfr6olQPE?=
- =?us-ascii?Q?VHBvzHc0JIa5PwVlrTpVnSl62AwX4Z/tc9ceD6Hzv8W2M8Uqhu3sJ4ey4buR?=
- =?us-ascii?Q?WdRImq4GSTPQTpZYcZOHGoFDEqszHzXW1OTtIS/qRyFtgUr2AwbxpmLvz+ja?=
- =?us-ascii?Q?7L73SgO6TC5mTdEBDEOu2BcfoAcKkp092ICWe7Bu76yQUHp2ZzePgMyPhTVp?=
- =?us-ascii?Q?f13La3qMwoFKhuyjbxP76yS4VUY6mMy940jwlFuSGI3Fmg8f30cdOZPP1mxB?=
- =?us-ascii?Q?zUj3O9NeiTeVuhCzkyEDk+4EM5d8rcqemWXWqpawXuVvKQ4uVOPxXgqgJUjP?=
- =?us-ascii?Q?uztph9RIUXHnYqKpIFQNxDsRSybLoDgBJV7w4ZMs/4NuRwoEoDs0zb7Dwvra?=
- =?us-ascii?Q?aZtSvWcv6Z5ZUkwX9AZT2joPgQEoBhan5qpAqmWhedTnZfdbHbzAUMlfIx/b?=
- =?us-ascii?Q?bZVpMWjYj+Eo4DmOETTaVhT6VCR1gFtsnwlt/qTAl1WVn2c1InpI8kulVypI?=
- =?us-ascii?Q?rqZPCXm7j+ABIrPyreDjfC+cMgjTRlMIuI/k6lFRmQpJHcwclK6ikdVfBI4v?=
- =?us-ascii?Q?iL4AENbg8syjx2PVkNouGf3/noeoM/78ziZeu8gxnZvRHPLO4I4XMuIpNJdg?=
- =?us-ascii?Q?SXXp3MSLnVBp6qx8gUpvYzhdhuwATy5552IZaVL338iMDmB4xlLcvwfQXzyy?=
- =?us-ascii?Q?bVK58eck2wS+Ljw/DeV2UmmlB6DViPY2JQ+mNppuW9guOF17kU3PiJwr607s?=
- =?us-ascii?Q?Rvq6cjUD0Yhx5W20nQ67XVuYbh4MKB2m4s81auHz4mmFDpSASLhaUucpxyUk?=
- =?us-ascii?Q?CGqxI3wVXIUEl1O6PCy9GCAHwu4uZxrIrRR2tPaitIgNtNyWYb7izFlhGQ0T?=
- =?us-ascii?Q?nm5uXvzHn+OPSNlg3P80pg2Jnno4Mok39gOFF9t7BlzI86dYD78en24hLqIJ?=
- =?us-ascii?Q?nchUuC72gz4478pZ29fGYJC9M2+sV2JvTK7871lkijUdLmK15ai5jnOEEYSk?=
- =?us-ascii?Q?fgHM2zeSM7kOHaxjytlndSarZnYNrOhEtQ5fIEJI+RULsVr/Rh4x/eaBA28a?=
- =?us-ascii?Q?A3QpBJaB2XHdOkMj6ILuuemQoQcE4bG/my/bUCrxNxX50TU+cvaKWBbtTsds?=
- =?us-ascii?Q?c1kuty2GIJ+Jd2vU2V+FNwHe1YWFILkshPOr2w76zJzCkumL2jt9A+OJjRtm?=
- =?us-ascii?Q?R8uUw6yFbpDpvkftsDHUQsOSxtR2yFh/nfQ2EVtdF1zFdIb+eFebrO/0XOvF?=
- =?us-ascii?Q?BwSy5jtpaAnamiohomN7bBmxZZmpkuIVWGi+SeWIuOmubwHeRhBDGUjcR1zh?=
- =?us-ascii?Q?9xPGhu3+k3IpVVMu2T82P9JLgCD+Y10He6O1Dftl90mKhm8zZ/HaRMfx5J0K?=
- =?us-ascii?Q?71SoAALuCqKM+lcmqgpXChwSPmUAM7eTIvZVQtPt0g0Z73elUajCkGNWJqK2?=
- =?us-ascii?Q?dpVOf1S4S16ym3Fba/IP8cg=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01fcbb47-1ce8-4ed7-ce11-08db00a56000
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1001MB2345.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2023 20:30:48.6451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C4hZY4k583QPhKqNEPUdZbRXWkO/LS2sUytuqHS7xw4B2WmjkLwYvmzH96UAQqSc29Xr8aH9mT8Kb1c2fqVLrfn368S6YPdUEew9XP/gg1U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7480
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 04:11:27PM -0800, Saravana Kannan wrote:
-> Dmitry, Maxim(s), Miquel, Luca, Doug, Colin, Martin, Jean-Philippe,
-> 
-> I've Cc-ed you because I had pointed you to v1 of this series + the
-> patches in that thread at one point or another as a fix to some issue
-> you were facing. It'd appreciate it if you can test this series and
-> report any issues, or things it fixed and give Tested-bys.
+Hi All,
 
-I applied this on my working net-next/main development branch and can
-confirm I am able to successfully boot the Beaglebone Black.
+Here is version 6 of my series to adjust the INT3472 code's handling of
+the privacy LED on x86 laptops with MIPI camera(s) so that it will also
+work on devices which have a privacy-LED GPIO but not a clk-enable GPIO
+(so that we cannot just tie the LED state to the clk-enable state).
 
-Tested-by: Colin Foster <colin.foster@in-advantage.com>
+Changes in v6:
+- The LED lookup series has been merged, immutable branch pull-req here:
+  https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
+- Rework the media-core changes to correctly free the LED reference,
+  this rework also allows dropping the patch to merge the async + fwnode
+  code into videodev.ko
+- Drop the patch merging the async + fwnode code into videodev.ko
+
+Changes in v5:
+- Rename lookup-table names to match those from the gpio and reset lookups:
+  s/led_name/provider/
+  s/consumer_dev_name/dev_id/
+  s/consumer_function/con_id/
+- Add static inline wrappers for the v4l2_async debugfs init/exit funcs,
+  to fix build errors when CONFIG_V4L2_ASYNC is not enabled
+
+Changes in v4:
+- Rename new __led_get() helper to led_module_get()
+- Drop of/devicetree support from "led-class: Add generic [devm_]led_get()"
+- Add RFC patch to re-add of/devicetree support to show that the new
+  led_get() can easily be extended with dt support when the need for this
+  arises (proof-of-concept dt code, not intended for merging)
+- New patch to built async and fwnode code into videodev.ko,
+  to avoid issues with some of the new LED code getting builtin vs
+  other parts possibly being in a module
+- Move the led_get() call to v4l2_async_register_subdev_sensor()
+- Move the led_disable_sysfs() call to be done at led_get() time
+- Address some other minor review comments
+
+Changes in v3:
+- Due to popular request by multiple people this new version now models
+  the privacy LED as a LED class device. This requires being able to
+  "tie" the LED class device to a specific camera sensor (some devices
+  have multiple sensors + privacy-LEDs).
+
+Patch 1 adds generic privacy-LED support to the v4l2-core/v4l2-subdev.c
+code automatically enabling the privacy-LED when s_stream(subdev, 1)
+is called. So that we don't need to add privacy-LED code to all the
+camera sensor drivers separately (as requested by Sakari).
+
+Patches 2-5 are patches to the platform specific INT3472 code to register
+privacy-LED class devices + lookup table entries for privacy-LEDs described
+in the special INT3472 ACPI nodes found on x86 devices with MIPI cameras.
+
+This depends on the just merged LED lookup code from:
+https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
+
+This series has been tested on:
+
+- Lenovo ThinkPad X1 Yoga gen 7, IPU6, front: ov2740 with privacy LED
+- Dell Latitude 9420, IPU 6, front: ov01a1s with privacy LED
+- Mirosoft Surface Go, IPU3, front: ov5693 with privacy LED
+                              back: ov8865 with privacy LED (pled not yet supported)
+
+Regards,
+
+Hans
+
+
+
+Hans de Goede (5):
+  media: v4l2-core: Make the v4l2-core code enable/disable the privacy
+    LED if present
+  platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+  platform/x86: int3472/discrete: Create a LED class device for the
+    privacy LED
+  platform/x86: int3472/discrete: Move GPIO request to
+    skl_int3472_register_clock()
+  platform/x86: int3472/discrete: Get the polarity from the _DSM entry
+
+ drivers/media/v4l2-core/v4l2-async.c          |   4 +
+ drivers/media/v4l2-core/v4l2-fwnode.c         |   7 ++
+ drivers/media/v4l2-core/v4l2-subdev-priv.h    |  14 +++
+ drivers/media/v4l2-core/v4l2-subdev.c         |  44 ++++++++
+ drivers/platform/x86/intel/int3472/Makefile   |   2 +-
+ .../x86/intel/int3472/clk_and_regulator.c     |  34 ++++--
+ drivers/platform/x86/intel/int3472/common.h   |  18 +++-
+ drivers/platform/x86/intel/int3472/discrete.c | 100 ++++++++----------
+ drivers/platform/x86/intel/int3472/led.c      |  74 +++++++++++++
+ include/media/v4l2-subdev.h                   |   3 +
+ 10 files changed, 234 insertions(+), 66 deletions(-)
+ create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
+ create mode 100644 drivers/platform/x86/intel/int3472/led.c
+
+-- 
+2.39.1
+
