@@ -2,133 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E17467E7BD
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 15:07:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6770D67E86E
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 15:38:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231404AbjA0OH1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Jan 2023 09:07:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
+        id S232369AbjA0OiY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Jan 2023 09:38:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjA0OHZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 09:07:25 -0500
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06E330CD;
-        Fri, 27 Jan 2023 06:07:24 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2FFB55C03FA;
-        Fri, 27 Jan 2023 09:07:24 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 27 Jan 2023 09:07:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1674828444; x=1674914844; bh=tmFRvlKVvX
-        DK9iy2Pc8KgmZTSRXrarsd78EnwvIZO4Y=; b=NOtYL68bWQPKMRjr4X7bpnbbxz
-        7eSWvJQzxTv8J8AdzG9IcB7B+Jw7UQ+xdJ0Mobfll4DzZj3owFqI/VhbP7PofLQ5
-        36GLBxIXeCkDeiwo8qd8W+fjWd3amKerM1ZmlE4z9qw3s+2E6y+hmEfgWQhfKEO0
-        3VciIznrSHHSNuH6bNCdHRKrO67DnzxX6+i/Y7P2Fx4F/3sWRTA7nfizaeWkyW7J
-        jVg0wkUh2ZNZhlD1ZQuGHGpW7FzhPqyDXNYnunLoF1i4DWtMlXxxlKPab2XiBDEw
-        QUOJwQd/JtcbR5P69IZoq3c8I9ekLmbta6s/INr+BcNJikUkkYCeWmLT0kng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1674828444; x=1674914844; bh=tmFRvlKVvXDK9iy2Pc8KgmZTSRXr
-        arsd78EnwvIZO4Y=; b=FN3ast6dbSwkvPmNhF3nBjkyVcryjx2FY4iIo20ELF0J
-        EfvZqE8TP7/siXO2K7jBbHYA2ki2UUhCuORZq9KiVIiBKJkF8arsuTWbSdDn7LEn
-        MsR7Yp3nL7gIwYsdpKmo5ejLqWdlqqqq81ddjaFgHQ1BbVdpkRFa9yaxIDbsCdaN
-        3KNZxrN/fsrtJqRNB+GAbAHmx5stST1UB1G2C5q+L6seQYvqf6Us0hG6hpHRb0fV
-        Fbz0jFs+8PvOTf+e0AM6G5+yBv0XSSdpFMc5g2FJkV9P0GrsZHcA/I+k1XjbHsNQ
-        HzEQ86aD95W0CQT6rMOqNkE7PBYqVWxLcjhGCvxy2g==
-X-ME-Sender: <xms:m9rTY8FKaB4Xpf4We-V4MeXKRupaSyB7FHHOFxU8H9qf3IJyjNFMyw>
-    <xme:m9rTY1VWczUnMFWi7NFzuGJHZJZQhVsoxbsxQKLoZjreM_jypfI6DjJl7CjXbLLb9
-    J0Ai_sZZAsKh8MT788>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddviedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:m9rTY2J4aKVshpDMSvJHowbnPtJuXJJHIoklfy2zUI80FnWDDCBEzA>
-    <xmx:m9rTY-G53oR5P5JpEDgd538rIQRYQmw0UJ_GY4amcvxPXN87piliDg>
-    <xmx:m9rTYyUPhWNsOGOtpRVSQH5vGUA0G2yBQZOMM-vN5yF1s8ZucNCsPg>
-    <xmx:nNrTY0fVd0D0JNmtfcg_uXjKp-Jgbr-wcu5yN-rlJtIcbyapir72Jg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id B634DB60086; Fri, 27 Jan 2023 09:07:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
-Mime-Version: 1.0
-Message-Id: <44479469-3079-4654-a08b-aeb0e45cb1b4@app.fastmail.com>
-In-Reply-To: <CACRpkdZDm2enFM=0AoDre=GmF+NHv+ZX9=9LdZ_KAcUJ5ta64A@mail.gmail.com>
-References: <20230127101149.3475929-1-arnd@kernel.org>
- <20230127101149.3475929-7-arnd@kernel.org>
- <CACRpkdZDm2enFM=0AoDre=GmF+NHv+ZX9=9LdZ_KAcUJ5ta64A@mail.gmail.com>
-Date:   Fri, 27 Jan 2023 15:07:04 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Linus Walleij" <linus.walleij@linaro.org>,
-        "Arnd Bergmann" <arnd@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] gpiolib: split linux/gpio/driver.h out of linux/gpio.h
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233561AbjA0OiW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Jan 2023 09:38:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B948A13DD1;
+        Fri, 27 Jan 2023 06:38:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53DEE61CBD;
+        Fri, 27 Jan 2023 14:38:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39A1C433D2;
+        Fri, 27 Jan 2023 14:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674830296;
+        bh=bTSW7NmUsG8tgCcNy2Sa9snhAmKGyq9mToBUWqqSejs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tPljhGE8A8JrC03p17PQpzYPtj3u75TC2O/cCxPLGk7/Pmz5E/ImwxNSE8X1ldeAo
+         tTr7Y5V6jtLpeG/wzh6dpC6F4GtN0gucg5gzrvT7JOmJ++JYoUyGHXibvBBnZqorVM
+         hB9wqE7Vg9ddwFl+Ux8p5/6zmkVBUM0MMt36rd2+Yg5qcg/OsOFCTEIGxMX8F8SfEf
+         y36NhgZyoLpyXnJixgHK1oB/FMExUaFyk3A7kqqZKO1LrmDjqJA/SSBRw51/tNYBY9
+         5jPeHU6lRheS1fMNKS8pl8HJeTIyXFJz8MzJhdNhcfsqkRB9gOjLofn8lhEOsvOcZM
+         mHWz3+n54xWzw==
+Date:   Fri, 27 Jan 2023 14:38:08 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, linus.walleij@linaro.org, matthias.bgg@gmail.com,
+        gregkh@linuxfoundation.org, daniel.lezcano@linaro.org,
+        chunfeng.yun@mediatek.com, angelogioacchino.delregno@collabora.com,
+        allen-kh.cheng@mediatek.com, nfraprado@collabora.com,
+        andrew@lunn.ch, gtk3@inbox.ru, sean.wang@mediatek.com,
+        zhiyong.tao@mediatek.com
+Subject: Re: [PATCH v8 3/9] dt-bindings: mfd: syscon: Add mt8365-syscfg
+Message-ID: <Y9Ph0E09GycQ20J4@google.com>
+References: <20230123163833.1007181-1-bero@baylibre.com>
+ <20230123163833.1007181-4-bero@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230123163833.1007181-4-bero@baylibre.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 27, 2023, at 14:39, Linus Walleij wrote:
-> On Fri, Jan 27, 2023 at 11:12 AM Arnd Bergmann <arnd@kernel.org> wrote:
->
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> Almost all gpio drivers include linux/gpio/driver.h, and other
->> files should not rely on includes from this header.
->>
->> Remove the indirect include from here and include the correct
->> headers directly from where they are used.
->>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> As mentioned on v1 you will need two additional patches to
-> avoid build errors from the bots, perhaps Bartosz can cherry-pick
-> them?
+On Mon, 23 Jan 2023, Bernhard Rosenkränzer wrote:
 
-Yes, that would be ideal.
+> Document Mediatek mt8365-syscfg
+> 
+> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=gpiochip-no-driver-h&id=73ca8058a7b2075c993040bdc92b6a82f57d4316
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=gpiochip-no-driver-h&id=89f4f9cc70c686303679e57bdc3ac86507979fe3
->
-> (Maybe the Viper cf adapter is deleted in the PXA boardfile removal so
-> it's not an issue. The HTE file needs patching through.)
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Applied, thanks
 
-Thanks!
-
-Indeed, the viper support is gone in linux-next, which is why that
-change was gone from my series after rebasing. I have the same
-HTE file change in my tree that you have, but misclassified it
-as an existing bug rather than one caused by my patch. The maintainer
-said they would apply my patch directly, but it has not shown
-up in linux-next yet.
-
-I agree that for both patches the best way is if Bartosz
-applies your version before my series.
-
-    Arnd
-
-[1] https://lore.kernel.org/all/38f2d681-80a8-dc97-e5ed-4886e5e3bf7c@nvidia.com/
+-- 
+Lee Jones [李琼斯]
