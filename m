@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7961F67DA72
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 01:13:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 228C967DA7A
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Jan 2023 01:13:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbjA0ANF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 19:13:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46270 "EHLO
+        id S229976AbjA0ANJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 19:13:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbjA0AMR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 19:12:17 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB87728D4
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:08 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id t13-20020a056902018d00b0074747131938so3672337ybh.12
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:08 -0800 (PST)
+        with ESMTP id S232861AbjA0AMX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 19:12:23 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C367174A58
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:10 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id a14-20020a5b0ace000000b007bf99065fcbso3672910ybr.2
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Jan 2023 16:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivP3XAPTaMslZ0S+XLyk7hnb7R+owb4t4qagKyvh274=;
-        b=Oh5dmIBsL8VdvCphyPu6af2tpQO72hGjRz6FJiyXdF32XEcCHaYgj0Y11W4GTR3/V4
-         dM1na1qjdkHVeLhBJ+nhNpdVpKRS1NkclC/SaC/umLbLFbrLM1k85mfWsfQosG536ZHF
-         XKVwu7QeiTT0BC1vh34ak3IZCTgDZrALE8AIMxahzzuZea5RcqrqIHolZT1d8pHAvmK3
-         dzR7m/0/S5a4YYGBR7dszeEtsl7JVkbsa/smTjJ+9rHheOkX3YNX2tw6so3sOACA1RoT
-         /qU3O7IP23SOPbflr+9cXT59aR1IHKQDnM/l4aQ0g/AIODzyJYd7dDDfniw6gBc5sjLj
-         0gvQ==
+        bh=nNud8Lepb4eeXuGOsqZyJ2CqEHzF4/YGHX/WXomA3GE=;
+        b=dg98ZZl1AyihbP1LtRx2ePJtNIBANvg6l6Gdfmwrlmg+xT29TDIlqdpN4YyRCNlsxH
+         2d+0NDQIyNI3+imcQ7NQDTRWU1cDISH1SIRjs9KZ9MtQYKwyRV2E4kxG41RUu30tztbk
+         1mwsm7nys4j63yTbqvFZ+dsEGsC+i/ndeRX8r4+da18Js4TD+T2SAi+UhZwx6pYIX2zk
+         S33rrWohkq2TTRvsyKP/W20Tvxz9wzR67Dg4HTFjJ3AJA4tGIDsFSQ5Evi/mLTjK/dZc
+         mdnVVzCHcFRVh1ANjNSv5R8RCXk+iP/LFXcXuHnbESiTmXqgog9RUHjvs7XuDBqjK0Te
+         pPWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ivP3XAPTaMslZ0S+XLyk7hnb7R+owb4t4qagKyvh274=;
-        b=3KmT8SH2EcO8vP/POA0dBAelT7EnVnD+PJ+mr1AFF+VFaYn1pO7CrTqPPk83Ujng0c
-         8HNHyO7vFuBCpP6FQHtq3yEIZx6Ro4mZexkSGkv/eI+ZQSlRpjuIP47BCU5W0+Y4EO9L
-         Q3p6D6FtrRnQErX68De7ZjErQW34pW6+coaKnPLmnkAr7/yDIVhfQjBkEk+R/ZjII0J2
-         3hKRgLvSjp9ZDDbqcUndjIb7yH830Imy9zwV9biyLN0TFudmuU2wMYhwiFdDGXvLJl2I
-         Q/iKZ6spMH5OxM8bQbg7hfZgo8TC1kGlZKNotzR4rVgrssoIjKsGNKhH7F/fyHfgJ1xw
-         m4PQ==
-X-Gm-Message-State: AO0yUKWnx1lJVh/FjkbG5QuFiMS4IPb5Iwf7yUHZ13Rz/NNn6Uo9ORLA
-        S0p91GluhqcIxpHDK2iXtngFm3uGcTQnD+c=
-X-Google-Smtp-Source: AK7set+syxPr8xIlnVYPb+OoZVp9SPzH7ECkaBbaiIrgGJW8W5AL2JGqjxSUYEhwb9aiEN4TE1tz7/z+jEla25w=
+        bh=nNud8Lepb4eeXuGOsqZyJ2CqEHzF4/YGHX/WXomA3GE=;
+        b=u62chXcNZbltY0OlQoSHiPWwj5r4wo4VEKQ7mqOaFYPoaPRKMY3gLOR+jxGA3+Y2KR
+         OZFMoHNIsxesh8gxrNKc74/1F+qhVLdyLuSjW/3GLU07Z/dnLH64M+G0aWlgYmwPyeav
+         J6qzzxB3T7waAIS0qS3MiNfIUTtyxO8lS2J1PGOnBCRcfsURkcnc9kwCa/2Tj7BX9VlK
+         JnlwpO+AHx9De8/poSvFPT4FMECkkDfHrTj7+fpVInZ5cbWo1QKouTiJtpYfp1UaV6TQ
+         KGgfS9CAWBwOEAJ7q8SoHHgyuIlMxgtwk0tMilCzwYelru+35EDP8N6RmKZcW2oabjjl
+         vdXA==
+X-Gm-Message-State: AFqh2kpXAoJGcNe9NV15JEz/MRtXTL33dtwJuT+LIrn2bP86Mzmocq6z
+        iFd0/JaYeNO38fKvCO5G0Oeh1OMrsCL48x4=
+X-Google-Smtp-Source: AMrXdXsSdZknjAr0wKn0gY/MpnIZeRHel3NzwGKSoO8sLRLrs7LZP2oF+s13fwjubTyvaUKdTsWZdOHXxvgHyc8=
 X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:c3b4:8b1c:e3ee:3708])
- (user=saravanak job=sendgmr) by 2002:a81:5d1:0:b0:506:69cb:8950 with SMTP id
- 200-20020a8105d1000000b0050669cb8950mr1273793ywf.38.1674778327341; Thu, 26
- Jan 2023 16:12:07 -0800 (PST)
-Date:   Thu, 26 Jan 2023 16:11:36 -0800
+ (user=saravanak job=sendgmr) by 2002:a81:6284:0:b0:373:8313:2991 with SMTP id
+ w126-20020a816284000000b0037383132991mr3462545ywb.261.1674778329995; Thu, 26
+ Jan 2023 16:12:09 -0800 (PST)
+Date:   Thu, 26 Jan 2023 16:11:37 -0800
 In-Reply-To: <20230127001141.407071-1-saravanak@google.com>
-Message-Id: <20230127001141.407071-10-saravanak@google.com>
+Message-Id: <20230127001141.407071-11-saravanak@google.com>
 Mime-Version: 1.0
 References: <20230127001141.407071-1-saravanak@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-Subject: [PATCH v2 09/11] of: property: Simplify of_link_to_phandle()
+Subject: [PATCH v2 10/11] irqchip/irq-imx-gpcv2: Mark fwnode device as not initialized
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -107,134 +107,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver core now:
-- Has the parent device of a supplier pick up the consumers if the
-  supplier never has a device created for it.
-- Ignores a supplier if the supplier has no parent device and will never
-  be probed by a driver
-
-And already prevents creating a device link with the consumer as a
-supplier of a parent.
-
-So, we no longer need to find the "compatible" node of the supplier or
-do any other checks in of_link_to_phandle(). We simply need to make sure
-that the supplier is available in DT.
+Since this device is only partially initialized by the irqchip driver,
+we need to mark the fwnode device as not initialized. This is to let
+fw_devlink know that the device will be completely initialized at a
+later point. That way, fw_devlink will continue to defer the probe of
+the power domain consumers till the power domain driver successfully
+binds to the struct device and completes the initialization of the
+device.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/property.c | 84 +++++++------------------------------------
- 1 file changed, 13 insertions(+), 71 deletions(-)
+ drivers/irqchip/irq-imx-gpcv2.c | 1 +
+ drivers/soc/imx/gpcv2.c         | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 134cfc980b70..c651aad6f34b 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1062,20 +1062,6 @@ of_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
- 	return of_device_get_match_data(dev);
+diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
+index b9c22f764b4d..8a0e82067924 100644
+--- a/drivers/irqchip/irq-imx-gpcv2.c
++++ b/drivers/irqchip/irq-imx-gpcv2.c
+@@ -283,6 +283,7 @@ static int __init imx_gpcv2_irqchip_init(struct device_node *node,
+ 	 * later the GPC power domain driver will not be skipped.
+ 	 */
+ 	of_node_clear_flag(node, OF_POPULATED);
++	fwnode_dev_initialized(domain->fwnode, false);
+ 	return 0;
  }
  
--static bool of_is_ancestor_of(struct device_node *test_ancestor,
--			      struct device_node *child)
--{
--	of_node_get(child);
--	while (child) {
--		if (child == test_ancestor) {
--			of_node_put(child);
--			return true;
--		}
--		child = of_get_next_parent(child);
--	}
--	return false;
--}
--
- static struct device_node *of_get_compat_node(struct device_node *np)
- {
- 	of_node_get(np);
-@@ -1106,71 +1092,27 @@ static struct device_node *of_get_compat_node_parent(struct device_node *np)
- 	return node;
- }
+diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+index 7a47d14fde44..b24f9ab634dc 100644
+--- a/drivers/soc/imx/gpcv2.c
++++ b/drivers/soc/imx/gpcv2.c
+@@ -1519,6 +1519,7 @@ static int imx_gpcv2_probe(struct platform_device *pdev)
  
--/**
-- * of_link_to_phandle - Add fwnode link to supplier from supplier phandle
-- * @con_np: consumer device tree node
-- * @sup_np: supplier device tree node
-- *
-- * Given a phandle to a supplier device tree node (@sup_np), this function
-- * finds the device that owns the supplier device tree node and creates a
-- * device link from @dev consumer device to the supplier device. This function
-- * doesn't create device links for invalid scenarios such as trying to create a
-- * link with a parent device as the consumer of its child device. In such
-- * cases, it returns an error.
-- *
-- * Returns:
-- * - 0 if fwnode link successfully created to supplier
-- * - -EINVAL if the supplier link is invalid and should not be created
-- * - -ENODEV if struct device will never be create for supplier
-- */
--static int of_link_to_phandle(struct device_node *con_np,
-+static void of_link_to_phandle(struct device_node *con_np,
- 			      struct device_node *sup_np)
- {
--	struct device *sup_dev;
--	struct device_node *tmp_np = sup_np;
-+	struct device_node *tmp_np = of_node_get(sup_np);
+ 		pd_pdev->dev.parent = dev;
+ 		pd_pdev->dev.of_node = np;
++		pd_pdev->dev.fwnode = of_fwnode_handle(np);
  
--	/*
--	 * Find the device node that contains the supplier phandle.  It may be
--	 * @sup_np or it may be an ancestor of @sup_np.
--	 */
--	sup_np = of_get_compat_node(sup_np);
--	if (!sup_np) {
--		pr_debug("Not linking %pOFP to %pOFP - No device\n",
--			 con_np, tmp_np);
--		return -ENODEV;
--	}
-+	/* Check that sup_np and its ancestors are available. */
-+	while (tmp_np) {
-+		if (of_fwnode_handle(tmp_np)->dev) {
-+			of_node_put(tmp_np);
-+			break;
-+		}
- 
--	/*
--	 * Don't allow linking a device node as a consumer of one of its
--	 * descendant nodes. By definition, a child node can't be a functional
--	 * dependency for the parent node.
--	 */
--	if (of_is_ancestor_of(con_np, sup_np)) {
--		pr_debug("Not linking %pOFP to %pOFP - is descendant\n",
--			 con_np, sup_np);
--		of_node_put(sup_np);
--		return -EINVAL;
--	}
-+		if (!of_device_is_available(tmp_np)) {
-+			of_node_put(tmp_np);
-+			return;
-+		}
- 
--	/*
--	 * Don't create links to "early devices" that won't have struct devices
--	 * created for them.
--	 */
--	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
--	if (!sup_dev &&
--	    (of_node_check_flag(sup_np, OF_POPULATED) ||
--	     sup_np->fwnode.flags & FWNODE_FLAG_NOT_DEVICE)) {
--		pr_debug("Not linking %pOFP to %pOFP - No struct device\n",
--			 con_np, sup_np);
--		of_node_put(sup_np);
--		return -ENODEV;
-+		tmp_np = of_get_next_parent(tmp_np);
- 	}
--	put_device(sup_dev);
- 
- 	fwnode_link_add(of_fwnode_handle(con_np), of_fwnode_handle(sup_np));
--	of_node_put(sup_np);
--
--	return 0;
- }
- 
- /**
+ 		ret = platform_device_add(pd_pdev);
+ 		if (ret) {
 -- 
 2.39.1.456.gfc5497dd1b-goog
 
