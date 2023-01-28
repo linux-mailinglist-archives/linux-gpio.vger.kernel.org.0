@@ -2,158 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FBA67F6C4
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 10:42:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D9C67F6E0
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 11:06:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjA1Jmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Jan 2023 04:42:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
+        id S233440AbjA1KGP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Jan 2023 05:06:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbjA1Jmb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 04:42:31 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D902279B
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Jan 2023 01:41:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674898908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=twR14cjllGUXLpKlnOdL7uubVR+CcOSrwvbCUlEF4yg=;
-        b=ByAqBjFPIVe6TNUUXR91kJbxLz4wT1nkQOryGO2OQNUvSd7c1qumVYqwkjhTQB6cYPlcQa
-        nn2zX4IsL8OYphcMEjO9Yvsb4yNvPhe6NiGcdqnelwDIV11nbNfs6CjTZ/pNX6Geestq9R
-        5zkr38cs5Ixur9ORmgVBlcwoYFeDY+8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-304-ip6ZLExOOCyieo7CA1R_VA-1; Sat, 28 Jan 2023 04:41:45 -0500
-X-MC-Unique: ip6ZLExOOCyieo7CA1R_VA-1
-Received: by mail-ej1-f72.google.com with SMTP id hp2-20020a1709073e0200b0084d47e3fe82so4676487ejc.8
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Jan 2023 01:41:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=twR14cjllGUXLpKlnOdL7uubVR+CcOSrwvbCUlEF4yg=;
-        b=C6E6+m5tFcq7eCKOR709/rbLucWRS5aBLal/wV9kSgseS2Uqa2iBe8przbffNydvKQ
-         MxGdJOjONClURJ9kHCyKeAA3K/vC/nS3dbj/i6TVTbefwzkI3LlE57LfF86qucmXAWAn
-         Kt5gZVOuforxFSmGS/6EKwycuB8YPEhXebFyVRIx12vxALzeZ38N6V9jtlQKiTJkutiJ
-         +WsKaYK6i1a4kKMcmjbVmN7k3beG5uU/VwF+N7ymT+KcDS5SvxEleH4xHvbIVzubdYzN
-         eUoDgoBBMwEbVjiGPFKtQEHmKAQkyPMjCUP99h4TPgsgfV8tHL26kmJA6FljY/ew65H2
-         3Kgg==
-X-Gm-Message-State: AFqh2koKce1lkKvXFHR0pK6olwWXGBmO+jg48LBDxpwwMo4xxhj8iSbL
-        n75hq/tB9MVlLjG/QpXg+kkquGsgYajydhL3MDir8G6AkEC+Iz6EiAPXGlhdnhyxfnGnYbPJ1Nq
-        F2QxZhZJAkyS8l5JHwRwE1A==
-X-Received: by 2002:a17:907:8b08:b0:860:c12c:14fd with SMTP id sz8-20020a1709078b0800b00860c12c14fdmr47726555ejc.76.1674898904776;
-        Sat, 28 Jan 2023 01:41:44 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXsLWHdwigC9AWjgO/I5vHPQwk+KI0Cp2B38kYPAXsibJhvaTjuoQ0sruljT5mNLvxnF6Tby9g==
-X-Received: by 2002:a17:907:8b08:b0:860:c12c:14fd with SMTP id sz8-20020a1709078b0800b00860c12c14fdmr47726543ejc.76.1674898904558;
-        Sat, 28 Jan 2023 01:41:44 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id mb18-20020a170906eb1200b0084f7d38713esm3622593ejb.108.2023.01.28.01.41.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Jan 2023 01:41:44 -0800 (PST)
-Message-ID: <579d96f3-83d3-8b0a-6760-ce1903936c1a@redhat.com>
-Date:   Sat, 28 Jan 2023 10:41:43 +0100
+        with ESMTP id S229530AbjA1KGO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 05:06:14 -0500
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD0F7B40A
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Jan 2023 02:06:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1674900354; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=TmvaFX7FiCJ0asOwwaDfNVWp0fGokR6Uz7XFzELfF2870ILH2lWHpevCwbHKp56sgCB9iYi2YyLoZF1tOs+i/K2xf5C3VRscooWlbWk9wOUNECOpvvjBBnQ6PFIuZyJDFt9VycEBjVCcQYP6zSs7wNk2fQwm5GNGdZBE/bIGS3E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1674900354; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=j5nGUkI38D1MQpVdEyrHttbcAiB8ENVVDLRJhTAndkA=; 
+        b=kULu0tb/33i5OSYXRTitlnbFY1Hz9xpF0/QarJbKYb+gsVlZTjbDGgOQtlka7rIBkWOy7HBpZp4kYKMCctjpY9qvivZmtvxBbbxq4zDKvWahbv8m9oV9U/wYhZFQxVzy98Otiwcy8lpp6455ZrJOZIBT+7CAnX9ImvupLF1Z48U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=linux.beauty;
+        spf=pass  smtp.mailfrom=me@linux.beauty;
+        dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1674900354;
+        s=zmail; d=linux.beauty; i=me@linux.beauty;
+        h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=j5nGUkI38D1MQpVdEyrHttbcAiB8ENVVDLRJhTAndkA=;
+        b=t8bWmI6kg7WfW2v2CtmQw4umaMX2LguJCiieRH8xhx9L8ix/RX1xhQGPOnHPdmDP
+        MCknYaT/jRJ/td/Grw6+4+P/2+Ezx20UbgjeeXHGVXJStOwVo4tdm/IWgH78NP76/t2
+        EvghwW1bWkcdk5u4TsrV/yiTS7uE1UryrYo0n6II=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1674900352501560.8186083550721; Sat, 28 Jan 2023 02:05:52 -0800 (PST)
+Date:   Sat, 28 Jan 2023 18:05:52 +0800
+From:   Li Chen <me@linux.beauty>
+To:     "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "li chen" <lchen@ambarella.com>,
+        "rob herring" <robh+dt@kernel.org>,
+        "krzysztof kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "moderated list:arm/ambarella soc support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:pin control subsystem" <linux-gpio@vger.kernel.org>,
+        "open list:open firmware and flattened device tree bindings" 
+        <devicetree@vger.kernel.org>,
+        "open list" <linux-kernel@vger.kernel.org>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Message-ID: <185f7d72de2.c88b8fe6489519.2797878078784039860@linux.beauty>
+In-Reply-To: <CACRpkdYVGv=YM6cvtXVxNW42uM+dW_Zv-BkrDyMX+DB73w=2nA@mail.gmail.com>
+References: <20230123073305.149940-1-lchen@ambarella.com> <20230123073305.149940-14-lchen@ambarella.com> <CACRpkdYVGv=YM6cvtXVxNW42uM+dW_Zv-BkrDyMX+DB73w=2nA@mail.gmail.com>
+Subject: Re: [PATCH 13/15] dt-bindings: pinctrl: add support for Ambarella
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED class
- device for the privacy LED
-Content-Language: en-US, nl
-To:     kernel test robot <lkp@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>
-References: <20230127203729.10205-4-hdegoede@redhat.com>
- <202301281537.fKVHsgf4-lkp@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <202301281537.fKVHsgf4-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 1/28/23 08:24, kernel test robot wrote:
-> Hi Hans,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v6.2-rc5]
-> [cannot apply to media-tree/master]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
-> patch link:    https://lore.kernel.org/r/20230127203729.10205-4-hdegoede%40redhat.com
-> patch subject: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED class device for the privacy LED
-> config: i386-randconfig-r004-20230123 (https://download.01.org/0day-ci/archive/20230128/202301281537.fKVHsgf4-lkp@intel.com/config)
-> compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-> reproduce (this is a W=1 build):
->         # https://github.com/intel-lab-lkp/linux/commit/d71a1bce9c9ea0bd5b98920b2d72a5b0a36ca19d
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
->         git checkout d71a1bce9c9ea0bd5b98920b2d72a5b0a36ca19d
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         make W=1 O=build_dir ARCH=i386 olddefconfig
->         make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/platform/
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from drivers/platform/x86/intel/int3472/discrete.c:17:
->>> drivers/platform/x86/intel/int3472/common.h:107:40: error: field 'lookup' has incomplete type
->      107 |                 struct led_lookup_data lookup;
->          |                                        ^~~~~~
-> --
->    In file included from drivers/platform/x86/intel/int3472/led.c:7:
->>> drivers/platform/x86/intel/int3472/common.h:107:40: error: field 'lookup' has incomplete type
->      107 |                 struct led_lookup_data lookup;
->          |                                        ^~~~~~
->    drivers/platform/x86/intel/int3472/led.c: In function 'skl_int3472_register_pled':
->>> drivers/platform/x86/intel/int3472/led.c:57:9: error: implicit declaration of function 'led_add_lookup'; did you mean 'd_can_lookup'? [-Werror=implicit-function-declaration]
->       57 |         led_add_lookup(&int3472->pled.lookup);
->          |         ^~~~~~~~~~~~~~
->          |         d_can_lookup
->    drivers/platform/x86/intel/int3472/led.c: In function 'skl_int3472_unregister_pled':
->>> drivers/platform/x86/intel/int3472/led.c:71:9: error: implicit declaration of function 'led_remove_lookup' [-Werror=implicit-function-declaration]
->       71 |         led_remove_lookup(&int3472->pled.lookup);
->          |         ^~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
+Sorry for my late reply.
 
-As mentioned in the cover-letter this series depends on this immutable-branch:
+ ---- On Mon, 23 Jan 2023 20:32:28 +0800  Linus Walleij  wrote --- 
+ > Hi Li,
+ > 
+ > thanks for your patch!
+ > 
+ > It's nice to see Ambarella working with the kernel community.
+ > 
+ > On Mon, Jan 23, 2023 at 8:41 AM Li Chen lchen@ambarella.com> wrote:
+ > 
+ > > +properties:
+ > > +  compatible:
+ > > +    items:
+ > > +      - const: ambarella,pinctrl
+ > 
+ > I bet there will be more instances of pin controllers from Ambarella, so I would
+ > use this only as a fallback, so the for should likely be:
+ > 
+ > compatible = "ambarella,-pinctrl", "ambarella,pinctrl";
+ > 
+ > we need to establish this already otherwise "ambarella,pinctrl" just becomes
+ > the "weird name of the first ambarella SoC supported by standard DT bindings".
+ 
+There is only single "ambarella,pinctrl" in Ambarella downstream kernels, and we use soc_device_attribute->data
+and soc_device_attribute->soc_id/family to get correct SoC-specific information like reg offset and etc.
 
-https://lore.kernel.org/platform-driver-x86/Y9QGcA+9nlmOOy2d@google.com/
+Krzysztof has taught me that this way is wrong and
+SoC is required in compatible: https://www.spinics.net/lists/arm-kernel/msg1043145.html
 
-That branch not being present in the base used by LKP is what is causing this
-error.
+So I will update this property to "ambarella,s6lm-pinctrl" in the new version.
+
+ > > +  amb,pull-regmap:
+ > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+ > > +    items:
+ > > +      maxItems: 1
+ > > +
+ > > +  amb,ds-regmap:
+ > > +    items:
+ > > +      maxItems: 1
+ > 
+ > Interesting that these registers are elsewhere, but I bet there is an
+ > engineering
+ > explanation for this :)
+ > 
+ > > +    properties:
+ > > +      amb,pinmux-ids:
+ > > +        description: |
+ > > +          an integer array. Each integer in the array specifies a pin
+ > > +          with given mux function, with pin id and mux packed as:
+ > > +          mux << 12 | pin id
+ > > +          Here mux means function of this pin, and pin id is identical to gpio id. For
+ > > +          the SoC supporting IOMUX, like S2L, the maximal value of mux is 5. However,
+ > > +          for the SoC not supporting IOMUX, like A5S, S2, the third or fourth function
+ > > +          is selected by other "virtual pins" setting. Here the "virtual pins" means
+ > > +          there is no real hardware pins mapping to the corresponding register address.
+ > > +          So the registers for the "virtual pins" can be used for the selection of 3rd
+ > > +          or 4th function for other real pins.
+ > 
+ > I think you can use the standard bindings for this if you insist on
+ > using the "magic
+ > numbers" scheme.
+ > 
+ > (I prefer function names and group names as strings, but I gave up on trying
+ > to convince the world to use this because people have so strong opions about
+ > it.)
+ > 
+ > From Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml:
+ > 
+ >   pinmux:
+ >     description:
+ >       The list of numeric pin ids and their mux settings that properties in the
+ >       node apply to (either this, "pins" or "groups" have to be specified)
+ >     $ref: /schemas/types.yaml#/definitions/uint32-array
+ > 
+
+Well noted, I will switch to pinmux in v2.
+
+ > > +      amb,pinconf-ids:
+ > > +        description: |
+ > > +          an integer array. Each integer in the array specifies a pin
+ > > +          with given configuration, with pin id and config packed as:
+ > > +            config << 16 | pin id
+ > > +          Here config is used to configure pull up/down and drive strength of the pin,
+ > > +          and it's orgnization is:
+ > > +          bit1~0: 00: pull down, 01: pull up, 1x: clear pull up/down
+ > > +          bit2:   reserved
+ > > +          bit3:   0: leave pull up/down as default value, 1: config pull up/down
+ > > +          bit5~4: drive strength value, 0: 2mA, 1: 4mA, 2: 8mA, 3: 12mA
+ > > +          bit6:   reserved
+ > > +          bit7:   0: leave drive strength as default value, 1: config drive strength
+ > 
+ > I would be very happy if I could convince you to use the standard (string)
+ > bindings for this.
+ > And from Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+ > 
+ > For each config node this means using strings such as
+ > bias-high-impedance; etc in the device tree pin config node.
+ > 
+ > Following that scheme just makes life so much easier for maintainers and
+ > reviewers: very few people reviewing or debugging the system will think
+ > it is easy to read a magic number and then (in their head) mask out the
+ > bits to see that "OK this is drive strength 8mA" and then have energy and
+ > memory enough in their head to remember that "wait a minute, that is supposed
+ > to be 12mA in this design", leading to long review and development
+ > cycles.
+ > 
+ > By using:
+ > 
+ > drive-push-pull;
+ > drive-strength = ;
+ > 
+ > you make the cognitive load on the people reading the device tree much
+ > lower and easier to write, maintain and debug for humans.
+ > 
+ > The tendency to encode this info in terse bitfields appear to be done for either
+ > of these reasons:
+ > 
+ > - Footprint / memory usage
+ > - Adopt the users to the way the machine thinks instead of the other way around
+ > - "We always did it this way"
+ > 
+ > Neither is a very good argument on a new 64bit platform.
+
+Thanks for your detailed explanation. I totally agree with you and I also really hate
+magic number haha.
+
+I will convert it to standard binding after convincing my manager.
 
 Regards,
-
-Hans
-
+Li
