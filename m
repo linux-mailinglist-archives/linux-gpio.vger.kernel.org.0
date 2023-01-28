@@ -2,175 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CCC267F8F2
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 16:02:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EC7067F997
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 17:32:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234337AbjA1PCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Jan 2023 10:02:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44586 "EHLO
+        id S230351AbjA1Qcp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Jan 2023 11:32:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234124AbjA1PCl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 10:02:41 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB4128D3F
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Jan 2023 07:02:38 -0800 (PST)
+        with ESMTP id S229894AbjA1Qcp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 11:32:45 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F2A2069A
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Jan 2023 08:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674918158; x=1706454158;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RjmkWA9HGfH+CEta8pgp5rWNA02IXmHkGvZgD7AOpHQ=;
-  b=WPy3xtVPASuqldjTLr20yTmbk6wi7F3oW4gtGrf3sNa/CY6yU31SSB77
-   EPI6jcr0N2kDMeupDp+TgPSX20jmLrRfWgmymXc7otEd9GtaIfIGGGjVJ
-   +RYx1MeCEaobcb8oi7ibwAxmzv33UyqSeeLk/BxHc9oYBXTAFEylsUgZC
-   GEnDTrRa6YZfuY30cE0LDUgWEf48qPU9vxMsohVq09hTBkIHRX9luazK8
-   vef7EUTg5UWLMfXNWwQzQmv1AfU02SeRHkL415HrLz2I+uU8+Hr1zqkVy
-   MtAUNgzWdgFB2fSTwWeW5ycweY7cNylaQwT6Lm8VrUWNSXjXR1y0L9Ifi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="310918153"
+  t=1674923564; x=1706459564;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=+hkmkXhMC8Th9ej0/zljfT0Eso2Ce8H6CRCFcvXqU2Y=;
+  b=eSYiYMXSUit08Q3GoDfH8TrTZ12fTMMn5L22+UkpOrCZmDR9Ybb96oD0
+   qs3htdK2u2w/aL94uAdNE3MsNP1Bmw8GsBINfEbcm4mBJYat7vLwAlKJa
+   6u0EBwvVpJSd1pmGtV7oI096kFGF8RikHHQaKd/6ZVVcaDmJXku8BLxGn
+   iVOx40Ms9t9SNOmCuRVB/nUk9dEpLIRk3fJ5eMgAYiy9CoPb6fXWRmkxa
+   IUdprb4fBzJzQ0DiZ+acTGkvN1GCETudWa/eraDCOcIIFhM/qIsysTkBk
+   y1HPus/nRnBXuX1c/xmkB+gwXTeBtgMeOEvYGBTxd5gvE/a6nMMPtnLnf
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="307648653"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="310918153"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 07:02:38 -0800
+   d="scan'208";a="307648653"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 08:32:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="806158016"
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="694054035"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="806158016"
+   d="scan'208";a="694054035"
 Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2023 07:02:36 -0800
+  by orsmga008.jf.intel.com with ESMTP; 28 Jan 2023 08:32:42 -0800
 Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pLmix-0000p1-38;
-        Sat, 28 Jan 2023 15:02:35 +0000
-Date:   Sat, 28 Jan 2023 23:01:50 +0800
+        id 1pLo89-0000uW-1F;
+        Sat, 28 Jan 2023 16:32:41 +0000
+Date:   Sun, 29 Jan 2023 00:32:37 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 677d85e1a1ee69fa05ccea83847309484be3781c
-Message-ID: <63d538de.IFalTEA63GwtvjoI%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:gpiochip-no-driver-h 5/5]
+ arch/arm/mach-orion5x/board-rd88f5182.c:107:6: error: call to undeclared
+ function 'of_machine_is_compatible'; ISO C99 and later do not support
+ implicit function declarations
+Message-ID: <202301290051.LqXniYxY-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 677d85e1a1ee69fa05ccea83847309484be3781c  tools: gpio: fix -c option of gpio-event-mon
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git gpiochip-no-driver-h
+head:   df771cce328bbd37333797d0df3471c2e03ecb03
+commit: df771cce328bbd37333797d0df3471c2e03ecb03 [5/5] gpio: Make the legacy <linux/gpio.h> consumer-only
+config: arm-mvebu_v5_defconfig (https://download.01.org/0day-ci/archive/20230129/202301290051.LqXniYxY-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=df771cce328bbd37333797d0df3471c2e03ecb03
+        git remote add linusw-gpio https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+        git fetch --no-tags linusw-gpio gpiochip-no-driver-h
+        git checkout df771cce328bbd37333797d0df3471c2e03ecb03
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
 
-elapsed time: 775m
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
 
-configs tested: 94
-configs skipped: 2
+All errors (new ones prefixed by >>):
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>> arch/arm/mach-orion5x/board-rd88f5182.c:107:6: error: call to undeclared function 'of_machine_is_compatible'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           if (of_machine_is_compatible("marvell,rd-88f5182-nas"))
+               ^
+   1 error generated.
 
-gcc tested configs:
-x86_64                            allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64               randconfig-a002-20230123
-x86_64               randconfig-a005-20230123
-x86_64               randconfig-a001-20230123
-x86_64               randconfig-a006-20230123
-x86_64               randconfig-a003-20230123
-x86_64               randconfig-a004-20230123
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-i386                 randconfig-a004-20230123
-i386                 randconfig-a006-20230123
-i386                 randconfig-a005-20230123
-i386                 randconfig-a002-20230123
-i386                 randconfig-a003-20230123
-i386                 randconfig-a001-20230123
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                           rhel-8.3-bpf
-x86_64                         rhel-8.3-kunit
-s390                                defconfig
-s390                             allmodconfig
-arc                                 defconfig
-alpha                               defconfig
-s390                             allyesconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-ia64                             allmodconfig
-i386                 randconfig-c001-20230123
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                          randconfig-c001
-m68k                         amcore_defconfig
-powerpc                      makalu_defconfig
-m68k                        mvme147_defconfig
-m68k                          amiga_defconfig
-mips                          rb532_defconfig
-arc                        nsim_700_defconfig
-sh                           se7724_defconfig
-sh                            shmin_defconfig
-sh                        sh7763rdp_defconfig
-sh                          rsk7264_defconfig
-arm                          exynos_defconfig
-xtensa                  nommu_kc705_defconfig
-arc                      axs103_smp_defconfig
-xtensa                    smp_lx200_defconfig
-s390                          debug_defconfig
 
-clang tested configs:
-x86_64               randconfig-a013-20230123
-x86_64               randconfig-a011-20230123
-x86_64               randconfig-a016-20230123
-x86_64               randconfig-a012-20230123
-x86_64               randconfig-a015-20230123
-x86_64               randconfig-a014-20230123
-riscv                randconfig-r042-20230123
-hexagon              randconfig-r041-20230123
-hexagon              randconfig-r045-20230123
-s390                 randconfig-r044-20230123
-i386                 randconfig-a013-20230123
-i386                 randconfig-a016-20230123
-i386                 randconfig-a012-20230123
-i386                 randconfig-a015-20230123
-i386                 randconfig-a011-20230123
-i386                 randconfig-a014-20230123
-powerpc                      walnut_defconfig
-arm                        mvebu_v5_defconfig
-arm                           sama7_defconfig
-powerpc                 mpc832x_mds_defconfig
-x86_64                          rhel-8.3-rust
-hexagon              randconfig-r041-20230124
-hexagon              randconfig-r045-20230124
-arm                  randconfig-r046-20230124
-x86_64               randconfig-k001-20230123
+vim +/of_machine_is_compatible +107 arch/arm/mach-orion5x/board-rd88f5182.c
+
+065194a06b4187 Thomas Petazzoni 2014-04-22  104  
+065194a06b4187 Thomas Petazzoni 2014-04-22  105  static int __init rd88f5182_pci_init(void)
+065194a06b4187 Thomas Petazzoni 2014-04-22  106  {
+065194a06b4187 Thomas Petazzoni 2014-04-22 @107  	if (of_machine_is_compatible("marvell,rd-88f5182-nas"))
+065194a06b4187 Thomas Petazzoni 2014-04-22  108  		pci_common_init(&rd88f5182_pci);
+065194a06b4187 Thomas Petazzoni 2014-04-22  109  
+065194a06b4187 Thomas Petazzoni 2014-04-22  110  	return 0;
+065194a06b4187 Thomas Petazzoni 2014-04-22  111  }
+065194a06b4187 Thomas Petazzoni 2014-04-22  112  
+
+:::::: The code at line 107 was first introduced by commit
+:::::: 065194a06b4187f9c1f4a37951904534291fb85b ARM: orion5x: convert RD-88F5182 to Device Tree
+
+:::::: TO: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+:::::: CC: Jason Cooper <jason@lakedaemon.net>
 
 -- 
 0-DAY CI Kernel Test Service
-https://01.org/lkp
+https://github.com/intel/lkp-tests
