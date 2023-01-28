@@ -2,133 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E66C267F5AF
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 08:35:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1512367F5B4
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Jan 2023 08:36:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233931AbjA1Hfq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Jan 2023 02:35:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37486 "EHLO
+        id S234002AbjA1HgR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Jan 2023 02:36:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233936AbjA1Hfa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 02:35:30 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEFDF8CE19
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 23:35:17 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id z1-20020a17090a66c100b00226f05b9595so6773222pjl.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Jan 2023 23:35:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b+RFpRJs0xuB4gmuObROuwz4dxLhUH7cqrzlkSnFIcc=;
-        b=E5f3tYSRcGCHD0f05IVlrEg2aBkkQF0+d8+GwNVMRweXITwGxTNJvl5GTzT/ZHynfs
-         tS33LB+QIqb6arl4mkDu5QIIcWq5vLgpXy8dfHP3V/owwfOnmTzyMOVP0yNrKwmgGMTM
-         tG1bKn3TkpfZydcJaT59XgRaIixC6tces40+ymhlwJ1PXxTT4wvEjPW7qoMy1Ye0oXYz
-         oCJ7l5IbZD3va8n08BzIwLdTZQpf60Obi65+jSPECZ4UGLN3XalZN27XFaLXBv51sDrI
-         X/kC6qLfllMA7pk8Jbm/NdDdvLdnCZch7bX6oAHOjIuA2BwN+rjWZ4QxCawWq1g9Ce0Z
-         cBSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b+RFpRJs0xuB4gmuObROuwz4dxLhUH7cqrzlkSnFIcc=;
-        b=exyRAMoZ4sf/QRfM3QJN5mRK+HSibiH5TspsJpLSuqrX/TDqegx6aJW4JFibGIPLZ3
-         RnJHgH/iaGpP5jRWegv1j0w00u3O/sOszt+9bQD1BC5c97ZotohxjzhLCXlQ6kNZvHZh
-         G81PsdNzbl/UsTq1arZMU2McE8iBneShfzRz7570m1YUlIszc9bcUH5WLLZmt+wAp0pS
-         pyJqiI6RJFZGdRAoHdueFnguZuogpdZ+b6xSzMpge8xzQn2OGyK94oUZ9xunTxHeSGRX
-         RryTLqg/NI4Q9Nz7fsWPcHoJX36dEPrjp4RaEiB9YARjSUOSM0KiWR+QiSZsgv07xi3E
-         yqKg==
-X-Gm-Message-State: AFqh2kr8vvJNdf7lXmSnAIfo7xjmFZrXtVXcBOKoJyi2zCahGC2pnYrp
-        htWrbOlm+go/8Hi4jZITf5ofaIOxmyxt2dF0tr3ItA==
-X-Google-Smtp-Source: AMrXdXtcy6GzDmIsWx+JJhiM4nf5ZJkxCfBvmjzprfDg2/sXA1zxWHzVMufXd/eGbAB3EbQBo759okdBtzEgtTTy6y4=
-X-Received: by 2002:a17:90a:7e8d:b0:225:d307:95ce with SMTP id
- j13-20020a17090a7e8d00b00225d30795cemr5435623pjl.136.1674891317143; Fri, 27
- Jan 2023 23:35:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20230127001141.407071-1-saravanak@google.com> <20230127001141.407071-11-saravanak@google.com>
- <Y9OemQgO9qoSdT1r@smile.fi.intel.com>
-In-Reply-To: <Y9OemQgO9qoSdT1r@smile.fi.intel.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Jan 2023 23:34:40 -0800
-Message-ID: <CAGETcx9rSNgBhthkyj5zPbTPzp_SW+UUUJqPCSPFix0KG9NiOw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] irqchip/irq-imx-gpcv2: Mark fwnode device as not initialized
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
+        with ESMTP id S234012AbjA1Hfr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Jan 2023 02:35:47 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1458E17A;
+        Fri, 27 Jan 2023 23:35:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674891328; x=1706427328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2IGlG08LzZjsRh15w/36FW5g5Yh+zOPUK0S/8aQnkuw=;
+  b=fZ577Frujdic2V8cQzByn/v/682d2t+sbR9kAIPjd3AHFy9nWOQxU5UP
+   LqOl/2Qc5IbfEYWks4Bk5qIeQITnK/A/VhjVGxn5QA3aprJs13n7jPhnS
+   Ceq0+rb7+7R9nI0bw2xB9oBii5Qh8oTBehWMrGVSPucmh6TIx3vgkgmEF
+   BZl+a8HF5/VY/rc66gtRK7TocJCI9o/bUESYNUldAY+IHzA0NESqCp9gv
+   1r82i/HqD0x9bHlkBydS0sV2vnxF8I52H2eHD4QZUHDgS1zEZelaO1K6r
+   0ignYGsB53yjf0QkY+B1/VN/qQgvrzLU0alqL9nUWBgnVL5dBEXRF/GSa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="315226503"
+X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
+   d="scan'208";a="315226503"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 23:35:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="771853680"
+X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
+   d="scan'208";a="771853680"
+Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Jan 2023 23:35:22 -0800
+Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pLfk9-0000UT-0d;
+        Sat, 28 Jan 2023 07:35:21 +0000
+Date:   Sat, 28 Jan 2023 15:35:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-media@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>
+Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
+ enable/disable the privacy LED if present
+Message-ID: <202301281534.9Z8xRsrX-lkp@intel.com>
+References: <20230127203729.10205-2-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230127203729.10205-2-hdegoede@redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 1:51 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Jan 26, 2023 at 04:11:37PM -0800, Saravana Kannan wrote:
-> > Since this device is only partially initialized by the irqchip driver,
-> > we need to mark the fwnode device as not initialized. This is to let
-> > fw_devlink know that the device will be completely initialized at a
-> > later point. That way, fw_devlink will continue to defer the probe of
-> > the power domain consumers till the power domain driver successfully
-> > binds to the struct device and completes the initialization of the
-> > device.
->
-> ...
->
-> >               pd_pdev->dev.of_node = np;
-> > +             pd_pdev->dev.fwnode = of_fwnode_handle(np);
->
-> Instead,
->
->                 device_set_node(&pd_dev->dev, of_fwnode_handle(np));
+Hi Hans,
 
-Ack
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.2-rc5]
+[cannot apply to media-tree/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+patch link:    https://lore.kernel.org/r/20230127203729.10205-2-hdegoede%40redhat.com
+patch subject: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present
+config: riscv-randconfig-r026-20230123 (https://download.01.org/0day-ci/archive/20230128/202301281534.9Z8xRsrX-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install riscv cross compiling tool for clang build
+        # apt-get install binutils-riscv64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/000ccec1824b3256e3fc1a94079bb953f19faab5
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Hans-de-Goede/media-v4l2-core-Make-the-v4l2-core-code-enable-disable-the-privacy-LED-if-present/20230128-131233
+        git checkout 000ccec1824b3256e3fc1a94079bb953f19faab5
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/media/v4l2-core/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/media/v4l2-core/v4l2-subdev.c:1124:20: error: call to undeclared function 'led_get'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           sd->privacy_led = led_get(sd->dev, "privacy-led");
+                             ^
+>> drivers/media/v4l2-core/v4l2-subdev.c:1124:18: error: incompatible integer to pointer conversion assigning to 'struct led_classdev *' from 'int' [-Wint-conversion]
+           sd->privacy_led = led_get(sd->dev, "privacy-led");
+                           ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 errors generated.
 
 
--Saravana
+vim +/led_get +1124 drivers/media/v4l2-core/v4l2-subdev.c
+
+  1120	
+  1121	int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
+  1122	{
+  1123	#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+> 1124		sd->privacy_led = led_get(sd->dev, "privacy-led");
+  1125		if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
+  1126			return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
+  1127	
+  1128		if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+  1129			mutex_lock(&sd->privacy_led->led_access);
+  1130			led_sysfs_disable(sd->privacy_led);
+  1131			led_trigger_remove(sd->privacy_led);
+  1132			led_set_brightness(sd->privacy_led, 0);
+  1133			mutex_unlock(&sd->privacy_led->led_access);
+  1134		}
+  1135	#endif
+  1136		return 0;
+  1137	}
+  1138	EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
+  1139	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
