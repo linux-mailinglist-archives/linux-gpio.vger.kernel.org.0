@@ -2,201 +2,371 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 236396807F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 09:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D0AB680A83
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 11:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbjA3I4J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 03:56:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40354 "EHLO
+        id S235170AbjA3KNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 05:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235944AbjA3I4I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 03:56:08 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3066327D66
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 00:56:07 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id n2so7186031pfo.3
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 00:56:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cvti0wscSxm2TsFta3vppQO1DWp6PaQtNXLMnh1nMxU=;
-        b=wCbHQAQZNWcjdWWkzQJgDhsEDKuVN1zgoHCXrEukOEkgU2YOV3x1Jyu4fOP3xQZRcE
-         pWMxI1BEvf5ZrYRdn0hw0gExa61JO2fyFO0drmRQaR7qIN95KVk2e2kDpADRDWBCWK8Z
-         flTyfRJsWSz7K6x9ck5DPCum/IBz2cK3J6lEQ8apC5HAFrhDvJ17+MSzkql+AddL+UA1
-         kqdcEZIQ7zbXJuZrB0KFUnP4CQB+LUNBzSwah9Nr+hccEf5jo62JU6VZ8J+aPmmL/QVm
-         y/0vlDZZf0w07LPfbWXcUp2szu5gEJ3/FqRnFZnakmBSA1iS4iLb8+MR1bD7eM1NWMHY
-         /NIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cvti0wscSxm2TsFta3vppQO1DWp6PaQtNXLMnh1nMxU=;
-        b=LCMnDmzEMWSAEDUui2mGm0TTRidjymzHjc7vHGSqgoPmqPoHARJ+ujrd9Fjb7WQ/rz
-         g5i2ZzvWLA8Ov75EhPVfai0hEqjbyg3Bw55XnPOu/43SvJgSHXuAvX1GWjwSGhiVumFY
-         nLonqEvYg4h88+M3nPCyrify50wWro8TnuQSzNz65LeZibJGIwvIhK/tJkKtAbp2nWbA
-         c2J5qNGVm0lRHu+CvlH9RycGj3d8U6Ofn4N71o7B4oLmbMfFgDQBmKwB0i6mbweoPRK7
-         qSvm1whByipxlk17q6RyAEMwAIzY3qpm0Cy7DkU406Kb4126wyFyrNLGYrvdsUdJg2wB
-         rQNA==
-X-Gm-Message-State: AO0yUKX/nL8CiDfq/bI/AvbeyUbvich5TyvphzKW7gFpmOaKHRkcN4zp
-        oCFGgHCvX7/19L8WOdz5lAw82Q==
-X-Google-Smtp-Source: AK7set8lcM5fQ2RoTmj81iwj1zSBfNdM0n7rVQIjXg+oYAZNRx9qpvdUg22R0xSmKyKtG9S0ga5Jmg==
-X-Received: by 2002:a62:1c10:0:b0:57d:56f1:6ae7 with SMTP id c16-20020a621c10000000b0057d56f16ae7mr14872298pfc.33.1675068966188;
-        Mon, 30 Jan 2023 00:56:06 -0800 (PST)
-Received: from localhost.localdomain ([124.123.172.194])
-        by smtp.gmail.com with ESMTPSA id o3-20020a056a0015c300b00593a01d93ecsm3320539pfu.208.2023.01.30.00.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 00:56:05 -0800 (PST)
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-To:     saravanak@google.com
-Cc:     abel.vesa@linaro.org, alexander.stein@ew.tq-group.com,
-        andriy.shevchenko@linux.intel.com, bigunclemax@gmail.com,
-        brgl@bgdev.pl, colin.foster@in-advantage.com,
-        cristian.marussi@arm.com, devicetree@vger.kernel.org,
-        dianders@chromium.org, djrscally@gmail.com,
-        dmitry.baryshkov@linaro.org, festevam@gmail.com, fido_max@inbox.ru,
-        frowand.list@gmail.com, geert+renesas@glider.be,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        heikki.krogerus@linux.intel.com, jpb@kernel.org,
-        jstultz@google.com, kernel-team@android.com, kernel@pengutronix.de,
-        lenb@kernel.org, linus.walleij@linaro.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux@roeck-us.net, lkft@linaro.org, luca.weiss@fairphone.com,
-        magnus.damm@gmail.com, martin.kepplinger@puri.sm, maz@kernel.org,
-        miquel.raynal@bootlin.com, naresh.kamboju@linaro.org,
-        rafael@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
-        sakari.ailus@linux.intel.com, shawnguo@kernel.org,
-        sudeep.holla@arm.com, tglx@linutronix.de, tony@atomide.com
-Subject: [PATCH v2 00/11] fw_devlink improvements
-Date:   Mon, 30 Jan 2023 14:25:42 +0530
-Message-Id: <20230130085542.38546-1-naresh.kamboju@linaro.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230127001141.407071-1-saravanak@google.com>
-References: <20230127001141.407071-1-saravanak@google.com>
+        with ESMTP id S236093AbjA3KNH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 05:13:07 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037DB2726;
+        Mon, 30 Jan 2023 02:13:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675073586; x=1706609586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lkzQnJaDnZsjoC5W0+1xU1mLq9d2iemOIAHUFDXsbkM=;
+  b=baGfeGWInx2JCMDv0UfVtqivSrUHVHuQA6Yo7fidqwNORx0dGFNPnLwS
+   dGNrbi521xLkiLIsfMlLq0IzdIN9Kxs36K6uW/330iefguresX+Vlc9J6
+   gnIaaleNaMF3oXP7AzXMYiIV+c4CBpmESBvXxceLwvVBKF/pzQFC82F1p
+   heiUG8YT5D9Qs3WLuI4hrhEnemRSRocsBwWJdAWyl6z2kKWPEt7dg3S1g
+   mdIfpL9sL53WPyyVZVaAaFvaA6+FXNUIzOiVv40l8DX6T/a2isT83jqdY
+   /ZzeoBzbGsewmID16K2dIUXWMD50L2+6/OsQb5ohAHKvp5MSjeQVsaq1q
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="307867038"
+X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
+   d="scan'208";a="307867038"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:13:05 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="752768538"
+X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
+   d="scan'208";a="752768538"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:13:01 -0800
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+        by kekkonen.fi.intel.com (Postfix) with SMTP id 2A9D2120243;
+        Mon, 30 Jan 2023 12:12:59 +0200 (EET)
+Date:   Mon, 30 Jan 2023 12:12:59 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED
+ class device for the privacy LED
+Message-ID: <Y9eYKxdo7BvqI9sR@kekkonen.localdomain>
+References: <20230127203729.10205-1-hdegoede@redhat.com>
+ <20230127203729.10205-4-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230127203729.10205-4-hdegoede@redhat.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Build test pass on arm, arm64, i386, mips, parisc, powerpc, riscv, s390, sh,
-sparc and x86_64.
+Hi Hans,
 
-Boot and LTP smoke pass on qemu-arm64, qemu-armv7, qemu-i386 and qemu-x86_64.
-Boot failed on FVP.
+On Fri, Jan 27, 2023 at 09:37:27PM +0100, Hans de Goede wrote:
+> On some systems, e.g. the Lenovo ThinkPad X1 Yoga gen 7 and the ThinkPad
+> X1 Nano gen 2 there is no clock-enable pin, triggering the:
+> "No clk GPIO. The privacy LED won't work" warning and causing the privacy
+> LED to not work.
+> 
+> Fix this by modeling the privacy LED as a LED class device rather then
+> integrating it with the registered clock.
+> 
+> Note this relies on media subsys changes to actually turn the LED on/off
+> when the sensor's v4l2_subdev's s_stream() operand gets called.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v4:
+> - Make struct led_classdev the first member of the pled struct
+> - Use strchr to replace the : with _ in the acpi_dev_name()
+> ---
+>  drivers/platform/x86/intel/int3472/Makefile   |  2 +-
+>  .../x86/intel/int3472/clk_and_regulator.c     |  3 -
+>  drivers/platform/x86/intel/int3472/common.h   | 15 +++-
+>  drivers/platform/x86/intel/int3472/discrete.c | 58 ++++-----------
+>  drivers/platform/x86/intel/int3472/led.c      | 74 +++++++++++++++++++
+>  5 files changed, 105 insertions(+), 47 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/int3472/led.c
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
+> index cfec7784c5c9..9f16cb514397 100644
+> --- a/drivers/platform/x86/intel/int3472/Makefile
+> +++ b/drivers/platform/x86/intel/int3472/Makefile
+> @@ -1,4 +1,4 @@
+>  obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472_discrete.o \
+>  					   intel_skl_int3472_tps68470.o
+> -intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o common.o
+> +intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o common.o
+>  intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o common.o
+> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> index 74dc2cff799e..e3b597d93388 100644
+> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> @@ -23,8 +23,6 @@ static int skl_int3472_clk_prepare(struct clk_hw *hw)
+>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>  
+>  	gpiod_set_value_cansleep(clk->ena_gpio, 1);
+> -	gpiod_set_value_cansleep(clk->led_gpio, 1);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -33,7 +31,6 @@ static void skl_int3472_clk_unprepare(struct clk_hw *hw)
+>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>  
+>  	gpiod_set_value_cansleep(clk->ena_gpio, 0);
+> -	gpiod_set_value_cansleep(clk->led_gpio, 0);
+>  }
+>  
+>  static int skl_int3472_clk_enable(struct clk_hw *hw)
+> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+> index 53270d19c73a..82dc37e08882 100644
+> --- a/drivers/platform/x86/intel/int3472/common.h
+> +++ b/drivers/platform/x86/intel/int3472/common.h
+> @@ -6,6 +6,7 @@
+>  
+>  #include <linux/clk-provider.h>
+>  #include <linux/gpio/machine.h>
+> +#include <linux/leds.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/machine.h>
+>  #include <linux/types.h>
+> @@ -28,6 +29,8 @@
+>  #define GPIO_REGULATOR_NAME_LENGTH				21
+>  #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
+>  
+> +#define INT3472_LED_MAX_NAME_LEN				32
+> +
+>  #define CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET			86
+>  
+>  #define INT3472_REGULATOR(_name, _supply, _ops)			\
+> @@ -96,10 +99,16 @@ struct int3472_discrete_device {
+>  		struct clk_hw clk_hw;
+>  		struct clk_lookup *cl;
+>  		struct gpio_desc *ena_gpio;
+> -		struct gpio_desc *led_gpio;
+>  		u32 frequency;
+>  	} clock;
+>  
+> +	struct int3472_pled {
+> +		struct led_classdev classdev;
+> +		struct led_lookup_data lookup;
+> +		char name[INT3472_LED_MAX_NAME_LEN];
+> +		struct gpio_desc *gpio;
+> +	} pled;
+> +
+>  	unsigned int ngpios; /* how many GPIOs have we seen */
+>  	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
+>  	struct gpiod_lookup_table gpios;
+> @@ -119,4 +128,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+>  				   struct acpi_resource_gpio *agpio);
+>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
+>  
+> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
+> +			      struct acpi_resource_gpio *agpio, u32 polarity);
+> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
+> +
+>  #endif
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 708d51f9b41d..38b1372e0745 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -155,37 +155,21 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+>  }
+>  
+>  static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
+> -				       struct acpi_resource_gpio *agpio, u8 type)
+> +				       struct acpi_resource_gpio *agpio)
+>  {
+>  	char *path = agpio->resource_source.string_ptr;
+>  	u16 pin = agpio->pin_table[0];
+>  	struct gpio_desc *gpio;
+>  
+> -	switch (type) {
+> -	case INT3472_GPIO_TYPE_CLK_ENABLE:
+> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+> -		if (IS_ERR(gpio))
+> -			return (PTR_ERR(gpio));
+> -
+> -		int3472->clock.ena_gpio = gpio;
+> -		/* Ensure the pin is in output mode and non-active state */
+> -		gpiod_direction_output(int3472->clock.ena_gpio, 0);
+> -		break;
+> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
+> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,privacy-led");
+> -		if (IS_ERR(gpio))
+> -			return (PTR_ERR(gpio));
+> +	gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
+> +	if (IS_ERR(gpio))
+> +		return (PTR_ERR(gpio));
+>  
+> -		int3472->clock.led_gpio = gpio;
+> -		/* Ensure the pin is in output mode and non-active state */
+> -		gpiod_direction_output(int3472->clock.led_gpio, 0);
+> -		break;
+> -	default:
+> -		dev_err(int3472->dev, "Invalid GPIO type 0x%02x for clock\n", type);
+> -		break;
+> -	}
+> +	int3472->clock.ena_gpio = gpio;
+> +	/* Ensure the pin is in output mode and non-active state */
+> +	gpiod_direction_output(int3472->clock.ena_gpio, 0);
+>  
+> -	return 0;
+> +	return skl_int3472_register_clock(int3472);
+>  }
+>  
+>  static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
+> @@ -293,11 +277,16 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  
+>  		break;
+>  	case INT3472_GPIO_TYPE_CLK_ENABLE:
+> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
+> -		ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
+> +		ret = skl_int3472_map_gpio_to_clk(int3472, agpio);
+>  		if (ret)
+>  			err_msg = "Failed to map GPIO to clock\n";
+>  
+> +		break;
+> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+> +		ret = skl_int3472_register_pled(int3472, agpio, polarity);
+> +		if (ret)
+> +			err_msg = "Failed to register LED\n";
+> +
+>  		break;
+>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
+>  		ret = skl_int3472_register_regulator(int3472, agpio);
+> @@ -341,21 +330,6 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>  
+>  	acpi_dev_free_resource_list(&resource_list);
+>  
+> -	/*
+> -	 * If we find no clock enable GPIO pin then the privacy LED won't work.
+> -	 * We've never seen that situation, but it's possible. Warn the user so
+> -	 * it's clear what's happened.
+> -	 */
+> -	if (int3472->clock.ena_gpio) {
+> -		ret = skl_int3472_register_clock(int3472);
+> -		if (ret)
+> -			return ret;
+> -	} else {
+> -		if (int3472->clock.led_gpio)
+> -			dev_warn(int3472->dev,
+> -				 "No clk GPIO. The privacy LED won't work\n");
+> -	}
+> -
+>  	int3472->gpios.dev_id = int3472->sensor_name;
+>  	gpiod_add_lookup_table(&int3472->gpios);
+>  
+> @@ -372,8 +346,8 @@ static int skl_int3472_discrete_remove(struct platform_device *pdev)
+>  		skl_int3472_unregister_clock(int3472);
+>  
+>  	gpiod_put(int3472->clock.ena_gpio);
+> -	gpiod_put(int3472->clock.led_gpio);
+>  
+> +	skl_int3472_unregister_pled(int3472);
+>  	skl_int3472_unregister_regulator(int3472);
+>  
+>  	return 0;
+> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+> new file mode 100644
+> index 000000000000..251c6524458e
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/int3472/led.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Author: Hans de Goede <hdegoede@redhat.com> */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/leds.h>
+> +#include "common.h"
+> +
+> +static int int3472_pled_set(struct led_classdev *led_cdev,
+> +				     enum led_brightness brightness)
+> +{
+> +	struct int3472_discrete_device *int3472 =
+> +		container_of(led_cdev, struct int3472_discrete_device, pled.classdev);
+> +
+> +	gpiod_set_value_cansleep(int3472->pled.gpio, brightness);
+> +	return 0;
+> +}
+> +
+> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
+> +			      struct acpi_resource_gpio *agpio, u32 polarity)
+> +{
+> +	char *p, *path = agpio->resource_source.string_ptr;
+> +	int ret;
+> +
+> +	if (int3472->pled.classdev.dev)
+> +		return -EBUSY;
+> +
+> +	int3472->pled.gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
+> +							     "int3472,privacy-led");
+> +	if (IS_ERR(int3472->pled.gpio))
+> +		return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.gpio),
+> +				     "getting privacy LED GPIO\n");
+> +
+> +	if (polarity == GPIO_ACTIVE_LOW)
+> +		gpiod_toggle_active_low(int3472->pled.gpio);
+> +
+> +	/* Ensure the pin is in output mode and non-active state */
+> +	gpiod_direction_output(int3472->pled.gpio, 0);
+> +
+> +	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
+> +	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
+> +		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
+> +	p = strchr(int3472->pled.name, ':');
+> +	*p = '_';
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+While I suppose ACPI device names generally are shorter than
+sizeof(int3472->pled.name), it'd be nice to still check p is non-NULL here,
+just to be sure.
 
-Please refer following link for details of testing.
-FVP boot log failed.
-https://qa-reports.linaro.org/~anders.roxell/linux-mainline-patches/build/lore_kernel_org_linux-devicetree_20230127001141_407071-1-saravanak_google_com/testrun/14389034/suite/boot/test/gcc-12-lkftconfig-64k_page_size/details/
+> +
+> +	int3472->pled.classdev.name = int3472->pled.name;
+> +	int3472->pled.classdev.max_brightness = 1;
+> +	int3472->pled.classdev.brightness_set_blocking = int3472_pled_set;
+> +
+> +	ret = led_classdev_register(int3472->dev, &int3472->pled.classdev);
+> +	if (ret)
+> +		goto err_free_gpio;
+> +
+> +	int3472->pled.lookup.provider = int3472->pled.name;
+> +	int3472->pled.lookup.dev_id = int3472->sensor_name;
+> +	int3472->pled.lookup.con_id = "privacy-led";
+> +	led_add_lookup(&int3472->pled.lookup);
+> +
+> +	return 0;
+> +
+> +err_free_gpio:
+> +	gpiod_put(int3472->pled.gpio);
+> +	return ret;
+> +}
+> +
+> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
+> +{
+> +	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
+> +		return;
+> +
+> +	led_remove_lookup(&int3472->pled.lookup);
+> +	led_classdev_unregister(&int3472->pled.classdev);
+> +	gpiod_put(int3472->pled.gpio);
+> +}
 
+-- 
+Kind regards,
 
-[    2.613437] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-[    2.613628] Mem abort info:
-[    2.613756]   ESR = 0x0000000096000005
-[    2.613904]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    2.614071]   SET = 0, FnV = 0
-[    2.614215]   EA = 0, S1PTW = 0
-[    2.614358]   FSC = 0x05: level 1 translation fault
-[    2.614517] Data abort info:
-[    2.614647]   ISV = 0, ISS = 0x00000005
-[    2.614792]   CM = 0, WnR = 0
-[    2.614934] [0000000000000010] user address but active_mm is swapper
-[    2.615105] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-[    2.615219] Modules linked in:
-[    2.615310] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.2.0-rc5 #1
-[    2.615445] Hardware name: FVP Base RevC (DT)
-[    2.615533] pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[    2.615685] pc : gpiochip_setup_dev (include/linux/err.h:41 include/linux/fwnode.h:201 drivers/gpio/gpiolib.c:586) 
-[    2.615816] lr : gpiochip_add_data_with_key (drivers/gpio/gpiolib.c:871) 
-[    2.615970] sp : ffff8000081af5e0
-[    2.616051] x29: ffff8000081af5e0 x28: 0000000000000000 x27: ffff0008027cb5a0
-[    2.616261] x26: 0000000000000000 x25: ffffd7c5d6745910 x24: ffff0008027f4800
-[    2.616472] x23: 0000000000000000 x22: ffffd7c5d62b99a8 x21: 0000000000000202
-[    2.616679] x20: 0000000000000000 x19: ffff0008027f4800 x18: ffffffffffffffff
-[    2.616890] x17: ffffd7c5d6467928 x16: 0000000013e3690a x15: ffff8000081af3b0
-[    2.617102] x14: ffff00080275cd8a x13: ffff00080275cd88 x12: 0000000000000001
-[    2.617312] x11: 62726568746f6d3a x10: 0000000000000000 x9 : ffffd7c5d3b3ebe0
-[    2.617522] x8 : ffff8000081af548 x7 : 0000000000000000 x6 : 0000000000000001
-[    2.617727] x5 : 0000000000000000 x4 : ffff000800640000 x3 : ffffd7c5d62b99c8
-[    2.617933] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-[    2.618138] Call trace:
-[    2.618204] gpiochip_setup_dev (include/linux/err.h:41 include/linux/fwnode.h:201 drivers/gpio/gpiolib.c:586) 
-[    2.618337] gpiochip_add_data_with_key (drivers/gpio/gpiolib.c:871) 
-[    2.618493] devm_gpiochip_add_data_with_key (drivers/gpio/gpiolib-devres.c:478) 
-[    2.618654] bgpio_pdev_probe (drivers/gpio/gpio-mmio.c:793) 
-[    2.618785] platform_probe (drivers/base/platform.c:1401) 
-[    2.618928] really_probe (drivers/base/dd.c:560 drivers/base/dd.c:639) 
-[    2.619056] __driver_probe_device (drivers/base/dd.c:778) 
-[    2.619193] driver_probe_device (drivers/base/dd.c:808) 
-[    2.619329] __device_attach_driver (drivers/base/dd.c:937) 
-[    2.619464] bus_for_each_drv (drivers/base/bus.c:427) 
-[    2.619590] __device_attach (drivers/base/dd.c:1010) 
-[    2.619722] device_initial_probe (drivers/base/dd.c:1058) 
-[    2.619861] bus_probe_device (drivers/base/bus.c:489) 
-[    2.619988] device_add (drivers/base/core.c:3637) 
-[    2.620102] platform_device_add (drivers/base/platform.c:717) 
-[    2.620251] mfd_add_device (drivers/mfd/mfd-core.c:297) 
-[    2.620397] devm_mfd_add_devices (drivers/mfd/mfd-core.c:351 drivers/mfd/mfd-core.c:449) 
-[    2.620548] vexpress_sysreg_probe (drivers/mfd/vexpress-sysreg.c:115) 
-[    2.620672] platform_probe (drivers/base/platform.c:1401) 
-[    2.620814] really_probe (drivers/base/dd.c:560 drivers/base/dd.c:639) 
-[    2.620940] __driver_probe_device (drivers/base/dd.c:778) 
-[    2.621080] driver_probe_device (drivers/base/dd.c:808) 
-[    2.621216] __driver_attach (drivers/base/dd.c:1195) 
-[    2.621344] bus_for_each_dev (drivers/base/bus.c:301) 
-[    2.621467] driver_attach (drivers/base/dd.c:1212) 
-[    2.621596] bus_add_driver (drivers/base/bus.c:618) 
-[    2.621720] driver_register (drivers/base/driver.c:246) 
-[    2.621859] __platform_driver_register (drivers/base/platform.c:868) 
-[    2.622012] vexpress_sysreg_driver_init (drivers/mfd/vexpress-sysreg.c:134) 
-[    2.622145] do_one_initcall (init/main.c:1306) 
-[    2.622269] kernel_init_freeable (init/main.c:1378 init/main.c:1395 init/main.c:1414 init/main.c:1634) 
-[    2.622394] kernel_init (init/main.c:1526) 
-[    2.622531] ret_from_fork (arch/arm64/kernel/entry.S:864) 
-[ 2.622692] Code: 910003fd a90153f3 aa0003f3 f9414c00 (f9400801)
-All code
-========
-   0:*	fd                   	std    		<-- trapping instruction
-   1:	03 00                	add    (%rax),%eax
-   3:	91                   	xchg   %eax,%ecx
-   4:	f3 53                	repz push %rbx
-   6:	01 a9 f3 03 00 aa    	add    %ebp,-0x55fffc0d(%rcx)
-   c:	00 4c 41 f9          	add    %cl,-0x7(%rcx,%rax,2)
-  10:	01 08                	add    %ecx,(%rax)
-  12:	40 f9                	rex stc 
-
-Code starting with the faulting instruction
-===========================================
-   0:	01 08                	add    %ecx,(%rax)
-   2:	40 f9                	rex stc 
-[    2.622807] ---[ end trace 0000000000000000 ]---
-[    2.623043] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[    2.623157] SMP: stopping secondary CPUs
-[    2.623303] Kernel Offset: 0x57c5cb400000 from 0xffff800008000000
-[    2.623413] PHYS_OFFSET: 0x80000000
-[    2.623492] CPU features: 0x00000,001439ff,cd3e772f
-[    2.623591] Memory Limit: none
-[    2.623679] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
-
-
-ref:
- - https://qa-reports.linaro.org/~anders.roxell/linux-mainline-patches/build/lore_kernel_org_linux-devicetree_20230127001141_407071-1-saravanak_google_com/?results_layout=table&failures_only=false#!?details=#test-results
-
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
-
+Sakari Ailus
