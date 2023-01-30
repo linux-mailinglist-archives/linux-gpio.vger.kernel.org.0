@@ -2,65 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33013681F68
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 00:11:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D27A0681F9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 00:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjA3XLN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 18:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        id S229460AbjA3X0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 18:26:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbjA3XLM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 18:11:12 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D7D7ECF
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:11:09 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-4c131bede4bso181230437b3.5
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:11:09 -0800 (PST)
+        with ESMTP id S229709AbjA3X0n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 18:26:43 -0500
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28D0B771
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:26:42 -0800 (PST)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-510476ee20aso74325347b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:26:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LDfQZoGlwUK+kzxRXSbyFi2jPNk3BphEmmNBP0GjF0Q=;
-        b=OQ5btj3qyNunRkWa/eT2Rf1e2qqvSRm/L4uLNC8PepSZPzxTIskzOaRby8IxSTJK1a
-         A4DJcRTNXP9feNHl9aBq3x7WgYKKrBMUhPFJnfmAVFoIPC834tDKXunaB9jtZTz7COHt
-         0CEAmfvG6UfZMEo1bA7Vi/L8t9/tNunOZ521l7rvupZa9n0rxe/9e3WsAcas95BatZDb
-         MIoeWvtgMjugIfsqKyMQ+ZA8rY0LX3Daz7lN92Ul91r1riwqf6MML/jEAbnuhIER77tt
-         LeWz2X9ZYld81ddZiBXddfLmU2YIzWZ7r+qzxfr8K3QK7yj02Um4UZPadN7qmXoWkXP1
-         U1jA==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R1IBAqSy8wtf5Jix/Rds0S8evB7QfrwGL4k3bDD7gbM=;
+        b=dXjYLvVg6PGOLbHp693IhO+eqv3U4alFec/05Z7E1JpRDbZDBIerLgSczyXuuYMv7t
+         ZXUX5CBtu3lKhl6w9Pb1MIjcUKpYSoM7Ys0vHJfushhSfMalAhO7HmEZllxUqW1PAIVW
+         U8S3vCCCKptrn/ImRvzH94NntoR1JhLFbOeVZPd/fKVlNowd20NFCDaskzAKdUTW7Ai4
+         wHnw9NO26sjmS3LMR7CjVPEmSOgmxqSkMYA5zVmezn+EBufKj7N0mjxoyaPV3hbSuIdV
+         /y55n7RjeRWNPUk6gx3YFKh/ZM/MENjXdXdgTBiQgDwJkBPURpWOhU0ucYBJ4hzWt/9O
+         hQsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LDfQZoGlwUK+kzxRXSbyFi2jPNk3BphEmmNBP0GjF0Q=;
-        b=2c7ATXRK5rlr/RxX2ZKR/6CUTJaPhFUN3pdROGAQD7uRZdTJ9pqTew4BXFyueySZSb
-         C50sU5ZixRXMDTQ2ZCqp45tBr+t96l4y3hmLXpkOs6XVQWcKa0KNORrqAvlcLuq46Vlj
-         scb3bGCuBcc+GHfAd4ztSfTyMHu/jcVaINO+D7jQKzBbFjLV5Efs57u5JVLPUogsEZ8b
-         VHV7/I+1yzje9D0mC4bvEW+Br5uX/JStL6rBx6RR2FdA4yakzZc3+rGTGlY45wuzs+S6
-         1Rj+sXJcDcRABfKBRJASZRNLxcp9XkREKm/zo3ebMHxAv4BCri2+ZphiF5A4OAdK+TIu
-         euRQ==
-X-Gm-Message-State: AFqh2kpbAxuUy8UGP8COI7+7WFLo/dbBUTp5TPaOUWmAMVecB0BqGixF
-        dOVfUGys+FeY3u1q2Kc32+tsxBIknka+aKm0Nhdsqg==
-X-Google-Smtp-Source: AMrXdXtRz1bfZDc0Sl8udmgePKD2SUPlDJ5rqBwH5lFq8s8CAawhOWc+wuDT5y9DNmCpcoDn2Xrf/+ydTkvzsK2sjQE=
-X-Received: by 2002:a81:1a0a:0:b0:4dc:818f:f9f2 with SMTP id
- a10-20020a811a0a000000b004dc818ff9f2mr5170823ywa.469.1675120268932; Mon, 30
- Jan 2023 15:11:08 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R1IBAqSy8wtf5Jix/Rds0S8evB7QfrwGL4k3bDD7gbM=;
+        b=Y9dHGnkjcet9khbgw6QKjiJTiOn2NnQY1+0r1pg4S+HAJ9tJB3D14b3JozZBuLLD/7
+         XRnlhroouj/AKibK9Sc04qByueqXRQByZQcMrqH7JMJl0aCV20trWzW9etNxtciCm5xH
+         rumukMHCmzPa96TTvnP6ito/KaxMzEg7bjV7XkP2Kzf5650ok6c1pyqcgAmrYuyrLeQj
+         xf6ncTPCAv03eQWb3XQehlBiMMpswTAMQuRcL/xuw9ACf6Iz4VSIJNKmfJLPg7hs8axD
+         mW/9A+UBlpi069oj+htU+zAar/y21udBnErrYFX13vHy5U+gLLoAdWC+uNRPDufzJMtQ
+         Qg4Q==
+X-Gm-Message-State: AFqh2kojSPZRVuY2UCki2SwLv3R5NvAM/yEvX+qce9OSQ9zVFX1dyA26
+        DxJWR3L9EJe1y6aRrlXzcVN2P88ks66taT02hcSDaQ==
+X-Google-Smtp-Source: AMrXdXsS/bRpwSrf+SszpPb+XkwFnsjVv2uhKWEyoJX8kptGDGcBUHARSvA1F5YQELFnOhlaOaNYLg6U/X2uvGQg9P0=
+X-Received: by 2002:a81:6842:0:b0:4ff:e4bc:b56f with SMTP id
+ d63-20020a816842000000b004ffe4bcb56fmr5162592ywc.488.1675121201953; Mon, 30
+ Jan 2023 15:26:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20230130165435.2347569-1-konrad.dybcio@linaro.org>
-In-Reply-To: <20230130165435.2347569-1-konrad.dybcio@linaro.org>
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
+ <20230125093548.GB23347@pengutronix.de> <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+ <20230126104927.GE23347@pengutronix.de> <20230129183339.GY24167@pengutronix.de>
+ <CACRpkdYRynwJJZR5uCEn9rmE3c8p7R8SQdXC2FkzRUkBYRjErg@mail.gmail.com> <20230130164835.eteteji2vy7pbwtz@pengutronix.de>
+In-Reply-To: <20230130164835.eteteji2vy7pbwtz@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 31 Jan 2023 00:10:57 +0100
-Message-ID: <CACRpkdZjAyLUg3V7ZTzeMfUOTrndLrRX_gTFdO+amSmZkzB72Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pincfg-node: Introduce an
- overridable way to set bias on pins
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
-        agross@kernel.org, krzysztof.kozlowski@linaro.org,
-        marijn.suijten@somainline.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 31 Jan 2023 00:26:30 +0100
+Message-ID: <CACRpkdZsKAHx9KVTAF0-VBSd5QOSzP+Li_dyWETPY+_FpC_Cmw@mail.gmail.com>
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Robert Schwebel <r.schwebel@pengutronix.de>,
+        bartosz.golaszewski@linaro.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de, shawnguo@kernel.org,
+        Sascha Hauer <sha@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -70,77 +77,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 5:54 PM Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-
-> We came to a point where we sometimes we support a few dozen boards
-> with a given SoC. Sometimes, we have to take into consideration
-> configurations which deviate rather significatly from the reference
-> or most common designs. In the context of pinctrl, this often comes
-> down to wildly different pin configurations. While pins, function and
-> drive-strength are easily overridable, the (mostly) boolean properties
-> associated with setting bias, aren't. This wouldn't be much of a
-> problem if they didn't differ between boards so often, preventing us
-> from having a "nice" baseline setup without inevitably having to go
-> with an ugly /delete-property/.
-
-I see what the problem is.
-
-Have you considered pulling out *all* the pin config for a certain
-reference design into its own .dtsi file, simply? And then not include
-that to the next product.
-
-This pattern is pretty common.
-
-> Introduce bias-type, a bias-type-
-> specific property and clone the pinconf-generic type enum into
-> dt-bindings to allow for setting the bias in an easily overridable
-> manner such as:
+On Mon, Jan 30, 2023 at 5:48 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Jan 30, 2023 at 11:19:11AM +0100, Linus Walleij wrote:
+> > On Sun, Jan 29, 2023 at 7:33 PM Robert Schwebel
+> > <r.schwebel@pengutronix.de> wrote:
+> >
+> > > While this could also be done with a daemon offering a dbus api, this
+> > > would be significantly more complex. In a critical environment, one
+> > > needs to make sure that the daemon process never fails, otherwhise th=
+e
+> > > power of the DuT would maybe be in a random state. Then of course one
+> > > can add a watchdog, but with the current sysfs interface it's really
+> > > simple. Of course that would also work if the new interface would off=
+er
+> > > a "keep this line as it is" feature, but adding a dbus daemon just fo=
+r
+> > > keeping the state of a pin sounds overcomplex when the kernel could a=
+lso
+> > > provide that functionality.
+> >
+> > One issue we face as developers is scaleability. Things that
+> > seem straight forward on a single board computer in a lab get
+> > really complex in a big system with man GPIO chips.
 >
-> // SoC DT
-> i2c0_pin: i2c0-pin-state {
->         pins = "gpio10";
->         function = "gpio";
->         bias-type = <BIAS_PULL_UP>;
-> };
+> This is the point where the discussion took a wrong turn.
 >
-> // Deviant board DT
-> &i2c0_pin {
->         bias-type = <BIAS_HIGH_IMPEDANCE>;
-> };
+> Yes, there is awareness that the sysfs API has a downside (here: on some
+> platforms the number allocation is not stable).
 >
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> But the problem here is that the alternative (i.e. using the newer
+> devctrl API) also has a downside that makes it unsuitable (or overly
+> complex) to use for some workflows.
 
-The idea is pretty straight-forward.
+That should make it possible to use my suggested debugfs facility
+that provide the same, but does not use the global numberspace.
 
-But it applies to systems already using the bool flags. So what do
-we do the day we manage to have:
+People who don't care about the complexity involved with the character
+device certainly will not care about the downsides of using debugfs in
+production either. (Such as interfering with any chardev users...)
 
-{
-    bias-type = <BIAS_HIGH_IMPEDANCE>;
-    bias-pull-up;
-};
+> Just an idea: Wouldn't a nice solution be to make it possible to opt-out
+> of the reset to the safe state after use?
 
-As you see this makes it necessary to author some really nasty
-YAML to make sure this cannot happen or everyone has to make
-a runtime check for it.
+As Bartosz says there is no reset to any safe state, whatever that
+would be. The state is kept in hardware just like with sysfs.
 
-Another problem is that I was just discussing with Bjorn for some
-specific i2c pull-up, was actually using the argument for
-bias-pull-up with a parameter:
+You can even set up the state from sysfs and then read it back
+from the character device or vice versa, after freeing each
+hogs resources.
 
-bias-pull-up = <8000000>;  // 8kOhm pull-up
+It's really just the .get_direction() and .get() callbacks on the
+gpio_chip that read the state, .set_direction_input|output()
+and .set() sets it, like they always did.
 
-Not to mention that other platforms than qcom use this and
-qcom use it for drive-strength I think?
-
-+#define DRIVE_STRENGTH                 9
-+#define DRIVE_STRENGTH_UA              10
-
-drive-strength = <8>; // 8mA drive strength
-
-bias-type = <DRIVE_STRENGTH>;
-
-OK where do I put my 8 mA now?
+Consider the example too tools/gpio/gpio-hammer.c
+that I wrote. It reads the initial line values of the GPIO lines
+(from hardware) and then start to invert them. It doesn't start
+from any specific state?
 
 Yours,
 Linus Walleij
