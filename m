@@ -2,400 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 343FA681BE3
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 21:55:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D966681BF1
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 21:59:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjA3Uzv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 15:55:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
+        id S229502AbjA3U7i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 15:59:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjA3Uzu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 15:55:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C538B4671E
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 12:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675112099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RMBTjf9dX7Thl50RTCE+QgN0YSOMd4ZkDeyqa4Eg9KE=;
-        b=eYhN8CFp9Xe3RCd5TCrOsKE35pqMslGVpVwvqT2PRCUUBiPHFXtNwk3lkl76S2oQ28bnOz
-        r9Q0oBjKH3A7/71RltDo+fMfF5HnWZWHEmomQdlA3f+dgPn43+QOn9zXnKKxfyyakG9k3Q
-        iyIOU/bsZ4NPtlWVWuqoJQXBBT4ShkI=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-544-EklrKj9BOQWPARDG46UFYA-1; Mon, 30 Jan 2023 15:54:58 -0500
-X-MC-Unique: EklrKj9BOQWPARDG46UFYA-1
-Received: by mail-ej1-f71.google.com with SMTP id ds1-20020a170907724100b008775bfcef62so8115428ejc.9
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 12:54:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RMBTjf9dX7Thl50RTCE+QgN0YSOMd4ZkDeyqa4Eg9KE=;
-        b=QUCr2gWfypm6Cr61ZTOVj9rEKfJkUfMSAxbE6LtrFkXWoUZ/kXL+clDLporj2RF9gb
-         kwX024318tqhqc+1CptEozwi7o9j3tvS85yiZVlC54eb8QrgCwgxKP96hb07f0EQrUz0
-         P8lua+seiHb8G/CY4nybAVWi2TBTrviL69QMipGR4KuZV/g2ZnQEycRg8qWL7jSgxh/D
-         9YnHXglkrsgk7pxx8ASuMVGiej9cAzXPvpJMlyxE9te7n/zhEGwZs5Urrrm7YOE4nOZY
-         LY9K2EoCjfmRrXVzW8ZpK1x/YBJLHWW+0DLIR61bKMqzTGVu1RNjtSBkD9IXNGVLu1QH
-         K+9Q==
-X-Gm-Message-State: AO0yUKXrwxGBN5WeKLTZSyFOKpnMLFtR4XkNlOstg3/1Lf4n7oJSL+dh
-        4RAzop5/ekMSOTk5aF/SsPmXo0yJihUPrEsyjU9/9D7JoEKW5fqsAO0knk4itu8qfzNzfXgLyiW
-        TyeODrFZ+pBOi/AHPKR6d6g==
-X-Received: by 2002:a17:906:aad0:b0:87b:d41b:67dc with SMTP id kt16-20020a170906aad000b0087bd41b67dcmr11874390ejb.74.1675112096948;
-        Mon, 30 Jan 2023 12:54:56 -0800 (PST)
-X-Google-Smtp-Source: AK7set93L3tVDZyk5rYWNsyfbay/gpIqz9wvCIeqpAV0PUVsMZvjAiRoxHs30ugUvYPmg8Op548DIw==
-X-Received: by 2002:a17:906:aad0:b0:87b:d41b:67dc with SMTP id kt16-20020a170906aad000b0087bd41b67dcmr11874370ejb.74.1675112096638;
-        Mon, 30 Jan 2023 12:54:56 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id mb18-20020a170906eb1200b0084f7d38713esm7357883ejb.108.2023.01.30.12.54.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 12:54:55 -0800 (PST)
-Message-ID: <900ebfbc-5a8a-7aba-97b4-00dbc194beb5@redhat.com>
-Date:   Mon, 30 Jan 2023 21:54:55 +0100
-MIME-Version: 1.0
+        with ESMTP id S229496AbjA3U7h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 15:59:37 -0500
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2084.outbound.protection.outlook.com [40.107.15.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77857305F6
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 12:59:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AXK0snzn0nEytK20r8trzrSKq9dDjvM9zOXYdHRJcDnji3IcLtlY25msSOTguTt//WJbmKTHMgruWpxgZf27DJXerIELonFwHqhYP0iMV3fn+e4sv3+5LUljkHaIj3tK964S5gdCoRe06DjXH+kKJCHIsVOimFCLI3Ikh+Wp7GGYsG4KcwWwURBBH1N5YO0u+wNNNE0NJnbQfTa9Q3tk+eO6aiyJ63n8e8D9TXJV3HZkK61WpyYswtPOthGlV3nzzc4u6VXfH0FLvUcyYJjHUVcqag4bbDZaUKxlkXufLV7zUbVJV6VIhdNNR20JHFxdD+bPCs6GBoY+ngfvnt93HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oITB2K0QxmqgA+c43sg/PQf/KojC/KJNKHUXkq7bAiY=;
+ b=J3XkZUvW9qodqQUEUFZYbysI8WyxdJfQJx+2l5IcLAHO9mf7Jjz4z+EDLsSq9EIan2fMORRS3PJtCwqpX7eZ6KhO9SJPq2dP4XC6yo2u5YGfuo5rhFvdRoGDIfeRblfZt65rfkFiTIbh5d2C3Q/Nxp1t7HP02OxW85/0VStwzZxQkNhwryL1qGYZgRHZkuosxKqFHx/oG4/Zf4sXSD0cM0CgbqkZZIXGzvwtxlgjNXpW6Mpl6g5PZp2qlEgsNtyRmcERzNGqaoByDSWIjxLvuhAYKsWD23LjO8oVNoNwOiXpCyOMEihLlBDUyGwDebrgKmYOheYtwPxoA21FtWgjUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
+ dkim=pass header.d=eilabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oITB2K0QxmqgA+c43sg/PQf/KojC/KJNKHUXkq7bAiY=;
+ b=I56RxZAV4x3VyFUUHJkRgopx1BWle9kmHX9MZuPO7AOHOdx1FwB/g5fu3P+3yqoF45LTGGcDz36znh9+l5ytSpuZQvjdfoJxh7oMyI2rlSh0nueqjRpAMwkTrtxVPXaOz0O702qtF9DQCeTml8IG9H0Gb+MpQU8fYX+EgICzq8g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=eilabs.com;
+Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
+ by VI1P194MB2168.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:1c7::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
+ 2023 20:59:33 +0000
+Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ ([fe80::6322:b35d:1369:be7e]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ ([fe80::6322:b35d:1369:be7e%7]) with mapi id 15.20.6043.036; Mon, 30 Jan 2023
+ 20:59:33 +0000
+Message-ID: <7b736829-414a-ba4f-59f5-bc78c27621e5@eilabs.com>
+Date:   Mon, 30 Jan 2023 21:59:30 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v6 3/5] platform/x86: int3472/discrete: Create a LED class
- device for the privacy LED
-Content-Language: en-US, nl
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-References: <20230127203729.10205-1-hdegoede@redhat.com>
- <20230127203729.10205-4-hdegoede@redhat.com>
- <Y9eYKxdo7BvqI9sR@kekkonen.localdomain>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y9eYKxdo7BvqI9sR@kekkonen.localdomain>
+ Thunderbird/102.5.1
+From:   =?UTF-8?Q?Levente_R=c3=a9v=c3=a9sz?= <levente.revesz@eilabs.com>
+Subject: [RFC PATCH 0/3] gpio: pca953x: Redesign handling of chip types
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0123.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:97::9) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:800:147::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|VI1P194MB2168:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd73e4dc-f470-46c6-5b1d-08db0304e339
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: P6HHT/UC7CkIrWmRCcZHyFaMAEDJcgh2r7P7VW6g2R4K6Klm9dzAW/bAi8CSBacag/j1leB2fDKvId8KjUsIy/Zn/WgfpxaHt7QYI3zxI09NUcR2sDesnoBMcLwGwSE7ikiF+QukJhKGdKgYqrMiN31VcXaGw7oSGXrvnsI5nQzdF+LXE+qUHrOyax27WbjW2FrXulKd0juhTDhhWJACgY7SOU+ES323hMEUhXrQ3q+wM6bQ3w8u890Rc4ao69HMqyvM5TaT6LuyBdB/Bv9kKI3vec/FeVezlruvrOLAIur+9Fe7tX4R5gkGk0enb3EdCu+JEVN21W7cS7w06Gy3/cJUX3X9/m0cUYm9/pqMnRRR2yntQqyGjY8xr07Aqiix8Y69rJ7zc742Mwu0yxFPbO5SjHPmLsXeB3urwtmpL3h/yV+LEdZg5QcrTFFdqENu5Dh1LqwkYWuUOsSdGje/UrLGKQi3RW786Eevldd82LRvuMxqoh9Ep9yycxSqW6yS+qM+HjrS1fTNCOawsM97S1pCWvFyP4zJa0LnmPmDDslC6302zQFEjZrwtBSCyFsIvysUQcv7gWAg0FQAXJCoiHvpUZQty9vkKB3WZWZZHQR5WRPh83ndfNogby6t6s3b5PDyxHkk4QgW2mlSsXwc8a95s9/3D+xZbV4e8AK4pPfbinn3RTb0/fXYMkGlEPfCkPbPUdewA7MLc+/v5HnqD+r7mQ9z6GCIXNEknNjDAEYX7vQXGu18ieH8EdlggzHt4kKU15Y07JdR1XAZDJAZag==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(376002)(346002)(39830400003)(136003)(451199018)(7416002)(2616005)(31696002)(86362001)(38100700002)(83380400001)(36756003)(2906002)(6506007)(6512007)(26005)(186003)(6486002)(478600001)(966005)(31686004)(41300700001)(66946007)(4326008)(110136005)(5660300002)(8936002)(66556008)(54906003)(8676002)(316002)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVlURm9wdG1OTnNjUUtxbTJDR1VENTA1MTRhWFV4SGhTaVlyT0lPL21EOU1W?=
+ =?utf-8?B?RlNITnY5czlaeEFEWkRST24yUHdiNjBQR2F6VUQzRFFDVk1CQWJvbUxtNmVa?=
+ =?utf-8?B?dnlTbFZTaWRDdTQ2Y1J2L2QreUpTWnFMajY3MVFlazY0NTlUWlBvRmJwbXcr?=
+ =?utf-8?B?ZWVCQlY1SndEY3pVWE5hWmVDWUZtSmk1dGcyQnlmV2gzZytFQnZjV2s0TXha?=
+ =?utf-8?B?Rkt2Mlc5UktuQm5nWDhPNEppVlpsYjM0Zkh5RWdPT1dNVUpBTnRwUmtRV1lt?=
+ =?utf-8?B?ZG1BMGVaUGZLZkl1aVpRWE9TL0FUNEZpSW9INGVLZ1hpYUJpejZ4WVJlQkhh?=
+ =?utf-8?B?WG1DQWpLc01HVTExZDRSd1NIREZPa1RlVlJCM0RDWTNxcXdLWGdka3FHQ1ky?=
+ =?utf-8?B?cWdmaWEvSnJQRnYyS05vRzhKQlBPZ3ZIek9vUW94NzRJVXByY3NsVjJXZlMy?=
+ =?utf-8?B?ODk0QUJMbEtKY252dnlqc3h3dlVkcit2VDE0SGs3ZW5JaTlqQXlBaFpmYmh2?=
+ =?utf-8?B?aXRESlgxM1AyQjliMTVrUGwvZFNhbU1wNnV4L3BDeXBFUXJvRGdOcjBWeDdy?=
+ =?utf-8?B?WC90dVlUZ3V4YWliTWVQQjg0cFdxeUFWMncxT0VWUVY1RHVlNmhHVjdwY3Aw?=
+ =?utf-8?B?bXFUcWZuRXUzVVdBMUpTcDFlSXlCUDFPRjJWUWNrTjRIb1drNGpjZlNPd1NJ?=
+ =?utf-8?B?eklaTEp3QnhpMnBJaDBZSmZTSkVJR0lpYUZLdnlBbXlVbnJCc0dWTlRIZm13?=
+ =?utf-8?B?Um5MSU5rQnhIRXRVemU2elg5UExRV2g3TXpkQWV4YnRVaEpaUlF5YmVaNkZz?=
+ =?utf-8?B?U1c0NzRGcVZsZ0U1UDZ0b1RMOS9PN1pNYzNOWmhIRVNMV01MbGZhd2wzeS93?=
+ =?utf-8?B?amlFYmtiNkswdHJWUTVkOXZtOVZMNlZ1UmZFRzZtZUR2VS8zajlHSENwcTVr?=
+ =?utf-8?B?ODNTOGMra1VvNTBYa2tUblZuSU1qSktWSk9rUElJZkxRU0I4TzY1RWkwSUIx?=
+ =?utf-8?B?NEIrZWFmdllFY3B0K0YyZU1ZeGpNb2NTdlZWRE9wZXlyNzJ1N2FONG1PUG9x?=
+ =?utf-8?B?ai9heDBqd0hNRzhzQ3E5MFNTYStXQ0hubFMyVDlta2lOdnkwMm9wZzFMQ0dq?=
+ =?utf-8?B?T2RPOTFYU29KRUI1SDIvUEJ2Njc2a05NYmhHY2VvQWtSVW9VL2dHaEVyRzU2?=
+ =?utf-8?B?RmpBNnFGTHpqQlBmSXBRMVZ4NFJRSnlMYkZ4VzEvaEtDQ2VoQ1pDTkx3dFRX?=
+ =?utf-8?B?NmQwUW5OSVBLb0ozUEZJOUx2eFcwMkNrd3pmT3hWMUFSZXNaeDkwV24vQVF1?=
+ =?utf-8?B?dE12Q0ExWEJ3dDYwcGZNbGRXNjc2MDBLQWIxTE1SRGtnMnEwN29ORWE3dFI4?=
+ =?utf-8?B?Y0ZlQnk2bTVxdTdZTnN0Ti9JeHVvNnR5Rlo5dUNUaXpDbFdaamNoVEk1T0Zj?=
+ =?utf-8?B?aWxvVkc5akFyc3hZNXBFRVMzb0k5Nngxd2dlNUJqTE5ZM1QxOGJGUGxzOE5o?=
+ =?utf-8?B?YnlhRHR2WHhkNjJiaGVLNi9sR3AyL01ObWIzelpYcnRXem14L1dKSnFFSzBk?=
+ =?utf-8?B?SzBwZHNkWHpxa09Iem9uZURBVkpMSE1vWDl4a1dUUElkdDdpcVNGeUd2aTlr?=
+ =?utf-8?B?akNhSzRjVllTN0JHdWcxUkpIYmU5ZEMwaEcyZUs3ZGQvejRvYzVBeHl2Ykxq?=
+ =?utf-8?B?UVlYbDllYzdqSHRiUURCSXh0RGVCY2thYnByVFZiWWpKZm9mdHAvZWRSRjBt?=
+ =?utf-8?B?NTM3eEswNWNKL083M0NEQzk1cVdDTDFEWDVENDJhdFdsaEpEMVJjRnF4a0Qw?=
+ =?utf-8?B?UU9Vb0ZaeUFLVzdjUTI1SDNBWVIrekVjNlVreVYySTIzYnBML0NveGlaQ1U2?=
+ =?utf-8?B?Q0psRTFKeTg5ejlJWVMxdVByNVJXWk1iNzBBdWxkUkVXK0xwMHlxM1hEYnlB?=
+ =?utf-8?B?Y0kwc1NGU0VPN2puTzBxNExPM2lPQmw3QjhVMzJ6bWNWVTFYQ3d3ZGhNVlMz?=
+ =?utf-8?B?Z2NGUGVyUllTc09yUEpTNVNaVk1ac2k3cm5kb0hueDMrVFRISjZHeWhyYlZJ?=
+ =?utf-8?B?UmFpTHZ0RnhTQUpsQ01HbSs2eTZmSmc4NGRYU2VlRUQyT1dSYkNCTzJMTHVo?=
+ =?utf-8?B?RGZXeW80UDBoSGdqYXdOaHhlUUQvcXBXUWdYVnBjYm9IMFFCWEUxYmVOU2Q2?=
+ =?utf-8?B?THc9PQ==?=
+X-OriginatorOrg: eilabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd73e4dc-f470-46c6-5b1d-08db0304e339
+X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 20:59:33.1714
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uAFmwFcFK7RNsDUfrvpw0667loSeNKC3w2FMLWgSN7j1gZtn0n6CBHwb4PiLDx8Wc5SfxajbUWJ9naYAiO7QpOio7p86OB2j66+NOFMKMt8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P194MB2168
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 1/30/23 11:12, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Fri, Jan 27, 2023 at 09:37:27PM +0100, Hans de Goede wrote:
->> On some systems, e.g. the Lenovo ThinkPad X1 Yoga gen 7 and the ThinkPad
->> X1 Nano gen 2 there is no clock-enable pin, triggering the:
->> "No clk GPIO. The privacy LED won't work" warning and causing the privacy
->> LED to not work.
->>
->> Fix this by modeling the privacy LED as a LED class device rather then
->> integrating it with the registered clock.
->>
->> Note this relies on media subsys changes to actually turn the LED on/off
->> when the sensor's v4l2_subdev's s_stream() operand gets called.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v4:
->> - Make struct led_classdev the first member of the pled struct
->> - Use strchr to replace the : with _ in the acpi_dev_name()
->> ---
->>  drivers/platform/x86/intel/int3472/Makefile   |  2 +-
->>  .../x86/intel/int3472/clk_and_regulator.c     |  3 -
->>  drivers/platform/x86/intel/int3472/common.h   | 15 +++-
->>  drivers/platform/x86/intel/int3472/discrete.c | 58 ++++-----------
->>  drivers/platform/x86/intel/int3472/led.c      | 74 +++++++++++++++++++
->>  5 files changed, 105 insertions(+), 47 deletions(-)
->>  create mode 100644 drivers/platform/x86/intel/int3472/led.c
->>
->> diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
->> index cfec7784c5c9..9f16cb514397 100644
->> --- a/drivers/platform/x86/intel/int3472/Makefile
->> +++ b/drivers/platform/x86/intel/int3472/Makefile
->> @@ -1,4 +1,4 @@
->>  obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472_discrete.o \
->>  					   intel_skl_int3472_tps68470.o
->> -intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o common.o
->> +intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o common.o
->>  intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o common.o
->> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> index 74dc2cff799e..e3b597d93388 100644
->> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
->> @@ -23,8 +23,6 @@ static int skl_int3472_clk_prepare(struct clk_hw *hw)
->>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
->>  
->>  	gpiod_set_value_cansleep(clk->ena_gpio, 1);
->> -	gpiod_set_value_cansleep(clk->led_gpio, 1);
->> -
->>  	return 0;
->>  }
->>  
->> @@ -33,7 +31,6 @@ static void skl_int3472_clk_unprepare(struct clk_hw *hw)
->>  	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
->>  
->>  	gpiod_set_value_cansleep(clk->ena_gpio, 0);
->> -	gpiod_set_value_cansleep(clk->led_gpio, 0);
->>  }
->>  
->>  static int skl_int3472_clk_enable(struct clk_hw *hw)
->> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
->> index 53270d19c73a..82dc37e08882 100644
->> --- a/drivers/platform/x86/intel/int3472/common.h
->> +++ b/drivers/platform/x86/intel/int3472/common.h
->> @@ -6,6 +6,7 @@
->>  
->>  #include <linux/clk-provider.h>
->>  #include <linux/gpio/machine.h>
->> +#include <linux/leds.h>
->>  #include <linux/regulator/driver.h>
->>  #include <linux/regulator/machine.h>
->>  #include <linux/types.h>
->> @@ -28,6 +29,8 @@
->>  #define GPIO_REGULATOR_NAME_LENGTH				21
->>  #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
->>  
->> +#define INT3472_LED_MAX_NAME_LEN				32
->> +
->>  #define CIO2_SENSOR_SSDB_MCLKSPEED_OFFSET			86
->>  
->>  #define INT3472_REGULATOR(_name, _supply, _ops)			\
->> @@ -96,10 +99,16 @@ struct int3472_discrete_device {
->>  		struct clk_hw clk_hw;
->>  		struct clk_lookup *cl;
->>  		struct gpio_desc *ena_gpio;
->> -		struct gpio_desc *led_gpio;
->>  		u32 frequency;
->>  	} clock;
->>  
->> +	struct int3472_pled {
->> +		struct led_classdev classdev;
->> +		struct led_lookup_data lookup;
->> +		char name[INT3472_LED_MAX_NAME_LEN];
->> +		struct gpio_desc *gpio;
->> +	} pled;
->> +
->>  	unsigned int ngpios; /* how many GPIOs have we seen */
->>  	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
->>  	struct gpiod_lookup_table gpios;
->> @@ -119,4 +128,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
->>  				   struct acpi_resource_gpio *agpio);
->>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
->>  
->> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
->> +			      struct acpi_resource_gpio *agpio, u32 polarity);
->> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
->> +
->>  #endif
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index 708d51f9b41d..38b1372e0745 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -155,37 +155,21 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
->>  }
->>  
->>  static int skl_int3472_map_gpio_to_clk(struct int3472_discrete_device *int3472,
->> -				       struct acpi_resource_gpio *agpio, u8 type)
->> +				       struct acpi_resource_gpio *agpio)
->>  {
->>  	char *path = agpio->resource_source.string_ptr;
->>  	u16 pin = agpio->pin_table[0];
->>  	struct gpio_desc *gpio;
->>  
->> -	switch (type) {
->> -	case INT3472_GPIO_TYPE_CLK_ENABLE:
->> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
->> -		if (IS_ERR(gpio))
->> -			return (PTR_ERR(gpio));
->> -
->> -		int3472->clock.ena_gpio = gpio;
->> -		/* Ensure the pin is in output mode and non-active state */
->> -		gpiod_direction_output(int3472->clock.ena_gpio, 0);
->> -		break;
->> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
->> -		gpio = acpi_get_and_request_gpiod(path, pin, "int3472,privacy-led");
->> -		if (IS_ERR(gpio))
->> -			return (PTR_ERR(gpio));
->> +	gpio = acpi_get_and_request_gpiod(path, pin, "int3472,clk-enable");
->> +	if (IS_ERR(gpio))
->> +		return (PTR_ERR(gpio));
->>  
->> -		int3472->clock.led_gpio = gpio;
->> -		/* Ensure the pin is in output mode and non-active state */
->> -		gpiod_direction_output(int3472->clock.led_gpio, 0);
->> -		break;
->> -	default:
->> -		dev_err(int3472->dev, "Invalid GPIO type 0x%02x for clock\n", type);
->> -		break;
->> -	}
->> +	int3472->clock.ena_gpio = gpio;
->> +	/* Ensure the pin is in output mode and non-active state */
->> +	gpiod_direction_output(int3472->clock.ena_gpio, 0);
->>  
->> -	return 0;
->> +	return skl_int3472_register_clock(int3472);
->>  }
->>  
->>  static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
->> @@ -293,11 +277,16 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>  
->>  		break;
->>  	case INT3472_GPIO_TYPE_CLK_ENABLE:
->> -	case INT3472_GPIO_TYPE_PRIVACY_LED:
->> -		ret = skl_int3472_map_gpio_to_clk(int3472, agpio, type);
->> +		ret = skl_int3472_map_gpio_to_clk(int3472, agpio);
->>  		if (ret)
->>  			err_msg = "Failed to map GPIO to clock\n";
->>  
->> +		break;
->> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
->> +		ret = skl_int3472_register_pled(int3472, agpio, polarity);
->> +		if (ret)
->> +			err_msg = "Failed to register LED\n";
->> +
->>  		break;
->>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->>  		ret = skl_int3472_register_regulator(int3472, agpio);
->> @@ -341,21 +330,6 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
->>  
->>  	acpi_dev_free_resource_list(&resource_list);
->>  
->> -	/*
->> -	 * If we find no clock enable GPIO pin then the privacy LED won't work.
->> -	 * We've never seen that situation, but it's possible. Warn the user so
->> -	 * it's clear what's happened.
->> -	 */
->> -	if (int3472->clock.ena_gpio) {
->> -		ret = skl_int3472_register_clock(int3472);
->> -		if (ret)
->> -			return ret;
->> -	} else {
->> -		if (int3472->clock.led_gpio)
->> -			dev_warn(int3472->dev,
->> -				 "No clk GPIO. The privacy LED won't work\n");
->> -	}
->> -
->>  	int3472->gpios.dev_id = int3472->sensor_name;
->>  	gpiod_add_lookup_table(&int3472->gpios);
->>  
->> @@ -372,8 +346,8 @@ static int skl_int3472_discrete_remove(struct platform_device *pdev)
->>  		skl_int3472_unregister_clock(int3472);
->>  
->>  	gpiod_put(int3472->clock.ena_gpio);
->> -	gpiod_put(int3472->clock.led_gpio);
->>  
->> +	skl_int3472_unregister_pled(int3472);
->>  	skl_int3472_unregister_regulator(int3472);
->>  
->>  	return 0;
->> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
->> new file mode 100644
->> index 000000000000..251c6524458e
->> --- /dev/null
->> +++ b/drivers/platform/x86/intel/int3472/led.c
->> @@ -0,0 +1,74 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/* Author: Hans de Goede <hdegoede@redhat.com> */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/leds.h>
->> +#include "common.h"
->> +
->> +static int int3472_pled_set(struct led_classdev *led_cdev,
->> +				     enum led_brightness brightness)
->> +{
->> +	struct int3472_discrete_device *int3472 =
->> +		container_of(led_cdev, struct int3472_discrete_device, pled.classdev);
->> +
->> +	gpiod_set_value_cansleep(int3472->pled.gpio, brightness);
->> +	return 0;
->> +}
->> +
->> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
->> +			      struct acpi_resource_gpio *agpio, u32 polarity)
->> +{
->> +	char *p, *path = agpio->resource_source.string_ptr;
->> +	int ret;
->> +
->> +	if (int3472->pled.classdev.dev)
->> +		return -EBUSY;
->> +
->> +	int3472->pled.gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
->> +							     "int3472,privacy-led");
->> +	if (IS_ERR(int3472->pled.gpio))
->> +		return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.gpio),
->> +				     "getting privacy LED GPIO\n");
->> +
->> +	if (polarity == GPIO_ACTIVE_LOW)
->> +		gpiod_toggle_active_low(int3472->pled.gpio);
->> +
->> +	/* Ensure the pin is in output mode and non-active state */
->> +	gpiod_direction_output(int3472->pled.gpio, 0);
->> +
->> +	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
->> +	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
->> +		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
->> +	p = strchr(int3472->pled.name, ':');
->> +	*p = '_';
-> 
-> While I suppose ACPI device names generally are shorter than
-> sizeof(int3472->pled.name), it'd be nice to still check p is non-NULL here,
-> just to be sure.
+The pca953x driver supports many chips. These all have the basic 4
+registers: input, output, invert and direction. Most of them have
+additional registers for various functions, like pull-up and
+pull-down control, interrupt status and mask, hardware debounce.
 
-Sure, I've added a check for this while merging this.
+Different chip types have various register layouts. These layouts differ
+even in the basic 4 registers.
 
-Regards,
+This patch series
 
-Hans
+    1. Cleans up chip type handling, and
+    2. Replaces register address calculations. The proposed scheme
+       works with every register of every chip type.
+
+These changes make it possible to add support for extended functions for
+more chip types, including:
+
+    * Interrupt mask for PCA950X, PCA9698, PCA957X and XRA120X
+    * Interrupt status for PCA957X and XRA120X
+    * Bias for PCA957X and XRA120X
+    * Debounce for PCAL65XX and XRA120X
+
+References:
+1. Previous discussion about the chip types
+   https://lore.kernel.org/linux-gpio/Y1q52efyv93%2Fz8BC@smile.fi.intel.com/
+2. An overview of pca953x chip types
+   https://lore.kernel.org/linux-gpio/67bba210-09ac-32fb-bb97-8bfc40c2c200@eilabs.com/
 
 
+Best Regards,
+Levente Révész
 
-> 
->> +
->> +	int3472->pled.classdev.name = int3472->pled.name;
->> +	int3472->pled.classdev.max_brightness = 1;
->> +	int3472->pled.classdev.brightness_set_blocking = int3472_pled_set;
->> +
->> +	ret = led_classdev_register(int3472->dev, &int3472->pled.classdev);
->> +	if (ret)
->> +		goto err_free_gpio;
->> +
->> +	int3472->pled.lookup.provider = int3472->pled.name;
->> +	int3472->pled.lookup.dev_id = int3472->sensor_name;
->> +	int3472->pled.lookup.con_id = "privacy-led";
->> +	led_add_lookup(&int3472->pled.lookup);
->> +
->> +	return 0;
->> +
->> +err_free_gpio:
->> +	gpiod_put(int3472->pled.gpio);
->> +	return ret;
->> +}
->> +
->> +void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
->> +{
->> +	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
->> +		return;
->> +
->> +	led_remove_lookup(&int3472->pled.lookup);
->> +	led_classdev_unregister(&int3472->pled.classdev);
->> +	gpiod_put(int3472->pled.gpio);
->> +}
-> 
+Levente Révész (3):
+  gpio: pca953x: Replace chip type flags with a type enum
+  gpio: pca953x: Describe register maps with enums
+  gpio: pca953x: Redesign register address calculation
 
+ drivers/gpio/gpio-pca953x.c | 1196 ++++++++++++++++++++++++++---------
+ 1 file changed, 894 insertions(+), 302 deletions(-)
+
+-- 
+2.38.1
