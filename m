@@ -2,308 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57AD0680AA9
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 11:18:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC29F680AAC
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 11:19:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236337AbjA3KSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 05:18:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
+        id S235595AbjA3KTZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 05:19:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236259AbjA3KSM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 05:18:12 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F187D2884D;
-        Mon, 30 Jan 2023 02:18:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675073885; x=1706609885;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fJ0z630gmwhZTyHyPQIkHmXLmd3BKr1+hnkSLqDqByQ=;
-  b=Xkqu5UiZM38ZUOgRA7DcwwmPS+26zmZU5iURdg0n+RKC+kjWA37J2K2U
-   5W6+IxjR381HQtOO1CYJrD0dBagbCM5aZwYApKpvHodEwJM4sstzvPiWV
-   3DxflbmE0+THddl6r4p5MSpXGN4d2VSMTHKspXvDNdChe+49u/B0hnMAL
-   69Mf0u7RxE3UK6h91qY0KTwmyvpgPEGP2pr8HFnH/ON6HHw01Hb/4+YRq
-   TzouPI+oh1rnJpYsfkENGm8PIVA7ihhDZBjtyyKQAysyRwBp7djVm0qL0
-   7HIW23iLKMEf+OdmAKvxSrSav1YhO1oetTwUcYueYIczUsHnlZ4beelkH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="413743074"
-X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
-   d="scan'208";a="413743074"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:18:04 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="641479185"
-X-IronPort-AV: E=Sophos;i="5.97,257,1669104000"; 
-   d="scan'208";a="641479185"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 02:18:00 -0800
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-        by kekkonen.fi.intel.com (Postfix) with SMTP id 2930D120243;
-        Mon, 30 Jan 2023 12:17:57 +0200 (EET)
-Date:   Mon, 30 Jan 2023 12:17:57 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org, hverkuil@xs4all.nl
-Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Message-ID: <Y9eZOmDAYW8lm/By@kekkonen.localdomain>
-References: <20230127203729.10205-1-hdegoede@redhat.com>
- <20230127203729.10205-2-hdegoede@redhat.com>
+        with ESMTP id S235232AbjA3KTZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 05:19:25 -0500
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026DFC5
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 02:19:24 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-506609635cbso153090137b3.4
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 02:19:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PbXYa+1h3JGvPkI2e2r9wC2zYeWqmL9dDlStBP8aWMM=;
+        b=P1Afal8LKNvPUJSin0zCuWNGxjS37wy4usQNo6LkXuXy6je0VuAuIqfB8tCwih5irG
+         y4ZfLXI9SlU15jdPOWs14HIIdKbBCvrEJVKhsv1iiQofNDDtlEuQ6Wes5WEvzBJPv+B/
+         Elc1GyKOdAViuqx89zYJTmYSwJXGjtM1itHKqKb/VBZIVx90+6Bg+RBgV464cn7wFctt
+         G4Lzw8wlvMqr3keW/p5lBzfCaAyKUDB1mcz4KWznWrmfO97t82BEnNt+a1jBP6vClPf5
+         6o8ahX95k7fpvoxuOXSReCWuR0WY9UwAbosEGoVLSHDeOaN7dv+7Yl8+z66CyTYWw4M/
+         lveg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PbXYa+1h3JGvPkI2e2r9wC2zYeWqmL9dDlStBP8aWMM=;
+        b=rXpmAnY67ord73wYO7Yx2oW/p+d54MC09MaC9xsauNS2bv4hb5R5L1xOrbeAawsiJn
+         JqAhlp0whJCKA1HbwV0J1y52ick+Rzjjv0eB9BJrFKqgTRijl94Z1HF+/4PbbCvbd7Vg
+         VxN4OBuAwNP9mK7Ic8cp+MNos4yLvZSSls0JREEUohz5M5cIBxRvhPy3HiVn5KsR2ndO
+         bbPnKbiIO8ftstplk4Zg+8+qU3DZaXJABOqs5Dq/DtorPi01f7PtVFPMqdxsUTdYqLhQ
+         9FyHtGKyu6nWV5HOtmwAg+ohagmbnzCVs1BVLbdzokpHEPpkPfXNlDDrAjAV39vYsdbf
+         1QlQ==
+X-Gm-Message-State: AO0yUKXK5xO5YdHuhgwxAkEXK7HHjEhjEQbhwypV7tthVpjk+mbgOXia
+        CY7s6+VtSUStArouGL1ATFDhfYt00JHzRzMxqOSNLA==
+X-Google-Smtp-Source: AK7set+0MAxUtAkN4x5F4XkIljJVaPumURc09EsRCucecuM5EIkR9bNRXC57l1nStthPhJvMbVWYb7913x3oESiOiu8=
+X-Received: by 2002:a0d:e701:0:b0:506:66f5:fd24 with SMTP id
+ q1-20020a0de701000000b0050666f5fd24mr2863987ywe.130.1675073963201; Mon, 30
+ Jan 2023 02:19:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127203729.10205-2-hdegoede@redhat.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
+ <20230125093548.GB23347@pengutronix.de> <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+ <20230126104927.GE23347@pengutronix.de> <20230129183339.GY24167@pengutronix.de>
+In-Reply-To: <20230129183339.GY24167@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 30 Jan 2023 11:19:11 +0100
+Message-ID: <CACRpkdYRynwJJZR5uCEn9rmE3c8p7R8SQdXC2FkzRUkBYRjErg@mail.gmail.com>
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+To:     Robert Schwebel <r.schwebel@pengutronix.de>
+Cc:     Sascha Hauer <sha@pengutronix.de>, bartosz.golaszewski@linaro.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de, shawnguo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Hans,
+On Sun, Jan 29, 2023 at 7:33 PM Robert Schwebel
+<r.schwebel@pengutronix.de> wrote:
 
-On Fri, Jan 27, 2023 at 09:37:25PM +0100, Hans de Goede wrote:
-> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
-> associated with the sensor and extend the call_s_stream() wrapper to
-> enable/disable the privacy LED if found.
-> 
-> This makes the core handle privacy LED control, rather then having to
-> duplicate this code in all the sensor drivers.
-> 
-> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> While this could also be done with a daemon offering a dbus api, this
+> would be significantly more complex. In a critical environment, one
+> needs to make sure that the daemon process never fails, otherwhise the
+> power of the DuT would maybe be in a random state. Then of course one
+> can add a watchdog, but with the current sysfs interface it's really
+> simple. Of course that would also work if the new interface would offer
+> a "keep this line as it is" feature, but adding a dbus daemon just for
+> keeping the state of a pin sounds overcomplex when the kernel could also
+> provide that functionality.
 
-Please wrap the lines over 80, unless there are tangible reasons to keep
-them as-is.
+One issue we face as developers is scaleability. Things that
+seem straight forward on a single board computer in a lab get
+really complex in a big system with man GPIO chips.
 
-For this patch:
+One of the big dangers of the sysfs ABI is that it is dependent on
+probe order which the kernel sadly does not really guarantee.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+It's a bit like /dev/sda /dev/sdb after you boot up a system with
+two USB drives, certainly you know which one is sda and sdb
+if you plug them in by hand, but if you just boot the system with
+both in, what is the kernel expected to do, and what is expected
+to happen? What happens in practice is first come first serve...
 
-On my behalf it can be merged via another tree, I don't expect conflicts.
-Also cc Hans Verkuil.
+This means a script can work for years, and then some random
+day a PCI device is sleepy and comes after some other device,
+and the numbers of all GPIOs are shuffled.
 
-And the rest:
+However, if you feel safe about that, for example if there is only
+one GPIO chip on the entire system so there will only ever be
+gpiochip0, what do you think about my debugfs proposal?
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+The below is cut and paste from the drivers/gpio/TODO file:
 
-Please also see my comment on the 3rd patch.
+-------------------------------
+Debugfs in place of sysfs
 
-> ---
-> Changes in v6:
-> - Add v4l2_subdev_privacy_led_get()/_put() helpers
-> - At least the _put helper is necessary for cleanup on errors later on in
->   v4l2_async_register_subdev_sensor()
-> - This puts all the LED related coded into a single file (v4l2-subdev.c)
->   removing the need to build the async + fwnode code into videodev.ko,
->   so that patch is dropped
-> - Move the (non-error-exit) cleanup from v4l2_subdev_cleanup() to
->    v4l2_async_unregister_subdev()
-> 
-> Changes in v4 (requested by Laurent Pinchart):
-> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
->   make errors other then -ENOENT fail the register() call.
-> - Move the led_disable_sysfs() call to be done at led_get() time, instead
->   of only disabling the sysfs interface when the sensor is streaming.
-> ---
->  drivers/media/v4l2-core/v4l2-async.c       |  4 ++
->  drivers/media/v4l2-core/v4l2-fwnode.c      |  7 ++++
->  drivers/media/v4l2-core/v4l2-subdev-priv.h | 14 +++++++
->  drivers/media/v4l2-core/v4l2-subdev.c      | 44 ++++++++++++++++++++++
->  include/media/v4l2-subdev.h                |  3 ++
->  5 files changed, 72 insertions(+)
->  create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 2f1b718a9189..d7e9ffc7aa23 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -24,6 +24,8 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
->  				    struct v4l2_subdev *subdev,
->  				    struct v4l2_async_subdev *asd)
-> @@ -822,6 +824,8 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  	if (!sd->async_list.next)
->  		return;
->  
-> +	v4l2_subdev_put_privacy_led(sd);
-> +
->  	mutex_lock(&list_lock);
->  
->  	__v4l2_async_nf_unregister(sd->subdev_notifier);
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 3d9533c1b202..049c2f2001ea 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -28,6 +28,8 @@
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-subdev.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  static const struct v4l2_fwnode_bus_conv {
->  	enum v4l2_fwnode_bus_type fwnode_bus_type;
->  	enum v4l2_mbus_type mbus_type;
-> @@ -1302,6 +1304,10 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->  
->  	v4l2_async_nf_init(notifier);
->  
-> +	ret = v4l2_subdev_get_privacy_led(sd);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
->  	ret = v4l2_async_nf_parse_fwnode_sensor(sd->dev, notifier);
->  	if (ret < 0)
->  		goto out_cleanup;
-> @@ -1322,6 +1328,7 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->  	v4l2_async_nf_unregister(notifier);
->  
->  out_cleanup:
-> +	v4l2_subdev_put_privacy_led(sd);
->  	v4l2_async_nf_cleanup(notifier);
->  	kfree(notifier);
->  
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev-priv.h b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-> new file mode 100644
-> index 000000000000..52391d6d8ab7
-> --- /dev/null
-> +++ b/drivers/media/v4l2-core/v4l2-subdev-priv.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * V4L2 sub-device pivate header.
-> + *
-> + * Copyright (C) 2023 Hans de Goede <hdegoede@redhat.com>
-> + */
-> +
-> +#ifndef _V4L2_SUBDEV_PRIV_H_
-> +#define _V4L2_SUBDEV_PRIV_H_
-> +
-> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd);
-> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd);
-> +
-> +#endif
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 4988a25bd8f4..9fd183628285 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -9,6 +9,7 @@
->   */
->  
->  #include <linux/ioctl.h>
-> +#include <linux/leds.h>
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -23,6 +24,8 @@
->  #include <media/v4l2-fh.h>
->  #include <media/v4l2-event.h>
->  
-> +#include "v4l2-subdev-priv.h"
-> +
->  #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
->  static int subdev_fh_init(struct v4l2_subdev_fh *fh, struct v4l2_subdev *sd)
->  {
-> @@ -322,6 +325,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
->  {
->  	int ret;
->  
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		if (enable)
-> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
-> +		else
-> +			led_set_brightness(sd->privacy_led, 0);
-> +	}
-> +#endif
->  	ret = sd->ops->video->s_stream(sd, enable);
->  
->  	if (!enable && ret < 0) {
-> @@ -1090,6 +1101,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
->  	sd->grp_id = 0;
->  	sd->dev_priv = NULL;
->  	sd->host_priv = NULL;
-> +	sd->privacy_led = NULL;
->  #if defined(CONFIG_MEDIA_CONTROLLER)
->  	sd->entity.name = sd->name;
->  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
-> @@ -1105,3 +1117,35 @@ void v4l2_subdev_notify_event(struct v4l2_subdev *sd,
->  	v4l2_subdev_notify(sd, V4L2_DEVICE_NOTIFY_EVENT, (void *)ev);
->  }
->  EXPORT_SYMBOL_GPL(v4l2_subdev_notify_event);
-> +
-> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
-> +{
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
-> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
-> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
-> +
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		mutex_lock(&sd->privacy_led->led_access);
-> +		led_sysfs_disable(sd->privacy_led);
-> +		led_trigger_remove(sd->privacy_led);
-> +		led_set_brightness(sd->privacy_led, 0);
-> +		mutex_unlock(&sd->privacy_led->led_access);
-> +	}
-> +#endif
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
-> +
-> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd)
-> +{
-> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
-> +		mutex_lock(&sd->privacy_led->led_access);
-> +		led_sysfs_enable(sd->privacy_led);
-> +		mutex_unlock(&sd->privacy_led->led_access);
-> +		led_put(sd->privacy_led);
-> +	}
-> +#endif
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_subdev_put_privacy_led);
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index b15fa9930f30..0547313f98cc 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -38,6 +38,7 @@ struct v4l2_subdev;
->  struct v4l2_subdev_fh;
->  struct tuner_setup;
->  struct v4l2_mbus_frame_desc;
-> +struct led_classdev;
->  
->  /**
->   * struct v4l2_decode_vbi_line - used to decode_vbi_line
-> @@ -982,6 +983,8 @@ struct v4l2_subdev {
->  	 * appropriate functions.
->  	 */
->  
-> +	struct led_classdev *privacy_led;
-> +
->  	/*
->  	 * TODO: active_state should most likely be changed from a pointer to an
->  	 * embedded field. For the time being it's kept as a pointer to more
+The old sysfs code that enables simple uses of GPIOs from the
+command line is still popular despite the existence of the proper
+character device. The reason is that it is simple to use on
+root filesystems where you only have a minimal set of tools such
+as "cat", "echo" etc.
 
--- 
-Kind regards,
+The old sysfs still need to be strongly deprecated and removed
+as it relies on the global GPIO numberspace that assume a strict
+order of global GPIO numbers that do not change between boots
+and is independent of probe order.
 
-Sakari Ailus
+To solve this and provide an ABI that people can use for hacks
+and development, implement a debugfs interface to manipulate
+GPIO lines that can do everything that sysfs can do today: one
+directory per gpiochip and one file entry per line:
+
+/sys/kernel/debug/gpiochip/gpiochip0
+/sys/kernel/debug/gpiochip/gpiochip0/gpio0
+/sys/kernel/debug/gpiochip/gpiochip0/gpio1
+/sys/kernel/debug/gpiochip/gpiochip0/gpio2
+/sys/kernel/debug/gpiochip/gpiochip0/gpio3
+...
+/sys/kernel/debug/gpiochip/gpiochip1
+/sys/kernel/debug/gpiochip/gpiochip1/gpio0
+/sys/kernel/debug/gpiochip/gpiochip1/gpio1
+...
+
+The exact files and design of the debugfs interface can be
+discussed but the idea is to provide a low-level access point
+for debugging and hacking and to expose all lines without the
+need of any exporting. Also provide ample ammunition to shoot
+oneself in the foot, because this is debugfs after all.
+-------------------------------
+
+Yours,
+Linus Walleij
