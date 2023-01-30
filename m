@@ -2,142 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB636814A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 16:18:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F7E681579
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 16:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237892AbjA3PSc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 10:18:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60374 "EHLO
+        id S237835AbjA3Pqv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 10:46:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238050AbjA3PS2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 10:18:28 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B80C15C;
-        Mon, 30 Jan 2023 07:17:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675091875; x=1706627875;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4jfbSarMFyi7cMttwvDR5yy006KKKlZ6jChWvaFjhEk=;
-  b=YzBqa9ltyfekpYfTOa4cifNKNPR+88bOa3O8Wv+rESqnn2J+LHMlI/rI
-   o6A8U4fHRSqF1WPTqJvkdqAf5d7MoodgCFRylMYlJYjVAZtkcfGTPKfHN
-   ubEyEKoLEe5DoBjEIB2wpnnwiojIqDqJkewioulYGMzySAFgVOuJOj7T7
-   nmyEslTOIqYdadL+m6edgJx9LbgJtS/bXO9uLFHDWfAWAZ2PCzAE2KwVN
-   EDbNeEfesgBBHObNEIqwdJ7YDnmsMjU7nJvP+ZugdKKa31A+7trTi7XGI
-   5yt1y9LevJD03nYULxtPQWKX18NcYe1zUWhJYc+BrWJ1poBsqhN/T/ylZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="354898535"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="354898535"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 07:16:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="992938805"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="992938805"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2023 07:16:41 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pMVtc-00HPM7-2k;
-        Mon, 30 Jan 2023 17:16:36 +0200
-Date:   Mon, 30 Jan 2023 17:16:36 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 08/11] driver core: fw_devlink: Make cycle detection
- more robust
-Message-ID: <Y9ffVEa1KECKqBGB@smile.fi.intel.com>
-References: <20230127001141.407071-1-saravanak@google.com>
- <20230127001141.407071-9-saravanak@google.com>
- <Y9OcqGTocu8ZlFqy@smile.fi.intel.com>
- <CAGETcx-PiV12pKnVuKyvNcjYbHA=YFJG1QUa-o-G1cL3iMHgcA@mail.gmail.com>
- <Y9e09qUa9CDxHFcb@smile.fi.intel.com>
- <CAMuHMdXSgS-hu1xV_vmJZi_kr6ypiS=a-e0p7Hb75HKDfz9k-g@mail.gmail.com>
+        with ESMTP id S237192AbjA3Pqb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 10:46:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A058F41B79
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 07:46:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 50C95B81211
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:46:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E97B2C433A4
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 15:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675093569;
+        bh=zKsdQMLewvz5vpuyU1ZFhGmydLi3IRdSKCLooHlOcS4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nVFoRvIAmNzCAJqY9aSo6V+QH1N0WxdGSWLorIwEnnCCpGpbrq4nBc/WaXFZMbSqs
+         BdKXk92R+jOMP5AoHuB8PTlY1HoAUuUhKheMglaQ3Q6a8PUTLlD9fvqlCuHWOTOi1J
+         GVh9XlOoiWTRe8fJd2c40L20fRFOan9hE3OIeqgyuvRngAGuBz1Bh4zC6kUjDG7xm5
+         uzxTwx+Hc7DAKgqkP2mbncNCveFxlpEN6T9UuYJQB/auIOqpxeRlyz4KS6WCEJYoT2
+         wc8AmP+Atu9uze6CyY7w5Mof7AkLitsXqIdqFgaG4NgLNjmIC77tIBtVNR4AJDfhUp
+         gQmvyuPuvYPgg==
+Received: by mail-vs1-f47.google.com with SMTP id y8so12968082vsq.0
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 07:46:09 -0800 (PST)
+X-Gm-Message-State: AFqh2kpKT/3zPLPw/E0HKj2izxyyKfEUQ0NLghjGH8gVEsYy6UIRVxJI
+        8pGV2aphsP7lXlsaE/mY2fKWjd3MtTz5p04NVA==
+X-Google-Smtp-Source: AMrXdXverKWwwTHPDzzPxjuuD3m1jhFXXlSgNS7RPOu6iYy+8Azs/XuTqXVaUe+stzB06j1Gs7eWEmk2jWagNKznCsc=
+X-Received: by 2002:a05:6102:5490:b0:3b5:1fe4:f1c2 with SMTP id
+ bk16-20020a056102549000b003b51fe4f1c2mr6818396vsb.0.1675093568878; Mon, 30
+ Jan 2023 07:46:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXSgS-hu1xV_vmJZi_kr6ypiS=a-e0p7Hb75HKDfz9k-g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
+ <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
+ <20230125093548.GB23347@pengutronix.de> <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
+ <20230126104927.GE23347@pengutronix.de> <20230129183339.GY24167@pengutronix.de>
+ <CACRpkdYRynwJJZR5uCEn9rmE3c8p7R8SQdXC2FkzRUkBYRjErg@mail.gmail.com>
+ <20230130110252.cnw4ex6g3gc5bl3w@pengutronix.de> <CACRpkdb-LbRrg0gwB6ArJ-=YdM5TtXVN3oZf58hPCppnt8ZUjg@mail.gmail.com>
+In-Reply-To: <CACRpkdb-LbRrg0gwB6ArJ-=YdM5TtXVN3oZf58hPCppnt8ZUjg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Jan 2023 09:45:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJofZ5386oS1hkme2n_pbQVe3OAVxusQvs43wzKCM2LZw@mail.gmail.com>
+Message-ID: <CAL_JsqJofZ5386oS1hkme2n_pbQVe3OAVxusQvs43wzKCM2LZw@mail.gmail.com>
+Subject: Re: GPIO static allocation warning with v6.2-rcX
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robert Schwebel <r.schwebel@pengutronix.de>,
+        Sascha Hauer <sha@pengutronix.de>,
+        bartosz.golaszewski@linaro.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de, shawnguo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 03:36:04PM +0100, Geert Uytterhoeven wrote:
-> On Mon, Jan 30, 2023 at 1:16 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Jan 27, 2023 at 11:34:28PM -0800, Saravana Kannan wrote:
-> > > On Fri, Jan 27, 2023 at 1:43 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Thu, Jan 26, 2023 at 04:11:35PM -0800, Saravana Kannan wrote:
-> > > > > +static bool __fw_devlink_relax_cycles(struct device *con,
-> > > > > +                              struct fwnode_handle *sup_handle)
-> > > > > +{
-> > > > > +     struct fwnode_link *link;
-> > > > > +     struct device_link *dev_link;
-> > > >
-> > > > > +     struct device *sup_dev = NULL, *par_dev = NULL;
-> > > >
-> > > > You can put it the first line since it's long enough.
+On Mon, Jan 30, 2023 at 9:02 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Jan 30, 2023 at 12:02 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > On 23-01-30, Linus Walleij wrote:
+> > > On Sun, Jan 29, 2023 at 7:33 PM Robert Schwebel
+> > > <r.schwebel@pengutronix.de> wrote:
 > > >
-> > > Wait, is that a style guideline to have the longer lines first?
+> > > > While this could also be done with a daemon offering a dbus api, this
+> > > > would be significantly more complex. In a critical environment, one
+> > > > needs to make sure that the daemon process never fails, otherwhise the
+> > > > power of the DuT would maybe be in a random state. Then of course one
+> > > > can add a watchdog, but with the current sysfs interface it's really
+> > > > simple. Of course that would also work if the new interface would offer
+> > > > a "keep this line as it is" feature, but adding a dbus daemon just for
+> > > > keeping the state of a pin sounds overcomplex when the kernel could also
+> > > > provide that functionality.
+> > >
+> > > One issue we face as developers is scaleability. Things that
+> > > seem straight forward on a single board computer in a lab get
+> > > really complex in a big system with man GPIO chips.
+> > >
+> > > One of the big dangers of the sysfs ABI is that it is dependent on
+> > > probe order which the kernel sadly does not really guarantee.
 > >
-> > No, but it's easier to read.
-> 
-> Yes it is, "reverse xmas tree" local variable ordering:
-> https://elixir.bootlin.com/linux/v6.2-rc6/source/Documentation/process/maintainer-netdev.rst#L272
+> > Does it? At least the drive I listed (e.g. the imx gpio driver) uses
+> > aliases to make it reliable.
+>
+> I'm not sure that is the intended use of the aliases in device tree.
+> (Rob can maybe answer this.)
 
-Good to  know, thanks!
+The kernel community's position on stable device numbers for userspace
+is quite clear.
 
--- 
-With Best Regards,
-Andy Shevchenko
+That is how aliases get used by the kernel though. IMO, they should be
+limited to a documented set of alias names, and GPIO is not one of
+them. We replaced the whole GPIO sysfs API for this reason (among
+others).
 
+IIRC, i.MX is one of the worst abusers with aliases for everything,
+most of which should be removed.
 
+Rob
