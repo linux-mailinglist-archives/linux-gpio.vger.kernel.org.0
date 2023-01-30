@@ -2,244 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11DBF68187E
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 19:17:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B875668196C
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 19:38:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbjA3SRG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 13:17:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49072 "EHLO
+        id S236242AbjA3SiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 13:38:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbjA3SRG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 13:17:06 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001822BEC5
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 10:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675102624; x=1706638624;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=EgV9+i26XOuuU0Ld2zamPXgtSMabYzvBRjHZVsYD8dM=;
-  b=G8jRw/+nG4746RVOgUlTAGWVk709VMxliaE+Oz3I80GQlfcjTyr6W0l2
-   A2hVPt0eYGZp6Nk2wQDy3OLCkUu92HJZ5kTcVQsLrKlsgZlJKumYr8mSQ
-   +xcfmrhnCF+PtpHS4co/0Dq+D+uetGFAUVOnenJZvgkf/x6tddeUjndIp
-   ui1PKrKUDQ81Mki9D2KRDvsWu+o34BW2wfNOXpVFvfrB2bK8qmX8Gl5ly
-   sQb+IY/PKXI2BadeNXLMWnnmm2hHlR2u4iVohIOm6mBGBjmwc1J6E4XZg
-   DXPx7ldFeRTqOXGNUOMXL1cxznbCM86I/nbsAQ97t11vte91rujrsHGNb
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="392180796"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="392180796"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 10:17:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="788116987"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="788116987"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 30 Jan 2023 10:17:02 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1C85F152; Mon, 30 Jan 2023 20:17:39 +0200 (EET)
-Date:   Mon, 30 Jan 2023 20:17:39 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 6.3-1
-Message-ID: <Y9gJw0zLe3g10WYl@black.fi.intel.com>
+        with ESMTP id S237410AbjA3SiB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 13:38:01 -0500
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E26170F;
+        Mon, 30 Jan 2023 10:37:08 -0800 (PST)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-15085b8a2f7so16264747fac.2;
+        Mon, 30 Jan 2023 10:37:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QYdypphiGiORHl5j+yMljNsD206DEi5H26RsKdcAI+U=;
+        b=Qcsfcuw3JsZ3s+ul+flK+YNEKgIisO4V3wKaxtz2zvdgh7zjLMKGVfFxUxqGaKunX1
+         +Z3jvrLd1z+KXPQ0VsDdN6CS1ljv9ui3pqEHYywQ3jLtXpQKnKhkSPCRKuFPLTgjrjmf
+         rCgC+XUH9OhNcC4Ij65SRREKJrVp17A7k4IfaPGj1dT1I9KLGLFyE9NVFcyYmh40p6mW
+         RPvPxJ7dlLTvuTsvbYb/cubD9U6ZGSJgD0ZZPvLqhPaav2JmebpnAjkX8EZtPigt9d0o
+         BKvDq5AhW9La9/gw0DVpHEoEJSkjU2f/cJPi40ZJJpRcz9clIB7tGjOX35Ibvdo2SuDQ
+         rUAw==
+X-Gm-Message-State: AO0yUKWlJu5wikZQ/eN+SyXvvxFBjPcNnsdImm6qD5WYyfywR5F8YbvK
+        ENj1UJi3JlOCRI5fB1S9Lpsk38j9mg==
+X-Google-Smtp-Source: AK7set/Idt/xWQrTCTneEaD3YHNIFguFuZSIGGEp1x4r/NuMnynSUl3elQgOA/OFI4IM6OQ2n1CcmA==
+X-Received: by 2002:a05:6870:ac1e:b0:163:28c9:beef with SMTP id kw30-20020a056870ac1e00b0016328c9beefmr11845994oab.59.1675103827642;
+        Mon, 30 Jan 2023 10:37:07 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id c11-20020a544e8b000000b0037854b52db4sm1270294oiy.55.2023.01.30.10.37.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jan 2023 10:37:07 -0800 (PST)
+Received: (nullmailer pid 3088245 invoked by uid 1000);
+        Mon, 30 Jan 2023 18:37:06 -0000
+Date:   Mon, 30 Jan 2023 12:37:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Leonard, Niall" <Niall.Leonard@ncr.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] gpio: dt-bindings: add new property to wd,mbl-gpio
+ bindings
+Message-ID: <20230130183706.GA3079628-robh@kernel.org>
+References: <20230126-gpio-mmio-fix-v1-0-8a20ce0e8275@ncr.com>
+ <20230126-gpio-mmio-fix-v1-1-8a20ce0e8275@ncr.com>
+ <d4a70ab2-c5a2-2478-3fa9-c703c1619252@linaro.org>
+ <MW5PR15MB52184F83BA524D9600B820F5FDCC9@MW5PR15MB5218.namprd15.prod.outlook.com>
+ <ed16faa2-eb04-772d-8762-0c3f90fddbcb@linaro.org>
+ <c95cea18-5b92-e16c-f4f6-cde93ca22ca1@ncr.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <c95cea18-5b92-e16c-f4f6-cde93ca22ca1@ncr.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+On Mon, Jan 30, 2023 at 01:20:55PM +0000, Leonard, Niall wrote:
+> On 29/01/2023 15:59, Krzysztof Kozlowski wrote:
+> > *External Message* - Use caution before opening links or attachments
+> > 
+> > On 27/01/2023 12:39, Leonard, Niall wrote:
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>> Sent: 26 January 2023 12:29
+> >>> To: Leonard, Niall <Niall.Leonard@ncr.com>; Linus Walleij
+> >>> <linus.walleij@linaro.org>; Bartosz Golaszewski <brgl@bgdev.pl>; Rob
+> >>> Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
+> >>> <krzysztof.kozlowski+dt@linaro.org>
+> >>> Cc: linux-gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> >>> kernel@vger.kernel.org
+> >>> Subject: Re: [PATCH 1/3] gpio: dt-bindings: add new property to wd,mbl-gpio
+> >>> bindings
+> >>>
+> >>> *External Message* - Use caution before opening links or attachments
+> >>>
+> >>> On 26/01/2023 11:17, Niall Leonard via B4 Submission Endpoint wrote:
+> >>>> From: Niall Leonard <nl250060@ncr.com>
+> >>>
+> >>> Subject: missing "wd,mbl-gpio:" prefix.
+> >>>
+> >>> Subject: drop second/last, redundant "bindings". The "dt-bindings"
+> >>> prefix is already stating that these are bindings.
+> >>>
+> >>>>
+> >>>> Added optional "no-input" property
+> >>>
+> >>> Missing full stop.
+> >>>
+> >>>>
+> >>>> Signed-off-by: Niall Leonard <nl250060@ncr.com>
+> >>>> ---
+> >>>>   Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt | 1 +
+> >>>>   1 file changed, 1 insertion(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> >>>> b/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> >>>> index 038c3a6a1f4d..9405f9dad522 100644
+> >>>> --- a/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> >>>> +++ b/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> >>>> @@ -18,6 +18,7 @@ Required properties:
+> >>>>
+> >>>>   Optional properties:
+> >>>>   	- no-output: GPIOs are read-only.
+> >>>> +	- no-input: GPIOs are write-only. Read is via a shadow register.
+> >>>
+> >>> Why this property is needed? Why driver cannot always use shadow
+> >>> register?
+> >>>
+> >> The shadow register is currently only used during the write operation. It is not available during the read operation.
+> > 
+> > You just wrote above that reading is via shadow register, so how can it
+> > not be available for reads? Again, why you cannot always read via shadow
+> > register and need to make a property? You mean that for other GPIOs
+> > there is no shadow register at all?
+> > 
+> The existing read method does not use the shadow register.
+> 
+> static int bgpio_get(struct gpio_chip *gc, unsigned int gpio)
+> {
+> 	return !!(gc->read_reg(gc->reg_dat) & bgpio_line2mask(gc, gpio));
+> }
+> 
+> > What changes between one board and another that justifies this property?
+> 
+> I have a couple of boards where the electronics engineer decided to only 
+> use the chip select line, so no read/write signal is connected. This 
+> means that reading the address activates the chip select and drives the 
+> contents of the data bus to the port. 
 
-Here is the bunch of refactoring and cleanups for Intel pin control drivers for
-v6.3 cycle. Has been for a few weeks in Linux Next without any issue reported.
-Please pull for next.
+This part makes sense as you explained the h/w.
 
-Thanks,
+> For example is someone reads the 
+> file /sys/kernel/debug/gpio this corrupts the port. So I have had to add 
+> this property to avoid that situation.
 
-With Best Regards,
-Andy Shevchenko
+Not quite relevant to the DT binding being a Linux detail.
 
-The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+> 
+> If you are strongly against this then just reject it and I will look 
+> after it myself. I thought there may be others who would find this 
+> change useful.
 
-  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+A property for a board level quirk is appropriate. You just need to 
+explain that in the commit message rather than stating what the diff 
+already tells us.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.3-1
-
-for you to fetch changes up to 88f8ac47bddc1674b2840c733f1120a548037199:
-
-  pinctrl: Proofreading and updating the documentation (part 2) (2023-01-17 17:42:29 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v6.3-1
-
-* Add ~4kOhm bias support to Intel pin control drivers
-* Convert Intel pin control drivers to use INTEL_COMMUNITY_*()
-* Add struct pinfunction and use it in Intel pin control drivers
-* Make pin control documentation up to date
-* Miscellaneous cleanups
-
-The following is an automated git shortlog grouped by driver:
-
-pinctrl:
- - Proofreading and updating the documentation accordingly
- - Proofreading and updating the documentation (part 2)
-
-alderlake:
- -  Replace ADL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-baytrail:
- -  Convert to use new memeber in struct intel_function
-
-broxton:
- -  Replace BXT_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-
-cannonlake:
- -  Replace CNL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-cedarfork:
- -  Replace CDF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-cherryview:
- -  Convert to use new memeber in struct intel_function
-
-denverton:
- -  Replace DNV_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-elkhartlake:
- -  Replace EHL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-emmitsburg:
- -  Replace EBG_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-geminilake:
- -  Replace GLK_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-
-icelake:
- -  Replace ICL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-intel:
- -  Get rid of unused members in struct intel_function
- -  Make use of struct pinfunction and PINCTRL_PINFUNCTION()
- -  Define maximum pad number in the group
- -  Use same order of bit fields for PADCFG2
- -  Add ~4k bias support
- -  Add definitions to all possible biases
- -  Deduplicate some code in intel_config_set_pull()
- -  Add default case to intel_config_set_pull()
- -  Convert to generic_handle_domain_irq()
- -  Always use gpp_num_padown_regs in the main driver
- -  Introduce INTEL_COMMUNITY_*() to unify community macros
-
-Introduce struct pinfunction and PINCTRL_PINFUNCTION() macro:
- - Introduce struct pinfunction and PINCTRL_PINFUNCTION() macro
-
-jasperlake:
- -  Replace JSL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-lakefield:
- -  Replace LKF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-lewisburg:
- -  Replace LBG_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-
-lynxpoint:
- -  Convert to use new memeber in struct intel_function
-
-merrifield:
- -  Convert to use new memeber in struct intel_function
-
-meteorlake:
- -  Replace MTL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-moorefield:
- -  Convert to use new memeber in struct intel_function
-
-sunrisepoint:
- -  Replace SPT_COMMUNITY() by INTEL_COMMUNITY_*()
-
-tigerlake:
- -  Replace TGL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-
-----------------------------------------------------------------
-Andy Shevchenko (33):
-      pinctrl: intel: Introduce INTEL_COMMUNITY_*() to unify community macros
-      pinctrl: alderlake: Replace ADL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: broxton: Replace BXT_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-      pinctrl: cannonlake: Replace CNL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: cedarfork: Replace CDF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: denverton: Replace DNV_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: elkhartlake: Replace EHL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: emmitsburg: Replace EBG_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: geminilake: Replace GLK_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-      pinctrl: icelake: Replace ICL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: jasperlake: Replace JSL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: lakefield: Replace LKF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: lewisburg: Replace LBG_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-      pinctrl: meteorlake: Replace MTL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: tigerlake: Replace TGL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: sunrisepoint: Replace SPT_COMMUNITY() by INTEL_COMMUNITY_*()
-      pinctrl: intel: Always use gpp_num_padown_regs in the main driver
-      pinctrl: intel: Convert to generic_handle_domain_irq()
-      pinctrl: intel: Add default case to intel_config_set_pull()
-      pinctrl: intel: Deduplicate some code in intel_config_set_pull()
-      pinctrl: intel: Add definitions to all possible biases
-      pinctrl: intel: Add ~4k bias support
-      pinctrl: intel: Use same order of bit fields for PADCFG2
-      pinctrl: intel: Define maximum pad number in the group
-      pinctrl: Introduce struct pinfunction and PINCTRL_PINFUNCTION() macro
-      pinctrl: intel: Make use of struct pinfunction and PINCTRL_PINFUNCTION()
-      pinctrl: baytrail: Convert to use new memeber in struct intel_function
-      pinctrl: cherryview: Convert to use new memeber in struct intel_function
-      pinctrl: lynxpoint: Convert to use new memeber in struct intel_function
-      pinctrl: merrifield: Convert to use new memeber in struct intel_function
-      pinctrl: moorefield: Convert to use new memeber in struct intel_function
-      pinctrl: intel: Get rid of unused members in struct intel_function
-      pinctrl: Proofreading and updating the documentation accordingly
-
-Bagas Sanjaya (1):
-      pinctrl: Proofreading and updating the documentation (part 2)
-
- Documentation/driver-api/pin-control.rst     | 498 +++++++++++++--------------
- drivers/pinctrl/intel/pinctrl-alderlake.c    |  18 +-
- drivers/pinctrl/intel/pinctrl-baytrail.c     |  10 +-
- drivers/pinctrl/intel/pinctrl-broxton.c      |  31 +-
- drivers/pinctrl/intel/pinctrl-cannonlake.c   |  31 +-
- drivers/pinctrl/intel/pinctrl-cedarfork.c    |  13 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c   |   6 +-
- drivers/pinctrl/intel/pinctrl-denverton.c    |  13 +-
- drivers/pinctrl/intel/pinctrl-elkhartlake.c  |  24 +-
- drivers/pinctrl/intel/pinctrl-emmitsburg.c   |  13 +-
- drivers/pinctrl/intel/pinctrl-geminilake.c   |  21 +-
- drivers/pinctrl/intel/pinctrl-icelake.c      |  35 +-
- drivers/pinctrl/intel/pinctrl-intel.c        |  74 ++--
- drivers/pinctrl/intel/pinctrl-intel.h        |  55 ++-
- drivers/pinctrl/intel/pinctrl-jasperlake.c   |  13 +-
- drivers/pinctrl/intel/pinctrl-lakefield.c    |  13 +-
- drivers/pinctrl/intel/pinctrl-lewisburg.c    |  12 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c    |   8 +-
- drivers/pinctrl/intel/pinctrl-merrifield.c   |   6 +-
- drivers/pinctrl/intel/pinctrl-meteorlake.c   |  23 +-
- drivers/pinctrl/intel/pinctrl-moorefield.c   |   6 +-
- drivers/pinctrl/intel/pinctrl-sunrisepoint.c |  37 +-
- drivers/pinctrl/intel/pinctrl-tigerlake.c    |  30 +-
- include/linux/pinctrl/pinctrl.h              |  20 ++
- 24 files changed, 440 insertions(+), 570 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
