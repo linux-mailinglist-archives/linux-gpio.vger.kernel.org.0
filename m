@@ -2,139 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 953F568032A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 00:51:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E7116803F0
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 03:59:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbjA2Xvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Jan 2023 18:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        id S229578AbjA3C71 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Jan 2023 21:59:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjA2Xvj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Jan 2023 18:51:39 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD7FFF32;
-        Sun, 29 Jan 2023 15:51:38 -0800 (PST)
-Received: from mercury (unknown [185.209.196.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 64034660086E;
-        Sun, 29 Jan 2023 23:51:36 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1675036296;
-        bh=IIIAwVilRWbK/VxJ9R07BpYKGovKnA/g9pkFp6lqOE0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BqkFNT0Zs/lQ4ZAdZec7R7noK9RCNBkqilV/t1bQhOMZbIlDsCTR8QIJkJbNxvyOU
-         VbE7ue6VTg0M3DdOWcJ6aGjsAcjTr2+ZxqzGv8a4wgAiwvMHBZJQ6DDXAkuexFJSWl
-         X/R91K3+3QzQ9ulj8z1XnphRoMblYCn+zpF9EVSp+xN1/FLHdO8Hkm6XRWqdErQRuJ
-         XeOTeXAI9WSIaEqngDpgSjhUg3RwspINiAkv6i7zlzWrTopqAX91YHvKTxV3bw79iu
-         MRFOyiLlAzyqG/4UwvkFeNkVVuel8NH5rRpODeuULeaiH/bQDGOlXtMZ5C14IPTwFL
-         k7BwaWsFHnZdQ==
-Received: by mercury (Postfix, from userid 1000)
-        id 44F4B1060A24; Mon, 30 Jan 2023 00:51:34 +0100 (CET)
-Date:   Mon, 30 Jan 2023 00:51:34 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Add missing
- (unevaluated|additional)Properties on child node schemas
-Message-ID: <20230129235134.bmlr33mmxkges22h@mercury.elektranox.org>
-References: <20230124230228.372305-1-robh@kernel.org>
+        with ESMTP id S235521AbjA3C7Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Jan 2023 21:59:25 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492361BAD9
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Jan 2023 18:59:23 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id dr8so6401458ejc.12
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Jan 2023 18:59:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cuvuEIWvWifnWX+tS1UYLP6iIDWylaHtaPdx3s7KXPI=;
+        b=P7m8d8Vu8n6QWMQBb7p50k+pVC6BEmR2mNBvda/nkiWAg+SXwQPkUAnf+RtpTGB91a
+         KLD5Lg7XHB98GPiGC0W33pDX+Wttrj9Do6/FblIvC1EBy+WTQqx+2jBCcGBlubPR3mmV
+         htYWs0wBIFhwhs+JVf8p0z85dRsKIIXP1mFrA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cuvuEIWvWifnWX+tS1UYLP6iIDWylaHtaPdx3s7KXPI=;
+        b=HAHVDHbJ0AWTz+UvLqBF77qdquCdxP9uXPHoMuSd9hR0eQf7QIUztYhNv9NwPgmGzY
+         +x82InTAzfuetpRwWzG94JbXJvjoiQLnOmjIPHjI16KCaTrnMdGVsw4w4tVr1JIhetUE
+         YqDHj2uyFE9Fpo7Fe+RTsJ8JAkKZlV7Rjqje8+mkgChxHW3HP1RldmPME0WYq8U1Nz79
+         g/Dyvbj96nbPeg04GbjtJEx/doZu1gkmzHkLoQccDtwM1GuCGXv1nex7XePpuOgqSVal
+         McD0rudicA6GsMp58dU419ZQ9bI/jOM1ZKU71K9LL69WKRoZFvBGlA5sLxfqw6KjjzaF
+         kOpQ==
+X-Gm-Message-State: AO0yUKUSbroIUPes+D4d+ockhiAjaKkHZ0YTTr3reQ3W8MbX1DEQMluK
+        Asl/hkxQKTxfTs+SgMBnViVCzfOJou1Y/jsFH6s=
+X-Google-Smtp-Source: AK7set8jJbSsX0UW9Q/dgX/JZoXwGvmYuPcKHeNB3K01XA1dZgMi/vz0oqAdBiKgmfDyvC65QFwFa779jrBBAm7Vmag=
+X-Received: by 2002:a17:907:2a03:b0:87f:5802:fd72 with SMTP id
+ fd3-20020a1709072a0300b0087f5802fd72mr1847753ejc.237.1675047561610; Sun, 29
+ Jan 2023 18:59:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gicruapujo3hf3sv"
-Content-Disposition: inline
-In-Reply-To: <20230124230228.372305-1-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230119235501.53294-1-joel@jms.id.au> <b565b254-45aa-4f7a-b158-99fb4c66167f@app.fastmail.com>
+ <CACRpkdYGG8jA9x8Hb9ByvkhFXgbyG43K=LB5F0t4hLxyXtWKjQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYGG8jA9x8Hb9ByvkhFXgbyG43K=LB5F0t4hLxyXtWKjQ@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 30 Jan 2023 02:59:09 +0000
+Message-ID: <CACPK8Xf3Nz8mZrGrwUXx9PZWp90jYwEOAoZ2giY4qKou3opn3w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: aspeed-g5: Bypass clock check when fetching regmap
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
+        linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, 27 Jan 2023 at 12:36, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Jan 20, 2023 at 3:35 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > On Fri, 20 Jan 2023, at 10:25, Joel Stanley wrote:
+>
+> > > A recent commit cf517fef601b ("pinctrl: aspeed: Force to disable the
+> > > function's signal") exposed a problem with fetching the regmap for
+> > > reading the GFX register.
+> > >
+> > > The Romulus machine the device tree contains a gpio hog for GPIO S7.
+> > > With the patch applied:
+> > >
+> > >   Muxing pin 151 for GPIO
+> > >   Disabling signal VPOB9 for VPO
+> > >   aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to acquire regmap for IP block 1
+> > >   aspeed-g5-pinctrl 1e6e2080.pinctrl: request() failed for pin 151
+> > >
+> > > The code path is aspeed-gpio -> pinmux-g5 -> regmap -> clk, and the
+> > > of_clock code returns an error as it doesn't have a valid struct clk_hw
+> > > pointer. The regmap call happens because pinmux wants to check the GFX
+> > > node (IP block 1) to query bits there.
+> > >
+> > > For reference, before the offending patch:
+> > >
+> > >   Muxing pin 151 for GPIO
+> > >   Disabling signal VPOB9 for VPO
+> > >   Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> > >   Disabling signal VPOB9 for VPOOFF1
+> > >   Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> > >   Disabling signal VPOB9 for VPOOFF2
+> > >   Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> > >   Enabling signal GPIOS7 for GPIOS7
+> > >   Muxed pin 151 as GPIOS7
+> > >   gpio-943 (seq_cont): hogged as output/low
+> > >
+> > > As a workaround, skip the clock check to allow pinmux to proceed.
+> >
+> > We'd want the clock on and and the device out of reset before this
+> > makes sense though. We're just assuming the IP is in an operational
+> > state? Was this just accidentally working because reading the register
+> > in a bad state is producing 0 instead of other undefined garbage?
+>
+> This makes sense, can we come up with a resonable patch for this
+> problem or should this one be merged as an intermediate remedy?
 
---gicruapujo3hf3sv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Andrew is correct, my testing showed that we do need to take the
+device out of reset in order to write a value that sticks. Qemu is
+insufficient for testing this as it doesn't model the reset lines.
 
-Hi,
+We really don't want to enable the clocks just to set a value that
+doesn't need to be set. There's a big nasty delay in the clock driver.
 
-On Tue, Jan 24, 2023 at 05:02:28PM -0600, Rob Herring wrote:
-> Just as unevaluatedProperties or additionalProperties are required at
-> the top level of schemas, they should (and will) also be required for
-> child node schemas. That ensures only documented properties are
-> present.
->=20
-> Add unevaluatedProperties or additionalProperties as appropriate, and
-> then add any missing properties flagged by the addition.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> [...]
-> diff --git a/Documentation/devicetree/bindings/power/supply/ti,lp8727.yam=
-l b/Documentation/devicetree/bindings/power/supply/ti,lp8727.yaml
-> index ce6fbdba8f6b..0542d4126cf5 100644
-> --- a/Documentation/devicetree/bindings/power/supply/ti,lp8727.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/ti,lp8727.yaml
-> @@ -28,6 +28,7 @@ properties:
->  patternProperties:
->    '^(ac|usb)$':
->      type: object
-> +    additionalProperties: false
->      description: USB/AC charging parameters
->      properties:
->        charger-type:
+I suggest we revert the problematic patch until we can come up with a
+better solution.
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cheers,
 
--- Sebastian
-
---gicruapujo3hf3sv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmPXBoUACgkQ2O7X88g7
-+ppJ7Q/9G9KiN17FVwYLLs8SnUjgqv/kYKrPVShDKerSSX6M0f7jyOVMBZz/QMpm
-Qzn0tl5laK3KtKo8zTuT/nHHQrwIyURSi8k3pEYUNc4KW8lTxLA4gLOCNjU+mA3r
-hFuUUvRcrmDnS9e+du/tWzYg8mSp0eucjWzURwTq+OA2qeUlEfH+1YAb+8LWHxWP
-O1pnLG9pGJMA1D3WDQzfXB0YfKpOkPYhxczD3VK0xqO77Z/PFANzD0Us/1XKtoFn
-NcsoPPSPBA/KpyjVWi94Rgy7zCXxKTeodChRqTVNUpms71aK75cO7z13ZOSYj3Kh
-5ZDpVLxWk2Yp5UujqxsMBYkJ31nQHS63CirMS84oPRR6WKbWzl9Qavl9VdPLMDe5
-9lwmcjlHoe0MSwwwuBDuwJRuO2Yr6KcOYvepEbv0/aes6hCB0e4IGq716JG2clLQ
-ZDVV5R3dmZk3KR3Ctu5twKz22MXyzqmoemtciqIsHkrLePBXwK6ylrLJfadUpgc1
-9hvsiNNTMntVlLI3gIQvsqw3W89s8UmTQAV02ykLZ19yAXhSQW34aslkoG204Dbk
-JRW+Mp6cXkXwNoMyqq1rCt4yFIG3ys3ELjFNGRX4we4+XJ7ZVU6agwxNMbyrFuUt
-UKXHATWoGucDR6hd83W0A7eREcm/GZzUnBKCAMTu4FUu1UBEOqM=
-=p8Fr
------END PGP SIGNATURE-----
-
---gicruapujo3hf3sv--
+Joel
