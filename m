@@ -2,122 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7666B6816D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 17:49:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B8256816FF
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 17:54:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236798AbjA3QtM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 11:49:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
+        id S235730AbjA3Qy5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 11:54:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237585AbjA3QtH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 11:49:07 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83593CE36
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 08:48:41 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pMXKg-0002DX-EP; Mon, 30 Jan 2023 17:48:38 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pMXKf-001VWc-G3; Mon, 30 Jan 2023 17:48:36 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pMXKd-00H7SI-SN; Mon, 30 Jan 2023 17:48:35 +0100
-Date:   Mon, 30 Jan 2023 17:48:35 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Robert Schwebel <r.schwebel@pengutronix.de>,
-        bartosz.golaszewski@linaro.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de, shawnguo@kernel.org,
-        Sascha Hauer <sha@pengutronix.de>
-Subject: Re: GPIO static allocation warning with v6.2-rcX
-Message-ID: <20230130164835.eteteji2vy7pbwtz@pengutronix.de>
-References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
- <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
- <20230125093548.GB23347@pengutronix.de>
- <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
- <20230126104927.GE23347@pengutronix.de>
- <20230129183339.GY24167@pengutronix.de>
- <CACRpkdYRynwJJZR5uCEn9rmE3c8p7R8SQdXC2FkzRUkBYRjErg@mail.gmail.com>
+        with ESMTP id S235917AbjA3Qyr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 11:54:47 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC533D936
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 08:54:45 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id mf7so14877902ejc.6
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 08:54:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXg0vcX33DnXDRl4Qdi6ZDWogrA8s0G2Rrxf8IO1PKs=;
+        b=QbEicjF7YmF13ezulDFfNuz727VQByALrw9uuIPZvtZlKMsoG+jKaOarkL4iXLFKTG
+         M0d6hNOY6JOUyW1OrmRyichUnqhw1kBkVBj0LApPmSnftNSC8johSQ78djllzPoCumbP
+         KOd3H32nWwAcGVcTBDzQpq/8ZHGB8vg9dmTqpZYpQxcSQgiP1cAI2AjgfSPJiazPGZl1
+         wxFm74achDIccqe7q6gGhas3ePdnaoHCZLqbcWoTFz16gQOpPV2Di3ZmnB9dc01SgKNY
+         /ckAetNlwTU+YT3b2tGaxVSjfp7t2vt0DQJWAVym52nNEYWv3LPl04ChAPzvthnsLTsJ
+         Jz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LXg0vcX33DnXDRl4Qdi6ZDWogrA8s0G2Rrxf8IO1PKs=;
+        b=FgFIf15KXl3FyO44BxofTPNbKonndwWVdoCI1EMyHNVc7mbBMrd+kyNM2yB8w97WcM
+         I24VFmAnZyKUjm2b3G/n5MpsR4N3kbC91orskDRxXR92GsyAQ7LzZUbyu41MShBebmaD
+         clkja1VAWBBndoFn4/Tld1pE9Q9qLHaqAu2LIAeF2iWJ1m8C+Poqjgk0phs96gO1O7/c
+         ScGUptKTirbPxPH3mHc0YnQ++ucyfw1iliHyMKaq0mX/YW4R+ecr7TQgZ4gNkflfPtaq
+         ETEoj+i3cK+LctRmEcHRiAAFd+JO50S8xFE2eSm/t/ZoglnJi6RkWecEXvZ26EFxUFSG
+         tvfA==
+X-Gm-Message-State: AO0yUKUqTD0pGKcP2qe//4Ag1cXbdaOfR7k7D/haMib5+0fGrOFNpapO
+        iYSmVRbG2wxC6AF3/dLmZvpB4A==
+X-Google-Smtp-Source: AK7set+Mbu9nF6QDeSGgFURDfRkwriUDkJi++ex+D+IPiTZoixzQMsBWsfU1u1xAf1BAwf+msRnsxQ==
+X-Received: by 2002:a17:907:3c16:b0:889:daeb:5532 with SMTP id gh22-20020a1709073c1600b00889daeb5532mr2195829ejc.47.1675097684236;
+        Mon, 30 Jan 2023 08:54:44 -0800 (PST)
+Received: from localhost.localdomain (abyl20.neoplus.adsl.tpnet.pl. [83.9.31.20])
+        by smtp.gmail.com with ESMTPSA id lj14-20020a170906f9ce00b0088744fc7084sm2590651ejb.38.2023.01.30.08.54.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jan 2023 08:54:43 -0800 (PST)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org, krzysztof.kozlowski@linaro.org
+Cc:     marijn.suijten@somainline.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/2] dt-bindings: pincfg-node: Introduce an overridable way to set bias on pins
+Date:   Mon, 30 Jan 2023 17:54:34 +0100
+Message-Id: <20230130165435.2347569-1-konrad.dybcio@linaro.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jb2jyn3bwadewd6v"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYRynwJJZR5uCEn9rmE3c8p7R8SQdXC2FkzRUkBYRjErg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+We came to a point where we sometimes we support a few dozen boards
+with a given SoC. Sometimes, we have to take into consideration
+configurations which deviate rather significatly from the reference
+or most common designs. In the context of pinctrl, this often comes
+down to wildly different pin configurations. While pins, function and
+drive-strength are easily overridable, the (mostly) boolean properties
+associated with setting bias, aren't. This wouldn't be much of a
+problem if they didn't differ between boards so often, preventing us
+from having a "nice" baseline setup without inevitably having to go
+with an ugly /delete-property/. Introduce bias-type, a bias-type-
+specific property and clone the pinconf-generic type enum into
+dt-bindings to allow for setting the bias in an easily overridable
+manner such as:
 
---jb2jyn3bwadewd6v
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+// SoC DT
+i2c0_pin: i2c0-pin-state {
+	pins = "gpio10";
+	function = "gpio";
+	bias-type = <BIAS_PULL_UP>;
+};
 
-On Mon, Jan 30, 2023 at 11:19:11AM +0100, Linus Walleij wrote:
-> On Sun, Jan 29, 2023 at 7:33 PM Robert Schwebel
-> <r.schwebel@pengutronix.de> wrote:
->=20
-> > While this could also be done with a daemon offering a dbus api, this
-> > would be significantly more complex. In a critical environment, one
-> > needs to make sure that the daemon process never fails, otherwhise the
-> > power of the DuT would maybe be in a random state. Then of course one
-> > can add a watchdog, but with the current sysfs interface it's really
-> > simple. Of course that would also work if the new interface would offer
-> > a "keep this line as it is" feature, but adding a dbus daemon just for
-> > keeping the state of a pin sounds overcomplex when the kernel could also
-> > provide that functionality.
->=20
-> One issue we face as developers is scaleability. Things that
-> seem straight forward on a single board computer in a lab get
-> really complex in a big system with man GPIO chips.
+// Deviant board DT
+&i2c0_pin {
+	bias-type = <BIAS_HIGH_IMPEDANCE>;
+};
 
-This is the point where the discussion took a wrong turn.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ .../bindings/pinctrl/pincfg-node.yaml         |  4 ++
+ include/dt-bindings/pinctrl/pinconf-generic.h | 40 +++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/pinconf-generic.h
 
-Yes, there is awareness that the sysfs API has a downside (here: on some
-platforms the number allocation is not stable).
+diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+index be81ed22a036..d4ea563d283e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+@@ -51,6 +51,10 @@ properties:
+     description: use pin-default pull state. Takes as optional argument on
+       hardware supporting it the pull strength in Ohm.
+ 
++  bias-type:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Use the specified bias type.
++
+   drive-push-pull:
+     oneOf:
+       - type: boolean
+diff --git a/include/dt-bindings/pinctrl/pinconf-generic.h b/include/dt-bindings/pinctrl/pinconf-generic.h
+new file mode 100644
+index 000000000000..7d9c7d8f9105
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinconf-generic.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2011 ST-Ericsson SA
++ * Written on behalf of Linaro for ST-Ericsson
++ *
++ * Author: Linus Walleij <linus.walleij@linaro.org>
++ */
++
++#ifndef _DT_BINDINGS_PINCTRL_PINCONF_GENERIC_H
++#define _DT_BINDINGS_PINCTRL_PINCONF_GENERIC_H
++
++#define BIAS_BUS_HOLD			0
++#define BIAS_DISABLE			1
++#define BIAS_HIGH_IMPEDANCE		2
++#define BIAS_PULL_DOWN			3
++#define BIAS_PULL_PIN_DEFAULT		4
++#define BIAS_PULL_UP			5
++#define DRIVE_OPEN_DRAIN		6
++#define DRIVE_OPEN_SOURCE		7
++#define DRIVE_PUSH_PULL			8
++#define DRIVE_STRENGTH			9
++#define DRIVE_STRENGTH_UA		10
++#define INPUT_DEBOUNCE			11
++#define INPUT_ENABLE			12
++#define INPUT_SCHMITT			13
++#define INPUT_SCHMITT_ENABLE		14
++#define MODE_LOW_POWER			15
++#define MODE_PWM			16
++#define OUTPUT				17
++#define OUTPUT_ENABLE			18
++#define OUTPUT_IMPEDANCE_OHMS		19
++#define PERSIST_STATE			20
++#define POWER_SOURCE			21
++#define SKEW_DELAY			22
++#define SLEEP_HARDWARE_STATE		23
++#define SLEW_RATE			24
++#define PIN_CONFIG_END			0x7F
++#define PIN_CONFIG_MAX			0xFF
++
++#endif
+-- 
+2.39.1
 
-But the problem here is that the alternative (i.e. using the newer
-devctrl API) also has a downside that makes it unsuitable (or overly
-complex) to use for some workflows.
-
-Just an idea: Wouldn't a nice solution be to make it possible to opt-out
-of the reset to the safe state after use?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jb2jyn3bwadewd6v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPX9OAACgkQwfwUeK3K
-7AlKlgf/eTKgSnyl4c2qwHdFVFx2orBxVpYc4czF2ITbpxsZPS1shRVin/twUE2e
-KCuvO2cJftOv/y0gY5yQPjzK48ERz/pGHL0PFym7RuS+sRtBS3BLvnL53NbXYQQ0
-xmFdEtNCjw4q8tbviU1CodJaoCKOwZNDtLxswBgGNTUSLkMlW7XG1FX7ygnEtIML
-Lq7rxI1EK+DNV5+u6D+szxSwso92N1aJ4+n4ZqE4haN0tfc2eEbBA5zcBNGN7+/a
-3OHWZJnuyxrj6gbS8u3SwfkaodAL8BvEoBBZ21vnbRwBt9626ottr8ycXiLGMZX1
-GjJ0zt0kVhIYFtMQbA3/T8/gwqis6w==
-=ZxRE
------END PGP SIGNATURE-----
-
---jb2jyn3bwadewd6v--
