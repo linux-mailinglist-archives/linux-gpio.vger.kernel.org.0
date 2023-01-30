@@ -2,347 +2,332 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D418681C07
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 22:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE45B681BFD
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Jan 2023 22:00:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbjA3VBK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Jan 2023 16:01:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55388 "EHLO
+        id S229611AbjA3VAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Jan 2023 16:00:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjA3VBJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 16:01:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72E046155
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 13:00:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675112414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NQR10RvxjfTGxb66NAVT7cY3C5m41ahj69SYknOlOLM=;
-        b=fXoWg5yuV1UgO46Rznem9w/jQFkW9crg75sjV66X+r39C+Z6jZE1UxpopBrDzcHTLM5n6X
-        QMl5L8TzhRVab/SkbV8PdEpV9R26Hj/FoM4s/iR//AxMyY3yMDH+vC3584SOfBEcTB+cFH
-        VgpRauXEYg2Mn8PJfRKnIr/NaISBDew=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-511-J4ibKAtbMXqltCsi2OIsAg-1; Mon, 30 Jan 2023 16:00:13 -0500
-X-MC-Unique: J4ibKAtbMXqltCsi2OIsAg-1
-Received: by mail-ed1-f69.google.com with SMTP id c12-20020a05640227cc00b0049e2c079aabso8933954ede.1
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Jan 2023 13:00:12 -0800 (PST)
+        with ESMTP id S229468AbjA3VAh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Jan 2023 16:00:37 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5D14740A;
+        Mon, 30 Jan 2023 13:00:31 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id n13so1950682wmr.4;
+        Mon, 30 Jan 2023 13:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:content-language
+         :references:cc:to:from:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KuSuW06HHF3831P0xJ/zxYyhYTNoVLwB7x4VqcQ3BUY=;
+        b=aw41t3PiCVuliTn7GB71u3ZTHm5yQpZ4AAdgVa8UV92fR0y+n3BLzsnsKTmPpQMH0K
+         DNvmj+ssAHPpX38Fvjmoe5iUzvk2j4k7OB0w66a7e91IUTCOeUcxLcNdLp3HFE/z0Pj/
+         1ztyi0lVlM1Ypo4CZ57a0mj6jYEI2E6LCPY3q9IvOaflvMIH7uVEvvqjwLOi0E88WjOk
+         9awAEh0cPp7qC8XQVoWBSlF285oJ5OjbMr3zMyAIglRMzt8c5r5/LmVrX2N89UOAV3vQ
+         IITrtqrcE/6xaxiFdoDvExIupLvrmW6xHLfKmmKznOPnF2+iJ/wdP4ZoB+v5Q09VA1k9
+         5wgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:subject:content-language
+         :references:cc:to:from:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQR10RvxjfTGxb66NAVT7cY3C5m41ahj69SYknOlOLM=;
-        b=tjQywwuknWJBfGh6YlFgBp0DL1P6T2kraSe7nbR35KAy6fis2rVDtPpjP4XTQkycHD
-         OYsxzAv9fjzD1TC7zOC+LpHwF8Z1X6/SieyohNvh4PJQGmwGOUfq/ZSuuCZZoI4NSAb1
-         pxCpJPUI9ODoF9NL1n4kCl95xMBo37f/1ny9bzNHRTRyGJaP6O7oznPE8KfatkcBoWSh
-         JXTBLoZYfNhlZdUEyFF6zJ71R/kJz5/H3b+v32TSz/MgaiOtT928AKOv+iZRwnv5bCsC
-         z+R32SkPGYJmQYfggrZe+yfI9K0NqA+bQ5IqLmneNxWZDkkCxgVc9b0w0RiaJTVKkO2A
-         xSEg==
-X-Gm-Message-State: AO0yUKWsClL1s+dBiTkUScJV9buwboLPDgF8xD4LTSAl9Vu8zTqugj7v
-        cqf/Dbt+jD2wg3yMvk66o+kk+MXWAfY+Br2PtU8J015wGegOHsnb4y/iGmaR9NU/Yv9Cfy7TCc1
-        /iJRwRZj35JZx6a5bDZoBlA==
-X-Received: by 2002:a17:907:970b:b0:880:c284:8436 with SMTP id jg11-20020a170907970b00b00880c2848436mr14930064ejc.57.1675112412042;
-        Mon, 30 Jan 2023 13:00:12 -0800 (PST)
-X-Google-Smtp-Source: AK7set8gu2Ch4fsvA7OUiSViVWGyO4eYLyB5XVW44owkpHc++Z9imLV3g6iV/IEtuifLbIMEABPLIA==
-X-Received: by 2002:a17:907:970b:b0:880:c284:8436 with SMTP id jg11-20020a170907970b00b00880c2848436mr14930044ejc.57.1675112411828;
-        Mon, 30 Jan 2023 13:00:11 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id oy17-20020a170907105100b0087bd50f6986sm5936035ejb.42.2023.01.30.13.00.10
+        bh=KuSuW06HHF3831P0xJ/zxYyhYTNoVLwB7x4VqcQ3BUY=;
+        b=omsgVqOf3ieQhUVdn6I7xEuxh1ZXLDdVZ86KJlQhHK7+R0ko3VzXrpSZuk1iM6wICQ
+         jPsEUPHnGRdNigy9V+kJTIC/h/TzOjJ34THMMU0hJf5wAj3BwOxNUAxhkstjwJgpJkTg
+         ZYlRAogY3IY+1M2thX7TdlsWZvG5i6HxzqmaKT4Dsyc9Dqjfc1mOi/MMcdEczdx/V6eF
+         K8qlOoi9SPNNLWMhe9syK+9mPNvB8bgDcGSatrww7Bdr6KOgfXilMD2UbIEPa0Jhc44e
+         giGoTyKuNknoPxh7w3xM807zolRmTe888jsETHMFxtpXCo/u4Yvom8tdjpo0D2Tw0ZSF
+         3SOw==
+X-Gm-Message-State: AFqh2kowrbO/VgGLPptxe9SwxckP4EJWzO1dofLG8zuOh/JmfYgmxxSg
+        ZxytWEhwViAj4Um53koz/uQ=
+X-Google-Smtp-Source: AMrXdXtJed6wpGR2cYaoQZUKrCrllboFvOBM2MNrbyMZZ7PyjnFqAhhst3wANkrZshDgdFwY1oiE7Q==
+X-Received: by 2002:a05:600c:4e05:b0:3d3:5a4a:9103 with SMTP id b5-20020a05600c4e0500b003d35a4a9103mr50950062wmq.31.1675112429300;
+        Mon, 30 Jan 2023 13:00:29 -0800 (PST)
+Received: from ?IPV6:2a01:c23:c074:7400:d941:3cb5:fa86:8ec8? (dynamic-2a01-0c23-c074-7400-d941-3cb5-fa86-8ec8.c23.pool.telefonica.de. [2a01:c23:c074:7400:d941:3cb5:fa86:8ec8])
+        by smtp.googlemail.com with ESMTPSA id l21-20020a05600c4f1500b003dc4050c97bsm13993322wmq.3.2023.01.30.13.00.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 13:00:11 -0800 (PST)
-Message-ID: <694b482c-5c67-2e9c-603a-e79bb4d7fd9a@redhat.com>
-Date:   Mon, 30 Jan 2023 22:00:10 +0100
+        Mon, 30 Jan 2023 13:00:28 -0800 (PST)
+Message-ID: <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
+Date:   Mon, 30 Jan 2023 22:00:24 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v6 1/5] media: v4l2-core: Make the v4l2-core code
- enable/disable the privacy LED if present
-Content-Language: en-US, nl
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org, hverkuil@xs4all.nl
-References: <20230127203729.10205-1-hdegoede@redhat.com>
- <20230127203729.10205-2-hdegoede@redhat.com>
- <Y9eZOmDAYW8lm/By@kekkonen.localdomain>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y9eZOmDAYW8lm/By@kekkonen.localdomain>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Content-Language: en-US
+Subject: [PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
+ binding
+In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Convert Amlogic Meson pinctrl binding to yaml.
 
-On 1/30/23 11:17, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Fri, Jan 27, 2023 at 09:37:25PM +0100, Hans de Goede wrote:
->> Make v4l2_async_register_subdev_sensor() try to get a privacy LED
->> associated with the sensor and extend the call_s_stream() wrapper to
->> enable/disable the privacy LED if found.
->>
->> This makes the core handle privacy LED control, rather then having to
->> duplicate this code in all the sensor drivers.
->>
->> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Please wrap the lines over 80, unless there are tangible reasons to keep
-> them as-is.
-> 
-> For this patch:
-> 
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> On my behalf it can be merged via another tree, I don't expect conflicts.
-> Also cc Hans Verkuil.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- consider that more than one compatible can be set
+- remove bus part from example
+v3:
+- remove minItem/maxItem properties for compatible
+---
+ .../pinctrl/amlogic,meson-pinctrl.yaml        | 122 ++++++++++++++++++
+ .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
+ 2 files changed, 122 insertions(+), 94 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
 
-Thanks.
-
-I've merged the entire series into my pdx86/review-hans branch now:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-(with the lines in this patch shortened to 80 chars).
-
-Once the builders have had some time to play with this branch
-(and once I've run some tests to make sure the patches still
-work as expected) I will push to platform-drivers-x86/for-next .
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
-> And the rest:
-> 
-> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> Please also see my comment on the 3rd patch.
-> 
->> ---
->> Changes in v6:
->> - Add v4l2_subdev_privacy_led_get()/_put() helpers
->> - At least the _put helper is necessary for cleanup on errors later on in
->>   v4l2_async_register_subdev_sensor()
->> - This puts all the LED related coded into a single file (v4l2-subdev.c)
->>   removing the need to build the async + fwnode code into videodev.ko,
->>   so that patch is dropped
->> - Move the (non-error-exit) cleanup from v4l2_subdev_cleanup() to
->>    v4l2_async_unregister_subdev()
->>
->> Changes in v4 (requested by Laurent Pinchart):
->> - Move the led_get() call to v4l2_async_register_subdev_sensor() and
->>   make errors other then -ENOENT fail the register() call.
->> - Move the led_disable_sysfs() call to be done at led_get() time, instead
->>   of only disabling the sysfs interface when the sensor is streaming.
->> ---
->>  drivers/media/v4l2-core/v4l2-async.c       |  4 ++
->>  drivers/media/v4l2-core/v4l2-fwnode.c      |  7 ++++
->>  drivers/media/v4l2-core/v4l2-subdev-priv.h | 14 +++++++
->>  drivers/media/v4l2-core/v4l2-subdev.c      | 44 ++++++++++++++++++++++
->>  include/media/v4l2-subdev.h                |  3 ++
->>  5 files changed, 72 insertions(+)
->>  create mode 100644 drivers/media/v4l2-core/v4l2-subdev-priv.h
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
->> index 2f1b718a9189..d7e9ffc7aa23 100644
->> --- a/drivers/media/v4l2-core/v4l2-async.c
->> +++ b/drivers/media/v4l2-core/v4l2-async.c
->> @@ -24,6 +24,8 @@
->>  #include <media/v4l2-fwnode.h>
->>  #include <media/v4l2-subdev.h>
->>  
->> +#include "v4l2-subdev-priv.h"
->> +
->>  static int v4l2_async_nf_call_bound(struct v4l2_async_notifier *n,
->>  				    struct v4l2_subdev *subdev,
->>  				    struct v4l2_async_subdev *asd)
->> @@ -822,6 +824,8 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->>  	if (!sd->async_list.next)
->>  		return;
->>  
->> +	v4l2_subdev_put_privacy_led(sd);
->> +
->>  	mutex_lock(&list_lock);
->>  
->>  	__v4l2_async_nf_unregister(sd->subdev_notifier);
->> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
->> index 3d9533c1b202..049c2f2001ea 100644
->> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
->> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
->> @@ -28,6 +28,8 @@
->>  #include <media/v4l2-fwnode.h>
->>  #include <media/v4l2-subdev.h>
->>  
->> +#include "v4l2-subdev-priv.h"
->> +
->>  static const struct v4l2_fwnode_bus_conv {
->>  	enum v4l2_fwnode_bus_type fwnode_bus_type;
->>  	enum v4l2_mbus_type mbus_type;
->> @@ -1302,6 +1304,10 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->>  
->>  	v4l2_async_nf_init(notifier);
->>  
->> +	ret = v4l2_subdev_get_privacy_led(sd);
->> +	if (ret < 0)
->> +		goto out_cleanup;
->> +
->>  	ret = v4l2_async_nf_parse_fwnode_sensor(sd->dev, notifier);
->>  	if (ret < 0)
->>  		goto out_cleanup;
->> @@ -1322,6 +1328,7 @@ int v4l2_async_register_subdev_sensor(struct v4l2_subdev *sd)
->>  	v4l2_async_nf_unregister(notifier);
->>  
->>  out_cleanup:
->> +	v4l2_subdev_put_privacy_led(sd);
->>  	v4l2_async_nf_cleanup(notifier);
->>  	kfree(notifier);
->>  
->> diff --git a/drivers/media/v4l2-core/v4l2-subdev-priv.h b/drivers/media/v4l2-core/v4l2-subdev-priv.h
->> new file mode 100644
->> index 000000000000..52391d6d8ab7
->> --- /dev/null
->> +++ b/drivers/media/v4l2-core/v4l2-subdev-priv.h
->> @@ -0,0 +1,14 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/*
->> + * V4L2 sub-device pivate header.
->> + *
->> + * Copyright (C) 2023 Hans de Goede <hdegoede@redhat.com>
->> + */
->> +
->> +#ifndef _V4L2_SUBDEV_PRIV_H_
->> +#define _V4L2_SUBDEV_PRIV_H_
->> +
->> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd);
->> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd);
->> +
->> +#endif
->> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->> index 4988a25bd8f4..9fd183628285 100644
->> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->> @@ -9,6 +9,7 @@
->>   */
->>  
->>  #include <linux/ioctl.h>
->> +#include <linux/leds.h>
->>  #include <linux/mm.h>
->>  #include <linux/module.h>
->>  #include <linux/slab.h>
->> @@ -23,6 +24,8 @@
->>  #include <media/v4l2-fh.h>
->>  #include <media/v4l2-event.h>
->>  
->> +#include "v4l2-subdev-priv.h"
->> +
->>  #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
->>  static int subdev_fh_init(struct v4l2_subdev_fh *fh, struct v4l2_subdev *sd)
->>  {
->> @@ -322,6 +325,14 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
->>  {
->>  	int ret;
->>  
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		if (enable)
->> +			led_set_brightness(sd->privacy_led, sd->privacy_led->max_brightness);
->> +		else
->> +			led_set_brightness(sd->privacy_led, 0);
->> +	}
->> +#endif
->>  	ret = sd->ops->video->s_stream(sd, enable);
->>  
->>  	if (!enable && ret < 0) {
->> @@ -1090,6 +1101,7 @@ void v4l2_subdev_init(struct v4l2_subdev *sd, const struct v4l2_subdev_ops *ops)
->>  	sd->grp_id = 0;
->>  	sd->dev_priv = NULL;
->>  	sd->host_priv = NULL;
->> +	sd->privacy_led = NULL;
->>  #if defined(CONFIG_MEDIA_CONTROLLER)
->>  	sd->entity.name = sd->name;
->>  	sd->entity.obj_type = MEDIA_ENTITY_TYPE_V4L2_SUBDEV;
->> @@ -1105,3 +1117,35 @@ void v4l2_subdev_notify_event(struct v4l2_subdev *sd,
->>  	v4l2_subdev_notify(sd, V4L2_DEVICE_NOTIFY_EVENT, (void *)ev);
->>  }
->>  EXPORT_SYMBOL_GPL(v4l2_subdev_notify_event);
->> +
->> +int v4l2_subdev_get_privacy_led(struct v4l2_subdev *sd)
->> +{
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	sd->privacy_led = led_get(sd->dev, "privacy-led");
->> +	if (IS_ERR(sd->privacy_led) && PTR_ERR(sd->privacy_led) != -ENOENT)
->> +		return dev_err_probe(sd->dev, PTR_ERR(sd->privacy_led), "getting privacy LED\n");
->> +
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_disable(sd->privacy_led);
->> +		led_trigger_remove(sd->privacy_led);
->> +		led_set_brightness(sd->privacy_led, 0);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +	}
->> +#endif
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(v4l2_subdev_get_privacy_led);
->> +
->> +void v4l2_subdev_put_privacy_led(struct v4l2_subdev *sd)
->> +{
->> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
->> +	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
->> +		mutex_lock(&sd->privacy_led->led_access);
->> +		led_sysfs_enable(sd->privacy_led);
->> +		mutex_unlock(&sd->privacy_led->led_access);
->> +		led_put(sd->privacy_led);
->> +	}
->> +#endif
->> +}
->> +EXPORT_SYMBOL_GPL(v4l2_subdev_put_privacy_led);
->> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->> index b15fa9930f30..0547313f98cc 100644
->> --- a/include/media/v4l2-subdev.h
->> +++ b/include/media/v4l2-subdev.h
->> @@ -38,6 +38,7 @@ struct v4l2_subdev;
->>  struct v4l2_subdev_fh;
->>  struct tuner_setup;
->>  struct v4l2_mbus_frame_desc;
->> +struct led_classdev;
->>  
->>  /**
->>   * struct v4l2_decode_vbi_line - used to decode_vbi_line
->> @@ -982,6 +983,8 @@ struct v4l2_subdev {
->>  	 * appropriate functions.
->>  	 */
->>  
->> +	struct led_classdev *privacy_led;
->> +
->>  	/*
->>  	 * TODO: active_state should most likely be changed from a pointer to an
->>  	 * embedded field. For the time being it's kept as a pointer to more
-> 
+diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+new file mode 100644
+index 000000000..7aaae606b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic Meson pinmux controller
++
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
++
++allOf:
++  - $ref: pinctrl.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - amlogic,meson8-cbus-pinctrl
++              - amlogic,meson8b-cbus-pinctrl
++              - amlogic,meson8m2-cbus-pinctrl
++              - amlogic,meson8-aobus-pinctrl
++              - amlogic,meson8b-aobus-pinctrl
++              - amlogic,meson8m2-aobus-pinctrl
++              - amlogic,meson-gxbb-periphs-pinctrl
++              - amlogic,meson-gxbb-aobus-pinctrl
++              - amlogic,meson-gxl-periphs-pinctrl
++              - amlogic,meson-gxl-aobus-pinctrl
++              - amlogic,meson-axg-periphs-pinctrl
++              - amlogic,meson-axg-aobus-pinctrl
++              - amlogic,meson-g12a-periphs-pinctrl
++              - amlogic,meson-g12a-aobus-pinctrl
++              - amlogic,meson-a1-periphs-pinctrl
++              - amlogic,meson-s4-periphs-pinctrl
++      - items:
++          - const: amlogic,meson8m2-aobus-pinctrl
++          - const: amlogic,meson8-aobus-pinctrl
++      - items:
++          - const: amlogic,meson8m2-cbus-pinctrl
++          - const: amlogic,meson8-cbus-pinctrl
++
++  ranges: true
++
++  "#address-cells":
++    enum: [1, 2]
++
++  "#size-cells":
++    enum: [1, 2]
++
++required:
++  - compatible
++  - ranges
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties:
++  anyOf:
++    - type: object
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++patternProperties:
++  "^bank@[0-9]$":
++    type: object
++    properties:
++      reg:
++        minItems: 5
++        maxItems: 5
++
++      reg-names:
++        items:
++          - const: gpio
++          - const: pull
++          - const: pull-enable
++          - const: mux
++          - const: ds
++
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-ranges:
++        $ref: /schemas/types.yaml#/definitions/phandle
++
++    required:
++      - reg
++      - reg-names
++      - gpio-controller
++      - "#gpio-cells"
++      - gpio-ranges
++
++examples:
++  - |
++    pinctrl {
++      compatible = "amlogic,meson-g12a-periphs-pinctrl";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++
++      bank@40 {
++        reg = <0x0 0x40  0x0 0x4c>,
++              <0x0 0xe8  0x0 0x18>,
++              <0x0 0x120 0x0 0x18>,
++              <0x0 0x2c0 0x0 0x40>,
++              <0x0 0x340 0x0 0x1c>;
++        reg-names = "gpio", "pull", "pull-enable", "mux", "ds";
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&periphs_pinctrl 0 0 86>;
++      };
++
++      cec_ao_a_h_pins: cec_ao_a_h {
++        mux {
++          groups = "cec_ao_a_h";
++          function = "cec_ao_a_h";
++          bias-disable;
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+deleted file mode 100644
+index 8146193bd..000000000
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ /dev/null
+@@ -1,94 +0,0 @@
+-== Amlogic Meson pinmux controller ==
+-
+-Required properties for the root node:
+- - compatible: one of "amlogic,meson8-cbus-pinctrl"
+-		      "amlogic,meson8b-cbus-pinctrl"
+-		      "amlogic,meson8m2-cbus-pinctrl"
+-		      "amlogic,meson8-aobus-pinctrl"
+-		      "amlogic,meson8b-aobus-pinctrl"
+-		      "amlogic,meson8m2-aobus-pinctrl"
+-		      "amlogic,meson-gxbb-periphs-pinctrl"
+-		      "amlogic,meson-gxbb-aobus-pinctrl"
+-		      "amlogic,meson-gxl-periphs-pinctrl"
+-		      "amlogic,meson-gxl-aobus-pinctrl"
+-		      "amlogic,meson-axg-periphs-pinctrl"
+-		      "amlogic,meson-axg-aobus-pinctrl"
+-		      "amlogic,meson-g12a-periphs-pinctrl"
+-		      "amlogic,meson-g12a-aobus-pinctrl"
+-		      "amlogic,meson-a1-periphs-pinctrl"
+-		      "amlogic,meson-s4-periphs-pinctrl"
+- - reg: address and size of registers controlling irq functionality
+-
+-=== GPIO sub-nodes ===
+-
+-The GPIO bank for the controller is represented as a sub-node and it acts as a
+-GPIO controller.
+-
+-Required properties for sub-nodes are:
+- - reg: should contain a list of address and size, one tuple for each entry
+-   in reg-names.
+- - reg-names: an array of strings describing the "reg" entries.
+-   Must contain "mux" and "gpio".
+-   May contain "pull", "pull-enable" and "ds" when appropriate.
+- - gpio-controller: identifies the node as a gpio controller
+- - #gpio-cells: must be 2
+-
+-=== Other sub-nodes ===
+-
+-Child nodes without the "gpio-controller" represent some desired
+-configuration for a pin or a group. Those nodes can be pinmux nodes or
+-configuration nodes.
+-
+-Required properties for pinmux nodes are:
+- - groups: a list of pinmux groups. The list of all available groups
+-   depends on the SoC and can be found in driver sources.
+- - function: the name of a function to activate for the specified set
+-   of groups. The list of all available functions depends on the SoC
+-   and can be found in driver sources.
+-
+-Required properties for configuration nodes:
+- - pins: a list of pin names
+-
+-Configuration nodes support the following generic properties, as
+-described in file pinctrl-bindings.txt:
+- - "bias-disable"
+- - "bias-pull-up"
+- - "bias-pull-down"
+- - "output-enable"
+- - "output-disable"
+- - "output-low"
+- - "output-high"
+-
+-Optional properties :
+- - drive-strength-microamp: Drive strength for the specified pins in uA.
+-			    This property is only valid for G12A and newer.
+-
+-=== Example ===
+-
+-	pinctrl: pinctrl@c1109880 {
+-		compatible = "amlogic,meson8-cbus-pinctrl";
+-		reg = <0xc1109880 0x10>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		gpio: banks@c11080b0 {
+-			reg = <0xc11080b0 0x28>,
+-			      <0xc11080e8 0x18>,
+-			      <0xc1108120 0x18>,
+-			      <0xc1108030 0x30>;
+-			reg-names = "mux", "pull", "pull-enable", "gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-               };
+-
+-		nand {
+-			mux {
+-				groups = "nand_io", "nand_io_ce0", "nand_io_ce1",
+-					 "nand_io_rb0", "nand_ale", "nand_cle",
+-					 "nand_wen_clk", "nand_ren_clk", "nand_dqs",
+-					 "nand_ce2", "nand_ce3";
+-				function = "nand";
+-			};
+-		};
+-	};
+-- 
+2.39.1
 
