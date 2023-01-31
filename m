@@ -2,64 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B521682D80
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 14:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9AA8682DAA
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 14:22:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231408AbjAaNON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 08:14:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
+        id S230135AbjAaNV7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 08:21:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbjAaNOJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 08:14:09 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59F12721
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 05:13:56 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id e15so17974657ybn.10
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 05:13:56 -0800 (PST)
+        with ESMTP id S230202AbjAaNV5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 08:21:57 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365CF2D4D
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 05:21:51 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id x4so18036090ybp.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 05:21:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lebX9VzQP7VMYHLa2vyK4hrBtzDqJ9eFCBgK4dZHGqY=;
-        b=qXtrFvc8NPvibTzkOdKNUNcSgLQUKhwmE6ALIFFlhhema+9UDs2/xEAIp+1VFL2AAa
-         9YdIL9SgKkLhDEhuwRUiuvwE+TJRxMZaSHitbLSVMLJWtVAtYkK0GK6tJyPqTuRp+uQL
-         z9Swhwf9izFHI+zJzgyEejUwavw8wqvwJqCFL7fTGGGc8rUk6bd8vUrsAR80S6dFW0CU
-         hZiVxhUNlbWJv7m3ZE4fyFtpkBPjAJ3YI9uNsWLMWDjXerT9A5FLOXeafa1i88ACzgEk
-         ucAdfE/0nfU4LAz+zOTnAF/Jz8srUae8pvFzBqYWFGMrKyNnJMDbovdndrXlESHtXAa3
-         /m+Q==
+        bh=PS8+qSIHWKmyaRKr/7lxTJ6J5mm+kDSGr6zIeoJ549o=;
+        b=htWHRzHAwcQ0yAcUaCKKPMHpnADzNrTlXGi4VxX0uQm6MD5SZoGdgtpzL8o65lkS+J
+         oHMjPWTpazwCPHW7PkbXQ39ODcdQ1zpni0YxDqQ/UVxtfGJx/im8ae03Vi2I2Lsfm5wZ
+         Vvy1OV1p4w8Am06cqaXTgvkN5CXA83hz2FvTGR3i5oE7Gc34i9sQ6O0L09ycJxwkZnnI
+         8FetWLWHvZhRRYdbL5KJUVXWHmrOhxpgc1OnN4VU+pIzMHAiEZ9rE8AdFTrenobeV1ER
+         uoTXdc7ZBzK0MZIV7d83dCH6iWt3eI0IU6D/ynC2juhtHyRJpwH2EaR1sJmYkcBzZcDd
+         hi8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lebX9VzQP7VMYHLa2vyK4hrBtzDqJ9eFCBgK4dZHGqY=;
-        b=t8y8EXFl0xu0vSFH5+0aOYFzn0f4ZprJqrE6X1cjeDMJcKfzKofp5cObyi+dsDwuL6
-         srXWmBqxUB0oXmue8X0musMoFC1d5B06W2mrS04YujJJ9FaQRm/ZfpFJl6+adZvScAX8
-         Rt9gXSDRB3O7jNTol+D/BhH4TpPGsnoe1mk/R7GcABDXLvxMYVUSCRDYVNuQB9Vxcj+A
-         UC3qhqwLR1MAR0d2FwhmrPIz+q7ufWjiLoLnbjM5DPut/RAs5RkTwj2A0BsFion4ZIFX
-         nmtYqhF8vyehmVLQPZXR7Jx/mAlb8crMNBU3TWCZca7ubFoLGl+2Z04fulVURgt/0pZA
-         R6zQ==
-X-Gm-Message-State: AO0yUKXuJSFHYLGm69VNfOn/L+P+FLZOqY/rLuzOCuMp1FmIaGTGIFCP
-        BvaKJL8/Q+YOc+7OFeV+E0uloQTYkh9NQJPc1cLq2w==
-X-Google-Smtp-Source: AK7set/ssVUH1Rz89sAOJnKBoqT7NZMWXa8/qUnWnQSWqihB5+j26vSuiStV4rczYgZIb+D5YQtZAm1c0IjM0yuMuo4=
-X-Received: by 2002:a25:2fce:0:b0:83e:bd63:6dd7 with SMTP id
- v197-20020a252fce000000b0083ebd636dd7mr45490ybv.24.1675170835979; Tue, 31 Jan
- 2023 05:13:55 -0800 (PST)
+        bh=PS8+qSIHWKmyaRKr/7lxTJ6J5mm+kDSGr6zIeoJ549o=;
+        b=A0QyzawOlpjU4QFz/GBzLlRmVF9xx4Vtj+sQsYCjNfDaBRG1yCBFJzYdJbu183FI20
+         +wa0XdZsdUAVYk+bJkjiKbrtYcJSXJq0G689EsnmCFuv+JHa1FSkU+1laK+78iR1A+RN
+         S6vRkdaHgBhC+KSefFV+8QM+Im7On225YkZRhzqKonixQSq1ndOoN1bkyZdwkBBknbJO
+         gBOpf4j6LbNG7dzKVVSncPSX5yC9kHCyCPnBmX223st6lrn7MefEYH2BYYPU2BlIKeCV
+         qLkkR2gib1c2iqnv5tWffyCuWek9y1GtTZo7p0ghrQnAxwAcaMFiTd8I9LUHULI1zFWR
+         eSNw==
+X-Gm-Message-State: AO0yUKWhiBZDNLekiUnY2zr265rpUQa5mYdYOlbVb4xyCQbvuUL4g5uM
+        wEP9Ld0icwZ/rHCbH8OqfvoFOLEXsZpN6LeAG1omKg==
+X-Google-Smtp-Source: AK7set8/PVrN2trOeEjFNnfvyMyl2HcH5os3U2pgQpYPFiW4trjlvzIOwEyxdrdhyrEiLoAumJMcFGsPSB5DntGMFsc=
+X-Received: by 2002:a5b:c1:0:b0:80b:c9d0:c676 with SMTP id d1-20020a5b00c1000000b0080bc9d0c676mr2496081ybp.341.1675171310442;
+ Tue, 31 Jan 2023 05:21:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20221220005529.34744-1-hal.feng@starfivetech.com>
-In-Reply-To: <20221220005529.34744-1-hal.feng@starfivetech.com>
+References: <20230130165435.2347569-1-konrad.dybcio@linaro.org>
+ <CACRpkdZjAyLUg3V7ZTzeMfUOTrndLrRX_gTFdO+amSmZkzB72Q@mail.gmail.com> <f3f70ac2-d097-b6ee-22d3-92fcfdd7c53f@linaro.org>
+In-Reply-To: <f3f70ac2-d097-b6ee-22d3-92fcfdd7c53f@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 31 Jan 2023 14:13:44 +0100
-Message-ID: <CACRpkdbU=Y_LVBfSctQULzFuo4tB9KxgFbv=JGHPuuok6jC8FQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Basic pinctrl support for StarFive JH7110 RISC-V SoC
-To:     Hal Feng <hal.feng@starfivetech.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Date:   Tue, 31 Jan 2023 14:21:38 +0100
+Message-ID: <CACRpkdbD+vtiFnPHoSR9fpV5zwtdNo923frROR7Nb1nkAMP4wQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pincfg-node: Introduce an
+ overridable way to set bias on pins
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org, krzysztof.kozlowski@linaro.org,
+        marijn.suijten@somainline.org, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,30 +71,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 1:55 AM Hal Feng <hal.feng@starfivetech.com> wrote:
+On Tue, Jan 31, 2023 at 12:50 AM Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
 
-> This patch series adds basic pinctrl support for StarFive JH7110 SoC.
-> You can simply get or review the patches at the link [1].
->
-> [1]: https://github.com/hal-feng/linux/commits/visionfive2-minimal
->
-> Changes since v2:
-> - Rebased on tag v6.1.
+> > +#define DRIVE_STRENGTH                 9
+> > +#define DRIVE_STRENGTH_UA              10
+> >
+> > drive-strength = <8>; // 8mA drive strength
+> >
+> > bias-type = <DRIVE_STRENGTH>;
+> >
+> > OK where do I put my 8 mA now?
+> >
+> If you look at the 2/2 patch, this property only reads BIAS_
+> values, which can't coexist anyway.
 
-Overall this looks OK, the DT bindings does not have any review from
-the DT people but I think they had enough time to do that and were
-properly CC:ed so not your fault.
+Well the DT bindings have to be consistent and clear on their
+own, no matter how Linux implements it.
 
-However when I try to apply this to the pinctrl tree it fails,
-for example it seems to depend on an entry in MAINTAINERS
-which isn't upstream.
+But I'm sure you can make YAML verification such that it is
+impossible to use both schemes at the same time, and it's not
+like I don't understand what you're getting at.
 
-Can you please rebase the patches that are supposed to be
-applied to the pinctrl tree (for example normally not patch 1, the DTS
-patch) on my "devel" branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
-
-If you resend this quickly I can apply it pronto.
+What I need as input is mainly the DT bindings people opinion
+on introducing another orthogonal way of doing something
+that is already possible to do another way, just more convenient.
+Because that is essentially what is happening here.
 
 Yours,
 Linus Walleij
