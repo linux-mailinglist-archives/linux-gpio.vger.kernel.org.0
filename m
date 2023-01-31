@@ -2,92 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F6FE6836DC
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 20:52:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37BB2683842
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 22:05:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbjAaTwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 14:52:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
+        id S231491AbjAaVFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 16:05:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjAaTwT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 14:52:19 -0500
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58CB418B0A
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 11:52:18 -0800 (PST)
-Received: by mail-vs1-xe31.google.com with SMTP id 3so17254714vsq.7
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 11:52:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KL2k5mH5tmh8OZcAXLezc94ObW8reBjePc/UC71xBuk=;
-        b=2zcH/SsP+C3sFcBExQ+tfjOiA4gzU+xCDsh55hkCCdEu6CNi7dn8/CaS9L1bJCZhDz
-         lB1hpgdbjllPcUhcdiqHRYzRw1m9mqYX/edVLZ1r8sRPodBFhkUJZ6tLqvp4CXX+0kgO
-         GgHOOGR3F3iiIWstYbmXzTRO3Dd+rVTxZVLo4skOle1v+9FABR+kr61UU815wkUDy+Oq
-         iKqqF7myL+thFvtLvQJrn0s71X4mBAh20HKquY1WYr0aMYKzWQk3qp87MWwhyGMLnZfG
-         sGh8IYl43lEK7fV4ItLIuSmdb6QdKvlYYuACayqCMbpnvESPMxENX9zqvOo5FoEUaGiM
-         kKEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KL2k5mH5tmh8OZcAXLezc94ObW8reBjePc/UC71xBuk=;
-        b=X5M/Qknd3WBYZv3rmYHBBBTLlfTzXMDm6RBtNJHSTNADM7CpSsCBxxoe3Bvz4b4WkQ
-         ib5IxVTVuRxaVZI1P67krov7ZKyKU8gK5gD1bhJmzCoPxmdZmdGsBU/oLokPYb62eeSa
-         W9tvexRczqmgfwKhMJcakyuS8FbIch71TlaVtb2uDQJx2swG7lJt9Mp3BF5PNunmpK54
-         0DASaxSSm4vrdgCvPYjTJl9iQonIwqpTvrD4NZu6BO9TngdfPq3Ykm9+gnPPmg67Ntnv
-         Z3quPY/mn7lUHk/A7nu/Z9QAFhZyVS1ILO8n3dGo9LIydwRJrutnlskpY8HLY5bfHrJy
-         oP5w==
-X-Gm-Message-State: AO0yUKWFZN/gxhpCE+l123E4t3gLICNAQhwnzCMt1/+DvF+/EWbbs/LT
-        Im2mAdkRIxEXEiRfVbkIuFdr/a7VxmM06Qpgs8t/9g==
-X-Google-Smtp-Source: AK7set/oOA6IyJt+vh/gLqG2/HRqLlE5B5Cir2bEZDg1ffrGa8ZLHGevdwZmT6tHqfZ/+115zsVr54EHJ+RjH+iqR4Y=
-X-Received: by 2002:a67:e002:0:b0:3fe:b46c:7889 with SMTP id
- c2-20020a67e002000000b003feb46c7889mr14423vsl.78.1675194737411; Tue, 31 Jan
- 2023 11:52:17 -0800 (PST)
+        with ESMTP id S229876AbjAaVFQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 16:05:16 -0500
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8E0B1;
+        Tue, 31 Jan 2023 13:05:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1675199113; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=1V5cuuwav3MMPhfUaTAvqss/U5kHMNq2CLWt809qYns=;
+        b=WgV2FwCk0FUAi8lZNNgSmYjvrJ+1V9pTMNi0J+ifSPY2TM8JVQzvH2MTGzI6kamryI53eR
+        Y5xb7/2qAq+VIveHHqm6p6YSYOFm0nZcTKYxJXq1KIcAiWfAIs7rin8pymnc91kYYAu8QS
+        EiQAdLdu8cPeO7wpwFR3gxl72Oruwdw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, list@opendingux.net,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Add I2S pins for the JZ4760(B) and JZ4770
+Date:   Tue, 31 Jan 2023 21:05:08 +0000
+Message-Id: <20230131210508.68775-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <CABTDG88t8_6s0ahuEKAxXsJD1KP0OuMoS-Mqi+qoeJuHutk4Qw@mail.gmail.com>
- <CAMRc=MdDzBQOeH01wm-i36KCDX_CM4E9jV=+gG7BQt8-36WzFw@mail.gmail.com> <CABTDG8-5Cch9vS6kWqQp+RGV082CfMT7gv1QiO1n9y6YzSR4Eg@mail.gmail.com>
-In-Reply-To: <CABTDG8-5Cch9vS6kWqQp+RGV082CfMT7gv1QiO1n9y6YzSR4Eg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 31 Jan 2023 20:52:06 +0100
-Message-ID: <CAMRc=Mdso+vvd68LYpQt_1NMWn5M2t_KjfYjCbLFtj5-5=8D6g@mail.gmail.com>
-Subject: Re: I2C, SPI, etc for libgpiod
-To:     Hank Barta <hbarta@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
+X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        SUSPICIOUS_RECIPS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 8:32 PM Hank Barta <hbarta@gmail.com> wrote:
->
-> Thank you for clarifying.
->
-> Can you point me to the other user-space tools or help with search
-> strings? So far I've not had any luck finding them.
->
+Add the data structures to support the I2S pins of the JZ4760(B) and
+JZ4770 SoCs, which are mostly similar to the JZ4780 ones.
 
-i2c-tools is the official toolset for I2C on linux:
-https://i2c.wiki.kernel.org/index.php/I2C_Tools
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 57 +++++++++++++++++++++++--------
+ 1 file changed, 43 insertions(+), 14 deletions(-)
 
-spi-tools seems to be the maintained package for user-space spidev:
-https://github.com/cpb-/spi-tools
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 2f220a47b749..efcf6b9d88f3 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -901,7 +901,15 @@ static int jz4760_pwm_pwm5_pins[] = { 0x85, };
+ static int jz4760_pwm_pwm6_pins[] = { 0x6a, };
+ static int jz4760_pwm_pwm7_pins[] = { 0x6b, };
+ static int jz4760_otg_pins[] = { 0x8a, };
+-
++static int jz4760_i2s_data_tx0_pins[] = { 0x87, };
++static int jz4760_i2s_data_tx1_pins[] = { 0x8b, };
++static int jz4760_i2s_data_tx2_pins[] = { 0x8c, };
++static int jz4760_i2s_data_tx3_pins[] = { 0x8d, };
++static int jz4760_i2s_data_rx_pins[] = { 0x86, };
++static int jz4760_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
++static int jz4760_i2s_sysclk_pins[] = { 0x85, };
++
++static u8 jz4760_i2s_clk_txrx_funcs[] = { 1, 0, };
+ static u8 jz4760_uart3_data_funcs[] = { 0, 1, };
+ static u8 jz4760_mmc0_1bit_a_funcs[] = { 1, 1, 0, };
+ 
+@@ -1014,6 +1022,14 @@ static const struct group_desc jz4760_groups[] = {
+ 	INGENIC_PIN_GROUP("pwm6", jz4760_pwm_pwm6, 0),
+ 	INGENIC_PIN_GROUP("pwm7", jz4760_pwm_pwm7, 0),
+ 	INGENIC_PIN_GROUP("otg-vbus", jz4760_otg, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx0", jz4760_i2s_data_tx0, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx1", jz4760_i2s_data_tx1, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx2", jz4760_i2s_data_tx2, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx3", jz4760_i2s_data_tx3, 0),
++	INGENIC_PIN_GROUP("i2s-data-rx", jz4760_i2s_data_rx, 0),
++	INGENIC_PIN_GROUP_FUNCS("i2s-clk-txrx", jz4760_i2s_clk_txrx,
++				jz4760_i2s_clk_txrx_funcs),
++	INGENIC_PIN_GROUP("i2s-sysclk", jz4760_i2s_sysclk, 2),
+ };
+ 
+ static const char *jz4760_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
+@@ -1074,6 +1090,10 @@ static const char *jz4760_pwm5_groups[] = { "pwm5", };
+ static const char *jz4760_pwm6_groups[] = { "pwm6", };
+ static const char *jz4760_pwm7_groups[] = { "pwm7", };
+ static const char *jz4760_otg_groups[] = { "otg-vbus", };
++static const char *jz4760_i2s_groups[] = {
++	"i2s-data-tx0", "i2s-data-tx1", "i2s-data-tx2", "i2s-data-tx3",
++	"i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
++};
+ 
+ static const struct function_desc jz4760_functions[] = {
+ 	{ "uart0", jz4760_uart0_groups, ARRAY_SIZE(jz4760_uart0_groups), },
+@@ -1105,6 +1125,7 @@ static const struct function_desc jz4760_functions[] = {
+ 	{ "pwm6", jz4760_pwm6_groups, ARRAY_SIZE(jz4760_pwm6_groups), },
+ 	{ "pwm7", jz4760_pwm7_groups, ARRAY_SIZE(jz4760_pwm7_groups), },
+ 	{ "otg", jz4760_otg_groups, ARRAY_SIZE(jz4760_otg_groups), },
++	{ "i2s", jz4760_i2s_groups, ARRAY_SIZE(jz4760_i2s_groups), },
+ };
+ 
+ static const struct ingenic_chip_info jz4760_chip_info = {
+@@ -1249,6 +1270,7 @@ static int jz4770_mac_rmii_pins[] = {
+ static int jz4770_mac_mii_pins[] = {
+ 	0x7b, 0x7a, 0x7d, 0x7c, 0xa7, 0x24, 0xaf,
+ };
++static int jz4770_i2s_clk_rx_pins[] = { 0x88, 0x89, };
+ 
+ static const struct group_desc jz4770_groups[] = {
+ 	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data, 0),
+@@ -1351,6 +1373,15 @@ static const struct group_desc jz4770_groups[] = {
+ 	INGENIC_PIN_GROUP("mac-rmii", jz4770_mac_rmii, 0),
+ 	INGENIC_PIN_GROUP("mac-mii", jz4770_mac_mii, 0),
+ 	INGENIC_PIN_GROUP("otg-vbus", jz4760_otg, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx0", jz4760_i2s_data_tx0, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx1", jz4760_i2s_data_tx1, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx2", jz4760_i2s_data_tx2, 0),
++	INGENIC_PIN_GROUP("i2s-data-tx3", jz4760_i2s_data_tx3, 0),
++	INGENIC_PIN_GROUP("i2s-data-rx", jz4760_i2s_data_rx, 0),
++	INGENIC_PIN_GROUP_FUNCS("i2s-clk-txrx", jz4760_i2s_clk_txrx,
++				jz4760_i2s_clk_txrx_funcs),
++	INGENIC_PIN_GROUP("i2s-sysclk", jz4760_i2s_sysclk, 2),
++	INGENIC_PIN_GROUP("i2s-clk-rx", jz4770_i2s_clk_rx, 1),
+ };
+ 
+ static const char *jz4770_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
+@@ -1412,6 +1443,10 @@ static const char *jz4770_pwm5_groups[] = { "pwm5", };
+ static const char *jz4770_pwm6_groups[] = { "pwm6", };
+ static const char *jz4770_pwm7_groups[] = { "pwm7", };
+ static const char *jz4770_mac_groups[] = { "mac-rmii", "mac-mii", };
++static const char *jz4770_i2s_groups[] = {
++	"i2s-data-tx0", "i2s-data-tx1", "i2s-data-tx2", "i2s-data-tx3",
++	"i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk", "i2s-clk-rx",
++};
+ 
+ static const struct function_desc jz4770_functions[] = {
+ 	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
+@@ -1445,6 +1480,7 @@ static const struct function_desc jz4770_functions[] = {
+ 	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
+ 	{ "mac", jz4770_mac_groups, ARRAY_SIZE(jz4770_mac_groups), },
+ 	{ "otg", jz4760_otg_groups, ARRAY_SIZE(jz4760_otg_groups), },
++	{ "i2s", jz4770_i2s_groups, ARRAY_SIZE(jz4770_i2s_groups), },
+ };
+ 
+ static const struct ingenic_chip_info jz4770_chip_info = {
+@@ -1780,16 +1816,9 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
+ static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
+ static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
+ static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
+-static int jz4780_i2s_data_tx_pins[] = { 0x87, };
+-static int jz4780_i2s_data_rx_pins[] = { 0x86, };
+-static int jz4780_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
+-static int jz4780_i2s_clk_rx_pins[] = { 0x88, 0x89, };
+-static int jz4780_i2s_sysclk_pins[] = { 0x85, };
+ static int jz4780_dmic_pins[] = { 0x32, 0x33, };
+ static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
+ 
+-static u8 jz4780_i2s_clk_txrx_funcs[] = { 1, 0, };
+-
+ static const struct group_desc jz4780_groups[] = {
+ 	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data, 0),
+ 	INGENIC_PIN_GROUP("uart0-hwflow", jz4770_uart0_hwflow, 0),
+@@ -1878,12 +1907,12 @@ static const struct group_desc jz4780_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3, 1),
+ 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e, 1),
+ 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f, 1),
+-	INGENIC_PIN_GROUP("i2s-data-tx", jz4780_i2s_data_tx, 0),
+-	INGENIC_PIN_GROUP("i2s-data-rx", jz4780_i2s_data_rx, 0),
+-	INGENIC_PIN_GROUP_FUNCS("i2s-clk-txrx", jz4780_i2s_clk_txrx,
+-				jz4780_i2s_clk_txrx_funcs),
+-	INGENIC_PIN_GROUP("i2s-clk-rx", jz4780_i2s_clk_rx, 1),
+-	INGENIC_PIN_GROUP("i2s-sysclk", jz4780_i2s_sysclk, 2),
++	INGENIC_PIN_GROUP("i2s-data-tx", jz4760_i2s_data_tx0, 0),
++	INGENIC_PIN_GROUP("i2s-data-rx", jz4760_i2s_data_rx, 0),
++	INGENIC_PIN_GROUP_FUNCS("i2s-clk-txrx", jz4760_i2s_clk_txrx,
++				jz4760_i2s_clk_txrx_funcs),
++	INGENIC_PIN_GROUP("i2s-clk-rx", jz4770_i2s_clk_rx, 1),
++	INGENIC_PIN_GROUP("i2s-sysclk", jz4760_i2s_sysclk, 2),
+ 	INGENIC_PIN_GROUP("dmic", jz4780_dmic, 1),
+ 	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc, 0),
+ 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit, 0),
+-- 
+2.39.1
 
-Personally I use the following python modules on linux:
-https://pypi.org/project/smbus2/ https://pypi.org/project/spidev/
-
-> best,
->
->
-> PS: Gmail thought it best to reply directly to you but if you think
-> appropriate, please share your reply with the list.
->
-
-Yes, no harm in responding directly on the list.
-
-Bart
