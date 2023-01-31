@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6FC683485
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 19:00:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 122E36834C7
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 19:09:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbjAaSAJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 13:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
+        id S231297AbjAaSJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 13:09:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231589AbjAaR7q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 12:59:46 -0500
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069513A5AA
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 09:59:27 -0800 (PST)
-Received: by mail-vs1-xe33.google.com with SMTP id p10so12472552vsu.5
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 09:59:27 -0800 (PST)
+        with ESMTP id S229504AbjAaSJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 13:09:22 -0500
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C691B54D
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:09:21 -0800 (PST)
+Received: by mail-vs1-xe34.google.com with SMTP id p10so12502789vsu.5
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:09:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nezYhvde/QcQsmcpdh8Fc3+nyJY53Alil+uSN//iqfc=;
-        b=oBARWMDARYVCC3du3qKF/ZGi9W5QJgPQjl+ZMKHE8+OLLpOl9aBh/luWClybKVVucW
-         Hmo+CLyue4HJPp5ckwH/pxJY0wEbIJ1dgHwWZtq/RUqwqzZ6xjeFn5RtKtcTAcOtJYvF
-         1T1XA6R34eqtjU1TQg/A4kU8NZjSPs+x1lYUve/gnO9FuA4U9UQ2d/2kXzU0VkgBCzL7
-         6/J4MS+p6uthxITvD+FpqITq9ZFYPQktn2srJKF4QiL1GUu4Ge1Tbe7GNog0tR1o8bDq
-         at7lZrEzgTBVRuqDa0am5QtjCGgbWfVo7IvQUWqICJENLOD7hE3ecExogpo7p0J6IpT+
-         WnnQ==
+        bh=Nd3rnQKvQdyAwKsT+GUkd8tOiS36MQWuUnO0Iz/mmNw=;
+        b=CkgnWq4FumOF+VqNSEZf4xOyxPZ0fZONV9wPG/oLThzcfXbfMfHp2WF8b0SjLyCwhH
+         7vBcwL+/W/6EKrSAhH1hRsqlXkiiJ+ddQAqsCdkhHvKDrNzvO1MBo3COkxkpDbH+h+4t
+         vSmwdlASUAnkjeYxGdukjHujugnMzZ178CEkA/DYkolaYWrwO1/RUlYrnHFmAGHqBVdM
+         xU31wJhhUFwqWcLV8r2s7E7oztnc3q1BsihSfJecjD2q/eYV7SuvlW3wKzSzhgaU7g2O
+         nZq+OtMbfGos9XSBrFxwupEdnOeHqHBwlXi7SELzb9mgc6pi0adJE8gJQIQBP9Gu6UJw
+         LTow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nezYhvde/QcQsmcpdh8Fc3+nyJY53Alil+uSN//iqfc=;
-        b=u9k9oxxY3CDkZjQ8Z0AilDApACKMNWQlyDPwQDyF3A/0E4EPnbw6MGFJcm5G03NIhx
-         867/9GrLwG8WlFNydw7kEGmue6T4YK2wC3A0v4YUObMM/sH+rIbWHM3m9y/lVxqQO4py
-         en2lz2n6vO13pLzPplR0W6o7ZVb1LnE8RuhHZVsmaR4YChMXt2NCdSWKnjLl97SVxpoj
-         Dr8rt/BVhPCN8AztTscO7PjO5ve7xge8Td9Sl+a0DmK74RbdZndGSGzaG+JMouuajzoT
-         9LaWJzfylqLLqJcjXjUYr8AKzxfSWgOJAVK/JKbXmpHG74UwbXS9bSIa16r+kBiv40AM
-         YqDQ==
-X-Gm-Message-State: AO0yUKVL4gIvQpsaUY6/qmhg+zmtGmxymkss1vRTC9gPhBzHsiEcMic/
-        IBhvHpetyV2rG5fDZ2su/rlLH1pTIhQGMro9g6zgNg==
-X-Google-Smtp-Source: AK7set/fvTqyLfxAhgjiNNlx33lWP9hg6YE+vyuV5cVFQWlHaoxPwdGD9db4A0Hc1SJ/6agL3RgPlqdFaYuRj+5IOXg=
-X-Received: by 2002:a67:c793:0:b0:3fe:b46c:7889 with SMTP id
- t19-20020a67c793000000b003feb46c7889mr358996vsk.78.1675187966885; Tue, 31 Jan
- 2023 09:59:26 -0800 (PST)
+        bh=Nd3rnQKvQdyAwKsT+GUkd8tOiS36MQWuUnO0Iz/mmNw=;
+        b=pfYYDQFtTna91YbMZK4eMSRgzg/ZnyofigD9jlJBPKJf4wFh0xwtpkUjtT1riAWdj/
+         CLrbErcjLplLE53vXlpb4B4OV2CRJuKjng+HihtELfT8DdF6Rka0x0iUpxHTRv5ia0yR
+         e0jLQTTEPKeQtE7l0l+lruo2eoGPLYjXg9j5aRx3JmKKoggBexwWN6WZ9atDK1ntBhAS
+         PRdq8ePtB6sRlQhzqQkpU6mbwmTIhIKoviayXTLaaNEokWGOy3aqYyjih9aOxtavskBU
+         DZOlAYbWbrGfZQafnW9i6Gw/4eF9WwTQLxIp2Q2eIbQ4tCY3s+H6TXnQQ2Ak+cuHywhx
+         +VMw==
+X-Gm-Message-State: AO0yUKVra+cqQ55JtTKPsMrx1q8Habyhu5vUmoFPCywFHOIINW/euIVj
+        V2u7YcZ51Fkso6gdwtOE/ZFaVSmuuDEOkV+AmgP5GIsFSXq6CxoV
+X-Google-Smtp-Source: AK7set9So0Y3Umkil4SYk+rmDExI0I9H4ApA7vqyOcFLQh5sz2XnaE8zPt+HAaXg5MYFI5d5Ynm+5mouECSYvFsMIVI=
+X-Received: by 2002:a05:6102:10c1:b0:3f2:58c2:5358 with SMTP id
+ t1-20020a05610210c100b003f258c25358mr2042806vsr.62.1675188560534; Tue, 31 Jan
+ 2023 10:09:20 -0800 (PST)
 MIME-Version: 1.0
-References: <CABTDG88t8_6s0ahuEKAxXsJD1KP0OuMoS-Mqi+qoeJuHutk4Qw@mail.gmail.com>
-In-Reply-To: <CABTDG88t8_6s0ahuEKAxXsJD1KP0OuMoS-Mqi+qoeJuHutk4Qw@mail.gmail.com>
+References: <DM6PR10MB2908B13E4387EAA786CF5F0FF9C59@DM6PR10MB2908.namprd10.prod.outlook.com>
+In-Reply-To: <DM6PR10MB2908B13E4387EAA786CF5F0FF9C59@DM6PR10MB2908.namprd10.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 31 Jan 2023 18:59:16 +0100
-Message-ID: <CAMRc=MdDzBQOeH01wm-i36KCDX_CM4E9jV=+gG7BQt8-36WzFw@mail.gmail.com>
-Subject: Re: I2C, SPI, etc for libgpiod
-To:     Hank Barta <hbarta@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
+Date:   Tue, 31 Jan 2023 19:09:09 +0100
+Message-ID: <CAMRc=MczAuqzah37Jf7k3MdvNwWzhcnELWcATUA-yFMZ1L2d8g@mail.gmail.com>
+Subject: Re: libgpiod multichip bulk event wait
+To:     "Naidoo, Vernon" <Vernon.Naidoo@hidglobal.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -64,36 +64,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 5:47 PM Hank Barta <hbarta@gmail.com> wrote:
+On Fri, Jan 20, 2023 at 3:06 PM Naidoo, Vernon
+<Vernon.Naidoo@hidglobal.com> wrote:
 >
-> Hi all,
-> I've been fooling around with libgpiod on Debian (not R-Pi OS) and am
-> fairly comfortable using the APIs it provides. I haven't finished that
-> exploration yet, but looking ahead, I'm curious about usage of some of
-> the alternate GPIO capabilities aside from reading and setting inputs
-> and outputs. I haven't seen anything about those in the information I
-> find for https://libgpiod.readthedocs.io or
-> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/.
+> Good day,
 >
-> Is there support for these alternate functions or is that something on
-> someone's TODO list? Are there other libraries or APIs that I can use?
+> I'm porting some code that currently uses the gpiod_line_event_wait_bulk command, however, the new platform has the gpio spread out across multiple gpiochips. Is there a way to achieve the same functionality when waiting for events on multiple gpiochips?
 >
-> I've used WiringPi on R-Pi OS but that project seems to be foundering.
->
-> Thanks!
->
-> NB: I'm stupidly/bravely sharing my efforts in this direction at
-> https://github.com/HankB/GPIOD_Debian_Raspberry_Pi
->
-> --
-> Beautiful Sunny Winfield
+> Best Regards,
+> Vernon Naidoo
 
-Is your question: will libgpiod support other pin functions for GPIOs?
-If so then: no, it will not. It's not a tool that allows you to change
-pin settings - it merely wraps the linux character device uAPI in a
-set of functions.
-
-It's the kernel's job to do pin control and there are other user-space
-tools for I2C and SPI available, libgpiod is only for GPIOs.
+You can get the associated file descriptor for each line with
+gpiod_line_event_get_fd() and poll all of them together using poll,
+select, epoll, etc.
 
 Bart
