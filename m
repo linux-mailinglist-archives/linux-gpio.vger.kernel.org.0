@@ -2,110 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0761F682F4B
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 15:32:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14EF26832F9
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 17:47:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbjAaOci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 09:32:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33822 "EHLO
+        id S229504AbjAaQrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 11:47:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjAaOch (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 09:32:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9DE14E8F;
-        Tue, 31 Jan 2023 06:32:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 299EEB81D1A;
-        Tue, 31 Jan 2023 14:32:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A2DC4339B;
-        Tue, 31 Jan 2023 14:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675175552;
-        bh=64JB2TqJHzbLRcbZWFRXHWsvB96LNMCT5mLL4Q289KM=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=HdOdDy41bNSQS0D13xoGvq2nqSCY58YUlYwSBwkqpU5VesgzTW02x4/oVKsRqZA29
-         ZF0KpYVcSzC7zEqj/rIukYg6cKMQW/vvnCE5W6Mefi3hZ+6ldLimiV19BA9BWN3kyu
-         IVMJwGwG/kXJ5u0noasMfcfV5KO//nwJL62AsGAOaUFI+iTmQw9K+0t6Zs/empjRqB
-         r22fg4OcfhLMZJFb5AZoJAWpF9c8vKzCbRkfbQKPtUTnfGi06axPUwuwnbgF2LK5Z9
-         c+CdJg2pzje64YtAQwfAcOQ4eaHdIVNh5Y8kQtLtHhX2Oy8XRRPcawMx90TCP+4drh
-         9mzl+Rugp5Wqg==
-From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-In-Reply-To: <20230126085137.375814-1-herve.codina@bootlin.com>
-References: <20230126085137.375814-1-herve.codina@bootlin.com>
-Subject: Re: [PATCH v3 0/3] Add the Renesas IDT821034 codec support
-Message-Id: <167517554994.691025.8617744298241053162.b4-ty@kernel.org>
-Date:   Tue, 31 Jan 2023 14:32:29 +0000
+        with ESMTP id S229900AbjAaQrR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 11:47:17 -0500
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF8D14229
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 08:47:15 -0800 (PST)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-15eec491b40so20051435fac.12
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 08:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lTg6f+0h1jvRJ/j1toK0cjaXCI0vfg8Jz49I2OtGH7I=;
+        b=DCdr1pUIcQxIe9PYMsnMLDSEWQ+ig1io7/jaKoPEfP2uyUK4XCXH7lPuej1W05S4pd
+         jtB0CFKRWtRUK3d7plu+j2tG16y+eX0eWlTVCmGNUo4YqLI0oTZqS9ZUeYUzU/dpyx/C
+         9/51o5Hzhiw7QiBGkbaKSF8ftPgqAGro+ORpvt7y3UWUf23HiiwV/ix7falahK88kdoe
+         kB0uUTMo2JXvklfZXNnT/gkzV53qu1m6hhHw3bHnaylwKsI5eotW7Q71vzwdwb1r7L8t
+         bcQYpFTMScVRzZEEKyqgynxJf6SyshpaBcOlCvRsa0OpMxU8O7XT3b/4f3Q5R13YSFHt
+         2RGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lTg6f+0h1jvRJ/j1toK0cjaXCI0vfg8Jz49I2OtGH7I=;
+        b=gqccsUWZCPCiG+nFUlk77HXNsa5vel88OYyAQk3Go+t9Dex5SHBYhaMf+k8Bzjzlun
+         C29S1w79k4FOZRqWMLx9gZCSMIa0wZlX/qCNLORMyXYupjZ5AXnFiCT1YC1/tv7wAGUb
+         uHevL3xrK/OKdzjoCdSngzJ9XROZ18eQeHJu0Nr+mUDZeDCj5ZKBVLqhu/uYAJPbjpL6
+         HYlH+jDG/fOBb4ELdhCZH0hIT1rvG2sy9VtwOYG98x22/Q8LA7JBl48Ts32feVVYrbjB
+         B1bphPl4UYzj6GAK08oj+LXhvJB6xgsMD4FIcyvKzWDlm0uxWeqMSKNbmjNHbJVuoojT
+         fO6A==
+X-Gm-Message-State: AO0yUKXNT1VJwxff0N2Jmv8VtOhAKzm7E8sb2WfCQfFN23O3w+aDJF+i
+        tuEoLbaMHLpe4j51OAuQNWgcPXB1D1cnC4jyosOaOb2ibjaYtg==
+X-Google-Smtp-Source: AK7set+OlyBijlX/QaPUYnpGvshLMalNpOye3bILf+3od2u5IRIS5rzHpF6YyZsCACv1Lm6h8hiGjzieUxH9qAdk/Hg=
+X-Received: by 2002:a05:6870:2409:b0:163:925e:abb6 with SMTP id
+ n9-20020a056870240900b00163925eabb6mr1192417oap.286.1675183634613; Tue, 31
+ Jan 2023 08:47:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Hank Barta <hbarta@gmail.com>
+Date:   Tue, 31 Jan 2023 10:47:03 -0600
+Message-ID: <CABTDG88t8_6s0ahuEKAxXsJD1KP0OuMoS-Mqi+qoeJuHutk4Qw@mail.gmail.com>
+Subject: I2C, SPI, etc for libgpiod
+To:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 26 Jan 2023 09:51:34 +0100, Herve Codina wrote:
-> The Renesas IDT821034 codec is four channel PCM codec with on-chip
-> filters and programmable gain setting.
-> It also provides SLIC (Subscriber Line Interface Circuit) signals as
-> GPIOs.
-> 
-> Based on previous iteration,
->   https://lore.kernel.org/linux-kernel/20230120095036.514639-1-herve.codina@bootlin.com/
-> this v3 series mainly:
->   - Fixes _put() methods
->   - Introduces and uses idt821034_2x8bit_write()
->   - Removes the '#if IS_ENABLED(CONFIG_GPIOLIB)' conditional
-> 
-> [...]
+Hi all,
+I've been fooling around with libgpiod on Debian (not R-Pi OS) and am
+fairly comfortable using the APIs it provides. I haven't finished that
+exploration yet, but looking ahead, I'm curious about usage of some of
+the alternate GPIO capabilities aside from reading and setting inputs
+and outputs. I haven't seen anything about those in the information I
+find for https://libgpiod.readthedocs.io or
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/.
 
-Applied to
+Is there support for these alternate functions or is that something on
+someone's TODO list? Are there other libraries or APIs that I can use?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+I've used WiringPi on R-Pi OS but that project seems to be foundering.
 
 Thanks!
 
-[1/3] dt-bindings: sound: Add Renesas IDT821034 codec
-      commit: 545679837eef1819aee3868fbb9dfced9a56de02
-[2/3] ASoC: codecs: Add support for the Renesas IDT821034 codec
-      commit: e51166990e81754d2cd30593558c3ff47fa49f15
-[3/3] MAINTAINERS: add the Renesas IDT821034 codec entry
-      commit: e60259f77c46a6b4733b20f1fb44547d67302c67
+NB: I'm stupidly/bravely sharing my efforts in this direction at
+https://github.com/HankB/GPIOD_Debian_Raspberry_Pi
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+Beautiful Sunny Winfield
