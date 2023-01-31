@@ -2,79 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33FA36834DD
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 19:11:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E05F06834DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 19:11:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbjAaSLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 13:11:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
+        id S230207AbjAaSLS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 13:11:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbjAaSLC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 13:11:02 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37C05956A
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:10:38 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id x40so25433380lfu.12
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:10:38 -0800 (PST)
+        with ESMTP id S230202AbjAaSLR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 13:11:17 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1219F589A9
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:10:58 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id t18so15076091wro.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 10:10:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sgl57XiY71VeDZmuPKpv5s2hgkF2PM12zyC72R8iwDw=;
-        b=pXHl5O3JBlW2NIvTD1T9j3Dpgw9fclujIjHlFMnk8XHpqpBOWMQEnMl06FmAvZyjw8
-         QwCkZw0Fdvkkf2X6tJW8c53P1lMQnrei61fDeklDTp8jLiyCpGdyjckipCogCeXtM3+c
-         sYuVGmE0i5NFg+xmrvvD4339pqWd5edLwv1JETarCkxfA3cAKsb9bd7cyCVPNPkPDPt5
-         xo/lYKRuNxXFLuzqEAmcMG97cFGNjqKf0MjGN/7NlfD4BcywnlTJOas96eCsGNkdKHfC
-         NzrZoNqwVos2byzLbL6dgV2sN6g4+wjoW8PSUTSocOcKJXCDuPiLlsoXuWCZVDduuTm2
-         Ylyg==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XR55y+T758WKW/7ql/unBGSUjmS+PjO1DsLN5hn+c+o=;
+        b=wFScOlmQ66UJbfUzucCNVBZgKDOEdmOcFlilGIn1btSC/G2bRprLNIue8x0jnWfpbt
+         oFc50XFj2PQK9Iv9sM7qxvv554kkDrwRVcZrX4q9M3Zvjc97WLSFskiZc+JKkNHmS0CM
+         q08WRr4RieIA0v6CdjyplvgahkQ3giyalU+DH00/qz3xMR7whSo6DcV94FKtUr3yRyg5
+         vtSC+pXRJBzX/vm2RlkYDmqmCClvUahWqZpmTl/RGoufCNjhZ+DtP/+xd5Ubx9chNeV/
+         EKND1fNe3g/tbfikVj4sSGlBWwvozZCXfVUOq8a3FffclQuIjXrOVWODjmZYw0xs/4n5
+         xlRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sgl57XiY71VeDZmuPKpv5s2hgkF2PM12zyC72R8iwDw=;
-        b=bDzXY6DevypVF4IiNKzBHmSJnK3SyucNVBIt/VQJGfmVYv05fJwfE/fTtDhwoC8B8X
-         wVSjL4vWhZSNemLX3Tx2xE8Fy3JK6CI7odb4rEj+Je+dFPlucyzxYmFgkcK9knKXUV2V
-         eECfX5Wq32It+hVaJh52N2puFoO3u/Vklr398RM/lg2KyXS9HPFNlDpFaZ4ABil04dQX
-         Xm0asm00KZmW54lXoeZIXQp4QXi37JWeKphSEqetwclw6PjSHKiU+OKYK/cNn48i92Ht
-         QnPFy00Jpil2+TJN6qncGIhL5X2+IX2pQ43BTBdsFJld1H+Ha99AcQxYBB9lVWKxtboo
-         Q0zg==
-X-Gm-Message-State: AO0yUKWuYif2B3tAOkv4EjHCZltlQRL8SC3AZQzdGu0IaCYfD6nJx+WG
-        0wA7vmDzQtnJy44jRANDmEW0pCb/zveTRI9SjqRAIjCcn5Y63T4v
-X-Google-Smtp-Source: AK7set/tb3bKzAUJq6qr2c8dLg5VxSkSbmz92eF7qcgRTj1l5Ppmj64JISflXOMdtx+WD+Y4LX8vIuaAczMDB5BWTVA=
-X-Received: by 2002:ac2:5bce:0:b0:4d8:696d:6ab0 with SMTP id
- u14-20020ac25bce000000b004d8696d6ab0mr1884432lfn.152.1675188635387; Tue, 31
- Jan 2023 10:10:35 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XR55y+T758WKW/7ql/unBGSUjmS+PjO1DsLN5hn+c+o=;
+        b=vnkBjcejDCEagdYWMynPcnokoDcH2cxJhol7jqyOGuRTPzQ3JQ9/THQSuC/6kbBdXx
+         zwUrR8MFtYd0Iv7/bZNELrIy0k4JXfcNd0buMlBqDDilFHVgTyP4n+lOZAUsZlsNl8Yw
+         YWcN2xKIMKtNHtoOpbOJOYiC/g1wOs50L321yuQjKtq0hFgL0pkWpNCoeu3qQhit019V
+         1X0y/CLgJoZjTsmrh5+4cECQ7JdxhSkCAvZa3jTdBrzAeLyQB9OTMZvzLxjZFCQK4Czw
+         B1Ql5Zra9VHdx305uMM7j7OMBpzoGJD/3lK5X85GkV93EsbDV4yvmL/cwkQwTPQKIcFl
+         5W3A==
+X-Gm-Message-State: AO0yUKXh6PnZd+Pf35YaEg/rY1MDEJ+mPXWTMkvDrTllCtfgdE+QSHly
+        3jKyk5JBLD5PvOO6Pj5jHT6VKw==
+X-Google-Smtp-Source: AK7set8pyjQr13LRmtmw6G37njqFHvBxv86Suq/59K3GAyNRk+/QqH2Eh7loAx8uRvPhH/wkyo8E0A==
+X-Received: by 2002:a5d:64ee:0:b0:2bf:b7e3:7c82 with SMTP id g14-20020a5d64ee000000b002bfb7e37c82mr30857251wri.57.1675188649649;
+        Tue, 31 Jan 2023 10:10:49 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id n15-20020a5d598f000000b002bdff778d87sm16838246wri.34.2023.01.31.10.10.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Jan 2023 10:10:49 -0800 (PST)
+Message-ID: <67110788-4e9c-8a6b-0b25-ec4e9ee8d494@linaro.org>
+Date:   Tue, 31 Jan 2023 19:10:46 +0100
 MIME-Version: 1.0
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 31 Jan 2023 19:10:22 +0100
-Message-ID: <CAMRc=Me+BZRfxvE4O1Hd72-3_gaGsZ3Uu3fewQDizAEyxGsEBA@mail.gmail.com>
-Subject: [RFC] libgpiod v2.0 API review
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH V3 0/7] Add minimal boot support for IPQ9574
+Content-Language: en-US
+To:     devi priya <quic_devipriy@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
+        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+References: <20230130125528.11509-1-quic_devipriy@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230130125528.11509-1-quic_devipriy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's been long in the making but I'm mostly happy with how libgpiod v2
-turned out. I'd like to tag libgpiod v2.0-rc1 soon and then release it
-within a month. Before we carve the API and ABI in stone, I'd like to
-invite all interested parties to review the current version of the
-interface (for the C lib and all high-level language bindings).
+On 30/01/2023 13:55, devi priya wrote:
+> The IPQ9574 is Qualcomm's 802.11ax SoC for Routers,
+> Gateways and Access Points.
+> 
+> This series adds minimal board boot support for ipq9574-al02-c7 board
+> 
+> Posting V3 series, considering the previously posted version as V2
+> 
+> Changes in V3:
+> 	- Rebased on linux-next/master
+> 	- Dropped the 'dt-bindings: mmc: sdhci-msm: Document the IPQ9574
+> 	  compatible' since it is already part of the linux-next/master
+> 	- Detailed change log is added in the respective patches
+> 	- V2 can be found at
+> 	  https://lore.kernel.org/linux-arm-msm/f81e4605-9111-7f70-abb3-72067d68f8e2@quicinc.com/
 
-Let me know if there's anything that still needs adding or tweaking.
-Testing and bug-reports are appreciated as well.
+This was v1. :)
 
-Of course many thanks go out to Kent Gibson, Viresh Kumar and Andy
-Shevchenko for the hard work contributing to and testing the library.
+Best regards,
+Krzysztof
 
-Bart
