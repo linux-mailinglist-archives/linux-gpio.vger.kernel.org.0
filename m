@@ -2,83 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14EF26832F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 17:47:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99120683395
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Jan 2023 18:17:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjAaQrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 11:47:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55620 "EHLO
+        id S229651AbjAaRRY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Jan 2023 12:17:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbjAaQrR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 11:47:17 -0500
-Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF8D14229
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 08:47:15 -0800 (PST)
-Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-15eec491b40so20051435fac.12
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Jan 2023 08:47:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lTg6f+0h1jvRJ/j1toK0cjaXCI0vfg8Jz49I2OtGH7I=;
-        b=DCdr1pUIcQxIe9PYMsnMLDSEWQ+ig1io7/jaKoPEfP2uyUK4XCXH7lPuej1W05S4pd
-         jtB0CFKRWtRUK3d7plu+j2tG16y+eX0eWlTVCmGNUo4YqLI0oTZqS9ZUeYUzU/dpyx/C
-         9/51o5Hzhiw7QiBGkbaKSF8ftPgqAGro+ORpvt7y3UWUf23HiiwV/ix7falahK88kdoe
-         kB0uUTMo2JXvklfZXNnT/gkzV53qu1m6hhHw3bHnaylwKsI5eotW7Q71vzwdwb1r7L8t
-         bcQYpFTMScVRzZEEKyqgynxJf6SyshpaBcOlCvRsa0OpMxU8O7XT3b/4f3Q5R13YSFHt
-         2RGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lTg6f+0h1jvRJ/j1toK0cjaXCI0vfg8Jz49I2OtGH7I=;
-        b=gqccsUWZCPCiG+nFUlk77HXNsa5vel88OYyAQk3Go+t9Dex5SHBYhaMf+k8Bzjzlun
-         C29S1w79k4FOZRqWMLx9gZCSMIa0wZlX/qCNLORMyXYupjZ5AXnFiCT1YC1/tv7wAGUb
-         uHevL3xrK/OKdzjoCdSngzJ9XROZ18eQeHJu0Nr+mUDZeDCj5ZKBVLqhu/uYAJPbjpL6
-         HYlH+jDG/fOBb4ELdhCZH0hIT1rvG2sy9VtwOYG98x22/Q8LA7JBl48Ts32feVVYrbjB
-         B1bphPl4UYzj6GAK08oj+LXhvJB6xgsMD4FIcyvKzWDlm0uxWeqMSKNbmjNHbJVuoojT
-         fO6A==
-X-Gm-Message-State: AO0yUKXNT1VJwxff0N2Jmv8VtOhAKzm7E8sb2WfCQfFN23O3w+aDJF+i
-        tuEoLbaMHLpe4j51OAuQNWgcPXB1D1cnC4jyosOaOb2ibjaYtg==
-X-Google-Smtp-Source: AK7set+OlyBijlX/QaPUYnpGvshLMalNpOye3bILf+3od2u5IRIS5rzHpF6YyZsCACv1Lm6h8hiGjzieUxH9qAdk/Hg=
-X-Received: by 2002:a05:6870:2409:b0:163:925e:abb6 with SMTP id
- n9-20020a056870240900b00163925eabb6mr1192417oap.286.1675183634613; Tue, 31
- Jan 2023 08:47:14 -0800 (PST)
+        with ESMTP id S230146AbjAaRRX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 12:17:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C1F4A239;
+        Tue, 31 Jan 2023 09:16:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ED28CB81E20;
+        Tue, 31 Jan 2023 17:16:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99733C4339B;
+        Tue, 31 Jan 2023 17:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675185372;
+        bh=Htn9YhYSlgRXffy3rT6sfQrDIlpLGqBXlf/agXBrdjw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jd3P9INjEYDlOAf/nypZj15Bfx3IQXs0A/Bm7oulj21GQqkSV9CmHDaLE/uqqC8+Q
+         A34cwv3ogGiy4SyxiQOaOoF+URg3kNK7J1QkMv+J1MjUCPNb7pAwhv3jLsfg78gS6D
+         aeLJMPFBKnV4ntAA2+4VrIZ/n6PRCfblE7w/jeQP8R1/Il7dKHbxROF4S5Ak/NInK9
+         laX9Voh6RZP4wGrYaveQqR6XZl4xKQQ52OVktiUGv0QYqEHVA3tVH800AIE0VyjsKu
+         mk7EILMP9Y8VE0s2df5yAbsOFzEvneWmFBcN99XQbjn/7uPkUe598H25cPZCaeGg5c
+         c44wE13S3Yr7Q==
+Received: by mail-ua1-f50.google.com with SMTP id h9so1205544uag.9;
+        Tue, 31 Jan 2023 09:16:12 -0800 (PST)
+X-Gm-Message-State: AO0yUKUvL1XP9WZebacf7rBzG3rHGPU5PG3KgKsdWemHFtHqh2Po0CHx
+        1MUC/x7eZPprRBXsl4KXnjQjq+HKLc2OPn7QCg==
+X-Google-Smtp-Source: AK7set+iQsvrBKzhLDAGubPW+WjufNqDgwcRXrUNOCRmNJyXpbrbxPa1dClHjP0DYEs+SdSGeyjnL1grO5hWlrX1kjY=
+X-Received: by 2002:ab0:1603:0:b0:656:239b:8a1e with SMTP id
+ k3-20020ab01603000000b00656239b8a1emr3410737uae.58.1675185371547; Tue, 31 Jan
+ 2023 09:16:11 -0800 (PST)
 MIME-Version: 1.0
-From:   Hank Barta <hbarta@gmail.com>
-Date:   Tue, 31 Jan 2023 10:47:03 -0600
-Message-ID: <CABTDG88t8_6s0ahuEKAxXsJD1KP0OuMoS-Mqi+qoeJuHutk4Qw@mail.gmail.com>
-Subject: I2C, SPI, etc for libgpiod
-To:     linux-gpio@vger.kernel.org
+References: <cover.1674693008.git.daniel@makrotopia.org> <3f0fd0becc338eef66caeb7244c3c432b8d1ef7a.1674693008.git.daniel@makrotopia.org>
+In-Reply-To: <3f0fd0becc338eef66caeb7244c3c432b8d1ef7a.1674693008.git.daniel@makrotopia.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 31 Jan 2023 11:16:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLuMrZs-ggmT_c7Bwa6ERKAU4vDi2_QH5OzyjYbvMsREw@mail.gmail.com>
+Message-ID: <CAL_JsqLuMrZs-ggmT_c7Bwa6ERKAU4vDi2_QH5OzyjYbvMsREw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add bindings for MT7981 SoC
+To:     Daniel Golle <daniel@makrotopia.org>
+Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Edward-JW Yang <edward-jw.yang@mediatek.com>,
+        Johnson Wang <johnson.wang@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Jianhui Zhao <zhaojh329@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi all,
-I've been fooling around with libgpiod on Debian (not R-Pi OS) and am
-fairly comfortable using the APIs it provides. I haven't finished that
-exploration yet, but looking ahead, I'm curious about usage of some of
-the alternate GPIO capabilities aside from reading and setting inputs
-and outputs. I haven't seen anything about those in the information I
-find for https://libgpiod.readthedocs.io or
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/.
+On Wed, Jan 25, 2023 at 6:34 PM Daniel Golle <daniel@makrotopia.org> wrote:
+>
+> Add bindings for the MT7981 pinctrl driver. As MT7981 has most features
+> in common with MT7986 (but has a different layout in terms on pinctrl
+> and clocks), the existing mediatek,mt7986-pinctrl.yaml was used as an
+> example to create a similar document covering MT7981.
+>
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  .../pinctrl/mediatek,mt7981-pinctrl.yaml      | 475 ++++++++++++++++++
+>  1 file changed, 475 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7981-pinctrl.yaml
 
-Is there support for these alternate functions or is that something on
-someone's TODO list? Are there other libraries or APIs that I can use?
+Resending due to some header corruption:
 
-I've used WiringPi on R-Pi OS but that project seems to be foundering.
-
-Thanks!
-
-NB: I'm stupidly/bravely sharing my efforts in this direction at
-https://github.com/HankB/GPIOD_Debian_Raspberry_Pi
-
--- 
-Beautiful Sunny Winfield
+Reviewed-by: Rob Herring <robh@kernel.org>
