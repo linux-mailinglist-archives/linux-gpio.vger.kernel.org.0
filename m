@@ -2,102 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9885686EA4
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 20:07:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA169687127
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 23:45:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231597AbjBATHl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Feb 2023 14:07:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        id S230372AbjBAWpm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Feb 2023 17:45:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjBATHk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 14:07:40 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5638D11666;
-        Wed,  1 Feb 2023 11:07:39 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso4238427pju.0;
-        Wed, 01 Feb 2023 11:07:39 -0800 (PST)
+        with ESMTP id S229940AbjBAWpl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 17:45:41 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D472038B4D
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 14:45:39 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id a3so160958wrt.6
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 14:45:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sYuj6nuz7v0sjXdD2o8WMzkHE18hez9OL5tgTnqXQAk=;
-        b=nMcK9Esu/goIpRGLlr+yK1/bMm4tJnvviLs2MEWvrY6c40nNTaOyHINW1KU3h0z+8O
-         bDgyMPqH66qdR1CvqO/2Z9mVj+HqGKPxLTm6UglhB4k+24/mgsgsGZ4Pq0xRb6HLzv7v
-         IOpifSSyZazk9dY5+uMgIfdl9C+L+TL8m38vAs84I5TO/KHVH68wSWJF70maxUzr9448
-         GJySraFT9WpsyUy4I+b16eyDEmOfuTKiQCilG/e1TAsH7CF14SgIc+AzaxabCA7/4+Rs
-         b5Ic9mikaOrXoH5HEe6Y2LcAp7lDvKvQ7geUPGHbcwr7xqjtExfXApn+G+ZmmDiiSNQK
-         uQVg==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nXEg1M/8Ow65IihrBRBuML6WIDNs1pKYceWi+8rT6PE=;
+        b=qDInqtYujTo0IpmxoSiaW8ivIhtbPTHMjMQHFiUTrkQJvgGDw9nyD3Kvuo1p2aAXaR
+         e2w7d8JHOyE8bqtRS7gRpkbGqTjvKH88ZtyVyphv4L8n7ny0pv1XqJyXEei1fMC6a4EM
+         O3kviYo3Jo21H1r+SIBXtcTPlIMHRFJ/dD9i/3M/JRgIHDixrcq9AMHqLaNiHajgFMBP
+         iQYuroK/pZ+Wm0PP+imuHPHBz97BJ2Z7S9YOJ4bsEN1uT5jA6jB6dUpL6XJ8c3F45G0f
+         clmso6BDaXyj3hZjs4MfWBWRbbEahUE27DrL/wLlV+0sSoGifGUkkt54oxqwCiblSdVL
+         yipA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sYuj6nuz7v0sjXdD2o8WMzkHE18hez9OL5tgTnqXQAk=;
-        b=1r7run5v6+4X38XC/4RjVNBODmAAGWvZ9nnlC2Dgofp+jVXurAW0ggsFFYcQhBAs31
-         LhmGffDFLfiJlbOL7dWDnghjQ+nntZ28Z5e/uZndM846jQ7WrssLjRwWZft5zv0weS/p
-         oH7RjxGyTFLNHCs4+dFlvDBeI54l/J5DtKOk6R0+dUhAyETwG6zWo5b8tMY9Z0vDtGWl
-         tFmtbxwrPlstQJtwzysCJ2rtJsA4ZLYQvNPT5HDoJ1oZDnapp9sxdsfSBxm6chDN3pMa
-         v2vdX2fhMaQzrNzv1hTwJk82hIF0GU9OfGs6tFk+24XqK1qgJQCVjQgPZqCwTuqqVzk/
-         FJag==
-X-Gm-Message-State: AO0yUKW4DOLttnj4+3FWskKsqFw+qM7PQ/+7tw19SPHXm9dYFVGfaBH2
-        66t9VrTubwtxpQvJLvrO6A4=
-X-Google-Smtp-Source: AK7set+ED2oLNbgFQ9PfGXKYC/HceWqgT7wYL1GIEEu8YXSNzIaMczza1J93jht+jIhBWlGe2Sk3Rg==
-X-Received: by 2002:a17:903:246:b0:198:a715:d26d with SMTP id j6-20020a170903024600b00198a715d26dmr4962789plh.8.1675278458735;
-        Wed, 01 Feb 2023 11:07:38 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:ce3a:44de:62b3:7a4b])
-        by smtp.gmail.com with ESMTPSA id 6-20020a170902c10600b00198bc9ba510sm342625pli.71.2023.02.01.11.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 11:07:37 -0800 (PST)
-Date:   Wed, 1 Feb 2023 11:07:35 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@kernel.org>, linux-gpio@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] gpiolib: remove gpio_set_debounce
-Message-ID: <Y9q4d50lSdPn8myb@google.com>
-References: <20230127101149.3475929-1-arnd@kernel.org>
- <20230127101149.3475929-5-arnd@kernel.org>
- <Y9n8P1rP+cYyoNIH@google.com>
- <Y9qwJtOaKrgB5n+T@smile.fi.intel.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nXEg1M/8Ow65IihrBRBuML6WIDNs1pKYceWi+8rT6PE=;
+        b=j97grE7fdpRRsCr7bu2sTXuCd/lXkE9dDyHFH+1SG6pNoTvo1GUwUpjXTIdfhC7Sxv
+         7ouDaSrLYltX6hLt7sOVos8TKKt9x/pl/0Dv+V0UxTNr69b+HidPISbUN68u6VY/Xeaj
+         7KYXtHGSPbC6hXNxgIzCsNuFk4MYfBQdBck3T1nKX7X5Tou8oZukSSlWUEDyp980qBUr
+         JI2u0zArC+nRNxnHQ9dBNQidhEDSvj+5pqG3AiJSBeYlyRaAwOnEzMKLJWO9lN3cP5IE
+         Sxl3OfkQ3NLrBsNgAnOWWCJn3mhpETF+pxZ0tKnsMlZvi941ACN+rVWGZJm1mjKgriZW
+         48Yg==
+X-Gm-Message-State: AO0yUKV8O9onAjpn/AaHXT7XfiST0Th01rB/bH6XEGwRpTiKGP+M0O9M
+        ziXH3ZY3m3OeDLDXrnEyl+aQuijEv26ZW/RG+yKS+w==
+X-Google-Smtp-Source: AK7set8hlhnmbtZBx98H8ICP56Fc5lHNYHDcGn2ClEg32Z21/F1mXiNlNLipP7v0YtJ/2DJTGfai3wxLoTqjPnVhszE=
+X-Received: by 2002:adf:f94e:0:b0:2bf:edb9:78e5 with SMTP id
+ q14-20020adff94e000000b002bfedb978e5mr127102wrr.383.1675291538313; Wed, 01
+ Feb 2023 14:45:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y9qwJtOaKrgB5n+T@smile.fi.intel.com>
+References: <20230201150011.200613-1-brgl@bgdev.pl> <20230201150011.200613-2-brgl@bgdev.pl>
+ <e28c9048-635d-3936-e440-27e293501ff6@linaro.org> <CAMRc=Mc8gFpcB6k-qVmSAM0=iKHGBmGcqm3aV2xiyjWPG1wtvg@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc8gFpcB6k-qVmSAM0=iKHGBmGcqm3aV2xiyjWPG1wtvg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Feb 2023 23:45:25 +0100
+Message-ID: <CACRpkdaFCG+PHXrOTGW4ZLMSOcJvJ6eYKRO-VLds1J13OuTYJA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: describe sa8775p-tlmm
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 08:32:06PM +0200, Andy Shevchenko wrote:
-> On Tue, Jan 31, 2023 at 09:44:31PM -0800, Dmitry Torokhov wrote:
-> > On Fri, Jan 27, 2023 at 11:11:46AM +0100, Arnd Bergmann wrote:
-> 
-> ...
-> 
-> > > -	return !gpio_get_value(ts->gpio_pendown);
-> > > +	return !gpiod_get_value(ts->gpio_pendown);
-> > 
-> > No, we can not blindly do that without checking annotations on GPIOs.
-> 
-> But this is easy to fix, i.e. use raw API, no?
+On Wed, Feb 1, 2023 at 4:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Wed, Feb 1, 2023 at 4:13 PM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> >
+> > On 01/02/2023 16:00, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Add DT bindings for the TLMM controller on sa8775p platforms.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> >
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +
+> > > +    tlmm: pinctrl@f000000 {
+> > > +        compatible = "qcom,sa8775p-tlmm";
+> > > +        reg = <0xf000000 0x1000000>;
+> > > +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        gpio-controller;
+> > > +        #gpio-cells = <2>;
+> > > +        interrupt-controller;
+> > > +        #interrupt-cells = <2>;
+> > > +        gpio-ranges = <&tlmm 0 0 149>;
+> >
+> > You have 148 GPIOs, so s/149/148/.
+> >
+> > I'll fix other bindings as we have such mistake in several places.
+> >
+> >
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >
+> > Best regards,
+> > Krzysztof
+> >
+>
+> Ah, cr*p, sorry for missing it. Linus - can you change it when
+> applying? I don't want to send more noise.
 
-I'd rather not (I hope I can make this driver respect declared polarity
-at some point), so for debounce we could do:
+Of course :)
 
-	gpiod_set_debounce(gpio_to_gpiod(), ...);
-
-in ads7846 for now, and get rid of gpio_set_debounce() as a publc API.
-
-Thanks.
-
--- 
-Dmitry
+Yours,
+Linus Walleij
