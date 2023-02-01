@@ -2,139 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B9CC6864A7
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 11:47:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E616864D8
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 11:56:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232030AbjBAKrX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Feb 2023 05:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
+        id S232303AbjBAK4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Feb 2023 05:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231482AbjBAKrW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 05:47:22 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91944239;
-        Wed,  1 Feb 2023 02:47:20 -0800 (PST)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3117uhbu010480;
-        Wed, 1 Feb 2023 10:47:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=++5oz/wf4CKFYQhluK6ApEm/28aDTUiINogCA77NbaM=;
- b=Lc9Ah5p0zfe1hmtPC3rv+aEmDwb7cXTvuy1apM4ezDQPpKxq28dIiEW+HQ0OBGjXZFwo
- 5vZNsbqG9TveUxj7TQRVTrFVvJn+xoJqFsma+prjS/+6/02sWfom8qrnOIKc9a4xEY0G
- p0F1HEyPzFTnt31ZqRRCA1TZ0+uGOflNuEktL2kHE77x2HUDalP/wDZCXwBFCG4Z8VRE
- DqIY33RIV6nItTnAypxyMasmojdUxfHrQer0+rZtgz9QPTRnjoth5dqDQkKyNZl9BWB0
- P86yrnhjK2MQoSdLZNosJCVdqLJbhL0CLqbxiN1ritYfuYXWVxEyFubjFMIsQ8fieIMA Gg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nfkj3rfwm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Feb 2023 10:46:59 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 311AkwH8010347
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 1 Feb 2023 10:46:58 GMT
-Received: from [10.50.40.201] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 1 Feb 2023
- 02:46:49 -0800
-Message-ID: <8dbdc5c2-58a3-32b8-5583-b216ae51ec95@quicinc.com>
-Date:   Wed, 1 Feb 2023 16:16:46 +0530
+        with ESMTP id S232063AbjBAK4t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 05:56:49 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B54D5A815
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 02:56:48 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id h12so16886465wrv.10
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 02:56:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nl7xjwnlIFO9cTPnHakzqSLtSfVZPcvJWgfAb9UTMgg=;
+        b=yMwEZzFJds1B31S8gN6Gtf3DXOsheuyX+qdKKzQ1XkldQSxHFEm+qWlYJCE95L51pm
+         gmFplAF3bDfpnRBjiuWm7sxaIPnZNbkwY4FHvtv4KquGN8IuauXG1mTjvKXslADq7RQw
+         X7EGQSFtfGh2vS9VVUcKMXowGNKmeQbwBymnOoPl0JB7DB/3CVhBYYdJ9KyVIYEjU1yi
+         kW2WXgrylGrw4gWvwTBtJrYMFWa2aW3G9PgeRaIETAbdyNhZNnP2dp0sD158O3ieDN9V
+         ZQV6FMqiMlKV3/IaU1Zms6aVa9y7DPuxEWuOGAiPmsikz3NJhHpZlQAPW6Tbf7WiNYzX
+         nl1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nl7xjwnlIFO9cTPnHakzqSLtSfVZPcvJWgfAb9UTMgg=;
+        b=yAiXPTEIkTEnGuonBNSeU+94JnMFA128vyrhV58TqrGlQ8pThWpBSgyBVV5Zlz9Ulc
+         2pt/EGPUbUvVnn2biznRD2W8jraJgmQbzQenx3BAVZgEC+/KzQLmAPXht1mssQ/cunqi
+         A/3aLQYX+tnk9Tr1jiUkgaQCCTMj0o7PL5EHW7biMb66pXWLRD3YlyY1a8Qm4UpMvb3K
+         r02LuPGzs5j4WTCSDFnUnRy2/fbAn5MXID0cDDN0DY5okBDctO4SOAdxPzJ0kusRADpR
+         4pVNn3J+E7EYOrel7b9HN8+9BlTtSXtTjsWtm14ocbJjROPpYxTsVETjrA4b+2HTq8Wf
+         OE9Q==
+X-Gm-Message-State: AO0yUKUcUYS2AVEDXSS/avNjzWHXORqZV17CMdii74dOhqvzBFk6aHsh
+        Ng4eS+nCxEY6dXTkec4NIFweLg==
+X-Google-Smtp-Source: AK7set+KPB702v3Zc0QEXCUeeDFVfwvU1Lo9YL4UGHj4SIr90S4Y+aj9ttU3Tq07PI/5GAwPH9ZT0w==
+X-Received: by 2002:adf:fc88:0:b0:2bf:d137:9945 with SMTP id g8-20020adffc88000000b002bfd1379945mr1887395wrr.51.1675249006727;
+        Wed, 01 Feb 2023 02:56:46 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:bad9:621b:618e:38d6? ([2a01:e0a:982:cbb0:bad9:621b:618e:38d6])
+        by smtp.gmail.com with ESMTPSA id v9-20020a056000144900b002c3b2afae00sm1870583wrx.41.2023.02.01.02.56.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Feb 2023 02:56:46 -0800 (PST)
+Message-ID: <604029c8-3286-8514-ec35-6c5cb1b7a38a@linaro.org>
+Date:   Wed, 1 Feb 2023 11:56:45 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V4 6/7] arm64: dts: qcom: Add ipq9574 SoC and AL02 board
- support
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
+ binding
 Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
-References: <20230201060319.20434-1-quic_devipriy@quicinc.com>
- <20230201060319.20434-7-quic_devipriy@quicinc.com>
- <91ddc32e-0e59-fe49-b8c2-b33b962c943e@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <91ddc32e-0e59-fe49-b8c2-b33b962c943e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+ <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
+Organization: Linaro Developer Services
+In-Reply-To: <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HxSh4rYJCRBbys7ipcTXSsPvzCas8hNh
-X-Proofpoint-ORIG-GUID: HxSh4rYJCRBbys7ipcTXSsPvzCas8hNh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-01_04,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=837 clxscore=1015 priorityscore=1501
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302010093
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Heiner,
 
+On 30/01/2023 22:00, Heiner Kallweit wrote:
+> Convert Amlogic Meson pinctrl binding to yaml.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v2:
+> - consider that more than one compatible can be set
+> - remove bus part from example
+> v3:
+> - remove minItem/maxItem properties for compatible
+> ---
+>   .../pinctrl/amlogic,meson-pinctrl.yaml        | 122 ++++++++++++++++++
+>   .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
+>   2 files changed, 122 insertions(+), 94 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> 
 
-On 2/1/2023 1:07 PM, Krzysztof Kozlowski wrote:
-> On 01/02/2023 07:03, Devi Priya wrote:
->> Add initial device tree support for Qualcomm IPQ9574 SoC and AL02 board
->>
->> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
->> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
->> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->> ---
-> 
-> 
->> +
->> +		sdhc_1: mmc@7804000 {
->> +			compatible = "qcom,ipq9574-sdhci", "qcom,sdhci-msm-v5";
->> +			reg = <0x07804000 0x1000>, <0x07805000 0x1000>;
->> +			reg-names = "hc", "cqhci";
->> +
->> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "hc_irq", "pwr_irq";
->> +
->> +			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
->> +				 <&gcc GCC_SDCC1_APPS_CLK>,
->> +				 <&xo_board_clk>;
->> +			clock-names = "iface", "core", "xo";
->> +			mmc-ddr-1_8v;
->> +			mmc-hs200-1_8v;
->> +			mmc-hs400-1_8v;
->> +			mmc-hs400-enhanced-strobe;
->> +			max-frequency = <384000000>;
->> +			bus-width = <8>;
-> 
-> None of these 6 are properties of the SoC. Move them to the DTS.
-> 
-Sure, will do
+<snip>
 
-> Best regards,
-> Krzysztof
-> 
-Best Regards,
-Devi Priya
+Please send new versions as separate threads, or keep the same thread structure othwerwise
+it highly confuses humans & b4 when applying the patches...
+
+Assuming new revision: v2 ([PATCH v2] dt-bindings: pwm: Convert Amlogic Meson PWM binding)
+Assuming new revision: v4 ([PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl binding)
+Assuming new revision: v5 ([PATCH v2] dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO interrupt controller binding)
+Assuming new revision: v6 ([PATCH v3] dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO interrupt controller binding)
+Assuming new revision: v7 ([PATCH v2] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl binding)
+
+Thanks,
+Neil
+
