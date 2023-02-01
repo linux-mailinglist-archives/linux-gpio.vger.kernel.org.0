@@ -2,116 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3C36869B2
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 16:14:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C61586869CF
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 16:16:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232252AbjBAPOR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Feb 2023 10:14:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
+        id S232611AbjBAPQE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Feb 2023 10:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232004AbjBAPOF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 10:14:05 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 778146C12E
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 07:13:29 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id iv8-20020a05600c548800b003db04a0a46bso2704866wmb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 07:13:29 -0800 (PST)
+        with ESMTP id S232007AbjBAPPv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 10:15:51 -0500
+Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6877D9E
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 07:15:25 -0800 (PST)
+Received: by mail-vk1-xa2e.google.com with SMTP id q76so237284vkb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 07:15:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EoczYxoYefo3q4e07FBM/XL6+cv7m/SSyckrYjyJ2jI=;
-        b=tKqceXX1fCVRHew9rbSIswyEw480KhF951nMK1gj1DdIhvCvbgj1t6GvTU3G9iaQxH
-         iVa7e5vbdIuDNBybRTT+DyPj3ccs3A1j1+MyANhBFIIU19ON3n44XMZAwsxdOL6d2+DM
-         eULyNbAaBwUqdWooBXQj1s8/iSacT3+UUKqZlJH4U1EPKv2Rntizbvw8gE3I3MjE4kqj
-         KlqQi64oVMkjzUIgIbHqL/yM+mBOwvn1yEolssdvtRkjwIXzflL6VWj2aNuGfFJ7++tS
-         Swt11PCjQA4ugJBF5kJbRBvbUwAT59apFz0EIjtY3KseV4VKfo4unm0fyupUd5xyjnCv
-         ipjA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=P2xP6eCF3TqKX2hPAQtTqyhRnHPd6nA+ZAl9lx1s02E=;
+        b=cPd9ZK+s9OOnXPyWMp4YxzVTUmzWE5mddvFUShs3EAUOGbyfSahgZTkFtkeEfUiX12
+         pNNTxcFBD0mva/RhwyvK7Io1ueQL9HvERq/amx0mzc4NpMB0rbJx65UGb1cPDFqtV8vD
+         ySeo01oX7qk+TeOAaGW59fg4EXTrfVZc44IZkiH45LO9pG7aixZ7T9cD9wFR1mxJjjif
+         eO5UFLZpiDZPZshCPN07y60s2zdJy7AY13+65IlTLncbdxdP93yA9Fp3Moa96T4mIwgr
+         CyiCwFC701oqylACrCbaZ6AoaVp8SfP/4Moy20GuM+mZ5R6pnqvvAl9wL2hDcFj3WPhZ
+         7Qkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EoczYxoYefo3q4e07FBM/XL6+cv7m/SSyckrYjyJ2jI=;
-        b=paAA1OIzqTnTkuZ5Pu2BEHDj0VGsTYYHmRzNi9oc16pcXP7A7MD/9fWasPUcCd1pGu
-         /zz1zdWd2RNXm8G+1ubzBywhPXsJ1qWWGqp/mX+BFvD2dY55KyiBzje3lGhFYwCwl508
-         b8i5OnY5O0kQNtESrKZb5nI16a3RPWLWbhThORV8KVQDGlBxvHT0ByqTE1iWcrTlS23T
-         ev0CeBvCQ0LJOTj2Im9Q+ANI6A0xRQhpoMpsTdbBAkcwNC39HUtebiikCqoNWZcCa9Q2
-         OvfZRgHFtbE8PC8dqvxJ4dWUBOdnXxwVhip97IscJWHYzLcVSZv/DvxuxAV/bRsZqW46
-         uFDw==
-X-Gm-Message-State: AO0yUKUdBiGs65jIr7RjIupPH5O/xdgNCoK3ENntXLjk62OzCUmOJfpB
-        5EADIROACetOHeq3Hr3W6P3jag==
-X-Google-Smtp-Source: AK7set9QAWNS+grEJLKmMBdY3r/mHJMdSn6u8/EAciwP5Bos5o8XwQWXVoxusxhjfO0PYZufrwYWiw==
-X-Received: by 2002:a05:600c:b8f:b0:3da:f5e6:a320 with SMTP id fl15-20020a05600c0b8f00b003daf5e6a320mr7872902wmb.22.1675264403721;
-        Wed, 01 Feb 2023 07:13:23 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id j14-20020a05600c130e00b003df241f52e8sm861132wmf.42.2023.02.01.07.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 07:13:23 -0800 (PST)
-Message-ID: <e28c9048-635d-3936-e440-27e293501ff6@linaro.org>
-Date:   Wed, 1 Feb 2023 16:13:21 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P2xP6eCF3TqKX2hPAQtTqyhRnHPd6nA+ZAl9lx1s02E=;
+        b=Ut3RtXZcfKIY3uqAjHkNJDf6FuZ6EZL0/l+yMGirDt/mXAdXLJQpmFN6wvuWf5LxOu
+         Fs2xomLvXsuodZDucBiFurbJKfSLWtXZEQXVLSITeQDWwLyHa49GQhsGR9OjU+ARqfdT
+         xLm8VeFsL8sNvH+zRmf5sjycKnXUej51INZTxGimZQc0xjeJLxwwNXzKxbPq+Btm/wjC
+         jqCx0SujHmS6PEotxtuRDKvxLpI4KT40YxecV4D+0xmJlyVHTRbcZ7V3ssUiqNNuiACy
+         1IRF7NpiMzX4++qVYLXrLAA10HsErXYr87V1LAUI+qd3XX3X5i7e/qLLI+nk0C+tqaRY
+         TF6Q==
+X-Gm-Message-State: AO0yUKVuTjW0eKadGr9z+FlBD/noGHWa1ZXwcmM2v9NLI9BY/VU1oCum
+        3aQHQAGpQ5lcEVIqnmwHRsxFl0OKvRz2i6Q+SCLFtQ==
+X-Google-Smtp-Source: AK7set/a9n8DhEWml4oeRIbxJr7piLem7ocXP6IYnly6d6H3q6ePiYA+VD+PX3blmVuO3ebrdTGmoiIBa20h4UH/ECM=
+X-Received: by 2002:a05:6122:691:b0:3ea:22a8:aef with SMTP id
+ n17-20020a056122069100b003ea22a80aefmr383731vkq.25.1675264524773; Wed, 01 Feb
+ 2023 07:15:24 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
+References: <20230201150011.200613-1-brgl@bgdev.pl> <20230201150011.200613-2-brgl@bgdev.pl>
+ <e28c9048-635d-3936-e440-27e293501ff6@linaro.org>
+In-Reply-To: <e28c9048-635d-3936-e440-27e293501ff6@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 1 Feb 2023 16:15:13 +0100
+Message-ID: <CAMRc=Mc8gFpcB6k-qVmSAM0=iKHGBmGcqm3aV2xiyjWPG1wtvg@mail.gmail.com>
 Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: describe sa8775p-tlmm
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Gross <agross@kernel.org>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230201150011.200613-1-brgl@bgdev.pl>
- <20230201150011.200613-2-brgl@bgdev.pl>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230201150011.200613-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/02/2023 16:00, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Add DT bindings for the TLMM controller on sa8775p platforms.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Feb 1, 2023 at 4:13 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 01/02/2023 16:00, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add DT bindings for the TLMM controller on sa8775p platforms.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+>
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    tlmm: pinctrl@f000000 {
+> > +        compatible = "qcom,sa8775p-tlmm";
+> > +        reg = <0xf000000 0x1000000>;
+> > +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        interrupt-controller;
+> > +        #interrupt-cells = <2>;
+> > +        gpio-ranges = <&tlmm 0 0 149>;
+>
+> You have 148 GPIOs, so s/149/148/.
+>
+> I'll fix other bindings as we have such mistake in several places.
+>
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> Best regards,
+> Krzysztof
+>
 
+Ah, cr*p, sorry for missing it. Linus - can you change it when
+applying? I don't want to send more noise.
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    tlmm: pinctrl@f000000 {
-> +        compatible = "qcom,sa8775p-tlmm";
-> +        reg = <0xf000000 0x1000000>;
-> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        gpio-ranges = <&tlmm 0 0 149>;
-
-You have 148 GPIOs, so s/149/148/.
-
-I'll fix other bindings as we have such mistake in several places.
-
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Bart
