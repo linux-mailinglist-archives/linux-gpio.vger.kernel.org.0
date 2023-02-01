@@ -2,123 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12E616864D8
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 11:56:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F4E686978
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 16:03:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbjBAK4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Feb 2023 05:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
+        id S232759AbjBAPDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Feb 2023 10:03:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232063AbjBAK4t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 05:56:49 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B54D5A815
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 02:56:48 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id h12so16886465wrv.10
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 02:56:48 -0800 (PST)
+        with ESMTP id S232755AbjBAPDU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 10:03:20 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF63721C4
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Feb 2023 07:00:53 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso1593741wmp.3
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Feb 2023 07:00:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nl7xjwnlIFO9cTPnHakzqSLtSfVZPcvJWgfAb9UTMgg=;
-        b=yMwEZzFJds1B31S8gN6Gtf3DXOsheuyX+qdKKzQ1XkldQSxHFEm+qWlYJCE95L51pm
-         gmFplAF3bDfpnRBjiuWm7sxaIPnZNbkwY4FHvtv4KquGN8IuauXG1mTjvKXslADq7RQw
-         X7EGQSFtfGh2vS9VVUcKMXowGNKmeQbwBymnOoPl0JB7DB/3CVhBYYdJ9KyVIYEjU1yi
-         kW2WXgrylGrw4gWvwTBtJrYMFWa2aW3G9PgeRaIETAbdyNhZNnP2dp0sD158O3ieDN9V
-         ZQV6FMqiMlKV3/IaU1Zms6aVa9y7DPuxEWuOGAiPmsikz3NJhHpZlQAPW6Tbf7WiNYzX
-         nl1g==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/K9COTcFlAS0U4RierMnuwuOF33gGwaSy7WkKbceLio=;
+        b=p/mIW+z9sZEhKWaw1AJkTS2Zu7BhIw/LmqOCegv7o+hkHLMwxdO0ttGB735ElQUiP6
+         OvDw5qlRmURo5VxVWJouTgJNAg/256p2jHe+RWbexnDLiexuDxYG66z8/gmqbacg16+E
+         c7R7famAiPFfWTZIG43OUmCUmX1IluN/2c4frI54D+iP9aXOevp7rnJQM6cXHBCrvpD5
+         oZg5Uw5jO8J3BN1cfp8HjchnjjQSB1rZaZQgv6YRNT4+S/xEotguQKe6ydILMjQ9DtAS
+         kKRehybrLXynjzJrEu2Mv/UJ6zrKVwrblkPV1WSQ99YCxtSwPw3+huBfee8MQqfNPMof
+         6flg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Nl7xjwnlIFO9cTPnHakzqSLtSfVZPcvJWgfAb9UTMgg=;
-        b=yAiXPTEIkTEnGuonBNSeU+94JnMFA128vyrhV58TqrGlQ8pThWpBSgyBVV5Zlz9Ulc
-         2pt/EGPUbUvVnn2biznRD2W8jraJgmQbzQenx3BAVZgEC+/KzQLmAPXht1mssQ/cunqi
-         A/3aLQYX+tnk9Tr1jiUkgaQCCTMj0o7PL5EHW7biMb66pXWLRD3YlyY1a8Qm4UpMvb3K
-         r02LuPGzs5j4WTCSDFnUnRy2/fbAn5MXID0cDDN0DY5okBDctO4SOAdxPzJ0kusRADpR
-         4pVNn3J+E7EYOrel7b9HN8+9BlTtSXtTjsWtm14ocbJjROPpYxTsVETjrA4b+2HTq8Wf
-         OE9Q==
-X-Gm-Message-State: AO0yUKUcUYS2AVEDXSS/avNjzWHXORqZV17CMdii74dOhqvzBFk6aHsh
-        Ng4eS+nCxEY6dXTkec4NIFweLg==
-X-Google-Smtp-Source: AK7set+KPB702v3Zc0QEXCUeeDFVfwvU1Lo9YL4UGHj4SIr90S4Y+aj9ttU3Tq07PI/5GAwPH9ZT0w==
-X-Received: by 2002:adf:fc88:0:b0:2bf:d137:9945 with SMTP id g8-20020adffc88000000b002bfd1379945mr1887395wrr.51.1675249006727;
-        Wed, 01 Feb 2023 02:56:46 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:bad9:621b:618e:38d6? ([2a01:e0a:982:cbb0:bad9:621b:618e:38d6])
-        by smtp.gmail.com with ESMTPSA id v9-20020a056000144900b002c3b2afae00sm1870583wrx.41.2023.02.01.02.56.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 02:56:46 -0800 (PST)
-Message-ID: <604029c8-3286-8514-ec35-6c5cb1b7a38a@linaro.org>
-Date:   Wed, 1 Feb 2023 11:56:45 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
- binding
-Content-Language: en-US
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        bh=/K9COTcFlAS0U4RierMnuwuOF33gGwaSy7WkKbceLio=;
+        b=RH6afnR5rvQEvxcgAlL1/r/ke05qu3njc7VE9ujEa85laDRQiFrXN7nVeBwOh+RC3M
+         AxSyKtZnpvqk45fgQzuC/IBAiqnc2LQkza7LmqsaDweVeHF8YcnzVUkndA8D1plMzAmW
+         YRGW8idh/IYP9acXd7JX2EHoytO1i4X6aAtdf5E59bvUZAKOU+LPUmRMWmNdrV+Dt1RW
+         jE5gE4IjGLcx3AFsLbph1jVXDS+fVLSLqwrgQI36FklzLA7U3ng7cP2/PvT4H7yVOF2V
+         H7PtXbNZUxyR/n+qUdhOpzcdffJuI6FKqpbfUqNpoXq4SrYHgoHH6C73baNeeQG1+PPS
+         pNow==
+X-Gm-Message-State: AO0yUKWF79QokVRGEXLUyecDlgPbXeVZ96xVIvI8Kz08nFqyIBU8dBOt
+        zQWmhN01HuenwEwQJKtbfbvfjQ==
+X-Google-Smtp-Source: AK7set+cvxx+A6u/0XIDpmD66fIdcV03aPZBVGL7pbpgTOBCfVDRoPJBj2UYfsJh0iTd/FCBVR28dQ==
+X-Received: by 2002:a7b:cd17:0:b0:3db:14d0:65be with SMTP id f23-20020a7bcd17000000b003db14d065bemr2277347wmj.34.1675263617793;
+        Wed, 01 Feb 2023 07:00:17 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d64:a4e6:40a8:8e69])
+        by smtp.gmail.com with ESMTPSA id f28-20020a5d58fc000000b002be5401ef5fsm18063754wrd.39.2023.02.01.07.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Feb 2023 07:00:17 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
- <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v3 0/2] pinctrl: qcom: add dt-bindings and driver for sa8775p-tlmm
+Date:   Wed,  1 Feb 2023 16:00:09 +0100
+Message-Id: <20230201150011.200613-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Heiner,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 30/01/2023 22:00, Heiner Kallweit wrote:
-> Convert Amlogic Meson pinctrl binding to yaml.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> v2:
-> - consider that more than one compatible can be set
-> - remove bus part from example
-> v3:
-> - remove minItem/maxItem properties for compatible
-> ---
->   .../pinctrl/amlogic,meson-pinctrl.yaml        | 122 ++++++++++++++++++
->   .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
->   2 files changed, 122 insertions(+), 94 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
->   delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> 
+This series contains the device-tree bindings and the pinctrl driver for the
+SA8775P platforms.
 
-<snip>
+v2 -> v3 (Changes in DT bindings only)
+- fix the gpio pattern property (platform has 148 GPIOs)
+- add blank lines for better readability
 
-Please send new versions as separate threads, or keep the same thread structure othwerwise
-it highly confuses humans & b4 when applying the patches...
+v1 -> v2:
+- squash several functions into bigger groups
+- fixed the emacX_ptp functions (they were generated automatically and the
+  script made two separate functions into one)
+- fixed the compatible and DT bindings examples
+- added missing DT properties
+- made sure the bindings pass tests
+- coding style fixes in the driver
 
-Assuming new revision: v2 ([PATCH v2] dt-bindings: pwm: Convert Amlogic Meson PWM binding)
-Assuming new revision: v4 ([PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl binding)
-Assuming new revision: v5 ([PATCH v2] dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO interrupt controller binding)
-Assuming new revision: v6 ([PATCH v3] dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO interrupt controller binding)
-Assuming new revision: v7 ([PATCH v2] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl binding)
+Bartosz Golaszewski (1):
+  dt-bindings: pinctrl: describe sa8775p-tlmm
 
-Thanks,
-Neil
+Yadu MG (1):
+  pinctrl: qcom: add the tlmm driver sa8775p platforms
+
+ .../bindings/pinctrl/qcom,sa8775p-tlmm.yaml   |  138 ++
+ drivers/pinctrl/qcom/Kconfig                  |    9 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c        | 1537 +++++++++++++++++
+ 4 files changed, 1685 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sa8775p.c
+
+-- 
+2.37.2
 
