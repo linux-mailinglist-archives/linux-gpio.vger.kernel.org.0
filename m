@@ -2,231 +2,310 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EF76685D0B
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 03:06:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B65685F0F
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Feb 2023 06:38:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbjBACGv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Jan 2023 21:06:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39854 "EHLO
+        id S230009AbjBAFiS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Feb 2023 00:38:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjBACGu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Jan 2023 21:06:50 -0500
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC9244B75C;
-        Tue, 31 Jan 2023 18:06:49 -0800 (PST)
-Received: by mail-ot1-f48.google.com with SMTP id v24-20020a05683011d800b0068bdd29b160so1592476otq.13;
-        Tue, 31 Jan 2023 18:06:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y0haGgSjCQMn2MiEVJmkIrDh7Syiy8FDFeByatBgAR8=;
-        b=VGrxoGm+sJMxzT9a9qswxLbOVJ3g7aHkwSrVl/Jk60TozfCNN/UZlIFXTn2RIW5h2i
-         AIGlmyRbS1sTeLXtAJZnDT1AmTAnroFvhg50kY8NS6eCsoWu1djXpDHpwbcoHlRZ5Blq
-         fIbkF3fg9kM2eV3hPf31HQ54m7+0je4SBzu15SWR7HKb8CeDAikEqbOSasPVZB/XfJ8Y
-         DxEWEpm61/h3jG6vl82o5dhRPIbsaBNMAlu2Tp9656y5JpPX2b/fy/5YxcXjAZSBVoqY
-         gWB9CNOAOf5sLJW7rt8dmQoZJt3bv7ZdMoHLr32ZnIKez7C37PMuU/mCC91tEk5oOT8W
-         wrSA==
-X-Gm-Message-State: AO0yUKU0K+Ap/TCFmUsX5Lw+wQHqvQ9cC1Ojto8lfxSEUUnB4pf1p33n
-        RLiO7Vj3H0QrOgGMUk8FGQ==
-X-Google-Smtp-Source: AK7set+4sb6nd6xIFd8MNV2tpKeR+7ihkEbAnwX5fpcAMz2dbi13lkSweEjyzomzaewFwqAsqRmAyg==
-X-Received: by 2002:a05:6830:30a5:b0:68b:d40e:e21f with SMTP id g37-20020a05683030a500b0068bd40ee21fmr384560ots.34.1675217208900;
-        Tue, 31 Jan 2023 18:06:48 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id f88-20020a9d03e1000000b0068bcadcad5bsm4181956otf.57.2023.01.31.18.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Jan 2023 18:06:48 -0800 (PST)
-Received: (nullmailer pid 2321407 invoked by uid 1000);
-        Wed, 01 Feb 2023 02:06:47 -0000
-Date:   Tue, 31 Jan 2023 20:06:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
- binding
-Message-ID: <20230201020647.GA2318275-robh@kernel.org>
-References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
- <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
+        with ESMTP id S229488AbjBAFiQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Feb 2023 00:38:16 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C752F7B6;
+        Tue, 31 Jan 2023 21:38:14 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3114hBtr026763;
+        Wed, 1 Feb 2023 05:37:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=PyOBXszOi5f70yjy1+vveBqK67JgpijjFqZ06K00oFU=;
+ b=aEwcwVYQYO/oppWM6VzcbWO4EEm2qrdPwYBcAgehdY7R4o3FR8s6GNeBBhRSnHewfnuC
+ Wc9zt69vt9mPPF+G5MixIDbY+gB0lq6BXrbbGdggX38bKkt3qlRU/deeg47bsFwuC9vY
+ ZY+Rs9hT7ErqtPVq+JYeJ6hNOtJ3pviZsyWu4nNhkmIHxZXEFRkukPCaPCT94zRN5itW
+ ZGHCUS8LF10Dgx+OS0JsMyJAhB58oRD28m4hkDOAeY8QmSyVqg5123Fz0+O1Zi40VfBB
+ sA7ATXjaLFZ5RgSfWAzQptzb9bjEvVuCiqG6dhkDvvKLgA+HTyzhVZrZRnIif++uOz0W qg== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nfbyq0s5v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Feb 2023 05:37:54 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3115brFW008466
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 1 Feb 2023 05:37:53 GMT
+Received: from [10.50.28.88] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 31 Jan
+ 2023 21:37:46 -0800
+Message-ID: <038b0f5a-5be1-bb90-80f0-29203ad7c0f0@quicinc.com>
+Date:   Wed, 1 Feb 2023 11:07:43 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <285b7b4b-4fd4-be5f-266c-96b1ee6f4cbf@gmail.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH V2 8/9] arm64: dts: qcom: add IPQ5332 SoC and MI01.2 board
+ support
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <dmitry.baryshkov@linaro.org>, <marcel.ziswiler@toradex.com>,
+        <nfraprado@collabora.com>, <robimarko@gmail.com>,
+        <quic_gurus@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20230130114702.20606-1-quic_kathirav@quicinc.com>
+ <20230130114702.20606-9-quic_kathirav@quicinc.com>
+ <1d8777f7-ec11-b68c-629e-b17d5772396b@linaro.org>
+Content-Language: en-US
+From:   Kathiravan T <quic_kathirav@quicinc.com>
+In-Reply-To: <1d8777f7-ec11-b68c-629e-b17d5772396b@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: bLZYQBKJ1E3-qY6vaLMMen9jAyYbuSyk
+X-Proofpoint-GUID: bLZYQBKJ1E3-qY6vaLMMen9jAyYbuSyk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-01_02,2023-01-31_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 mlxscore=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2302010047
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 10:00:24PM +0100, Heiner Kallweit wrote:
-> Convert Amlogic Meson pinctrl binding to yaml.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> v2:
-> - consider that more than one compatible can be set
-> - remove bus part from example
-> v3:
-> - remove minItem/maxItem properties for compatible
-> ---
->  .../pinctrl/amlogic,meson-pinctrl.yaml        | 122 ++++++++++++++++++
->  .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
->  2 files changed, 122 insertions(+), 94 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
-> new file mode 100644
-> index 000000000..7aaae606b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
-> @@ -0,0 +1,122 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic Meson pinmux controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <neil.armstrong@linaro.org>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - amlogic,meson8-cbus-pinctrl
-> +              - amlogic,meson8b-cbus-pinctrl
-> +              - amlogic,meson8m2-cbus-pinctrl
-> +              - amlogic,meson8-aobus-pinctrl
-> +              - amlogic,meson8b-aobus-pinctrl
-> +              - amlogic,meson8m2-aobus-pinctrl
-> +              - amlogic,meson-gxbb-periphs-pinctrl
-> +              - amlogic,meson-gxbb-aobus-pinctrl
-> +              - amlogic,meson-gxl-periphs-pinctrl
-> +              - amlogic,meson-gxl-aobus-pinctrl
-> +              - amlogic,meson-axg-periphs-pinctrl
-> +              - amlogic,meson-axg-aobus-pinctrl
-> +              - amlogic,meson-g12a-periphs-pinctrl
-> +              - amlogic,meson-g12a-aobus-pinctrl
-> +              - amlogic,meson-a1-periphs-pinctrl
-> +              - amlogic,meson-s4-periphs-pinctrl
-> +      - items:
-> +          - const: amlogic,meson8m2-aobus-pinctrl
-> +          - const: amlogic,meson8-aobus-pinctrl
-> +      - items:
-> +          - const: amlogic,meson8m2-cbus-pinctrl
-> +          - const: amlogic,meson8-cbus-pinctrl
 
-Again, can't have both with and without the fallback allowed.
+On 1/30/2023 5:55 PM, Konrad Dybcio wrote:
+>
+> On 30.01.2023 12:47, Kathiravan Thirumoorthy wrote:
+>> From: Kathiravan T <quic_kathirav@quicinc.com>
+>>
+>> Add initial device tree support for the Qualcomm IPQ5332 SoC and
+>> MI01.2 board.
+>>
+>> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
+>> ---
+> [...]
+>
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		tz_mem: tz@4a600000 {
+>> +			no-map;
+>> +			reg = <0x0 0x4a600000 0x0 0x200000>;
+> reg should come before no-map
 
-> +
-> +  ranges: true
-> +
-> +  "#address-cells":
-> +    enum: [1, 2]
-> +
-> +  "#size-cells":
-> +    enum: [1, 2]
-> +
-> +required:
-> +  - compatible
-> +  - ranges
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties:
-> +  anyOf:
 
-Don't need anyOf.
+Ack. Will fix it in V3.
 
-> +    - type: object
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
-> +patternProperties:
-> +  "^bank@[0-9]$":
 
-Unit addresses are hex.
+>
+>
+>> +		};
+>> +	};
+>> +
+>> +	soc@0 {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0 0 0 0xffffffff>;
+>> +
+>> +		tlmm: pinctrl@1000000 {
+>> +			compatible = "qcom,ipq5332-tlmm";
+>> +			reg = <0x01000000 0x300000>;
+>> +			interrupts = <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>;
+>> +			gpio-controller;
+>> +			#gpio-cells = <2>;
+>> +			gpio-ranges = <&tlmm 0 0 53>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <2>;
+>> +
+>> +			serial_0_pins: serial0-state {
+>> +				pins = "gpio18", "gpio19";
+>> +				function = "blsp0_uart0";
+>> +				drive-strength = <8>;
+>> +				bias-pull-up;
+>> +			};
+>> +		};
+>> +
+>> +		gcc: clock-controller@1800000 {
+>> +			compatible = "qcom,ipq5332-gcc";
+>> +			reg = <0x01800000 0x80000>;
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +			#power-domain-cells = <1>;
+>> +			clock-names = "xo",
+>> +				      "sleep_clk",
+>> +				      "pcie_2lane_phy_pipe_clk",
+>> +				      "pcie_2lane_phy_pipe_clk_x1",
+>> +				      "usb_pcie_wrapper_pipe_clk";
+>> +			clocks = <&xo_board>,
+>> +				 <&sleep_clk>,
+>> +				 <0>,
+>> +				 <0>,
+>> +				 <0>;
+>> +		};
+>> +
+>> +		sdhc: mmc@7804000 {
+>> +			compatible = "qcom,ipq5332-sdhci", "qcom,sdhci-msm-v5";
+>> +			reg = <0x07804000 0x1000>, <0x07805000 0x1000>;
+>> +
+>> +			interrupts = <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "hc_irq", "pwr_irq";
+>> +
+>> +			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
+>> +				 <&gcc GCC_SDCC1_APPS_CLK>,
+>> +				 <&xo_board>;
+>> +			clock-names = "iface", "core", "xo";
+>> +			mmc-ddr-1_8v;
+>> +			mmc-hs200-1_8v;
+>> +			max-frequency = <192000000>;
+>> +			bus-width = <4>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		blsp1_uart0: serial@78af000 {
+>> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>> +			reg = <0x078af000 0x200>;
+>> +			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
+>> +				 <&gcc GCC_BLSP1_AHB_CLK>;
+>> +			clock-names = "core", "iface";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		intc: interrupt-controller@b000000 {
+>> +			compatible = "qcom,msm-qgic2";
+>> +			reg = <0x0b000000 0x1000>,	/* GICD */
+>> +			      <0x0b002000 0x1000>,	/* GICC */
+>> +			      <0x0b001000 0x1000>,	/* GICH */
+>> +			      <0x0b004000 0x1000>;	/* GICV */
+>> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges = <0 0x0b00c000 0x3000>;
+>> +
+>> +			v2m0: v2m@0 {
+>> +				compatible = "arm,gic-v2m-frame";
+>> +				reg = <0x00000000 0xffd>;
+>> +				msi-controller;
+>> +			};
+>> +
+>> +			v2m1: v2m@1 {
+>> +				compatible = "arm,gic-v2m-frame";
+>> +				reg = <0x00001000 0xffd>;
+> The unit address does not match the address part of the reg
+> property, dtbs_check will not succeed..
 
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minItems: 5
-> +        maxItems: 5
-> +
-> +      reg-names:
-> +        items:
-> +          - const: gpio
-> +          - const: pull
-> +          - const: pull-enable
-> +          - const: mux
-> +          - const: ds
-> +
-> +      gpio-controller: true
-> +
-> +      "#gpio-cells":
-> +        const: 2
-> +
-> +      gpio-ranges:
-> +        $ref: /schemas/types.yaml#/definitions/phandle
 
-Wrong type and gpio-ranges already has a type.
+Thanks, will update the node name accordingly in V3. AFAIR, I didn't see 
+any dtbs_check warning. Let me cross check it again.
 
-> +
-> +    required:
-> +      - reg
-> +      - reg-names
-> +      - gpio-controller
-> +      - "#gpio-cells"
-> +      - gpio-ranges
-> +
-> +examples:
-> +  - |
-> +    pinctrl {
-> +      compatible = "amlogic,meson-g12a-periphs-pinctrl";
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges;
-> +
-> +      bank@40 {
-> +        reg = <0x0 0x40  0x0 0x4c>,
-> +              <0x0 0xe8  0x0 0x18>,
-> +              <0x0 0x120 0x0 0x18>,
-> +              <0x0 0x2c0 0x0 0x40>,
-> +              <0x0 0x340 0x0 0x1c>;
-> +        reg-names = "gpio", "pull", "pull-enable", "mux", "ds";
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&periphs_pinctrl 0 0 86>;
-> +      };
-> +
-> +      cec_ao_a_h_pins: cec_ao_a_h {
-> +        mux {
-> +          groups = "cec_ao_a_h";
-> +          function = "cec_ao_a_h";
-> +          bias-disable;
-> +        };
-> +      };
-> +    };
+
+>
+> The rest lgtm
+
+
+Thanks a lot for the review!
+
+
+>
+> Konrad
+>> +				msi-controller;
+>> +			};
+>> +
+>> +			v2m2: v2m@2 {
+>> +				compatible = "arm,gic-v2m-frame";
+>> +				reg = <0x00002000 0xffd>;
+>> +				msi-controller;
+>> +			};
+>> +		};
+>> +
+>> +		timer@b120000 {
+>> +			compatible = "arm,armv7-timer-mem";
+>> +			reg = <0x0b120000 0x1000>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +
+>> +			frame@b120000 {
+>> +				reg = <0x0b121000 0x1000>,
+>> +				      <0x0b122000 0x1000>;
+>> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <0>;
+>> +			};
+>> +
+>> +			frame@b123000 {
+>> +				reg = <0x0b123000 0x1000>;
+>> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <1>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b124000 {
+>> +				reg = <0x0b124000 0x1000>;
+>> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <2>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b125000 {
+>> +				reg = <0x0b125000 0x1000>;
+>> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <3>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b126000 {
+>> +				reg = <0x0b126000 0x1000>;
+>> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <4>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b127000 {
+>> +				reg = <0x0b127000 0x1000>;
+>> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <5>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			frame@b128000 {
+>> +				reg = <0x0b128000 0x1000>;
+>> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+>> +				frame-number = <6>;
+>> +				status = "disabled";
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv8-timer";
+>> +		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +	};
+>> +};
