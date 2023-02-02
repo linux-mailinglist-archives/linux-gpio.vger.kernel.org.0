@@ -2,152 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB825687F07
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 14:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53305687F0E
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 14:47:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231868AbjBBNog (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 08:44:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
+        id S231661AbjBBNrh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 08:47:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbjBBNog (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 08:44:36 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E74179232
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 05:44:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675345475; x=1706881475;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GVuhfM7Ht0W02YrRD7N/to9p624Ypq8AMPrIhI9doUc=;
-  b=hFSYs8osT1oM7AYhX41SuLuf2/XuaVLmbJpyBu28uGaTMtj9Fl4NJ6P1
-   FJBOvq6Ls0ydffYmtjBEYWq/ikgHS1kA8JUNJcjihEqJHIRteXmTggI72
-   SwSVB5P78QnW4+YSlukCM0sgY0Up/nYK1J7t8A2T8s7rdn8WfBki27nB2
-   V36W5cpt/qbpPoPFZUBgE6OFpUIJ+c8Z1/+36akRE17E9bIb3cC60bK2s
-   rBCdbkgBtxKJVKgcAoLEeBe4j3/EcDhhOuP+4VjAlpM4xxrPIqQlKQtds
-   ixZ33x1d/wm4a8uH+4TEu4A61fACzpcpoIZxvVi9oogJBgzzIYcXYU3RD
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="316444035"
-X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="316444035"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 05:44:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="773885361"
-X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="773885361"
-Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Feb 2023 05:44:33 -0800
-Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pNZtA-0006YW-2i;
-        Thu, 02 Feb 2023 13:44:32 +0000
-Date:   Thu, 02 Feb 2023 21:44:02 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 4b6b185599273ecf980e3892006a7a29c5ad653b
-Message-ID: <63dbbe22.es7dSEjrhzr7xAIl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232052AbjBBNrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 08:47:37 -0500
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC058FB6B
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 05:47:22 -0800 (PST)
+Received: by mail-vk1-xa30.google.com with SMTP id v81so892011vkv.5
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 05:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=j4oCXdup8n6v8+NV1Y2tr9d5t5xzk71vogTRfgmjQAo=;
+        b=1e4Nqng+igmZ/sjJvxRnooaGcY+pPB2sg/FxoprfRpsjC5cQW8IZFzHDJJAbwwaY78
+         4NplP5dAh0zX4BcyTqf6pG1twOZPFll0xuyW6ikhN3RiLlVbWs/ko8SgrK7gGN1v49TS
+         trjUctTtWZ+98Uvm6w1ywzwfQOAmW2FspORdBESQdAYv3+WOuPD3Ckw5HjqNggqJiLO0
+         aTot93GIXsE/VprawkW07yqvz7UdANVnaDD8sMdpwKSHByyF/ittLdo3AAu6ws3Zbgoc
+         lejTDW61JzTbRqsDEyRipHtceS0DhEdebaVBX89rgNnj9qIlb9HG8r8W14q9JJlvQdGz
+         aYvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j4oCXdup8n6v8+NV1Y2tr9d5t5xzk71vogTRfgmjQAo=;
+        b=hcJWTNoct/sK6RTZf1lJBu91LifCvb/7KphO7N2OVGrUo/dP8QWRaD2PKbwQumvPtc
+         PvGVSE4ioVhU2k2+rNRzQi7uAZTqJ5nCX0rg+y85x6c/iazdmzDVgLjaQwXJfZmjL3xL
+         owwClHh1BLJolPVjA6hXWQxg9904oqj+J0CUveHlkLQIKdADII4pYzhACXJdOes3RG7b
+         FPTSi6rdaxUCXkmfIJ5XL/svhYzIln8po4UssqsUv8bS6iunhI2mxZcjE+4ZB771cyJv
+         qMmHrQ+wchW6dXtvjMxvSA9KJOOv5Trf6XtmwAcJr55iP9FBTz0k5N+e7fXi0+pJnhDg
+         o8WQ==
+X-Gm-Message-State: AO0yUKWqO0KjafMeCPdHycXnErYwUQpDW6+Z/A4RZmMbI4IWVudj7iRi
+        0fd6K4PhAHFQZlsOsBt76MmOBCA0Q2vJA26GPl19wg==
+X-Google-Smtp-Source: AK7set9hPhIWcpZYmygU9JQRV/1iD1bXGVCi4ox3CXAnd/nPJK3j3mhMIvfPBqdsldpRjnsmjXk2Q0qfO2TpUHdjtcE=
+X-Received: by 2002:a05:6122:1688:b0:3e1:db78:6cd9 with SMTP id
+ 8-20020a056122168800b003e1db786cd9mr909715vkl.25.1675345641149; Thu, 02 Feb
+ 2023 05:47:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230201150011.200613-1-brgl@bgdev.pl> <CACRpkdYEQkxEJ23Xt4hjwu3Jxct-QXZktdzze5Pf6SBNYj80Fg@mail.gmail.com>
+ <CAMRc=MdDwSi+DDJmn3Yrnh5m8EK5EJEfLrejXHN0+0k41DKx3w@mail.gmail.com> <CACRpkdbLjcGUvycX9p=hYjMwS6UJOkUTOJvbEcNtddx5mnbSuQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbLjcGUvycX9p=hYjMwS6UJOkUTOJvbEcNtddx5mnbSuQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 2 Feb 2023 14:47:10 +0100
+Message-ID: <CAMRc=Me2wQTvx83nZSuaiagO3Z02Q55p6u1pXKnx9LkF10OY1g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pinctrl: qcom: add dt-bindings and driver for sa8775p-tlmm
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 4b6b185599273ecf980e3892006a7a29c5ad653b  pinctrl: qcom: add the tlmm driver sa8775p platforms
+On Thu, Feb 2, 2023 at 1:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Thu, Feb 2, 2023 at 9:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Wed, Feb 1, 2023 at 11:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > >
+> > > On Wed, Feb 1, 2023 at 4:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > This series contains the device-tree bindings and the pinctrl driver for the
+> > > > SA8775P platforms.
+> > > >
+> > > > v2 -> v3 (Changes in DT bindings only)
+> > > > - fix the gpio pattern property (platform has 148 GPIOs)
+> > > > - add blank lines for better readability
+> > >
+> > > v3 patch set applied, fixing the 149->148 number in the example
+> > > in patch 1!
+> > >
+> >
+> > Thanks! Seems like only patch 1/2 got into your branch?
+>
+> That's confusing, it looks to me like they are both there?
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+>
+> Isn't "pinctrl: qcom: add the tlmm driver sa8775p platforms" patch 2/2?
+>
 
-elapsed time: 864m
+Strange, didn't see it there before. Anyway, thanks a lot!
 
-configs tested: 70
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                            allnoconfig
-arc                                 defconfig
-powerpc                           allnoconfig
-um                             i386_defconfig
-alpha                               defconfig
-um                           x86_64_defconfig
-s390                                defconfig
-x86_64               randconfig-a001-20230130
-i386                          randconfig-a001
-s390                             allmodconfig
-i386                          randconfig-a003
-x86_64               randconfig-a003-20230130
-x86_64               randconfig-a004-20230130
-i386                          randconfig-a005
-x86_64               randconfig-a002-20230130
-x86_64               randconfig-a006-20230130
-s390                             allyesconfig
-x86_64               randconfig-a005-20230130
-ia64                             allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-bpf
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-i386                             allyesconfig
-i386                                defconfig
-i386                 randconfig-a003-20230130
-i386                 randconfig-a001-20230130
-i386                 randconfig-a004-20230130
-i386                 randconfig-a006-20230130
-i386                 randconfig-a002-20230130
-i386                 randconfig-a005-20230130
-i386                          randconfig-c001
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64               randconfig-a014-20230130
-x86_64               randconfig-a012-20230130
-x86_64               randconfig-a013-20230130
-x86_64               randconfig-a011-20230130
-x86_64               randconfig-a015-20230130
-x86_64               randconfig-a016-20230130
-x86_64                        randconfig-k001
-i386                 randconfig-a014-20230130
-i386                 randconfig-a013-20230130
-i386                 randconfig-a015-20230130
-i386                 randconfig-a016-20230130
-i386                 randconfig-a012-20230130
-i386                 randconfig-a011-20230130
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Bart
