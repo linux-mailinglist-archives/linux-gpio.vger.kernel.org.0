@@ -2,104 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53305687F0E
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 14:47:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1259B688115
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 16:06:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231661AbjBBNrh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 08:47:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
+        id S229916AbjBBPG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 10:06:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232052AbjBBNrh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 08:47:37 -0500
-Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC058FB6B
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 05:47:22 -0800 (PST)
-Received: by mail-vk1-xa30.google.com with SMTP id v81so892011vkv.5
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 05:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j4oCXdup8n6v8+NV1Y2tr9d5t5xzk71vogTRfgmjQAo=;
-        b=1e4Nqng+igmZ/sjJvxRnooaGcY+pPB2sg/FxoprfRpsjC5cQW8IZFzHDJJAbwwaY78
-         4NplP5dAh0zX4BcyTqf6pG1twOZPFll0xuyW6ikhN3RiLlVbWs/ko8SgrK7gGN1v49TS
-         trjUctTtWZ+98Uvm6w1ywzwfQOAmW2FspORdBESQdAYv3+WOuPD3Ckw5HjqNggqJiLO0
-         aTot93GIXsE/VprawkW07yqvz7UdANVnaDD8sMdpwKSHByyF/ittLdo3AAu6ws3Zbgoc
-         lejTDW61JzTbRqsDEyRipHtceS0DhEdebaVBX89rgNnj9qIlb9HG8r8W14q9JJlvQdGz
-         aYvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j4oCXdup8n6v8+NV1Y2tr9d5t5xzk71vogTRfgmjQAo=;
-        b=hcJWTNoct/sK6RTZf1lJBu91LifCvb/7KphO7N2OVGrUo/dP8QWRaD2PKbwQumvPtc
-         PvGVSE4ioVhU2k2+rNRzQi7uAZTqJ5nCX0rg+y85x6c/iazdmzDVgLjaQwXJfZmjL3xL
-         owwClHh1BLJolPVjA6hXWQxg9904oqj+J0CUveHlkLQIKdADII4pYzhACXJdOes3RG7b
-         FPTSi6rdaxUCXkmfIJ5XL/svhYzIln8po4UssqsUv8bS6iunhI2mxZcjE+4ZB771cyJv
-         qMmHrQ+wchW6dXtvjMxvSA9KJOOv5Trf6XtmwAcJr55iP9FBTz0k5N+e7fXi0+pJnhDg
-         o8WQ==
-X-Gm-Message-State: AO0yUKWqO0KjafMeCPdHycXnErYwUQpDW6+Z/A4RZmMbI4IWVudj7iRi
-        0fd6K4PhAHFQZlsOsBt76MmOBCA0Q2vJA26GPl19wg==
-X-Google-Smtp-Source: AK7set9hPhIWcpZYmygU9JQRV/1iD1bXGVCi4ox3CXAnd/nPJK3j3mhMIvfPBqdsldpRjnsmjXk2Q0qfO2TpUHdjtcE=
-X-Received: by 2002:a05:6122:1688:b0:3e1:db78:6cd9 with SMTP id
- 8-20020a056122168800b003e1db786cd9mr909715vkl.25.1675345641149; Thu, 02 Feb
- 2023 05:47:21 -0800 (PST)
+        with ESMTP id S232096AbjBBPGN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 10:06:13 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6D641081
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 07:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675350372; x=1706886372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=E+wGx5zRDu7tKAFP+EfF6mWhZurTm9hj8VJCLSbRA9c=;
+  b=b7NRgNw0JJwDZO2RSFUYL78AcwzY3NT1e+VMQIfOG6VD9TaS4f59k7gt
+   YJvz218x3IrAUZUBVivC6YtNbFMreZLe5JINRP2by0qHWlOubXmMq5x/a
+   +QEnYHxOvY3Qwc2pqmbXetVgLK3UHnY3q0rMXbo4su6U9+MyLxd/ct4eL
+   EI//n13mIwsDX2I3xn2YY7AHTssF5W9ta0SupnhuSbRv2WGBvWPlgibZo
+   GTgUenkbe7g6jkyoo8SkRXGGjroJLmqWkWL0ZbaHuZUJJlnDeC3mqki4P
+   MlOrAqFgSLIHDxG03NUKJSxTxRPJ3hVpbveNJOSzOXqlno/I6EhivcAF1
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="327114203"
+X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
+   d="scan'208";a="327114203"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 07:04:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="728906076"
+X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
+   d="scan'208";a="728906076"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Feb 2023 07:04:13 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pNb8F-001E0K-16;
+        Thu, 02 Feb 2023 17:04:11 +0200
+Date:   Thu, 2 Feb 2023 17:04:10 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>
+Cc:     Martyn Welch <martyn.welch@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>
+Subject: Re: [RFC PATCH 2/3] gpio: pca953x: Describe register maps with enums
+Message-ID: <Y9vQ6sR283B4RItv@smile.fi.intel.com>
+References: <fbd33cdb-6942-e1ac-57ad-b7f3faf7eba5@eilabs.com>
+ <73a0ab72-1189-0b87-6b26-5525645a591d@eilabs.com>
 MIME-Version: 1.0
-References: <20230201150011.200613-1-brgl@bgdev.pl> <CACRpkdYEQkxEJ23Xt4hjwu3Jxct-QXZktdzze5Pf6SBNYj80Fg@mail.gmail.com>
- <CAMRc=MdDwSi+DDJmn3Yrnh5m8EK5EJEfLrejXHN0+0k41DKx3w@mail.gmail.com> <CACRpkdbLjcGUvycX9p=hYjMwS6UJOkUTOJvbEcNtddx5mnbSuQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbLjcGUvycX9p=hYjMwS6UJOkUTOJvbEcNtddx5mnbSuQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 2 Feb 2023 14:47:10 +0100
-Message-ID: <CAMRc=Me2wQTvx83nZSuaiagO3Z02Q55p6u1pXKnx9LkF10OY1g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] pinctrl: qcom: add dt-bindings and driver for sa8775p-tlmm
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <73a0ab72-1189-0b87-6b26-5525645a591d@eilabs.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 2, 2023 at 1:54 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Thu, Feb 2, 2023 at 9:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Wed, Feb 1, 2023 at 11:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >
-> > > On Wed, Feb 1, 2023 at 4:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > This series contains the device-tree bindings and the pinctrl driver for the
-> > > > SA8775P platforms.
-> > > >
-> > > > v2 -> v3 (Changes in DT bindings only)
-> > > > - fix the gpio pattern property (platform has 148 GPIOs)
-> > > > - add blank lines for better readability
-> > >
-> > > v3 patch set applied, fixing the 149->148 number in the example
-> > > in patch 1!
-> > >
-> >
-> > Thanks! Seems like only patch 1/2 got into your branch?
->
-> That's confusing, it looks to me like they are both there?
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
->
-> Isn't "pinctrl: qcom: add the tlmm driver sa8775p platforms" patch 2/2?
->
+On Mon, Jan 30, 2023 at 09:59:48PM +0100, Levente Révész wrote:
+> The driver supports 8 chip types, 6 of which have extended registers
+> with various functions, e.g. pull-up and pull-down bias for the gpio
+> lines or interrupt masking. To allow supporting these functions, the
+> driver has to be able to calculate the addresses of these registers.
+> 
+> Replace the register maps with an enum for each chip type. These do not
+> contain the same numeric values as the old defines, but the new address
+> calculating functions (in the next patch) use them appropriately.
+> 
+> Add currently used registers to struct pca953x_reg_config.
+> 
+> Create a reg_config struct for each chip type.
 
-Strange, didn't see it there before. Anyway, thanks a lot!
+...
 
-Bart
+> +enum xra120x_reg {
+> +};
+
+>  static const struct pca953x_reg_config pca953x_regs = {
+> +};
+
+Make those enums and reg_config definitions to be sorted by their
+respective names.
+
+...
+
+> +	case TYPE_PCA950X:
+> +		registers = BIT(PCA950X_REG_INPUT) |
+> +			    BIT(PCA950X_REG_OUTPUT) |
+> +			    BIT(PCA950X_REG_INVERT) |
+> +			    BIT(PCA950X_REG_DIRECTION) |
+> +			    BIT(PCA950X_REG_INT_MASK);
+> +		break;
+
+Can't it be simplified if you define something like REG_MAX in each of
+the enums and use here simply GENMASK(MAX, 0); ?
+
+...
+
+> +	case TYPE_PCA950X:
+> +		registers = BIT(PCA950X_REG_OUTPUT) |
+> +			    BIT(PCA950X_REG_INVERT) |
+> +			    BIT(PCA950X_REG_DIRECTION) |
+> +			    BIT(PCA950X_REG_INT_MASK);
+
+Something similar, maybe with a definition of the volatile registers?
+
+> +		break;
+
+...
+
+>  	if (chip->type == TYPE_PCA957X) {
+> -		chip->regs = &pca957x_regs;
+>  		ret = device_pca957x_init(chip, invert);
+>  	} else {
+> -		chip->regs = &pca953x_regs;
+>  		ret = device_pca95xx_init(chip, invert);
+>  	}
+
+After this the {} may be dropped as well.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
