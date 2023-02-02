@@ -2,74 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E96687903
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 10:36:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6618F68790C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 10:38:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232154AbjBBJgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 04:36:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45966 "EHLO
+        id S229595AbjBBJin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 04:38:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232148AbjBBJgw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 04:36:52 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00462302A6
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 01:36:32 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id d4-20020a05600c3ac400b003db1de2aef0so872743wms.2
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 01:36:32 -0800 (PST)
+        with ESMTP id S231718AbjBBJik (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 04:38:40 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16DA683048
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 01:38:38 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id t7so1113843wrp.5
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 01:38:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dt8ozUADZ6eeGHmzvcBaxCI0C79i87ycD5W165HFrnQ=;
-        b=LlAsSUPrUvuIh5VUAOPjfHAoGUfXDX96nCiMDKbEZernph10xhS3CkihOKxrZc6M6Q
-         r3e3tEYxj3Xi6yxBI5LfR5VyxjChKvfVXmXt+pExhvjSG2RAiboe8x+CnT0E3k1JImKc
-         2DHP6QDfPWbBRhkqBFlbSUTK62wLR0rF7g/zm6egvDpDqY+wWQR9zUgUHUJxQoEYf6f2
-         cCh8Y9PLVQj/EPBvAl3Ri0mBTjQ9Kw7cELWGJxEcs7qqnv49rjtR0em+7BZzl8O6/e6m
-         Y+R6G0AC+RSzcm/9Yjp5tclKtZxbLKPeVC/kOMyQfp5RoEJcA9kyzK9xkVlpFIZqLlqQ
-         J5qw==
+        bh=1SVU6QigYfI43kWNTeLwwoyCrnQDbgOxVnxRJ80sFMw=;
+        b=DGkg38jlZDUTz15Z4tOwAS3Anphznwxrli3xvDOZRnNl6r8/CayV5FrtmrR4Vsxpa0
+         gyFTfObawwlIt4jLoiZ6LsIvFzwWiOfRcKyIEv3Xy3382u8K23U2B0SmXVJUgNogx3xX
+         HdKFBy1X57O5dDcYNnIgd8qxJndlpOq7wNV15Uq2pDwKOrDZD/VawfOzCQQYr4rtq+bz
+         xxczjZGFR3JwzXOxGDY7g/TiwZk5m8ZSWIbd2bCE9i6GXtDZNZfkys7nxW9lcCka+8hP
+         cSsG78iW1elHk6WSThjlAbw3CG4HwHfOf/IShBlWETBYNkFXP+3c/oXVC7yI+Xzz450g
+         4JYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dt8ozUADZ6eeGHmzvcBaxCI0C79i87ycD5W165HFrnQ=;
-        b=Y+sysFoM4eOBmQ/thfGnvLwZuzvvlmvUOO0+rJuTDXrMgiLgXllTm7CWKY61Cw9Db+
-         Bt/eKjVrD0TRRX+lAGuwr0J9ZZPhjNo7/1+l5F0xT5ApgN+bgsGrMKQQ/+u9+mSmrMUI
-         VdcJsPFxLpViN6ubFc0eEtb/mbIXDkzo9hIAjT9F+Ii7tgbXMpWBYwMDZ5pSoFo/b/z/
-         5PoCIl+qetm+ts+zFNpVH7DbNkICcO/HuNckMoYJpZ+ND7/4Be4rR1SkaHBEQV0nMWxl
-         Rew7iOF5JowH0bIx2NvIUqgpHZ7WKOJm1N4a6g7yUcjbGDFS6P8SfdX9QyPnyBRfwN26
-         wHHA==
-X-Gm-Message-State: AO0yUKW0NSiz4EGgL4xmL/UV9mkMiFx1tJK4d7VPUALGb98BOWfegN9w
-        7Cio0IPXV2qMOtDSAqf7MzqAhQ==
-X-Google-Smtp-Source: AK7set8B5X1XicB6CO5YGe0QdiSaCPJUiAmapInJVjJKHSPrSIQU5oErqrpGdMcOozxKFkfjMfu7FA==
-X-Received: by 2002:a05:600c:5006:b0:3dc:58d5:3a80 with SMTP id n6-20020a05600c500600b003dc58d53a80mr1267788wmr.24.1675330591551;
-        Thu, 02 Feb 2023 01:36:31 -0800 (PST)
+        bh=1SVU6QigYfI43kWNTeLwwoyCrnQDbgOxVnxRJ80sFMw=;
+        b=GPW+Vi5NNkxp7htK1uMDVa+KutsBm0oAFKeyufVHJdDlhpZv7xcWZITc44sT4ay0qX
+         mkQhUUvyR7CKnjvOtXQRITfhI0KnI/PNjFk/LHS2RokP0TwF2YLG/BPAWAMB+pMyuElH
+         XqLP6iFFrKVrl9BAWnIQg13rkZGDEWZjz6F5zCugiqXifh2pI1NwWD+j9DB+wOR6xuF7
+         fYc8ONdeMQglGiFWnuHmKpm2lhxWcDXJOU8wWDEGg4lE1uaKJISnMVLQaVaepnYy3oPm
+         /9l76ohsLccfOippJyfF+Xkj79enee9fSu7Xk83jEZwpf1GukUmbFIdXo3m2kboPrGMk
+         Guiw==
+X-Gm-Message-State: AO0yUKV9PdbN8zO4p9bijj9BdUFx2riComHN1FNriNFllS0fcw/fwOFO
+        vzUE6cKvBNb3NNFwQZWhi5Z91w==
+X-Google-Smtp-Source: AK7set/YtuHJ/gLfQ7R747dzj3cK1k46TG7Tyv3bSIJY4mF9pBcvOhfX3zWGEcm+q27k7hoJOBQ0uA==
+X-Received: by 2002:a05:6000:184a:b0:2bf:bc75:1730 with SMTP id c10-20020a056000184a00b002bfbc751730mr5852303wri.70.1675330716631;
+        Thu, 02 Feb 2023 01:38:36 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id m2-20020a056000180200b002bfb5618ee7sm19468693wrh.91.2023.02.02.01.36.30
+        by smtp.gmail.com with ESMTPSA id j9-20020a5d6189000000b002c285b4d2b5sm6437113wru.101.2023.02.02.01.38.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 01:36:31 -0800 (PST)
-Message-ID: <722c731f-646d-f953-7408-353bebf2a870@linaro.org>
-Date:   Thu, 2 Feb 2023 10:36:29 +0100
+        Thu, 02 Feb 2023 01:38:36 -0800 (PST)
+Message-ID: <176bf263-a12d-2cb3-d67c-3d7c3a0c7c31@linaro.org>
+Date:   Thu, 2 Feb 2023 10:38:34 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: sm8350-hdk: align pin config node
- names with bindings
+Subject: Re: [PATCH 7/7] dt-bindings: pinctrl: qcom: correct gpio-ranges in
+ examples
 Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230201154321.276419-1-krzysztof.kozlowski@linaro.org>
- <844ecb2f-e398-1187-810a-4f24372bd189@linaro.org>
+        Richard Acayan <mailingradian@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Iskren Chernev <me@iskren.info>,
+        Martin Botka <martin.botka@somainline.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230201153019.269718-1-krzysztof.kozlowski@linaro.org>
+ <20230201153019.269718-7-krzysztof.kozlowski@linaro.org>
+ <Y9qORcPIuq4IZcL1@gerhold.net> <Y9qT3vNTcuT+njIR@gerhold.net>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <844ecb2f-e398-1187-810a-4f24372bd189@linaro.org>
+In-Reply-To: <Y9qT3vNTcuT+njIR@gerhold.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,24 +89,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/02/2023 16:46, Konrad Dybcio wrote:
-> 
-> 
-> On 1.02.2023 16:43, Krzysztof Kozlowski wrote:
->> Bindings expect pins to be named with certain pattern.
+On 01/02/2023 17:31, Stephan Gerhold wrote:
+> On Wed, Feb 01, 2023 at 05:07:40PM +0100, Stephan Gerhold wrote:
+>> On Wed, Feb 01, 2023 at 04:30:19PM +0100, Krzysztof Kozlowski wrote:
+>>> Correct the number of GPIOs in gpio-ranges to match reality.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> AFAICT the current gpio-ranges do match the number of GPIOs (ngpios) in
+>> the pinctrl drivers for all/most of the platforms you update below. It
+>> looks like the special UFS_RESET pins are also exported as GPIOs in
+>> addition to the real GPIOs. I'm not sure if this is intended or a
+>> mistake.
 >>
->> ---
-> Do we want a Fixes: here?
 > 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> It looks like this is on purpose:
+> 
+> ---
+> From 53a5372ce326116f3e3d3f1d701113b2542509f4 Mon Sep 17 00:00:00 2001
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Date: Tue, 4 Jun 2019 00:19:59 -0700
+> Subject: [PATCH] pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> 
+> The ufs_reset pin is expected to be wired to the reset pin of the
+> primary UFS memory but is pretty much just a general purpose output pinr
+> 
+> Reorder the pins and expose it as gpio 150, so that the UFS driver can
+> toggle it.
+> ---
+> 
+> And it's used in sdm845-mtp.dts:
+> 
+> &ufs_mem_hc {
+> 	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+> };
+> 
+> So I think this patch (together with the DT ones you sent) should be
+> dropped because it would prevent using the UFS_RESET as GPIO since it's
+> no longer included in gpio-ranges.
 
-Could be:
-
-Fixes: d96d8f9192be ("arm64: dts: qcom: sm8350-hdk: Enable lt9611uxc dsi-hdmi bridge")
-
-
+Thanks, but then we need to fix few others which miss the UFS reset pin.
 
 Best regards,
 Krzysztof
