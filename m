@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F28C688148
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 16:09:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A4C368815C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 16:12:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230021AbjBBPJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 10:09:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
+        id S231778AbjBBPM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 10:12:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232408AbjBBPIr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 10:08:47 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E82A93E3C
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 07:08:24 -0800 (PST)
+        with ESMTP id S231644AbjBBPMz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 10:12:55 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE2C945E2
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 07:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675350504; x=1706886504;
+  t=1675350750; x=1706886750;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=oNLoDCrNz5E3tpcWjxQu6H5DXL42C8IWrVoNuwWD2eI=;
-  b=J1mO2SHR+hEbzcxD8mhLD3gkBA4yoKtATcfQHhbzlzGqrGSzMmqDMUMd
-   3INIReycQxAbZFERPobujjgzxBSJ/riLXJBm7bZPyUng3DxCmDYCCdakM
-   Vo4d11Zz1KuEhji71r5+0lEdxTtpaVw6rq8ikJkX8Cz9ADUjps8Fy4djG
-   HXWPZOCsdEjpfDB+Qw4OH34JO49asVbcEA5n1x4SaS1LEE+HFPTINK29E
-   K5nzfdi7SEuSTuT8Z4ppOOiLZ1u0x5SfW7xNbnxAg736Zg2KmB8zz5MUz
-   X917VKTlhvmojbaHTpg1KddVoakyjxipql+Q6QEfr6NUcHRRJZ/ey0cmo
+  bh=xL1WadO6AMRE/2r8QdLAOaCgfP5qANdJj0tnFfUY3ng=;
+  b=YkO4PnPUWJSxU8iUNLbxJDsFG6bGW3eS2BA0/DbcEsK4DlJXe2M7DkyB
+   73S9v+hfYSI1V7baY5x3hTmS3ZRns3ZYDRvsN6CEfeKcZc+fvWoza2b+d
+   uu/IZIM9C/cs7CtaGys7rSffbSuDMdlj3YvNIPGcEGM7Mkz+DbW3+xemA
+   g8v/JE2bC5uECms7JZDOLg0L57v5hNoeVEPHiZnF17X6yMWB8jrp52ugC
+   xz5qNn7TVSxRY3P/9XN+9Pz+E4UMSoY3k2nCQ1cLj5ZjXGPsA222u7VLd
+   ouN2gu7CO6E1XBCLoU5zfAiIeSVrCQH9crWgd97m38Eft0jUY5AmWiqH+
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="308805454"
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="308117892"
 X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="308805454"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 07:06:53 -0800
+   d="scan'208";a="308117892"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 07:12:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="789310975"
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="807990480"
 X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="789310975"
+   d="scan'208";a="807990480"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 02 Feb 2023 07:06:50 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 02 Feb 2023 07:12:24 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pNbAl-001E3s-2C;
-        Thu, 02 Feb 2023 17:06:47 +0200
-Date:   Thu, 2 Feb 2023 17:06:47 +0200
+        id 1pNbGA-001EAP-0m;
+        Thu, 02 Feb 2023 17:12:22 +0200
+Date:   Thu, 2 Feb 2023 17:12:21 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>
 Cc:     Martyn Welch <martyn.welch@collabora.com>,
@@ -53,19 +53,17 @@ Cc:     Martyn Welch <martyn.welch@collabora.com>,
         Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
         Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org,
         Peter Robinson <pbrobinson@gmail.com>
-Subject: Re: [RFC PATCH 3/3] gpio: pca953x: Redesign register address
- calculation
-Message-ID: <Y9vRhwqFUL0878qO@smile.fi.intel.com>
-References: <fbd33cdb-6942-e1ac-57ad-b7f3faf7eba5@eilabs.com>
- <5a4ce37a-2d5b-d179-dd1b-04fdd038c63f@eilabs.com>
+Subject: Re: [RFC PATCH 0/3] gpio: pca953x: Redesign handling of chip types
+Message-ID: <Y9vS1dsuMm5XxkdD@smile.fi.intel.com>
+References: <7b736829-414a-ba4f-59f5-bc78c27621e5@eilabs.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a4ce37a-2d5b-d179-dd1b-04fdd038c63f@eilabs.com>
+In-Reply-To: <7b736829-414a-ba4f-59f5-bc78c27621e5@eilabs.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,41 +71,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 09:59:55PM +0100, Levente Révész wrote:
-> The driver supports 8 chip types, 6 of which have extended registers
-> with various functions, e.g. pull-up and pull-down bias for the gpio
-> lines or interrupt masking. To allow supporting these functions, the
-> driver has to be able to calculate the addresses of these registers.
+On Mon, Jan 30, 2023 at 09:59:30PM +0100, Levente Révész wrote:
+> Hi All,
 > 
-> Replace the address calculation scheme with new reg_addr() and check_reg()
-> functions, one for each register layout. The new functions can work with
-> all of the extended registers. The functions have been tested with the
-> register layout of each compatible chip.
+> The pca953x driver supports many chips. These all have the basic 4
+> registers: input, output, invert and direction. Most of them have
+> additional registers for various functions, like pull-up and
+> pull-down control, interrupt status and mask, hardware debounce.
+> 
+> Different chip types have various register layouts. These layouts differ
+> even in the basic 4 registers.
+> 
+> This patch series
+> 
+>     1. Cleans up chip type handling, and
+>     2. Replaces register address calculations. The proposed scheme
+>        works with every register of every chip type.
+> 
+> These changes make it possible to add support for extended functions for
+> more chip types, including:
+> 
+>     * Interrupt mask for PCA950X, PCA9698, PCA957X and XRA120X
+>     * Interrupt status for PCA957X and XRA120X
+>     * Bias for PCA957X and XRA120X
+>     * Debounce for PCAL65XX and XRA120X
+> 
+> References:
+> 1. Previous discussion about the chip types
+>    https://lore.kernel.org/linux-gpio/Y1q52efyv93%2Fz8BC@smile.fi.intel.com/
+> 2. An overview of pca953x chip types
+>    https://lore.kernel.org/linux-gpio/67bba210-09ac-32fb-bb97-8bfc40c2c200@eilabs.com/
 
-...
+Now as I'm thinking more of your nice job, it may be less effort to everybody
+if you start from moving the driver to be a real pin control driver united with
+GPIO handling.
 
-> +/*
-> + * Register types:
-> + *   - Single register: 1 byte for each GPIO port.
-> + *   - Double register: 2 bytes for each GPIO port.
-> + *   - One-byte register: Only a single byte.
+That said, start drivers/pinctrl/pinctrl-pca953x.c from scratch with all your
+ideas in it. To make it better for review and testing, split by series in which
+you add the main chip family, i.e. PCA953x one (without interrupt?) and then
+adding each type one-by-one.
 
-We use term "bank".
+Also prepare some documentation file in Documentation/...gpio.../pca953x or
+start a brand new pinctrl folder (we do not have it yet) where you describe
+all your research.
 
-> + */
-
-...
-
-> + * Returns -1 if reg_addr is invalid.
-
-Use proper error code.
-
-...
-
-> + * Convert register address to register enum value.
-> + * Returns -1 if reg_addr is invalid.
-
-Ditto.
+Note, this will be quite useful to enable PWM support later on for some chips.
 
 -- 
 With Best Regards,
