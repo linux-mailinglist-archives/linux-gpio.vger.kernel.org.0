@@ -2,68 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6618F68790C
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 10:38:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4323687A68
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 11:39:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjBBJin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 04:38:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
+        id S232530AbjBBKjO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 05:39:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231718AbjBBJik (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 04:38:40 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16DA683048
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 01:38:38 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id t7so1113843wrp.5
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 01:38:38 -0800 (PST)
+        with ESMTP id S232614AbjBBKjM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 05:39:12 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9606F72F
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 02:39:10 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id r2so1261622wrv.7
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 02:39:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1SVU6QigYfI43kWNTeLwwoyCrnQDbgOxVnxRJ80sFMw=;
-        b=DGkg38jlZDUTz15Z4tOwAS3Anphznwxrli3xvDOZRnNl6r8/CayV5FrtmrR4Vsxpa0
-         gyFTfObawwlIt4jLoiZ6LsIvFzwWiOfRcKyIEv3Xy3382u8K23U2B0SmXVJUgNogx3xX
-         HdKFBy1X57O5dDcYNnIgd8qxJndlpOq7wNV15Uq2pDwKOrDZD/VawfOzCQQYr4rtq+bz
-         xxczjZGFR3JwzXOxGDY7g/TiwZk5m8ZSWIbd2bCE9i6GXtDZNZfkys7nxW9lcCka+8hP
-         cSsG78iW1elHk6WSThjlAbw3CG4HwHfOf/IShBlWETBYNkFXP+3c/oXVC7yI+Xzz450g
-         4JYg==
+        bh=UPhYC1ocFq5QQJpaVTOzLcdTeomY74tjmBhXmnXXIeY=;
+        b=wNsy3ESBxdq1FnLv0ESqEqE4iP2XzsEzI1Jmyyk4MCTw9Cwei1rKQ9kIY6XpfN0Ynj
+         U2c5RRH/s7m43jBx8UhEnt7xegE5jgXxWiKVtbuuTWr08ARRyT8A6mg6YM52UshZ9uPR
+         TJfZo9DiUsRnQkVo3nDPD15VlkqAlan1ExtPx1eYZ/maJeCn+5hdd4a7EJBV0CcIxX+j
+         7IiVd4a5I5Tq9dloTrfcpNirUz9ffXuRWuyTrefflUQgioStM8NgwpXWg3L9JT5kznNV
+         HaQJ+sTPUdVoRrXxgF24aX0U9MPxS8LOagyiFqLYn9NyBUrgyyYshij+FpsWnmeUw8Uh
+         GIQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1SVU6QigYfI43kWNTeLwwoyCrnQDbgOxVnxRJ80sFMw=;
-        b=GPW+Vi5NNkxp7htK1uMDVa+KutsBm0oAFKeyufVHJdDlhpZv7xcWZITc44sT4ay0qX
-         mkQhUUvyR7CKnjvOtXQRITfhI0KnI/PNjFk/LHS2RokP0TwF2YLG/BPAWAMB+pMyuElH
-         XqLP6iFFrKVrl9BAWnIQg13rkZGDEWZjz6F5zCugiqXifh2pI1NwWD+j9DB+wOR6xuF7
-         fYc8ONdeMQglGiFWnuHmKpm2lhxWcDXJOU8wWDEGg4lE1uaKJISnMVLQaVaepnYy3oPm
-         /9l76ohsLccfOippJyfF+Xkj79enee9fSu7Xk83jEZwpf1GukUmbFIdXo3m2kboPrGMk
-         Guiw==
-X-Gm-Message-State: AO0yUKV9PdbN8zO4p9bijj9BdUFx2riComHN1FNriNFllS0fcw/fwOFO
-        vzUE6cKvBNb3NNFwQZWhi5Z91w==
-X-Google-Smtp-Source: AK7set/YtuHJ/gLfQ7R747dzj3cK1k46TG7Tyv3bSIJY4mF9pBcvOhfX3zWGEcm+q27k7hoJOBQ0uA==
-X-Received: by 2002:a05:6000:184a:b0:2bf:bc75:1730 with SMTP id c10-20020a056000184a00b002bfbc751730mr5852303wri.70.1675330716631;
-        Thu, 02 Feb 2023 01:38:36 -0800 (PST)
+        bh=UPhYC1ocFq5QQJpaVTOzLcdTeomY74tjmBhXmnXXIeY=;
+        b=jBRJ6RMnG6gxDNufjOrJzUckRm1jUXjU8PuJWtAfINyjuAvK3iqxhUbNCUDMohlHNF
+         n2d/arNEj9sRfjax4lyqQYrdFOwz5Qyky9kagCEopeRBGDhp0onP9srKl6NHcpBe1fc9
+         hkfSDv3clKLK+pqzZMujCb4MS5XryBZzoRbSpZIEJcYMUOzB1MS3+wNiea2EVXyJj6/J
+         FIz3DxMlRlQhKBCjFwxW2F5jPBWAIj7Rl/D2CPjt2YHkUv6hlHv6Mbkq5qQWhaZ257YG
+         OfAGkCCJrifCwBMuFn7WsNkGYhrsYWw4X5amkMT0AjEicXj9hk5apWhF4zHUQVtLp5lX
+         0JCg==
+X-Gm-Message-State: AO0yUKX2RZMO5qVhWDMyc5quuE3wpZiDmzthzr7eSDzAn3RXAlo7wURO
+        3Tu4Io4KSUj/2ffxuLfJMMsztA==
+X-Google-Smtp-Source: AK7set9zMb2dJxCvWWhQaIeMEKvJdGBZiHwAdLW5pVwrj8P4IhdOHkyAmDrFqbSXF8UBuwh9hZ65qA==
+X-Received: by 2002:adf:e7c4:0:b0:2bf:cab7:cc36 with SMTP id e4-20020adfe7c4000000b002bfcab7cc36mr4566178wrn.23.1675334349270;
+        Thu, 02 Feb 2023 02:39:09 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id j9-20020a5d6189000000b002c285b4d2b5sm6437113wru.101.2023.02.02.01.38.34
+        by smtp.gmail.com with ESMTPSA id r6-20020adff106000000b002bfe05bf6dcsm14573620wro.88.2023.02.02.02.39.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 01:38:36 -0800 (PST)
-Message-ID: <176bf263-a12d-2cb3-d67c-3d7c3a0c7c31@linaro.org>
-Date:   Thu, 2 Feb 2023 10:38:34 +0100
+        Thu, 02 Feb 2023 02:39:08 -0800 (PST)
+Message-ID: <de2a44bd-08ee-12d6-a78e-33e39401b3a2@linaro.org>
+Date:   Thu, 2 Feb 2023 11:39:07 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
 Subject: Re: [PATCH 7/7] dt-bindings: pinctrl: qcom: correct gpio-ranges in
  examples
 Content-Language: en-US
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Andy Gross <agross@kernel.org>,
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
         Richard Acayan <mailingradian@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         krishna Lanka <quic_vamslank@quicinc.com>,
@@ -74,9 +74,8 @@ Cc:     Andy Gross <agross@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230201153019.269718-1-krzysztof.kozlowski@linaro.org>
  <20230201153019.269718-7-krzysztof.kozlowski@linaro.org>
- <Y9qORcPIuq4IZcL1@gerhold.net> <Y9qT3vNTcuT+njIR@gerhold.net>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y9qT3vNTcuT+njIR@gerhold.net>
+In-Reply-To: <20230201153019.269718-7-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -89,46 +88,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/02/2023 17:31, Stephan Gerhold wrote:
-> On Wed, Feb 01, 2023 at 05:07:40PM +0100, Stephan Gerhold wrote:
->> On Wed, Feb 01, 2023 at 04:30:19PM +0100, Krzysztof Kozlowski wrote:
->>> Correct the number of GPIOs in gpio-ranges to match reality.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> AFAICT the current gpio-ranges do match the number of GPIOs (ngpios) in
->> the pinctrl drivers for all/most of the platforms you update below. It
->> looks like the special UFS_RESET pins are also exported as GPIOs in
->> addition to the real GPIOs. I'm not sure if this is intended or a
->> mistake.
->>
+On 01/02/2023 16:30, Krzysztof Kozlowski wrote:
+> Correct the number of GPIOs in gpio-ranges to match reality.
 > 
-> It looks like this is on purpose:
-> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> From 53a5372ce326116f3e3d3f1d701113b2542509f4 Mon Sep 17 00:00:00 2001
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Date: Tue, 4 Jun 2019 00:19:59 -0700
-> Subject: [PATCH] pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> 
-> The ufs_reset pin is expected to be wired to the reset pin of the
-> primary UFS memory but is pretty much just a general purpose output pinr
-> 
-> Reorder the pins and expose it as gpio 150, so that the UFS driver can
-> toggle it.
-> ---
-> 
-> And it's used in sdm845-mtp.dts:
-> 
-> &ufs_mem_hc {
-> 	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-> };
-> 
-> So I think this patch (together with the DT ones you sent) should be
-> dropped because it would prevent using the UFS_RESET as GPIO since it's
-> no longer included in gpio-ranges.
+>  .../devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml        | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml         | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml        | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.yaml  | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm6125-tlmm.yaml | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm6350-tlmm.yaml | 2 +-
+>  .../devicetree/bindings/pinctrl/qcom,sm8150-pinctrl.yaml        | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm8450-tlmm.yaml | 2 +-
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml | 2 +-
 
-Thanks, but then we need to fix few others which miss the UFS reset pin.
+As pointed out by Stephan, this is mostly incorrect and needs fixes.
+There will be a v2.
 
 Best regards,
 Krzysztof
