@@ -2,121 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5680E687783
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 09:32:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32CBD687796
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 09:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232123AbjBBIcf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 03:32:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47550 "EHLO
+        id S231947AbjBBIfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 03:35:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232319AbjBBIcX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 03:32:23 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1619387595;
-        Thu,  2 Feb 2023 00:32:14 -0800 (PST)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3127OKNj029812;
-        Thu, 2 Feb 2023 08:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=1E7KEBBYZ5bLXQHYsH+o+DFJLF2aRnrLuqJT7vKcoHw=;
- b=ZcMmbLqzFaRAT/SPdV4k7vzDXMCbBFJmJ93JpyzWAoIPdfxZ9TIlnkXgK2BmdmePQIe3
- Ryf0SVuT5m5GvKQmEJirZjiSrxj4UZUjUDoeBb92BdYefhe49pxK64R7QqAL7+UvWpJx
- hZwVc5AWUpqYHraPv3zo/dlTVMXx8f2OhkoQEhep4eyK6vvm9aZ7lpQT1ng+TzYreUVI
- DOYkcrVPAyC66n+fV4cj7rxni+lK9BVMUilsCM6OQFH9kBmvBhwALLm76mfVedFtWQC7
- IllZ3IyCLhte8AVMgyTiVLyGGoUP7rg2jpnGh8yaRpw6Cx2sNv5z4a9GvdCa8k9yFDb9 qg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nfnyhjd5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 08:31:59 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3128Vw3O000539
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 2 Feb 2023 08:31:58 GMT
-Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Thu, 2 Feb 2023 00:31:49 -0800
-From:   Devi Priya <quic_devipriy@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
-Subject: [PATCH V5 7/7] arm64: defconfig: Enable IPQ9574 SoC base configs
-Date:   Thu, 2 Feb 2023 14:00:31 +0530
-Message-ID: <20230202083031.10457-8-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230202083031.10457-1-quic_devipriy@quicinc.com>
-References: <20230202083031.10457-1-quic_devipriy@quicinc.com>
+        with ESMTP id S231752AbjBBIfF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 03:35:05 -0500
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6703E87165
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 00:34:16 -0800 (PST)
+Received: by mail-vs1-xe2f.google.com with SMTP id d66so1035747vsd.9
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 00:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JvtsncsIkvDTPY0jE9MmEEDZESoCNPgo52emg1byeqY=;
+        b=ZXPQcL55tEJFFBDxaSofDg5SA3eMC10OVo/tZa8i6XtTXajdTe2SXtEOTWSabTC79q
+         54VMKo4aW+TKdJd890QsUUE61Ks9L7FS0FjxEOOlYkp0cDlaj6Cw7F7GK8olrtEFWckL
+         dhZVlfD40jQt30b6Gs7LRBjxMqDdxkzj0PWqcpdVQN+fo/srM1IFbnM24El+bcVwZrBY
+         tFVr1tEsbAWy5SxlYycoEZBxu/CJgLoTm+VzP72II2YJ3TsriV5qxJjLmmjVI03/LUrb
+         5BdXI671CWyHQUeZhLy7VVXwP3YZKjPyuXQQqxQPvnl8vwMJYSkUxSowV3P2XyMA6Htq
+         RvIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JvtsncsIkvDTPY0jE9MmEEDZESoCNPgo52emg1byeqY=;
+        b=t15eRwnrH/mNyWAimTrNa1TKfzePODm3yxVT10dvoHydgTNW8ms4qzHtd0rGY665qM
+         ayTpLPzhAVce7jwmjute5R18VAi2Ge4PRIvkCFQ/Kb2X6/XgDMBek1zezHefTEbHodua
+         JwC1XXMuGtsD5oMFpYZWN/KN0+2CqZyKiZz4IJLdfijZtN8groxRszqArl0pPypB5QRo
+         9NgAyx3rYGgpvZSnmmH0q0lhJ515n9qH6wkm+wRhsDEIkUgsx6gmiqXp6A0KbdwcpkDd
+         zZdjd2o0GuC3O4AGyutB1zdQ2Mg3viBvfx2/dER01KLRpqosiVdzRhxaW/1WsziCBY3W
+         yCcA==
+X-Gm-Message-State: AO0yUKWidFcVNCePr4vqZ6EgCT2YPlePebD8ZFHQeM6VSQVyq/gOaRII
+        4TyS4Gg7ujCAYKg/Chxb4YzCnqJ2M5/gokcYa0tqGQ==
+X-Google-Smtp-Source: AK7set9jAXkCm3Ol0NBP3fEdyURHk9ju/tk/alXv1YIEXTN1Rkv0L8SWWv8mzIerQz084ji4l3MGe97fcY5WnPFD9+w=
+X-Received: by 2002:a67:c11b:0:b0:3f2:58c2:5358 with SMTP id
+ d27-20020a67c11b000000b003f258c25358mr1052172vsj.62.1675326851633; Thu, 02
+ Feb 2023 00:34:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 5WOGSddzsVZzw2tPBOkQsX3heMFXj7ut
-X-Proofpoint-ORIG-GUID: 5WOGSddzsVZzw2tPBOkQsX3heMFXj7ut
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-01_15,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=777
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302020079
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230125212631.749094-1-trix@redhat.com>
+In-Reply-To: <20230125212631.749094-1-trix@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 2 Feb 2023 09:34:00 +0100
+Message-ID: <CAMRc=MeXm8TCJVL+3n=aEi87wowu4AaiqmO5VY3T0vhb7m+ZDQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra186: remove unneeded loop in tegra186_gpio_init_route_mapping()
+To:     Tom Rix <trix@redhat.com>
+Cc:     linus.walleij@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enables clk & pinctrl related configs
+On Wed, Jan 25, 2023 at 10:26 PM Tom Rix <trix@redhat.com> wrote:
+>
+> Reviewing the j loop over num_irqs_per_bank, in the code previous
+> to the fixes: commit, every j was used. now only when j == 0.
+> If only j == 0 is used, there is no need for the loop.
+>
+> Fixes: 210386804745 ("gpio: tegra186: Support multiple interrupts per bank")
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 40 ++++++++++++++++--------------------
+>  1 file changed, 18 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 9941f35af823..14c872b6ad05 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -677,7 +677,7 @@ static const struct of_device_id tegra186_pmc_of_match[] = {
+>  static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
+>  {
+>         struct device *dev = gpio->gpio.parent;
+> -       unsigned int i, j;
+> +       unsigned int i;
+>         u32 value;
+>
+>         for (i = 0; i < gpio->soc->num_ports; i++) {
+> @@ -699,27 +699,23 @@ static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
+>                          * On Tegra194 and later, each pin can be routed to one or more
+>                          * interrupts.
+>                          */
+> -                       for (j = 0; j < gpio->num_irqs_per_bank; j++) {
+> -                               dev_dbg(dev, "programming default interrupt routing for port %s\n",
+> -                                       port->name);
+> -
+> -                               offset = TEGRA186_GPIO_INT_ROUTE_MAPPING(p, j);
+> -
+> -                               /*
+> -                                * By default we only want to route GPIO pins to IRQ 0. This works
+> -                                * only under the assumption that we're running as the host kernel
+> -                                * and hence all GPIO pins are owned by Linux.
+> -                                *
+> -                                * For cases where Linux is the guest OS, the hypervisor will have
+> -                                * to configure the interrupt routing and pass only the valid
+> -                                * interrupts via device tree.
+> -                                */
+> -                               if (j == 0) {
+> -                                       value = readl(base + offset);
+> -                                       value = BIT(port->pins) - 1;
+> -                                       writel(value, base + offset);
+> -                               }
+> -                       }
+> +                       dev_dbg(dev, "programming default interrupt routing for port %s\n",
+> +                               port->name);
+> +
+> +                       offset = TEGRA186_GPIO_INT_ROUTE_MAPPING(p, 0);
+> +
+> +                       /*
+> +                        * By default we only want to route GPIO pins to IRQ 0. This works
+> +                        * only under the assumption that we're running as the host kernel
+> +                        * and hence all GPIO pins are owned by Linux.
+> +                        *
+> +                        * For cases where Linux is the guest OS, the hypervisor will have
+> +                        * to configure the interrupt routing and pass only the valid
+> +                        * interrupts via device tree.
+> +                        */
+> +                       value = readl(base + offset);
+> +                       value = BIT(port->pins) - 1;
+> +                       writel(value, base + offset);
+>                 }
+>         }
+>  }
+> --
+> 2.26.3
+>
 
-Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
----
- Changes in V5:
-	- No changes
+Applied, thanks!
 
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a8c74a419d95..3f6d883b4bb2 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -556,6 +556,7 @@ CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
- CONFIG_PINCTRL_IPQ6018=y
-+CONFIG_PINCTRL_IPQ9574=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8953=y
- CONFIG_PINCTRL_MSM8976=y
-@@ -1131,6 +1132,7 @@ CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
-+CONFIG_IPQ_GCC_9574=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
--- 
-2.17.1
-
+Bart
