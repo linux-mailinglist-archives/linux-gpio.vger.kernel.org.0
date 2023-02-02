@@ -2,128 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EFF2688166
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 16:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4760B688565
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 18:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231546AbjBBPOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 10:14:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
+        id S231835AbjBBRbI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 12:31:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232095AbjBBPOS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 10:14:18 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1F1234E9
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 07:14:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675350855; x=1706886855;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=30ocE8NIFYPehfEfyIGNUEw17M4p53zlwXCcHMEDYAo=;
-  b=VS1ArFPythGZBxT/f87YDFYiDQe2N+Xs3HR6tw5dacXk6Afngj1JUUy6
-   YpOZDN5/xylXVDMKaILLtJ3DSawM/xkaIRULibwubqIRd8KFWM+xwE/Lj
-   WXPvGqyvl6igjxqnCqcsaIIhVz6dybKvPZXeuwh79pQwnYhqur++upPDA
-   WilakNy69OOsaN8vjjSur+8COoz56RN5GiCvbzPckXMcLjknNScwcy50T
-   19QAwMsjGbEv7q3KGoWWd+PfcByOqOuETTx8q9nCw4Gf1iU3+PKGU/QsP
-   rQzl1yVs5JigetH1GO+NZVy3xi1H1Dhckqx5Nqh72EiBddGUM+TqMn3z1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="316466758"
-X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="316466758"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 07:14:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="994118079"
-X-IronPort-AV: E=Sophos;i="5.97,267,1669104000"; 
-   d="scan'208";a="994118079"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Feb 2023 07:14:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pNbHt-001ED5-13;
-        Thu, 02 Feb 2023 17:14:09 +0200
-Date:   Thu, 2 Feb 2023 17:14:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>
-Cc:     Martyn Welch <martyn.welch@collabora.com>,
+        with ESMTP id S231712AbjBBRbH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 12:31:07 -0500
+Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982BF6E424;
+        Thu,  2 Feb 2023 09:31:03 -0800 (PST)
+Received: from g550jk.localnet (unknown [62.108.10.64])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 9589FCD5C6;
+        Thu,  2 Feb 2023 17:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1675359061; bh=0eZaB2Z6pp9+ZJxkb/c8fWlD+Xrf4XZo1SLRMLsglys=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ebC0Zzh1lLyL079pX/RhFRSVn2M5hRnBTUav4w7mThX21GdtLr08DDxkwPGX12CsH
+         DSdn71JLhkXMCWCbXPIyiFodbdh9X8B+c4RtYwPnrly/hyCxG9Lpgo2TMWC2GUlozw
+         C449PAl9K1b9rsKoEXS4CMCnd8KLsbhATupRGvFU=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org,
-        Peter Robinson <pbrobinson@gmail.com>
-Subject: Re: [RFC PATCH 0/3] gpio: pca953x: Redesign handling of chip types
-Message-ID: <Y9vTQQlmMd+ZXO4/@smile.fi.intel.com>
-References: <7b736829-414a-ba4f-59f5-bc78c27621e5@eilabs.com>
- <Y9vS1dsuMm5XxkdD@smile.fi.intel.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Lypak <vladimir.lypak@gmail.com>,
+        Iskren Chernev <me@iskren.info>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 01/10] dt-bindings: pinctrl: qcom,msm8226: correct GPIO name
+ pattern
+Date:   Thu, 02 Feb 2023 18:31:00 +0100
+Message-ID: <1772950.3VsfAaAtOV@z3ntu.xyz>
+In-Reply-To: <20230202104452.299048-2-krzysztof.kozlowski@linaro.org>
+References: <20230202104452.299048-1-krzysztof.kozlowski@linaro.org>
+ <20230202104452.299048-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y9vS1dsuMm5XxkdD@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_SUSPICIOUS_NTLD,
+        SPF_HELO_NONE,SPF_PASS,T_PDS_OTHER_BAD_TLD autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 05:12:22PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 30, 2023 at 09:59:30PM +0100, Levente Révész wrote:
-> > Hi All,
-> > 
-> > The pca953x driver supports many chips. These all have the basic 4
-> > registers: input, output, invert and direction. Most of them have
-> > additional registers for various functions, like pull-up and
-> > pull-down control, interrupt status and mask, hardware debounce.
-> > 
-> > Different chip types have various register layouts. These layouts differ
-> > even in the basic 4 registers.
-> > 
-> > This patch series
-> > 
-> >     1. Cleans up chip type handling, and
-> >     2. Replaces register address calculations. The proposed scheme
-> >        works with every register of every chip type.
-> > 
-> > These changes make it possible to add support for extended functions for
-> > more chip types, including:
-> > 
-> >     * Interrupt mask for PCA950X, PCA9698, PCA957X and XRA120X
-> >     * Interrupt status for PCA957X and XRA120X
-> >     * Bias for PCA957X and XRA120X
-> >     * Debounce for PCAL65XX and XRA120X
-> > 
-> > References:
-> > 1. Previous discussion about the chip types
-> >    https://lore.kernel.org/linux-gpio/Y1q52efyv93%2Fz8BC@smile.fi.intel.com/
-> > 2. An overview of pca953x chip types
-> >    https://lore.kernel.org/linux-gpio/67bba210-09ac-32fb-bb97-8bfc40c2c200@eilabs.com/
+On Donnerstag, 2. Februar 2023 11:44:43 CET Krzysztof Kozlowski wrote:
+> The MSM8226 TLMM pin controller has GPIOs 0-116, so correct the pattern
+> to bring back missing 107-109.
 > 
-> Now as I'm thinking more of your nice job, it may be less effort to everybody
-> if you start from moving the driver to be a real pin control driver united with
-> GPIO handling.
-> 
-> That said, start drivers/pinctrl/pinctrl-pca953x.c from scratch with all your
-> ideas in it. To make it better for review and testing, split by series in which
-> you add the main chip family, i.e. PCA953x one (without interrupt?) and then
-> adding each type one-by-one.
-> 
-> Also prepare some documentation file in Documentation/...gpio.../pca953x or
-> start a brand new pinctrl folder (we do not have it yet) where you describe
-> all your research.
-> 
-> Note, this will be quite useful to enable PWM support later on for some chips.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-And to avoid messing up with the existing driver, add Kconfig part at last.
+Reviewed-by: Luca Weiss <luca@z3ntu.xyz>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml       | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml index
+> a29b8a9e1f31..6cb667fa8665 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+> @@ -56,7 +56,7 @@ $defs:
+>            subnode.
+>          items:
+>            oneOf:
+> -            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-6])$"
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-6])$"
+>              - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
+> sdc2_data ] minItems: 1
+>          maxItems: 36
+
+
 
 
