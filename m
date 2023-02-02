@@ -2,116 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E3FB687BD7
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 12:12:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00A2A687DEF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Feb 2023 13:54:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbjBBLMu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Feb 2023 06:12:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
+        id S232253AbjBBMyg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Feb 2023 07:54:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjBBLMu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 06:12:50 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BA4EB54;
-        Thu,  2 Feb 2023 03:12:45 -0800 (PST)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31278hgN024984;
-        Thu, 2 Feb 2023 11:12:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=lGOeiNcI8SsLloD/yR8WJw3AVyExKfKx6S6uiu95xOY=;
- b=MAwn20UqRYb7FmO4QXpvohOXqbKqlR2HpAGwW1XdxCmEx8qMvmNUDvSzeHxLLySk8xiO
- OXQJ/i6AJGYQvKsK/dEDAQyFhMnYL5EIwPGm93imLGbhAsCDR7p4VF/CQeObjIiew5BY
- B0VQ71jSz9PqdiN5qQmYEpS13/1VQNiGF82xWvKF81/aHUJW90OVlx203hxsB7HoIYU3
- 4xH0Wg/BlJzWzV1a9Wmv0Tk1PSM4uHiMOJSdaFkLtbPMWfo3ZQ5PZj0AEfMLJodQCC5d
- 5ql3FDXP9Bkq7Lu4Gq6iCf148zgGCWnjN2lEsA86PAs8is3Ro8qTWstaLjbKE8EOsZms Cg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nfnyhjrj5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 11:12:25 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 312BCNiL008270
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 2 Feb 2023 11:12:23 GMT
-Received: from [10.50.17.72] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 2 Feb 2023
- 03:12:13 -0800
-Message-ID: <9ac04156-bbbe-5cc6-e6cb-7a29ccff22b4@quicinc.com>
-Date:   Thu, 2 Feb 2023 16:42:09 +0530
+        with ESMTP id S232152AbjBBMye (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Feb 2023 07:54:34 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E590E53572
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 04:54:33 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id g2so2014004ybk.8
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 04:54:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hou2cpFBpeYFXDjBngNxUrkbjF+eRNy5ueebEuZYyZQ=;
+        b=D7N1rGfNtk+hVf8eAwCjQmKZlTV+LjudLUiUdxC1DYZxkJ7TPk1xdmrU7ZUlp1MNOp
+         iYIl+scDP8BaLzYbePblz0If/LgYb4apxSDsg1Rp84h+XvuFDnNW4ZH0jZQlojWm9ABt
+         ECB18wQ1z+kIE6F3Qdg3QoBOLLqhLykYhQ1TrWhjRgpY9SANz+KiEp1eLkCRcS+9SI+v
+         WdYEhSZQi7UnzC1YxOEtA/jeMBtHbkwTZyneDRb5tLL2ahdjC56c6U6/BOJM7OQIvXTw
+         evgrfv1Jut2TJ4CWvyDXV4JXse+Kuxl9AAsle1hToSRY0z9OXrpHnzJRTBjb7P2ciPvS
+         /MJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hou2cpFBpeYFXDjBngNxUrkbjF+eRNy5ueebEuZYyZQ=;
+        b=3Cqg74LUB8ZYXNxZbjFPqd/RMh6vJkCbo0pINVsu7BR13PND2PaiT+RWEiYaKyQtj+
+         T0gR0KqqrUKlRR1Vj3X6sEztV7RyrQj845f1GFct2TAn5+yavahb62umNCrsN6Vr+PKa
+         xRuF4O++Numv0ooKZtmL+UUK/dRNf8AMLgi20T9xASxTbll/GkFjhB5IANpEEExipNYA
+         Le+1ed8s+eej4Lckeo7vQQbdulYE2/HEQunho9EyYxi9ZvGRR17015nf9wQilX7WdTzW
+         LiDHP6jdZy4Mgw/KhAG8B2AeS/znmSaUwTKxTB3qxdyi592u3lX6BaJwg7BB8xRMrKLW
+         1EaQ==
+X-Gm-Message-State: AO0yUKUGKgIT5eXaqQFy4ZCBGnMnByRD7ZxQJwX0zmqV6Lue8+chB7KN
+        6r39yxDoWKsIAelxC4smDPi3x68YiameCHZaJg483w==
+X-Google-Smtp-Source: AK7set9JcP4LrmflM2Vg6wAshx+OZbIoXMQmJnLVzau1kHRpZ2Qk6Tzv2+8Kf+dRoEUlxIU3UHfaYHhnIjYMwvPjxZ0=
+X-Received: by 2002:a25:fe0a:0:b0:7ca:9b40:72a7 with SMTP id
+ k10-20020a25fe0a000000b007ca9b4072a7mr435653ybe.130.1675342473108; Thu, 02
+ Feb 2023 04:54:33 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V5 7/7] arm64: defconfig: Enable IPQ9574 SoC base configs
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
-References: <20230202083031.10457-1-quic_devipriy@quicinc.com>
- <20230202083031.10457-8-quic_devipriy@quicinc.com>
- <b8703dbe-9b4e-86e7-b24d-ff3b3c315327@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <b8703dbe-9b4e-86e7-b24d-ff3b3c315327@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qZ8rsJrQlP20Wvo4R11G2vxjYoP6IBCP
-X-Proofpoint-ORIG-GUID: qZ8rsJrQlP20Wvo4R11G2vxjYoP6IBCP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-02_02,2023-02-02_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=466
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302020102
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230201150011.200613-1-brgl@bgdev.pl> <CACRpkdYEQkxEJ23Xt4hjwu3Jxct-QXZktdzze5Pf6SBNYj80Fg@mail.gmail.com>
+ <CAMRc=MdDwSi+DDJmn3Yrnh5m8EK5EJEfLrejXHN0+0k41DKx3w@mail.gmail.com>
+In-Reply-To: <CAMRc=MdDwSi+DDJmn3Yrnh5m8EK5EJEfLrejXHN0+0k41DKx3w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 2 Feb 2023 13:54:21 +0100
+Message-ID: <CACRpkdbLjcGUvycX9p=hYjMwS6UJOkUTOJvbEcNtddx5mnbSuQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pinctrl: qcom: add dt-bindings and driver for sa8775p-tlmm
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Feb 2, 2023 at 9:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Wed, Feb 1, 2023 at 11:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Wed, Feb 1, 2023 at 4:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > This series contains the device-tree bindings and the pinctrl driver for the
+> > > SA8775P platforms.
+> > >
+> > > v2 -> v3 (Changes in DT bindings only)
+> > > - fix the gpio pattern property (platform has 148 GPIOs)
+> > > - add blank lines for better readability
+> >
+> > v3 patch set applied, fixing the 149->148 number in the example
+> > in patch 1!
+> >
+>
+> Thanks! Seems like only patch 1/2 got into your branch?
 
+That's confusing, it looks to me like they are both there?
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
 
-On 2/2/2023 2:35 PM, Krzysztof Kozlowski wrote:
-> On 02/02/2023 09:30, Devi Priya wrote:
->> Enables clk & pinctrl related configs
-> 
-> "for Qualcomm IPQ9574 SoC".
-> 
-> Because defconfig is for all sub-architectures, thus IPQ9574 is
-> non-obvious for most of people.Okay, got it
-> 
-> With above:
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-Sure, Thank you!
-> 
-> Best regards,
-> Krzysztof
-> 
-Best Regards,
-Devi Priya
+Isn't "pinctrl: qcom: add the tlmm driver sa8775p platforms" patch 2/2?
+
+Yours,
+Linus Walleij
