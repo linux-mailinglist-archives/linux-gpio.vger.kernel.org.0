@@ -2,103 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D126899BD
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 14:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE3A689A13
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 14:50:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232822AbjBCNaG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 08:30:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
+        id S232392AbjBCNtm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 08:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232776AbjBCNaE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 08:30:04 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C74627B5;
-        Fri,  3 Feb 2023 05:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1675430968; x=1706966968;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HRL4soUZGhkgOpsuFJTflw9CMFVUDRCcn8Px2h/bpVI=;
-  b=Tvz8v9i2OZW2uOxG/PYCiXNZN2pEApfUnskhaNC6e8bJiGIZoPEYLb6p
-   zdZdoO3o/W/lsFPFbXZ9BAjUE3ADh5+d48C32bGdubbOask2mo+44Xk+g
-   tdBSIaJCWsMYT7VEDftqLoG2wRk0ickJW2adkT7iTTNFWCixQTC+m7jTw
-   kItRJuVq1LXdQd8fr0ewd2/K4Fs72vHj3Rk1dqFJ0Ehz7hk+YjuZ/tFo2
-   dPvj/bOLHX91eA/ts15lNfcaFRnehjLi/Bu56fUsHxhuIhNxT9SR28ow4
-   BrRVGesMF3minCxE1Xl9BUHawDdb6fvaPlK7oo+nPUaDxvWBS44Nme3j5
-   w==;
-X-IronPort-AV: E=Sophos;i="5.97,270,1669100400"; 
-   d="scan'208";a="135441456"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2023 06:29:27 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 3 Feb 2023 06:29:20 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.16 via Frontend Transport; Fri, 3 Feb 2023 06:29:18 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] pinctrl: at91: use devm_kasprintf() to avoid potential leaks
-Date:   Fri, 3 Feb 2023 15:27:14 +0200
-Message-ID: <20230203132714.1931596-1-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S230038AbjBCNtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 08:49:41 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD96D66EEC;
+        Fri,  3 Feb 2023 05:49:39 -0800 (PST)
+Received: from pendragon.ideasonboard.com (unknown [95.214.66.65])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2CCD6890;
+        Fri,  3 Feb 2023 14:49:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1675432177;
+        bh=twmuq3q7Al8t0dG5XXte9ZDuYRAzK64pORvKsi5dZtQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qsORpL0Uj9JY/PCmdctSdYjH8WIxXKO/aZb04ghWAK+rrFLld+EHf3mQOdDASKs2O
+         E/t/SxPHoRRVXzLbXtGYYK630y/NTwjRZgUtemJ8Qt6dSjM/n5bAa5HzrAyPw+lu2K
+         RhP1lSURZKaxzqZBrqJWn0+5vNmsfXyGPFKyTbb0=
+Date:   Fri, 3 Feb 2023 15:49:35 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Subject: Re: [PATCH 01/22] gpu/drm: remove the shmobile drm driver
+Message-ID: <Y90Q73ykVEHRNII4@pendragon.ideasonboard.com>
+References: <20230113062339.1909087-1-hch@lst.de>
+ <20230113062339.1909087-2-hch@lst.de>
+ <Y8EMZ0GI5rtor9xr@pendragon.ideasonboard.com>
+ <20230203071506.GB24833@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230203071506.GB24833@lst.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use devm_kasprintf() instead of kasprintf() to avoid any potential
-leaks. At the moment drivers have no remove functionality thus
-there is no need for fixes tag.
+On Fri, Feb 03, 2023 at 08:15:06AM +0100, Christoph Hellwig wrote:
+> So given that the big series doesn't go in, can we get this removal
+> picked up through the drm tree?
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/pinctrl/pinctrl-at91-pio4.c | 4 ++--
- drivers/pinctrl/pinctrl-at91.c      | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Geert has a board with an ARM-based SoC compatible with this driver, and
+he expressed interest in taking over maintainership. Geert, could you
+share your plans ? Should the shmobile_drm driver be dropped now, or
+will you revive it in a relatively near future ?
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index 39b233f73e13..373eed8bc4be 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -1149,8 +1149,8 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
- 
- 		pin_desc[i].number = i;
- 		/* Pin naming convention: P(bank_name)(bank_pin_number). */
--		pin_desc[i].name = kasprintf(GFP_KERNEL, "P%c%d",
--					     bank + 'A', line);
-+		pin_desc[i].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "P%c%d",
-+						  bank + 'A', line);
- 
- 		group->name = group_names[i] = pin_desc[i].name;
- 		group->pin = pin_desc[i].number;
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 1e1813d7c550..c405296e4989 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1885,7 +1885,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	for (i = 0; i < chip->ngpio; i++)
--		names[i] = kasprintf(GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
-+		names[i] = devm_kasprintf(&pdev->dev, GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
- 
- 	chip->names = (const char *const *)names;
- 
 -- 
-2.34.1
+Regards,
 
+Laurent Pinchart
