@@ -2,290 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B237689B6A
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 15:19:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D1E689EA4
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 16:57:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233209AbjBCOTA convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 3 Feb 2023 09:19:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
+        id S233203AbjBCP5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 10:57:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232580AbjBCOS1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 09:18:27 -0500
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC40423877;
-        Fri,  3 Feb 2023 06:18:09 -0800 (PST)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id AD3AD24E287;
-        Fri,  3 Feb 2023 22:18:06 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
- 2023 22:18:06 +0800
-Received: from ubuntu.localdomain (113.72.144.84) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
- 2023 22:18:05 +0800
-From:   Hal Feng <hal.feng@starfivetech.com>
-To:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andreas Schwab <schwab@suse.de>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 4/4] pinctrl: starfive: Add StarFive JH7110 aon controller driver
-Date:   Fri, 3 Feb 2023 22:18:01 +0800
-Message-ID: <20230203141801.59083-5-hal.feng@starfivetech.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20230203141801.59083-1-hal.feng@starfivetech.com>
-References: <20230203141801.59083-1-hal.feng@starfivetech.com>
+        with ESMTP id S233117AbjBCP5k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 10:57:40 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF0B9E9C9;
+        Fri,  3 Feb 2023 07:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=RABYZKQEnf0QK23SEeW3xVSQhJGlQ3o0a9xB2pxXdFg=; b=mxbhKN8eDLHf3sRbpUD1Pm5ad9
+        DUxn/adCxDe6jPyxHF/gdCrJDf3lsIsIixEOuV8CpNuzkiX752ZBaf0wsnY0b2i3cM9FUEcN20eX2
+        rIR05AXVLD17i/oQNhbkjja3UIifH2qUWnxDkJqAUC7NG8o6c1/1J2q0zeQmeJMRLojURzkVBUv7W
+        j9O4rmt4LMN1wjI6tRgPyBaBqiFphCrvwmB0uTJBDK4DzjkMj6rO8E5wNKaysJXqmttqL9r4yHFrh
+        f47+XS3tx6LOOWc7AZ91W6sFA96KtfzRuvr3oItFzuKm5u8MGjDHAAIf0SDJC5iX+lV71N215QhEo
+        +ggV+adQ==;
+Received: from [2601:1c2:d00:6a60::9526]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pNyR8-002pf0-3m; Fri, 03 Feb 2023 15:57:14 +0000
+Message-ID: <f6a60193-a5d1-c42c-158a-4b0bfe9c7538@infradead.org>
+Date:   Fri, 3 Feb 2023 07:57:12 -0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [113.72.144.84]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: remove arch/sh
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+ <20230116071306.GA15848@lst.de>
+ <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+ <20230203071423.GA24833@lst.de>
+ <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
+ <20230203083037.GA30738@lst.de>
+ <d10fe31b2af6cf4e03618f38ca9d3ca5c72601ed.camel@physik.fu-berlin.de>
+ <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jianlong Huang <jianlong.huang@starfivetech.com>
+Hi--
 
-Add pinctrl driver for StarFive JH7110 SoC aon pinctrl controller.
+On 2/3/23 02:33, Geert Uytterhoeven wrote:
+> Hi Adrian,
+> 
+> On Fri, Feb 3, 2023 at 11:29 AM John Paul Adrian Glaubitz
+> <glaubitz@physik.fu-berlin.de> wrote:
+>> On Fri, 2023-02-03 at 09:30 +0100, Christoph Hellwig wrote:
+>>> On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
+>>>> Since this is my very first time stepping up as a kernel maintainer, I was hoping
+>>>> to get some pointers on what to do to make this happen.
+>>>>
+>>>> So far, we have set up a new kernel tree and I have set up a local development and
+>>>> test environment for SH kernels using my SH7785LCR board as the target platform.
+>>>>
+>>>> Do I just need to send a patch asking to change the corresponding entry in the
+>>>> MAINTAINERS file?
+>>>
+>>> I'm not sure a there is a document, but:
+>>>
+>>>  - add the MAINTAINERS change to your tree
+>>>  - ask Stephen to get your tree included in linux-next
+>>>
+>>> then eventually send a pull request to Linus with all of that.  Make
+>>> sure it's been in linux-next for a while.
+>>
+>> OK, thanks for the pointers! Will try to get this done by next week.
+>>
+>> We're still discussing among SuperH developer community whether there will be a second
+>> maintainer, so please bear with us a few more days. I will collect patches in the
+>> meantime.
+> 
+> Thanks a lot!
+> 
+> If you need any help with process, setup, ... don't hesitate to ask
+> (on e.g. #renesas-soc on Libera).
 
-Co-developed-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
-Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
----
- drivers/pinctrl/starfive/Kconfig              |  12 ++
- drivers/pinctrl/starfive/Makefile             |   1 +
- .../starfive/pinctrl-starfive-jh7110-aon.c    | 177 ++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+While Adrian and Geert are reading this, I have a question:
 
-diff --git a/drivers/pinctrl/starfive/Kconfig b/drivers/pinctrl/starfive/Kconfig
-index 453c8a0b3118..8192ac2087fc 100644
---- a/drivers/pinctrl/starfive/Kconfig
-+++ b/drivers/pinctrl/starfive/Kconfig
-@@ -37,3 +37,15 @@ config PINCTRL_STARFIVE_JH7110_SYS
- 	  This also provides an interface to the GPIO pins not used by other
- 	  peripherals supporting inputs, outputs, configuring pull-up/pull-down
- 	  and interrupts on input changes.
-+
-+config PINCTRL_STARFIVE_JH7110_AON
-+	tristate "Always-on pinctrl and GPIO driver for the StarFive JH7110 SoC"
-+	depends on SOC_STARFIVE  || COMPILE_TEST
-+	depends on OF
-+	select PINCTRL_STARFIVE_JH7110
-+	default SOC_STARFIVE
-+	help
-+	  Say yes here to support always-on pin control on the StarFive JH7110 SoC.
-+	  This also provides an interface to the GPIO pins not used by other
-+	  peripherals supporting inputs, outputs, configuring pull-up/pull-down
-+	  and interrupts on input changes.
-diff --git a/drivers/pinctrl/starfive/Makefile b/drivers/pinctrl/starfive/Makefile
-index dc2d1e392314..ee0d32d085cb 100644
---- a/drivers/pinctrl/starfive/Makefile
-+++ b/drivers/pinctrl/starfive/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_PINCTRL_STARFIVE_JH7100)	+= pinctrl-starfive-jh7100.o
- 
- obj-$(CONFIG_PINCTRL_STARFIVE_JH7110)		+= pinctrl-starfive-jh7110.o
- obj-$(CONFIG_PINCTRL_STARFIVE_JH7110_SYS)	+= pinctrl-starfive-jh7110-sys.o
-+obj-$(CONFIG_PINCTRL_STARFIVE_JH7110_AON)	+= pinctrl-starfive-jh7110-aon.o
-diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
-new file mode 100644
-index 000000000000..8cf28aaed254
---- /dev/null
-+++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Pinctrl / GPIO driver for StarFive JH7110 SoC aon controller
-+ *
-+ * Copyright (C) 2022 StarFive Technology Co., Ltd.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <dt-bindings/pinctrl/starfive,jh7110-pinctrl.h>
-+
-+#include "../core.h"
-+#include "../pinconf.h"
-+#include "../pinmux.h"
-+#include "pinctrl-starfive-jh7110.h"
-+
-+#define JH7110_AON_NGPIO		4
-+#define JH7110_AON_GC_BASE		64
-+
-+/* registers */
-+#define JH7110_AON_DOEN			0x0
-+#define JH7110_AON_DOUT			0x4
-+#define JH7110_AON_GPI			0x8
-+#define JH7110_AON_GPIOIN		0x2c
-+
-+#define JH7110_AON_GPIOEN		0xc
-+#define JH7110_AON_GPIOIS		0x10
-+#define JH7110_AON_GPIOIC		0x14
-+#define JH7110_AON_GPIOIBE		0x18
-+#define JH7110_AON_GPIOIEV		0x1c
-+#define JH7110_AON_GPIOIE		0x20
-+#define JH7110_AON_GPIORIS		0x28
-+#define JH7110_AON_GPIOMIS		0x28
-+
-+#define JH7110_AON_GPO_PDA_0_5_CFG	0x30
-+
-+static const struct pinctrl_pin_desc jh7110_aon_pins[] = {
-+	PINCTRL_PIN(PAD_TESTEN,		"TESTEN"),
-+	PINCTRL_PIN(PAD_RGPIO0,		"RGPIO0"),
-+	PINCTRL_PIN(PAD_RGPIO1,		"RGPIO1"),
-+	PINCTRL_PIN(PAD_RGPIO2,		"RGPIO2"),
-+	PINCTRL_PIN(PAD_RGPIO3,		"RGPIO3"),
-+	PINCTRL_PIN(PAD_RSTN,		"RSTN"),
-+	PINCTRL_PIN(PAD_GMAC0_MDC,	"GMAC0_MDC"),
-+	PINCTRL_PIN(PAD_GMAC0_MDIO,	"GMAC0_MDIO"),
-+	PINCTRL_PIN(PAD_GMAC0_RXD0,	"GMAC0_RXD0"),
-+	PINCTRL_PIN(PAD_GMAC0_RXD1,	"GMAC0_RXD1"),
-+	PINCTRL_PIN(PAD_GMAC0_RXD2,	"GMAC0_RXD2"),
-+	PINCTRL_PIN(PAD_GMAC0_RXD3,	"GMAC0_RXD3"),
-+	PINCTRL_PIN(PAD_GMAC0_RXDV,	"GMAC0_RXDV"),
-+	PINCTRL_PIN(PAD_GMAC0_RXC,	"GMAC0_RXC"),
-+	PINCTRL_PIN(PAD_GMAC0_TXD0,	"GMAC0_TXD0"),
-+	PINCTRL_PIN(PAD_GMAC0_TXD1,	"GMAC0_TXD1"),
-+	PINCTRL_PIN(PAD_GMAC0_TXD2,	"GMAC0_TXD2"),
-+	PINCTRL_PIN(PAD_GMAC0_TXD3,	"GMAC0_TXD3"),
-+	PINCTRL_PIN(PAD_GMAC0_TXEN,	"GMAC0_TXEN"),
-+	PINCTRL_PIN(PAD_GMAC0_TXC,	"GMAC0_TXC"),
-+};
-+
-+static int jh7110_aon_set_one_pin_mux(struct jh7110_pinctrl *sfp,
-+				      unsigned int pin,
-+				      unsigned int din, u32 dout,
-+				      u32 doen, u32 func)
-+{
-+	if (pin < sfp->gc.ngpio && func == 0)
-+		jh7110_set_gpiomux(sfp, pin, din, dout, doen);
-+
-+	return 0;
-+}
-+
-+static int jh7110_aon_get_padcfg_base(struct jh7110_pinctrl *sfp,
-+				      unsigned int pin)
-+{
-+	if (pin < PAD_GMAC0_MDC)
-+		return JH7110_AON_GPO_PDA_0_5_CFG;
-+
-+	return -1;
-+}
-+
-+static void jh7110_aon_irq_handler(struct irq_desc *desc)
-+{
-+	struct jh7110_pinctrl *sfp = jh7110_from_irq_desc(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long mis;
-+	unsigned int pin;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	mis = readl_relaxed(sfp->base + JH7110_AON_GPIOMIS);
-+	for_each_set_bit(pin, &mis, JH7110_AON_NGPIO)
-+		generic_handle_domain_irq(sfp->gc.irq.domain, pin);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int jh7110_aon_init_hw(struct gpio_chip *gc)
-+{
-+	struct jh7110_pinctrl *sfp = container_of(gc,
-+			struct jh7110_pinctrl, gc);
-+
-+	/* mask all GPIO interrupts */
-+	writel_relaxed(0, sfp->base + JH7110_AON_GPIOIE);
-+	/* clear edge interrupt flags */
-+	writel_relaxed(0, sfp->base + JH7110_AON_GPIOIC);
-+	writel_relaxed(0x0f, sfp->base + JH7110_AON_GPIOIC);
-+	/* enable GPIO interrupts */
-+	writel_relaxed(1, sfp->base + JH7110_AON_GPIOEN);
-+	return 0;
-+}
-+
-+static const struct jh7110_gpio_irq_reg jh7110_aon_irq_reg = {
-+	.is_reg_base	= JH7110_AON_GPIOIS,
-+	.ic_reg_base	= JH7110_AON_GPIOIC,
-+	.ibe_reg_base	= JH7110_AON_GPIOIBE,
-+	.iev_reg_base	= JH7110_AON_GPIOIEV,
-+	.ie_reg_base	= JH7110_AON_GPIOIE,
-+	.ris_reg_base	= JH7110_AON_GPIORIS,
-+	.mis_reg_base	= JH7110_AON_GPIOMIS,
-+};
-+
-+static const struct jh7110_pinctrl_soc_info jh7110_aon_pinctrl_info = {
-+	.pins		= jh7110_aon_pins,
-+	.npins		= ARRAY_SIZE(jh7110_aon_pins),
-+	.ngpios		= JH7110_AON_NGPIO,
-+	.gc_base	= JH7110_AON_GC_BASE,
-+	.dout_reg_base	= JH7110_AON_DOUT,
-+	.dout_mask	= GENMASK(3, 0),
-+	.doen_reg_base	= JH7110_AON_DOEN,
-+	.doen_mask	= GENMASK(2, 0),
-+	.gpi_reg_base	= JH7110_AON_GPI,
-+	.gpi_mask	= GENMASK(3, 0),
-+	.gpioin_reg_base	   = JH7110_AON_GPIOIN,
-+	.irq_reg		   = &jh7110_aon_irq_reg,
-+	.jh7110_set_one_pin_mux  = jh7110_aon_set_one_pin_mux,
-+	.jh7110_get_padcfg_base  = jh7110_aon_get_padcfg_base,
-+	.jh7110_gpio_irq_handler = jh7110_aon_irq_handler,
-+	.jh7110_gpio_init_hw	 = jh7110_aon_init_hw,
-+};
-+
-+static const struct of_device_id jh7110_aon_pinctrl_of_match[] = {
-+	{
-+		.compatible = "starfive,jh7110-aon-pinctrl",
-+		.data = &jh7110_aon_pinctrl_info,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, jh7110_aon_pinctrl_of_match);
-+
-+static struct platform_driver jh7110_aon_pinctrl_driver = {
-+	.probe = jh7110_pinctrl_probe,
-+	.driver = {
-+		.name = "starfive-jh7110-aon-pinctrl",
-+		.of_match_table = jh7110_aon_pinctrl_of_match,
-+	},
-+};
-+module_platform_driver(jh7110_aon_pinctrl_driver);
-+
-+MODULE_DESCRIPTION("Pinctrl driver for the StarFive JH7110 SoC aon controller");
-+MODULE_AUTHOR("Jianlong Huang <jianlong.huang@starfivetech.com>");
-+MODULE_LICENSE("GPL");
+Is this "sh64" still accurate and applicable? from Documentation/kbuild/kbuild.rst:
+
+But some architectures such as x86 and sparc have aliases.
+
+- x86: i386 for 32 bit, x86_64 for 64 bit
+- sh: sh for 32 bit, sh64 for 64 bit <<<<<<<<<<<<<<<
+- sparc: sparc32 for 32 bit, sparc64 for 64 bit
+
+
+
+Thanks.
 -- 
-2.38.1
-
+~Randy
