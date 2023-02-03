@@ -2,242 +2,484 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FC5968A240
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 19:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5678668A450
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 22:11:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbjBCStY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 13:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
+        id S232978AbjBCVLZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 16:11:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjBCStX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 13:49:23 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E2AA8A00;
-        Fri,  3 Feb 2023 10:49:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BEJZHm5da+nPxgO/iaX45xqDwLsTgzNHa0lrzDGOOSc0vDIj/4M3kAsKSyR0hIQu3tE9zTSK//jL+lgQ5sshPx2TlYZaKr75rolqSsbMLpnIOlL1r+w3zQ3cfp96cL0kURmO7wqdscACJ83Q5W0Rezm5r/lM5/XO9sgpzAudgowZ+YsfzhSDtVm5+yNCJiu8jScjao+bAa5X1XT90NmMRuWn56MJEtyZ7WjI+9dZmMtQ8OSdjnpIEOlVS2QANOrVt5ynsZrXAJKxLZMCfRQF41zxN58ae4sRtndO2m1htsTP8nmYZa+/WN+nTxdhZF3FLz5V7Zl5YcVS6PH4t2+h6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fYdAV5Yqq6NftIFQ9k0l4idvNLK+xmAmd/McYzZ6yP0=;
- b=DaFbBcy/utLBVptJAnu5oBBjNK+P1Y2ZdgTmPADAjld3mtNAFUKgisrlgQUfIzS0iuMrPQ/WFGpKZXI7t9o0w4WWzHVVqXQE5967DlQYVfKXFaMTR/Jb+HUyxNDErbbWDHGUneJKS7n1+9W3KZ0QaEJ+zsmWSGLTAqHz+wS7/dw03XcMf7nhbO2joyZ49Uc8CkBrdkHdpCVrx6aXzM/BIy/F3w/Hu6nTRvXH3l4NyplR0ysHUAJB0dkwjT5pWouBT6Ca8qg1nARDGoUNffiR5jVcxOGFp9UFKslZIGZaOi1jz8OnOO161EmZXuvQWDViFjDjc3xlOnRmOU0EmUPSAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fYdAV5Yqq6NftIFQ9k0l4idvNLK+xmAmd/McYzZ6yP0=;
- b=rLtuDdbme1uOd0+YL/j6YuUu9UVu7g6zJ/7otz2jCPaFc0Nvwn56G3kkCnktRg58oT5zlqHZMRbqjKA1G1wunOGDgOsQbkR1LzudRJ5JUSpiilMelJOCvhwjTeQqAE8l1aLdP0+SrCO9MZhWBu8vArqlRTpQ5a61qLBBI0Yr3OSo05iloQa4T6heTCrQh7z8eS3M5UN3oaYnBDbHAOkyUjRzGRfu+Cfo2ZXuNCgeq4bCx0Am73jZam4G0od4IF7ljdNGkF1Vsb/s0TnsC4lOaJ8MyrVkQNARyEtIOtVK5JaZi5znACgS6I9EMVjCk3PC1M0VwTCtt11Zh2cCuHoTIA==
-Received: from MW4PR04CA0169.namprd04.prod.outlook.com (2603:10b6:303:85::24)
- by PH7PR12MB7211.namprd12.prod.outlook.com (2603:10b6:510:206::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Fri, 3 Feb
- 2023 18:49:19 +0000
-Received: from CO1NAM11FT067.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:85:cafe::c6) by MW4PR04CA0169.outlook.office365.com
- (2603:10b6:303:85::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.31 via Frontend
- Transport; Fri, 3 Feb 2023 18:49:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT067.mail.protection.outlook.com (10.13.174.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6064.31 via Frontend Transport; Fri, 3 Feb 2023 18:49:19 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 3 Feb 2023
- 10:49:11 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 3 Feb 2023
- 10:49:11 -0800
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server id 15.2.986.36 via Frontend Transport; Fri, 3 Feb
- 2023 10:49:10 -0800
-From:   David Thompson <davthompson@nvidia.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <limings@nvidia.com>, David Thompson <davthompson@nvidia.com>
-Subject: [PATCH v1 v/1] gpio: mlxbf: enable GPIO interface and ACPI event for host-gpio[7]
-Date:   Fri, 3 Feb 2023 13:49:07 -0500
-Message-ID: <20230203184907.18786-1-davthompson@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+        with ESMTP id S232237AbjBCVLX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 16:11:23 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5FC71BF5;
+        Fri,  3 Feb 2023 13:11:10 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 313KenUI024989;
+        Fri, 3 Feb 2023 21:10:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=ZrXUH0Omg6RzsJR3syi23SBibtjJaDRCIYaiu1onFk0=;
+ b=TsbV0n6AKPZDBX9pHKYLr9Madn8vG3vbMLbAm4A+gQ8v/KOg1ZnO7/TQahQjVPOcHgYY
+ z/fE29YA0YqUmTv68hyF7t4bTKi4+omTtvdjOjoYeoyzd5yVU1S8TSM0iu8vrtT5KDuR
+ 2QQ1mM+JDM8SsHmr8poKHTRRGTfdxXd2vxlW/rfzTF0upDrUM3WIj83wbQLMdwIQdE9h
+ xPwMJ1w68OJx2Jkc2izXQGhqwNO96KekmCMSysTZqXQpT6Ri7W16PTw8N1cLax5+1rfh
+ z1JZzaaXVJBvx89jutvc2jFYPgMmimgCwXUAIKPuu69EQBWR+t8Y1o28dsJOb43KA9ZN tQ== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ngns2jha8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Feb 2023 21:10:17 +0000
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 313LAGUp006424
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 3 Feb 2023 21:10:16 GMT
+Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 3 Feb 2023 13:10:15 -0800
+From:   Elliot Berman <quic_eberman@quicinc.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
+        "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        "Vikash Garodia" <quic_vgarodia@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Amol Maheshwari <amahesh@qti.qualcomm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Elliot Berman <quic_eberman@quicinc.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <iommu@lists.linux.dev>,
+        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+Subject: [PATCH] firmware: qcom_scm: Move qcom_scm.h to include/linux/firmware/qcom/
+Date:   Fri, 3 Feb 2023 13:09:52 -0800
+Message-ID: <20230203210956.3580811-1-quic_eberman@quicinc.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT067:EE_|PH7PR12MB7211:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f473249-a019-4882-bd45-08db06175b7b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HWZaRWq6vo4lDWtYwF5/NRUHtItzF2m+O9g81Eeynaaxsau3O2hKtiWmKF2VCzOoFw/QkH/qV7gT1YJ4limruOU3RMgVkmS73fKf8nDupQZVws32F63QwPTHPbnjt29uU+BbrByjftX6+CaJGO0RTpV5DIkL6UrTbdZEk3GweKmnQpmy6N8Z2fEoDJz3JgDH23eI7K5z95Fd9ypx6uOQHtX2jj4OCSsR55KJN5oXzdtXzKd1bEfN2eBg2gWt8TxF20qTNfYnwT1Cb86wofH6oTKSZ2J/DVnbNYh5aZxDrd9Yf03AN31XW7PBfdkTRoyIZtBbgsFZaDDZaEEA9Do/QotyOHnwGoiysfjRFvn6g1P+hCZvb1hSXHnEuIOuXTnYFfa0PqJN3gqlyEw8UtQ0E+AbpaAzhAu5XYEVLBXQc1mb6kvs+vlg2EPFBg5RdjaaTjMXoB0LhgcqOS+A3t+xAI8Kvpm4+kVHVxzgIaoikmYF00KzrnR7w6abqKy19NYqd+U5V9njxPhCpPXnCUyUxLx4Sjs4stlrD4G2XdiKRNru52g3sSqdJ/TUUt00i+nq79nignm3EXpkoG3/kXHQlhqjtUjH3JndvZKp4NIBLtkCbE+s1XXEMokOp4zPmDblio9xNThyvm1df8ZuolLB/fLeSFKLg3ka/pLyGRhfmuBzmTU01xJRpfJ2uaJ18URTHciu8w2wbkBpL1DHc10Juw==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(376002)(396003)(136003)(346002)(451199018)(36840700001)(46966006)(40470700004)(7636003)(356005)(86362001)(82740400003)(5660300002)(36756003)(4326008)(54906003)(70206006)(316002)(36860700001)(70586007)(8676002)(8936002)(40460700003)(2906002)(40480700001)(41300700001)(7696005)(2616005)(336012)(82310400005)(478600001)(47076005)(426003)(83380400001)(1076003)(26005)(6666004)(107886003)(186003)(110136005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2023 18:49:19.0345
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f473249-a019-4882-bd45-08db06175b7b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT067.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7211
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZlK216WrMbhK0f96yjsuQBwOakhKfBhG
+X-Proofpoint-ORIG-GUID: ZlK216WrMbhK0f96yjsuQBwOakhKfBhG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-03_19,2023-02-03_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
+ spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302030190
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This commit adds ACPI handling for host-gpio[7] to trigger
-the power-button event.
+Move include/linux/qcom_scm.h to include/linux/firmware/qcom/qcom_scm.h.
+This removes 1 of a few remaining Qualcomm-specific headers into a more
+approciate subdirectory under include/.
 
-Signed-off-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Liming Sun <limings@nvidia.com>
+Suggested-by: Bjorn Andersson <andersson@kernel.org>
+Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
 ---
- drivers/gpio/gpio-mlxbf.c | 65 +++++++++++++++++++++++++++++++++------
- 1 file changed, 55 insertions(+), 10 deletions(-)
+ arch/arm/mach-qcom/platsmp.c                     | 2 +-
+ drivers/cpuidle/cpuidle-qcom-spm.c               | 2 +-
+ drivers/firmware/qcom_scm-legacy.c               | 2 +-
+ drivers/firmware/qcom_scm-smc.c                  | 2 +-
+ drivers/firmware/qcom_scm.c                      | 2 +-
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c            | 2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c          | 2 +-
+ drivers/gpu/drm/msm/hdmi/hdmi_hdcp.c             | 2 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c | 2 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c       | 2 +-
+ drivers/iommu/arm/arm-smmu/qcom_iommu.c          | 2 +-
+ drivers/media/platform/qcom/venus/firmware.c     | 2 +-
+ drivers/misc/fastrpc.c                           | 2 +-
+ drivers/mmc/host/sdhci-msm.c                     | 2 +-
+ drivers/net/ipa/ipa_main.c                       | 2 +-
+ drivers/net/wireless/ath/ath10k/qmi.c            | 2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c               | 2 +-
+ drivers/remoteproc/qcom_q6v5_mss.c               | 2 +-
+ drivers/remoteproc/qcom_q6v5_pas.c               | 2 +-
+ drivers/remoteproc/qcom_wcnss.c                  | 2 +-
+ drivers/soc/qcom/mdt_loader.c                    | 2 +-
+ drivers/soc/qcom/ocmem.c                         | 2 +-
+ drivers/soc/qcom/rmtfs_mem.c                     | 2 +-
+ drivers/thermal/qcom/lmh.c                       | 2 +-
+ drivers/ufs/host/ufs-qcom-ice.c                  | 2 +-
+ include/linux/{ => firmware/qcom}/qcom_scm.h     | 0
+ 26 files changed, 25 insertions(+), 25 deletions(-)
+ rename include/linux/{ => firmware/qcom}/qcom_scm.h (100%)
 
-diff --git a/drivers/gpio/gpio-mlxbf.c b/drivers/gpio/gpio-mlxbf.c
-index 1fa9973f55b9..a8b6117c7593 100644
---- a/drivers/gpio/gpio-mlxbf.c
-+++ b/drivers/gpio/gpio-mlxbf.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm/mach-qcom/platsmp.c b/arch/arm/mach-qcom/platsmp.c
+index 5d2f386a46d8..eca2fe0f4314 100644
+--- a/arch/arm/mach-qcom/platsmp.c
++++ b/arch/arm/mach-qcom/platsmp.c
+@@ -14,7 +14,7 @@
+ #include <linux/of_address.h>
+ #include <linux/smp.h>
+ #include <linux/io.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
  
- #include <linux/acpi.h>
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/gpio/driver.h>
-@@ -12,19 +13,30 @@
- #include <linux/resource.h>
+ #include <asm/smp_plat.h>
+ 
+diff --git a/drivers/cpuidle/cpuidle-qcom-spm.c b/drivers/cpuidle/cpuidle-qcom-spm.c
+index beedf22cbe78..4ac83918edf2 100644
+--- a/drivers/cpuidle/cpuidle-qcom-spm.c
++++ b/drivers/cpuidle/cpuidle-qcom-spm.c
+@@ -17,7 +17,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/cpuidle.h>
+ #include <linux/cpu_pm.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <soc/qcom/spm.h>
+ 
+ #include <asm/proc-fns.h>
+diff --git a/drivers/firmware/qcom_scm-legacy.c b/drivers/firmware/qcom_scm-legacy.c
+index 9f918b9e6f8f..029e6d117cb8 100644
+--- a/drivers/firmware/qcom_scm-legacy.c
++++ b/drivers/firmware/qcom_scm-legacy.c
+@@ -9,7 +9,7 @@
+ #include <linux/mutex.h>
+ #include <linux/errno.h>
+ #include <linux/err.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/arm-smccc.h>
+ #include <linux/dma-mapping.h>
+ 
+diff --git a/drivers/firmware/qcom_scm-smc.c b/drivers/firmware/qcom_scm-smc.c
+index bb3235a64b8f..16cf88acfa8e 100644
+--- a/drivers/firmware/qcom_scm-smc.c
++++ b/drivers/firmware/qcom_scm-smc.c
+@@ -8,7 +8,7 @@
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
  #include <linux/types.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/arm-smccc.h>
+ #include <linux/dma-mapping.h>
  
-+#include "gpiolib-acpi.h"
-+
- /* Number of pins on BlueField */
- #define MLXBF_GPIO_NR 54
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 2000323722bf..468d4d5ab550 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -12,7 +12,7 @@
+ #include <linux/interconnect.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+index 660ba0db8900..d09221f97f71 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+@@ -5,7 +5,7 @@
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/cpumask.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/pm_opp.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/slab.h>
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 57586c794b84..89ff978b81bb 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -8,7 +8,7 @@
  
- /* Pad Electrical Controls. */
--#define MLXBF_GPIO_PAD_CONTROL_FIRST_WORD 0x0700
--#define MLXBF_GPIO_PAD_CONTROL_1_FIRST_WORD 0x0708
--#define MLXBF_GPIO_PAD_CONTROL_2_FIRST_WORD 0x0710
--#define MLXBF_GPIO_PAD_CONTROL_3_FIRST_WORD 0x0718
-+#define MLXBF_GPIO_PAD_CONTROL_FIRST_WORD	0x0700
-+#define MLXBF_GPIO_PAD_CONTROL_1_FIRST_WORD	0x0708
-+#define MLXBF_GPIO_PAD_CONTROL_2_FIRST_WORD	0x0710
-+#define MLXBF_GPIO_PAD_CONTROL_3_FIRST_WORD	0x0718
-+
-+#define MLXBF_GPIO_PIN_DIR_I                    0x1040
-+#define MLXBF_GPIO_PIN_DIR_O                    0x1048
-+#define MLXBF_GPIO_PIN_STATE                    0x1000
-+#define MLXBF_GPIO_SCRATCHPAD                   0x20
-+#define MLXBF_GPIO_INT_SETUP                    0x0040
-+#define MLXBF_GPIO_INT_SETUP_GBL_ENA_MASK       0x1
-+
-+/* GPIO pin 7 is reserved for power good indication on BlueField. */
-+#define MLXBF_GPIO_POWER_GOOD_PIN		7
+ #include <linux/ascii85.h>
+ #include <linux/interconnect.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/pm_opp.h>
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_hdcp.c b/drivers/gpu/drm/msm/hdmi/hdmi_hdcp.c
+index e7748461cffc..0752fe373351 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi_hdcp.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi_hdcp.c
+@@ -3,7 +3,7 @@
+  */
  
--#define MLXBF_GPIO_PIN_DIR_I 0x1040
--#define MLXBF_GPIO_PIN_DIR_O 0x1048
--#define MLXBF_GPIO_PIN_STATE 0x1000
--#define MLXBF_GPIO_SCRATCHPAD 0x20
-+/* GPIO pins enabled for interrupt */
-+#define MLXBF_GPIO_INT_ENA_DEASSERT             0x3008
-+#define MLXBF_GPIO_INT_DEASSERT_ENA_BITS	BIT(MLXBF_GPIO_POWER_GOOD_PIN)
+ #include "hdmi.h"
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
  
- #ifdef CONFIG_PM
- struct mlxbf_gpio_context_save_regs {
-@@ -42,17 +54,39 @@ struct mlxbf_gpio_state {
- 	/* Memory Address */
- 	void __iomem *base;
+ #define HDCP_REG_ENABLE 0x01
+ #define HDCP_REG_DISABLE 0x00
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
+index 74e9ef2fd580..b5b14108e086 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
+@@ -4,7 +4,7 @@
+  */
  
-+	int hwirq;
-+
- #ifdef CONFIG_PM
- 	struct mlxbf_gpio_context_save_regs csave_regs;
- #endif
- };
+ #include <linux/of_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/ratelimit.h>
  
-+static int mlxbf_gpio_to_irq(struct gpio_chip *chip, u32 gpio)
-+{
-+	struct mlxbf_gpio_state *gs = gpiochip_get_data(chip);
-+
-+	return gs->hwirq;
-+}
-+
-+static void mlxbf_gpio_cfg_irq(struct mlxbf_gpio_state *gs)
-+{
-+	u64 intr_cfg;
-+
-+	intr_cfg = readq(gs->base + MLXBF_GPIO_INT_SETUP);
-+	intr_cfg |= MLXBF_GPIO_INT_SETUP_GBL_ENA_MASK;
-+	writeq(intr_cfg, gs->base + MLXBF_GPIO_INT_SETUP);
-+
-+	intr_cfg = readq(gs->base + MLXBF_GPIO_INT_ENA_DEASSERT);
-+	intr_cfg |= MLXBF_GPIO_INT_DEASSERT_ENA_BITS;
-+	writeq(intr_cfg, gs->base + MLXBF_GPIO_INT_ENA_DEASSERT);
-+}
-+
- static int mlxbf_gpio_probe(struct platform_device *pdev)
- {
--	struct mlxbf_gpio_state *gs;
- 	struct device *dev = &pdev->dev;
-+	struct mlxbf_gpio_state *gs;
- 	struct gpio_chip *gc;
--	int ret;
-+	int ret, irq;
+ #include "arm-smmu.h"
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 91d404deb115..ef42329e82ce 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -7,7 +7,7 @@
+ #include <linux/adreno-smmu-priv.h>
+ #include <linux/delay.h>
+ #include <linux/of_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
  
- 	gs = devm_kzalloc(&pdev->dev, sizeof(*gs), GFP_KERNEL);
- 	if (!gs)
-@@ -63,6 +97,7 @@ static int mlxbf_gpio_probe(struct platform_device *pdev)
- 		return PTR_ERR(gs->base);
+ #include "arm-smmu.h"
+ #include "arm-smmu-qcom.h"
+diff --git a/drivers/iommu/arm/arm-smmu/qcom_iommu.c b/drivers/iommu/arm/arm-smmu/qcom_iommu.c
+index 270c3d9128ba..1e0b7b2e9fbd 100644
+--- a/drivers/iommu/arm/arm-smmu/qcom_iommu.c
++++ b/drivers/iommu/arm/arm-smmu/qcom_iommu.c
+@@ -27,7 +27,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
  
- 	gc = &gs->gc;
-+
- 	ret = bgpio_init(gc, dev, 8,
- 			 gs->base + MLXBF_GPIO_PIN_STATE,
- 			 NULL,
-@@ -73,8 +108,16 @@ static int mlxbf_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return -ENODEV;
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index 142d4c74017c..e5759d7e9ede 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -12,7 +12,7 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/sizes.h>
+ #include <linux/soc/qcom/mdt_loader.h>
  
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
- 	gc->owner = THIS_MODULE;
- 	gc->ngpio = MLXBF_GPIO_NR;
-+	gs->hwirq = irq;
-+	gc->to_irq = mlxbf_gpio_to_irq;
-+
-+	mlxbf_gpio_cfg_irq(gs);
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index c9902a1dcf5d..04f80e754477 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -18,7 +18,7 @@
+ #include <linux/rpmsg.h>
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <uapi/misc/fastrpc.h>
+ #include <linux/of_reserved_mem.h>
  
- 	ret = devm_gpiochip_add_data(dev, &gs->gc, gs);
- 	if (ret) {
-@@ -83,7 +126,9 @@ static int mlxbf_gpio_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 4ac8651d0b29..8ac81d57a3df 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -13,7 +13,7 @@
+ #include <linux/pm_opp.h>
+ #include <linux/slab.h>
+ #include <linux/iopoll.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/interconnect.h>
+ #include <linux/pinctrl/consumer.h>
+diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+index 4fb92f771974..90baf7a54d9a 100644
+--- a/drivers/net/ipa/ipa_main.c
++++ b/drivers/net/ipa/ipa_main.c
+@@ -16,7 +16,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_address.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/soc/qcom/mdt_loader.h>
  
- 	platform_set_drvdata(pdev, gs);
-+	acpi_gpiochip_request_interrupts(gc);
- 	dev_info(&pdev->dev, "registered Mellanox BlueField GPIO");
-+
- 	return 0;
- }
+ #include "ipa.h"
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index 3f94fbf83702..90f457b8e1fe 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -13,7 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <linux/platform_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/soc/qcom/smem.h>
+ #include <linux/string.h>
+ #include <net/sock.h>
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 47e9a8b0d474..e0128c69bfbf 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -14,7 +14,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/reboot.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index fddb63cffee0..da2513bb6387 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -34,7 +34,7 @@
+ #include "qcom_pil_info.h"
+ #include "qcom_q6v5.h"
  
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ 
+ #define MPSS_CRASH_REASON_SMEM		421
+ 
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index dc6f07ca8341..d5a049669616 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -18,7 +18,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+index 68f37296b151..9881443cb8df 100644
+--- a/drivers/remoteproc/qcom_wcnss.c
++++ b/drivers/remoteproc/qcom_wcnss.c
+@@ -19,7 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+index 3f11554df2f3..33dd8c315eb7 100644
+--- a/drivers/soc/qcom/mdt_loader.c
++++ b/drivers/soc/qcom/mdt_loader.c
+@@ -12,7 +12,7 @@
+ #include <linux/firmware.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+diff --git a/drivers/soc/qcom/ocmem.c b/drivers/soc/qcom/ocmem.c
+index c92d26b73e6f..199fe9872035 100644
+--- a/drivers/soc/qcom/ocmem.c
++++ b/drivers/soc/qcom/ocmem.c
+@@ -16,7 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+index 9d59ad509a5c..2d3ee22b9249 100644
+--- a/drivers/soc/qcom/rmtfs_mem.c
++++ b/drivers/soc/qcom/rmtfs_mem.c
+@@ -14,7 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/io.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ 
+ #define QCOM_RMTFS_MEM_DEV_MAX	(MINORMASK + 1)
+ #define NUM_MAX_VMIDS		2
+diff --git a/drivers/thermal/qcom/lmh.c b/drivers/thermal/qcom/lmh.c
+index 4122a51e9874..f6edb12ec004 100644
+--- a/drivers/thermal/qcom/lmh.c
++++ b/drivers/thermal/qcom/lmh.c
+@@ -10,7 +10,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/of_platform.h>
+ #include <linux/slab.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ 
+ #define LMH_NODE_DCVS			0x44435653
+ #define LMH_CLUSTER0_NODE_ID		0x6370302D
+diff --git a/drivers/ufs/host/ufs-qcom-ice.c b/drivers/ufs/host/ufs-qcom-ice.c
+index 62387ccd5b30..453978877ae9 100644
+--- a/drivers/ufs/host/ufs-qcom-ice.c
++++ b/drivers/ufs/host/ufs-qcom-ice.c
+@@ -8,7 +8,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/platform_device.h>
+-#include <linux/qcom_scm.h>
++#include <linux/firmware/qcom/qcom_scm.h>
+ 
+ #include "ufs-qcom.h"
+ 
+diff --git a/include/linux/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
+similarity index 100%
+rename from include/linux/qcom_scm.h
+rename to include/linux/firmware/qcom/qcom_scm.h
+
+base-commit: 3866989ec2c319341e2cf69ec6116269b634a271
 -- 
-2.30.1
+2.39.1
 
