@@ -2,123 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F2E268970A
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 11:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BBEB689715
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 11:41:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232305AbjBCKhH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 3 Feb 2023 05:37:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
+        id S230180AbjBCKlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 05:41:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbjBCKhG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 05:37:06 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3158412F22;
-        Fri,  3 Feb 2023 02:36:48 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pNtQu-0005LU-Pm; Fri, 03 Feb 2023 11:36:40 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pNtQu-000Qu4-EY; Fri, 03 Feb 2023 11:36:40 +0100
-Message-ID: <1c4be6be8aa9f69af71c967b4cc0b77344d374de.camel@physik.fu-berlin.de>
-Subject: Re: remove arch/sh
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Date:   Fri, 03 Feb 2023 11:36:35 +0100
-In-Reply-To: <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
-References: <20230113062339.1909087-1-hch@lst.de>
-         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
-         <20230116071306.GA15848@lst.de>
-         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-         <20230203071423.GA24833@lst.de>
-         <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
-         <20230203083037.GA30738@lst.de>
-         <d10fe31b2af6cf4e03618f38ca9d3ca5c72601ed.camel@physik.fu-berlin.de>
-         <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.3 
+        with ESMTP id S229785AbjBCKlC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 05:41:02 -0500
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2080.outbound.protection.outlook.com [40.107.14.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE7E272B
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Feb 2023 02:41:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O0VNCO7ckEEviWrMaQPBaZaL97KwBtTPSDuraDgM7XoCe7DM2xWqJCaX1vJWqAanpHu+WvJsuC72Pd9XZtKkWvF77LLXPk47Ut5/ncqZ8d//nHgCuXMtw56C/t1D7ffCPdsTKX/B1sig0/K7mIn1wjx2RgEmO/t2DTSkRXXcxveLRsU6JTLxbZNNDxWxo4YKx0W0bEzCITqTrCzCBVJcZsrbgIDNnZ5/TlEg2P8C5xQqtXYeVXPh6GQ6mVzNkxDXNPtnk4ehg025ofYWkGR9876JTCawlw91OSeJHzJFj254dTxGnH6syDrI6PP4erFE6GbsVJSV6kBjaBEK7pG5uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VEe6OZAJzEjZ82AxCmvm6HvfvFlNqrPiwrsamGYYYDM=;
+ b=OJn8X3KlxysgA9HMtXc3enwZP4pGT9qNiIOor8qf19H1xchgKszO1gi+C/ZGqzZ1Z+SApqYIhuS4A84PwcrGE2vG8S17yBOkH4Z2M89DUKcvlkaT2868lTulYqhKHTrsbOb4ctWWHfbXlLKXaPT7grz/8fygUy/TZws3XPKzDt5+pvxttCvIzGRyFfV9RbfLI0cMxkUQzqXrSqxCTA/xSO3J11uqKpeVTfrPUF5rHdiiRU3tmEwk+KHkw7BipGK8bs1yS/DDVh2ENk3MHuPoX5gVQGuN2fs6oj2hJIjkKHnUz1Yratqu9Qbqdh7esGm8iHdDGy3jkuWUgoCVpS7Hjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
+ dkim=pass header.d=eilabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VEe6OZAJzEjZ82AxCmvm6HvfvFlNqrPiwrsamGYYYDM=;
+ b=Klhf+MA1ikC8TD8XioVjUEOk3p9fnaJC99cGN/YzIv04A1w405azl+Q/NBSwcuAGHLFHJX5l/4PQlAtjz6zqhO6gDLHkMTa82VAI7Ase3Y9MvRr9hLEoMvppR9yQJluddcQRuQgpjYsBfkuWHrhb5tPol0p7J1uwDNxfaRQpeQw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=eilabs.com;
+Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
+ by PR3P194MB1619.EURP194.PROD.OUTLOOK.COM (2603:10a6:102:172::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.24; Fri, 3 Feb
+ 2023 10:40:58 +0000
+Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ ([fe80::6322:b35d:1369:be7e]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ ([fe80::6322:b35d:1369:be7e%4]) with mapi id 15.20.6064.028; Fri, 3 Feb 2023
+ 10:40:58 +0000
+Message-ID: <8c9dc414-9c15-26db-fcae-233c5ca0a171@eilabs.com>
+Date:   Fri, 3 Feb 2023 11:40:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [RFC PATCH 0/3] gpio: pca953x: Redesign handling of chip types
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Martyn Welch <martyn.welch@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org,
+        Peter Robinson <pbrobinson@gmail.com>
+References: <7b736829-414a-ba4f-59f5-bc78c27621e5@eilabs.com>
+ <Y9vS1dsuMm5XxkdD@smile.fi.intel.com> <Y9vTQQlmMd+ZXO4/@smile.fi.intel.com>
+From:   =?UTF-8?Q?Levente_R=c3=a9v=c3=a9sz?= <levente.revesz@eilabs.com>
+In-Reply-To: <Y9vTQQlmMd+ZXO4/@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR3P281CA0168.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a0::20) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:800:147::21)
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|PR3P194MB1619:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b429c8d-ead3-46d4-181e-08db05d32293
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wCVjGwj5J291zbeSl9LC9jdMFxFghIAS+2W2/zSEZDvAdu5MG1TVQBlQZeU4ezq90nkSEl2JOfObwVXj5wFYKMO4KgPiD9FrdyYo/UVK9hq8LNhd2AuJypjnhyaa3ciFMK3xE/n69FZvP6RRSlhhDjtlwQQWYiwJ5aHjBJnrDOX3ZfbmCP2ocOoGaABLkiji6jSYmyUkrBAMrN5EaDnVnb01Y+M/cJQfWXG8oHvt/Epkcdc0JUy2Labk5+/oItaCAEg7GXlv7fn9p44J0ZVDZgm3P1UYjPljDVBR6m8qqG6Y1PyGgPVC6UN9XXoqZT4cblkp9k7lPmoC6mYjcsrlMZYZDKlcfXqj2q2v274NLS+N64l20LFYUqRVyXQRnddwEvG/2cOPZg1q/4i6vFtsdtWVEqSLXqUbdgCGKgIDhd0C8Qnq9fe8eQJzJULIjVeaHryu3IblZlFAqZ6fiUG4xCYIhd4MSJqavUHJ6Mw77Pq/ut/p/jkqbdOOMw72RxfZintSB2I9IZuB5rxcOYvViRzaDNuWHZbLiK10qVG7Mhm0zXzX5FH2HK0bHM0qHjnGp0MmjvBgJ3b67/qJQ+abUK4PdiVqRBk8FlfJe13WLJpG6d3cMq3lnAZs7W886bamRlpwyiQqCMybzksi+fEvKUDFcIF4BuvWicLJPYkOmLBt7l7bbU2W7Fmh3nAy3Mgl8GF6RNtAHGI/Fe+oKyZLRKUPlTMeA4Htos6oMu1xkoE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(346002)(39830400003)(136003)(376002)(451199018)(7416002)(36756003)(66476007)(6486002)(86362001)(66574015)(66556008)(5660300002)(66946007)(41300700001)(54906003)(316002)(38100700002)(31696002)(8676002)(6916009)(8936002)(478600001)(4326008)(186003)(6506007)(2906002)(26005)(31686004)(6512007)(4744005)(6666004)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YisvTi90YmUreVJiZnRmY2VsM1o3OVJwV3ppTnJXa3dXdWN4Tk92QmdZczdI?=
+ =?utf-8?B?WE40cEdXbmUwYllEN3EyK1EzbUsyRGZXMDNia25HVnhPeTlyeU9BbFd2VFFo?=
+ =?utf-8?B?cW5oTXhLcUh3Y2c4UmxzUkFFcFk3UnJaOUpBL1VIRVZ4YzJDWjd3RFRzNko1?=
+ =?utf-8?B?QzdpMU5DSWlST21MYVNyblpQZXZQSWs0ZXVjQXRHdy9kMmsxTWlCK3lDMHlB?=
+ =?utf-8?B?NDl5eCt3MGFGbzUrcDVjRnYySkJ5eTFjakYxWFZaWFYydTZaRzVQRDNxYkt0?=
+ =?utf-8?B?OHBZeGk4MlpEQUhYdUZHclpFQ0QwdjFQVlBxeWpFK0FUbWJ2dG5ZWnZiam9w?=
+ =?utf-8?B?VG5lVjRiNktIcVZ2bHpKbzgrZkdVMTlTamJlRDVwVUtvc2M3ZG0zM1ZvOWRP?=
+ =?utf-8?B?Mk5hTG5TZ1g2MFBqbGlCN25uVlVvU0JHTVVpWWNXUGFFcGRLWkNxUDd5MTBG?=
+ =?utf-8?B?eklkOXg1L095SUZobHp2TTI0WXJVMGY4U2wxTjcvdWRZbzlBUVUzdXVsc0c4?=
+ =?utf-8?B?ZjJVeVVhSHVrK3NTcFRPWFhwdWpNR0ZzOEZvMTdEdVlCWHljaWEwR0hUd2xS?=
+ =?utf-8?B?TnU0QzZUNUhBanlUNWQ5TFNPZGRVYXRUaG03NG4vNnZYcjJXRCtZcGRmSDFL?=
+ =?utf-8?B?ZVVBSU1xM1I5anowWUFaWC9tc3BtSmZ1a2RGMS9ML2VxNERNaEZVVDFVaWlr?=
+ =?utf-8?B?WENVd3JRWWhKQ3ZWckt1SHhNUUZLQWJaUTNnRndVRnBwdFYxaEJFekFvaXlD?=
+ =?utf-8?B?bWNKeXJEUjNiamlZNExMVitGQmc0eWh5R2tPa0hLaDFWRHMySWxwbEY0L3Fi?=
+ =?utf-8?B?VlB1NERYTy9lejRVcG5YVEc0bHVkbndqTHV0MnNqbkdwdFYvc1ZSQms3QnM4?=
+ =?utf-8?B?TE8ySXpRRHUwcFpvcEZZd0o5R3RtQVQ3ZzVFUS9DbFZVMUhERTI2RXBOZGFR?=
+ =?utf-8?B?RitkWUNMQ2lZbXRZN3ZFTVorNndLN21LT05qKy9TemR2MW1veXNYdEptUGtQ?=
+ =?utf-8?B?RTJRb3B3cmpBZEdHckIrTVFnSWNPdFZhUm5HcHhRQWpzZFVycG5SVGJwRkFV?=
+ =?utf-8?B?enJ6aGxjRDQwc1NwalBQVUgzWHZjU3FQeDNVQWRtVzdVSFJJWHVaUlM5MklQ?=
+ =?utf-8?B?bzFWMlFVUDN4TW1PYWE4NWNhek04NFRpM1ZMNldMRkRhYmlLTjBqU291ZjJU?=
+ =?utf-8?B?Qno1NkR4MEIySHlmTGpOdzcrUmppUDNDR1hnKzBMeDJTTklVc04vQ3VCQS9u?=
+ =?utf-8?B?QnlEa2dxbFlkOGVpY2tTbjBXc1hzYlhDZm1uU1N0MG95ekF0Um13d0hwRFlq?=
+ =?utf-8?B?YjJJZ2REZkZqWVlGU2ZuSTgzbW8vSDdPcGNvWWlIUUtuTUI2MjJReEIybTdY?=
+ =?utf-8?B?UmtxU2FQcGQ2aWUwcklPMVk2bGYyQktYRmMyOGRCQmVqNk8vMmp1a1JGQ1BB?=
+ =?utf-8?B?UHVjR2ZNYlNjbDVSZGRnU2ZlWXp1UVkxam0zaEk0eEs1TWkvZUpTa0xsWjl1?=
+ =?utf-8?B?N0hmZ0NyR0xsWE5FVWllVnZTcTZhV2RBcEpDbThhYU5FaGtxdGFMWEU3MTZt?=
+ =?utf-8?B?MlJ4VjZiR0RlYWRXSUFtVEtXTDAvcHM5Qzg3WklWdWtZaFd5dHdsQnkvYmEr?=
+ =?utf-8?B?YWI0RFVnNkFyZGZrNlZ3b0pwM01ZNkJzbXRiYnhWeU8zdmtabGhQbEdiUnEx?=
+ =?utf-8?B?ZUpSWlhxVGJXcFBFcjFkSEJOUXFoMUZ1dEt6TEJ5bjRBR3R4YWpLb0xxeER1?=
+ =?utf-8?B?Z1g2Q1dFQXZsc3A4N3RGSFVQWjJYSHhHNkd6Vk5nNERwMXRVbGxjOHdaL1Ay?=
+ =?utf-8?B?a0R4WXB3dVhuQ3BFY3dua3lMN3NKNDNnRTVlekErYjhPZWxmSUlwZ25Yd1M2?=
+ =?utf-8?B?MXltV0IySjJZSmtqYnEwbGxCR3NLWTR1Zktlb0NVMUhWMlUzMjlqVlhLYXpi?=
+ =?utf-8?B?ZytzOHdNWm4rblhUWnFBTk0wc25lZjNiUExhMjlENE1mendaVGw0ZG90aTZB?=
+ =?utf-8?B?RW1nd05HVXpMRWxaajUxbGUxVXE2cEpIUmptNXNXeTFvSW9KaVBXcTdXT21O?=
+ =?utf-8?B?TVVlV0lOemxjM3o4eDdjWGdFWGU4NHFoQjJMSlFYSTE2U1MzeFJMNlV5R3ZN?=
+ =?utf-8?B?YkRqLzRnaDhEVXMyQXl2aWhnVDhjN28xOUYwaGxzd1RsVFZ3NXUxSW12MzlQ?=
+ =?utf-8?B?NUE9PQ==?=
+X-OriginatorOrg: eilabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b429c8d-ead3-46d4-181e-08db05d32293
+X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2023 10:40:58.1391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hHzPbiq9xO420H1xWqVptPBo9CDgsGkKAAqTlwxSOgAyANPDdjl9VICHTqSedaM9vhAjNZ2J2OAeSiOE/GJ0nwNIqx5rwm9SEJXfA8Hk7vg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P194MB1619
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert!
+On 02/02/2023 16.14, Andy Shevchenko wrote:
+> On Thu, Feb 02, 2023 at 05:12:22PM +0200, Andy Shevchenko wrote:
+>> Now as I'm thinking more of your nice job, it may be less effort to everybody
+>> if you start from moving the driver to be a real pin control driver united with
+>> GPIO handling.
 
-On Fri, 2023-02-03 at 11:33 +0100, Geert Uytterhoeven wrote:
-> Hi Adrian,
-> 
-> On Fri, Feb 3, 2023 at 11:29 AM John Paul Adrian Glaubitz
-> <glaubitz@physik.fu-berlin.de> wrote:
-> > On Fri, 2023-02-03 at 09:30 +0100, Christoph Hellwig wrote:
-> > > On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
-> > > > Since this is my very first time stepping up as a kernel maintainer, I was hoping
-> > > > to get some pointers on what to do to make this happen.
-> > > > 
-> > > > So far, we have set up a new kernel tree and I have set up a local development and
-> > > > test environment for SH kernels using my SH7785LCR board as the target platform.
-> > > > 
-> > > > Do I just need to send a patch asking to change the corresponding entry in the
-> > > > MAINTAINERS file?
-> > > 
-> > > I'm not sure a there is a document, but:
-> > > 
-> > >  - add the MAINTAINERS change to your tree
-> > >  - ask Stephen to get your tree included in linux-next
-> > > 
-> > > then eventually send a pull request to Linus with all of that.  Make
-> > > sure it's been in linux-next for a while.
-> > 
-> > OK, thanks for the pointers! Will try to get this done by next week.
-> > 
-> > We're still discussing among SuperH developer community whether there will be a second
-> > maintainer, so please bear with us a few more days. I will collect patches in the
-> > meantime.
-> 
-> Thanks a lot!
-> 
-> If you need any help with process, setup, ... don't hesitate to ask
-> (on e.g. #renesas-soc on Libera).
+I will look into this, it will probably take a few weeks to come up with something presentable.
 
-Thanks a lot! I've got some real-life tasks to do today, but I will join later today.
+Thank you for your review so far!
 
-And I will ask questions ;-).
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Best Regards,
+Levente Révész
