@@ -2,58 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48C41689011
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 08:05:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA01689035
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 08:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231579AbjBCHFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 02:05:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
+        id S231665AbjBCHLc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 02:11:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbjBCHFL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 02:05:11 -0500
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3F08FB5B;
-        Thu,  2 Feb 2023 23:04:51 -0800 (PST)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 281A924E1EC;
-        Fri,  3 Feb 2023 15:04:48 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
- 2023 15:04:48 +0800
-Received: from [192.168.125.110] (113.72.144.84) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
- 2023 15:04:47 +0800
-Message-ID: <7c6583eb-2c03-a584-1faf-8cbd44674175@starfivetech.com>
-Date:   Fri, 3 Feb 2023 15:04:46 +0800
+        with ESMTP id S230230AbjBCHLb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 02:11:31 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE8E222CA
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 23:11:30 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id r2so3778020wrv.7
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 23:11:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VMpIUIgr72vj2KES61ZyPekdCitWfbzab3EmSUELRzs=;
+        b=M+T7ihDmZWPoR1fZf9kKLTa3I5EStvTTz8K3LOVdpY+E1Q/3lQR9exUPcduCHkNlaQ
+         Nb3b3qYCNUOLfjGLX4XMh8ZH6PU9Pb2nhoSErgTYbCuNy4SFZMDjGxCl4SiLC1h5xynh
+         iY9YfdOGRTeFQTv12ZZNECggqif1T0puu18mXbpiuqUcI9SJagu1E+KISyTxUvT3z1Oz
+         xS4BYhaR/wM2o7PR2xNOi8Ujz89pnceoS8ivYbLGuLq2rQj4cRuiPCHRVIEWka2t+zvO
+         +KCLs0B4u71jQ8I6wiUoZ6S8Qxt2pfQ5aFL0zDKt6UBWFVCamHAp3bd9xEUIob0wrk6Y
+         6XPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMpIUIgr72vj2KES61ZyPekdCitWfbzab3EmSUELRzs=;
+        b=PT2yKq/88P2ALscuwIqD5BhXx4UdpHfbZCR6N1z2DlW9Gro7x1cLeQyeQjjkt+eYZ0
+         hXlheTm+Wu6Ke9d9LTk4+raVRWdkVE4GF/rijc6cLRzZK8C+TDS2XfspDCFB+hUnseM8
+         3wd2eI+fBOvjhiScPhqmusKf518sE/CJrRlelkm4NtspOasCp5YNASmQFK3IOaaKTT0L
+         tydsAmZbPHQqzOL8ZytLcqeCy0LwPVbW5/+4ZF7nDzEWLE3OIUY5dUP3lZ8RiH1ACLpv
+         2QxVxDu/IC2/LPU8MFYYoL6u6vI3WtLXGPCOfpdR2KHFD3Az3gBa3IaRl6i/JHkhRNjj
+         AmMA==
+X-Gm-Message-State: AO0yUKWi0A8oXngpJ7ZgGZksHwbitYkm0EWBtdV/Q2Bwx4GqLeETc+7A
+        BMhHy9T9+uaAwSSBrFwwcXGAcw==
+X-Google-Smtp-Source: AK7set8wSgQiywPGrL5fVkji5XDmWBCGOwWzrueNmHsy/nA6CO+I1vjesYJdPBkcS2iWqRjRngCzYg==
+X-Received: by 2002:a5d:680d:0:b0:2bf:ac3f:a9da with SMTP id w13-20020a5d680d000000b002bfac3fa9damr7829808wru.7.1675408288885;
+        Thu, 02 Feb 2023 23:11:28 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id f9-20020a5d4dc9000000b002bfb37497a8sm1249205wru.31.2023.02.02.23.11.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Feb 2023 23:11:28 -0800 (PST)
+Message-ID: <e2728f7c-4d6a-5920-35e8-ea24b907128d@linaro.org>
+Date:   Fri, 3 Feb 2023 08:11:26 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v3 4/5] pinctrl: starfive: Add StarFive JH7110 sys
- controller driver
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 00/10] pinctrl/ARM/arm64: qcom: correct TLMM
+ gpio-ranges and GPIO pin names
 Content-Language: en-US
-To:     Andreas Schwab <schwab@suse.de>
-CC:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20221220005529.34744-1-hal.feng@starfivetech.com>
- <20221220005529.34744-5-hal.feng@starfivetech.com> <mvm4js6zthr.fsf@suse.de>
-From:   Hal Feng <hal.feng@starfivetech.com>
-In-Reply-To: <mvm4js6zthr.fsf@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Stephan Gerhold <stephan@gerhold.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Lypak <vladimir.lypak@gmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>, Iskren Chernev <me@iskren.info>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230202104452.299048-1-krzysztof.kozlowski@linaro.org>
+ <CACRpkdb_OHXfAGMYwFv3gzRWyDJw6=eNuJedteMxiEvPtQxvWw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CACRpkdb_OHXfAGMYwFv3gzRWyDJw6=eNuJedteMxiEvPtQxvWw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.144.84]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,109 +84,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 31 Jan 2023 15:08:48 +0100, Andreas Schwab wrote:
-> On Dez 20 2022, Hal Feng wrote:
+On 02/02/2023 23:28, Linus Walleij wrote:
+> On Thu, Feb 2, 2023 at 11:45 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
 > 
->> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
->> new file mode 100644
->> index 000000000000..85df9d0ae1de
->> --- /dev/null
->> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
->> @@ -0,0 +1,979 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Pinctrl / GPIO driver for StarFive JH7110 SoC
->> + *
->> + * Copyright (C) 2022 Emil Renner Berthing <kernel@esmil.dk>
->> + * Copyright (C) 2022 StarFive Technology Co., Ltd.
->> + */
->> +
->> +#include <linux/bits.h>
->> +#include <linux/clk.h>
->> +#include <linux/gpio/driver.h>
->> +#include <linux/io.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset.h>
->> +#include <linux/spinlock.h>
->> +
->> +#include <linux/pinctrl/pinctrl.h>
->> +#include <linux/pinctrl/pinmux.h>
->> +
->> +#include <dt-bindings/pinctrl/starfive,jh7110-pinctrl.h>
->> +
->> +#include "../core.h"
->> +#include "../pinctrl-utils.h"
->> +#include "../pinmux.h"
->> +#include "../pinconf.h"
->> +#include "pinctrl-starfive-jh7110.h"
+>> Changes since v1:
+>> 1. Match the driver's ngpios (so usually include the ufs-reset where
+>>    applicable). Several patches were dropped, other rewritten.
+>> 2. Add tags
 > 
-> This misses a couple of headers, see commit 042b93c9b666.
+> Needless to say I'm a big fan of the series:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c: In function 'jh7110_pin_dbg_show':
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:100:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
->   100 |         seq_printf(s, "%s", dev_name(pctldev->dev));
->       |         ^~~~~~~~~~
->       |         bstr_printf
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c: At top level:
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:538:21: error: variable 'jh7110_pinconf_ops' has initializer but incomplete type
->   538 | static const struct pinconf_ops jh7110_pinconf_ops = {
->       |                     ^~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:539:10: error: 'const struct pinconf_ops' has no member named 'pin_config_get'
->   539 |         .pin_config_get         = jh7110_pinconf_get,
->       |          ^~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:539:35: warning: excess elements in struct initializer
->   539 |         .pin_config_get         = jh7110_pinconf_get,
->       |                                   ^~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:539:35: note: (near initialization for 'jh7110_pinconf_ops')
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:540:10: error: 'const struct pinconf_ops' has no member named 'pin_config_group_get'
->   540 |         .pin_config_group_get   = jh7110_pinconf_group_get,
->       |          ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:540:35: warning: excess elements in struct initializer
->   540 |         .pin_config_group_get   = jh7110_pinconf_group_get,
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:540:35: note: (near initialization for 'jh7110_pinconf_ops')
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:541:10: error: 'const struct pinconf_ops' has no member named 'pin_config_group_set'
->   541 |         .pin_config_group_set   = jh7110_pinconf_group_set,
->       |          ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:541:35: warning: excess elements in struct initializer
->   541 |         .pin_config_group_set   = jh7110_pinconf_group_set,
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:541:35: note: (near initialization for 'jh7110_pinconf_ops')
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:542:10: error: 'const struct pinconf_ops' has no member named 'pin_config_dbg_show'
->   542 |         .pin_config_dbg_show    = jh7110_pinconf_dbg_show,
->       |          ^~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:542:35: warning: excess elements in struct initializer
->   542 |         .pin_config_dbg_show    = jh7110_pinconf_dbg_show,
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:542:35: note: (near initialization for 'jh7110_pinconf_ops')
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:543:10: error: 'const struct pinconf_ops' has no member named 'is_generic'
->   543 |         .is_generic             = true,
->       |          ^~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:543:35: warning: excess elements in struct initializer
->   543 |         .is_generic             = true,
->       |                                   ^~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:543:35: note: (near initialization for 'jh7110_pinconf_ops')
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c: In function 'jh7110_gpio_request':
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:548:16: error: implicit declaration of function 'pinctrl_gpio_request' [-Werror=implicit-function-declaration]
->   548 |         return pinctrl_gpio_request(gc->base + gpio);
->       |                ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c: In function 'jh7110_gpio_free':
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:553:9: error: implicit declaration of function 'pinctrl_gpio_free' [-Werror=implicit-function-declaration]
->   553 |         pinctrl_gpio_free(gc->base + gpio);
->       |         ^~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c: At top level:
-> ../drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c:538:33: error: storage size of 'jh7110_pinconf_ops' isn't known
->   538 | static const struct pinconf_ops jh7110_pinconf_ops = {
->       |                                 ^~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> make[4]: *** [../scripts/Makefile.build:253: drivers/pinctrl/starfive/pinctrl-starfive-jh7110.o] Error 1
+> Will you send me a pull request for the pinctrl things as soon as
+> you feel confident it is finished, and I'll queue it up for v6.3?
 
-Will add the missing headers. Thanks for your feedback.
+Sure!
 
 Best regards,
-Hal
+Krzysztof
+
