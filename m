@@ -2,59 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D8E689068
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 08:17:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C070689098
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 08:19:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbjBCHPy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 02:15:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
+        id S231598AbjBCHRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 02:17:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbjBCHPx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 02:15:53 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE9192190;
-        Thu,  2 Feb 2023 23:15:45 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DB51E68C4E; Fri,  3 Feb 2023 08:15:42 +0100 (CET)
-Date:   Fri, 3 Feb 2023 08:15:42 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Subject: Re: [PATCH 02/22] usb: remove the dead USB_OHCI_SH option
-Message-ID: <20230203071542.GC24833@lst.de>
-References: <20230113062339.1909087-1-hch@lst.de> <20230113062339.1909087-3-hch@lst.de> <Y8EEbCP6PRMzWP5y@kroah.com>
+        with ESMTP id S231705AbjBCHRf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 02:17:35 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEB791894
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Feb 2023 23:17:31 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id j25so261153wrc.4
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Feb 2023 23:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sSkASq83cJg2WOe2/nzv5anWuC/vJ2xsJwMGh8943ZI=;
+        b=qQXuLP7dIGRSpmr5eLEf94xOWMsnU6dk0lGiLtuEa88Q9ZY4c9NbgFBpdihUief7Up
+         8pLFPaTI+0muOhnPf+hlEGlvnAR+QCuaiq2U3uz3pcdnLoU2yLKnKLUt8kYihUXu4kcM
+         YqprYsaaL9Wz1nc8rKPUZ66geW3Wwheftm1tX37PA0r4VZXoiCaAjEC0j0rBVr/1S545
+         lBFSQBEdIQqs/HtcZZ/xYhsCQeb+2oDGy9bbVmrF5jq9hx4wwb8N4kSYaaX9vYFVwO1q
+         WRC99+Va84/xpY9nXtixYoqYmygJNMeVOz2EKH1PXKAQJi56hWerZ9ZHBJLs+wZJ2rap
+         Km0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sSkASq83cJg2WOe2/nzv5anWuC/vJ2xsJwMGh8943ZI=;
+        b=hnlOEMmtxCkSOj1pYHU5YSCpBDvjPdVAKaLOp5oUkxMPWXzmj8+iLikDTRELjX/jFY
+         Z4jKhRvcGsIUh/h0ivexQo4qaGAhyo2/qD7sbJ/JR6ro9BO24TT0IDWD4nXP9mS3vnBl
+         9w7/S5e7cisjL7n426U6ZtpI571KJ03acVVEqoygt2cjs8j3bZW8yiaIEmfdH8PNWoIs
+         fXOaQE2xLlSHyv0LcSLCLCNAnDvjGb71eiNVV3xhr3m/aLG56cuoHbnOjR/wjvQ7tm32
+         fpl5Dey1H5rZJrE8TL/+IpEIHnrpZUuQazUQkE18JxdumlzATTiS/C6vHgf2kkGY2CF/
+         4uGg==
+X-Gm-Message-State: AO0yUKUdkQpc1mQrIuQ9yfp4baXmi9GP5V8z2XcT5hWdZPz17cSNQPKK
+        cudMHw+cR62bb827OFizxaoR4Q==
+X-Google-Smtp-Source: AK7set+3DwO3EzLOyttbMzw58HIbpgMQrSBHpW38EamYD5uQa3Hjgvlx5oaK92gjI5qg6MbymWOFuA==
+X-Received: by 2002:adf:fb4b:0:b0:2bf:c4be:e987 with SMTP id c11-20020adffb4b000000b002bfc4bee987mr6829170wrs.26.1675408650389;
+        Thu, 02 Feb 2023 23:17:30 -0800 (PST)
+Received: from krzk-bin.. ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id q16-20020adff950000000b002bff574a250sm1291828wrr.2.2023.02.02.23.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Feb 2023 23:17:30 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Subject: Re: (subset) [PATCH 3/3] dt-bindings: pinctrl: qcom,sm8350: add input-disable
+Date:   Fri,  3 Feb 2023 08:17:20 +0100
+Message-Id: <167540864401.6835.8158822534844887891.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230201154321.276419-3-krzysztof.kozlowski@linaro.org>
+References: <20230201154321.276419-1-krzysztof.kozlowski@linaro.org> <20230201154321.276419-3-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8EEbCP6PRMzWP5y@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 08:12:44AM +0100, Greg Kroah-Hartman wrote:
-> Do you want all of these to go through a single tree, or can they go
-> through the different driver subsystem trees?
+On Wed, 1 Feb 2023 16:43:21 +0100, Krzysztof Kozlowski wrote:
+> The SM8350 HDK8350 board uses input-disable property, so allow it:
+> 
+>   sm8350-hdk.dtb: pinctrl@f100000: lt9611-state: 'oneOf' conditional failed, one must be fixed:
+>     ...
+>     'input-disable' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> 
+> [...]
 
-Looks like the big removal isn't going in for this merge winodw,
-so can you queue this patch up after all Greg?
+Applied, thanks!
+
+[3/3] dt-bindings: pinctrl: qcom,sm8350: add input-disable
+      https://git.kernel.org/krzk/linux-dt/c/91d04c759c85f1fc2d3ed7d1b5bc1a7dbab87f92
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
