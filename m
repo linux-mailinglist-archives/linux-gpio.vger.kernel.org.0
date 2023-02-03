@@ -2,70 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DAB689F9E
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 17:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B0F689FAC
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 17:51:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233558AbjBCQtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 11:49:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39120 "EHLO
+        id S233619AbjBCQvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Feb 2023 11:51:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233456AbjBCQtL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 11:49:11 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C91A878B
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Feb 2023 08:49:07 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id m16-20020a05600c3b1000b003dc4050c94aso4322388wms.4
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Feb 2023 08:49:07 -0800 (PST)
+        with ESMTP id S233386AbjBCQvS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 11:51:18 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2094CA87BF
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Feb 2023 08:51:04 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so6439595wmb.2
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Feb 2023 08:51:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sWkuOMDUDuOgvvtDY78kfL6B7zEVTcX+KXFC3I95akE=;
-        b=Z5cavXfXZVOkUEqSofJL1fpNGiqYmg9ZsTvbAJy4MaoLWX9zNCFkSs0Aa4Qq5i1UGC
-         jNKpupj+28EnIv530/Quq+7Jv+UY7J+aJarca2krR+qhJsPusEp2UzIzwC2uidgM2FDk
-         Cl3rjSAjT+sNDuoZbz+cWZIJQVxlIRlvgS4nNzwk7oVFLBxFQ4qaF6L9+ktLTu9WV/tC
-         7WDZ1Hd3Zclh5IjiDXaA/EGBZQrqmX2AKxL6sBtwUbc8BhcleL6bxm+yry62NlK8DdLs
-         A0babIip34DfAE/Bxd3Ni1pxlR6QLnZlJEE5JXyNXHk9h3HZ4hTDJeQ0P6SZwiBoJXgq
-         2PqQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i4li/9i3u9UyzclsczzklQ2mXGRj8GCSwNuG6wd4jb8=;
+        b=FemXfcjSEPTjMXFHEwf0w3C8Sp/4HZdoj3bk3luyYFWbMxGbCQSBPcZadlCJZ3HpwA
+         3TdETrMfiOrm8y85osfr7ZWNZmKgsCS5yQUdsbZDnM72DSKY/KSTlkCY7jfcir5sqA+A
+         6cFZPm1WEFB42skI4mmJdgc7+L7f80oBSnzPVFEU0OCyEEImHqjE7ncqzpIHboX49gtg
+         4aaGUwjv6OaoniN6pMYLe4D4OAEp/IeSTexs85FfkwAIHcXu2yhjx1CXmmBLzPoOKfkq
+         dC7HZmCUp5LfaGrZ6Ow0M5zWXBUHZSSkcma116hXQj6NNBItWC3ASP4sEOhKS0dQT1oe
+         l3Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sWkuOMDUDuOgvvtDY78kfL6B7zEVTcX+KXFC3I95akE=;
-        b=lNwEqeMWK8Och4elnzSGlAWQMXTGTXAE8JjZki56zrbi5jJZWN2o7AXdrfJlCu/Pmd
-         B+C8+KAOEtFcDXCfwl+0CcoxKIqQzJ9dQPcnk3KqYep1XObxiSn+yLVsE9/Iq06YFv2j
-         GMZ3+tnz962q4lh/QjXHiABmhnbOePKyoAYeU6BQ2E+PUvR32QaXfqnqmqPdBLeMy/WX
-         cYrzsLkofpRCiRCnWzwr9Vla48DN30G1tEBCNuVB5Wl1j2w5AxNGLKDqT0kc6wht5KIY
-         cU9otX/7XpUX1VLcZZL0xx6yz8WL+oJ1UrhUc2fDVV8aNgwcSqFG4ZiGF/Dj+YdsYRA9
-         KOHQ==
-X-Gm-Message-State: AO0yUKUIwQqXtAZLFh2Qmxmxue0SVrlrwUH23AQ9U5sgdCoKKLYvIB0F
-        hoA/pky8+2I7bP5tR8VjYSSiiQ==
-X-Google-Smtp-Source: AK7set89ru4hCvtbqJGNreUW4FL/GSy9LNx2YC30ZaWYA6NPzlm2BQgk0OmjrQ55/wBMc8m2JApJAw==
-X-Received: by 2002:a05:600c:4f96:b0:3cf:9844:7b11 with SMTP id n22-20020a05600c4f9600b003cf98447b11mr11330029wmq.23.1675442946241;
-        Fri, 03 Feb 2023 08:49:06 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i4li/9i3u9UyzclsczzklQ2mXGRj8GCSwNuG6wd4jb8=;
+        b=GCMM3ASOcGnLbwHvupQRXiCz/IQbUqYYYsMnxtCCZwbkrHFJbuAvDLzoTsSYP26TRG
+         jRv+zc+QCKHXEj01WJ4CiD4sx0zXHL+wVdGA/YLW+F6nBFnOyI1vYO12B3joCti9zYAa
+         PcKzJMHIKQDWaI2bnSM1DvDKFmtpTy48g4Q9dYXwt7plVbjg8WiCJjBE5fCRd8W22VN3
+         kdYGvuwRjQUzb6NPofYqjPNN7vdig/qoHwgXchv2z98MJ8ne3y/1sHTTlDx7gI7WwLKX
+         y8lDObh5kqYnFSfJqtfrsDFuLTI1FffxssMnEnkPgsV3KVGm3CrMZ38lGEcvXNLVPY5O
+         14fA==
+X-Gm-Message-State: AO0yUKX0jh0iVnvJBmqNxtk61+wnMao7k5hbMUrjYZVkOGwvPyBwWpRI
+        4izZWEd2p1ZqyXrfjW1z7o/S3Q==
+X-Google-Smtp-Source: AK7set/tt1XH/V0f9ArX9C9Da5CC4MinClm94GGUoWZMvguZDBclGzYIm4l1ViWO++NCnWptamZqcA==
+X-Received: by 2002:a05:600c:3b1e:b0:3db:1200:996e with SMTP id m30-20020a05600c3b1e00b003db1200996emr10513354wms.16.1675443062712;
+        Fri, 03 Feb 2023 08:51:02 -0800 (PST)
 Received: from krzk-bin.. ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id i21-20020a05600c355500b003dc4b4dea31sm3503247wmq.27.2023.02.03.08.49.04
+        by smtp.gmail.com with ESMTPSA id u1-20020a05600c00c100b003a3442f1229sm8174654wmm.29.2023.02.03.08.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 08:49:05 -0800 (PST)
+        Fri, 03 Feb 2023 08:51:02 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 5/5] arm64: dts: qcom: sc8280xp: correct LPASS GPIO gpio-ranges
-Date:   Fri,  3 Feb 2023 17:48:54 +0100
-Message-Id: <20230203164854.390080-5-krzysztof.kozlowski@linaro.org>
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: sm8450-lpass-lpi: correct swr_rx_data group
+Date:   Fri,  3 Feb 2023 17:50:54 +0100
+Message-Id: <20230203165054.390762-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230203164854.390080-1-krzysztof.kozlowski@linaro.org>
-References: <20230203164854.390080-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -78,28 +74,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SC8280XP LPASS pin controller has GPIOs 0-18, so correct the number
-of GPIOs in gpio-ranges.
+According to hardware programming guide, the swr_rx_data pin group has
+only two pins (GPIO5 and GPIO6).  This is also visible in "struct
+sm8450_groups" in the driver - GPIO15 does not have swr_rx_data
+function.
 
-Fixes: c18773d162a6 ("arm64: dts: qcom: sc8280xp: add SoundWire and LPASS")
+Fixes: ec1652fc4d56 ("pinctrl: qcom: Add sm8450 lpass lpi pinctrl driver")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index c8509b1b040f..59545372595f 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -2645,7 +2645,7 @@ lpass_tlmm: pinctrl@33c0000 {
- 			      <0 0x3550000 0x0 0x10000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			gpio-ranges = <&lpass_tlmm 0 0 18>;
-+			gpio-ranges = <&lpass_tlmm 0 0 19>;
- 
- 			clocks = <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
- 				 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+index c3c8c34148f1..e22d03ce292e 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+@@ -105,7 +105,7 @@ static const struct pinctrl_pin_desc sm8450_lpi_pins[] = {
+ static const char * const swr_tx_clk_groups[] = { "gpio0" };
+ static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio14" };
+ static const char * const swr_rx_clk_groups[] = { "gpio3" };
+-static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5", "gpio15" };
++static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5" };
+ static const char * const dmic1_clk_groups[] = { "gpio6" };
+ static const char * const dmic1_data_groups[] = { "gpio7" };
+ static const char * const dmic2_clk_groups[] = { "gpio8" };
 -- 
 2.34.1
 
