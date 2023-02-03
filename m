@@ -2,106 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDEA6689AD9
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 15:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0E2689B71
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Feb 2023 15:19:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233754AbjBCN7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Feb 2023 08:59:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
+        id S233493AbjBCOTB convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 3 Feb 2023 09:19:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233536AbjBCN6m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 08:58:42 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AE2A2A45;
-        Fri,  3 Feb 2023 05:55:47 -0800 (PST)
-Received: by mail-qt1-f176.google.com with SMTP id f10so5472656qtv.1;
-        Fri, 03 Feb 2023 05:55:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nbKgXRRhHOsf8b2qFYqubarXiD/2JOI3CXyxQSetlOo=;
-        b=HlEDPXIokd/UDyTtc0FxQNaDH0ZU/iUhw74FrRW24qFU+x/UvHrM3GvgjU6XYoPfK4
-         2a2wgRqkfLi1xDl5PSBd5UkwLYsdlnwlmZvc5sMXnZVOKO0ld5QsKfMM4Xta/ms5CNxS
-         ppXL+O3ObR9qo8Vq45mIVyXo+YcXgreGnvBUUWGiX/vXsD14bkYewuWgtd2COS54VdSy
-         KUKU9eEw5Wp39brBfUJYMOM/S6kXT2FUwFn4y6EgyrZO/Pm8GUtPRNZ4nQee+mT+NH8Z
-         kX+5LCYAEVVGBYc2Zw2vGRC3e6C9SSXL77LKPQVWLKskZTa4XqQmh9orAtTSvVK3EXoP
-         CEEA==
-X-Gm-Message-State: AO0yUKVcLrFdcEncIeo8DCv1VeOvmBlSU4e1lgl6i+PjpTk7oXrN7eCy
-        /8MGYFvKOvbzHC1alr44Fi3raKccTgAn8Q==
-X-Google-Smtp-Source: AK7set/VrH2W/hF5htoK/wyjMPPVEuFk9wCswUkXu2hSgQiBOpjFpUlZY44JgVrrob1RrSq8KnXVeA==
-X-Received: by 2002:ac8:57d6:0:b0:3b8:4bb8:5aa5 with SMTP id w22-20020ac857d6000000b003b84bb85aa5mr20729191qta.54.1675432441314;
-        Fri, 03 Feb 2023 05:54:01 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id n3-20020ac86743000000b003b80a69d353sm1577481qtp.49.2023.02.03.05.54.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Feb 2023 05:54:00 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5254e8994e8so23778007b3.6;
-        Fri, 03 Feb 2023 05:54:00 -0800 (PST)
-X-Received: by 2002:a0d:c2c4:0:b0:514:a90f:10ea with SMTP id
- e187-20020a0dc2c4000000b00514a90f10eamr1025067ywd.316.1675432440139; Fri, 03
- Feb 2023 05:54:00 -0800 (PST)
+        with ESMTP id S232467AbjBCOSY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Feb 2023 09:18:24 -0500
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52CE61CAD0;
+        Fri,  3 Feb 2023 06:18:07 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id EE43E24E020;
+        Fri,  3 Feb 2023 22:18:03 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
+ 2023 22:18:04 +0800
+Received: from ubuntu.localdomain (113.72.144.84) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 3 Feb
+ 2023 22:18:02 +0800
+From:   Hal Feng <hal.feng@starfivetech.com>
+To:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Conor Dooley <conor@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andreas Schwab <schwab@suse.de>,
+        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/4] Basic pinctrl support for StarFive JH7110 RISC-V SoC
+Date:   Fri, 3 Feb 2023 22:17:57 +0800
+Message-ID: <20230203141801.59083-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20230113062339.1909087-1-hch@lst.de> <20230113062339.1909087-2-hch@lst.de>
- <Y8EMZ0GI5rtor9xr@pendragon.ideasonboard.com> <20230203071506.GB24833@lst.de> <Y90Q73ykVEHRNII4@pendragon.ideasonboard.com>
-In-Reply-To: <Y90Q73ykVEHRNII4@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Feb 2023 14:53:48 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVi1DPqYNbB5xWeG+1kK4x=8zQ0y57WSJ_j2xENCjQREQ@mail.gmail.com>
-Message-ID: <CAMuHMdVi1DPqYNbB5xWeG+1kK4x=8zQ0y57WSJ_j2xENCjQREQ@mail.gmail.com>
-Subject: Re: [PATCH 01/22] gpu/drm: remove the shmobile drm driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [113.72.144.84]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Laurent,
+This patch series adds basic pinctrl support for StarFive JH7110 SoC.
 
-On Fri, Feb 3, 2023 at 2:49 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Fri, Feb 03, 2023 at 08:15:06AM +0100, Christoph Hellwig wrote:
-> > So given that the big series doesn't go in, can we get this removal
-> > picked up through the drm tree?
->
-> Geert has a board with an ARM-based SoC compatible with this driver, and
-> he expressed interest in taking over maintainership. Geert, could you
-> share your plans ? Should the shmobile_drm driver be dropped now, or
-> will you revive it in a relatively near future ?
+Changes since v3:
+- Rebased on Linus's "devel" branch of linux-pinctrl repo, which was based on
+  on tag v6.2-rc1.
+- Dropped patch 1.
+Patch 2 & 3:
+- Added a reference for '-pins$' patternProperties.
+- Put "additionalProperties: false" before properties section. (by Rob)
+- Improved the description.
+- Changed the node name in examples from "gpio" to "pinctrl".
+Patch 4:
+- Added some missing headers. (by Andreas)
 
-(Trying to) get it working on that board is on my list...
+  v3: https://lore.kernel.org/all/20221220005529.34744-1-hal.feng@starfivetech.com/
 
-Gr{oetje,eeting}s,
+Changes since v2:
+- Rebased on tag v6.1.
+Patch 1:
+- Renamed pinctrl-starfive-jh7110.h to
+  starfive,jh7110-pinctrl.h. (by Krzysztof)
+- Separated the register values in the binding header and stored them in
+  a new file arch/riscv/boot/dts/starfive/jh7110-pinfunc.h. (by Krzysztof)
+- Split patch 1 into sys part and aon part. Merged them into patch 2
+  and patch 3 respectively.
+Patch 2 & 3:
+- Dropped "reg-names" and the description of "interrupts". Dropped quotes
+  behind "$ref" and kept consisitent quotes. (by Krzysztof)
+- Moved gpio properties behind interrupt properties.
+- Moved "required" behind "patternProperties". (by Krzysztof)
+- Rewrote the examples of bindings. (by Krzysztof and Emil)
+- Added Co-developed-by tag for Emil.
+- Dropped unused "clocks" property in patch 3.
+Patch 4 & 5:
+- Renamed "pinctrl-starfive.*" to "pinctrl-starfive-jh7110.*" and replaced
+  all "starfive_" prefix with "jh7110_" in these files. (by Emil)
+- Dropped macro GPIO_NUM_PER_WORD. (by Emil)
+- Dropped unused flag member in starfive_pinctrl_soc_info structure. (by Emil)
+- Renamed "pinctrl-jh7110-sys.c" to "pinctrl-starfive-jh7110-sys.c".
+  Renamed "pinctrl-jh7110-aon.c" to "pinctrl-starfive-jh7110-aon.c". (by Emil)
+- Added individual Kconfig options for sys and aon pinctrl drivers. (by Emil)
+- Made the sys and aon pinctrl drivers be modules. (by Emil)
+- Added "JH7110_" prefix for macro SYS_GPO_PDA_0_74_CFG,
+  SYS_GPO_PDA_89_94_CFG and AON_GPO_PDA_0_5_CFG. (by Emil)
+- Dropped jh7110_sys_pinctrl_probe() and jh7110_aon_pinctrl_probe().
+  Got the match data in the common jh7110_pinctrl_probe() and used it
+  to probe. (by Emil)
+- Dropped the of_match_ptr macro(). (by Emil)
+- Set the MODULE_LICENSE as "GPL" according to commit bf7fbeeae6db.
 
-                        Geert
+  v2: https://lore.kernel.org/all/20221118011108.70715-1-hal.feng@starfivetech.com/
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Changes since v1:
+- Rebased on tag v6.1-rc5.
+- Dropped patch 22 and 23 since they were merged in v6.1-rc1.
+- Removed some unused macros and register values which do not belong to
+  bindings. Simplified pinctrl definitions in patch 24. (by Krzysztof)
+- Split the bindings into sys pinctrl bindings and aon pinctrl bindings,
+  and split patch 25 into two patches.
+- Made the bindings follow generic pinctrl bindings. (by Krzysztof)
+- Fixed some wrong indentation in bindings, and checked it with
+  `make dt_binding_check`.
+- Split the patch 26 into two patches which added sys and aon pinctrl
+  driver respectively.
+- Restructured the pinctrl drivers so made them follow generic pinctrl
+  bindings. Rewrote `dt_node_to_map` and extracted the public code to make
+  it clearer.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  v1: https://lore.kernel.org/all/20220929143225.17907-1-hal.feng@linux.starfivetech.com/
+
+Jianlong Huang (4):
+  dt-bindings: pinctrl: Add StarFive JH7110 sys pinctrl
+  dt-bindings: pinctrl: Add StarFive JH7110 aon pinctrl
+  pinctrl: starfive: Add StarFive JH7110 sys controller driver
+  pinctrl: starfive: Add StarFive JH7110 aon controller driver
+
+ .../pinctrl/starfive,jh7110-aon-pinctrl.yaml  | 123 +++
+ .../pinctrl/starfive,jh7110-sys-pinctrl.yaml  | 141 +++
+ MAINTAINERS                                   |   8 +-
+ drivers/pinctrl/starfive/Kconfig              |  33 +
+ drivers/pinctrl/starfive/Makefile             |   4 +
+ .../starfive/pinctrl-starfive-jh7110-aon.c    | 177 ++++
+ .../starfive/pinctrl-starfive-jh7110-sys.c    | 449 ++++++++
+ .../starfive/pinctrl-starfive-jh7110.c        | 982 ++++++++++++++++++
+ .../starfive/pinctrl-starfive-jh7110.h        |  70 ++
+ .../pinctrl/starfive,jh7110-pinctrl.h         | 137 +++
+ 10 files changed, 2121 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-aon-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+ create mode 100644 include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+
+-- 
+2.38.1
+
