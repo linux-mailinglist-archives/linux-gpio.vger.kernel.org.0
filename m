@@ -2,111 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52EB968B115
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Feb 2023 18:20:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC38168B2A1
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 00:09:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbjBERUX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Feb 2023 12:20:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
+        id S229585AbjBEXJI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Feb 2023 18:09:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjBERUW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Feb 2023 12:20:22 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346CF199D6;
-        Sun,  5 Feb 2023 09:20:21 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id mc11so28131709ejb.10;
-        Sun, 05 Feb 2023 09:20:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHKHtHmdBvu9gCl5Uypjbx8NwWDCD3db/bpuwxrPVv4=;
-        b=GHMCUB6xoF6V29LH64z7vIPbEOj4/sYrr0E0HBhRBIfxFIa2/ba09BUwMP2pBnVFHs
-         alfQLoKysiFg3FZbOn3+yEoDydxHxbZFwfNPdpP4di9i71aw9cgkctY0CCufjCD7TkWr
-         Y+7nZY/di4GF5hUBMGkakkC2QuchUcUKfeU/GgjsxcU4MbgYXLn0+vo5nOqdzq8J2YB2
-         In1jIn9fjrye6rxJ5YzSYuYkFNAU5u8a8avkukntCS3OI4huWm485L04sgJuuFSOohpj
-         D4CRo20juU2z+PKBb+A/sb5gzm0jmtfQ5jlYiJLisUd3UxF5UtNFZc5bzc06HfC5+edh
-         Sl7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHKHtHmdBvu9gCl5Uypjbx8NwWDCD3db/bpuwxrPVv4=;
-        b=oOxuuuVvwMjxuBpudfKwcBh2uz1bacRB2X0Gt8N4oU1InTxI69gzCFiy/6FkjrfOgw
-         U+t7TUEVwSqBoEAY7JFYU9I3Mwk87e5XuWt/d91wrsqRSP6CQ7k+01J+hRVG777EnnER
-         Ba1D3haem4LsB9AV2mvEqtRVBP6ayEOVGzfj4MoWXRMTyJZuSRRh4CXmLNPawOrFfo3U
-         KMLgkL4qB7STu4PxYU+4BrspfqZl42nmX9aBOCR0+X3m/l7bhZ715AA5jzgytX+vx1kb
-         5f0biiyASX+Kd/CxyvlhK4TdEcP6q5gxq4ZLdRog43QuO6GgO+5FncSTefLeSO/MpBbq
-         wwhg==
-X-Gm-Message-State: AO0yUKXUwCLGy68acxvOBYIIVKXAX2CQRtbY1cE3y+aGXCatJBYMcYWI
-        bqiGUXUn9BLeorkXQH/WVMU=
-X-Google-Smtp-Source: AK7set/17iI3CDHKuvSWSXOBFIuJXIdIz2dQjNgoERzWWImV2UhbkRts9m9wGr/M5ENsi2QXfdG1Aw==
-X-Received: by 2002:a17:906:d7a7:b0:87b:d3e3:c23 with SMTP id pk7-20020a170906d7a700b0087bd3e30c23mr19288755ejb.54.1675617619672;
-        Sun, 05 Feb 2023 09:20:19 -0800 (PST)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id o13-20020a17090611cd00b0088bd62b1cbbsm4302321eja.192.2023.02.05.09.20.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Feb 2023 09:20:19 -0800 (PST)
-Message-ID: <0de7b28e-1c12-2546-2747-d8932678f9dd@gmail.com>
-Date:   Sun, 5 Feb 2023 18:20:17 +0100
+        with ESMTP id S229478AbjBEXJH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Feb 2023 18:09:07 -0500
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1062F17CF5;
+        Sun,  5 Feb 2023 15:09:05 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4P94p10kzhz4x1f;
+        Mon,  6 Feb 2023 10:08:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1675638543;
+        bh=pNXUawnaU3qfDTxBKpmXsJPpQ4kMgE5LZAjUfYaVNaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZnYADCx5yiYMn3pkGOedm0t/sNMIjkMYLf/dBTxabGoodLOZTSPJETPuFDge/Cde4
+         aIRPsac6jVpl6zYzM5s0sf9qZ8PH7w9zSC17MHdHR3/1Prai5iUUUHvsKOEj2nhHO3
+         Cblnv6/K2AhBj4YkTU2WIyVtn11Iyu9muX3ILcAHxEldyx9xBhSO4GKxKXmaTccHeU
+         yYw5esGxcNGOWPs8dnxojmNjd9fFKZA9h2nPmfY09YsEtc/xrY2g/H5zDiLVhBoJXQ
+         OF2qL+X7Qm4pEDL2kEKjgtpjAAAz7yUq4t9yOAfwzn4aDqbJ6ZpjiHa3qtmhjT39nt
+         0JnygHWxXhFVw==
+Date:   Mon, 6 Feb 2023 10:08:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Subject: Re: remove arch/sh
+Message-ID: <20230206100856.603a0f8f@canb.auug.org.au>
+In-Reply-To: <20230203083037.GA30738@lst.de>
+References: <20230113062339.1909087-1-hch@lst.de>
+        <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+        <20230116071306.GA15848@lst.de>
+        <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+        <20230203071423.GA24833@lst.de>
+        <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
+        <20230203083037.GA30738@lst.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v2 2/8] dt-bindings: pinctrl: rockchip,pinctrl: mark gpio
- sub nodes of pinctrl as deprecated
-To:     heiko@sntech.de
-Cc:     Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kever.yang@rock-chips.com, sjg@chromium.org,
-        philipp.tomsich@vrull.eu, john@metanate.com,
-        quentin.schulz@theobroma-systems.com
-References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
- <137b56f0-8e86-f705-4ba7-d5dfe3c0b477@gmail.com>
- <CACRpkdYYB4-qhgbN3D8-Yjs9QVcj1oCZZHTVJXsyXgC=p-e=NA@mail.gmail.com>
-Content-Language: en-US
-From:   Johan Jonker <jbx6244@gmail.com>
-In-Reply-To: <CACRpkdYYB4-qhgbN3D8-Yjs9QVcj1oCZZHTVJXsyXgC=p-e=NA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; boundary="Sig_/9=gZIOzZKIZz.T3XwOWz_99";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On 1/26/23 14:45, Linus Walleij wrote:
-> On Sat, Jan 21, 2023 at 12:08 PM Johan Jonker <jbx6244@gmail.com> wrote:
-> 
->> Mark gpio sub nodes of pinctrl as deprecated.
->> Gpio nodes are now placed in the root of the device tree.
->> The relation to pinctrl is now described with the
->> "gpio-ranges" property.
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
+On Fri, 3 Feb 2023 09:30:37 +0100 Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
+> > Since this is my very first time stepping up as a kernel maintainer, I =
+was hoping
+> > to get some pointers on what to do to make this happen.
+> >=20
+> > So far, we have set up a new kernel tree and I have set up a local deve=
+lopment and
+> > test environment for SH kernels using my SH7785LCR board as the target =
+platform.
+> >=20
+> > Do I just need to send a patch asking to change the corresponding entry=
+ in the
+> > MAINTAINERS file? =20
+>=20
+> I'm not sure a there is a document, but:
+>=20
+>  - add the MAINTAINERS change to your tree
+>  - ask Stephen to get your tree included in linux-next
 
-> Do you want me to simply merge this patch to the pinctrl tree?
+And by "Stephen", Christoph means me.  When you are ready, please send
+me a request to include your tree/branch in linux-next (usually the
+branch is called something like "for-next" or just "next") telling me
+the git URL, and the contacts I should send email to if there are
+conflicts/build issues with the branch.  I will then fetch the branch
+every time I create a new linux-next release (most work days), so all
+you need to do is update that branch each time you are ready to publish
+more commits.
 
-Hi Heiko,
+--=20
+Cheers,
+Stephen Rothwell
 
-Any last minute feedback possible?
-If this patch suits then maybe give a ack for Linus?
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Johan 
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Yours,
-> Linus Walleij
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmPgNwgACgkQAVBC80lX
+0GzQVAgAjy+Ruo0rndMBlq3LUsn3e3WM6k7+dwjW7y5KrWBUtO9yrheMEypNr12O
+byLw07yy1/H56vz7bZJN3IaFDMrx7kFxU2Rfi4K2lkrd5y7hRGFHFbyG9KACdTVo
+d4yMastrzpa4sqz6druszU7GDQnWEFS8+bdy18sKOXOIF2A4/bCfyPcwbu6WcX9U
+PWBzYOIqYThwk1BW+po7wuq+KMZW0337iVEob5zS9qRotE98YCs2zc5AjSg1XQx3
+SWMIA+zrNKOlxUJ9BUoeDAQUoe6UJjekpz9o0j9q/w1DDNKl9mXQ5q+JvpuzrtGj
+5u71j4opYj+PidkCy3HMoXj2z0tlFw==
+=TRVa
+-----END PGP SIGNATURE-----
+
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99--
