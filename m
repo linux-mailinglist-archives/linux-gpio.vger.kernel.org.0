@@ -2,220 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B539468ACE7
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Feb 2023 23:32:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D70E968AD96
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Feb 2023 01:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbjBDWcv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Feb 2023 17:32:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
+        id S229800AbjBEA2G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Feb 2023 19:28:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232476AbjBDWcu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Feb 2023 17:32:50 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C9423C5F
-        for <linux-gpio@vger.kernel.org>; Sat,  4 Feb 2023 14:32:43 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id pj3so8368657pjb.1
-        for <linux-gpio@vger.kernel.org>; Sat, 04 Feb 2023 14:32:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCubKHsyMQJF8LMl1XgSOrfeBF7lBTY/RGmJLycWlaU=;
-        b=G2+vuASwFpuwWTpilhz1IvtVsiUT9WhCHPg3bHDt/5F+ZoUeYQwXI0GHaH/YaKtytT
-         o1acMo5Mlm9cllOyD5PirVkDAsyvv3CP6uyWR+LaTPS1ROgZi0SnUgG8oPPxwGDdvf2H
-         Luf92Ex8l5lVs6qa9X7drp1/LtoiKUv6uQViswIbJn67mpOnBEQ7U8Nir6vHJjl4A/oJ
-         +5ukHAB+inYG8Le10OO2jEj7EmNeHwW7lkjz8nuxXrYC+JIa5v+c8qtK+v9w+HDq7apx
-         KU2y4mG6YSECFfteheftSjttr13wzYo3LIzXiFwWhQHZEs641AvyDiOb9vOPwrpjxbKw
-         BE5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TCubKHsyMQJF8LMl1XgSOrfeBF7lBTY/RGmJLycWlaU=;
-        b=6mUjJOfE1z1LbJ+X4QxlA5BsH7QLHos1TXMynfBeN9Sq+e4tgfeuptoiTHDXtczPlb
-         s3ou9vJx0fCOUtdEGs0SGApIciSEC1EdIW1iXPCpn2gg/8eknDYGoIiiLGNKkPQpAeTw
-         6j5h0BcX8VwEnwJUAflH/74i7r1NiFlNYN4hoDyK+yF2wlNDPKmedpCMbdcyh6IWWDn/
-         XbGFBwIVzGt1uG6Pl640CMuPG/klmtPonyoO6egUJYTgBjK/IR/ApjVfciOY7oMrOjnz
-         /KhmW5jOrnhaURCwucfqrGmdh1rJXaGf9mTGGONaPnGGNDrGyILSZ1s7iLQwrIEiDCRX
-         71nQ==
-X-Gm-Message-State: AO0yUKWeJo+Nj8+vfD0xPmehTVd2SmRhzkChmxQmuyaEUGSxXB5stbqa
-        qAomZzcrMzUBEx++P9EQMI1RGkw5lgUEOj8x4qOGQQ==
-X-Google-Smtp-Source: AK7set+WTHxq5oO63yGH1Y9Xnzv5N1lAd2jXSDL3AuczoyplN2Tu7uL6IRfi3QFZwCS/cMVnCxbzD3B8jbvtM9uZpe8=
-X-Received: by 2002:a17:90a:656:b0:226:cff8:6472 with SMTP id
- q22-20020a17090a065600b00226cff86472mr2232226pje.73.1675549962139; Sat, 04
- Feb 2023 14:32:42 -0800 (PST)
+        with ESMTP id S230023AbjBEA2G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Feb 2023 19:28:06 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1701BCB
+        for <linux-gpio@vger.kernel.org>; Sat,  4 Feb 2023 16:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675556883; x=1707092883;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9SLDQPyf59Vdm6QMoGWpcmt2YZ3csAFXGPpYIYD5DB4=;
+  b=ILy05lfZl7CTVfTZ6dlNtO/glAkFDdSuUeJZZrzTilv8E+SXgtRF7RR7
+   M8c7CbJx1WUVW5KiZo6j5GvSTF2CQIaEbbYWorOkq8LEX9pmXukVa1T55
+   KVqDPVWUxKbE2tPkMEkCmLL8OKF/ZxWcF81e0w1Sd2LpdYNeRE44VtXcS
+   qifrMuZDdrv1rQ12vvs5xzUMioom2MEuZDA9KKRx6et5lPWJ8/BtdepRA
+   qCzQeLLxnm8BvNZ75q4Z7zv7GpPr01kvHiKR84hKRkpDsrfbLHFcIOXJH
+   GkF2F96ZAZrNwPbld5vK6ObVdKsWrivSEclqXhV2syEQeLqOthtyhhowA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="327637828"
+X-IronPort-AV: E=Sophos;i="5.97,274,1669104000"; 
+   d="scan'208";a="327637828"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2023 16:28:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="696502351"
+X-IronPort-AV: E=Sophos;i="5.97,274,1669104000"; 
+   d="scan'208";a="696502351"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 04 Feb 2023 16:28:01 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pOSsz-0001bK-0B;
+        Sun, 05 Feb 2023 00:28:01 +0000
+Date:   Sun, 05 Feb 2023 08:27:38 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 2e539b735d8683097846b486c0fb093da5f27fbb
+Message-ID: <63def7fa.x8sPB4GGKtpoEI8+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20230127001141.407071-1-saravanak@google.com> <20230127001141.407071-5-saravanak@google.com>
- <20230130143153.67dsxn4lugfetfwb@bogus> <Y9fe2arI8afeURWn@smile.fi.intel.com>
- <CAGETcx9aPp+JU-hO+fGyGps6jaoKoFzZd2zzy5YZBKoU8G=OhA@mail.gmail.com> <20230131101337.376mnrvhltbsychd@bogus>
-In-Reply-To: <20230131101337.376mnrvhltbsychd@bogus>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Sat, 4 Feb 2023 14:32:05 -0800
-Message-ID: <CAGETcx9Jc1YAV49+gJWo0gFh1rxJ3nwBCw_CKYhAREBwvq5Kcw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/11] gpiolib: Clear the gpio_device's fwnode
- initialized flag before adding
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 2:13 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, Jan 30, 2023 at 08:01:17PM -0800, Saravana Kannan wrote:
-> > On Mon, Jan 30, 2023 at 7:14 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Mon, Jan 30, 2023 at 02:31:53PM +0000, Sudeep Holla wrote:
-> > > > On Thu, Jan 26, 2023 at 04:11:31PM -0800, Saravana Kannan wrote:
-> > > > > Registering an irqdomain sets the flag for the fwnode. But having the
-> > > > > flag set when a device is added is interpreted by fw_devlink to mean the
-> > > > > device has already been initialized and will never probe. This prevents
-> > > > > fw_devlink from creating device links with the gpio_device as a
-> > > > > supplier. So, clear the flag before adding the device.
-> > >
-> > > ...
-> > >
-> > > > > +   /*
-> > > > > +    * If fwnode doesn't belong to another device, it's safe to clear its
-> > > > > +    * initialized flag.
-> > > > > +    */
-> > > > > +   if (!gdev->dev.fwnode->dev)
-> > > > > +           fwnode_dev_initialized(gdev->dev.fwnode, false);
-> > > >
-> > > > This is the one causing the kernel crash during the boot on FVP which
-> > > > Naresh has reported. Just reverted this and was able to boot, confirming
-> > > > the issue with this patch.
-> > >
-> > > I'm wondering if
-> > >
-> > >         if (!dev_fwnode(&gdev->dev)->dev)
-> > >                 fwnode_dev_initialized(&dev_fwnode(gdev->dev), false);
-> > >
-> > > works.
-> >
-> > No, that won't help. The problem was that with arm32, we have gpio
-> > devices created without any of_node or fwnode. So I can't assume
-> > fwnode will always be present.
-> >
->
-> Correct, and this one is not even arm32. But it is just reusing a driver
-> that needs to be supported even on arm32.
->
-> Not sure on how to proceed. As a simple way to check, I added a NULL check
-> for fwnode building on top of Andy's suggestion[1]. That works.
->
-> Also the driver in question on arm64 FVP model is drivers/mfd/vexpress-sysreg.c
-> mfd_add_device() in drivers/mfd/mfd-core.c allows addition of devices without
-> of_node/fwnode. I am sure returning error like[2] will break many platforms
-> but I just wanted to confirm the root cause and [2] fixes the boot without
-> NULL check for fwnode in gpiochip_setup_dev().
->
-> Hope this helps.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 2e539b735d8683097846b486c0fb093da5f27fbb  gpio: tegra186: remove unneeded loop in tegra186_gpio_init_route_mapping()
 
-Thanks for debugging it for me Sudeep. Incorporated into my v3.
+elapsed time: 1673m
 
--Saravana
+configs tested: 60
+configs skipped: 2
 
->
-> --
-> Regards,
-> Sudeep
->
-> [1]
->
-> -->8
-> diff --git i/drivers/gpio/gpiolib.c w/drivers/gpio/gpiolib.c
-> index b23140c6485f..e162f13aa2c9 100644
-> --- i/drivers/gpio/gpiolib.c
-> +++ w/drivers/gpio/gpiolib.c
-> @@ -577,13 +577,15 @@ static void gpiodevice_release(struct device *dev)
->  static int gpiochip_setup_dev(struct gpio_device *gdev)
->  {
->         int ret;
-> +       struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
->
->         /*
->          * If fwnode doesn't belong to another device, it's safe to clear its
->          * initialized flag.
->          */
-> -       if (!gdev->dev.fwnode->dev)
-> -               fwnode_dev_initialized(gdev->dev.fwnode, false);
-> +       if (fwnode && !fwnode->dev)
-> +               fwnode_dev_initialized(fwnode, false);
-> +
->         ret = gcdev_register(gdev, gpio_devt);
->         if (ret)
->                 return ret;
->
-> [2]
->
-> -->8
->
-> diff --git i/drivers/mfd/mfd-core.c w/drivers/mfd/mfd-core.c
-> index 16d1861e9682..3b2c4b0e9a2a 100644
-> --- i/drivers/mfd/mfd-core.c
-> +++ w/drivers/mfd/mfd-core.c
-> @@ -231,9 +231,11 @@ static int mfd_add_device(struct device *parent, int id,
->                         }
->                 }
->
-> -               if (!pdev->dev.of_node)
-> +               if (!pdev->dev.of_node) {
->                         pr_warn("%s: Failed to locate of_node [id: %d]\n",
->                                 cell->name, platform_id);
-> +                       goto fail_alias;
-> +               }
->         }
->
->         mfd_acpi_add_device(cell, pdev);
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+alpha                               defconfig
+x86_64                            allnoconfig
+ia64                             allmodconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+um                           x86_64_defconfig
+sh                               allmodconfig
+um                             i386_defconfig
+m68k                             allmodconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+powerpc                          allmodconfig
+s390                             allyesconfig
+m68k                             allyesconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-bpf
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           allyesconfig
+arc                  randconfig-r043-20230204
+s390                 randconfig-r044-20230204
+riscv                randconfig-r042-20230204
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                                defconfig
+i386                             allyesconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arm                                 defconfig
+
+clang tested configs:
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20230204
+arm                  randconfig-r046-20230204
+hexagon              randconfig-r045-20230204
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a002
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a006
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
