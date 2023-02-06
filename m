@@ -2,50 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA3FC68B8D5
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 10:41:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF2B68B903
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 10:53:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjBFJlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 04:41:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
+        id S229522AbjBFJwi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 04:52:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjBFJls (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 04:41:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3399811674;
-        Mon,  6 Feb 2023 01:41:47 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBD5060DCC;
-        Mon,  6 Feb 2023 09:41:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66AAC433EF;
-        Mon,  6 Feb 2023 09:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675676506;
-        bh=TvgaLId7CjU5WDr/jGvVee6fSSjJFU/9lSDvuAuffYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=z+TD6NzCKPHi3I9A8nr9sfLqBY/pwU0ihDoP1Ys6Ttk2SyT3o9S24tB8mEA6bVWOT
-         jx8hnBoEb2VLclUNoGHsj697V6ALD3aKyAV3grV7g82Q0kZtIy57zp4rcra1achSIC
-         yG6W0uCKj4oiD9BoZ6+HfJb4uG4afJ8Q2InlkZ0U=
-Date:   Mon, 6 Feb 2023 10:41:43 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tharunkumar.Pasumarthi@microchip.com
-Cc:     Kumaravel.Thiagarajan@microchip.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        UNGLinuxDriver@microchip.com, lkp@intel.com
-Subject: Re: [PATCH v3 char-misc-next] misc: microchip: pci1xxxx: Add
- OTP/EEPROM driver for the pci1xxxx switch
-Message-ID: <Y+DLVwfOjEKYJpyB@kroah.com>
-References: <20230116192908.2980862-1-kumaravel.thiagarajan@microchip.com>
- <Y8pzIgeMyf2oNCn4@kroah.com>
- <PH7PR11MB59587A0639FE44245A68312B9BDA9@PH7PR11MB5958.namprd11.prod.outlook.com>
+        with ESMTP id S229648AbjBFJwM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 04:52:12 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F971CF58
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 01:52:10 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id mf7so32493458ejc.6
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 01:52:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=baVP657n8icmklgNe0xOuxc0O0JI+5IT7IAu1E1Ky7k=;
+        b=PejvlXRJZwnjHFmZqjeyDC4631Qf/DpedicCiPcMmDPWobE3+8JEzNN1MwoQmE+Cr7
+         +oFSLhPspjpUKKhrMcKxXcV8MsF5/V3T8eJGFT1UrBxuF68gHdFP9TreXoaNb85YRB8K
+         Ur7y33M7x+ITEV9HLoWL95S1YTMuLAvlPHWBTEmWL8rya1rAjFB4ATVitCHz0dft91OZ
+         xsdYv5X9rKND35Pdx4s8Htag48DNIOhY+aXoswR4+hVMcFJK5Q/2YVHE2ZOQXFkw3kow
+         7fMEcRA6UGv6JE0rAgT99W5yCSd+zP7Zozmb+6hnR31RnWd7gMFejjANtV1ZOFrEiMDd
+         rMPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=baVP657n8icmklgNe0xOuxc0O0JI+5IT7IAu1E1Ky7k=;
+        b=kNBgmew8Ze6Ez9OybzIiT6L04GBFpyL1OCZafXPey7K+xL59MDEgSIOThOBLuwJ7hb
+         hT/io1DjUgSxAbv5oxxPAz9YQ9RO1NFnOxCCS/0LafExt9O6MeuSJUaGyWvcIduHfah1
+         Vim9TwCD173UXL4pbASFdMv07vzXxdOe/pyMF+haMLAy+H/XhnlRRFoLiJ4ok62zjRfG
+         pSEfDH99QgeZEJQH3GKi9MmVbzLldDnoLDkJfXeGPy/P92YiyG2sLS9xn44ijMPkXAe5
+         um38uGA3+6GFfiA7pGlhCsxjfkWYbaCnGFNRuny3oF4PYP7iGD4fSZlkaQW49R2RwBOf
+         WHew==
+X-Gm-Message-State: AO0yUKVaIQ+7dqoWLfsKCOWvY9Rkel+i54TOW2ka3mbeNUGQmL3jSmfJ
+        RDT8UQq2gkYjoogpIan/Ps2JmQ==
+X-Google-Smtp-Source: AK7set819Bt8yINrBhs7qYEWhkifE9mWvvy3wPSDQiyXOb5hzFTlwkg1yIxUDyAiQZ1LDgExVDz4qA==
+X-Received: by 2002:a17:906:3608:b0:878:711d:9310 with SMTP id q8-20020a170906360800b00878711d9310mr20275052ejb.1.1675677129200;
+        Mon, 06 Feb 2023 01:52:09 -0800 (PST)
+Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
+        by smtp.gmail.com with ESMTPSA id uj19-20020a170907c99300b0088c804c4ae2sm5126434ejc.201.2023.02.06.01.52.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Feb 2023 01:52:08 -0800 (PST)
+Message-ID: <03d6c92a-c9f3-915c-218a-14ff5c5250d2@linaro.org>
+Date:   Mon, 6 Feb 2023 11:52:06 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR11MB59587A0639FE44245A68312B9BDA9@PH7PR11MB5958.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH V3 4/9] dt-bindings: clock: Add Qualcomm IPQ5332 GCC
+Content-Language: en-GB
+To:     Kathiravan T <quic_kathirav@quicinc.com>,
+        krzysztof.kozlowski@linaro.org, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        arnd@arndb.de, marcel.ziswiler@toradex.com,
+        nfraprado@collabora.com, robimarko@gmail.com,
+        quic_gurus@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     quic_varada@quicinc.com, quic_srichara@quicinc.com
+References: <20230206071217.29313-1-quic_kathirav@quicinc.com>
+ <20230206071217.29313-5-quic_kathirav@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20230206071217.29313-5-quic_kathirav@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,34 +84,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 09:20:51AM +0000, Tharunkumar.Pasumarthi@microchip.com wrote:
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Sent: Friday, January 20, 2023 4:26 PM
-> > To: Kumaravel Thiagarajan - I21417
-> > <Kumaravel.Thiagarajan@microchip.com>
-> > > +             dev_err(&priv->pdev->dev,
-> > > +                     "EPC_Timeout, EEPROM is unresponsive: %x\n",
-> > > + data);
-> > 
-> > Can this spam the kernel logs?  If so, please rate limit it.
+On 06/02/2023 09:12, Kathiravan T wrote:
+> Add binding for the Qualcomm IPQ5332 Global Clock Controller.
 > 
-> This print will only come once at max and will not spam logs.
+> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
+> ---
+> Changes in V3:
+> 	- Actually I missed to remove the clocks in V2 which are supposed to
+> 	  be removed. In V3 I have removed those and they are
+> 	  GCC_APSS_AHB_CLK, GCC_APSS_AHB_CLK_SRC, GCC_APSS_AXI_CLK
+> 	- For the same, didn't add the Reviewed-By tags from Stephen and
+> 	  Krzysztof
 > 
-> > > +     delay = msecs_to_jiffies(OTP_RW_TIMEOUT_MILLISECONDS);
-> > > +     j0 = jiffies;
-> > > +     j1 = j0 + delay;
-> > 
-> > Are you sure this math works out?  Please use the jiffies math functions
-> > instead so you can handle wrapping properly.
+> Changes in V2:
+> 	- property 'clocks' is marked required
+> 	- Renamed the include file name to match with compatible
 > 
-> You suggest using any existing APIs to add jiffies to handle wrapping? I am not able 
-> to find any such API. Can you please point out API name. 
+>   .../bindings/clock/qcom,ipq5332-gcc.yaml      |  61 +++
+>   include/dt-bindings/clock/qcom,ipq5332-gcc.h  | 356 ++++++++++++++++++
+>   2 files changed, 417 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+>   create mode 100644 include/dt-bindings/clock/qcom,ipq5332-gcc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+> new file mode 100644
+> index 000000000000..961311af400c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,ipq5332-gcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Global Clock & Reset Controller on IPQ5332
+> +
+> +maintainers:
+> +  - Stephen Boyd <sboyd@kernel.org>
+> +
+> +description: |
+> +  Qualcomm global clock control module provides the clocks, resets and power
+> +  domains on IPQ5332.
+> +
+> +  See also:: include/dt-bindings/clock/qcom,gcc-ipq5332.h
+> +
+> +allOf:
+> +  - $ref: qcom,gcc.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq5332-gcc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO clock source
+> +      - description: Sleep clock source
+> +      - description: PCIE 2lane PHY pipe clock source
+> +      - description: PCIE 2lane x1 PHY pipe clock source (For second lane)
+> +      - description: USB PCIE wrapper pipe clock source
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xo
+> +      - const: sleep_clk
+> +      - const: pcie_2lane_phy_pipe_clk
+> +      - const: pcie_2lane_phy_pipe_clk_x1
+> +      - const: usb_pcie_wrapper_pipe_clk
 
-I have no context here for what you are doing with the math in jiffies,
-but that is usually a very odd thing.  If you use the normal timer
-functions, you will not have to worry about the wrapping as it is
-handled for you, right?
+pcie3x1_0_pipe_clk_src, pcie3x1_1_pipe_clk_src, pcie3x2_pipe_clk_src 
+usb0_pipe_clk_src are missing.
 
-thanks,
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    clock-controller@1800000 {
+> +      compatible = "qcom,ipq5332-gcc";
+> +      reg = <0x01800000 0x80000>;
+> +      clocks = <&xo_board>,
+> +               <&sleep_clk>,
+> +               <&pcie_2lane_phy_pipe_clk>,
+> +               <&pcie_2lane_phy_pipe_clk_x1>,
+> +               <&usb_pcie_wrapper_pipe_clk>;
+> +      #clock-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +      #reset-cells = <1>;
+> +    };
+> +...
 
-greg k-h
+-- 
+With best wishes
+Dmitry
+
