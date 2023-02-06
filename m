@@ -2,170 +2,267 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F247B68B879
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 10:20:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F58D68B8CD
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 10:39:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbjBFJU6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 04:20:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        id S229952AbjBFJjv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 04:39:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjBFJU5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 04:20:57 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780124C2C;
-        Mon,  6 Feb 2023 01:20:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1675675256; x=1707211256;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=urBxPIsFBJ0SWtrwV2/7uamOfOIf5Zi/lwUlTJ6cSzk=;
-  b=doCri9ALHd5sPEEU/5quArC4fCJQrC3X6qEKdVGxV8fPM5cxE1mVBVQu
-   jRPJaJSxJ1LU51oiPQFHEsZuD3M+iCTkb2McAtxCOGvzRfWn9FNxIFUfh
-   SIWqBG7Afv+bCeeg6JlQsd1i7ll6m0/BE8P5Dc+mh4uw2PLfxgMGlrMAH
-   CM80sShnim7gNUXM0D9HrjWcRNAIVKuc+c3l1rjvTqQclhx3H60ghopUc
-   mqL1/w0ZscjB7M0Yy9pJi6uxIv+DYBWGT20XBPVuUyArxCajyup42AigI
-   YriplnevPiLl6wP1A31pidRiQuGyhDBmXQ//LiEdHrYV40irILbM+OGxr
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.97,276,1669100400"; 
-   d="scan'208";a="199079013"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Feb 2023 02:20:53 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 6 Feb 2023 02:20:53 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 6 Feb 2023 02:20:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YiC2C8UR64QON7VWuqn6AsJ9/r/rwRibCPzzn30sco2BCj4bnIufndJ3f/pw85y+8psrSYTfC4ADBQvt8Dgsu4nuKqBFjr7/RrhU7pqUIvFToqzLOqUB+RsAD+5D2Zl28/aBxCLqg5gN9dkrCLYUsf/oqI8tOXkovoHlNWD3MGmuzrKXBCaPL/AOdiL5q5exrn5cHQoz3AToTqU7Fnb+hAQo+OdWz2+WEfA5r4GnAWKI2JGUL7tqZIaQAEg+pzhRa4+zj3mi/ZSjKK7NPz6ddSyl7LsTcXqLVxdLXclsZVDMsVQp+8Vu/s9jrI4OU5jsgDoqhqV4377kWkolXYOdDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NFjoiB+LK2mTsqMwNttqAozubq8fyJ925BjrQwjKVFw=;
- b=mbbYAuVrD02YiYyBII5YInpZtixm84V28rb2s8ZdU0UWZR029JOS7RivWiSjTwyndpXPjRpTIgPPRLiAYV61QJrK1yNFpvl07L74sAMMv4YbtpBPr23I/0T0mp5vfoCSXuB7YuSuJ2I4J/gvEnfnP4PukYkDVJIGwMtoZ9101Kn9CDeUXPeON6Bd6rnLADBSWTW+03sChzq3Gciv1C6H++xjkx6JfJ2oG35HoTGanENKMxVHhq+ut37Sjz/uvAdTdm9oZolXzTsd6ySJ3OIX9EsjwPdD2sNQ8MyY+0eXB/bhXY+E6xDNtmPWlAgoUgN++iIfUHLsg/aibRB4co6aAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NFjoiB+LK2mTsqMwNttqAozubq8fyJ925BjrQwjKVFw=;
- b=Cek90+s7jDBaJt5o8y6a0u6IDrOYN2wsS4NHdwafHFaBUVzaMLnR8TEKkmrASP6HfbhcUsnLx0Sh6Sajj35X03cbLzQZIiUwdmvWN61KzTGIrS3TpJnP4DiSzVQpnMJYZ2Xa5LYDEHC1RB2dnWjwdVdUGpSD5DfIKQ5/z7ZAPpY=
-Received: from PH7PR11MB5958.namprd11.prod.outlook.com (2603:10b6:510:1e1::22)
- by DS7PR11MB6040.namprd11.prod.outlook.com (2603:10b6:8:77::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6064.34; Mon, 6 Feb 2023 09:20:51 +0000
-Received: from PH7PR11MB5958.namprd11.prod.outlook.com
- ([fe80::cf2e:97c:7f47:9ca6]) by PH7PR11MB5958.namprd11.prod.outlook.com
- ([fe80::cf2e:97c:7f47:9ca6%4]) with mapi id 15.20.6064.034; Mon, 6 Feb 2023
- 09:20:51 +0000
-From:   <Tharunkumar.Pasumarthi@microchip.com>
-To:     <gregkh@linuxfoundation.org>, <Kumaravel.Thiagarajan@microchip.com>
-CC:     <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <UNGLinuxDriver@microchip.com>,
-        <lkp@intel.com>
-Subject: RE: [PATCH v3 char-misc-next] misc: microchip: pci1xxxx: Add
- OTP/EEPROM driver for the pci1xxxx switch
-Thread-Topic: [PATCH v3 char-misc-next] misc: microchip: pci1xxxx: Add
- OTP/EEPROM driver for the pci1xxxx switch
-Thread-Index: AQHZKXdRTqU9jy+mxk+hberHdhxKbq6nKH0AgBqbxPA=
-Date:   Mon, 6 Feb 2023 09:20:51 +0000
-Message-ID: <PH7PR11MB59587A0639FE44245A68312B9BDA9@PH7PR11MB5958.namprd11.prod.outlook.com>
-References: <20230116192908.2980862-1-kumaravel.thiagarajan@microchip.com>
- <Y8pzIgeMyf2oNCn4@kroah.com>
-In-Reply-To: <Y8pzIgeMyf2oNCn4@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB5958:EE_|DS7PR11MB6040:EE_
-x-ms-office365-filtering-correlation-id: 3c2f1d97-292b-4482-3dcd-08db082370eb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Uxbe5wXlxJX9X1f2L6Lns2/4nOqCigbxFJP2+iJ70JvwEGpRH0zyGT+79DnKthh/jScJDYuMa31OegS3kAz4wsj1/vfGgLoZVjaOyhCanHTuQieHuwB2k5tPokE5rsepeKyiPTxNO2E94zVmHsg+jo5Hil+eynBlQScENc1qTydZaCcsDb+/jwQ2prXWDOiE0nIbuleyPW+DDJeHq5o86vkOvgoB1MdjyIL8t4PPoQ8jwGb+OXgSE3sTVaB+1e48j1rOZIby322uQSCDDUVeglla2v9FMdb8yk9uNEX3BC9XgytQQavDGn3gknuX+Ii1R/7hlc1a8oNCsw5Ucne3zHEHrQN9bJGX+NOjs/A61MeZOZc5nUSi/6B7Lg0wpjv/YTTwyqOuw6vxKbai9xtrWXItjlGJBs3BaeyHV7ypLkBz8uh/cK8MaG9mdg7zOteWCrxum2AG6/z18DVBzR0BMJy06FDfwpB5QDwntcL1mMJIGGHlxSeWdJS/1LcWXhfQUOHlD/rBZwCFSOf4RbCTnECVq7yT9xxV1q5P2mqIvZeGgW2HO+iZOhGPUMjzOxHVNuhQUpUmn1duOHflGKIFFAaPdEdu1HDwaYHI5nXEgmaTR1SE/ctiLl5VREca61a9SogjjW+yWcF6O3aTt+Gy6wb6DgwvRugMkzcJVirUyKprwh0ZRbCw+bO2RnByHldgckMIEswGwu5HUOBQU3lOESsUg6EX1RN0yVSuars/L3U=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5958.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(376002)(396003)(366004)(39860400002)(346002)(451199018)(86362001)(6636002)(316002)(33656002)(110136005)(26005)(186003)(54906003)(71200400001)(55016003)(7696005)(2906002)(66446008)(64756008)(66556008)(4744005)(8676002)(8936002)(5660300002)(41300700001)(4326008)(9686003)(478600001)(53546011)(6506007)(52536014)(76116006)(66476007)(66946007)(38100700002)(83380400001)(122000001)(38070700005)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YXFV+vOYyTz+IpmEpWfgTOtma4VLH4O/ERG7ceXatOsXngW6s4PQVP8QQTyc?=
- =?us-ascii?Q?ZPsFtDuukXnjpVTCQwPrQ5A++hxxXrC8eMbAw4bT6o2RkJ8UGUhisLd5AsET?=
- =?us-ascii?Q?4Z02SFQdZeM6mZrXSD6QsAlbyRgutc6KG/c7hY3/nLkYsO0nnJP1IqfMvWtF?=
- =?us-ascii?Q?pl16sQuvxCIkuVdNGDyov4S7OzVhv+8AW+kh16TYkBsTH/VLGH0PgVq740Fg?=
- =?us-ascii?Q?MLlPsRfvC3dKDXP5BtGPpz7rRNNBziBV4IU/YjTAbNtHYQkyX58dh1iJdzrE?=
- =?us-ascii?Q?jA4l08LB1j0aojKub1wkSla0fdv+rGCVd1opfxoqj7skdfnFIexcMRcGYE7+?=
- =?us-ascii?Q?DbYMdhUIfNQ5ngUUuqCdmMqACo2lpHSg4z/PR5vX9/0EXhemfEPmDw8V6tU6?=
- =?us-ascii?Q?9gmnhZmBvXN1lNUHUwLXhLffNofKa/bUt2yZVef6QyI0zooQvdQPp09sVnjt?=
- =?us-ascii?Q?Ud046a3m7SZcDdvbs0kp/T6gD39f3FU9BpgyOUyb1gtNF0WtdDDMlui2ZAaG?=
- =?us-ascii?Q?V4FeOYFOQwxO7mGmTPL5bhvea5MtnHp/x1FcFSgUqc+HXY9r/AIz5LHkE8Ky?=
- =?us-ascii?Q?Lpjafh2MAjEjL27sWup/qWjYMMTI/e3DME7NmdogYB830bO9ySwU+adwyzsV?=
- =?us-ascii?Q?c7ENPyqfWjKBGKJuym+RiiUd3zoJVezPV6p0M5cVPgnKZMN6lu4aK6WKRZNm?=
- =?us-ascii?Q?4N3ZnhXtmLVgtu2zLDYEqREDypY6a8ThmOSN5oIEaC8S78ROjizeXCnP0Btt?=
- =?us-ascii?Q?0rmpdx88ui04l1KxTRKkjdtoH3ZII7VEtfbbsGQ1zanXpRF+dSw9T1hirgIm?=
- =?us-ascii?Q?HwBCHm0YUlO6KNAmm4cqK1iKWgI9ZUcoIQI7hkJR7lFmar9AvE5CZAsp6WpD?=
- =?us-ascii?Q?Vc+a/oirELKPzWrcN0byMHNL4R+ZwBFWQaGfkU2TD4yK31Gj4M9XhyLVbDtm?=
- =?us-ascii?Q?Vs653EZCmnW2c0Objm94+pVM+qGqY4SvroOSQdBkdiQMBXvLGtXmV6KEN20y?=
- =?us-ascii?Q?HvusKiN0xkUuXhhGk5vkWA/VAY4mQyIWaHIwQv6RMGwLGoD5xHYR5uCrwR/O?=
- =?us-ascii?Q?87qSGabaJ9ZK/364fM3eaTcnsevJSkLkqyAbJSExpugz3qTfdnJvTsMP8sDI?=
- =?us-ascii?Q?HASqGS18E1sQvLjtELWZo/FD25VbCGCPNOZXW5tuzrRZp7Sleyv36WEnrAgT?=
- =?us-ascii?Q?FbkXKjK7jvKBJii+sujxixrHaChZXcsaqK9mmt75+LOOQBbcIiDuTKJc+9Fm?=
- =?us-ascii?Q?PebBqutRmTl9W+3rhjKtjLjIucnpIXxFvzN+aCO4KIPilQPYJF2VvuAp2ELf?=
- =?us-ascii?Q?7Dlmp69T483WE3ew6xo9eUYtK7bT0popK2lKig6hNLkENFS3abmCIHD7qDmM?=
- =?us-ascii?Q?e2lfsnC4DKg3Ncy4BU2i3zNgrzKmvBVr7HQApmL0G5FuFY1hVqB2FyK0FGIN?=
- =?us-ascii?Q?Q8T/V+qIiRAsOLYwb74bIf41lLOA53DWoR76aqw4STjvlk3oknWa2xSo0Bkl?=
- =?us-ascii?Q?cq72HKS7+M58UzW4I/WD5AOv4N0mRRFjCyCFvzhhyZaOgHfH/dKqkDtCEtiy?=
- =?us-ascii?Q?IMPqqQLGwHECuxsqY1CyIY4JZolrmDrzGqqa641nz5G8IM90y/VcU2wTKR0B?=
- =?us-ascii?Q?FeAiggL/AkIK1S4fFxG6asA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229906AbjBFJju (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 04:39:50 -0500
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F012E11674;
+        Mon,  6 Feb 2023 01:39:47 -0800 (PST)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 68028240002;
+        Mon,  6 Feb 2023 09:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1675676386;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AubTcWOYqSxJt7Wh6bP1/DqkOsNeNYXj8kBwWyYv++A=;
+        b=lkoOheG4wX9oGM+5NpVS2+5pvUbY5At5ACfEIBMm6y+lcmVVBjbgHKvJC6NqPSpWErCPyf
+        QKY83Q/7p9AN5K3I8dR98yGB+RNuCJYrkGDO4HA+kfcRiewe9KrdZdiHIiwyezVQwSQygI
+        Lwnb3WRZiEu0xfftHuFvd2dAHEsKBAuAjoTpgvABwVnCQ89X0CnhAaER2B8p7ZUCt6ITHk
+        yV7Cmtt9Dy1iQ41jZjEcYEqGt1BWaljAAD+ThVmw3RRjYvCFVC6Fs5apc/Yd5RDIwz5W0f
+        UPQ/UQJG8jYoPZPZm9CyGMxcIl3GrqLg8XuO4bEQzSUmcSGIvr+bIs6TVeReYQ==
+Date:   Mon, 6 Feb 2023 10:39:12 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Maxim Kiselev <bigunclemax@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        abel.vesa@linaro.org, alexander.stein@ew.tq-group.com,
+        andriy.shevchenko@linux.intel.com, brgl@bgdev.pl,
+        colin.foster@in-advantage.com, cristian.marussi@arm.com,
+        devicetree@vger.kernel.org, dianders@chromium.org,
+        djrscally@gmail.com, dmitry.baryshkov@linaro.org,
+        festevam@gmail.com, fido_max@inbox.ru, frowand.list@gmail.com,
+        geert+renesas@glider.be, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
+        jpb@kernel.org, jstultz@google.com, kernel-team@android.com,
+        kernel@pengutronix.de, lenb@kernel.org, linus.walleij@linaro.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux@roeck-us.net, lkft@linaro.org, luca.weiss@fairphone.com,
+        magnus.damm@gmail.com, martin.kepplinger@puri.sm, maz@kernel.org,
+        rafael@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
+        sakari.ailus@linux.intel.com, shawnguo@kernel.org,
+        tglx@linutronix.de, tony@atomide.com,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 00/11] fw_devlink improvements
+Message-ID: <20230206103912.7db5ed72@xps-13>
+In-Reply-To: <CAGETcx_uri6exkv1Jkzmc4PyEam9yjuH2H1zrq4LYNtJ+XDMWw@mail.gmail.com>
+References: <20230127001141.407071-1-saravanak@google.com>
+        <20230130085542.38546-1-naresh.kamboju@linaro.org>
+        <CAGETcx_411fVxsM-ZMK7j2Bvkmi2TKPbzSuD+03M3cb7WKHfJw@mail.gmail.com>
+        <20230131101813.goaoy32qvrowvyyb@bogus>
+        <CALHCpMijXAgQx2qq8g8zdq=6AHwP+g5WVBjjry=v+dKEq9KDLw@mail.gmail.com>
+        <CAGETcx_UvW819m1Y-QU_ySB1nG_RegKKT06=YjkK=C_qjbAySw@mail.gmail.com>
+        <CALHCpMha_1nXt4rUe+A184XSWpyNk0_PkYjWZ+tUN7BJWqENLA@mail.gmail.com>
+        <CAGETcx_uri6exkv1Jkzmc4PyEam9yjuH2H1zrq4LYNtJ+XDMWw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5958.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c2f1d97-292b-4482-3dcd-08db082370eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2023 09:20:51.3931
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: amn0+spys4H5ZA8Uk9POEM+boFxSSXwE26yKszuGrgoJigzBG2UvvnoTsxdIuV+0yaas+pjdQEh/P3OkvMJOtfT4+fI2cvGE8nWgJHQvMBdnkuSYR3DAnry/0ExIZBVG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6040
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Friday, January 20, 2023 4:26 PM
-> To: Kumaravel Thiagarajan - I21417
-> <Kumaravel.Thiagarajan@microchip.com>
-> > +             dev_err(&priv->pdev->dev,
-> > +                     "EPC_Timeout, EEPROM is unresponsive: %x\n",
-> > + data);
+Hi Saravana,
+
++ Srinivas, nvmem maintainer
+
+saravanak@google.com wrote on Sun, 5 Feb 2023 17:32:57 -0800:
+
+> On Fri, Feb 3, 2023 at 1:39 AM Maxim Kiselev <bigunclemax@gmail.com> wrot=
+e:
+> >
+> > =D0=BF=D1=82, 3 =D1=84=D0=B5=D0=B2=D1=80. 2023 =D0=B3. =D0=B2 09:07, Sa=
+ravana Kannan <saravanak@google.com>: =20
+> > >
+> > > On Thu, Feb 2, 2023 at 9:36 AM Maxim Kiselev <bigunclemax@gmail.com> =
+wrote: =20
+> > > >
+> > > > Hi Saravana,
+> > > > =20
+> > > > > Can you try the patch at the end of this email under these
+> > > > > configurations and tell me which ones fail vs pass? I don't need =
+logs =20
+> > > >
+> > > > I did these tests and here is the results: =20
+> > >
+> > > Did you hand edit the In-Reply-To: in the header? Because in the
+> > > thread you are reply to the wrong email, but the context in your email
+> > > seems to be from the right email.
+> > >
+> > > For example, see how your reply isn't under the email you are replying
+> > > to in this thread overview:
+> > > https://lore.kernel.org/lkml/20230127001141.407071-1-saravanak@google=
+.com/#r
+> > > =20
+> > > > 1. On top of this series - Not works
+> > > > 2. Without this series    - Works
+> > > > 3. On top of the series with the fwnode_dev_initialized() deleted -=
+ Not works
+> > > > 4. Without this series, with the fwnode_dev_initialized() deleted  =
+- Works
+> > > >
+> > > > So your nvmem/core.c patch helps only when it is applied without th=
+e series.
+> > > > But despite the fact that this helps to avoid getting stuck at prob=
+ing
+> > > > my ethernet device, there is still regression.
+> > > >
+> > > > When the ethernet module is loaded it takes a lot of time to drop d=
+ependency
+> > > > from the nvmem-cell with mac address.
+> > > >
+> > > > Please look at the kernel logs below. =20
+> > >
+> > > The kernel logs below really aren't that useful for me in their
+> > > current state. See more below.
+> > >
+> > > ---8<---- <snip> --->8----
+> > > =20
+> > > > P.S. Your nvmem patch definitely helps to avoid a device probe stuck
+> > > > but look like it is not best way to solve a problem which we discus=
+sed
+> > > > in the MTD thread.
+> > > >
+> > > > P.P.S. Also I don't know why your nvmem-cell patch doesn't help whe=
+n it was
+> > > > applied on top of this series. Maybe I missed something. =20
+> > >
+> > > Yeah, I'm not too sure if the test was done correctly. You also didn't
+> > > answer my question about the dts from my earlier email.
+> > > https://lore.kernel.org/lkml/CAGETcx8FpmbaRm2CCwqt3BRBpgbogwP5gNB+iA5=
+OEtuxWVTNLA@mail.gmail.com/#t
+> > >
+> > > So, can you please retest config 1 with all pr_debug and dev_dbg in
+> > > drivers/core/base.c changed to the _info variants? And then share the
+> > > kernel log from the beginning of boot? Maybe attach it to the email so
+> > > it doesn't get word wrapped by your email client. And please point me
+> > > to the .dts that corresponds to your board. Without that, I can't
+> > > debug much.
+> > >
+> > > Thanks,
+> > > Saravana =20
+> > =20
+> > > Did you hand edit the In-Reply-To: in the header? Because in the
+> > > thread you are reply to the wrong email, but the context in your email
+> > > seems to be from the right email. =20
+> >
+> > Sorry for that, it seems like I accidently deleted it.
+> > =20
+> > > So, can you please retest config 1 with all pr_debug and dev_dbg in
+> > > drivers/core/base.c changed to the _info variants? And then share the
+> > > kernel log from the beginning of boot? Maybe attach it to the email so
+> > > it doesn't get word wrapped by your email client. And please point me
+> > > to the .dts that corresponds to your board. Without that, I can't
+> > > debug much. =20
+> >
+> > Ok, I retested config 1 with all _debug logs changed to the _info. I
+> > added the kernel log and the dts file to the attachment of this email. =
+=20
 >=20
-> Can this spam the kernel logs?  If so, please rate limit it.
-
-This print will only come once at max and will not spam logs.
-
-> > +     delay =3D msecs_to_jiffies(OTP_RW_TIMEOUT_MILLISECONDS);
-> > +     j0 =3D jiffies;
-> > +     j1 =3D j0 + delay;
+> Ah, so your device is not supported/present upstream? Even though it's
+> not upstream, I'll help fix this because it should fix what I believe
+> are unreported issues in upstream.
 >=20
-> Are you sure this math works out?  Please use the jiffies math functions
-> instead so you can handle wrapping properly.
+> Ok I know why configs 1 - 4 behaved the way they did and why my test
+> patch didn't help.
+>=20
+> After staring at mtd/nvmem code for a few hours I think mtd/nvmem
+> interaction is kind of a mess.
 
-You suggest using any existing APIs to add jiffies to handle wrapping? I am=
- not able=20
-to find any such API. Can you please point out API name.=20
+nvmem is a recent subsystem but mtd carries a lot of legacy stuff we
+cannot really re-wire without breaking users, so nvmem on top of mtd
+of course inherit from the fragile designs in place.
+
+> mtd core creates "partition" platform
+> devices (including for nvmem-cells) that are probed by drivers in
+> drivers/nvmem. However, there's no driver for "nvmem-cells" partition
+> platform device. However, the nvmem core creates nvmem_device when
+> nvmem_register() is called by MTD or these partition platform devices
+> created by MTD. But these nvmem_devices are added to a nvmem_bus but
+> the bus has no means to even register a driver (it should really be a
+> nvmem_class and not nvmem_bus).
+
+Srinivas, do you think we could change this?
+
+> And the nvmem_device sometimes points
+> to the DT node of the MTD device or sometimes the partition platform
+> devices or maybe no DT node at all.
+
+I guess this comes from the fact that this is not strongly defined in
+mtd and depends on the situation (not mentioning 20 years of history
+there as well). "mtd" is a bit inconsistent on what it means. Older
+designs mixed: controllers, ECC engines when relevant and memories;
+while these three components are completely separated. Hence
+sometimes the mtd device ends up being the top level controller,
+sometimes it's just one partition...
+
+But I'm surprised not all of them point to a DT node. Could you show us
+an example? Because that might likely be unexpected (or perhaps I am
+missing something).
+
+> So it's a mess of multiple devices pointing to the same DT node with
+> no clear way to identify which ones will point to a DT node and which
+> ones will probe and which ones won't. In the future, we shouldn't
+> allow adding new compatible strings for partitions for which we don't
+> plan on adding nvmem drivers.
+>
+> Can you give the patch at the end of the email a shot? It should fix
+> the issue with this series and without this series. It just avoids
+> this whole mess by not creating useless platform device for
+> nvmem-cells compatible DT nodes.
+
+Thanks a lot for your help.
+
+>=20
+> Thanks,
+> Saravana
+>=20
+> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+> index d442fa94c872..88a213f4d651 100644
+> --- a/drivers/mtd/mtdpart.c
+> +++ b/drivers/mtd/mtdpart.c
+> @@ -577,6 +577,7 @@ static int mtd_part_of_parse(struct mtd_info *master,
+>  {
+>         struct mtd_part_parser *parser;
+>         struct device_node *np;
+> +       struct device_node *child;
+>         struct property *prop;
+>         struct device *dev;
+>         const char *compat;
+> @@ -594,6 +595,10 @@ static int mtd_part_of_parse(struct mtd_info *master,
+>         else
+>                 np =3D of_get_child_by_name(np, "partitions");
+>=20
+> +       for_each_child_of_node(np, child)
+> +               if (of_device_is_compatible(child, "nvmem-cells"))
+> +                       of_node_set_flag(child, OF_POPULATED);
+
+What about a comment explaining why we need that in the final patch
+(with a comment)? Otherwise it's a little bit obscure.
+
+> +
+>         of_property_for_each_string(np, "compatible", prop, compat) {
+>                 parser =3D mtd_part_get_compatible_parser(compat);
+>                 if (!parser)
+
 
 Thanks,
-Tharun Kumar P
+Miqu=C3=A8l
