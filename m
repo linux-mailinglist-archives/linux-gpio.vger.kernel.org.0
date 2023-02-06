@@ -2,61 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C3EA68BFFF
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 15:25:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86DD668C072
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 15:49:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbjBFOZu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 09:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44150 "EHLO
+        id S229728AbjBFOtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 09:49:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbjBFOZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 09:25:49 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B9318B;
-        Mon,  6 Feb 2023 06:25:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675693548; x=1707229548;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rATt2PX8P75QhOIAjUfrO77yb+4mDlyqMVW4eOWEDpg=;
-  b=jkP4qJyyOpvE0YAdCeKID2veEpSEasY9Q3iBL0gMxQUYpssnCWIpKhru
-   10Fv/OmV6RacLVAWPh6JPFClz1wULSehIdmAeI7lV7TrArpKrux3IOFfX
-   K9CFsfhei2oOza0olV28ZQIg64glVxd7xSRCRGj/pMJ7GQCxP9e7uq+I5
-   FnuvoxGPJAQyuH71jGeNcY/ncaKQWfXcR4xc6kC+Ucc48YsojGP4o2IXG
-   OcpZvED9Wp0PA6FaWZtx7ALOHM2yvHllOH7S0maE4QB0VUH6d9/nltXpO
-   PrQIdSgXNtBTNLsTPK4ZH3UAhSfGfGi98EqLY5QgJON0dHcuL1VneRoy4
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="312870294"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="312870294"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 06:25:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="775183443"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="775183443"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Feb 2023 06:25:46 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id A31AC241; Mon,  6 Feb 2023 16:26:24 +0200 (EET)
-Date:   Mon, 6 Feb 2023 16:26:24 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>,
+        with ESMTP id S229483AbjBFOtT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 09:49:19 -0500
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3431556F;
+        Mon,  6 Feb 2023 06:49:17 -0800 (PST)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPA id 1998A60008;
+        Mon,  6 Feb 2023 14:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1675694956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jssNCiN7d9s4FVYSLSQNiyVO3Ef91kZOrafXDxLBvCU=;
+        b=COQcQzPd++3+6kKr86fsnQKxAAOXJW0JTXfd8ACn3wA00LkZxrNz1Kn7mpHSDeIAA+FzP6
+        4leRgqa2DKiybYvDlArlGTc0dc7bvn6zgIdD+n22GPxMCm0hLeLNqL9KyvhyWtL6GMeVYM
+        u/p8VmGw9k650IasMSMs6PHscy2j8mkzlgdPD0d8c8OUXb1ij0r4LAvmcfvs1kVld330CJ
+        nZToQi9xBPezbHbOn5iUdeIBu5Z7Z2JDERNeNMs4sL4KfjLAEPuUg2r+nUHJTP6vDszJWR
+        qIvMgrFa3/WPw+6MaalIuHFzC/SHl9bcRGTDnKlP6zIbDVm5a0pwyW04X34TrA==
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Herve Codina <herve.codina@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jim Minter <jimminter@microsoft.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Restore the pins that used to be
- in Direct IRQ mode
-Message-ID: <Y+EOEHgDK3cRUmr6@black.fi.intel.com>
-References: <20230206141558.20916-1-andriy.shevchenko@linux.intel.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 0/3] Add the Infineon PEB2466 codec support
+Date:   Mon,  6 Feb 2023 15:49:01 +0100
+Message-Id: <20230206144904.91078-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230206141558.20916-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,14 +57,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 04:15:59PM +0200, Andy Shevchenko wrote:
-> If the firmware mangled the register contents too much,
-> check the saved value for the Direct IRQ mode. If it
-> matches, we will restore the pin state.
-> 
-> Reported-by: Jim Minter <jimminter@microsoft.com>
-> Fixes: 6989ea4881c8 ("pinctrl: intel: Save and restore pins in "direct IRQ" mode")
-> Tested-by: Jim Minter <jimminter@microsoft.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+The Infineon PEB2466 codec is a programmable DSP-based four channels
+codec with filters capabilities.
+It also provides signals as GPIOs.
+
+Best regards,
+Herve Codina
+
+Herve Codina (3):
+  dt-bindings: sound: Add the Infineon PEB2466 codec
+  ASoC: codecs: Add support for the Infineon PEB2466 codec
+  MAINTAINERS: add the Infineon PEB2466 codec entry
+
+ .../bindings/sound/infineon,peb2466.yaml      |   91 +
+ MAINTAINERS                                   |    7 +
+ sound/soc/codecs/Kconfig                      |   12 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/peb2466.c                    | 2071 +++++++++++++++++
+ 5 files changed, 2183 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/infineon,peb2466.yaml
+ create mode 100644 sound/soc/codecs/peb2466.c
+
+-- 
+2.39.1
+
