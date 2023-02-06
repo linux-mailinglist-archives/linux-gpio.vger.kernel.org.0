@@ -2,68 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E78568BB6D
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 12:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D0968BB77
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Feb 2023 12:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229990AbjBFLZn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 06:25:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
+        id S229819AbjBFL1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 06:27:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjBFLZm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 06:25:42 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8610EB463
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 03:25:40 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id x8so5639499ybt.13
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 03:25:40 -0800 (PST)
+        with ESMTP id S230052AbjBFL1I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 06:27:08 -0500
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9D8FF1D
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 03:27:02 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-4b718cab0e4so150692507b3.9
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 03:27:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gqoL344ahlUSGKEcPeWSWxdzAFVQeuSWEQ2bFV7PfAw=;
-        b=GQC7Vdd0ShtHyuYbws684oddqVBcnUscuuhAQE0nrgOMJxSOmJwSONncXrg2FupUax
-         EEblB6a6KqEYuoOH1qvl4bpRvNk7xCHyk8FBpuf/Q6e3QJ0YZCpDOf/PkERhTu4a6YeV
-         NsAfL3eGNrVdjNRLSFFoeeMExbwu4TnaI8bS4mkQwX93fE5FzfF8posZD3bavN4zHGBg
-         EOlze0vpR1vV4CRg7WemHThjOAVeh8wxRsMk4G/ML9uDpVmPn3orE+5VCxtQLLp9wef2
-         HSM+WnPTvOKBiTW0QUH9EIaopo71B9xThIHwsKSDqMBoO+FI0QFJsnG5pMvqaVrytIkI
-         8WBw==
+        bh=GJR7iIBYxeHMKeEYc9yJlmGGl4YAGtrHLk1xmdfWkjY=;
+        b=cEiqbsgShNHfgqVqwAK88z6dPmS5LNgW4KwIyRVk3eWmxUXP0lv1ECQABJxp4IuAW4
+         08SmBAO/PDsRaPrMqDLjT3iOOCqXXb/OLe791QjQFGztN3jDiPclnERlhhuQg37GtVIK
+         uruJuMVn/c+RFufhHvA1+2oVj6SHkahm3MvAtdj2UdPrjz981YKz03DmWmA/Mml3Ebo2
+         vgLuq6z4a1wu8/LSs5sn3+RErEjRdU1L1PTnIJqzqC0aArFJrsaTANiqN1TlCwSK+P+p
+         k+lZZZF0sQH3lVORlgXpVQUkbl1FE8R1/ZFV35uUjtD4VSBn4jrBaeuXzuqVkGAB60uh
+         pFeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gqoL344ahlUSGKEcPeWSWxdzAFVQeuSWEQ2bFV7PfAw=;
-        b=ZcLzZAywz3lnPEH8Wml73Aezc++pG6dVrZF8879knHEdCVvUiMImAZcX/vudSeXlbH
-         UxLKSqGD0+v4Ym6d6gwJ8J6fhWcrpL0srZV1c4snptrSclpZf4LzU7OYL7PzriRLu9JG
-         z4v9i9EpIM8ToXHj100uzFTqb0lx9ObxFVIWFkeSnkHQ+q3u9fcgu+oBAaY/56gyAyem
-         FQvaLMmiA8+iMT7LKJNd1B0D0ZIfkJ1+8JpZn0BnjSa1DIWAFHFCStKewdCb3e1XJOj0
-         4sBSEX0sYjqAL5b+0+9kA1MH8bdb3c3psjW3AwzLvjlv1zh/5AJW6kjYVvWSR2BRjKSX
-         nwYw==
-X-Gm-Message-State: AO0yUKWVKNPZTYssR6sabYnauZZPYfp3jbP3saODPDZb1oCaOTY/1GvV
-        b0gCCxHBhX9/Ox4k/jvM5FWFd481namC1QO0NZktYg==
-X-Google-Smtp-Source: AK7set+SFrdnVJOmmGT4T8wNENpdw4jkqUL4JIeIMcevxcJ8Pyit+ExaUYRLjibaZ5z5zrn9F+yeezTbHdktarTKGwM=
-X-Received: by 2002:a5b:d4f:0:b0:893:76b2:9200 with SMTP id
- f15-20020a5b0d4f000000b0089376b29200mr315983ybr.584.1675682739722; Mon, 06
- Feb 2023 03:25:39 -0800 (PST)
+        bh=GJR7iIBYxeHMKeEYc9yJlmGGl4YAGtrHLk1xmdfWkjY=;
+        b=Npg4VcPc4nTo0lTAa9LZU7HD5acrpSW3f7eyS7EJsRiXL9UHvSSDkOedcx1UZFjh4D
+         fsi0yAP2cD0DDoS8na5iHjPloGMdyLGpXT4r5mpTlmi70JgwJMUWvljPlAyiK6HoWhNU
+         uKTStTJMhkp7i7JctKXlJulzFe0MhZE39lXTJSYTIF1DFjNy3hnUVysabl0ZqrhaX96W
+         2pZS79BJyx0mXL6ET/9+ITuZ8yg6JRkHynpHPCI+SRok/ol1W5stH9NQcubJckxyfmMT
+         Ivzy4Kbx5ZkrKpnjGPF+b3KG2MDZa/brVINevkFa2FbiE3Uk/9pt0tYcy8XBcvlNTP2i
+         WhDA==
+X-Gm-Message-State: AO0yUKVBj/i7WOZCBLof11oyeF0Vx5igOD6ZLv7tP/TZ1tCILFwWgqLB
+        Cm30kudgLd/WE/PisqSqSdQu2dXcnMpxX3Gy5jNW9g==
+X-Google-Smtp-Source: AK7set8L3VLeOObm9qWRrIhVr41MTYoDvVibtG9Ay2RHWLmtjUwNSvhhckk7653hSCZoO5nkPQYJMfhJ+CrdMrR5rTM=
+X-Received: by 2002:a05:690c:b18:b0:4f3:8d0e:edce with SMTP id
+ cj24-20020a05690c0b1800b004f38d0eedcemr1702307ywb.185.1675682822071; Mon, 06
+ Feb 2023 03:27:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20230206071217.29313-1-quic_kathirav@quicinc.com>
-In-Reply-To: <20230206071217.29313-1-quic_kathirav@quicinc.com>
+References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com> <137b56f0-8e86-f705-4ba7-d5dfe3c0b477@gmail.com>
+In-Reply-To: <137b56f0-8e86-f705-4ba7-d5dfe3c0b477@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Feb 2023 12:25:28 +0100
-Message-ID: <CACRpkdbtEFCSKX8VcD9bAZLy-PYfwVCRKYwXJmh0hnK2Nroq0A@mail.gmail.com>
-Subject: Re: [PATCH V3 0/9] Add minimal boot support for IPQ5332
-To:     Kathiravan T <quic_kathirav@quicinc.com>
-Cc:     krzysztof.kozlowski@linaro.org, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, arnd@arndb.de, dmitry.baryshkov@linaro.org,
-        marcel.ziswiler@toradex.com, nfraprado@collabora.com,
-        robimarko@gmail.com, quic_gurus@quicinc.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        quic_varada@quicinc.com, quic_srichara@quicinc.com
+Date:   Mon, 6 Feb 2023 12:26:50 +0100
+Message-ID: <CACRpkda3TNyLqy5ZSKMsp8E+Tzys8o1h=q6qSoBCta+08BYZ_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: pinctrl: rockchip,pinctrl: mark gpio
+ sub nodes of pinctrl as deprecated
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kever.yang@rock-chips.com, sjg@chromium.org,
+        philipp.tomsich@vrull.eu, john@metanate.com,
+        quentin.schulz@theobroma-systems.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -75,21 +73,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Kathiravan,
+On Sat, Jan 21, 2023 at 12:08 PM Johan Jonker <jbx6244@gmail.com> wrote:
 
-thanks for your patches!
+> Mark gpio sub nodes of pinctrl as deprecated.
+> Gpio nodes are now placed in the root of the device tree.
+> The relation to pinctrl is now described with the
+> "gpio-ranges" property.
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-On Mon, Feb 6, 2023 at 8:12 AM Kathiravan T <quic_kathirav@quicinc.com> wrote:
-
-> Kathiravan T (9):
->   dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
->   pinctrl: qcom: Introduce IPQ5332 TLMM driver
-
-I have applied these two patches to the pin control tree for v6.3.
-
-I see no reason to wait for more review since Krzysztof acked the
-bindings and the driver isn't invasive at all, any problems can certainly
-be fixed up in-tree.
+This patch applied to the pinctrl tree.
 
 Yours,
 Linus Walleij
