@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E73468CC38
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 02:44:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED1768CC3E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 02:44:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbjBGBoG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 20:44:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41668 "EHLO
+        id S229847AbjBGBoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 20:44:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbjBGBnU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 20:43:20 -0500
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7343B36697
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 17:42:50 -0800 (PST)
-Received: by mail-pf1-x44a.google.com with SMTP id ds10-20020a056a004aca00b0059c8629c220so3619093pfb.23
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 17:42:50 -0800 (PST)
+        with ESMTP id S229995AbjBGBn3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 20:43:29 -0500
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B869636470
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 17:42:51 -0800 (PST)
+Received: by mail-pl1-x649.google.com with SMTP id p18-20020a170902ead200b0019909279002so3092261pld.3
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 17:42:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qO7SA/IWYPEhdvQ3bg5afBtNBnjngejmFoW2WqOrddI=;
-        b=GazeBruttlU5oTI33IWVV1tAUn4JRdRTAmGz0onik+n6U1T5h3g5Eqk7gGdOGMDK/b
-         pISWVmhqDorcgwiUsTtbwUhwsXkQBy9FbOADGd10qeFLJKcjSWm9FlwkrDf0YSZnQ9+5
-         MlI9mebazN/CBNgen9ENy7akZji0sNSLpJDHAKCcuu7sotue0FW2RA5Bj0NTsc48DOU1
-         BJ2j+WUhTu8DoyxWUtbwaehDC8ppns7BWt2T/8qAizu6/ITBGfNfqXYJKkF1ZM6CyRxn
-         ZcscZDUsMpAZKiRckNDj1rDjE8L096aAxpbX+tYBH1Uk2VlibG8o8TaOGQfpibf5qmCu
-         A4Ug==
+        bh=YX1zBRfC33D3rDRElKAdT20jJS5RQeSlv0JzqWYnjho=;
+        b=UGmq1xHhmv8QgalRGnvex5vaBwzzKCS6zloJhLFOA04JYhf7s2xljRYpy9kTAoNsHa
+         iBC98QSDMciwj7mZAoPpI2usajIcl1gF62f5Z4nG2GjxXwW1tEOTSt3uCwYi8iyDdG37
+         BQfwQH+F5b5B8hHp73/BToUo9eBPbPtsoJG7VHsq9ww2xJmU91i6mybd4OadC8hcmn4L
+         z/JS/fusQ1z+bJZfl9x8ljB4BFuvxFXBUNKd3sGG9GJYtq6qpJhSHd3ZvicyZg0osOk+
+         QxgZAlVpjyrodYVEXosDI3FM0qnhjaVmzWT6ld85NejZtUeLAUKpBMz5nIKrGLcp4W86
+         p/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qO7SA/IWYPEhdvQ3bg5afBtNBnjngejmFoW2WqOrddI=;
-        b=S7fzKptinLTdxlDhxd+l2OWvmZtwV4eJHB9SK2cBW0+igqBGn4/WvBekg9jRoU5vka
-         H22HkmmxsQXUTYKw+Ba8HxmnUKYR8JbtU4JZ51CIaqFKEo3h30v6/iybUyr/rrkLPnc7
-         KxejwUFECdKIKb6vh1YxfmWk5OavZ4U3m7nWOYWkovay4ijPAOVrmhnOGBVDFoq0ptZv
-         Qn4ZMlLn7gutSGWEuMkccIzbzwkB4nKHeWEG6IBSottY3ePFohRFaOuI0qG0lhI3ib8h
-         tWKYRqdKziDGKZ5wEef1R7nhNQYAE6NqpwAJltUIkHdWa/E1A9Qszw42O0Gr365HEsXn
-         rM/g==
-X-Gm-Message-State: AO0yUKVHQqDcuEmgtWX5ndokJMmsMgM3oyPKjzFdyhp2cvgmqLHYuJvT
-        l0fB3v5ljXPuNWLtZIZXNUBothqNz8PXNMM=
-X-Google-Smtp-Source: AK7set8CF2GrP/NVxAgKrUj8AGlYPMKVoXXaqrQpeXZ8O8WzceQ78vPHdt/Q5BozlBJGRB5LWE1p0PTeySIpdfY=
+        bh=YX1zBRfC33D3rDRElKAdT20jJS5RQeSlv0JzqWYnjho=;
+        b=xGhHwCvMuRGJcZsxSVLLXyLMKXXBz03DwjCRMOVqcpllANHdD+J0dj3t4vOPekdmLb
+         WiwGGw+Fe11Ej5imgc1xWepbOes9nkrEAy90G6jVRg27qKygsvBx9CMPLPdkfC8MehOZ
+         V++dGNQICXh1CEnzPs3uU4lpDGQwEi6PVjLC8bus1fvvmyhjp2u4B86WzZbxz49JWEz9
+         6xYy12pRCZ4PUehbOj14bmkMV3yq+A6WscAK5k3TkB6RB7FHSy1pPrsNLMVn3pB7kP86
+         DoWZJSAgxPcCktU8XdS34JI0sRvJlU52aZVOqcjnMkA+NeUpoLUdyQ1KBCQW/Z9GquiE
+         lfkQ==
+X-Gm-Message-State: AO0yUKVwZn5PM3zPnvQsF7ZwnNwrMhTV+/rd8TX5jheY+1yLy7MAgFF6
+        33gkfTpLElURSUKaxYisa6CLYfvx+3gAFgY=
+X-Google-Smtp-Source: AK7set8Gcli9J3BzSmSCx9wcmgEyp38uzEhI1HIWAsHDVULR2jB9pwdeXZpjU2A6RPq1Ak9f9gnun0I1Kq/a1mU=
 X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:ae1:aba6:f21c:4a94])
- (user=saravanak job=sendgmr) by 2002:a63:7304:0:b0:4da:d745:98dd with SMTP id
- o4-20020a637304000000b004dad74598ddmr170930pgc.62.1675734160457; Mon, 06 Feb
- 2023 17:42:40 -0800 (PST)
-Date:   Mon,  6 Feb 2023 17:42:03 -0800
+ (user=saravanak job=sendgmr) by 2002:a17:90a:1d4e:b0:230:ae97:c349 with SMTP
+ id u14-20020a17090a1d4e00b00230ae97c349mr441075pju.8.1675734163194; Mon, 06
+ Feb 2023 17:42:43 -0800 (PST)
+Date:   Mon,  6 Feb 2023 17:42:04 -0800
 In-Reply-To: <20230207014207.1678715-1-saravanak@google.com>
-Message-Id: <20230207014207.1678715-12-saravanak@google.com>
+Message-Id: <20230207014207.1678715-13-saravanak@google.com>
 Mime-Version: 1.0
 References: <20230207014207.1678715-1-saravanak@google.com>
 X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-Subject: [PATCH v3 11/12] firmware: arm_scmi: Set fwnode for the scmi_device
+Subject: [PATCH v3 12/12] mtd: mtdpart: Don't create platform device that'll
+ never probe
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -109,38 +110,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This allows fw_devlink to track and enforce supplier-consumer
-dependencies for scmi_device.
+These "nvmem-cells" platform devices never get probed because there's no
+platform driver for it and it's never used anywhere else. So it's a
+waste of memory. These devices also cause fw_devlink to block nvmem
+consumers of "nvmem-cells" partition from probing because the supplier
+device never probes.
 
+So stop creating platform devices for nvmem-cells partitions to avoid
+wasting memory and to avoid blocking probing of consumers.
+
+Reported-by: Maxim Kiselev <bigunclemax@gmail.com>
+Fixes: bcdf0315a61a ("mtd: call of_platform_populate() for MTD partitions")
 Signed-off-by: Saravana Kannan <saravanak@google.com>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Colin Foster <colin.foster@in-advantage.com>
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/bus.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mtd/mtdpart.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-index 35bb70724d44..cc2eba067575 100644
---- a/drivers/firmware/arm_scmi/bus.c
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-+#include <linux/of.h>
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index d442fa94c872..85f5ee6f06fc 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -577,6 +577,7 @@ static int mtd_part_of_parse(struct mtd_info *master,
+ {
+ 	struct mtd_part_parser *parser;
+ 	struct device_node *np;
++	struct device_node *child;
+ 	struct property *prop;
+ 	struct device *dev;
+ 	const char *compat;
+@@ -594,6 +595,15 @@ static int mtd_part_of_parse(struct mtd_info *master,
+ 	else
+ 		np = of_get_child_by_name(np, "partitions");
  
- #include "common.h"
- 
-@@ -191,7 +192,7 @@ scmi_device_create(struct device_node *np, struct device *parent, int protocol,
- 	scmi_dev->id = id;
- 	scmi_dev->protocol_id = protocol;
- 	scmi_dev->dev.parent = parent;
--	scmi_dev->dev.of_node = np;
-+	device_set_node(&scmi_dev->dev, of_fwnode_handle(np));
- 	scmi_dev->dev.bus = &scmi_bus_type;
- 	scmi_dev->dev.release = scmi_device_release;
- 	dev_set_name(&scmi_dev->dev, "scmi_dev.%d", id);
++	/*
++	 * Don't create devices that are added to a bus but will never get
++	 * probed. That'll cause fw_devlink to block probing of consumers of
++	 * this partition until the partition device is probed.
++	 */
++	for_each_child_of_node(np, child)
++		if (of_device_is_compatible(child, "nvmem-cells"))
++			of_node_set_flag(child, OF_POPULATED);
++
+ 	of_property_for_each_string(np, "compatible", prop, compat) {
+ 		parser = mtd_part_get_compatible_parser(compat);
+ 		if (!parser)
 -- 
 2.39.1.519.gcb327c4b5f-goog
 
