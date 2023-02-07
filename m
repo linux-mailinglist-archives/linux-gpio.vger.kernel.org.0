@@ -2,172 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3671968CE38
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 05:32:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC0968D0CF
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 08:49:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbjBGEc1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 23:32:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44734 "EHLO
+        id S229685AbjBGHtO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Feb 2023 02:49:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230294AbjBGEcZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 23:32:25 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7012613DDB;
-        Mon,  6 Feb 2023 20:32:23 -0800 (PST)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3174I1Y0011209;
-        Tue, 7 Feb 2023 04:32:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=dDG9jZi8NNGifa3TxlUih9e+cN+KpyacXCMrVoKssXg=;
- b=lNwz7D2zT1rFRpY478YJOQa8zHWEVL+Cs5VF6mb5WY80JfjiJYqBSz20tYCY0nEIdIQb
- WmaxscjV+2I0uwjqAAPEO1GMM8GsTKrWa1QDT6w3/9/1UDfocKzZuR4+OKmu4+aIsJuq
- NXrxruv2en17P16s/rGLTZjJphVu/kZ9a49Y7JtOo67/bHb5hy4y2f/l3qNXchezoSMW
- 3QHmKTCFQ1pNSko+6xxg7tV/kj9TSzV8NtCMA9dtCiyHJo1HHyQkQLTuZmXbxFeYNLHE
- CrBDOzh8a4Qvj6rRtK9lmAQoz17RadjU7KCVhIX1AsCCVwWwvj7ZGfoQJOUWPNkjxv6X Bw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nhgng5aar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Feb 2023 04:32:07 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3174W60P006581
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 7 Feb 2023 04:32:06 GMT
-Received: from [10.201.2.96] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 6 Feb 2023
- 20:31:58 -0800
-Message-ID: <e59d133e-40a9-0dae-b272-20d82e8c9b76@quicinc.com>
-Date:   Tue, 7 Feb 2023 10:01:55 +0530
+        with ESMTP id S229585AbjBGHtN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 02:49:13 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A66812847;
+        Mon,  6 Feb 2023 23:49:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1675756152; x=1707292152;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vluZuFSkGXbu6xfPDdmoiFX4n+Szt9NgbKjeRxh+kfk=;
+  b=XwMcx2mddJaVaITik9PyeUnKaP1foPfjIVN6urInPlkLNgulGgCVgI8j
+   VKUdozVy7GWWuuBBN082yEGw6Dxyo7M7MKZm7kkyO74dnb/ItidTvUmGP
+   vsjLNKxJYOaV2XXHcd557f3Ulq5MMVRqWP8qxdNYCQ9UyerjY9F0U8k9D
+   23sU/59mheqL2qvhO2jgrtwDuo5+YcjxgCDoEpACD7Dh/a3yRVH8mOvui
+   hqSTbcW4hUIlxwic5hFeqVrNKDlsT1OszK/lTXmV70JiJ8BAg0Dd0rb08
+   y+nxDeiqIURpWHJeGm5eM/BgdtsEzkI4uxuKckFG1LywfkF92O0Y1g4eh
+   w==;
+X-IronPort-AV: E=Sophos;i="5.97,278,1669100400"; 
+   d="scan'208";a="195693381"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Feb 2023 00:49:11 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Tue, 7 Feb 2023 00:48:57 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
+ Transport; Tue, 7 Feb 2023 00:48:56 -0700
+Date:   Tue, 7 Feb 2023 08:48:56 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linus.walleij@linaro.org>, <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] pinctrl: ocelot: Fix alt mode for ocelot
+Message-ID: <20230207074856.2akoi4v65cbolinb@soft-dev3-1>
+References: <20230206203720.1177718-1-horatiu.vultur@microchip.com>
+ <CAHp75VcVn2=Xy7P4xgiDKkpOkw+YD1zGwMYARpWV6Eiv0fUakw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH V3 5/9] clk: qcom: add Global Clock controller (GCC)
- driver for IPQ5332 SoC
-Content-Language: en-US
-To:     Bjorn Andersson <andersson@kernel.org>
-CC:     <krzysztof.kozlowski@linaro.org>, <agross@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <dmitry.baryshkov@linaro.org>, <marcel.ziswiler@toradex.com>,
-        <nfraprado@collabora.com>, <robimarko@gmail.com>,
-        <quic_gurus@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_varada@quicinc.com>,
-        <quic_srichara@quicinc.com>
-References: <20230206071217.29313-1-quic_kathirav@quicinc.com>
- <20230206071217.29313-6-quic_kathirav@quicinc.com>
- <20230207034108.bypitlfxicpz6wqb@ripper>
-From:   Kathiravan T <quic_kathirav@quicinc.com>
-In-Reply-To: <20230207034108.bypitlfxicpz6wqb@ripper>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 4VfyI-KjiMDmNKzm7rj--9gij9Vn1Nna
-X-Proofpoint-ORIG-GUID: 4VfyI-KjiMDmNKzm7rj--9gij9Vn1Nna
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-06_07,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0
- phishscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302070039
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcVn2=Xy7P4xgiDKkpOkw+YD1zGwMYARpWV6Eiv0fUakw@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thanks Bjorn for the review!
+The 02/06/2023 22:59, Andy Shevchenko wrote:
 
+Hi Andy,
 
-On 2/7/2023 9:11 AM, Bjorn Andersson wrote:
-> On Mon, Feb 06, 2023 at 12:42:13PM +0530, Kathiravan T wrote:
->> diff --git a/drivers/clk/qcom/gcc-ipq5332.c b/drivers/clk/qcom/gcc-ipq5332.c
-> [..]
->> +
->> +enum {
->> +	DT_SLEEP_CLK,
->> +	DT_XO,
->> +	DT_PCIE_2LANE_PHY_PIPE_CLK,
->> +	DT_PCIE_2LANE_PHY_PIPE_X1_CLK,
->> +	DT_USB_PCIE_WRAPPER_PIPE_CLK,
-> This list does not match the clocks as defined in the binding.
+> 
+> On Mon, Feb 6, 2023 at 10:37 PM Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
+> >
+> > In case the driver was trying to set an alternate mode for gpio
+> > 0 or 32 then the mode was not set correctly. The reason is that
+> > there is computation error inside the function ocelot_pinmux_set_mux
+> > because in this case it was trying to shift to left by -1.
+> > Fix this by actually shifting the function bits and not the position.
+> >
+> > Fixes: 4b36082e2e09 ("pinctrl: ocelot: fix pinmuxing for pins after 31")
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> 
+> ...
+> 
+> >         regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
+> >                            BIT(p), f << p);
+> >         regmap_update_bits(info->map, REG_ALT(1, info, pin->pin),
+> > -                          BIT(p), f << (p - 1));
+> > +                          BIT(p), (f >> 1) << p);
+> 
+> I'm not sure I understand how this doesn't break anything that has a
+> bit 0 set in f. Is it not a problem?
 
+I don't think it is a problem. This is similar to the implementation of
+'lan966x_pinmux_set_mux', the only difference is that
+lan966x_pinmux_set_mux has more GPIOs than ocelot.
 
-Ack. will fix this in next spin.
+If we take an example where f equals 0x1 and p equals 0.
+REG_ALT(0): BIT(0) & (0x1 << 0) equals 0x1
+REG_ALT(1): BIT(0) & ((0x1 >> 1) << 0)) equals 0x0.
 
+Or am I misunderstood something?
 
->
->> +};
->> +
->> +enum {
->> +	P_PCIE3X2_PIPE,
->> +	P_PCIE3X1_0_PIPE,
->> +	P_PCIE3X1_1_PIPE,
->> +	P_USB3PHY_0_PIPE,
->> +	P_CORE_BI_PLL_TEST_SE,
->> +	P_GCC_GPLL0_OUT_MAIN_DIV_CLK_SRC,
->> +	P_GPLL0_OUT_AUX,
->> +	P_GPLL0_OUT_MAIN,
->> +	P_GPLL2_OUT_AUX,
->> +	P_GPLL2_OUT_MAIN,
->> +	P_GPLL4_OUT_AUX,
->> +	P_GPLL4_OUT_MAIN,
->> +	P_SLEEP_CLK,
->> +	P_XO,
->> +};
->> +
->> +static const struct clk_parent_data gcc_parent_data_xo = { .index = DT_XO };
->> +
->> +static struct clk_alpha_pll gpll0_main = {
->> +	.offset = 0x20000,
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_STROMER_PLUS],
->> +	.clkr = {
->> +		.enable_reg = 0xb000,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(const struct clk_init_data){
-> Please add a space between ')' and '{ on all these.
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-
-Ack.
-
-
->
->> +			.name = "gpll0_main",
->> +			.parent_data = &gcc_parent_data_xo,
->> +			.num_parents = 1,
->> +			.ops = &clk_alpha_pll_stromer_ops,
->> +		},
->> +	},
->> +};
-> [..]
->> +static const struct qcom_cc_desc gcc_ipq5332_desc = {
->> +	.config = &gcc_ipq5332_regmap_config,
->> +	.clks = gcc_ipq5332_clocks,
->> +	.num_clks = ARRAY_SIZE(gcc_ipq5332_clocks),
->> +	.resets = gcc_ipq5332_resets,
->> +	.num_resets = ARRAY_SIZE(gcc_ipq5332_resets),
->> +	.clk_hws = gcc_ipq5332_hws,
->> +	.num_clk_hws = ARRAY_SIZE(gcc_ipq5332_hws),
-> No GDSCs?
-
-No, there is no GDSC support.
-
-
->
-> Regards,
-> Bjorn
+-- 
+/Horatiu
