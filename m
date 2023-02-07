@@ -2,138 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 300A868E04A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 19:43:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5889068E22D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 21:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbjBGSny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Feb 2023 13:43:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
+        id S229628AbjBGUxR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Feb 2023 15:53:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230445AbjBGSnx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 13:43:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06221E1D5;
-        Tue,  7 Feb 2023 10:43:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 856E1B81AB2;
-        Tue,  7 Feb 2023 18:43:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D06C433D2;
-        Tue,  7 Feb 2023 18:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675795429;
-        bh=z46LV0K67pYt+9sG+8XPfphcBy3wjoS4vl+j+OOVUvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=icQIS6QVs3SIYrh/ewyBWxOXyRdTzSi5iQLtHvNEjG7lvYhQ+DvHhk+3KEs5qU2sU
-         TMTqOav5kG8GY5JR22dKb78qqMAt/Bg2JYkWEyM+MGuclGw0hQvMcVEtbzsmiJlItD
-         IEGaquWuCLNILvUo5685guZahlOFm7IGWB2GaIQ6/vE/h0SUH8mRyEHQMupAISjrjW
-         fnVVq+bZn0SaHzKt6ZHA6LtwE38N/APEa35C82I5WgacjEtf/+fE+N1kuSQDae5KOg
-         NbPJHolFeXjK9+XKnt9280QC9hb68ZWPxwLnKvG03l5612lhbMN4Z8sBFUzc9BZ9vj
-         q3xPIHrd6PLJg==
-Date:   Tue, 7 Feb 2023 10:43:45 -0800
-From:   Lee Jones <lee@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, linux-arch@vger.kernel.org,
-        devicetree@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexander Aring <alex.aring@gmail.com>,
+        with ESMTP id S229441AbjBGUxQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 15:53:16 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E253B652;
+        Tue,  7 Feb 2023 12:53:15 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id c13so4137518ejz.1;
+        Tue, 07 Feb 2023 12:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YfKELKMAnQFkkEbZHEYEZttNxlmjlMVEh0XNdBoEsjw=;
+        b=e1mwDgXaY5E6n859Lh8E/kA9NZHYyP0k8s2hCe1rVhBqfHpVx2nL0YTe0MZ/wz2muP
+         sYRVk2PWCxOlDfKJiEYlUoBZl1Ac9dgZlGQUxRRsfo+TJ4hBpI5bJ6GGFt/iv7yZpRuV
+         QJwv/W3L55N3/gC0OcYRYriT9MeJNabif8VtIjcuEG+Uk72Ib/UpIy3A4Wl21UycyGeV
+         khphF77pzIvpuuNw3it4HAM5Bhbv+J+/cXG7jY1bIIVSkuk0pymjT4CR2+CXdZ7aILGi
+         +dV8eymgVbI7VDVjM4FRnhr/cX1PTT27Ux51VwSTwf6Ea8dAeAkQ/9jIrMwF1hoVs8mR
+         tT/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YfKELKMAnQFkkEbZHEYEZttNxlmjlMVEh0XNdBoEsjw=;
+        b=Il/dbBq2ROQMePEn958QJ/AYzTSyxoFhLxtHhGZZERGNALdM2WOn9Qva81c5+PYOG5
+         zxK5Bh7qX+GWT4Y0hTTlQDub/L6ThCFATuDLvO25vnYGqPDPG9Jpmr9V6BkTHga5NZO9
+         InsjahmordlUkbT/4PEIAbyAMZ3fv/yK553eA5R69Qpl6XI5aDXgY1WhSpdcwqkxiEDq
+         rzi6mxGaPKLTh/z5Uz1x/kRBe++Icrwt61JUsBbxLEk3YF2WlnJp65DoddC8PpNNEP21
+         KLDugsz6D//7O+BQx8xkW2XQaLKGW9AsdJ/xr2cizqD5e6QUVS6/EbVFL09sGmyvb9U6
+         kYAQ==
+X-Gm-Message-State: AO0yUKUQvHUScV233RfBdtvmquU9qt8+2z4/+C+D6avkJL0INX65jnxH
+        Ts4dTXAJ0z9xLwlxo/d/yKY=
+X-Google-Smtp-Source: AK7set8gSzfFyLFzaRMOX6lLIPCjFSzze6dgA1JenhwCC1vYAs7beQOSSrNlWqOlog2SIUGPkEcD0g==
+X-Received: by 2002:a17:906:bc54:b0:8aa:d923:faf0 with SMTP id s20-20020a170906bc5400b008aad923faf0mr104030ejv.10.1675803193728;
+        Tue, 07 Feb 2023 12:53:13 -0800 (PST)
+Received: from localhost ([2001:b07:5d37:537d:cd23:cd6e:ae14:44fe])
+        by smtp.gmail.com with ESMTPSA id g4-20020a170906348400b007add62dafbasm7323912ejb.157.2023.02.07.12.53.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Feb 2023 12:53:13 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 07 Feb 2023 20:53:09 +0000
+Message-Id: <CQCMNHG923N3.3991UZTUP9WFA@vincent-arch>
+From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
+To:     "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Tony Lindgren" <tony@atomide.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Devarsh Thakkar" <devarsht@ti.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Stefan Schmidt" <stefan@datenfreihafen.org>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-doc-tw-discuss@lists.sourceforge.net>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <linux-m68k@lists.linux-m68k.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-sh@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-wpan@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <SHA-cyfmac-dev-list@infineon.com>, <linux-arch@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Cc:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Jonathan Corbet" <corbet@lwn.net>, "Alex Shi" <alexs@kernel.org>,
+        "Yanteng Si" <siyanteng@loongson.cn>,
+        "Hu Haowen" <src.res@email.cn>,
+        "Russell King" <linux@armlinux.org.uk>,
+        "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+        "Janusz Krzysztofik" <jmkrzyszt@gmail.com>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        "Gregory Clement" <gregory.clement@bootlin.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+        "Rich Felker" <dalias@libc.org>,
+        "Mun Yew Tham" <mun.yew.tham@intel.com>,
+        "Keerthy" <j-keerthy@ti.com>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Alexander Aring" <alex.aring@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Kalle Valo <kvalo@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 06/12] gpiolib: split linux/gpio/driver.h out of
- linux/gpio.h
-Message-ID: <Y+Kb4Ql+I7/Abm48@google.com>
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Arend van Spriel" <aspriel@gmail.com>,
+        "Franky Lin" <franky.lin@broadcom.com>,
+        "Hante Meuleman" <hante.meuleman@broadcom.com>,
+        "Kalle Valo" <kvalo@kernel.org>, "Qiang Zhao" <qiang.zhao@nxp.com>,
+        "Li Yang" <leoyang.li@nxp.com>, "Lee Jones" <lee@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Frank Rowand" <frowand.list@gmail.com>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>
+Subject: Re: [PATCH v3 01/12] gpiolib: remove empty asm/gpio.h files
 References: <20230207142952.51844-1-andriy.shevchenko@linux.intel.com>
- <20230207142952.51844-7-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230207142952.51844-7-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <20230207142952.51844-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230207142952.51844-2-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 07 Feb 2023, Andy Shevchenko wrote:
-
 > From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Almost all gpio drivers include linux/gpio/driver.h, and other
-> files should not rely on includes from this header.
-> 
-> Remove the indirect include from here and include the correct
-> headers directly from where they are used.
-> 
+>
+> The arm and sh versions of this file are identical to the generic
+> versions and can just be removed.
+>
+> The drivers that actually use the sh3 specific version also include
+> cpu/gpio.h directly, with the exception of magicpanelr2, which is
+> easily fixed. This leaves coldfire as the only gpio driver
+> that needs something custom for gpiolib.
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/arm/mach-omap1/irq.c                              | 1 +
->  arch/arm/mach-orion5x/board-rd88f5182.c                | 1 +
->  arch/arm/mach-s3c/s3c64xx.c                            | 1 +
->  arch/arm/mach-sa1100/assabet.c                         | 1 +
->  arch/arm/plat-orion/gpio.c                             | 1 +
->  drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c | 1 +
->  include/linux/gpio.h                                   | 2 --
->  include/linux/mfd/ucb1x00.h                            | 1 +
 
-Acked-by: Lee Jones <lee@kernel.org>
-
->  8 files changed, 7 insertions(+), 2 deletions(-)
-
--- 
-Lee Jones [李琼斯]
+Reviewed-by: Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
