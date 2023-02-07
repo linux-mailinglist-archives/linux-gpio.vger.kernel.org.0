@@ -2,58 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC0968D0CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 08:49:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69B1168D0F4
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 08:52:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbjBGHtO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Feb 2023 02:49:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
+        id S230391AbjBGHwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Feb 2023 02:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjBGHtN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 02:49:13 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A66812847;
-        Mon,  6 Feb 2023 23:49:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1675756152; x=1707292152;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vluZuFSkGXbu6xfPDdmoiFX4n+Szt9NgbKjeRxh+kfk=;
-  b=XwMcx2mddJaVaITik9PyeUnKaP1foPfjIVN6urInPlkLNgulGgCVgI8j
-   VKUdozVy7GWWuuBBN082yEGw6Dxyo7M7MKZm7kkyO74dnb/ItidTvUmGP
-   vsjLNKxJYOaV2XXHcd557f3Ulq5MMVRqWP8qxdNYCQ9UyerjY9F0U8k9D
-   23sU/59mheqL2qvhO2jgrtwDuo5+YcjxgCDoEpACD7Dh/a3yRVH8mOvui
-   hqSTbcW4hUIlxwic5hFeqVrNKDlsT1OszK/lTXmV70JiJ8BAg0Dd0rb08
-   y+nxDeiqIURpWHJeGm5eM/BgdtsEzkI4uxuKckFG1LywfkF92O0Y1g4eh
-   w==;
-X-IronPort-AV: E=Sophos;i="5.97,278,1669100400"; 
-   d="scan'208";a="195693381"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Feb 2023 00:49:11 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 7 Feb 2023 00:48:57 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
- Transport; Tue, 7 Feb 2023 00:48:56 -0700
-Date:   Tue, 7 Feb 2023 08:48:56 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linus.walleij@linaro.org>, <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] pinctrl: ocelot: Fix alt mode for ocelot
-Message-ID: <20230207074856.2akoi4v65cbolinb@soft-dev3-1>
-References: <20230206203720.1177718-1-horatiu.vultur@microchip.com>
- <CAHp75VcVn2=Xy7P4xgiDKkpOkw+YD1zGwMYARpWV6Eiv0fUakw@mail.gmail.com>
+        with ESMTP id S231132AbjBGHv5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 02:51:57 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81FACC2E;
+        Mon,  6 Feb 2023 23:51:55 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id v13so14217449eda.11;
+        Mon, 06 Feb 2023 23:51:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1MAcGBhfYJH12s1m6Mlrfjjm34y3tTLoDEvIT2WAfMg=;
+        b=d7K7xElfgp/OSqI7i4n2yCI8yumpN7UeyLpjtJx0sV/FpiLD/636yAvtiMkTtkYb0l
+         ucDlBQjpSjRU/+aOWJzRHVKBDZmOhA9zcBhNG5jaISqPzCREvE8uZC2fePI4uuhZFVb3
+         ZVouoHp1n3OcwIk5MiJh0HjBTnFDhTrgYxHmdndZjz9aHrNYR1jEt9EX39P/tut7eww2
+         ZcW5YPGlY2CrQTQvywR1fryKusmAXif+bU4ox7LT3G7pbNcV0JmP5H0Igll2IULkiee4
+         v+Wj5EP7kCIfF1E2g0QBph3fJfdfQTZAzVt/QiF+meDGsqk7AxQoWo+UjQZk24PGorhf
+         JxBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1MAcGBhfYJH12s1m6Mlrfjjm34y3tTLoDEvIT2WAfMg=;
+        b=hrFA4I0jm//HYLjjbajuD+Bk7sHl+TisG3n98PztbBeh64qsPTj+Q6HbBJVTQgQxdO
+         YkxuvkqZ5yTecrSC+ijKernYyCWqoyMHUSNSHPy55ier4Yw+Lop+uTkh864dfpt3RqD3
+         hhSYWuel2uv7oZ7p0f2N+dWFzFteDexJaqtVL3K6Q7qcCI1MuoijxltB3nuWcyl7+UDy
+         EkwyFdArK6n8AF/CamaMM7at6AYYx/CY+eCyqCaaucauHnReMCO6miivMZU6zl9VaoJb
+         XD4ytQqrPT/jRGwl99ZudynxlWRvAf1cJWzxXFt2CNUdnUDBOUJWWH+pU/dxNDEdmVGg
+         GsJg==
+X-Gm-Message-State: AO0yUKUjlmyBwSovbanBxQ3OBIXYwH5ECcZQolhSp3Jxvc04s/9KwUmU
+        0zNRTIfkM+jOOYb4JLhu9qrCC53MWVEPNoDNCmw=
+X-Google-Smtp-Source: AK7set9lt5j+w095nFTUJw9kawQv3h15WZBR3heYuhLpaFmwnyQ54oO5vLiD88vSYWR/e266zEZphxYcff6g5Hda/As=
+X-Received: by 2002:a50:8a83:0:b0:4aa:9903:ec5f with SMTP id
+ j3-20020a508a83000000b004aa9903ec5fmr656184edj.54.1675756314187; Mon, 06 Feb
+ 2023 23:51:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcVn2=Xy7P4xgiDKkpOkw+YD1zGwMYARpWV6Eiv0fUakw@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <20230207014207.1678715-1-saravanak@google.com> <20230207014207.1678715-13-saravanak@google.com>
+In-Reply-To: <20230207014207.1678715-13-saravanak@google.com>
+From:   Maxim Kiselev <bigunclemax@gmail.com>
+Date:   Tue, 7 Feb 2023 10:51:41 +0300
+Message-ID: <CALHCpMgC55uTnZKPGdKmSX1f0++bSLp2odBp5gQ1kmg90JuQwQ@mail.gmail.com>
+Subject: Re: [PATCH v3 12/12] mtd: mtdpart: Don't create platform device
+ that'll never probe
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Jean-Philippe Brucker <jpb@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,48 +110,68 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 02/06/2023 22:59, Andy Shevchenko wrote:
-
-Hi Andy,
-
-> 
-> On Mon, Feb 6, 2023 at 10:37 PM Horatiu Vultur
-> <horatiu.vultur@microchip.com> wrote:
-> >
-> > In case the driver was trying to set an alternate mode for gpio
-> > 0 or 32 then the mode was not set correctly. The reason is that
-> > there is computation error inside the function ocelot_pinmux_set_mux
-> > because in this case it was trying to shift to left by -1.
-> > Fix this by actually shifting the function bits and not the position.
-> >
-> > Fixes: 4b36082e2e09 ("pinctrl: ocelot: fix pinmuxing for pins after 31")
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> 
-> ...
-> 
-> >         regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
-> >                            BIT(p), f << p);
-> >         regmap_update_bits(info->map, REG_ALT(1, info, pin->pin),
-> > -                          BIT(p), f << (p - 1));
-> > +                          BIT(p), (f >> 1) << p);
-> 
-> I'm not sure I understand how this doesn't break anything that has a
-> bit 0 set in f. Is it not a problem?
-
-I don't think it is a problem. This is similar to the implementation of
-'lan966x_pinmux_set_mux', the only difference is that
-lan966x_pinmux_set_mux has more GPIOs than ocelot.
-
-If we take an example where f equals 0x1 and p equals 0.
-REG_ALT(0): BIT(0) & (0x1 << 0) equals 0x1
-REG_ALT(1): BIT(0) & ((0x1 >> 1) << 0)) equals 0x0.
-
-Or am I misunderstood something?
-
-> 
+=D0=B2=D1=82, 7 =D1=84=D0=B5=D0=B2=D1=80. 2023 =D0=B3. =D0=B2 04:42, Sarava=
+na Kannan <saravanak@google.com>:
+>
+> These "nvmem-cells" platform devices never get probed because there's no
+> platform driver for it and it's never used anywhere else. So it's a
+> waste of memory. These devices also cause fw_devlink to block nvmem
+> consumers of "nvmem-cells" partition from probing because the supplier
+> device never probes.
+>
+> So stop creating platform devices for nvmem-cells partitions to avoid
+> wasting memory and to avoid blocking probing of consumers.
+>
+> Reported-by: Maxim Kiselev <bigunclemax@gmail.com>
+> Fixes: bcdf0315a61a ("mtd: call of_platform_populate() for MTD partitions=
+")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/mtd/mtdpart.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+> index d442fa94c872..85f5ee6f06fc 100644
+> --- a/drivers/mtd/mtdpart.c
+> +++ b/drivers/mtd/mtdpart.c
+> @@ -577,6 +577,7 @@ static int mtd_part_of_parse(struct mtd_info *master,
+>  {
+>         struct mtd_part_parser *parser;
+>         struct device_node *np;
+> +       struct device_node *child;
+>         struct property *prop;
+>         struct device *dev;
+>         const char *compat;
+> @@ -594,6 +595,15 @@ static int mtd_part_of_parse(struct mtd_info *master=
+,
+>         else
+>                 np =3D of_get_child_by_name(np, "partitions");
+>
+> +       /*
+> +        * Don't create devices that are added to a bus but will never ge=
+t
+> +        * probed. That'll cause fw_devlink to block probing of consumers=
+ of
+> +        * this partition until the partition device is probed.
+> +        */
+> +       for_each_child_of_node(np, child)
+> +               if (of_device_is_compatible(child, "nvmem-cells"))
+> +                       of_node_set_flag(child, OF_POPULATED);
+> +
+>         of_property_for_each_string(np, "compatible", prop, compat) {
+>                 parser =3D mtd_part_get_compatible_parser(compat);
+>                 if (!parser)
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.39.1.519.gcb327c4b5f-goog
+>
 
--- 
-/Horatiu
+Hi, Saravana!
+
+Now it works pretty well. Thank you so much for your efforts.
+
+> Reported-by: Maxim Kiselev <bigunclemax@gmail.com>
+> Fixes: bcdf0315a61a ("mtd: call of_platform_populate() for MTD partitions=
+")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+
+Tested-by: Maksim Kiselev <bigunclemax@gmail.com>
