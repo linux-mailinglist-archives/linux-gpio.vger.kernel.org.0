@@ -2,96 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9134C68D20E
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 10:07:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF0A368D254
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 10:15:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbjBGJHM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 7 Feb 2023 04:07:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49380 "EHLO
+        id S231450AbjBGJPI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Feb 2023 04:15:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjBGJHM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 04:07:12 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68931234DF;
-        Tue,  7 Feb 2023 01:07:08 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pPJwG-001RJZ-JC; Tue, 07 Feb 2023 10:06:56 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pPJwE-000mCw-Hc; Tue, 07 Feb 2023 10:06:56 +0100
-Message-ID: <60ed320c8f5286e8dbbf71be29b760339fd25069.camel@physik.fu-berlin.de>
-Subject: Re: remove arch/sh
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Date:   Tue, 07 Feb 2023 10:06:53 +0100
-In-Reply-To: <20230203071423.GA24833@lst.de>
-References: <20230113062339.1909087-1-hch@lst.de>
-         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
-         <20230116071306.GA15848@lst.de>
-         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-         <20230203071423.GA24833@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.3 
+        with ESMTP id S231439AbjBGJPG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 04:15:06 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18683669D
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Feb 2023 01:15:05 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id d189so9604388ybc.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Feb 2023 01:15:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=q8jBVuw64zr+++4naEUhmf8QMT+GB68ff/CcL3gGnDk=;
+        b=NWlZW+1yt6Dn6Z2iU3Hm59DGjYhkWJYoHVsD+bAUodoF+FaamRhb/AUYydjendGFUO
+         ZHKaeU/1EyJcdLHBaadRpFCxZ2Mggbg80NX1tmi6vzsFaO5zwCM7mCrnZHD1JjG/B1r6
+         bqgOqg5D+H353oCu3RcqkPZoZEW6YxwfCJ2ziCAgsa0Nj8BoVkX3BkjuDW5U3EsvGJGc
+         YEXIIqREmxLzUU5hPd15s1Be2EFNFSRdEbfsY9L22U7rW6vMeWywFpRVFwE1lOGXzqVm
+         521qqGp8mnebLHZkaK+OaMgMCGH+r1nOx78Vg1Z1qLaLpwShT7tjF+k01pdc0Lk5DwOk
+         vncQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q8jBVuw64zr+++4naEUhmf8QMT+GB68ff/CcL3gGnDk=;
+        b=c6BLhr87lj+9SizaBexkoskZMTy/kofnpXnoHYQfoH619bRHZeHBEJCIpJgJxdJRPU
+         glWuUPPGaosQQRaJGJpijhEObqzdgdTksZ/mBwCDGm2aVmBI/E74nDa4VQI6RhbvnqMp
+         s4bJ/LZkWLOFAlGMmBguq6hEuNzBkoKIpsBTpBYQKBTUbmjtO+BoU8Xipa6AUbK971ft
+         hiTFcMhP9N31sQMwVuNTwNS14Me3Rl2S/uZVXnr7h1EQTEgTT27hjC7d3mjgx0cf8Net
+         4N6qSJ7mL+M6fgjUs4qgjv8k+rStS7UXoGMXGwsmowyk3Kknvv/H340R6fPhGle+Sdo+
+         ebyA==
+X-Gm-Message-State: AO0yUKWZrqPpB02gFjNRtqwS2HuRBdzggyWBsMQwyYXQzfQKv5uvY5mD
+        VgdIgi8JBxAs3x23nGnGYLflGww6R/WxwRwj/lhkbw==
+X-Google-Smtp-Source: AK7set+yZ7oot/nLJBhp936PRtnytfQjFAtinpDu6O4RQZtagOF92fdcaz69150IfHZum63k6nVKWxw2gVVw1WaXgSQ=
+X-Received: by 2002:a5b:6c5:0:b0:88f:946:bd98 with SMTP id r5-20020a5b06c5000000b0088f0946bd98mr323446ybq.24.1675761305145;
+ Tue, 07 Feb 2023 01:15:05 -0800 (PST)
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230206141558.20916-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230206141558.20916-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Feb 2023 10:14:53 +0100
+Message-ID: <CACRpkda+5s3X-g5C=42m3Xh-A=mpR-2hLasht6bMT89L9XBJQg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: Restore the pins that used to be
+ in Direct IRQ mode
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Jim Minter <jimminter@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Christoph!
+On Mon, Feb 6, 2023 at 3:16 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-On Fri, 2023-02-03 at 08:14 +0100, Christoph Hellwig wrote:
-> On Mon, Jan 16, 2023 at 09:52:10AM +0100, John Paul Adrian Glaubitz wrote:
-> > We have had a discussion between multiple people invested in the SuperH port and
-> > I have decided to volunteer as a co-maintainer of the port to support Rich Felker
-> > when he isn't available.
-> 
-> So, this still isn't reflected in MAINTAINERS in linux-next.  When
-> do you plan to take over?  What platforms will remain supported and
-> what can we start dropping due to being unused and unmaintained?
+> If the firmware mangled the register contents too much,
+> check the saved value for the Direct IRQ mode. If it
+> matches, we will restore the pin state.
+>
+> Reported-by: Jim Minter <jimminter@microsoft.com>
+> Fixes: 6989ea4881c8 ("pinctrl: intel: Save and restore pins in "direct IRQ" mode")
+> Tested-by: Jim Minter <jimminter@microsoft.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I'm getting everything ready now with Geert's help and I have a probably dumb
-question regarding the MAINTAINERS file change: Shall I just add myself as an
-additional maintainer first or shall I also drop Yoshinori Sato?
+Patch applied for fixes.
 
-Also, is it desirable to add a "T:" entry for the kernel tree?
-
-Thanks,
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Yours,
+Linus Walleij
