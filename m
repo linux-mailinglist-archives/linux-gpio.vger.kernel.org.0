@@ -2,158 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ED1768CC3E
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 02:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57CE168CCB6
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 03:48:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjBGBoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Feb 2023 20:44:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
+        id S229647AbjBGCsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Feb 2023 21:48:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjBGBn3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 20:43:29 -0500
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B869636470
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 17:42:51 -0800 (PST)
-Received: by mail-pl1-x649.google.com with SMTP id p18-20020a170902ead200b0019909279002so3092261pld.3
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Feb 2023 17:42:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YX1zBRfC33D3rDRElKAdT20jJS5RQeSlv0JzqWYnjho=;
-        b=UGmq1xHhmv8QgalRGnvex5vaBwzzKCS6zloJhLFOA04JYhf7s2xljRYpy9kTAoNsHa
-         iBC98QSDMciwj7mZAoPpI2usajIcl1gF62f5Z4nG2GjxXwW1tEOTSt3uCwYi8iyDdG37
-         BQfwQH+F5b5B8hHp73/BToUo9eBPbPtsoJG7VHsq9ww2xJmU91i6mybd4OadC8hcmn4L
-         z/JS/fusQ1z+bJZfl9x8ljB4BFuvxFXBUNKd3sGG9GJYtq6qpJhSHd3ZvicyZg0osOk+
-         QxgZAlVpjyrodYVEXosDI3FM0qnhjaVmzWT6ld85NejZtUeLAUKpBMz5nIKrGLcp4W86
-         p/oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YX1zBRfC33D3rDRElKAdT20jJS5RQeSlv0JzqWYnjho=;
-        b=xGhHwCvMuRGJcZsxSVLLXyLMKXXBz03DwjCRMOVqcpllANHdD+J0dj3t4vOPekdmLb
-         WiwGGw+Fe11Ej5imgc1xWepbOes9nkrEAy90G6jVRg27qKygsvBx9CMPLPdkfC8MehOZ
-         V++dGNQICXh1CEnzPs3uU4lpDGQwEi6PVjLC8bus1fvvmyhjp2u4B86WzZbxz49JWEz9
-         6xYy12pRCZ4PUehbOj14bmkMV3yq+A6WscAK5k3TkB6RB7FHSy1pPrsNLMVn3pB7kP86
-         DoWZJSAgxPcCktU8XdS34JI0sRvJlU52aZVOqcjnMkA+NeUpoLUdyQ1KBCQW/Z9GquiE
-         lfkQ==
-X-Gm-Message-State: AO0yUKVwZn5PM3zPnvQsF7ZwnNwrMhTV+/rd8TX5jheY+1yLy7MAgFF6
-        33gkfTpLElURSUKaxYisa6CLYfvx+3gAFgY=
-X-Google-Smtp-Source: AK7set8Gcli9J3BzSmSCx9wcmgEyp38uzEhI1HIWAsHDVULR2jB9pwdeXZpjU2A6RPq1Ak9f9gnun0I1Kq/a1mU=
-X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:ae1:aba6:f21c:4a94])
- (user=saravanak job=sendgmr) by 2002:a17:90a:1d4e:b0:230:ae97:c349 with SMTP
- id u14-20020a17090a1d4e00b00230ae97c349mr441075pju.8.1675734163194; Mon, 06
- Feb 2023 17:42:43 -0800 (PST)
-Date:   Mon,  6 Feb 2023 17:42:04 -0800
-In-Reply-To: <20230207014207.1678715-1-saravanak@google.com>
-Message-Id: <20230207014207.1678715-13-saravanak@google.com>
-Mime-Version: 1.0
-References: <20230207014207.1678715-1-saravanak@google.com>
-X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-Subject: [PATCH v3 12/12] mtd: mtdpart: Don't create platform device that'll
- never probe
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?=" <rafal@milecki.pl>
-Cc:     Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229490AbjBGCsa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Feb 2023 21:48:30 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F4F23C7A
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Feb 2023 18:48:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675738110; x=1707274110;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=59x8H3s7ri/CDFVkFi0jUugnNzcJWr510as1OvYbmT4=;
+  b=NcerhA/p34TXbc+8dWz9co1IA6TrdCu41qHFL/5NHrJZlgzL3Ie7e1zB
+   8oiMP2LXGOAoeM68ix/rpMzqqLp4Gp1fprOG24ltzaTX6A5nodmCD7nVZ
+   NPJ7NJppzfAcyfQgccdgU8NbIxOaHwYLCUyEvJ+mggFA+hQM6uAzxDeLb
+   Q3DJ6qd2QxtLVeNokV3StFpxJKLIKpWS0jnCg71dyh++cXhICGSEoBRBF
+   Klw0DtoKDYNbAKerUudLgA34/sN8D2jS5lz7dHbTHmJSvxt+l3c1aKIK0
+   ycrebPfvHMgFIhNt3jrUwtMFiukMCrYoIWWpQIZE3Kmr3ikRFRCw35oau
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="330677140"
+X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
+   d="scan'208";a="330677140"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 18:48:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="755470717"
+X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
+   d="scan'208";a="755470717"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Feb 2023 18:48:28 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pPE1z-0002yW-2Y;
+        Tue, 07 Feb 2023 02:48:27 +0000
+Date:   Tue, 07 Feb 2023 10:48:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 5921b250f43870e7d8044ca14e402292ceb3e3a8
+Message-ID: <63e1bbe3.ZL2whkfzdj9J3NT5%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These "nvmem-cells" platform devices never get probed because there's no
-platform driver for it and it's never used anywhere else. So it's a
-waste of memory. These devices also cause fw_devlink to block nvmem
-consumers of "nvmem-cells" partition from probing because the supplier
-device never probes.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 5921b250f43870e7d8044ca14e402292ceb3e3a8  pinctrl: qcom: sm8450-lpass-lpi: correct swr_rx_data group
 
-So stop creating platform devices for nvmem-cells partitions to avoid
-wasting memory and to avoid blocking probing of consumers.
+elapsed time: 855m
 
-Reported-by: Maxim Kiselev <bigunclemax@gmail.com>
-Fixes: bcdf0315a61a ("mtd: call of_platform_populate() for MTD partitions")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/mtd/mtdpart.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+configs tested: 38
+configs skipped: 2
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index d442fa94c872..85f5ee6f06fc 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -577,6 +577,7 @@ static int mtd_part_of_parse(struct mtd_info *master,
- {
- 	struct mtd_part_parser *parser;
- 	struct device_node *np;
-+	struct device_node *child;
- 	struct property *prop;
- 	struct device *dev;
- 	const char *compat;
-@@ -594,6 +595,15 @@ static int mtd_part_of_parse(struct mtd_info *master,
- 	else
- 		np = of_get_child_by_name(np, "partitions");
- 
-+	/*
-+	 * Don't create devices that are added to a bus but will never get
-+	 * probed. That'll cause fw_devlink to block probing of consumers of
-+	 * this partition until the partition device is probed.
-+	 */
-+	for_each_child_of_node(np, child)
-+		if (of_device_is_compatible(child, "nvmem-cells"))
-+			of_node_set_flag(child, OF_POPULATED);
-+
- 	of_property_for_each_string(np, "compatible", prop, compat) {
- 		parser = mtd_part_get_compatible_parser(compat);
- 		if (!parser)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+x86_64                            allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+powerpc                           allnoconfig
+s390                                defconfig
+s390                             allyesconfig
+x86_64                              defconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+x86_64                               rhel-8.3
+i386                 randconfig-a011-20230206
+i386                 randconfig-a014-20230206
+x86_64                           allyesconfig
+i386                 randconfig-a012-20230206
+i386                 randconfig-a013-20230206
+i386                 randconfig-a015-20230206
+i386                 randconfig-a016-20230206
+x86_64                           rhel-8.3-bpf
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+sh                               allmodconfig
+ia64                             allmodconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                                defconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+i386                             allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+m68k                             allmodconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+
 -- 
-2.39.1.519.gcb327c4b5f-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
