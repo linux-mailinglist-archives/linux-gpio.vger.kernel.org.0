@@ -2,133 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05D1A68D113
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 08:56:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9134C68D20E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 10:07:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230345AbjBGH4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Feb 2023 02:56:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
+        id S231373AbjBGJHM convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 7 Feb 2023 04:07:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjBGH4h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 02:56:37 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE533ABF;
-        Mon,  6 Feb 2023 23:56:36 -0800 (PST)
-Received: by mail-qt1-f179.google.com with SMTP id z5so15778770qtn.8;
-        Mon, 06 Feb 2023 23:56:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X2wYlj6gN2naNv6gpoblV6OOQNS/n19UAH0L94v4JNA=;
-        b=wUPhG2bN1r5NsnmQHW5uV+uFZJu0ulIEuhmFktxC08fwn1do48LRBLUTfw/Mn16tAh
-         op8NJT1ECr2pxKEEIL8fBSth5R1K5OJUdRyRBAL9q/yL1TYa5L1ohz5m5+qUw266MpxC
-         19k11pIIoiELRG44AnGRmCbEU4ADTFSu5c5qJoRPBF0uup6wqbyO7eopTCtLYCelvPTF
-         aa+Wc+q7O5foi1L2KdzbT4HRk531X/mHRAc+AzdbpS3xi7bYKGZZi+T3BLO3SxZC0HnS
-         Q0H3nQymUbi4qR2/fQoErzUNYOobkPiGNDoc8rex+msCMl3kjY4GzWYnfqXA2IjxHymB
-         /C+w==
-X-Gm-Message-State: AO0yUKXHpCKZnfDcwkdtg3334D2hdnKxaoXI/6fYMXhLwmHr3EQuIzmv
-        BYmaIVvAZT3tNfPvUQTn0hw/t1SkRImtQQ==
-X-Google-Smtp-Source: AK7set/GsXzUtdquy75y0skRTgxKoi8REMlB3sUQ/kxGRwkiKEXp2fARGeiFzvznbAB8sWCyRdNxPQ==
-X-Received: by 2002:ac8:5949:0:b0:3b8:41f4:94e7 with SMTP id 9-20020ac85949000000b003b841f494e7mr3710067qtz.17.1675756595464;
-        Mon, 06 Feb 2023 23:56:35 -0800 (PST)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id e18-20020ac86712000000b003b9a505627bsm8872489qtp.79.2023.02.06.23.56.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Feb 2023 23:56:35 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5254e8994e8so140830827b3.6;
-        Mon, 06 Feb 2023 23:56:34 -0800 (PST)
-X-Received: by 2002:a5b:508:0:b0:8a3:59a4:340e with SMTP id
- o8-20020a5b0508000000b008a359a4340emr269046ybp.604.1675756583781; Mon, 06 Feb
- 2023 23:56:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20230207014207.1678715-1-saravanak@google.com> <20230207014207.1678715-4-saravanak@google.com>
-In-Reply-To: <20230207014207.1678715-4-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Feb 2023 08:56:11 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVRq-+zMuMPMuqLt45t5X78P4nRWZ-cJe8fk=1TsugTYA@mail.gmail.com>
-Message-ID: <CAMuHMdVRq-+zMuMPMuqLt45t5X78P4nRWZ-cJe8fk=1TsugTYA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/12] soc: renesas: Move away from using OF_POPULATED
- for fw_devlink
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+        with ESMTP id S229690AbjBGJHM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 04:07:12 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68931234DF;
+        Tue,  7 Feb 2023 01:07:08 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pPJwG-001RJZ-JC; Tue, 07 Feb 2023 10:06:56 +0100
+Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pPJwE-000mCw-Hc; Tue, 07 Feb 2023 10:06:56 +0100
+Message-ID: <60ed320c8f5286e8dbbf71be29b760339fd25069.camel@physik.fu-berlin.de>
+Subject: Re: remove arch/sh
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Date:   Tue, 07 Feb 2023 10:06:53 +0100
+In-Reply-To: <20230203071423.GA24833@lst.de>
+References: <20230113062339.1909087-1-hch@lst.de>
+         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+         <20230116071306.GA15848@lst.de>
+         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+         <20230203071423.GA24833@lst.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.3 
+MIME-Version: 1.0
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.148.100
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 7, 2023 at 2:42 AM Saravana Kannan <saravanak@google.com> wrote:
-> The OF_POPULATED flag was set to let fw_devlink know that the device
-> tree node will not have a struct device created for it. This information
-> is used by fw_devlink to avoid deferring the probe of consumers of this
-> device tree node.
->
-> Let's use fwnode_dev_initialized() instead because it achieves the same
-> effect without using OF specific flags. This allows more generic code to
-> be written in driver core.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hello Christoph!
 
-You've missed my earlier:
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, 2023-02-03 at 08:14 +0100, Christoph Hellwig wrote:
+> On Mon, Jan 16, 2023 at 09:52:10AM +0100, John Paul Adrian Glaubitz wrote:
+> > We have had a discussion between multiple people invested in the SuperH port and
+> > I have decided to volunteer as a co-maintainer of the port to support Rich Felker
+> > when he isn't available.
+> 
+> So, this still isn't reflected in MAINTAINERS in linux-next.  When
+> do you plan to take over?  What platforms will remain supported and
+> what can we start dropping due to being unused and unmaintained?
 
-Gr{oetje,eeting}s,
+I'm getting everything ready now with Geert's help and I have a probably dumb
+question regarding the MAINTAINERS file change: Shall I just add myself as an
+additional maintainer first or shall I also drop Yoshinori Sato?
 
-                        Geert
+Also, is it desirable to add a "T:" entry for the kernel tree?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
+Adrian
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
