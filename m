@@ -2,465 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD3B868DB80
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 15:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A40D068DBF7
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Feb 2023 15:46:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233099AbjBGOcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Feb 2023 09:32:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44914 "EHLO
+        id S231258AbjBGOqJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Feb 2023 09:46:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232853AbjBGOac (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 09:30:32 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245213E0B7;
-        Tue,  7 Feb 2023 06:29:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675780187; x=1707316187;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=A4CXaCS1V5YYLH/ZOzB/EoGrp/Od1buKWHTb7RvcWAk=;
-  b=ZCHQ22qDErP4hNS/reIPHR8VZjEiIaorzIFb9JnR0ZLXSGhY6LMpwBf5
-   jJfJjX1ZIzwSBDv6Jfof5q4WcBP+g49q+P33KqSS6ToXJ2nIvCbC42N0U
-   JUOyMzNogKUO4pNvjSjN/Yq1sUZeLA3tiUAR9lK+ZAMjEcdwS6CLqXPTE
-   zbExXLHHk1wkaNzn+MeO//PBuOfvxcChkyIt1JXToQeB+4ACyaEGe2X12
-   WEDTG1CzWAjwcEO7XBn1EbAGrTTUAfZO6owG6+/GS9H3QMRuJPj5UQDTI
-   RiSrW2rDbSFy8xTrlp0qSSvj0Q3m19XV/BtgbKsiYiLtaDbUlD31hmJKh
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="391915711"
-X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="391915711"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 06:29:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="912355058"
-X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="912355058"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Feb 2023 06:29:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DD3DF556; Tue,  7 Feb 2023 16:30:02 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, linux-arch@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexander Aring <alex.aring@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Kalle Valo <kvalo@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Lee Jones <lee@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH v3 12/12] gpiolib: Clean up headers
-Date:   Tue,  7 Feb 2023 16:29:52 +0200
-Message-Id: <20230207142952.51844-13-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230207142952.51844-1-andriy.shevchenko@linux.intel.com>
-References: <20230207142952.51844-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232021AbjBGOpx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Feb 2023 09:45:53 -0500
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C81D1BD3;
+        Tue,  7 Feb 2023 06:45:51 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2D8E45C0196;
+        Tue,  7 Feb 2023 09:34:29 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 07 Feb 2023 09:34:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1675780469; x=1675866869; bh=AVCUu1MGS8
+        jO+7PBj7/h/6q0QIji1++TygwsCvCXgFA=; b=Ohn5a44HCVWZixV9/E2k2oqAbo
+        PaqllPYG63xXI2UeWsfdIUgRN/SP8xSmNthGhW7dOutxSSc5uhxMiv4kbPPqClMI
+        dyc2ILYQRSQhSD3cgxUc8QmSIVlj3tj9CstZhZXqal/+0pxvF43I974bbB+/HTjd
+        ad3Y6OZmlBLWeva7Ri8TnI1b/6sOboklYD0Zl9enJ+9KZT5nTwv++ULMp6I7UC/e
+        N6fra/2AuKq65R6F1hgepGPxZqTgVsk8TBmB8fS/twgw8xeGEDMpaEXyr63mC63o
+        ijSid+KMOo35M7OEau1ppNY+jL1u0WdzyWPS+E4oJ8A/LMVg3P7YNORy6A8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1675780469; x=1675866869; bh=AVCUu1MGS8jO+7PBj7/h/6q0QIji
+        1++TygwsCvCXgFA=; b=itoDtjY6+ry+GHdfHAGYuaRGyQ8h3i6PWeWFrKDeCPsM
+        HKULM/SZ16GfzaUmNp7oGfBA2cSamCtJ83Cj34DLNNbKB4G8pea4dx4b2qyxeIxN
+        NLIstfsepEdhu36phnto21uFCBzeGQf66X5MgibGpX5Ym3mImw/JLeO7n80cfS5f
+        pR/Sp8TaYYJeeEzyPF+Zm/IpjF+sSVQnZCk03Tz65PydcVpyTsijL7f05mQxvlwC
+        SOpy0Y+/c1jjJug1QC5/ryXqtQjvei+1pQG6Jq9HQEKSBLjEg3IyAGN7DuSN1WFY
+        G6UWT0233+dq1A2J3pYeQbvim7Lie6lxlv09EmTX+g==
+X-ME-Sender: <xms:dGHiY-uRNR-cKvzVBEHQJj2HtWilXm_u5c2TMJtqS3sWtcfW4w5Fsw>
+    <xme:dGHiYzdfggGuTImtQAiCbW39Hm4_EcAirl6MIXBOIXs5fHNmh_6rec-kcU38RoCs6
+    IKg3aIuqbaEA-b-qNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegkedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:dWHiY5xMIjaeIG45LwPnmGKEpD14PL7cJ8QZxyJXKa24zsLHRpH6Vg>
+    <xmx:dWHiY5MyIgp4SKed-gxDMjEtixZCjLyRGJp4pjA7r27TgY_nqUVHwA>
+    <xmx:dWHiY-9ex18D_l2oN-nLz0ON3SKEKLgUe3hUhIGeuP_iZB7hgznZkA>
+    <xmx:dWHiY1mPYutPxqSRXdBx0FFglmFEw4jnIdDHE5Mrd21Vs6xiKTyXoA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id EBC62B60086; Tue,  7 Feb 2023 09:34:28 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
+Mime-Version: 1.0
+Message-Id: <7974a715-db69-4693-b8c8-543c5828775f@app.fastmail.com>
+In-Reply-To: <Y+I1Orh74wR5Sese@smile.fi.intel.com>
+References: <20230127101149.3475929-1-arnd@kernel.org>
+ <20230127101149.3475929-5-arnd@kernel.org> <Y9n8P1rP+cYyoNIH@google.com>
+ <Y9qwJtOaKrgB5n+T@smile.fi.intel.com> <Y9q4d50lSdPn8myb@google.com>
+ <Y+I1Orh74wR5Sese@smile.fi.intel.com>
+Date:   Tue, 07 Feb 2023 15:34:10 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Cc:     "Arnd Bergmann" <arnd@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] gpiolib: remove gpio_set_debounce
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is a few things done:
-- include only the headers we are direct user of
-- when pointer is in use, provide a forward declaration
-- add missing headers
-- group generic headers and subsystem headers
-- sort each group alphabetically
+On Tue, Feb 7, 2023, at 12:25, Andy Shevchenko wrote:
+> On Wed, Feb 01, 2023 at 11:07:35AM -0800, Dmitry Torokhov wrote:
+>> On Wed, Feb 01, 2023 at 08:32:06PM +0200, Andy Shevchenko wrote:
+>> > On Tue, Jan 31, 2023 at 09:44:31PM -0800, Dmitry Torokhov wrote:
+>> > > On Fri, Jan 27, 2023 at 11:11:46AM +0100, Arnd Bergmann wrote:
+>
+> ...
+>
+>> > > > -	return !gpio_get_value(ts->gpio_pendown);
+>> > > > +	return !gpiod_get_value(ts->gpio_pendown);
+>> > > 
+>> > > No, we can not blindly do that without checking annotations on GPIOs.
+>> > 
+>> > But this is easy to fix, i.e. use raw API, no?
+>> 
+>> I'd rather not (I hope I can make this driver respect declared polarity
+>> at some point), so for debounce we could do:
+>> 
+>> 	gpiod_set_debounce(gpio_to_gpiod(), ...);
+>> 
+>> in ads7846 for now, and get rid of gpio_set_debounce() as a publc API.
+>
+> This will work and we can keep it for a while (gpio_to_desc(), I believe you
+> meant this one, is part of the new API to keep this bridge for the cases like
+> this).
+>
+> Arnd, are you going to send a v3? It would be really nice to have less
+> collisions next cycle if your series is applied.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c   | 10 ++++++----
- drivers/gpio/gpiolib-acpi.h   |  1 -
- drivers/gpio/gpiolib-of.c     |  6 ++++--
- drivers/gpio/gpiolib-of.h     |  1 -
- drivers/gpio/gpiolib-swnode.c |  5 +++--
- drivers/gpio/gpiolib-sysfs.c  | 21 ++++++++++++++++-----
- drivers/gpio/gpiolib.c        |  9 ++++++---
- include/linux/gpio.h          |  9 +++------
- include/linux/gpio/consumer.h | 14 ++++++++++----
- include/linux/gpio/driver.h   | 30 +++++++++++++++++++++++-------
- 10 files changed, 71 insertions(+), 35 deletions(-)
+I was planning to, but I see you beat me to it already, sorry for
+dropping the ball here and thanks for picking it up!
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index bb583cea366c..3871dade186a 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -7,17 +7,19 @@
-  *          Mika Westerberg <mika.westerberg@linux.intel.com>
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/dmi.h>
- #include <linux/errno.h>
--#include <linux/gpio/consumer.h>
--#include <linux/gpio/driver.h>
--#include <linux/gpio/machine.h>
- #include <linux/export.h>
--#include <linux/acpi.h>
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/mutex.h>
- #include <linux/pinctrl/pinctrl.h>
- 
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/machine.h>
-+
- #include "gpiolib.h"
- #include "gpiolib-acpi.h"
- 
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index 5fa315b3c912..a6f3be0bb921 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -9,7 +9,6 @@
- #define GPIOLIB_ACPI_H
- 
- #include <linux/err.h>
--#include <linux/errno.h>
- #include <linux/types.h>
- 
- #include <linux/gpio/consumer.h>
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 0f699af438b0..1436cdb5fa26 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -10,14 +10,16 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/errno.h>
--#include <linux/module.h>
- #include <linux/io.h>
--#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_gpio.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
-+
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- 
- #include "gpiolib.h"
-diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-index e5bb065d82ef..6b3a5347c5d9 100644
---- a/drivers/gpio/gpiolib-of.h
-+++ b/drivers/gpio/gpiolib-of.h
-@@ -4,7 +4,6 @@
- #define GPIOLIB_OF_H
- 
- #include <linux/err.h>
--#include <linux/errno.h>
- #include <linux/types.h>
- 
- #include <linux/notifier.h>
-diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-index dd9ccac214d1..b5a6eaf3729b 100644
---- a/drivers/gpio/gpiolib-swnode.c
-+++ b/drivers/gpio/gpiolib-swnode.c
-@@ -6,13 +6,14 @@
-  */
- #include <linux/err.h>
- #include <linux/errno.h>
--#include <linux/gpio/consumer.h>
--#include <linux/gpio/driver.h>
- #include <linux/kernel.h>
- #include <linux/printk.h>
- #include <linux/property.h>
- #include <linux/string.h>
- 
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+
- #include "gpiolib.h"
- #include "gpiolib-swnode.h"
- 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 6e4267944f80..c1cbf71329f0 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -1,18 +1,29 @@
- // SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/bitops.h>
-+#include <linux/device.h>
- #include <linux/idr.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kdev_t.h>
-+#include <linux/kstrtox.h>
-+#include <linux/list.h>
- #include <linux/mutex.h>
--#include <linux/device.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/string.h>
- #include <linux/sysfs.h>
-+#include <linux/types.h>
-+
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
--#include <linux/interrupt.h>
--#include <linux/kdev_t.h>
--#include <linux/slab.h>
--#include <linux/ctype.h>
- 
- #include "gpiolib.h"
- #include "gpiolib-sysfs.h"
- 
-+struct kernfs_node;
-+
- #define GPIO_IRQF_TRIGGER_NONE		0
- #define GPIO_IRQF_TRIGGER_FALLING	BIT(0)
- #define GPIO_IRQF_TRIGGER_RISING	BIT(1)
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 99a2c77c3711..900f6573c070 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -6,22 +6,25 @@
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/errno.h>
- #include <linux/file.h>
- #include <linux/fs.h>
--#include <linux/gpio.h>
--#include <linux/gpio/driver.h>
--#include <linux/gpio/machine.h>
- #include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- 
-+#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio/machine.h>
-+
- #include <uapi/linux/gpio.h>
- 
- #include "gpiolib-acpi.h"
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 84bb49939d6e..574c45be924b 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -12,7 +12,7 @@
- #ifndef __LINUX_GPIO_H
- #define __LINUX_GPIO_H
- 
--#include <linux/errno.h>
-+struct device;
- 
- /* see Documentation/driver-api/gpio/legacy.rst */
- 
-@@ -132,20 +132,17 @@ void gpio_free_array(const struct gpio *array, size_t num);
- 
- /* CONFIG_GPIOLIB: bindings for managed devices that want to request gpios */
- 
--struct device;
--
- int devm_gpio_request(struct device *dev, unsigned gpio, const char *label);
- int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 			  unsigned long flags, const char *label);
- 
- #else /* ! CONFIG_GPIOLIB */
- 
--#include <linux/bug.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- 
--struct device;
--struct gpio_chip;
-+#include <asm/bug.h>
-+#include <asm/errno.h>
- 
- static inline bool gpio_is_valid(int number)
- {
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 5432e5d5fbfb..1c4385a00f88 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -3,15 +3,14 @@
- #define __LINUX_GPIO_CONSUMER_H
- 
- #include <linux/bits.h>
--#include <linux/bug.h>
--#include <linux/compiler_types.h>
--#include <linux/err.h>
-+#include <linux/types.h>
- 
- struct acpi_device;
- struct device;
- struct fwnode_handle;
--struct gpio_desc;
-+
- struct gpio_array;
-+struct gpio_desc;
- 
- /**
-  * struct gpio_descs - Struct containing an array of descriptors that can be
-@@ -185,8 +184,11 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #else /* CONFIG_GPIOLIB */
- 
-+#include <linux/err.h>
- #include <linux/kernel.h>
- 
-+#include <asm/bug.h>
-+
- static inline int gpiod_count(struct device *dev, const char *con_id)
- {
- 	return 0;
-@@ -616,6 +618,8 @@ struct gpio_desc *acpi_get_and_request_gpiod(char *path, unsigned int pin, char
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
-+#include <linux/err.h>
-+
- static inline int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios)
- {
-@@ -647,6 +651,8 @@ void gpiod_unexport(struct gpio_desc *desc);
- 
- #else  /* CONFIG_GPIOLIB && CONFIG_GPIO_SYSFS */
- 
-+#include <asm/errno.h>
-+
- static inline int gpiod_export(struct gpio_desc *desc,
- 			       bool direction_may_change)
- {
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 262a84ce9bcb..5c6db5533be6 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -2,27 +2,35 @@
- #ifndef __LINUX_GPIO_DRIVER_H
- #define __LINUX_GPIO_DRIVER_H
- 
--#include <linux/device.h>
--#include <linux/irq.h>
-+#include <linux/bits.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/irqhandler.h>
- #include <linux/lockdep.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/property.h>
-+#include <linux/spinlock_types.h>
- #include <linux/types.h>
- 
-+#ifdef CONFIG_GENERIC_MSI_IRQ
- #include <asm/msi.h>
-+#endif
- 
--struct gpio_desc;
-+struct device;
-+struct irq_chip;
-+struct irq_data;
-+struct module;
- struct of_phandle_args;
-+struct pinctrl_dev;
- struct seq_file;
--struct gpio_device;
--struct module;
--enum gpiod_flags;
--enum gpio_lookup_flags;
- 
- struct gpio_chip;
-+struct gpio_desc;
-+struct gpio_device;
-+
-+enum gpio_lookup_flags;
-+enum gpiod_flags;
- 
- union gpio_irq_fwspec {
- 	struct irq_fwspec	fwspec;
-@@ -679,6 +687,10 @@ bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
- int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
- 				struct irq_domain *domain);
- #else
-+
-+#include <asm/bug.h>
-+#include <asm/errno.h>
-+
- static inline int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
- 					      struct irq_domain *domain)
- {
-@@ -756,6 +768,10 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
- 
- #else /* CONFIG_GPIOLIB */
- 
-+#include <linux/err.h>
-+
-+#include <asm/bug.h>
-+
- static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--- 
-2.39.1
-
+      Arnd
