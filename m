@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4B768EE58
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 12:57:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16DF968EE65
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 13:01:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231218AbjBHL54 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Feb 2023 06:57:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
+        id S230037AbjBHMBc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Feb 2023 07:01:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231187AbjBHL5z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 06:57:55 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D8B485AB
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Feb 2023 03:57:53 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id q8so13145225wmo.5
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Feb 2023 03:57:53 -0800 (PST)
+        with ESMTP id S229837AbjBHMBc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 07:01:32 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3373A48A36
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Feb 2023 04:01:30 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id a2so16224863wrd.6
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Feb 2023 04:01:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Os5EeAhOwAZRzentDp9ToOzfsCfsH4W7jIuEYSHVgak=;
-        b=y0KiKEAwymREB5G/oHcJbBjDEJTOmrJHi6PAYsrniCHSA8HuQ6Hgn660IKAQhdPKag
-         wsIHNpH1I9ybpgaFbHTqNWDCne0XkDM9IAqrv2toi9mc1vroSeQwML80fHgjIcPHuQb9
-         lVRLnuofn0LZAaxho0ebZDd1AWIjanb/qRmSCKF8MYakyPy9cTPVteIJbwfrX1xzJFT2
-         ZL5JIoMe6JFHMedH6McYBF17gCmOfvk8kG1LMEIQ766wS/Hyus31/3RZ85CjC7gXIEzJ
-         OfIFJ7Wfcx7lsk17BOv7No9/0m/edxLCw88rKhmrbKA6IUpdZO34VqiS89HT7em86dZR
-         8NBw==
+        bh=5qad9qfr6xeRM+umDGpr9M+cfEjndgPjP7JWCYE+lXA=;
+        b=OYDGtqEigsQkH3blONz2B4KtY/XEJ89esODLrNCJekrtR9MKWl/pUI1Y2CX0YUElah
+         Dqeq+FVBV1ZoQ+n0lQiBO8Yx+97Q8Qk5ujkS7nA5S95XwYjSqNMORX6G9t0x/gIDCaFw
+         S8JRnvkIGiCUZDdOJ5efntDM3fyioJwb54hyRBF/8/P9/m3xoaECVJgTFNp4mEYhWwi0
+         tB4YFQMz3MWOQ7PVrgPpZAGqbVPFIb7WFMpUenOFhWXwLG3Gt3r8MqYSqkS8rZ+/nBxu
+         7ZQ9SzWZHsXjWj2ttFP65G17aO/zqZmo8wH3PM4zUwKGQtp/dklJ9ACwQyB0PZyYC5tK
+         frIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Os5EeAhOwAZRzentDp9ToOzfsCfsH4W7jIuEYSHVgak=;
-        b=yjTBEFzbqzJFsUiJluWsV7sIJo8+1hnI+upHrSZVX+VTfeqDy6UK6ODEmywSgOc29t
-         qiMS4b708+O3zvJWVsOy52UPvZJOqGoSQ6VxN054JIMuRJ3haNrL6CR+XknN618rNWJ3
-         pea/QNYg/B5cns57XiD3Q/avAzuJkZP5MOiJMI8k4fCeDUc07cYHL+VROZQeBpH8QEp5
-         Efhw7OGb/5tMONmgw0VwCAeVbFAA0avlvQ6g8xcFwHQYrr4QzQIFXpK2F25A+XM+7AAx
-         dF5fsyGmD0PmPavh+zOliJ/ISr0Bvh9erNvfJj4BLoTjQ3pE7S0b9jtbVUUI3FZu4BwI
-         oQjA==
-X-Gm-Message-State: AO0yUKUIU65z4cnt7bU9afEQVkwEBOHEiH0xH7U7k/lRWbSDJqLDwtcL
-        QK+/5UhSO4XlOklnpSKawj9S0w==
-X-Google-Smtp-Source: AK7set/ooFp2421xqMkR0fa63StmM5ni5yPRn4jighJqF3WIg0OE06QgA+hnr5NJpVuBQ9Rm6ayz6w==
-X-Received: by 2002:a05:600c:4496:b0:3dc:de85:5007 with SMTP id e22-20020a05600c449600b003dcde855007mr6258599wmo.21.1675857471998;
-        Wed, 08 Feb 2023 03:57:51 -0800 (PST)
+        bh=5qad9qfr6xeRM+umDGpr9M+cfEjndgPjP7JWCYE+lXA=;
+        b=QL51DEXV5hSOzzbR5GDmixFryE3g+Y9Bvk6AyomuEZgp4NCbx6ZCJw6uQ50qYwWHvz
+         8XgCXpRiMKR7mZtIrJCKpL89uCwpbpEd5CeIIzGIKlrFIO4G3pRPywiTla3hPKHy3p/5
+         /XLidxcjJs6d/UiqpetukrRNpDl1n/vTCYkh2YqWl86tURFFrYIWxJnaYOSUISBc7t7n
+         CGo55gKW76Pg8oQbrPZgeDnDqTxGKCIuJma/9M9FX8DV/WF/hS1Ec3GrIuXq3wSODDRY
+         SAzGfkWk8nnGIK6DlxR2ItEzxwf/zzXTvDDifFXstSPtWrBIUZsFtD15bkbQoMe8tCla
+         pdmw==
+X-Gm-Message-State: AO0yUKVMrCHAOSuoKM1eQwQS3vwBe8uTAm7tp5TZrIAzVNxxP6Ud2eFK
+        W6iqJI2bBcON+rXF0mreB8qT+A==
+X-Google-Smtp-Source: AK7set+xgJ6WrfTLrSZ0x7p/NvqlO7QbXsza7mf18Q5eO28H3/W9GsfeBeIyt6eeYsdSXFIb8afm+A==
+X-Received: by 2002:adf:f344:0:b0:2c3:ff6c:ea5 with SMTP id e4-20020adff344000000b002c3ff6c0ea5mr1540941wrp.68.1675857688691;
+        Wed, 08 Feb 2023 04:01:28 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id k21-20020a05600c1c9500b003dc43a10fa5sm1819426wms.13.2023.02.08.03.57.50
+        by smtp.gmail.com with ESMTPSA id a18-20020a5d4572000000b002c3e7474b0fsm7861604wrc.13.2023.02.08.04.01.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Feb 2023 03:57:51 -0800 (PST)
-Message-ID: <9e7e1762-1c2e-28cd-c7a7-b0577addf51e@linaro.org>
-Date:   Wed, 8 Feb 2023 12:57:50 +0100
+        Wed, 08 Feb 2023 04:01:28 -0800 (PST)
+Message-ID: <7bb3e201-954d-c8eb-9430-19626c43fe75@linaro.org>
+Date:   Wed, 8 Feb 2023 13:01:27 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: tegra234: Add DT binding doc
+Subject: Re: [PATCH 3/3] arm64: tegra: Add Tegra234 pinmux device
+Content-Language: en-US
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com,
         linus.walleij@linaro.org, robh+dt@kernel.org,
@@ -62,10 +63,10 @@ Cc:     Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com,
         linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         smangipudi@nvidia.com
 References: <20230207115617.12088-1-pshete@nvidia.com>
- <a1395eb2-da3a-e080-fa6b-50f20d879655@linaro.org> <Y+OGdMFQkL9Dtaq/@orome>
-Content-Language: en-US
+ <20230207115617.12088-3-pshete@nvidia.com>
+ <f0d58e5b-74df-26cf-592e-302a00d08eee@linaro.org> <Y+OAthBgds9InvKp@orome>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y+OGdMFQkL9Dtaq/@orome>
+In-Reply-To: <Y+OAthBgds9InvKp@orome>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -78,77 +79,68 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08/02/2023 12:24, Thierry Reding wrote:
-> On Tue, Feb 07, 2023 at 04:33:08PM +0100, Krzysztof Kozlowski wrote:
-
-
->>> +          type: object
->>> +          additionalProperties:
->>> +            properties:
->>> +              nvidia,pins:
->>> +                description: An array of strings. Each string contains the name
->>> +                  of a pin or group. Valid values for these names are listed
->>> +                  below.
->>
->> Define properties in top level, which points to the complexity of your
->> if-else, thus probably this should be split into two bindings. Dunno,
->> your other bindings repeat this pattern :(
-> 
-> The property itself is already defined in the common schema found in
-> nvidia,tegra-pinmux-common.yaml and we're overriding this here for each
-> instance since each has its own set of pins.
-> 
-> This was a compromise to avoid too many bindings. Originally I attempted
-> to roll all Tegra pinctrl bindings into a single dt-schema, but that
-> turned out truly horrible =) Splitting this into per-SoC bindings is
-> already causing a lot of duplication in these files, 
-
-What would be duplicated? Almost eveerything should be coming from
-shared binding, so you will have only compatible,
-patternProperties(pinmux) and nvidia,pins. And an example. Maybe I miss
-something but I would say this would create many but very easy to read
-bindings, referencing common pieces.
-
-> though splitting
-> off the common bits into nvidi,tegra-pinmux-common.yaml helps a bit with
-> that already. Splitting this into per-instance bindings would
-> effectively duplicate everything but the pin array here, so we kind of
-> settled on this compromise for Tegra194.
-
-OK, but are you sure it is now readable? You have if:then: with
-patternProperties: with additionalProperties: with properties: with
-nvidia,pins.
-
-> 
-> We're taking a bit of a shortcut here already, since technically not all
-> pins support all the functions listed above. On the other hand, fully
-> accurately describing per-pin functions would make this a total mess, so
-> again, we use this simplified representation as a compromise.
-
-That's okay, many platforms do the same way.
-
-(...)
-
+On 08/02/2023 12:00, Thierry Reding wrote:
+> On Tue, Feb 07, 2023 at 04:33:42PM +0100, Krzysztof Kozlowski wrote:
+>> On 07/02/2023 12:56, Prathamesh Shete wrote:
+>>> This change adds pinmux node for Tegra234.
+>>>
+>>> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+>>> ---
+>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 14 ++++++++++++++
+>>>  1 file changed, 14 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+>>> index eaf05ee9acd1..c91b88bc56d1 100644
+>>> --- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+>>> +++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+>>> @@ -701,6 +701,13 @@
+>>>  			interrupt-controller;
+>>>  			#gpio-cells = <2>;
+>>>  			gpio-controller;
+>>> +			gpio-ranges = <&pinmux 0 0 164>;
+>>> +		};
 >>> +
->>> +        pex_rst_c5_out_state: pinmux-pex-rst-c5-out {
->>> +            pex_rst {
+>>> +		pinmux: pinmux@2430000 {
+>>> +			compatible = "nvidia,tegra234-pinmux";
+>>> +			reg = <0x2430000 0x19100>;
+>>> +			status = "okay";
 >>
->> Underscores are not valid in node names.
+>> Why? Anything disabled it?
+>>
+>>>  		};
+>>>  
+>>>  		mc: memory-controller@2c00000 {
+>>> @@ -1664,6 +1671,13 @@
+>>>  			interrupt-controller;
+>>>  			#gpio-cells = <2>;
+>>>  			gpio-controller;
+>>> +			gpio-range = <&pinmux_aon 0 0 32>;
+>>> +		};
+>>> +
+>>> +		pinmux_aon: pinmux@c300000 {
+>>> +			compatible = "nvidia,tegra234-pinmux-aon";
+>>> +			reg = <0xc300000 0x4000>;
+>>> +			status = "okay";
+>>
+>> Also why?
 > 
-> We have supported underscore in older bindings for historical reasons.
-> But I suppose for these newer bindings we could disallow them.
+> These are probably copy-pasted from Tegra194 where these snuck in. I can
+> drop those when applying. I'll also prepare a patch to drop these from
+> the tegra194.dtsi.
 > 
-> Some of the older DTs have a large number of underscores, so I'm not
-> sure it makes sense to go back and fix those. Maybe something to keep in
-> mind for when we're done with all the conversions...
+> I wonder if there's a good way to detect these. We'd have to run checks
+> on the DT source files, so that's a bit difficult. I do have an
+> experimental script that tries to capture some common pitfalls on
+> sources but it's quite ugly and slow, but I guess I could add something
+> like this. But perhaps there are better ways?
 
-I understand, up to you. I think that if such older platform is still
-supported/maintained/used, then such cleanups are positive. Underscores
-are reported by dtc at W=2, so it is not that critical. But many other
-nits like generic node names are being enforced by dtschema, thus if you
-want to achieve 0-warning state, at some point you will need to address
-these. Of course different question is on what tasks you want to spend
-your time. :)
+One way to easy spot them is to override always by label, thus every
+node defined like above is a new node. However I think we talked about
+this and you do not follow this practice, thus there is no way to tell -
+is the status reasonable or not.
+
+Automated tools could help here as well - run fdtdump on DTB and look
+for status=okay.
 
 Best regards,
 Krzysztof
