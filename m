@@ -2,280 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DA3568E9F2
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 09:35:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2E968EBE1
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 10:42:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbjBHIfy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Feb 2023 03:35:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36742 "EHLO
+        id S230491AbjBHJmE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Feb 2023 04:42:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbjBHIfx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 03:35:53 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F38317158
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Feb 2023 00:35:50 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso3513169pju.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Feb 2023 00:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aGCngmn3qYO37IvW03Wsv1Sd1d/k2b7T3ZI7GJg8uRY=;
-        b=cPsKgAUkHw27v8h88LQ+bRZGoy8A0erdlmgM5JUOi+2YLRFRsZDgzow810SgerWi6c
-         7ZkNatq08eCjuhQV7vWipxsC16kWxyMGN4pLB44A3wVf9ll3ZCJAwTr36t6R3fCmR4mz
-         QT45nsmhTLkg/c9q2OJkwRV4bZNHdzodoupS0UIoqpgq+BrHm31rA+MOuwvudwKX898F
-         AGuaP1JtqWkQ8jLB0gUq0Cm6dY77IVfaRwp2a3fYuz8wQtmx0GCux71qn7uQMbDXTY/R
-         S4wBHfTUkAi7AFZ1sy97qwTexNEuDqZE7tdokzNf2CDa1SO7FjGL7mBMUCxyvfRXkVFE
-         X3Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aGCngmn3qYO37IvW03Wsv1Sd1d/k2b7T3ZI7GJg8uRY=;
-        b=RxEgttardE8CEhZroBt0rplGCt06EUBV9bFcr7rclSKZ9pe9b3aPajhat2AqGPhkFU
-         gxGk93WEyUWOWnbrHXrb9hDQUVeLyAEz/VUDQjdKZY35mR0/ozmYblG52U33/hld4h8q
-         hZWPLpJyIGFDVbBdrlBHxarUE0mvEx0B0rn5L8ZXfaVtVIoc52SOmV62+AQ5MAMQ0Xj2
-         LMV8El/nFZz5NTIb3vCiC3q4raK4ZSbRZ783mORfDPgyYRmp7F3X0jpIUW8gwrr5MZj8
-         ZhOT89Sq3YFwalxT+EWChShIPqywrpqWdYDOgUAHEQo44xY8rpjy/ZC8NMiFLyjZgeTs
-         hmcw==
-X-Gm-Message-State: AO0yUKVtW2sqWMZYLKUQ62oUEJ94GbebrN/LbD2E/SxCweSkUj1ZPKG9
-        kuGd7/GRg48LFghT0uCFXWbwPKdsGeYS8zBD1cuovA==
-X-Google-Smtp-Source: AK7set/TDWd3+Egoy+JfLKAz5sJaXWQWjOWmfrHsqy3L62s04ncd7pLxpA5rCkq4UU5UWfrCIcarV+jDJQ7ZU53Ulek=
-X-Received: by 2002:a17:90a:d082:b0:22c:ad5e:e1e3 with SMTP id
- k2-20020a17090ad08200b0022cad5ee1e3mr523701pju.141.1675845349397; Wed, 08 Feb
- 2023 00:35:49 -0800 (PST)
+        with ESMTP id S231203AbjBHJl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 04:41:56 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153B0442F8;
+        Wed,  8 Feb 2023 01:41:25 -0800 (PST)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3189Dnn9023278;
+        Wed, 8 Feb 2023 09:40:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=mP4LubzJ2urSBkzpOLTo8lj/x1I0b/0nAvkIOvDsbrg=;
+ b=CoxGMpwof00vqQHb/C6iu98MJph21VcjKP6Er+iLRmWryRpL2cE59lstVY0zhBJoykFA
+ yRkVoRLVowvd7Ab+Shrvp34+tnFo11gOb9xMqMcssITpJvF1ak6wC7DH6WFaT8fAzaRl
+ F1j2o1m+WtxfHm/YNPgltKAnVFjIvS11DrrNuJqEPSVfGeNzLd331WmDa5hjNDyCbZ5c
+ xLv9LjUq/AwCwgRqiUr+6GTflCU4DZhu3aHoE8TPHXp/M9K2aM/pBUuLUKXWCSasnFG0
+ tlLWyy5hRUhOch+cslsGKXC1AaCU1b16Qv2UNUR/QUGmY1fy+w3pcKDMoOz3W+2XYbBW VA== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nm8x1r283-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Feb 2023 09:40:54 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3189ercw030362
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 8 Feb 2023 09:40:53 GMT
+Received: from [10.50.23.208] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 8 Feb 2023
+ 01:40:43 -0800
+Message-ID: <aadb5fb5-5aa8-fdc0-68e6-7a716073756e@quicinc.com>
+Date:   Wed, 8 Feb 2023 15:10:40 +0530
 MIME-Version: 1.0
-References: <20230207014207.1678715-1-saravanak@google.com>
- <20230207014207.1678715-10-saravanak@google.com> <CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com>
- <CAGETcx8DaZqS7+47PhX4hQOfSk7AzPcTu=2i+4gAgXr6wyDNgg@mail.gmail.com>
- <CAGETcx_bkuFaLCiPrAWCPQz+w79ccDp6=9e881qmK=vx3hBMyg@mail.gmail.com> <CAMuHMdVREiVoGp-jvXKAdPSwjio13VgtPXWppnGOB+gSS9op+g@mail.gmail.com>
-In-Reply-To: <CAMuHMdVREiVoGp-jvXKAdPSwjio13VgtPXWppnGOB+gSS9op+g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 8 Feb 2023 00:35:12 -0800
-Message-ID: <CAGETcx_+rhHvaC_HJXGrr5_WAd2+k5f=rWYnkCZ6z5bGX-wj4w@mail.gmail.com>
-Subject: Re: [PATCH v3 09/12] of: property: Simplify of_link_to_phandle()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH V7 2/7] clk: qcom: Add Global Clock Controller driver for
+ IPQ9574
+Content-Language: en-US
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <nfraprado@collabora.com>,
+        <broonie@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_poovendh@quicinc.com>
+References: <20230206103337.21000-1-quic_devipriy@quicinc.com>
+ <20230206103337.21000-3-quic_devipriy@quicinc.com>
+ <94fc3698-3568-87d8-7263-68de9ca53eab@linaro.org>
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <94fc3698-3568-87d8-7263-68de9ca53eab@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zUo0LoeF43W7QOkU4BXLTUNJyk3jRFyL
+X-Proofpoint-ORIG-GUID: zUo0LoeF43W7QOkU4BXLTUNJyk3jRFyL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-08_03,2023-02-08_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 impostorscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2302080087
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 7, 2023 at 11:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Saravana,
->
-> On Wed, Feb 8, 2023 at 8:32 AM Saravana Kannan <saravanak@google.com> wrote:
-> > On Tue, Feb 7, 2023 at 6:08 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > On Tue, Feb 7, 2023 at 12:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Tue, Feb 7, 2023 at 2:42 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > The driver core now:
-> > > > > - Has the parent device of a supplier pick up the consumers if the
-> > > > >   supplier never has a device created for it.
-> > > > > - Ignores a supplier if the supplier has no parent device and will never
-> > > > >   be probed by a driver
-> > > > >
-> > > > > And already prevents creating a device link with the consumer as a
-> > > > > supplier of a parent.
-> > > > >
-> > > > > So, we no longer need to find the "compatible" node of the supplier or
-> > > > > do any other checks in of_link_to_phandle(). We simply need to make sure
-> > > > > that the supplier is available in DT.
-> > > > >
-> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > >
-> > > > Thanks for your patch!
-> > > >
-> > > > This patch introduces a regression when dynamically loading DT overlays.
-> > > > Unfortunately this happens when using the out-of-tree OF configfs,
-> > > > which is not supported upstream.  Still, there may be (obscure)
-> > > > in-tree users.
-> > > >
-> > > > When loading a DT overlay[1] to enable an SPI controller, and
-> > > > instantiate a connected SPI EEPROM:
->
-> [...]
->
-> > > > The SPI controller and the SPI EEPROM are no longer instantiated.
->
-> > > Sigh... I spent way too long trying to figure out if I caused a memory
-> > > leak. I should have scrolled down further! Doesn't look like that part
-> > > is related to anything I did.
-> > >
-> > > There are some flags set to avoid re-parsing fwnodes multiple times.
-> > > My guess is that the issue you are seeing has to do with how many of
-> > > the in memory structs are reused vs not when an overlay is
-> > > applied/removed and some of these flags might not be getting cleared
-> > > and this is having a bigger impact with this patch (because the fwnode
-> > > links are no longer anchored on "compatible" nodes).
-> > >
-> > > With/without this patch (let's keep the series) can you look at how
-> > > the following things change between each step you do above (add,
-> > > remove, retry):
-> > > 1) List of directories under /sys/class/devlink
-> > > 2) Enable the debug logs inside __fwnode_link_add(),
-> > > __fwnode_link_del(), device_link_add()
-> > >
-> > > My guess is that the final solution would entail clearing
-> > > FWNODE_FLAG_LINKS_ADDED for some fwnodes.
-> >
-> > You replied just as I was about to hit send. So sending this anyway...
-> >
-> > Ok, I took a closer look and I think it's a bit of a mess. The fact
-> > that it even worked for you without this patch is a bit of a
-> > coincidence.
-> >
-> > Let's just take platform devices that are created by
-> > driver/of/platform.c as an example.
-> >
-> > The main problem is that when you add/remove properties to a DT node
-> > of an existing platform device, nothing is really done about it at the
-> > device level. We don't even unbind and rebind the driver so the driver
-> > could make use of the new properties. We don't remove and add back the
-> > device so whoever might use the new property will use it. And if you
-> > are adding a new node, it'll only trigger any platform device level
-> > impact if it's a new node of a "simple-bus" (or similar bus) device.
-> >
-> > Problem 1:
-> > So if you add a new child node to an existing probed device that adds
-> > its children explicitly (as in, the parent is not a "simple-bus" like
-> > device), nothing will happen. The newly added child device node will
-> > get converted into a platform device, not will the parent device
-> > notice it. So in your case of adding msiof0_pins, it's just that when
-> > the consumer gets the pins, the driver doesn't get involved much and
-> > it's the pinctrl framework that reads the DT and figures it out.
-> >
-> > With this patch, the fwnode links point to the actual resource and the
-> > actual parent device inherits them if they don't get converted to a
-> > struct device. But since we are adding this msiof0_pins after the
-> > parent device has probed, the fwnode link isn't inherited by the
-> > parent pinctrl device.
-> >
-> > Problem 2:
-> > So if you add a property to an already bound device, nothing is done
-> > by the driver. In your overlay example, if you move the status="okay"
-> > line to be the first property you change in the msiof0 spi device,
-> > you'll probably see that fw_devlink is no longer the one blocking the
-> > probe. This is because the platform device will get added as soon as
-> > the status flips from disabled to enabled and at that point fw_devlink
-> > will think it has no suppliers and won't do any probe deferring. And
-> > then as the new properties get added nothing will happen at the device
-> > or fw_devlink level. If the msiof0's spi driver fails immediately with
-> > NOT -EPROBE_DEFER when platform device is added because it couldn't
-> > find any pinctrl property, then msiof0 will never probe (unless you
-> > remove and add the driver). If it had failed with -EPROBE_DEFER, then
-> > it might probe again if something else triggers a deferred probe
-> > attempt. Clearly, things working/not working based on the order of
-> > properties in DT is not a good implementation.
-> >
-> > Problem 3:
-> > What if you enable a previously disabled supplier. There's no way to
-> > handle that from a fw_devlink level without re-parsing the entire
-> > device tree because existing devices might be consumers now.
-> >
-> > Anyway, long story short, it's sorta worked due to coincidence and
-> > it's quite messy to get it to work correctly.
->
-> Several subsystems register notifiers to be informed of the events
-> above. E.g. drivers/spi/spi.c:
->
->         if (IS_ENABLED(CONFIG_OF_DYNAMIC))
->                 WARN_ON(of_reconfig_notifier_register(&spi_of_notifier));
->         if (IS_ENABLED(CONFIG_ACPI))
->                 WARN_ON(acpi_reconfig_notifier_register(&spi_acpi_notifier));
->
-> So my issue might be triggered using ACPI, too.
+Thanks for taking time to review the patch!
 
-Yeah, I did notice this before my email. Here's an ugly hack (at end
-of email) to test my theory about Problem 1. I didn't compile test it
-(because I should go to bed now), but you get the idea. Can you give
-this a shot? It should fix your specific case. Basically for all
-overlays (I hope the function is only used for overlays) we assume all
-nodes are NOT devices until they actually get added as a device. Don't
-review the code, it's not meant to be :)
-
--Saravana
-
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -226,6 +226,7 @@ static void __of_attach_node(struct device_node *np)
-        np->sibling = np->parent->child;
-        np->parent->child = np;
-        of_node_clear_flag(np, OF_DETACHED);
-+       np->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
- }
-
- /**
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 81c8c227ab6b..7299cd668e51 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -732,6 +732,7 @@ static int of_platform_notify(struct notifier_block *nb,
-                if (of_node_check_flag(rd->dn, OF_POPULATED))
-                        return NOTIFY_OK;
-
-+               rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
-                /* pdev_parent may be NULL when no bus platform device */
-                pdev_parent = of_find_device_by_node(rd->dn->parent);
-                pdev = of_platform_device_create(rd->dn, NULL,
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 15f174f4e056..1de55561b25d 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -4436,6 +4436,7 @@ static int of_spi_notify(struct notifier_block
-*nb, unsigned long action,
-                        return NOTIFY_OK;
-                }
-
-+               rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
-                spi = of_register_spi_device(ctlr, rd->dn);
-                put_device(&ctlr->dev);
+On 2/6/2023 7:37 PM, Dmitry Baryshkov wrote:
+> On 06/02/2023 12:33, Devi Priya wrote:
+>> Add Global Clock Controller (GCC) driver for ipq9574 based devices
+>>
+>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>> ---
+>>   Changes in V7:
+>>     - Used qcom_cc_probe instead of qcom_cc_really_probe in
+>>       gcc_ipq9574_probe
+>>
+>>   drivers/clk/qcom/Kconfig       |    8 +
+>>   drivers/clk/qcom/Makefile      |    1 +
+>>   drivers/clk/qcom/gcc-ipq9574.c | 4295 ++++++++++++++++++++++++++++++++
+>>   3 files changed, 4304 insertions(+)
+>>   create mode 100644 drivers/clk/qcom/gcc-ipq9574.c
+>>
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index 5ab4b7dfe3c2..a9f01d67a500 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -173,6 +173,14 @@ config IPQ_GCC_8074
+>>         i2c, USB, SD/eMMC, etc. Select this for the root clock
+>>         of ipq8074.
+>> +config IPQ_GCC_9574
+>> +    tristate "IPQ9574 Global Clock Controller"
+>> +    help
+>> +      Support for global clock controller on ipq9574 devices.
+>> +      Say Y if you want to use peripheral devices such as UART, SPI,
+>> +      i2c, USB, SD/eMMC, etc. Select this for the root clock
+>> +      of ipq9574.
+>> +
+>>   config MSM_GCC_8660
+>>       tristate "MSM8660 Global Clock Controller"
+>>       help
+>> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+>> index 3194465dd02c..51e6e5eb187b 100644
+>> --- a/drivers/clk/qcom/Makefile
+>> +++ b/drivers/clk/qcom/Makefile
+>> @@ -27,6 +27,7 @@ obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+>>   obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+>>   obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+>>   obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
+>> +obj-$(CONFIG_IPQ_GCC_9574) += gcc-ipq9574.o
+>>   obj-$(CONFIG_IPQ_LCC_806X) += lcc-ipq806x.o
+>>   obj-$(CONFIG_MDM_GCC_9607) += gcc-mdm9607.o
+>>   obj-$(CONFIG_MDM_GCC_9615) += gcc-mdm9615.o
+>> diff --git a/drivers/clk/qcom/gcc-ipq9574.c 
+>> b/drivers/clk/qcom/gcc-ipq9574.c
+>> new file mode 100644
+>> index 000000000000..718106a9ac7b
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gcc-ipq9574.c
+> 
+> [skipped]
+> 
+>> +static struct clk_branch gcc_snoc_pcie3_2lane_s_clk = {
+>> +    .halt_reg = 0x2e054,
+>> +    .clkr = {
+>> +        .enable_reg = 0x2e054,
+>> +        .enable_mask = BIT(0),
+>> +        .hw.init = &(struct clk_init_data) {
+>> +            .name = "gcc_snoc_pcie3_2lane_s_clk",
+>> +            .parent_hws = (const struct clk_hw *[]) {
+>> +                &pcie3_axi_s_clk_src.clkr.hw
+>> +            },
+>> +            .num_parents = 1,
+>> +            .flags = CLK_SET_RATE_PARENT,
+>> +            .ops = &clk_branch2_ops,
+>> +        },
+>> +    },
+>> +};
+>> +
+>> +static struct clk_regmap_mux pcie0_pipe_clk_src = {
+>> +    .reg = 0x28064,
+>> +    .shift = 8,
+>> +    .width = 2,
+>> +    .parent_map = gcc_pcie30_phy0_pipe_clk_xo_map,
+>> +    .clkr = {
+>> +        .hw.init = &(struct clk_init_data) {
+>> +            .name = "pcie0_pipe_clk_src",
+>> +            .parent_data = gcc_pcie30_phy0_pipe_clk_xo,
+>> +            .num_parents = ARRAY_SIZE(gcc_pcie30_phy0_pipe_clk_xo),
+>> +            .flags = CLK_SET_RATE_PARENT,
+>> +            .ops = &clk_regmap_mux_closest_ops,
+> 
+> 
+> clk_regmap_phy_mux_ops ?
+Okay, will update the ops and struct accordingly in the next series
+> 
+>> +        },
+>> +    },
+>> +};
+>> +
+>> +static struct clk_regmap_mux pcie1_pipe_clk_src = {
+>> +    .reg = 0x29064,
+>> +    .shift = 8,
+>> +    .width = 2,
+>> +    .parent_map = gcc_pcie30_phy1_pipe_clk_xo_map,
+>> +    .clkr = {
+>> +        .hw.init = &(struct clk_init_data) {
+>> +            .name = "pcie1_pipe_clk_src",
+>> +            .parent_data = gcc_pcie30_phy1_pipe_clk_xo,
+>> +            .num_parents = ARRAY_SIZE(gcc_pcie30_phy1_pipe_clk_xo),
+>> +            .flags = CLK_SET_RATE_PARENT,
+>> +            .ops = &clk_regmap_mux_closest_ops,
+>> +        },
+>> +    },
+>> +};
+>> +
+>> +static struct clk_regmap_mux pcie2_pipe_clk_src = {
+>> +    .reg = 0x2a064,
+>> +    .shift = 8,
+>> +    .width = 2,
+>> +    .parent_map = gcc_pcie30_phy2_pipe_clk_xo_map,
+>> +    .clkr = {
+>> +        .hw.init = &(struct clk_init_data) {
+>> +            .name = "pcie2_pipe_clk_src",
+>> +            .parent_data = gcc_pcie30_phy2_pipe_clk_xo,
+>> +            .num_parents = ARRAY_SIZE(gcc_pcie30_phy2_pipe_clk_xo),
+>> +            .flags = CLK_SET_RATE_PARENT,
+>> +            .ops = &clk_regmap_mux_closest_ops,
+> 
+> clk_regmap_phy_mux_ops ?
+Okay
+> 
+> 
+>> +        },
+>> +    },
+>> +};
+>> +
+>> +static struct clk_regmap_mux pcie3_pipe_clk_src = {
+>> +    .reg = 0x2b064,
+>> +    .shift = 8,
+>> +    .width = 2,
+>> +    .parent_map = gcc_pcie30_phy3_pipe_clk_xo_map,
+>> +    .clkr = {
+>> +        .hw.init = &(struct clk_init_data) {
+>> +            .name = "pcie3_pipe_clk_src",
+>> +            .parent_data = gcc_pcie30_phy3_pipe_clk_xo,
+>> +            .num_parents = ARRAY_SIZE(gcc_pcie30_phy3_pipe_clk_xo),
+>> +            .flags = CLK_SET_RATE_PARENT,
+>> +            .ops = &clk_regmap_mux_closest_ops,
+> 
+> clk_regmap_phy_mux_ops ?
+Okay
+> 
+>> +        },
+>> +    },
+>> +};
+> 
+Best Regards,
+Devi Priya
