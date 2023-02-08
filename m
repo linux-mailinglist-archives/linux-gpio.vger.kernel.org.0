@@ -2,44 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CD14699225
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 11:48:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 177E16993DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 13:06:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbjBPKsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 05:48:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38310 "EHLO
+        id S229561AbjBPMGS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 07:06:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229970AbjBPKsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 05:48:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B587E552A9;
-        Thu, 16 Feb 2023 02:48:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6554361F77;
-        Thu, 16 Feb 2023 10:47:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37A4C433EF;
-        Thu, 16 Feb 2023 10:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676544466;
-        bh=qPKJcQ81NdgJ9mjdld2jyisKDD9+D95sDN9DG7hmjx0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DszsnKa9tf0u7K5ayygNV3MPjUNrLLUSycmWGZhwOkCQQ4NU+FuzhI8jekTi3ANNB
-         fus/TC1hPty7mv4ToYwocMe8jIOX7YxQalBcxi4AfwsNXPfR+SqGoXx3hJJVnXRWCU
-         WHKnLHdX4otGbV9Qh/z/mcru/K2rWe/ze+AHxZ9djovLcly/rUbYSeWXY9yzhqBdKY
-         YQDl9s/8fF37sJHLLaAON2vBZXyL0H8IGm3kt3pLCmMrJi4vX08ZUWd23/Hh85Cpnl
-         ZCuNXLxJPKHGieKddQrO1fsC8XLaMPK0oQ/FmqPPL52mWpsy3F+333wJtE0V2uwcGP
-         xs6dAcaBcCDIw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pSbnk-00ArRW-Bg;
-        Thu, 16 Feb 2023 10:47:44 +0000
-Date:   Thu, 16 Feb 2023 10:47:43 +0000
-Message-ID: <86pma9yjhs.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
+        with ESMTP id S229657AbjBPMGR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 07:06:17 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3202D153
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 04:06:13 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id r34-20020a05683044a200b0068d4a8a8d2dso517403otv.12
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 04:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uglBygBs9ijyHk9bCgsz1JnjSH+tWIY8t2J8IkoGaKg=;
+        b=OxdaKe43FG9pkV/bxMqLQm3QB4w5+H6Nr/d+Bjy8+kEDM3NJEhkGNiSMjs3fsLD7nX
+         3FQL3VJawYluNdpGWKhI0CjkAQEJJ0k3lKaioo9f336frqO1cuVZtKtUcEpMmj3Q8HnO
+         VKlCxnjEruwsZ+y9RMnSfEXge6AGxzVKYQ7rMLP5iJEMNcZjr4oT5VDcToTZjzAtvSja
+         3xs6UQaKA5O5AAeox08IcxpMEml2d+IZwaPiKmacDw3lWpGyRi4/ovKLZPZ+2llCiSRY
+         UOZt0X5DNWwDYjiNEGh4ij+s8vL2gbmYTOLAdfTolGGIPH7/Y12V0HHcEyXM3THm3ctI
+         1HFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uglBygBs9ijyHk9bCgsz1JnjSH+tWIY8t2J8IkoGaKg=;
+        b=A1DFY/WcR7eVRTHYqFiA5b6RFkkRsN4NaaCs8zpMsTOjyMprQ9vJ8c7EV3ctKUs17a
+         nNC7EFM04Evo7kxu7gfHPAW0Ae+V62FAk/CDDyzcYhirdbgJVQK8ZBNCzC1B+5Np+zBK
+         ZatMQwWwPy7o3awAESZd54dXFoJ+OUWVRlXl/BXgsIJvlVtpIErYgphT0Q959Mt9u+y0
+         M3q/sFUcSuLFEJlbj6VZSuxfvz7pCScb0RGBqDmHcK9UvChRTxlXFnyXuyW0cp8mfrKJ
+         /XQ2Fzn670jMIZ9yHUXeYzBWXauXdBfr2boAB4qsLIneb/I7Br29RlGOIWRmrc3fv2hn
+         OYBg==
+X-Gm-Message-State: AO0yUKUBoCBw32CMTn0S6s2zDV9Ors9Rv/e1cQMO57aX0KBQCORFczgB
+        IizagyEeYPSQhZvBw6rdV/h2+g==
+X-Google-Smtp-Source: AK7set/QViwHWfznjRNuw1BE1wQ1msM8bPS/oX7O9gJb49xGfWna2ZIBMwHXu83+kYvTCy95yhddwg==
+X-Received: by 2002:a05:6830:2a04:b0:68d:6175:d5b9 with SMTP id y4-20020a0568302a0400b0068d6175d5b9mr778243otu.19.1676549173177;
+        Thu, 16 Feb 2023 04:06:13 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id n12-20020a9d64cc000000b0068d4a8a8d40sm544774otl.81.2023.02.16.04.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Feb 2023 04:06:12 -0800 (PST)
+Date:   Wed, 8 Feb 2023 06:16:44 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -53,52 +63,117 @@ Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
         Romain Perier <romain.perier@gmail.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/17] Mass convert GPIO IRQ chips to be immutable
-In-Reply-To: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 16/17] gpio: pci-idio-16: Convert to immutable irq_chip
+Message-ID: <Y+OEnM/gZ+lLRELc@fedora>
 References: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, mun.yew.tham@intel.com, brgl@bgdev.pl, joel@jms.id.au, andrew@aj.id.au, albeu@free.fr, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, f.fangjian@huawei.com, daniel@thingy.jp, romain.perier@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, william.gray@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org, jmkrzyszt@gmail.com, arnd@arndb.de, tony@atomide.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20230215-immutable-chips-v1-16-51a8f224a5d0@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AySwEFEhj9sTbaXz"
+Content-Disposition: inline
+In-Reply-To: <20230215-immutable-chips-v1-16-51a8f224a5d0@linaro.org>
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 16 Feb 2023 09:37:01 +0000,
-Linus Walleij <linus.walleij@linaro.org> wrote:
-> 
-> We are getting tired of these irq_chips not getting converted
-> to be immutable, so I just take out the big hammer and fix
-> some that I deem not too complex as best I can.
 
-Thanks for taking the hit on this one.
+--AySwEFEhj9sTbaXz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I had a cursory look, and they seem fine overall. only the omap one
-looks a bit scary, but I take it that Tony can give that one a go
-before it gets merged.
+On Thu, Feb 16, 2023 at 10:37:17AM +0100, Linus Walleij wrote:
+> Convert the driver to immutable irq-chip with a bit of
+> intuition.
+>=20
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-FWIW:
+FYI, I'm migrating pci-idio-16 to the regmap-irq API soon, so this patch
+might not be necessary once the code is removed. Anyway, here's my ack
+in case this patch series is merged first.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Acked-by: William Breathitt Gray <william.gray@linaro.org>
 
-	M.
+> ---
+>  drivers/gpio/gpio-pci-idio-16.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-pci-idio-16.c b/drivers/gpio/gpio-pci-idio=
+-16.c
+> index a86ce748384b..6726c32e31e6 100644
+> --- a/drivers/gpio/gpio-pci-idio-16.c
+> +++ b/drivers/gpio/gpio-pci-idio-16.c
+> @@ -107,6 +107,8 @@ static void idio_16_irq_mask(struct irq_data *data)
+> =20
+>  		raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
+>  	}
+> +
+> +	gpiochip_disable_irq(chip, irqd_to_hwirq(data));
+>  }
+> =20
+>  static void idio_16_irq_unmask(struct irq_data *data)
+> @@ -117,6 +119,8 @@ static void idio_16_irq_unmask(struct irq_data *data)
+>  	const unsigned long prev_irq_mask =3D idio16gpio->irq_mask;
+>  	unsigned long flags;
+> =20
+> +	gpiochip_enable_irq(chip, irqd_to_hwirq(data));
+> +
+>  	idio16gpio->irq_mask |=3D mask;
+> =20
+>  	if (!prev_irq_mask) {
+> @@ -138,12 +142,14 @@ static int idio_16_irq_set_type(struct irq_data *da=
+ta, unsigned int flow_type)
+>  	return 0;
+>  }
+> =20
+> -static struct irq_chip idio_16_irqchip =3D {
+> +static const struct irq_chip idio_16_irqchip =3D {
+>  	.name =3D "pci-idio-16",
+>  	.irq_ack =3D idio_16_irq_ack,
+>  	.irq_mask =3D idio_16_irq_mask,
+>  	.irq_unmask =3D idio_16_irq_unmask,
+> -	.irq_set_type =3D idio_16_irq_set_type
+> +	.irq_set_type =3D idio_16_irq_set_type,
+> +	.flags =3D IRQCHIP_IMMUTABLE,
+> +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+> =20
+>  static irqreturn_t idio_16_irq_handler(int irq, void *dev_id)
+> @@ -242,7 +248,7 @@ static int idio_16_probe(struct pci_dev *pdev, const =
+struct pci_device_id *id)
+>  	idio_16_state_init(&idio16gpio->state);
+> =20
+>  	girq =3D &idio16gpio->chip.irq;
+> -	girq->chip =3D &idio_16_irqchip;
+> +	gpio_irq_chip_set_chip(girq, &idio_16_irqchip);
+>  	/* This will let us handle the parent IRQ in the driver */
+>  	girq->parent_handler =3D NULL;
+>  	girq->num_parents =3D 0;
+>=20
+> --=20
+> 2.34.1
+>=20
 
--- 
-Without deviation from the norm, progress is not possible.
+--AySwEFEhj9sTbaXz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY+OEnAAKCRC1SFbKvhIj
+K5eCAPwLmxXCtGXXgP0akD13UFw7dXSdGyxVszeP+0DYBG+nUwD9GF6hkUXvQwOW
+2bR53NrSasEyxAdN84aY3rFim+gKKQE=
+=Zw1V
+-----END PGP SIGNATURE-----
+
+--AySwEFEhj9sTbaXz--
