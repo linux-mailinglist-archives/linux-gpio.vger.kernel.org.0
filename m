@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC38569B154
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 17:49:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3665D69B155
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 17:49:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjBQQtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Feb 2023 11:49:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        id S229919AbjBQQtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Feb 2023 11:49:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjBQQtk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 11:49:40 -0500
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC0B474C0
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:39 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id e17so1647645qvw.8
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:39 -0800 (PST)
+        with ESMTP id S229903AbjBQQtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 11:49:41 -0500
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38F4497FB
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:40 -0800 (PST)
+Received: by mail-qt1-x836.google.com with SMTP id l23so1295483qtj.1
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JBYJ6k0k+VwIOBHwk5gBDh6Agwe69W8vixfj+NTwllQ=;
-        b=cbgLFejJCkpFAA1rG+0UhVL12J9Kobhzxs0sUeSCZnsDNZuzpFAfmYkqndjEtV5DI6
-         kW2GzbI/EGgOyvKiAUPizIKx9rIHbtAD6uh0yQJmEwX2G3wd19DeZjt5IBx7lhC7dWKV
-         Q7X5UAmCemucN9qoxsVo0IBoSCKebEk61Nhszx8Sl8Usu2DJ+Aqpz5aj7l6503HM9tzA
-         NnvgIlOBe0c+qyb2NAIM+aoTLTpFeWxjV0E/ucnvZc8gelIXfot1NkS/BQe9RcKsIxzk
-         L78sDo5LO9hkFyA0yyaQlf8yev3PON+TGZi9nncsFpbw3iq4OqrbksgUXl7V4eOYzT+K
-         QwsA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7GwlRJ6QZLC4825eR4jurC5qWL3Ut7MNH8cguHvzEhM=;
+        b=WGolbwhTzFWaofdqfEJ8TP6repSRsRwc3FPGxpK7wfibIFLRL+KpvtbBV29N/rhGKk
+         YsDDaVlsYJelbAmFPKcBzndlF3aYlzPqxgEBxc4kqCLtLqUMA8lygycK2svwu3XhYpIu
+         XKHUj4vCfB9s4aUksqbmk4JvZ1uRCEyWbGLpC+7V5gdNblDGfD/z0kd1lB3QA6peMhtS
+         H7F+JqM6NAKXUSMIu/ysL1Rp8b7l5+Em4IQ3VfVPQlLw4YeSDytAq+VVOsRuxTXsx+9P
+         UsXajI8KMjYU6GaByqAA2nw7x4CQKCJJF0Rk6SwPtrGqpZdwXFkZgFKCyIli7DnydW/E
+         1qIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JBYJ6k0k+VwIOBHwk5gBDh6Agwe69W8vixfj+NTwllQ=;
-        b=CbJJOfzKV4ZYBJdnXEiQ+76Rq7y3NqZkB1TaMcm5NZRg4UtLtEFTEhdOMSFNSWFomS
-         Cn34STwP8KjHs9k+CJLx8W4LVAZo1xZMOKVNpnmF4bIoRK4Vwx3G3n1+roeWSARa4PYe
-         mgY0ARmxTYcos0upEoYQ0weR8d9u1KsFqacZzfHyrBxhmjxR3WvaR25+BFaIaINIsQte
-         YN3UAa1mOPHVTZfCtlMUrVkJsP+rsZsrO03WbxaGD4T2x56whMW12bymNa/q6fYof4av
-         mErfDbL6+XZRHXeRnbbSzcfz+vQW9nh7cbN1rd5CiUOfNVATUJcAq/cuD1DpzOk2YBRo
-         t5/A==
-X-Gm-Message-State: AO0yUKUjORwCI2E8d2MmFiho1kAMDtseSVeCgQLv5GLZ6AY4rQXxzosi
-        DuJy58apT3Yf7rmtBHppIdqP36S2cD2I0zq4
-X-Google-Smtp-Source: AK7set9tVasjBlEnZHW2dQ+jbQys+MEkEojuhwaDAbV3NzS4mykkijQTQKiIyqYuqqIuadRnPy2pHQ==
-X-Received: by 2002:a05:6214:1942:b0:56e:aa11:daa3 with SMTP id q2-20020a056214194200b0056eaa11daa3mr2767351qvk.14.1676652579014;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7GwlRJ6QZLC4825eR4jurC5qWL3Ut7MNH8cguHvzEhM=;
+        b=dzHmMf1OtInb69SLUiqh2kZXkbFlnSSylyzTjmiZVYk0pigqLqys9jR0oLx/UeD4zB
+         JHKa9p/z9OtHb8GmMeIGk1pauZVhl7HbDp2uADIFywgb7aWQ9qtxAwt5/up/qzIyQAWA
+         6uIoaFaKGYNfFeUG5VnRK4qXafD5d8DVY2C8+xWZjGEM+fm3oQ5q+mLJXJhFKM8ZQzeN
+         j39qpT/rNcWcu33qtde7P+5Uhtal/9+Q+NM25AULwWA3XEh0voNTOFRbKHIjzx6hiDJ4
+         lqlu426dBIe8YDzagSMxMb7T2FyffrFMLZSQ7VzqRxYeco3jRMFho9mlqkgd1wJ3uJVL
+         NAdQ==
+X-Gm-Message-State: AO0yUKW8mZ9gLZLnvZ72iAxksCH4lscC3NUn9ub563Vy4kLmKrCW047G
+        gyUx8gWoPQRPhSztkerjyZEd3w==
+X-Google-Smtp-Source: AK7set9ekPkTE3SQ0s7BZXYOpBFWNOzx0FBss2icitDMGpEKS3fCAHLe2utTGVFdGj/sKe8XcIWBkw==
+X-Received: by 2002:ac8:5914:0:b0:3b9:ba24:4f38 with SMTP id 20-20020ac85914000000b003b9ba244f38mr2841609qty.56.1676652579813;
         Fri, 17 Feb 2023 08:49:39 -0800 (PST)
 Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id b68-20020a37b247000000b0073980414888sm3569161qkf.42.2023.02.17.08.49.38
+        by smtp.gmail.com with ESMTPSA id b68-20020a37b247000000b0073980414888sm3569161qkf.42.2023.02.17.08.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 08:49:38 -0800 (PST)
+        Fri, 17 Feb 2023 08:49:39 -0800 (PST)
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     linus.walleij@linaro.org, brgl@bgdev.pl
 Cc:     broonie@kernel.org, andriy.shevchenko@linux.intel.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 0/6] Migrate IDIO-16 GPIO drivers to regmap API
-Date:   Wed,  8 Feb 2023 12:18:15 -0500
-Message-Id: <cover.1675876659.git.william.gray@linaro.org>
+Subject: [PATCH 1/6] regmap-irq: Add no_status support
+Date:   Wed,  8 Feb 2023 12:18:16 -0500
+Message-Id: <1e14e042c84f0c0a5e7d25ae9986f88a9620965c.1675876659.git.william.gray@linaro.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <cover.1675876659.git.william.gray@linaro.org>
+References: <cover.1675876659.git.william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
@@ -69,40 +72,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The regmap API supports IO port accessors so we can take advantage of
-regmap abstractions rather than handling access to the device registers
-directly in the driver. The 104-idio-16 and pci-idio-16 modules depend
-on the IDIO-16 library and are thus updated accordingly.
+Some devices lack status registers, yet expect to handle interrupts.
+Introduce a no_status flag to indicate such a configuration, where
+rather than read a status register to verify, all interrupts received
+are assumed to be active.
 
-The 104-IDIO-16 lacks a status register (as does the 104-DIO-48E), so a
-no_status flag is introduced to the regmap-irq API to properly handle
-such cases and avoid hacks. The 104-dio-48e module is updated in a
-subsequent patch to take advantage of this new no_status flag.
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+---
+ drivers/base/regmap/regmap-irq.c | 23 ++++++++++++++++-------
+ include/linux/regmap.h           |  2 ++
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
-By leveraging the regmap API, the idio-16 library is reduced to simply a
-devm_idio_16_regmap_register() function and a configuration structure
-struct idio_16_regmap_config.
-
-William Breathitt Gray (6):
-  regmap-irq: Add no_status support
-  gpio: 104-dio-48e: Utilize no_status regmap-irq flag
-  gpio: idio-16: Migrate to the regmap API
-  gpio: 104-idio-16: Migrate to the regmap API
-  gpio: pci-idio-16: Migrate to the regmap API
-  gpio: idio-16: Remove unused legacy interface
-
- drivers/base/regmap/regmap-irq.c |  23 ++-
- drivers/gpio/Kconfig             |   7 +-
- drivers/gpio/gpio-104-dio-48e.c  |   6 +-
- drivers/gpio/gpio-104-idio-16.c  | 294 ++++++++----------------------
- drivers/gpio/gpio-idio-16.c      | 255 ++++++++++++++------------
- drivers/gpio/gpio-idio-16.h      |  80 +++------
- drivers/gpio/gpio-pci-idio-16.c  | 295 +++++++------------------------
- include/linux/regmap.h           |   2 +
- 8 files changed, 326 insertions(+), 636 deletions(-)
-
-
-base-commit: 4827aae061337251bb91801b316157a78b845ec7
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index a8f185430a07..7abc42c5794d 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -437,7 +437,11 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 	 * possible in order to reduce the I/O overheads.
+ 	 */
+ 
+-	if (chip->num_main_regs) {
++	if (chip->no_status) {
++		/* no status register so default to all active */
++		memset(data->status_buf, 0xFF,
++		       chip->num_regs * sizeof(*data->status_buf));
++	} else if (chip->num_main_regs) {
+ 		unsigned int max_main_bits;
+ 		unsigned long size;
+ 
+@@ -967,12 +971,17 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 			continue;
+ 
+ 		/* Ack masked but set interrupts */
+-		reg = d->get_irq_reg(d, d->chip->status_base, i);
+-		ret = regmap_read(map, reg, &d->status_buf[i]);
+-		if (ret != 0) {
+-			dev_err(map->dev, "Failed to read IRQ status: %d\n",
+-				ret);
+-			goto err_alloc;
++		if (d->chip->no_status) {
++			/* no status register so default to all active */
++			d->status_buf[i] = -1;
++		} else {
++			reg = d->get_irq_reg(d, d->chip->status_base, i);
++			ret = regmap_read(map, reg, &d->status_buf[i]);
++			if (ret != 0) {
++				dev_err(map->dev, "Failed to read IRQ status: %d\n",
++					ret);
++				goto err_alloc;
++			}
+ 		}
+ 
+ 		if (chip->status_invert)
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index a3bc695bcca0..12637c4d231e 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -1563,6 +1563,7 @@ struct regmap_irq_chip_data;
+  *		      can be accomplished with a @get_irq_reg callback, without
+  *		      the need for a @sub_reg_offsets table.
+  * @status_invert: Inverted status register: cleared bits are active interrupts.
++ * @no_status: No status register: all interrupts assumed generated by device.
+  * @runtime_pm:  Hold a runtime PM lock on the device when accessing it.
+  *
+  * @num_regs:    Number of registers in each control bank.
+@@ -1630,6 +1631,7 @@ struct regmap_irq_chip {
+ 	unsigned int clear_on_unmask:1;
+ 	unsigned int not_fixed_stride:1;
+ 	unsigned int status_invert:1;
++	unsigned int no_status:1;
+ 
+ 	int num_regs;
+ 
 -- 
 2.39.1
 
