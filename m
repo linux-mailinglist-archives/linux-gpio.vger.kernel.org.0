@@ -2,102 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEFAA68EE75
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 13:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE1C68EEA8
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 13:14:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbjBHMGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Feb 2023 07:06:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
+        id S231200AbjBHMOK convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 8 Feb 2023 07:14:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbjBHMGL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 07:06:11 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072DA49039
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Feb 2023 04:06:05 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id hn2-20020a05600ca38200b003dc5cb96d46so1266818wmb.4
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Feb 2023 04:06:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nvc70662qT1tudUaeHKF9NVD5XdghLVQqXJv6WZUq7k=;
-        b=zw836VyF/IQ1nIWPBHEaWD1KMAcRZejV5TNNTTZYK5bl6pFq91nb87/AcrOb0DknRE
-         eEVf71lXrwYh5XSJpTY6pLmJ8DJnHNs/vc377cKY3bEzafdVuuR2Rlz2lhZb7FZ3/BlV
-         0ETVP3jqYfx/Aq7XONWb5SxmSM2B73Z13syqHqNlHvus7gXwTHNSUb/WUBxTImPLW+bB
-         gMcJ1n/V189TYSUdA+Y2aGq52apqnon+Klx75Vm8Ph20UVVt3RM3DmrU+JKT5c232Iz4
-         13efSas+RcuLHwNU6LISRU3WjBN/+EE6t3wRWryK0JRMxG/GXi3/XLFkH0tq3C5+W55a
-         1TKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nvc70662qT1tudUaeHKF9NVD5XdghLVQqXJv6WZUq7k=;
-        b=HM3LAtst0cFf3yaCMNVOa7aEbAAJgXNKZlBeW/QcQRTGjGDmwlUQC25xt26NURrnEX
-         hDD3Qk+hK//npgkqMCKPhKNbtcWSlZetIzN7QSfwZLX5U2IGp1OCoupOdPRg/QWx/UK1
-         7yXnK312xGkSR8iJVvlaM2MKwdHv6TDpBYfAaQRj1jMQb3xeLjbUaZjDhKbQNq9Zx++N
-         tkiBGmNRVhZub72VFLOKHQ2iy8b44W+GZfcKMFZSNsccltsRZ3Hb7AhZ2PDy2UL3eHX4
-         fVti5Kiac9gcdVdhsGAZiYvUvVlOfTeWuq/X+qMcq8Yo3qNXLWW8yWImy+dFDmMNh4vw
-         Yu0w==
-X-Gm-Message-State: AO0yUKUy2hPNtjJNCSV6w5wC2g4+zr2Hz36vxtEdfPm+sPYrOb+WzZFA
-        Y6ReBOewvnMxTVCL9NUU9TYrKYtSfMZ5C1Ri
-X-Google-Smtp-Source: AK7set/qHwGkIgf/BP+Zq/H3KlrxtCkwAw9/fP+bS3H788mDQqiZKzJlKhYFJKZ9/5o1O+XgwQvo6A==
-X-Received: by 2002:a05:600c:1609:b0:3dc:53a2:2690 with SMTP id m9-20020a05600c160900b003dc53a22690mr6250444wmn.7.1675857963621;
-        Wed, 08 Feb 2023 04:06:03 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id n16-20020a1c7210000000b003dc1d668866sm1718825wmc.10.2023.02.08.04.06.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Feb 2023 04:06:03 -0800 (PST)
-Message-ID: <1dc0589b-2434-47c5-a1d2-d253b06d3a67@linaro.org>
-Date:   Wed, 8 Feb 2023 13:06:02 +0100
+        with ESMTP id S231186AbjBHMOJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 07:14:09 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C543C212A4;
+        Wed,  8 Feb 2023 04:14:04 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pPjKb-0028L0-7w; Wed, 08 Feb 2023 13:13:45 +0100
+Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pPjKa-000FU0-W6; Wed, 08 Feb 2023 13:13:45 +0100
+Message-ID: <f6317e9073362b13b10df57de23e63945becea32.camel@physik.fu-berlin.de>
+Subject: Re: remove arch/sh
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Date:   Wed, 08 Feb 2023 13:13:43 +0100
+In-Reply-To: <0e26bf17-864e-eb22-0d07-5b91af4fde92@infradead.org>
+References: <20230113062339.1909087-1-hch@lst.de>
+         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+         <20230116071306.GA15848@lst.de>
+         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+         <20230203071423.GA24833@lst.de>
+         <60ed320c8f5286e8dbbf71be29b760339fd25069.camel@physik.fu-berlin.de>
+         <0e26bf17-864e-eb22-0d07-5b91af4fde92@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.3 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 3/3] arm64: tegra: Add Tegra234 pinmux device
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        smangipudi@nvidia.com
-References: <20230207115617.12088-1-pshete@nvidia.com>
- <20230207115617.12088-3-pshete@nvidia.com>
- <f0d58e5b-74df-26cf-592e-302a00d08eee@linaro.org> <Y+OAthBgds9InvKp@orome>
- <7bb3e201-954d-c8eb-9430-19626c43fe75@linaro.org>
-In-Reply-To: <7bb3e201-954d-c8eb-9430-19626c43fe75@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.148.100
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08/02/2023 13:01, Krzysztof Kozlowski wrote:
->> I wonder if there's a good way to detect these. We'd have to run checks
->> on the DT source files, so that's a bit difficult. I do have an
->> experimental script that tries to capture some common pitfalls on
->> sources but it's quite ugly and slow, but I guess I could add something
->> like this. But perhaps there are better ways?
+Hi Randy!
+
+On Tue, 2023-02-07 at 17:31 -0800, Randy Dunlap wrote:
 > 
-> One way to easy spot them is to override always by label, thus every
-> node defined like above is a new node. However I think we talked about
-> this and you do not follow this practice, thus there is no way to tell -
-> is the status reasonable or not.
+> On 2/7/23 01:06, John Paul Adrian Glaubitz wrote:
+> > Hello Christoph!
+> > 
+> > On Fri, 2023-02-03 at 08:14 +0100, Christoph Hellwig wrote:
+> > > On Mon, Jan 16, 2023 at 09:52:10AM +0100, John Paul Adrian Glaubitz wrote:
+> > > > We have had a discussion between multiple people invested in the SuperH port and
+> > > > I have decided to volunteer as a co-maintainer of the port to support Rich Felker
+> > > > when he isn't available.
+> > > 
+> > > So, this still isn't reflected in MAINTAINERS in linux-next.  When
+> > > do you plan to take over?  What platforms will remain supported and
+> > > what can we start dropping due to being unused and unmaintained?
+> > 
+> > I'm getting everything ready now with Geert's help and I have a probably dumb
+> > question regarding the MAINTAINERS file change: Shall I just add myself as an
+> > additional maintainer first or shall I also drop Yoshinori Sato?
+> > 
+> > Also, is it desirable to add a "T:" entry for the kernel tree?
 > 
-> Automated tools could help here as well - run fdtdump on DTB and look
-> for status=okay.
+> Yes, definitely.
 
-Eh, obviously it won't work - every node which was disabled in DTSI and
-enabled in DTS will have the status=okay...
+Geert has suggested to wait with adding a tree source to the entry until I get my
+own kernel.org account. I have enough GPG signatures from multiple kernel developers
+on my GPG key, so I think it shouldn't be too difficult to qualify for an account.
 
-Best regards,
-Krzysztof
+Adrian
 
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
