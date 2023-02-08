@@ -2,112 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3363D68EBFB
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 10:47:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 319F768EC5C
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 11:09:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230291AbjBHJrG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Feb 2023 04:47:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        id S230134AbjBHKJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Feb 2023 05:09:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjBHJrG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 04:47:06 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4A4E3AF
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Feb 2023 01:47:04 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id n28-20020a05600c3b9c00b003ddca7a2bcbso1003702wms.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Feb 2023 01:47:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sKWqqdCURAlapoO/zHZWEUEDu0sAlPmjm8qcDQuj3/o=;
-        b=AFNOTmmNdAi4x/iq0lW+2oa3/iowxBepitKje/bk2kk6yjnAWpmUgP0MxfcniCjMxL
-         cLVfAlnvmWE1JOFK+8cRNKB9+jnZPN/Sf1bAwNmd2DXnENBFmaxqXe89MujccTCkMjRX
-         IA9ExMtJqnxPKYjrRlhRKRu9d2T6d1TyhYDVvkBsnZKjCn16fglpcS8NgLgbqBs/MrBk
-         6Nn+1J85dwESa8fl0Wpw5IubPMiiJ80dniqqtFCMdOgeDFjUFU2cCnpyECRe2lAtbUzB
-         Q/+5V9F8RD666Uv4wNDwe5gSu8XLVXf+jVKFoZN/mHwN5GyHTvmMo++vW7ic6HPqKT6p
-         to2g==
+        with ESMTP id S229706AbjBHKJG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 05:09:06 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA7293F3;
+        Wed,  8 Feb 2023 02:09:05 -0800 (PST)
+Received: by mail-qt1-f170.google.com with SMTP id h24so20055725qta.12;
+        Wed, 08 Feb 2023 02:09:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sKWqqdCURAlapoO/zHZWEUEDu0sAlPmjm8qcDQuj3/o=;
-        b=prPthJnQwVM2CumIZoOMySyJfh5+vaBcIswnhu4jsbLNyCnWcapzXoJvWoAcKkRVHE
-         jg5CDsYNMwGzbX0j2Z8aJnmqNuJQP90t+aNs1ARu565ZbaEXLKQFz2/HPws7Demui0ax
-         JcrVLuTtafQu+2tl5XYhWWH9qsdMeF4mMjmJgcr9o204ROy5KZ0AF0ACPUdN0s7oaAgD
-         NyxbH6qIp10au/k6OyVP4PvKsMNfau9ztKd1S2dJGrf3d90ywQWz0dFdx8T2I8+drBdH
-         zYvEn5E8bIEgd4ngWsQB7AoZNNHjkDYyYHPUu4a0qOKxP47maTE95LclpgnU0oq0sAsJ
-         DYzQ==
-X-Gm-Message-State: AO0yUKWMIPWAoiwXVv4toURThjr9eOw8TJ5aobGC0o4DZQLtGXzyY0G5
-        QQZ2HPqRSE3/z+DNJXw3LdGzXg==
-X-Google-Smtp-Source: AK7set+ZZUFlxV399UI0n/SVY7Of+MZ69YbRTQXn/l8hvQlxCOmoVOKCL1/Tu0HKM2KpvYZ47j80mg==
-X-Received: by 2002:a05:600c:a291:b0:3e0:1a9:b1e0 with SMTP id hu17-20020a05600ca29100b003e001a9b1e0mr7956771wmb.25.1675849623242;
-        Wed, 08 Feb 2023 01:47:03 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id g10-20020a05600c310a00b003dd19baf45asm1434879wmo.40.2023.02.08.01.47.01
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Al90dbaVnMvp1zrarwIGYloHZEfuuu1TJgBG8XepFdE=;
+        b=ODARmn87I0+wpt7STPuOcAeBBIeRkkY/k2hP75Qd4JOmZxio7IfcvQdWW9foKUFJVB
+         Itxtl8SjNumukYOQra1ho0pXyAuPGXc5EKHwHc+/IhuF0oR4RLecpLvyVrWuLfjmme5e
+         iQyJCsh85x9mH1QlC1Z0F2UPzE1dqJu+5ERGhRy0Fw4mSMG7RTes46DPLOndJAV2dwwJ
+         iLtTO54zg1K1pmS9w8eufYCnb13IZ+aEnubUQSI9oHBh5suTCdUGjQXySiKv6kymRe1j
+         nJsuIY0jQtB560gkm8r4dc131LxAylv8/D0ctnEypNhKfyks8bA5xc6sTGpo4Dv6N0AF
+         ErXg==
+X-Gm-Message-State: AO0yUKXsgEY8F3V3EFBVd8aLTRVnoEIVTxJ/SJYscTfqx5MSiwGzhJbo
+        KqNXxWQiDHoWC2aPojWoUado5EWuuINBfS2S
+X-Google-Smtp-Source: AK7set+z2q+GKKBVkMO9i5mvqn6izSiK+EF5MtJjRSaQhddI6zFY8709SiO4krMyjD9TKY81rsaDkg==
+X-Received: by 2002:ac8:5fc1:0:b0:3b8:49a9:48c0 with SMTP id k1-20020ac85fc1000000b003b849a948c0mr11975248qta.13.1675850944267;
+        Wed, 08 Feb 2023 02:09:04 -0800 (PST)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id x11-20020a05620a448b00b0072c01a3b6aasm11511525qkp.100.2023.02.08.02.09.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Feb 2023 01:47:02 -0800 (PST)
-Message-ID: <045f1afa-f442-0f4c-7dd2-292ac472b12f@linaro.org>
-Date:   Wed, 8 Feb 2023 10:47:00 +0100
+        Wed, 08 Feb 2023 02:09:03 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id o187so21579816ybg.3;
+        Wed, 08 Feb 2023 02:09:02 -0800 (PST)
+X-Received: by 2002:a5b:508:0:b0:8a3:59a4:340e with SMTP id
+ o8-20020a5b0508000000b008a359a4340emr741320ybp.604.1675850942618; Wed, 08 Feb
+ 2023 02:09:02 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V7 4/7] pinctrl: qcom: Add IPQ9574 pinctrl driver
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-References: <20230206103337.21000-1-quic_devipriy@quicinc.com>
- <20230206103337.21000-5-quic_devipriy@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230206103337.21000-5-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230207142952.51844-1-andriy.shevchenko@linux.intel.com> <20230207142952.51844-9-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230207142952.51844-9-andriy.shevchenko@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Feb 2023 11:08:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVkhymFCys_LnqKtpXLBT6sKURbVqBnp2wDUc63nhxvSw@mail.gmail.com>
+Message-ID: <CAMuHMdVkhymFCys_LnqKtpXLBT6sKURbVqBnp2wDUc63nhxvSw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/12] gpio: aggregator: Add missing header(s)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Devarsh Thakkar <devarsht@ti.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, linux-arch@vger.kernel.org,
+        devicetree@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Hu Haowen <src.res@email.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alexander Aring <alex.aring@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Lee Jones <lee@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/02/2023 11:33, Devi Priya wrote:
-> Add pinctrl definitions for the TLMM of IPQ9574
-> 
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+Hi Andy,
+
+Thanks for your patch!
+
+On Tue, Feb 7, 2023 at 3:29 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> Do not imply that some of the generic headers may be always included.
+> Instead, include explicitly what we are direct user of.
+
+That applies only to the addition of #include <linux/slab.h>...
+Please also describe the other changes.
+
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  Changes in V7:
-> 	- Corrected the indentation in the Makefile
-> 	- Unwrapped the lines in ipq9574_groups wherever applicable
-> 
->  drivers/pinctrl/qcom/Kconfig           |  11 +
->  drivers/pinctrl/qcom/Makefile          |   1 +
->  drivers/pinctrl/qcom/pinctrl-ipq9574.c | 828 +++++++++++++++++++++++++
->  3 files changed, 840 insertions(+)
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq9574.c
-> 
+>  drivers/gpio/gpio-aggregator.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+> index 6d17d262ad91..20a686f12df7 100644
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -10,19 +10,20 @@
+>  #include <linux/bitmap.h>
+>  #include <linux/bitops.h>
+>  #include <linux/ctype.h>
+> -#include <linux/gpio.h>
+> -#include <linux/gpio/consumer.h>
+> -#include <linux/gpio/driver.h>
+> -#include <linux/gpio/machine.h>
+>  #include <linux/idr.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/overflow.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/string.h>
+>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/machine.h>
+> +
+>  #define AGGREGATOR_MAX_GPIOS 512
 
+For the actual changes:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Gr{oetje,eeting}s,
 
-Best regards,
-Krzysztof
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
