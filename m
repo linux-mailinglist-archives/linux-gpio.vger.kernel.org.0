@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3665D69B155
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 17:49:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DA4469B156
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 17:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjBQQtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Feb 2023 11:49:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
+        id S229940AbjBQQto (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Feb 2023 11:49:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbjBQQtl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 11:49:41 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38F4497FB
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:40 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id l23so1295483qtj.1
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:40 -0800 (PST)
+        with ESMTP id S229913AbjBQQtm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 11:49:42 -0500
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EE7474C0
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:41 -0800 (PST)
+Received: by mail-qt1-x82d.google.com with SMTP id r6so1339119qtx.10
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 08:49:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7GwlRJ6QZLC4825eR4jurC5qWL3Ut7MNH8cguHvzEhM=;
-        b=WGolbwhTzFWaofdqfEJ8TP6repSRsRwc3FPGxpK7wfibIFLRL+KpvtbBV29N/rhGKk
-         YsDDaVlsYJelbAmFPKcBzndlF3aYlzPqxgEBxc4kqCLtLqUMA8lygycK2svwu3XhYpIu
-         XKHUj4vCfB9s4aUksqbmk4JvZ1uRCEyWbGLpC+7V5gdNblDGfD/z0kd1lB3QA6peMhtS
-         H7F+JqM6NAKXUSMIu/ysL1Rp8b7l5+Em4IQ3VfVPQlLw4YeSDytAq+VVOsRuxTXsx+9P
-         UsXajI8KMjYU6GaByqAA2nw7x4CQKCJJF0Rk6SwPtrGqpZdwXFkZgFKCyIli7DnydW/E
-         1qIg==
+        bh=bxSHhRIK7JTZXIncFXbe4DygtHjDqgxwQ1O7fQr99v0=;
+        b=bBK72SGShYHBhmybaEy8D9ycdnj8d7RbBzWnHqRYNa4M/J05pj2MkeQs4cb5SNlWj3
+         HhS3EDcgw8lfHB6RseBMCMU/5BoM6yic6xDlcMOCdZBgE5SNqmNXGoHi/cjovVZVRwXM
+         n7KobkwZNwnLIyqlLasDtXjoKaCInWmsSC0wR4P+iXrynxEb67CvXEMytWkhKp5y6vk9
+         vxdzqn8/xD1+KlGBVgYIB/OBOMWyAjnpIiDNVz8uGSvuEmN9C2hE1gjOpUs5s/goqlnK
+         VqrEH1h4A9YX+C+r7TksxAjUMK6/6n6epokDVoqTxj3xUU+ahD360N3wvmUoltlnkgl4
+         nLUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7GwlRJ6QZLC4825eR4jurC5qWL3Ut7MNH8cguHvzEhM=;
-        b=dzHmMf1OtInb69SLUiqh2kZXkbFlnSSylyzTjmiZVYk0pigqLqys9jR0oLx/UeD4zB
-         JHKa9p/z9OtHb8GmMeIGk1pauZVhl7HbDp2uADIFywgb7aWQ9qtxAwt5/up/qzIyQAWA
-         6uIoaFaKGYNfFeUG5VnRK4qXafD5d8DVY2C8+xWZjGEM+fm3oQ5q+mLJXJhFKM8ZQzeN
-         j39qpT/rNcWcu33qtde7P+5Uhtal/9+Q+NM25AULwWA3XEh0voNTOFRbKHIjzx6hiDJ4
-         lqlu426dBIe8YDzagSMxMb7T2FyffrFMLZSQ7VzqRxYeco3jRMFho9mlqkgd1wJ3uJVL
-         NAdQ==
-X-Gm-Message-State: AO0yUKW8mZ9gLZLnvZ72iAxksCH4lscC3NUn9ub563Vy4kLmKrCW047G
-        gyUx8gWoPQRPhSztkerjyZEd3w==
-X-Google-Smtp-Source: AK7set9ekPkTE3SQ0s7BZXYOpBFWNOzx0FBss2icitDMGpEKS3fCAHLe2utTGVFdGj/sKe8XcIWBkw==
-X-Received: by 2002:ac8:5914:0:b0:3b9:ba24:4f38 with SMTP id 20-20020ac85914000000b003b9ba244f38mr2841609qty.56.1676652579813;
-        Fri, 17 Feb 2023 08:49:39 -0800 (PST)
+        bh=bxSHhRIK7JTZXIncFXbe4DygtHjDqgxwQ1O7fQr99v0=;
+        b=BnGnMGCIWvsSKQcvLzF8mmGCBDXSGJg+le5D1N++8+1ftJVAHsXSqEzvuGVrT5E39R
+         TJ7U8orYasffaZd5efZz9D2SjfIzHbYLYrl7OI3mufe6Q7X99oU3b+TcF24Hq4s/znJB
+         rIS8vda96hDj2+xz+NoMI3Rs43GiaE6ioZxOuJWR5DBJ2WWdvcn7P50ukRpqOuzedxZ+
+         lGvYhHkljqnlPHo26/1Xgs5qPjHo7a9jD3vqLGGrBR/Rjumb4Iln8ukyJZn1y6Qr8jLe
+         hiyQqTZhYHFuUikUziZnUpwJ9mQStHp+XcYcXe4hF02d/ECWU6jNqWDK9EqcMMRHrL1y
+         SE7w==
+X-Gm-Message-State: AO0yUKXwKwJnZOrvc4SspXqPFLB+cK04EL17nNHAtpuD5xvhu2GPfYjf
+        G3Hr1c3QC9SvQ2IZfKnZdKkvlw==
+X-Google-Smtp-Source: AK7set8T0nLgI/dXlquKcJR73ymSYdmJVlsR5ZpdeUQCG52DFge9IebeJgeUGpwqCppsiMxFcJW3NA==
+X-Received: by 2002:ac8:5784:0:b0:3b9:bc8c:c204 with SMTP id v4-20020ac85784000000b003b9bc8cc204mr11198556qta.15.1676652580626;
+        Fri, 17 Feb 2023 08:49:40 -0800 (PST)
 Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
         by smtp.gmail.com with ESMTPSA id b68-20020a37b247000000b0073980414888sm3569161qkf.42.2023.02.17.08.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 08:49:39 -0800 (PST)
+        Fri, 17 Feb 2023 08:49:40 -0800 (PST)
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     linus.walleij@linaro.org, brgl@bgdev.pl
 Cc:     broonie@kernel.org, andriy.shevchenko@linux.intel.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 1/6] regmap-irq: Add no_status support
-Date:   Wed,  8 Feb 2023 12:18:16 -0500
-Message-Id: <1e14e042c84f0c0a5e7d25ae9986f88a9620965c.1675876659.git.william.gray@linaro.org>
+Subject: [PATCH 2/6] gpio: 104-dio-48e: Utilize no_status regmap-irq flag
+Date:   Wed,  8 Feb 2023 12:18:17 -0500
+Message-Id: <0feb25265128808d4487c49238fdd9f3ca3bb725.1675876659.git.william.gray@linaro.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1675876659.git.william.gray@linaro.org>
 References: <cover.1675876659.git.william.gray@linaro.org>
@@ -72,79 +72,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some devices lack status registers, yet expect to handle interrupts.
-Introduce a no_status flag to indicate such a configuration, where
-rather than read a status register to verify, all interrupts received
-are assumed to be active.
+The 104-DIO-48E lacks an IRQ status register. Rather than use the Clear
+Interrupt register as the status register, set the no_status flag to
+true and thus avoid such a hack.
 
-Cc: Mark Brown <broonie@kernel.org>
 Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 ---
- drivers/base/regmap/regmap-irq.c | 23 ++++++++++++++++-------
- include/linux/regmap.h           |  2 ++
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-104-dio-48e.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-index a8f185430a07..7abc42c5794d 100644
---- a/drivers/base/regmap/regmap-irq.c
-+++ b/drivers/base/regmap/regmap-irq.c
-@@ -437,7 +437,11 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
- 	 * possible in order to reduce the I/O overheads.
- 	 */
+diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
+index a3846faf3780..fe3c93bfe4bd 100644
+--- a/drivers/gpio/gpio-104-dio-48e.c
++++ b/drivers/gpio/gpio-104-dio-48e.c
+@@ -195,13 +195,9 @@ static int dio48e_probe(struct device *dev, unsigned int id)
+ 		return -ENOMEM;
  
--	if (chip->num_main_regs) {
-+	if (chip->no_status) {
-+		/* no status register so default to all active */
-+		memset(data->status_buf, 0xFF,
-+		       chip->num_regs * sizeof(*data->status_buf));
-+	} else if (chip->num_main_regs) {
- 		unsigned int max_main_bits;
- 		unsigned long size;
- 
-@@ -967,12 +971,17 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
- 			continue;
- 
- 		/* Ack masked but set interrupts */
--		reg = d->get_irq_reg(d, d->chip->status_base, i);
--		ret = regmap_read(map, reg, &d->status_buf[i]);
--		if (ret != 0) {
--			dev_err(map->dev, "Failed to read IRQ status: %d\n",
--				ret);
--			goto err_alloc;
-+		if (d->chip->no_status) {
-+			/* no status register so default to all active */
-+			d->status_buf[i] = -1;
-+		} else {
-+			reg = d->get_irq_reg(d, d->chip->status_base, i);
-+			ret = regmap_read(map, reg, &d->status_buf[i]);
-+			if (ret != 0) {
-+				dev_err(map->dev, "Failed to read IRQ status: %d\n",
-+					ret);
-+				goto err_alloc;
-+			}
- 		}
- 
- 		if (chip->status_invert)
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index a3bc695bcca0..12637c4d231e 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1563,6 +1563,7 @@ struct regmap_irq_chip_data;
-  *		      can be accomplished with a @get_irq_reg callback, without
-  *		      the need for a @sub_reg_offsets table.
-  * @status_invert: Inverted status register: cleared bits are active interrupts.
-+ * @no_status: No status register: all interrupts assumed generated by device.
-  * @runtime_pm:  Hold a runtime PM lock on the device when accessing it.
-  *
-  * @num_regs:    Number of registers in each control bank.
-@@ -1630,6 +1631,7 @@ struct regmap_irq_chip {
- 	unsigned int clear_on_unmask:1;
- 	unsigned int not_fixed_stride:1;
- 	unsigned int status_invert:1;
-+	unsigned int no_status:1;
- 
- 	int num_regs;
- 
+ 	chip->name = name;
+-	/* No IRQ status register so use CLEAR_INTERRUPT register instead */
+-	chip->status_base = DIO48E_CLEAR_INTERRUPT;
+ 	chip->mask_base = DIO48E_ENABLE_INTERRUPT;
+ 	chip->ack_base = DIO48E_CLEAR_INTERRUPT;
+-	/* CLEAR_INTERRUPT doubles as status register so we need it cleared */
+-	chip->clear_ack = true;
+-	chip->status_invert = true;
++	chip->no_status = true;
+ 	chip->num_regs = 1;
+ 	chip->irqs = dio48e_regmap_irqs;
+ 	chip->num_irqs = ARRAY_SIZE(dio48e_regmap_irqs);
 -- 
 2.39.1
 
