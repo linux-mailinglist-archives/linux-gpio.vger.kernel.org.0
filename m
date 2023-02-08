@@ -2,215 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E62F68E8B8
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 08:10:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C9868E8E9
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Feb 2023 08:31:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbjBHHK4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Feb 2023 02:10:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
+        id S230092AbjBHHbT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Feb 2023 02:31:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjBHHKz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 02:10:55 -0500
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96E216ACC;
-        Tue,  7 Feb 2023 23:10:52 -0800 (PST)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 3DEF8240005;
-        Wed,  8 Feb 2023 07:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1675840251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aMJxOP//3lmrdw4Ez3gU5F4BL9UKnlN7VOGF3OJa748=;
-        b=OMnfkutDt91abAJjp/6eauDG4dn+ggxo319G0cGWyRerN8lLWv11QT+Q2aXz0hYl18sfcr
-        1nyuc2cnZez0LUK59e9ONCp7mG1JLW/oSfTh+nmn3GefZ7tf8GDA2pSi2dwnFSxNjVzN3m
-        7xvfUg5TGFKW2/bauuCcMxiG4W4bw/i6PYUyQe7F4tWnZQM6CtT9yJ92d9Hr24dqzNgmVM
-        duzmoNKG8VJJHzy2h8n2IkgRFNZpo30RPq0LCK6DCkCgKXheSLd3PaKT3CIkP28nfX7zYG
-        yp5ZngE3YFdFDtbWkb0z+1aYLotqX8/B3KtQwIwovQ9yES4CESUYt0scjA+56Q==
-Date:   Wed, 8 Feb 2023 08:10:48 +0100
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S229479AbjBHHbS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Feb 2023 02:31:18 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8761A976;
+        Tue,  7 Feb 2023 23:31:16 -0800 (PST)
+Received: by mail-qt1-f172.google.com with SMTP id w3so19826726qts.7;
+        Tue, 07 Feb 2023 23:31:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E2bppoHuX82os++/Py2NRHmX1jE3ZJ52UnRWRf0XIy0=;
+        b=ewVDqstYLbGPRddG4bzS/68gmKLt3MhMZZP1NLzoqle01VaP+TB4CkqY48xW+JzrJ7
+         T28sdFsvHKbDx2RD1LmCcJnWbw9JkvdXZtQjhZtC5H2ILbj6QRiaHckbkhPn8oUI67+8
+         /xSOOhg55fAYiJzuwLK18c+t1yrapJjpJIkQsw0HXOx9gcPW6juAD/7EBVAmbfJkiGVM
+         kNKUtV+nuw9cMyZzf/KUChAMa9iFLzCGHkuzykz3YYosfvChBQBCjOTYF8dQ6za16dWC
+         YwylZ2gG7wJHqM3PLgToAtHg4qlkzijw6J7Aij/M87PwpXlJOPeKp1KAtryZqndC4pjC
+         09Wg==
+X-Gm-Message-State: AO0yUKV6/tDkF3vT4R04BV8eV8U9DLpVLewOone2IqCmHpYz6OhPdI/g
+        RbE/Iy9fqIaryYATLeN0R/grjclM7FgcAg==
+X-Google-Smtp-Source: AK7set9hcIzUDkK1G3UaRBC+OshC93bQi4ys9oWbQAyGP8JxA5lLgF7hpUaTvhO+BZFlkrdD+DT5pQ==
+X-Received: by 2002:a05:622a:c4:b0:3b0:2fa:8a90 with SMTP id p4-20020a05622a00c400b003b002fa8a90mr12054489qtw.8.1675841475574;
+        Tue, 07 Feb 2023 23:31:15 -0800 (PST)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id x10-20020a05620a12aa00b0071d57a0eb17sm10898243qki.136.2023.02.07.23.31.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Feb 2023 23:31:15 -0800 (PST)
+Received: by mail-yb1-f178.google.com with SMTP id q9so226957ybk.2;
+        Tue, 07 Feb 2023 23:31:15 -0800 (PST)
+X-Received: by 2002:a0d:ca03:0:b0:506:6b5d:523c with SMTP id
+ m3-20020a0dca03000000b005066b5d523cmr523838ywd.283.1675841464452; Tue, 07 Feb
+ 2023 23:31:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20230207014207.1678715-1-saravanak@google.com>
+ <20230207014207.1678715-10-saravanak@google.com> <CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com>
+ <CAGETcx8DaZqS7+47PhX4hQOfSk7AzPcTu=2i+4gAgXr6wyDNgg@mail.gmail.com>
+In-Reply-To: <CAGETcx8DaZqS7+47PhX4hQOfSk7AzPcTu=2i+4gAgXr6wyDNgg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 8 Feb 2023 08:30:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXPosaKarsRWZpuGGD7Xam6qngsej+3iJdfWGTBDiWhLA@mail.gmail.com>
+Message-ID: <CAMuHMdXPosaKarsRWZpuGGD7Xam6qngsej+3iJdfWGTBDiWhLA@mail.gmail.com>
+Subject: Re: [PATCH v3 09/12] of: property: Simplify of_link_to_phandle()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/3] ASoC: codecs: Add support for the Infineon PEB2466
- codec
-Message-ID: <20230208081048.0708037f@bootlin.com>
-In-Reply-To: <fd3ccda3-f964-6904-6056-f93c43b85a0f@wanadoo.fr>
-References: <20230206144904.91078-1-herve.codina@bootlin.com>
-        <20230206144904.91078-3-herve.codina@bootlin.com>
-        <fd3ccda3-f964-6904-6056-f93c43b85a0f@wanadoo.fr>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Maxim Kiselev <bigunclemax@gmail.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Jean-Philippe Brucker <jpb@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 7 Feb 2023 22:17:39 +0100
-Hi Christophe,
+Hi Saravana,
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Wed, Feb 8, 2023 at 3:08 AM Saravana Kannan <saravanak@google.com> wrote:
+> On Tue, Feb 7, 2023 at 12:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Feb 7, 2023 at 2:42 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > The driver core now:
+> > > - Has the parent device of a supplier pick up the consumers if the
+> > >   supplier never has a device created for it.
+> > > - Ignores a supplier if the supplier has no parent device and will never
+> > >   be probed by a driver
+> > >
+> > > And already prevents creating a device link with the consumer as a
+> > > supplier of a parent.
+> > >
+> > > So, we no longer need to find the "compatible" node of the supplier or
+> > > do any other checks in of_link_to_phandle(). We simply need to make sure
+> > > that the supplier is available in DT.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >
+> > Thanks for your patch!
+> >
+> > This patch introduces a regression when dynamically loading DT overlays.
+> > Unfortunately this happens when using the out-of-tree OF configfs,
+> > which is not supported upstream.  Still, there may be (obscure)
+> > in-tree users.
+> >
+> > When loading a DT overlay[1] to enable an SPI controller, and
+> > instantiate a connected SPI EEPROM:
+> >
+> >     $ overlay add 25lc040
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /keys/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-0
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-names
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/cs-gpios
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /__symbols__/msiof0_pins
+> >
+> > The SPI controller and the SPI EEPROM are no longer instantiated.
+> >
+> >     # cat /sys/kernel/debug/devices_deferred
+> >     e6e90000.spi    platform: wait for supplier msiof0
+> >
+> > Let's remove the overlay again:
+> >
+> >     $ overlay rm 25lc040
+> >     input: keys as /devices/platform/keys/input/input1
+> >
+> > And retry:
+> >
+> >     $ overlay add 25lc040
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /keys/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-0
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-names
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/cs-gpios
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /__symbols__/msiof0_pins
+> >     spi_sh_msiof e6e90000.spi: DMA available
+> >     spi_sh_msiof e6e90000.spi: registered master spi0
+> >     spi spi0.0: setup mode 0, 8 bits/w, 100000 Hz max --> 0
+> >     at25 spi0.0: 512 Byte at25 eeprom, pagesize 16
+> >     spi_sh_msiof e6e90000.spi: registered child spi0.0
+> >
+> > Now it succeeds, and the SPI EEPROM is available, and works.
+> >
+> > Without this patch, or with this patch reverted after applying the
+> > full series:
+> >
+> >     $ overlay add 25lc040
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /keys/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-0
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/pinctrl-names
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/cs-gpios
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /soc/spi@e6e90000/status
+> >     OF: overlay: WARNING: memory leak will occur if overlay removed,
+> > property: /__symbols__/msiof0_pins
+> >     OF: Not linking spi@e6e90000 to interrupt-controller@f1010000 - No
+> > struct device
+> >     spi_sh_msiof e6e90000.spi: DMA available
+> >     spi_sh_msiof e6e90000.spi: registered master spi0
+> >     spi spi0.0: setup mode 0, 8 bits/w, 100000 Hz max --> 0
+> >     at25 spi0.0: 444 bps (2 bytes in 9 ticks)
+> >     at25 spi0.0: 512 Byte at25 eeprom, pagesize 16
+> >     spi_sh_msiof e6e90000.spi: registered child spi0.0
+> >
+> > The SPI EEPROM is available on the first try after boot.
+>
+> Sigh... I spent way too long trying to figure out if I caused a memory
+> leak. I should have scrolled down further! Doesn't look like that part
+> is related to anything I did.
 
-> Le 06/02/2023 =C3=A0 15:49, Herve Codina a =C3=A9crit=C2=A0:
-> > The Infineon PEB2466 codec is a programmable DSP-based four channels
-> > codec with filters capabilities.
-> > It also provides signals as GPIOs.
-> >=20
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >   sound/soc/codecs/Kconfig   |   12 +
-> >   sound/soc/codecs/Makefile  |    2 +
-> >   sound/soc/codecs/peb2466.c | 2071 ++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 2085 insertions(+)
-> >   create mode 100644 sound/soc/codecs/peb2466.c
-> >  =20
->=20
-> [...]
->=20
-> > +static int peb2466_spi_probe(struct spi_device *spi)
-> > +{
-> > +	struct peb2466 *peb2466;
-> > +	unsigned long mclk_rate;
-> > +	int ret;
-> > +	u8 xr5;
-> > +
-> > +	spi->bits_per_word =3D 8;
-> > +	ret =3D spi_setup(spi);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	peb2466 =3D devm_kzalloc(&spi->dev, sizeof(*peb2466), GFP_KERNEL);
-> > +	if (!peb2466)
-> > +		return -ENOMEM;
-> > +
-> > +	peb2466->spi =3D spi;
-> > +
-> > +	peb2466->regmap =3D devm_regmap_init(&peb2466->spi->dev, NULL, peb246=
-6,
-> > +					   &peb2466_regmap_config);
-> > +	if (IS_ERR(peb2466->regmap))
-> > +		return PTR_ERR(peb2466->regmap);
-> > +
-> > +	peb2466->reset_gpio =3D devm_gpiod_get_optional(&peb2466->spi->dev,
-> > +						      "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(peb2466->reset_gpio))
-> > +		return PTR_ERR(peb2466->reset_gpio);
-> > +
-> > +	peb2466->mclk =3D devm_clk_get(&peb2466->spi->dev, "mclk"); =20
->=20
-> Hi,
->=20
-> Up to you to decide if it is a good idea or not, but using=20
-> devm_clk_get_enabled() would save the 'mclk' field in peb2466 ...
->=20
-> > +	if (IS_ERR(peb2466->mclk))
-> > +		return PTR_ERR(peb2466->mclk);
-> > +	ret =3D clk_prepare_enable(peb2466->mclk);
-> > +	if (ret)
-> > +		return ret; =20
->=20
-> ... these 3 lines ...
->=20
-> > +
-> > +	if (peb2466->reset_gpio) {
-> > +		gpiod_set_value_cansleep(peb2466->reset_gpio, 1);
-> > +		udelay(4);
-> > +		gpiod_set_value_cansleep(peb2466->reset_gpio, 0);
-> > +		udelay(4);
-> > +	}
-> > +
-> > +	spi_set_drvdata(spi, peb2466); =20
->=20
-> ... this spi_set_drvdata() call ...
->=20
-> > +
-> > +	mclk_rate =3D clk_get_rate(peb2466->mclk);
-> > +	switch (mclk_rate) {
-> > +	case 1536000:
-> > +		xr5 =3D PEB2466_XR5_MCLK_1536;
-> > +		break;
-> > +	case 2048000:
-> > +		xr5 =3D PEB2466_XR5_MCLK_2048;
-> > +		break;
-> > +	case 4096000:
-> > +		xr5 =3D PEB2466_XR5_MCLK_4096;
-> > +		break;
-> > +	case 8192000:
-> > +		xr5 =3D PEB2466_XR5_MCLK_8192;
-> > +		break;
-> > +	default:
-> > +		dev_err(&peb2466->spi->dev, "Unsupported clock rate %lu\n",
-> > +			mclk_rate);
-> > +		ret =3D -EINVAL;
-> > +		goto failed;
-> > +	}
-> > +	ret =3D regmap_write(peb2466->regmap, PEB2466_XR5, xr5);
-> > +	if (ret) {
-> > +		dev_err(&peb2466->spi->dev, "Setting MCLK failed (%d)\n", ret);
-> > +		goto failed;
-> > +	}
-> > +
-> > +	ret =3D devm_snd_soc_register_component(&spi->dev, &peb2466_component=
-_driver,
-> > +					      &peb2466_dai_driver, 1);
-> > +	if (ret)
-> > +		goto failed;
-> > +
-> > +	if (IS_ENABLED(CONFIG_GPIOLIB)) {
-> > +		ret =3D peb2466_gpio_init(peb2466);
-> > +		if (ret)
-> > +			goto failed;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +failed:
-> > +	clk_disable_unprepare(peb2466->mclk);
-> > +	return ret; =20
->=20
-> ... this error handling path ...
->=20
-> > +}
-> > +
-> > +static void peb2466_spi_remove(struct spi_device *spi)
-> > +{
-> > +	struct peb2466 *peb2466 =3D spi_get_drvdata(spi);
-> > +
-> > +	clk_disable_unprepare(peb2466->mclk);
-> > +} =20
->=20
-> ... and the remove function.
->=20
-> CJ
->=20
+Please ignore the memory leak messages.  They are known issues
+in the upstream DT overlay code, and not related to your series.
 
-Thanks for pointing this.
-I will use devm_clk_get_enabled() in the next series iteration as suggested.
+> There are some flags set to avoid re-parsing fwnodes multiple times.
+> My guess is that the issue you are seeing has to do with how many of
+> the in memory structs are reused vs not when an overlay is
+> applied/removed and some of these flags might not be getting cleared
+> and this is having a bigger impact with this patch (because the fwnode
+> links are no longer anchored on "compatible" nodes).
+>
+> With/without this patch (let's keep the series) can you look at how
+> the following things change between each step you do above (add,
+> remove, retry):
+> 1) List of directories under /sys/class/devlink
+> 2) Enable the debug logs inside __fwnode_link_add(),
+> __fwnode_link_del(), device_link_add()
 
-Best regards,
-Herv=C3=A9
+Thanks, I'll give that a try, later...
 
---=20
-Herv=C3=A9 Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
