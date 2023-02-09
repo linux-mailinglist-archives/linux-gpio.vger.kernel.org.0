@@ -2,95 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 234C96909CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 14:24:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7084C690BF3
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 15:37:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbjBINYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Feb 2023 08:24:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
+        id S231138AbjBIOhR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 9 Feb 2023 09:37:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjBINYf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 08:24:35 -0500
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592C55357D;
-        Thu,  9 Feb 2023 05:24:32 -0800 (PST)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 830A73CE;
-        Thu,  9 Feb 2023 14:24:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1675949070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nStzcWGawBN+FFQgxCUoGQgyi6tWKaLoIEQNCXCbs5E=;
-        b=CAOvNc++i1yy4bn7QWCkKmOiAPRZaT3Sf12XY3NDahIE5g/B1IEQChLnqr9Qt6YueWoblL
-        iCx3r+c5yyGfAlX7WteUBviEtl8TY5BxRF77in/7CueN/fVxYo5HQ50CgVRSZJgiQYX2yB
-        VdsuKMaQmzy7LRDtELuj5bDLiC69U28alewBt/a68Ql6g/lojCAlXFcuSlVnAxP8JadodR
-        C2+WMdB8A9tCyJ+tvF25UqXEt2BZzNLI4Lm2iqU4Mzo5cO1tMzFziJherKOjINcSYOjVEP
-        zr56czSyTIE9kNa804vAUv48gWDNobclBtWmJ414Z2NQ3tEPAqesBBC+JScGwQ==
-From:   Michael Walle <michael@walle.cc>
-To:     linus.walleij@linaro.org
-Cc:     Claudiu.Beznea@microchip.com, Ludovic.Desroches@microchip.com,
-        Nicolas.Ferre@microchip.com, Ryan.Wanner@microchip.com,
-        alexandre.belloni@bootlin.com, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Walle <michael@walle.cc>
-Subject: Re: I2c GPIO Recovery with pinctrl strict mode
-Date:   Thu,  9 Feb 2023 14:24:22 +0100
-Message-Id: <20230209132422.179674-1-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
-References: <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
+        with ESMTP id S231146AbjBIOhP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 09:37:15 -0500
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71725C168;
+        Thu,  9 Feb 2023 06:37:13 -0800 (PST)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 0B7E224E2D9;
+        Thu,  9 Feb 2023 22:37:04 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 9 Feb
+ 2023 22:37:04 +0800
+Received: from ubuntu.localdomain (183.27.96.33) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 9 Feb
+ 2023 22:37:03 +0800
+From:   Hal Feng <hal.feng@starfivetech.com>
+To:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Andreas Schwab <schwab@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor@kernel.org>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 0/4] Basic pinctrl support for StarFive JH7110 RISC-V SoC
+Date:   Thu, 9 Feb 2023 22:36:58 +0800
+Message-ID: <20230209143702.44408-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [183.27.96.33]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->> My main issue is the process of freeing ownership of a pin(s) having
->> another driver, in this case gpio, to take ownership then free that
->> ownership back to the default state, in this case it would be back to
->> i2c.
->>
->> I have tried calling pinmux_disable_setting() and then claiming the
->> gpios then enabling them for recovery then disabling them again. This
->> causes lots of warnings and some cases the full ownership is not
->> transferred.
->>
->> It seems that what I am attempting to achieve is not doable currently.
->> Is this the case or am I missing some extra things needing to prepare
->> for this action?
->
-> There are several other i2c bus drivers doing this already, for example
-> drivers/i2c/busses/i2c-imx.c
-> 
-> The idea is to have some different pinctrl states and move between
-> them explicitly in the driver to move pins from i2c mode to GPIO
-> mode and back.
-> 
-> The imx driver depend on the ability of the i.MX pin controller to use
-> the pins as a certain function and GPIO at the same time.
+This patch series adds basic pinctrl support for StarFive JH7110 SoC.
 
-But that's because this is a limitation of the imx i2c controller.
-Usually, if i2c controllers don't have a hardware bus recovery (which
-is broken in most designs..) they usually have an override bit to
-bit bang SDA and SCL manually. Do the microchip cores have such bits?
+Changes since v4:
+Patch 1 & 2:
+- Added pinmux-node.yaml reference for '-pins$' patternProperties.
+- Dropped reference for pinmux properties.
 
-Fun fact: also the layerscape SoCs use the imx i2c cores. It's just that
-layerscape SoCs doesn't support dynamic pinmuxing...
+  v4: https://lore.kernel.org/all/20230203141801.59083-1-hal.feng@starfivetech.com/
 
--michael
+Changes since v3:
+- Rebased on Linus's "devel" branch of linux-pinctrl repo, which was based on
+  on tag v6.2-rc1.
+- Dropped patch 1.
+Patch 2 & 3:
+- Added a reference for '-pins$' patternProperties.
+- Put "additionalProperties: false" before properties section. (by Rob)
+- Improved the description.
+- Changed the node name in examples from "gpio" to "pinctrl".
+Patch 4:
+- Added some missing headers. (by Andreas)
 
-> This is due to the imx pin controller not setting the .strict attribute
-> on the struct pinmux_ops so that pins can be used in parallel for
-> i2c and GPIO and gpiod_get() will not fail. But the Atmel driver does
-> not set this so you should be fine I think.
+  v3: https://lore.kernel.org/all/20221220005529.34744-1-hal.feng@starfivetech.com/
+
+Changes since v2:
+- Rebased on tag v6.1.
+Patch 1:
+- Renamed pinctrl-starfive-jh7110.h to
+  starfive,jh7110-pinctrl.h. (by Krzysztof)
+- Separated the register values in the binding header and stored them in
+  a new file arch/riscv/boot/dts/starfive/jh7110-pinfunc.h. (by Krzysztof)
+- Split patch 1 into sys part and aon part. Merged them into patch 2
+  and patch 3 respectively.
+Patch 2 & 3:
+- Dropped "reg-names" and the description of "interrupts". Dropped quotes
+  behind "$ref" and kept consisitent quotes. (by Krzysztof)
+- Moved gpio properties behind interrupt properties.
+- Moved "required" behind "patternProperties". (by Krzysztof)
+- Rewrote the examples of bindings. (by Krzysztof and Emil)
+- Added Co-developed-by tag for Emil.
+- Dropped unused "clocks" property in patch 3.
+Patch 4 & 5:
+- Renamed "pinctrl-starfive.*" to "pinctrl-starfive-jh7110.*" and replaced
+  all "starfive_" prefix with "jh7110_" in these files. (by Emil)
+- Dropped macro GPIO_NUM_PER_WORD. (by Emil)
+- Dropped unused flag member in starfive_pinctrl_soc_info structure. (by Emil)
+- Renamed "pinctrl-jh7110-sys.c" to "pinctrl-starfive-jh7110-sys.c".
+  Renamed "pinctrl-jh7110-aon.c" to "pinctrl-starfive-jh7110-aon.c". (by Emil)
+- Added individual Kconfig options for sys and aon pinctrl drivers. (by Emil)
+- Made the sys and aon pinctrl drivers be modules. (by Emil)
+- Added "JH7110_" prefix for macro SYS_GPO_PDA_0_74_CFG,
+  SYS_GPO_PDA_89_94_CFG and AON_GPO_PDA_0_5_CFG. (by Emil)
+- Dropped jh7110_sys_pinctrl_probe() and jh7110_aon_pinctrl_probe().
+  Got the match data in the common jh7110_pinctrl_probe() and used it
+  to probe. (by Emil)
+- Dropped the of_match_ptr macro(). (by Emil)
+- Set the MODULE_LICENSE as "GPL" according to commit bf7fbeeae6db.
+
+  v2: https://lore.kernel.org/all/20221118011108.70715-1-hal.feng@starfivetech.com/
+
+Changes since v1:
+- Rebased on tag v6.1-rc5.
+- Dropped patch 22 and 23 since they were merged in v6.1-rc1.
+- Removed some unused macros and register values which do not belong to
+  bindings. Simplified pinctrl definitions in patch 24. (by Krzysztof)
+- Split the bindings into sys pinctrl bindings and aon pinctrl bindings,
+  and split patch 25 into two patches.
+- Made the bindings follow generic pinctrl bindings. (by Krzysztof)
+- Fixed some wrong indentation in bindings, and checked it with
+  `make dt_binding_check`.
+- Split the patch 26 into two patches which added sys and aon pinctrl
+  driver respectively.
+- Restructured the pinctrl drivers so made them follow generic pinctrl
+  bindings. Rewrote `dt_node_to_map` and extracted the public code to make
+  it clearer.
+
+  v1: https://lore.kernel.org/all/20220929143225.17907-1-hal.feng@linux.starfivetech.com/
+
+Jianlong Huang (4):
+  dt-bindings: pinctrl: Add StarFive JH7110 sys pinctrl
+  dt-bindings: pinctrl: Add StarFive JH7110 aon pinctrl
+  pinctrl: starfive: Add StarFive JH7110 sys controller driver
+  pinctrl: starfive: Add StarFive JH7110 aon controller driver
+
+ .../pinctrl/starfive,jh7110-aon-pinctrl.yaml  | 124 +++
+ .../pinctrl/starfive,jh7110-sys-pinctrl.yaml  | 142 +++
+ MAINTAINERS                                   |   8 +-
+ drivers/pinctrl/starfive/Kconfig              |  33 +
+ drivers/pinctrl/starfive/Makefile             |   4 +
+ .../starfive/pinctrl-starfive-jh7110-aon.c    | 177 ++++
+ .../starfive/pinctrl-starfive-jh7110-sys.c    | 449 ++++++++
+ .../starfive/pinctrl-starfive-jh7110.c        | 982 ++++++++++++++++++
+ .../starfive/pinctrl-starfive-jh7110.h        |  70 ++
+ .../pinctrl/starfive,jh7110-pinctrl.h         | 137 +++
+ 10 files changed, 2123 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-aon-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+ create mode 100644 include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+
+-- 
+2.38.1
+
