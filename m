@@ -2,153 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B79569143C
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 00:14:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3886914DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 00:47:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbjBIXOP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Feb 2023 18:14:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58992 "EHLO
+        id S229523AbjBIXra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Feb 2023 18:47:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbjBIXOO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 18:14:14 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B8D627AF
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 15:14:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675984453; x=1707520453;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3sRM68GRjAkFnGHK8zWneDPCYF/QryaQhCLDd9e0Br0=;
-  b=YTQH+6/iBr3q29/EYFuUgV267YKsmBenh+sM132NmRErioZ7evDv97r9
-   6gFVUX8xRW0kiqxX81gT4VEwhJV0mbPpfhnh6x6T3NAs/Ejq6sPPT8VQ+
-   hUGdfV162aDWah3NiCqFkcWh7yWBKjLEFzpgAPfACVrw34GSJr5gLknCr
-   WRgGP9G0nZw/vfe1kPEnNmYkQdWU2F1wp2dgQlgcZVZextyipeUdwAEBH
-   hxNth+sne5jGws7DGPVmQgwEhwm6Mpr+6HuLQiJGksikoBVXIj3zxON2y
-   gACHzrLrCgEM/qzIie+qRkUaw6qZC1Amob5KiLAdtHJIlCo8S9TofY1U3
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="332413653"
-X-IronPort-AV: E=Sophos;i="5.97,285,1669104000"; 
-   d="scan'208";a="332413653"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 15:14:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="996736709"
-X-IronPort-AV: E=Sophos;i="5.97,285,1669104000"; 
-   d="scan'208";a="996736709"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Feb 2023 15:14:11 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pQG7G-0005Ms-2k;
-        Thu, 09 Feb 2023 23:14:10 +0000
-Date:   Fri, 10 Feb 2023 07:13:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 1ec033f00ceb9c7ccd6a7f42f6d617021d5c8c5e
-Message-ID: <63e57e0f.IxUrfqxO6WC5uGf+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229483AbjBIXr3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 18:47:29 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BEF37F0F
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 15:47:28 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id s89-20020a17090a2f6200b0023125ebb4b1so3882886pjd.3
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 15:47:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QxET9Yp8cuppZnEs5o3Ww6UE0KLQp1sqSSekmXMh6v4=;
+        b=YQkFHBAcFt46nhq17iDNKYIAxYZPNg8cWS90ikL08FD+fxTJGDAIoMHDBR0Ly2H5EK
+         wlCz2rwt6kuTbgbfnKtLtBONm6n8YyQeItFg5wmngH4ec/OK+EenStf5Bl2wc/Pi0mpQ
+         LcvvLi/odCQqwHhKbRMDR5pPZZ1rFCMk657oNvywk1Rx22BnywIh4WuNkYc7Jm5P1+7h
+         usRSA/7J+yN1+M57nvpLd4htn0GWIdJA5hU4dJKDyDfXB1MFYCuRaBRyhs0jsVq9Zrjm
+         W8ITUyQ6pYMFOch59yvWjssCEo7lKi8hDk3Vh3R+OBwP3JG+i4DYIFXtRXxaTUKc9RAc
+         Q/BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QxET9Yp8cuppZnEs5o3Ww6UE0KLQp1sqSSekmXMh6v4=;
+        b=x1993p9q84hblcMzkvebC+XNi4UMtLpM8aobZaTipr2RPZmcEMNSXgOVs71dOnuFh7
+         OrJgEY+G5qCJPrqjZItU7Sjjte8LSEXeMTEUnQa//gF0+ph6E/cCghaiLW2iXUOTbHyA
+         XPxUPhS2evBJBay+CmXWldmn9mwd1q8wwwA+VT38BugyNqAuNj3LFE3Iz8OxROBgWFA+
+         B3ht8EzJknDRxDUTY+24s71lqGIqBQA/Hw2NgQNgCSUa9Pj6lsngh0IEiccz8QQHBzxT
+         WqEqjJiV56L/aVM+655X4GtAsmdEp3WtyQhUGKli9oV0rximT0fxCU1H9V9WmKkfJK4X
+         AuDg==
+X-Gm-Message-State: AO0yUKWLvwmicQPQWPVPY3rB1ZdYQPbIlxBhi2EhYOx0Izwn6ZSLVfFy
+        TsGok4NuFPoK8b8gqk7G7vg=
+X-Google-Smtp-Source: AK7set9Ad8KdoE2OYZY9AyksLEEZw7ZrUOTdaQm6evwZZPzqGKGOZCfJX1KxnOBPv4HTzLMNj6R3nw==
+X-Received: by 2002:a17:90a:19ce:b0:22c:d44:5669 with SMTP id 14-20020a17090a19ce00b0022c0d445669mr57005pjj.22.1675986447799;
+        Thu, 09 Feb 2023 15:47:27 -0800 (PST)
+Received: from sol (14-201-52-182.tpgi.com.au. [14.201.52.182])
+        by smtp.gmail.com with ESMTPSA id e12-20020a17090a728c00b00230e41e98desm3928607pjg.32.2023.02.09.15.47.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 15:47:27 -0800 (PST)
+Date:   Fri, 10 Feb 2023 07:47:21 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] tools: use 'unsigned int' instead of 'uint'
+Message-ID: <Y+WGCdb7tJOKDQ6u@sol>
+References: <20230209185312.635613-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20230209185312.635613-1-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 1ec033f00ceb9c7ccd6a7f42f6d617021d5c8c5e  Merge tag 'qcom-pinctrl-6.3-2' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt into devel
+On Thu, Feb 09, 2023 at 07:53:12PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> uint is an old compatibility name that GCC still provides but clang
+> doesn't. Use unsigned int instead.
+> 
+> Fixes: 8ffb6489286f ("tools: line name focussed rework")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  tools/tools-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/tools-common.h b/tools/tools-common.h
+> index efbeeb8..5d39170 100644
+> --- a/tools/tools-common.h
+> +++ b/tools/tools-common.h
+> @@ -43,7 +43,7 @@ struct resolved_line {
+>  	int chip_num;
+>  
+>  	/* offset of line on chip */
+> -	uint offset;
+> +	unsigned int offset;
+>  
+>  	/* line value for gpioget/set */
+>  	int value;
+> -- 
+> 2.37.2
+> 
 
-elapsed time: 1909m
+Oops, my bad.
 
-configs tested: 72
-configs skipped: 2
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                            allnoconfig
-arc                                 defconfig
-alpha                               defconfig
-x86_64                              defconfig
-s390                             allmodconfig
-x86_64                           rhel-8.3-bpf
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-um                             i386_defconfig
-s390                                defconfig
-um                           x86_64_defconfig
-x86_64                               rhel-8.3
-s390                             allyesconfig
-ia64                             allmodconfig
-powerpc                           allnoconfig
-x86_64                           allyesconfig
-arm                                 defconfig
-alpha                            allyesconfig
-x86_64               randconfig-a014-20230206
-m68k                             allyesconfig
-x86_64               randconfig-a013-20230206
-m68k                             allmodconfig
-x86_64               randconfig-a011-20230206
-arc                              allyesconfig
-x86_64               randconfig-a012-20230206
-x86_64               randconfig-a015-20230206
-i386                                defconfig
-x86_64               randconfig-a016-20230206
-i386                 randconfig-a011-20230206
-i386                 randconfig-a014-20230206
-i386                 randconfig-a012-20230206
-riscv                randconfig-r042-20230204
-i386                 randconfig-a013-20230206
-s390                 randconfig-r044-20230206
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arc                  randconfig-r043-20230209
-arm                  randconfig-r046-20230209
-i386                          randconfig-a014
-x86_64                        randconfig-a006
-i386                          randconfig-a012
-i386                          randconfig-a016
-sh                               allmodconfig
-arm64                            allyesconfig
-i386                             allyesconfig
-arm                              allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-
-clang tested configs:
-hexagon              randconfig-r045-20230206
-hexagon              randconfig-r041-20230206
-hexagon              randconfig-r041-20230204
-hexagon              randconfig-r045-20230209
-x86_64                        randconfig-a001
-i386                          randconfig-a013
-x86_64                        randconfig-a003
-s390                 randconfig-r044-20230209
-i386                          randconfig-a011
-riscv                randconfig-r042-20230209
-hexagon              randconfig-r041-20230209
-x86_64                        randconfig-a005
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a004
-x86_64                        randconfig-k001
-x86_64                          rhel-8.3-rust
-i386                          randconfig-a006
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
