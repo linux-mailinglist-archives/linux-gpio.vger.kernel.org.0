@@ -2,93 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B75690311
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 10:16:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A59FF6904FC
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 11:35:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjBIJQN convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 9 Feb 2023 04:16:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49712 "EHLO
+        id S229618AbjBIKfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Feb 2023 05:35:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjBIJQM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 04:16:12 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558EB5B92;
-        Thu,  9 Feb 2023 01:16:10 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pQ323-003ncL-Bt; Thu, 09 Feb 2023 10:15:55 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=suse-laptop.fritz.box)
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pQ323-0012H8-3k; Thu, 09 Feb 2023 10:15:55 +0100
-Message-ID: <ed4a36508c3d047f9e9a882475388be18b790b76.camel@physik.fu-berlin.de>
-Subject: Re: remove arch/sh
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Rob Landley <rob@landley.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Date:   Thu, 09 Feb 2023 10:15:52 +0100
-In-Reply-To: <1c6e7a19-a650-1852-6f74-ca5547db44c4@landley.net>
-References: <20230113062339.1909087-1-hch@lst.de>
-         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
-         <20230116071306.GA15848@lst.de>
-         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-         <20230203071423.GA24833@lst.de>
-         <60ed320c8f5286e8dbbf71be29b760339fd25069.camel@physik.fu-berlin.de>
-         <0e26bf17-864e-eb22-0d07-5b91af4fde92@infradead.org>
-         <f6317e9073362b13b10df57de23e63945becea32.camel@physik.fu-berlin.de>
-         <1c6e7a19-a650-1852-6f74-ca5547db44c4@landley.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.3 
+        with ESMTP id S230290AbjBIKex (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 05:34:53 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691346B35A
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 02:32:42 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-52bed2ce9bdso18777777b3.13
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 02:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ryrOP+Qukz2gWs6turESQfJKOLpwVFYNNLXrnHrVZQY=;
+        b=F7sa3S9sK7etrnQQ8t7WF7bIrtlcWNAAcWRnIr5JI9bZsLRFuhdLfkTwaoOO/0PliM
+         CcwpfRuQ5mDBPeyejALwtcZQIAJiQGmaoBYmY65PUT4oiRIpVYMVChd1x9xLWKHwDX3m
+         HRyVWX5mGPH1d/lbZVf9x3i+45G4d4f6FcaIPcukZUqF8vu5YkdDgOLQp2XZod+qeBX3
+         UZNpMg0q+/ehO+jtguEnhIyMQ8Zfusv4mjNAurEnVhx9CbWlKIQPVytiqoP1UOqC/yVl
+         GDdkMFiIQz1C5oOEdTDmYY1HLn7xuYhHdSuEcyo/juBWY1lRxaAvRMGR5/liQB8jo2lC
+         JK2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ryrOP+Qukz2gWs6turESQfJKOLpwVFYNNLXrnHrVZQY=;
+        b=a5L+qnZ+wRBcl+RhwR35KRMFRqVhkqGrscRZghXUqkoTHZVaLG4X4cssG9V8HDsXj3
+         qMq6xbsCuxbkrP8BF01nCDPZkasDZA8v0VA9JAFYwmyT+1zgVhT0mxoSfyHFah+ESAhJ
+         jUHXrehZ0QwsSdLgdHkeJVP1yFYmFs9rdOGQQGY0DygvYIh6wpdWk3jYpOE5rLJh3Oyg
+         Q9izFah0QjvOJkmGAXcHijy5juCiKP1ZAijfw5leb7rcl+0lcdNe7YYWRlhfQ9UQs4Rs
+         3euEDjELGqDV9mLSmpViG8ksifhO+N8IIZrlDMu+3pgS7uiPinNcapkJeVZDoAUVSp2u
+         rnwg==
+X-Gm-Message-State: AO0yUKXJZNP3DcbRBx8lbQMDo8AgFS8moIm758Tj0vWp4U7lbeo5mJ7C
+        CK08tmCM9DAp0+0fMDlJ3bSrRY79mmHlnk0o0dWXDA==
+X-Google-Smtp-Source: AK7set/O3Y8txaqL7+gEsfHlEj9Y6syky3ttsk99HfGCIdIEAIBlzyTr86ABauCWFAo+5omQD+SiRRaoPeOlfl7dh40=
+X-Received: by 2002:a0d:e743:0:b0:50b:429e:a9ef with SMTP id
+ q64-20020a0de743000000b0050b429ea9efmr1042797ywe.434.1675938758805; Thu, 09
+ Feb 2023 02:32:38 -0800 (PST)
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
+In-Reply-To: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Feb 2023 11:32:27 +0100
+Message-ID: <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
+Subject: Re: I2c GPIO Recovery with pinctrl strict mode
+To:     Ryan.Wanner@microchip.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        Claudiu.Beznea@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2023-02-08 at 21:09 -0600, Rob Landley wrote:
-> > Geert has suggested to wait with adding a tree source to the entry until I get my
-> > own kernel.org account. I have enough GPG signatures from multiple kernel developers
-> > on my GPG key, so I think it shouldn't be too difficult to qualify for an account.
-> 
-> So you're not planning to use https://lk.j-core.org/J-Core-Developers/sh-linux
-> but push to kernel.org and ask Linus to pull from there?
+On Tue, Feb 7, 2023 at 6:56 PM <Ryan.Wanner@microchip.com> wrote:
 
-Yes, that's what Geert recommended.
+> My main issue is the process of freeing ownership of a pin(s) having
+> another driver, in this case gpio, to take ownership then free that
+> ownership back to the default state, in this case it would be back to
+> i2c.
+>
+> I have tried calling pinmux_disable_setting() and then claiming the
+> gpios then enabling them for recovery then disabling them again. This
+> causes lots of warnings and some cases the full ownership is not
+> transferred.
+>
+> It seems that what I am attempting to achieve is not doable currently.
+> Is this the case or am I missing some extra things needing to prepare
+> for this action?
 
-Adrian
+There are several other i2c bus drivers doing this already, for example
+drivers/i2c/busses/i2c-imx.c
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+The idea is to have some different pinctrl states and move between
+them explicitly in the driver to move pins from i2c mode to GPIO
+mode and back.
+
+The imx driver depend on the ability of the i.MX pin controller to use
+the pins as a certain function and GPIO at the same time.
+
+This is due to the imx pin controller not setting the .strict attribute
+on the struct pinmux_ops so that pins can be used in parallel for
+i2c and GPIO and gpiod_get() will not fail. But the Atmel driver does
+not set this so you should be fine I think.
+
+Yours,
+Linus Walleij
