@@ -2,116 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29148690591
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 11:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5A36905BA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 11:54:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbjBIKrP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Feb 2023 05:47:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        id S229841AbjBIKyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Feb 2023 05:54:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbjBIKq0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 05:46:26 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C54C69524
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 02:45:31 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id b132so691784ybc.12
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 02:45:31 -0800 (PST)
+        with ESMTP id S229818AbjBIKyW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 05:54:22 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F564457FE
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 02:54:02 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-520dad0a7d2so19911907b3.5
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 02:54:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ECisu58Ou5Xr+AMVxHOSKNEG1TgY5Zq0H9DdDE7KjY=;
-        b=PVhgmNxsQQPyBAEDdyt8QfmWO6MNCgn8yXiI9Mk1P0Ph6Z19uULy1nXT56GCFjrWPx
-         kjKAE5+lQs+meWWdvnVXJViYasQ2BIpN581gJLur43fb8v+TauC8ZGc8lXkHOKYKGPcA
-         FP9AoOGP4SFr4QMxn1WBQianBQR4oWtc3600hrLz3lvn4coxlQ/kaFuOWt2ycqbFfbXj
-         SxVqq2jNdWE80O8KHlaeEokxbPI9aumzyK9cn0FOyw0rWNFqZc4gomcB9McjjYB1Bcm8
-         Us5DeeJ+v5hZbjP8yos1A+fhfcFeiZ/hBxsKgjJrx5lCY9fTmG5/RwJWvoKjyWMph0k2
-         WXDA==
+        bh=V2A+JSNtnZSZNxHkgAOi3qNQTktXDyh9ngmNgvIu/CA=;
+        b=JAWbIuTo+YkqigV5WYJR8dXCehyFtGE5Z6eBV4/3O5rPNRRJxklnyx1YXE4REYv1r1
+         qr0I6uTYrR65jiGBDAoNhT5WwtxblEjfXfyGQvdrewghc3oXR/l48xp3mc3mlEdrDnBi
+         y9XDt1ef8HWfvHW/q3ZmLRMQcI2ZM5AglT3YW5UNybOFASe3zJ1y9pqQejDDh/Nnv5q4
+         MKVGU+Diqxq7BQ7bPWSM+Z1davVQkHSQXVtekQG7k1UXHqTiHTdc5Am/daBI8W1g2m7S
+         3epkVeJvgDyvPUgglq7wVAeAdXYecPLIbgZ0w5EbUt+As6syQHHXLOJo6Ly6Jek3o0tM
+         /Zng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6ECisu58Ou5Xr+AMVxHOSKNEG1TgY5Zq0H9DdDE7KjY=;
-        b=OAyltiNE7wEtEh4uRnysyrfSDuVbZgNt/LIvixm0mtJ7+Ud1U6bATq45bl6cE9kMJ5
-         /5Gm3xSz2y9kVEj7ffKDAvGPhPvvcY5eoPgM9a8i3ADbWf+eIIU4itvRVssPrzDIOrjL
-         /zspTVPDmTkSqwyhrbDt01UOpm3GFLsWb67slF/tLxM8DnK8lKKeNRTZhWaNdIuG0x7l
-         xwAVUOlyboNe09t0b10CaUaNnQno8TDogP0kuPe/t4p4OD2EVp2LBqx1vPtKbRs/ZPGx
-         qvUiQ/ZlP5nujBPWdyafzuWqAK8LM6UUFnFZhOcwo/wbm2uXfWM8nCtHyfMiIeYYiLRe
-         PyDw==
-X-Gm-Message-State: AO0yUKV5wrcokezY06HfFkKrgiH+D/I66lb0I0i5JWh07A1yNgk5P2dn
-        n3Z/8xMpk9A3OTh0COUivS7nPtXgycDZwsmKa1RDjwG1EDS5lw==
-X-Google-Smtp-Source: AK7set+c8vMXQoWt9zrvvB2u9a8HdXjW8xESL/qxrGLNm0jpSb7R5TJb/uyrRXXnVWpXHWRj2G52DUyGkXuHv+E8/cU=
-X-Received: by 2002:a5b:6c5:0:b0:88f:946:bd98 with SMTP id r5-20020a5b06c5000000b0088f0946bd98mr1339211ybq.24.1675939530421;
- Thu, 09 Feb 2023 02:45:30 -0800 (PST)
+        bh=V2A+JSNtnZSZNxHkgAOi3qNQTktXDyh9ngmNgvIu/CA=;
+        b=XQlren+wNnE2KHEgEO9QzUEGracBAvZiRRauzHN3aF+oPlVoZISidKGwP7ESn5kjiE
+         MiX4uGAnJd1P90KXfBGH0ORD3KuYTxJEH/bCcP6/mz6ifo22dY2ebYEs5EBAKpbCurgD
+         nP2KWhfRkhD9vYfPVDYA/grWpsgpMR2T9RFBrsGalVyo3rAzWkEWdJMvclltiQ03KPBX
+         a3eIUGNbVK43mi9uc1wBMA9b4ITUqH6rqgy/HrI836zYJBt2k3gsLTL4ZJFAgPsmL/C7
+         27aSO0j0vJAdBOdPsztuF5czgI8ign/KUHEBFt0Q6qTV4gD3LC7HxLJeE8mHS/a6BVFR
+         fRZQ==
+X-Gm-Message-State: AO0yUKXKSly1OBSaXgYENX4mJ6y+8giLIGj9C3/6k+CNXFArrhiOePyf
+        129X2FDWGQKxzk/EpcKeUKCK/C4Thq7F9Yh3eBao0g==
+X-Google-Smtp-Source: AK7set8a+8zMOjcx8bvOYohd2EDEaCiGDR5OYPFXEWBbxF+7BLoX87v2W+Q6qpXP28L/htQNP3zulYOvtTR2C7vW020=
+X-Received: by 2002:a0d:ca01:0:b0:52a:ac51:c6d1 with SMTP id
+ m1-20020a0dca01000000b0052aac51c6d1mr906560ywd.477.1675940041566; Thu, 09 Feb
+ 2023 02:54:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20230208173343.37582-1-andriy.shevchenko@linux.intel.com>
- <20230208173343.37582-3-andriy.shevchenko@linux.intel.com> <30234963-33e5-e2d7-a6ef-112e89efbdd0@linaro.org>
-In-Reply-To: <30234963-33e5-e2d7-a6ef-112e89efbdd0@linaro.org>
+References: <20230208185714.27313-1-asmaa@nvidia.com> <20230208185714.27313-2-asmaa@nvidia.com>
+In-Reply-To: <20230208185714.27313-2-asmaa@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Feb 2023 11:45:18 +0100
-Message-ID: <CACRpkdYRTq35gJq3YODGh9S_JnH1jxSOT8mNnetyRQY9Z5LhWQ@mail.gmail.com>
-Subject: Re: [PATCH v4 02/18] ARM: s3c24xx: Use the right include
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Vincenzo Palazzo <vincenzopalazzodev@gmail.com>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Michael Walle <michael@walle.cc>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, linux-arch@vger.kernel.org,
-        devicetree@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexander Aring <alex.aring@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Kalle Valo <kvalo@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
+Date:   Thu, 9 Feb 2023 11:53:50 +0100
+Message-ID: <CACRpkdZ_sPCa+Q6MWUKj1ytCe5AxTp--bMmbRTUfsNO0kZTMpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] Support NVIDIA BlueField-3 GPIO controller
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
+        linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -123,25 +67,92 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 8, 2023 at 6:39 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi Asmaa,
 
-> On 08/02/2023 18:33, Andy Shevchenko wrote:
-> > From: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > The file s3c64xx.c is including <linux/gpio.h> despite using no
-> > symbols from the file, however it needs it to implicitly bring in
-> > of_have_populated_dt() so include <linux/of.h> explicitly instead.
-> >
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  arch/arm/mach-s3c/s3c64xx.c | 2 +-
+thanks for your patch!
+
+On Wed, Feb 8, 2023 at 7:57 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
+
+> This patch adds support for the BlueField-3 SoC GPIO driver
+> which allows:
+> - setting certain GPIOs as interrupts from other dependent drivers
+> - ability to manipulate certain GPIO pins via libgpiod tools for instance
 >
-> It's not s3c24xx anymore, so subject prefix:
-> ARM: s3c64xx:
+> BlueField-3 has 56 GPIOs but the user is only allowed to change some
+> of them into GPIO mode. Use valid_mask to make it impossible to alter
+> the rest of the GPIOs.
+>
+> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
 
-My mistake, mea culpa.
+(...)
+
+> +struct mlxbf3_gpio_context {
+> +       struct gpio_chip gc;
+> +       struct irq_chip irq_chip;
+> +
+> +       /* YU GPIO block address */
+> +       void __iomem *gpio_io;
+> +
+> +       /* YU GPIO cause block address */
+> +       void __iomem *gpio_cause_io;
+
+I especially like that you use the word "cause" (as in cause-and-effect)
+over the imprecise and overused word "reason" (brrrr)
+
+> +static int mlxbf3_gpio_direction_input(struct gpio_chip *chip,
+> +                                      unsigned int offset)
+> +{
+> +       struct mlxbf3_gpio_context *gs = gpiochip_get_data(chip);
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
+> +
+> +       writel(BIT(offset), gs->gpio_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_CLEAR);
+> +
+> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mlxbf3_gpio_direction_output(struct gpio_chip *chip,
+> +                                       unsigned int offset,
+> +                                       int value)
+> +{
+> +       struct mlxbf3_gpio_context *gs = gpiochip_get_data(chip);
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
+> +
+> +       writel(BIT(offset), gs->gpio_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_SET);
+> +
+> +       if (value)
+> +               writel(BIT(offset), gs->gpio_io + MLXBF_GPIO_FW_DATA_OUT_SET);
+> +       else
+> +               writel(BIT(offset), gs->gpio_io + MLXBF_GPIO_FW_DATA_OUT_CLEAR);
+> +
+> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
+> +
+> +       return 0;
+> +}
+
+GPIO_GENERIC / bgpio should be able to handle these too.
+
+> +       ret = bgpio_init(gc, dev, 4,
+> +                       gs->gpio_io + MLXBF_GPIO_READ_DATA_IN,
+> +                       gs->gpio_io + MLXBF_GPIO_FW_DATA_OUT_SET,
+> +                       gs->gpio_io + MLXBF_GPIO_FW_DATA_OUT_CLEAR,
+> +                       NULL, NULL, 0);
+
+Instead of NULL, NULL, 0
+
+use
+
+gs->gpio_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_SET,
+gs->gpio_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_CLEAR,
+0);
+
+The generic library will make sure to also set the output value when
+changing direction to output.
 
 Yours,
 Linus Walleij
