@@ -2,61 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A59FF6904FC
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 11:35:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC935690500
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 11:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjBIKfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Feb 2023 05:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
+        id S229501AbjBIKgl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Feb 2023 05:36:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbjBIKex (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 05:34:53 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691346B35A
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 02:32:42 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-52bed2ce9bdso18777777b3.13
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 02:32:42 -0800 (PST)
+        with ESMTP id S229518AbjBIKgY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 05:36:24 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E536A335
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 02:35:11 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id u7so1866725ybk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 02:35:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ryrOP+Qukz2gWs6turESQfJKOLpwVFYNNLXrnHrVZQY=;
-        b=F7sa3S9sK7etrnQQ8t7WF7bIrtlcWNAAcWRnIr5JI9bZsLRFuhdLfkTwaoOO/0PliM
-         CcwpfRuQ5mDBPeyejALwtcZQIAJiQGmaoBYmY65PUT4oiRIpVYMVChd1x9xLWKHwDX3m
-         HRyVWX5mGPH1d/lbZVf9x3i+45G4d4f6FcaIPcukZUqF8vu5YkdDgOLQp2XZod+qeBX3
-         UZNpMg0q+/ehO+jtguEnhIyMQ8Zfusv4mjNAurEnVhx9CbWlKIQPVytiqoP1UOqC/yVl
-         GDdkMFiIQz1C5oOEdTDmYY1HLn7xuYhHdSuEcyo/juBWY1lRxaAvRMGR5/liQB8jo2lC
-         JK2Q==
+        bh=JJgX5QvJsADw9laMT79k7Un3WgY8suaKk5qie04JT20=;
+        b=BDZwjoDell5uK5ikdBXTTYw7oCrWD0oBaZgYkglrpdf8lpqbEKBuyS7bjEUQBKadP0
+         eEt94gNomenAEPDoHo9wboyqS3CHfeIP41yJ2O6mAbpjONw234ujUqquopeLauyLSj0u
+         FPQ12wpSL3QQI1zG/+pZCh/VSjUFaPbJSaSzYWPu5naAGYszvSSXCfV4t6/V/GngRE4g
+         Sf+v/wQWcw5fPAmPr10W5cD7C3ZnDrUptbBpzVzNc6GmR5h20KyE/STUz1Mye/n+YXPn
+         /umOWwHXyCj9/tji/P06itCTqFLukM/CnLnnGPJDNYFVFVKE7MgbEa/QluxAbX8YjX7w
+         hQEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ryrOP+Qukz2gWs6turESQfJKOLpwVFYNNLXrnHrVZQY=;
-        b=a5L+qnZ+wRBcl+RhwR35KRMFRqVhkqGrscRZghXUqkoTHZVaLG4X4cssG9V8HDsXj3
-         qMq6xbsCuxbkrP8BF01nCDPZkasDZA8v0VA9JAFYwmyT+1zgVhT0mxoSfyHFah+ESAhJ
-         jUHXrehZ0QwsSdLgdHkeJVP1yFYmFs9rdOGQQGY0DygvYIh6wpdWk3jYpOE5rLJh3Oyg
-         Q9izFah0QjvOJkmGAXcHijy5juCiKP1ZAijfw5leb7rcl+0lcdNe7YYWRlhfQ9UQs4Rs
-         3euEDjELGqDV9mLSmpViG8ksifhO+N8IIZrlDMu+3pgS7uiPinNcapkJeVZDoAUVSp2u
-         rnwg==
-X-Gm-Message-State: AO0yUKXJZNP3DcbRBx8lbQMDo8AgFS8moIm758Tj0vWp4U7lbeo5mJ7C
-        CK08tmCM9DAp0+0fMDlJ3bSrRY79mmHlnk0o0dWXDA==
-X-Google-Smtp-Source: AK7set/O3Y8txaqL7+gEsfHlEj9Y6syky3ttsk99HfGCIdIEAIBlzyTr86ABauCWFAo+5omQD+SiRRaoPeOlfl7dh40=
-X-Received: by 2002:a0d:e743:0:b0:50b:429e:a9ef with SMTP id
- q64-20020a0de743000000b0050b429ea9efmr1042797ywe.434.1675938758805; Thu, 09
- Feb 2023 02:32:38 -0800 (PST)
+        bh=JJgX5QvJsADw9laMT79k7Un3WgY8suaKk5qie04JT20=;
+        b=7Gjl2D7ufxC4x6KuznBDXaIJ0IYv8zT3sJPy4eNVXKqq0dBP9UWrmxp01ivGFGa69g
+         qWmEoQVYGC4N9tH6Ok1gnFyRlugdi/zznbcHnaNUWqIvxSF8uNM9zRtQm7yk5fSNbSB4
+         9RCa4i0XS/OfxkaSI+z8Fe4ntEQPjt8gvT/mn1vcPPem5eyTgKKQlR6ySeXB6cV2xSR/
+         I2OWa/zsL1oqVVVrVkeBZEzNL0WAsxbijsKfd0oFsCtH+AdgZ2tJ9ZTpi0IdJNYsJIqi
+         Aa6xbjTwBIF9UyjrqkxuZw/gXiWsbtsi3EYNOyS03Ng1UF6Zs3ZcqrWsMK5irPi/NExc
+         WgnQ==
+X-Gm-Message-State: AO0yUKWmpv5Fw8ZlZnzkms6/xc896B//iph1z/qwjCI4lDKThzPbc1Ga
+        u6J6ZFywWSVyaMz4Gyxan6MZbHkHg+yrd7Xlhhaiaw==
+X-Google-Smtp-Source: AK7set9iONTDm/V2Uk77rB4FKHxBkm7FbdUCso7hGlDRC6qONQKfDwseGChJaZD/z1wiD4VkoLu6GPjRNy2V0/xngkE=
+X-Received: by 2002:a5b:150:0:b0:88f:92ec:4292 with SMTP id
+ c16-20020a5b0150000000b0088f92ec4292mr1178366ybp.460.1675938888838; Thu, 09
+ Feb 2023 02:34:48 -0800 (PST)
 MIME-Version: 1.0
-References: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
-In-Reply-To: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
+References: <20230203141801.59083-1-hal.feng@starfivetech.com> <87e31545-3107-1cc2-fc93-197f66712ccc@starfivetech.com>
+In-Reply-To: <87e31545-3107-1cc2-fc93-197f66712ccc@starfivetech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Feb 2023 11:32:27 +0100
-Message-ID: <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
-Subject: Re: I2c GPIO Recovery with pinctrl strict mode
-To:     Ryan.Wanner@microchip.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
-        Claudiu.Beznea@microchip.com
+Date:   Thu, 9 Feb 2023 11:34:37 +0100
+Message-ID: <CACRpkda7ihWGjAP4=FU5uPqFMs4YxV5RLU8iwRNG7bYDeyOJ3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] Basic pinctrl support for StarFive JH7110 RISC-V SoC
+To:     Hal Feng <hal.feng@starfivetech.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andreas Schwab <schwab@suse.de>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,36 +73,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 7, 2023 at 6:56 PM <Ryan.Wanner@microchip.com> wrote:
+On Wed, Feb 8, 2023 at 3:31 AM Hal Feng <hal.feng@starfivetech.com> wrote:
 
-> My main issue is the process of freeing ownership of a pin(s) having
-> another driver, in this case gpio, to take ownership then free that
-> ownership back to the default state, in this case it would be back to
-> i2c.
->
-> I have tried calling pinmux_disable_setting() and then claiming the
-> gpios then enabling them for recovery then disabling them again. This
-> causes lots of warnings and some cases the full ownership is not
-> transferred.
->
-> It seems that what I am attempting to achieve is not doable currently.
-> Is this the case or am I missing some extra things needing to prepare
-> for this action?
+> I have resent the patches rebased on your "devel" branch. Rob has added
+> Reviewed-by tags for DT bindings, but the DT binding patches still need
+> to be modified a little bit. Could you apply this series if I modify the
+> DT bindings patches and resend as v5? Or it need another round of review?
 
-There are several other i2c bus drivers doing this already, for example
-drivers/i2c/busses/i2c-imx.c
-
-The idea is to have some different pinctrl states and move between
-them explicitly in the driver to move pins from i2c mode to GPIO
-mode and back.
-
-The imx driver depend on the ability of the i.MX pin controller to use
-the pins as a certain function and GPIO at the same time.
-
-This is due to the imx pin controller not setting the .strict attribute
-on the struct pinmux_ops so that pins can be used in parallel for
-i2c and GPIO and gpiod_get() will not fail. But the Atmel driver does
-not set this so you should be fine I think.
+No more review needed for small fixes. Just resend a v5 and include
+the review tags and I will apply it. After a few revisions this is usually
+fine.
 
 Yours,
 Linus Walleij
