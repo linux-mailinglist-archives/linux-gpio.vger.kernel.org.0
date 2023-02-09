@@ -2,89 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EEA5690228
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 09:29:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C4C769028D
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Feb 2023 09:55:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbjBII3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Feb 2023 03:29:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44708 "EHLO
+        id S229476AbjBIIzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Feb 2023 03:55:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjBII3i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 03:29:38 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6096E442F2
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Feb 2023 00:29:36 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id z13so882939wmp.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Feb 2023 00:29:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ziWX5p/72UywAdxKA7LNDVxrSwnr4vdR8atBrdNzFXI=;
-        b=CWJOky25KIedq/9uyGXCkMRtXy/cA1pMTAhHgYHIbvrIoxGsi1FYT4UeeW7wd4J5t8
-         ve+Poz9HImIfylmFcNA00hITJie2JN6iHHg7qd6cvj2bWXbmrYEZmiltvKz/vj9twXMR
-         Tzak8SVDvXXxTCc6leh1xvgcJvpzll1xS82s6QKgn4GuITzx+hF4cdfH7TgCcSkdwtZG
-         V0PQJwCjBi2AwrvXvSc9dx0hyqW0+p4C7zuXnKPuM5Q+/HOnUiNgnABR3k2mUIV9Tvik
-         HugXpzoXqc4AObyGiKyqSyEgfQCxQdldHxkTwHfP40qV6/TnMr8r5vvllLhKh63kNMAX
-         rAEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ziWX5p/72UywAdxKA7LNDVxrSwnr4vdR8atBrdNzFXI=;
-        b=xMKo0odjNC3tf/gDxfJgOcXzn+HFmTs/bfpWnWcqqiu+F3fNhrfWcMyIGTQ4eEddhf
-         b+EK1OStyTPFEbT2sqWr/2tAc+QWWGg8CDCPJv4eDyEsnNAorRziYCS7KLx+E4cekg8Y
-         c/iCUqcnAGh2APLiQioQUcx5IWfLydoYh8MZ6PGD2T2TdpWcZ5oq7ZJq8qdCJjrSIXun
-         5YzSY89zJiCaSQmbN0KMoAitQ4ItSKOzItMlt0gexNLcw/UY3V1bTLfWE3kFcpAAQyiZ
-         0Tayqvq5ILHBKAe0eMFNfTLrzZo9Oxl1/YCe7htOs+pdLT9YaUQUZMb2S+yRSR5qdC2U
-         t+Yw==
-X-Gm-Message-State: AO0yUKU6J8CO9bmlS8PGa6AF5RipqfkfnuJO0lPTa4oH1NTwVCFPaxZz
-        dN6LlRUVtqk2ViWjbTNQJUcfeA==
-X-Google-Smtp-Source: AK7set80Xla51urku0oSo1PvVBBpHyge+nEKhUAH8UQFTzY+CAHZdNTYGErugAkfMC3jB4y9zo3Tfg==
-X-Received: by 2002:a05:600c:1d17:b0:3dd:1c45:fe3a with SMTP id l23-20020a05600c1d1700b003dd1c45fe3amr3586584wms.16.1675931374990;
-        Thu, 09 Feb 2023 00:29:34 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id m24-20020a05600c3b1800b003dc41a9836esm1190012wms.43.2023.02.09.00.29.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Feb 2023 00:29:34 -0800 (PST)
-Message-ID: <59efb87b-5f97-a409-46ae-095ab03d01b9@linaro.org>
-Date:   Thu, 9 Feb 2023 09:29:32 +0100
+        with ESMTP id S229602AbjBIIzL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Feb 2023 03:55:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA66356484;
+        Thu,  9 Feb 2023 00:55:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 69F6161949;
+        Thu,  9 Feb 2023 08:55:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74AFFC433EF;
+        Thu,  9 Feb 2023 08:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1675932905;
+        bh=zt7Y7HnHpASdaS3oqAwBrAieLVQQiB023LB2aYtnvyM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XfaZ4yA8EWHMHhJfOvzEaaeVm+piMBPx1+9NXGHsDVdNQmEiduw+COAwUUUuTopto
+         oZjqFvH6uHJ4qBMV6Cohz97JtwTcwijTVQJSNDa6f0ZHqhCnAti0YqzaYPYzr/nBku
+         +7X4R94xWUILdiq6jJ6UxlJ9Hl1jLCBioI1MzMUg=
+Date:   Thu, 9 Feb 2023 09:55:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH v4 char-misc-next] misc: microchip: pci1xxxx: Add
+ OTP/EEPROM driver for the pci1xxxx switch
+Message-ID: <Y+S05tQ5e5pE9/v0@kroah.com>
+References: <20230209044237.3927293-1-tharunkumar.pasumarthi@microchip.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2] dt-bindings: gpio: nxp,pcf8575: add gpio-line-names
-To:     Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-References: <20230209041752.35380-1-twoerner@gmail.com>
- <20230209043100.1508-1-twoerner@gmail.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230209043100.1508-1-twoerner@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230209044237.3927293-1-tharunkumar.pasumarthi@microchip.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/02/2023 05:31, Trevor Woerner wrote:
-> The family of PCF857x-compatible chips describe 8-bit i2c i/o expanders.
-> Allow the user to specify names for the 8 gpio lines.
+On Thu, Feb 09, 2023 at 10:12:37AM +0530, Tharun Kumar P wrote:
+> +static int e2p_device_write_byte(struct pci1xxxx_otp_e2p_device *priv,
+> +				 unsigned long byte_offset, u8 value)
+> +{
+> +	u32 data;
+> +
+> +	/* Write the value into EEPROM_DATA_REG register */
+> +	writel(value, priv->reg_base + MMAP_EEPROM_OFFSET(EEPROM_DATA_REG));
+> +	data = EEPROM_CMD_EPC_TIMEOUT_BIT | EEPROM_CMD_EPC_WRITE | byte_offset;
+> +
+> +	/* Write the data into EEPROM_CMD_REG register */
+> +	writel(data, priv->reg_base + MMAP_EEPROM_OFFSET(EEPROM_CMD_REG));
+> +
+> +	/* Set the EPC_BUSY bit of EEPROM_CMD_REG register */
+> +	writel(EEPROM_CMD_EPC_BUSY_BIT | data, priv->reg_base +
+> +	       MMAP_EEPROM_OFFSET(EEPROM_CMD_REG));
+> +
+> +	/* Wait for the EPC_BUSY bit to get cleared */
+> +	do {
+> +		data = readl(priv->reg_base + MMAP_EEPROM_OFFSET(EEPROM_CMD_REG));
+> +	} while (data & EEPROM_CMD_EPC_BUSY_BIT);
 
-PCA9675 is 16-bit and has 16 outputs/
+That's a very busy "sit and spin" loop here, what happens if the read of
+the bit never actually succeeds?  You just locked up the system with no
+way to interrupt it :(
 
-Best regards,
-Krzysztof
+Please provide some sort of timeout, or way to break out of this.
 
+> +
+> +	if (data & EEPROM_CMD_EPC_TIMEOUT_BIT) {
+> +		dev_err(&priv->pdev->dev, "EEPROM write timed out\n");
+
+How can the timeout bit happen if the busy bit was still set?
+
+And what can userspace do about this if it is reported?
+
+> +		return -EFAULT;
+
+This return value is ONLY for when we have memory faults from reading
+to/from userspace and the kernel.  It's not a valid return value for a
+device error, sorry.  -EIO maybe?
+
+You return this error in a number of other places in the driver that
+shouldn't, please fix this up.
+
+Also the loop issue is in your read_byte call and the same review
+comments apply there.
+
+thanks,
+
+greg k-h
