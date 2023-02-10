@@ -2,93 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D7026923F3
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 18:05:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B2F692648
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 20:27:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232915AbjBJRFm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 12:05:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
+        id S233074AbjBJT1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 14:27:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232860AbjBJRFl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 12:05:41 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8D671031;
-        Fri, 10 Feb 2023 09:05:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676048740; x=1707584740;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+kVL093vuqMy/XSj3eiI+5YfoBG6X1O8lTOOxXMxMQI=;
-  b=n9QZDxcPuqQf5FwQOGXStJ5NVLSSU6uMwoXRbRbHN0y6eBbHLbXeyINf
-   Nov//lyDlVVijnw+8vDOhgC4n+SsemLuri1ueTSg4HHPwCU6beuK9huDq
-   /YK4Cg3pK56uZilLfvhsX6rW27PwBt+qg2y+nZ7Sop8Gg1cGg9qOLHDhn
-   ndUCgAs44MAnvOyclDm9HjQFAjy9zPUzYlVnzBPPpXMb7ioHtUOqzUuCo
-   aPQv7YJ6R5G9EndblP50V+gPzOuEqbrQx6e8SfN7FbyT3YqfmgNHcsJHH
-   xwcaqti7ModylVVCsNbGDHZ3BjslvK4i3l4uU7ASRAebuoZGVIP7le4sm
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="328158465"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="328158465"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 09:05:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="700537280"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="700537280"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 10 Feb 2023 09:04:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pQWpV-0058Qb-2k;
-        Fri, 10 Feb 2023 19:04:57 +0200
-Date:   Fri, 10 Feb 2023 19:04:57 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Werner Sembach <wse@tuxedocomputers.com>
-Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
-Message-ID: <Y+Z5OSa6hepQBOyc@smile.fi.intel.com>
-References: <20230210164636.628462-1-wse@tuxedocomputers.com>
+        with ESMTP id S232530AbjBJT1t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 14:27:49 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF17F627B0
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 11:27:48 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id r8so7540965pls.2
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 11:27:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwrUc84I/sw9tW3rFINcSrPClBVAQXnQCQkcXqCJwLw=;
+        b=hQAxFU0UWDL+c15mTPMopFsa+DtSgaC7lA9lDiZRF+/FBqEeZ1Sy6LFHOtrrmF7Sd2
+         v3IQ4IcAubIN0sr/1IcMzervGsBGnx/9uVGBupdYwT7CYjSfUyh2ey92RUSzoBbbgpYn
+         0yrTbvmX6Y5z5uGK5Fr3w7qB8YcpBQwxPf068+nJTDp3fMtnUOry570Pkrgu+Z0vJX0T
+         /oD0wDMz7A461CTNkbVBFXvkA3x1tdf1xcy/8c23ZzOgsoyCkwyAxKek0E8ib8LB8umD
+         JbVUcVsa0e4608OvA+Dgszfc0dcvb4K/Bn/gnpXg2T2gMtByW8tFjWx/0j/YrIp98Bph
+         Jh+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZwrUc84I/sw9tW3rFINcSrPClBVAQXnQCQkcXqCJwLw=;
+        b=by7vzsdlmylCpRfxKrQb52vlI641Rip7IfYqi9DPkoBMziDMearj+QRbstmGhLeoIi
+         ex/Bfyb0pcVCfPp+VUQmCPUznxEqMp27oyxaTKRsCuiQHn7rNeOiZO7lmODk+Li0VNmn
+         SJHgomtYcO1JKQXUg2p9tP3+rt1rVmOUSrNPOI4BNakC4I8fKve7MgtkkbhANDPPodx+
+         CDYITx9P1cCWN+1D5TSCUCi0Wg/b7VHMXNcxyHV19CSU/ZbNKOr/qxDrWTQz3VDQTTN+
+         RZuxm4py1jNEsF0YESLyFN/ECUhBT1fsWrGVffFaLp1KdXSAh85/dvbsSR8EJrQGtVZk
+         OJ5w==
+X-Gm-Message-State: AO0yUKXLMtPbYJGOCuCbyibe7fO4m7EZORsf6cNmlDz8GjfMWiUmHhAi
+        CGz2/K8/CbvL+edQVtVJy+s8K6WeOTYe0RRSc7fzLA==
+X-Google-Smtp-Source: AK7set8YqUGIKC41zQQA+imGuckADHerNWZeukO+5tCxdqLGYKK3iW3D9WDbQqKroQBsftoX1HY4I+fjcAkwH4jn0w0=
+X-Received: by 2002:a17:90a:f018:b0:230:9e2a:ebd8 with SMTP id
+ bt24-20020a17090af01800b002309e2aebd8mr2796418pjb.48.1676057267896; Fri, 10
+ Feb 2023 11:27:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230210164636.628462-1-wse@tuxedocomputers.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230207014207.1678715-1-saravanak@google.com> <20230210101333.h2e7hcl3ylsoh6fy@skbuf>
+In-Reply-To: <20230210101333.h2e7hcl3ylsoh6fy@skbuf>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 10 Feb 2023 11:27:11 -0800
+Message-ID: <CAGETcx_SQJ1q_f8r+zKATF-EEb0P-T_ot15AQ1x1Vc_3h=XfCw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] fw_devlink improvements
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Maxim Kiselev <bigunclemax@gmail.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Jean-Philippe Brucker <jpb@kernel.org>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 05:46:36PM +0100, Werner Sembach wrote:
-> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
-> changed the policy such that I2C touchpads may be able to wake up the
-> system by default if the system is configured as such.
-> 
-> However on Clevo NH5xAx/TUXEDO XA15 Gen10 there is a mistake in the ACPI
-> tables that the TP_ATTN# signal connected to GPIO 10 is configured as
-> ActiveLow and level triggered but connected to a pull up.
+On Fri, Feb 10, 2023 at 2:13 AM Vladimir Oltean <vladimir.oltean@nxp.com> wrote:
+>
+> Hi Saravana,
+>
+> On Mon, Feb 06, 2023 at 05:41:52PM -0800, Saravana Kannan wrote:
+> > Vladimir,
+> >
+> > Ccing you because DSA's and fw_devlink have known/existing problems
+> > (still in my TODOs to fix). But I want to make sure this series doesn't
+> > cause additional problems for DSA.
+> >
+> > All,
+> >
+> > This patch series improves fw_devlink in the following ways:
+> >
+> > 1. It no longer cares about a fwnode having a "compatible" property. It
+> >    figures this out more dynamically. The only expectation is that
+> >    fwnodes that are converted to devices actually get probed by a driver
+> >    for the dependencies to be enforced correctly.
+> >
+> > 2. Finer grained dependency tracking. fw_devlink will now create device
+> >    links from the consumer to the actual resource's device (if it has one,
+> >    Eg: gpio_device) instead of the parent supplier device. This improves
+> >    things like async suspend/resume ordering, potentially remove the need
+> >    for frameworks to create device links, more parallelized async probing,
+> >    and better sync_state() tracking.
+> >
+> > 3. Handle hardware/software quirks where a child firmware node gets
+> >    populated as a device before its parent firmware node AND actually
+> >    supplies a non-optional resource to the parent firmware node's
+> >    device.
+> >
+> > 4. Way more robust at cycle handling (see patch for the insane cases).
+> >
+> > 5. Stops depending on OF_POPULATED to figure out some corner cases.
+> >
+> > 6. Simplifies the work that needs to be done by the firmware specific
+> >    code.
+> >
+> > The v3 series has gone through my usual testing on my end and looks good
+> > to me.
+>
+> Booted on an NXP LS1028A (arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts)
+> and a Turris MOX (arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts)
+> with no observed regressions.
 
-I'm not sure I understand the issue here. From what you say here it seems
-correct ACPI description.
+Thanks for testing Vladimir!
 
-> As soon as the
-> system suspends the touchpad loses power and then the system wakes up.
-> 
-> To avoid this problem, introduce a quirk for this model that will prevent
-> the wakeup capability for being set for GPIO 10.
-
-I'm not against fixing this, but wouldn't be better to actually target the root
-cause and have a different quirk? Or is it me who didn't get what is the root
-cause?
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Is there something specific you would like
+> me to test?
 
 
+Not really, I just want to make sure the common DSA architectures
+don't hit any regression. In the hardware you tested, are there cases
+of PHYs where the supplier is the parent MDIO? I remember that being
+the only case where I needed special casing
+(FWNODE_FLAG_NEEDS_CHILD_BOUND_ON_ADD) in fw_devlink -- so it'll be
+good to make sure I didn't accidentally break anything there.
+
+
+-Saravana
