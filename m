@@ -2,170 +2,261 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B2F692648
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 20:27:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D35E692766
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 20:48:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbjBJT1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 14:27:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        id S233493AbjBJTsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 14:48:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbjBJT1t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 14:27:49 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF17F627B0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 11:27:48 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id r8so7540965pls.2
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 11:27:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZwrUc84I/sw9tW3rFINcSrPClBVAQXnQCQkcXqCJwLw=;
-        b=hQAxFU0UWDL+c15mTPMopFsa+DtSgaC7lA9lDiZRF+/FBqEeZ1Sy6LFHOtrrmF7Sd2
-         v3IQ4IcAubIN0sr/1IcMzervGsBGnx/9uVGBupdYwT7CYjSfUyh2ey92RUSzoBbbgpYn
-         0yrTbvmX6Y5z5uGK5Fr3w7qB8YcpBQwxPf068+nJTDp3fMtnUOry570Pkrgu+Z0vJX0T
-         /oD0wDMz7A461CTNkbVBFXvkA3x1tdf1xcy/8c23ZzOgsoyCkwyAxKek0E8ib8LB8umD
-         JbVUcVsa0e4608OvA+Dgszfc0dcvb4K/Bn/gnpXg2T2gMtByW8tFjWx/0j/YrIp98Bph
-         Jh+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZwrUc84I/sw9tW3rFINcSrPClBVAQXnQCQkcXqCJwLw=;
-        b=by7vzsdlmylCpRfxKrQb52vlI641Rip7IfYqi9DPkoBMziDMearj+QRbstmGhLeoIi
-         ex/Bfyb0pcVCfPp+VUQmCPUznxEqMp27oyxaTKRsCuiQHn7rNeOiZO7lmODk+Li0VNmn
-         SJHgomtYcO1JKQXUg2p9tP3+rt1rVmOUSrNPOI4BNakC4I8fKve7MgtkkbhANDPPodx+
-         CDYITx9P1cCWN+1D5TSCUCi0Wg/b7VHMXNcxyHV19CSU/ZbNKOr/qxDrWTQz3VDQTTN+
-         RZuxm4py1jNEsF0YESLyFN/ECUhBT1fsWrGVffFaLp1KdXSAh85/dvbsSR8EJrQGtVZk
-         OJ5w==
-X-Gm-Message-State: AO0yUKXLMtPbYJGOCuCbyibe7fO4m7EZORsf6cNmlDz8GjfMWiUmHhAi
-        CGz2/K8/CbvL+edQVtVJy+s8K6WeOTYe0RRSc7fzLA==
-X-Google-Smtp-Source: AK7set8YqUGIKC41zQQA+imGuckADHerNWZeukO+5tCxdqLGYKK3iW3D9WDbQqKroQBsftoX1HY4I+fjcAkwH4jn0w0=
-X-Received: by 2002:a17:90a:f018:b0:230:9e2a:ebd8 with SMTP id
- bt24-20020a17090af01800b002309e2aebd8mr2796418pjb.48.1676057267896; Fri, 10
- Feb 2023 11:27:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20230207014207.1678715-1-saravanak@google.com> <20230210101333.h2e7hcl3ylsoh6fy@skbuf>
-In-Reply-To: <20230210101333.h2e7hcl3ylsoh6fy@skbuf>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 10 Feb 2023 11:27:11 -0800
-Message-ID: <CAGETcx_SQJ1q_f8r+zKATF-EEb0P-T_ot15AQ1x1Vc_3h=XfCw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] fw_devlink improvements
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        with ESMTP id S233518AbjBJTsr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 14:48:47 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13C3241DA;
+        Fri, 10 Feb 2023 11:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676058477; x=1707594477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i+KB61FTKNIuFq1GlPUNiKJj7lmRriDdUCRgpzPS5y8=;
+  b=d20Avkp94nNhNTPHhBGGD8BrokCE7J8GtM7oI3Tb88XbZcG8I32X61jP
+   NbvhcD0uu60u5q54rsTBUpwflbkePc8Wm2NNVV6gUCXZk3r1Bg+b0g9Jg
+   YRITZalxUJRriTrPJgHeJi4BKtlZkdyUtuR7ZezQtd5uvCc6GkzR2Duvo
+   6/RlZca78r1Lva1t6iu+mnYzPzWcqQsnKgfRra7huYJ1rRC0VNwWfeyzJ
+   0l4pLIa+c8z+guw4Dfn6BzoCFpH75+80fyzLfwtatZep4KsV56N57hrVZ
+   Aza5fngd1eh3gMCtot8eSoiq2yp5Sj0bnxK/Dz/RSSKmhPeuLCzjS0asd
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="331814922"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="331814922"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 11:43:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="661502477"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="661502477"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 10 Feb 2023 11:43:45 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pQZJA-00060z-2E;
+        Fri, 10 Feb 2023 19:43:44 +0000
+Date:   Sat, 11 Feb 2023 03:43:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/5] pinctrl: at91: use devm_kasprintf() to avoid
+ potential leaks (part 2)
+Message-ID: <202302110336.1P7vM7AU-lkp@intel.com>
+References: <20230210145656.71838-2-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230210145656.71838-2-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 2:13 AM Vladimir Oltean <vladimir.oltean@nxp.com> wrote:
->
-> Hi Saravana,
->
-> On Mon, Feb 06, 2023 at 05:41:52PM -0800, Saravana Kannan wrote:
-> > Vladimir,
-> >
-> > Ccing you because DSA's and fw_devlink have known/existing problems
-> > (still in my TODOs to fix). But I want to make sure this series doesn't
-> > cause additional problems for DSA.
-> >
-> > All,
-> >
-> > This patch series improves fw_devlink in the following ways:
-> >
-> > 1. It no longer cares about a fwnode having a "compatible" property. It
-> >    figures this out more dynamically. The only expectation is that
-> >    fwnodes that are converted to devices actually get probed by a driver
-> >    for the dependencies to be enforced correctly.
-> >
-> > 2. Finer grained dependency tracking. fw_devlink will now create device
-> >    links from the consumer to the actual resource's device (if it has one,
-> >    Eg: gpio_device) instead of the parent supplier device. This improves
-> >    things like async suspend/resume ordering, potentially remove the need
-> >    for frameworks to create device links, more parallelized async probing,
-> >    and better sync_state() tracking.
-> >
-> > 3. Handle hardware/software quirks where a child firmware node gets
-> >    populated as a device before its parent firmware node AND actually
-> >    supplies a non-optional resource to the parent firmware node's
-> >    device.
-> >
-> > 4. Way more robust at cycle handling (see patch for the insane cases).
-> >
-> > 5. Stops depending on OF_POPULATED to figure out some corner cases.
-> >
-> > 6. Simplifies the work that needs to be done by the firmware specific
-> >    code.
-> >
-> > The v3 series has gone through my usual testing on my end and looks good
-> > to me.
->
-> Booted on an NXP LS1028A (arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts)
-> and a Turris MOX (arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts)
-> with no observed regressions.
+Hi Andy,
 
-Thanks for testing Vladimir!
+I love your patch! Perhaps something to improve:
 
-> Is there something specific you would like
-> me to test?
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next next-20230210]
+[cannot apply to clk/clk-next soc/for-next linus/master v6.2-rc7]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-at91-use-devm_kasprintf-to-avoid-potential-leaks-part-2/20230210-225817
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230210145656.71838-2-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 1/5] pinctrl: at91: use devm_kasprintf() to avoid potential leaks (part 2)
+config: arm-randconfig-r046-20230210 (https://download.01.org/0day-ci/archive/20230211/202302110336.1P7vM7AU-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/0562771ccfa099db4361c2e5958ca1685f498cdf
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Andy-Shevchenko/pinctrl-at91-use-devm_kasprintf-to-avoid-potential-leaks-part-2/20230210-225817
+        git checkout 0562771ccfa099db4361c2e5958ca1685f498cdf
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pinctrl/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302110336.1P7vM7AU-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pinctrl/pinctrl-at91.c: In function 'at91_pinctrl_probe':
+   drivers/pinctrl/pinctrl-at91.c:1402:22: error: 'names' undeclared (first use in this function)
+    1402 |                 if (!names)
+         |                      ^~~~~
+   drivers/pinctrl/pinctrl-at91.c:1402:22: note: each undeclared identifier is reported only once for each function it appears in
+   drivers/pinctrl/pinctrl-at91.c: In function 'at91_gpio_probe':
+>> drivers/pinctrl/pinctrl-at91.c:1889:28: warning: passing argument 1 of 'strreplace' makes pointer from integer without a cast [-Wint-conversion]
+    1889 |                 strreplace('-', alias_idx + 'A');
+         |                            ^~~
+         |                            |
+         |                            int
+   In file included from include/linux/bitmap.h:11,
+                    from include/linux/cpumask.h:12,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/mutex.h:17,
+                    from include/linux/notifier.h:14,
+                    from include/linux/clk.h:14,
+                    from drivers/pinctrl/pinctrl-at91.c:8:
+   include/linux/string.h:172:24: note: expected 'char *' but argument is of type 'int'
+     172 | char *strreplace(char *s, char old, char new);
+         |                  ~~~~~~^
+   drivers/pinctrl/pinctrl-at91.c:1889:17: error: too few arguments to function 'strreplace'
+    1889 |                 strreplace('-', alias_idx + 'A');
+         |                 ^~~~~~~~~~
+   include/linux/string.h:172:7: note: declared here
+     172 | char *strreplace(char *s, char old, char new);
+         |       ^~~~~~~~~~
 
 
-Not really, I just want to make sure the common DSA architectures
-don't hit any regression. In the hardware you tested, are there cases
-of PHYs where the supplier is the parent MDIO? I remember that being
-the only case where I needed special casing
-(FWNODE_FLAG_NEEDS_CHILD_BOUND_ON_ADD) in fw_devlink -- so it'll be
-good to make sure I didn't accidentally break anything there.
+vim +/strreplace +1889 drivers/pinctrl/pinctrl-at91.c
 
+  1809	
+  1810	static int at91_gpio_probe(struct platform_device *pdev)
+  1811	{
+  1812		struct device *dev = &pdev->dev;
+  1813		struct device_node *np = dev->of_node;
+  1814		struct at91_gpio_chip *at91_chip = NULL;
+  1815		struct gpio_chip *chip;
+  1816		struct pinctrl_gpio_range *range;
+  1817		int ret = 0;
+  1818		int irq, i;
+  1819		int alias_idx = of_alias_get_id(np, "gpio");
+  1820		uint32_t ngpio;
+  1821		char **names;
+  1822	
+  1823		BUG_ON(alias_idx >= ARRAY_SIZE(gpio_chips));
+  1824		if (gpio_chips[alias_idx]) {
+  1825			ret = -EBUSY;
+  1826			goto err;
+  1827		}
+  1828	
+  1829		irq = platform_get_irq(pdev, 0);
+  1830		if (irq < 0) {
+  1831			ret = irq;
+  1832			goto err;
+  1833		}
+  1834	
+  1835		at91_chip = devm_kzalloc(&pdev->dev, sizeof(*at91_chip), GFP_KERNEL);
+  1836		if (!at91_chip) {
+  1837			ret = -ENOMEM;
+  1838			goto err;
+  1839		}
+  1840	
+  1841		at91_chip->regbase = devm_platform_ioremap_resource(pdev, 0);
+  1842		if (IS_ERR(at91_chip->regbase)) {
+  1843			ret = PTR_ERR(at91_chip->regbase);
+  1844			goto err;
+  1845		}
+  1846	
+  1847		at91_chip->ops = (const struct at91_pinctrl_mux_ops *)
+  1848			of_match_device(at91_gpio_of_match, &pdev->dev)->data;
+  1849		at91_chip->pioc_virq = irq;
+  1850		at91_chip->pioc_idx = alias_idx;
+  1851	
+  1852		at91_chip->clock = devm_clk_get(&pdev->dev, NULL);
+  1853		if (IS_ERR(at91_chip->clock)) {
+  1854			dev_err(&pdev->dev, "failed to get clock, ignoring.\n");
+  1855			ret = PTR_ERR(at91_chip->clock);
+  1856			goto err;
+  1857		}
+  1858	
+  1859		ret = clk_prepare_enable(at91_chip->clock);
+  1860		if (ret) {
+  1861			dev_err(&pdev->dev, "failed to prepare and enable clock, ignoring.\n");
+  1862			goto clk_enable_err;
+  1863		}
+  1864	
+  1865		at91_chip->chip = at91_gpio_template;
+  1866		at91_chip->id = alias_idx;
+  1867	
+  1868		chip = &at91_chip->chip;
+  1869		chip->label = dev_name(&pdev->dev);
+  1870		chip->parent = &pdev->dev;
+  1871		chip->owner = THIS_MODULE;
+  1872		chip->base = alias_idx * MAX_NB_GPIO_PER_BANK;
+  1873	
+  1874		if (!of_property_read_u32(np, "#gpio-lines", &ngpio)) {
+  1875			if (ngpio >= MAX_NB_GPIO_PER_BANK)
+  1876				pr_err("at91_gpio.%d, gpio-nb >= %d failback to %d\n",
+  1877				       alias_idx, MAX_NB_GPIO_PER_BANK, MAX_NB_GPIO_PER_BANK);
+  1878			else
+  1879				chip->ngpio = ngpio;
+  1880		}
+  1881	
+  1882		names = devm_kasprintf_strarray(dev, "pio", chip->ngpio);
+  1883		if (!names) {
+  1884			ret = -ENOMEM;
+  1885			goto clk_enable_err;
+  1886		}
+  1887	
+  1888		for (i = 0; i < chip->ngpio; i++)
+> 1889			strreplace('-', alias_idx + 'A');
+  1890	
+  1891		chip->names = (const char *const *)names;
+  1892	
+  1893		range = &at91_chip->range;
+  1894		range->name = chip->label;
+  1895		range->id = alias_idx;
+  1896		range->pin_base = range->base = range->id * MAX_NB_GPIO_PER_BANK;
+  1897	
+  1898		range->npins = chip->ngpio;
+  1899		range->gc = chip;
+  1900	
+  1901		ret = at91_gpio_of_irq_setup(pdev, at91_chip);
+  1902		if (ret)
+  1903			goto gpiochip_add_err;
+  1904	
+  1905		ret = gpiochip_add_data(chip, at91_chip);
+  1906		if (ret)
+  1907			goto gpiochip_add_err;
+  1908	
+  1909		gpio_chips[alias_idx] = at91_chip;
+  1910		platform_set_drvdata(pdev, at91_chip);
+  1911		gpio_banks = max(gpio_banks, alias_idx + 1);
+  1912	
+  1913		dev_info(&pdev->dev, "at address %p\n", at91_chip->regbase);
+  1914	
+  1915		return 0;
+  1916	
+  1917	gpiochip_add_err:
+  1918	clk_enable_err:
+  1919		clk_disable_unprepare(at91_chip->clock);
+  1920	err:
+  1921		dev_err(&pdev->dev, "Failure %i for GPIO %i\n", ret, alias_idx);
+  1922	
+  1923		return ret;
+  1924	}
+  1925	
 
--Saravana
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
