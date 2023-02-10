@@ -2,93 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41C30691CBC
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 11:32:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7DF5691E95
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 12:49:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231733AbjBJKcK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 05:32:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        id S231842AbjBJLtY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 06:49:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232000AbjBJKcK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 05:32:10 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6179E6D608;
-        Fri, 10 Feb 2023 02:32:09 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="318403729"
-X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="318403729"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 02:32:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="668011981"
-X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="668011981"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 10 Feb 2023 02:32:07 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1pQQhJ-0050Uk-1b;
-        Fri, 10 Feb 2023 12:32:05 +0200
-Date:   Fri, 10 Feb 2023 12:32:05 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Add NVIDIA BlueField-3 GPIO driver and pin
- controller
-Message-ID: <Y+YdJdkToTAcvCDt@smile.fi.intel.com>
-References: <20230208185714.27313-1-asmaa@nvidia.com>
- <CAHp75Vf7FcAvSwLPWj4OfnJ61iXy7TAFFzTAq_8b9VXeyCfBFg@mail.gmail.com>
- <CH2PR12MB3895C873B4381A88636A0EABD7D99@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CAHp75VfVJ8B1d+gSi6WJw9guJBUkaJwH1yU7N7FpJ-DtL_L6Rg@mail.gmail.com>
+        with ESMTP id S231603AbjBJLtX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 06:49:23 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2343D7071F
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 03:49:22 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id l37-20020a05600c1d2500b003dfe46a9801so3909700wms.0
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 03:49:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tB5gNRU/MbQprb8j0TWV5I2QJ6yglApm7jTfttA1W+s=;
+        b=Fbaytt/6vfSC8HQfFnVPGnQtxX8HuwZli0T3ctHeBmMgZtzOJ2vvjhO1utdqYFrd11
+         qFg7IF689kisIoiOgUgcOcLFKYoU7xqF+fpjxa8dMQlWInYH2rWYEj7TEgx3dRb1qdZO
+         R2FTc2fT1A6WjwWTSDg7/RS3uk/Pj8edGTikvZHo6UVEqyDe7EMM0jb17C8OiFnaFXKd
+         sJ1GdOB5+6FymExSar5JWNlOwFp/JBE3/3xvK0DW90bkr0QpbMxrujWgDPZBA8btRFmj
+         mQ1ehUyi65l/sIi6giVg6C+wtziYgximwMyyVCxBXR3rIjiyoJidayBJLKXXxOgGsbZG
+         N/tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tB5gNRU/MbQprb8j0TWV5I2QJ6yglApm7jTfttA1W+s=;
+        b=AB5Seq6we0rrFIRPdVuJbm1LkKTMq+ErS/f9S4RhkV1uVwgcOfV6ASkFDaygXSZ9BV
+         pAjTQXOmyQ8wF+w8vZfwzhfTcdvNJqtviNzF13ulL6XNvOYVDsU3kyq6VZTwktF/paor
+         NZlWzMZ7GZVIs3+5tDRKD/67CkJG3ZwtBqqxT1bEwN4XEPAFdFxduskgHWcfqATTr2Cu
+         8wTHg9bR7MNYaEeiE6g2bFbiKm+E1nWUIqABRU7AInN1F44RQXYpKWxmhbDmicXUXJP2
+         xy6mKO78hM2XJ876KNjsuuJJ851esRg3Y43s5JqPjPIEIXR0n+dAJUKDdtCjSlXmUsx/
+         vIdw==
+X-Gm-Message-State: AO0yUKU30m3t3GpB0hfcAcGbkRAdlKNHhOc12O7l8e13vNDT1AMl6B6V
+        arD1pkGVpxaZaccQKiQHQdlLQA==
+X-Google-Smtp-Source: AK7set/1Gsg8u5EZA8fcBKB9kdH65gCgoUVWX3TMIqjLGRyl+q8jQhE4BO6X2f58xxHOBKcAVLyW1Q==
+X-Received: by 2002:a05:600c:1d24:b0:3dc:55d9:ec8 with SMTP id l36-20020a05600c1d2400b003dc55d90ec8mr15856247wms.41.1676029760748;
+        Fri, 10 Feb 2023 03:49:20 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b003dc43a10fa5sm5279319wmp.13.2023.02.10.03.49.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Feb 2023 03:49:20 -0800 (PST)
+Message-ID: <985921d7-a07c-7ede-d1d3-82bd8a9553f0@linaro.org>
+Date:   Fri, 10 Feb 2023 12:49:18 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfVJ8B1d+gSi6WJw9guJBUkaJwH1yU7N7FpJ-DtL_L6Rg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: nxp,pcf8575: add
+ gpio-line-names
+Content-Language: en-US
+To:     Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+References: <20230210025132.36605-1-twoerner@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230210025132.36605-1-twoerner@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 12:15:15PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 10, 2023 at 12:48 AM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
+On 10/02/2023 03:51, Trevor Woerner wrote:
+> The devices described in this binding represent 8-bit and 16-bit i2c i/o
+> expanders. Allow the user to specify names for up to 16 gpio lines.
 > 
-> First of all, do not top-post!
-> 
-> > Thank you for your response. I was just going to contact you regarding this. I successfully sent these patches to you, Linus and Bartosz while they failed to get delivered to the "*.kernel.org" emails below:
-> > linux-gpio@vger.kernel.org;
-> > linux-kernel@vger.kernel.org;
-> > linux-acpi@vger.kernel.org
-> >
-> > Have these emails changed?
-> 
-> No, but you need to work with your company's IT to understand what's
-> going on. Your mails are only available privately and not in the
-> archives on lore.kernel.org. This is an issue and I'm not going to
-> comment on something that was not in public.
-
-To illustrate what I'm talking about:
-
-https://lore.kernel.org/linux-gpio/CACRpkdZ_sPCa+Q6MWUKj1ytCe5AxTp--bMmbRTUfsNO0kZTMpQ@mail.gmail.com/T/#t
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> ---
+> changes since v2:
 
 
-> > These patches don't have much in common with gpio-mlxbf or gpio-mlxbf2 because the hardware registers and logic have changed across generations. The only similar code between gpio-mlxbf2.c and gpio-mlxbf3.c is the irq handling.
-> 
-> I see, don't forget to put it in the cover letter for the next version
-> (you will send it when you will be sure that emails are going to the
-> kernel.org archives).
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
