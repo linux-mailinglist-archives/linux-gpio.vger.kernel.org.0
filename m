@@ -2,56 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB493692A59
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 23:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F578692A6B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 23:45:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbjBJWmO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 17:42:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
+        id S233995AbjBJWpW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 17:45:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233555AbjBJWmN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 17:42:13 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FE5749AD
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 14:42:08 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id x71so7194155ybg.6
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 14:42:08 -0800 (PST)
+        with ESMTP id S234000AbjBJWpT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 17:45:19 -0500
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C116D75368
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 14:45:17 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-52ec329dc01so68200647b3.10
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 14:45:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=26hWLD5KLKkw4IobX1dhlza6o28KL+X+gg+uQ008c9Y=;
-        b=kjAO4ixdBXxoURlwsMOwtpUwFlGiYNdLuN+PdolZDbrpvWlk1x6X4zAlKz8WNaTQBz
-         7nxqo9eLHG7aDD/cviRWVaML4u2//Bdf3C2v5YU6EwzT+Zeh9xcIt9GSSxKfs1qaNejm
-         wBY8eoEC5iCJhjNNbM3wPx8v8o61YCERxgNQi5qAFGbWSsUFZzZZZoCNmLz9mBW0bEHk
-         L5twlyJKw66LKKLT6irS77UPRzqt1YTTFopcv0Kh/XVOIfDcpPMkxXQ0acxnzsfdguh1
-         3fp/jKKj66UnNShJoYf9OBOja34rmCbYnWojNa3x4m3zfgDJTRd04VIpo5rYiZwgw7Uq
-         oyQQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C8zbQ5UeRyMGBzBZKt+eKJGEp6xhDoMWS6ByqtAI+qQ=;
+        b=jQ66+heze0J6Ozux4oG4WwoV+2CsrGPIRzg+v+qWUt4V83/YkynKLfwyVpYb+1LWaP
+         dPW+6PSP90qh1UZoiGZy855Nf6gP2UwsCAio30PTEy4a8ujL7chBJ9yn0b++wrXuI0c+
+         O1zVLv78LwEp/tzHG+hVFbN+DyHr4mAcv0zuwNizBDOhrrkE7Ed9hCnPLTZ9QDOGgvpp
+         PNQ51xkGp2cOp041e2sIipfx6dTL41Jbck530hz0dmBsuaiwp/P6QznD6xUh2QbsTp1x
+         kxiHqPlVnGJ0PF4Wy3GubcS5OpPTubUhMTtkjwfjsnrRnHKlCzvUFnpCs3YDG0/xXD7/
+         zssA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=26hWLD5KLKkw4IobX1dhlza6o28KL+X+gg+uQ008c9Y=;
-        b=ca+2NJvMWvFKMjeQ+BBswoOYUxXhkLVjCPJUlZINf76TOMItJEjW6r6SY0Le2oN2Jc
-         CeY5OAxobtEHhrbIrWWNL+2VO5sVn/mC7fY7x2e2Tmf+ryqvA45fn7hHjY9maWdhOUgK
-         dvpAW9OUlLcr1INLoJZKUWjEv3bC4gL+jPgjkjar9d7uvL+QdHaTg8BQje6iCh4HVtvM
-         0dRaXvYsZOZv14GftxuV+no8uByX6WM9zV1uhdce2dz47vePfSosgaJXnFgHTrEtsTLU
-         SDj/i4ldJzoeBzSMxDG9G6JNGap2EEZ2c4iIonc9iHDnhUYiF+BaRKQ35myNEFS79jLS
-         Bx5Q==
-X-Gm-Message-State: AO0yUKUisLNgkzcH3KOh7oaZJMk+dSnj2eTialn1d0DwYGttZhqJ5Qpj
-        8rDINQ4vWabxiD0Jw2hexr6T0utCntbLXRepaRT0ASJ48ywYrXzr
-X-Google-Smtp-Source: AK7set++pi9cbqMLRO+KWKmt0V41DP+0fzmqkXucHMaDCx6QdoaC9+K1xNYqQJVZhD+aS/RZcDSOx/+85fWo8oFz6PY=
-X-Received: by 2002:a25:f30e:0:b0:86f:8ba9:9474 with SMTP id
- c14-20020a25f30e000000b0086f8ba99474mr1835840ybs.302.1676068928035; Fri, 10
- Feb 2023 14:42:08 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C8zbQ5UeRyMGBzBZKt+eKJGEp6xhDoMWS6ByqtAI+qQ=;
+        b=JdK9mKrGhmQMvTauzocBDtN2t3WLOXK8SXRffSXCD3PNzWxtLeJY7UUBQySMUUk8/U
+         lD83c7NIAnPFG8U7hbME5Y9r8zfTCwwvjK1Dai8kEfOgPNbEgGfxDjerUBp2aJQ9aH7s
+         DNBd+X9Ngo9yO+sFUnkZYG/ofuvLnj1k+5iWZW1/2VUsveL7vnC2b8+NqDnx4p3VtFRY
+         Mm9xDpn5wP12Up35Cc28xZQcF8GcHXWbDRph5e4ZjdFGoXbW7wkxqmXSKjWTKpZXuBeF
+         s2ayE+znY7HRQVWZ6FPnPhlQQc8lroVb8KKYL8a4eLjMxQ41GsoPbIVkbGGGP9IlPFUU
+         zBHw==
+X-Gm-Message-State: AO0yUKVuHJGy7awW5iDikKmsCrWYu76Ivtc3Tl3p0Er4G0H2A6GtBcRi
+        hNCPeapS+3yD4YrwuUAVdwqGp5jTk6igf5i0+hs0ug==
+X-Google-Smtp-Source: AK7set/6Xvi8CzuNgX79rZvneMkeXDi2US6l2P8G1w1iVzuJBaisym39eN4L1EuUt3tZClsyw0XAtI+QRSxWibIX0QQ=
+X-Received: by 2002:a0d:ff45:0:b0:52e:e6ed:308c with SMTP id
+ p66-20020a0dff45000000b0052ee6ed308cmr61064ywf.524.1676069117008; Fri, 10 Feb
+ 2023 14:45:17 -0800 (PST)
 MIME-Version: 1.0
+References: <20230209143702.44408-1-hal.feng@starfivetech.com>
+In-Reply-To: <20230209143702.44408-1-hal.feng@starfivetech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Feb 2023 23:41:57 +0100
-Message-ID: <CACRpkdax4qmftH974q+269YD65oMfLNFe-FrRSLyAZ_HY1OF0Q@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for the v6.2 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 10 Feb 2023 23:45:05 +0100
+Message-ID: <CACRpkdbao9M5dMHFO_QE8z4_E6DZLZsMUW1OnUNjKSfQc59=ew@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Basic pinctrl support for StarFive JH7110 RISC-V SoC
+To:     Hal Feng <hal.feng@starfivetech.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Andreas Schwab <schwab@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -62,74 +72,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Feb 9, 2023 at 3:37 PM Hal Feng <hal.feng@starfivetech.com> wrote:
 
-some assorted pin control fixes, the most interesting will be
-the Intel patch fixing a classic problem: laptop touchpad IRQs...
+> This patch series adds basic pinctrl support for StarFive JH7110 SoC.
 
-Details in the signed tag, please pull it in!
+This v4 version applied, the driver is in good shape and all bindings ACKed,
+nice work on this driver!
 
 Yours,
 Linus Walleij
-
-
-The following changes since commit 2241ab53cbb5cdb08a6b2d4688feb13971058f65:
-
-  Linux 6.2-rc5 (2023-01-21 16:27:01 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.2-3
-
-for you to fetch changes up to a8520be3ffef3d25b53bf171a7ebe17ee0154175:
-
-  pinctrl: intel: Restore the pins that used to be in Direct IRQ mode
-(2023-02-07 10:13:51 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.2 series:
-
-- Some pin drive register fixes in the Mediatek driver.
-
-- Return proper error code in the Aspeed driver, and revert
-  and ill-advised force-disablement patch that needs to be
-  reworked.
-
-- Fix AMD driver debug output.
-
-- Fix potential NULL dereference in the Single driver.
-
-- Fix a group definition error in the Qualcomm SM8450 LPASS
-  driver.
-
-- Restore pins used in direct IRQ mode in the Intel driver.
-  (This fixes some laptop touchpads!)
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      pinctrl: intel: Restore the pins that used to be in Direct IRQ mode
-
-Guodong Liu (1):
-      pinctrl: mediatek: Fix the drive register definition of some Pins
-
-Joel Stanley (2):
-      pinctrl: aspeed: Fix confusing types in return value
-      pinctrl: aspeed: Revert "Force to disable the function's signal"
-
-Krzysztof Kozlowski (1):
-      pinctrl: qcom: sm8450-lpass-lpi: correct swr_rx_data group
-
-Mario Limonciello (1):
-      pinctrl: amd: Fix debug output for debounce time
-
-Maxim Korotkov (1):
-      pinctrl: single: fix potential NULL dereference
-
- drivers/pinctrl/aspeed/pinctrl-aspeed.c         | 13 +++++++++++--
- drivers/pinctrl/intel/pinctrl-intel.c           | 16 +++++++++++++---
- drivers/pinctrl/mediatek/pinctrl-mt8195.c       |  4 ++--
- drivers/pinctrl/pinctrl-amd.c                   |  1 +
- drivers/pinctrl/pinctrl-single.c                |  2 ++
- drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c |  2 +-
- 6 files changed, 30 insertions(+), 8 deletions(-)
