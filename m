@@ -2,94 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7DF5691E95
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 12:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9685B691F79
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 14:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbjBJLtY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 06:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        id S232199AbjBJNEf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 08:04:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjBJLtX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 06:49:23 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2343D7071F
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 03:49:22 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id l37-20020a05600c1d2500b003dfe46a9801so3909700wms.0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 03:49:22 -0800 (PST)
+        with ESMTP id S232107AbjBJNEG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 08:04:06 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E00177AE38
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 05:04:04 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id n13so3762976wmr.4
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 05:04:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tB5gNRU/MbQprb8j0TWV5I2QJ6yglApm7jTfttA1W+s=;
-        b=Fbaytt/6vfSC8HQfFnVPGnQtxX8HuwZli0T3ctHeBmMgZtzOJ2vvjhO1utdqYFrd11
-         qFg7IF689kisIoiOgUgcOcLFKYoU7xqF+fpjxa8dMQlWInYH2rWYEj7TEgx3dRb1qdZO
-         R2FTc2fT1A6WjwWTSDg7/RS3uk/Pj8edGTikvZHo6UVEqyDe7EMM0jb17C8OiFnaFXKd
-         sJ1GdOB5+6FymExSar5JWNlOwFp/JBE3/3xvK0DW90bkr0QpbMxrujWgDPZBA8btRFmj
-         mQ1ehUyi65l/sIi6giVg6C+wtziYgximwMyyVCxBXR3rIjiyoJidayBJLKXXxOgGsbZG
-         N/tg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ixA9jzJ6GpVnqslHKqpMGo99fPJA21Nf52MUAyWPLy8=;
+        b=eL3khXKUZ/eBE4JTmEQ3Mpxi0QTe4qp9du6M7JWe5lEAqTJkVCoK4rMhtqVV+mzlNQ
+         0wNwwd4h1HazuPAsiaazpQqMXJRakWCAtSRG0TXyit58qnDTrGL/6+qwkLPMRNnKmXsH
+         bZLvQ+Wz1QYtrXSFORHhNWLC3UFEKQNiSpyLoPniiOQPCJq49d80+lbNrEkg9DQcpkG7
+         PRzt7H0hQcRz3lMt79rdFvzEobPFQp6zratJBamv616A2g8Z+FGWfDA2g1cbdnX3W/EV
+         GFHAUT29vDCa6ZXuHYqYfhtDGRn9aSMTjHAMVkOfgin7PYhlKAPEBA+uJtxyAuMKWPxY
+         upfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tB5gNRU/MbQprb8j0TWV5I2QJ6yglApm7jTfttA1W+s=;
-        b=AB5Seq6we0rrFIRPdVuJbm1LkKTMq+ErS/f9S4RhkV1uVwgcOfV6ASkFDaygXSZ9BV
-         pAjTQXOmyQ8wF+w8vZfwzhfTcdvNJqtviNzF13ulL6XNvOYVDsU3kyq6VZTwktF/paor
-         NZlWzMZ7GZVIs3+5tDRKD/67CkJG3ZwtBqqxT1bEwN4XEPAFdFxduskgHWcfqATTr2Cu
-         8wTHg9bR7MNYaEeiE6g2bFbiKm+E1nWUIqABRU7AInN1F44RQXYpKWxmhbDmicXUXJP2
-         xy6mKO78hM2XJ876KNjsuuJJ851esRg3Y43s5JqPjPIEIXR0n+dAJUKDdtCjSlXmUsx/
-         vIdw==
-X-Gm-Message-State: AO0yUKU30m3t3GpB0hfcAcGbkRAdlKNHhOc12O7l8e13vNDT1AMl6B6V
-        arD1pkGVpxaZaccQKiQHQdlLQA==
-X-Google-Smtp-Source: AK7set/1Gsg8u5EZA8fcBKB9kdH65gCgoUVWX3TMIqjLGRyl+q8jQhE4BO6X2f58xxHOBKcAVLyW1Q==
-X-Received: by 2002:a05:600c:1d24:b0:3dc:55d9:ec8 with SMTP id l36-20020a05600c1d2400b003dc55d90ec8mr15856247wms.41.1676029760748;
-        Fri, 10 Feb 2023 03:49:20 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b003dc43a10fa5sm5279319wmp.13.2023.02.10.03.49.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Feb 2023 03:49:20 -0800 (PST)
-Message-ID: <985921d7-a07c-7ede-d1d3-82bd8a9553f0@linaro.org>
-Date:   Fri, 10 Feb 2023 12:49:18 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: nxp,pcf8575: add
- gpio-line-names
-Content-Language: en-US
-To:     Trevor Woerner <twoerner@gmail.com>, linux-kernel@vger.kernel.org,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ixA9jzJ6GpVnqslHKqpMGo99fPJA21Nf52MUAyWPLy8=;
+        b=M3kYHvhFgvLT3U3wd+oQMDzPY4/nEQ10ZqFJcohNnb/6KoO21hI834nAZ+4S18rEJ/
+         +BPwKrJuiWrY6PoggJUhy7XxowPVf31a2bDH5TciT+nMmCO5QK8RgNFafFvUJjHaPq/Z
+         Yi3sAHu90U32m3NCcO+HhzwQSRgAbLLRsn9uNVegLIoESCjPYRNh9M8WSFAaXPfa19vz
+         0KqLmoext8ZvFmlzCdU+NovC7wOodvJEv9ctvO1kscciwOMl8PxkMv/6f48YCFgr5KK5
+         5dQ+W2oXxjMK2qEXOhiTX36yBJq2/HMpHzpCbYIJIRcEMZmE1JoF9pgBPxZ8C8aXTnwn
+         lTRQ==
+X-Gm-Message-State: AO0yUKVZSjfjhqFbb+4hQ3KS4GuUg7eP+PelcHeVCovx+ar/EOwWepWF
+        w9zHMAm8ch2XOIqhAzFJyAeO6A==
+X-Google-Smtp-Source: AK7set/TL22nHy41O2BY3kDURGTenR8zccOioBWdHdjiLntbHbTYIeoNAHfyLDnvRPJLA5dNZvEbTA==
+X-Received: by 2002:a05:600c:4a9c:b0:3dd:1b6f:4f30 with SMTP id b28-20020a05600c4a9c00b003dd1b6f4f30mr16996411wmp.3.1676034243474;
+        Fri, 10 Feb 2023 05:04:03 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d60c:4605:88cb:74c])
+        by smtp.gmail.com with ESMTPSA id p13-20020a05600c468d00b003e001afa274sm5492940wmo.2.2023.02.10.05.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Feb 2023 05:04:03 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-References: <20230210025132.36605-1-twoerner@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230210025132.36605-1-twoerner@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [libgpiod][PATCH] bindings: cxx: fix building gpiod::timestamp with clang
+Date:   Fri, 10 Feb 2023 14:04:01 +0100
+Message-Id: <20230210130401.1181599-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/02/2023 03:51, Trevor Woerner wrote:
-> The devices described in this binding represent 8-bit and 16-bit i2c i/o
-> expanders. Allow the user to specify names for up to 16 gpio lines.
-> 
-> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
-> ---
-> changes since v2:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+Clang's system_clock implementation uses microseconds resolution by
+default and we fail to construct a time_point out of chrono::nanoseconds
+as the library prohibits us from accidentally losing information when
+casting the latter to the former. Use nanoseconds explicitly as the
+resolution of the realtime timestamp.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ bindings/cxx/gpiodcxx/timestamp.hpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/bindings/cxx/gpiodcxx/timestamp.hpp b/bindings/cxx/gpiodcxx/timestamp.hpp
+index 2eaadd2..5efeb4c 100644
+--- a/bindings/cxx/gpiodcxx/timestamp.hpp
++++ b/bindings/cxx/gpiodcxx/timestamp.hpp
+@@ -38,7 +38,8 @@ public:
+ 	/**
+ 	 * @brief Real-time time_point.
+ 	 */
+-	using time_point_realtime = ::std::chrono::time_point<::std::chrono::system_clock>;
++	using time_point_realtime = ::std::chrono::time_point<::std::chrono::system_clock,
++							      ::std::chrono::nanoseconds>;
+ 
+ 	/**
+ 	 * @brief Constructor with implicit  conversion from `uint64_t`.
+-- 
+2.37.2
 
