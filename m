@@ -2,186 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 850466921F6
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 16:22:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D8069226B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Feb 2023 16:39:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232415AbjBJPWI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 10:22:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
+        id S232340AbjBJPj5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 10:39:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232690AbjBJPWE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 10:22:04 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC84199EA;
-        Fri, 10 Feb 2023 07:21:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1676042511; x=1707578511;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=LmSNEV8esOSMvDjVtqmDJTDWfJjJwFsykmECFC1tmc0=;
-  b=ScKv17vqO/JiTnj1Px1rdJvP5JZ+PIRibE8wNQS49uJu9h9uYbQXXy4X
-   f2SxHIluZu1F+rS4/lu0yqdQCWDz19xJAlfgcNlAOiQ5H9bjKVfw3VpvA
-   QL7qV/GaMWG88dCxc949OeXpzWPbmlfvEZDBP4qWWWLi876fVw0cmjzEi
-   v1OwxxSTaRuRwR7DaqSdUPPlhwicVrN43ONi2cq8GS1c1XnzV0iqfiGaK
-   ATtAAia2Fxde0SXaylQO9jKSnhL/G2c0Ew92WZ2ttkAlVrr7clSVKktRw
-   BYd08yWfHN75A0qqGv9TzgplazSleZzMraCm8d0Btgm4S/PM6V494CVGS
-   g==;
-X-IronPort-AV: E=Sophos;i="5.97,287,1669100400"; 
-   d="scan'208";a="200157217"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2023 08:21:50 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 10 Feb 2023 08:21:49 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16 via Frontend
- Transport; Fri, 10 Feb 2023 08:21:49 -0700
+        with ESMTP id S232413AbjBJPj4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 10:39:56 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2085.outbound.protection.outlook.com [40.107.101.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8F155E7D;
+        Fri, 10 Feb 2023 07:39:51 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hrmFGWhb5PzMn1oIkIV8KL4pQfoGBzN2DAuG4AZE+SUPypgV1M3I63WOZnFDcY3uZLi6d86D9p+GigQWMVbkdc0QIvt/zZ/pwY0rwj+pCS5qZqcHYIVfJdYlaErfzFXcqO24POlSPgskDvPoXMdQ/nfWCWRXbob75h4ZHhWJiiaey04pUECA+mhqc4Cg0HeP5ZmtVvub4iL3KwuCibyvSDGDEVyUH2W20AtSBPOxuxAoh/KCJaE1ddNAvqwBXfdzjxR0T7ftvAr5vSHhcMv49xbqhPVl4DwErpY5rvAVsRh58r0hegh1kAvFHNhXh1q19dA+CfMYt6ws6iZsL4nTbw==
+ b=NhdWGb/GMPuyxEd4qa8L4OmBPwbqBjCsWuGgBtPX3ZT4u8om7dgq/MPKNEvbl3ZW7Af48JDi8CeAtDhDsRF0e2Mi4sxPlnlxVt9QPiPKGARiXjvHqjDZ9DunaPlixGBu6OhMQEUaduZewuKSKtaRJIDwMEBBgKKo4W6JNab3hdZ30AjHKFi386oG58xnh9KSonTp4IDA/v6j/1hfBXR6w7Tb+2MrMlrhqcdqu3ieLG1OEY311E09BUXbojreL93oj9dCFKveEIDgtdIyPm1EbpMxv4ZQVk1M3cs44wXZmdCB0DsdPsGnlur2kxJrVmfxmoD+Y6ay1HkCiKmoZkntvA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LmSNEV8esOSMvDjVtqmDJTDWfJjJwFsykmECFC1tmc0=;
- b=QqL8M2Pddr4G0q0BrGBFONgN4kFqXtzrD3XiHEDmEaiU/CeyOu8lw6oKMT7EcZfzGbKcFAXHu+5S5/qVruzg4yLh9ErP7qLbiQcix4O2mbxLCCTS/HwsYXJz3OIXGnWrsCyG0iKnnhfv4jDIqwAhVmaCpCqubaBFdXxoAyIKxICfS03CpvR3nBjBcBiEhi+csa+oWnJGFScgqynFgE1aoyMS9DHL+dWaS9FcGdsFjOAYzlvtuoTQljhi/FoX7QnsdmxUapNXfJFHWspuSNAEoTH7B7Hrzo6QPqyOcE2f0yImfCBfSBmHwABrqJLOa4hbd5IXPiPNVfKEKuqP3wtcDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ bh=3DVFrzdlyWoHDzlyLn5beb9p2OpQlD5M1eD1VKnFWrU=;
+ b=Pa7fEQeHMwTUXktERIlCv6zdczXWRQDUwX6Dyf7z3hhZ8SU1fFhAqBBqUoJqDqqdLB6cdMwjhK4dYIp4bO3+P4WXPvOQlObK9URu9kEcopNkdzGSQbUCJWXaBKABVU2o6XHB54AuiPvkKXT2clfwKBHI8cLR7Qr2rMbnOopNEoA7U7UK6cdI3uHVhy7bBzBZzS4gforE3KA3HjvFAvXxxmQ8n/Oj4sULGC7hoTc8uFVrQFAz/Ga5ZYAIS19LAm6DpfBLgN6SW1+ImP5JUHJKJXAfZepC3bYRJbHc8n29VCtY6txriPr5bMHJWJbcYv7AwmhUx8J6ZUyAFfhQpAfqQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LmSNEV8esOSMvDjVtqmDJTDWfJjJwFsykmECFC1tmc0=;
- b=qAo8Ynoxthu5ssPcSLjn9DWVYdcZSzX7QUonwVagyI1PwWgJkP8z7Un2J3BkMXarJER2bqijheTZj2vp0ZeN32E7jw/ildibenjVs8Hm5y6UmpunWWv+a8LdBfoLLN3VOV5r86Bg7h4GeBP69c5zLElnz2D5K9zGdN10mj5Tx7M=
-Received: from BN7PR11MB2657.namprd11.prod.outlook.com (2603:10b6:406:b1::19)
- by MN0PR11MB6207.namprd11.prod.outlook.com (2603:10b6:208:3c5::21) with
+ bh=3DVFrzdlyWoHDzlyLn5beb9p2OpQlD5M1eD1VKnFWrU=;
+ b=nPonsyrwL6HTuI22W0SQLzzEP3CK8ATCDnmN2XYCI2u6DG6coKYs0bc0f+C01gc1uLHB2gDvvXSiKsNEBRAHOvRY5b7edRxrzBMLOKPCMKpe36V5CaxbaZH5IB8+BvWx2bduF6dq4/H/jOY5175gIX/PN8/gNlk+qBdeQzOWp2PoM9UGyqEeKRoGpivMis8GHn324pGGWFxxco6qQ3t9Xnki/ukoxzv8fisiOKVhfdnsP95Ml9rWDWT2Ds8fMC0TX6VhFZrg7dxKOm0MgO94Z5HZlWrXnxCS4LwNrRYIXdO9x1UAxs65rPGWoC0aA+h6poanaAHgxzCaz8TbHj/PjQ==
+Received: from BN8PR15CA0067.namprd15.prod.outlook.com (2603:10b6:408:80::44)
+ by SN7PR12MB7451.namprd12.prod.outlook.com (2603:10b6:806:29b::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.21; Fri, 10 Feb
- 2023 15:21:48 +0000
-Received: from BN7PR11MB2657.namprd11.prod.outlook.com
- ([fe80::5785:c616:dbb7:5dbd]) by BN7PR11MB2657.namprd11.prod.outlook.com
- ([fe80::5785:c616:dbb7:5dbd%7]) with mapi id 15.20.6086.019; Fri, 10 Feb 2023
- 15:21:47 +0000
-From:   <Ryan.Wanner@microchip.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <Claudiu.Beznea@microchip.com>
-Subject: Re: I2c GPIO Recovery with pinctrl strict mode
-Thread-Topic: I2c GPIO Recovery with pinctrl strict mode
-Thread-Index: AQHZOx16zGlzhrQDN0+TB+zF+/Sngq7GbWGAgAHjgAA=
-Date:   Fri, 10 Feb 2023 15:21:47 +0000
-Message-ID: <961a2164-640a-86b5-980f-73668eb161e4@microchip.com>
-References: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
- <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
-In-Reply-To: <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN7PR11MB2657:EE_|MN0PR11MB6207:EE_
-x-ms-office365-filtering-correlation-id: 000af2c9-62e5-431f-c88b-08db0b7a86c9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ra368qfLVRsL3QLglykjmNYSgg1RS6RIOyv3IGiDhPak2elGBDR0AYtMp5TqHY4WQaGOz23SAIzvlxsHj2P7IqC/W6TNey4rNBRxACvY4GEtz9KuloWtlOG2rVTnm0VDNiXPeFs83bL8XQe5oEtJfyQSM15dxSlKkRKb69pcGGE/u9GAmyBUCJBp5VSAoBe+/V7JgjwMnXouImmKL2N5v9uqla2HMVkAM797FSmcHYAs2lYYQDQyY0phKM9B8QfypYLuJP+d1EHsuqY9QK2rlH5pjzVBUarQnqioFydxSNRWEhxByvvva9+9/IH4s+CX9dFEVXVP8oN8CJq/xrVGVI9aN3JETS0Awckyl46H7+VtVnf8pOFhluMFn9FeZhbgvdceBHCu8MbDu9gEYGT6zJ94vqePi89PpaDyouzAkQXvANI8C+GbqNCWOyPDWK1MIoNXZ5DnLkodr8Aqbvt0r8guP4FmGgECLnNZo3DhhdpOixOTB8RpbKvwDJeoiwg1SDlIdtQo0ViRKRH59UorTnqNF+hkl6aG36o9y0YklDYU9T6/IsMxX47dXKDb1Xt0VUu7lrJlPbkmtP37PvQppHXA43doqERndv9zK5CmOvcwSQIfxunevCRyvqs0xNi4ZWb9rv+792ClNwCrIi2uV72WYRtF/Ehi/PFsCkbnFEJnyc49rIq6VioLsn59b9dbCrJTvPzfPLDXFo2HJ1P1J3OFTMdqJHIcrSabfY34bsQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2657.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(366004)(346002)(396003)(136003)(376002)(451199018)(36756003)(38070700005)(31696002)(86362001)(64756008)(91956017)(4326008)(66446008)(8676002)(6916009)(66946007)(41300700001)(66476007)(8936002)(76116006)(66556008)(5660300002)(6486002)(54906003)(316002)(2906002)(83380400001)(38100700002)(6512007)(122000001)(186003)(26005)(6506007)(53546011)(478600001)(71200400001)(2616005)(107886003)(31686004)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bDZ1YkhkMFZFdHF4UVQvOWNxQmlyMmV6eStDbkVCa002QXJNWGN5eGk4Y3Rp?=
- =?utf-8?B?eXFSS3RYRXFyMTVJdkFRSVNENnlRSG1WWFArUGgzcEJmZWF2UWFBdU1zcURY?=
- =?utf-8?B?Y0R0Q2NjQmRGZTRHRUJmR0dnbGRLV2NwK1JGYlpxUUpaOEk4NUN3RUlxTUtm?=
- =?utf-8?B?OUdpRjdCb1BSb0dlMGhWMFoxK2RFc2czamJGbnpMOXJ3RVB0NGtvQVhab3dW?=
- =?utf-8?B?Y0dLZWl0dFFvOFRFQmFwSFFqdjNjYlFXN2pCT1JJVVkwSXJveExIVzRUbDZJ?=
- =?utf-8?B?RlVxY0FkMU5PSkZEbGxHL2lha1VyYThXNjZUUHI2b29HY2hBUGlQQkxaYVlW?=
- =?utf-8?B?THpkTS82YVV0b1FzUUZsK2Fha0FrSWdlWHB5c1RyL0FEdmhvTUtjd1VtS2dM?=
- =?utf-8?B?cC81N3BSOENhTVhWNmhLR3Z2cFlHNVdQRk1RQlF3RWJFV0ozMUFVcDluOWtP?=
- =?utf-8?B?czRrWGkyYVdWRUFIMXJtaDQ3Yy95TE10R2FzMWRpM3ZpS3JWZGdwOFNxVEFr?=
- =?utf-8?B?NTdERTQzMGNJRUh0RTJEZFNLd0kwOCtxYnRNSTYwL2R0MVYrVnQ1WHNHMGo5?=
- =?utf-8?B?eWJoY0xKbDYrbzZzVTQzUDRYOC9uNVFjTmN3NVFyaFdCY1h1Vi9OWFE4eXhE?=
- =?utf-8?B?aVdpSWJPeTY1NVBYQTNyT3d1cW5PYUI2RGJtcC9nZ0ptVzFFMFArUnBxMnBN?=
- =?utf-8?B?L0ZKaTh6UElDNHRWM09ZR3NXck54ekJVdGJTYzdKMnJZK1RTb2dIQlJ5MEtC?=
- =?utf-8?B?RnFLdkFaanFNN0FRY2FXUUxmczRGT2duNmRLb1lxUUlZMW9SZ3YzZms0djdU?=
- =?utf-8?B?T3dIckYwcWozOFFEUVZKQ2dlNEZDQjFRY2MwS1B6aStVQThSWjBMSXV1OHpB?=
- =?utf-8?B?TStVcFZDSVpFN2NNdERGUlQzczFpbnIvRGVVTE1zSGtPSWVpaEQrcXZ1VW9r?=
- =?utf-8?B?azdNZ3ZvTGNVY0NtdmZsbnU5eGVZOWlkOURJTVVtaHU5bXBjYkptcldCK2hp?=
- =?utf-8?B?TlFsaDhCWkVpb3ZlR3Z4R0hyanlqdURCLzBhWlRiald3bFZGaWhMNloxSlds?=
- =?utf-8?B?RVQ1ak9lRFY5SmNuaTA2STNtNXhhbDhlczhsaVJYV2h6eENla0VDbjNEWEoy?=
- =?utf-8?B?VUF1d2V5RlE1V1VheG05RStLN1FlMUlGd3lUY0NKOXA1ZVJWUm5UZ0xveTls?=
- =?utf-8?B?NkxLTkg5cUQyVEtIM0dvM09lUlFYYVpqWlpXenMyZDZUaU10V29Pa2hRNjJZ?=
- =?utf-8?B?bnJXMTlYei80YlNEdG1xL3ozOThDNTl3Rzg0OEJTTHMxaDk3QmIvYWhmVlNV?=
- =?utf-8?B?TEZQRW9ueVhPNEZWd0tBR04vSUtJRVZqempJY1h5WXpFTjZ5Wnk4WUZmVllV?=
- =?utf-8?B?MWM5azVuaVVrVXVHOTNwTGJvV3czOTU1TWNrb2FSNTJ3WG5KYi9WUnAyU2tO?=
- =?utf-8?B?WE5hYzNXMGNta2Z3TGxxcTM0RkVsQ0ZUVnZJS3lyRXlveVRvOFZKcGFLTUgz?=
- =?utf-8?B?Ulc4eU1MOVkvUDlub2t6ZzZYbStPZ05zNEtIRlhCbjFuQmpFUXVVUVgvN3dt?=
- =?utf-8?B?dUc2VUZ4UjA5WXg1T0I0SnpnLzM2S0JkR3JJY0JidjBTMUE5MXFtTHlTMjZo?=
- =?utf-8?B?Ym8zeVBER2RIYnFNUFBtVlZ1QngrSEE0dk90Q0x6TVl6akQ4MWRyRkpNaUVk?=
- =?utf-8?B?TkwybjdrTlpscVRVMUpSVEEvaU95dlB5eENVVlBYeXdNTWtuUGhDaXV0VE5q?=
- =?utf-8?B?TzlFYXJ1YTgzY090alZHRVk5Q3FNT1c4Q1Vjd3lQSExPQWtRTkIyRW9aWlZX?=
- =?utf-8?B?UGcrbEJCQUVLWUFwNHBQQ0N4Y0k2ODMxR2xXL0NkdjNZdU9OQmdjcm5wdE4z?=
- =?utf-8?B?R3hWKzNkaE9Lb0hDb3MzeHd2NXlUNTRUbkdUVzdQMThBWVBIN2s2SE9aS1U4?=
- =?utf-8?B?Ty85bWpWencvSzRicHMzYklsLzUzZHpkRUJ0MW9RNEhCUHNMYngvTXNZeGpI?=
- =?utf-8?B?ZmtFRWZPbmxjeDZ6VE9GNEtnUi92ZmRzNC81REp3MzFjZzRPcEc4dTBNbCth?=
- =?utf-8?B?U0U5cHo4ay9FNWdhZnU2dGk4YXpDOHFJdjc0a3JUVGhUYTRIcCtHOUtRMytu?=
- =?utf-8?Q?alYj09P6aZm5A2FvZFxScjFmB?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <31041DFEABE5284EB98E00DE0DBA5E52@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ 2023 15:39:49 +0000
+Received: from BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:80:cafe::61) by BN8PR15CA0067.outlook.office365.com
+ (2603:10b6:408:80::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.21 via Frontend
+ Transport; Fri, 10 Feb 2023 15:39:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BN8NAM11FT050.mail.protection.outlook.com (10.13.177.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6086.21 via Frontend Transport; Fri, 10 Feb 2023 15:39:49 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 10 Feb
+ 2023 07:39:46 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 10 Feb 2023 07:39:45 -0800
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.36 via Frontend
+ Transport; Fri, 10 Feb 2023 07:39:45 -0800
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>
+CC:     Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH v3 0/2] Add NVIDIA BlueField-3 GPIO driver and pin controller
+Date:   Fri, 10 Feb 2023 10:39:39 -0500
+Message-ID: <cover.1676042188.git.asmaa@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2657.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 000af2c9-62e5-431f-c88b-08db0b7a86c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2023 15:21:47.7718
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT050:EE_|SN7PR12MB7451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78ec9ae7-ebd1-4e94-4c04-08db0b7d0b92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UJvpXEpW4dUvkBtiERIcSX8vWOvTLMUttwJEJJ2/t7YMt+7rS0iLorLP50kRahapFQv976ScOvGSFoqixi3D0IHmZsDLjsNb6LPLbToTtvJuiudOoxN323QHKFFqD1Igv8Ym18eeewFrRO9o9DYwv6v/8pZpRKyO5kx5K4Vr/2G7W4lWExT9sH+PXwzogcWgZEcYNKJ2tnVEn/dDUoMSvJEt9l191k9QUtg/9WexXfURqv0Ahrc7q2frQyUXLzA2xcY4f5jQXrnM//cZYJAMVBrcsf46wYHgmeAqkXWykTUkCgs6zrng98IYa0tNDCC4ontGQsQsqkZWDfAqEKg+9Jo7LqH8ZEc1sRopImVQ+tC9T5WqqQ44PZCiop0OQr2PENoTq+EBeRCANmZjRKhw0orhfkIahnfwbBOj20yi0bwGWps7C4SsfmaPZf23CdIU12Wqjmy7L5NX/T/BRFd2Ui4h0NKNNiYSL7WAT7QKoj3o1nixGfGmIjdboh8kixOZtFecgEdHkY1Fm3nJDjbpYvU0hjGWucox1QBkZXcef1L2wEH24b6kQbGmHdf1mSwdAwW5mTRNzZEQLr3x4GdMwF0MwZ0MdFR/0/m/i0v+Pi6EglrFWlbBSF2/odecQjdKLA/cSygDC1aD8ZqFNyefHWvg055iLEPQCBYzs2jHTxK9CaM9HLzYwAQULX4A7b0I/W1yRIVovE2OQFrxOIKe+Q==
+X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(39860400002)(396003)(136003)(451199018)(40470700004)(36840700001)(46966006)(82310400005)(8676002)(450100002)(186003)(8936002)(70586007)(70206006)(4326008)(36756003)(86362001)(82740400003)(7636003)(356005)(2616005)(426003)(47076005)(336012)(40460700003)(2906002)(107886003)(316002)(7696005)(41300700001)(5660300002)(6666004)(26005)(40480700001)(478600001)(36860700001)(83380400001)(110136005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 15:39:49.4136
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GewKeNbCuHkl+zN7gJYubUk+8N4AxpjG+TPxW/nL/qYFrt71WKyA+x2fCp4JK/LwiG/4hRyAOoq1gYhkGZXuijcsJOl18NH8VLZ2q4raOqY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6207
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78ec9ae7-ebd1-4e94-4c04-08db0b7d0b92
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7451
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gMi85LzIzIDAzOjMyLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPiBFWFRFUk5BTCBFTUFJTDog
-RG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBrbm93IHRo
-ZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIFR1ZSwgRmViIDcsIDIwMjMgYXQgNjo1NiBQTSA8
-Unlhbi5XYW5uZXJAbWljcm9jaGlwLmNvbT4gd3JvdGU6DQo+IA0KPj4gTXkgbWFpbiBpc3N1ZSBp
-cyB0aGUgcHJvY2VzcyBvZiBmcmVlaW5nIG93bmVyc2hpcCBvZiBhIHBpbihzKSBoYXZpbmcNCj4+
-IGFub3RoZXIgZHJpdmVyLCBpbiB0aGlzIGNhc2UgZ3BpbywgdG8gdGFrZSBvd25lcnNoaXAgdGhl
-biBmcmVlIHRoYXQNCj4+IG93bmVyc2hpcCBiYWNrIHRvIHRoZSBkZWZhdWx0IHN0YXRlLCBpbiB0
-aGlzIGNhc2UgaXQgd291bGQgYmUgYmFjayB0bw0KPj4gaTJjLg0KPj4NCj4+IEkgaGF2ZSB0cmll
-ZCBjYWxsaW5nIHBpbm11eF9kaXNhYmxlX3NldHRpbmcoKSBhbmQgdGhlbiBjbGFpbWluZyB0aGUN
-Cj4+IGdwaW9zIHRoZW4gZW5hYmxpbmcgdGhlbSBmb3IgcmVjb3ZlcnkgdGhlbiBkaXNhYmxpbmcg
-dGhlbSBhZ2Fpbi4gVGhpcw0KPj4gY2F1c2VzIGxvdHMgb2Ygd2FybmluZ3MgYW5kIHNvbWUgY2Fz
-ZXMgdGhlIGZ1bGwgb3duZXJzaGlwIGlzIG5vdA0KPj4gdHJhbnNmZXJyZWQuDQo+Pg0KPj4gSXQg
-c2VlbXMgdGhhdCB3aGF0IEkgYW0gYXR0ZW1wdGluZyB0byBhY2hpZXZlIGlzIG5vdCBkb2FibGUg
-Y3VycmVudGx5Lg0KPj4gSXMgdGhpcyB0aGUgY2FzZSBvciBhbSBJIG1pc3Npbmcgc29tZSBleHRy
-YSB0aGluZ3MgbmVlZGluZyB0byBwcmVwYXJlDQo+PiBmb3IgdGhpcyBhY3Rpb24/DQo+IA0KPiBU
-aGVyZSBhcmUgc2V2ZXJhbCBvdGhlciBpMmMgYnVzIGRyaXZlcnMgZG9pbmcgdGhpcyBhbHJlYWR5
-LCBmb3IgZXhhbXBsZQ0KPiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQo+IA0KPiBUaGUg
-aWRlYSBpcyB0byBoYXZlIHNvbWUgZGlmZmVyZW50IHBpbmN0cmwgc3RhdGVzIGFuZCBtb3ZlIGJl
-dHdlZW4NCj4gdGhlbSBleHBsaWNpdGx5IGluIHRoZSBkcml2ZXIgdG8gbW92ZSBwaW5zIGZyb20g
-aTJjIG1vZGUgdG8gR1BJTw0KPiBtb2RlIGFuZCBiYWNrLg0KPiANCj4gVGhlIGlteCBkcml2ZXIg
-ZGVwZW5kIG9uIHRoZSBhYmlsaXR5IG9mIHRoZSBpLk1YIHBpbiBjb250cm9sbGVyIHRvIHVzZQ0K
-PiB0aGUgcGlucyBhcyBhIGNlcnRhaW4gZnVuY3Rpb24gYW5kIEdQSU8gYXQgdGhlIHNhbWUgdGlt
-ZS4NCj4gDQo+IFRoaXMgaXMgZHVlIHRvIHRoZSBpbXggcGluIGNvbnRyb2xsZXIgbm90IHNldHRp
-bmcgdGhlIC5zdHJpY3QgYXR0cmlidXRlDQo+IG9uIHRoZSBzdHJ1Y3QgcGlubXV4X29wcyBzbyB0
-aGF0IHBpbnMgY2FuIGJlIHVzZWQgaW4gcGFyYWxsZWwgZm9yDQo+IGkyYyBhbmQgR1BJTyBhbmQg
-Z3Bpb2RfZ2V0KCkgd2lsbCBub3QgZmFpbC4gQnV0IHRoZSBBdG1lbCBkcml2ZXIgZG9lcw0KPiBu
-b3Qgc2V0IHRoaXMgc28geW91IHNob3VsZCBiZSBmaW5lIEkgdGhpbmsuDQo+IA0KSSBhbSB0cnlp
-bmcgdG8gZW5hYmxlIC5zdHJpY3QgaW4gdGhlIEF0bWVsIHBpbmN0cmwgZHJpdmVyLCBhbmQgdGhh
-dCBpcw0Kd2hhdCBpcyBjYXVzaW5nIG15IGlzc3Vlcy4gSSBoYXZlIHRyaWVkIGEgc2ltaWxhciBh
-cHByb2FjaCB0byB0aGUgaW14DQpkcml2ZXIgYnV0IGl0IHNlZW1zIEkgY2Fubm90IHRyYW5zZmVy
-IG93bmVyc2hpcCBjbGVhbmx5Lg0KDQpCZXN0LA0KUnlhbg0KDQo=
+This series of patches creates a pin controller driver and GPIO
+driver for NVIDIA BlueField-3 SoC.
+The first patch creates a GPIO driver for handling interrupts and
+allowing the change of direction and value of a GPIO if needed.
+The second patch creates a pin controller driver for allowing a
+select number of GPIO pins to be manipulated from userspace or
+the kernel.
+
+The BlueField-3 SoC gpio-mlxbf3.c driver handles different hardware registers
+and logic that from gpio-mlxbf.c and gpio-mlxbf2.c.
+For that reason, we have separate drivers for each generation.
+
+Changes from v2->v3:
+Addressed the following comments from maintainers:
+- bgpio_init can handle direction_input and direction_output
+- Update pinctrl Kconfig to select GPIO_MLXBF3
+- remove unnecessary #includes from gpio-mlxbf3.c and pinctrl-mlxbf.c
+
+Asmaa Mnebhi (2):
+  Support NVIDIA BlueField-3 GPIO controller
+  Support NVIDIA BlueField-3 pinctrl driver
+
+ drivers/gpio/Kconfig            |   7 +
+ drivers/gpio/Makefile           |   1 +
+ drivers/gpio/gpio-mlxbf3.c      | 262 ++++++++++++++++++++++++
+ drivers/pinctrl/Kconfig         |  10 +
+ drivers/pinctrl/Makefile        |   1 +
+ drivers/pinctrl/pinctrl-mlxbf.c | 341 ++++++++++++++++++++++++++++++++
+ 6 files changed, 622 insertions(+)
+ create mode 100644 drivers/gpio/gpio-mlxbf3.c
+ create mode 100644 drivers/pinctrl/pinctrl-mlxbf.c
+
+-- 
+2.30.1
+
