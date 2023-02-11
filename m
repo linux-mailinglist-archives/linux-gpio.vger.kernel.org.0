@@ -2,73 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 763CA692B75
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Feb 2023 00:39:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A043692D7D
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Feb 2023 04:07:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbjBJXjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Feb 2023 18:39:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        id S229540AbjBKDHA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Feb 2023 22:07:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbjBJXjq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 18:39:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95438A253;
-        Fri, 10 Feb 2023 15:39:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C46BA61EDA;
-        Fri, 10 Feb 2023 23:38:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 35868C433D2;
-        Fri, 10 Feb 2023 23:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676072328;
-        bh=tWF3stMTI3D2fjeGMM2sCw7H6XS4vtyDCXpcCtpVuXQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=oqlaz3HROov+GzG8Y2iaJs1u77pmLnvP925eDVkyhD5SonjcqS8+/718Ez8Ta9HUo
-         2ufrLSLulkeQ2/Y8QRRpE9Cvu14NtePY7nrv28ZSQokp9Svm8BjCu/2/9BitAx0ryc
-         ig/3NJje7daKbRgSysQZ5CK7kiPktb1hiMiYQHu0QGgITXXzsZnYDZRSTY/lff3a0g
-         jU/ElLetxIoYWZwdks8EAanPfVjrQykxzvCOPPpMZ5PyvqJdzrQO9XHfjOGXMcofCp
-         bni8VCG/KPJTqGqV3WP4tJ/whUmguQz3XXepStPBPaaIJSsEA1QrRL6zvFPZqYGJqo
-         ktQMMT7R6ZSqQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 22738E55F00;
-        Fri, 10 Feb 2023 23:38:48 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control fixes for the v6.2 series
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdax4qmftH974q+269YD65oMfLNFe-FrRSLyAZ_HY1OF0Q@mail.gmail.com>
-References: <CACRpkdax4qmftH974q+269YD65oMfLNFe-FrRSLyAZ_HY1OF0Q@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdax4qmftH974q+269YD65oMfLNFe-FrRSLyAZ_HY1OF0Q@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.2-3
-X-PR-Tracked-Commit-Id: a8520be3ffef3d25b53bf171a7ebe17ee0154175
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 545c80ab3428df0d693f6b99b57f3c6ada34494d
-Message-Id: <167607232812.6240.942893665514908197.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Feb 2023 23:38:48 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229491AbjBKDG7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Feb 2023 22:06:59 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E320D301BC;
+        Fri, 10 Feb 2023 19:06:56 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id j9so4905989qvt.0;
+        Fri, 10 Feb 2023 19:06:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2TDBKZBTZbMMfOeZNMhoUJ0z+JUybx5iBV75f0j4k6w=;
+        b=my9udRAu7tl5AKlQTTKUpXKYFYyDxf6i0zL73CHjD+FBgCWUT6iPzXaoexuVd0VYbk
+         VzwqR3Ko6LQ3ubMKUATiCwN1VpxV5+h43QvYLcSixtmItSaSgbof31a6tKpU8LjFs/Qu
+         iQHNzwIO6JmNtHz+46Ydvy5IIwM5/jXMWO2jQfI6nOmrniRA25FApW+oczAUrY33WowX
+         x2/FygFMPx5eBGGdgbA130uZ+6M8sf2CFfaD0Rp3hz3EPdG33IMDKXCtCAc+9btWPQlN
+         SIEMVWSzMyGrT8UCbp8B2h3w/pvJxro9itX1jKCMvBIHLM0AXXsHILyIYsK/Zt0n02J4
+         lHCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2TDBKZBTZbMMfOeZNMhoUJ0z+JUybx5iBV75f0j4k6w=;
+        b=wDyCWVOXCC3LoWHFhoP7IQGsppV8JfOrKv1TRsBd18WWmwHmCnS7CnZTcuOBvg+8op
+         9rPgg0m/JU5hPaxqo3T/m45CvBAyJ9XOkESM/Itv8wfjRyqC13Tf4rr161aNTdeSZ8wf
+         Qhs2jT9lr9AnDEElfdaTluQh8kqnJV5WbOLCpluEOMbH8TJx99edy2kz3nHHezvEUh2+
+         a+uqmHdG6J6DIUdd9b+hwj0UFPzkuYCLWSAQTidZNGcUDqbkXWTu2bAM2GyAtAFE0Ev2
+         oMWI0BJexprDJiI2ZheDReJv7cOe9w0FhIvxsllwdj3OY/V1InqNLre6+p0iRam3+E78
+         PiXQ==
+X-Gm-Message-State: AO0yUKV2cZa1zSJVnaa1W4G6EjEI73rbNUtjtp8fwPXgVESD6yglT9J3
+        jcbGTo3WW8XPIac9Mq2DlBuc2qvu/Ck=
+X-Google-Smtp-Source: AK7set+kgKbpFVSNtNOPmhbT8NjZxv0/pYhecNq9UhpKCadjuBsXvflUav52R3KCeDP3s9dkQohzww==
+X-Received: by 2002:a05:6214:29e2:b0:56c:22d7:3906 with SMTP id jv2-20020a05621429e200b0056c22d73906mr18322447qvb.25.1676084815727;
+        Fri, 10 Feb 2023 19:06:55 -0800 (PST)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id t73-20020a37464c000000b007186c9e167esm4789186qka.52.2023.02.10.19.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Feb 2023 19:06:54 -0800 (PST)
+From:   Trevor Woerner <twoerner@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio.txt: expand gpio-line-names recommendations
+Date:   Fri, 10 Feb 2023 22:06:45 -0500
+Message-Id: <20230211030646.24549-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.36.0.rc2.17.g4027e30c53
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 10 Feb 2023 23:41:57 +0100:
+Provide more guidance to differentiate between recommendations for names of
+lines which are hard-wired to on-board devices, versus recommendations for
+names of lines which are connected to general-purpose pin headers.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.2-3
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ .../devicetree/bindings/gpio/gpio.txt         | 41 +++++++++++++------
+ 1 file changed, 29 insertions(+), 12 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/545c80ab3428df0d693f6b99b57f3c6ada34494d
-
-Thank you!
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 5663e71b751f..d82c32217fff 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -154,18 +154,35 @@ of the GPIOs that can't be used.
+ 
+ Optionally, a GPIO controller may have a "gpio-line-names" property. This is
+ an array of strings defining the names of the GPIO lines going out of the
+-GPIO controller. This name should be the most meaningful producer name
+-for the system, such as a rail name indicating the usage. Package names
+-such as pin name are discouraged: such lines have opaque names (since they
+-are by definition generic purpose) and such names are usually not very
+-helpful. For example "MMC-CD", "Red LED Vdd" and "ethernet reset" are
+-reasonable line names as they describe what the line is used for. "GPIO0"
+-is not a good name to give to a GPIO line. Placeholders are discouraged:
+-rather use the "" (blank string) if the use of the GPIO line is undefined
+-in your design. The names are assigned starting from line offset 0 from
+-left to right from the passed array. An incomplete array (where the number
+-of passed named are less than ngpios) will still be used up until the last
+-provided valid line index.
++GPIO controller.
++
++For lines which are routed to on-board devices, this name should be
++the most meaningful producer name for the system, such as a rail name
++indicating the usage. Package names, such as a pin name, are discouraged:
++such lines have opaque names (since they are by definition general-purpose)
++and such names are usually not very helpful. For example "MMC-CD", "Red LED
++Vdd" and "ethernet reset" are reasonable line names as they describe what
++the line is used for. "GPIO0" is not a good name to give to a GPIO line
++that is hard-wired to a specific device.
++
++However, in the case of lines that are routed to a general purpose header
++(e.g. the Raspberry Pi 40-pin header), and therefore are not hard-wired to
++specific devices, using a pin number or the names on the header is fine
++provided these are real (preferably unique) names. Using an SoC's pad name
++or package name, or names made up from kernel-internal software constructs,
++are strongly discouraged. For example "pin8 [gpio14/uart0_txd]" is fine
++if the board's documentation labels pin 8 as such. However "PortB_24" (an
++example of a name from an SoC's reference manual) would not be desirable.
++
++In either case placeholders are discouraged: rather use the "" (blank
++string) if the use of the GPIO line is undefined in your design. Ideally,
++try to add comments to the dts file describing the naming the convention
++you have chosen, and specifying from where the names are derived.
++
++The names are assigned starting from line offset 0, from left to right,
++from the passed array. An incomplete array (where the number of passed
++names is less than ngpios) will be used up until the last provided valid
++line index.
+ 
+ Example:
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.36.0.rc2.17.g4027e30c53
+
