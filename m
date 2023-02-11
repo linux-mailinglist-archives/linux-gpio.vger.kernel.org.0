@@ -2,76 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C28C6692F5C
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Feb 2023 09:25:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E10F0692F82
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Feb 2023 09:45:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjBKIZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Feb 2023 03:25:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
+        id S229767AbjBKIpK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Feb 2023 03:45:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjBKIZU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Feb 2023 03:25:20 -0500
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D967832CF6;
-        Sat, 11 Feb 2023 00:25:14 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 6DE8424E2AF;
-        Sat, 11 Feb 2023 16:25:05 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sat, 11 Feb
- 2023 16:25:05 +0800
-Received: from [172.16.16.234] (113.72.145.145) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sat, 11 Feb
- 2023 16:25:04 +0800
-Message-ID: <4211d93d-702c-6759-6f25-f86160c0be5d@starfivetech.com>
-Date:   Sat, 11 Feb 2023 16:24:59 +0800
+        with ESMTP id S229764AbjBKIpG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Feb 2023 03:45:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A5561D18;
+        Sat, 11 Feb 2023 00:44:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 59735B8265C;
+        Sat, 11 Feb 2023 08:44:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C7EC433EF;
+        Sat, 11 Feb 2023 08:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1676105084;
+        bh=e4p3EfDk6PE2hribcSKd91RgeGPv/7wNlON+CBw55wQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YHOqJ7Ek4jtd9+4Gmvyt4opibsuubv6BOkxW9APKkNpqF3Xz0u/x3FafVvE9Bm9Px
+         BVgwRAZBbiLwSQh2jKdrZ7iVozVdNflJGqw12CQluQHLirBY2HqqBUdpN3wU0Y+RMa
+         8gZWIs1jlvzXtlWZ6d6cK0HR6cd6dHVORtl06IrM=
+Date:   Sat, 11 Feb 2023 09:44:41 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tharunkumar.Pasumarthi@microchip.com
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH v4 char-misc-next] misc: microchip: pci1xxxx: Add
+ OTP/EEPROM driver for the pci1xxxx switch
+Message-ID: <Y+dVeeSODu8w5ns9@kroah.com>
+References: <20230209044237.3927293-1-tharunkumar.pasumarthi@microchip.com>
+ <Y+S05tQ5e5pE9/v0@kroah.com>
+ <PH7PR11MB59588BF687D7D2EDAC36E4899BDF9@PH7PR11MB5958.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v5 0/4] Basic pinctrl support for StarFive JH7110 RISC-V
- SoC
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, Andreas Schwab <schwab@suse.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor@kernel.org>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20230209143702.44408-1-hal.feng@starfivetech.com>
- <CACRpkdbao9M5dMHFO_QE8z4_E6DZLZsMUW1OnUNjKSfQc59=ew@mail.gmail.com>
-Content-Language: en-US
-From:   Hal Feng <hal.feng@starfivetech.com>
-In-Reply-To: <CACRpkdbao9M5dMHFO_QE8z4_E6DZLZsMUW1OnUNjKSfQc59=ew@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.145.145]
-X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR11MB59588BF687D7D2EDAC36E4899BDF9@PH7PR11MB5958.namprd11.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 10 Feb 2023 23:45:05 +0100, Linus Walleij wrote:
-> On Thu, Feb 9, 2023 at 3:37 PM Hal Feng <hal.feng@starfivetech.com> wrote:
+On Sat, Feb 11, 2023 at 05:07:43AM +0000, Tharunkumar.Pasumarthi@microchip.com wrote:
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Thursday, February 9, 2023 2:25 PM
+> > To: Tharunkumar Pasumarthi - I67821
+> > <Tharunkumar.Pasumarthi@microchip.com>
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the
+> > content is safe
+> > 
+> > > +     } while (data & EEPROM_CMD_EPC_BUSY_BIT);
+> > 
+> > That's a very busy "sit and spin" loop here, what happens if the read of the
+> > bit never actually succeeds?  You just locked up the system with no way to
+> > interrupt it :(
+> > 
+> > Please provide some sort of timeout, or way to break out of this.
+> > 
+> > > +
+> > > +     if (data & EEPROM_CMD_EPC_TIMEOUT_BIT) {
+> > > +             dev_err(&priv->pdev->dev, "EEPROM write timed out\n");
+> > 
+> > How can the timeout bit happen if the busy bit was still set?
+> > 
+> > And what can userspace do about this if it is reported?
 > 
-> > This patch series adds basic pinctrl support for StarFive JH7110 SoC.
-> 
-> This v4 version applied, the driver is in good shape and all bindings ACKed,
-> nice work on this driver!
+> Hi Greg,
+> If EEPROM_CMD_EPC_BUSY_BIT is set for more than 30ms, it will be cleared automatically by the hardware logic and EEPROM_CMD_EPC_TIMEOUT_BIT bit will be set to indicate the timeout. User space application will inform user about timeout on EEPROM write/read when this error occurs.
 
-v4? Is this a typo? This series is v5.
-Anyway, thank you so much!
+Ok, if the bit being set will notify userspace of the issue, then why
+also spam the kernel error log?
 
-Best regards,
-Hal
+thanks,
+
+greg k-h
