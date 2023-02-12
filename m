@@ -2,112 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7246269385F
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Feb 2023 17:14:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0B569396C
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Feb 2023 19:47:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjBLQOz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Feb 2023 11:14:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
+        id S229558AbjBLSrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Feb 2023 13:47:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjBLQOy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Feb 2023 11:14:54 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A435911E85
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 08:14:53 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id n13so7127758wmr.4
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 08:14:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MF7/vbJs0MIasH4Urg58rp48T2rF3hjYXHHT6Ln6xtQ=;
-        b=efgPoAyvsUx1cIKnzwm/LdjiDGwm/n1mEoJu7i1Oiokqc+Ur2TTo154uQNt6rxcHOW
-         QcRPITcuX0oDApdp4/UX6gBv2rwuIo82hPMLKvloTB/FogolfYxedlu8W+L9bg+4xJhO
-         RuxJdaKSD0Ii2883U5tSlsIqFTNaUqLwivhH/YKeEQG/8mvWO71HGBtZjSbOwz0w+RjS
-         8Yg51cuyIT8+fA1boMwV3SFd77ls4pWK93VxjboD03c9u/6tku1qTozQ6WuDk0irW4rj
-         /teCEEMQCxdH8mywej05YsbwlMwzkOw7w4bCR2P/YDV+HIS1sUH/EB9JWevcgTWkd9mW
-         /pRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MF7/vbJs0MIasH4Urg58rp48T2rF3hjYXHHT6Ln6xtQ=;
-        b=rxNgPillLmuCqZEvbkdpybJFXAG+bfDDDSiisIizRGR3D8nnaiA+8iJhyaa3J+EI8b
-         O0c8R3ipZcfISr00s3lv8ko+DzW0qzWUJzeivijdw5c1iiceVkbJbghf3IojKTZYTegg
-         U/i8CfRb94dI3ICKhN0DgYJ81dXaqjK/xhcQbhFkc2bYFlGEvGyRru/7iY5o5TRlvqtb
-         4WX3NJcgCYqus0dWl/aZ0UgHB42PUC3SPYHWq/HzqQxWmp2mTASeyVQ0MUKj6bdMsVKu
-         whLqmDmZIZYlmBAPL8uJqh9cSMAWMt83yXzaThhBuiAOhkJakoH/gIT84eH8pTGv4SZj
-         pbsQ==
-X-Gm-Message-State: AO0yUKUldgbj5DgJnj2ZX8j7RCUnfs+c66e8QRXCBl6x/OJcCQaCZQXv
-        BW5uz2HQIKNdmsmGt3K7Tu8I9Q==
-X-Google-Smtp-Source: AK7set82gpA3fZoua53Cnxd03waql62CWCqDMUJBLUpUtt88FI+piYIUYuM7vRs9wt4H3r4tPV+vFg==
-X-Received: by 2002:a05:600c:4b1b:b0:3dc:53da:328b with SMTP id i27-20020a05600c4b1b00b003dc53da328bmr20546758wmp.14.1676218492273;
-        Sun, 12 Feb 2023 08:14:52 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id j40-20020a05600c1c2800b003dc4480df80sm16229620wms.34.2023.02.12.08.14.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Feb 2023 08:14:51 -0800 (PST)
-Message-ID: <e0bf4347-ec24-a4e2-0851-d5cdf850cc28@linaro.org>
-Date:   Sun, 12 Feb 2023 17:14:49 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 1/8] dt-bindings: gpio: rockchip,gpio-bank: add
- compatible string per SoC
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S229436AbjBLSrH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Feb 2023 13:47:07 -0500
+X-Greylist: delayed 1540 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Feb 2023 10:47:05 PST
+Received: from mx.flying-snail.de (mx.flying-snail.de [IPv6:2a06:1c40:3::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8A910400
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 10:47:05 -0800 (PST)
+Received: from [2a02:908:1b0:8800:2ff:ffff:fe11:2236] (helo=mondbasis.internal.flying-snail.de)
+        by mx.flying-snail.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <pelzi@flying-snail.de>)
+        id 1pRGyN-002vxr-UT; Sun, 12 Feb 2023 19:21:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=feldner-bv.de; s=s1; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References;
+        bh=S4eMM/Ni/1THzQ6AsWye0pgbL3S8Ck4ZUQKNSjmDg90=; b=R4HIaQTZpT3xitUTor7oeHuIft
+        QAm4Y7Mf5W3PytfbjE3Lxb06SBnDfbv45QYiR8pzGzFFAvKhnsZp/C4U06qVaGVmdfo4CdRlllUci
+        ATVmnyYr8g4IJTlhI3WMVXM2lJngKIV2EDyfGdY7KCG5fHNIBPQom0gGD0Xe42jb6aQbeTPNWaInR
+        aa6K44kPMQRElJu7CLhlmnTG1Dtw7NJPM4PdqUDDRpiTA1R2pFSgkRVmFU723bq7PBF2QIF/ZoHp1
+        nI2zSuo/304IPWEg5GwfgRUXPt7FqGSAOtPLRWsqqeZPv9rJSHOocVJdJT0wFu/G+pkB1TTClhxm7
+        IVjypYhg==;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=flying-snail.de; s=s1; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To
+        :From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References;
+        bh=S4eMM/Ni/1THzQ6AsWye0pgbL3S8Ck4ZUQKNSjmDg90=; b=QXYsV5raxeP8886jyYVl3kXwPc
+        1fz5BMvo75L1zXBayWNv+kZXVa8k/u9fXKHGlqYCLn0bXy8eHZlQJU7XTBmvscG7BvSSJDhnDq38w
+        5JWFMSrfOE2O3ElxowUrJvioOYDiXoZEI+Am7KboQkccXF7714HOa95V+jV2bEdPuBMtwoLWs4noh
+        8Iu7ai7KuyTX8nQO0P0EUc5v/i2dwR4eghgPKh4l4nl/59drKYjDQwjKM/10KleKMgRq7/VJ/RTmi
+        qon1ojdh39mJiEb6MnwXpInBcQNvKBzEjiO720UHmEGi2ayGaZChHhwNmcRXd0vb2Dk/T6Bff+kX6
+        MvncLsgw==;
+Received: from [fde6:2538:5b30:3b53:146b:5d45:c296:7cff] (helo=debian-qemu)
+        by mondbasis.internal.flying-snail.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <pelzi@flying-snail.de>)
+        id 1pRGyF-000lvu-Kt; Sun, 12 Feb 2023 19:21:11 +0100
+Date:   Sun, 12 Feb 2023 19:21:03 +0100
+From:   Andreas Feldner <pelzi@flying-snail.de>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kever.yang@rock-chips.com, sjg@chromium.org,
-        philipp.tomsich@vrull.eu, john@metanate.com,
-        quentin.schulz@theobroma-systems.com
-References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
- <CACRpkdbmXri1vtRShm7a3N0sRA7Qg_ni5FpAtiEv+72a6g9Wng@mail.gmail.com>
- <CAMRc=MeKdb=xmidwXQiNxtJpb1xii1D-43m1z6cNtF1VxFwogg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMRc=MeKdb=xmidwXQiNxtJpb1xii1D-43m1z6cNtF1VxFwogg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] pinctrl: sunxi: set minimal debounce on input-debounce 0
+Message-ID: <Y+kuD+/v3+N1vwxR@debian-qemu.internal.flying-snail.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/02/2023 21:03, Bartosz Golaszewski wrote:
-> On Wed, Feb 8, 2023 at 12:08 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> On Sat, Jan 21, 2023 at 12:06 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>
->>> Currently all Rockchip gpio nodes have the same compatible.
->>> Compatible strings should be SoC related.
->>>
->>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->>
->> Bartosz can you merge this one patch and keep the rest back
->> so we get a more defined DT binding baseline?
->>
->> Yours,
->> Linus Walleij
-> 
-> Krzysztof, you left your ack but seem to also have pointed out an
-> issue - do you want me to fix it up somehow before applying? Drop the
-> oneOf and turn it back into an enum?
+sunxi-h3-h5 based boards have no support for switching
+off IRQ debouncing filter. This would be the expected
+behaviour of value 0 for the general pinctl parameter
+input-debounce.
+The current driver implementation ignores value 0
+for input-debounce, leaving the chip's default. This
+default, however, is not minimal, but equivalent to
+value 31 (microseconds).
 
+This patch does not ignore value 0 but instead makes
+sure the corresponding IRQ debounce filter is set
+to the shortest time selectable, i. e. the fast
+oscillator with a divider of 1 == (2 ^ 0).
 
-Sure, you can apply with my comment fixed but then just please check
-with `make dt_binding_check DT_SCHEMA_FILES="xxx.yaml"`, that
-indentation is not mixed up.
+Fixes: 7c926492d38a ("pinctrl: sunxi: Add support for interrupt debouncing")
 
-Best regards,
-Krzysztof
+Signed-off-by: Andreas Feldner <pelzi@flying-snail.de>
+---
+Changes in v2:
+  - Posted as separate mail thread
+  - Made sure tabs are kept
+  - Excluded patch to devicetree
+
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 40 +++++++++++++++------------
+ 1 file changed, 23 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index f35179eceb4e..6798c8f4067e 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1444,29 +1444,35 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
+ 		if (ret)
+ 			return ret;
+ 
+-		if (!debounce)
+-			continue;
+-
+-		debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
+-		losc_div = sunxi_pinctrl_get_debounce_div(losc,
+-							  debounce_freq,
+-							  &losc_diff);
+-
+-		hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
+-							  debounce_freq,
+-							  &hosc_diff);
+-
+-		if (hosc_diff < losc_diff) {
+-			div = hosc_div;
+-			src = 1;
++		if (debounce) {
++			debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
++			losc_div = sunxi_pinctrl_get_debounce_div(losc,
++								  debounce_freq,
++								  &losc_diff);
++
++			hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
++								  debounce_freq,
++								  &hosc_diff);
++
++			if (hosc_diff < losc_diff) {
++				div = hosc_div;
++				src = 1;
++			} else {
++				div = losc_div;
++				src = 0;
++			}
+ 		} else {
+-			div = losc_div;
+-			src = 0;
++			/* lowest time as best approximation to "off" */
++			div = 0;
++			src = 1;
+ 		}
+ 
+ 		writel(src | div << 4,
+ 		       pctl->membase +
+ 		       sunxi_irq_debounce_reg_from_bank(pctl->desc, i));
++
++		pr_info("Debounce filter for IRQ bank %d configured to %d us (reg %x)\n",
++			i, debounce, src | div << 4);
+ 	}
+ 
+ 	return 0;
+-- 
+2.30.2
 
