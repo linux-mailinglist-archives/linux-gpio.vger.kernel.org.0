@@ -2,158 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0B569396C
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Feb 2023 19:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51FA4693A4B
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Feb 2023 22:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjBLSrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Feb 2023 13:47:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34918 "EHLO
+        id S229760AbjBLVr5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Feb 2023 16:47:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjBLSrH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Feb 2023 13:47:07 -0500
-X-Greylist: delayed 1540 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 12 Feb 2023 10:47:05 PST
-Received: from mx.flying-snail.de (mx.flying-snail.de [IPv6:2a06:1c40:3::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8A910400
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 10:47:05 -0800 (PST)
-Received: from [2a02:908:1b0:8800:2ff:ffff:fe11:2236] (helo=mondbasis.internal.flying-snail.de)
-        by mx.flying-snail.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <pelzi@flying-snail.de>)
-        id 1pRGyN-002vxr-UT; Sun, 12 Feb 2023 19:21:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=feldner-bv.de; s=s1; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References;
-        bh=S4eMM/Ni/1THzQ6AsWye0pgbL3S8Ck4ZUQKNSjmDg90=; b=R4HIaQTZpT3xitUTor7oeHuIft
-        QAm4Y7Mf5W3PytfbjE3Lxb06SBnDfbv45QYiR8pzGzFFAvKhnsZp/C4U06qVaGVmdfo4CdRlllUci
-        ATVmnyYr8g4IJTlhI3WMVXM2lJngKIV2EDyfGdY7KCG5fHNIBPQom0gGD0Xe42jb6aQbeTPNWaInR
-        aa6K44kPMQRElJu7CLhlmnTG1Dtw7NJPM4PdqUDDRpiTA1R2pFSgkRVmFU723bq7PBF2QIF/ZoHp1
-        nI2zSuo/304IPWEg5GwfgRUXPt7FqGSAOtPLRWsqqeZPv9rJSHOocVJdJT0wFu/G+pkB1TTClhxm7
-        IVjypYhg==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=flying-snail.de; s=s1; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To
-        :From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References;
-        bh=S4eMM/Ni/1THzQ6AsWye0pgbL3S8Ck4ZUQKNSjmDg90=; b=QXYsV5raxeP8886jyYVl3kXwPc
-        1fz5BMvo75L1zXBayWNv+kZXVa8k/u9fXKHGlqYCLn0bXy8eHZlQJU7XTBmvscG7BvSSJDhnDq38w
-        5JWFMSrfOE2O3ElxowUrJvioOYDiXoZEI+Am7KboQkccXF7714HOa95V+jV2bEdPuBMtwoLWs4noh
-        8Iu7ai7KuyTX8nQO0P0EUc5v/i2dwR4eghgPKh4l4nl/59drKYjDQwjKM/10KleKMgRq7/VJ/RTmi
-        qon1ojdh39mJiEb6MnwXpInBcQNvKBzEjiO720UHmEGi2ayGaZChHhwNmcRXd0vb2Dk/T6Bff+kX6
-        MvncLsgw==;
-Received: from [fde6:2538:5b30:3b53:146b:5d45:c296:7cff] (helo=debian-qemu)
-        by mondbasis.internal.flying-snail.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <pelzi@flying-snail.de>)
-        id 1pRGyF-000lvu-Kt; Sun, 12 Feb 2023 19:21:11 +0100
-Date:   Sun, 12 Feb 2023 19:21:03 +0100
-From:   Andreas Feldner <pelzi@flying-snail.de>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: sunxi: set minimal debounce on input-debounce 0
-Message-ID: <Y+kuD+/v3+N1vwxR@debian-qemu.internal.flying-snail.de>
+        with ESMTP id S229679AbjBLVr4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Feb 2023 16:47:56 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E7D9750
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 13:47:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676238475; x=1707774475;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=W9VHxmt5OExJwTOnHFZ/HUvyDmFFCgydGvIbDkfecp4=;
+  b=Qy4+kftKC6X15D9E7WC8ELxYoSqOJv/ri0kFakSWkWlEvsArwmtAXCCp
+   m7FKo6Wg941XlQ+IfR/vy9HuCoyMk3NLpBan5TawWAAZtnVEJYPntyNDQ
+   6ojhUA7aqHMbzUXZkdmXxmXp3u4FMye4WYxQjrlMCWJ+Nx5P8sASt0LLh
+   dyK9Yc/0V8YW1Px8MbyuxRjdXUjMfbtuQz6/JVcFP9IL9RH04ryUytgbp
+   +lgSUYBtb391eYOjFmYvS8LKU3snP82tslzmORIo/304hi9pz8nWWUhpV
+   XlV3lUkYV4DnnjCSez6cI+n5x4qqmwckkGNXv+DWVRgExwwRSzcOlgAW8
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="318785891"
+X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
+   d="scan'208";a="318785891"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2023 13:47:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="811392676"
+X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
+   d="scan'208";a="811392676"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2023 13:47:53 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pRKCO-0007Ov-1A;
+        Sun, 12 Feb 2023 21:47:52 +0000
+Date:   Mon, 13 Feb 2023 05:47:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:gpiochip-no-driver-h 5/5] arch/mips/ar7/gpio.c:24:38:
+ warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer
+ from integer without a cast
+Message-ID: <202302130551.RReykD8t-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sunxi-h3-h5 based boards have no support for switching
-off IRQ debouncing filter. This would be the expected
-behaviour of value 0 for the general pinctl parameter
-input-debounce.
-The current driver implementation ignores value 0
-for input-debounce, leaving the chip's default. This
-default, however, is not minimal, but equivalent to
-value 31 (microseconds).
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git gpiochip-no-driver-h
+head:   df771cce328bbd37333797d0df3471c2e03ecb03
+commit: df771cce328bbd37333797d0df3471c2e03ecb03 [5/5] gpio: Make the legacy <linux/gpio.h> consumer-only
+config: mips-ar7_defconfig (https://download.01.org/0day-ci/archive/20230213/202302130551.RReykD8t-lkp@intel.com/config)
+compiler: mipsel-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=df771cce328bbd37333797d0df3471c2e03ecb03
+        git remote add linusw-gpio https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+        git fetch --no-tags linusw-gpio gpiochip-no-driver-h
+        git checkout df771cce328bbd37333797d0df3471c2e03ecb03
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash arch/mips/ar7/
 
-This patch does not ignore value 0 but instead makes
-sure the corresponding IRQ debounce filter is set
-to the shortest time selectable, i. e. the fast
-oscillator with a divider of 1 == (2 ^ 0).
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302130551.RReykD8t-lkp@intel.com/
 
-Fixes: 7c926492d38a ("pinctrl: sunxi: Add support for interrupt debouncing")
+All warnings (new ones prefixed by >>):
 
-Signed-off-by: Andreas Feldner <pelzi@flying-snail.de>
----
-Changes in v2:
-  - Posted as separate mail thread
-  - Made sure tabs are kept
-  - Excluded patch to devicetree
+   arch/mips/ar7/gpio.c:19:33: error: field 'chip' has incomplete type
+      19 |         struct gpio_chip        chip;
+         |                                 ^~~~
+   arch/mips/ar7/gpio.c: In function 'ar7_gpio_get_value':
+   arch/mips/ar7/gpio.c:24:38: error: implicit declaration of function 'gpiochip_get_data' [-Werror=implicit-function-declaration]
+      24 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+>> arch/mips/ar7/gpio.c:24:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   arch/mips/ar7/gpio.c: In function 'titan_gpio_get_value':
+   arch/mips/ar7/gpio.c:32:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      32 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'ar7_gpio_set_value':
+   arch/mips/ar7/gpio.c:42:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      42 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'titan_gpio_set_value':
+   arch/mips/ar7/gpio.c:55:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      55 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'ar7_gpio_direction_input':
+   arch/mips/ar7/gpio.c:68:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      68 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'titan_gpio_direction_input':
+   arch/mips/ar7/gpio.c:78:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      78 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'ar7_gpio_direction_output':
+   arch/mips/ar7/gpio.c:93:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      93 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'titan_gpio_direction_output':
+   arch/mips/ar7/gpio.c:105:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     105 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+         |                                      ^~~~~~~~~~~~~~~~~
+   arch/mips/ar7/gpio.c: In function 'ar7_gpio_init':
+   arch/mips/ar7/gpio.c:318:15: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
+     318 |         ret = gpiochip_add_data(&gpch->chip, gpch);
+         |               ^~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 40 +++++++++++++++------------
- 1 file changed, 23 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index f35179eceb4e..6798c8f4067e 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1444,29 +1444,35 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
- 		if (ret)
- 			return ret;
- 
--		if (!debounce)
--			continue;
--
--		debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
--		losc_div = sunxi_pinctrl_get_debounce_div(losc,
--							  debounce_freq,
--							  &losc_diff);
--
--		hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
--							  debounce_freq,
--							  &hosc_diff);
--
--		if (hosc_diff < losc_diff) {
--			div = hosc_div;
--			src = 1;
-+		if (debounce) {
-+			debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
-+			losc_div = sunxi_pinctrl_get_debounce_div(losc,
-+								  debounce_freq,
-+								  &losc_diff);
-+
-+			hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
-+								  debounce_freq,
-+								  &hosc_diff);
-+
-+			if (hosc_diff < losc_diff) {
-+				div = hosc_div;
-+				src = 1;
-+			} else {
-+				div = losc_div;
-+				src = 0;
-+			}
- 		} else {
--			div = losc_div;
--			src = 0;
-+			/* lowest time as best approximation to "off" */
-+			div = 0;
-+			src = 1;
- 		}
- 
- 		writel(src | div << 4,
- 		       pctl->membase +
- 		       sunxi_irq_debounce_reg_from_bank(pctl->desc, i));
-+
-+		pr_info("Debounce filter for IRQ bank %d configured to %d us (reg %x)\n",
-+			i, debounce, src | div << 4);
- 	}
- 
- 	return 0;
+vim +24 arch/mips/ar7/gpio.c
+
+7ca5dc145bc7da Florian Fainelli 2009-06-24  21  
+5f3c909881d5de Florian Fainelli 2010-01-03  22  static int ar7_gpio_get_value(struct gpio_chip *chip, unsigned gpio)
+7ca5dc145bc7da Florian Fainelli 2009-06-24  23  {
+1b2766fb496c46 Linus Walleij    2015-12-08 @24  	struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
+5f3c909881d5de Florian Fainelli 2010-01-03  25  	void __iomem *gpio_in = gpch->regs + AR7_GPIO_INPUT;
+7ca5dc145bc7da Florian Fainelli 2009-06-24  26  
+249e573d99ab59 Linus Walleij    2015-12-22  27  	return !!(readl(gpio_in) & (1 << gpio));
+5f3c909881d5de Florian Fainelli 2010-01-03  28  }
+5f3c909881d5de Florian Fainelli 2010-01-03  29  
+
+:::::: The code at line 24 was first introduced by commit
+:::::: 1b2766fb496c462b3f6e1d1c52c72f8601ac8540 MIPS: ar7: use gpiochip data pointer
+
+:::::: TO: Linus Walleij <linus.walleij@linaro.org>
+:::::: CC: Linus Walleij <linus.walleij@linaro.org>
+
 -- 
-2.30.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
