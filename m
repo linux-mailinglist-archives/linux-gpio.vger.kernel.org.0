@@ -2,93 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7EA9695000
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 19:56:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88B31695024
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 20:00:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjBMS4I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 13:56:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53784 "EHLO
+        id S230413AbjBMTAZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 14:00:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjBMS4I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 13:56:08 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D2B1F5C7;
-        Mon, 13 Feb 2023 10:55:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676314549; x=1707850549;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vsBZP1hEviGNKOb8Fn2HjPjrYWP3jTqAc4o808JTUSY=;
-  b=QNXBtX8JEgVRBnE/08Dj2Z0SyoM9K6HyWivy08N2Bj5GmwJBINeGzUvK
-   YqEpXjkv74qRQmIm6UeJLIjihU+Eo7bqkkFY9o7N4Bl/ZHxe9AcWU+P1w
-   KamfxSqbWDQChs9fDYM9+wXQBxvr9D4rKS4f+ponCfuMgIGmDIctTaxUa
-   w1xNYs7sWq8TNVtnV9/QGOT8EElA6NrVND9jZcY2SZYU0to1TxzNlQh2l
-   WwVb8WgJguIkyFzFLSo51zZqJs26oFxKnqtCw5vLA3elwe+GWy4H8SAZy
-   AtHZvqsSSTzikaooy08sMkEYFWIRnAUfDzpGq0yag3ykOyQlMRsqVYlHp
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="310602049"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="310602049"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 10:55:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="732589821"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="732589821"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Feb 2023 10:55:34 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pRdzB-006VG3-12;
-        Mon, 13 Feb 2023 20:55:33 +0200
-Date:   Mon, 13 Feb 2023 20:55:33 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        with ESMTP id S230451AbjBMTAV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 14:00:21 -0500
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96BE05B8D;
+        Mon, 13 Feb 2023 10:59:55 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id n10so7373861ejc.4;
+        Mon, 13 Feb 2023 10:59:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G8q51kK6EcMWY45OADx0YlrUAHXXNckmxq84G+AMDoo=;
+        b=I/4NsOWCc8x67ptEEuUxp7fSdh+XsKdLD1XwPcF+GLH0I3T2o7l1lxDRD1qk1QKjv3
+         bRlSzJobJmfdHFfp101rDy+EfpRww0wmaUuFge6TRQF6uDf/+Q2tj86w4kURDGxllPCw
+         XAYSUefJ3x/53iN86Ny8Y7dYd2nhfPvWpEhNgzquKh/DixNOw8qZWCJf1wQ4shF/xJzD
+         R/+qoayhL6dWsFR2Zwo9Otx9TnOE0qa+iHHbD3M/XwAZE0EkLK/Yxgkas2YJPZprqxUX
+         biJrhje8DSu/tfn8XvZw1JyEAwbvta/ZI1rfIQNYX1/PQzkA0b/Tv1SLRagtEytwLuK0
+         bnRw==
+X-Gm-Message-State: AO0yUKXDFL1P29P/WuntopZZ7rYEtuiXFShsz6lglp4T+VEQsoPaD6uJ
+        HZT31RfOc28FOH3oCbEteuteiO0gW4C3k+2HYLjABs/j
+X-Google-Smtp-Source: AK7set/XqnK1+BZIJW75M4vIKfORxIqDUeumVJlSYEssuFY13C3BbT0IgoVIcP5Oz4V35FSTeb4LLvTCwUWrN+l9aq0=
+X-Received: by 2002:a17:906:4e19:b0:8b1:28e5:a1bc with SMTP id
+ z25-20020a1709064e1900b008b128e5a1bcmr182776eju.5.1676314777309; Mon, 13 Feb
+ 2023 10:59:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20230213132812.38646-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0jkMez3_7rRqgyvbB9ik55fRxsU6yoLBZ-gVP7djwntmA@mail.gmail.com> <Y+qHpa0GsIilc59A@smile.fi.intel.com>
+In-Reply-To: <Y+qHpa0GsIilc59A@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 13 Feb 2023 19:59:26 +0100
+Message-ID: <CAJZ5v0jbaemJqNi5bqZXTi2mr0hcfaL+UsJVQt6n4BQjL6ubmA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties:
+ Clarify Explicit and Implicit
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Len Brown <lenb@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] Documentation: firmware-guide: gpio-properties:
- Clarify Explicit and Implicit
-Message-ID: <Y+qHpa0GsIilc59A@smile.fi.intel.com>
-References: <20230213132812.38646-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0jkMez3_7rRqgyvbB9ik55fRxsU6yoLBZ-gVP7djwntmA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jkMez3_7rRqgyvbB9ik55fRxsU6yoLBZ-gVP7djwntmA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 13, 2023 at 07:39:10PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Feb 13, 2023 at 2:27 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Feb 13, 2023 at 7:55 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Feb 13, 2023 at 07:39:10PM +0100, Rafael J. Wysocki wrote:
+> > On Mon, Feb 13, 2023 at 2:27 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+>
+> ...
+>
+> > >  That said, for our above example the both GPIOs, since the bias setting
+> > >  is explicit and _DSD is present, will be treated as active with a high
 > >
+> > Applied as 6.3 material, thanks!
+>
+> Can you withdraw it for now, please? It has some formatting issues.
+> I will fix and send a new version instead.
 
-...
-
-> >  That said, for our above example the both GPIOs, since the bias setting
-> >  is explicit and _DSD is present, will be treated as active with a high
-> 
-> Applied as 6.3 material, thanks!
-
-Can you withdraw it for now, please? It has some formatting issues.
-I will fix and send a new version instead.
-
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sure.
