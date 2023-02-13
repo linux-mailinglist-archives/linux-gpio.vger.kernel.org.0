@@ -2,51 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F7B7694504
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 13:00:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B73694611
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 13:42:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbjBMMAn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 07:00:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36764 "EHLO
+        id S230106AbjBMMmB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 07:42:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbjBMMAh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 07:00:37 -0500
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F2B18B20;
-        Mon, 13 Feb 2023 04:00:18 -0800 (PST)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id C54F91646;
-        Mon, 13 Feb 2023 13:00:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1676289616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=voxYeZ7wh5c7OrjzskwQHyd3j/r/yCtZhLRFGBW9fEM=;
-        b=n1yzElJg/OxL7J4kVsS0FOK/7wizoIWnPnrbMKATH3ilguTjMhUbnbBghkiYoZyAQGPeR3
-        TL6HxNjofvC4k9qWG51WDpHb7nDgmXh9OAGTXUg8qw1F1oVEK//3mSck4XTHtss3Znl9+L
-        gcVspdrCX1mQPS9ykjkvEtltO4l24tk9ayajznlrxIPfLGWwpJ0K1DjObJe9bRGdV21M47
-        TtWyJAgc44FK7i2hgHsgEgqfHj8EDIt/2fmNE64bAAx5fs21xb6ON12kbEKnZf1YbqaX2C
-        yGjWBMfaHc9csLKYKF1iTk1jXsmKKrK2CeqbImuPh0CXozyRpm/CKIFqWs+ZoA==
-From:   Michael Walle <michael@walle.cc>
-To:     tharunkumar.pasumarthi@microchip.com
-Cc:     gregkh@linuxfoundation.org, UNGLinuxDriver@microchip.com,
-        arnd@arndb.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v5 char-misc-next] misc: microchip: pci1xxxx: Add OTP/EEPROM driver for the pci1xxxx switch
-Date:   Mon, 13 Feb 2023 13:00:09 +0100
-Message-Id: <20230213120009.2661528-1-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <Y+iQnfR65M0El34R@kroah.com>
-References: <Y+iQnfR65M0El34R@kroah.com>
+        with ESMTP id S230127AbjBMMl7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 07:41:59 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614C010C5;
+        Mon, 13 Feb 2023 04:41:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676292116; x=1707828116;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DG7Ke2sciLVu9YsJ/QYtVHzYsvTpCMR4WXEcGmnErso=;
+  b=S6VAexWkM/2uEJfMbmD1LOmPoghTvpTWt/AmOxu9A42pBSPznzPEsOt0
+   uYCn+S2id5hYQW562wp3t3MO+n/qDdpPcOoDfkIpMViobPeIKOOPmvXff
+   25IuhJFg0qRTQpfmPlzsRTgBI5W/xaNjGp5U5NGQKLKeSHT9yjroi9BiE
+   lt58qiHAe1gt3ErZQUnCL7GUhgHjzT2ilCnPJ02JQ3qr/noma2F3dxAFe
+   NCIVuJkmzBFsbTEWVpg6Xwm4Lt00hYOgZppFB6MOtDpttCzcsYROJcM7h
+   9IRzijAeiz21xQip9OHUY4SOf4xZslp47Zxg6SYoOSE1InyNMKV09rFic
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="318903728"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="318903728"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 04:41:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="811585538"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="811585538"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Feb 2023 04:41:53 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pRY9X-006Kc5-0W;
+        Mon, 13 Feb 2023 14:41:51 +0200
+Date:   Mon, 13 Feb 2023 14:41:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Raul E Rangel <rrangel@chromium.org>
+Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
+Message-ID: <Y+owDqifuU9nf+1i@smile.fi.intel.com>
+References: <20230210164636.628462-1-wse@tuxedocomputers.com>
+ <Y+Z5OSa6hepQBOyc@smile.fi.intel.com>
+ <029b8d80-db28-cdb2-5c39-334be6968fad@tuxedocomputers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <029b8d80-db28-cdb2-5c39-334be6968fad@tuxedocomputers.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,16 +71,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->>> +	/* Wait for the EPC_BUSY bit to get cleared */
->>> +	do {
->>> +		data = readl(priv->reg_base + MMAP_EEPROM_OFFSET(EEPROM_CMD_REG));
->>> +	} while (data & EEPROM_CMD_EPC_BUSY_BIT);
->>
->> Again, you can not sit and spin in a busy-wait like this with no chance
->> to recover if something goes wrong with the hardware (hint, what if it
->> got removed?)
+On Mon, Feb 13, 2023 at 12:30:08PM +0100, Werner Sembach wrote:
+> Am 10.02.23 um 18:04 schrieb Andy Shevchenko:
+> > On Fri, Feb 10, 2023 at 05:46:36PM +0100, Werner Sembach wrote:
+> > > commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> > > changed the policy such that I2C touchpads may be able to wake up the
+> > > system by default if the system is configured as such.
+> > > 
+> > > However on Clevo NH5xAx/TUXEDO XA15 Gen10 there is a mistake in the ACPI
+> > > tables that the TP_ATTN# signal connected to GPIO 10 is configured as
+> > > ActiveLow and level triggered but connected to a pull up.
+> > I'm not sure I understand the issue here. From what you say here it seems
+> > correct ACPI description.
+> TBH I copied the commit description from https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4cb786180dfb5258ff3111181b5e4ecb1d4a297b
+> which is for a different device having the exact same problem.
 
-Also, it is good practice to CC people who did comments on the
-former versions.
+Yeah, and I reviewed that and seems paid no attention to this detail.
 
--michael
+So, ActiveLow + PullUp is the _right_ thing to do in ACPI.
+The problem seems somewhere else.
+
+Mario, can we have an access to the schematics of the affected pin to
+understand better what's going on?
+
+Or is that description missing some crucial detail?
+
+> > > As soon as the
+> > > system suspends the touchpad loses power and then the system wakes up.
+> > > 
+> > > To avoid this problem, introduce a quirk for this model that will prevent
+> > > the wakeup capability for being set for GPIO 10.
+> > I'm not against fixing this, but wouldn't be better to actually target the root
+> > cause and have a different quirk? Or is it me who didn't get what is the root
+> > cause?
+> > 
+> I missed to reference the original discussion while copying the description:
+> https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627 (Note that
+> it's a somewhat convoluted issue spanning multiple bugs when you scroll up
+> from that particular linked comment, which are however irrelevant for this
+> patch)
+> 
+> I'm not deep into how ACPI defined IRQ work so maybe not a good idea for me
+> summing it up, as I might have misunderstood parts of it ^^
+
+The GpioIo() and GpioInt() resources have gaps in them, due to this some
+additional information is required or some heuristics is used to deduct
+the settings.
+
+All this is described in
+https://www.kernel.org/doc/html/latest/firmware-guide/acpi/gpio-properties.html
+
+> I added the other ones from there to the cc.
+
+Thank you.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
