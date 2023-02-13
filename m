@@ -2,124 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8862E695209
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 21:39:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABA54695381
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 22:58:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjBMUjb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 15:39:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36552 "EHLO
+        id S229632AbjBMV57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 16:57:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjBMUja (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 15:39:30 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622671284B;
-        Mon, 13 Feb 2023 12:39:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676320769; x=1707856769;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=89B8F9htL6Qei6aB89FjZiKtmN09XvKCxECHkIfzD7U=;
-  b=IVaapr+CmWP5I+LrvCa71OigVxsAwRzBW9xsu3+x3IUhIW/U/zGCpcat
-   PSYSPDvB7n5m4xMlurj9Ut8vEbv9THrQgONulA/zUiJ5fGcKR4sO2UrIU
-   7YC9sGBBprrVFnmgK/3kXgMhvvILqBhXa7OVLc2FzxbjiwtcmRISUVzuR
-   ZYvUeRmj7Ykv8eU14QlL+/XRz2H9q5QGfLaM2ZejnXtrYSdQnElwcaQOD
-   gRP6lAZ+jMngfbaL301cwbfS373usDHSEMytc4aERmXyr1yk7MlJ1XRYf
-   m9ysHqYhJVvD5ztZmJwt/vlyrsxa/6VPrraIu0qkSDlaWcBdbhF0c1rRV
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="358401414"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="358401414"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 12:39:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="914470130"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="914470130"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Feb 2023 12:39:27 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D92F51A6; Mon, 13 Feb 2023 22:40:06 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S229560AbjBMV56 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 16:57:58 -0500
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Feb 2023 13:57:38 PST
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B015222EE
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 13:57:38 -0800 (PST)
+Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 4757e5b8-abe9-11ed-ab57-005056bd6ce9;
+        Mon, 13 Feb 2023 23:56:33 +0200 (EET)
+From:   andy.shevchenko@gmail.com
+Date:   Mon, 13 Feb 2023 23:56:33 +0200
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
         linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: [PATCH v2 1/1] Documentation: firmware-guide: gpio-properties: Clarify Explicit and Implicit
-Date:   Mon, 13 Feb 2023 22:40:05 +0200
-Message-Id: <20230213204005.55483-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
+Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
+Message-ID: <Y+qyEVxMh4VRIsy3@surfacebook>
+References: <20230210164636.628462-1-wse@tuxedocomputers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230210164636.628462-1-wse@tuxedocomputers.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Clarify the Explicit and Implicit meanings in the table of Pull Bias.
+Fri, Feb 10, 2023 at 05:46:36PM +0100, Werner Sembach kirjoitti:
+> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> changed the policy such that I2C touchpads may be able to wake up the
+> system by default if the system is configured as such.
+> 
+> However on Clevo NH5xAx/TUXEDO XA15 Gen10 there is a mistake in the ACPI
+> tables that the TP_ATTN# signal connected to GPIO 10 is configured as
+> ActiveLow and level triggered but connected to a pull up. As soon as the
+> system suspends the touchpad loses power and then the system wakes up.
+> 
+> To avoid this problem, introduce a quirk for this model that will prevent
+> the wakeup capability for being set for GPIO 10.
 
-While at it, distinguish pull bias keywords used in ACPI by using bold
-font in the table of the respective terms.
+Please, update the commit message and send v2.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: fixed formatting issues
- .../firmware-guide/acpi/gpio-properties.rst   | 35 +++++++++++++------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+We would like to have this fix nevertheless, because users will suffer w/o it.
 
-diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
-index eaec732cc77c..db0c0b1f3700 100644
---- a/Documentation/firmware-guide/acpi/gpio-properties.rst
-+++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
-@@ -67,17 +67,30 @@ state of the output pin which driver should use during its initialization.
- Linux tries to use common sense here and derives the state from the bias
- and polarity settings. The table below shows the expectations:
- 
--=========  =============  ==============
--Pull Bias     Polarity     Requested...
--=========  =============  ==============
--Implicit     x            AS IS (assumed firmware configured for us)
--Explicit     x (no _DSD)  as Pull Bias (Up == High, Down == Low),
--                          assuming non-active (Polarity = !Pull Bias)
--Down         Low          as low, assuming active
--Down         High         as low, assuming non-active
--Up           Low          as high, assuming non-active
--Up           High         as high, assuming active
--=========  =============  ==============
-++-------------+-------------+-----------------------------------------------+
-+| Pull Bias   | Polarity    | Requested...                                  |
-++=============+=============+===============================================+
-+| Implicit                                                                  |
-++-------------+-------------+-----------------------------------------------+
-+| **Default** | x           | AS IS (assumed firmware configured it for us) |
-++-------------+-------------+-----------------------------------------------+
-+| Explicit                                                                  |
-++-------------+-------------+-----------------------------------------------+
-+| **None**    | x           | AS IS (assumed firmware configured it for us) |
-+|             |             | with no Pull Bias                             |
-++-------------+-------------+-----------------------------------------------+
-+| **Up**      | x (no _DSD) |                                               |
-+|             +-------------+ as high, assuming non-active                  |
-+|             | Low         |                                               |
-+|             +-------------+-----------------------------------------------+
-+|             | High        | as high, assuming active                      |
-++-------------+-------------+-----------------------------------------------+
-+| **Down**    | x (no _DSD) |                                               |
-+|             +-------------+ as low, assuming non-active                   |
-+|             | High        |                                               |
-+|             +-------------+-----------------------------------------------+
-+|             | Low         | as low, assuming active                       |
-++-------------+-------------+-----------------------------------------------+
- 
- That said, for our above example the both GPIOs, since the bias setting
- is explicit and _DSD is present, will be treated as active with a high
 -- 
-2.39.1
+With Best Regards,
+Andy Shevchenko
+
 
