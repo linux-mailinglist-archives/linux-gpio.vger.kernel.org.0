@@ -2,150 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FA4693A4B
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Feb 2023 22:47:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69F19693F7F
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 09:22:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229760AbjBLVr5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Feb 2023 16:47:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
+        id S229783AbjBMIWl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 03:22:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjBLVr4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Feb 2023 16:47:56 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E7D9750
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Feb 2023 13:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676238475; x=1707774475;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=W9VHxmt5OExJwTOnHFZ/HUvyDmFFCgydGvIbDkfecp4=;
-  b=Qy4+kftKC6X15D9E7WC8ELxYoSqOJv/ri0kFakSWkWlEvsArwmtAXCCp
-   m7FKo6Wg941XlQ+IfR/vy9HuCoyMk3NLpBan5TawWAAZtnVEJYPntyNDQ
-   6ojhUA7aqHMbzUXZkdmXxmXp3u4FMye4WYxQjrlMCWJ+Nx5P8sASt0LLh
-   dyK9Yc/0V8YW1Px8MbyuxRjdXUjMfbtuQz6/JVcFP9IL9RH04ryUytgbp
-   +lgSUYBtb391eYOjFmYvS8LKU3snP82tslzmORIo/304hi9pz8nWWUhpV
-   XlV3lUkYV4DnnjCSez6cI+n5x4qqmwckkGNXv+DWVRgExwwRSzcOlgAW8
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="318785891"
-X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
-   d="scan'208";a="318785891"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2023 13:47:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="811392676"
-X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
-   d="scan'208";a="811392676"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2023 13:47:53 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pRKCO-0007Ov-1A;
-        Sun, 12 Feb 2023 21:47:52 +0000
-Date:   Mon, 13 Feb 2023 05:47:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:gpiochip-no-driver-h 5/5] arch/mips/ar7/gpio.c:24:38:
- warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer
- from integer without a cast
-Message-ID: <202302130551.RReykD8t-lkp@intel.com>
+        with ESMTP id S229975AbjBMIWj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 03:22:39 -0500
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89F2126E0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 00:22:31 -0800 (PST)
+Received: by mail-vk1-xa2f.google.com with SMTP id m65so872357vkh.10
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 00:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DNFhsPbkfGfOWNF5M4aRb8nwKD8L5aVj2WV/H46NM8s=;
+        b=FUl1PYoI6f7iaowuUwS7WQ+lm59mVLYdd9PxJxMH0hpKlctnYJr0OwwNREZKLvP2Am
+         DwKWxu/0Jk+JGgsmeUlJTQd80TUHaP1Ys0k+RwJa6m5zdIgzFA7kMIvgujH6RcCPKYAL
+         Y21pdWTp4KxdAuVRvn7mVLVq6kLVuS+ux1rKDDbBOtrWUDVv0qWjC0Lc/JPt6dSy8Zd6
+         RhQRNOynaR9GbZ8sh75eYUzwu8EhC3eTnQvv1L0hGSGxPG5TTeN46PL99z5a7RsbBp9U
+         NUKVX16/+l07eikPflUNp3ohRYvlmk7uYzYWKN6xMVq9OnSL3HRBzDRfAv5VTzZVw4l0
+         xx+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DNFhsPbkfGfOWNF5M4aRb8nwKD8L5aVj2WV/H46NM8s=;
+        b=oDSkV584Ixktloj8ouqLmDSKnYOBx7Oe14kjZtZTW9P30I66PeZpxHGtyKiBjasWZb
+         HJ6zFpiyY/QpCmM9H4EgrHlBEt6tBPptb1JIh7zVkjDO37hdk66MwsqyAkVknqQq9XQ8
+         U0F7FJABKAmrIX0Y72BAA4J+MfWy9KZKtYJ82ZbNYPW4Jj5EV9z2RC7iEyfqHR8GXOPa
+         rsv0eR7fvD8CPVsbrrLob6v904OGT0YSEYy+oxsKXQOqWGAZY1EbBT/OYH+bJDSIWdTl
+         TAmcbONcOnyxqYS9Vbcct/0ASWqxjeyWK7OEMZLhlKr6IycXFS/WK5owGkwlARSM+AW3
+         dHIQ==
+X-Gm-Message-State: AO0yUKW2ZkGqIy6QQn0lLuUePt/tnkMfMMeB7gYhqH5jJVMAaXmcP4Zp
+        a+ygP/inal7ao4so7nzF8E5fB4VHT9Dv8+qmIQ==
+X-Google-Smtp-Source: AK7set+9UwkiFHdHvWwWhXVctY96ivbydUW+f3py/7uJ2afNQ6ep1a2hxq837+GFsQV5TqE4fgsKoS5daSneuGgcjrk=
+X-Received: by 2002:a1f:2a06:0:b0:3ea:4830:a019 with SMTP id
+ q6-20020a1f2a06000000b003ea4830a019mr3902464vkq.9.1676276550497; Mon, 13 Feb
+ 2023 00:22:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a59:d954:0:b0:399:647f:a8f5 with HTTP; Mon, 13 Feb 2023
+ 00:22:29 -0800 (PST)
+Reply-To: engr.fred_martins@aol.com
+From:   "Fred Martins." <fred49508@gmail.com>
+Date:   Mon, 13 Feb 2023 00:22:29 -0800
+Message-ID: <CAJFb9+A_oaVJb4x32SiDzSQe1=AMdB0dYt6R-AdvKbsbKJw7EA@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git gpiochip-no-driver-h
-head:   df771cce328bbd37333797d0df3471c2e03ecb03
-commit: df771cce328bbd37333797d0df3471c2e03ecb03 [5/5] gpio: Make the legacy <linux/gpio.h> consumer-only
-config: mips-ar7_defconfig (https://download.01.org/0day-ci/archive/20230213/202302130551.RReykD8t-lkp@intel.com/config)
-compiler: mipsel-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=df771cce328bbd37333797d0df3471c2e03ecb03
-        git remote add linusw-gpio https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-        git fetch --no-tags linusw-gpio gpiochip-no-driver-h
-        git checkout df771cce328bbd37333797d0df3471c2e03ecb03
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash arch/mips/ar7/
+Greetings,
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302130551.RReykD8t-lkp@intel.com/
+I wonder why you continue neglecting my emails. Please, acknowledge
+the receipt of this message in reference to the subject above as I
+intend to send to you the details of the mail. Sometimes, try to check
+your spam box because most of these correspondences fall out sometimes
+in SPAM folder.
 
-All warnings (new ones prefixed by >>):
-
-   arch/mips/ar7/gpio.c:19:33: error: field 'chip' has incomplete type
-      19 |         struct gpio_chip        chip;
-         |                                 ^~~~
-   arch/mips/ar7/gpio.c: In function 'ar7_gpio_get_value':
-   arch/mips/ar7/gpio.c:24:38: error: implicit declaration of function 'gpiochip_get_data' [-Werror=implicit-function-declaration]
-      24 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
->> arch/mips/ar7/gpio.c:24:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-   arch/mips/ar7/gpio.c: In function 'titan_gpio_get_value':
-   arch/mips/ar7/gpio.c:32:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      32 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'ar7_gpio_set_value':
-   arch/mips/ar7/gpio.c:42:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      42 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'titan_gpio_set_value':
-   arch/mips/ar7/gpio.c:55:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      55 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'ar7_gpio_direction_input':
-   arch/mips/ar7/gpio.c:68:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      68 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'titan_gpio_direction_input':
-   arch/mips/ar7/gpio.c:78:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      78 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'ar7_gpio_direction_output':
-   arch/mips/ar7/gpio.c:93:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      93 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'titan_gpio_direction_output':
-   arch/mips/ar7/gpio.c:105:38: warning: initialization of 'struct ar7_gpio_chip *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     105 |         struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-         |                                      ^~~~~~~~~~~~~~~~~
-   arch/mips/ar7/gpio.c: In function 'ar7_gpio_init':
-   arch/mips/ar7/gpio.c:318:15: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
-     318 |         ret = gpiochip_add_data(&gpch->chip, gpch);
-         |               ^~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +24 arch/mips/ar7/gpio.c
-
-7ca5dc145bc7da Florian Fainelli 2009-06-24  21  
-5f3c909881d5de Florian Fainelli 2010-01-03  22  static int ar7_gpio_get_value(struct gpio_chip *chip, unsigned gpio)
-7ca5dc145bc7da Florian Fainelli 2009-06-24  23  {
-1b2766fb496c46 Linus Walleij    2015-12-08 @24  	struct ar7_gpio_chip *gpch = gpiochip_get_data(chip);
-5f3c909881d5de Florian Fainelli 2010-01-03  25  	void __iomem *gpio_in = gpch->regs + AR7_GPIO_INPUT;
-7ca5dc145bc7da Florian Fainelli 2009-06-24  26  
-249e573d99ab59 Linus Walleij    2015-12-22  27  	return !!(readl(gpio_in) & (1 << gpio));
-5f3c909881d5de Florian Fainelli 2010-01-03  28  }
-5f3c909881d5de Florian Fainelli 2010-01-03  29  
-
-:::::: The code at line 24 was first introduced by commit
-:::::: 1b2766fb496c462b3f6e1d1c52c72f8601ac8540 MIPS: ar7: use gpiochip data pointer
-
-:::::: TO: Linus Walleij <linus.walleij@linaro.org>
-:::::: CC: Linus Walleij <linus.walleij@linaro.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Best regards,
