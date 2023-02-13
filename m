@@ -2,113 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E004694DB1
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 18:06:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C331694DD4
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 18:21:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbjBMRGh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 12:06:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        id S229816AbjBMRVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 12:21:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbjBMRGf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 12:06:35 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524AD1EFFF
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 09:06:32 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id bp15so19760801lfb.13
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 09:06:32 -0800 (PST)
+        with ESMTP id S229607AbjBMRU5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 12:20:57 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880401CAC3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 09:20:56 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id w20-20020a17090a8a1400b00233d7314c1cso5040694pjn.5
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 09:20:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=chromium.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/n1VzIpjuUedXOfI3QLDNuih13WOod4KM2WM+q/V6I=;
-        b=GOJfWNcI1ZLdOBCkKzJF+1HkfegOheFdmo5J+bx+MNHMNVyiOxjBnlcvj7m74kVrp0
-         /5a5cvjwXPaBn0pwEtAII/uASNSRWP32CfNT3jhTX2Z1uH7YpBmeJUcSi/k7lZCbffwv
-         wWljY27vfm2U4e9rujYDKvkXE2OWCC8CrDrX/Y6ltl+/3AQeS4QwEb+/LrWVXsX7Jisv
-         XfJB3s9gU9ZtbGyTZ20EcIoqWH8N5Nhz5Mz1zF9y2L0qEO9+REg6LhVokbSZJ5jZqXMP
-         kc4z8DXsSwEN2tXFIOkoYIkU8YBzgydgs9F94etEfXzrsm/xdCkaApXr0RoKZ/7KhR1w
-         aMUA==
+        bh=u3UYU5VuDwql0z0bUwRUw+J5kKvLOo1Kd32ar3uMe8A=;
+        b=oJ0JFVaFMr3+pu4NOs0ksHekVlOalYOzWxvNeNXGda9+dVBL+b8Ppr1JC7xg9b/FN+
+         pv9/leOpH7vul2MMWpO00p1cI0dW5p5Vkn4h+F8zpaWjzbrCaVAtSHXaR2eZg0UdNuNm
+         UW+D2fn74Xm417lK6Yp6Yrvh3rIcc5+R4vkRI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=i/n1VzIpjuUedXOfI3QLDNuih13WOod4KM2WM+q/V6I=;
-        b=zE7LMqZtT0sNFd4v4g7YZ0Hq1+7Xzi0xqRRcJhgGWw667eYByASg+Z4Y0CI5y5Hya2
-         DbZFM1ahV1rhlZuLBXCmQsxWbbOACZhBb3sYarkMH6e+WDVlBuRVS4LTOQJDOaI9MBO4
-         u0gy6y2r90GGyiFBjfBpuNkAGETKw6OyC8WaBmQ5ioagYcZVNw8hT/79WDqorM6A6oea
-         6kVylosTQxiNoQl13q/Nyy1jEwYAnlX+kJtqozWuH5lNbXRMQbyLHEpwwhKx93EU5LaT
-         VRqYLk9ZdH+eb9GsD5dI9o7+kRGppN7OEfvbNjbntc/UT27+M4ZvYrjW1l0DeGrQWCVS
-         2RQw==
-X-Gm-Message-State: AO0yUKU8nlPR/rw6fFa9hgISzu0cjR8AQFi0ir79pjvD1F5yrp50UoTz
-        IcnSghlpmOK9WafrllGvP6Za8i6g307RyCywL6fsoB+pnI8=
-X-Google-Smtp-Source: AK7set/anX5lzcMiCMdmBcc/F0FW7HFJMZ+5arjEdKbrDRTwVmFee56qquMRPxSpFSmZ0yleuUBEDdrE1xF6P4DFFlQ=
-X-Received: by 2002:ac2:597b:0:b0:4cc:8a9c:3b14 with SMTP id
- h27-20020ac2597b000000b004cc8a9c3b14mr3981488lfp.14.1676307990388; Mon, 13
- Feb 2023 09:06:30 -0800 (PST)
+        bh=u3UYU5VuDwql0z0bUwRUw+J5kKvLOo1Kd32ar3uMe8A=;
+        b=RygiybP9CwxfJ1VV/uTIANBW7aG8NOhGCw89iDJXLvVVZ6sFZCudcUh6cMHd2jClfL
+         RyQom+KIa6OOuKsp9PtiIyUculhzMN50/S6ENz3oQ/r5SmyzVIpzIXGQSPp1SIUXqJOr
+         3F1N79SZmhn6A1AcDbumtSa5eN6RrthKOYwUfbJbDqN/2kzzVnpRcZep3/JrZuRctiL2
+         DAhElCkd9xmOCcCljpT9YFzFQ8SxIbp9mc6b281adnOBJsG/ewO6Yo7lWKeqWGUHkp/O
+         N3xOjDz8Pi99n3AMW2dVjQkfxi4Ym2kniwL9lKWCTOvM/FJzh4WKBqnDx558akpf0M2K
+         w1Sg==
+X-Gm-Message-State: AO0yUKWlN4xrVr6C21wSi+wG83loKfyNbd80g4XsSTBa+qCOg0TOgwA4
+        ZgrYspj8iVCxdsA30elbah80h3oyCz+mr2fl
+X-Google-Smtp-Source: AK7set8GoYORF79R9w4jvwoxQHHtkiXBn9bAYuOwyNxZafXSnr2OiG69xM1XrxZuy5zTT9vdTewZLA==
+X-Received: by 2002:a17:903:1247:b0:19a:9dab:3434 with SMTP id u7-20020a170903124700b0019a9dab3434mr5326128plh.37.1676308855802;
+        Mon, 13 Feb 2023 09:20:55 -0800 (PST)
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com. [209.85.215.177])
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902b08700b0019aaccb665bsm929062plr.245.2023.02.13.09.20.54
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Feb 2023 09:20:54 -0800 (PST)
+Received: by mail-pg1-f177.google.com with SMTP id b22so3324178pgw.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 09:20:54 -0800 (PST)
+X-Received: by 2002:aa7:9795:0:b0:5a8:5b4e:908e with SMTP id
+ o21-20020aa79795000000b005a85b4e908emr2958698pfp.10.1676308853423; Mon, 13
+ Feb 2023 09:20:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20230213170504.360265-1-brgl@bgdev.pl>
-In-Reply-To: <20230213170504.360265-1-brgl@bgdev.pl>
-From:   Peter Robinson <pbrobinson@gmail.com>
-Date:   Mon, 13 Feb 2023 17:06:19 +0000
-Message-ID: <CALeDE9MyrHTNF9Gpr04KAB0P+gn-cSpxQoFgWBUYR5niBzeUkg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: python: pass DESTDIR to setup.py
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230210164636.628462-1-wse@tuxedocomputers.com>
+ <Y+Z5OSa6hepQBOyc@smile.fi.intel.com> <029b8d80-db28-cdb2-5c39-334be6968fad@tuxedocomputers.com>
+ <Y+owDqifuU9nf+1i@smile.fi.intel.com> <86db79fa-5efb-caad-3310-60928907cc58@amd.com>
+ <Y+pLLzLDotZQLpdA@smile.fi.intel.com> <97026dc5-e92e-62fe-43ae-33533125d900@tuxedocomputers.com>
+In-Reply-To: <97026dc5-e92e-62fe-43ae-33533125d900@tuxedocomputers.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Mon, 13 Feb 2023 10:20:41 -0700
+X-Gmail-Original-Message-ID: <CAHQZ30Cs+kp82coR10Wat7q3S_8+pFf=5=44kMEMcjBOjmn=6A@mail.gmail.com>
+Message-ID: <CAHQZ30Cs+kp82coR10Wat7q3S_8+pFf=5=44kMEMcjBOjmn=6A@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 13, 2023 at 5:05 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As per automake docs:
->
-> The DESTDIR variable can be used to perform a staged installation. The
-> package should be configured as if it was going to be installed in its
-> final location (e.g., --prefix /usr), but when running make install, the
-> DESTDIR should be set to the absolute name of a directory into which the
-> installation will be diverted. From this directory it is easy to review
-> which files are being installed where, and finally copy them to their
-> final location by some means.
->
-> Prefix $(prefix) with $(DESTDIR) when calling setup.py.
->
-> Reported-by: Peter Robinson <pbrobinson@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Peter Robinson <pbrobinson@gmail.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
+SUSB#_EN
 
-Fixes the build for Fedora, thanks.
-> ---
->  bindings/python/Makefile.am | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Feb 13, 2023 at 7:47 AM Werner Sembach <wse@tuxedocomputers.com> wrote:
 >
-> diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-> index 9fb2e95..75ce53b 100644
-> --- a/bindings/python/Makefile.am
-> +++ b/bindings/python/Makefile.am
-> @@ -18,7 +18,7 @@ all-local:
+> Am 13.02.23 um 15:37 schrieb Andy Shevchenko:
+> > On Mon, Feb 13, 2023 at 07:20:48AM -0600, Mario Limonciello wrote:
+> >> On 2/13/23 06:41, Andy Shevchenko wrote:
+> >>> On Mon, Feb 13, 2023 at 12:30:08PM +0100, Werner Sembach wrote:
+> >>>> Am 10.02.23 um 18:04 schrieb Andy Shevchenko:
+> >>>>> On Fri, Feb 10, 2023 at 05:46:36PM +0100, Werner Sembach wrote:
+> >>>>>> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> >>>>>> changed the policy such that I2C touchpads may be able to wake up the
+> >>>>>> system by default if the system is configured as such.
+> >>>>>>
+> >>>>>> However on Clevo NH5xAx/TUXEDO XA15 Gen10 there is a mistake in the ACPI
+> >>>>>> tables that the TP_ATTN# signal connected to GPIO 10 is configured as
+> >>>>>> ActiveLow and level triggered but connected to a pull up.
+> >>>>> I'm not sure I understand the issue here. From what you say here it seems
+> >>>>> correct ACPI description.
+> >>>> TBH I copied the commit description from https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4cb786180dfb5258ff3111181b5e4ecb1d4a297b
+> >>>> which is for a different device having the exact same problem.
+> >>> Yeah, and I reviewed that and seems paid no attention to this detail.
+> >>>
+> >>> So, ActiveLow + PullUp is the _right_ thing to do in ACPI.
+> >>> The problem seems somewhere else.
+> >>>
+> >>> Mario, can we have an access to the schematics of the affected pin to
+> >>> understand better what's going on?
+> >>>
+> >>> Or is that description missing some crucial detail?
 >
->  install-exec-local:
->         GPIOD_WITH_TESTS= \
-> -       $(PYTHON) $(srcdir)/setup.py install --prefix=$(prefix)
-> +       $(PYTHON) $(srcdir)/setup.py install --prefix=$(DESTDIR)$(prefix)
+> Schematics for the NH5xAx can also be found on this unofficial clevo mirror
+> (service manuals, scroll to end for schematics):
 >
->  SUBDIRS = gpiod
+> http://repo.palkeo.com/clevo-mirror/NH5xACx_AFx_ADx/NH50AC.zip
 >
-> --
-> 2.37.2
+> http://repo.palkeo.com/clevo-mirror/NH5xACx_AFx_ADx/NH50AF1.zip
 >
+> User: repo
+>
+> PW: repo
+>
+> >> The schematics were shared by the reporter for the original issue which is
+> >> how we reached the conclusion there was a mistake.
+> >>
+> >> As they're both Clevo designs it's certainly possible they have the same
+> >> mistake in two systems.
+
+> > Thank you!
+> > I have looked at the schematics and read discussion.
+> >
+> > So, the conclusion that this is a BIOS bug is incorrect in my opinion.
+> > The problem is either in the PMIC/EC firmware that shouldn't shut down 3.3VS
+> > signal for a while or on the PCB level, so that pull up should be connected
+> > to another power source that stays on.
+> >
+> > This means the description on the initial patch with the same issue is
+> > incorrect.
+> >
+> > Do we know the power sequence on the suspend to see which and how on the
+> > time line the power sources are off/on?
+> >
+
+If you look at the load switch for 3.3VS, its EN2 pin is connected to
+SUSB#_EN which is connected to SUSB# which is connected to
+AND(SUSB#_PCH -> SLP_S3_L, PM_SLP_S0 -> S0A3_GPIO). So there is no
+PMIC/EC firmware that is incharge of this. I guess I'm not quite sure
+how they have S0A3_GPIO configured, so maybe I have an invert wrong.
+
+The EC does control DD_ON which controls the 3.3V and 5V rails.
+
+> >>>>>> As soon as the
+> >>>>>> system suspends the touchpad loses power and then the system wakes up.
+> >>>>>>
+> >>>>>> To avoid this problem, introduce a quirk for this model that will prevent
+> >>>>>> the wakeup capability for being set for GPIO 10.
+> >>>>> I'm not against fixing this, but wouldn't be better to actually target the root
+> >>>>> cause and have a different quirk? Or is it me who didn't get what is the root
+> >>>>> cause?
+> >>>>>
+> >>>> I missed to reference the original discussion while copying the description:
+> >>>> https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627 (Note that
+> >>>> it's a somewhat convoluted issue spanning multiple bugs when you scroll up
+> >>>> from that particular linked comment, which are however irrelevant for this
+> >>>> patch)
+> >>>>
+> >>>> I'm not deep into how ACPI defined IRQ work so maybe not a good idea for me
+> >>>> summing it up, as I might have misunderstood parts of it ^^
+> >>> The GpioIo() and GpioInt() resources have gaps in them, due to this some
+> >>> additional information is required or some heuristics is used to deduct
+> >>> the settings.
+> >>>
+> >>> All this is described in
+> >>> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/gpio-properties.html
+> >>>
+> >>>> I added the other ones from there to the cc.
+> >>> Thank you.
