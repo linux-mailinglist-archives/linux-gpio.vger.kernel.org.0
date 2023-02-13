@@ -2,64 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E013F694B85
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 16:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BD25694CCD
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 17:31:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbjBMPpG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 10:45:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58852 "EHLO
+        id S230135AbjBMQbA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 13 Feb 2023 11:31:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbjBMPpD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 10:45:03 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE9918AA6;
-        Mon, 13 Feb 2023 07:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676303102; x=1707839102;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hDHWza/hTNXaQ+1x9vJMEvDHotzqCdmFV+4VMwkFn1g=;
-  b=nB6osN9pw4CuBpjbm9WC4Kl0DASFmIzacOpRLZ+0GWj5d9p24559twxg
-   qKbEdNttxViXZNmMk3jxQNhtapGd64oNiPQ+VTNCICADztJdZRNgniNB+
-   0pFGtkmUWSy5V1WmEIAFi56yKBN+utMQhLWylQgUT1yXOC3siS68UcGUn
-   7P39gjj8mzxWEQSUcwhQ5SjQjsFfZZotSKUDvFpKHUwWSLXLfUcXpE5Lq
-   RQX9IHpHpypV7Pg3BC12yyzYnidEvRqkhGzT7oTImIwMDYMY4EH+pVXf+
-   1VM0UDcipGqyHZ4qmTiqSNJkmOxcBpu69VI6Mit4/iSwZSK50E70G6hvF
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="318938358"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="318938358"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 07:45:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="618682273"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="618682273"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 13 Feb 2023 07:44:59 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4056E269; Mon, 13 Feb 2023 17:45:35 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 5/5] pinctrl: at91: Utilise temporary variable for struct device
-Date:   Mon, 13 Feb 2023 17:45:32 +0200
-Message-Id: <20230213154532.32992-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230213154532.32992-1-andriy.shevchenko@linux.intel.com>
-References: <20230213154532.32992-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229815AbjBMQbA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 11:31:00 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97041CA3E;
+        Mon, 13 Feb 2023 08:30:58 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pRbiw-0043kT-S2; Mon, 13 Feb 2023 17:30:38 +0100
+Received: from p5b13aa49.dip0.t-ipconnect.de ([91.19.170.73] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pRbiw-0046cc-HY; Mon, 13 Feb 2023 17:30:38 +0100
+Message-ID: <dbda1f6e1c280c13d963ad6e7f68a853a7741199.camel@physik.fu-berlin.de>
+Subject: Re: remove arch/sh
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Date:   Mon, 13 Feb 2023 17:30:36 +0100
+In-Reply-To: <20230206100856.603a0f8f@canb.auug.org.au>
+References: <20230113062339.1909087-1-hch@lst.de>
+         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+         <20230116071306.GA15848@lst.de>
+         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+         <20230203071423.GA24833@lst.de>
+         <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
+         <20230203083037.GA30738@lst.de> <20230206100856.603a0f8f@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 91.19.170.73
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,185 +72,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We have a temporary variable to keep pointer to struct device.
-Utilise it inside the ->probe() implementation.
+Hi Steve!
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-at91.c | 63 +++++++++++++++-------------------
- 1 file changed, 27 insertions(+), 36 deletions(-)
+On Mon, 2023-02-06 at 10:08 +1100, Stephen Rothwell wrote:
+> Hi,
+> 
+> On Fri, 3 Feb 2023 09:30:37 +0100 Christoph Hellwig <hch@lst.de> wrote:
+> > 
+> > On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
+> > > Since this is my very first time stepping up as a kernel maintainer, I was hoping
+> > > to get some pointers on what to do to make this happen.
+> > > 
+> > > So far, we have set up a new kernel tree and I have set up a local development and
+> > > test environment for SH kernels using my SH7785LCR board as the target platform.
+> > > 
+> > > Do I just need to send a patch asking to change the corresponding entry in the
+> > > MAINTAINERS file?  
+> > 
+> > I'm not sure a there is a document, but:
+> > 
+> >  - add the MAINTAINERS change to your tree
+> >  - ask Stephen to get your tree included in linux-next
+> 
+> And by "Stephen", Christoph means me.  When you are ready, please send
+> me a request to include your tree/branch in linux-next (usually the
+> branch is called something like "for-next" or just "next") telling me
+> the git URL, and the contacts I should send email to if there are
+> conflicts/build issues with the branch.  I will then fetch the branch
+> every time I create a new linux-next release (most work days), so all
+> you need to do is update that branch each time you are ready to publish
+> more commits.
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 08f88403affb..7ada36ca64eb 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1304,7 +1304,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	if (!np)
- 		return -ENODEV;
- 
--	info->dev = &pdev->dev;
-+	info->dev = dev;
- 	info->ops = of_device_get_match_data(dev);
- 	at91_pinctrl_child_count(info, np);
- 
-@@ -1324,35 +1324,30 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
--	dev_dbg(&pdev->dev, "nmux = %d\n", info->nmux);
-+	dev_dbg(dev, "nmux = %d\n", info->nmux);
- 
--	dev_dbg(&pdev->dev, "mux-mask\n");
-+	dev_dbg(dev, "mux-mask\n");
- 	tmp = info->mux_mask;
- 	for (i = 0; i < gpio_banks; i++) {
--		for (j = 0; j < info->nmux; j++, tmp++) {
--			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
--		}
-+		for (j = 0; j < info->nmux; j++, tmp++)
-+			dev_dbg(dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
- 	}
- 
--	dev_dbg(&pdev->dev, "nfunctions = %d\n", info->nfunctions);
--	dev_dbg(&pdev->dev, "ngroups = %d\n", info->ngroups);
--	info->functions = devm_kcalloc(&pdev->dev,
--					info->nfunctions,
--					sizeof(struct at91_pmx_func),
--					GFP_KERNEL);
-+	dev_dbg(dev, "nfunctions = %d\n", info->nfunctions);
-+	dev_dbg(dev, "ngroups = %d\n", info->ngroups);
-+	info->functions = devm_kcalloc(dev, info->nfunctions, sizeof(*info->functions),
-+				       GFP_KERNEL);
- 	if (!info->functions)
- 		return -ENOMEM;
- 
--	info->groups = devm_kcalloc(&pdev->dev,
--					info->ngroups,
--					sizeof(struct at91_pin_group),
--					GFP_KERNEL);
-+	info->groups = devm_kcalloc(dev, info->ngroups, sizeof(*info->groups),
-+				    GFP_KERNEL);
- 	if (!info->groups)
- 		return -ENOMEM;
- 
--	dev_dbg(&pdev->dev, "nbanks = %d\n", gpio_banks);
--	dev_dbg(&pdev->dev, "nfunctions = %d\n", info->nfunctions);
--	dev_dbg(&pdev->dev, "ngroups = %d\n", info->ngroups);
-+	dev_dbg(dev, "nbanks = %d\n", gpio_banks);
-+	dev_dbg(dev, "nfunctions = %d\n", info->nfunctions);
-+	dev_dbg(dev, "ngroups = %d\n", info->ngroups);
- 
- 	i = 0;
- 
-@@ -1376,7 +1371,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	struct pinctrl_pin_desc *pdesc;
- 	int ret, i, j, k;
- 
--	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
- 
-@@ -1384,13 +1379,10 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	at91_pinctrl_desc.name = dev_name(&pdev->dev);
-+	at91_pinctrl_desc.name = dev_name(dev);
- 	at91_pinctrl_desc.npins = gpio_banks * MAX_NB_GPIO_PER_BANK;
- 	at91_pinctrl_desc.pins = pdesc =
--		devm_kcalloc(&pdev->dev,
--			     at91_pinctrl_desc.npins, sizeof(*pdesc),
--			     GFP_KERNEL);
--
-+		devm_kcalloc(dev, at91_pinctrl_desc.npins, sizeof(*pdesc), GFP_KERNEL);
- 	if (!at91_pinctrl_desc.pins)
- 		return -ENOMEM;
- 
-@@ -1413,8 +1405,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	platform_set_drvdata(pdev, info);
--	info->pctl = devm_pinctrl_register(&pdev->dev, &at91_pinctrl_desc,
--					   info);
-+	info->pctl = devm_pinctrl_register(dev, &at91_pinctrl_desc, info);
- 	if (IS_ERR(info->pctl))
- 		return dev_err_probe(dev, PTR_ERR(info->pctl), "could not register AT91 pinctrl driver\n");
- 
-@@ -1423,7 +1414,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 		if (gpio_chips[i])
- 			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
- 
--	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
-+	dev_info(dev, "initialized AT91 pinctrl driver\n");
- 
- 	return 0;
- }
-@@ -1714,6 +1705,7 @@ static void gpio_irq_handler(struct irq_desc *desc)
- static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 				  struct at91_gpio_chip *at91_gpio)
- {
-+	struct device		*dev = &pdev->dev;
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-@@ -1721,8 +1713,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_irq_chip	*girq;
- 	int i;
- 
--	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip),
--				    GFP_KERNEL);
-+	gpio_irqchip = devm_kzalloc(dev, sizeof(*gpio_irqchip), GFP_KERNEL);
- 	if (!gpio_irqchip)
- 		return -ENOMEM;
- 
-@@ -1758,7 +1749,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		girq->parent_handler = gpio_irq_handler;
- 		girq->num_parents = 1;
--		girq->parents = devm_kcalloc(&pdev->dev, 1,
-+		girq->parents = devm_kcalloc(dev, girq->num_parents,
- 					     sizeof(*girq->parents),
- 					     GFP_KERNEL);
- 		if (!girq->parents)
-@@ -1824,7 +1815,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	at91_chip = devm_kzalloc(&pdev->dev, sizeof(*at91_chip), GFP_KERNEL);
-+	at91_chip = devm_kzalloc(dev, sizeof(*at91_chip), GFP_KERNEL);
- 	if (!at91_chip)
- 		return -ENOMEM;
- 
-@@ -1836,7 +1827,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	at91_chip->pioc_virq = irq;
- 	at91_chip->pioc_idx = alias_idx;
- 
--	at91_chip->clock = devm_clk_get_enabled(&pdev->dev, NULL);
-+	at91_chip->clock = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(at91_chip->clock))
- 		return dev_err_probe(dev, PTR_ERR(at91_chip->clock), "failed to get clock, ignoring.\n");
- 
-@@ -1844,8 +1835,8 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	at91_chip->id = alias_idx;
- 
- 	chip = &at91_chip->chip;
--	chip->label = dev_name(&pdev->dev);
--	chip->parent = &pdev->dev;
-+	chip->label = dev_name(dev);
-+	chip->parent = dev;
- 	chip->owner = THIS_MODULE;
- 	chip->base = alias_idx * MAX_NB_GPIO_PER_BANK;
- 
-@@ -1886,7 +1877,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, at91_chip);
- 	gpio_banks = max(gpio_banks, alias_idx + 1);
- 
--	dev_info(&pdev->dev, "at address %p\n", at91_chip->regbase);
-+	dev_info(dev, "at address %p\n", at91_chip->regbase);
- 
- 	return 0;
- }
+I'm in the MAINTAINERS now in Linus' tree. I have requested a kernel.org
+account now and will hopefully have my trees set up later this week.
+
+I'll let you know about the URLs as soon as possible.
+
+Adrian
+
 -- 
-2.39.1
-
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
