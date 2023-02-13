@@ -2,75 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69F19693F7F
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 09:22:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC64E693FE4
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Feb 2023 09:45:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbjBMIWl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Feb 2023 03:22:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        id S230031AbjBMIpc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Feb 2023 03:45:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbjBMIWj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 03:22:39 -0500
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89F2126E0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 00:22:31 -0800 (PST)
-Received: by mail-vk1-xa2f.google.com with SMTP id m65so872357vkh.10
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 00:22:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DNFhsPbkfGfOWNF5M4aRb8nwKD8L5aVj2WV/H46NM8s=;
-        b=FUl1PYoI6f7iaowuUwS7WQ+lm59mVLYdd9PxJxMH0hpKlctnYJr0OwwNREZKLvP2Am
-         DwKWxu/0Jk+JGgsmeUlJTQd80TUHaP1Ys0k+RwJa6m5zdIgzFA7kMIvgujH6RcCPKYAL
-         Y21pdWTp4KxdAuVRvn7mVLVq6kLVuS+ux1rKDDbBOtrWUDVv0qWjC0Lc/JPt6dSy8Zd6
-         RhQRNOynaR9GbZ8sh75eYUzwu8EhC3eTnQvv1L0hGSGxPG5TTeN46PL99z5a7RsbBp9U
-         NUKVX16/+l07eikPflUNp3ohRYvlmk7uYzYWKN6xMVq9OnSL3HRBzDRfAv5VTzZVw4l0
-         xx+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNFhsPbkfGfOWNF5M4aRb8nwKD8L5aVj2WV/H46NM8s=;
-        b=oDSkV584Ixktloj8ouqLmDSKnYOBx7Oe14kjZtZTW9P30I66PeZpxHGtyKiBjasWZb
-         HJ6zFpiyY/QpCmM9H4EgrHlBEt6tBPptb1JIh7zVkjDO37hdk66MwsqyAkVknqQq9XQ8
-         U0F7FJABKAmrIX0Y72BAA4J+MfWy9KZKtYJ82ZbNYPW4Jj5EV9z2RC7iEyfqHR8GXOPa
-         rsv0eR7fvD8CPVsbrrLob6v904OGT0YSEYy+oxsKXQOqWGAZY1EbBT/OYH+bJDSIWdTl
-         TAmcbONcOnyxqYS9Vbcct/0ASWqxjeyWK7OEMZLhlKr6IycXFS/WK5owGkwlARSM+AW3
-         dHIQ==
-X-Gm-Message-State: AO0yUKW2ZkGqIy6QQn0lLuUePt/tnkMfMMeB7gYhqH5jJVMAaXmcP4Zp
-        a+ygP/inal7ao4so7nzF8E5fB4VHT9Dv8+qmIQ==
-X-Google-Smtp-Source: AK7set+9UwkiFHdHvWwWhXVctY96ivbydUW+f3py/7uJ2afNQ6ep1a2hxq837+GFsQV5TqE4fgsKoS5daSneuGgcjrk=
-X-Received: by 2002:a1f:2a06:0:b0:3ea:4830:a019 with SMTP id
- q6-20020a1f2a06000000b003ea4830a019mr3902464vkq.9.1676276550497; Mon, 13 Feb
- 2023 00:22:30 -0800 (PST)
+        with ESMTP id S229747AbjBMIpb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Feb 2023 03:45:31 -0500
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6026E10C6;
+        Mon, 13 Feb 2023 00:45:30 -0800 (PST)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 84ACE3200903;
+        Mon, 13 Feb 2023 03:45:28 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 13 Feb 2023 03:45:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1676277928; x=
+        1676364328; bh=CHr6ZXr+PKDm6XjaoSQUGvnP/21g+79OjDTwDq5gaPY=; b=W
+        t3ThRa6m8G//ZEGPBt9bSSWQHtwhnV+V66r8PioCLDbu2gujONsSUIE6N7CaMz8n
+        ky2KFbzjefwT+/SKdn5N7Hs5kcanFKFDxmSDuNwwUF+1JMt6i/XtTjrGoyiU6WHE
+        ZPg80dNS3oXlCNbStquw7YzXLUjfuWiVAoXw17rwPPDa9Cw0/bQwWXNgz4PymR3B
+        HDYjzC19w2gxR6IRQl3+u5X9lzRGR742qBYNwugmKqE0UmSvA7uyi/F66odrIbHY
+        1m8Y7Y9taEsgdqPPvpR0qDQTfcLrWboPvxK9BoqDzdFDQZDCW/k6XO/eyrkNFpcS
+        zTpUGZzmPB0KfFlm+GfUg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1676277928; x=
+        1676364328; bh=CHr6ZXr+PKDm6XjaoSQUGvnP/21g+79OjDTwDq5gaPY=; b=U
+        3B8svi7ofTzNzNfCrAkG5k+OjjSV6n2kG450pJCl56tjYBA/tn63V0XsL6DCIZNf
+        RWG7zesab0Z+Nxa4xd9OQuLFKTOmdmlF4tLUheQxeGtwZCh80zmaRTXKjeGtNb6y
+        Nc4U16cHZaseGwb4xi+mXt74vqE4mTUfsIdd8NqFa4eX1hS5UDXoOQgVmUd6+X36
+        W5KwL5iVYYbdIVBwpB3NLThPZHtf/IUW0o4lYCPMLPD64b6WGxnkG7w4Qa5LsrGb
+        oTWrqf3qOwKzwDBd6BHZLmOELaIA/T5xOQeIvFZCidmSUeVyv/v1Sv9R5SsMN0pD
+        SLp6d1fwrM40ctXRApsZw==
+X-ME-Sender: <xms:p_jpY0Kmk_nnZfqC7dkLu06A6-ZB0R4EvAxbU-cR7-YIYhmYcwfgEA>
+    <xme:p_jpY0IyC7SgFeAu1hYO5A0vnxHENzQ4PDfyFKNXNG3iiGOOqsjPbQ9Hv6gUnT5Md
+    EN83NUt_yQuF59rHOU>
+X-ME-Received: <xmr:p_jpY0sKJEAZ25PyphufYsur7gkQrbXalkNswmtuZwDHFsdPwW7Bu5vOJTKz5nQPRcIIxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeitddguddvvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgr
+    gihimhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtf
+    frrghtthgvrhhnpeetgfelgefggeekkefggfeludeiudffjeffgeevveekjedukedtudeu
+    teefteefgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:p_jpYxYwn3ytOO-2l-lqxezN2qmW_yIOcHhdbFAUi1_Flkpi3oQCAg>
+    <xmx:p_jpY7YBh7lz6U76wlAhWJXkGHIIg07pBuH55d-7fcxarpyFrTtdrQ>
+    <xmx:p_jpY9DaszLO6-KEtbb-GbVPbzJTza2fDaXjtbd4D4JgL-k_Vf4ekw>
+    <xmx:qPjpY4QLNbGa4x2nK2jJAPx-hBvBn7kR_0Za636p63BVIzYe-vgb-g>
+Feedback-ID: i8771445c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 13 Feb 2023 03:45:27 -0500 (EST)
+Date:   Mon, 13 Feb 2023 09:45:25 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andreas Feldner <pelzi@flying-snail.de>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: sunxi: set minimal debounce on
+ input-debounce 0
+Message-ID: <20230213084525.gr4urlvygsmonati@houat>
+References: <Y+kuD+/v3+N1vwxR@debian-qemu.internal.flying-snail.de>
 MIME-Version: 1.0
-Received: by 2002:a59:d954:0:b0:399:647f:a8f5 with HTTP; Mon, 13 Feb 2023
- 00:22:29 -0800 (PST)
-Reply-To: engr.fred_martins@aol.com
-From:   "Fred Martins." <fred49508@gmail.com>
-Date:   Mon, 13 Feb 2023 00:22:29 -0800
-Message-ID: <CAJFb9+A_oaVJb4x32SiDzSQe1=AMdB0dYt6R-AdvKbsbKJw7EA@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Y+kuD+/v3+N1vwxR@debian-qemu.internal.flying-snail.de>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings,
+Hi,
 
-I wonder why you continue neglecting my emails. Please, acknowledge
-the receipt of this message in reference to the subject above as I
-intend to send to you the details of the mail. Sometimes, try to check
-your spam box because most of these correspondences fall out sometimes
-in SPAM folder.
+On Sun, Feb 12, 2023 at 07:21:03PM +0100, Andreas Feldner wrote:
+> sunxi-h3-h5 based boards have no support for switching
+> off IRQ debouncing filter. This would be the expected
+> behaviour of value 0 for the general pinctl parameter
+> input-debounce.
+> The current driver implementation ignores value 0
+> for input-debounce, leaving the chip's default. This
+> default, however, is not minimal, but equivalent to
+> value 31 (microseconds).
+>=20
+> This patch does not ignore value 0 but instead makes
+> sure the corresponding IRQ debounce filter is set
+> to the shortest time selectable, i. e. the fast
+> oscillator with a divider of 1 =3D=3D (2 ^ 0).
+>=20
+> Fixes: 7c926492d38a ("pinctrl: sunxi: Add support for interrupt debouncin=
+g")
+>=20
+> Signed-off-by: Andreas Feldner <pelzi@flying-snail.de>
 
-Best regards,
+Like I said in the other thread, I don't think that deviating from the
+generic property semantics is a good thing.
+
+Maxime
