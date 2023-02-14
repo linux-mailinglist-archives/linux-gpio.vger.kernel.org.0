@@ -2,180 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 794626962DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 12:56:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30719696382
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 13:31:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232560AbjBNL41 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 06:56:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52188 "EHLO
+        id S229686AbjBNMbm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 07:31:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232347AbjBNL4O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 06:56:14 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17F324C99;
-        Tue, 14 Feb 2023 03:56:13 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aszBClSYwplZpgre2VAqvGc9WFYBoqaodUa3GV82uKY0qLnyxpHK5DH3niS8wayIfBbGpSOVbwXCCEKajqwBWJsZmPAAD3Qe5UK6RySKd6ObkFL/4DY1hNPiU7oi81Gn4Ac/PswfABcT1JZIxE/UPoYGZGd8JF4JxDJ3j9TDSK8bdB1dLK2wM681w3yhgTRIFuhw1rcNL5XY8K78WdCM0M0tcXI3xKk5kIZUoZmJ4KAWViG5SGv7uVr+NixgCXx5/uJehztttpce/Y7ryvsJTE1OaZsuMWS2uCBvLzajf6zQcP+o2QfU8MSigfrTymEa/VfxUTrGAQhwfO+wCMBojw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e7d8U2b5VRjx266Ds+P6gjeWYis/y1BO30+E/CMtmgg=;
- b=aG+NLYDMlwyW1R/LG/S1PAg/hH9PWY/tvP4u/gYh+6LdJJ/EctBF4yTFVRFaaXlsxbj/+VRf3a25T79kROi0p1/vnFk8waBFYNAGqFeL9XSFPuimOs6sqRGmHFItXWfo3SWozEjzEyn1Mp8Sx0hSPPlw0dCQs9AoIcXJnkwxD2UuDfGypl1DVO9MVINMrV0qcMnUXcjRVs90SaWQ3Jm/Yt2sDzqo0gV5PwAtk2Dy+FJZeM5QcyE5Kyba2ML9lPKtteSvaZE8BetE9OUIVR0SpzxBaFGEET4EWucPp7iYbD2s1UPavjEn2troobE83b8G03ek9Xh2Ip1I2npqELFIFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e7d8U2b5VRjx266Ds+P6gjeWYis/y1BO30+E/CMtmgg=;
- b=XUZcxCXd7zg7adJTul0AHEoSa78tUS73nVIal3oBV6G0IJVeJaGDvFUevl5R1M+MZuUZTSiWniLKnzaSIYFmI17eSMF4TOc2zke/6W9RL10eKl0w9UrRJ+ng6JRpoYz5WfbffDlXagY7UH/ybd45iRv9eQsdvyYiQzwt1XkG9qTQtaBKpsOJBsOcLrgQ4H9Mt5W2at+R7gbGZVqrC+bRz2KTGSKbBdtOwz/sc2q+1SwAYQ+K+9sbOEUHeZVzRqnTbLmYMxpVsWUSFtlmsoVJcjS3T6i7RdkWM7NOVThtkohKR/WdzffMJ6LnJhgcNBegfKYxZudLdtdSq4Ych6e1KQ==
-Received: from MW4PR04CA0390.namprd04.prod.outlook.com (2603:10b6:303:81::35)
- by CY8PR12MB7413.namprd12.prod.outlook.com (2603:10b6:930:5f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
- 2023 11:56:12 +0000
-Received: from CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:81:cafe::23) by MW4PR04CA0390.outlook.office365.com
- (2603:10b6:303:81::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24 via Frontend
- Transport; Tue, 14 Feb 2023 11:56:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT060.mail.protection.outlook.com (10.13.175.132) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6086.24 via Frontend Transport; Tue, 14 Feb 2023 11:56:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
- 2023 03:56:02 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
- 2023 03:56:02 -0800
-Received: from dipenp.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Tue, 14 Feb 2023 03:56:02 -0800
-From:   Dipen Patel <dipenp@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <robh+dt@kernel.org>, <timestamp@lists.linux.dev>
-CC:     Dipen Patel <dipenp@nvidia.com>
-Subject: [PATCH V2 6/6] arm64: tegra: Add GTE nodes
-Date:   Tue, 14 Feb 2023 03:55:53 -0800
-Message-ID: <20230214115553.10416-7-dipenp@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230214115553.10416-1-dipenp@nvidia.com>
-References: <20230214115553.10416-1-dipenp@nvidia.com>
-X-NVConfidentiality: public
+        with ESMTP id S229604AbjBNMbl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 07:31:41 -0500
+Received: from srv6.fidu.org (srv6.fidu.org [159.69.62.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC587C144;
+        Tue, 14 Feb 2023 04:31:37 -0800 (PST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by srv6.fidu.org (Postfix) with ESMTP id B554EC800A7;
+        Tue, 14 Feb 2023 13:31:35 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at srv6.fidu.org
+Received: from srv6.fidu.org ([127.0.0.1])
+        by localhost (srv6.fidu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id aweOVSJQj-J0; Tue, 14 Feb 2023 13:31:35 +0100 (CET)
+Received: from [192.168.178.52] (host-212-18-30-247.customer.m-online.net [212.18.30.247])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: wse@tuxedocomputers.com)
+        by srv6.fidu.org (Postfix) with ESMTPSA id F18DEC800A4;
+        Tue, 14 Feb 2023 13:31:34 +0100 (CET)
+Message-ID: <2d983050-f844-6c5e-8ae9-9f87ac68dfdd@tuxedocomputers.com>
+Date:   Tue, 14 Feb 2023 13:31:34 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT060:EE_|CY8PR12MB7413:EE_
-X-MS-Office365-Filtering-Correlation-Id: deed0e13-8fde-46c9-bc6f-08db0e8277b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YpSvSIs60o5EJRvzudYTxuV6pS3FkrQF1vN1X7ti2G0X2FnS8vGU/rK8as97xgWI9mLqRTEvur71UbVjrrL4p8Lib589eK50BeJSqXEmhM+ke1ZSOIaji580W6hfYcjeUewkiRTpwRN1BgLLzoxstAcJ1g0IWm/ggWlVwzKOC4xjHZSsg8r8sYCZ/m/NJZeNevMO4RMl48m4khccURas86eru3DlsnmybIp65LSmp+NmEY2Q9Lx6e9X9IVWQ2c2V0LcV77WLiineEyWNzD23Pq06c5H42OnehKsRSyv8bwnLABACk4dThEiRNDoozsri4hc66pZ3iqavPppH95t6wv8bC6BNdEVfeZYazGdNjFuMwYh3X0Y89bUNrE3Qtr7nHt9gKEta4sH2AUxHQUKSZF2GUNZ1Qpd37J8+NKmKpXSaZpMHSMXU7PcqYVtn6vmqbjddTW8fZIcmxTDzCb24XOrebRYOzg0Vexk6Rz2iSIAkbuJlJW+Kfq0vwOjXJGVoC+YIhTeal24zKQIrPFfLmpmY2dPmn1v3eTDr/HyCEeZXLUbHU4wa3ieYHH9O17PLtSDbAzqiBtaq6Rw48PK+cK4WP48iqM265BW8t4My9j5q5Y08jojhDHOQcBMP57hL7TDhQbtiJFKo1Bj4BmsH+0yYewZ3sJ32cFf0vicQvspsKyThXKEcBOzEz4MM1LO3CU4P9SC0kuPtQV2/xBYS3wKwHuu2lKTmKmHcjoIUt8ZAZt1pdRPfPbvsIgvWlt6jfzq+AaVF2BRx7xZVn7JSYg==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(136003)(346002)(39860400002)(396003)(376002)(451199018)(40470700004)(46966006)(36840700001)(82740400003)(70586007)(36860700001)(7696005)(41300700001)(8676002)(70206006)(4326008)(8936002)(5660300002)(356005)(921005)(86362001)(7636003)(107886003)(83380400001)(1076003)(186003)(26005)(6666004)(40460700003)(478600001)(426003)(336012)(2616005)(47076005)(36756003)(82310400005)(110136005)(316002)(40480700001)(2906002)(2101003)(83996005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 11:56:11.8168
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: deed0e13-8fde-46c9-bc6f-08db0e8277b1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7413
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
+To:     andy.shevchenko@gmail.com
+Cc:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230210164636.628462-1-wse@tuxedocomputers.com>
+ <Y+qyEVxMh4VRIsy3@surfacebook>
+Content-Language: en-US
+From:   Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <Y+qyEVxMh4VRIsy3@surfacebook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add GTE nodes for the tegra234. Also modify AON GTE nodes for the
-tegra194 to remove nvidia,slice property and add nvidia,gpio-controller
-propertyto specify AON GPIO controller node so that GTE driver can
-do namespace conversion between GPIO lines provided by the gpiolib
-framework and hardware timestamping engine subsystem.
-
-Signed-off-by: Dipen Patel <dipenp@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi |  3 +--
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 19 +++++++++++++++++++
- 2 files changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 4afcbd60e144..4c92850b1ec4 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1363,7 +1363,6 @@
- 			reg = <0x3aa0000 0x10000>;
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 			nvidia,int-threshold = <1>;
--			nvidia,slices = <11>;
- 			#timestamp-cells = <1>;
- 			status = "okay";
- 		};
-@@ -1586,7 +1585,7 @@
- 			reg = <0xc1e0000 0x10000>;
- 			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 			nvidia,int-threshold = <1>;
--			nvidia,slices = <3>;
-+			nvidia,gpio-controller = <&gpio_aon>;
- 			#timestamp-cells = <1>;
- 			status = "okay";
- 		};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index eaf05ee9acd1..4a87490c5fd4 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -1086,6 +1086,15 @@
- 			clock-names = "fuse";
- 		};
- 
-+		hte_lic: hardware-timestamp@3aa0000 {
-+			compatible = "nvidia,tegra234-gte-lic";
-+			reg = <0x3aa0000 0x10000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			nvidia,int-threshold = <1>;
-+			#timestamp-cells = <1>;
-+			status = "okay";
-+		};
-+
- 		hsp_top0: hsp@3c00000 {
- 			compatible = "nvidia,tegra234-hsp", "nvidia,tegra194-hsp";
- 			reg = <0x03c00000 0xa0000>;
-@@ -1603,6 +1612,16 @@
- 			#mbox-cells = <2>;
- 		};
- 
-+		hte_aon: hardware-timestamp@c1e0000 {
-+			compatible = "nvidia,tegra234-gte-aon";
-+			reg = <0xc1e0000 0x10000>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			nvidia,int-threshold = <1>;
-+			nvidia,gpio-controller = <&gpio_aon>;
-+			#timestamp-cells = <1>;
-+			status = "okay";
-+		};
-+
- 		gen2_i2c: i2c@c240000 {
- 			compatible = "nvidia,tegra194-i2c";
- 			reg = <0xc240000 0x100>;
--- 
-2.17.1
-
+Am 13.02.23 um 22:56 schrieb andy.shevchenko@gmail.com:
+> Fri, Feb 10, 2023 at 05:46:36PM +0100, Werner Sembach kirjoitti:
+>> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+>> changed the policy such that I2C touchpads may be able to wake up the
+>> system by default if the system is configured as such.
+>>
+>> However on Clevo NH5xAx/TUXEDO XA15 Gen10 there is a mistake in the ACPI
+>> tables that the TP_ATTN# signal connected to GPIO 10 is configured as
+>> ActiveLow and level triggered but connected to a pull up. As soon as the
+>> system suspends the touchpad loses power and then the system wakes up.
+>>
+>> To avoid this problem, introduce a quirk for this model that will prevent
+>> the wakeup capability for being set for GPIO 10.
+> Please, update the commit message and send v2.
+>
+> We would like to have this fix nevertheless, because users will suffer w/o it.
+>
+OK I'm on it.
