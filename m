@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DDC0696C9F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 19:19:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C0A696EB6
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 21:54:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbjBNST0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 13:19:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
+        id S229483AbjBNUy3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 15:54:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjBNST0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 13:19:26 -0500
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C6A8A63;
-        Tue, 14 Feb 2023 10:19:23 -0800 (PST)
+        with ESMTP id S229454AbjBNUy2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 15:54:28 -0500
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41799298CC;
+        Tue, 14 Feb 2023 12:54:26 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id 37032604F2;
-        Tue, 14 Feb 2023 19:19:21 +0100 (CET)
+        by domac.alu.hr (Postfix) with ESMTP id 43115604F3;
+        Tue, 14 Feb 2023 21:54:23 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1676398761; bh=PJ3eaIwz7dzMUNCJVgbwJF/YFOg1DSyW0oFj3FiomaU=;
+        t=1676408063; bh=RT4I/OIHeNiAba1aSITMpBbq2CDX3h+SC/sKOSd/9Ik=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=nthE9KSwp47u16vpyRY0YXUoZSLegKo48mwiurI5A5GRS+9S09p5FlANn+EV5PUJX
-         +UXmBDE5I3fo6uQkwFFzJlOPAKb6CaP+cwlHhN6I6GwjXZr/Ztjo470NcYOT/zZKPJ
-         qF1l2qa9mIAZkUD08aEqq+FeNEAGAn25RFqYwtp5n6Oq8k7sUIvRN3q/gIyIBHKQnW
-         eKYWmdv/zdVCK9KqKLgsLVu9euqG/uVmLVDwuZNHOiENQ78zLG3UxPRTZPkB+IJ/0z
-         ZUfrVs1uuDkQmrAaT9Isb1i9hImtSM+D0S60XdnD1F7KE1jY7HB9EktnOePnHKYuiT
-         X7j6JM+dC4qzQ==
+        b=YlJG5cT2jLM/HdM/BEIywNTY5pocxGpkIc933y4t0nLCH+ISrPcMoE4346wHTHOHA
+         SkEO3w11ux3Z247Ab1Qrrxy/jUB6/yp8RYwhwQslw1UoqsKYG6L4IuGxskHxl/JrAn
+         aEEOqFpOeQnocQ0+6k+/OrBcin3QvS/Ck4KEjYU/XSxh9H7Gj6mp87JbMxfK7n3OvL
+         zyKbDqCNonb1Z+kQYiXzO1JcEA4eZqtxzYw1RjNCw2musENiUqWKMPDBkABBT3H+/Y
+         klYr/nZP0g7itlsUSR81ss4yJF77En3Lfx2oMRI5uRA7Gyo6WbVDR2LoEqC/WHBJdc
+         YSrw9XfWWeMxA==
 X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
 Received: from domac.alu.hr ([127.0.0.1])
         by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tRoXBTyv8o_P; Tue, 14 Feb 2023 19:19:18 +0100 (CET)
+        with ESMTP id OpyqtGM7-WDS; Tue, 14 Feb 2023 21:54:12 +0100 (CET)
 Received: from [192.168.1.4] (unknown [77.237.109.125])
-        by domac.alu.hr (Postfix) with ESMTPSA id B22B3604ED;
-        Tue, 14 Feb 2023 19:19:17 +0100 (CET)
+        by domac.alu.hr (Postfix) with ESMTPSA id 2630F604ED;
+        Tue, 14 Feb 2023 21:54:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1676398758; bh=PJ3eaIwz7dzMUNCJVgbwJF/YFOg1DSyW0oFj3FiomaU=;
+        t=1676408052; bh=RT4I/OIHeNiAba1aSITMpBbq2CDX3h+SC/sKOSd/9Ik=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=cfB/QyXS5W9jy/C/LT0fpmPMVJVMfEA/i/BUHrXlvLpQoJW+kjqaKiV0cu+q9MdIf
-         vu8g1XqdkuM5pbdA5M1uGl1/zrJXWkAe0FMYThsD5hubX13VSGTMjeiCOJO9kCZ9eD
-         EK4knTO/uU8qhXoUAMu8/Os8goG0DGGL1l+CCbiLq/zEHTlllgo0ICrSA6Y0R9JvU0
-         3nPMFLWcXbgMd9MD7Py78xyYpEtoRopDWIDt23rtZOAnPXNDDx+lBTaSbJ0P3ccEbB
-         f9ijYQpnlcQCmtnQUbWhPHc2jUIuQaB0wh3P9lT8d1Z9ry+6ScY/ocgDfqGvW+ALwB
-         HumtVjx6DWwKQ==
-Message-ID: <36d8e761-58e2-2515-fd1a-65a11731d1b1@alu.unizg.hr>
-Date:   Tue, 14 Feb 2023 19:19:16 +0100
+        b=bIJgZmsH4n45WJ1PnwIDlyOpDxEVi6AApkh/Mi7H/P1nXYQOauOeyTNZe8K8g8te1
+         2+fwsDq0BOu+wqwX0/x1ZF3AZXFclAwrq0jDHncHFHrqY6IyNJEY5LvG+RMnXXa6ie
+         6MkEv4P6Ni9j8/orHjRRT64XoeYLtdtqhvxnAGvE1sC85DNlUTmLtcIzx7FYRG30tZ
+         5c1rlfpzYRK0S5xJNCN19A/jByYanU22y9jrgOGC2wt7P7wuokWC220BnHAZpKV2Be
+         1YGAmbLiY7WGm4pWvk8mXNzRwWcbKpb+6LsmKETWG6TdhOkX2ARCMvxoeUc6Pb2JOS
+         /z78pCDNab8tQ==
+Message-ID: <f796c459-cfa0-7643-acd5-ae5638e213dc@alu.unizg.hr>
+Date:   Tue, 14 Feb 2023 21:54:11 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
+Subject: Re: INFO: BISECTED: memory leak in gpio device in 6.2-rc6
 To:     Andy Shevchenko <andriy.shevchenko@intel.com>
 Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -237,97 +237,51 @@ On 12. 02. 2023. 15:19, Andy Shevchenko wrote:
 >  
 >  static ssize_t
 
+P.S.
+
 Hi, Andy,
 
-Sorry, but unfortunately this patch didn't fix the memleak. Please see the result:
+Lucky or unlucky, bisect was rather quick: the gpio-sim module seems to appear in
+the 5.17-rc1 kernel, and it seems that this first version is already "bad", that is,
+leaking memory.
 
-root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# echo clear > /sys/kernel/debug/kmemleak
-root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# time ./gpio-sim.sh
-trap: SIGTERM: bad trap
-1. chip_name and dev_name attributes
-1.1. Chip name is communicated to user
-1.2. chip_name returns 'none' if the chip is still pending
-1.3. Device name is communicated to user
-2. Creating and configuring simulated chips
-2.1. Default number of lines is 1
-2.2. Number of lines can be specified
-2.3. Label can be set
-2.4. Label can be left empty
-2.5. Line names can be configured
-2.6. Line config can remain unused if offset is greater than number of lines
-2.7. Line configfs directory names are sanitized
-2.8. Multiple chips can be created
-2.9. Can't modify settings when chip is live
-2.10. Can't create line items when chip is live
-2.11. Probe errors are propagated to user-space
-2.12. Cannot enable a chip without any GPIO banks
-2.13. Duplicate chip labels are not allowed
-2.14. Lines can be hogged
-3. Controlling simulated chips
-3.1. Pull can be set over sysfs
-3.2. Pull can be read from sysfs
-3.3. Incorrect input in sysfs is rejected
-3.4. Can't write to value
-4. Simulated GPIO chips are functional
-4.1. Values can be read from sysfs
-4.2. Bias settings work correctly
-GPIO gpio-sim test PASS
+I have managed to automate the exploit to create cca. 330,000 leaks, but the kernel
+did not crash yet, though much of the memory was used. But the leak is rather small,
+32 bytes + overhead.
 
-real	0m1.120s
-user	0m0.283s
-sys	0m0.842s
-root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# echo scan > /sys/kernel/debug/kmemleak
+Here is the result of the run of tools/testing/selftests/gpio/gpio-sim.sh:
+
 root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# cat /sys/kernel/debug/kmemleak 
-unreferenced object 0xffff91f019219660 (size 32):
-  comm "gpio-sim.sh", pid 11223, jiffies 4295028142 (age 87.304s)
+unreferenced object 0xffff9ed2ca929f40 (size 32):
+  comm "gpio-sim.sh", pid 15074, jiffies 4294959639 (age 25.848s)
   hex dump (first 32 bytes):
     67 70 69 6f 2d 73 69 6d 2e 30 2d 6e 6f 64 65 30  gpio-sim.0-node0
     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
   backtrace:
-    [<ffffffff86fcd408>] __kmem_cache_alloc_node+0x1d8/0x330
-    [<ffffffff86f4c271>] __kmalloc_node_track_caller+0x51/0xd0
-    [<ffffffff872fb359>] kvasprintf+0x69/0xd0
-    [<ffffffff872fb4ce>] kasprintf+0x4e/0x70
-    [<ffffffffc1864553>] gpio_sim_device_config_live_store+0x483/0x6b5 [gpio_sim]
-    [<ffffffff870dde9c>] configfs_write_iter+0xcc/0x130
-    [<ffffffff87016869>] vfs_write+0x1f9/0x3b0
-    [<ffffffff87016dab>] ksys_write+0x6b/0xf0
-    [<ffffffff87016e59>] __x64_sys_write+0x19/0x20
-    [<ffffffff87b91188>] do_syscall_64+0x58/0x80
-    [<ffffffff87c000aa>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
+    [<000000008ae1eb47>] slab_post_alloc_hook+0x80/0x2a0
+    [<000000000d18725c>] __kmalloc_track_caller+0x118/0x290
+    [<0000000031cbee97>] kvasprintf+0x66/0xd0
+    [<00000000f315aa2a>] kasprintf+0x4e/0x70
+    [<00000000a996121f>] gpio_sim_device_config_live_store+0x372/0x578 [gpio_sim]
+    [<00000000fd890a9e>] configfs_write_iter+0xc8/0x130
+    [<00000000e3ef7485>] new_sync_write+0x117/0x1b0
+    [<000000006dc1f988>] vfs_write+0x1aa/0x290
+    [<0000000027668ff9>] ksys_write+0x61/0xe0
+    [<00000000ac7bd963>] __x64_sys_write+0x1a/0x20
+    [<00000000ed9d842c>] do_syscall_64+0x58/0x80
+    [<00000000c81cc832>] entry_SYSCALL_64_after_hwframe+0x44/0xae
 root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# uname -rms
-Linux 6.2.0-rc8-lru-km-andy-00015-gf6feea56f66d-dirty x86_64
+Linux 5.17.0-rc1-mglru-kmlk-andy x86_64
 root@marvin-IdeaPad-3-15ITL6:/home/marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio# 
 
-I can verify that I build the right patch:
+Basically, this is the similar output to the one with 6.2-rc6 leak.
 
-marvin@marvin-IdeaPad-3-15ITL6:~/linux/kernel/linux_torvalds$ git diff
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 60514bc5454f..7f79e49b23d7 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -954,9 +954,9 @@ static void gpio_sim_device_deactivate_unlocked(struct gpio_sim_device *dev)
- 
-        swnode = dev_fwnode(&dev->pdev->dev);
-        platform_device_unregister(dev->pdev);
-+       gpio_sim_remove_hogs(dev);
-        gpio_sim_remove_swnode_recursive(swnode);
-        dev->pdev = NULL;
--       gpio_sim_remove_hogs(dev);
- }
- 
- static ssize_t
-marvin@marvin-IdeaPad-3-15ITL6:~/linux/kernel/linux_torvalds$ 
-
-Alternatively, I could try to bisect if you think it's prudent to try that.
-But first I need a stroll after this kernel build :-)
-
-Do you think that knowing when the bug was introduced might help find the culprit?
+I hope this can help narrow down the culprit code.
 
 Regards,
 Mirsad
 
---
+-- 
 Mirsad Goran Todorovac
 Sistem inženjer
 Grafički fakultet | Akademija likovnih umjetnosti
