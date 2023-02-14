@@ -2,249 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 368A3695962
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 07:45:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB90695978
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 07:53:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231672AbjBNGp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 01:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38488 "EHLO
+        id S231414AbjBNGxD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 01:53:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231688AbjBNGpu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 01:45:50 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02701D93E
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 22:45:45 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id o8so13694304pls.11
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Feb 2023 22:45:45 -0800 (PST)
+        with ESMTP id S229811AbjBNGxC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 01:53:02 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0344514EAF;
+        Mon, 13 Feb 2023 22:53:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1676357582; x=1707893582;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Z2VJQVCHq7rRVwHf9yI2Gpe/4xkLdX/1w38sUuQyLDA=;
+  b=gDAdZcVeOIFvgNvF9CwUmbk1F4+r1+HTUJG/h4bGe87RHuqN8/D7fNUh
+   E0DPuFpfSdKdU5ehuKWzxpGu0aqPkIAX0AdboliSh/HAZ9IFVOAUJTi79
+   79kMO49iP/GcrBLjpVAUAf7AFLyUUbp/8F3+8Ra41LPFvefQX7QblPpgC
+   d8Zf8sF8GjBlMYjy/yc86adeG/X6oaRGA1HSCOILiWkLGZKpA7PTf0OLk
+   Mukbo6Fpsm08+ky4ruTh63TrdFgKTGvH40YTLgtZMrH5cJFZnK3GJV72p
+   AN6Ov1aMbI5D5DdmVZOZ3bt/qprAMGBtAOX1BdEnMcIJU1tVZgTKdC4Bk
+   A==;
+X-IronPort-AV: E=Sophos;i="5.97,294,1669100400"; 
+   d="scan'208";a="196790688"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Feb 2023 23:53:01 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 13 Feb 2023 23:52:58 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Mon, 13 Feb 2023 23:52:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hf6SMOb5jISrAkcDZ2FgrcVjMQQLm73hXejoNkYbvC7D9hrQVh1pTZ9JBde2JstB7cHDPzE1SKC/n4YpKyuEK2mN8v+Go1D73utweS/fqkW6rQah9YZGMxDz2EYWGwvWhd8qKjMj4Q66AHtWiQ3Ap8s0mjQDAihKi8/vO0c27EmwSwIC/06x2F3CmuwpoYLnuMKtXMcJUdrB2x20amovwFgoYTJcr5eKUu5XmapahsC14aSU7oaA/qUD+lXJTzMyZLXZQKemii1xdBAZ0NPRV1S7e2qMzW4L2fzdEi97mtKE6QAQW8UeMMdWe11wfFib6+V/GsnW4PK3L9FCha8qRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z2VJQVCHq7rRVwHf9yI2Gpe/4xkLdX/1w38sUuQyLDA=;
+ b=daxx3XutDgiC6CcSg9WjpIvbpVZLZH9z630KTLwLF/Zagsc5nO8Tl/TXcam3Gp3jeMbs4dO+22LQWDp4UReMMzc0P0CHLK+wRIvYfRNPQjS/LR/IIBLgEY+3OpxF0b9K0GIm/fWOsXa3vT70DeYkMwfcHY/5h2Gg+yaRQKil/4xnnIElLstbJlToQrG228shtuPLS1hu2zrU0OjyfKqyuNxP8w/es6nX/SsJXSd6nI7FVSZDgIWc7OZlycC3PmCCgown58ESW87qeV5y0jCNKKP4IVU4BDo6nQqfdzExmWKu2AwmyCAB1NsQy/IU2Sj28iXmSu169DrvmdMM0tj97A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Le9fM18mP4cGW/xZpYvSDjpmlg7QVRuW+mP1TFxDzjw=;
-        b=QwJ0HGN2Gd71ZmFK8SDjsxRsgJkd5uEvK9ubO7r/HeGu9ogfldkjHl+Z0tadUG/x+Y
-         eDe3EVJNAVTUZ7/mJ3c9NZ32AQPZebO/6WfHOabF2y6zcSwFGjm6Wooax8z0UpEA70Me
-         HI6x8xgdoJ1TOCcKVzCoxDruxbT3WnpmrJQPSPxxc+Y0Fr5TrJdGulwvyoCuuT+BP6R0
-         0LtG51CMHNoVTaT5vNBMexfztTxHTKT+gCwmGzc/PAEagzJE0Z+M/rIR4Q9j4olCj7hK
-         TIz1yl+Cx8njwcKsVk0gfb2gvKTiqii4hT11O0oSAN5oaaS/AiuvJ9cj0mYgdvx7l8/j
-         JhRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Le9fM18mP4cGW/xZpYvSDjpmlg7QVRuW+mP1TFxDzjw=;
-        b=mJFbdob4IqT7ZxvmgkQAzbCub4gfFX+zhZcgmy0ndpODO8CfV6zz0+u+i7c+yk3+Kx
-         TAA6rz+q3RXSC0CGGwj8JM380CEWV1QimaxANGg4L3XjKbllxVj19/c5+dJEr8DTNCwG
-         D5DXnIc0hnWgKUl82kcKXiUN8YVuIonmShautLSc0gGQkER+BNNzrV5cIQqKsybeb+z+
-         piSBUbvAbTDK3PeYYehke7EBc6ltGVBA1Uo4nnwRpya/suAk8A5iWryji48IIYXkTe1L
-         IgE4CwwoXs9efEHv4K96vepGXXSCX2KDAtXFiu3tEn2gJxE8XdOickZF8hcmI9IQLI2A
-         WoNg==
-X-Gm-Message-State: AO0yUKW9qNkv65VFvE3TrLzAFZBLAj5PgZpjbqiBcyX66HdukCAHdw/7
-        Z1V5GBopSgQCerAnj2SF73zueFEwnN9Nbe1X
-X-Google-Smtp-Source: AK7set+vKHI9d/kxjwInqy3iKPe4Qx63CUTfo+HiItTvegX7OZHJ0ttqqJCVlqlKZIVW9OcDXcMOrw==
-X-Received: by 2002:a17:902:e804:b0:196:519d:8655 with SMTP id u4-20020a170902e80400b00196519d8655mr1939744plg.5.1676357145258;
-        Mon, 13 Feb 2023 22:45:45 -0800 (PST)
-Received: from localhost ([122.172.83.155])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902c24500b0019a928a8982sm4464156plg.118.2023.02.13.22.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 22:45:44 -0800 (PST)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: [PATCH 2/2] bindings: rust: Update bindgen's version
-Date:   Tue, 14 Feb 2023 12:15:35 +0530
-Message-Id: <28f987bd0b6fd94f381b27f712c7d99ade607cf6.1676357080.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <24d754e5d765de80f99d8f8942d7ffeea8f3110c.1676357080.git.viresh.kumar@linaro.org>
-References: <24d754e5d765de80f99d8f8942d7ffeea8f3110c.1676357080.git.viresh.kumar@linaro.org>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z2VJQVCHq7rRVwHf9yI2Gpe/4xkLdX/1w38sUuQyLDA=;
+ b=bdlgQqc3V9SV8WcoMGF279ZjPU6rDL3zA1Cjls4ui2UnRu92HtOKSB5CHKIeXJoTjfoWem3SJ98X/EFD9mtoohmLkuuF9qtokcVufQ++O6rJ2wJeUcVVEopD12V/0JxdeLEY6FX8OyWbPjeGxxagGoB8dxAZmDW+A4Eqv674bTc=
+Received: from PH7PR11MB5958.namprd11.prod.outlook.com (2603:10b6:510:1e1::22)
+ by BL1PR11MB5431.namprd11.prod.outlook.com (2603:10b6:208:315::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
+ 2023 06:52:56 +0000
+Received: from PH7PR11MB5958.namprd11.prod.outlook.com
+ ([fe80::cf2e:97c:7f47:9ca6]) by PH7PR11MB5958.namprd11.prod.outlook.com
+ ([fe80::cf2e:97c:7f47:9ca6%5]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
+ 06:52:56 +0000
+From:   <Tharunkumar.Pasumarthi@microchip.com>
+To:     <christophe.jaillet@wanadoo.fr>, <linux-kernel@vger.kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <arnd@arndb.de>, <UNGLinuxDriver@microchip.com>
+Subject: RE: [PATCH v5 char-misc-next] misc: microchip: pci1xxxx: Add
+ OTP/EEPROM driver for the pci1xxxx switch
+Thread-Topic: [PATCH v5 char-misc-next] misc: microchip: pci1xxxx: Add
+ OTP/EEPROM driver for the pci1xxxx switch
+Thread-Index: AQHZPpY5D8pOvjRSE0idcTrTWegJHq7K86uAgAMLz3CAAAT1QA==
+Date:   Tue, 14 Feb 2023 06:52:56 +0000
+Message-ID: <PH7PR11MB5958E626F5FA9BAB2B9FA2F39BA29@PH7PR11MB5958.namprd11.prod.outlook.com>
+References: <20230212035743.231353-1-tharunkumar.pasumarthi@microchip.com>
+ <99b3f6a9-ab7d-b3dd-2a54-3fcd72607ec6@wanadoo.fr>
+ <PH7PR11MB59584043A6EF64BC4C7291C89BA29@PH7PR11MB5958.namprd11.prod.outlook.com>
+In-Reply-To: <PH7PR11MB59584043A6EF64BC4C7291C89BA29@PH7PR11MB5958.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB5958:EE_|BL1PR11MB5431:EE_
+x-ms-office365-filtering-correlation-id: fb99b379-e427-412b-c1c1-08db0e581a6e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ppeEYePFGksnzABrTVZt9mBHP7IBRUnm7dAFrrUg7+z2mxxjO4BoTPChacTGJmZuZ1a1lMYP90kWMZioKqZImBJ4IjKwphsvgQQonv3Dpmb1QsghnaoIilzR9QBa1IEku2aY5HEcI8o19FuEW7qFtHvYAm/RJsskSr8cSS3c9nK5rpwrmHIv5VxtYReCrJ9leQFQBDDLgyd/DLyIU/f3enib/cLJi9oae9K4tz5iF5lfhB9UaPI9cUOO344r+Jj1dgQe+vDryiURCcioEtOc2yx/NMzgJ974M8zEZ0rmyWk+dX3D2f5Jj6l0HTWQpUJwdx9FqPRF/dKLrQrW6TWFU09+LMF5PPbjWs+VaeZc9k0SsKYgQ3Ufsio5cu1p8TzRL9eiKHHuWJpRHbKDD/fgGp4ItBterx6iTwo0hHn8oHu6eZokgRsHBqA6I7abP/lSsmRlk5aRtouYPFcx5m/VCBCnY3jBwBg4niFuBoMfDWZ6t3Q1H9e1LWq4iVV8eZkuZ2pFppWNlGvrx9IC/4oeL3Zyzj0UI8vdXTAgKhliq3FcvEnPznOGk13Bl5BKhZ3Yd9o7VfQ3RVZY52Avn99vPOamPqi+he9gfSp0qoDIKyTKJvDDin0GbS9ZSCxzIk7fi2JX9teL7cgG8NfNKatb1GhBW1a7NfhTuKWJXFHakwJY9FyrAoYfBIeStUMYGMmCnBadxrkkXbjXp5J+sCJcEyYKjaKjDMqfZSxMasG+YuB+otCrdQ1uQ/ZjO/LktUgP
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5958.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(39840400004)(366004)(376002)(396003)(346002)(451199018)(76116006)(66946007)(4326008)(110136005)(8676002)(9686003)(122000001)(316002)(71200400001)(54906003)(86362001)(33656002)(186003)(2940100002)(26005)(53546011)(38100700002)(6506007)(38070700005)(55016003)(83380400001)(107886003)(4744005)(41300700001)(66476007)(478600001)(7696005)(2906002)(66446008)(66556008)(64756008)(52536014)(8936002)(5660300002)(32563001)(491001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QzNOc2EzZUsrMEk3UEI1M3djeS8zbUJZNm12TWtWY1VBRW16azB3NTNZT2tk?=
+ =?utf-8?B?ZGFkdndPb1JYbkF0M3JYcjZneWZVbjdZUFFYUVFaWG5UeDloeDlSeDNkL0RW?=
+ =?utf-8?B?MitpT2N0dWk1RWU4ajZZOTIzK0hzRmk4dm0vU0Q4UVVOVzVCdzVUM3JUc2gy?=
+ =?utf-8?B?dndkMXRtVi9XZTlULzVxUVA0YTdqSWNQcUdBN3NCVDYxVzB0QVQ3WXBFSEQz?=
+ =?utf-8?B?Smhnb3h0c2RLdDBKN2QrZGRFL0haejR1RDBLYk91cGQyV3hZQlVscEtLZGRE?=
+ =?utf-8?B?M0htRXhlYXU3b1RocGI5K3lSYnZHSGFJeHZLdnpzRW8xTTFZREc0M1pQUWRM?=
+ =?utf-8?B?MXl3ei9GVWJSSzVFQ2hNV1BqcXJMZUhQZkxKNnlnUjN5WUNqZ2tKa2R4WTAw?=
+ =?utf-8?B?eStiSEhjMU4vY25tQ2xOY0pxZ0FzcEFLc0dwb1FLbDh5Vm4vV3doWlRGelpk?=
+ =?utf-8?B?UCtMNE92S3ZMdWY4aXRzNzBPRGhhOUc2WEIxSUFmekg2eVdjTTZiZXU0aVZG?=
+ =?utf-8?B?NFEvcEUwRTN3MFBTbDE3ME5YNkhURHZKdEZITFp1VjczeldlZjdyOUxZUERJ?=
+ =?utf-8?B?RmVuaDlmNnErK1hPWFlXckxHV29ETDZKRXZWMWI4alA2amxpekVpYmpiWUto?=
+ =?utf-8?B?M1ZmWjZiNjhYRStvaUxRRFg5TEJWdFJ0ZzVoRzNTT1RBaCt5UmhaZU53Yjhw?=
+ =?utf-8?B?eFQ4TklZMHhPK0VLTEJLdGUvUlhxN2hwTFJRVzFsQkZYREFTc1dmVDRpd2pB?=
+ =?utf-8?B?Z0dkcjltd2hBMDFNZ3BLcmhkRnF0TjY0cCtQT0d1V2JONXVMYVRqT1JQVFEr?=
+ =?utf-8?B?KzhyRExuQlRkNndJWjJmZ1UwQVYzWDR1QmxMdUQ5WFhMQmZUUzVnc1FNajZX?=
+ =?utf-8?B?S2hrRXhDK3pHTEFrdzdVMklLWEc4aDFoK2Vod1FxSGdvRmVIYVZSUXdsSmNn?=
+ =?utf-8?B?VkpwL0dmUHZhN0UrbzF3VFFqQm1veC9IUXpaeU5ldDB0WmRwd1NTUU1kVlM4?=
+ =?utf-8?B?WFg0TnpCY2RQMGVHZzZobVNhSFkrdlBiZ2FEdVZEaTBhL0tLNDBTS2FEZWZL?=
+ =?utf-8?B?c05qMDNVWUpIc0Z0ekMva3VUT2U1ZDJjbFVFSGxuTjE5VEdMeDBGQ25iZHRT?=
+ =?utf-8?B?S1hJOGNPZ1BVbUNyYnRIWUhsbVAwc0dCZTlsSytFQmVhWWZnbC9kSUZwWWpI?=
+ =?utf-8?B?L1NXN1NSWktmREcwVEhxd3p4UUR0bmQ5UWpSa3V3NDRxWmlsR0tGb3haSzB1?=
+ =?utf-8?B?S0hzZHJMTHpZNzV3azhYb2E4QkZEbUJzbWsrUUl4M05RWmZmNURIZ3p6ekU2?=
+ =?utf-8?B?UTR3bis3a1h5cXRnUHNrcnBNWVhqRitkM2JNbHFYek9FQk80YkR1Q2N1YzJz?=
+ =?utf-8?B?ZTJjN2VDbFg1SktEZmloc0FRWlRzTTFlWThPeWZQZlpEbFhNVGFEaW9oWGZy?=
+ =?utf-8?B?QUhmTUgwVnV4a2czTDd5eUNGbC8rQVI2dkgxYVlnRTVNMHJHWTYvSWlXcDJh?=
+ =?utf-8?B?SlFzTVJyWCtSRS80WkhXK3BxMDZTYWRCRWxkeFdlM3QxeEJtYVFhZmxCcFQ4?=
+ =?utf-8?B?WTlVL0JraDEvbUtraERzeWxpV2lrUDNCcThNeW1VWVNwSUFlM05oWlpCT29Q?=
+ =?utf-8?B?Q21PdDZ2U0I0SHhvSExnbnVqU3pWME5nbm42emxXNElLbWM0em1OU05NOGFE?=
+ =?utf-8?B?UGNiSXBGbDlQK3I1NDBSWTg4SW5MWXZHZEpYaGJHaHlPOFc1YmJKeE51TTV1?=
+ =?utf-8?B?T082VFRvM2NiekJFalhxZ1ByaVQ3NUhNVmxDeCtwc3ozdmNhTS9seTZHZjdH?=
+ =?utf-8?B?UXNnbHlSalQ5b1BtL3puVGhub01ST3B5UG1jdjJFR1dDNnRUMXdFbk9YQVhB?=
+ =?utf-8?B?eVN0ZGsrNVZhR1l4OEYvbkYvOTFuZnhhS3c0a0dxTjhCTVNINUI0NFUwZGI5?=
+ =?utf-8?B?cGdKcmM0Y2ZmeVRiY0NaUW1ta2RrTDZFZUdlNWE1eWhTcmZSK3RaRHZoZlFR?=
+ =?utf-8?B?dlBCb2RtdVVVdEROZnRid1dBdEtzclBLWTBxdFJvakQ3dEFVVytBVHR1TVVP?=
+ =?utf-8?B?dDRaUVhXRlNFRi9PT0EyZWhIcWxRWktRRmczY3JncDB2VG5tK0lVSnF3YmhR?=
+ =?utf-8?B?ejhSQmJQbHJ5S295Tkh6aDhVUXpMSGl5SHNPa0NpWGZjdDBmaW1QVUhlNXVk?=
+ =?utf-8?Q?TJszs8Yas4ks41dbkCuPjcc=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5958.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb99b379-e427-412b-c1c1-08db0e581a6e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2023 06:52:56.6278
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oewiQfIbAdkSKSSPYgTNIsaq4+6RpRsRNr8S6T8rkQRwGG0Xe0VPY9ZPZ1DUGVj9BxLC2dgiypVbFsuCJbUcN8p+pn6hqD8WQYjGxnkLIaJy5ANuAM6XT9ddT74xu4m1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5431
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The currently selected version of bindgen has a unmaintained dependency
-and generates the following build warning while building vhost-device
-crate:
-
-Crate:     ansi_term
-Version:   0.12.1
-Warning:   unmaintained
-Title:     ansi_term is Unmaintained
-Date:      2021-08-18
-ID:        RUSTSEC-2021-0139
-URL:       https://rustsec.org/advisories/RUSTSEC-2021-0139
-Dependency tree:
-ansi_term 0.12.1
-└── clap 2.34.0
-    └── bindgen 0.59.2
-        └── libgpiod-sys 0.1.0
-            └── libgpiod 0.1.0
-                └── vhost-device-gpio 0.1.0
-
-error: 1 denied warning found!
-
-Fix it by moving to a later version of bindgen, which updates the types
-of few of the arguments to the FFI helpers and so required changes to
-few of explicit type conversions.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- bindings/rust/gpiosim-sys/Cargo.toml         | 2 +-
- bindings/rust/libgpiod-sys/Cargo.toml        | 2 +-
- bindings/rust/libgpiod/src/event_buffer.rs   | 3 +--
- bindings/rust/libgpiod/src/line_config.rs    | 6 ++----
- bindings/rust/libgpiod/src/line_request.rs   | 8 ++++----
- bindings/rust/libgpiod/src/request_config.rs | 4 ++--
- 6 files changed, 11 insertions(+), 14 deletions(-)
-
-diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim-sys/Cargo.toml
-index c3571d2cf48e..9aa047feba82 100644
---- a/bindings/rust/gpiosim-sys/Cargo.toml
-+++ b/bindings/rust/gpiosim-sys/Cargo.toml
-@@ -19,5 +19,5 @@ errno = "0.2.8"
- libgpiod = { path = "../libgpiod" }
- 
- [build-dependencies]
--bindgen = "0.59.1"
-+bindgen = "0.63"
- cc = "1.0.46"
-diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
-index 479184da3f7b..3bc3525aedca 100644
---- a/bindings/rust/libgpiod-sys/Cargo.toml
-+++ b/bindings/rust/libgpiod-sys/Cargo.toml
-@@ -17,5 +17,5 @@ edition = "2021"
- [dependencies]
- 
- [build-dependencies]
--bindgen = "0.59.1"
-+bindgen = "0.63"
- cc = "1.0.46"
-diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-index 5a72ddb197ac..0675ea6c5181 100644
---- a/bindings/rust/libgpiod/src/event_buffer.rs
-+++ b/bindings/rust/libgpiod/src/event_buffer.rs
-@@ -2,7 +2,6 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
--use std::os::raw::c_ulong;
- use std::ptr;
- 
- use super::{
-@@ -74,7 +73,7 @@ impl Buffer {
-     pub fn new(capacity: usize) -> Result<Self> {
-         // SAFETY: The `gpiod_edge_event_buffer` returned by libgpiod is guaranteed to live as long
-         // as the `struct Buffer`.
--        let buffer = unsafe { gpiod::gpiod_edge_event_buffer_new(capacity as c_ulong) };
-+        let buffer = unsafe { gpiod::gpiod_edge_event_buffer_new(capacity) };
-         if buffer.is_null() {
-             return Err(Error::OperationFailed(
-                 OperationType::EdgeEventBufferNew,
-diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-index 3848a3a68304..a2721a20e4fa 100644
---- a/bindings/rust/libgpiod/src/line_config.rs
-+++ b/bindings/rust/libgpiod/src/line_config.rs
-@@ -2,8 +2,6 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
--use std::os::raw::c_ulong;
--
- use super::{
-     gpiod,
-     line::{Offset, Settings, SettingsMap, Value},
-@@ -65,7 +63,7 @@ impl Config {
-             gpiod::gpiod_line_config_add_line_settings(
-                 self.config,
-                 offsets.as_ptr(),
--                offsets.len() as c_ulong,
-+                offsets.len(),
-                 settings.settings,
-             )
-         };
-@@ -91,7 +89,7 @@ impl Config {
-             gpiod::gpiod_line_config_set_output_values(
-                 self.config,
-                 mapped_values.as_ptr(),
--                values.len() as u64,
-+                values.len(),
-             )
-         };
- 
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index a77c95deb1e3..ebf41f240ae2 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -2,7 +2,7 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
--use std::os::{raw::c_ulong, unix::prelude::AsRawFd};
-+use std::os::unix::prelude::AsRawFd;
- use std::time::Duration;
- 
- use super::{
-@@ -40,7 +40,7 @@ impl Request {
-             gpiod::gpiod_line_request_get_requested_offsets(
-                 self.request,
-                 offsets.as_mut_ptr(),
--                self.num_lines() as u64,
-+                self.num_lines(),
-             )
-         };
-         offsets.shrink_to(num_offsets as usize);
-@@ -70,7 +70,7 @@ impl Request {
-         let ret = unsafe {
-             gpiod::gpiod_line_request_get_values_subset(
-                 self.request,
--                offsets.len() as c_ulong,
-+                offsets.len(),
-                 offsets.as_ptr(),
-                 values.as_mut_ptr(),
-             )
-@@ -127,7 +127,7 @@ impl Request {
-         let ret = unsafe {
-             gpiod::gpiod_line_request_set_values_subset(
-                 self.request,
--                offsets.len() as c_ulong,
-+                offsets.len(),
-                 offsets.as_ptr(),
-                 values.as_ptr(),
-             )
-diff --git a/bindings/rust/libgpiod/src/request_config.rs b/bindings/rust/libgpiod/src/request_config.rs
-index 939838cbed2f..2ad68efdd12a 100644
---- a/bindings/rust/libgpiod/src/request_config.rs
-+++ b/bindings/rust/libgpiod/src/request_config.rs
-@@ -3,7 +3,7 @@
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
- use std::ffi::{CStr, CString};
--use std::os::raw::{c_char, c_ulong};
-+use std::os::raw::c_char;
- use std::str;
- 
- use super::{gpiod, Error, OperationType, Result};
-@@ -75,7 +75,7 @@ impl Config {
-     /// Set the size of the kernel event buffer for the request.
-     pub fn set_event_buffer_size(&mut self, size: usize) -> &mut Self {
-         // SAFETY: `gpiod_request_config` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_request_config_set_event_buffer_size(self.config, size as c_ulong) }
-+        unsafe { gpiod::gpiod_request_config_set_event_buffer_size(self.config, size) }
- 
-         self
-     }
--- 
-2.31.1.272.g89b43f80a514
-
+PiBGcm9tOiBUaGFydW5rdW1hciBQYXN1bWFydGhpIC0gSTY3ODIxDQo+IFNlbnQ6IFR1ZXNkYXks
+IEZlYnJ1YXJ5IDE0LCAyMDIzIDEyOjA4IFBNDQo+IFRvOiBDaHJpc3RvcGhlIEpBSUxMRVQgPGNo
+cmlzdG9waGUuamFpbGxldEB3YW5hZG9vLmZyPjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcNCj4gSGkgQ2hyaXN0b3BoZSwNCj4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0KPiAN
+Cj4gSW4gdGhlIGVhcmxpZXIgdmVyc2lvbiBvZiBwYXRjaCwgYXV4aWxpYXJ5X2RyaXZlcl91bnJl
+Z2lzdGVyIHdhcyBkb25lIGJlZm9yZQ0KPiB1bnJlZ2lzdGVyX2Jsa2Rldi4NCj4gQnV0IEdyZWcg
+c3VnZ2VzdGVkIHRvIGNoYW5nZSBpdCB0aGlzIHdheSAtICJZb3UgbmVlZCB0byB1bnJlZ2lzdGVy
+IHlvdXIgYmxvY2sNCj4gZGV2aWNlIF9CRUZPUkVfIHRoZSBhdXggZGV2aWNlIGdvZXMgYXdheSB1
+bmRlcm5lYXRoIGl0Ii4gSGVuY2UgZm9sbG93ZWQNCj4gdGhpcyBvcmRlci4NCg0KU2luY2UgYmxv
+Y2sgZGV2aWNlIGlzIGEgY2hpbGQgb2YgdGhlIGF1eCBkZXZpY2UsIGl0IG1ha2VzIHNlbnNlIHRv
+IHJlbW92ZSBibG9jayBkZXZpY2UgYmVmb3JlIHJlbW92aW5nIHRoZSBhdXhfZGV2aWNlLg0KU28g
+dGhhdCB1bndpbmRpbmcgb2YgdGhlIGRldmljZSBzdGFjayBpcyBkb25lIGluIHRoZSByZXZlcnNl
+IG9yZGVyIG9mIGNyZWF0aW9uLg0KDQpUaGFua3MsDQpUaGFydW4gS3VtYXIgUA0K
