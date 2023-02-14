@@ -2,65 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45018695E8F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 10:11:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EA41696178
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 11:52:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232321AbjBNJLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 04:11:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46458 "EHLO
+        id S231611AbjBNKwS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 05:52:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232328AbjBNJL3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 04:11:29 -0500
-Received: from mail.workercentrum.pl (mail.workercentrum.pl [51.89.166.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDCA252AF
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Feb 2023 01:09:52 -0800 (PST)
-Received: by mail.workercentrum.pl (Postfix, from userid 1002)
-        id 4CAC3AEF66; Fri, 10 Feb 2023 09:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=workercentrum.pl;
-        s=mail; t=1676020870;
-        bh=DQrvNxV4sbMtkGDNj/C7a2f11q8dNrBm5UPp1jE5GkY=;
-        h=Date:From:To:Subject:From;
-        b=2pGx1CZ1HE4nY3ZLeUGA0MMZuCqNrO4j44r3SlSSnCP6oWLoKFCmaYGwBm0ZR2RhG
-         jN/VdyHEJfZP4kH6vAfnotGIGuoZX1GDPWaL0xLqqwvpNGTm9Sje1pcfjrigFSBjFC
-         nBBR6DbsVYd189cYV44qDmFzd/kvryQ0nLb/tIqaQo9wvf/lKNpT9KBWCbhS6KbsqG
-         JfxTESyzXkxzEj6vfyhoRXIEliU2eegpVsBxB7jzp4ukP2Pt+ZbGZ09eAX+Ve/odkw
-         lZwhK5Nh+gZ0YHJfYL4I2rh7zDLUNFv1+mhSKGcbrIbV26lcwwhe3fZIsRUoWBB8rA
-         4EML+HWyGmW/w==
-Received: by mail.workercentrum.pl for <linux-gpio@vger.kernel.org>; Fri, 10 Feb 2023 09:10:56 GMT
-Message-ID: <20230210074500-0.1.7d.lz88.0.vdxnpuoys6@workercentrum.pl>
-Date:   Fri, 10 Feb 2023 09:10:56 GMT
-From:   "Piotr Werner" <piotr.werner@workercentrum.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Panele fotowaltaiczne
-X-Mailer: mail.workercentrum.pl
+        with ESMTP id S229622AbjBNKwR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 05:52:17 -0500
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3FEDD
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Feb 2023 02:52:16 -0800 (PST)
+Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id a3675129-ac55-11ed-bd9b-005056bd6ce9;
+        Tue, 14 Feb 2023 12:52:13 +0200 (EET)
+From:   andy.shevchenko@gmail.com
+Date:   Tue, 14 Feb 2023 12:52:13 +0200
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] gpio: vf610: make irq_chip immutable
+Message-ID: <Y+tn3Y+SraIetn5X@surfacebook>
+References: <20230214073638.571417-1-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214073638.571417-1-alexander.stein@ew.tq-group.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Tue, Feb 14, 2023 at 08:36:38AM +0100, Alexander Stein kirjoitti:
+> Since recently, the kernel is nagging about mutable irq_chips:
+> 
+>     "not an immutable chip, please consider fixing it!"
+> 
+> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+> helper functions and call the appropriate gpiolib functions.
 
-Jeste=C5=9Bmy firm=C4=85 z wieloletnim do=C5=9Bwiadczeniem, kt=C3=B3ra sp=
-rawnie przygotuje dla Pa=C5=84stwa ofert=C4=99 i wszelkie formalno=C5=9Bc=
-i. Sam monta=C5=BC zaplanujemy na wiosn=C4=99.
+...
 
-O samych plusach fotowoltaiki czy pompach ciep=C5=82a na pewno ju=C5=BC P=
-a=C5=84stwo s=C5=82yszeli, dlatego teraz prosimy o zostawienie kontaktu, =
-aby nasz specjalista m=C3=B3g=C5=82 przedstawi=C4=87 ofert=C4=99 zgodn=C4=
-=85 z Waszymi potrzebami.
+> The overall changes are based on commit f1138dacb7ff
+> ("gpio: sch: make irq_chip immutable")
 
-Kiedy mogliby=C5=9Bmy z Pa=C5=84stwem um=C3=B3wi=C4=87 si=C4=99 na rozmow=
-=C4=99 w celu zbadania potrzeb?
+Nice, but you forgot one crucial detail. You need to mark GPIO resuested
+whenever it's locked as IRQ and otherwise when unlocked.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Pozdrawiam,
-Piotr Werner
