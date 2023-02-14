@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE912696A27
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 17:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9D2E696A3C
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 17:48:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231689AbjBNQqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 11:46:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
+        id S229765AbjBNQsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 11:48:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231779AbjBNQqg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 11:46:36 -0500
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08002CFDD;
-        Tue, 14 Feb 2023 08:46:22 -0800 (PST)
-Received: by mail-qt1-x829.google.com with SMTP id c2so18188845qtw.5;
-        Tue, 14 Feb 2023 08:46:22 -0800 (PST)
+        with ESMTP id S232529AbjBNQsv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 11:48:51 -0500
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E86A93FE;
+        Tue, 14 Feb 2023 08:48:48 -0800 (PST)
+Received: by mail-qk1-x729.google.com with SMTP id bl15so6365512qkb.4;
+        Tue, 14 Feb 2023 08:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EF3Fh18aPcGx0lZp0vgnipu7S3GtbM+fR6/6UdgsdNs=;
-        b=CTF/qzvcYJAJLKXvKMWN/YwCABFO/JfSitBj6DO/vhRNHvMpG85slDJ1toSOPCNDnh
-         wy86254A87Avvwy7jTAtH458QbqVSJerHCXlxlF5hSbg3k7s7QPRatVg/02DvVaxnrko
-         /LWmwB3TJLGd+6WNTojelVikUPwCecSBMuuMP/0Bry5gpTKB3Ba2hmS/3jR/doM12lOB
-         XLP40X4HP6l901qc217chSeJBlYwrlXiD0vU+FRn+MEEc7N/48HgLw5Aj/QOSZ7FaVv1
-         ywEOa64WxY39zw3PR2f0iVzvsJIQHuLQEUV2JdYJDPAdR3IFwiOewRGzd0r7To0hijZM
-         wHTg==
+        bh=Nau7lgiudKbh01gy/XQ5sRV2ogzSHbVMQQVqpfepIyY=;
+        b=H0M5c0e2xuyV72DLSzHYxC41sV3A2EJB351Bi8GUtZuUnnl3fUPXtfVqpLpqAaTD1t
+         veM07BgNlys43ZAVAcxg/selzbWZir79lwsUi0c+FuOlDiQvZn4wIlbwXpzVJJfjkhy7
+         OQmpY3/o+MaacAOe3Uw67yY9fsokcUeRJ6DJxTUfMh/IxeB4PLnuCcc4BSMmYshnmkf6
+         +BNCwCxwdDZSbxo86tZ1E2gF1ylHX9m2esqrQ1W/hHHA6dX51vbk3EZoocI7MST1JBXC
+         vxLKAeknEOBOCfLnQFb9KMY22v7it9IjdzLV7PdDPCrwum3oRvTenIuyootEEhEWZPud
+         e60w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EF3Fh18aPcGx0lZp0vgnipu7S3GtbM+fR6/6UdgsdNs=;
-        b=kDKwOPk9mFgKQgQgrWrM8n2HkPTnnQRgocC94fLTIElsPHhgcxVI2zvDip+yVoZFbI
-         ywNhbmwsff0BET0PhC2eMq20Bud0C1B+wQeFvwv4hqIkfiULSbnvKfIHGbLl1eBBQUXh
-         lxiXHPJ1Ak1bgUKoB0Mv2LChpNdUh8f65ZX4KCtJyYVdCH6grcA6iWeg/NKjLcRbxC13
-         coMb2RTDW7AguDFQH2TueFveFawh2HJEmb3O1b7k2nwYPmTEoVR9sCjsUcrtWa4ji6U2
-         uzMdNEQVoqjCMmpqXwqtZefXWveQ0MY2A/fsXWuXnsnHq8SZ+m3ijBY4j5wkiDoSYGv4
-         hvSQ==
-X-Gm-Message-State: AO0yUKXaE/YgPFd45Jbspz3kt8y93ICwIC7aZV3V5W7VXOHTIwSpwiSi
-        BssTKnSH0M1wFQLAB6JzzBD2Yt6O3ivmjUOuzmc=
-X-Google-Smtp-Source: AK7set/XOn2ZldcOYB2ieyAsOe3/lw+j3S2PAxYis4xfciqkF+F/Gmpvcc3VJrUrmfVUJnwfPGEdiu9QWZrUtBvBhOU=
-X-Received: by 2002:ac8:5ac9:0:b0:3b6:82ef:2d6 with SMTP id
- d9-20020ac85ac9000000b003b682ef02d6mr458716qtd.24.1676393181530; Tue, 14 Feb
- 2023 08:46:21 -0800 (PST)
+        bh=Nau7lgiudKbh01gy/XQ5sRV2ogzSHbVMQQVqpfepIyY=;
+        b=4MsezhOVPiD+yPRQ0uGBXkoKcxSHq6v1ehBuCoRSPGPyRwT7608GV2snV1SYyY7Sv2
+         OyesTyY75JOM/M/En/QhPKy2tBuxmrd0URrbCp8akomsS5pAYehArQ0l3iflbkBme99T
+         CoFKo58qN9DWiE/9Hmk2baCKCs9RDacbyRL3G0Ble9NfyVhdoJntcPwTf0VKCsXAuNdB
+         OZ7+OLYxsiL93M/btZZjD8w6myCGqL5zei5TwwOiiKqR2tNTvPEHo2PsDY0gWwiFGkGt
+         /QAV8BniWpB7K7/ld+FWG3ZgD3dxzj1U0ogWxOFoqdd/lkgkAJGeC4P3i4DzEl7GXgDx
+         SKag==
+X-Gm-Message-State: AO0yUKUDRWFZMifu8fICu7T1lUVmgDRK60/xben5mEL0h/lBxUDouE/2
+        G+I46wcOYo+TBUb8W0eem93yNKNmoUJUYhiWnHvy8yN7eV8kww==
+X-Google-Smtp-Source: AK7set+O41SkSlASBYPRgAtQ1mhirkdG7vKW0SAlOOQXg7ZYHnMbY+fyzZCR9s5UUcjsk+MzQ39LQjExm97fcWjs71U=
+X-Received: by 2002:a37:9a85:0:b0:725:ff53:b58e with SMTP id
+ c127-20020a379a85000000b00725ff53b58emr229775qke.331.1676393327818; Tue, 14
+ Feb 2023 08:48:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20230214125949.3462396-1-alexander.stein@ew.tq-group.com>
-In-Reply-To: <20230214125949.3462396-1-alexander.stein@ew.tq-group.com>
+References: <20230214125949.3462396-1-alexander.stein@ew.tq-group.com> <CAHp75Vf0u_F4bFs-1hyckG7h-7r3XqxdZc_6EjuWxTxbfMPMjQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vf0u_F4bFs-1hyckG7h-7r3XqxdZc_6EjuWxTxbfMPMjQ@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Feb 2023 18:45:45 +0200
-Message-ID: <CAHp75Vf0u_F4bFs-1hyckG7h-7r3XqxdZc_6EjuWxTxbfMPMjQ@mail.gmail.com>
+Date:   Tue, 14 Feb 2023 18:48:11 +0200
+Message-ID: <CAHp75VdLuDmaBRr0X_==zKxAN5mkxDZV4MMywo7bETaFCvmASg@mail.gmail.com>
 Subject: Re: [PATCH v2 1/1] gpio: vf610: make irq_chip immutable
 To:     Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -67,130 +67,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 14, 2023 at 2:59 PM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
->
-> Since recently, the kernel is nagging about mutable irq_chips:
->
->     "not an immutable chip, please consider fixing it!"
->
-> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-> helper functions and call the appropriate gpiolib functions.
+On Tue, Feb 14, 2023 at 6:45 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Feb 14, 2023 at 2:59 PM Alexander Stein
+> <alexander.stein@ew.tq-group.com> wrote:
 
-Thanks for an update, something to amend below, otherwise
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+...
 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
-> Thanks Andy for the feedback!
+> >         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
 >
-> Changes in v2:
-> * Add missing calls to gpiochip_disable_irq() and gpiochip_enable_irq()
+> Now you can use gpio_num here...
 >
->  drivers/gpio/gpio-vf610.c | 35 ++++++++++++++++++++---------------
->  1 file changed, 20 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index a429176673e7..b657a07a9b56 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -30,7 +30,6 @@ struct fsl_gpio_soc_data {
->
->  struct vf610_gpio_port {
->         struct gpio_chip gc;
-> -       struct irq_chip ic;
->         void __iomem *base;
->         void __iomem *gpio_base;
->         const struct fsl_gpio_soc_data *sdata;
-> @@ -207,19 +206,23 @@ static int vf610_gpio_irq_set_type(struct irq_data *d, u32 type)
->
->  static void vf610_gpio_irq_mask(struct irq_data *d)
->  {
-> -       struct vf610_gpio_port *port =
-> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
->         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+> > +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
 
-Now you can use gpio_num here...
+...
 
-> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
->
->         vf610_gpio_writel(0, pcr_base);
-> +       gpiochip_disable_irq(gc, gpio_num);
->  }
->
->  static void vf610_gpio_irq_unmask(struct irq_data *d)
->  {
-> -       struct vf610_gpio_port *port =
-> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
->         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
-> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
->
-> +       gpiochip_enable_irq(gc, gpio_num);
->         vf610_gpio_writel(port->irqc[d->hwirq] << PORT_PCR_IRQC_OFFSET,
+> >  static void vf610_gpio_irq_unmask(struct irq_data *d)
+> >  {
+> > -       struct vf610_gpio_port *port =
+> > -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
+> > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
+> >         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
 
-...and here.
+And here.
 
-
->                           pcr_base);
->  }
-> @@ -237,6 +240,17 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
->         return 0;
->  }
+> > +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+> >
+> > +       gpiochip_enable_irq(gc, gpio_num);
+> >         vf610_gpio_writel(port->irqc[d->hwirq] << PORT_PCR_IRQC_OFFSET,
 >
-> +static const struct irq_chip vf610_irqchip = {
-> +       .name = "gpio-vf610",
-> +       .irq_ack = vf610_gpio_irq_ack,
-> +       .irq_mask = vf610_gpio_irq_mask,
-> +       .irq_unmask = vf610_gpio_irq_unmask,
-> +       .irq_set_type = vf610_gpio_irq_set_type,
-> +       .irq_set_wake = vf610_gpio_irq_set_wake,
-> +       .flags = IRQCHIP_IMMUTABLE,
-> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> +};
-> +
->  static void vf610_gpio_disable_clk(void *data)
->  {
->         clk_disable_unprepare(data);
-> @@ -249,7 +263,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
->         struct vf610_gpio_port *port;
->         struct gpio_chip *gc;
->         struct gpio_irq_chip *girq;
-> -       struct irq_chip *ic;
->         int i;
->         int ret;
+> ...and here.
 >
-> @@ -315,14 +328,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
->         gc->direction_output = vf610_gpio_direction_output;
->         gc->set = vf610_gpio_set;
->
-> -       ic = &port->ic;
-> -       ic->name = "gpio-vf610";
-> -       ic->irq_ack = vf610_gpio_irq_ack;
-> -       ic->irq_mask = vf610_gpio_irq_mask;
-> -       ic->irq_unmask = vf610_gpio_irq_unmask;
-> -       ic->irq_set_type = vf610_gpio_irq_set_type;
-> -       ic->irq_set_wake = vf610_gpio_irq_set_wake;
-> -
->         /* Mask all GPIO interrupts */
->         for (i = 0; i < gc->ngpio; i++)
->                 vf610_gpio_writel(0, port->base + PORT_PCR(i));
-> @@ -331,7 +336,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
->         vf610_gpio_writel(~0, port->base + PORT_ISFR);
->
->         girq = &gc->irq;
-> -       girq->chip = ic;
-> +       gpio_irq_chip_set_chip(girq, &vf610_irqchip);
->         girq->parent_handler = vf610_gpio_irq_handler;
->         girq->num_parents = 1;
->         girq->parents = devm_kcalloc(&pdev->dev, 1,
-> --
-> 2.34.1
->
-
+> >                           pcr_base);
+> >  }
 
 -- 
 With Best Regards,
