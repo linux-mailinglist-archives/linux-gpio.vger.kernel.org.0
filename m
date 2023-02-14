@@ -2,122 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DC416969A6
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 17:33:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE912696A27
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Feb 2023 17:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232106AbjBNQdP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Feb 2023 11:33:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
+        id S231689AbjBNQqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Feb 2023 11:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232062AbjBNQdN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 11:33:13 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC3D23841;
-        Tue, 14 Feb 2023 08:32:57 -0800 (PST)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E8R2YX019443;
-        Tue, 14 Feb 2023 16:32:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=2BG/t9czVGoNLmZhsJNUd2cUC/rQPsQHouwqX6sY4wM=;
- b=oRkge8BEZqop25FqCQfjLTQNOCdtlR8P9afP056NkD9h3MUY16IgrKMHz40sO4mrDWWS
- Vkaymrnw+cAEUJLAczDH0ax71JnEQhN3oetp7SNlNfd8/OWErtuxwUBHTslh6Gjcwr6Y
- yICBvh7QeplaLK21pqfVkMsKSeAtBn+mNPBpirXkoMabhv9RtvnpgRriAdvs08tJIBBF
- zuDuLeQ67Aa/6uMONDu0FhsTsW36upxpFYtgObWZP1TLlU5EGq89GovBAGCWNlbRIr9u
- u2b9LE0n3uh5jVK6+0b/05gb+9WRi2DIOvk6KojA5bFbylWCIeOazzqEdBCpKLxXk6nO TQ== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqpmmkacc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 16:32:39 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31EGWc35011402
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 16:32:38 GMT
-Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Tue, 14 Feb 2023 08:32:30 -0800
-From:   Devi Priya <quic_devipriy@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
-Subject: [PATCH V8 7/7] arm64: defconfig: Enable IPQ9574 SoC base configs
-Date:   Tue, 14 Feb 2023 22:01:16 +0530
-Message-ID: <20230214163116.9924-8-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230214163116.9924-1-quic_devipriy@quicinc.com>
-References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
+        with ESMTP id S231779AbjBNQqg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Feb 2023 11:46:36 -0500
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08002CFDD;
+        Tue, 14 Feb 2023 08:46:22 -0800 (PST)
+Received: by mail-qt1-x829.google.com with SMTP id c2so18188845qtw.5;
+        Tue, 14 Feb 2023 08:46:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EF3Fh18aPcGx0lZp0vgnipu7S3GtbM+fR6/6UdgsdNs=;
+        b=CTF/qzvcYJAJLKXvKMWN/YwCABFO/JfSitBj6DO/vhRNHvMpG85slDJ1toSOPCNDnh
+         wy86254A87Avvwy7jTAtH458QbqVSJerHCXlxlF5hSbg3k7s7QPRatVg/02DvVaxnrko
+         /LWmwB3TJLGd+6WNTojelVikUPwCecSBMuuMP/0Bry5gpTKB3Ba2hmS/3jR/doM12lOB
+         XLP40X4HP6l901qc217chSeJBlYwrlXiD0vU+FRn+MEEc7N/48HgLw5Aj/QOSZ7FaVv1
+         ywEOa64WxY39zw3PR2f0iVzvsJIQHuLQEUV2JdYJDPAdR3IFwiOewRGzd0r7To0hijZM
+         wHTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EF3Fh18aPcGx0lZp0vgnipu7S3GtbM+fR6/6UdgsdNs=;
+        b=kDKwOPk9mFgKQgQgrWrM8n2HkPTnnQRgocC94fLTIElsPHhgcxVI2zvDip+yVoZFbI
+         ywNhbmwsff0BET0PhC2eMq20Bud0C1B+wQeFvwv4hqIkfiULSbnvKfIHGbLl1eBBQUXh
+         lxiXHPJ1Ak1bgUKoB0Mv2LChpNdUh8f65ZX4KCtJyYVdCH6grcA6iWeg/NKjLcRbxC13
+         coMb2RTDW7AguDFQH2TueFveFawh2HJEmb3O1b7k2nwYPmTEoVR9sCjsUcrtWa4ji6U2
+         uzMdNEQVoqjCMmpqXwqtZefXWveQ0MY2A/fsXWuXnsnHq8SZ+m3ijBY4j5wkiDoSYGv4
+         hvSQ==
+X-Gm-Message-State: AO0yUKXaE/YgPFd45Jbspz3kt8y93ICwIC7aZV3V5W7VXOHTIwSpwiSi
+        BssTKnSH0M1wFQLAB6JzzBD2Yt6O3ivmjUOuzmc=
+X-Google-Smtp-Source: AK7set/XOn2ZldcOYB2ieyAsOe3/lw+j3S2PAxYis4xfciqkF+F/Gmpvcc3VJrUrmfVUJnwfPGEdiu9QWZrUtBvBhOU=
+X-Received: by 2002:ac8:5ac9:0:b0:3b6:82ef:2d6 with SMTP id
+ d9-20020ac85ac9000000b003b682ef02d6mr458716qtd.24.1676393181530; Tue, 14 Feb
+ 2023 08:46:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: K1vqlMjXA_q1-N6F2rnAaskrEpmJfuy7
-X-Proofpoint-GUID: K1vqlMjXA_q1-N6F2rnAaskrEpmJfuy7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_11,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
- bulkscore=0 clxscore=1015 mlxscore=0 mlxlogscore=787 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302140140
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230214125949.3462396-1-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20230214125949.3462396-1-alexander.stein@ew.tq-group.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 14 Feb 2023 18:45:45 +0200
+Message-ID: <CAHp75Vf0u_F4bFs-1hyckG7h-7r3XqxdZc_6EjuWxTxbfMPMjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: vf610: make irq_chip immutable
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enables clk & pinctrl related configs for Qualcomm IPQ9574 SoC
+On Tue, Feb 14, 2023 at 2:59 PM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> Since recently, the kernel is nagging about mutable irq_chips:
+>
+>     "not an immutable chip, please consider fixing it!"
+>
+> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+> helper functions and call the appropriate gpiolib functions.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
----
- Changes in V8:
-	- No changes
+Thanks for an update, something to amend below, otherwise
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> Thanks Andy for the feedback!
+>
+> Changes in v2:
+> * Add missing calls to gpiochip_disable_irq() and gpiochip_enable_irq()
+>
+>  drivers/gpio/gpio-vf610.c | 35 ++++++++++++++++++++---------------
+>  1 file changed, 20 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index a429176673e7..b657a07a9b56 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -30,7 +30,6 @@ struct fsl_gpio_soc_data {
+>
+>  struct vf610_gpio_port {
+>         struct gpio_chip gc;
+> -       struct irq_chip ic;
+>         void __iomem *base;
+>         void __iomem *gpio_base;
+>         const struct fsl_gpio_soc_data *sdata;
+> @@ -207,19 +206,23 @@ static int vf610_gpio_irq_set_type(struct irq_data *d, u32 type)
+>
+>  static void vf610_gpio_irq_mask(struct irq_data *d)
+>  {
+> -       struct vf610_gpio_port *port =
+> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
+>         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index b452d8d7a32c..c2dfa833af3f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -545,6 +545,7 @@ CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
- CONFIG_PINCTRL_IPQ6018=y
-+CONFIG_PINCTRL_IPQ9574=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8953=y
- CONFIG_PINCTRL_MSM8976=y
-@@ -1123,6 +1124,7 @@ CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
-+CONFIG_IPQ_GCC_9574=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
+Now you can use gpio_num here...
+
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+>
+>         vf610_gpio_writel(0, pcr_base);
+> +       gpiochip_disable_irq(gc, gpio_num);
+>  }
+>
+>  static void vf610_gpio_irq_unmask(struct irq_data *d)
+>  {
+> -       struct vf610_gpio_port *port =
+> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
+>         void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+>
+> +       gpiochip_enable_irq(gc, gpio_num);
+>         vf610_gpio_writel(port->irqc[d->hwirq] << PORT_PCR_IRQC_OFFSET,
+
+...and here.
+
+
+>                           pcr_base);
+>  }
+> @@ -237,6 +240,17 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
+>         return 0;
+>  }
+>
+> +static const struct irq_chip vf610_irqchip = {
+> +       .name = "gpio-vf610",
+> +       .irq_ack = vf610_gpio_irq_ack,
+> +       .irq_mask = vf610_gpio_irq_mask,
+> +       .irq_unmask = vf610_gpio_irq_unmask,
+> +       .irq_set_type = vf610_gpio_irq_set_type,
+> +       .irq_set_wake = vf610_gpio_irq_set_wake,
+> +       .flags = IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+>  static void vf610_gpio_disable_clk(void *data)
+>  {
+>         clk_disable_unprepare(data);
+> @@ -249,7 +263,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         struct vf610_gpio_port *port;
+>         struct gpio_chip *gc;
+>         struct gpio_irq_chip *girq;
+> -       struct irq_chip *ic;
+>         int i;
+>         int ret;
+>
+> @@ -315,14 +328,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         gc->direction_output = vf610_gpio_direction_output;
+>         gc->set = vf610_gpio_set;
+>
+> -       ic = &port->ic;
+> -       ic->name = "gpio-vf610";
+> -       ic->irq_ack = vf610_gpio_irq_ack;
+> -       ic->irq_mask = vf610_gpio_irq_mask;
+> -       ic->irq_unmask = vf610_gpio_irq_unmask;
+> -       ic->irq_set_type = vf610_gpio_irq_set_type;
+> -       ic->irq_set_wake = vf610_gpio_irq_set_wake;
+> -
+>         /* Mask all GPIO interrupts */
+>         for (i = 0; i < gc->ngpio; i++)
+>                 vf610_gpio_writel(0, port->base + PORT_PCR(i));
+> @@ -331,7 +336,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         vf610_gpio_writel(~0, port->base + PORT_ISFR);
+>
+>         girq = &gc->irq;
+> -       girq->chip = ic;
+> +       gpio_irq_chip_set_chip(girq, &vf610_irqchip);
+>         girq->parent_handler = vf610_gpio_irq_handler;
+>         girq->num_parents = 1;
+>         girq->parents = devm_kcalloc(&pdev->dev, 1,
+> --
+> 2.34.1
+>
+
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
