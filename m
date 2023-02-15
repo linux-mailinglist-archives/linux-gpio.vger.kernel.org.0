@@ -2,90 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D12F8697EC1
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:52:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF80697EC4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:52:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjBOOwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 09:52:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
+        id S229477AbjBOOw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 09:52:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjBOOwN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:52:13 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31760392A7
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:52:10 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id qw12so48856755ejc.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:52:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I2AVCTxVI6zQjggycmwXv6RwAq/qSzlndyzZgf2fgz8=;
-        b=lrdM++KfkWIGn5grRBA4X+MGpFJlgwE9l7RMREt1AThrnYs0njeYFwcBFtmBa5pkCx
-         buwXceGlqjeactxgCq1JRsJc4U3AKX5nTUuYfXFM+s5AWh0XJ5NYSkUod4h5FCBtjeUs
-         OQ17kPQeWYlot61B0RC1rnYX65+JEca8t4JJaM4oAGHMDqE3MEEgGjXwJ0Erg6fS9Zgx
-         HqEvndEdFIC76IBbYG4/H+9P5qKeXQQSv9rBTB5y27iE3LLhf8EuiTK4Ak6B1PdTFhFL
-         tim1+kwhElX8dooSespzHUYofRFmRdgpVJTp91WcAapLFJaALGtT8EruZRieU1zRwKl8
-         8Etg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I2AVCTxVI6zQjggycmwXv6RwAq/qSzlndyzZgf2fgz8=;
-        b=vnv0F2BIMXyQdk+yko/OCEPXBXpnQ4ZJZr7UQl2KrCX+NlN8KG2bTYJ74bTfkL1LhJ
-         8JcMZhSFjzL571lMhoHxoy/dJWRz/+IooEgtUucnDJcwr+muYxJsLjiWBgWyuDyJQNTx
-         Pl4wq3+4zCGuBcIMKLMkUcocptPGbfOSz3LvNDThmRJpxU12tuP/0nLX+GNRwyhJ3QWC
-         j2uE0uutvHiMFCtzWeFIUkisAoyRkn3WcE//jIDk8ABdnSfC7WL/ZVOinSi7tq5XxKjR
-         DyJkUUoEgXEko9AiQZZvKEIV6sEb0BiEyFsR2BqxNv7f/oc80lPtXp1fMbcTgFzYfsrs
-         M0vw==
-X-Gm-Message-State: AO0yUKWePQMM32eBpX2+0UFyz7RbkXCrz+ZMRn7OOXuJSQDmB1D3/2c5
-        qxrrmhQmC7+HDFu/oWRXXt04SQ+0eZuW77gr
-X-Google-Smtp-Source: AK7set/dmgqiWoaDYWs3vFxhgIzpfj8+85XiHoXGZ/c4Hxc0fHofrncnXMesA0dzw9xL18nu279KpQ==
-X-Received: by 2002:a17:907:a508:b0:8af:54d0:181d with SMTP id vr8-20020a170907a50800b008af54d0181dmr2488553ejc.35.1676472729287;
-        Wed, 15 Feb 2023 06:52:09 -0800 (PST)
-Received: from fedora.. ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id v3-20020a17090651c300b007c11e5ac250sm9905233ejk.91.2023.02.15.06.52.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 06:52:08 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: mlxbf2: select GPIOLIB_IRQCHIP
-Date:   Wed, 15 Feb 2023 15:52:06 +0100
-Message-Id: <20230215145206.1761912-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S229574AbjBOOw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:52:56 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567D9F751;
+        Wed, 15 Feb 2023 06:52:54 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pSJ9L-00082i-9y; Wed, 15 Feb 2023 15:52:47 +0100
+Message-ID: <05f6936f-f8e0-d0e5-7f8f-d0278dc03753@leemhuis.info>
+Date:   Wed, 15 Feb 2023 15:52:46 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
+Content-Language: en-US, de-DE
+From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+          Linux regressions mailing list 
+          <regressions@lists.linux.dev>
+References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
+ <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
+ <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
+ <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+ <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
+In-Reply-To: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676472774;c077c2a6;
+X-HE-SMSGID: 1pSJ9L-00082i-9y
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver uncondictionally uses the GPIOLIB_IRQCHIP so
-select it.
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 21.01.23 13:32, Linux kernel regression tracking (#adding) wrote:
+> On 19.01.23 02:54, Joel Stanley wrote:
+>> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
+>>> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
+>>>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>>>>
+>>>>> When the driver want to disable the signal of the function, it doesn't
+>>>>> need to query the state of the mux function's signal on a pin. The
+>>>>> condition below will miss the disable of the signal:
+>>
+>>>> I can't see the verdict for this patch? Will there be a new
+>>>> version, or are we in the middle of a discussion?
+>>>> I'd really like Andrew's ACK on the result before merging.
+>>>
+>>> Apologies, it's been a bit of A Week :)
+>>>
+>>> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
+>>
+>> As foreseen by Andrew, this caused a regression. On the Romulus
+>> machine the device tree contains a gpio hog for GPIO S7. With the
+>> patch applied:
+> 
+> #regzbot ^introduced cf517fef601b
+> #regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
+> acquire regmap for IP block 1
+> #regzbot ignore-activity
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ec7cfd4f52b1..e9917a45b005 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1531,6 +1531,7 @@ config GPIO_MLXBF2
- 	tristate "Mellanox BlueField 2 SoC GPIO"
- 	depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMPILE_TEST)
- 	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say Y here if you want GPIO support on Mellanox BlueField 2 SoC.
- 
--- 
-2.34.1
+#regzbot fix: 606d4ef4922662
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+#regzbot ignore-activity
