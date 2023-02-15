@@ -2,166 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70D6A6979CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 11:23:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C4DC697A34
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 11:50:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233709AbjBOKXk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 05:23:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49100 "EHLO
+        id S234244AbjBOKt7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 05:49:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233676AbjBOKXk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 05:23:40 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBBB6A78
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 02:23:38 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1pSEwk-0001Fl-8Y; Wed, 15 Feb 2023 11:23:30 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1pSEwi-0008M5-Dp; Wed, 15 Feb 2023 11:23:28 +0100
-Date:   Wed, 15 Feb 2023 11:23:28 +0100
-To:     Quentin Schulz <foss+kernel@0leil.net>
-Cc:     linus.walleij@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>
-Subject: Re: [RFC PATCH 1/1] pinctrl: rockchip: add support for per-pinmux
- io-domain dependency
-Message-ID: <20230215102328.GB13829@pengutronix.de>
-References: <20220802095252.2486591-1-foss+kernel@0leil.net>
- <20220802095252.2486591-2-foss+kernel@0leil.net>
+        with ESMTP id S234204AbjBOKtv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 05:49:51 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E5F20D13;
+        Wed, 15 Feb 2023 02:49:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676458190; x=1707994190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=A1GVDAatWTbg3vYiCbvEQRHzPOG8qGp7+GAnChLvirM=;
+  b=J9XOdUr36xKViVg4K5F6h6yii3An23oQerGY9w/3+U6kW5u0AA1mrjUh
+   ay44omEm3bjr591rzOr2rb1p/kPTkTtz43mLtdi747nexzdDyFINsolMc
+   ryLM+7aGAh+z5SsACT233DUbsPduIwUilOnxMi+ri52zVA0dWrxkw4aLh
+   3UiFVgSKRA41dTrNqaC9CHS5FRxCodmRsTLUhTjPvyrJ+YTTKtoRx/tXx
+   h+5/kZQlmkq68hC+O2TfO/D5xhspCDqYVjhMmJOjV0cfXYacKvqVA2UGr
+   ahSMClKg/Ib74zVhZrJhCIKww7W8YrvR9okj4RwiOSL7EmofnSH2+eBS1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="311763741"
+X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
+   d="scan'208";a="311763741"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 02:49:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="733238704"
+X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
+   d="scan'208";a="733238704"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Feb 2023 02:49:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pSFMA-007DXH-0B;
+        Wed, 15 Feb 2023 12:49:46 +0200
+Date:   Wed, 15 Feb 2023 12:49:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mario.limonciello@amd.com, alexander.deucher@amd.com
+Subject: Re: [PATCH v3] gpiolib: acpi: Add a ignore wakeup quirk for Clevo
+ NH5xAx
+Message-ID: <Y+y4ycHtPkABr/Ia@smile.fi.intel.com>
+References: <20230214125810.10715-1-wse@tuxedocomputers.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220802095252.2486591-2-foss+kernel@0leil.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-From:   Sascha Hauer <sha@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230214125810.10715-1-wse@tuxedocomputers.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Hi Quentin,
-
-On Tue, Aug 02, 2022 at 11:52:52AM +0200, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+On Tue, Feb 14, 2023 at 01:58:10PM +0100, Werner Sembach wrote:
+> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> changed the policy such that I2C touchpads may be able to wake up the
+> system by default if the system is configured as such.
 > 
-> On some Rockchip SoCs, some SoC pins are split in what are called IO
-> domains.
+> However for some devices there is a bug, that is causing the touchpad to
+> instantly wake up the device again once it gets deactivated. The root cause
+> is still under investigation:
+> https://lore.kernel.org/linux-acpi/2d983050-f844-6c5e-8ae9-9f87ac68dfdd@tuxedocomputers.com/T/#mb2e738787f6b6208d17b92aa6e72d4de846d4e4d
+
+Bart, I'm fine if it goes directly via your tree, or I can send it in usual
+bundle of fixes after rc1 (however it seems this deserves to make v6.2).
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> To workaround this problem for the time being, introduce a quirk for this
+> model that will prevent the wakeup capability for being set for GPIO 16.
 > 
-> An IO domain is supplied power externally, by regulators from a PMIC for
-> example. This external power supply is then used by the IO domain as
-> "supply" for the IO pins if they are outputs.
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> Each IO domain can configure which voltage the IO pins will be operating
-> on (1.8V or 3.3V).
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index e2ab4d5253bea..82e8e43582eba 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1612,6 +1612,18 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>  			.ignore_wake = "ELAN0415:00@9",
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * Spurious wakeups from TP_ATTN# pin
+> +		 * Found in BIOS 1.7.7
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "NH5xAx"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_wake = "SYNA1202:00@16",
+> +		},
+> +	},
+>  	{} /* Terminating entry */
+>  };
+>  
+> -- 
+> 2.34.1
 > 
-> There already exists an IO domain driver for Rockchip SoCs[1]. This
-> driver allows to explicit the relationship between the external power
-> supplies and IO domains[2]. This makes sure the regulators are enabled
-> by the Linux kernel so the IO domains are supplied with power and
-> correctly configured as per the supplied voltage.
-> This driver is a regulator consumer and does not offer any other
-> interface for device dependency.
-> 
-> However, IO pins belonging to an IO domain need to have this IO domain
-> correctly configured before they are being used otherwise they do not
-> operate correctly (in our case, a pin configured as output clock was
-> oscillating between 0 and 150mV instead of the expected 1V8).
-> 
-> In order to make this dependency transparent to the consumer of those
-> pins and not add Rockchip-specific code to third party drivers (a camera
-> driver in our case), it is hooked into the pinctrl driver which is
-> Rockchip-specific obviously.
-
-I don't know the status of this patch, but I haven't found anything
-newer, so please point me to newer patches if the discussion has
-continued somewhere else. Anyway, here are some thoughts about this
-patch
-
-I think the general approach is fine but could be improved. Right now we
-have one io-domain device with several supplies. That means once one
-consumer needs an io-domain, the supplies for all domains need to be
-probed beforehand.  We could relax this requirement by adding a subnode
-for each domain, so instead of doing this:
-
-pmu_io_domains: io-domains {
-	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
-	pmuio1-supply = <&vcc3v3_pmu>;
-	pmuio2-supply = <&vcc3v3_pmu>;
-	vccio1-supply = <&vccio_acodec>;
-	vccio2-supply = <&vcc_1v8>;
-	vccio3-supply = <&vccio_sd>;
-	vccio4-supply = <&vcc_1v8>;
-	vccio5-supply = <&vcc_3v3>;
-	vccio6-supply = <&vcc_1v8>;
-	vccio7-supply = <&vcc_3v3>;
-};
-
-We could do this:
-
-pmu_io_domains: io-domains {
-	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
-
-	io_domain_pmuio1: io-domain@ {
-		reg = <0>;
-		supply = <&vcc3v3_pmu>;
-	};
-
-	io_domain_pmuio2: io-domain@1 {
-		reg = <1>;
-		supply = <&vcc3v3_pmu>;
-	};
-
-	...
-};
-
-This way we could put a driver on each io-domain. When another device
-needs an io-domain we no longer have to wait for all regulators to
-appear, but only for the regulator that actually supplies that domain.
-
-With that we could specify the io-domain dependencies at dtsi or core
-level. A board would only have to make sure that the io-domain that is
-needed to access the PMIC does not itself need a supply from the very
-same PMIC to not get into circular dependencies. The supplies for the
-io-domains are specified at board level anyway, so all that a board
-would have to do is to skip (or replace with a fixed-regulator) the
-supply for the io-domain that provides access to the I2C port the PMIC
-is on. That is not too bad I guess as the regulator that supplies the
-io-domain to access the PMIC needs to be always-on anyway. In the end if
-we would turn that regulator off, we would no longer be able to turn it
-on again.
-
-One thing about putting the "rockchip,io-domains" property into the
-pingroups. We would have to put this property into each and every
-existing pingroup in all dts[i] files and new files would have to be
-reviewed in this regard as well. The pinctrl driver already has
-knowledge about all pins, so I think that would be the natural place to
-also add the knowledge about which io-domain a pin is in. With that in
-place we would get the knowledge if a io-domain is in use and could
-disable unused io-domains. I am afraid that the "rockchip,io-domains"
-property would only be added in places where it actually hurts someone.
-
-Sascha
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+With Best Regards,
+Andy Shevchenko
+
+
