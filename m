@@ -2,71 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D009E697B76
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 13:08:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3935F697BE0
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 13:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232054AbjBOMIa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 07:08:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
+        id S231442AbjBOMfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 07:35:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjBOMI3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 07:08:29 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A02C2A987;
-        Wed, 15 Feb 2023 04:08:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676462908; x=1707998908;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DYpXXhUbajYvp9CAwgR03lGdhtEFU9c+JaHUOcAL/20=;
-  b=dbvvEfyKY+Qr0mXnjXDpqBIbBzS6YiRzagk7WRoCk2tSKrB2w5ozbF6D
-   nGwqbyulBCOJEMT3LApXdSK1i5M2HkUu4IHVVtqgJ4W+qeEQCKfwflCCV
-   to/7yQCgFWWSj1kquQylWlAWsof0GrWn5M1ohU5BSSuUjFBSidh/JyYH1
-   IFpaOM5aaTHfEWXodDy9DsIUZ1qKGxSwm/nEzITuNzu2OcF3HHmJwsVaL
-   bFfF1KJ3iEJlxU34B4JuMsxGs+iyeLaBbvZIiLre85C46SbYNspP59e1c
-   pswUri2lddSdnL4U9CFu/zMHTerhY0q2pKtPmCe6RCki+yTR3I0pnLuQu
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="319446418"
-X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="319446418"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 04:08:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="702009547"
-X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="702009547"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 15 Feb 2023 04:08:21 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id CDC341A6; Wed, 15 Feb 2023 14:09:01 +0200 (EET)
-Date:   Wed, 15 Feb 2023 14:09:01 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH] gpiolib: acpi: remove redundant declaration
-Message-ID: <Y+zLXZsiZljl0z5t@black.fi.intel.com>
-References: <20230215120004.9693-1-raag.jadav@intel.com>
+        with ESMTP id S233934AbjBOMey (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 07:34:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AB038641;
+        Wed, 15 Feb 2023 04:34:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6377161B9F;
+        Wed, 15 Feb 2023 12:34:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EADC433EF;
+        Wed, 15 Feb 2023 12:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676464478;
+        bh=UdB5gcZ1ipRdvMF/VYd7e+V0Gy9qLJujvD96WZvS0NA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DCpoOc8iHx3XcRwBSD1ZDGP40QOJqNIxZTP+CRuJvEBLFgtOvJHb1BxmmVQVfcWPz
+         DPq298F9sCKiTeahJyumwLmhzWr9yLHuVSt/Mq5h78veRLGCdNRsAQHf5/jlKiUChd
+         8no4Zb0DtNaYMe8Larvl6+gOzcfXADoQV3n31OpI37s4NQZPPzZ76+mFaeI75IShx0
+         fBSKmCTTMHdUu/uG4tD/KLRby5vMvJ7nwVoO2+s1CTjifo3P032eI5Pd6K3fCrMyho
+         +7hgd9oQhxO2zo08wGaCj5FxGS2syXQflakHSPJ4CtIOHS5c3xxNQmN6SuEQblgliV
+         KrB2+yr/wTnhQ==
+Date:   Wed, 15 Feb 2023 12:34:30 +0000
+From:   Jean-Philippe Brucker <jpb@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        John Stultz <jstultz@google.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Maxim Kiselev <bigunclemax@gmail.com>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] fw_devlink improvements
+Message-ID: <Y+zRVsyZ2iJlrM8u@myrica>
+References: <20230207014207.1678715-1-saravanak@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230215120004.9693-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230207014207.1678715-1-saravanak@google.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 05:30:04PM +0530, Raag Jadav wrote:
-> Remove acpi_device declaration, as it is no longer needed.
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+Hi Saravana,
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Mon, Feb 06, 2023 at 05:41:52PM -0800, Saravana Kannan wrote:
+> Naresh, Tony, Abel, Geert, Dmitry, Maxim(s), Miquel, Luca, Doug, Martin,
+> Jean-Philippe,
+> 
+> Can I get your Tested-by's for this v3 series please?
+
+Sorry for the delay (I misconfigured my inbox). I tested virtio-iommu with
+these changes, no regression:
+
+Tested-by: Jean-Philippe Brucker <jpb@kernel.org>
+
+
+Removing driver_deferred_probe_check_state() by reverting [1] breaks
+loading virtio-iommu as a module, as the dependency between PCI devices
+and PCI IOMMU is ignored, and the device probed too early [2]. I'll try to
+figure out how to make that work.
+
+Thanks,
+Jean
+
+[1] https://lore.kernel.org/lkml/20220819221616.2107893-5-saravanak@google.com/
+[2] https://lore.kernel.org/lkml/Yv+dpeIPvde7oDHi@myrica/
