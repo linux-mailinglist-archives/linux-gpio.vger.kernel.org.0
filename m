@@ -2,99 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43C7E697E89
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:40:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ECDE697E98
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:43:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbjBOOkC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 09:40:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
+        id S229806AbjBOOn4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 09:43:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjBOOjv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:39:51 -0500
-Received: from srv6.fidu.org (srv6.fidu.org [159.69.62.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D319279BE;
-        Wed, 15 Feb 2023 06:39:47 -0800 (PST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by srv6.fidu.org (Postfix) with ESMTP id 87C21C8009E;
-        Wed, 15 Feb 2023 15:39:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        tuxedocomputers.com; h=content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from; s=
-        default; t=1676471985; x=1678286386; bh=cg11z1Z2tn2N+OnXuggI+b/O
-        sn25Mo8y6eX2kCO52wA=; b=q5fCCEu9nE7GdT2tFUAtxIqEA+URH/I13jd5a5yE
-        ucBa4xwlbum1CYO5VYqMkyf6U0wqd+uzPg2Bsl11RLGnjZ2GmF7GAaLw3rHZipk2
-        PrMB/mil9lud7d3TEiBxU/NKBgQJmOA0rm0AFS55HY5QcoJPIp5AvIBUQn1cGfJH
-        Ar0=
-X-Virus-Scanned: Debian amavisd-new at srv6.fidu.org
-Received: from srv6.fidu.org ([127.0.0.1])
-        by localhost (srv6.fidu.org [127.0.0.1]) (amavisd-new, port 10026)
-        with LMTP id Kl3NNn0Ujgg3; Wed, 15 Feb 2023 15:39:45 +0100 (CET)
-Received: from wsembach-tuxedo.fritz.box (host-88-217-226-44.customer.m-online.net [88.217.226.44])
-        (Authenticated sender: wse@tuxedocomputers.com)
-        by srv6.fidu.org (Postfix) with ESMTPA id B99E8C8009A;
-        Wed, 15 Feb 2023 15:39:44 +0100 (CET)
-From:   Werner Sembach <wse@tuxedocomputers.com>
-To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
-        alexander.deucher@amd.com
-Subject: [PATCH v4] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
-Date:   Wed, 15 Feb 2023 15:39:41 +0100
-Message-Id: <20230215143941.13247-1-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229789AbjBOOnz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:43:55 -0500
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6692A8A5A
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:43:54 -0800 (PST)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-52ec329dc01so255187547b3.10
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:43:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ga39QTsy+z+m6NyTC7ZtkFH0kMl3HCJFlPDjuWsRCWk=;
+        b=U8p4AERjm1Lc3YZ7T+TlMGqRY40l2Na0nQvgNEMfY5Va6AhzuV+WvbVhijMw9eW2HY
+         1Ssw2ZRTxZD2a3aWcS4Bskkin0pC6SDjPXDirKJjQxHmgsr/LxtWia0H07SUueLe3cd0
+         Fz2CmKxy3z/KV363+Ni/976R0aiofLVVtzbJVDUUhQIFTWzqQ8yJu7TQONZ1DJ9DX6nz
+         7cy9vMpvsysDuhhTVa93efaKniU8TkUS27YVjqfFa4KPoWzgSqIjlM7kXlMe2wxwxi7n
+         JnF2o4yPbHwZgyYV4dq9FtCYsEjkC/IJwWGKxu3/lf9aHkUAiE5NITBHcEpWEnosuCEW
+         FFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ga39QTsy+z+m6NyTC7ZtkFH0kMl3HCJFlPDjuWsRCWk=;
+        b=Nj8RxqJvbJHSVQAllPkEvP0eMdzhl+vPmbCHUf0c6+0EA3vzMGwm72cT13BM1CHe1H
+         Y1eADibKhMoWckvhX39DY7bntgD/OezmsUVPyQH5MfWvNYCMgjevUaSA0c59WnUhRq/N
+         MzVP9XQfsBKMagHoBvV/X4oV9Imsb/3ThVRzyWkxhkvK6bmpmiByyJ2FTpOBQGoQiXv4
+         tfXk5caVRKBzXlVPc4o1lKKCCZ4g8IcXo0J4G/jUzVlqpivwWr62/2EMu4UV21xL8Unl
+         DfB3k2kH4Jp9/2NwuvahMKrm4ry04O0Vkjg20oGPn14YrT9u8i00qy9KhryUpDbOBqfb
+         uytw==
+X-Gm-Message-State: AO0yUKUmOJXheIE6uHlvD6oUYcZYc2IO+f6VSzuXaHmnO7eZvb0G5MJF
+        /TdXHhjyuBtrzZZdr8PzssRIkLmku8Qf57ZAZT23sw==
+X-Google-Smtp-Source: AK7set8QDwgi+2WYBs7jbHO1kq1hZku7IWBRjrps5059OlF1v3nu7z62weSmEN4CYag/RCS63I3P5y145+a8zVOVNwg=
+X-Received: by 2002:a5b:c3:0:b0:83a:dd71:5b70 with SMTP id d3-20020a5b00c3000000b0083add715b70mr324341ybp.35.1676472233624;
+ Wed, 15 Feb 2023 06:43:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230215092421.143199-1-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20230215092421.143199-1-alexander.stein@ew.tq-group.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Feb 2023 15:43:41 +0100
+Message-ID: <CACRpkdZbcs4zgGtuF5U4_JghHJ=A31T8jp2NTcN68P2Eh2azxg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpiolib: allow device numbering using OF alias
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Johan Hovold <johan@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
-changed the policy such that I2C touchpads may be able to wake up the
-system by default if the system is configured as such.
+Top-posting because important people are missing from the to:line.
 
-However for some devices there is a bug, that is causing the touchpad to
-instantly wake up the device again once it gets deactivated. The root cause
-is still under investigation:
-https://lore.kernel.org/linux-acpi/2d983050-f844-6c5e-8ae9-9f87ac68dfdd@tuxedocomputers.com/T/#mb2e738787f6b6208d17b92aa6e72d4de846d4e4d
+It seems you are trying to enforce topology here,
+i.e. hammering down what should come first, second etc, despite the
+probe order.
 
-To workaround this problem for the time being, introduce a quirk for this
-model that will prevent the wakeup capability for being set for GPIO 16.
+First the DT people need to acknowledge that this is a valid way to use
+device tree aliases. I'm not so sure about that. Remember that DT
+is mostly OS neutral, but we do have aliases for some use cases that
+can be the same tricky in any OS.
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Cc: <stable@vger.kernel.org> # v6.1+
----
- drivers/gpio/gpiolib-acpi.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Second I want Johan Hovolds input on this from the Linux sysfs side, as
+he keeps reminding me that sysfs already has topology and should be
+discovered from there (loosely paraphrased from memory). It might
+be that you are fixing something that should not be fixed.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index e2ab4d5253bea..82e8e43582eba 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1612,6 +1612,18 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "ELAN0415:00@9",
- 		},
- 	},
-+	{
-+		/*
-+		 * Spurious wakeups from TP_ATTN# pin
-+		 * Found in BIOS 1.7.7
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "NH5xAx"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "SYNA1202:00@16",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
--- 
-2.34.1
+Please keep the new respondents on subsequent postings.
 
+Yours,
+Linus Walleij
+
+On Wed, Feb 15, 2023 at 10:24 AM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+
+> From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+>
+> This is useful e.g. for the following cases
+>
+> - GPIO IP name order is not aligned with SOC addresses
+>   (i.MX93 from NXP)
+> - reproducible naming for GPIO expander chips
+>
+> The implementation is a mix of the one found for MMC and RTC.
+>
+> Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> imx93 specifies alias for 4 on-chip GPIO controllers. But they are
+> ignored:
+> $ ls -o -g /sys/bus/gpio/devices/
+> total 0
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip0 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0071/gpiochip0
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip1 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0072/gpiochip1
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip2 -> ../../../devices/platform/soc@0/43810080.gpio/gpiochip2
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip3 -> ../../../devices/platform/soc@0/43820080.gpio/gpiochip3
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip4 -> ../../../devices/platform/soc@0/43830080.gpio/gpiochip4
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip5 -> ../../../devices/platform/soc@0/47400080.gpio/gpiochip5
+> lrwxrwxrwx 1 0 Feb 15 10:03 gpiochip6 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0070/gpiochip6
+>
+> With this patch this becomes:
+> $ ls -o -g /sys/bus/gpio/devices/
+> total 0
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip0 -> ../../../devices/platform/soc@0/47400080.gpio/gpiochip0
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip1 -> ../../../devices/platform/soc@0/43810080.gpio/gpiochip1
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip2 -> ../../../devices/platform/soc@0/43820080.gpio/gpiochip2
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip3 -> ../../../devices/platform/soc@0/43830080.gpio/gpiochip3
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip4 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0071/gpiochip4
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip5 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0072/gpiochip5
+> lrwxrwxrwx 1 0 Feb 15 10:18 gpiochip6 -> ../../../devices/platform/soc@0/42000000.bus/42530000.i2c/i2c-2/2-0070/gpiochip6
+>
+>  drivers/gpio/gpiolib.c | 33 +++++++++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 19bd23044b01..4d606ad522ac 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -663,10 +663,25 @@ static void gpiochip_setup_devs(void)
+>         }
+>  }
+>
+> +/**
+> + * gpio_first_nonreserved_index() - get the first index that is not reserved
+> + */
+> +static int gpio_first_nonreserved_index(void)
+> +{
+> +       int max;
+> +
+> +       max = of_alias_get_highest_id("gpio");
+> +       if (max < 0)
+> +               return 0;
+> +
+> +       return max + 1;
+> +}
+> +
+>  int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>                                struct lock_class_key *lock_key,
+>                                struct lock_class_key *request_key)
+>  {
+> +       int index, alias_id, min_idx;
+>         struct fwnode_handle *fwnode = NULL;
+>         struct gpio_device *gdev;
+>         unsigned long flags;
+> @@ -696,12 +711,22 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>
+>         device_set_node(&gdev->dev, gc->fwnode);
+>
+> -       gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+> -       if (gdev->id < 0) {
+> -               ret = gdev->id;
+> -               goto err_free_gdev;
+> +       alias_id = of_alias_get_id(to_of_node(gc->fwnode), "gpio");
+> +       if (alias_id >= 0) {
+> +               index = ida_simple_get(&gpio_ida, alias_id, alias_id + 1,
+> +                                      GFP_KERNEL);
+> +       } else {
+> +               min_idx = gpio_first_nonreserved_index();
+> +               index = ida_simple_get(&gpio_ida, min_idx, 0,
+> +                                      GFP_KERNEL);
+> +               if (index < 0) {
+> +                       ret = gdev->id;
+> +                       goto err_free_gdev;
+> +               }
+>         }
+>
+> +       gdev->id = index;
+> +
+>         ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+>         if (ret)
+>                 goto err_free_ida;
+> --
+> 2.34.1
+>
