@@ -2,142 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E00697999
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 11:15:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 411486979A8
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 11:18:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjBOKPb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 05:15:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42536 "EHLO
+        id S233884AbjBOKSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 05:18:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjBOKPb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 05:15:31 -0500
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023B7233F9;
-        Wed, 15 Feb 2023 02:15:29 -0800 (PST)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 6FDA5D55;
-        Wed, 15 Feb 2023 11:15:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1676456128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PpXCooOaudyL1G2ba6OqnRgI8sSX5LWMJy3d6h9lOGs=;
-        b=YsYEoNG3VU6DEEUj0Djdnsl7qpS7XCC8XjM/K9VzRRejHsmo7x62IZ6vMLzZz0neJ5GR3r
-        ZsWjkuiau3tF5RwJzZ2QJRydWZQoG1kzUbZ474BSlZV11hXRtZKkRcj9ABOUwprevu9zeU
-        pNW+Vn9nEGkT+tMkvaVnatiimPsq0Nn61h2CTXvO22nVOK4ojfVQ+pptZkrpB3zCzwTE2S
-        MIZEOvKJmE2uyLNq1/EePC/jFTyiMP2sr2gcVmmkdc4KpUtnjlFt4imvKcaMa8YC6+/AZQ
-        7n2A7Uu/G7+6i1NEEvlDXdVX7D7oG+CE2DSeyh1+O/AXGiEcyPQqnue/AXB+iA==
+        with ESMTP id S229578AbjBOKST (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 05:18:19 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5EF32CF3
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 02:18:18 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-52f0001ff8eso157542377b3.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 02:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vJBqbA9/1u4A8sVO/Zk715/WabHxkSgMgrFN8Htu8mM=;
+        b=WjVP6zmwugQ9MOW+plHy2OjEWtkW2pV2E+kvSjcZJCrqafoEfoyABgBc+weMQiblln
+         QcXbBOqxbdSwv3ilQ5OpUKg0rJzIgO6XAQvJyO6dLRlWryae9iOsJ3ABu8Ry+1lOHF9i
+         T41AcZ5jOPQkdbEMmdtqZ+BBsH1OJ7n7Rw86CUXbzH8cTVvlTmRQxVqan/zhhKANDUCa
+         sIdHLC3ZqvYPG8OnsTAq/4EAyIRe6P0yftBIO+wN9HwyrR9pDtxBy21Br/JS7oh4EHJS
+         RvgTIzjdqm4RmgLj44l81AJOch3tI2ublUs8ZAii9AYsKpagh59sDrsaGrCY6QciAxFt
+         eUuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vJBqbA9/1u4A8sVO/Zk715/WabHxkSgMgrFN8Htu8mM=;
+        b=0VW1yw+2oawCobGRMXTsjUv3Wk3g4cJwf61FPCY/5PMNm6oFIhFlhG0s3sDOsOYJgR
+         YpyGsR8zZqh5Gd4praDVmkXFM66mg0exYDsOVLBIUp97Yp0Qi3hO9IGpRM2bkZmhGMZ5
+         zNKp3ZSiViX5HE47qj9JB+oS4xVcUj5wYvpif+TiNe+VR+82k/un0cqH/WM4tBIP0esc
+         seM31eNAHwpNWfeMHlmoVEDlCiwN/ojwR6XeW0xn+5adTEddrNmMCHVPzbG/toNXJuyv
+         haKAke3GTYxLpU5bRiWapFZsmlYTeBvv4FWyUDS/CqCBhDENGK5ut7YjqE5uT2dJJAmF
+         0jAA==
+X-Gm-Message-State: AO0yUKW4407AlxfL7roih5716OFJgDNjZXUsHaJFAVch+rfSAmAjk3eX
+        TphpjxLucxd3llC40QLmtgcW94TAelTvbhYroFUw3w==
+X-Google-Smtp-Source: AK7set8Q/ML7FJWquz6rdA8/0zq+ibw2pjtN5ZL0/QIoHuOAFcnJNcM/tya+FKCufMOb71pOTFpIBgNnjAROFWgeOO8=
+X-Received: by 2002:a5b:c3:0:b0:83a:dd71:5b70 with SMTP id d3-20020a5b00c3000000b0083add715b70mr242086ybp.35.1676456298013;
+ Wed, 15 Feb 2023 02:18:18 -0800 (PST)
 MIME-Version: 1.0
-Date:   Wed, 15 Feb 2023 11:15:28 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Kumaravel.Thiagarajan@microchip.com
-Cc:     gregkh@linuxfoundation.org, Tharunkumar.Pasumarthi@microchip.com,
-        UNGLinuxDriver@microchip.com, arnd@arndb.de,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Subject: Re: [PATCH v5 char-misc-next] misc: microchip: pci1xxxx: Add
- OTP/EEPROM driver for the pci1xxxx switch
-In-Reply-To: <BN8PR11MB3668A1E8541035E257F2C500E9A39@BN8PR11MB3668.namprd11.prod.outlook.com>
-References: <20230212035743.231353-1-tharunkumar.pasumarthi@microchip.com>
- <20230214082804.2761756-1-michael@walle.cc>
- <BN8PR11MB36680842890C294566A156C3E9A39@BN8PR11MB3668.namprd11.prod.outlook.com>
- <7276bef47792e489abd093e4bd0044de@walle.cc> <Y+yeyNCA48IbKOKC@kroah.com>
- <BN8PR11MB36680D97C97B4894E321CAD9E9A39@BN8PR11MB3668.namprd11.prod.outlook.com>
- <BN8PR11MB3668A1E8541035E257F2C500E9A39@BN8PR11MB3668.namprd11.prod.outlook.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <4124a575e7c7fe4f7d6393698970183c@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230214073638.571417-1-alexander.stein@ew.tq-group.com> <Y+tn3Y+SraIetn5X@surfacebook>
+In-Reply-To: <Y+tn3Y+SraIetn5X@surfacebook>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Feb 2023 11:18:06 +0100
+Message-ID: <CACRpkdYHJOgO9K_H9QA1_VWgParbh+Xqh-oCmo3JAFtaMXYByg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: vf610: make irq_chip immutable
+To:     andy.shevchenko@gmail.com
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->> > > > > > Microchip's pci1xxxx is an unmanaged PCIe3.1a switch for
->> > > > > > consumer, industrial, and automotive applications. This
->> > > > > > switch integrates OTP and EEPROM to enable customization of
->> > > > > > the part in the field. This patch provides the OTP/EEPROM
->> > > > > > driver to support the
->> > same.
->> > > > >
->> > > > > Why isn't this driver using the nvmem subsystem which is
->> > > > > usually used for OTP and EEPROM?
->> > > > Michael, these OTP and EEPROM memories do not have any fixed
->> > > > location registers which store values (Eg. mac address, config
->> > > > parameters, etc) at fixed offsets.
->> > > > It stores a bunch of records, each of which has some data to be
->> > > > written into the device's hardware registers at different locations.
->> > > > These records are directly consumed by the hardware and
->> > > > interpreted without the involvement of the software.
->> > > > Therefore, we don't require any OTP / EEPROM register map to be
->> > > > input to the OS / driver through device tree or board files.
->> > > > I only had to enumerate two separate block devices using the
->> > > > driver so that the config binary files can be overlayed using
->> > > > the dd command.
->> > > > Since this is not fitting like a conventional nvme device, I
->> > > > didn't choose the nvme subsystem.
->> > > > Please let me know your thoughts / comments if any.
->> > >
->> > > So this is only for provisioning. i.e. during manufacturing a
->> > > board which uses this PCI bridge? There are no kernel users, nor
->> > > is there a common interface towards user-space. But just some
->> > > block device (why not a char device?) exposed to userspace. I
->> > > presume there is a companion userspace application for it? Why do
->> > > you take the extra step and have a (random) kernel interface, you
->> > > could also just access the PCI device directly from userspace
->> > > within your companion application, e.g. through libpci.
->> >
->> > Yeah, why not just use userspace, I missed that, thanks!
->> Greg & Michael, I do not want to expose the entire or even partial set
->> of device registers to the user space access directly for safety 
->> reasons.
+On Tue, Feb 14, 2023 at 11:52 AM <andy.shevchenko@gmail.com> wrote:
+> Tue, Feb 14, 2023 at 08:36:38AM +0100, Alexander Stein kirjoitti:
+> > Since recently, the kernel is nagging about mutable irq_chips:
+> >
+> >     "not an immutable chip, please consider fixing it!"
+> >
+> > Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+> > helper functions and call the appropriate gpiolib functions.
+>
+> ...
+>
+> > The overall changes are based on commit f1138dacb7ff
+> > ("gpio: sch: make irq_chip immutable")
+>
+> Nice, but you forgot one crucial detail. You need to mark GPIO resuested
+> whenever it's locked as IRQ and otherwise when unlocked.
 
-I presume that utility will need root anyway. IOW, it doesn't make
-sense to be used as a normal user.
++static const struct irq_chip vf610_irqchip = {
+(...)
++       GPIOCHIP_IRQ_RESOURCE_HELPERS,
 
->> I think hardware registers shall be accessible only through safe and
->> robust kernel mode components and that the user space shall only be
->> able to access the device through the kernel mode services.
->> I want the user to use the hardware only in those ways designated by
->> the driver.
+That's what this macro does ;)
 
-I don't get that point. It is not something you are doing regularly
-or maybe even in a running system. I guess you'll have to do a reboot
-anyway after you modified some registers defaults. Anyway, it's still
-only for provisioning.
-
->> We were using the "busybox devmem" to access the hardware registers
->> directly and to program the EEPROM / OTP.
->> But we understood that it cannot be an end user solution in all cases
->> and based on some of the operating environments, there can be some
->> restrictions in opening the direct hardware access to the user space.
-
-Yes, then just build a tool around libpci as I've mentioned. Who is the
-user here? An OEM? An end-user? What would an end-user update within
-your PCI bridge?
-
-As a matter of fact, it actually makes it harder for a user because
-he will also need this kernel driver (which might be disabled for
-whatever reason).
-
->> Please let me know your thoughts / comments if any.
-> 
-> I missed one more important point. This driver is targeted not just
-> for the manufacturing environment.
-> we want to be able to update the OTP / EEPROM when the device is in
-> the field also.
-
-What would be an example of that?
-
--michael
+Yours,
+Linus Walleij
