@@ -2,113 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1F1D698499
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 20:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7C0698557
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 21:15:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjBOTjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 14:39:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38000 "EHLO
+        id S229718AbjBOUPR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 15:15:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjBOTje (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 14:39:34 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FC403E62E
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 11:39:32 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id cz14so16757759oib.12
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 11:39:32 -0800 (PST)
+        with ESMTP id S229680AbjBOUPP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 15:15:15 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD01D3D904
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 12:15:12 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id fi26so25464902edb.7
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 12:15:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+gy9nLNyoIQUK6iwX/Y0FCLjl3H31hI6ury00skryq4=;
-        b=MWcU3QEll9pf0YdfxZEo6BIrtfcqPJnmHeyxMxC4JCaieJXorrJ9DXlOoYGQ4N9TE6
-         fdFJFUujY6GchLIliA05LdROnfWKVPJa0qCilaja0BnyyIuSE3dcD/EenGs0oJqlNL9A
-         I2EhTjajUMYLKFYe7y31BrkHCIs3M/qu5/HXmaaLO80xWsYjWLBGOI7N0JJdCyfIipKQ
-         /MIX9qrw1mEHzg06zJ2a3UBSCU8L+I0yEsa+pBo2gAmUjURM8nwOQS3VzKIA6btRczVO
-         NZDrdsAoKIWb67LZcDvjNHTaXY7PcwCCF3ThzcKCjUU9D5fPUPxQJ0ztwX3ZPYRundRz
-         1lJw==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dlmPTOnb/uWLfvlA407oM/Uo2zpIEnCfaCV3rCJXuTk=;
+        b=PGgGoS9veoto+MdZyUsqJVCgiRm48C+bKGg/BNzqmRyAgBduWvjwLSIA9hJVRCTPfC
+         tyB77nflObOintmTohjswFYX8+ae/eoY8EUA9VzdFWhQp+l+rdx9MaUxF3bHu7BGf1z4
+         ihoqE5AsCngkijR4DrhLF37fMhF63uDOtAp47ig+OQrTn6A/BW4tD73y6TWMJ6ZntKCD
+         5J7V2so5FtVjGXPEzP3RkldnxZi/61DuY0BKamJLit8SyoEJhI6Iry0TNH3SjOFUMvOs
+         ylwlFYZ0vqzHuuFjGZthLTlIEN+jkgmc3/J4WC1ojPxdLwqSMhWj4QeGZs3hM1Fkn91Q
+         y/5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+gy9nLNyoIQUK6iwX/Y0FCLjl3H31hI6ury00skryq4=;
-        b=MG5813YE1OGMV9stBMImynTVL/FhUo2FX+tts9g2ix/o9NqvP2JOi6aUpwyPcgKRSX
-         mdcGOs1EgVFvqOKkGOm+ysGpkGBLKPJ7S+7pU3YfT3XprpOai/CYoT6O/L5Q/d9l6OtK
-         YDY87TZT7/HEb4HcRBUV/vFhaeUX5k2sG1KiDYxN6BRTg9qLHeCQ0oxSM067Z5RtR5UF
-         R2Hw36ubMeH9TAAYj4VmjqHgwcEhnUKVbC1x4OCGdhIBRI4YW1Wnlr8Zgb2KqbH/2JE6
-         6f8nKh/fbvhvmTVPIGkxdiVWWDowchlB+uznDptgsF4CIBtMO0NA7BP70ybFCGNYlQ2r
-         jRfA==
-X-Gm-Message-State: AO0yUKWA9ZkhiWMQeI4n/ESDXwci8aBcHwI2rq6uOnjFGSnAjf30TSPl
-        FTriUrq6oA0UStc/5wlW40nWsQ==
-X-Google-Smtp-Source: AK7set/RbYIbriNGlWV+8yhX2eMc6Wc3l4GJWkr3tSVWhf+ljWb4Dz7LcZQx8qoF9ZF8mqjqg0rqiQ==
-X-Received: by 2002:a05:6808:219:b0:364:fc2c:687a with SMTP id l25-20020a056808021900b00364fc2c687amr1248492oie.57.1676489971741;
-        Wed, 15 Feb 2023 11:39:31 -0800 (PST)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id o4-20020acad704000000b003785996ef36sm3024980oig.19.2023.02.15.11.39.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 11:39:31 -0800 (PST)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH] gpio: 104-dio-48e: Utilize mask_buf_def in handle_mask_sync() callback
-Date:   Wed,  8 Feb 2023 05:55:42 -0500
-Message-Id: <20230208105542.9459-1-william.gray@linaro.org>
-X-Mailer: git-send-email 2.39.1
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dlmPTOnb/uWLfvlA407oM/Uo2zpIEnCfaCV3rCJXuTk=;
+        b=nHZCoOmL93XNud2wllkJtS7CqjCuxKH9NNBwMTWjPsu8ZkPEZltKzjPB5H+X18ZMYK
+         lRWX4QQa6aia8XX+e6+Z6wxhRyAwbVOa5l+kVuH+Sl7VhnjRkZXnlB7PTSd8BLTGcAxD
+         BbNi1jdmxoY74pgYgP8kuA0URE4BlC6sNBb4ttsXifo/Rr1c0IND29FSfjGRiss4IF+A
+         D3vuma11RAo3ZjlyRURMXP8qV/9PY9q86QSusxcY+SMlHjCVaT9F5Ah3PkVv3JdppfvA
+         ejNTGRnZzZZoI3ZX23wZSRZTh4MmNY0SacgqemWD12/zbOmeE1aq/1P52THnvHrr2gbu
+         sqeg==
+X-Gm-Message-State: AO0yUKVrd+lx39jctxhtyBpvq/CY8NeELd/ckzdQ3Gre47YMNsft3CVW
+        exK/f0ibtcFIj6juYhEpPezIIA==
+X-Google-Smtp-Source: AK7set8lzJ0tcYwuFqn55W8bMUH7MpsMOhrCOTOKKSzf2FZ8WDQaVfnJzAccK7AFJKoOa77PZC0Ivg==
+X-Received: by 2002:a17:907:7e8b:b0:8b1:472a:758d with SMTP id qb11-20020a1709077e8b00b008b1472a758dmr702577ejc.18.1676492111277;
+        Wed, 15 Feb 2023 12:15:11 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id y7-20020a170906070700b008b14bd356d9sm638926ejb.37.2023.02.15.12.15.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Feb 2023 12:15:10 -0800 (PST)
+Message-ID: <0b053e6d-79c5-38fc-5f6f-d7cd13fcefd9@linaro.org>
+Date:   Wed, 15 Feb 2023 21:15:08 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 1/8] dt-bindings: gpio: rockchip,gpio-bank: add
+ compatible string per SoC
+Content-Language: en-US
+To:     Johan Jonker <jbx6244@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        heiko@sntech.de, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kever.yang@rock-chips.com, sjg@chromium.org,
+        philipp.tomsich@vrull.eu, john@metanate.com,
+        quentin.schulz@theobroma-systems.com
+References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
+ <CACRpkdbmXri1vtRShm7a3N0sRA7Qg_ni5FpAtiEv+72a6g9Wng@mail.gmail.com>
+ <CAMRc=MeKdb=xmidwXQiNxtJpb1xii1D-43m1z6cNtF1VxFwogg@mail.gmail.com>
+ <e0bf4347-ec24-a4e2-0851-d5cdf850cc28@linaro.org>
+ <CAMRc=MdZOmxSTvtKaPo7cnx6q+dg8ANQYuM8PeuN+KQ7fqV61g@mail.gmail.com>
+ <e0168826-2276-405e-2d31-4b396335d02a@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <e0168826-2276-405e-2d31-4b396335d02a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The mask_buf_def argument provides a mask of all the maskable lines.
-Utilize mask_buf_def rather than hardcode an "all_masked" mask.
+On 15/02/2023 17:14, Johan Jonker wrote:
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-104-dio-48e.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+>> Johan, please address the enum issue and resend just this patch.
+> 
+> I changed to oneOf, because with enum I didn't get it working.
+> With 2 enum's it complains about: is not of type 'string'.
+> I'm out of ideas...
+> Maybe it's something simple that I overlook.
+> Could Krzysztof give an example?
 
-diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
-index a3846faf3780..74e2721f2613 100644
---- a/drivers/gpio/gpio-104-dio-48e.c
-+++ b/drivers/gpio/gpio-104-dio-48e.c
-@@ -106,7 +106,6 @@ static int dio48e_handle_mask_sync(struct regmap *const map, const int index,
- {
- 	unsigned int *const irq_mask = irq_drv_data;
- 	const unsigned int prev_mask = *irq_mask;
--	const unsigned int all_masked = GENMASK(1, 0);
- 	int err;
- 	unsigned int val;
- 
-@@ -118,7 +117,7 @@ static int dio48e_handle_mask_sync(struct regmap *const map, const int index,
- 	*irq_mask = mask_buf;
- 
- 	/* if all previously masked, enable interrupts when unmasking */
--	if (prev_mask == all_masked) {
-+	if (prev_mask == mask_buf_def) {
- 		err = regmap_write(map, DIO48E_CLEAR_INTERRUPT, 0x00);
- 		if (err)
- 			return err;
-@@ -126,7 +125,7 @@ static int dio48e_handle_mask_sync(struct regmap *const map, const int index,
- 	}
- 
- 	/* if all are currently masked, disable interrupts */
--	if (mask_buf == all_masked)
-+	if (mask_buf == mask_buf_def)
- 		return regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
- 
- 	return 0;
+Documentation/devicetree/bindings/arm/l2c2x0.yaml
 
-base-commit: 4827aae061337251bb91801b316157a78b845ec7
--- 
-2.39.1
+It should look like this, if my email did not mess up indents:
+
++    oneOf:
++      - enum:
++          - rockchip,gpio-bank
++          - rockchip,rk3188-gpio-bank0
++      - items:
++          - enum:
+
+Best regards,
+Krzysztof
 
