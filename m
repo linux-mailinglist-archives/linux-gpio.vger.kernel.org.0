@@ -2,140 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D850D6986DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 22:03:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAAB9698771
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 22:38:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbjBOVDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 16:03:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59624 "EHLO
+        id S229537AbjBOViv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 16:38:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230120AbjBOVC5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 16:02:57 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5995C46D75;
-        Wed, 15 Feb 2023 13:01:11 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id qw12so216114ejc.2;
-        Wed, 15 Feb 2023 13:01:11 -0800 (PST)
+        with ESMTP id S229614AbjBOViv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 16:38:51 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C184B2BED2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 13:38:49 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id g28so435024lfv.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 13:38:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VUp+NjHQlk7QRhkHY/eVWdSJwlizf3fbd3NyJl4mf5Y=;
-        b=kSU8hnfkTXFQSgIXcWAp6Q5sP/zmCOW0IILiw57c5yp6fHJZy2+0DVRf9mfN3kh+0N
-         7HfK1SkmG0M79Rbl1w0r2f38Sl8x2b4Am5NnHPunHqoQ41TDOanhTMWkwOoj5yxEngmr
-         tPMPed3dwEdXiUCYs8LKt7tBZ/aQlDhrXAlruI0gkGRZnxq3ulxoKUTRlQXprTEd2FD9
-         LXtlW2UbCbUTP4gn/0egYl7Pfo5NBxxA63ibgwPj1plCYtL7iZ+BmxjzYhrvETrt8OMo
-         5oquFOz0+iBhnbfwZ+j2Amlo+2UxnbEoyCTBSSrIdYkYCdBVR4T08/2JLznuHxlauu0E
-         R+BQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=blvGTC9nCPS4N7cOuS54QlGtneBbW2QkfoCowQlULH4=;
+        b=WQ6BJUnlfisdVOCB1WI59ylhD//Bwcju91lQuydpO4oh7PQf32u04SSyYASlKhpD2K
+         l41VARONpAFN0NM/KkTJeRYGmRCbrleV9jWTCft9eRxhvtzwlbLV3Y7qfaWx0x8JbYaN
+         lWlq/wfI991ydckZ5qDXBdn7UZcsAEb0bUu026upyG5kHxT7uCIJIqbu2cUr9DzvB3p0
+         bAlS553HzoXLMbEdyR8y/U8gvgGJ9eDURd9Sp+2lrFDfXQXcCEhTp7bWLmQEh6fZosMR
+         EH4DyNiyAcsKLyTnR+1NgVrj5bu1MjlJa84gQMVxaY0wWGLzD6rPrZjmvDYzXBFd4paX
+         GO2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VUp+NjHQlk7QRhkHY/eVWdSJwlizf3fbd3NyJl4mf5Y=;
-        b=UGW+OAPq8eYPUXUDldIgtiMEhJlOn9jrMO5L03qEWZ5aDaXNRWFfVh3miXkLHnW5Of
-         uRJDrYntfQyoFY1vsXQ/kQsoguPRDsLqASCdJb5bvgmsj6/AaUflKE8FCR6LAtsCd+uT
-         3DFkfBuLYS3+xYfX+1cy8iEMbvF8VdsXlvhdYYQYJBFnsHZzuXlKRW7Qml/52NLlaMHx
-         8bdGhLWNW8gLYFuV5BLS+KFIU5B57WS7f+rjk8zq0sw55wC1B1/RTg/Djb6ucWCKsvLz
-         kTZnlpCdMeDklduiqH4aGg9yGloYvYP+m/V+PZzV6jdlLPE9W6r2sFUF41GR0AabTcAE
-         S3kQ==
-X-Gm-Message-State: AO0yUKX/lU4uFzw7O1HFi90M138ZGgC5zWq3khTNWieHjaqf5t64/fVv
-        7Ggg+q4Niy3H99YimOrCIdBPdi5E/LM=
-X-Google-Smtp-Source: AK7set/1Z/v5Xz2z0uQdJVECDukHZj+cm0Gwg9IPjkNsreqh1L+qUYJBz1+XjYyyVp4LKYlb0kp8BA==
-X-Received: by 2002:a17:906:a409:b0:887:981:5f7c with SMTP id l9-20020a170906a40900b0088709815f7cmr3725847ejz.11.1676494869798;
-        Wed, 15 Feb 2023 13:01:09 -0800 (PST)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ov38-20020a170906fc2600b008af574e95d7sm8202046ejb.27.2023.02.15.13.01.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Feb 2023 13:01:09 -0800 (PST)
-Message-ID: <038585bd-7226-b28b-93a5-e1676a57298e@gmail.com>
-Date:   Wed, 15 Feb 2023 22:01:08 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=blvGTC9nCPS4N7cOuS54QlGtneBbW2QkfoCowQlULH4=;
+        b=0fLpn/73KOBkBCJbHiFglyGLwWegxsWohPs+rKswT5jG3DsmaCgPfuu7dsG42oP88R
+         SHZOhoFhbNebc0ajoke+qNsxHO30O65FJpbRSSQF6pqW54GHktwIpOaLOPaT2MRzQrkT
+         tO0OURiNevITo4oy9H2R7R6thJm+TWRklakIW21Ki3utql9aDM09hsbXC2HMxufkv42v
+         ikc7eCVf8tYN5UwXO1wCZWibwWkZqbAf/2GRGwQIbTonFTVddEu1hvw1ZWjq99ESWnRm
+         wHC6YCDud4KuXQrfRNQAym+aaDyMoRg2dF6PD4edWoizUlKMf0cj5Ddh+aNfe8CezCAt
+         dWWA==
+X-Gm-Message-State: AO0yUKXT2EWQnXQWyNDBmb5/j9PO9BrrDVVu9hfIo5VBDSrBdaJPFKey
+        M2uITCsavKIu3PrG24vo8PQ5ZDdpKwsC0/He
+X-Google-Smtp-Source: AK7set/XPreWqP0Kpj+Jwu9m8WuT0v/elvbebWaVCPGB3j18D8rC+1n00igoMGy4n8uba+oPAN0qPA==
+X-Received: by 2002:ac2:518d:0:b0:4db:1b30:e631 with SMTP id u13-20020ac2518d000000b004db1b30e631mr745942lfi.57.1676497127392;
+        Wed, 15 Feb 2023 13:38:47 -0800 (PST)
+Received: from Fecusia.lan (c-05d8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.216.5])
+        by smtp.gmail.com with ESMTPSA id a5-20020a056512020500b004db45ae3aa8sm454466lfo.50.2023.02.15.13.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Feb 2023 13:38:45 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tony Lindgren <tony@atomide.com>, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH] gpio: omap: Drop irq_base
+Date:   Wed, 15 Feb 2023 22:38:43 +0100
+Message-Id: <20230215213843.1737181-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From:   Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v3] dt-bindings: gpio: rockchip,gpio-bank: add compatible
- string per SoC
-To:     brgl@bgdev.pl
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
-Content-Language: en-US
-In-Reply-To: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently all Rockchip gpio nodes have the same compatible.
-Compatible strings should be SoC related.
+The OMAP1 at one point was using static irqs but that time is gone,
+OMAP1 uses sparse irqs like all other multiplatform targets so this
+static allocation of descriptors should just go.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
+ drivers/gpio/gpio-omap.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-Changed V3:
-  Keep enum
----
- .../bindings/gpio/rockchip,gpio-bank.yaml     | 27 ++++++++++++++++---
- 1 file changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-index affd823c8..2e9a5179c 100644
---- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-+++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-@@ -11,9 +11,28 @@ maintainers:
-
- properties:
-   compatible:
--    enum:
--      - rockchip,gpio-bank
--      - rockchip,rk3188-gpio-bank0
-+    oneOf:
-+      - enum:
-+          - rockchip,gpio-bank
-+          - rockchip,rk3188-gpio-bank0
-+      - items:
-+          - enum:
-+              - rockchip,px30-gpio-bank
-+              - rockchip,rk3036-gpio-bank
-+              - rockchip,rk3066a-gpio-bank
-+              - rockchip,rk3128-gpio-bank
-+              - rockchip,rk3188-gpio-bank
-+              - rockchip,rk3228-gpio-bank
-+              - rockchip,rk3288-gpio-bank
-+              - rockchip,rk3328-gpio-bank
-+              - rockchip,rk3308-gpio-bank
-+              - rockchip,rk3368-gpio-bank
-+              - rockchip,rk3399-gpio-bank
-+              - rockchip,rk3568-gpio-bank
-+              - rockchip,rk3588-gpio-bank
-+              - rockchip,rv1108-gpio-bank
-+              - rockchip,rv1126-gpio-bank
-+          - const: rockchip,gpio-bank
-
-   reg:
-     maxItems: 1
-@@ -75,7 +94,7 @@ examples:
-       };
-
-       gpio1: gpio@2003c000 {
--        compatible = "rockchip,gpio-bank";
-+        compatible = "rockchip,rk3188-gpio-bank", "rockchip,gpio-bank";
-         reg = <0x2003c000 0x100>;
-         interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-         clocks = <&clk_gates8 10>;
---
-2.20.1
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 80ddc43fd875..292e62c06008 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -992,7 +992,6 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
+ 	struct gpio_irq_chip *irq;
+ 	static int gpio;
+ 	const char *label;
+-	int irq_base = 0;
+ 	int ret;
+ 
+ 	/*
+@@ -1024,19 +1023,6 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
+ 	}
+ 	bank->chip.ngpio = bank->width;
+ 
+-#ifdef CONFIG_ARCH_OMAP1
+-	/*
+-	 * REVISIT: Once we have OMAP1 supporting SPARSE_IRQ, we can drop
+-	 * irq_alloc_descs() since a base IRQ offset will no longer be needed.
+-	 */
+-	irq_base = devm_irq_alloc_descs(bank->chip.parent,
+-					-1, 0, bank->width, 0);
+-	if (irq_base < 0) {
+-		dev_err(bank->chip.parent, "Couldn't allocate IRQ numbers\n");
+-		return -ENODEV;
+-	}
+-#endif
+-
+ 	/* MPUIO is a bit different, reading IRQ status clears it */
+ 	if (bank->is_mpuio && !bank->regs->wkup_en)
+ 		irqc->irq_set_wake = NULL;
+@@ -1047,7 +1033,6 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
+ 	irq->default_type = IRQ_TYPE_NONE;
+ 	irq->num_parents = 1;
+ 	irq->parents = &bank->irq;
+-	irq->first = irq_base;
+ 
+ 	ret = gpiochip_add_data(&bank->chip, bank);
+ 	if (ret)
+-- 
+2.34.1
 
