@@ -2,52 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EF80697EC4
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F14A5697EF2
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbjBOOw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 09:52:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        id S229571AbjBOO64 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 09:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbjBOOw4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:52:56 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567D9F751;
-        Wed, 15 Feb 2023 06:52:54 -0800 (PST)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pSJ9L-00082i-9y; Wed, 15 Feb 2023 15:52:47 +0100
-Message-ID: <05f6936f-f8e0-d0e5-7f8f-d0278dc03753@leemhuis.info>
-Date:   Wed, 15 Feb 2023 15:52:46 +0100
+        with ESMTP id S229554AbjBOO64 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:58:56 -0500
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1191839CF1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:58:34 -0800 (PST)
+Received: by mail-vs1-xe2e.google.com with SMTP id g8so20121054vso.3
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 06:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vPkUSaLMzwpeCHMGA+UM75UbDw347VZfWrMPvnxSJi0=;
+        b=ZJ39X5oTsZs/ynW8YRkYknySK+P7IIWYfkYcekUd4iKazKtn4cWD6BxY0OZUuv5RHS
+         Me2RaZXQvE7GCB+I70HCtifJ3XaeOh2yEbMcihp1AdezuwAYpQUKKXnsqnc0G/J36jdT
+         dK5TlDDHEpjBanUkThStkKzNR5bL9cX6/yOq1D2b7/OpUaxTL4soSepbODExn0ZgbhJb
+         lKwiTjuFALIeMbKxnOcSF9mpl8eWG0Q3P/4A+TTLYx6u28q/JcFqv/Ga/FX4flWnwvxI
+         CiTHib4YuDL2t2wCNp7VRPuxhhYaGxt9xVxm1Iy5Kp3FAWOx7jSM6yfHZU1h96fdw/Vl
+         Pk1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vPkUSaLMzwpeCHMGA+UM75UbDw347VZfWrMPvnxSJi0=;
+        b=C/MeBReJAcHA1Uwxk480sV7VfPHYGbSRYb4SHdLqENkVQXutW4RfjGUHGwI7rABykp
+         8kFKrDiQDgcxRAhTcvm7jOHsXzdoLkhVzZj4fo4jKHsBvxgDE6WU8aBMvIUojychZ++W
+         jjTKvKxlMSXI1Peu+Sre+i4nqc1HQnp66buMTTLitvNi2EJWmYvejEYCzmDqdyMlm9Er
+         j0INx5VJIWG522yYaeW82n+G/qwZUDTwfHU6dSGKmu6kSLoSHlinnKde/Of7mo3/vVGP
+         yUzrhN1CWjFtajMzwruA/THzt79B9xgR7I0M4Z0FH+7rfwRO7v1Vqkyd0CTG5OR4a0b5
+         xKhQ==
+X-Gm-Message-State: AO0yUKUQ7qO7uOq9HMeq3VlDYcKWHgSMp72F5UYeXMCW6sC1nnc/rc3i
+        7HoMZvfMUvqE3u89brEkcRHp+wH+SWP4/gVGVQ/tmA==
+X-Google-Smtp-Source: AK7set+0YxuGri/V2foEwc0NiZxIp6uu5J4mgHu5oKT2oVA9rc8lPd74Rg8O7qhHyudpBwVuMuSQnCHtmC16lKeGmbc=
+X-Received: by 2002:a05:6102:7db:b0:410:e23:4ba with SMTP id
+ y27-20020a05610207db00b004100e2304bamr401863vsg.80.1676473110911; Wed, 15 Feb
+ 2023 06:58:30 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
-Content-Language: en-US, de-DE
-From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+References: <20230215095249.246911-1-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20230215095249.246911-1-alexander.stein@ew.tq-group.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 15 Feb 2023 15:58:20 +0100
+Message-ID: <CAMRc=MciMZ5n9RZ7nzac46WKwmbxdjO_4VSL=GgApmOdj=wf4w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] gpio: vf610: make irq_chip immutable
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Billy Tsai <billy_tsai@aspeedtech.com>,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-          Linux regressions mailing list 
-          <regressions@lists.linux.dev>
-References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
- <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
- <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
- <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
- <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-In-Reply-To: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676472774;c077c2a6;
-X-HE-SMSGID: 1pSJ9L-00082i-9y
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,46 +66,123 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Link: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
+On Wed, Feb 15, 2023 at 10:52 AM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> Since recently, the kernel is nagging about mutable irq_chips:
+>
+>     "not an immutable chip, please consider fixing it!"
+>
+> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
+> helper functions and call the appropriate gpiolib functions.
+>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+> Changes in v3:
+> * Use calculated gpio_num instead of accessing struct member
+>
+>  drivers/gpio/gpio-vf610.c | 41 ++++++++++++++++++++++-----------------
+>  1 file changed, 23 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index a429176673e7..d3f3a69d4907 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -30,7 +30,6 @@ struct fsl_gpio_soc_data {
+>
+>  struct vf610_gpio_port {
+>         struct gpio_chip gc;
+> -       struct irq_chip ic;
+>         void __iomem *base;
+>         void __iomem *gpio_base;
+>         const struct fsl_gpio_soc_data *sdata;
+> @@ -207,20 +206,24 @@ static int vf610_gpio_irq_set_type(struct irq_data *d, u32 type)
+>
+>  static void vf610_gpio_irq_mask(struct irq_data *d)
+>  {
+> -       struct vf610_gpio_port *port =
+> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
+> -       void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+> +       void __iomem *pcr_base = port->base + PORT_PCR(gpio_num);
+>
+>         vf610_gpio_writel(0, pcr_base);
+> +       gpiochip_disable_irq(gc, gpio_num);
+>  }
+>
+>  static void vf610_gpio_irq_unmask(struct irq_data *d)
+>  {
+> -       struct vf610_gpio_port *port =
+> -               gpiochip_get_data(irq_data_get_irq_chip_data(d));
+> -       void __iomem *pcr_base = port->base + PORT_PCR(d->hwirq);
+> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +       struct vf610_gpio_port *port = gpiochip_get_data(gc);
+> +       irq_hw_number_t gpio_num = irqd_to_hwirq(d);
+> +       void __iomem *pcr_base = port->base + PORT_PCR(gpio_num);
+>
+> -       vf610_gpio_writel(port->irqc[d->hwirq] << PORT_PCR_IRQC_OFFSET,
+> +       gpiochip_enable_irq(gc, gpio_num);
+> +       vf610_gpio_writel(port->irqc[gpio_num] << PORT_PCR_IRQC_OFFSET,
+>                           pcr_base);
+>  }
+>
+> @@ -237,6 +240,17 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
+>         return 0;
+>  }
+>
+> +static const struct irq_chip vf610_irqchip = {
+> +       .name = "gpio-vf610",
+> +       .irq_ack = vf610_gpio_irq_ack,
+> +       .irq_mask = vf610_gpio_irq_mask,
+> +       .irq_unmask = vf610_gpio_irq_unmask,
+> +       .irq_set_type = vf610_gpio_irq_set_type,
+> +       .irq_set_wake = vf610_gpio_irq_set_wake,
+> +       .flags = IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+>  static void vf610_gpio_disable_clk(void *data)
+>  {
+>         clk_disable_unprepare(data);
+> @@ -249,7 +263,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         struct vf610_gpio_port *port;
+>         struct gpio_chip *gc;
+>         struct gpio_irq_chip *girq;
+> -       struct irq_chip *ic;
+>         int i;
+>         int ret;
+>
+> @@ -315,14 +328,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         gc->direction_output = vf610_gpio_direction_output;
+>         gc->set = vf610_gpio_set;
+>
+> -       ic = &port->ic;
+> -       ic->name = "gpio-vf610";
+> -       ic->irq_ack = vf610_gpio_irq_ack;
+> -       ic->irq_mask = vf610_gpio_irq_mask;
+> -       ic->irq_unmask = vf610_gpio_irq_unmask;
+> -       ic->irq_set_type = vf610_gpio_irq_set_type;
+> -       ic->irq_set_wake = vf610_gpio_irq_set_wake;
+> -
+>         /* Mask all GPIO interrupts */
+>         for (i = 0; i < gc->ngpio; i++)
+>                 vf610_gpio_writel(0, port->base + PORT_PCR(i));
+> @@ -331,7 +336,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+>         vf610_gpio_writel(~0, port->base + PORT_ISFR);
+>
+>         girq = &gc->irq;
+> -       girq->chip = ic;
+> +       gpio_irq_chip_set_chip(girq, &vf610_irqchip);
+>         girq->parent_handler = vf610_gpio_irq_handler;
+>         girq->num_parents = 1;
+>         girq->parents = devm_kcalloc(&pdev->dev, 1,
+> --
+> 2.34.1
+>
 
-On 21.01.23 13:32, Linux kernel regression tracking (#adding) wrote:
-> On 19.01.23 02:54, Joel Stanley wrote:
->> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
->>> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
->>>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->>>>
->>>>> When the driver want to disable the signal of the function, it doesn't
->>>>> need to query the state of the mux function's signal on a pin. The
->>>>> condition below will miss the disable of the signal:
->>
->>>> I can't see the verdict for this patch? Will there be a new
->>>> version, or are we in the middle of a discussion?
->>>> I'd really like Andrew's ACK on the result before merging.
->>>
->>> Apologies, it's been a bit of A Week :)
->>>
->>> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
->>
->> As foreseen by Andrew, this caused a regression. On the Romulus
->> machine the device tree contains a gpio hog for GPIO S7. With the
->> patch applied:
-> 
-> #regzbot ^introduced cf517fef601b
-> #regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
-> acquire regmap for IP block 1
-> #regzbot ignore-activity
+Applied, thanks!
 
-#regzbot fix: 606d4ef4922662
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
-#regzbot ignore-activity
+Bart
