@@ -2,249 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B527E697DAF
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 14:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFE6B697E7B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 15:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229964AbjBONmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 08:42:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
+        id S229716AbjBOOhX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 09:37:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbjBONmM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 08:42:12 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD82434C37;
-        Wed, 15 Feb 2023 05:42:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676468530; x=1708004530;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=72poG9BNyJWgNcO4lHVwaSx+WheBWsmEuGzRhm0Pokw=;
-  b=kfilNg2aA4iWyMBK/GdaraISK50PkTKLeSlFr+5VbO01wsADhUPE+FVp
-   v2cNYQhxXgkV+ViMvIWlswKvU0p2V4Es0MnFlnSeZqzkaP/5j6w7C3F5/
-   I6cFVl1CeiJ1X9J5kWmCtgfysuRgt5jgP01ASgRT5AGBQyoBWvRJNqBAA
-   rdpP77PDRz/XGZYZPOqOrp9UDuIbW+q6ntDPyAFuscEIQGzDNqMP+gQkC
-   bdxvfxoOIeouUbSnUmaeJTIThFiHso2EW51Ca8tVTBSHFRB1HO/joB/fn
-   4TO/NPtwXyrkBOiZpONELlnf7wOl742zcZg4MyhTR63DviFnVv2We7u6z
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="332734641"
-X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="332734641"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 05:42:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="812450051"
-X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="812450051"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Feb 2023 05:42:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6F212269; Wed, 15 Feb 2023 15:42:44 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 5/5] pinctrl: at91: Utilise temporary variable for struct device
-Date:   Wed, 15 Feb 2023 15:42:42 +0200
-Message-Id: <20230215134242.37618-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230215134242.37618-1-andriy.shevchenko@linux.intel.com>
-References: <20230215134242.37618-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229550AbjBOOhX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 09:37:23 -0500
+Received: from srv6.fidu.org (srv6.fidu.org [IPv6:2a01:4f8:231:de0::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9926B27481;
+        Wed, 15 Feb 2023 06:37:20 -0800 (PST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by srv6.fidu.org (Postfix) with ESMTP id 8840AC8009E;
+        Wed, 15 Feb 2023 15:37:18 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at srv6.fidu.org
+Received: from srv6.fidu.org ([127.0.0.1])
+        by localhost (srv6.fidu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Wn5GFcbnWkqU; Wed, 15 Feb 2023 15:37:18 +0100 (CET)
+Received: from [192.168.176.165] (host-88-217-226-44.customer.m-online.net [88.217.226.44])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: wse@tuxedocomputers.com)
+        by srv6.fidu.org (Postfix) with ESMTPSA id B4607C8009A;
+        Wed, 15 Feb 2023 15:37:17 +0100 (CET)
+Message-ID: <f72ea973-1733-d82d-7fb5-c0e01daa173b@tuxedocomputers.com>
+Date:   Wed, 15 Feb 2023 15:37:17 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3] gpiolib: acpi: Add a ignore wakeup quirk for Clevo
+ NH5xAx
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mario.limonciello@amd.com, alexander.deucher@amd.com
+References: <20230214125810.10715-1-wse@tuxedocomputers.com>
+ <Y+y4ycHtPkABr/Ia@smile.fi.intel.com>
+ <d08e2305-92ba-15e2-398b-b495ed294f1c@tuxedocomputers.com>
+ <Y+zdi5GTO6Mdhldn@smile.fi.intel.com> <Y+zd9kCob1i7zq11@smile.fi.intel.com>
+From:   Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <Y+zd9kCob1i7zq11@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We have a temporary variable to keep pointer to struct device.
-Utilise it inside the ->probe() implementation.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-at91.c | 60 +++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 08f88403affb..de48a8e0f85f 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1304,7 +1304,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	if (!np)
- 		return -ENODEV;
- 
--	info->dev = &pdev->dev;
-+	info->dev = dev;
- 	info->ops = of_device_get_match_data(dev);
- 	at91_pinctrl_child_count(info, np);
- 
-@@ -1324,35 +1324,31 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
--	dev_dbg(&pdev->dev, "nmux = %d\n", info->nmux);
-+	dev_dbg(dev, "nmux = %d\n", info->nmux);
- 
--	dev_dbg(&pdev->dev, "mux-mask\n");
-+	dev_dbg(dev, "mux-mask\n");
- 	tmp = info->mux_mask;
- 	for (i = 0; i < gpio_banks; i++) {
- 		for (j = 0; j < info->nmux; j++, tmp++) {
--			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
-+			dev_dbg(dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
- 		}
- 	}
- 
--	dev_dbg(&pdev->dev, "nfunctions = %d\n", info->nfunctions);
--	dev_dbg(&pdev->dev, "ngroups = %d\n", info->ngroups);
--	info->functions = devm_kcalloc(&pdev->dev,
--					info->nfunctions,
--					sizeof(struct at91_pmx_func),
--					GFP_KERNEL);
-+	dev_dbg(dev, "nfunctions = %d\n", info->nfunctions);
-+	dev_dbg(dev, "ngroups = %d\n", info->ngroups);
-+	info->functions = devm_kcalloc(dev, info->nfunctions, sizeof(*info->functions),
-+				       GFP_KERNEL);
- 	if (!info->functions)
- 		return -ENOMEM;
- 
--	info->groups = devm_kcalloc(&pdev->dev,
--					info->ngroups,
--					sizeof(struct at91_pin_group),
--					GFP_KERNEL);
-+	info->groups = devm_kcalloc(dev, info->ngroups, sizeof(*info->groups),
-+				    GFP_KERNEL);
- 	if (!info->groups)
- 		return -ENOMEM;
- 
--	dev_dbg(&pdev->dev, "nbanks = %d\n", gpio_banks);
--	dev_dbg(&pdev->dev, "nfunctions = %d\n", info->nfunctions);
--	dev_dbg(&pdev->dev, "ngroups = %d\n", info->ngroups);
-+	dev_dbg(dev, "nbanks = %d\n", gpio_banks);
-+	dev_dbg(dev, "nfunctions = %d\n", info->nfunctions);
-+	dev_dbg(dev, "ngroups = %d\n", info->ngroups);
- 
- 	i = 0;
- 
-@@ -1376,7 +1372,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	struct pinctrl_pin_desc *pdesc;
- 	int ret, i, j, k;
- 
--	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
- 
-@@ -1384,13 +1380,10 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	at91_pinctrl_desc.name = dev_name(&pdev->dev);
-+	at91_pinctrl_desc.name = dev_name(dev);
- 	at91_pinctrl_desc.npins = gpio_banks * MAX_NB_GPIO_PER_BANK;
- 	at91_pinctrl_desc.pins = pdesc =
--		devm_kcalloc(&pdev->dev,
--			     at91_pinctrl_desc.npins, sizeof(*pdesc),
--			     GFP_KERNEL);
--
-+		devm_kcalloc(dev, at91_pinctrl_desc.npins, sizeof(*pdesc), GFP_KERNEL);
- 	if (!at91_pinctrl_desc.pins)
- 		return -ENOMEM;
- 
-@@ -1413,8 +1406,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	platform_set_drvdata(pdev, info);
--	info->pctl = devm_pinctrl_register(&pdev->dev, &at91_pinctrl_desc,
--					   info);
-+	info->pctl = devm_pinctrl_register(dev, &at91_pinctrl_desc, info);
- 	if (IS_ERR(info->pctl))
- 		return dev_err_probe(dev, PTR_ERR(info->pctl), "could not register AT91 pinctrl driver\n");
- 
-@@ -1423,7 +1415,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 		if (gpio_chips[i])
- 			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
- 
--	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
-+	dev_info(dev, "initialized AT91 pinctrl driver\n");
- 
- 	return 0;
- }
-@@ -1714,6 +1706,7 @@ static void gpio_irq_handler(struct irq_desc *desc)
- static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 				  struct at91_gpio_chip *at91_gpio)
- {
-+	struct device		*dev = &pdev->dev;
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-@@ -1721,8 +1714,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_irq_chip	*girq;
- 	int i;
- 
--	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip),
--				    GFP_KERNEL);
-+	gpio_irqchip = devm_kzalloc(dev, sizeof(*gpio_irqchip), GFP_KERNEL);
- 	if (!gpio_irqchip)
- 		return -ENOMEM;
- 
-@@ -1758,7 +1750,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		girq->parent_handler = gpio_irq_handler;
- 		girq->num_parents = 1;
--		girq->parents = devm_kcalloc(&pdev->dev, 1,
-+		girq->parents = devm_kcalloc(dev, girq->num_parents,
- 					     sizeof(*girq->parents),
- 					     GFP_KERNEL);
- 		if (!girq->parents)
-@@ -1824,7 +1816,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	at91_chip = devm_kzalloc(&pdev->dev, sizeof(*at91_chip), GFP_KERNEL);
-+	at91_chip = devm_kzalloc(dev, sizeof(*at91_chip), GFP_KERNEL);
- 	if (!at91_chip)
- 		return -ENOMEM;
- 
-@@ -1836,7 +1828,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	at91_chip->pioc_virq = irq;
- 	at91_chip->pioc_idx = alias_idx;
- 
--	at91_chip->clock = devm_clk_get_enabled(&pdev->dev, NULL);
-+	at91_chip->clock = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(at91_chip->clock))
- 		return dev_err_probe(dev, PTR_ERR(at91_chip->clock), "failed to get clock, ignoring.\n");
- 
-@@ -1844,8 +1836,8 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	at91_chip->id = alias_idx;
- 
- 	chip = &at91_chip->chip;
--	chip->label = dev_name(&pdev->dev);
--	chip->parent = &pdev->dev;
-+	chip->label = dev_name(dev);
-+	chip->parent = dev;
- 	chip->owner = THIS_MODULE;
- 	chip->base = alias_idx * MAX_NB_GPIO_PER_BANK;
- 
-@@ -1886,7 +1878,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, at91_chip);
- 	gpio_banks = max(gpio_banks, alias_idx + 1);
- 
--	dev_info(&pdev->dev, "at address %p\n", at91_chip->regbase);
-+	dev_info(dev, "at address %p\n", at91_chip->regbase);
- 
- 	return 0;
- }
--- 
-2.39.1
-
+Am 15.02.23 um 14:28 schrieb Andy Shevchenko:
+> On Wed, Feb 15, 2023 at 03:26:36PM +0200, Andy Shevchenko wrote:
+>> On Wed, Feb 15, 2023 at 12:59:46PM +0100, Werner Sembach wrote:
+>>> Am 15.02.23 um 11:49 schrieb Andy Shevchenko:
+>>>> On Tue, Feb 14, 2023 at 01:58:10PM +0100, Werner Sembach wrote:
+>>>>> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+>>>>> changed the policy such that I2C touchpads may be able to wake up the
+>>>>> system by default if the system is configured as such.
+>>>>>
+>>>>> However for some devices there is a bug, that is causing the touchpad to
+>>>>> instantly wake up the device again once it gets deactivated. The root cause
+>>>>> is still under investigation:
+>>>>> https://lore.kernel.org/linux-acpi/2d983050-f844-6c5e-8ae9-9f87ac68dfdd@tuxedocomputers.com/T/#mb2e738787f6b6208d17b92aa6e72d4de846d4e4d
+>>>> Bart, I'm fine if it goes directly via your tree, or I can send it in usual
+>>>> bundle of fixes after rc1 (however it seems this deserves to make v6.2).
+> Actually we have yet another little fix. So maybe I can create a tagged bundle.
+> Perhaps v4 will be the best option here.
+on it
+>
+>>> Just realized i did not add cc stable:
+>>>
+>>> It is required for 6.1 also.
+>> We have at least the following options:
+>> - you can send specific request for stable after it becomes a part of upstream
+>> - you can send a v4 with it
+>>
+>>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>>>
+>>>>> To workaround this problem for the time being, introduce a quirk for this
+>>>>> model that will prevent the wakeup capability for being set for GPIO 16.
