@@ -2,64 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E19697D6A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 14:31:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93629697D94
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 14:38:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbjBONbJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 08:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47416 "EHLO
+        id S230432AbjBONiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 08:38:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbjBONbI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 08:31:08 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD12392BF;
-        Wed, 15 Feb 2023 05:30:58 -0800 (PST)
+        with ESMTP id S230111AbjBONiM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 08:38:12 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909422F7AD;
+        Wed, 15 Feb 2023 05:38:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676467858; x=1708003858;
+  t=1676468291; x=1708004291;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=SC842wn42nkR0dYnRKqNWRp+buYOMeHzKeTEg6aEzbQ=;
-  b=YRo1ERCDpQHo14k0mV2s/915Njzhb+qivOB8ZB5mrwsSffSbSKlHhaDT
-   jwAyPszHFwIs+zXoXJXns1IthqlM1egfpolZuXndJ9B45Qld+2SmCsetb
-   Aq1UAlAVc+Wr6znMR8jA8TGk2BSl1QsnSWM/OQ/zF/1hKjWI3sdIhPI7W
-   3zO1cpmlrTmX8+c20xKuxa1IIGhiTECKvLye94siy4Ytz8A/WTdApWblD
-   l829UBXUbRcYk8DHY7UMVnXP59yOzihzBZFubCVheo30tDHvv78NZcbyQ
-   /qb6Mypcujjoy8VUopuEzJ0Fp7UFDEiLn0dJQnyp6iLLmzuaX+1JaJRRP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="315080815"
+  bh=+4r0+D+q5ysn8M+YYqPSqFr45GaxeGtQyxkSeRJTi1U=;
+  b=NRrmvenv4cwJpf95BqDV4tCGNgFaYW884q3Kh2rwFkEmnGjm3XfUHNDJ
+   0I6kLfxt2ZojI7pLftuXIVlzsQTbBaQ4BdIpPbqFWta7ke3dIpJHsk0Zw
+   zXlGtSbdcV4bI45AmJ4r22WG0Nf7V6VnR0ASG3of3r91VBR8atX7WmKpZ
+   kfiH8ZQM0bvhhEvgFQgEaQWqE2lPskNoNmohnVTU1wBhC8LPLRwO7Qds7
+   TkOHS3XDmEX9bg+iGFuSrnPIxogtkmsxQ0yw8IqSj/PG75Sq5D3sHvyqL
+   akS2wYbifkgJzgF6jOs+Ko9NRHFLBGDQDfnTDRwJwNdRXbInhF+KXy6h5
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="332733937"
 X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="315080815"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 05:30:57 -0800
+   d="scan'208";a="332733937"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 05:38:11 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="758405223"
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="793501673"
 X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
-   d="scan'208";a="758405223"
+   d="scan'208";a="793501673"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Feb 2023 05:30:54 -0800
+  by orsmga004.jf.intel.com with ESMTP; 15 Feb 2023 05:38:08 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pSHs5-007GuX-0X;
-        Wed, 15 Feb 2023 15:30:53 +0200
-Date:   Wed, 15 Feb 2023 15:30:52 +0200
+        id 1pSHz4-007H3i-2x;
+        Wed, 15 Feb 2023 15:38:06 +0200
+Date:   Wed, 15 Feb 2023 15:38:06 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH] gpiolib: acpi: remove redundant declaration
-Message-ID: <Y+zejChw4u/L1MLR@smile.fi.intel.com>
-References: <20230215120004.9693-1-raag.jadav@intel.com>
- <Y+zLXZsiZljl0z5t@black.fi.intel.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ludovic.Desroches@microchip.com,
+        linus.walleij@linaro.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com
+Subject: Re: [PATCH v2 5/5] pinctrl: at91: Utilise temporary variable for
+ struct device
+Message-ID: <Y+zgPjDruv4cIqDd@smile.fi.intel.com>
+References: <20230213154532.32992-1-andriy.shevchenko@linux.intel.com>
+ <20230213154532.32992-6-andriy.shevchenko@linux.intel.com>
+ <b78661b9-d9a4-5c2c-7df6-8fc79da73538@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y+zLXZsiZljl0z5t@black.fi.intel.com>
+In-Reply-To: <b78661b9-d9a4-5c2c-7df6-8fc79da73538@microchip.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,15 +70,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 02:09:01PM +0200, Mika Westerberg wrote:
-> On Wed, Feb 15, 2023 at 05:30:04PM +0530, Raag Jadav wrote:
-> > Remove acpi_device declaration, as it is no longer needed.
+On Tue, Feb 14, 2023 at 11:11:58AM +0000, Claudiu.Beznea@microchip.com wrote:
+> On 13.02.2023 17:45, Andy Shevchenko wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > > 
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > We have a temporary variable to keep pointer to struct device.
+> > Utilise it inside the ->probe() implementation.
 > 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Apart from this the patch also removes some { } and does some alignments.
+> For clarity some of these might go better in a different patch.
 
-Pushed for fixes, thanks!
+I was under impression that checkpatch will complain about it, but it appears
+that it does not. I will issue a new version with this updated.
+
+Thanks for your reviews and testing!
 
 -- 
 With Best Regards,
