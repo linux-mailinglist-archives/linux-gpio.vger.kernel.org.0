@@ -2,94 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5F29697F90
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 16:35:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E83697FE0
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 16:52:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjBOPfe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 10:35:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55698 "EHLO
+        id S229736AbjBOPwo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 10:52:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjBOPfe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 10:35:34 -0500
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F21B74C
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 07:35:33 -0800 (PST)
-Received: by mail-vs1-xe32.google.com with SMTP id h10so10153694vsu.11
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 07:35:33 -0800 (PST)
+        with ESMTP id S229503AbjBOPwn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 10:52:43 -0500
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C25F366B2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 07:52:41 -0800 (PST)
+Received: by mail-ua1-x929.google.com with SMTP id g12so3678561uae.6
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 07:52:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2i+hOOD/XXfFq2xjGBtPfhSLUO1F+yLEJY+o/KzQff0=;
-        b=ZHcCugrnULfmYIH0yONSRJAKEWocuZRU4/fNd3ihGhdl2TUopte1+wRa4yL7n6cMF4
-         +fVGoKNvua2UAAw8j2kBVydYFb8S9yK6x3QgkoKcCXyCSEr8NBqxPSU38JcjTU+SG+C5
-         0tzZDJm+D7t5kic0PdfCFzCT6eKvtEBI+c2hgIYIXJgKfEydlIW099ygKrFligry0ni0
-         FFBGUJpNlGYeHSnLd2ZbYSgcMq1tBqt0UJgZ8fT7rVmLm3Hyseh3irujSSZ2t8QxSGXj
-         aNrKbt6qL52O2zdC4vLmPssy9i8E+eUWkhFTmCRpC+3wO7028Y8F+89V/Ya97x9I6x8i
-         W1ZA==
+        bh=QHEckESBmtanHoXNoCvk3gYsaCb3mmNnsjrBL0CHXHo=;
+        b=uFE2tcYXYvgsB0sRGahu4i6/jR0i1fWRumRbB6+LOj6E4ZTQeoJQKY+uir8dwyQAPf
+         0tFSiyKW/Fnvdx7G9YqrFDzJ5rpovQR98oqoI9mDNOHpQoG6qkudJ1v0/vpv9DTZyvHu
+         2FZ5pBhMrW+AwLQ0UHgvstufkVnkWswfeG6NT/qsFhsMW+RqE4zXszDTo9BrlFUTp25+
+         B7HTBOKfeZtBkRm441r7YFaJc0rXVKo3xjPJcpiXV6JNc9DsILiJLKJHBFrcxHls+m2Y
+         ZP+U/dMUytGegPXffNuxumCFe0jCae7w9HsecNZLfJZoIChNvNanAquRYPfNiHANjZr/
+         6auA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2i+hOOD/XXfFq2xjGBtPfhSLUO1F+yLEJY+o/KzQff0=;
-        b=rI3X+ze9yLgyKMC+Mcl/tcv9xLFOk3wJ1o5XRODdwsZUWY57sX5QPpkhANdqTT88qA
-         43vriRK6UNPK4luDDBxnZapR2jQ45G+RjPDwCj10Lt+0WyVBL4hCQyBpIwY9mGeJQDpb
-         BlO+ky9xDHgC3mHZsBaa6yhKhC7g4qH72wg18NymNOkVUYzUn/Aff2uCFRc+9IjU5Cqw
-         Jwjpjsokxfsk7ADLH6w/QXBwMRQdd/MQpgz1Nj3VOYl7VVKvgVVF4pyXoSXmCxEql+sg
-         1lmrwm4CFgkFlDiK39iP8XUcBc8zeiCR0uLxbfwkjuQfGq8tJ/OgNZYan0cEAnma7dAQ
-         syJg==
-X-Gm-Message-State: AO0yUKVeU4Yc6CsS6YUQ6oiJ31FHhvhdox63+5Jrw6n+4zU5SnamWXKv
-        Vt1Cf22CpIRlje9Cdlmhs63pd+bce/qC0qGs23Tnbp6qxEsqiw==
-X-Google-Smtp-Source: AK7set/G2Po8tORo3A0sfQzAwRiKj4aM9OUEueDuN45rxn0PZFjZDFfFQEVZgZHa+cGC9DZZsPE2A7YhA+HLZaGdXsk=
-X-Received: by 2002:a05:6102:7db:b0:410:e23:4ba with SMTP id
- y27-20020a05610207db00b004100e2304bamr421208vsg.80.1676475331880; Wed, 15 Feb
- 2023 07:35:31 -0800 (PST)
+        bh=QHEckESBmtanHoXNoCvk3gYsaCb3mmNnsjrBL0CHXHo=;
+        b=q3SdUBpahNqswsiPfnQg/lrM8BVZej5XG7ShDTZ5Fh3DwKcUDzrmAW5joWVoGXuLZ0
+         jJn+qTP0wxqFNBmH+a7GGwFYxQWPGI6++JBDaWJarF0iDlKW/x0AHWuDdDi7fyQvNJR6
+         nHobC5SPbjqtaFyg0VXl7i4KskiWm7FEQqxGttTsdyqQFf9geJTTltNtJQKk/GLtKICr
+         wGIX8G+PfJkfXbNeyE02ZYY7fS6hQWrM/z4xL2uPb5U0a4BsvJpD+ZGUUASwCYeHulDm
+         BkV1Fabd2rfhd6DmeBiEVmMEKtFtTwNuN1oFYVYKhMWVi+xP6GYUX/MqyTV4zIqozLCz
+         Wd5w==
+X-Gm-Message-State: AO0yUKVoVgqpNKeztTGyacrrOiDHc8VObiK+32oL86gdgUk6JIbTeQeZ
+        zaPagCe4NcwUilWzmzRpxcmMwlnJsTolWHnhYM6Etg==
+X-Google-Smtp-Source: AK7set+vnGRn5VJvyu0QxjkbABjPQvrEocRoV7wexNKYGw75YkBBJD0qPPmjAkmta0f6ajtUkrNDoiyJSIKAB5KOn4A=
+X-Received: by 2002:ab0:654d:0:b0:68a:7054:58a6 with SMTP id
+ x13-20020ab0654d000000b0068a705458a6mr367631uap.22.1676476360679; Wed, 15 Feb
+ 2023 07:52:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20230215145206.1761912-1-linus.walleij@linaro.org>
-In-Reply-To: <20230215145206.1761912-1-linus.walleij@linaro.org>
+References: <20230208173343.37582-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230208173343.37582-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 15 Feb 2023 16:35:21 +0100
-Message-ID: <CAMRc=McZjQV+C7oZS0eT5JjKDtv-zXzsX941iv5Ow+RmZXAVBQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mlxbf2: select GPIOLIB_IRQCHIP
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
+Date:   Wed, 15 Feb 2023 16:52:29 +0100
+Message-ID: <CAMRc=MdsCZKh12QcqdWk+Zht5UDpA_G1+rx6+_3dzwjDYe6L+Q@mail.gmail.com>
+Subject: Re: [PATCH v4 00/18] gpiolib cleanups
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vincenzo Palazzo <vincenzopalazzodev@gmail.com>,
+        Devarsh Thakkar <devarsht@ti.com>,
+        Michael Walle <michael@walle.cc>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, linux-arch@vger.kernel.org,
+        devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alex Shi <alexs@kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Hu Haowen <src.res@email.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alexander Aring <alex.aring@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 3:52 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Wed, Feb 8, 2023 at 6:34 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> This driver uncondictionally uses the GPIOLIB_IRQCHIP so
-> select it.
+> These are some older patches Arnd did last year, rebased to
+> linux-next-20230208. On top there are Andy's patches regarding
+> similar topic. The series starts with Linus Walleij's patches.
 >
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> The main goal is to remove some of the legacy bits of the gpiolib
+> interfaces, where the corner cases are easily avoided or replaced
+> with gpio descriptor based interfaces.
 >
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index ec7cfd4f52b1..e9917a45b005 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1531,6 +1531,7 @@ config GPIO_MLXBF2
->         tristate "Mellanox BlueField 2 SoC GPIO"
->         depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMPILE_TEST)
->         select GPIO_GENERIC
-> +       select GPIOLIB_IRQCHIP
->         help
->           Say Y here if you want GPIO support on Mellanox BlueField 2 SoC.
->
-> --
-> 2.34.1
+> The idea is to get an immutable branch and route the whole series
+> via GPIO tree.
 >
 
-I queued that for fixes as it can trigger a build failure.
+Andy,
+
+looks like this series has all the acks it needs but I decided to not
+send it in the upcoming merge window, I'd prefer it gets some time in
+next so I'll let it sit until the next release cycle.
 
 Bart
