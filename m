@@ -2,87 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87921697BEE
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 13:36:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44015697D34
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Feb 2023 14:27:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233745AbjBOMgr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Feb 2023 07:36:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54476 "EHLO
+        id S232380AbjBON06 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Feb 2023 08:26:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233561AbjBOMgq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 07:36:46 -0500
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE1E3802F
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 04:36:45 -0800 (PST)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-530b85f118cso39601007b3.9
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Feb 2023 04:36:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=peZj4Dk2pewXfcQXtkuPVVkhigNfkMkCTdv1hPoK17Y=;
-        b=Hi5pgs95llh+e5WF9CMkxjOw6RVm/KtBj41xOF4pZCqWPkB0RQQNcdR9GK3MJqQ2Qu
-         syQNFFkzsHTuLwi/hFT+M8i66y8lI96mro/ajroI0KY9Q+koWHhsUyvT+atNZlRCiU6g
-         rNElhuBU/r2ZplBitdzGZtwnDo/Xq87PEM3aQXVqvRge+UiaAvPEo941jm6WguYGbkKM
-         0Rn/rangyTVxkpnwKyscZCYsaHQIMxjHJrrxONNd6/oLfa+qUWopGuwNGaGmJcThqi85
-         WIdzWrg7BoInBHgx+HojPtfQ9vLz6KXtnWCTktGAWcN07IYpX6SIDixHha+zY/obPvPI
-         wPdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=peZj4Dk2pewXfcQXtkuPVVkhigNfkMkCTdv1hPoK17Y=;
-        b=wPz4yJGoI/KX1lLHNK0qJPSA42HfQeG9a2D0IqKlnh53KUwQ4SkzqhL64XqJN+1KUG
-         RUGCVbovliu1/iuEZnnABXnUpjEzfm/HEJucg1PUfmSQZsGBfqC6EMFhHMDKdsCGnQY3
-         tGU+sAent4FOjBO+MF7LW7enkNX/iV7eGhE6SR1+TOIFdd3nhWcvU7FHzlLyuIxHAlh+
-         J3acQcGxZFvtWdWlgi9GiUQj5GCGY1CqxBe5Cfvy/RX0+0hi44AMt/D8iMJA0VizaAxZ
-         kQtL9kFUe4bf6jM6KqgqfqXhr9MRmRLcUXosEK0oZNar8oDJmUihqb9EjPC9Lnt0uDn+
-         hVSg==
-X-Gm-Message-State: AO0yUKVaCdn+WNtQ3Ia3WH0y5TmnyDfDfSjOBjiqK/fKYjBWP9nI+G0E
-        O1V6eFmq6Hiz8cCAYmGg+YmpCWSnVmwPFQxhWzuteQ==
-X-Google-Smtp-Source: AK7set+q7msr7DRhg1NWbsLLGrj0a/RemAwt6fWpgKw2yjIRNuUVqVgtYGWMmcjHOU9YJgjoCzyXn+EniltG86FbHRQ=
-X-Received: by 2002:a5b:604:0:b0:803:19fa:2c20 with SMTP id
- d4-20020a5b0604000000b0080319fa2c20mr163418ybq.207.1676464604763; Wed, 15 Feb
- 2023 04:36:44 -0800 (PST)
+        with ESMTP id S232065AbjBON05 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Feb 2023 08:26:57 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0654438EB2;
+        Wed, 15 Feb 2023 05:26:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676467601; x=1708003601;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D2b09vJQ7yhdBo6iThANpyqutldlkAD4sQwHEbLeBMI=;
+  b=lbq+caz4+dqSpOdNhPFoJ/g7Sn1OIsfjSLchthbLLYGvxJ9lWvZaVwvv
+   ooVOX2qohxYS6vn/ImwbZp2i4Qy+u1hN6DTt3cWXedPmZVrwHhfROjt2c
+   rGzlH5Migw0TbAuKfeRjgZbl/m8qmsGjjoMUMFOVcdV4eBVCsbULIA+2L
+   unXnYxMquHMgYl2IpZ2Z9cST1EY0g/EOP3v7agReSUGT/ts7rLVXz/vtO
+   0kycikK950br3RIV4i1oWyl6G23ExFy7KKPBgLfKQWIsFQeQKYLRHqgdP
+   XBm46Oz8seLMi6A4SmemILybaVsjufBpPO3No0zoai8EzwSDaRNrqnCMT
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="330055695"
+X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
+   d="scan'208";a="330055695"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 05:26:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="702032824"
+X-IronPort-AV: E=Sophos;i="5.97,299,1669104000"; 
+   d="scan'208";a="702032824"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 15 Feb 2023 05:26:37 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pSHnw-007Gom-0G;
+        Wed, 15 Feb 2023 15:26:36 +0200
+Date:   Wed, 15 Feb 2023 15:26:35 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mario.limonciello@amd.com, alexander.deucher@amd.com
+Subject: Re: [PATCH v3] gpiolib: acpi: Add a ignore wakeup quirk for Clevo
+ NH5xAx
+Message-ID: <Y+zdi5GTO6Mdhldn@smile.fi.intel.com>
+References: <20230214125810.10715-1-wse@tuxedocomputers.com>
+ <Y+y4ycHtPkABr/Ia@smile.fi.intel.com>
+ <d08e2305-92ba-15e2-398b-b495ed294f1c@tuxedocomputers.com>
 MIME-Version: 1.0
-References: <20230215095249.246911-1-alexander.stein@ew.tq-group.com>
-In-Reply-To: <20230215095249.246911-1-alexander.stein@ew.tq-group.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Feb 2023 13:36:33 +0100
-Message-ID: <CACRpkdZowEfa0As9XMs+OOrsaUk5=pYyhAGXKXzGWZHQdU4SUg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] gpio: vf610: make irq_chip immutable
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d08e2305-92ba-15e2-398b-b495ed294f1c@tuxedocomputers.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 10:52 AM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
+On Wed, Feb 15, 2023 at 12:59:46PM +0100, Werner Sembach wrote:
+> Am 15.02.23 um 11:49 schrieb Andy Shevchenko:
+> > On Tue, Feb 14, 2023 at 01:58:10PM +0100, Werner Sembach wrote:
+> > > commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> > > changed the policy such that I2C touchpads may be able to wake up the
+> > > system by default if the system is configured as such.
+> > > 
+> > > However for some devices there is a bug, that is causing the touchpad to
+> > > instantly wake up the device again once it gets deactivated. The root cause
+> > > is still under investigation:
+> > > https://lore.kernel.org/linux-acpi/2d983050-f844-6c5e-8ae9-9f87ac68dfdd@tuxedocomputers.com/T/#mb2e738787f6b6208d17b92aa6e72d4de846d4e4d
+> > Bart, I'm fine if it goes directly via your tree, or I can send it in usual
+> > bundle of fixes after rc1 (however it seems this deserves to make v6.2).
+> Just realized i did not add cc stable:
+> 
+> It is required for 6.1 also.
 
-> Since recently, the kernel is nagging about mutable irq_chips:
->
->     "not an immutable chip, please consider fixing it!"
->
-> Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-> helper functions and call the appropriate gpiolib functions.
->
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> Changes in v3:
-> * Use calculated gpio_num instead of accessing struct member
+We have at least the following options:
+- you can send specific request for stable after it becomes a part of upstream
+- you can send a v4 with it
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > > To workaround this problem for the time being, introduce a quirk for this
+> > > model that will prevent the wakeup capability for being set for GPIO 16.
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
