@@ -2,255 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89F7C6995AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 14:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB59C699658
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 14:51:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbjBPNZQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 08:25:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38008 "EHLO
+        id S229806AbjBPNvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 08:51:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjBPNZO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 08:25:14 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E8D54561;
-        Thu, 16 Feb 2023 05:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676553913; x=1708089913;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=2H++iGRfR09wbs4iqdkBPck8cSAllR7ohEnhgO/4WCI=;
-  b=lpIrJscX4Fac4jxOk4Mb8rNmUvC0xRlwTP0t/s4jqwhz87KS6hfy1hTS
-   qIDdjNv3oyEH+iBfN6Bj+yf+KQ1GSW5n2o4Ifm3NqbY8opGSMLIzmWIYH
-   HEk2Z9HXch39oqcMaX9L5M6/+3+y6AUmynwnAxIbsL1L8+8Ft5P+45hfd
-   HWP7oQ+UU+cZoy/S8rYHd2VFCNBQNS7OhIl8jYE61WwqKpMBP14Wh6ev9
-   Af2gBFhny7YpwLo2KYVkdvkI665hGHGZImld3eQQgD1uZith97S4Vab1O
-   DH3bVxMYTyGbOqPvtgdIZ0MUIgwQhsYHT+UnXuVPwKB0/eE049e9gjatm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="331711609"
-X-IronPort-AV: E=Sophos;i="5.97,302,1669104000"; 
-   d="scan'208";a="331711609"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2023 05:25:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10623"; a="999033087"
-X-IronPort-AV: E=Sophos;i="5.97,302,1669104000"; 
-   d="scan'208";a="999033087"
-Received: from inesxmail01.iind.intel.com ([10.223.154.20])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Feb 2023 05:25:08 -0800
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-        by inesxmail01.iind.intel.com (Postfix) with ESMTP id 095DE1A9F6;
-        Thu, 16 Feb 2023 18:55:08 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-        id 061B9162; Thu, 16 Feb 2023 18:55:08 +0530 (IST)
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1 3/3] gpio: elkhartlake: Introduce Elkhart Lake PSE GPIO
-Date:   Thu, 16 Feb 2023 18:53:56 +0530
-Message-Id: <20230216132356.29922-4-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230216132356.29922-1-raag.jadav@intel.com>
-References: <20230216132356.29922-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229885AbjBPNvc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 08:51:32 -0500
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5ED53B0C2;
+        Thu, 16 Feb 2023 05:51:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1676555471; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=n3e6V0OoPliLCxnynkYX1BT0oz7+TNyIk8cvea0eiqe4uhM7lO/JuA1xYU4LF6Pmu849emz0P83ccBnCu9I8xfoeNLdO31As5D7so3LUl6ajWqeLvaYfNll8kW6Am9AQVQ7oAMehd5swybxSegfKpfRmCOzHxAt3eC8p6j+9NYc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1676555471; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=oLQJFu/YeHJZ+e6PfLY6thqunBy9QxUaZpPGg1FO/6c=; 
+        b=TZjmtyk4aNX8lmMDa8z05GXFEswC/XBFhHCG7FcGwH+yGYwufq4MqXV1qUL3rJvrt+cbW0eITS/EX9lqq/1YARtTPQ08KQXu/wvpzqS+mgA4we6WbNKGoUbK9Ca+ZY5atYQCyRGVuL7dRuPaoxJkd1YvmBgcYfkKdgHme+J6jqM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1676555471;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=oLQJFu/YeHJZ+e6PfLY6thqunBy9QxUaZpPGg1FO/6c=;
+        b=gpemIUQvj1NFOsbN+oIYoYJhtN85CpnezhoiwOevE2FgZUTT82C5P0v41oOomAth
+        5+e/V+j7szwyaemk5Z0DndHE5YFJt0orAMRyHIdwzjg3Kk/kAnY/hXCXTYV3x1X9Rne
+        zbN+TM9mUbHjGtk1euDfw9IYlekPufisbh5I22b0=
+Received: from [10.10.10.3] (37.120.152.236 [37.120.152.236]) by mx.zohomail.com
+        with SMTPS id 1676555466955976.4479803295967; Thu, 16 Feb 2023 05:51:06 -0800 (PST)
+Message-ID: <88ef812b-b8e8-f640-f9f7-a1579ea69d31@arinc9.com>
+Date:   Thu, 16 Feb 2023 16:50:57 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 2/2] pinctrl: add mt7981 pinctrl driver
+To:     Daniel Golle <daniel@makrotopia.org>, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Chen-Yu Tsai <wenst@chromium.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Edward-JW Yang <edward-jw.yang@mediatek.com>,
+        Johnson Wang <johnson.wang@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Jianhui Zhao <zhaojh329@gmail.com>
+References: <cover.1674693008.git.daniel@makrotopia.org>
+ <ef5112946d16cacc67e65e439ba7b52a9950c1bb.1674693008.git.daniel@makrotopia.org>
+Content-Language: en-US
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <ef5112946d16cacc67e65e439ba7b52a9950c1bb.1674693008.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Pandith N <pandith.n@intel.com>
+Hi Daniel,
 
-This driver adds support for Elkhart Lake PSE GPIO controller,
-using Intel Tangier as a library driver.
+On 26.01.2023 03:34, Daniel Golle wrote:
+> Add pinctrl driver for the MediaTek MT7981 SoC, based on the driver
+> which can also be found the SDK.
+> 
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>   drivers/pinctrl/mediatek/Kconfig          |    5 +
+>   drivers/pinctrl/mediatek/Makefile         |    1 +
+>   drivers/pinctrl/mediatek/pinctrl-mt7981.c | 1048 +++++++++++++++++++++
+>   3 files changed, 1054 insertions(+)
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7981.c
+> 
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> index fed02c6fea062..f20c28334bcbf 100644
+> --- a/drivers/pinctrl/mediatek/Kconfig
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -127,6 +127,11 @@ config PINCTRL_MT7622
+>   	default ARM64 && ARCH_MEDIATEK
+>   	select PINCTRL_MTK_MOORE
+>   
+> +config PINCTRL_MT7981
+> +	bool "Mediatek MT7981 pin control"
+> +	depends on OF
+> +	select PINCTRL_MTK_MOORE
+> +
 
-Signed-off-by: Pandith N <pandith.n@intel.com>
-Co-developed-by: Raag Jadav <raag.jadav@intel.com>
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- MAINTAINERS                     |  1 +
- drivers/gpio/Kconfig            | 12 +++++
- drivers/gpio/Makefile           |  1 +
- drivers/gpio/gpio-elkhartlake.c | 94 +++++++++++++++++++++++++++++++++
- drivers/gpio/gpio-tangier.h     |  5 ++
- 5 files changed, 113 insertions(+)
- create mode 100644 drivers/gpio/gpio-elkhartlake.c
+Is there a reason why you removed these lines from v1?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e9d42b2747d..aec1a2040f32 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10389,6 +10389,7 @@ M:	Andy Shevchenko <andy@kernel.org>
- L:	linux-gpio@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
-+F:	drivers/gpio/gpio-elkhartlake.c
- F:	drivers/gpio/gpio-ich.c
- F:	drivers/gpio/gpio-merrifield.c
- F:	drivers/gpio/gpio-ml-ioh.c
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 7fc7a2768705..c60066d4cd72 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -242,6 +242,17 @@ config GPIO_DWAPB
- 	  Say Y or M here to build support for the Synopsys DesignWare APB
- 	  GPIO block.
- 
-+config GPIO_ELKHARTLAKE
-+	tristate "Intel Elkhart Lake PSE GPIO support"
-+	depends on (X86 && ACPI) || COMPILE_TEST
-+	select GPIO_TANGIER
-+	help
-+	  Select this option to enable GPIO support for Intel Elkhart Lake
-+	  PSE GPIO IP.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-elkhartlake.
-+
- config GPIO_EIC_SPRD
- 	tristate "Spreadtrum EIC support"
- 	depends on ARCH_SPRD || COMPILE_TEST
-@@ -632,6 +643,7 @@ config GPIO_TANGIER
- 	help
- 	  GPIO support for Intel Tangier and compatible platforms.
- 	  Currently supported:
-+	   - Elkhart Lake
- 	   - Merrifield
- 
- 	  If built as a module its name will be gpio-tangier.
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a6cea9d2c973..8c34d5e39eb8 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_GPIO_DAVINCI)		+= gpio-davinci.o
- obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
- obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
- obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
-+obj-$(CONFIG_GPIO_ELKHARTLAKE)		+= gpio-elkhartlake.o
- obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
- obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
- obj-$(CONFIG_GPIO_EP93XX)		+= gpio-ep93xx.o
-diff --git a/drivers/gpio/gpio-elkhartlake.c b/drivers/gpio/gpio-elkhartlake.c
-new file mode 100644
-index 000000000000..cf728ff35857
---- /dev/null
-+++ b/drivers/gpio/gpio-elkhartlake.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Elkhart Lake PSE GPIO driver
-+ *
-+ * Copyright (c) 2023 Intel Corporation.
-+ *
-+ * Authors: Pandith N <pandith.n@intel.com>
-+ *          Raag Jadav <raag.jadav@intel.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+
-+#include "gpio-tangier.h"
-+
-+/* Each Intel EHL PSE GPIO Controller has 30 GPIO pins */
-+#define EHL_PSE_NGPIO		30
-+
-+static int ehl_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct tng_gpio *priv;
-+	int irq, ret;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->ctx = devm_kzalloc(dev, sizeof(*priv->ctx), GFP_KERNEL);
-+	if (!priv->ctx)
-+		return -ENOMEM;
-+
-+	priv->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->reg_base))
-+		return PTR_ERR(priv->reg_base);
-+
-+	priv->dev = dev;
-+	priv->chip.base = -1;
-+	priv->chip.ngpio = EHL_PSE_NGPIO;
-+	priv->chip.can_sleep = false;
-+	priv->irq = irq;
-+
-+	priv->reg.gwmr = GWMR_EHL;
-+	priv->reg.gwsr = GWSR_EHL;
-+	priv->reg.gsir = GSIR_EHL;
-+
-+	ret = tng_gpio_probe(priv);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "tng_gpio_probe error %d\n", ret);
-+
-+	platform_set_drvdata(pdev, priv);
-+	return 0;
-+}
-+
-+static int ehl_gpio_suspend(struct device *dev)
-+{
-+	return tng_gpio_suspend(dev);
-+}
-+
-+static int ehl_gpio_resume(struct device *dev)
-+{
-+	return tng_gpio_resume(dev);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(ehl_gpio_pm_ops, ehl_gpio_suspend, ehl_gpio_resume);
-+
-+static const struct platform_device_id ehl_gpio_ids[] = {
-+	{ "gpio-elkhartlake" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, ehl_gpio_ids);
-+
-+static struct platform_driver ehl_gpio_driver = {
-+	.driver	= {
-+		.name	= "gpio-elkhartlake",
-+		.pm	= pm_sleep_ptr(&ehl_gpio_pm_ops),
-+	},
-+	.probe		= ehl_gpio_probe,
-+	.id_table	= ehl_gpio_ids,
-+};
-+module_platform_driver(ehl_gpio_driver);
-+
-+MODULE_AUTHOR("Pandith N <pandith.n@intel.com>");
-+MODULE_AUTHOR("Raag Jadav <raag.jadav@intel.com>");
-+MODULE_DESCRIPTION("Intel Elkhart Lake PSE GPIO driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(GPIO_TANGIER);
-diff --git a/drivers/gpio/gpio-tangier.h b/drivers/gpio/gpio-tangier.h
-index 414530c60c5a..6390a14ed9de 100644
---- a/drivers/gpio/gpio-tangier.h
-+++ b/drivers/gpio/gpio-tangier.h
-@@ -18,6 +18,11 @@
- 
- struct device;
- 
-+/* Elkhart Lake specific wake registers */
-+#define GWMR_EHL	0x100	/* Wake mask */
-+#define GWSR_EHL	0x118	/* Wake source */
-+#define GSIR_EHL	0x130	/* Secure input */
-+
- /* Merrifield specific wake registers */
- #define GWMR_MRFLD	0x400	/* Wake mask */
- #define GWSR_MRFLD	0x418	/* Wake source */
--- 
-2.17.1
++	depends on ARM64 || COMPILE_TEST
++	default ARM64 && ARCH_MEDIATEK
 
+Arınç
