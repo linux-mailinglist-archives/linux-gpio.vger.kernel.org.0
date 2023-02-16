@@ -2,94 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B01B76991F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 11:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD14699225
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 11:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbjBPKmX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 05:42:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        id S229816AbjBPKsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 05:48:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230292AbjBPKmP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 05:42:15 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE69855E72
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 02:41:53 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id cq19so2172278edb.5
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 02:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VEu9tYl9ixT0RlhKmk5fLsaHMUiQpUecJLWHV/pC3Vw=;
-        b=DKbXymnOtF1XMHNi83FzONMNiNoqYbtL7TmCr1PS+KGak8EsrVXSsL0NNRcgyZGpal
-         6ascZ91tN9Yb+ngczhbwHLNNLoucV1ocvvIrT+9AYzjFYmMPnvWu2lbd2jElDsQ2tMLj
-         AF9zkCKZdpf6Jv9vbw1dikIeJ/Wr35mGPS4NgfdtUTxpPthlw6Xfofb+dIw0Spe1tVfD
-         o/YPPzvsYXb/W89QkRqqxnpZ4wmcgtRjqTnwP5eJF0ntjaue1RRwYQmYIh432uHJDTlu
-         OYblgom9b+A0JlF+iVuh5I18gr911j7CEZfh7SVhMgN6OLn4NuUNMZEnZZa7TR2Qt0rw
-         O+fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VEu9tYl9ixT0RlhKmk5fLsaHMUiQpUecJLWHV/pC3Vw=;
-        b=eGT7EOT30V8fWt5B0xBxJdjBUqfeM29181eD3X9JscszUc7DQQzO+aIeMZk8vbjxZj
-         KiVaw3IsJxCjB/w16V6ubVDgZj9V8yYNqtmh64zseIc0qeDMthdGPMEPAmjGllltAslN
-         eyn6WuUc0MEfOMwp3y2hStWTn4LgK4CD1SldPNgi4P/pQwJKomQVbhWSuHUVk/LxHdDM
-         ibku0gPt4PWHrV/o4NfhF7tiJow88Xv9sxm+/XyuD5ezwgLsfzu8DJXcXiddnVEZGDlT
-         AQkl3h9rb+/tmS3ShDMiTWHBbPFAWOH6unCtvQXtEWLQeAazyYF9aALuhuA/sU8D6ru2
-         Qq0Q==
-X-Gm-Message-State: AO0yUKUaBbeKzp/gRshIJlyFo/bDu5MF8X0On1RjXoq5jVcODIOAzVl7
-        Zgvf6nkRJvugDnPMDLUwSmMN9A==
-X-Google-Smtp-Source: AK7set8vXxoTnXCznhpP6QpzCw4O9JO6x+mEM/Snm10J14uNMw42kLP4DGVtoqnjUdjsyMeSGP2GQA==
-X-Received: by 2002:aa7:df99:0:b0:4ac:c5c1:e1ed with SMTP id b25-20020aa7df99000000b004acc5c1e1edmr5914411edy.12.1676544107911;
-        Thu, 16 Feb 2023 02:41:47 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id v30-20020a50a45e000000b004acbf563d88sm657183edb.15.2023.02.16.02.41.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 02:41:47 -0800 (PST)
-Message-ID: <d94a8e7b-1c1e-34dc-5262-f16a260d813a@linaro.org>
-Date:   Thu, 16 Feb 2023 11:41:45 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v3] dt-bindings: gpio: rockchip,gpio-bank: add compatible
- string per SoC
-Content-Language: en-US
-To:     Johan Jonker <jbx6244@gmail.com>, brgl@bgdev.pl
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
- <038585bd-7226-b28b-93a5-e1676a57298e@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <038585bd-7226-b28b-93a5-e1676a57298e@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229970AbjBPKsc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 05:48:32 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B587E552A9;
+        Thu, 16 Feb 2023 02:48:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6554361F77;
+        Thu, 16 Feb 2023 10:47:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37A4C433EF;
+        Thu, 16 Feb 2023 10:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676544466;
+        bh=qPKJcQ81NdgJ9mjdld2jyisKDD9+D95sDN9DG7hmjx0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DszsnKa9tf0u7K5ayygNV3MPjUNrLLUSycmWGZhwOkCQQ4NU+FuzhI8jekTi3ANNB
+         fus/TC1hPty7mv4ToYwocMe8jIOX7YxQalBcxi4AfwsNXPfR+SqGoXx3hJJVnXRWCU
+         WHKnLHdX4otGbV9Qh/z/mcru/K2rWe/ze+AHxZ9djovLcly/rUbYSeWXY9yzhqBdKY
+         YQDl9s/8fF37sJHLLaAON2vBZXyL0H8IGm3kt3pLCmMrJi4vX08ZUWd23/Hh85Cpnl
+         ZCuNXLxJPKHGieKddQrO1fsC8XLaMPK0oQ/FmqPPL52mWpsy3F+333wJtE0V2uwcGP
+         xs6dAcaBcCDIw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pSbnk-00ArRW-Bg;
+        Thu, 16 Feb 2023 10:47:44 +0000
+Date:   Thu, 16 Feb 2023 10:47:43 +0000
+Message-ID: <86pma9yjhs.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, Alban Bedel <albeu@free.fr>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Jay Fang <f.fangjian@huawei.com>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/17] Mass convert GPIO IRQ chips to be immutable
+In-Reply-To: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+References: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, mun.yew.tham@intel.com, brgl@bgdev.pl, joel@jms.id.au, andrew@aj.id.au, albeu@free.fr, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, f.fangjian@huawei.com, daniel@thingy.jp, romain.perier@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, william.gray@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org, jmkrzyszt@gmail.com, arnd@arndb.de, tony@atomide.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/02/2023 22:01, Johan Jonker wrote:
-> Currently all Rockchip gpio nodes have the same compatible.
-> Compatible strings should be SoC related.
+On Thu, 16 Feb 2023 09:37:01 +0000,
+Linus Walleij <linus.walleij@linaro.org> wrote:
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+> We are getting tired of these irq_chips not getting converted
+> to be immutable, so I just take out the big hammer and fix
+> some that I deem not too complex as best I can.
 
+Thanks for taking the hit on this one.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I had a cursory look, and they seem fine overall. only the omap one
+looks a bit scary, but I take it that Tony can give that one a go
+before it gets merged.
 
-Best regards,
-Krzysztof
+FWIW:
 
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
