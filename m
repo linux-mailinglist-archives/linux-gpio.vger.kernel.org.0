@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E60946996F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 15:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEB6B6996FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 15:18:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbjBPORs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 09:17:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
+        id S229980AbjBPOSS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 09:18:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjBPORr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 09:17:47 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC83BBBBC;
-        Thu, 16 Feb 2023 06:17:46 -0800 (PST)
+        with ESMTP id S229862AbjBPOSR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 09:18:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE374BE93;
+        Thu, 16 Feb 2023 06:18:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 581C360EC4;
-        Thu, 16 Feb 2023 14:17:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA7FC433EF;
-        Thu, 16 Feb 2023 14:17:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8846560ABC;
+        Thu, 16 Feb 2023 14:18:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D37C433EF;
+        Thu, 16 Feb 2023 14:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676557065;
-        bh=msau/2K38eSyS0QwdkrUAtAJXdcgOWtGHzcKJ1Q6qLA=;
+        s=k20201202; t=1676557095;
+        bh=FJ/3UUWVjEdyo6sc6ZR1O3Q4KgQjH18wZv40K7Gof6M=;
         h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=YClAdZH0sHW2m6gPD+IhbEqbVY7ZRtsHvQbv0rKFQWSe9yqxlTdylkMHArEEBaGly
-         46dojse6vdz3dti93+mXI1V0axFEzRdmdp9bw7h3oCeXsAP0o14SG/uF9M5DliniWW
-         rTng24YEdcmORe02wayAef6shn5KWkUxyj4OduDFDqEgNkXjONwgKeSsWFM6hZBcFY
-         sQg01jkgYLCW3Svj/HCCtyPqVT5/1fCijyE1LY9aGwSBM+ePMQQO8JCpa537b05mvE
-         GdOe/WxfdMioa6kNV1NcPycYIBrUF+ylYmr8QGmjD1KLdJmfaeYoIwlcunw+Om5adx
-         94v8odGqc4Y9g==
-Message-ID: <3c0ad963-ce69-bd5b-20cd-888e5fbdecaf@kernel.org>
-Date:   Thu, 16 Feb 2023 15:17:40 +0100
+        b=Ix5GRxoJn+k+9ve36EFVTZOAAPQNXVIXjT+0mFF9O7L62zuzPEJ9cDrEWxAxi8bTr
+         czE37Jf6LNa/aCYs9LaJpSbJLuPyn63SKCWY76kuwysC50mh8ZkMNXAd7ci/EOfQ+Q
+         M6PD88cnympwxc/0DTqkkuk2drSH1ELQJqzA0o+GCRv+xnIvMM+e9pwZwJwDtBNEYo
+         SABcScV1X3lYLo4OBer/IlNAiTmVjfxYGtqh9jRl5L3m0sOjSqnqlaWgbe60JOeBm0
+         qxA4aI8lhOtuiYuUrk37SMCQgCo9nK5Y7lyEx8FfvAi3GPR4KbiP7s0DX0HBmN1VBm
+         KnQOa2GT7gsgQ==
+Message-ID: <16e3ddb4-219e-70a8-8644-c62973f84d31@kernel.org>
+Date:   Thu, 16 Feb 2023 15:18:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH V2 4/6] dt-bindings: timestamp: Add Tegra234 support
+Subject: Re: [PATCH V2 6/6] arm64: tegra: Add GTE nodes
 Content-Language: en-US
 To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
         jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
@@ -45,14 +45,14 @@ To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
         linux-doc@vger.kernel.org, robh+dt@kernel.org,
         timestamp@lists.linux.dev
 References: <20230214115553.10416-1-dipenp@nvidia.com>
- <20230214115553.10416-5-dipenp@nvidia.com>
+ <20230214115553.10416-7-dipenp@nvidia.com>
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230214115553.10416-5-dipenp@nvidia.com>
+In-Reply-To: <20230214115553.10416-7-dipenp@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,101 +61,77 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 14/02/2023 12:55, Dipen Patel wrote:
-> Added timestamp provider support for the Tegra234 in devicetree
-> bindings.
-
-1. Your commit does much more. You need to explain it why you drop some
-property.
-
-2. Bindings go before its usage (in the patchset).
-
-3. Please use scripts/get_maintainers.pl to get a list of necessary
-people and lists to CC.  It might happen, that command when run on an
-older kernel, gives you outdated entries.  Therefore please be sure you
-base your patches on recent Linux kernel.
-
-
+> Add GTE nodes for the tegra234. Also modify AON GTE nodes for the
+> tegra194 to remove nvidia,slice property and add nvidia,gpio-controller
+> propertyto specify AON GPIO controller node so that GTE driver can
+> do namespace conversion between GPIO lines provided by the gpiolib
+> framework and hardware timestamping engine subsystem.
 > 
 > Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 > ---
-> v2:
-> - Removed nvidia,slices property
-> - Added nvidia,gpio-controller based on review comments from Thierry,
->   this will help simplify the  hte provider driver.
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi |  3 +--
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 19 +++++++++++++++++++
+>  2 files changed, 20 insertions(+), 2 deletions(-)
 > 
->  .../timestamp/nvidia,tegra194-hte.yaml        | 30 ++++++++++++-------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
-> index c31e207d1652..d0f4ed75baee 100644
-> --- a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
-> +++ b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/timestamp/nvidia,tegra194-hte.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> index 4afcbd60e144..4c92850b1ec4 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> @@ -1363,7 +1363,6 @@
+>  			reg = <0x3aa0000 0x10000>;
+>  			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>  			nvidia,int-threshold = <1>;
+> -			nvidia,slices = <11>;
+>  			#timestamp-cells = <1>;
+>  			status = "okay";
+>  		};
+> @@ -1586,7 +1585,7 @@
+>  			reg = <0xc1e0000 0x10000>;
+>  			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>  			nvidia,int-threshold = <1>;
+> -			nvidia,slices = <3>;
+> +			nvidia,gpio-controller = <&gpio_aon>;
+>  			#timestamp-cells = <1>;
+>  			status = "okay";
+>  		};
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> index eaf05ee9acd1..4a87490c5fd4 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
+> @@ -1086,6 +1086,15 @@
+>  			clock-names = "fuse";
+>  		};
 >  
-> -title: Tegra194 on chip generic hardware timestamping engine (HTE)
-> +title: Tegra on chip generic hardware timestamping engine (HTE) provider
->  
->  maintainers:
->    - Dipen Patel <dipenp@nvidia.com>
-> @@ -23,6 +23,8 @@ properties:
->      enum:
->        - nvidia,tegra194-gte-aon
->        - nvidia,tegra194-gte-lic
-> +      - nvidia,tegra234-gte-aon
-> +      - nvidia,tegra234-gte-lic
->  
->    reg:
->      maxItems: 1
-> @@ -38,14 +40,11 @@ properties:
->      minimum: 1
->      maximum: 256
->  
-> -  nvidia,slices:
-> -    $ref: /schemas/types.yaml#/definitions/uint32
-> +  nvidia,gpio-controller:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
->      description:
-> -      HTE lines are arranged in 32 bit slice where each bit represents different
-> -      line/signal that it can enable/configure for the timestamp. It is u32
-> -      property and depends on the HTE instance in the chip. The value 3 is for
-> -      GPIO GTE and 11 for IRQ GTE.
-> -    enum: [3, 11]
-> +      The phandle to AON gpio controller instance. This is required to handle
-> +      namespace conversion between GPIO and GTE.
->  
->    '#timestamp-cells':
->      description:
-> @@ -55,11 +54,21 @@ properties:
->        mentioned in the nvidia GPIO device tree binding document.
->      const: 1
->  
-> +if:
+> +		hte_lic: hardware-timestamp@3aa0000 {
+> +			compatible = "nvidia,tegra234-gte-lic";
+> +			reg = <0x3aa0000 0x10000>;
+> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +			nvidia,int-threshold = <1>;
+> +			#timestamp-cells = <1>;
+> +			status = "okay";
 
-Keep it under allOf (so you no need to re-indent it on next if statement
-in the future) and put entire allOf after "required:".
+Why do you need status? It's okay by default.
 
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - nvidia,tegra194-gte-aon
-
-This is an ABI break. Does your driver handle it?
-
-> +          - nvidia,tegra234-gte-aon
-> +then:
-> +  required:
-> +    - nvidia,gpio-controller
+> +		};
 > +
->  required:
->    - compatible
->    - reg
->    - interrupts
-> -  - nvidia,slices
->    - "#timestamp-cells"
+>  		hsp_top0: hsp@3c00000 {
+>  			compatible = "nvidia,tegra234-hsp", "nvidia,tegra194-hsp";
+>  			reg = <0x03c00000 0xa0000>;
+> @@ -1603,6 +1612,16 @@
+>  			#mbox-cells = <2>;
+>  		};
+>  
+> +		hte_aon: hardware-timestamp@c1e0000 {
+> +			compatible = "nvidia,tegra234-gte-aon";
+> +			reg = <0xc1e0000 0x10000>;
+> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +			nvidia,int-threshold = <1>;
+> +			nvidia,gpio-controller = <&gpio_aon>;
+> +			#timestamp-cells = <1>;
+> +			status = "okay";
 
+
+Also here
 
 Best regards,
 Krzysztof
