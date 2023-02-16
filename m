@@ -2,84 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C9569902F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 10:38:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B64B36991A9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 11:37:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbjBPJih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 04:38:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        id S230168AbjBPKhb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 05:37:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbjBPJiF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 04:38:05 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B780518CA
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 01:37:27 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id f34so2001197lfv.10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 01:37:27 -0800 (PST)
+        with ESMTP id S230201AbjBPKhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 05:37:14 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892455454F
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 02:36:57 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id n20so2314755edy.0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 02:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uTZJUuoTLvnb8+dIB2o2Mq6G+9PNstLnM4iOJQS28hg=;
-        b=N8DrrLId/y7Llqj7BdEcTudPqAcKbLDdGVDlOE2D0AK9b5LDmeYFaXxOiHxAsF/EET
-         kbETpK1FE0ZMXlmnuqIKaBqKavRFFIo/USTTzCIxKnJs+EXePGNHyOlMb2Kww9Tcdo5U
-         JRU4yWH1c1ijp1D0GG2qeHoSVCgxV4XQl6ltyVJh/S71QSeLTdpNPNygnrzpoletwSm9
-         e/J4O2OooCcB7iYvdLH6BNYK4HpHyt0rUbQE/HcsUiuGDb8CuhDldZJUQc1or8iUszSx
-         BPBBOG8ltw6GVPXCxqoZgbvQ5KWpNAzMzpk9wjxF6LYIQ01KZNZvrsTc8LiVzsajYT43
-         d3WA==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vgVLDkztxJ3G36OLnAJF2EJEJwnivSBpqFWk7+ZtCag=;
+        b=hq8cbxBlnTEP1Y387FbX9ihGUGylRD4adtj3mfU0oQHmQ/DN4xaYbmAvUQWRHBVzcE
+         ZyuAZUA3vuh/G2c8V+42fs/W3qUKOqpZmKz3Yo0D+sXi14cnHf1ywkLPrGSoI1I7DnYY
+         dDddxrMMX2DNGaKdI/UkU+jdqDaNp9oes6x5RyKAhT4NUa2QtWnwv+0l9PGcvsZBOTYC
+         5tnXNU21Ei0yXCwsNtJ8FLUwZ942bN9yTSUmx+OBLB+CgmRSanNT9gZzJK4nQanebxbN
+         ntL2FBGeORVkGrz8Oi7z1Dj0aw3pMNk3wFP+OWhtPxazS5V3Q0V7U4NCpUrml6eSnE+P
+         G0Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uTZJUuoTLvnb8+dIB2o2Mq6G+9PNstLnM4iOJQS28hg=;
-        b=CPvL6DxBG/f9EdVcYGzcp0LfROJBa7ySklMdWW2A/tC7GpntiPKsm0hkTnR8RAui56
-         9ki1mkh5GFZXGmnI4YGDXtV5rgIOXfsk0unRvUETAMwa/kJ/NEO7sQuqlO3v1ZQtMKvi
-         5FQZxw3qeci3v5LPDQQVPWMhIrcxXDiAwhyng/5Gm5NPmwnZ/cl4STKMy8k1Jg/hQ7nw
-         BeZAb32feSAvE4Cm2HNFbWpd/fWwA5LtErQc7lldoN7ARSJpdJod2aCWw9Hlf9ImN0K9
-         sEgY1U3Zr0OxNNancrVR/lWkskKdecgOby/TiL8FeNmv2q1kHRnt0gdoZsLh+37rKHmF
-         G0+A==
-X-Gm-Message-State: AO0yUKWn30Sl4GQd8+Ozt9ijcw+WVbQKh7SkJ7ZoBwHrDx+BRwFuflob
-        7a631C51X/Bmo3ezKys9fJC+He/AO+ayqseC
-X-Google-Smtp-Source: AK7set8MZjOAbMcR9f34HdbTkDlR7J174NgMUjyFUi3tJw50XTL3Njfopnu5TIY3mJ4RzbH8YG1EQQ==
-X-Received: by 2002:a05:6512:e95:b0:4b5:70e0:f2e6 with SMTP id bi21-20020a0565120e9500b004b570e0f2e6mr762445lfb.24.1676540247187;
-        Thu, 16 Feb 2023 01:37:27 -0800 (PST)
-Received: from [127.0.1.1] ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id r3-20020a19ac43000000b004d8758a452asm229069lfc.288.2023.02.16.01.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 01:37:26 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Feb 2023 10:37:18 +0100
-Subject: [PATCH 17/17] gpio: pcie-idio-24: Convert to immutable irq_chip
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vgVLDkztxJ3G36OLnAJF2EJEJwnivSBpqFWk7+ZtCag=;
+        b=BLWXQ2xPhBLYx82oGaBEVZsfJJ4YErvqEe+Ca/H782DGCXwnrBrxmeZ5JxdpRMlTIS
+         QLZxR82xmdDzZ0ft70bRMwjbnPi5ugeeZ+kPkdYe6Vf63ODzhP3ILXEHAfI4piQj9Kmw
+         0qUiiDELnoJ/UPnTGUUdSns29El+rQQ+PzEMtcKsOFCmLc38XYLaC9CJAoeRU/pXqx8/
+         wtfocu1/z0YdzzQaAEjYSUsIEeYv3irf5GvH6In7ni7JiJuZZwgGAx8EEfm0PPHBp4bc
+         ZAxZkbNLOWv0gcMRHftSjzLr/svqypW05yjwfia479vEB6JU6M6Zb+VFOV3D4KPmDFou
+         p9uw==
+X-Gm-Message-State: AO0yUKXNnNKQGW974eFC2uU5p15dcvp6QhLcnUC9rkxub85C3VZ9dqHi
+        T2eQkNiySI4Tru9ccKBvnDRQgg==
+X-Google-Smtp-Source: AK7set9yVBI67IL9ONWNBCm7c6rfg7ygOe4la3UN4cRKvQSXQhxWqdkt+l/9kjcaN7rk4DC18k2JDA==
+X-Received: by 2002:aa7:ca45:0:b0:4ac:b838:a8fb with SMTP id j5-20020aa7ca45000000b004acb838a8fbmr5040893edt.36.1676543811780;
+        Thu, 16 Feb 2023 02:36:51 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id y12-20020a50bb0c000000b004ad15d5ef08sm648113ede.58.2023.02.16.02.36.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Feb 2023 02:36:48 -0800 (PST)
+Message-ID: <5b5b324d-f1a5-faf9-d740-27b6f62cdb7e@linaro.org>
+Date:   Thu, 16 Feb 2023 11:36:43 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH V8 3/7] dt-bindings: pinctrl: qcom: Add support for
+ IPQ9574
+Content-Language: en-US
+To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
+        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
+        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
+ <20230214163116.9924-4-quic_devipriy@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230214163116.9924-4-quic_devipriy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230215-immutable-chips-v1-17-51a8f224a5d0@linaro.org>
-References: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
-In-Reply-To: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
-To:     Mun Yew Tham <mun.yew.tham@intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, Alban Bedel <albeu@free.fr>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Jay Fang <f.fangjian@huawei.com>,
-        Daniel Palmer <daniel@thingy.jp>,
-        Romain Perier <romain.perier@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        William Breathitt Gray <william.gray@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-X-Mailer: b4 0.12.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,64 +87,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the driver to immutable irq-chip with a bit of
-intuition.
+On 14/02/2023 17:31, Devi Priya wrote:
+> Add new binding document for pinctrl on IPQ9574
+> 
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-pcie-idio-24.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-idio-24.c
-index 8a9b98fa418f..ac42150f4009 100644
---- a/drivers/gpio/gpio-pcie-idio-24.c
-+++ b/drivers/gpio/gpio-pcie-idio-24.c
-@@ -396,6 +396,8 @@ static void idio_24_irq_mask(struct irq_data *data)
- 	}
- 
- 	raw_spin_unlock_irqrestore(&idio24gpio->lock, flags);
-+
-+	gpiochip_disable_irq(chip, irqd_to_hwirq(data));
- }
- 
- static void idio_24_irq_unmask(struct irq_data *data)
-@@ -408,6 +410,8 @@ static void idio_24_irq_unmask(struct irq_data *data)
- 	const unsigned long bank_offset = bit_offset / 8;
- 	unsigned char cos_enable_state;
- 
-+	gpiochip_enable_irq(chip, irqd_to_hwirq(data));
-+
- 	raw_spin_lock_irqsave(&idio24gpio->lock, flags);
- 
- 	prev_irq_mask = idio24gpio->irq_mask >> bank_offset * 8;
-@@ -437,12 +441,14 @@ static int idio_24_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 	return 0;
- }
- 
--static struct irq_chip idio_24_irqchip = {
-+static const struct irq_chip idio_24_irqchip = {
- 	.name = "pcie-idio-24",
- 	.irq_ack = idio_24_irq_ack,
- 	.irq_mask = idio_24_irq_mask,
- 	.irq_unmask = idio_24_irq_unmask,
--	.irq_set_type = idio_24_irq_set_type
-+	.irq_set_type = idio_24_irq_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static irqreturn_t idio_24_irq_handler(int irq, void *dev_id)
-@@ -535,7 +541,7 @@ static int idio_24_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	idio24gpio->chip.set_multiple = idio_24_gpio_set_multiple;
- 
- 	girq = &idio24gpio->chip.irq;
--	girq->chip = &idio_24_irqchip;
-+	gpio_irq_chip_set_chip(girq, &idio_24_irqchip);
- 	/* This will let us handle the parent IRQ in the driver */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
--- 
-2.34.1
+Best regards,
+Krzysztof
 
