@@ -2,120 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DAEF6997FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 15:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA7E1699937
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 16:49:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjBPOzq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 09:55:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33672 "EHLO
+        id S229886AbjBPPtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 10:49:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbjBPOzp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 09:55:45 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90124521F2
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 06:55:43 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y1so2134323wru.2
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 06:55:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYcBJmwo22zXAEb41ec+7a2ghO3grcXFIW0zx/RN0Ao=;
-        b=D6b8rwoeHE66moNlWxbd4At4ZlqXKYb+X+3F72Gt1qSuaRvXn1bkFru8o/ffp5idRb
-         qniUVuR/SW6eowoiS9OXOsDIdAr5Xz4Tfix9o4makmnFFR2VSIfNc8PG5iccWLINT2q9
-         gzWOMoWqMlFeCQEBgI0Q5aQcHocqdWEsMHAJeg7fQEQNwMZz8cMSqZfIPXFZB/j4IE9m
-         Rnxb7b//1+sAeFIFLqXWq8sLw8EOlM2QEDMaa4r9EFlXhG8YPfzIw0T2c3rOHJYtVES2
-         0OsoTZRYfViTjkS0wnFauGUeGzkVNnJSdb50jw3+jYP89CpcqD3PuWmxWiASLD2sBu+M
-         sIHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GYcBJmwo22zXAEb41ec+7a2ghO3grcXFIW0zx/RN0Ao=;
-        b=h5EWYCLGfzi0AyswiCDijZ/M5gycQ9FQ5pp9YMBp941Tw0ZRnfY9Wjl2D1SHoAdCff
-         V6e/dKhAs/p9CXJ+HU+I4WUI+t/ijUeiIBVDNP680bDZm+c7oi2x3E6kwgbjDF7+xhkd
-         jTOzjRjtFlcPBqacguGoGf5rs/QLlxznJlEihXnc+/vzhCCvyfXaNGImFBgqMw3SMU87
-         pDsgw5zIlVXpwBRe+6u2IDQZe+Tlw8ea1Ht5E6o9hhMDNlhJ5aozetw/607QAN/gJ29L
-         GBXTEhu+gnwk1+kKSbPaA9fIMfa5EaaJhgh0buRi1B3KR0gRMzini0Kz3g4BzJhqodWs
-         yP3Q==
-X-Gm-Message-State: AO0yUKVrJ9rqc1VtiMxMb+6FjdsaRD4DyoqNU/HgfNOESLPoi/hP02Km
-        qISZ0E6L+sZwezPPo5liYZu6bg==
-X-Google-Smtp-Source: AK7set/gY8GYbV4sja3UZJe1bVwJ2rkyt+w0wuJeP9rAJ+KPlitdNZJkQiTO8K1DHIyF2Ft4tfPzhg==
-X-Received: by 2002:a5d:6691:0:b0:2c5:7c26:c2cc with SMTP id l17-20020a5d6691000000b002c57c26c2ccmr2398908wru.29.1676559342079;
-        Thu, 16 Feb 2023 06:55:42 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7c5b:1160:db5d:72da])
-        by smtp.gmail.com with ESMTPSA id p9-20020adfce09000000b002c5493a17efsm1730012wrn.25.2023.02.16.06.55.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 06:55:41 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.2
-Date:   Thu, 16 Feb 2023 15:55:36 +0100
-Message-Id: <20230216145536.121063-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S229724AbjBPPtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 10:49:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B335D2A9B3;
+        Thu, 16 Feb 2023 07:49:40 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D99D614E2;
+        Thu, 16 Feb 2023 15:49:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694EEC433EF;
+        Thu, 16 Feb 2023 15:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676562579;
+        bh=PBNlK9rtfW1dG51G1QB8MZVifuDiQ041ABguCzvNxA4=;
+        h=From:Subject:Date:To:Cc:From;
+        b=lVek7JFKejce7ovZSe2LcNc5bKHhxsZnQElQv/H/fW0ZvCrbTFZ+F/dDUBqdSrW4B
+         Im/Uh2CFic0HuwBJLW7R70qBqBtLN++NJCu99HsiXnQ+SvrIeLYdd5kZ09U4LFRbUp
+         O4fYiwJNSKmW8OwnAbNmQ/7G7PLWTjN/dNM9T9+e7ABrYugQ4qJJWj7udEkhGaNOfz
+         B86HPPiznr81dwDWrQzeVd4w0313da5i9/LvpeA+gYkLtLphNpzeSH5S4z57UE2Luo
+         JnC6tfLPUQIgjCO6YstbXJDE7w+4ev1NZhh6a1/nvIjKdXguUa2l8P/dF7UqY3oI/w
+         TX4h0XA196jOQ==
+From:   Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] pinctrl: at91: Minor cleanups
+Date:   Thu, 16 Feb 2023 15:43:56 +0000
+Message-Id: <20230216-gpio-at91-immutable-v1-0-44f52f148ab9@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADxP7mMC/x2NQQqDMBAAvyJ77oKJpDT9Sulhk6660ETJxlIQ/
+ 97Y4zAMs4NyEVa4dzsU/ojKkhuYSwdxpjwxyqsx2N4OvTVXnFZZkKo3KCltlcKb0Q1jDN67YG8
+ OWhlIGUOhHOezTaSVyynWwqN8/7vH8zh+SF3ukH4AAAA=
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=799; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=PBNlK9rtfW1dG51G1QB8MZVifuDiQ041ABguCzvNxA4=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBj7lCOQtQLLr3GltNzFAjCukyvl+/E3m3W0SqzcSv0
+ BNUabCuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCY+5QjgAKCRAk1otyXVSH0IjKB/
+ 90yp6ct2s6QD1slshxgCeB9ZfneCsVtFP2k6fg5ViobDKnK4JMiTgTEup9dZ6cmjxvwy8iYKTNgLGs
+ hyKy3IjdS1KH3Tufwa4Ceb+DeM0G5VZOCic+Pat0e+wh+E8+7rhHQCJ2agl7Au/woKTi40dgpKPwuU
+ Rs+yRGmb+HnVZxJ6Cwii+B8PylJQEnkGnwVwLg2PVhIaS85KcrZVR0EAGKptKbFH7oKib7JwRqsOei
+ QdAJFGehzWVRWmllStBNpCx3lByh63zG2YvKmZlZQfvQGLDDOhoNuluIGXmLve9LiXtXLcm0QRNBso
+ ogH5rRf+rGJx/HzTi19626N2R5u11y
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+A few cleanups for the at91 driver, making the GPIO irqchip
+immutable and removing an unused member from the driver data.
+The driver is still using statically assigned GPIO numbers, we
+can't just remove that since the driver itself is still relying
+on them even if there are no longer board files for this
+platform.
 
-Linus,
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (2):
+      pinctrl: at91: Make the irqchip immutable
+      pinctrl: at91: Remove pioc_index from struct at91_gpio_chip
 
-Please pull the following set of late fixes for v6.2. Details are in the
-signed tag as usual.
+ drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
+---
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+change-id: 20230216-gpio-at91-immutable-53fcb995b285
 
-Bartosz
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-The following changes since commit ceaa837f96adb69c0df0397937cd74991d5d821a:
-
-  Linux 6.2-rc8 (2023-02-12 14:10:17 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.2
-
-for you to fetch changes up to b8b3b0bfb742f0cbb006c66b10216b724ce42e25:
-
-  Merge tag 'intel-gpio-v6.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current (2023-02-16 13:31:42 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.2
-
-- fix a potential Kconfig issue with gpio-mlxbf2 not selecting
-  GPIOLIB_IRQCHIP
-- another immutable irqchip conversion, this time for gpio-vf610
-- fix a wakeup issue on Clevo NH5xAx
-
-----------------------------------------------------------------
-Alexander Stein (1):
-      gpio: vf610: make irq_chip immutable
-
-Bartosz Golaszewski (1):
-      Merge tag 'intel-gpio-v6.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current
-
-Linus Walleij (1):
-      gpio: mlxbf2: select GPIOLIB_IRQCHIP
-
-Raag Jadav (1):
-      gpiolib: acpi: remove redundant declaration
-
-Werner Sembach (1):
-      gpiolib: acpi: Add a ignore wakeup quirk for Clevo NH5xAx
-
- drivers/gpio/Kconfig        |  1 +
- drivers/gpio/gpio-vf610.c   | 41 +++++++++++++++++++++++------------------
- drivers/gpio/gpiolib-acpi.c | 12 ++++++++++++
- drivers/gpio/gpiolib-acpi.h |  1 -
- 4 files changed, 36 insertions(+), 19 deletions(-)
