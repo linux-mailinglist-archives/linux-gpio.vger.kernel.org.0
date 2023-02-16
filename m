@@ -2,91 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E0BD699E69
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 21:57:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8599D699FB1
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Feb 2023 23:25:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbjBPU5T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Feb 2023 15:57:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34768 "EHLO
+        id S230031AbjBPWZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Feb 2023 17:25:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbjBPU5S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 15:57:18 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4339B5034B
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 12:57:13 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-52f0001ff8eso42851717b3.4
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Feb 2023 12:57:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZFkias2XgSakIyQ/yJ/KyrbmtnCd3NbgWRQs5cfs8Y=;
-        b=dwWnz+cEkT/5NSYvQcAE6Cawz48MTxEb3LvO6FmBYdcXFD5uyIkbpmJZ0aJquNh2ZB
-         8PYEMsHnDfT2pnEtaxmi2RUiJ3Q/T+6YpQVh3B2OsaNX3UunF22vBzMoIV1tyRM2AFGB
-         GQjaB5NHiSo4LQzEWUAdSFpwL2RCx6qGuK0qkPx2SxzpXujg9lKC+3ZF6a6ta7mvWu0d
-         eLYFZX5zSFihm7CcFVBDgfKJruF2WoTMcieYpo3TZ9BXAqbzwfU/X0Bg3QJEzo6do2En
-         GKQBQZJ4UNdj5QY+5DIwTOGwC2h9wPq9Qfc2CaZIjOwd3wLA/tPEwbSchkiAgazdhynI
-         ZjiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6ZFkias2XgSakIyQ/yJ/KyrbmtnCd3NbgWRQs5cfs8Y=;
-        b=k7r2B5XgrVIz3VySdfFftO7Bo4HO11qUtFrEg8xfKwGGsSgecLE7v5h/63BNwT4/W+
-         ubn4Fw3fsAtMrIE3B1eXpKEsBbWmfE9f4PvqPKaK9wCJZH3p76Jullx0+bCbKvau6KdN
-         YoQJDmFwjZC5UsYNJvDFRmw++Nzj/bO6t4JFoXKE2TXCWG7Ar0U2nyC4jOBNcTJHUFkp
-         gSGdWUfZSNoTLKXLW6fYF5o+ttcXIIY/IWt7hR7DjhBtgHhS/HI8xnm0R7eUb1tqsMbN
-         6A9aPRBVKVJzF5eEfR17iz5S1x9zcXFR3/QX4ATgheIC+InC2J3KhF3PBFikjdM89MR1
-         oFjQ==
-X-Gm-Message-State: AO0yUKXAMsN4r/m+8vAxW0Zv6ZxNYPT/xtzCPnajv7jk9GN4R7Sg/fLn
-        hYGnms+2wLtyc+N8iYs+PSDErryKI+V3SABZwHFZ2TA0pwnMhg==
-X-Google-Smtp-Source: AK7set+VVuKsycLpjIeDTjdR60bkGwoSljwMi6eDQ7MEdk2dPfbMdp9P5XGKzkvk9mLroAReurAEXDHfZLP4f8ogJ9U=
-X-Received: by 2002:a81:a008:0:b0:52a:9161:f533 with SMTP id
- x8-20020a81a008000000b0052a9161f533mr1072468ywg.64.1676581032503; Thu, 16 Feb
- 2023 12:57:12 -0800 (PST)
+        with ESMTP id S230022AbjBPWZU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Feb 2023 17:25:20 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D351BFA;
+        Thu, 16 Feb 2023 14:25:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1676586317; x=1708122317;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qsv6ExycvD7L4PXOWLwj6LQgpjYdHLvCMxWuIyD8krc=;
+  b=Hu9DUrh6rwpmUZq8tNo6Yw7Jk4EQz7bfiRoe6LqmWEGebu7vdyUjbA68
+   GNolsNDzgsd3gOtbEnijRPoADvhbw0vyE422/W9+YONNmppekHQ2mnqqb
+   cRyaMpY+xHbIYnDYqE/aj7oHsHyJDLubGsNtHhhFI/7W9CsOW8DNdYJMv
+   tZD5gfFNxqUj35jBWG4cI1naQCo2nKJuAI8YK3PyrGbuBpEL93DsoyCJr
+   eJlXBu/KbJifOW+yFrg3jgtAQETmW8EB4uj9d768WU//KMxnJiHOT+aqy
+   UEv0RA4HKVquDpW+pQ2zCNu9QMx0pjxwyccOthsAzej++aEVbY8HhKEYm
+   g==;
+X-IronPort-AV: E=Sophos;i="5.97,304,1669100400"; 
+   d="scan'208";a="201366781"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Feb 2023 15:25:17 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 16 Feb 2023 15:25:16 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.16 via Frontend Transport; Thu, 16 Feb 2023 15:25:16 -0700
+From:   <Ryan.Wanner@microchip.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <claudiu.beznea@microchip.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH v2 0/2] pinctrl: Sama7g5 drive strength options updated
+Date:   Thu, 16 Feb 2023 15:25:22 -0700
+Message-ID: <20230216222524.3107759-1-Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <20230215213843.1737181-1-linus.walleij@linaro.org>
- <CACRpkdbP9HQp2TwB_KLgp11h+DArOmtGYRS+gRBrGb244YqZ9A@mail.gmail.com> <CAMRc=Mdk-7bQchQnHL8Lu5FDQSaWs8+zKLYTTfDPsxyovdjJpA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdk-7bQchQnHL8Lu5FDQSaWs8+zKLYTTfDPsxyovdjJpA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Feb 2023 21:57:00 +0100
-Message-ID: <CACRpkdYrRoGWMvwKM3V8kfMuZW_Tjnq5RfZ2RnUjQhOuoSv-Hg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: omap: Drop irq_base
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tony Lindgren <tony@atomide.com>, Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 16, 2023 at 1:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-> > Bart: they should probably be merged as part of the big set
-> > if the OMAP guys are OK with it.
-> > Sorry for the inconvenience.
-> >
->
-> Can you resend all of them once v6.3-rc1 is tagged?
+This patch set updates drive strength options for the Sama7g5 to align
+with drive strength options in the Sama7g5 data sheet.
 
-Of course.
+changes since v1:
+- Fix ABI break.
+- Add explanation for drive strength macros.
 
-> I will not be
-> taking them in before the merge window, let's give them some time in
-> next first. Those sweeping driver conversions usually end up breaking
-> a thing or two.
+Ryan Wanner (2):
+  pinctrl: at91-pio4: Implement the correct drive values for sama7g5
+  ARM: at91: dt: adding new macros
 
-I was mainly posting them so that people test them and not convert
-the same drivers since I'm already working on them, we can look at
-these patches in 3 weeks.
+ drivers/pinctrl/pinctrl-at91-pio4.c | 27 ++++++++++++++++++++++++++-
+ include/dt-bindings/pinctrl/at91.h  | 10 +++++++++-
+ 2 files changed, 35 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+-- 
+2.37.2
+
