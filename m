@@ -2,22 +2,22 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E782769A570
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 07:02:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C93B69A63B
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Feb 2023 08:49:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjBQGC2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Feb 2023 01:02:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
+        id S229656AbjBQHtm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Feb 2023 02:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjBQGC1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 01:02:27 -0500
+        with ESMTP id S229507AbjBQHtl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 02:49:41 -0500
 Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A75532B082;
-        Thu, 16 Feb 2023 22:02:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 665D55A3BC;
+        Thu, 16 Feb 2023 23:49:40 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 11BDD826D;
-        Fri, 17 Feb 2023 06:02:26 +0000 (UTC)
-Date:   Fri, 17 Feb 2023 08:02:24 +0200
+        by muru.com (Postfix) with ESMTPS id 202B880C1;
+        Fri, 17 Feb 2023 07:49:39 +0000 (UTC)
+Date:   Fri, 17 Feb 2023 09:49:37 +0200
 From:   Tony Lindgren <tony@atomide.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
@@ -37,16 +37,15 @@ Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 00/17] Mass convert GPIO IRQ chips to be immutable
-Message-ID: <Y+8YcCLs+HoeBEz7@atomide.com>
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 15/17] gpio: omap: Convert to immutable irq_chip
+Message-ID: <Y+8xkV5aUrAajLNP@atomide.com>
 References: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+ <20230215-immutable-chips-v1-15-51a8f224a5d0@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+In-Reply-To: <20230215-immutable-chips-v1-15-51a8f224a5d0@linaro.org>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,12 +54,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Linus Walleij <linus.walleij@linaro.org> [230216 09:37]:
-> Please test if you have the hardware. The OMAP patch especially,
-> hi Tony ;)
+Hi,
 
-Looking good so far, will do some more testing today.
+* Linus Walleij <linus.walleij@linaro.org> [230216 09:38]:
+> Convert the driver to immutable irq-chip with a bit of
+> intuition.
+> 
+> This driver require some special care: .irq_ack() was copied
+> from dummy_irq_chip where it was defined as noop. This only
+> makes sense if using handle_edge_irq() that will unconditionally
+> call .irq_ack() to avoid a crash, but this driver is not ever
+> using handle_edge_irq() so just avoid assigning .irq_ack().
+> 
+> A separate chip had to be created for the non-wakeup instance.
 
-Thanks,
+Nice, works for me.
 
-Tony
+BTW, I still see these warnings remaining on boot:
+
+gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
+
+Seems like we might be able to get rid of those too now or are
+there still some dependencies with /sys/class/gpio for example?
+
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
