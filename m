@@ -2,240 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19A4569BB42
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Feb 2023 18:32:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C362C69BDF1
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Feb 2023 00:30:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbjBRRcg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Feb 2023 12:32:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
+        id S229622AbjBRX37 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Feb 2023 18:29:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjBRRcf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Feb 2023 12:32:35 -0500
-Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC6213517;
-        Sat, 18 Feb 2023 09:32:34 -0800 (PST)
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.96)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1pTR4W-0006LT-1K;
-        Sat, 18 Feb 2023 18:32:28 +0100
-Date:   Sat, 18 Feb 2023 17:32:26 +0000
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     arinc9.unal@gmail.com
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        erkin.bozoglu@xeront.com
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: fix naming inconsistency
-Message-ID: <Y/ELqvXp5nfNWjOM@makrotopia.org>
-References: <20230218065108.8958-1-arinc.unal@arinc9.com>
- <20230218065108.8958-2-arinc.unal@arinc9.com>
+        with ESMTP id S229605AbjBRX36 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Feb 2023 18:29:58 -0500
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA7D12BC8
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Feb 2023 15:29:57 -0800 (PST)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5367fed74b8so22922927b3.6
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Feb 2023 15:29:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vz5DzYr/Opa8OtY4Tzu39Y9aDuWD1hSn8O8cPqW8lso=;
+        b=omb2A12qU7J8gN8cUyq0r2MdWs6Zk0tq96wdGCDEd/pf1ia4HVnj01jxwsB7Ktaf6t
+         ch17n2ssXiWutDHJG1MGrT0NjO8sMVa5u0D93JgJhyyWuJCXHlioCCUnCcopD2gB0Kax
+         FY/nAr2jFoFbaXNYj9SAa6wyDlTDcio1/bARURQ+FmM+1rEi6HjQ1j186Bp2qhNE2NX2
+         DEB49y2qVLbEaKv9ZmuQlllVQpI9GXjgWJYWWspsWMQCgGw6F/TYscrXtHT2zRjNRBie
+         VTrcDdh/sRPeRzh6d1Vroz4ih0SFwpMOcEHwgTc0LVcsVF0j2jNu9845BOv5bIfYEtMS
+         nCAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vz5DzYr/Opa8OtY4Tzu39Y9aDuWD1hSn8O8cPqW8lso=;
+        b=nxPyDBg7yJeDT3MgjR/jB7225zmlm3/ebB4v+bD1CWJE6tQBeGX09aAu5MvIHhbZ9f
+         ag+Hb8F3SHB5Matr55bxtsyGY3reGPWDC9W9lnMB+eeJ9TXXUxPNA5xEG+ijq6x9LJo+
+         l/woKHx2GFq1TWbfwccdeFODH6xVDM8fPDwUMAXiFXxuZky1hi2DvyRRq9vBhV+hhEdJ
+         c6TaU73eZwLFIfx1QiRD0SoKGl86y/h/6dxB+XqarAp2cI7vZgUkn0nXEDZIGjq/9Bxb
+         LBZdGMpQcrc6c97c55Q/bxDaxaTAnXKUG/hoZycXBfBxVzZ8XuNAwNTmri8br6BZTSyC
+         Za6Q==
+X-Gm-Message-State: AO0yUKXFZdafzG4sCq33QUH0yCnYl0MDKcFijrOtdOFnyUmZHOxOeLFF
+        77UKNmZSaxGzIE7jJxqpKpw3h9TuKD8ghPOJUXGWow==
+X-Google-Smtp-Source: AK7set/olNwKNK7HfjBrvB6nqfSSaLih+5uqgsaTvGCT3Mx5SRBygrVNZ9jBq1XWy8aWrrVifm4XLTxRGdk/YB3HlUs=
+X-Received: by 2002:a0d:dfc1:0:b0:52e:d00a:263b with SMTP id
+ i184-20020a0ddfc1000000b0052ed00a263bmr2152556ywe.35.1676762995905; Sat, 18
+ Feb 2023 15:29:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230218065108.8958-2-arinc.unal@arinc9.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <b151531d-c9fc-cafa-4e46-e213a9892247@microchip.com>
+ <CACRpkdbK8A9X4nCZEc53-wXU0Vgkc53j_r5rLQiSeoNbmvm8sg@mail.gmail.com>
+ <961a2164-640a-86b5-980f-73668eb161e4@microchip.com> <CACRpkdaKYN9eRtuOhBBp_50sR71AQvNSKtjAR1RZPhaKYhfJVw@mail.gmail.com>
+ <46dd4d9a-7dc8-48f9-69d4-d18ca6433acc@microchip.com>
+In-Reply-To: <46dd4d9a-7dc8-48f9-69d4-d18ca6433acc@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 19 Feb 2023 00:29:43 +0100
+Message-ID: <CACRpkdZg4t=0YUiwk4ik6VKXH1KCo_RLXoyL30yrxM+e9QqH-w@mail.gmail.com>
+Subject: Re: I2c GPIO Recovery with pinctrl strict mode
+To:     Ryan.Wanner@microchip.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        Claudiu.Beznea@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 18, 2023 at 09:51:07AM +0300, arinc9.unal@gmail.com wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> Some options include "MediaTek", some "Mediatek". Rename all to "MediaTek"
-> to address the naming inconsistency.
-> 
+On Fri, Feb 17, 2023 at 6:36 PM <Ryan.Wanner@microchip.com> wrote:
+> On 2/13/23 02:29, Linus Walleij wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >
+> > On Fri, Feb 10, 2023 at 4:21 PM <Ryan.Wanner@microchip.com> wrote:
+> >
+> >> I am trying to enable .strict in the Atmel pinctrl driver, and that is
+> >> what is causing my issues.
+> >
+> > Strictly speaking (ha!) that flag is for when you *cannot* use a pin
+> > in GPIO mode at the same time as another mode.
+> >
+> > Example: if you use the pin in I2C mode, then reading the GPIO
+> > input register will *not* reflect the value on the electrical line,
+> > because it has been decoupled physically. Then .strict should
+> > be true.
+> >
+> > The strict mode was not intended for policy, i.e. stopping kernel
+> > developers from doing wrong things. They have enough tools to
+> > do wrong things anyway, one more or less doesn't matter.
+>
+> I understand, so .strict keeps the pins mapped to one ownership,
+> so if I2C has those pins GPIO could not have access to them.
+>
+> When it comes to I2c recovery, looking at the I2C generic recovery,
+> the pins are both being used by the I2C and the GPIO at the same time.
+> This cannot happen with strict mode. So since I am enabling strict mode
+> for pinctrl-atmel-pio4.c I2C recovery cannot work?
 
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
+I think it can, you just have to be more careful.
 
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> ---
->  drivers/pinctrl/mediatek/Kconfig | 42 ++++++++++++++++----------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index 67818ba14d4e..a71874fed3d6 100644
-> --- a/drivers/pinctrl/mediatek/Kconfig
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -45,35 +45,35 @@ config PINCTRL_MTK_PARIS
->  
->  # For ARMv7 SoCs
->  config PINCTRL_MT2701
-> -	bool "Mediatek MT2701 pin control"
-> +	bool "MediaTek MT2701 pin control"
->  	depends on MACH_MT7623 || MACH_MT2701 || COMPILE_TEST
->  	depends on OF
->  	default MACH_MT2701
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT7623
-> -	bool "Mediatek MT7623 pin control with generic binding"
-> +	bool "MediaTek MT7623 pin control with generic binding"
->  	depends on MACH_MT7623 || COMPILE_TEST
->  	depends on OF
->  	default MACH_MT7623
->  	select PINCTRL_MTK_MOORE
->  
->  config PINCTRL_MT7629
-> -	bool "Mediatek MT7629 pin control"
-> +	bool "MediaTek MT7629 pin control"
->  	depends on MACH_MT7629 || COMPILE_TEST
->  	depends on OF
->  	default MACH_MT7629
->  	select PINCTRL_MTK_MOORE
->  
->  config PINCTRL_MT8135
-> -	bool "Mediatek MT8135 pin control"
-> +	bool "MediaTek MT8135 pin control"
->  	depends on MACH_MT8135 || COMPILE_TEST
->  	depends on OF
->  	default MACH_MT8135
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT8127
-> -	bool "Mediatek MT8127 pin control"
-> +	bool "MediaTek MT8127 pin control"
->  	depends on MACH_MT8127 || COMPILE_TEST
->  	depends on OF
->  	default MACH_MT8127
-> @@ -88,33 +88,33 @@ config PINCTRL_MT2712
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT6765
-> -	tristate "Mediatek MT6765 pin control"
-> +	tristate "MediaTek MT6765 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MT6779
-> -	tristate "Mediatek MT6779 pin control"
-> +	tristate "MediaTek MT6779 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  	help
->  	  Say yes here to support pin controller and gpio driver
-> -	  on Mediatek MT6779 SoC.
-> +	  on MediaTek MT6779 SoC.
->  	  In MTK platform, we support virtual gpio and use it to
->  	  map specific eint which doesn't have real gpio pin.
->  
->  config PINCTRL_MT6795
-> -	bool "Mediatek MT6795 pin control"
-> +	bool "MediaTek MT6795 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MT6797
-> -	bool "Mediatek MT6797 pin control"
-> +	bool "MediaTek MT6797 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
-> @@ -128,42 +128,42 @@ config PINCTRL_MT7622
->  	select PINCTRL_MTK_MOORE
->  
->  config PINCTRL_MT7981
-> -	bool "Mediatek MT7981 pin control"
-> +	bool "MediaTek MT7981 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_MOORE
->  
->  config PINCTRL_MT7986
-> -	bool "Mediatek MT7986 pin control"
-> +	bool "MediaTek MT7986 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_MOORE
->  
->  config PINCTRL_MT8167
-> -	bool "Mediatek MT8167 pin control"
-> +	bool "MediaTek MT8167 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT8173
-> -	bool "Mediatek MT8173 pin control"
-> +	bool "MediaTek MT8173 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT8183
-> -	bool "Mediatek MT8183 pin control"
-> +	bool "MediaTek MT8183 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MT8186
-> -	bool "Mediatek MT8186 pin control"
-> +	bool "MediaTek MT8186 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
-> @@ -182,28 +182,28 @@ config PINCTRL_MT8188
->  	  map specific eint which doesn't have real gpio pin.
->  
->  config PINCTRL_MT8192
-> -	bool "Mediatek MT8192 pin control"
-> +	bool "MediaTek MT8192 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MT8195
-> -	bool "Mediatek MT8195 pin control"
-> +	bool "MediaTek MT8195 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MT8365
-> -	bool "Mediatek MT8365 pin control"
-> +	bool "MediaTek MT8365 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK
->  
->  config PINCTRL_MT8516
-> -	bool "Mediatek MT8516 pin control"
-> +	bool "MediaTek MT8516 pin control"
->  	depends on OF
->  	depends on ARM64 || COMPILE_TEST
->  	default ARM64 && ARCH_MEDIATEK
-> @@ -211,7 +211,7 @@ config PINCTRL_MT8516
->  
->  # For PMIC
->  config PINCTRL_MT6397
-> -	bool "Mediatek MT6397 pin control"
-> +	bool "MediaTek MT6397 pin control"
->  	depends on MFD_MT6397 || COMPILE_TEST
->  	depends on OF
->  	default MFD_MT6397
-> -- 
-> 2.37.2
-> 
+You can move the pins between different states. E.g. state
+"A" and "B", so these states can be "GPIO mode" and "I2C mode".
+In "GPIO mode" the pins are muxed to the GPIO block, and in
+the "I2C mode" the pins are muxed to the I2C block.
+
+Whether one or other of these modes in practice has an opaque
+name like "default" or "init" (etc) is just confusing, the only reason
+these named states exist is for convenience. It is perfectly legal
+for a pin controller and driver to use states named "foo"
+or "bar" and never use any state called "default".
+(See further include/linux/pinctrl/pinctrl-state.h)
+
+So what you want in your driver is something like:
+
+struct pinctrl_state *gpio_state;
+struct pinctrl_state *i2c_state;
+
+(possibly more)
+
+And before normal operations you issue:
+
+pinctrl_select_state(p, i2c_state);
+
+And before recovery you issue:
+
+pinctrl_select_state(p, gpio_state);
+
+... then you use GPIO abstractions to do the recovery
+followed by
+
+pinctrl_select_state(p, i2c_state);
+
+To get back to normal operations.
+
+This is the gist of it. The problem with using GPIO at the
+same time as pin control is that some pin controllers
+implement a "shortcut" which is the
+struct pinmux_ops callbacks
+.gpio_request_enable()
+.gpio_disable_free()
+.gpio_set_direction()
+
+These callbacks will bypass the state selection and mux
+pins directly as a byproduct of using gpiod_*() operations.
+
+For example qualcomm does not implement these callbacks,
+and all GPIO state setup is done explicitly for every single
+GPIO pin. This is quite good, but also a bit tedious for the
+common cases which is why the shortcuts exist.
+
+If the pin controller has implemented these operations
+you get a problem with recovery because the GPIO
+calls may start to conflict with the state-selected muxing.
+
+It can however be made to work also in that case as long
+as you think things over, but order of semantics will come
+into play: you probably need to get the GPIO *before*
+doing pinctrl_select_state(p, i2c_state); the first time,
+lest the gpio initialization will unselect the I2C state.
+
+You probably also shouldn't mess with calling any
+gpiod_direction_input/output in the recovery code.
+Hopefully that can be avoided or replaced by more
+explicit pin control states in that case.
+
+This becomes a bit complex, but recovery is a bit
+complex and out of the ordinary, so...
+
+Yours,
+Linus Walleij
