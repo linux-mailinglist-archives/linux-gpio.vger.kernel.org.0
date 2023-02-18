@@ -2,154 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1497C69B699
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Feb 2023 01:09:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4215769B74B
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Feb 2023 02:06:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjBRAJm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Feb 2023 19:09:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
+        id S229752AbjBRBGp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Feb 2023 20:06:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjBRAJl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 19:09:41 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98FD466CC1
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Feb 2023 16:09:40 -0800 (PST)
+        with ESMTP id S229498AbjBRBGo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 20:06:44 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE87457E9;
+        Fri, 17 Feb 2023 17:06:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676678980; x=1708214980;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VtiXI0XmOvQLiyblTA+r8T+aMu0PWR9YRr8Y2ARUmKA=;
-  b=TP2qhPo0YRHLPBzILXdikEjNe+3mv0fw6iYfob20AogIuUL2m1Cn47KO
-   V83B9EHzg4jUiMj6XCx2KmqtbvIpoNGPmNluHW9g7N1pzqdKrDwu9s37F
-   VQW0clknfns+SJ6KtdQYvu94/+8T9QAZl2N4CWI3/huuvW33MxwazuH5C
-   WsEkyZoR1AdoO4F1qu+56yr8IqRnfVvrz1FpJ/IXJz0rNE+viLEhIBeLk
-   AmXzmFSXw6YlxN2PXFeNS6IDunqXCp7uFZzuJ7xZJE9MXopm9pV0ygqnZ
-   jZqqrKj5zQj3UeLD2/jCPfIwyBXKeQWtRbPTY73BS5Ues5FVVFdr50ga/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="333480996"
+  t=1676682403; x=1708218403;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r+eTrMw1FB+iDg1fr6ANtkvS4OBgRd5cOlW+TWhGpkc=;
+  b=Zgm/EdLqHV9z3afhAaGWqqLhsj0G1ooVCRt/qWrqqkvvHiabBQ5Aw2op
+   TnBOGw0lME0RZMEhJ/TuU/6i+V9DcJoMDDUBfo7d0fZibAYh9i53SLp3g
+   0V9I6lPGNunZf2aGDoYpyRYB5pO+IeL8hvMD8v2bDjP6LXl5nesWYwt9M
+   q4pFadChFZ8VEvDY19dBOn+UcExAz1az+VrLqimtc6Q+a5fIgGsgb2xDI
+   ZS1ha9j5uZwou5YM7HKm8sDd9m5rTQV5Svb7lEVZJIUjQcT8Sw7GHsOq/
+   ym9YrhZiD8f3GiRC7JzZ3MAIuLPNzE4bcgb3Bf2xGy3IN+Gl13T6bd8Il
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="394611756"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="333480996"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 16:09:40 -0800
+   d="scan'208";a="394611756"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 17:06:42 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="664049080"
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="734496291"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="664049080"
+   d="scan'208";a="734496291"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 17 Feb 2023 16:09:38 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 17 Feb 2023 17:06:40 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pTAnJ-000Buz-2S;
-        Sat, 18 Feb 2023 00:09:37 +0000
-Date:   Sat, 18 Feb 2023 08:09:04 +0800
+        id 1pTBgV-000BxP-27;
+        Sat, 18 Feb 2023 01:06:39 +0000
+Date:   Sat, 18 Feb 2023 09:05:54 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 79eeab1d85e0fee4c0bc36f3b6ddf3920f39f74b
-Message-ID: <63f01720.fDPb3mg+jE5VI0gq%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Asmaa Mnebhi <asmaa@nvidia.com>, andy.shevchenko@gmail.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: Re: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
+Message-ID: <202302180821.a8TRkiIS-lkp@intel.com>
+References: <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,LONGWORDS,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 79eeab1d85e0fee4c0bc36f3b6ddf3920f39f74b  gpio: sim: fix a memory leak
+Hi Asmaa,
 
-elapsed time: 725m
+I love your patch! Perhaps something to improve:
 
-configs tested: 73
-configs skipped: 3
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next brgl/gpio/for-next linus/master v6.2-rc8 next-20230217]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Asmaa-Mnebhi/pinctrl-pinctrl-mlxbf-Add-pinctrl-driver-support/20230218-062744
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa%40nvidia.com
+patch subject: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
+reproduce:
+        make versioncheck
 
-gcc tested configs:
-alpha                            allyesconfig
-alpha                               defconfig
-arc                              allyesconfig
-arc                                 defconfig
-arc                  randconfig-r043-20230217
-arm                              allmodconfig
-arm                              allyesconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-csky                                defconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-ia64                             allmodconfig
-ia64                                defconfig
-loongarch                        allmodconfig
-loongarch                         allnoconfig
-loongarch                           defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                randconfig-r042-20230217
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                                defconfig
-s390                 randconfig-r044-20230217
-sh                               allmodconfig
-sparc                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                            allnoconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302180821.a8TRkiIS-lkp@intel.com/
 
-clang tested configs:
-arm                  randconfig-r046-20230217
-hexagon              randconfig-r041-20230217
-hexagon              randconfig-r045-20230217
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
+versioncheck warnings: (new ones prefixed by >>)
+   INFO PATH=/opt/cross/clang/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+   /usr/bin/timeout -k 100 3h /usr/bin/make W=1 --keep-going HOSTCC=gcc-11 CC=gcc-11 -j32 ARCH=x86_64 versioncheck
+   find ./* \( -name SCCS -o -name BitKeeper -o -name .svn -o -name CVS -o -name .pc -o -name .hg -o -name .git \) -prune -o \
+   	-name '*.[hcS]' -type f -print | sort \
+   	| xargs perl -w ./scripts/checkversion.pl
+   ./drivers/accessibility/speakup/genmap.c: 13 linux/version.h not needed.
+   ./drivers/accessibility/speakup/makemapdata.c: 13 linux/version.h not needed.
+>> ./drivers/gpio/gpio-mlxbf3.c: 14 linux/version.h not needed.
+   ./drivers/net/ethernet/qlogic/qede/qede.h: 10 linux/version.h not needed.
+   ./drivers/net/ethernet/qlogic/qede/qede_ethtool.c: 7 linux/version.h not needed.
+   ./drivers/scsi/cxgbi/libcxgbi.h: 27 linux/version.h not needed.
+   ./drivers/scsi/mpi3mr/mpi3mr.h: 32 linux/version.h not needed.
+   ./drivers/scsi/qedi/qedi_dbg.h: 14 linux/version.h not needed.
+   ./drivers/soc/tegra/cbb/tegra-cbb.c: 19 linux/version.h not needed.
+   ./drivers/soc/tegra/cbb/tegra194-cbb.c: 26 linux/version.h not needed.
+   ./drivers/soc/tegra/cbb/tegra234-cbb.c: 27 linux/version.h not needed.
+   ./drivers/staging/media/atomisp/include/linux/atomisp.h: 23 linux/version.h not needed.
+   ./init/version-timestamp.c: 5 linux/version.h not needed.
+   ./samples/trace_events/trace_custom_sched.c: 11 linux/version.h not needed.
+   ./sound/soc/codecs/cs42l42.c: 14 linux/version.h not needed.
+   ./tools/lib/bpf/bpf_helpers.h: 289: need linux/version.h
+   ./tools/perf/tests/bpf-script-example.c: 60: need linux/version.h
+   ./tools/perf/tests/bpf-script-test-kbuild.c: 21: need linux/version.h
+   ./tools/perf/tests/bpf-script-test-prologue.c: 47: need linux/version.h
+   ./tools/perf/tests/bpf-script-test-relocation.c: 51: need linux/version.h
+   ./tools/testing/selftests/bpf/progs/dev_cgroup.c: 9 linux/version.h not needed.
+   ./tools/testing/selftests/bpf/progs/netcnt_prog.c: 3 linux/version.h not needed.
+   ./tools/testing/selftests/bpf/progs/test_map_lock.c: 4 linux/version.h not needed.
+   ./tools/testing/selftests/bpf/progs/test_send_signal_kern.c: 4 linux/version.h not needed.
+   ./tools/testing/selftests/bpf/progs/test_spin_lock.c: 4 linux/version.h not needed.
+   ./tools/testing/selftests/bpf/progs/test_tcp_estats.c: 37 linux/version.h not needed.
+   ./tools/testing/selftests/wireguard/qemu/init.c: 27 linux/version.h not needed.
 
 -- 
 0-DAY CI Kernel Test Service
