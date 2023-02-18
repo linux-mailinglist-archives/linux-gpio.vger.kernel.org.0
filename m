@@ -2,124 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4215769B74B
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Feb 2023 02:06:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B1969B85E
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Feb 2023 07:51:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbjBRBGp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Feb 2023 20:06:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
+        id S229499AbjBRGvW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Feb 2023 01:51:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjBRBGo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Feb 2023 20:06:44 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE87457E9;
-        Fri, 17 Feb 2023 17:06:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676682403; x=1708218403;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r+eTrMw1FB+iDg1fr6ANtkvS4OBgRd5cOlW+TWhGpkc=;
-  b=Zgm/EdLqHV9z3afhAaGWqqLhsj0G1ooVCRt/qWrqqkvvHiabBQ5Aw2op
-   TnBOGw0lME0RZMEhJ/TuU/6i+V9DcJoMDDUBfo7d0fZibAYh9i53SLp3g
-   0V9I6lPGNunZf2aGDoYpyRYB5pO+IeL8hvMD8v2bDjP6LXl5nesWYwt9M
-   q4pFadChFZ8VEvDY19dBOn+UcExAz1az+VrLqimtc6Q+a5fIgGsgb2xDI
-   ZS1ha9j5uZwou5YM7HKm8sDd9m5rTQV5Svb7lEVZJIUjQcT8Sw7GHsOq/
-   ym9YrhZiD8f3GiRC7JzZ3MAIuLPNzE4bcgb3Bf2xGy3IN+Gl13T6bd8Il
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="394611756"
-X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="394611756"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 17:06:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="734496291"
-X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="734496291"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Feb 2023 17:06:40 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pTBgV-000BxP-27;
-        Sat, 18 Feb 2023 01:06:39 +0000
-Date:   Sat, 18 Feb 2023 09:05:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>, andy.shevchenko@gmail.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, Asmaa Mnebhi <asmaa@nvidia.com>
-Subject: Re: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
-Message-ID: <202302180821.a8TRkiIS-lkp@intel.com>
-References: <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
+        with ESMTP id S229475AbjBRGvV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Feb 2023 01:51:21 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834324FC88;
+        Fri, 17 Feb 2023 22:51:19 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id ec30so668949edb.10;
+        Fri, 17 Feb 2023 22:51:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+7lF519TNw7DEedjha5cPKcDehMAz7Bv8bHQk6jEz4=;
+        b=Dy1NDiS2zWrTpyDfLkUhVZ19otqYOvNIptA058v62e0ANpW60H1SUSoQX+/+J9s25J
+         icpFwasXPieGs8kPw/NxgHlxgBrwZHz0poumxNExqboqexXWj/DY2y5rGZaAvybgcnwO
+         U4wfKDCbRElAOGYy5wAet6r+SuNTlM+cCGNIvWu/1+KeuYadkHj6yDipD6LeO3wxz2h/
+         D/6AjlKO4UKRX6CphqxeozWnup0mKOW0CJC0Q5xoCgc8iJHiAW+jb+E+2IbYT3d1AOvj
+         oUkfKZsOKm8FKbizjupIFPH96LfgDqv1GvVJQw0+Kw6aKMMu3cG0BcdhIsidR+KhElHO
+         3vJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x+7lF519TNw7DEedjha5cPKcDehMAz7Bv8bHQk6jEz4=;
+        b=zBsCql/5T0K1/M5AhPKn4WlNdjN9NXTqTYJ/sNO09KC51B3zGMHUW3iq3fHBt2zcne
+         CYp2kIuPOFZZ+yugoOYC+ZieYHG3ZXBLefw6wTos02EgCEQdkrL/iKQqIIElaD56S0cZ
+         9IvNiRReOJpJSjF/VrvFJc3jdkJ/R5BLdDWqgKN9atPqps/Hi1PCVwmsC17re7StBM3B
+         b261BZRHewZjW1i872RQZlv1U5LFAprKEQxxyC1qEwukc3jJyRdSZWZ89brFNLIuDZUe
+         nx8M7lvzFUdlXqxCrQnDfZ6XkLKnj3PnDtoRkl8vdsUVAvVVvdHUUvdATio3iruBwQsK
+         ueOA==
+X-Gm-Message-State: AO0yUKWnNkblZJC4JmGI6iUfqiu9VWOg10IP0RfC2pXZO/CDjG0vjKvv
+        1CzpLX99ncyw1YC3IYJeWXo=
+X-Google-Smtp-Source: AK7set/N25F8xcfjFi2RltkDno35yAF90bOUYEt+V4Pc7+D3K+722xn/kcgteRJXzhKnuN0U4y2vOg==
+X-Received: by 2002:a05:6402:12ca:b0:4ad:7204:6968 with SMTP id k10-20020a05640212ca00b004ad72046968mr6459722edx.32.1676703077887;
+        Fri, 17 Feb 2023 22:51:17 -0800 (PST)
+Received: from arinc9-PC.lan ([37.120.152.236])
+        by smtp.gmail.com with ESMTPSA id y19-20020a50ce13000000b004acc6c67089sm3156039edi.75.2023.02.17.22.51.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 22:51:17 -0800 (PST)
+From:   arinc9.unal@gmail.com
+X-Google-Original-From: arinc.unal@arinc9.com
+To:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Daniel Golle <daniel@makrotopia.org>, erkin.bozoglu@xeront.com
+Subject: [PATCH 1/2] pinctrl: mediatek: add missing options to PINCTRL_MT7981
+Date:   Sat, 18 Feb 2023 09:51:06 +0300
+Message-Id: <20230218065108.8958-1-arinc.unal@arinc9.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Asmaa,
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-I love your patch! Perhaps something to improve:
+There are options missing from PINCTRL_MT7981 whilst being on every other
+pin controller. Add them.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next brgl/gpio/for-next linus/master v6.2-rc8 next-20230217]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ drivers/pinctrl/mediatek/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Asmaa-Mnebhi/pinctrl-pinctrl-mlxbf-Add-pinctrl-driver-support/20230218-062744
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa%40nvidia.com
-patch subject: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
-reproduce:
-        make versioncheck
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302180821.a8TRkiIS-lkp@intel.com/
-
-versioncheck warnings: (new ones prefixed by >>)
-   INFO PATH=/opt/cross/clang/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 3h /usr/bin/make W=1 --keep-going HOSTCC=gcc-11 CC=gcc-11 -j32 ARCH=x86_64 versioncheck
-   find ./* \( -name SCCS -o -name BitKeeper -o -name .svn -o -name CVS -o -name .pc -o -name .hg -o -name .git \) -prune -o \
-   	-name '*.[hcS]' -type f -print | sort \
-   	| xargs perl -w ./scripts/checkversion.pl
-   ./drivers/accessibility/speakup/genmap.c: 13 linux/version.h not needed.
-   ./drivers/accessibility/speakup/makemapdata.c: 13 linux/version.h not needed.
->> ./drivers/gpio/gpio-mlxbf3.c: 14 linux/version.h not needed.
-   ./drivers/net/ethernet/qlogic/qede/qede.h: 10 linux/version.h not needed.
-   ./drivers/net/ethernet/qlogic/qede/qede_ethtool.c: 7 linux/version.h not needed.
-   ./drivers/scsi/cxgbi/libcxgbi.h: 27 linux/version.h not needed.
-   ./drivers/scsi/mpi3mr/mpi3mr.h: 32 linux/version.h not needed.
-   ./drivers/scsi/qedi/qedi_dbg.h: 14 linux/version.h not needed.
-   ./drivers/soc/tegra/cbb/tegra-cbb.c: 19 linux/version.h not needed.
-   ./drivers/soc/tegra/cbb/tegra194-cbb.c: 26 linux/version.h not needed.
-   ./drivers/soc/tegra/cbb/tegra234-cbb.c: 27 linux/version.h not needed.
-   ./drivers/staging/media/atomisp/include/linux/atomisp.h: 23 linux/version.h not needed.
-   ./init/version-timestamp.c: 5 linux/version.h not needed.
-   ./samples/trace_events/trace_custom_sched.c: 11 linux/version.h not needed.
-   ./sound/soc/codecs/cs42l42.c: 14 linux/version.h not needed.
-   ./tools/lib/bpf/bpf_helpers.h: 289: need linux/version.h
-   ./tools/perf/tests/bpf-script-example.c: 60: need linux/version.h
-   ./tools/perf/tests/bpf-script-test-kbuild.c: 21: need linux/version.h
-   ./tools/perf/tests/bpf-script-test-prologue.c: 47: need linux/version.h
-   ./tools/perf/tests/bpf-script-test-relocation.c: 51: need linux/version.h
-   ./tools/testing/selftests/bpf/progs/dev_cgroup.c: 9 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/netcnt_prog.c: 3 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_map_lock.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_send_signal_kern.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_spin_lock.c: 4 linux/version.h not needed.
-   ./tools/testing/selftests/bpf/progs/test_tcp_estats.c: 37 linux/version.h not needed.
-   ./tools/testing/selftests/wireguard/qemu/init.c: 27 linux/version.h not needed.
-
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index f20c28334bcb..67818ba14d4e 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -130,6 +130,8 @@ config PINCTRL_MT7622
+ config PINCTRL_MT7981
+ 	bool "Mediatek MT7981 pin control"
+ 	depends on OF
++	depends on ARM64 || COMPILE_TEST
++	default ARM64 && ARCH_MEDIATEK
+ 	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT7986
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.37.2
+
