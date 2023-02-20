@@ -2,124 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 344F569CFC7
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Feb 2023 15:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01BE969D093
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Feb 2023 16:25:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231865AbjBTO7r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Feb 2023 09:59:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45206 "EHLO
+        id S231265AbjBTPZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Feb 2023 10:25:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbjBTO7q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Feb 2023 09:59:46 -0500
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701451CACB
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 06:59:39 -0800 (PST)
-Received: by mail-vs1-xe2c.google.com with SMTP id v3so588204vse.0
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 06:59:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1676905178;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2EAsGyZAvm6u7RebXhNM4OstmhJzau/0diJUFrUURCA=;
-        b=knB3hT1duc1MTs0iknQypTc/pO26udEf2033nsquaRLESS+79t7qjfrPeuZQCT0Tej
-         OtmuoZ2rrXAdEnOnl2vDvoXC+zg6VaaDyz/awt8YVx3OjJRiep5hg1yUbdm0KYKyvgLn
-         DEhG/sTtb34ObEyUdnystXBdAJrThhvXHkk1SEpQz6LrvU4LZlaY+ArBNpujE0ZrTxdE
-         Fm0B9Kk6NEgTBf2+1gx68vxEmoBLNFVqERhiM7l7nUvsfucnqIP7K7bGsfv8Abh2ZEf6
-         vhi6oOpmIUvgZ44Ml+53uK91yJfoh2mANts9s7Evo5k2yvc/WM87/aAhMLTRvJnQtfW/
-         e+DA==
+        with ESMTP id S231700AbjBTPZ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Feb 2023 10:25:27 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB904224
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 07:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676906618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h33QpU2sQY74X3dZjb0I9PsJ55yb0IogyONJ/LA7kLE=;
+        b=F6vbPNN6QzXZDgSJQaFfRR7FgienWh7Iy8MTcns8UtjWNyXDxRbjJu1FEEKUllxe4ITE2G
+        lSEU8RpqONInk3FQF9mNBFb0u5WfL4wfcIfzyznXKOHQ7sBZo0bweOHD1FT0qBGEof1oLI
+        VX2riar354M2z9UETEu+9qZlQ6JRtFg=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-153-v9CpR4MfMtuU-CmijVcFqg-1; Mon, 20 Feb 2023 10:23:36 -0500
+X-MC-Unique: v9CpR4MfMtuU-CmijVcFqg-1
+Received: by mail-ed1-f72.google.com with SMTP id x16-20020a05640226d000b004a6c2f6a226so1568669edd.15
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 07:23:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1676905178;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2EAsGyZAvm6u7RebXhNM4OstmhJzau/0diJUFrUURCA=;
-        b=0ELszqVTeqXkqL3VYX9pvFjCFQ8sXxQ+2pPbJO+AkRQNd0pwUj1dEHhi+XMgKbEGFz
-         snn6huKaPCSdzsxNF7aXGl1Tt34d616Dqa+pJJqBJop3wMyzqiPJpnOVZ+FXJdJVKKT+
-         cAcEpdcVID60D36g3mo4npmeQ/ejm7izb9ph3rze6+tHrcHzBkd8SoEpu6Vl3ZFgG5TY
-         w7UjeR3m57h0c0ivCeK2EEVpAsi835OQeY/NmjdaROkuKS6xRG3qxJ/mq/ojocLPuHFX
-         9J3p2H0fRNwCQ9OrZQ07MaRX43Tv/6EEdSptNX2eAhvXonMwOOwU9wD8O91cize55A5r
-         Shvg==
-X-Gm-Message-State: AO0yUKU/fCM7EkkiM9GNlK+JoB4ZFdWOdk3wqZnvFbbnMo8p3EDZjv65
-        KoLFY7MXnltVONAT03azxMQSlcyHbYuixprsQ3vOLQ==
-X-Google-Smtp-Source: AK7set+++EUPmQLlCLmCPgXUxyzMvrtxfaiJJYKJlRr3HPWDYe4wgU5/IM0rTx3xz15k0zKKoKU/sN8+67Fmz+ZO2Vs=
-X-Received: by 2002:a67:d61e:0:b0:414:4aab:3c73 with SMTP id
- n30-20020a67d61e000000b004144aab3c73mr192421vsj.71.1676905178358; Mon, 20 Feb
- 2023 06:59:38 -0800 (PST)
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h33QpU2sQY74X3dZjb0I9PsJ55yb0IogyONJ/LA7kLE=;
+        b=NfAfcolyFdpAX4BjCxLfs61jtcCgmo9cQPhNCL7GqTJmSkj1Q9XVtZF/Q8TZI1Hp9w
+         C2BDcZuYU6dW0O9VitE46V3hUvBReskmRZXcjOGH/VWeUPt4eR4thyJKYi9n7Onywa2r
+         n4f9f368u0kb5p2EGDnxEXb0coiiAZY/IhgfFaKaO2CV/8TEDTtS6UsdkAZxFBFbTufO
+         yDXib/ngA3XEPXPhwK5gg7zCpfeaGbkXZPiXp0q93ww31qZmL5ZaJt8SeNoijbePChEj
+         LquV0257oEg8Jno3a9EKdBD4n4bKp+0/pTvrykzDOwoCNfiYPWHP1/CKboSpbumNOyQ8
+         5uHw==
+X-Gm-Message-State: AO0yUKV03UU4rU6TArRKQ3265UroC+w13Yx9N51xjkE610nNVcm0Rd19
+        GqRfyc1/Vmn5KO740p8YIP+fiiv1pa2qEEaEE5W7XS1h8uhyHtVn3geyIcennirCRc8qr1F8HUx
+        PvHDZjR6zIOIMSlRTKZk1Ug==
+X-Received: by 2002:a17:906:a96:b0:8b2:d30:e722 with SMTP id y22-20020a1709060a9600b008b20d30e722mr13207289ejf.3.1676906615666;
+        Mon, 20 Feb 2023 07:23:35 -0800 (PST)
+X-Google-Smtp-Source: AK7set/is8kiVsIxIrj34LOkdjWIUDUkDTQOPoBW9AUTjP4DjWtW941e8IbkoolO+A/rwDAMUTOcpg==
+X-Received: by 2002:a17:906:a96:b0:8b2:d30:e722 with SMTP id y22-20020a1709060a9600b008b20d30e722mr13207270ejf.3.1676906615372;
+        Mon, 20 Feb 2023 07:23:35 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id o15-20020a17090608cf00b008d398a4e687sm1384441eje.158.2023.02.20.07.23.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Feb 2023 07:23:34 -0800 (PST)
+Message-ID: <e61c78ea-e2b8-8c7f-c55f-a500036982a1@redhat.com>
+Date:   Mon, 20 Feb 2023 16:23:33 +0100
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 20 Feb 2023 20:29:27 +0530
-Message-ID: <CA+G9fYs4JsmNxX4+W=wijfSPdDsOy=SWLBSitZper5ncPpdxqA@mail.gmail.com>
-Subject: arm64: libgpiod: refcount_t: underflow; use-after-free.
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ferry Toth <fntoth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>, warthog618@gmail.com,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 1/3] ACPI: x86: Introduce an
+ acpi_quirk_skip_gpio_event_handlers() helper
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20230218103235.6934-1-hdegoede@redhat.com>
+ <20230218103235.6934-2-hdegoede@redhat.com>
+ <Y/N2/+UgH6MRUSOr@smile.fi.intel.com>
+Content-Language: en-US
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y/N2/+UgH6MRUSOr@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Following kernel warning notices on qemu-arm64, qemu-arm and also on devices
-running Linux version v6.2.0 while running libgpiod tests.
+Hi,
 
-+ ./gpiod.sh /opt/libgpiod/bin/
-  [INFO]    libgpiod test suite
-  [INFO]    117 tests registered
-  [INFO]    checking the linux kernel version
-  [INFO]    kernel release is v6.2.0 - ok to run tests
-  [INFO]    using gpio-tools from '/usr/bin'
-[   10.499036] ------------[ cut here ]------------
-[   10.499656] refcount_t: underflow; use-after-free.
-[   10.500264] WARNING: CPU: 2 PID: 291 at lib/refcount.c:28
-refcount_warn_saturate+0xf4/0x144
-[   10.501306] Modules linked in: gpio_mockup(-) cfg80211 bluetooth
-rfkill crct10dif_ce fuse drm
-[   10.502364] CPU: 2 PID: 291 Comm: gpiod-test Not tainted 6.2.0 #1
-[   10.503229] Hardware name: linux,dummy-virt (DT)
-[   10.503883] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   10.505331] pc : refcount_warn_saturate+0xf4/0x144
-[   10.505723] lr : refcount_warn_saturate+0xf4/0x144
-[   10.506115] sp : ffff800008983cd0
-[   10.506391] x29: ffff800008983cd0 x28: ffff0000c4c4c100 x27: 0000000000000000
-[   10.506961] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-[   10.507533] x23: 0000000000000200 x22: ffff0000c4e66800 x21: ffff0000c7734640
-[   10.508104] x20: 0000000000000001 x19: ffff0000c7734600 x18: ffffffffffffffff
-[   10.508677] x17: 3d4d455453595342 x16: ffffcf0234432020 x15: ffff800088983957
-[   10.509424] x14: 0000000000000000 x13: 2e656572662d7265 x12: 7466612d65737520
-[   10.510003] x11: 3b776f6c66726564 x10: ffffcf02365db580 x9 : ffffcf0233b20138
-[   10.510575] x8 : 00000000ffffefff x7 : ffffcf02365db580 x6 : 0000000000000001
-[   10.511145] x5 : ffffcf023655f000 x4 : ffffcf023655f2e8 x3 : 0000000000000000
-[   10.511721] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c4c4c100
-[   10.512294] Call trace:
-[   10.512494]  refcount_warn_saturate+0xf4/0x144
-[   10.512971]  kobject_put+0x164/0x220
-[   10.513224]  fwnode_remove_software_node+0x44/0x60
-[   10.513554]  gpio_mockup_unregister_pdevs+0x54/0x70 [gpio_mockup]
-[   10.513970]  gpio_mockup_exit+0x10/0x328 [gpio_mockup]
-[   10.514322]  __arm64_sys_delete_module+0x190/0x2a0
-[   10.514653]  invoke_syscall+0x50/0x120
-[   10.514915]  el0_svc_common.constprop.0+0x104/0x124
-[   10.515277]  do_el0_svc+0x44/0xcc
-[   10.515541]  el0_svc+0x30/0x94
-[   10.515788]  el0t_64_sync_handler+0xbc/0x13c
-[   10.516126]  el0t_64_sync+0x190/0x194
-[   10.516419] ---[ end trace 0000000000000000 ]---
+On 2/20/23 14:34, Andy Shevchenko wrote:
+> On Sat, Feb 18, 2023 at 11:32:33AM +0100, Hans de Goede wrote:
+>> x86 ACPI boards which ship with only Android as their factory image usually
+>> have pretty broken ACPI tables, relying on everything being hardcoded in
+>> the factory kernel image and often disabling parts of the ACPI enumeration
+>> kernel code to avoid the broken tables causing issues.
+>>
+>> Part of this broken ACPI code is that sometimes these boards have _AEI
+>> ACPI GPIO event handlers which are broken.
+>>
+>> So far this has been dealt with in the platform/x86/x86-android-tablets.c
+>> module, which contains various workarounds for these devices, by it calling
+>> acpi_gpiochip_free_interrupts() on gpiochip-s with troublesome handlers to
+>> disable the handlers.
+>>
+>> But in some cases this is too late, if the handlers are of the edge type
+>> then gpiolib-acpi.c's code will already have run them at boot.
+>> This can cause issues such as GPIOs ending up as owned by "ACPI:OpRegion",
+>> making them unavailable for drivers which actually need them.
+>>
+>> Boards with these broken ACPI tables are already listed in
+>> drivers/acpi/x86/utils.c for e.g. acpi_quirk_skip_i2c_client_enumeration().
+>> Extend the quirks mechanism for a new acpi_quirk_skip_gpio_event_handlers()
+>> helper, this re-uses the DMI-ids rather then having to duplicate the same
+>> DMI table in gpiolib-acpi.c .
+>>
+>> Also add the new ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS quirk to existing
+>> boards with troublesome ACPI gpio event handlers, so that the current
+>> acpi_gpiochip_free_interrupts() hack can be removed from
+>> x86-android-tablets.c .
+> 
+> I'm wondering if we can teach acpi_gpio_in_ignore_list() to handle this.
 
+You mean have it call acpi_quirk_skip_gpio_event_handlers(), or you mean
+extend the DMI matchs inside drivers/gpio/gpiolib-acpi.c to cover these
+cases ?
 
-Build and test logs,
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.2/testrun/14856342/suite/libgpiod/test/ctxless-get-value-single-line/log
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.2/testrun/14856342/suite/libgpiod/tests/
+These devices with severely broken DSDTs already need a bunch of
+other acpi handling quirks. So the idea is to re-use the existing
+quirk mechanism for these to avoid having to have DMI match table
+entries for a single model in various different places.
 
+> P.S. Why do we lock an IRQ before checking acpi_gpio_in_ignore_list() and
+>      why do we not free that if the IRQ is in ignore list?
 
---
-Linaro LKFT
-https://lkft.linaro.org
+The idea was to do the test after other things which can fail, so that
+if there are other reasons to skip the GPIO we don't do the test +
+dev_xxx msg.  But you are right, we should either unlock it when ignoring
+it, or move the acpi_gpio_in_ignore_list() list check up.
+
+I guess just moving the check up is better, shall I prepare a patch for this?
+
+Regards,
+
+Hans
+
