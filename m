@@ -2,126 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D25D669C3DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Feb 2023 02:02:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11BEB69C422
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Feb 2023 03:33:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbjBTBB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Feb 2023 20:01:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
+        id S229662AbjBTCdq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Feb 2023 21:33:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjBTBB6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Feb 2023 20:01:58 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE06AD52C;
-        Sun, 19 Feb 2023 17:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676854917; x=1708390917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZzntQ3V7u7adDDspP52ftt0OsOPYSqFBr5Qb62NUZuE=;
-  b=ExNTsluAk+QWn0XkIbDp4JqGUYLRGbVryu7Zyh148tE66e9xEBBSDef0
-   KYM239QKcQGwVDWjTCyk60Q/N9pOFwQZhUAlucvV4Ylb6wng+hYniMqmx
-   J0UJMraZxqlMNaSMbdXramWuxls1DdOn2TFF+CtB85NXCM7izeFNjYWQI
-   9bux+cJ8a2JNrqXwFk6tdU9F52ORrEDOpPhJ9TlU0iR0aV19oISLIaFXt
-   N1FCDpi7JtK7hfbamBDta6LlHZnaamWY1dhysyUqSy+jQUdulYjGE4OiZ
-   wK2s4nEks1jbOEJbCxve0jqPpMX38L1ov4+qm+M/Nu8uXrwKfvdHeGYh8
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="359763573"
-X-IronPort-AV: E=Sophos;i="5.97,311,1669104000"; 
-   d="scan'208";a="359763573"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2023 17:01:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="795012209"
-X-IronPort-AV: E=Sophos;i="5.97,311,1669104000"; 
-   d="scan'208";a="795012209"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 19 Feb 2023 17:01:52 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pTuYx-000DWR-1Y;
-        Mon, 20 Feb 2023 01:01:51 +0000
-Date:   Mon, 20 Feb 2023 09:00:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ye Xiang <xiang.ye@intel.com>, Lee Jones <lee@kernel.org>,
-        Wolfram Sang <wsa-dev@sang-engineering.com>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, srinivas.pandruvada@intel.com,
-        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com,
-        Ye Xiang <xiang.ye@intel.com>
-Subject: Re: [PATCH 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-Message-ID: <202302200820.aUaMtEFR-lkp@intel.com>
-References: <20230219183059.1029525-3-xiang.ye@intel.com>
+        with ESMTP id S229479AbjBTCdp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Feb 2023 21:33:45 -0500
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2057.outbound.protection.outlook.com [40.107.8.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119C19010;
+        Sun, 19 Feb 2023 18:33:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Itpyy7h7qaxNttfs24ED9oAyptOBYGK9hiuCYdUuOwEK2qvbtO6NnCqx7h5GAknEtSFTl4Y55KI/NA+P7+Ets08eWDnMwYOtKMeiWApQcf7U+YTzZKMhTiIERQ2RUtsUBALE3K0tzDUhf41LjTVhwLzc13FlUZGuzgI9D1/Y4bHg/bc4QXywRXVGQbWqLznXDMPn0Y+hwhe2LBebBnxsnpK0bS9DJT6Nh6SVT9O0mrRGG52E0RdBrseR0aYg+HQRmSFQeIZM8o3hdb6EaL73Sc4K4ern+DUnIsACiWVpMQyhNPcGm2VQPseez6dqo/CUt4YoupeXDe8viGkPfZGAPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EpbTYgyuYRWjQG6odLowPacC7raQfylLb/u4+/7cZ6g=;
+ b=CytxxxVjTgzn71jBziYYpl8dD3+/AKNONb2TAtm7/Qag1EN0AJveziHaUUduOPPfAyE9/lXpfPeL9jrkohJwUW71/NRraIpLJ9d+Wl+bhqAJvNKZmlcrHIoTAHo5ZRQ5SwvIgZM/FanjeG6dzXuIpechhC6nw14VOMyqyB/3CoIgmURiGAFIw16iC6O8+haJsJK6iJPaYiXJXnmSbBNcaUrUmB+WAOHzSbdelmob/HYhxvePkcg0SP0hpB8MWAORfu316iyjHk2P+/CvqNcnPAgBiK/nI4OyZxlgG0BcyeJCJNdieNZyK+pMD0dYGs5V9Q3xOwzdWnuCmtSE+jSOSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EpbTYgyuYRWjQG6odLowPacC7raQfylLb/u4+/7cZ6g=;
+ b=xDkD2ndD45X1SzQWwvn3SmdFQGQBEra3OU3/M0HG0YcD2L8ipwGubydnJFG3rfXlvE+J/kf9Ovq+566bhcIBYrTxE5PbjTUHxPPmaTcvALYazTqC1naSvFUXezrbFlWJ40wmR+6/arUeQlV0AX4xRyPf0ZN4p97R1Y16OUiFI0RZ5UsIAX+Tw0QGr5QU+3WLZa4cq30JU5O+1jcFI/E1zRjWjHjZpwMjbt3f8xWkCsNfItTegOW5DccAJ6Hv0R4QYsSnKGCvUUCgFIOUOSD4euiLSiI6IBSmsq1pIKwb2htuCqWWoEY1bh1OnIdmRw+lS/bb/HRFFcouTYoc9LAVxg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from AM0PR0402MB3428.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::25) by AM8PR04MB7762.eurprd04.prod.outlook.com
+ (2603:10a6:20b:241::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.19; Mon, 20 Feb
+ 2023 02:33:38 +0000
+Received: from AM0PR0402MB3428.eurprd04.prod.outlook.com
+ ([fe80::4157:bcf7:8f05:fab3]) by AM0PR0402MB3428.eurprd04.prod.outlook.com
+ ([fe80::4157:bcf7:8f05:fab3%6]) with mapi id 15.20.6111.019; Mon, 20 Feb 2023
+ 02:33:33 +0000
+From:   Chester Lin <clin@suse.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Chester Lin <clin@suse.com>, s32@nxp.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
+        Matthias Brugger <mbrugger@suse.com>
+Subject: [PATCH v5 0/3] Add pinctrl support for S32 SoC family
+Date:   Mon, 20 Feb 2023 10:33:17 +0800
+Message-Id: <20230220023320.3499-1-clin@suse.com>
+X-Mailer: git-send-email 2.37.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0223.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c5::11) To AM0PR0402MB3428.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::25)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230219183059.1029525-3-xiang.ye@intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR0402MB3428:EE_|AM8PR04MB7762:EE_
+X-MS-Office365-Filtering-Correlation-Id: b383b776-5e88-41b4-a3a1-08db12eadc1d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9IjqbWvMD+r2sW2AxF+Ig1lx/xY+zUkKkbJbi0glXpWr5rmIh437Jji+RN7/+bQ+VV+6RinMjFGHA1G5MrSVEGeBabwW/c7+9gc7jrk9aJy8V8A9trrFbCQT5ba+PcabcCeCoKyRfJC/mAXKBBWI3NhfnrraSIRTv1JCoaFr7Pc+TxRI/vgPF22Tt5Venhyea0vC0rUMrrQIaY0/xLhZ3OROkq6XSOzsgvDRbk/ZSvPdawSPeQHePw48O/cnzNDhuPk2XvMZ55fc235cLe2t9eP+ssWfvJ3xXU4HUL4gKZmdWh4jdWYMjh6LbfuM8fCj7F+sltiokqmmxuyrpEL3gcofC5ddsvN3uVxy4aLwBEIIWHU+Leo04F/pp3Ok9FXBX0mzqKsW8h8Byvb6WK+0SqHcgT7WK3gfJEoeknt/CCAXUvDAHJ2AwVX+Xi2pE3j5/k7Nzcsq8Nr7iD0zlt0hs14YcQQ697KY3Na6iCUMCzjpZ6xBTae80X2O8jGX6yl40Q9tWDcnajSEfDluge111dCWyYh6JCILsFHUP+DuQqagRQpQQwcIwD/C1amTj+ddioqjesCjhsYvuWAhhSBnGtSPqQSULDEwIK+7sXPMpiLBrl0QHWEyy2vq+sBJK5tRe9VrH5fTfXnbn7oSD7rXlGgnhvQqAM1kygtX4EuAmsg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3428.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(366004)(39860400002)(376002)(396003)(346002)(451199018)(6486002)(186003)(26005)(966005)(107886003)(6512007)(66556008)(4326008)(8676002)(66476007)(5660300002)(6666004)(7416002)(83380400001)(8936002)(2616005)(66946007)(6506007)(1076003)(36756003)(316002)(478600001)(110136005)(41300700001)(54906003)(38100700002)(86362001)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yI8pDrxtBhA56sGlwM+jGZwHIYoXo5d7LHiE2CYbZ1KvcY3Y2ewpLg76iQim?=
+ =?us-ascii?Q?b+Rm2hpLuDrnT7JzoUTnEvc69iGHXo7T55pfHYQ9Vo737XigdNnlsQHvbyBk?=
+ =?us-ascii?Q?NjCqMCjDcXlCJ3s374C42f90pxjxmuCIiPIR3VaaJkLUkYVhFCN/AP5Z/aMc?=
+ =?us-ascii?Q?W/48KEVX902g3ou9dLjTo2oONMIuBgcHrAbxl+Bhkjg9gUeSv20z/+3V+ldj?=
+ =?us-ascii?Q?jyxWrTLLDEaCT2oXp/g+XLGDxax1wxLhvMzaqvM5XefeY3a3JsqgrQ11Qo70?=
+ =?us-ascii?Q?XHavqFNGa73Gt83iXgsXrgA7QqUnWDdIIYLOhOyQBOlScINKlNSTVmh4SXEs?=
+ =?us-ascii?Q?/IU/UqH+Tn4zAOeb0qwb5F6Exlx6uxpHGLB4k74adduujLjwPFj/kFpv8i8G?=
+ =?us-ascii?Q?WkKfp+55VKvVIu0/C/ReyInupqfgUxCwq213uXSFdnaWbMWDMbJkRmSyHjFQ?=
+ =?us-ascii?Q?aUfwTZKFrTy2Xn/jro2X6CtE60aCrkBlxrx67Meywl9ZgJiDeSZ2xqZHPC1q?=
+ =?us-ascii?Q?o0ABJ/BfDZ9pd20fVFPIjEKBEqr4RlTsw1gcs5/LjHdjWNG6oZhwbIb/Pjfa?=
+ =?us-ascii?Q?2S/iENu4EFuPs45ubzLHVz9d28wLx+D6ztWIMS1+0cpnXxh9/zxu5A5jToPw?=
+ =?us-ascii?Q?IAgm5d7qb5l8y+vUMsbApfhoyXByNtu3YQx0Hjs2P9+oNuLy80rOyViGgdua?=
+ =?us-ascii?Q?WmRoBGUKgCDL9o1LEok9zOtBS4vcLx/JqTYkvHV4UOB8zTxIhaTLtPc+F2u7?=
+ =?us-ascii?Q?SS26ZeQzdezbYHK5jhCi56nCI4YAmYiVsSTBgiS4Rgwo9ovlrjTBCruOfSxp?=
+ =?us-ascii?Q?kTNmmsFbwFy6V7xBNP8ejjJN2A6DAULFKXOeTp9KgHmEzBMND7fub7oCeCYZ?=
+ =?us-ascii?Q?0y77LsZIpjKVcXV0vkuPHWai6kRQvZckO92154LMm7wZoOsCvbTDspzI7i9/?=
+ =?us-ascii?Q?DoE2cpXIYoActsmpBnz1Mp7+SF6Qphv4/21w/+E1XxMXOWXcKKmBlfTyFXsI?=
+ =?us-ascii?Q?F2fBoc0hxsk0EFoJrechHZ/FuRDtZ4hlJ4deP2IsbJDfGj/JYJGHrOfs94Mk?=
+ =?us-ascii?Q?i97vIg8Egp4vy6H8PfzMjHqXkw/CdSr70ryzZScls8ZJ2nKAvNIOl23vfP7w?=
+ =?us-ascii?Q?olBLnjtMOBtwsQudQJmdg50sgKiWOENmAXFgoXyn7BliPQpjNg5l/umQrpe4?=
+ =?us-ascii?Q?RwNNQ/NIRzN32SurCFAEmi2oFk8JBUwkoXn/LCyQ9u8Bdx6vYg2thUMuPIyJ?=
+ =?us-ascii?Q?TAxc0GGYFn01GydKyTQjqLOGywjnoGDdc54+6kyyoo4fd2T8N69YunDpjpzw?=
+ =?us-ascii?Q?xKI6tLSiE/hOEX0652vTPn7kFfOCOy9IDyXF3zKLoGykkwhaxVdW5aohrFws?=
+ =?us-ascii?Q?8dRrYb8i3+VuavXAafsJBPwnzbWPNLCbEHOpNL0MY/Y90TjxdOZEat/RdeFL?=
+ =?us-ascii?Q?mXn6cssX2qbnNFFDgMbzXBqEBoWHE+mH+IGKjC9VNH/U3IO5b74c0F0g6MOW?=
+ =?us-ascii?Q?/7oDYR6g0XWcEbhhQ3MMSgy50XTi4pyqeflAsLcS+ZG+5xXE1Cy1kR3If9x3?=
+ =?us-ascii?Q?p9tsMqeKW2c0AFf+9wA=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b383b776-5e88-41b4-a3a1-08db12eadc1d
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3428.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2023 02:33:32.9040
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MT5uJZ7rF8EinXqXd9QR5yU9Pr7dCVyS/MzJmS0sjnq1GV7QJyYyvlym3p/GhQsS
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7762
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Ye,
+Hello,
 
-Thank you for the patch! Perhaps something to improve:
+Here I want to introduce a new patch series, which aims to support IOMUX
+functions provided by SIUL2 [System Integration Unit Lite2] on S32 SoCs,
+such as S32G2. This series is originally from NXP's implementation on
+nxp-auto-linux repo[1] and it will be required by upstream kernel for
+supporting a variety of devices on S32 SoCs which need to config PINMUXs,
+such as PHYs and MAC controllers.
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on lee-mfd/for-mfd-fixes wsa/i2c/for-next broonie-spi/for-next linus/master v6.2-rc8]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks,
+Chester
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Xiang/mfd-Add-support-for-Intel-LJCA-device/20230220-023253
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20230219183059.1029525-3-xiang.ye%40intel.com
-patch subject: [PATCH 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20230220/202302200820.aUaMtEFR-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/ddd4f4ee32eff2fd7cb9933efdc8966d58894160
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Ye-Xiang/mfd-Add-support-for-Intel-LJCA-device/20230220-023253
-        git checkout ddd4f4ee32eff2fd7cb9933efdc8966d58894160
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/gpio/
+Changes in v5:
+- dt-bindings: No change
+- driver:
+  - Refactor register r/w access based on REGMAP_MMIO and regmap APIs.
+  - Tag PM functions with '__maybe_unused'.
+  - Add mask check while parsing pin ID from a pinmux value.
+  - Simplify s32_pinconf_mscr_* functions.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302200820.aUaMtEFR-lkp@intel.com/
+Changes in v4:
+- Link: https://lore.kernel.org/linux-arm-kernel/20230118094728.3814-2-clin@suse.com/T/
+- dt-bindings:
+  - Change the representation of available slew-rate DT values from
+    register values to real frequencies.
+- driver:
+  - Add a mapping table for converting the slew rates to register
+    settings.
+  - Move driver files into an independent folder drivers/pinctrl/nxp
+- Add a MAINTAINER patch.
 
-All warnings (new ones prefixed by >>):
+Changes in v3:
+- Link: https://lore.kernel.org/lkml/20221221073232.21888-1-clin@suse.com/T/
+- dt-bindings:
+  - Remove the minItems from reg because there's no optional item for
+    s32g2.
+  - List supported properties of pinmux-node and pincfg-node and add more
+    descriptions.
+  - Adjust the location of "required:".
+  - Fix descriptions and wordings.
+  - Rename the yaml file to nxp,s32g2-siul2-pinctrl.yaml.
+- Rename pinctrl-s32g.c to pinctrl-s32g2.c
+- Adjust Kconfig options [menu-invisible] and names [S32G -> S32G2].
+- Add .suppress_bind_attrs
+- Drop the .remove callback and replace the module_platform_driver() call
+  with builtin_platform_driver()
 
->> drivers/gpio/gpio-ljca.c:436:40: warning: 'ljca_gpio_id' defined but not used [-Wunused-const-variable=]
-     436 | static const struct platform_device_id ljca_gpio_id[] = {
-         |                                        ^~~~~~~~~~~~
+Changes in v2:
+- Link: https://lore.kernel.org/lkml/20221128054820.1771-1-clin@suse.com/T/
+- Move the "nxp,pins" ID range information from DT to the driver.
+- dt-bindings:
+  - Fix schema issues.
+  - Add descriptions for reg entries.
+  - Revise the example.
+- Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
+- Fix the copyright format suggested by NXP.
 
+[1] https://github.com/nxp-auto-linux/linux/tree/bsp35.0-5.15.73-rt
 
-vim +/ljca_gpio_id +436 drivers/gpio/gpio-ljca.c
+Chester Lin (3):
+  dt-bindings: pinctrl: add schema for NXP S32 SoCs
+  pinctrl: add NXP S32 SoC family support
+  MAINTAINERS: Add NXP S32 pinctrl maintainer and reviewer
 
-   434	
-   435	#define LJCA_GPIO_DRV_NAME "ljca-gpio"
- > 436	static const struct platform_device_id ljca_gpio_id[] = {
-   437		{ LJCA_GPIO_DRV_NAME, 0 },
-   438		{ /* sentinel */ }
-   439	};
-   440	MODULE_DEVICE_TABLE(platform, ljca_gpio_id);
-   441	
+ .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      | 123 +++
+ MAINTAINERS                                   |   8 +
+ drivers/pinctrl/Kconfig                       |   1 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/nxp/Kconfig                   |  15 +
+ drivers/pinctrl/nxp/Makefile                  |   4 +
+ drivers/pinctrl/nxp/pinctrl-s32.h             |  75 ++
+ drivers/pinctrl/nxp/pinctrl-s32cc.c           | 945 ++++++++++++++++++
+ drivers/pinctrl/nxp/pinctrl-s32g2.c           | 773 ++++++++++++++
+ 9 files changed, 1945 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nxp/Kconfig
+ create mode 100644 drivers/pinctrl/nxp/Makefile
+ create mode 100644 drivers/pinctrl/nxp/pinctrl-s32.h
+ create mode 100644 drivers/pinctrl/nxp/pinctrl-s32cc.c
+ create mode 100644 drivers/pinctrl/nxp/pinctrl-s32g2.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.37.3
+
