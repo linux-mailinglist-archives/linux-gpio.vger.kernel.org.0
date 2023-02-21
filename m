@@ -2,169 +2,276 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 135FD69D0F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Feb 2023 16:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCDA69E00E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Feb 2023 13:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231582AbjBTPxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Feb 2023 10:53:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47830 "EHLO
+        id S233346AbjBUMPu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Feb 2023 07:15:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232029AbjBTPwu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Feb 2023 10:52:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5717F1F4A3
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 07:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676908321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BQjD7p/EnYrpHZ+YIa0To+lddLhF7+RLIvX/pUap6eo=;
-        b=foFUaIqb52vQtJVr/UsvKoP1gYM0+dmw2q0IhefWU3SLFPgVuqLnctGyxNNKkVzig2G12J
-        pLEKJmSNGxdOqFGIY/nfWWdSp6tQOD+S4E57LwK6aRs1HaxrGB8+d8mYA1SCcb2OmpzFdX
-        8qJXl8qGiDXfMuxt3dVbAcNcl+VXjM0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-152-SUdXfRoqNC2kwTh5jUM1IA-1; Mon, 20 Feb 2023 10:52:00 -0500
-X-MC-Unique: SUdXfRoqNC2kwTh5jUM1IA-1
-Received: by mail-ed1-f69.google.com with SMTP id r6-20020aa7c146000000b004acd97105ffso2415693edp.19
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Feb 2023 07:52:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BQjD7p/EnYrpHZ+YIa0To+lddLhF7+RLIvX/pUap6eo=;
-        b=2hz9yYmpgddC9UgOuQzfCs+oCjuDpkZSkmNSJbBs/OM511FQJTHpGsZDJfW0cXsgWx
-         HQi/lamqprpPMLE4hmku8yjjJEoXgbQtsWua6i0cGZDQaWmwkeaTJZ9QiYxH1ZZXpHSa
-         0t45PzL2LO6jb88zOHOptxTbIYEw/4d72NojBM8muNkN2BFOCc6x2B5gwvUcdJxObNQO
-         nWg+0WqaHTZ498HSRMnvceMvLPVLajmmh+nBtVnZTpDhHbnWMql3WKfTIvJiRHvTAFDc
-         rFDfAhqK2TvST8g4fY+1SPWdL5vulCecSZO0d/97xLztukixj8CN3vmri72pK5daAHxu
-         2VcQ==
-X-Gm-Message-State: AO0yUKXygoe4l/i55eMqOKPNx6Q2CTngiWwZqcXQKADzziloZJw3ssjV
-        0kqCVXpa7/Ty0GTjbGTIxASdpIN2N0zPn8F+JXdQ6N/2AACisfQTpQUCJaP5KtynPrsVXglWJj2
-        daHQo4l0E9eT0Nut+BKogcfwf5mc=
-X-Received: by 2002:a17:907:2d0f:b0:879:d438:4d1c with SMTP id gs15-20020a1709072d0f00b00879d4384d1cmr13943977ejc.21.1676908318917;
-        Mon, 20 Feb 2023 07:51:58 -0800 (PST)
-X-Google-Smtp-Source: AK7set8PwG/VVE8roEybfD/mGFI2/PPKT1z5UIG7Fg4tYfx08r5GlyXiXq+R3Q3bUl28UPaI+eI4aw==
-X-Received: by 2002:a17:907:2d0f:b0:879:d438:4d1c with SMTP id gs15-20020a1709072d0f00b00879d4384d1cmr13943948ejc.21.1676908318615;
-        Mon, 20 Feb 2023 07:51:58 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id p20-20020a1709060dd400b008be5b97ca49sm3333310eji.150.2023.02.20.07.51.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 07:51:58 -0800 (PST)
-Message-ID: <97e7b76f-dfab-fa45-0eb0-37d632b57aef@redhat.com>
-Date:   Mon, 20 Feb 2023 16:51:57 +0100
-MIME-Version: 1.0
+        with ESMTP id S233278AbjBUMPt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Feb 2023 07:15:49 -0500
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2083.outbound.protection.outlook.com [40.107.20.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3337ACA10;
+        Tue, 21 Feb 2023 04:15:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SoiGzsh21NJ2Fz4a+EoF+n8bXcSpqQax6Z3y/K3vZxV+tniW/rnT8bGEd1yzDFLLpKmthNNz1qtR3Sz98RhD27ZbGyD/T5kWdXjdNd2rQyc8PC4ucFMTYz7/KV+mWUkVGTMo8LJz4Lya1XoJ/GT/m5pZ+OO53tEwebZOZMMyGbnKWtWfpbMsL82l1nJNBmPZxOqrvt8Bh18CO7gVtqkeBhYgnmZfryOQ/CY/36oE3vk7qpSzDZn8eo5KBuS93Yfbuz4q49W+IxEKT+8OKeefNw/l+CrFFjqXB/1JreVcA1RNxsX88aPQgu6yQTSR8MKbS67zgvFXP0M1p3CzTqjbkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DEtP7uToi2WFJemqx7U1gfQXAGPfA5yTmEBRqjWzSOI=;
+ b=I3TEtM3CVuvTk/rJqBkbms4XuNl0FBhBV3GMZ1wyw4vDyFbC1g3hZErhdIJ2ytdlJOwjI2Ezw2s0B4wyW7gVzwqgYKqdvWXRJ9fAE6D3prTu/9VjkgsJltDJLL9zRfyMV1oDgdhG9l69UYbKb6bsVSmsQmZxrhke/meTbIDbcsCqcvzke4M6zxISJmZj2cJkr7/3shw8PXKsgElNK1eiEnNF7mvpy7/PKgDk77RQNmFkigxSntQt6+3BQkiI0GqutpCukLaxgZEAv+0mlIPYczzRyxCmlRZjC8M4i7c3nEx3ro+zqXCsl45j0/bpagq79SyxVxxPNveqzblQnNTykQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DEtP7uToi2WFJemqx7U1gfQXAGPfA5yTmEBRqjWzSOI=;
+ b=VF6jnKn/0fvgJAy0SEhSJ0kvzKLdkcF3M09fAWCGCH6Gz5HT8Nt9/TWwHneYwuP9g4Kb7lV7ntXTN456Ti2chKgttJ+08/jWgRQwQ6Xxtpc0KLitMIhcYMeoBwxW2xbdCvv5L51AG8AdFaBV+XxItHa7PE2LHQkgaashD3xyVY7KDvIUoblVxnXQwbYi6D4zh1Ugd4xhAGt/wnU6rvC+A68wh1ox1VFTJXF7e+j3Tj0xkeyowpytf2csuTU4omZgxDZPF2Fb7t2VXMKViXXM2yO93LTNDJE6SqBUTu5rAVSSPDBFPZIQZNSQWPnt2ofocOcPSjc/I09TlbP8lSyJnQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from DU2PR04MB8536.eurprd04.prod.outlook.com (2603:10a6:10:2d7::10)
+ by PAXPR04MB9253.eurprd04.prod.outlook.com (2603:10a6:102:2bd::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.13; Tue, 21 Feb
+ 2023 12:14:32 +0000
+Received: from DU2PR04MB8536.eurprd04.prod.outlook.com
+ ([fe80::24d3:14a5:eeda:6cdd]) by DU2PR04MB8536.eurprd04.prod.outlook.com
+ ([fe80::24d3:14a5:eeda:6cdd%8]) with mapi id 15.20.6111.021; Tue, 21 Feb 2023
+ 12:14:32 +0000
+Message-ID: <85e042b3-1b59-5ef0-8510-50372cefa197@theobroma-systems.com>
+Date:   Tue, 21 Feb 2023 13:14:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 1/3] ACPI: x86: Introduce an
- acpi_quirk_skip_gpio_event_handlers() helper
+Subject: Re: [RFC PATCH 1/1] pinctrl: rockchip: add support for per-pinmux
+ io-domain dependency
 Content-Language: en-US
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20230218103235.6934-1-hdegoede@redhat.com>
- <20230218103235.6934-2-hdegoede@redhat.com>
- <Y/N2/+UgH6MRUSOr@smile.fi.intel.com>
- <e61c78ea-e2b8-8c7f-c55f-a500036982a1@redhat.com>
- <Y/OTX2Z6N0ZhLOvW@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y/OTX2Z6N0ZhLOvW@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Sascha Hauer <sha@pengutronix.de>,
+        Quentin Schulz <foss+kernel@0leil.net>
+Cc:     linus.walleij@linaro.org, heiko@sntech.de,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Riesch <michael.riesch@wolfvision.net>
+References: <20220802095252.2486591-1-foss+kernel@0leil.net>
+ <20220802095252.2486591-2-foss+kernel@0leil.net>
+ <20230215102328.GB13829@pengutronix.de>
+From:   Quentin Schulz <quentin.schulz@theobroma-systems.com>
+In-Reply-To: <20230215102328.GB13829@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: FR0P281CA0120.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a8::10) To DU2PR04MB8536.eurprd04.prod.outlook.com
+ (2603:10a6:10:2d7::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8536:EE_|PAXPR04MB9253:EE_
+X-MS-Office365-Filtering-Correlation-Id: a53ee5ff-90fb-407e-260b-08db14053051
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tjSy4/LCyhmcgA7dMoV2CYUTc7zs07zaSLtwgCJRCuFz2JXx98MJWEJ0rxRnAE1qw3xSP8iOUOehkdKYqaCwSGMNSEpPlxwcFthefg55fTaauJnBbBwwqyEdYh5Z9IkNTgHShOqqPjBNx3pTlPI1mZNPXoN68REirz5rPBTVyV209ZleKD6h+0yWOrYCSPyqkDOLNeOiO/9PQjjDq/xZ8xHBCuQWSJWSvZ0V86dgXLrXAeaMb+gtKxpolEsVwnEjnNgvGuxdWmwHj7MBTKn09jTQfU6EPRUUEoSVm86GFLQAPfgwEF90WWmOjw0N42RDyFfHxKXwMi+7L+FENlQV3d9djcTflusbvq1L+lVXEJIRsGOdhqhBRaeuQaWUg0cz9ykG5Z98vol7y0U051xoDGm5bYfXwYkmakLNqM0Qogc88uzKNekF/UjLns4RReZmlul1VxVBzlRHRskKSnn0Q92SFU9op6lRmAoQiCtPL4jLM7UiSZ9YcaxMf3rEsnps6BbpGtS04LeSXhto3QGWzm9VAiLGAYlt2/Qi8K6gjx98TW99qvqi6KsqllswbvkAlCBI13wWOrbUJHJBIeJkThDsLGg6V6c+eyQI1gku+ly+3deuQpj7MIzQi4hGFyYdPaaeL8sa6NoeNHFxVGPhp4kzkMWRgaImRoEEKtnq5z6UAiVrRF+6FW2A55pU9QYUs94eWH8MFSeaVbSCLrlXjtJDAD8BGU1f/xOzFcxSmBg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8536.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39850400004)(376002)(136003)(396003)(366004)(451199018)(66899018)(316002)(2906002)(31686004)(41300700001)(44832011)(36756003)(5660300002)(4326008)(66556008)(31696002)(83380400001)(66476007)(8936002)(8676002)(66946007)(110136005)(38100700002)(6506007)(26005)(186003)(86362001)(6666004)(2616005)(53546011)(6512007)(6486002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WDNhblBxdXpld3RveGNOZ2YxY1prWFhEZnFUUDNtK3BkTlY3QUN6Wm51SHVo?=
+ =?utf-8?B?MFRUMUEvTFpkN3UwSU5XQUg1YVliM3QxS3NXRjBTTjZWRFlWV3JhN3pOd0Nn?=
+ =?utf-8?B?OXhyTHJUZlloRXBNNFBickZlSU1RTG85L1UwUEk5V00rK215Vlhkd1VOWFhy?=
+ =?utf-8?B?RzU1TER5QTdSM3V3azkzcmRRZHhtY24yclI0b2ttaEJBSkc3Sjh1bW5tOTk3?=
+ =?utf-8?B?T3l3V0tLZDJVWnloay9CNXdwZVloVVZDdXVGUDJDL0pHN2pzRitmZGVMdW5E?=
+ =?utf-8?B?cFMwdHo4VWhWOVBoK29TQTQrdG11NjlMTFZlV3Bhendpams2QS9YVkljWmJi?=
+ =?utf-8?B?eUZtcDNPS3F3LzhUNnR5VnJvbjFVVFdVYzN0cWZtVStFbWZkOGxWSEpvUkto?=
+ =?utf-8?B?d0lyYU8rSlB6NTV6NWRhQmpjNlY4TEUzWTlLd0k4UmZQRWVMVyttRjdaM2dD?=
+ =?utf-8?B?MHAvdU53RC9odmJUUW82cXFkKzI1SGRNWThIZHo4UUtGLzlldkpLSzVHbnRz?=
+ =?utf-8?B?UWxKalovSDdBcjdFRzY1OTgwbHpiaFNpVlJMMHhxWjh3ajhJMVZrTUFhNGt5?=
+ =?utf-8?B?M2FxL3pkcDIxRlZCeEdHSmxGdVNrQTgyaGV3dlpLajZGeEpZQzN0WDY1a1pD?=
+ =?utf-8?B?T3FBUVBKalk0Uit2Mk90am1qNWtVdmhRR0kxZmppOVRqdC8relZ5SUJCNldo?=
+ =?utf-8?B?RnlXelVBSnd3cDd1eUFLRkdXMmt1c3cySXpuY2w1L0hSQVIwaFlvd3hKT3A5?=
+ =?utf-8?B?TUNUeWJ4SHJzZG9JeUN4YVZMWXlRSnV1UXZ6SWRzTktIYlo4aStlbzdhWG1v?=
+ =?utf-8?B?M2VXaHRBTmMydFV1T2h3QWUreFdnbm9QMytvNTB2YXloWkRwMTIwbzNMSGts?=
+ =?utf-8?B?VnFrdG9SSWZlUHBjczR3YTYrajNjWnVwSzRERDlkcU9EeWRyS0F3NlJCOXlQ?=
+ =?utf-8?B?c3d0WjZXdnErcUwwNUliNE9BVDNISWd3enZzY1JSZ0VGcW5QaGoyRHdBNzIz?=
+ =?utf-8?B?MmFqbWMxMVF4SmYzcHJOaVJvejMxV1NlajdZaHk0ZXpXeld4T0xDUHBkaXRF?=
+ =?utf-8?B?dVhwV0FpREVRbnlvdCt1d0VkOG12VHovWW9XZ0tWZGJlWURCYm9nMDdYemZM?=
+ =?utf-8?B?R280aHk1S0JmdWRxYmJyblhtZ3JGYmdFbERMMGVTbEgzdVNmSUxYSFpGeHV0?=
+ =?utf-8?B?MENtdmhVUklKcGpvTEV5OFBRa3dkbjBxZXNpYk9SazNuTkkzNjlQQUYxc2Fj?=
+ =?utf-8?B?REtxMkRNRWlXZ200QUtYVnRqTkFBREhienVubThkaEh4dkRoR1U4b3gyTzAx?=
+ =?utf-8?B?WlB1bUZBMGZ0TndJWm1kdHdRREVFWWQ0S2Y0SnBsdWNjU1FuRU8zZFRqOTlC?=
+ =?utf-8?B?dnRmc3FoQ0x5SXkzSUpsWHNnemxjMkxFclhvTkVDbTJ6YjhzUlB1Q3E2NUc4?=
+ =?utf-8?B?U01jVk5ybFJmSU5FeDJXSmhaRmdOeXUzaGRKM29zVFRCWW93S3N5Ym9hSjQv?=
+ =?utf-8?B?YmM4V0RZMG5xZERZd0kzK2QvTG9FNkxTYmVjTFFGZmlnZkhQL0FGREtIcERV?=
+ =?utf-8?B?VzVvZTFtS29xeGhWdXF4YUZIVzhkdTY2V1lSN2RDbzljVmdpYmQwTWN4YnVn?=
+ =?utf-8?B?Yk5Rd1M0T1J6WkpPWkdUVEFRZ2pKKzFEeThERnlrNXFqNFZKNm1rSktNRTR1?=
+ =?utf-8?B?a3BibU5RMnJ0VSt2dklxck1mM1lMSXJNWHhBcFpydUtmaVZscEQrL0dMNkFh?=
+ =?utf-8?B?MDhjbmt5Z2g4azBFNEx4Ynh5NkdQcmhvQ2xyNVh5S2RtNUVENnNIWFk1NTEz?=
+ =?utf-8?B?V3pGdG9vS2Vxa0dyZ1FnMWg3QWgwYjJLTFRIR2xJcysvRDM2OFFUY1AzNi9r?=
+ =?utf-8?B?N1MxaThMT0ZobTlsblIzLzQ5TnRwdEpzVGoySktNeC9yU25uOEFDOHZFLzRo?=
+ =?utf-8?B?YzNZcWo2bU0rRjlTNWt4NG9TWGJmTm9tTHBqc2gvRjFIYXpORWVOR244WmpY?=
+ =?utf-8?B?L2hDcEppZ09oK1kvMTl2a3MwK2xtV21KeVp4K0ZQR0hsc0hpaEd6VFBKM2tM?=
+ =?utf-8?B?RkNXVnp3SnhOWkdxdnZKU3JJSEU3cmpEZHA5bWNBZXpKQUhzZit5Zm41eTBO?=
+ =?utf-8?B?aTdZeUhPTFJIc3pUTWpqS2FtNHNnNTRuZ1dWVHBvSHRhcFV2MWpGZFNxeFFw?=
+ =?utf-8?Q?xLK9AP9FwjljIy1v1Z3RaOU=3D?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a53ee5ff-90fb-407e-260b-08db14053051
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8536.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2023 12:14:32.2167
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tLZkSEODky5JQG8d9bldYErZ6T57f/NqbFPwaySdorZSufq5Mc9307ilpf3CwckKlkQnZS0Ez0TzwEx/6jj6AWFb8zjInG0NfnihdW6gKp/9VPV+Byg0gL+XpIxvvuzV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9253
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Sascha,
 
-On 2/20/23 16:35, Andy Shevchenko wrote:
-> On Mon, Feb 20, 2023 at 04:23:33PM +0100, Hans de Goede wrote:
->> On 2/20/23 14:34, Andy Shevchenko wrote:
->>> On Sat, Feb 18, 2023 at 11:32:33AM +0100, Hans de Goede wrote:
->>>> x86 ACPI boards which ship with only Android as their factory image usually
->>>> have pretty broken ACPI tables, relying on everything being hardcoded in
->>>> the factory kernel image and often disabling parts of the ACPI enumeration
->>>> kernel code to avoid the broken tables causing issues.
->>>>
->>>> Part of this broken ACPI code is that sometimes these boards have _AEI
->>>> ACPI GPIO event handlers which are broken.
->>>>
->>>> So far this has been dealt with in the platform/x86/x86-android-tablets.c
->>>> module, which contains various workarounds for these devices, by it calling
->>>> acpi_gpiochip_free_interrupts() on gpiochip-s with troublesome handlers to
->>>> disable the handlers.
->>>>
->>>> But in some cases this is too late, if the handlers are of the edge type
->>>> then gpiolib-acpi.c's code will already have run them at boot.
->>>> This can cause issues such as GPIOs ending up as owned by "ACPI:OpRegion",
->>>> making them unavailable for drivers which actually need them.
->>>>
->>>> Boards with these broken ACPI tables are already listed in
->>>> drivers/acpi/x86/utils.c for e.g. acpi_quirk_skip_i2c_client_enumeration().
->>>> Extend the quirks mechanism for a new acpi_quirk_skip_gpio_event_handlers()
->>>> helper, this re-uses the DMI-ids rather then having to duplicate the same
->>>> DMI table in gpiolib-acpi.c .
->>>>
->>>> Also add the new ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS quirk to existing
->>>> boards with troublesome ACPI gpio event handlers, so that the current
->>>> acpi_gpiochip_free_interrupts() hack can be removed from
->>>> x86-android-tablets.c .
->>>
->>> I'm wondering if we can teach acpi_gpio_in_ignore_list() to handle this.
->>
->> You mean have it call acpi_quirk_skip_gpio_event_handlers(), or you mean
->> extend the DMI matchs inside drivers/gpio/gpiolib-acpi.c to cover these
->> cases ?
->>
->> These devices with severely broken DSDTs already need a bunch of
->> other acpi handling quirks. So the idea is to re-use the existing
->> quirk mechanism for these to avoid having to have DMI match table
->> entries for a single model in various different places.
+On 2/15/23 11:23, Sascha Hauer wrote:
 > 
-> I don't like growing amount of compile dependencies between these modules.
-> (Yes, I'm aware about stubs.)
-
-gpiolib-acpi.c already depends on CONFIG_ACPI and is not build when this
-is not set. So this does not add any new dependencies. IOW I don't see
-the problem here ?
-
-(also for this reason there is no stub for the new
-acpi_quirk_skip_gpio_event_handlers() helper)
-
-> Can we maybe move other quirks out from gpiolib-acpi.c to something like
-> PDx86 or another existing board files (with quirks)?
-
-I don't really see a clean way to move these.
- 
->>> P.S. Why do we lock an IRQ before checking acpi_gpio_in_ignore_list() and
->>>      why do we not free that if the IRQ is in ignore list?
->>
->> The idea was to do the test after other things which can fail, so that
->> if there are other reasons to skip the GPIO we don't do the test +
->> dev_xxx msg.  But you are right, we should either unlock it when ignoring
->> it, or move the acpi_gpio_in_ignore_list() list check up.
->>
->> I guess just moving the check up is better, shall I prepare a patch for this?
+> Hi Quentin,
 > 
-> Yes, please.
+> On Tue, Aug 02, 2022 at 11:52:52AM +0200, Quentin Schulz wrote:
+>> From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+>>
+>> On some Rockchip SoCs, some SoC pins are split in what are called IO
+>> domains.
+>>
+>> An IO domain is supplied power externally, by regulators from a PMIC for
+>> example. This external power supply is then used by the IO domain as
+>> "supply" for the IO pins if they are outputs.
+>>
+>> Each IO domain can configure which voltage the IO pins will be operating
+>> on (1.8V or 3.3V).
+>>
+>> There already exists an IO domain driver for Rockchip SoCs[1]. This
+>> driver allows to explicit the relationship between the external power
+>> supplies and IO domains[2]. This makes sure the regulators are enabled
+>> by the Linux kernel so the IO domains are supplied with power and
+>> correctly configured as per the supplied voltage.
+>> This driver is a regulator consumer and does not offer any other
+>> interface for device dependency.
+>>
+>> However, IO pins belonging to an IO domain need to have this IO domain
+>> correctly configured before they are being used otherwise they do not
+>> operate correctly (in our case, a pin configured as output clock was
+>> oscillating between 0 and 150mV instead of the expected 1V8).
+>>
+>> In order to make this dependency transparent to the consumer of those
+>> pins and not add Rockchip-specific code to third party drivers (a camera
+>> driver in our case), it is hooked into the pinctrl driver which is
+>> Rockchip-specific obviously.
+> 
+> I don't know the status of this patch, but I haven't found anything
+> newer, so please point me to newer patches if the discussion has
+> continued somewhere else. Anyway, here are some thoughts about this
+> patch
 
-Ok will do.
+No new version, a bit drowning in work but we are dependent on this 
+patchset for an adapter board we want to upstream so I'll have to get 
+back to it in the next few weeks/months.
 
-Regards,
+> 
+> I think the general approach is fine but could be improved. Right now we
+> have one io-domain device with several supplies. That means once one
+> consumer needs an io-domain, the supplies for all domains need to be
+> probed beforehand.  We could relax this requirement by adding a subnode
+> for each domain, so instead of doing this:
+> 
+> pmu_io_domains: io-domains {
+> 	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
+> 	pmuio1-supply = <&vcc3v3_pmu>;
+> 	pmuio2-supply = <&vcc3v3_pmu>;
+> 	vccio1-supply = <&vccio_acodec>;
+> 	vccio2-supply = <&vcc_1v8>;
+> 	vccio3-supply = <&vccio_sd>;
+> 	vccio4-supply = <&vcc_1v8>;
+> 	vccio5-supply = <&vcc_3v3>;
+> 	vccio6-supply = <&vcc_1v8>;
+> 	vccio7-supply = <&vcc_3v3>;
+> };
+> 
+> We could do this:
+> 
+> pmu_io_domains: io-domains {
+> 	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
+> 
+> 	io_domain_pmuio1: io-domain@ {
+> 		reg = <0>;
+> 		supply = <&vcc3v3_pmu>;
+> 	};
+> 
+> 	io_domain_pmuio2: io-domain@1 {
+> 		reg = <1>;
+> 		supply = <&vcc3v3_pmu>;
+> 	};
+> 
+> 	...
+> };
+> 
+> This way we could put a driver on each io-domain. When another device
+> needs an io-domain we no longer have to wait for all regulators to
+> appear, but only for the regulator that actually supplies that domain.
+> 
 
-hans
+Mmm, that's something I indeed hadn't thought about. We'd need to handle 
+pmu_io_domains probing (and making available) **some** io-domains 
+devices and not unregister them if other io-domains devices aren't able 
+to probe (e.g. EPROBE_DEFER or invalid configuration for some reason; 
+missing supply in board DTSI). Nothing impossible, haven't developed 
+such a thing yet (I guess it's just kind of a bus mechanism then).
 
+The other issue I'm thinking about ATM is whether we should support 
+upward compatibility (i.e. old io-domain driver with newer dts) and 
+backward compatibility (i.e. new io-domain driver with older dts). This 
+may make things a lot more complex. This is a maintainer choice though.
+
+> With that we could specify the io-domain dependencies at dtsi or core
+> level. A board would only have to make sure that the io-domain that is
+> needed to access the PMIC does not itself need a supply from the very
+> same PMIC to not get into circular dependencies. The supplies for the
+> io-domains are specified at board level anyway, so all that a board
+> would have to do is to skip (or replace with a fixed-regulator) the
+> supply for the io-domain that provides access to the I2C port the PMIC
+> is on. That is not too bad I guess as the regulator that supplies the
+> io-domain to access the PMIC needs to be always-on anyway. In the end if
+> we would turn that regulator off, we would no longer be able to turn it
+> on again.
+> 
+
+Correct.
+
+> One thing about putting the "rockchip,io-domains" property into the
+> pingroups. We would have to put this property into each and every
+> existing pingroup in all dts[i] files and new files would have to be
+> reviewed in this regard as well. The pinctrl driver already has
+> knowledge about all pins, so I think that would be the natural place to
+> also add the knowledge about which io-domain a pin is in. With that in
+> place we would get the knowledge if a io-domain is in use and could
+> disable unused io-domains. I am afraid that the "rockchip,io-domains"
+> property would only be added in places where it actually hurts someone.
+> 
+
+The Device Tree is here to explicit the dependencies between HW blocks, 
+which is what io-domains and pinctrl devices are and rockchip,io-domains 
+the relations between the both of them.
+
+While we know which pin is assigned to which io-domain because it's 
+fixed in the silicon, this information is linking two different HW 
+blocks and linux drivers (and linux devices actually). I'm wondering how 
+exactly you think we should get this link in code without reading the 
+Device Tree? Because we'll have to traverse the list of io-domains 
+devices and find a way to identify them. This very much seems like 
+something DT wanted to avoid? Can you tell me what I'm missing from the 
+big picture?
+
+Thanks for the feedback,
+Cheers,
+Quentin
