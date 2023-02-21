@@ -2,308 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8702469E186
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Feb 2023 14:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33A8A69E1B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Feb 2023 14:52:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233226AbjBUNlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Feb 2023 08:41:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
+        id S233416AbjBUNws (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Feb 2023 08:52:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233880AbjBUNlM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Feb 2023 08:41:12 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2F929171
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Feb 2023 05:41:07 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id j2so4293499wrh.9
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Feb 2023 05:41:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QKiU82LEoOf6cGNfmOJC5Tu0PYvmSx/RudSa5fDEbH0=;
-        b=hUsEPDGNKIn/AG8RnqhMU5bjemV5PdH6pVeOaN0Pfd/eCSdSJJY06okxPbleZ852Zm
-         RLhMKAEJJnkj5hYzL/ozN4jRPvbpa4TS8SxJzdBMiOEuDfFN0TFeMMPTeDrSTJ06kbwF
-         vOpZFv0jX+59zAzZxRT20NhqpeH/84EnwBaovO6A7c68JyszIxJpuniqFjXCR5hG+dTF
-         X/4qlaTYWMNsRLuaDMAI5BVK0+Im0t6Sp+rE0K0rQyeL33gneywsORAJAXPLr74w2TKT
-         GHUHUwIjUSYb0ZCSgnuxVHhBs+cT12q++/35dQhsdDO5cML24cGs2fSjdw6LkyrZz9mH
-         1GKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QKiU82LEoOf6cGNfmOJC5Tu0PYvmSx/RudSa5fDEbH0=;
-        b=J2E0efWkY+0+2yUrHEPokaPNlrDpR1xjVRaCi35c08Lwjh9kdG+0H6vvu50jVCDKXr
-         CVUnxP7bppL8HvPsS8cpVQ+b1oizK+ut1MFlj4TaXjij6zOqWGsrul2jZlFLDGHkZRNP
-         u3XD9WyyDWQatSWcJ1UMjblwIJ6oB7qUpoI4CbqaF35tFAtmWyYFdl7e4ud0ZEJAVdaQ
-         ks6ooExdTIgMkZR6VYRALGt4D/mnBZkQJg6zg/yDUS3X6TilJMOi6vpMm7GPVh0oxETG
-         OZqOezjasfECRSAgaPbw8KrjYOqQ8mCjWCGNXKuGhz4HKMX4MzNJJIC0H6yTpbVUCY/q
-         W1og==
-X-Gm-Message-State: AO0yUKUwRXsZtXYl6MwsFkwL6P61VyIk3kCy9wUe+K0xul7Be4B6+317
-        cIdsXlOMzHyukm3TA5O94hWkpg==
-X-Google-Smtp-Source: AK7set8JxSuTmFSYwHb8WoY3mmX01oI5h0K30e+VP/JMKXLWUgthgHAjYTLZ/D0BmYDbTzgotnqGgw==
-X-Received: by 2002:a5d:4b06:0:b0:2c5:8c04:c6b8 with SMTP id v6-20020a5d4b06000000b002c58c04c6b8mr3691432wrq.10.1676986865769;
-        Tue, 21 Feb 2023 05:41:05 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4c24:722f:312a:76c4])
-        by smtp.gmail.com with ESMTPSA id i16-20020adfefd0000000b002c552c6c8c2sm2525603wrp.87.2023.02.21.05.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Feb 2023 05:41:05 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] bindings: cxx: mark public classes as final
-Date:   Tue, 21 Feb 2023 14:41:03 +0100
-Message-Id: <20230221134103.263443-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S233400AbjBUNwr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Feb 2023 08:52:47 -0500
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA8025E3D;
+        Tue, 21 Feb 2023 05:52:44 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id DB15A604ED;
+        Tue, 21 Feb 2023 14:52:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1676987561; bh=DU0Q/m3FTCWzaxKV8pFjKM5tQt37HfAjM4pJvKiUo2k=;
+        h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+        b=EC3RxDM+mEmohfJ3Etxcjpjlx4ADud/v5jGISZn7iTsfsFpnFGFv3ifpvC5A7YUay
+         Mj6zZgx9f2KaDEpOP3Tdw0xrJO3airlZ1JKtVOPAs+l8ZdoRppcm1wWWWLSspkOYQu
+         WqeZ+uPWh1k2nyTMjCKBRcskjscUqRBvAuWafunigJcg9AYliez0IUy1pBywSQ7zUV
+         p/A2ixwix3qj+EYzHq6rmWOXRYEU9yBR1PyhfShYdRKBQb85Y5NhAKkmwRm+au9H/P
+         blNEAMB8ytVM9G4khUt3OXkvZZkJP9nxPE/yJsO7hirm0lJB8hSxVfnMuRqnG1W7yp
+         Xh4BzPfoJW/KQ==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iWpdHBbm2MPb; Tue, 21 Feb 2023 14:52:39 +0100 (CET)
+Received: from [10.0.1.16] (grf-nat.grf.hr [161.53.83.23])
+        by domac.alu.hr (Postfix) with ESMTPSA id 0A4C2604EA;
+        Tue, 21 Feb 2023 14:52:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1676987559; bh=DU0Q/m3FTCWzaxKV8pFjKM5tQt37HfAjM4pJvKiUo2k=;
+        h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+        b=qrPLaMlPV3GpgOgA783VpPDQ2yNPIBYzmLk83rabjzF5DKa/lS6cn9L0h24JxXqXf
+         N0Tta/l5l90QTBd41BDmRVRW9ubQjewhYHEYOEYKBqyYOcYtts50dgcupbPX6y/uug
+         10i0FsYFj18SjEaz94qBEK3LIjQSAfdm3u0p7Llsb6KmJVGYl+VQO8ItS7A/VjjpUY
+         pTyy6p+1ALCjayeZ3evq5BhxrAJWixUmsu90Wc+sq1A0GxtbBBO8vNUHdNOFkED060
+         osrixGnRd891FdDaGpad++P4qm/1RAk23LJffGqWf7Q9B77MMfJuyFVsYMU/Tdd4nG
+         gWa82RiJEFshg==
+Message-ID: <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr>
+Date:   Tue, 21 Feb 2023 14:52:38 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>
+References: <cdb562c5-040e-687f-a61f-4273fc356ff3@alu.unizg.hr>
+ <fb12086b-ff5f-333a-3199-a8690c4d4bdf@alu.unizg.hr>
+ <Y+j1dbZ0A1mndwXp@smile.fi.intel.com>
+ <36d8e761-58e2-2515-fd1a-65a11731d1b1@alu.unizg.hr>
+ <Y+y5nZJwZ6ykf0Fz@smile.fi.intel.com>
+ <3d96e50b-ed17-9bf5-149b-8a50c7b4cca2@alu.unizg.hr>
+ <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
+ <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr>
+ <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
+Content-Language: en-US, hr
+In-Reply-To: <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 20. 02. 2023. 14:43, Andy Shevchenko wrote:
+> On Mon, Feb 20, 2023 at 02:10:00PM +0100, Mirsad Todorovac wrote:
+>> On 2/16/23 15:16, Bartosz Golaszewski wrote:
+> 
+> ...
+> 
+>> As Mr. McKenney once said, a bunch of monkeys with keyboard could
+>> have done it in a considerable number of trials and errors ;-)
+>>
+>> But here I have something that could potentially leak as well. I could not devise a
+>> reproducer due to the leak being lightly triggered only in extreme memory contention.
+>>
+>> See it for yourself:
+>>
+>> drivers/gpio/gpio-sim.c:
+>>  301 static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+>>  302 {
+>>  303         struct device_attribute *val_dev_attr, *pull_dev_attr;
+>>  304         struct gpio_sim_attribute *val_attr, *pull_attr;
+>>  305         unsigned int num_lines = chip->gc.ngpio;
+>>  306         struct device *dev = chip->gc.parent;
+>>  307         struct attribute_group *attr_group;
+>>  308         struct attribute **attrs;
+>>  309         int i, ret;
+>>  310
+>>  311         chip->attr_groups = devm_kcalloc(dev, sizeof(*chip->attr_groups),
+>>  312                                          num_lines + 1, GFP_KERNEL);
+>>  313         if (!chip->attr_groups)
+>>  314                 return -ENOMEM;
+>>  315
+>>  316         for (i = 0; i < num_lines; i++) {
+>>  317                 attr_group = devm_kzalloc(dev, sizeof(*attr_group), GFP_KERNEL);
+>>  318                 attrs = devm_kcalloc(dev, GPIO_SIM_NUM_ATTRS, sizeof(*attrs),
+>>  319                                      GFP_KERNEL);
+>>  320                 val_attr = devm_kzalloc(dev, sizeof(*val_attr), GFP_KERNEL);
+>>  321                 pull_attr = devm_kzalloc(dev, sizeof(*pull_attr), GFP_KERNEL);
+>>  322                 if (!attr_group || !attrs || !val_attr || !pull_attr)
+>>  323                         return -ENOMEM;
+>>  324
+>>  325                 attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
+>>  326                                                   "sim_gpio%u", i);
+>>  327                 if (!attr_group->name)
+>>  328                         return -ENOMEM;
+>>
+>> Apparently, if the memory allocation only partially succeeds, in the theoretical case
+>> that the system is close to its kernel memory exhaustion, `return -ENOMEM` would not
+>> free the partially succeeded allocs, would it?
+>>
+>> To explain it better, I tried a version that is not yet full doing "all or nothing"
+>> memory allocation for the gpio-sim driver, because I am not that familiar with the
+>> driver internals.
+> 
+> devm_*() mean that the resource allocation is made in a managed manner, so when
+> it's done, it will be freed automatically.
 
-libgpiod C++ types are not meant to be inherited from. They already don't
-even provide virtual destructors so mark them explicitly as final. With
-that the destructors of throwable types can also be made non-virtual.
+Didn't see that one coming ... :-/ "buzzing though the bush ..."
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/cxx/gpiodcxx/chip-info.hpp         |  2 +-
- bindings/cxx/gpiodcxx/chip.hpp              |  2 +-
- bindings/cxx/gpiodcxx/edge-event-buffer.hpp |  2 +-
- bindings/cxx/gpiodcxx/edge-event.hpp        |  2 +-
- bindings/cxx/gpiodcxx/exception.hpp         | 12 ++++++------
- bindings/cxx/gpiodcxx/info-event.hpp        |  2 +-
- bindings/cxx/gpiodcxx/line-config.hpp       |  2 +-
- bindings/cxx/gpiodcxx/line-info.hpp         |  2 +-
- bindings/cxx/gpiodcxx/line-request.hpp      |  2 +-
- bindings/cxx/gpiodcxx/line-settings.hpp     |  2 +-
- bindings/cxx/gpiodcxx/request-builder.hpp   |  2 +-
- bindings/cxx/gpiodcxx/request-config.hpp    |  2 +-
- bindings/cxx/gpiodcxx/timestamp.hpp         |  2 +-
- 13 files changed, 18 insertions(+), 18 deletions(-)
+> The question is: is the lifetime of the attr_groups should be lesser or the
+> same as chip->gc.parent? Maybe it's incorrect to call devm_*() in the first place?
 
-diff --git a/bindings/cxx/gpiodcxx/chip-info.hpp b/bindings/cxx/gpiodcxx/chip-info.hpp
-index ebaf396..b6bd0f8 100644
---- a/bindings/cxx/gpiodcxx/chip-info.hpp
-+++ b/bindings/cxx/gpiodcxx/chip-info.hpp
-@@ -27,7 +27,7 @@ class chip;
- /**
-  * @brief Represents an immutable snapshot of GPIO chip information.
-  */
--class chip_info
-+class chip_info final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/chip.hpp b/bindings/cxx/gpiodcxx/chip.hpp
-index 2eaf155..2553f8c 100644
---- a/bindings/cxx/gpiodcxx/chip.hpp
-+++ b/bindings/cxx/gpiodcxx/chip.hpp
-@@ -38,7 +38,7 @@ class request_config;
- /**
-  * @brief Represents a GPIO chip.
-  */
--class chip
-+class chip final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
-index ff4d238..025517f 100644
---- a/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
-+++ b/bindings/cxx/gpiodcxx/edge-event-buffer.hpp
-@@ -34,7 +34,7 @@ class line_request;
-  * buffer which improves the performance by avoiding needless memory
-  * allocations.
-  */
--class edge_event_buffer
-+class edge_event_buffer final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/edge-event.hpp b/bindings/cxx/gpiodcxx/edge-event.hpp
-index 648165c..4fde561 100644
---- a/bindings/cxx/gpiodcxx/edge-event.hpp
-+++ b/bindings/cxx/gpiodcxx/edge-event.hpp
-@@ -30,7 +30,7 @@ class edge_event_buffer;
- /**
-  * @brief Immutable object containing data about a single edge event.
-  */
--class edge_event
-+class edge_event final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/exception.hpp b/bindings/cxx/gpiodcxx/exception.hpp
-index 98b7bc4..e89b384 100644
---- a/bindings/cxx/gpiodcxx/exception.hpp
-+++ b/bindings/cxx/gpiodcxx/exception.hpp
-@@ -25,7 +25,7 @@ namespace gpiod {
- /**
-  * @brief Exception thrown when an already closed chip is used.
-  */
--class GPIOD_CXX_API chip_closed : public ::std::logic_error
-+class GPIOD_CXX_API chip_closed final : public ::std::logic_error
- {
- public:
- 
-@@ -61,13 +61,13 @@ public:
- 	 */
- 	chip_closed& operator=(chip_closed&& other) noexcept;
- 
--	virtual ~chip_closed();
-+	~chip_closed();
- };
- 
- /**
-  * @brief Exception thrown when an already released line request is used.
-  */
--class GPIOD_CXX_API request_released : public ::std::logic_error
-+class GPIOD_CXX_API request_released final : public ::std::logic_error
- {
- public:
- 
-@@ -103,14 +103,14 @@ public:
- 	 */
- 	request_released& operator=(request_released&& other) noexcept;
- 
--	virtual ~request_released();
-+	~request_released();
- };
- 
- /**
-  * @brief Exception thrown when the core C library returns an invalid value
-  *        for any of the line_info properties.
-  */
--class GPIOD_CXX_API bad_mapping : public ::std::runtime_error
-+class GPIOD_CXX_API bad_mapping final : public ::std::runtime_error
- {
- public:
- 
-@@ -146,7 +146,7 @@ public:
- 	 */
- 	bad_mapping& operator=(bad_mapping&& other) noexcept;
- 
--	virtual ~bad_mapping();
-+	~bad_mapping();
- };
- 
- /**
-diff --git a/bindings/cxx/gpiodcxx/info-event.hpp b/bindings/cxx/gpiodcxx/info-event.hpp
-index 6f3c0b9..e99cbc4 100644
---- a/bindings/cxx/gpiodcxx/info-event.hpp
-+++ b/bindings/cxx/gpiodcxx/info-event.hpp
-@@ -31,7 +31,7 @@ class line_info;
- /**
-  * @brief Immutable object containing data about a single line info event.
-  */
--class info_event
-+class info_event final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/line-config.hpp b/bindings/cxx/gpiodcxx/line-config.hpp
-index b76fdff..8a3335c 100644
---- a/bindings/cxx/gpiodcxx/line-config.hpp
-+++ b/bindings/cxx/gpiodcxx/line-config.hpp
-@@ -30,7 +30,7 @@ class line_settings;
-  * @brief Contains a set of line config options used in line requests and
-  *        reconfiguration.
-  */
--class line_config
-+class line_config final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/line-info.hpp b/bindings/cxx/gpiodcxx/line-info.hpp
-index 189d305..26d25a9 100644
---- a/bindings/cxx/gpiodcxx/line-info.hpp
-+++ b/bindings/cxx/gpiodcxx/line-info.hpp
-@@ -31,7 +31,7 @@ class info_event;
-  * @brief Contains an immutable snapshot of the line's state at the
-  *        time when the object of this class was instantiated.
-  */
--class line_info
-+class line_info final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
-index f9f0322..54a4e00 100644
---- a/bindings/cxx/gpiodcxx/line-request.hpp
-+++ b/bindings/cxx/gpiodcxx/line-request.hpp
-@@ -34,7 +34,7 @@ class line_config;
- /**
-  * @brief Stores the context of a set of requested GPIO lines.
-  */
--class line_request
-+class line_request final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/line-settings.hpp b/bindings/cxx/gpiodcxx/line-settings.hpp
-index c18dc52..b043167 100644
---- a/bindings/cxx/gpiodcxx/line-settings.hpp
-+++ b/bindings/cxx/gpiodcxx/line-settings.hpp
-@@ -29,7 +29,7 @@ class line_config;
- /**
-  * @brief Stores GPIO line settings.
-  */
--class line_settings
-+class line_settings final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/request-builder.hpp b/bindings/cxx/gpiodcxx/request-builder.hpp
-index d3ada53..3216216 100644
---- a/bindings/cxx/gpiodcxx/request-builder.hpp
-+++ b/bindings/cxx/gpiodcxx/request-builder.hpp
-@@ -30,7 +30,7 @@ class request_config;
- /**
-  * @brief Intermediate object storing the configuration for a line request.
-  */
--class request_builder
-+class request_builder final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/request-config.hpp b/bindings/cxx/gpiodcxx/request-config.hpp
-index 70d179e..b099eb1 100644
---- a/bindings/cxx/gpiodcxx/request-config.hpp
-+++ b/bindings/cxx/gpiodcxx/request-config.hpp
-@@ -32,7 +32,7 @@ class chip;
-  * @brief Stores a set of options passed to the kernel when making a line
-  *        request.
-  */
--class request_config
-+class request_config final
- {
- public:
- 
-diff --git a/bindings/cxx/gpiodcxx/timestamp.hpp b/bindings/cxx/gpiodcxx/timestamp.hpp
-index 5efeb4c..7143ab3 100644
---- a/bindings/cxx/gpiodcxx/timestamp.hpp
-+++ b/bindings/cxx/gpiodcxx/timestamp.hpp
-@@ -26,7 +26,7 @@ namespace gpiod {
-  * @brief Stores the edge and info event timestamps as returned by the kernel
-  *        and allows to convert them to std::chrono::time_point.
-  */
--class timestamp
-+class timestamp final
- {
- public:
- 
+Bona fide said, I hope that automatic deallocation does things in the right order.
+I've realised that devm_kzalloc() calls devm_kmalloc() that registers allocations on
+a per driver list. But I am not sure how chip->gc was allocated?
+
+Here is said it is allocated in drivers/gpio/gpio-sim.c:386 in gpio_sim_add_bank(),
+as a part of
+
+	struct gpio_sim_chip *chip;
+	struct gpio_chip *gc;
+
+	gc = &chip->gc;
+
+and gc->parent is set to
+
+	gc->parent = dev;
+
+in line 420, which appears called before gpio_sim_setup_sysfs() and the lines above.
+
+If I understood well, automatic deallocation on unloading the driver goes
+in the reverse order, so lifetime of chip appears to be longer than attr_groups,
+but I am really not that good at this ...
+
+> Or maybe the chip->gc.parent should be changed to something else (actual GPIO
+> device, but then it's unclear how to provide the attributes in non-racy way
+Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
+
+I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
+device expert nor would be appropriate to try the craft not earned ;-)
+
+Regards,
+Mirsad
+
 -- 
-2.37.2
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+  System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
 
