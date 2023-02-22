@@ -2,75 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C91F69F25B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 10:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68DF869F306
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 11:53:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232166AbjBVJ7D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 04:59:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38224 "EHLO
+        id S231414AbjBVKxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 05:53:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231538AbjBVJ7C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 04:59:02 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEB4113D1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 01:58:37 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id y144so8068094yby.12
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 01:58:37 -0800 (PST)
+        with ESMTP id S229560AbjBVKxs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 05:53:48 -0500
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D46737702
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 02:53:47 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id d20so515442vsf.11
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 02:53:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f0bM7PsmE0wf0+asUiEYKD7QDlHNZHf9CvubfF1/sRs=;
-        b=OQUMilmYM4f9BHwyWGIF9no/TYDPrVshmbeFNhazNpGTND4ALChT/6g8StUN/imNLN
-         b2Kq7mcun8v15bEvnSE6Jn0XRSoQoO4IYFYg2gG8TOvt6vBgZLyEOCCWF+UHOIe+AA3m
-         mp+MoTbXPjRc5aIvnDyirfaM6UxRC+RNmaRo6rjZb5tljWE8YMAhSoE4QDJ3wyX6YkQQ
-         q0COW52QwFd11jIR00fprY0l7NsGxznQvRapc9uTeOSN8uZkduY4BYtXfidOZlr0LoPt
-         D3Sj1m25p2AA7LNKYWsnHbmpNly/RZIYd+5JeWe5bsqKZMJOlSWD8lldvPgx19nQugqJ
-         O7gw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1677063226;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=W5MlTtZFsyGu8cOqniDY17GNpI9RMba/aT2wck0Oz68=;
+        b=eJ4LjdJNRD6PN1K1sVfguMxeWrXtWS7OBCcokmQFCu8/CkDcydiAqlU4k0eTlk99sW
+         ZTtcZN19rjm0MuZwFmyul1F1DvUu6S8mcc7/5kbctDYu9WR1OOrIsxqUtESZ2GoZwFDV
+         q9wPhj+Ueth2+65PfSx0kXLJUZTITm7aQW/uJiHAteMq34ARmHTEn/ei5hFdciHYBkcT
+         Ni7wEbzbupqPpXrYCi5Re//SQS5BELEbf/C1iEPRw3aI9upAUqFByqFpDrZ1kb/hNT8a
+         DfszlFgL9rNXOB+zlAQrcxAqXW0o+3Nt57t9QTS0xOQ+L4jGWkkqawNBgAI4FkZ+pAv1
+         iaoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f0bM7PsmE0wf0+asUiEYKD7QDlHNZHf9CvubfF1/sRs=;
-        b=donklKpiv/ecNqHFenMCg3/v1o8EAsoKdbdgWL0ZoO6axb1XaRH25Qh4l7KnRlNeai
-         jsfoQhuEF+aKivachtMSqe5PJFq2DdXLWhAzAzel6OEafsuwrGifuXJU/T0scsddSi2B
-         ZnjuzihevOi0rmUDw8KWqcWiBQSVRf6mTewQwo97kFq3TO0ICK6sLs5WDGI59VqdmqaJ
-         4UPMLDqAK0nqaxTWtXU9zwcjDM5H4YH2j4sKcuxeEBMCZDiWUeevd8vsiyXMDD+wrhsT
-         id24lcT8oE67HrvAv8kAJd9Oq+jgNd6sscaBZ/HKuqG7DJaDEWYPPewBTMlWXpn/F7qZ
-         Sg8Q==
-X-Gm-Message-State: AO0yUKVjjp6N3S3IKXpIbr3FPGEBp36XjF8bkYAHLnTJ/NFhvibkLpp6
-        8+3I8/fcFK6ZSMPu1Cq+hMJQQhVkw5nJlNsQuM6bTQ==
-X-Google-Smtp-Source: AK7set8vuBlOWMUYuYN+7GHWG9+nSHIdD2Y0EYhXoFQmb1bQZHobbsI7ZupueVYF73il0ZfrErH/ZZ/NAh8nxua5/Z8=
-X-Received: by 2002:a25:8a84:0:b0:92c:2340:4dd9 with SMTP id
- h4-20020a258a84000000b0092c23404dd9mr124057ybl.309.1677059916205; Wed, 22 Feb
- 2023 01:58:36 -0800 (PST)
+        d=1e100.net; s=20210112; t=1677063226;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W5MlTtZFsyGu8cOqniDY17GNpI9RMba/aT2wck0Oz68=;
+        b=Wdav6+SdwK+rWTp1gYLInPw9fKDr7dvLvdI07sqSTiGKn4uUOqJJLn+7gHGnWBOQED
+         Aa2dfnqV5/V9TnsvW2XD577mnLAleZ3t28ETFdgZX2Mne/jTQfW+U5pA7v9Nv/31NQBN
+         d+urGI7GMtAxc3YYnto3wOMx5EQahhJoXlW6L4ocx1oJF01q2CbRb0rLNMJbkCzNh5L0
+         1ZD8z9k8R0v03NNwWZsw8kv7x7b6zI8adM8YFPJVypqO0N6OAHvSutSIBrQ+HKWpbJid
+         clXz5KggLBHEL/unm2gDIwuVOFgjfWsV8la7UYot1cPS8Dv3SdKHIBxiHfj24TFs4CNp
+         OrLQ==
+X-Gm-Message-State: AO0yUKU/hdBSltcKcbfZEIAtzNMaAH92kJUBJOSGdZATvrgEovlo4fiA
+        0TJXfAVsGhk9dXnh2Oa8A8XywySnS5TbYblOtIpb/g==
+X-Google-Smtp-Source: AK7set9nra+0DhCEZ5gj5gwhg4JhAvalntACrAyIMPOjTxAz0SwTUEO5HZy5DM7A3sNGO4RZakKK2xk0ww7hpZbswYE=
+X-Received: by 2002:a1f:f284:0:b0:401:8b9a:d80e with SMTP id
+ q126-20020a1ff284000000b004018b9ad80emr1422811vkh.21.1677063226136; Wed, 22
+ Feb 2023 02:53:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20230125143503.1015424-1-bero@baylibre.com> <20230125143503.1015424-10-bero@baylibre.com>
- <8c348b39-67f3-9210-1929-8b2f093be24c@baylibre.com> <Y/XenZUmT7Nh2qGP@kroah.com>
-In-Reply-To: <Y/XenZUmT7Nh2qGP@kroah.com>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Wed, 22 Feb 2023 10:58:25 +0100
-Message-ID: <CAFGrd9qp-p5+8_LNo7G_+sMbRUtCXKOtRSPMxspxTS7H7iBw5g@mail.gmail.com>
-Subject: Re: [PATCH v9 9/9] arm64: dts: mediatek: Initial mt8365-evk support
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, lee@kernel.org, linus.walleij@linaro.org,
-        matthias.bgg@gmail.com, daniel.lezcano@linaro.org,
-        chunfeng.yun@mediatek.com, angelogioacchino.delregno@collabora.com,
-        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
-        sean.wang@mediatek.com, zhiyong.tao@mediatek.com,
-        khilman@baylibre.com
+References: <cdb562c5-040e-687f-a61f-4273fc356ff3@alu.unizg.hr>
+ <fb12086b-ff5f-333a-3199-a8690c4d4bdf@alu.unizg.hr> <Y+j1dbZ0A1mndwXp@smile.fi.intel.com>
+ <36d8e761-58e2-2515-fd1a-65a11731d1b1@alu.unizg.hr> <Y+y5nZJwZ6ykf0Fz@smile.fi.intel.com>
+ <3d96e50b-ed17-9bf5-149b-8a50c7b4cca2@alu.unizg.hr> <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
+ <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr> <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
+ <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr> <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
+In-Reply-To: <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 22 Feb 2023 11:53:35 +0100
+Message-ID: <CAMRc=MeFGMtjoq4fwfJ17pBPAstOAjBi3fcQQrjJJnawzx7W5A@mail.gmail.com>
+Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
+To:     Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,23 +73,129 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Greg,
-Thanks for the update, I appreciate it.
-
-Alex
-
-Le mer. 22 f=C3=A9vr. 2023 =C3=A0 10:21, Greg KH <gregkh@linuxfoundation.or=
-g> a =C3=A9crit :
+On Tue, Feb 21, 2023 at 4:41 PM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
 >
-> On Wed, Feb 22, 2023 at 09:17:39AM +0100, Alexandre Mergnat wrote:
-> > Hi Matthias,
+> On Tue, Feb 21, 2023 at 02:52:38PM +0100, Mirsad Goran Todorovac wrote:
+> > On 20. 02. 2023. 14:43, Andy Shevchenko wrote:
+> > > On Mon, Feb 20, 2023 at 02:10:00PM +0100, Mirsad Todorovac wrote:
+> > > > On 2/16/23 15:16, Bartosz Golaszewski wrote:
+>
+> ...
+>
+> > > > As Mr. McKenney once said, a bunch of monkeys with keyboard could
+> > > > have done it in a considerable number of trials and errors ;-)
+> > > >
+> > > > But here I have something that could potentially leak as well. I could not devise a
+> > > > reproducer due to the leak being lightly triggered only in extreme memory contention.
+> > > >
+> > > > See it for yourself:
+> > > >
+> > > > drivers/gpio/gpio-sim.c:
+> > > >  301 static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+> > > >  302 {
+> > > >  303         struct device_attribute *val_dev_attr, *pull_dev_attr;
+> > > >  304         struct gpio_sim_attribute *val_attr, *pull_attr;
+> > > >  305         unsigned int num_lines = chip->gc.ngpio;
+> > > >  306         struct device *dev = chip->gc.parent;
+> > > >  307         struct attribute_group *attr_group;
+> > > >  308         struct attribute **attrs;
+> > > >  309         int i, ret;
+> > > >  310
+> > > >  311         chip->attr_groups = devm_kcalloc(dev, sizeof(*chip->attr_groups),
+> > > >  312                                          num_lines + 1, GFP_KERNEL);
+> > > >  313         if (!chip->attr_groups)
+> > > >  314                 return -ENOMEM;
+> > > >  315
+> > > >  316         for (i = 0; i < num_lines; i++) {
+> > > >  317                 attr_group = devm_kzalloc(dev, sizeof(*attr_group), GFP_KERNEL);
+> > > >  318                 attrs = devm_kcalloc(dev, GPIO_SIM_NUM_ATTRS, sizeof(*attrs),
+> > > >  319                                      GFP_KERNEL);
+> > > >  320                 val_attr = devm_kzalloc(dev, sizeof(*val_attr), GFP_KERNEL);
+> > > >  321                 pull_attr = devm_kzalloc(dev, sizeof(*pull_attr), GFP_KERNEL);
+> > > >  322                 if (!attr_group || !attrs || !val_attr || !pull_attr)
+> > > >  323                         return -ENOMEM;
+> > > >  324
+> > > >  325                 attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
+> > > >  326                                                   "sim_gpio%u", i);
+> > > >  327                 if (!attr_group->name)
+> > > >  328                         return -ENOMEM;
+> > > >
+> > > > Apparently, if the memory allocation only partially succeeds, in the theoretical case
+> > > > that the system is close to its kernel memory exhaustion, `return -ENOMEM` would not
+> > > > free the partially succeeded allocs, would it?
+> > > >
+> > > > To explain it better, I tried a version that is not yet full doing "all or nothing"
+> > > > memory allocation for the gpio-sim driver, because I am not that familiar with the
+> > > > driver internals.
+> > >
+> > > devm_*() mean that the resource allocation is made in a managed manner, so when
+> > > it's done, it will be freed automatically.
 > >
-> > This is a gentle ping to know if you can take this patch please.
-> > Sorry for the double mail, I screwed up the first send.
+> > Didn't see that one coming ... :-/ "buzzing though the bush ..."
+> >
+> > > The question is: is the lifetime of the attr_groups should be lesser or the
+> > > same as chip->gc.parent? Maybe it's incorrect to call devm_*() in the first place?
+> >
+> > Bona fide said, I hope that automatic deallocation does things in the right order.
+> > I've realised that devm_kzalloc() calls devm_kmalloc() that registers allocations on
+> > a per driver list. But I am not sure how chip->gc was allocated?
+> >
+> > Here is said it is allocated in drivers/gpio/gpio-sim.c:386 in gpio_sim_add_bank(),
+> > as a part of
+> >
+> >       struct gpio_sim_chip *chip;
+> >       struct gpio_chip *gc;
+> >
+> >       gc = &chip->gc;
+> >
+> > and gc->parent is set to
+> >
+> >       gc->parent = dev;
+> >
+> > in line 420, which appears called before gpio_sim_setup_sysfs() and the lines above.
+> >
+> > If I understood well, automatic deallocation on unloading the driver goes
+> > in the reverse order, so lifetime of chip appears to be longer than attr_groups,
+> > but I am really not that good at this ...
 >
-> It's the middle of the merge window, we can't take _ANYTHING_ now.
-> Please wait until after 6.3-rc1 is out.
+> So, the device is instantiated by platform_device_register_full().
 >
-> thanks,
+> It should gone with the platform_device_unregister().
 >
-> greg k-h
+> In case of CONFIG_DEBUG_KOBJECT_RELEASE=y the ->release() can be called
+> asynchronously.
+>
+> So, there are following questions:
+> - is the put_device() is actually called?
+> - is the above mentioned option is set to Y?
+> - if it's in Y, does kmemleak take it into account?
+> - if no, do you get anything new in `dmesg` when enable it?
+>
+> > > Or maybe the chip->gc.parent should be changed to something else (actual GPIO
+> > > device, but then it's unclear how to provide the attributes in non-racy way
+> > Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
+> >
+> > I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
+> > device expert nor would be appropriate to try the craft not earned ;-)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+Mirsad,
+
+I think you fear that the memory allocated for sysfs attributes could
+be accessed after the driver is detached from the simulated GPIO
+device? This is not possible as sysfs handles that gracefully (by
+removing all sysfs attributes with driver_sysfs_remove()) before
+freeing devres resources. You can test that yourself by instantiating
+a gpio-sim device, opening and holding a file descriptor to one of the
+sysfs attributes, disabling the device and then trying to read from
+said fd - it will return -ENODEV.
+
+Let me know if you actually mean something else?
+
+Bart
