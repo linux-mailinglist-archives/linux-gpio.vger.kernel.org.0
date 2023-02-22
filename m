@@ -2,77 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BCD669F748
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 16:01:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA5AB69FB19
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 19:40:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232321AbjBVPBx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 10:01:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48168 "EHLO
+        id S231304AbjBVSkR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 13:40:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232363AbjBVPBa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 10:01:30 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EC53BD84;
-        Wed, 22 Feb 2023 07:01:02 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id cy6so26050256edb.5;
-        Wed, 22 Feb 2023 07:01:02 -0800 (PST)
+        with ESMTP id S231312AbjBVSkQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 13:40:16 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1804108F;
+        Wed, 22 Feb 2023 10:39:58 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id i11so2585243wrp.5;
+        Wed, 22 Feb 2023 10:39:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yN89DAJMRBXcVJVWoF647sPGNR5k1aPb4CYJyqyPfsI=;
-        b=FuFZGNy7pX+t95imynP1lkrz40gOGA5ZzTtvPgFiAYCISthy8lxNE3YoHVqsxxV+Ex
-         DT3rpldKsci1tcwzKXZRRS076maWBH8qDuEWAfUKiwkMN9fwgLEc23anls1RiUVhQIMS
-         fHWlFzbE6EXvxSelKkIyJ38VlUap+4xJF4VCMvxLvE99JrIwIc4sQGJEDkLonHjElfly
-         XDLMqSA1+n38So5Ogt7IL928vevQyjWGZVmuEz+9p8Y7CzXR0jcp1a3vx9PfDbKWc05A
-         +uR9CupPXC3leO0dhtIhBNCAjNpXAYQJ3EXlMwrrsjDgpkVYipLySJiEGXmKj2tbGEUx
-         JEEQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=91+V2URQd5z0cRWdOdijFthyyEN9gwUVNKx2OIXRm+M=;
+        b=luRFZSblmPWY3gvrk6yKViXpppEt290S64jD0a09c5fdl2Wa+zgTS/VVVcLaeZtGf1
+         uQc5DXdqqz1i38W1yT70ERXNJiB92MhivB/TLlXOsjqbGBOEDn1YmsVCAyVyitmZEi+V
+         ex1usBk+Gq8bgb5cFOGt1bzMGObP/5AaaIJq8A7KCF7pCl693CW+ZZPd0NIFwJsBP5y4
+         eMy+V9aV2/NCp7+OpslssgUNIdTwKfTlw4iLNITnyTSGaNfk2ouKTJnx7PWmbcAkNCXT
+         KSnq0GDCosZ1Gz7uM4hNy2HQQTaq6TJIGWSGQjmnHB6JsLLQ5KM/1/SAimU4XXSZhm4J
+         QVJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yN89DAJMRBXcVJVWoF647sPGNR5k1aPb4CYJyqyPfsI=;
-        b=hI7XqgJTdGkrY8cBZzgBE6l8r7eqjWTxqBZ67j5f5nDCU48ed2ErhZ4iyjrvpVVa2K
-         W6x29EpdVivrOLkG3G9gme/ZZUK9OIU4uOH98FPtbHjWOqTQ8uTPRg5BE+tF9Uh3sJKo
-         b8L2zn/SMOnFYOZkM7l5IN0J50/xJKufOImeRMN07kMb+ext6d+QNHTPXKCO2KlpSePZ
-         8kc3er9bwhyB0IZHM3Yn1FLgo5VmwLoM1e8mkj9yoZhHATHue92a5WivCAj5Nicbol4L
-         vimQnmZssu+H8oy2Tf9Yf0j9VnqPYObcbl/mV69hNBDYJSuWH/K5koCqtIPrqAl1Krww
-         73Xg==
-X-Gm-Message-State: AO0yUKX4OblJc52vTQ/GdiWo0VFtfbWR9+RfiRfSxqC/JmoTJ6nK4yhr
-        lTzD52AVDXqJ8hZm159zr+w=
-X-Google-Smtp-Source: AK7set+P7v0pcUhYROkp+tnbnV1UtvndPMUZHU/DOCFNvfgS5U3L/ZWNhvfrVvrdbbTqNh6LCW/G4g==
-X-Received: by 2002:a17:907:6d03:b0:8b3:6da3:c788 with SMTP id sa3-20020a1709076d0300b008b36da3c788mr27810734ejc.51.1677078057740;
-        Wed, 22 Feb 2023 07:00:57 -0800 (PST)
-Received: from einstein.dilieto.eu (smtp.dilieto.eu. [188.68.43.228])
-        by smtp.gmail.com with ESMTPSA id j16-20020a508a90000000b004873927780bsm3685433edj.20.2023.02.22.07.00.56
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=91+V2URQd5z0cRWdOdijFthyyEN9gwUVNKx2OIXRm+M=;
+        b=4P6yJdplc6ogTSfdItm9NLPwW4+5JpG1/7ZnOio2ml0dBhpr2ciJTg2ub1IV0JnfO9
+         qOTVjxjikc18EJvZbSrvOUQAJwHR2Mk4eU7UTmx/lOAVZPuwgebXWawuwatV8ARSehBT
+         P+TIBu311i9Jc7b+gZ92cKJpC1iF6Q7F8KCwlESkDzcVTr219eLo55SE1Itm79qahubF
+         T69UjVGdu8Wz5PFpVKcK5F50KkKHHVG9stExCBn+A+5q8xweYa4OLNA15UlnL+ZqbQsJ
+         FHNgndVuWrZXmPoyNNAwbmvr6ifWgc00pYg8g4aS5c2n2k4zMfVtTcxOeCRZ3r5n0Yz2
+         obHQ==
+X-Gm-Message-State: AO0yUKVRP0N9M+xaFDUQAR+APfQOk5ch38oCn+6CtwKVo0cawkIyoqaH
+        RRpOxo/Mkxk1BAMRSfgX6QM=
+X-Google-Smtp-Source: AK7set/Ay1pTP7dhUzrpNZ4kePGXVZQAHKH5ICQPaMGVsqN5CiW4i4RTql7o2vSio2A1mf+Qef4G7A==
+X-Received: by 2002:a5d:6305:0:b0:2c7:e1f:60eb with SMTP id i5-20020a5d6305000000b002c70e1f60ebmr802521wru.69.1677091197184;
+        Wed, 22 Feb 2023 10:39:57 -0800 (PST)
+Received: from arinc9-PC.lan ([37.120.152.236])
+        by smtp.gmail.com with ESMTPSA id l18-20020a5d4112000000b002c56179d39esm9372845wrp.44.2023.02.22.10.39.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Feb 2023 07:00:57 -0800 (PST)
-Date:   Wed, 22 Feb 2023 16:00:54 +0100
-From:   Nicola Di Lieto <nicola.dilieto@gmail.com>
-To:     andy.shevchenko@gmail.com
-Cc:     Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+        Wed, 22 Feb 2023 10:39:56 -0800 (PST)
+From:   arinc9.unal@gmail.com
+X-Google-Original-From: arinc.unal@arinc9.com
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de>
- <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
- <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
- <Y/YPtJK8nVBthCML@surfacebook>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+Subject: [RFC PATCH 00/16] pinctrl: ralink: fix ABI, improve driver, move to mediatek, improve dt-bindings
+Date:   Wed, 22 Feb 2023 21:39:16 +0300
+Message-Id: <20230222183932.33267-1-arinc.unal@arinc9.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Y/YPtJK8nVBthCML@surfacebook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -83,15 +85,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy
+This is an ambitious effort I've been wanting to do for months.
 
-On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com wrote:
->
->Seems not much interest neither from community nor from author. Maybe later
->people will look into this?
->
+Straight off the bat, I'm fixing the ABI that I broke a while back, by
+reintroducing the ralink,rt2880-pinmux compatible string.
 
-It's not lack of interest, but rather lack of time. I should be able to 
-have a look at this sometime the week after next.
+If you take a look at the schema for mt7620 and rt305x, some functions got
+multiple lists for groups. Like refclk on mt7620. Because mt7620 and
+mt7628/mt7688 SoCs use the same compatible string, it's impossible to
+differentiate on the binding which SoC a devicetree is actually for.
+Therefore, the binding will allow all groups listed for that function. For
+example, if the SoC is mt7620, only the refclk function for the mdio group
+can be used. If one were to put "spi cs1" as the function there, there
+wouldn't be a warning.
 
-Nicola
+I address this by introducing new compatible strings for these SoCs, then
+split the schemas. I also separate mt7628/mt7688 from mt7620 pinctrl
+subdriver in the process.
+
+I wanted to split the rt305x driver too but too much code would be reused
+so I backed down from that.
+
+Ralink was acquired by MediaTek in 2011. These SoCs have been rebranded as
+MediaTek. We're moving the Ralink pinctrl driver to MediaTek, and rename
+the schemas to mediatek.
+
+I've renamed the ralink core driver to mtmips. I decided to call the core
+mtmips as I've seen folks from MediaTek use the same name when they added
+support for MT7621 pinctrl on U-Boot. Feel free to comment on this.
+
+The MTMIPS pinctrl driver requires rt_sysc_membase from
+arch/mips/ralink/of.c, so, for COMPILE_TEST to be useful, RALINK must be
+selected. These headers, asm/mach-ralink/ralink_regs.h and
+asm/mach-ralink/mt7620.h, from arch/mips/include are also required but
+they can easily be included:
+
+ifeq ($(CONFIG_COMPILE_TEST),y)
+CFLAGS_pinctrl-mtmips.o			+= -I$(srctree)/arch/mips/include
+endif
+
+Sergio, do you see a way to make the pinctrl driver independent of
+architecture code? At least avoid using rt_sysc_membase.
+
+dtbs_check will print warnings for DTs with the old strings as it will
+match multiple bindings. I assume that's acceptable in order to have the
+things properly documented without breaking the ABI. The bindings will work
+fine with the new compatible strings.
+
+I could define the checks under $defs:, then refer to it if the compatible
+string is the one which would work fine. Or I could put only the new
+compatible strings on the documentation. What are your thoughts Krzysztof,
+Rob?
+
+Arınç
+
+
