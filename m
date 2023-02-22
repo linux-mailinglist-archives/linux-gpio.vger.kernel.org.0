@@ -2,165 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B433869F4A2
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 13:35:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C36969F4A8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 13:36:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbjBVMfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 07:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
+        id S231266AbjBVMgk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 07:36:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231567AbjBVMfK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 07:35:10 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19AF63346A
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:35:08 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id b12so29694832edd.4
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:35:08 -0800 (PST)
+        with ESMTP id S230129AbjBVMgj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 07:36:39 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEEF38EAF
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:36:36 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id d7so2825218vsj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:36:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=txTrJv7AYzOlX/1y7v9G6WCXuMLyCZxtPmCMzn1Diaw=;
-        b=L8TSdPMA0EpPJqk7xECFclC0YVKb6uGYx8SoFg/ipiJYYy+pj8AiNc75Gk5kRNCdlP
-         LwdZKKbtCD+R7pB9x2uUQ5vbQeSJ9P++trIAjlGfkDVFwiwVslecAouyw5MgssccSJup
-         1O3RKsaOpyDspPyUYLH4ANTpnyY9aRL/0PsSbMjxgTJg4qpTC8dsCE8/LpOec3qQwgIr
-         u1XeTgI2ZSrX4BAqfYG5tck+gP6dGgWIQ1z71APT6olhsT0SX09ksIfev+EnlxLwdmAR
-         3ZzkOtbpEbHZMdmYHisvFpzGN2kgP9o+eAS3D7ShmGByGgHy6JHXK2NXeQjuX8eIftqB
-         3mww==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1677069396;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zXKWn6cF0+CHQo35voABdeN+lewIiOJOlV9cWuYDSxI=;
+        b=PUHckDVC8tKSZ0FAPE61kmkSmeyKm/Sq5RkaIgu6wIIJxIerQr7AjEhEFH7eT6bLiA
+         9v0U1XMDwjI3dU30Dpk608KiP/t1K01NijDSLrj4bLEvZI4Hdsr5kCVDXSLSLx4fS8hm
+         pZsW5awatXhXA0ZCWzMMzHA3Qj6gVJnA4THx9mduF0fvhSBk2ZtOmDj8uPY7BsNzihig
+         h8l0KiIHI59fGPFBx8y82YZEjc+/1ytoBD1LVzVgAg8/PX0MaFY/yAsN/U33Q99ZMZ7y
+         I66s3Hhde85aS2Z79FJh7XLTeEx7QOHsBV35PeEXmAM6rGUcQMFElPvXkPXuhD9ywdvv
+         1iFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=txTrJv7AYzOlX/1y7v9G6WCXuMLyCZxtPmCMzn1Diaw=;
-        b=HZ+pP5Rk2QPEulKB3YGzaLMC/UxtpXUQxnDTONrvbgPfpqnedr3mbrbDNGmh0tNCZy
-         JcE7lQ7/vFEKdyv18qqspgajZzdhuqXscjQ0s5xbiJvbSyCbbe8snkz77fkSBLXfxybS
-         tabh3vCgUzXvyD3h0k4lvr2t3aX0EpbsY88LI16RolNcm0z7G125uixY5/B5Z595BSQp
-         aoo6RNQtRzKcNLbJbtpQoYBlELlxRYww2W7JKZ2ggqlf6k//+8T4/Ox/K5GCM0ErzXns
-         vKgaTrcBQQzNTM9PeB3MFMJUl6ljrvGXiaRj2O75WX5mkGUydJslmefp/54YNrBhSk87
-         jpMg==
-X-Gm-Message-State: AO0yUKXwlULQNDS/cdB9tplgWsJ897uYY9BSWQz1HJXdpTkZ1Z0PEpm3
-        tyIce7a5wevbpjCFvYWbxfoEI8zszuE8AOif
-X-Google-Smtp-Source: AK7set8wGiT4LP0jX+AFzBDqKGFnMBzM3LkPeXWZbxr5Wl65sXW4zkMTqAaYezsLEqG1iGUv1KMRJA==
-X-Received: by 2002:a17:906:240f:b0:8b2:b711:5e62 with SMTP id z15-20020a170906240f00b008b2b7115e62mr18521969eja.52.1677069306590;
-        Wed, 22 Feb 2023 04:35:06 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id bw10-20020a170906c1ca00b008b133f9b33dsm8340957ejb.169.2023.02.22.04.35.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Feb 2023 04:35:06 -0800 (PST)
-Message-ID: <18d1048e-c66b-fea8-2755-6c1c6e23fde9@linaro.org>
-Date:   Wed, 22 Feb 2023 13:35:04 +0100
+        d=1e100.net; s=20210112; t=1677069396;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zXKWn6cF0+CHQo35voABdeN+lewIiOJOlV9cWuYDSxI=;
+        b=oDRAIY9vUGmYaI0Jt82Rlf/GbVz6BhTMtDOBKZYhiYlaVk9NE2JZ9CWmJJndCjejtp
+         tao7qjvTQytF11JUvH7eS3vu9rd7zYNxzjIVGu9PlHuFcZU2ZIn0sjDf3wKiOGjpcOeQ
+         aDDwS+HtaOVl4BV0NDtiouevYUmXrEvoAsJbUUsrMBTwJ8SLWAplN8yakgDAYnpK2eXP
+         DH2uUUn2/09GMIqqmH/xyJ0kbWH4X9cceKVExF/HY+xDoWnejz0FFhkikpegjkkSdpR9
+         e6GEyw6D0VNQfz4CAw8/Uzi7AxbzlvXwgpj4chAOWEMIyYB/CYBlNqLC18h1pUt4Dera
+         yTnA==
+X-Gm-Message-State: AO0yUKX2UHo/DhtfFoCgkS7hnWfI984mtjb1GedCnrE7tBr8m7LzT1xi
+        5yGgck0HHc2gfbyrmyE3cHpmY8HCWq2/Q3v5sDbLMg==
+X-Google-Smtp-Source: AK7set85UM52dIk/6l4hx5GXRC7iLhadz2pmT4Ls+DJUhrK2hIbprOPMz8lcmEbezXBdzGi7D/XisucsvME9ys1yn6o=
+X-Received: by 2002:a67:e1cc:0:b0:3ea:5896:84b9 with SMTP id
+ p12-20020a67e1cc000000b003ea589684b9mr1436878vsl.75.1677069395949; Wed, 22
+ Feb 2023 04:36:35 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 4/4] dt-bindings: gpio: Add Loongson-1 GPIO
-To:     Keguang Zhang <keguang.zhang@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-References: <20230222111213.2241633-1-keguang.zhang@gmail.com>
- <20230222111213.2241633-5-keguang.zhang@gmail.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230222111213.2241633-5-keguang.zhang@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <CA+G9fYs4JsmNxX4+W=wijfSPdDsOy=SWLBSitZper5ncPpdxqA@mail.gmail.com>
+In-Reply-To: <CA+G9fYs4JsmNxX4+W=wijfSPdDsOy=SWLBSitZper5ncPpdxqA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 22 Feb 2023 13:36:25 +0100
+Message-ID: <CAMRc=MdRev1NBz9ga0jcDKD0oZy_W-7caq9R0tQkUG86rBQ=3Q@mail.gmail.com>
+Subject: Re: arm64: libgpiod: refcount_t: underflow; use-after-free.
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ferry Toth <fntoth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>, warthog618@gmail.com,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/02/2023 12:12, Keguang Zhang wrote:
-> Add devicetree binding document for Loongson-1 GPIO.
-> 
-> Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
-> ---
->  .../bindings/gpio/loongson,ls1x-gpio.yaml     | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
-> new file mode 100644
-> index 000000000000..e4ab49d48fae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/loongson,ls1x-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson-1 GPIO controller
-> +
-> +maintainers:
-> +  - Keguang Zhang <keguang.zhang@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls1x-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 32
+On Mon, Feb 20, 2023 at 3:59 PM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> Following kernel warning notices on qemu-arm64, qemu-arm and also on devices
+> running Linux version v6.2.0 while running libgpiod tests.
+>
 
-Isn't this fixed at 32? Do you have hardware with different number of GPIOs?
+I don't see it on v6.2 with libgpiod v1.6.4. Seeing the output of the
+test script, it seems you're using an old version - what is it?
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - '#gpio-cells'
+> + ./gpiod.sh /opt/libgpiod/bin/
 
-Use consistent quotes - either " or '
+What's in gpiod.sh?
 
-> +  - ngpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    gpio0: gpio@1fd010c0 {
-> +        compatible = "loongson,ls1x-gpio";
-> +        reg = <0x1fd010c0 0x4>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        ngpios = <32>;
-> +    };
-> +
-> +  - |
-> +    gpio1: gpio@1fd010c4 {
-> +        compatible = "loongson,ls1x-gpio";
-> +        reg = <0x1fd010c4 0x4>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        ngpios = <32>;
-> +    };
+Bart
 
-These are two the same examples, keep only one.
-
-Best regards,
-Krzysztof
-
+>   [INFO]    libgpiod test suite
+>   [INFO]    117 tests registered
+>   [INFO]    checking the linux kernel version
+>   [INFO]    kernel release is v6.2.0 - ok to run tests
+>   [INFO]    using gpio-tools from '/usr/bin'
+> [   10.499036] ------------[ cut here ]------------
+> [   10.499656] refcount_t: underflow; use-after-free.
+> [   10.500264] WARNING: CPU: 2 PID: 291 at lib/refcount.c:28
+> refcount_warn_saturate+0xf4/0x144
+> [   10.501306] Modules linked in: gpio_mockup(-) cfg80211 bluetooth
+> rfkill crct10dif_ce fuse drm
+> [   10.502364] CPU: 2 PID: 291 Comm: gpiod-test Not tainted 6.2.0 #1
+> [   10.503229] Hardware name: linux,dummy-virt (DT)
+> [   10.503883] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   10.505331] pc : refcount_warn_saturate+0xf4/0x144
+> [   10.505723] lr : refcount_warn_saturate+0xf4/0x144
+> [   10.506115] sp : ffff800008983cd0
+> [   10.506391] x29: ffff800008983cd0 x28: ffff0000c4c4c100 x27: 0000000000000000
+> [   10.506961] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+> [   10.507533] x23: 0000000000000200 x22: ffff0000c4e66800 x21: ffff0000c7734640
+> [   10.508104] x20: 0000000000000001 x19: ffff0000c7734600 x18: ffffffffffffffff
+> [   10.508677] x17: 3d4d455453595342 x16: ffffcf0234432020 x15: ffff800088983957
+> [   10.509424] x14: 0000000000000000 x13: 2e656572662d7265 x12: 7466612d65737520
+> [   10.510003] x11: 3b776f6c66726564 x10: ffffcf02365db580 x9 : ffffcf0233b20138
+> [   10.510575] x8 : 00000000ffffefff x7 : ffffcf02365db580 x6 : 0000000000000001
+> [   10.511145] x5 : ffffcf023655f000 x4 : ffffcf023655f2e8 x3 : 0000000000000000
+> [   10.511721] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c4c4c100
+> [   10.512294] Call trace:
+> [   10.512494]  refcount_warn_saturate+0xf4/0x144
+> [   10.512971]  kobject_put+0x164/0x220
+> [   10.513224]  fwnode_remove_software_node+0x44/0x60
+> [   10.513554]  gpio_mockup_unregister_pdevs+0x54/0x70 [gpio_mockup]
+> [   10.513970]  gpio_mockup_exit+0x10/0x328 [gpio_mockup]
+> [   10.514322]  __arm64_sys_delete_module+0x190/0x2a0
+> [   10.514653]  invoke_syscall+0x50/0x120
+> [   10.514915]  el0_svc_common.constprop.0+0x104/0x124
+> [   10.515277]  do_el0_svc+0x44/0xcc
+> [   10.515541]  el0_svc+0x30/0x94
+> [   10.515788]  el0t_64_sync_handler+0xbc/0x13c
+> [   10.516126]  el0t_64_sync+0x190/0x194
+> [   10.516419] ---[ end trace 0000000000000000 ]---
+>
+>
+> Build and test logs,
+> https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.2/testrun/14856342/suite/libgpiod/test/ctxless-get-value-single-line/log
+> https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.2/testrun/14856342/suite/libgpiod/tests/
+>
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
