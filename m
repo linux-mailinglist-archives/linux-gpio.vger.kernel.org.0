@@ -2,65 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D86A69F3DA
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 13:01:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24A5169F405
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 13:07:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231485AbjBVMBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 07:01:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49070 "EHLO
+        id S229561AbjBVMHR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 07:07:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjBVMBr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 07:01:47 -0500
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620BA3802E
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:01:43 -0800 (PST)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-536cd8f6034so75831057b3.10
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8o3pJCIsbKHYK4QxN/c8k8ZbgMH244wreI3in8ggE10=;
-        b=qCao9UvR3lJq5LEpNfBYNnBw+NE7SSDItGZkUXW/mt3K3vOLYFpVp41V0z4Ohf4M/q
-         CKI6dF/A/xXkMzhKFIGUgdTO3rIFIHyVyHDiqVPqLbpi6hqZsoDf3NZbJCOtfBf1V750
-         Eo27xZOx32TtfmTHkVC4G04Pqjir9oPDoAjNoGpeltChVKuKRwqrV8FPIDlcqkYyHV2K
-         UG245cl2ghjCgVI/pDkUcDJSZHKfsZiYA7ELOVgy5PNlGOWYBXD6aUoxcmJSeCqnA60X
-         nZFZCGHmovR9lHU/B0+86RETKmcuHsUGttMgpBQmGQnf0CzzFSkmzYfVx2lvpTbteSgE
-         rGFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8o3pJCIsbKHYK4QxN/c8k8ZbgMH244wreI3in8ggE10=;
-        b=uWnQAEPolSaJrpRNbTPB53drFpQSd5whgHdXaouoaAjQ5myUlmlW7+I0M2AGK5ufVt
-         mcE/p2FSz1yb6QdiRnGYhNE4zKqhu6qtzXk4xk+s5yGGzZQ60jHSa14HCOvfI2kgAlPx
-         JEIaGcS1f1z4Mzh5gNUK0xvsJh3/2veG7kspk8YbzMgDmJ4/hqcVn6FVqRlkQxWTiG9l
-         gqxxQXzN0q4DMaHabqw0G6MD+pmL8Ou94mk39yJ+TNSGXoJjC1oL6sbZHcQgqpbsXmUg
-         olb7u9muYpg8Ca4LB/vMU5dt/j+w/tPCB2WqRpA+HWUSsMz6sbTgfac+KI0l0ibKVIOD
-         LWcQ==
-X-Gm-Message-State: AO0yUKVsaRfljqRXGI0onU432P5uJ0FUEbZrCwuPZcC7HuTyJVIjp9D8
-        MQByWmQHQnG/RaNPg4+8KXqyXPC8BeU5x0V0fGFzjw==
-X-Google-Smtp-Source: AK7set+I9yvUgsTMKP+Q14xXA0XgHXg6IMpqWXsxrBuhdaPynDdaQj0QgtdcOTyyi+OPQzCpfQzEvb2RGSYCwjyZt7o=
-X-Received: by 2002:a81:ac5c:0:b0:533:9b80:a30e with SMTP id
- z28-20020a81ac5c000000b005339b80a30emr915933ywj.10.1677067302370; Wed, 22 Feb
- 2023 04:01:42 -0800 (PST)
+        with ESMTP id S231877AbjBVMGm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 07:06:42 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B646338654
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 04:06:05 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pUnsh-0007JK-Dq; Wed, 22 Feb 2023 13:05:55 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1pUnse-0006aE-Ov; Wed, 22 Feb 2023 13:05:52 +0100
+Date:   Wed, 22 Feb 2023 13:05:52 +0100
+From:   Sascha Hauer <sha@pengutronix.de>
+To:     Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Cc:     Quentin Schulz <foss+kernel@0leil.net>, linus.walleij@linaro.org,
+        heiko@sntech.de, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Riesch <michael.riesch@wolfvision.net>
+Subject: Re: [RFC PATCH 1/1] pinctrl: rockchip: add support for per-pinmux
+ io-domain dependency
+Message-ID: <20230222120552.GL10447@pengutronix.de>
+References: <20220802095252.2486591-1-foss+kernel@0leil.net>
+ <20220802095252.2486591-2-foss+kernel@0leil.net>
+ <20230215102328.GB13829@pengutronix.de>
+ <85e042b3-1b59-5ef0-8510-50372cefa197@theobroma-systems.com>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 22 Feb 2023 13:01:31 +0100
-Message-ID: <CACRpkdY_jnEF=qcrkqtZHQ7U=8CmY5Uaz61STHw0nYF_p6-PRg@mail.gmail.com>
-Subject: [GIT PULL] pin control bulk changes for v6.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85e042b3-1b59-5ef0-8510-50372cefa197@theobroma-systems.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,484 +58,177 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Tue, Feb 21, 2023 at 01:14:28PM +0100, Quentin Schulz wrote:
+> Hi Sascha,
+> 
+> On 2/15/23 11:23, Sascha Hauer wrote:
+> > 
+> > Hi Quentin,
+> > 
+> > On Tue, Aug 02, 2022 at 11:52:52AM +0200, Quentin Schulz wrote:
+> > > From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+> > > 
+> > > On some Rockchip SoCs, some SoC pins are split in what are called IO
+> > > domains.
+> > > 
+> > > An IO domain is supplied power externally, by regulators from a PMIC for
+> > > example. This external power supply is then used by the IO domain as
+> > > "supply" for the IO pins if they are outputs.
+> > > 
+> > > Each IO domain can configure which voltage the IO pins will be operating
+> > > on (1.8V or 3.3V).
+> > > 
+> > > There already exists an IO domain driver for Rockchip SoCs[1]. This
+> > > driver allows to explicit the relationship between the external power
+> > > supplies and IO domains[2]. This makes sure the regulators are enabled
+> > > by the Linux kernel so the IO domains are supplied with power and
+> > > correctly configured as per the supplied voltage.
+> > > This driver is a regulator consumer and does not offer any other
+> > > interface for device dependency.
+> > > 
+> > > However, IO pins belonging to an IO domain need to have this IO domain
+> > > correctly configured before they are being used otherwise they do not
+> > > operate correctly (in our case, a pin configured as output clock was
+> > > oscillating between 0 and 150mV instead of the expected 1V8).
+> > > 
+> > > In order to make this dependency transparent to the consumer of those
+> > > pins and not add Rockchip-specific code to third party drivers (a camera
+> > > driver in our case), it is hooked into the pinctrl driver which is
+> > > Rockchip-specific obviously.
+> > 
+> > I don't know the status of this patch, but I haven't found anything
+> > newer, so please point me to newer patches if the discussion has
+> > continued somewhere else. Anyway, here are some thoughts about this
+> > patch
+> 
+> No new version, a bit drowning in work but we are dependent on this patchset
+> for an adapter board we want to upstream so I'll have to get back to it in
+> the next few weeks/months.
+> 
+> > 
+> > I think the general approach is fine but could be improved. Right now we
+> > have one io-domain device with several supplies. That means once one
+> > consumer needs an io-domain, the supplies for all domains need to be
+> > probed beforehand.  We could relax this requirement by adding a subnode
+> > for each domain, so instead of doing this:
+> > 
+> > pmu_io_domains: io-domains {
+> > 	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
+> > 	pmuio1-supply = <&vcc3v3_pmu>;
+> > 	pmuio2-supply = <&vcc3v3_pmu>;
+> > 	vccio1-supply = <&vccio_acodec>;
+> > 	vccio2-supply = <&vcc_1v8>;
+> > 	vccio3-supply = <&vccio_sd>;
+> > 	vccio4-supply = <&vcc_1v8>;
+> > 	vccio5-supply = <&vcc_3v3>;
+> > 	vccio6-supply = <&vcc_1v8>;
+> > 	vccio7-supply = <&vcc_3v3>;
+> > };
+> > 
+> > We could do this:
+> > 
+> > pmu_io_domains: io-domains {
+> > 	compatible = "rockchip,rk3568-pmu-io-voltage-domain";
+> > 
+> > 	io_domain_pmuio1: io-domain@ {
+> > 		reg = <0>;
+> > 		supply = <&vcc3v3_pmu>;
+> > 	};
+> > 
+> > 	io_domain_pmuio2: io-domain@1 {
+> > 		reg = <1>;
+> > 		supply = <&vcc3v3_pmu>;
+> > 	};
+> > 
+> > 	...
+> > };
+> > 
+> > This way we could put a driver on each io-domain. When another device
+> > needs an io-domain we no longer have to wait for all regulators to
+> > appear, but only for the regulator that actually supplies that domain.
+> > 
+> 
+> Mmm, that's something I indeed hadn't thought about. We'd need to handle
+> pmu_io_domains probing (and making available) **some** io-domains devices
+> and not unregister them if other io-domains devices aren't able to probe
+> (e.g. EPROBE_DEFER or invalid configuration for some reason; missing supply
+> in board DTSI). Nothing impossible, haven't developed such a thing yet (I
+> guess it's just kind of a bus mechanism then).
+> 
+> The other issue I'm thinking about ATM is whether we should support upward
+> compatibility (i.e. old io-domain driver with newer dts) and backward
+> compatibility (i.e. new io-domain driver with older dts). This may make
+> things a lot more complex. This is a maintainer choice though.
 
-this is the big pull request for v6.3 pin control.
+New io-domain driver with older dts is easy enough to handle as the new
+io-domain driver could fall back to old behaviour when the io-domains
+node doesn't have subnodes.
+Old io-domain driver with new dts doesn't work though, but I think is
+also less important.
 
-The details are in the signed tag as usual, nothing special,
-notably a lot of new Qualcomm hardware is supported, a
-RISC-V reference SoC and then some cleanups both in
-code and device tree bindings.
+> 
+> > With that we could specify the io-domain dependencies at dtsi or core
+> > level. A board would only have to make sure that the io-domain that is
+> > needed to access the PMIC does not itself need a supply from the very
+> > same PMIC to not get into circular dependencies. The supplies for the
+> > io-domains are specified at board level anyway, so all that a board
+> > would have to do is to skip (or replace with a fixed-regulator) the
+> > supply for the io-domain that provides access to the I2C port the PMIC
+> > is on. That is not too bad I guess as the regulator that supplies the
+> > io-domain to access the PMIC needs to be always-on anyway. In the end if
+> > we would turn that regulator off, we would no longer be able to turn it
+> > on again.
+> > 
+> 
+> Correct.
+> 
+> > One thing about putting the "rockchip,io-domains" property into the
+> > pingroups. We would have to put this property into each and every
+> > existing pingroup in all dts[i] files and new files would have to be
+> > reviewed in this regard as well. The pinctrl driver already has
+> > knowledge about all pins, so I think that would be the natural place to
+> > also add the knowledge about which io-domain a pin is in. With that in
+> > place we would get the knowledge if a io-domain is in use and could
+> > disable unused io-domains. I am afraid that the "rockchip,io-domains"
+> > property would only be added in places where it actually hurts someone.
+> > 
+> 
+> The Device Tree is here to explicit the dependencies between HW blocks,
+> which is what io-domains and pinctrl devices are and rockchip,io-domains the
+> relations between the both of them.
+> 
+> While we know which pin is assigned to which io-domain because it's fixed in
+> the silicon, this information is linking two different HW blocks and linux
+> drivers (and linux devices actually). I'm wondering how exactly you think we
+> should get this link in code without reading the Device Tree? Because we'll
+> have to traverse the list of io-domains devices and find a way to identify
+> them. This very much seems like something DT wanted to avoid? Can you tell
+> me what I'm missing from the big picture?
 
-I think at some point there was a small conflict in the
-MAINTAINERS file, but I don't see it now.
+We could add a rockchip,io-domains property to the rockchip,rk3xxx-pinctrl
+node pointing to the io-domain driver (the toplevel driver, not the
+subnodes), like:
 
-Please pull it in!
+	pinctrl: pinctrl {
+		compatible = "rockchip,rk3568-pinctrl";
+		rockchip,io-domains = <&pmu_io_domains>;
+		...
+	};
 
-Yours,
-Linus Walleij
+With that the pinctrl driver could call into the io-domain driver with
+something like:
 
-The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2=
-:
+	rockchip_iodomain_get(struct device_node *io_domain_toplevel_node, int num);
 
-  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+'num' would map to the subnode providing the domain. Alternatively this
+could be a const char *name instead. rockchip_iodomain_get() would then
+either return some cookie or -EPROBE_DEFER when the regulator is not yet
+available.
 
-are available in the Git repository at:
+Sascha
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.3-1
-
-for you to fetch changes up to 099f37a539e616f762241ab999495fb8aa2f5971:
-
-  pinctrl: qcom: Add support for i2c specific pull feature (2023-02-10
-23:47:07 +0100)
-
-----------------------------------------------------------------
-Core changes:
-
-- Add PINCTRL_PINFUNCTION() macro and use it in several
-  drivers.
-
-New drivers:
-
-- New driver for the StarFive JH7110 SoC "sys" and "aon"
-  (always-on) pin controllers. (RISC-V.)
-
-- New subdriver for the Qualcomm QDU1000/QRU1000 SoC pin
-  controller.
-
-- New subdrivers for the Qualcomm SM8550 SoC and LPASS
-  pin controllers.
-
-- New subdriver for the Qualcomm SA8775P SoC pin controller.
-
-- New subdriver for the Qualcomm IPQ5332 SoC pin controller.
-
-- New (trivial) support for Qualcomm PM8550 and PMR735D PMIC
-  pin control.
-
-- New subdriver for the Mediatek MT7981 SoC pin controller.
-
-Improvements:
-
-- Several cleanups and refactorings to the Intel drivers.
-
-- Add 4KOhm bias support to the Intel driver.
-
-- Use the NOIRQ_SYSTEM_SLEEP_PM_OPS for the AT91 driver.
-
-- Support general purpose clocks in the Qualcomm MSM8226 SoC.
-
-- Several conversions to use the new I2C .probe_new() call.
-
-- Massive clean-up of the Qualcomm Device Tree YAML schemas.
-
-- Add VIN[45] pins, groups and functions to the Renesas
-  r8a77950 SoC driver.
-
-----------------------------------------------------------------
-Abel Vesa (3):
-      dt-bindings: pinctrl: qcom: Add SM8550 pinctrl
-      pinctrl: qcom: Add SM8550 pinctrl driver
-      pinctrl: qcom: Add support for i2c specific pull feature
-
-Adam Skladowski (1):
-      pinctrl: qcom: pinctrl-msm8976: Correct function names for wcss pins
-
-Andy Shevchenko (45):
-      pinctrl: intel: Introduce INTEL_COMMUNITY_*() to unify community macr=
-os
-      pinctrl: alderlake: Replace ADL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: broxton: Replace BXT_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-      pinctrl: cannonlake: Replace CNL_COMMUNITY() by INTEL_COMMUNITY_GPPS(=
-)
-      pinctrl: cedarfork: Replace CDF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: denverton: Replace DNV_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: elkhartlake: Replace EHL_COMMUNITY() by INTEL_COMMUNITY_GPPS=
-()
-      pinctrl: emmitsburg: Replace EBG_COMMUNITY() by INTEL_COMMUNITY_GPPS(=
-)
-      pinctrl: geminilake: Replace GLK_COMMUNITY() by INTEL_COMMUNITY_SIZE(=
-)
-      pinctrl: icelake: Replace ICL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: jasperlake: Replace JSL_COMMUNITY() by INTEL_COMMUNITY_GPPS(=
-)
-      pinctrl: lakefield: Replace LKF_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: lewisburg: Replace LBG_COMMUNITY() by INTEL_COMMUNITY_SIZE()
-      pinctrl: meteorlake: Replace MTL_COMMUNITY() by INTEL_COMMUNITY_GPPS(=
-)
-      pinctrl: tigerlake: Replace TGL_COMMUNITY() by INTEL_COMMUNITY_GPPS()
-      pinctrl: sunrisepoint: Replace SPT_COMMUNITY() by INTEL_COMMUNITY_*()
-      pinctrl: intel: Always use gpp_num_padown_regs in the main driver
-      pinctrl: intel: Convert to generic_handle_domain_irq()
-      pinctrl: intel: Add default case to intel_config_set_pull()
-      pinctrl: intel: Deduplicate some code in intel_config_set_pull()
-      pinctrl: intel: Add definitions to all possible biases
-      pinctrl: intel: Add ~4k bias support
-      pinctrl: intel: Use same order of bit fields for PADCFG2
-      pinctrl: intel: Define maximum pad number in the group
-      pinctrl: Introduce struct pinfunction and PINCTRL_PINFUNCTION() macro
-      pinctrl: intel: Make use of struct pinfunction and PINCTRL_PINFUNCTIO=
-N()
-      pinctrl: baytrail: Convert to use new memeber in struct intel_functio=
-n
-      pinctrl: cherryview: Convert to use new memeber in struct intel_funct=
-ion
-      pinctrl: lynxpoint: Convert to use new memeber in struct intel_functi=
-on
-      pinctrl: merrifield: Convert to use new memeber in struct intel_funct=
-ion
-      pinctrl: moorefield: Convert to use new memeber in struct intel_funct=
-ion
-      pinctrl: intel: Get rid of unused members in struct intel_function
-      pinctrl: pinmux: Drop duplicate error message in pinmux_select()
-      pinctrl: samsung: Do not mention legacy API in the code
-      pinctrl: mediatek: Remove duplicate assignment of of_gpio_n_cells
-      pinctrl: qcom: lpass-lpi: Remove duplicate assignment of of_gpio_n_ce=
-lls
-      pinctrl: sunplus: sppctl: Remove duplicate assignment of of_gpio_n_ce=
-lls
-      pinctrl: digicolor: Remove duplicate assignment of of_gpio_n_cells
-      pinctrl: digicolor: Use proper headers and drop OF dependency
-      pinctrl: Proofreading and updating the documentation accordingly
-      gpiolib: Check "gpio-ranges" before calling ->add_pin_ranges()
-      pinctrl: bcm2835: Remove of_node_put() in
-bcm2835_of_gpio_ranges_fallback()
-      pinctrl: bcm2835: Switch to use ->add_pin_ranges()
-      Revert "gpiolib: of: Introduce hook for missing gpio-ranges"
-      pinctrl: qcom: Unify accessing to device fwnode
-
-Arnd Bergmann (1):
-      pinctrl: at91: convert to NOIRQ_SYSTEM_SLEEP_PM_OPS
-
-Ar=C4=B1n=C3=A7 =C3=9CNAL (6):
-      pinctrl: ralink: rename variables which point out the pin group
-      dt-bindings: pinctrl: mt7620: add proper function muxing binding
-      dt-bindings: pinctrl: mt7621: add proper function muxing binding
-      dt-bindings: pinctrl: rt2880: add proper function muxing binding
-      dt-bindings: pinctrl: rt305x: add proper function muxing binding
-      dt-bindings: pinctrl: rt3883: add proper function muxing binding
-
-Bagas Sanjaya (1):
-      pinctrl: Proofreading and updating the documentation (part 2)
-
-Bartosz Golaszewski (1):
-      dt-bindings: pinctrl: describe sa8775p-tlmm
-
-Basavaraj Natikar (1):
-      pinctrl: amd: Add Z-state wake control bits
-
-Bernhard Rosenkr=C3=A4nzer (1):
-      dt-bindings: pinctrl: add bindings for Mediatek MT8365 SoC
-
-Biju Das (1):
-      dt-bindings: pinctrl: renesas: Add RZ/G2L POEG binding
-
-Claudiu Beznea (1):
-      pinctrl: at91: use devm_kasprintf() to avoid potential leaks
-
-Daniel Golle (2):
-      dt-bindings: pinctrl: add bindings for MT7981 SoC
-      pinctrl: add mt7981 pinctrl driver
-
-Geert Uytterhoeven (2):
-      pinctrl: renesas: r8a779g0: Fix alignment in GPSR[678]_* macros
-      pinctrl: renesas: r8a77950: Add VIN[45] pins, groups, and functions
-
-Guodong Liu (2):
-      pinctrl: mediatek: Initialize variable pullen and pullup to zero
-      pinctrl: mediatek: Initialize variable *buf to zero
-
-Jianlong Huang (4):
-      dt-bindings: pinctrl: Add StarFive JH7110 sys pinctrl
-      dt-bindings: pinctrl: Add StarFive JH7110 aon pinctrl
-      pinctrl: starfive: Add StarFive JH7110 sys controller driver
-      pinctrl: starfive: Add StarFive JH7110 aon controller driver
-
-Johan Jonker (1):
-      dt-bindings: pinctrl: rockchip,pinctrl: mark gpio sub nodes of
-pinctrl as deprecated
-
-Kathiravan T (2):
-      dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
-      pinctrl: qcom: Introduce IPQ5332 TLMM driver
-
-Krzysztof Kozlowski (21):
-      dt-bindings: pinctrl: qcom,sm8450-tlmm: correct gpio-line-names size
-      dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: add input-enable
-and bias-bus-hold
-      dt-bindings: pinctrl: qcom,sdm845-pinctrl: add GPIO hogs
-      dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: correct pins pattern
-      dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: add input-enable
-and bias-bus-hold
-      dt-bindings: pinctrl: qcom,sm6350-tlmm: add gpio-line-names
-      dt-bindings: pinctrl: qcom,sm8350-tlmm: add gpio-line-names
-      dt-bindings: pinctrl: qcom,sm6350-tlmm: correct pins pattern
-      dt-bindings: pinctrl: qcom,sm8350-tlmm: correct pins pattern
-      dt-bindings: pinctrl: qcom: allow nine interrupts on SM6350
-      dt-bindings: pinctrl: qcom,sm8350: add input-disable
-      dt-bindings: pinctrl: qcom,msm8226: correct GPIO name pattern
-      dt-bindings: pinctrl: qcom,msm8909: correct GPIO name pattern and exa=
-mple
-      dt-bindings: pinctrl: qcom,sm6375: correct GPIO name pattern and exam=
-ple
-      dt-bindings: pinctrl: qcom,msm8953: correct GPIO name pattern
-      dt-bindings: pinctrl: qcom,sdx55: correct GPIO name pattern
-      dt-bindings: pinctrl: qcom,msm8994: correct number of GPIOs
-      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples
-      dt-bindings: pinctrl: qcom,sm8550-lpass-lpi-pinctrl: add SM8550 LPASS
-      pinctrl: qcom: pinctrl-sm8550-lpass-lpi: add SM8550 LPASS
-      dt-bindings: pinctrl: qcom: lpass-lpi: correct GPIO name pattern
-
-Lad Prabhakar (2):
-      pinctrl: renesas: rzg2l: Fix configuring the GPIO pins as interrupts
-      pinctrl: renesas: rzg2l: Add BUILD_BUG_ON() checks
-
-Linus Walleij (5):
-      pinctrl: at91: Tag suspend/resume __maybe_unused
-      Merge tag 'qcom-pinctrl-6.3' of
-https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt into
-devel
-      Merge tag 'renesas-pinctrl-for-v6.3-tag1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
-into devel
-      Merge tag 'intel-pinctrl-v6.3-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
-      Merge tag 'qcom-pinctrl-6.3-2' of
-https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt into
-devel
-
-Luca Weiss (1):
-      pinctrl: qcom: msm8226: Add General Purpose clocks
-
-Lukas Bulwahn (1):
-      pinctrl: mxs: avoid defines prefixed with CONFIG
-
-Matti Lehtim=C3=A4ki (1):
-      dt-bindings: pinctrl: msm8226: Add General Purpose clocks
-
-Melody Olvera (2):
-      dt-bindings: pinctrl: qcom: Add QDU1000 and QRU1000 pinctrl
-      pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
-
-Miaoqian Lin (2):
-      pinctrl: stm32: Fix refcount leak in stm32_pctrl_get_irq_domain
-      pinctrl: rockchip: Fix refcount leak in rockchip_pinctrl_parse_groups
-
-Neil Armstrong (2):
-      dt-bindings: pinctrl: qcom,pmic-gpio: document pm8550, pm8550b,
-pm8550ve, pm8550vs, pmk8550 & pmr735d
-      pinctrl: qcom: spmi-gpio: add support for pm8550 & pmr735d gpio contr=
-ol
-
-Peng Fan (1):
-      dt-bindings: pinctrl: imx8m: Integrate duplicated i.MX 8M schemas
-
-Rob Herring (3):
-      dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node
-names to "-pins$"
-      dt-bindings: pinctrl: mediatek: Fix child node name patterns
-      pinctrl: at91: fix deferred probing support
-
-Uwe Kleine-K=C3=B6nig (4):
-      pinctrl: da850-pupd: Drop empty platform remove function
-      pinctrl: thunderbay: Drop empty platform remove function
-      pinctrl: mcp23s08: Convert to i2c's .probe_new()
-      pinctrl: sx150x: Convert to i2c's .probe_new()
-
-Yadu MG (1):
-      pinctrl: qcom: add the tlmm driver sa8775p platforms
-
-ye xingchen (1):
-      pinctrl: nomadik: remove duplicate included header files
-
- ...,imx8mm-pinctrl.yaml =3D> fsl,imx8m-pinctrl.yaml} |   24 +-
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml       |   84 -
- .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |   84 -
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       |   84 -
- .../bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml  |   12 +-
- .../bindings/pinctrl/mediatek,mt7622-pinctrl.yaml  |    8 +-
- .../bindings/pinctrl/mediatek,mt7981-pinctrl.yaml  |  475 ++++++
- .../bindings/pinctrl/mediatek,mt8183-pinctrl.yaml  |    8 +-
- .../bindings/pinctrl/mediatek,mt8365-pinctrl.yaml  |  197 +++
- .../bindings/pinctrl/qcom,ipq5332-tlmm.yaml        |  134 ++
- .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,ipq8074-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,mdm9607-tlmm.yaml        |    4 +-
- .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8226-pinctrl.yaml     |   10 +-
- .../bindings/pinctrl/qcom,msm8660-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8909-tlmm.yaml        |    8 +-
- .../bindings/pinctrl/qcom,msm8916-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8953-pinctrl.yaml     |    6 +-
- .../bindings/pinctrl/qcom,msm8960-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8974-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8976-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8994-pinctrl.yaml     |   10 +-
- .../bindings/pinctrl/qcom,msm8996-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,msm8998-pinctrl.yaml     |    4 +-
- .../bindings/pinctrl/qcom,pmic-gpio.yaml           |   18 +
- .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |    4 +-
- .../bindings/pinctrl/qcom,qcm2290-tlmm.yaml        |    4 +-
- .../bindings/pinctrl/qcom,qcs404-pinctrl.yaml      |    4 +-
- .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml        |  134 ++
- .../bindings/pinctrl/qcom,sa8775p-tlmm.yaml        |  138 ++
- .../bindings/pinctrl/qcom,sc7180-pinctrl.yaml      |    4 +-
- .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml     |    2 +-
- .../bindings/pinctrl/qcom,sc8180x-tlmm.yaml        |    4 +-
- .../pinctrl/qcom,sc8280xp-lpass-lpi-pinctrl.yaml   |   10 +-
- .../bindings/pinctrl/qcom,sc8280xp-tlmm.yaml       |    4 +-
- .../bindings/pinctrl/qcom,sdm630-pinctrl.yaml      |    4 +-
- .../bindings/pinctrl/qcom,sdm670-tlmm.yaml         |    4 +-
- .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml      |   15 +-
- .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml       |    6 +-
- .../bindings/pinctrl/qcom,sdx65-tlmm.yaml          |    4 +-
- .../bindings/pinctrl/qcom,sm6115-tlmm.yaml         |    4 +-
- .../bindings/pinctrl/qcom,sm6125-tlmm.yaml         |    4 +-
- .../bindings/pinctrl/qcom,sm6350-tlmm.yaml         |   27 +-
- .../bindings/pinctrl/qcom,sm6375-tlmm.yaml         |    8 +-
- .../bindings/pinctrl/qcom,sm8150-pinctrl.yaml      |    4 +-
- .../pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     |    2 +-
- .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml      |    6 +-
- .../bindings/pinctrl/qcom,sm8350-tlmm.yaml         |   18 +-
- .../pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml     |    8 +-
- .../bindings/pinctrl/qcom,sm8450-tlmm.yaml         |    6 +-
- .../pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml     |  148 ++
- .../bindings/pinctrl/qcom,sm8550-tlmm.yaml         |  163 ++
- .../bindings/pinctrl/qcom,tlmm-common.yaml         |    5 +-
- .../bindings/pinctrl/ralink,mt7620-pinctrl.yaml    |  633 ++++++-
- .../bindings/pinctrl/ralink,mt7621-pinctrl.yaml    |  205 ++-
- .../bindings/pinctrl/ralink,rt2880-pinctrl.yaml    |   86 +-
- .../bindings/pinctrl/ralink,rt305x-pinctrl.yaml    |  236 ++-
- .../bindings/pinctrl/ralink,rt3883-pinctrl.yaml    |  205 ++-
- .../bindings/pinctrl/renesas,rzg2l-poeg.yaml       |   86 +
- .../bindings/pinctrl/rockchip,pinctrl.yaml         |    4 +-
- .../pinctrl/starfive,jh7110-aon-pinctrl.yaml       |  124 ++
- .../pinctrl/starfive,jh7110-sys-pinctrl.yaml       |  142 ++
- Documentation/driver-api/pin-control.rst           |  498 +++---
- MAINTAINERS                                        |    8 +-
- drivers/gpio/gpiolib-of.c                          |    5 -
- drivers/gpio/gpiolib.c                             |    8 +
- drivers/pinctrl/Kconfig                            |    2 +-
- drivers/pinctrl/bcm/pinctrl-bcm2835.c              |   10 +-
- drivers/pinctrl/freescale/pinctrl-mxs.c            |    6 +-
- drivers/pinctrl/freescale/pinctrl-mxs.h            |    6 +-
- drivers/pinctrl/intel/pinctrl-alderlake.c          |   18 +-
- drivers/pinctrl/intel/pinctrl-baytrail.c           |   10 +-
- drivers/pinctrl/intel/pinctrl-broxton.c            |   31 +-
- drivers/pinctrl/intel/pinctrl-cannonlake.c         |   31 +-
- drivers/pinctrl/intel/pinctrl-cedarfork.c          |   13 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |    6 +-
- drivers/pinctrl/intel/pinctrl-denverton.c          |   13 +-
- drivers/pinctrl/intel/pinctrl-elkhartlake.c        |   24 +-
- drivers/pinctrl/intel/pinctrl-emmitsburg.c         |   13 +-
- drivers/pinctrl/intel/pinctrl-geminilake.c         |   21 +-
- drivers/pinctrl/intel/pinctrl-icelake.c            |   35 +-
- drivers/pinctrl/intel/pinctrl-intel.c              |   74 +-
- drivers/pinctrl/intel/pinctrl-intel.h              |   55 +-
- drivers/pinctrl/intel/pinctrl-jasperlake.c         |   13 +-
- drivers/pinctrl/intel/pinctrl-lakefield.c          |   13 +-
- drivers/pinctrl/intel/pinctrl-lewisburg.c          |   12 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c          |    8 +-
- drivers/pinctrl/intel/pinctrl-merrifield.c         |    6 +-
- drivers/pinctrl/intel/pinctrl-meteorlake.c         |   23 +-
- drivers/pinctrl/intel/pinctrl-moorefield.c         |    6 +-
- drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |   37 +-
- drivers/pinctrl/intel/pinctrl-tigerlake.c          |   30 +-
- drivers/pinctrl/mediatek/Kconfig                   |    5 +
- drivers/pinctrl/mediatek/Makefile                  |    1 +
- drivers/pinctrl/mediatek/pinctrl-moore.c           |    1 -
- drivers/pinctrl/mediatek/pinctrl-mt7981.c          | 1048 ++++++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |    1 -
- drivers/pinctrl/mediatek/pinctrl-paris.c           |    5 +-
- drivers/pinctrl/nomadik/pinctrl-abx500.c           |    2 -
- drivers/pinctrl/pinctrl-amd.c                      |    7 +
- drivers/pinctrl/pinctrl-amd.h                      |    1 +
- drivers/pinctrl/pinctrl-at91-pio4.c                |    4 +-
- drivers/pinctrl/pinctrl-at91.c                     |   44 +-
- drivers/pinctrl/pinctrl-da850-pupd.c               |    6 -
- drivers/pinctrl/pinctrl-digicolor.c                |   10 +-
- drivers/pinctrl/pinctrl-mcp23s08_i2c.c             |    5 +-
- drivers/pinctrl/pinctrl-rockchip.c                 |    1 +
- drivers/pinctrl/pinctrl-sx150x.c                   |    6 +-
- drivers/pinctrl/pinctrl-thunderbay.c               |    7 -
- drivers/pinctrl/pinmux.c                           |    4 +-
- drivers/pinctrl/qcom/Kconfig                       |   50 +
- drivers/pinctrl/qcom/Makefile                      |    5 +
- drivers/pinctrl/qcom/pinctrl-ipq5332.c             |  861 ++++++++++
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           |    1 -
- drivers/pinctrl/qcom/pinctrl-msm.c                 |    9 +-
- drivers/pinctrl/qcom/pinctrl-msm.h                 |    1 +
- drivers/pinctrl/qcom/pinctrl-msm8226.c             |   11 +-
- drivers/pinctrl/qcom/pinctrl-msm8976.c             |    8 +-
- drivers/pinctrl/qcom/pinctrl-qdu1000.c             | 1274 ++++++++++++++
- drivers/pinctrl/qcom/pinctrl-sa8775p.c             | 1537 ++++++++++++++++=
-+
- drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c    |  240 +++
- drivers/pinctrl/qcom/pinctrl-sm8550.c              | 1790 ++++++++++++++++=
-++++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    8 +-
- drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |    2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |    2 +-
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |    2 +-
- drivers/pinctrl/ralink/pinctrl-mt7620.c            |  164 +-
- drivers/pinctrl/ralink/pinctrl-mt7621.c            |   48 +-
- drivers/pinctrl/ralink/pinctrl-rt2880.c            |   28 +-
- drivers/pinctrl/ralink/pinctrl-rt305x.c            |   82 +-
- drivers/pinctrl/ralink/pinctrl-rt3883.c            |   44 +-
- drivers/pinctrl/renesas/pfc-r8a77950.c             |  244 +++
- drivers/pinctrl/renesas/pfc-r8a779g0.c             |  112 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            |   25 +-
- drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +-
- drivers/pinctrl/starfive/Kconfig                   |   33 +
- drivers/pinctrl/starfive/Makefile                  |    4 +
- .../pinctrl/starfive/pinctrl-starfive-jh7110-aon.c |  177 ++
- .../pinctrl/starfive/pinctrl-starfive-jh7110-sys.c |  449 +++++
- drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c |  982 +++++++++++
- drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h |   70 +
- drivers/pinctrl/stm32/pinctrl-stm32.c              |    1 +
- drivers/pinctrl/sunplus/sppctl.c                   |    1 -
- .../dt-bindings/pinctrl/starfive,jh7110-pinctrl.h  |  137 ++
- include/linux/gpio/driver.h                        |   12 -
- include/linux/pinctrl/pinctrl.h                    |   20 +
- 147 files changed, 12945 insertions(+), 1355 deletions(-)
- rename Documentation/devicetree/bindings/pinctrl/{fsl,imx8mm-pinctrl.yaml
-=3D> fsl,imx8m-pinctrl.yaml} (76%)
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
- delete mode 100644
-Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7981-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-tlmm.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yam=
-l
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-poeg.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/starfive,jh7110-aon-pinctrl.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/starfive,jh7110-sys-pinctrl.yaml
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7981.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5332.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-qdu1000.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sa8775p.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8550.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
- create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
- create mode 100644 include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
