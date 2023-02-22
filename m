@@ -2,200 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68DF869F306
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 11:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A5269F338
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Feb 2023 12:12:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231414AbjBVKxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 05:53:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
+        id S231414AbjBVLMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 06:12:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjBVKxs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 05:53:48 -0500
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D46737702
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 02:53:47 -0800 (PST)
-Received: by mail-vs1-xe2d.google.com with SMTP id d20so515442vsf.11
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 02:53:47 -0800 (PST)
+        with ESMTP id S231230AbjBVLMa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 06:12:30 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1572F798;
+        Wed, 22 Feb 2023 03:12:24 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id z2so8499213plf.12;
+        Wed, 22 Feb 2023 03:12:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1677063226;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=W5MlTtZFsyGu8cOqniDY17GNpI9RMba/aT2wck0Oz68=;
-        b=eJ4LjdJNRD6PN1K1sVfguMxeWrXtWS7OBCcokmQFCu8/CkDcydiAqlU4k0eTlk99sW
-         ZTtcZN19rjm0MuZwFmyul1F1DvUu6S8mcc7/5kbctDYu9WR1OOrIsxqUtESZ2GoZwFDV
-         q9wPhj+Ueth2+65PfSx0kXLJUZTITm7aQW/uJiHAteMq34ARmHTEn/ei5hFdciHYBkcT
-         Ni7wEbzbupqPpXrYCi5Re//SQS5BELEbf/C1iEPRw3aI9upAUqFByqFpDrZ1kb/hNT8a
-         DfszlFgL9rNXOB+zlAQrcxAqXW0o+3Nt57t9QTS0xOQ+L4jGWkkqawNBgAI4FkZ+pAv1
-         iaoA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PJZ7Q8q1Rspu6OpozNaxV8ZPYxzYDs5O0iNAPEWEK4I=;
+        b=lBPXUSkEpAFpCERG1+1cfQ5FTHcnkvXbCxTw/L5zqKb/GDoFKSivBMB2XXONUnP9Fz
+         YKy8QVYCbvDneoBTLBoch5C88jiMJjjr5g3YWcA9zxsqGxXNhzN4JdS6nOo/QUZPbF2l
+         J72rlAoHsviB3wWPFxCVZHL6/T9gSsRqttJh+omiFA7GtdoNHC58oSPMGlYFyChLU580
+         6DIfK5QLZTCjAVfpjoWhSHdlXgJ5ML0dcYgRCd5DBYuNpvt0O4FwimpgBhZiWh8SOE0Z
+         Sc3A4KP4jH47GbgGUwFBf/RrdBp2dQBu+4oe15sXkS+8azTS0Py+b4RZhZ3rUQGrGOy3
+         ly+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677063226;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W5MlTtZFsyGu8cOqniDY17GNpI9RMba/aT2wck0Oz68=;
-        b=Wdav6+SdwK+rWTp1gYLInPw9fKDr7dvLvdI07sqSTiGKn4uUOqJJLn+7gHGnWBOQED
-         Aa2dfnqV5/V9TnsvW2XD577mnLAleZ3t28ETFdgZX2Mne/jTQfW+U5pA7v9Nv/31NQBN
-         d+urGI7GMtAxc3YYnto3wOMx5EQahhJoXlW6L4ocx1oJF01q2CbRb0rLNMJbkCzNh5L0
-         1ZD8z9k8R0v03NNwWZsw8kv7x7b6zI8adM8YFPJVypqO0N6OAHvSutSIBrQ+HKWpbJid
-         clXz5KggLBHEL/unm2gDIwuVOFgjfWsV8la7UYot1cPS8Dv3SdKHIBxiHfj24TFs4CNp
-         OrLQ==
-X-Gm-Message-State: AO0yUKU/hdBSltcKcbfZEIAtzNMaAH92kJUBJOSGdZATvrgEovlo4fiA
-        0TJXfAVsGhk9dXnh2Oa8A8XywySnS5TbYblOtIpb/g==
-X-Google-Smtp-Source: AK7set9nra+0DhCEZ5gj5gwhg4JhAvalntACrAyIMPOjTxAz0SwTUEO5HZy5DM7A3sNGO4RZakKK2xk0ww7hpZbswYE=
-X-Received: by 2002:a1f:f284:0:b0:401:8b9a:d80e with SMTP id
- q126-20020a1ff284000000b004018b9ad80emr1422811vkh.21.1677063226136; Wed, 22
- Feb 2023 02:53:46 -0800 (PST)
+        bh=PJZ7Q8q1Rspu6OpozNaxV8ZPYxzYDs5O0iNAPEWEK4I=;
+        b=iITzr+4tzzNoKZN/dZiOVvDyXS7KNf+GPZLDGCAjuo3Q3YOUjNs2Ps2qhMNQ+pem8u
+         248Nz8/rLeE5mM280rofJ2LvTh9a1P1DwwTt/WDV8G/AKw9aamtTlKjUNgEkGa7AWSZj
+         TEVQXNBBKhPKpBpENlfb/D8u4OifYYFYkasqldN+lKUr2c74AtW4naxGmzjv0NwoY+nP
+         eorotvjdnvpZxXjEAkvRVnFmicQM5pZSScMOH8/78iTJQo8Sq1DfTJmJqdE+Y5SvMRN6
+         0GIxuJ1rdPjloloyWK5RRKbRciAMo1g2RNrKhcubrMxmsUrZ+LgkOPbJYPbV4CSSgppb
+         HHDA==
+X-Gm-Message-State: AO0yUKUSS5/SBTSont3gzA8ujjvIMILaA8354qkrWe/PUo3RJwA3XUc2
+        QK2JTC2VFlDwBmajpdCX4JC2OWyTt9tuKQ==
+X-Google-Smtp-Source: AK7set9UUZS8ulmlnzwdgNHv+szYZ9YDhgBUWhGhgzWC8HLcm7t2QAQMage0/pZhonjzaI51HJ71hw==
+X-Received: by 2002:a17:90b:1c10:b0:230:fac8:d7e7 with SMTP id oc16-20020a17090b1c1000b00230fac8d7e7mr7187585pjb.2.1677064343988;
+        Wed, 22 Feb 2023 03:12:23 -0800 (PST)
+Received: from kelvin-ThinkPad-L14-Gen-1.. (94.130.220.35.bc.googleusercontent.com. [35.220.130.94])
+        by smtp.gmail.com with ESMTPSA id x7-20020a17090a294700b00234899c65e7sm4763228pjf.28.2023.02.22.03.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Feb 2023 03:12:23 -0800 (PST)
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Keguang Zhang <keguang.zhang@gmail.com>
+Subject: [PATCH 0/4] Devicetree support for Loongson-1 GPIO
+Date:   Wed, 22 Feb 2023 19:12:09 +0800
+Message-Id: <20230222111213.2241633-1-keguang.zhang@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <cdb562c5-040e-687f-a61f-4273fc356ff3@alu.unizg.hr>
- <fb12086b-ff5f-333a-3199-a8690c4d4bdf@alu.unizg.hr> <Y+j1dbZ0A1mndwXp@smile.fi.intel.com>
- <36d8e761-58e2-2515-fd1a-65a11731d1b1@alu.unizg.hr> <Y+y5nZJwZ6ykf0Fz@smile.fi.intel.com>
- <3d96e50b-ed17-9bf5-149b-8a50c7b4cca2@alu.unizg.hr> <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
- <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr> <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
- <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr> <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
-In-Reply-To: <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 22 Feb 2023 11:53:35 +0100
-Message-ID: <CAMRc=MeFGMtjoq4fwfJ17pBPAstOAjBi3fcQQrjJJnawzx7W5A@mail.gmail.com>
-Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
-To:     Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 4:41 PM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Tue, Feb 21, 2023 at 02:52:38PM +0100, Mirsad Goran Todorovac wrote:
-> > On 20. 02. 2023. 14:43, Andy Shevchenko wrote:
-> > > On Mon, Feb 20, 2023 at 02:10:00PM +0100, Mirsad Todorovac wrote:
-> > > > On 2/16/23 15:16, Bartosz Golaszewski wrote:
->
-> ...
->
-> > > > As Mr. McKenney once said, a bunch of monkeys with keyboard could
-> > > > have done it in a considerable number of trials and errors ;-)
-> > > >
-> > > > But here I have something that could potentially leak as well. I could not devise a
-> > > > reproducer due to the leak being lightly triggered only in extreme memory contention.
-> > > >
-> > > > See it for yourself:
-> > > >
-> > > > drivers/gpio/gpio-sim.c:
-> > > >  301 static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
-> > > >  302 {
-> > > >  303         struct device_attribute *val_dev_attr, *pull_dev_attr;
-> > > >  304         struct gpio_sim_attribute *val_attr, *pull_attr;
-> > > >  305         unsigned int num_lines = chip->gc.ngpio;
-> > > >  306         struct device *dev = chip->gc.parent;
-> > > >  307         struct attribute_group *attr_group;
-> > > >  308         struct attribute **attrs;
-> > > >  309         int i, ret;
-> > > >  310
-> > > >  311         chip->attr_groups = devm_kcalloc(dev, sizeof(*chip->attr_groups),
-> > > >  312                                          num_lines + 1, GFP_KERNEL);
-> > > >  313         if (!chip->attr_groups)
-> > > >  314                 return -ENOMEM;
-> > > >  315
-> > > >  316         for (i = 0; i < num_lines; i++) {
-> > > >  317                 attr_group = devm_kzalloc(dev, sizeof(*attr_group), GFP_KERNEL);
-> > > >  318                 attrs = devm_kcalloc(dev, GPIO_SIM_NUM_ATTRS, sizeof(*attrs),
-> > > >  319                                      GFP_KERNEL);
-> > > >  320                 val_attr = devm_kzalloc(dev, sizeof(*val_attr), GFP_KERNEL);
-> > > >  321                 pull_attr = devm_kzalloc(dev, sizeof(*pull_attr), GFP_KERNEL);
-> > > >  322                 if (!attr_group || !attrs || !val_attr || !pull_attr)
-> > > >  323                         return -ENOMEM;
-> > > >  324
-> > > >  325                 attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
-> > > >  326                                                   "sim_gpio%u", i);
-> > > >  327                 if (!attr_group->name)
-> > > >  328                         return -ENOMEM;
-> > > >
-> > > > Apparently, if the memory allocation only partially succeeds, in the theoretical case
-> > > > that the system is close to its kernel memory exhaustion, `return -ENOMEM` would not
-> > > > free the partially succeeded allocs, would it?
-> > > >
-> > > > To explain it better, I tried a version that is not yet full doing "all or nothing"
-> > > > memory allocation for the gpio-sim driver, because I am not that familiar with the
-> > > > driver internals.
-> > >
-> > > devm_*() mean that the resource allocation is made in a managed manner, so when
-> > > it's done, it will be freed automatically.
-> >
-> > Didn't see that one coming ... :-/ "buzzing though the bush ..."
-> >
-> > > The question is: is the lifetime of the attr_groups should be lesser or the
-> > > same as chip->gc.parent? Maybe it's incorrect to call devm_*() in the first place?
-> >
-> > Bona fide said, I hope that automatic deallocation does things in the right order.
-> > I've realised that devm_kzalloc() calls devm_kmalloc() that registers allocations on
-> > a per driver list. But I am not sure how chip->gc was allocated?
-> >
-> > Here is said it is allocated in drivers/gpio/gpio-sim.c:386 in gpio_sim_add_bank(),
-> > as a part of
-> >
-> >       struct gpio_sim_chip *chip;
-> >       struct gpio_chip *gc;
-> >
-> >       gc = &chip->gc;
-> >
-> > and gc->parent is set to
-> >
-> >       gc->parent = dev;
-> >
-> > in line 420, which appears called before gpio_sim_setup_sysfs() and the lines above.
-> >
-> > If I understood well, automatic deallocation on unloading the driver goes
-> > in the reverse order, so lifetime of chip appears to be longer than attr_groups,
-> > but I am really not that good at this ...
->
-> So, the device is instantiated by platform_device_register_full().
->
-> It should gone with the platform_device_unregister().
->
-> In case of CONFIG_DEBUG_KOBJECT_RELEASE=y the ->release() can be called
-> asynchronously.
->
-> So, there are following questions:
-> - is the put_device() is actually called?
-> - is the above mentioned option is set to Y?
-> - if it's in Y, does kmemleak take it into account?
-> - if no, do you get anything new in `dmesg` when enable it?
->
-> > > Or maybe the chip->gc.parent should be changed to something else (actual GPIO
-> > > device, but then it's unclear how to provide the attributes in non-racy way
-> > Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
-> >
-> > I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
-> > device expert nor would be appropriate to try the craft not earned ;-)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Update the driver to add DT support and dt-binding document,
+along with other minor changes.
 
-Mirsad,
+Keguang Zhang (4):
+  gpio: loongson1: Update copyright
+  gpio: loongson1: Introduce ls1x_gpio_chip struct
+  gpio: loongson1: Add DT support
+  dt-bindings: gpio: Add Loongson-1 GPIO
 
-I think you fear that the memory allocated for sysfs attributes could
-be accessed after the driver is detached from the simulated GPIO
-device? This is not possible as sysfs handles that gracefully (by
-removing all sysfs attributes with driver_sysfs_remove()) before
-freeing devres resources. You can test that yourself by instantiating
-a gpio-sim device, opening and holding a file descriptor to one of the
-sysfs attributes, disabling the device and then trying to read from
-said fd - it will return -ENODEV.
+ .../bindings/gpio/loongson,ls1x-gpio.yaml     | 60 ++++++++++++++
+ drivers/gpio/gpio-loongson1.c                 | 83 ++++++++++++-------
+ 2 files changed, 115 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
 
-Let me know if you actually mean something else?
 
-Bart
+base-commit: 4827aae061337251bb91801b316157a78b845ec7
+-- 
+2.34.1
+
