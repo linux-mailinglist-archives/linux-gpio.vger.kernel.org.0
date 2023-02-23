@@ -2,147 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C991A6A02A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 07:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45E0F6A042D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 09:50:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233193AbjBWGCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Feb 2023 01:02:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        id S232644AbjBWIup (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Feb 2023 03:50:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232846AbjBWGCf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 01:02:35 -0500
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4EC28228;
-        Wed, 22 Feb 2023 22:02:34 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1677132127; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=DIzq2l3H4WTqdlWLW2VWNcBP97sE4gt5oo+hksxZCt//lBhPoIP/lExLhjp94atUtFHgN4EyPPVfYbin64IVUB86UOrokuDHfgKbHe3veGP9nIfT3Qr3O1FgMvNgPUFrytwpLymruJDBrVa7zhzO6ElX5vTcyV4Lz7giutoiYYA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1677132127; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=fY/rYZ/QSdL3EXsPZDuBUtoL1olQYQkD3lDEY+ykYo8=; 
-        b=Bl11M0rzEUMQIlZf06U01wkUBGWse4NxABzpXv1O7tVKSrujJuJ+PBz0/0TEjslrJcwvrkzGay5YxY2GJtQMt2wt0QSJBCBCY3b7cD+S1V2Hr+xG/1GH+03br8QLlf5M4AzcdJ/S871a4PZIQUGm+Mx2vJULXQoWyEYIuOR3Mws=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1677132127;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=fY/rYZ/QSdL3EXsPZDuBUtoL1olQYQkD3lDEY+ykYo8=;
-        b=ImdvYPi59x5HDhSWSS9w6Fiep1G2P1O8DhCt1FsW2I50vp33aQNz3VDmdDlYslDD
-        wO7wgx8nLmuPJvZgdREzQTkYbIcsKJmAXNFbOTZRtDmB2f0UOttqfCinJDMSr2nZuoE
-        IKgny9ZRGAZx7RA/Nk7bRp2c/3qsNOUdHsjomhHc=
-Received: from [10.10.10.3] (37.120.152.236 [37.120.152.236]) by mx.zohomail.com
-        with SMTPS id 167713212609062.82464009307694; Wed, 22 Feb 2023 22:02:06 -0800 (PST)
-Message-ID: <286c6f85-8c5c-907f-a77b-b0c62e97a18a@arinc9.com>
-Date:   Thu, 23 Feb 2023 09:01:59 +0300
+        with ESMTP id S233666AbjBWIuo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 03:50:44 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2D839294
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 00:50:42 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id d73so4804831iof.4
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 00:50:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0k9jKD05OxtjSZUk6bMGF2fV3WT2sf3ooVEf+qjO17M=;
+        b=FPdmoPKFW+jfyOyJ8s+BGODY4LPwUyLyHRGMN7YMr6lsQ331Qvo0Z/7E9zUF7te44N
+         DeNIr4fP9hh5g5yRhPG4s2yQ4egCHF+JBJgyz3n+6ZfKO7RPQ2aBY1GMM6voaftCXeex
+         /6mDxxcc8cdsKONIP/98kGw9KRFce1B4UKPSjqjYdBOncJXXX011+Pc9jTFcgt0di1sd
+         owBsXZXRUkzhdZOwyjViDC1Y63W7CsqIMHJVLIZOBbYobSI5MSN2f5nJZbIw1HO3v2vT
+         xkGJ3yE/7uqX7waoWyLG712GECatO7QKsD0H6pEFqmoke5pXvzvAEmD/EMBhuLIX/d04
+         tKag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0k9jKD05OxtjSZUk6bMGF2fV3WT2sf3ooVEf+qjO17M=;
+        b=ZnTvODjugReIM6xagXPUvpgM1j8PYoKSGAh9OAj81zv1QuzoTe6KNRTx6Aoo+gOpuI
+         QToMGWtaZclH97pF7Oe6Q4EtyXP+C6GgdTEAupzM1pL7q2jt7MYjIxrdtSS0+nglBUhv
+         E3n87a00nUUI+LXkWpkCdo2pJI+aMxsGRMbDrJ4UfjJr6DbEeJCVjsdWt9SuCKM60wNI
+         XWwjAyDGFWdQeOQVtW6KrnLEerQ4XVeQjuqgrRuFy5EHzuXFvj3eAQwHV9ZTQzSiBLVn
+         CXaUQC8AUdSkTWT7vHmnahtr9RjXu9mbvpYnMRblxOZe74fiMS2MroKn/qLvUHY4PyvS
+         c3KQ==
+X-Gm-Message-State: AO0yUKV81TEA6ueUhnrFbJxLAVW6SOvZ2IR4Fuq9qQrB1bnZSG8P9PjW
+        yfXk7E5iCwfwUGpdMwEdCgUqpFrHka1mqyFC0/kMyg==
+X-Google-Smtp-Source: AK7set9UQqFb0+ZFU39E0PUxaMjUVNwiCvB67agmIDIKaz/cTznuaEp6hRCnZL0i11oy9MKaeKbCQEO+EKtS54rJCwY=
+X-Received: by 2002:a6b:7d47:0:b0:6e4:e844:22e5 with SMTP id
+ d7-20020a6b7d47000000b006e4e84422e5mr1236213ioq.63.1677142242103; Thu, 23 Feb
+ 2023 00:50:42 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [RFC PATCH 00/16] pinctrl: ralink: fix ABI, improve driver, move
- to mediatek, improve dt-bindings
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        William Dean <williamsukatube@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
-References: <20230222183932.33267-1-arinc.unal@arinc9.com>
- <CAMhs-H8cKG_aQaE_JBuEfchQ4jNZT5NRPEypywWFuFtsc2MiZg@mail.gmail.com>
-Content-Language: en-US
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <CAMhs-H8cKG_aQaE_JBuEfchQ4jNZT5NRPEypywWFuFtsc2MiZg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de> <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+ <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
+ <Y/YPtJK8nVBthCML@surfacebook> <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
+In-Reply-To: <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Feb 2023 09:50:30 +0100
+Message-ID: <CACRpkda5Mt1fVL8fRPWX=qgbu0d90xYp8a+LtaR1NE9LssQtgg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+To:     Nicola Di Lieto <nicola.dilieto@gmail.com>
+Cc:     andy.shevchenko@gmail.com,
+        Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23.02.2023 07:58, Sergio Paracuellos wrote:
-> Hi Arınç,
-> 
-> All of this looks pretty good to me. You did a really big effort with
-> this series. Thanks for doing this!
-> 
-> On Wed, Feb 22, 2023 at 7:39 PM <arinc9.unal@gmail.com> wrote:
->>
->> This is an ambitious effort I've been wanting to do for months.
->>
->> Straight off the bat, I'm fixing the ABI that I broke a while back, by
->> reintroducing the ralink,rt2880-pinmux compatible string.
->>
->> If you take a look at the schema for mt7620 and rt305x, some functions got
->> multiple lists for groups. Like refclk on mt7620. Because mt7620 and
->> mt7628/mt7688 SoCs use the same compatible string, it's impossible to
->> differentiate on the binding which SoC a devicetree is actually for.
->> Therefore, the binding will allow all groups listed for that function. For
->> example, if the SoC is mt7620, only the refclk function for the mdio group
->> can be used. If one were to put "spi cs1" as the function there, there
->> wouldn't be a warning.
->>
->> I address this by introducing new compatible strings for these SoCs, then
->> split the schemas. I also separate mt7628/mt7688 from mt7620 pinctrl
->> subdriver in the process.
->>
->> I wanted to split the rt305x driver too but too much code would be reused
->> so I backed down from that.
->>
->> Ralink was acquired by MediaTek in 2011. These SoCs have been rebranded as
->> MediaTek. We're moving the Ralink pinctrl driver to MediaTek, and rename
->> the schemas to mediatek.
->>
->> I've renamed the ralink core driver to mtmips. I decided to call the core
->> mtmips as I've seen folks from MediaTek use the same name when they added
->> support for MT7621 pinctrl on U-Boot. Feel free to comment on this.
->>
->> The MTMIPS pinctrl driver requires rt_sysc_membase from
->> arch/mips/ralink/of.c, so, for COMPILE_TEST to be useful, RALINK must be
->> selected. These headers, asm/mach-ralink/ralink_regs.h and
->> asm/mach-ralink/mt7620.h, from arch/mips/include are also required but
->> they can easily be included:
->>
->> ifeq ($(CONFIG_COMPILE_TEST),y)
->> CFLAGS_pinctrl-mtmips.o                 += -I$(srctree)/arch/mips/include
->> endif
->>
->> Sergio, do you see a way to make the pinctrl driver independent of
->> architecture code? At least avoid using rt_sysc_membase.
-> 
-> The only really dependent architecture code in these drivers now is
-> because of the use of
-> 'rt_sysc_r32()' and 'rt_sysc_w32()' in 'ralink_pmx_group_enable()'
-> function [0]. This is just to set the gpio mode. The read and write
-> registers here  SYSC_REG_GPIO_MODE and  SYSC_REG_GPIO_MODE2 are in the
-> system controller area. In all single ralink platform 'sysc' nodes
-> should be a syscon that can be accessed from the driver side. That way
-> you can just get those syscon areas via regmap APIs and properly read
-> and write desired registers. For the mt7621.dtsi file, the node is
-> already a syscon [1]. Other ralink device tree files should also be
-> modified to include this in its 'sysc' node (I think in openWRT dts
-> files at least for mt7620 is already included). You have to add that
-> in all of them since 'ralink_pmx_group_enable()' is common code for
-> all. I think this can be done in a different patch series. I can help
-> you to do this after this series is reviewed and accepted.
+On Wed, Feb 22, 2023 at 4:00 PM Nicola Di Lieto
+<nicola.dilieto@gmail.com> wrote:
+> On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com wrote:
+> >
+> >Seems not much interest neither from community nor from author. Maybe later
+> >people will look into this?
+> >
+>
+> It's not lack of interest, but rather lack of time. I should be able to
+> have a look at this sometime the week after next.
 
-Awesome, thanks a lot! Note to self, "depends on RALINK" menu entries 
-should be changed to "depends on OF" when this happens.
+Thanks Nicola, I am also interested in seeing this driver upstream.
 
-Arınç
+Yours,
+Linus Walleij
