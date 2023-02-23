@@ -2,152 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AF716A089C
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 13:29:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CDCE6A0A8C
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 14:33:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233571AbjBWM3q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Feb 2023 07:29:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
+        id S233375AbjBWNdA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Feb 2023 08:33:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233240AbjBWM3o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 07:29:44 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91EED3B226
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 04:29:40 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-536be69eadfso181338517b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 04:29:40 -0800 (PST)
+        with ESMTP id S233289AbjBWNc7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 08:32:59 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A42BDC0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 05:32:57 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id g17so1045854lfv.4
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 05:32:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=l27prqAr9h3GZK8RN08FtqLKiroMBi1v9H+IeJ/D4fk=;
-        b=l5qLjcXYM6AuNV6mV4P2Y4b+VgdUFH460IL1VVy54MWjQRE6rQGEYINztLgGRFqTgh
-         whRqElncLV1ytI+eC8jSdHl+vBSJsqRQ42g6hIBn5LMlYTwqXxtFJWMlcPTGdZwK56XR
-         EzGCRpFvFFoxjQSHAteMZv8JLd7tzoAktyolor86l6Mvq1siiGkT6qqS6YcobwCqYPwD
-         8OovUOyyWH2QTJNwOyulQv2T52A+ak1NVaoNC0IXeEGzqlK85iQo/dbACQLzWoJjnQ3q
-         VEDWv9npkWeGroNfweN7SATsof0A0sSewXqAoEY2F9B4p+70b5TV+SyYZvGs93y+DqbA
-         ZqWQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eXSfRBLuMqFua2MZpV9G4Cg4Ju4L9Za2DVr8M7QmRxU=;
+        b=EauZMVoGlbIfZ9gek64NWvJXSZlJNS4Ni7B1SzeT4bSexNDB79YluikQY1jDnya1Hb
+         L5ix6ZTLOjxK55m0roFsvXBBdqZRwryi86JX7p+YJQkvuOywE0UiefJCN13fQyK35JwK
+         SP0Ewpk4wh107UdESFvUvf+aSDa6ai5bIVAGU575pjPDsQ3jnMJ/4WcMc1VypNO8nEsS
+         SjqdLDvSOdhm60kJU97+fS0zl9YAa3YW+neShTDUBMX9bUdHjAzBvOyqp4i4lmTP3fYq
+         2sY/E41yX4G56/ZoTeGUARPv6QdkByNVqcM3utAdyvZA3XjGdKplmEU5NBfh9l0yVxc4
+         rJcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l27prqAr9h3GZK8RN08FtqLKiroMBi1v9H+IeJ/D4fk=;
-        b=CT/gj9TkrkuOAW2NyN30VOYh++qCzTcZfb8dLYBTSv+Lx7//KNhuFTrGmmwWf3ctiH
-         pW7fQ4VF9lP3g8gZLwJ1WW62rQ29fgQjOlVz8TayBpUuKnzfQIwtj0jC2JHJlahIz+2s
-         IFV7fCz5mY7h/yGmDXe+YiXlgMGMBRg0aTUJsXGFRnZS1DXj3rDhTqRK9Np5ElLlCGAU
-         zq3DmijWBBX3BsKlc5GYEx13PiBDua5jJMao2+ydE+s9s4W4YERLPhhlpaskKZvQw6RT
-         Ya90Y7aHEM+48XD3ft+hIahmS3jhfqH13aysUQEd1YHpj+w6TzkGcQBF1kJwn8OscCuz
-         4gCQ==
-X-Gm-Message-State: AO0yUKW56CL0INEqVnfwopvYwMRwGcYWWqJoQXBDh0/wExw6ANS3dOFl
-        Jn8vx+3JEpPQHR3m1xgk9RUZLfFdGHQ+xhmKERKFfg==
-X-Google-Smtp-Source: AK7set8qmLU86E6/dgl73UDiOOb9YsQwumSXwVyM1QkgcgWonuRowRvEKw7fc1bI/GuseWbw/VLMNR/bELlSqejTaT0=
-X-Received: by 2002:a25:918c:0:b0:8da:d0ab:258a with SMTP id
- w12-20020a25918c000000b008dad0ab258amr1927035ybl.5.1677155379491; Thu, 23 Feb
- 2023 04:29:39 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1676042188.git.asmaa@nvidia.com> <cover.1676668853.git.asmaa@nvidia.com>
- <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
-In-Reply-To: <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
+        bh=eXSfRBLuMqFua2MZpV9G4Cg4Ju4L9Za2DVr8M7QmRxU=;
+        b=nxGzt92NLMLYKXr7CxWmirSb1tOMxNfigYdbqBAKEBHqpUVGUD4goYlaD/D1TWZOD9
+         ZbPQc2Egsh65BoBSNvp+RUWlMvw8OMiEX1E5ce+XZVyy2/SjkKI9GOQnq4QoZqG18H1A
+         W3McA6hIDNdMZQgK02CorsTS8CXVh556HGPziXeR7Q2VZtpaui2IPeT6GJBwpzoRlcsO
+         tRLBudY7rTRqyn5iv2GIA4TQDkABcEmPWfHv4daQ0rX4Ncue06miRrVPdsUnJWW0gkGF
+         cCPSNtimLdXLiTcCEguIst5h/XNYi6twvkHTTIiGYYdVXvXQbhOdoXXOGcVelK5p2CdX
+         SPBg==
+X-Gm-Message-State: AO0yUKXj/EBXtiXqacQGxtiVWMmJkr8tKehoc0AsszIg33AYyM5tWUdE
+        gBwpKSVUHyIwKmYY7H0Q9zz4RQ==
+X-Google-Smtp-Source: AK7set8hx54qO9AF9kFGbn8rERbVyJmLHHWmAj3gIrsaR1aZTHYta7tKlaZm5HP7onXeHLZk9JfXqA==
+X-Received: by 2002:a19:f60f:0:b0:4b5:2ef3:fd2a with SMTP id x15-20020a19f60f000000b004b52ef3fd2amr4944777lfe.47.1677159175881;
+        Thu, 23 Feb 2023 05:32:55 -0800 (PST)
+Received: from fedora.. ([85.235.12.219])
+        by smtp.gmail.com with ESMTPSA id y14-20020ac24e6e000000b004dc48d91061sm772238lfs.304.2023.02.23.05.32.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Feb 2023 05:32:55 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Feb 2023 13:29:28 +0100
-Message-ID: <CACRpkdYgGjqL85CcNw=38_XrzsWPBX8GwhL9t3m_+fSnEjHrdw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH] misc: microchip: pci1xxxx: Convert to immutable irqchip
+Date:   Thu, 23 Feb 2023 14:32:52 +0100
+Message-Id: <20230223133252.2257276-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.39.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Asamaa,
+Convert the driver to immutable irq-chip with a bit of
+intuition.
 
-thanks for your patch!
+Cc: linux-gpio@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Maybe this would have been caught in review if the GPIO maintainers
+were involved, but the process isn't perfect. Better to just fix
+it.
+---
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-getting a lot better all the time.
+diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+index 3389803cb281..e616e3ec2b42 100644
+--- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
++++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+@@ -175,9 +175,13 @@ static void pci1xxxx_gpio_irq_set_mask(struct irq_data *data, bool set)
+ 	unsigned int gpio = irqd_to_hwirq(data);
+ 	unsigned long flags;
+ 
++	if (!set)
++		gpiochip_enable_irq(chip, gpio);
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 	pci1xxx_assign_bit(priv->reg_base, INTR_MASK_OFFSET(gpio), (gpio % 32), set);
+ 	spin_unlock_irqrestore(&priv->lock, flags);
++	if (set)
++		gpiochip_disable_irq(chip, gpio);
+ }
+ 
+ static void pci1xxxx_gpio_irq_mask(struct irq_data *data)
+@@ -283,12 +287,14 @@ static irqreturn_t pci1xxxx_gpio_irq_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irq_chip pci1xxxx_gpio_irqchip = {
++static const struct irq_chip pci1xxxx_gpio_irqchip = {
+ 	.name = "pci1xxxx_gpio",
+ 	.irq_ack = pci1xxxx_gpio_irq_ack,
+ 	.irq_mask = pci1xxxx_gpio_irq_mask,
+ 	.irq_unmask = pci1xxxx_gpio_irq_unmask,
+ 	.irq_set_type = pci1xxxx_gpio_set_type,
++	.flags = IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static int pci1xxxx_gpio_suspend(struct device *dev)
+@@ -351,7 +357,7 @@ static int pci1xxxx_gpio_setup(struct pci1xxxx_gpio *priv, int irq)
+ 		return retval;
+ 
+ 	girq = &priv->gpio.irq;
+-	girq->chip = &pci1xxxx_gpio_irqchip;
++	gpio_irq_chip_set_chip(girq, &pci1xxxx_gpio_irqchip);
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+ 	girq->parents = NULL;
+-- 
+2.34.1
 
-On Fri, Feb 17, 2023 at 10:27 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
-
-> Add support for the BlueField-3 SoC GPIO driver.
-> This driver configures and handles GPIO interrupts. It also enables a user
-> to manipulate certain GPIO pins via libgpiod tools or other kernel drivers.
-> The usables pins are defined via the gpio-reserved-ranges property.
->
-> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-
-(...)
-> +config GPIO_MLXBF3
-> +       tristate "Mellanox BlueField 3 SoC GPIO"
-> +       depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMPILE_TEST)
-> +       select GPIO_GENERIC
-
-select GPIOLIB_IRQCHIP
-
-since you use it.
-
-(...)
-> +static void mlxbf3_gpio_irq_enable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf3_gpio_context *gs = gpiochip_get_data(gc);
-> +       int offset = irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       writel(BIT(offset), gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_CLRCAUSE);
-> +
-> +       val = readl(gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       val |= BIT(offset);
-> +       writel(val, gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-
-Here, at the end (*after* writing registers) call:
-
-gpiochip_disable_irq(gc, offset);
-
-> +static void mlxbf3_gpio_irq_disable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf3_gpio_context *gs = gpiochip_get_data(gc);
-> +       int offset = irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-
-Here, at the beginning (*before* writing registers) call:
-
-gpiochip_disable_irq(gc, offset);
-
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       val = readl(gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       val &= ~BIT(offset);
-> +       writel(val, gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +}
-
-(...)
-
-> +static const struct irq_chip gpio_mlxbf3_irqchip = {
-> +       .name = "MLNXBF33",
-> +       .irq_set_type = mlxbf3_gpio_irq_set_type,
-> +       .irq_enable = mlxbf3_gpio_irq_enable,
-> +       .irq_disable = mlxbf3_gpio_irq_disable,
-
-Like Andy said:
-
-.flags = IRQCHIP_IMMUTABLE,
-GPIOCHIP_IRQ_RESOURCE_HELPERS,
-
-Apart from this it looks all right.
-
-Yours,
-Linus Walleij
