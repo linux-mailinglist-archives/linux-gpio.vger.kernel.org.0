@@ -2,64 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 941BF6A0117
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 03:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C93D6A0234
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 05:58:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233083AbjBWCLO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Feb 2023 21:11:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42150 "EHLO
+        id S233277AbjBWE6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Feb 2023 23:58:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbjBWCLJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 21:11:09 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008CD3E087
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 18:11:07 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id c23so6353713pjo.4
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Feb 2023 18:11:07 -0800 (PST)
+        with ESMTP id S232995AbjBWE6o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Feb 2023 23:58:44 -0500
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBEC9EF3;
+        Wed, 22 Feb 2023 20:58:42 -0800 (PST)
+Received: by mail-oi1-x22c.google.com with SMTP id bk2so9666477oib.10;
+        Wed, 22 Feb 2023 20:58:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3si7p3fkilqHdR2QtdQJ0BnGhLu5r3eUvpHNmBBoNfU=;
-        b=bsFuVPw9vMLv26aqo9rLQRx7/ZVG4PePcZshzIzVuFz5INf2SWCHG9gP5avkL6UPuE
-         jOIAaILC/67VYC4ERhYe+q36FdAaIwvKpRGm2I2XR8NuwCPTd72izbhdNriDU46wKrT8
-         NhXeJ5oW+USz2LY6ZXW/MAiF72lf7II4eMSJdY42424pQ1J1sudzsMP/A+Tt7Trk4UIw
-         gaXrswFhwc3oCG1whc8va1rxaUZP0XtQaHOUD9aoFZgo/8HBqn2GfoQTaVkGjB/IXwo1
-         t1iFrWGYslswuVL7Thwaj7JDkNK1LGwiKLl4MOwu666w/VQiAKp4QuSFJRroFpnYM6KQ
-         ktcQ==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7zwfDzUYIF2/Ch0TBhvURuwPH0xhlEkOqRiPNAWbTAM=;
+        b=Wu8i+tebr+qM9evWjfiBZqOisU73NEX4GLFp8a7/pfkyhzIk3fiyDPJc6h3f67kJWY
+         ZOlbNmgN/3G4xapSB2wbi69lnPmMcQyA2RfVQXdLsvEDOXh9miFAi50A84md91TMaHiQ
+         M5AqTlwkYsxAwE0NYg4+HDNST2XGg2ka09FJRf7qoS7JFNPczj1TnNHX28zLQhum6v14
+         0owxu8gsPitIYS/yrn5sYlBnK4+ZmNOwmaHR7oCm3tLUV4z8b3OBQH/5yXX00CTl5kIm
+         24z5QnQPglgh4C8JR1XUp8C9XuHen1PYUUNDoybXUs/XKYVvLz9DvB2B4+rJvX424MSV
+         /J4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3si7p3fkilqHdR2QtdQJ0BnGhLu5r3eUvpHNmBBoNfU=;
-        b=lDWWQMO+WQ+F6xgSL/VCyHsIwgyt5wzX+ORKdmA6HIZRONkwCxxOB2O6c2NhAO1BnO
-         khusHwgBCa8VN457omLp/WAxxVMyV46RhuUbbDqe/yi+t8kubka88fKEjsTN24Zdwsvw
-         neX4j9JpwheX7rPNvExhlS6Coc4PqtUmqMBWa+RJivqk7c5QSGOzHGmjjQPxnqVmWh8B
-         nYMpcBIbuKF4S7CWyRgUV+HUJpxdv7UUlGMY/phjDzulh5yal+pNraWAY2LIcjOy94Ld
-         R6gFvn1V0KSCQO8Ga28QtbaGdf4glovYMXYk6eGYL5WtjMFs81y6FCT2vgA6O3mV+Eep
-         j4Zw==
-X-Gm-Message-State: AO0yUKX/f+taxax1xb0cAnk877JRY8gvl1RcPyBiM7EKD21DyFKkgD1K
-        e318cPg7TsdhBQaISmLKJz3wGztfq91LO8WXHMyzAg==
-X-Google-Smtp-Source: AK7set/X9X8T6QrYsvmm11hBvxajjqfZG2IuKmEmJYtfAlMFwGwqcIvdXb5K48h1llDIIkRMFxc9g5o0MC5kLe30Tpc=
-X-Received: by 2002:a17:90b:1e05:b0:236:76cb:99d6 with SMTP id
- pg5-20020a17090b1e0500b0023676cb99d6mr2735818pjb.73.1677118267027; Wed, 22
- Feb 2023 18:11:07 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7zwfDzUYIF2/Ch0TBhvURuwPH0xhlEkOqRiPNAWbTAM=;
+        b=6XSEoGjKtM41wSQqvJDm5BFUxUOOVuAw1+YUSt4ZvvbZT3gV1JKbNKfu/MMGriEYwe
+         WGYLtLyswrg7Bfd05L3R/ZA9XTFQUZJoO0FeQuIQTE++PiizMkALMLGKhgZr43GwGZJr
+         e75rhWuI2LNrp+KFrSFVE0H1MLUsHxQCoQD+/Hl6Tu+H7To8dHa4KQScx9q6wVHTcgRU
+         YoIAGA9OvC06KhDcMWKhO83kB2/to+q9ym90brJsN4CMJFiKNJd/mqi/w1pGKAHOF1/2
+         l5cibWCU/aYLdsFzKWYcJGYBAEwO6SWhT16DohFGutZgjYJJu+4iDmz8bpPyj+eCTitA
+         64eQ==
+X-Gm-Message-State: AO0yUKXY0DjPnDImrWtauckBNZFhGwf/aMC59FwxjCqxgixYCILmEgbL
+        Q3tKOJ2Te6XUaFjnNOVlVi/s5NxMf89BtEML9pA=
+X-Google-Smtp-Source: AK7set8J9L0Jihnqm6aIw47nAmbm+z3nWjNHyX7IzhURyC7solSWgHuO+mOLsPvPXJcp9+OTsGE6JZluMqIUV4tFvWI=
+X-Received: by 2002:a05:6808:13c3:b0:37b:7c36:4df8 with SMTP id
+ d3-20020a05680813c300b0037b7c364df8mr402953oiw.144.1677128321624; Wed, 22 Feb
+ 2023 20:58:41 -0800 (PST)
 MIME-Version: 1.0
-References: <CACRpkdYy8nPeJbBVMsyh6DAeKXPMnsdp7CwK0O2oLWG++oSgDA@mail.gmail.com>
-In-Reply-To: <CACRpkdYy8nPeJbBVMsyh6DAeKXPMnsdp7CwK0O2oLWG++oSgDA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 22 Feb 2023 18:10:30 -0800
-Message-ID: <CAGETcx8TiZ1s7s1midKTqbVMzy6oPEkMSQhZkmccHFzyg22+Lw@mail.gmail.com>
-Subject: Re: Question on device links
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
+References: <20230222183932.33267-1-arinc.unal@arinc9.com>
+In-Reply-To: <20230222183932.33267-1-arinc.unal@arinc9.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 23 Feb 2023 05:58:30 +0100
+Message-ID: <CAMhs-H8cKG_aQaE_JBuEfchQ4jNZT5NRPEypywWFuFtsc2MiZg@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/16] pinctrl: ralink: fix ABI, improve driver, move
+ to mediatek, improve dt-bindings
+To:     arinc9.unal@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,135 +84,98 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 1:34 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Ar=C4=B1n=C3=A7,
+
+All of this looks pretty good to me. You did a really big effort with
+this series. Thanks for doing this!
+
+On Wed, Feb 22, 2023 at 7:39 PM <arinc9.unal@gmail.com> wrote:
 >
-> Hi Saravana,
+> This is an ambitious effort I've been wanting to do for months.
 >
-> please help me to look at this device link stuff in the pinctrl
-> subsystem!
-
-Hi Linus,
-
-Thanks for reaching out!
-
-> I started at one point to add device links for pin control and GPIO
-> based on something that was done inside a pin control driver,
-> resulting in these patches:
+> Straight off the bat, I'm fixing the ABI that I broke a while back, by
+> reintroducing the ralink,rt2880-pinmux compatible string.
 >
-> Enforcing links in some select drivers:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=consumer-links
+> If you take a look at the schema for mt7620 and rt305x, some functions go=
+t
+> multiple lists for groups. Like refclk on mt7620. Because mt7620 and
+> mt7628/mt7688 SoCs use the same compatible string, it's impossible to
+> differentiate on the binding which SoC a devicetree is actually for.
+> Therefore, the binding will allow all groups listed for that function. Fo=
+r
+> example, if the SoC is mt7620, only the refclk function for the mdio grou=
+p
+> can be used. If one were to put "spi cs1" as the function there, there
+> wouldn't be a warning.
 >
-> Enforcing it over all drivers:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=consumer-link-enforce
+> I address this by introducing new compatible strings for these SoCs, then
+> split the schemas. I also separate mt7628/mt7688 from mt7620 pinctrl
+> subdriver in the process.
 >
-> I am under the impression that your generic dependency work
-> now made these patches obsolete, so I can drop these branches
-> and forget about it, is that correct?
-
-Short answer is, yes, it'll be superseded by my work in driver core in
-the cases you have in mind when asking these questions.
-
-Now for the long answer that makes it less clear:
-
-fw_devlink currently supports "off" and "permissive" that are less
-stringent than the default "on". Not sure how long we want to support
-those option and whether we care about the device links in that case.
-The reason I haven't removed "off" is because 1) it was a good debug
-option during the early days if fw_devlink to see if it's breaking
-things. 2) early on during fw_devlink work, there were some debates
-about memory usage and one could argue that there might be low memory
-devices that want to save memory by avoiding the creation of device
-links (not sure how valid this argument is). fw_devlink seems a lot
-more stable and less "breaky" these days -- so (1) might not be a real
-concern anymore.
-
-Similarly the "permissive" option was useful in the early days where
-you still wanted to make sure sync_state() functionality worked
-correctly, but didn't want fw_devlink to order probing and break
-things. So, if anything, we can remove this even before we remove
-"off".
-
-The current default option for fw_devlink is "on" and doesn't set the
-DL_FLAG_PM_RUNTIME flag. fw_devlink=rpm does set that flag. But it
-hasn't been enabled by default so I'm not sure if there are any hidden
-bugs there -- unlikely when probe ordering is working, but still a
-possibility. The ideal goal is to make "rpm" the default and delete
-all the other options.
-
-And then, there are cycles. When there are cyclic dependencies in DT,
-fw_devlink doesn't enforce any ordering between the devices in the
-cycle because it doesn't know what the real probe dependencies are
-(and by extension suspend/resume). See [1] for additional context. So,
-if the cycle is A -> B -> C -> A, between A, B and C it only creates
-SYNC_STATE_ONLY device links (ensures correct sync_state() calls, but
-no other enforcement). An idea I have floating in my head as a TODO is
-for fw_devlink to learn the real dependency based on what it sees the
-drivers attempt to do. For example, if driver for B tries to create a
-device link for B -> C, then fw_devlink can start enforcing that going
-forward even if B defers probe for some other reason. The usefulness
-of this is very limited if B is already creating a B -> C device link
--- it just avoids a few hypothetical deferred probes. Also, Rob was
-okay with adding DT properties to break cycles at fw_devlink level,
-but I haven't thought through what that would look like. So, at least
-for now, when there are cycles, there's some use to the frameworks
-creating device links.
-
-Another point is, what about old ARM32 boards that don't use DT and
-use a machine specific .c file to create all the devices. fw_devlink
-won't do anything for them -- or at least, I haven't bothered to try
-to see if there's any way those can fake a "firmware" from fw_devlink
-perspective.
-
-Btw, all the comments above are only true since series[2] that landed
-in linux-next. Before that series, fw_devlink uses to create device
-links between the consumer and the parent of the pinctrl that was
-registering all the GPIOs (typically a platform or i2c device). But
-with [2], fw_devlink is smarter (see cover letter for details) and
-will create device links to the actual gpio devices (or whatever
-resource).
-
-Oh, and even if you do continue creating these device links from the
-pinctrl framework, it doesn't cause creation of separate device links
-from fw_devlink. The device links API just bumps up the ref counts
-appropriately. So, the real benefit is about reduced code in the
-framework and not any memory savings.
-
-So, TL;DR is that if you don't care about all of these:
-- old ARM32 boards
-- cases where someone might turn off fw_devlink
-- the corner cases where there are cycles (we could push the
-responsibility of creating device links to the drivers in that case)
-then you can drop all the code you are pointing to.
-
-Hope this helps?
-
-> What about these two drivers we already have:
+> I wanted to split the rt305x driver too but too much code would be reused
+> so I backed down from that.
 >
-> $ git grep link_consumers drivers/pinctrl/
-> drivers/pinctrl/core.c: if (pctldev->desc->link_consumers)
-> drivers/pinctrl/pinctrl-stmfx.c:        pctl->pctl_desc.link_consumers = true;
-> drivers/pinctrl/stm32/pinctrl-stm32.c:  pctl->pctl_desc.link_consumers = true;
+> Ralink was acquired by MediaTek in 2011. These SoCs have been rebranded a=
+s
+> MediaTek. We're moving the Ralink pinctrl driver to MediaTek, and rename
+> the schemas to mediatek.
 >
-> The effect will be to enforce links for each handle from a consumer
-> of a pinctrl handle:
+> I've renamed the ralink core driver to mtmips. I decided to call the core
+> mtmips as I've seen folks from MediaTek use the same name when they added
+> support for MT7621 pinctrl on U-Boot. Feel free to comment on this.
 >
-> static void pinctrl_link_add(struct pinctrl_dev *pctldev,
->                              struct device *consumer)
-> {
->         if (pctldev->desc->link_consumers)
->                 device_link_add(consumer, pctldev->dev,
->                                 DL_FLAG_PM_RUNTIME |
->                                 DL_FLAG_AUTOREMOVE_CONSUMER);
-> }
+> The MTMIPS pinctrl driver requires rt_sysc_membase from
+> arch/mips/ralink/of.c, so, for COMPILE_TEST to be useful, RALINK must be
+> selected. These headers, asm/mach-ralink/ralink_regs.h and
+> asm/mach-ralink/mt7620.h, from arch/mips/include are also required but
+> they can easily be included:
 >
-> Is this also in effect superceded with core dependency tracking
-> so this code should simply be deleted?
+> ifeq ($(CONFIG_COMPILE_TEST),y)
+> CFLAGS_pinctrl-mtmips.o                 +=3D -I$(srctree)/arch/mips/inclu=
+de
+> endif
+>
+> Sergio, do you see a way to make the pinctrl driver independent of
+> architecture code? At least avoid using rt_sysc_membase.
 
-My comments above apply to these too. I think if we are going to
-create device links outside of fw_devlink, we should do it at
-framework level as much as possible.
+The only really dependent architecture code in these drivers now is
+because of the use of
+'rt_sysc_r32()' and 'rt_sysc_w32()' in 'ralink_pmx_group_enable()'
+function [0]. This is just to set the gpio mode. The read and write
+registers here  SYSC_REG_GPIO_MODE and  SYSC_REG_GPIO_MODE2 are in the
+system controller area. In all single ralink platform 'sysc' nodes
+should be a syscon that can be accessed from the driver side. That way
+you can just get those syscon areas via regmap APIs and properly read
+and write desired registers. For the mt7621.dtsi file, the node is
+already a syscon [1]. Other ralink device tree files should also be
+modified to include this in its 'sysc' node (I think in openWRT dts
+files at least for mt7620 is already included). You have to add that
+in all of them since 'ralink_pmx_group_enable()' is common code for
+all. I think this can be done in a different patch series. I can help
+you to do this after this series is reviewed and accepted.
 
-Thanks,
-Saravana
-[1] - https://lore.kernel.org/lkml/20230207014207.1678715-9-saravanak@google.com/
-[2] - https://lore.kernel.org/lkml/20230207014207.1678715-1-saravanak@google.com/
+>
+> dtbs_check will print warnings for DTs with the old strings as it will
+> match multiple bindings. I assume that's acceptable in order to have the
+> things properly documented without breaking the ABI. The bindings will wo=
+rk
+> fine with the new compatible strings.
+>
+> I could define the checks under $defs:, then refer to it if the compatibl=
+e
+> string is the one which would work fine. Or I could put only the new
+> compatible strings on the documentation. What are your thoughts Krzysztof=
+,
+> Rob?
+>
+> Ar=C4=B1n=C3=A7
+>
+>
+
+Best regards,
+    Sergio Paracuellos
+
+[0]: https://elixir.bootlin.com/linux/v6.2/source/drivers/pinctrl/ralink/pi=
+nctrl-ralink.c#L117
+[1]: https://elixir.bootlin.com/linux/v6.2/source/arch/mips/boot/dts/ralink=
+/mt7621.dtsi#L62
