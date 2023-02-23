@@ -2,66 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CDCE6A0A8C
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 14:33:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AA766A0D3F
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Feb 2023 16:44:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233375AbjBWNdA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Feb 2023 08:33:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
+        id S234328AbjBWPoD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Feb 2023 10:44:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233289AbjBWNc7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 08:32:59 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A42BDC0
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 05:32:57 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id g17so1045854lfv.4
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Feb 2023 05:32:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eXSfRBLuMqFua2MZpV9G4Cg4Ju4L9Za2DVr8M7QmRxU=;
-        b=EauZMVoGlbIfZ9gek64NWvJXSZlJNS4Ni7B1SzeT4bSexNDB79YluikQY1jDnya1Hb
-         L5ix6ZTLOjxK55m0roFsvXBBdqZRwryi86JX7p+YJQkvuOywE0UiefJCN13fQyK35JwK
-         SP0Ewpk4wh107UdESFvUvf+aSDa6ai5bIVAGU575pjPDsQ3jnMJ/4WcMc1VypNO8nEsS
-         SjqdLDvSOdhm60kJU97+fS0zl9YAa3YW+neShTDUBMX9bUdHjAzBvOyqp4i4lmTP3fYq
-         2sY/E41yX4G56/ZoTeGUARPv6QdkByNVqcM3utAdyvZA3XjGdKplmEU5NBfh9l0yVxc4
-         rJcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eXSfRBLuMqFua2MZpV9G4Cg4Ju4L9Za2DVr8M7QmRxU=;
-        b=nxGzt92NLMLYKXr7CxWmirSb1tOMxNfigYdbqBAKEBHqpUVGUD4goYlaD/D1TWZOD9
-         ZbPQc2Egsh65BoBSNvp+RUWlMvw8OMiEX1E5ce+XZVyy2/SjkKI9GOQnq4QoZqG18H1A
-         W3McA6hIDNdMZQgK02CorsTS8CXVh556HGPziXeR7Q2VZtpaui2IPeT6GJBwpzoRlcsO
-         tRLBudY7rTRqyn5iv2GIA4TQDkABcEmPWfHv4daQ0rX4Ncue06miRrVPdsUnJWW0gkGF
-         cCPSNtimLdXLiTcCEguIst5h/XNYi6twvkHTTIiGYYdVXvXQbhOdoXXOGcVelK5p2CdX
-         SPBg==
-X-Gm-Message-State: AO0yUKXj/EBXtiXqacQGxtiVWMmJkr8tKehoc0AsszIg33AYyM5tWUdE
-        gBwpKSVUHyIwKmYY7H0Q9zz4RQ==
-X-Google-Smtp-Source: AK7set8hx54qO9AF9kFGbn8rERbVyJmLHHWmAj3gIrsaR1aZTHYta7tKlaZm5HP7onXeHLZk9JfXqA==
-X-Received: by 2002:a19:f60f:0:b0:4b5:2ef3:fd2a with SMTP id x15-20020a19f60f000000b004b52ef3fd2amr4944777lfe.47.1677159175881;
-        Thu, 23 Feb 2023 05:32:55 -0800 (PST)
-Received: from fedora.. ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id y14-20020ac24e6e000000b004dc48d91061sm772238lfs.304.2023.02.23.05.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 05:32:55 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org,
+        with ESMTP id S233299AbjBWPoC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Feb 2023 10:44:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D880498A7;
+        Thu, 23 Feb 2023 07:44:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6461361748;
+        Thu, 23 Feb 2023 15:44:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33320C433EF;
+        Thu, 23 Feb 2023 15:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677167041;
+        bh=uN8ISHkE6/VQt5crrjs+9hxZygbtaK7oShh8fdSy0Y8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c79lUVQbZO/0Sauy+GLKsA2XIKrd/rky0b92KLLJXEIyIvxzC19dQl+v74VALyBGx
+         km2VJa7KUug1BaDZtWZDbzpDKKQXt4hClGMXa1DUSwE0MbL2oX183+3synSOvjkPED
+         M1HJFYyR+YeQIbonJpN0nZwKjYPiJg69voMCP66k8Uo4y8Oski+Ec0g6uNzyZ+RLc3
+         SIa/xoCQEUDGvNVd2kkU3limYrLYIq2v2KXf8BYT3LZd9hJCQ34HZXGNunuaG1Ku0g
+         5PFaKI7M/qchctXpwpVjD1IgedBP/oP9H/OCul/ymH6OHcS6AfeRdOhNyvr+3Mq+dC
+         /485Ius1zVXoQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pVDlG-00CgTb-Pb;
+        Thu, 23 Feb 2023 15:43:58 +0000
+Date:   Thu, 23 Feb 2023 15:43:58 +0000
+Message-ID: <868rgoxu81.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] misc: microchip: pci1xxxx: Convert to immutable irqchip
-Date:   Thu, 23 Feb 2023 14:32:52 +0100
-Message-Id: <20230223133252.2257276-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.39.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] misc: microchip: pci1xxxx: Convert to immutable irqchip
+In-Reply-To: <20230223133252.2257276-1-linus.walleij@linaro.org>
+References: <20230223133252.2257276-1-linus.walleij@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,63 +65,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the driver to immutable irq-chip with a bit of
-intuition.
+On Thu, 23 Feb 2023 13:32:52 +0000,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> Convert the driver to immutable irq-chip with a bit of
+> intuition.
+> 
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Cc: linux-gpio@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Maybe this would have been caught in review if the GPIO maintainers
-were involved, but the process isn't perfect. Better to just fix
-it.
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-index 3389803cb281..e616e3ec2b42 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-@@ -175,9 +175,13 @@ static void pci1xxxx_gpio_irq_set_mask(struct irq_data *data, bool set)
- 	unsigned int gpio = irqd_to_hwirq(data);
- 	unsigned long flags;
- 
-+	if (!set)
-+		gpiochip_enable_irq(chip, gpio);
- 	spin_lock_irqsave(&priv->lock, flags);
- 	pci1xxx_assign_bit(priv->reg_base, INTR_MASK_OFFSET(gpio), (gpio % 32), set);
- 	spin_unlock_irqrestore(&priv->lock, flags);
-+	if (set)
-+		gpiochip_disable_irq(chip, gpio);
- }
- 
- static void pci1xxxx_gpio_irq_mask(struct irq_data *data)
-@@ -283,12 +287,14 @@ static irqreturn_t pci1xxxx_gpio_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irq_chip pci1xxxx_gpio_irqchip = {
-+static const struct irq_chip pci1xxxx_gpio_irqchip = {
- 	.name = "pci1xxxx_gpio",
- 	.irq_ack = pci1xxxx_gpio_irq_ack,
- 	.irq_mask = pci1xxxx_gpio_irq_mask,
- 	.irq_unmask = pci1xxxx_gpio_irq_unmask,
- 	.irq_set_type = pci1xxxx_gpio_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int pci1xxxx_gpio_suspend(struct device *dev)
-@@ -351,7 +357,7 @@ static int pci1xxxx_gpio_setup(struct pci1xxxx_gpio *priv, int irq)
- 		return retval;
- 
- 	girq = &priv->gpio.irq;
--	girq->chip = &pci1xxxx_gpio_irqchip;
-+	gpio_irq_chip_set_chip(girq, &pci1xxxx_gpio_irqchip);
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
- 	girq->parents = NULL;
+	M.
+
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
