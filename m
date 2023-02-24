@@ -2,97 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2B436A2149
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 19:17:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A18846A21BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 19:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjBXSRC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 13:17:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
+        id S229532AbjBXSuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 13:50:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbjBXSRB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 13:17:01 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0010113DF9;
-        Fri, 24 Feb 2023 10:16:57 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id w42so342065qtc.2;
-        Fri, 24 Feb 2023 10:16:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dbrfWU2+v05vgW558zPyEG9XfLlb2Qbh/gfCUZwyWQI=;
-        b=XxVCTehJPVgGP8dSH5G4p1FqFXEfrPHgU2eYaRv+X11mO/DuNCGQckQRBF3/LrmSY2
-         D44KmJy+nLSBv0VNdeyWDfSr1OjSAQL0CGK9IRH4TJY2/nP7BB+ednlGpJZ+FrGS1jSj
-         HOa5cD9M+qUROep+ycPHiZIhAp6+uKwkYNccouNORcgIcUMDL2EKOE/9w4z+BygSjH2i
-         mYgcTHtSZnj9oxdi2o9wKDBf9OaqQtZA9XvPa/Clpy2HbI9KeQ4y7UafIKQPFOHmUgbO
-         xDNlWkJ+kQx3glj28N05xw7N5Wpj7Qo7jLTwcCiql6K8C3GS+Z3U+gWNnUDedahlHiph
-         7Ocw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dbrfWU2+v05vgW558zPyEG9XfLlb2Qbh/gfCUZwyWQI=;
-        b=D+K2lkZkMYMRHaZDDvGIVsS0TnmiwoaZnn6B8bos0jQ3Y2Q1W3qS88uRr2uEyH5/0U
-         DTQvSypsGnciu+Ssa0herONFPfUKXHbMkbgbPFfaXoea+e6bkjpmN+WD1+Tzt3my9c2F
-         oStbmaoH4a4PZDdpVWlsTd6FUepyZEYeJT5ySQy0KvoVeAMZApCIfG+V3FZtx7nHhrH5
-         eA0OK6pM38WxJNdHqr4zsJGxpgRNkDY/MUuBtIu0euAyhGb0Id8J4bup2tKBQI313asA
-         lRll5u+RF8hQ4zmkK5OxDNOj2SMSkDFvp+4ZDWmMJ1ESER5XVyg+la6NdFNpOI08lJuL
-         kKjQ==
-X-Gm-Message-State: AO0yUKW/uTm3gtNY8fD1z2l9yy1Z6zQ5lJvt/+TtfgRKfR+HZEMJdIUX
-        gRxU+rVL/fN8AnBoH4t5b5pVN5KNBw35BeU9be4=
-X-Google-Smtp-Source: AK7set8PMPukDTNXLaVQNOCTO1ktYqvA4vD54uZFEKxFwUo9Q0hg2ln9c8i57jCCtLgbdMyUGKFO6/Q/BBs1/KHAm1M=
-X-Received: by 2002:ac8:24f:0:b0:3bf:b93b:6af1 with SMTP id
- o15-20020ac8024f000000b003bfb93b6af1mr848795qtg.1.1677262617128; Fri, 24 Feb
- 2023 10:16:57 -0800 (PST)
+        with ESMTP id S229635AbjBXSuH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 13:50:07 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9196A7AE;
+        Fri, 24 Feb 2023 10:50:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677264606; x=1708800606;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Med8FP749QQT3U1NIMdqmYtl7dVRycVXAPaFZGh995w=;
+  b=kUSokPvzYHN+KpXkk6Vgp/sWYaHOS+tXSNZ1PiCLAjqOdREmgUnPzkl1
+   BxMaeQgS4cp2Hde2NsRcXTt18RbOStO4qO9s+bzB4+NtaPgMVI49R+NDi
+   5G144sKtmCUtQ0EzDk2hVKHb5xi7fYor0tMDBTOsOy0d/nV/15E3oERKl
+   qTZPenOMM8c9jQlk+9VqkzFzjCzzwYEwYFiHdPEMBJ3s0ecz4bhMqHDr1
+   ec85bSc3K5mnxLED9YIXj2B+VE7FwASDkDkvzVeGBFs/Wd3FR4QVf05Pq
+   sPSR6Lj+ZWVE43AgaFD15IOQDEAV6xtK3/41rYRkrgNYJ1CQz/EV9fRi8
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="321754308"
+X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
+   d="scan'208";a="321754308"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 10:50:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="918528349"
+X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
+   d="scan'208";a="918528349"
+Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Feb 2023 10:50:02 -0800
+Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pVd8s-0002dD-0R;
+        Fri, 24 Feb 2023 18:50:02 +0000
+Date:   Sat, 25 Feb 2023 02:49:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        jpanis@baylibre.com, jneanne@baylibre.com
+Subject: Re: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
+Message-ID: <202302250208.XGrlUK3B-lkp@intel.com>
+References: <20230224133129.887203-3-eblanc@baylibre.com>
 MIME-Version: 1.0
-References: <20230224174007.13009-1-asmaa@nvidia.com>
-In-Reply-To: <20230224174007.13009-1-asmaa@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Feb 2023 20:16:21 +0200
-Message-ID: <CAHp75Vf_yHVhZS4ghZK5aZ7sQjdZ_1_MT=Ke6vVfUBRpL70-Eg@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: mmio: handle "ngpios" properly in bgpio_init
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230224133129.887203-3-eblanc@baylibre.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 7:40 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
->
-> bgpio_init uses "sz" argument to populate ngpio, which is not accurate.
+Hi Esteban,
 
-bgpio_init() uses the
+Thank you for the patch! Perhaps something to improve:
 
-(Note parentheses, same for other func() mentions)
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next broonie-regulator/for-next abelloni/rtc-next linus/master v6.2 next-20230224]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Instead, read the "ngpios" property from the DT and if it
-> doesn't exist, use the "sz" argument. With this change, drivers no
-> longer need to overwrite the ngpio variable after calling bgpio_init.
+url:    https://github.com/intel-lab-lkp/linux/commits/Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230224133129.887203-3-eblanc%40baylibre.com
+patch subject: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
+config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230225/202302250208.XGrlUK3B-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/5abddc736234d1cd3e28ef7e205bc0bfef263c15
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
+        git checkout 5abddc736234d1cd3e28ef7e205bc0bfef263c15
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc SHELL=/bin/bash drivers/pinctrl/ drivers/regulator/
 
-Thank you!
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302250208.XGrlUK3B-lkp@intel.com/
 
-...
+All warnings (new ones prefixed by >>):
 
-> +       ret = device_property_read_u32(dev, "ngpios", &ngpios);
-> +       if (!ret)
-> +               gc->ngpio = ngpios;
-> +       else
-> +               gc->ngpio = gc->bgpio_bits;
+>> drivers/pinctrl/pinctrl-tps6594.c:8: warning: "DEBUG" redefined
+       8 | #define DEBUG
+         | 
+   <command-line>: note: this is the location of the previous definition
 
-This duplicates the GPIO library. What probably better to have is to
-just check the property existence
 
-device_property_present() and do accordingly.
+vim +/DEBUG +8 drivers/pinctrl/pinctrl-tps6594.c
+
+   > 8	#define DEBUG
+     9	
 
 -- 
-With Best Regards,
-Andy Shevchenko
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
