@@ -2,118 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B4E06A1903
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 10:48:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8B86A1A8D
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 11:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbjBXJsW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 04:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
+        id S229630AbjBXKsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 05:48:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjBXJsV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 04:48:21 -0500
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A57829E34;
-        Fri, 24 Feb 2023 01:48:20 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id z6so2141750qtv.0;
-        Fri, 24 Feb 2023 01:48:20 -0800 (PST)
+        with ESMTP id S229605AbjBXKsX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 05:48:23 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E9813506
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 02:48:22 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id p8so13588568wrt.12
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 02:48:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JVXNCqpApA7ELtFM5W7tXqhzvT3RzGT0ucZSGwR72Fc=;
-        b=dnY0C/s1YZxv6ExAkfxySx7upc3ZK6WcAbur+sTRGiK7sg05e5eNCaezffrO1QBDgS
-         dIx+t4wtuI/ZdoxMkpMaAj3Rf0CNPlogjFI4ABmF2R6edDER3jzplFQbflqkCGKnwX6V
-         SUm0w0O7T/TZQ2qlVv2JFDRNC7kh+sy7bK2HxcPhlj37u+z82i6F2KWV2zOeKm6atQRD
-         /8CMxtBpU/GOHdtCRHmT3CYL2zbIh3pK6Ct//EReDOlU35qx/gB9nOlc0uubIWs4JF5w
-         mNHrkDaInCMKtfFP4HmDyfBekwuBCI2V2F+6FdaYx7oCVlSc0THhnSivN89c4M4GSiy/
-         kYQw==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HR0UWQKqPA3ewcsqzjhlOUtNlnfP6392kIgsSTEs7d8=;
+        b=mFDonIVCSZ0rdWjYufm4eMvD1LnS53ToUl9EKyG7g8JO+Rw3SGGn2yjcH2XfVaI4jd
+         XzYd933WnqWkKbOdDS9KEv4CdiagfLwwrTWFvUemRchLFrPChk2lmOAUY2VhL1HdsCrG
+         iyBVb2K6+rbHWzjs0OjUtW2I84AZoHuiLNFxCVtCTJT77XWJPqsuv1GQeZpyPpp6Iy15
+         l4MxJO+qfAmeD2MrXBiFD0dE0PejaR2H1f2M1GvTZ3+FqENUgZji00S4Se19dBrE4lYI
+         DTkPhWeqLQAaaHHt0l1em42bfTMhEHBDeoAFM6vzL2aupPc8clHQmmJjWYSJ9asXu3ZY
+         FMqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JVXNCqpApA7ELtFM5W7tXqhzvT3RzGT0ucZSGwR72Fc=;
-        b=5+SqAccAWHBEMXyVnX6GLwJYpcnwPy7KtXaX9fDw3Fgvm3O+tkfAToft/hPW0Vyat7
-         iuwmu8SGOlUUrfTbvziJeixy+ErgIKJXSmwffvM9P/bgIfwwAN8snniV3ZlKK0uT32pR
-         R68VF8/Oa45sEdLkV6lyGltvD++gKYNr515D3Jfl2dmkC2LtRaMTw9TSZB9N32sacZ8g
-         fDuXbPRfJPJAKtakwxPDWmhktKZt06WMN402QhbrSmUN05010bfRfFRXWvv4FbUfsqHs
-         ohgTxaz0AJ+2tMYA7TLS0u5haDxYPKf0Sd7+SfDs92PnRxyw9fIS7FpZhptyBTTGfnAx
-         Lf0A==
-X-Gm-Message-State: AO0yUKXRzdtE1pixGYZ0JPVzu0+1qjWuv+HhbCm4pPaca+BO4+vKsqJr
-        7/dJD26PECBAuFaOldr4rdafeKBggNNgL+EcADo97OOEqrjkKg==
-X-Google-Smtp-Source: AK7set8q1/ET9SaMohJ7q/8VDfxDX2T3g1CZP+PquoalRpsrVJj+NLUvNDoQfimqIv2A19WNteILS0DnkhT69hSTLQE=
-X-Received: by 2002:aed:2791:0:b0:3bd:1a0b:8ac4 with SMTP id
- a17-20020aed2791000000b003bd1a0b8ac4mr2683586qtd.1.1677232099416; Fri, 24 Feb
- 2023 01:48:19 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HR0UWQKqPA3ewcsqzjhlOUtNlnfP6392kIgsSTEs7d8=;
+        b=tUqwEHkUkM0IHVS6iSrmrUopizASAxde+EubYCf8z/wnwbOAhV4XRTqc2kpNfK/Z0I
+         zwgtsGpEkMCrMkqijH7SWyRykKxX7FVfUG/k1UNX7rv7U13S027tHZBzFrMYSz0LkP/0
+         iOBTtj05m2/UZSZWEf3OC0zw4SCNLyO1uPiZ90+5+d5RYzNxy0kXA8i88ErmmAvtkImx
+         TRgGzE6MTRzU5AJrtCMeS8W9KRloAt6tavWYyKiyhAKDgjlu9Ze1JqGyTaApRev5JHy/
+         5rxtpqLjsL42mOGODqHVx/noddk0ilOAWendLbTyJNFDLUpvJQaM5LURztUasmhCH+Bb
+         NaHA==
+X-Gm-Message-State: AO0yUKUW6xog49LQnfahFKLW4j65cQnrrrNC7+0mtYbLXSMPQmP77lBx
+        vsyNUlFlFtOtLdVUDm2AKfW+KDOUahtfKNikQLZY5A==
+X-Google-Smtp-Source: AK7set+t2ZMXxJdkymq/f433ab9d1M38NcOpbgsjxwuHP9yBszDXCzcxLzuD8X8eMuxSDUIbKIbUnFuGPUkJsIOSTvs=
+X-Received: by 2002:a5d:59a9:0:b0:2c7:e48:8ca4 with SMTP id
+ p9-20020a5d59a9000000b002c70e488ca4mr1099157wrr.2.1677235700730; Fri, 24 Feb
+ 2023 02:48:20 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1676042188.git.asmaa@nvidia.com> <cover.1676668853.git.asmaa@nvidia.com>
- <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
- <CAHp75VdeVpjzg5Y_4Y+Ke9=3wog28vUBN4Fd8zxfa8dWGrqUUA@mail.gmail.com>
- <CH2PR12MB3895520749883D912E5021F1D7AA9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CAHp75Vc+iSt2XvpOYzwZnzX7Qg013e-E27CPjPaO-QmtferWVg@mail.gmail.com>
- <CH2PR12MB389509F68E6AFE776C5B0AC6D7AB9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CAHp75VdoUDMvVk1uMQcAKQteL6gbYGpoKpFn96ysdS81LjPGCQ@mail.gmail.com> <CH2PR12MB389530C5929100CB54396CF5D7AB9@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB389530C5929100CB54396CF5D7AB9@CH2PR12MB3895.namprd12.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Feb 2023 11:47:43 +0200
-Message-ID: <CAHp75VfZ1r_sNus_qMYumja3YrJawA6hRHUbi-uPFUprorQ_Kw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+References: <20230219183059.1029525-1-xiang.ye@intel.com> <20230219183059.1029525-3-xiang.ye@intel.com>
+In-Reply-To: <20230219183059.1029525-3-xiang.ye@intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 24 Feb 2023 11:48:08 +0100
+Message-ID: <CACRpkdYdDE+B=SF+kAuQBiwUi31y_xELLXuDK+9G+rqD9MQBGg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] gpio: Add support for Intel LJCA USB GPIO driver
+To:     Ye Xiang <xiang.ye@intel.com>
+Cc:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        wentong.wu@intel.com, lixu.zhang@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 12:51 AM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
+Hi Ye,
 
-...
+thanks for your patch!
 
-> > > > > Ah that=E2=80=99s my bad. The property should be called "ngpios" =
-like in
-> > > > > the DT
-> > > > documentation. Will fix.
-> > > >
-> > > > And why do you need it? What's a corner case that the GPIO library
-> > > > doesn't handle yet?
-> > >
-> > > We have 2 gpiochips, gpiochip 0 supports 32 gpio pins and gpiochip 1
-> > supports only 24 pins.
-> > > If I remove the logic from gpio-mlxbf3.c, the gpiolib.c logic will co=
-rrectly set
-> > the ngpios =3D 32 for gpiochip 0 but will wrongly set ngpios=3D32 for g=
-piogchip 1:
-> >
-> > So, either you need to have two entries in DT per chip or ngpios should=
- be 56.
-> >
-> I already have 2 entries in my ACPI table, in the first entry, ngpios =3D=
- 32 and in the second entry ngpios =3D 24.
+I think your colleague Andy Shevchenko will provide the most detailed
+and deep feedback, but here are some things I spotted immediately:
 
-Can you show the DSDT excerpt of this device? (Also including the
-pieces for pin control)
+On Sun, Feb 19, 2023 at 7:31 PM Ye Xiang <xiang.ye@intel.com> wrote:
 
-Is this a table of the device in the wild?
+> This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
+> device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
+> GPIO module with specific protocol through interfaces exported by LJCA USB
+> driver.
+>
+> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
+(...)
 
-> Gpiochip_add_data_with_keys only reads the ngpios property if (ngpios =3D=
-=3D 0) which is not the case when
-> bgpio_init is called. bgpio_init uses "sz" argument to populate the ngpio=
- in bgpio_init, which is not what we want.
+> +config GPIO_LJCA
+> +       tristate "INTEL La Jolla Cove Adapter GPIO support"
+> +       depends on MFD_LJCA
 
-Maybe bgpio_init() is not a good API for your case?
+I would add
 
---
-With Best Regards,
-Andy Shevchenko
+   default MFD_LJCA
+
+so if you activate the MFD you get this subdriver by default
+as module or built-in depending on what the MFD is built
+as.
+
+(Same goes for the other subdrivers I guess)
+
+In addition you need:
+
+select GPIOLIB_IRQCHIP
+
+since you use this facility.
+
+> +static struct irq_chip ljca_gpio_irqchip = {
+
+static const ...
+
+> +       .name = "ljca-irq",
+> +       .irq_mask = ljca_irq_mask,
+> +       .irq_unmask = ljca_irq_unmask,
+> +       .irq_set_type = ljca_irq_set_type,
+> +       .irq_bus_lock = ljca_irq_bus_lock,
+> +       .irq_bus_sync_unlock = ljca_irq_bus_unlock,
+> +       .flags = IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+
+Yours,
+Linus Walleij
