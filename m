@@ -2,214 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 043C76A2073
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 18:25:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 263366A208E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 18:40:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjBXRZe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 12:25:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53472 "EHLO
+        id S229563AbjBXRk0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 12:40:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjBXRZd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 12:25:33 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7DC18ABF;
-        Fri, 24 Feb 2023 09:25:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677259533; x=1708795533;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=gOeoPUunRtqrWAPxVFi+A+bxwqPgK02CDhyAWGKSQVw=;
-  b=Uy/vPuzOL/fdMOq+gMqNRV1PYgOPCfIs6XXzrxnK3AT8K5k2BwqcF9x2
-   EXamMATz/4ud2VsnbVWkKceOAkeIEzCRKjDnkVrBD4ZS5D4JmdGxQFtX+
-   L/ThkAk4SpYi8nCnYjKs7EJ82NM0gd5clKbNTOKGafAPjB3o5/sOYMcQO
-   2kDXxsnB7j+0NO1ZxRx+X4FFy2tkvVBu2w9mHmTrd4o7YAFoq1Zz6hQTv
-   wuSHFRH3W0f3jaN+/M8HW60de3dhdn1SWnNtK7nQUp3XzLQpKaLMfZpj5
-   Uju52SCMMvWcW7ZCuByOTpo3a96zYdAd+mZGOysJYTZo6gmEQ0Aiq/alJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="331262670"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="331262670"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 09:25:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="741721148"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="741721148"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Feb 2023 09:25:32 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 24 Feb 2023 09:25:31 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Fri, 24 Feb 2023 09:25:31 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Fri, 24 Feb 2023 09:25:30 -0800
+        with ESMTP id S229448AbjBXRkZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 12:40:25 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10hn2244.outbound.protection.outlook.com [52.100.157.244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B784269AEB;
+        Fri, 24 Feb 2023 09:40:24 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f9rQjtxlpjPuphCf/GlaMjyDnFBj17EKcfE6NQjKorj2IMEtVEUm8SfnXaByjNc5K36ZyZt7klD3kSlY9PkDt2icgcioazXtLQNzwq1nvtEWqtwmQ+a1B2N2APQhpfqJIKFo+rz3gMfLLiH5ChlW7VPfrraIfBBqQ20m2Tc6XDKDqHMv2QRuDCvEHNShxQCJZfoB0Z34YziuyGoLcJJWxqiPAWUCzo/5yQ+E9AokxQ5ZYvB+tA8JQxw/q3DRsQ964i69G57U/+xqv0sUvilRk3AWLnMCNrG5cdqODX/pk2r/DQAgl9BKffo9KZ7atuz3EAo9FebaPwPLGpsnDxTE9A==
+ b=VfImz7ntGsE5nrgVpoTEYrWIkGGH5Mu2AMRlX0L8w3K8hFbl2pzWyJlU6DVjkJEXTjtWoPPQmui+aKWkrsL0whriZeBw8LO8KlJygcsnvVEPsGScmkuSbo4tXz8bIIZq2NjwNnJdDJIkRYXknDnmqBshMoBSQgdSIo3Phn+RImc3ErSkXNW9Al7VsXNAzuSEcaNBF7yJqCI/1EgVTlnUInI+r/WiN5sWb+3A08QYXufPtN2kr6Hq0NjJ0ZsFWksLpKPq5XOBhMr+NmT4ZVv2OgjJvFgdNX6JM36UPdz/C67Wscgno19uq0nKqrPN08SxIPn1KOT6BJyQrPi6eB0diw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6VY4onE9AGVasfPuknXB/O7kSyO65XKCUR3EU8Jvxk=;
- b=CvqFk1RCBmbLE4pb90+rsINaS390P89g8rkjRj9TUx9wtUN6ZydZQoiDIyV+j5C1n8V1b86NOIZZQdzNr2Zsh689EqgbzI6Re3772ZW0TuzlEkPSxAL9Ee32TYdmAFka/B/r/xDJJLK7z61NAnUwMoi3lBlYTe9182dwH6B9lBqGraBSsuyW2QirOHx7itMehhb1K+ZnKpSUFDJEYPcIQaIK9mEA7PNVSLu2CvkDOGJAxPui252xppeVO3Nw1WvBYIAwkA/M2wKzBWjydLagJZFiL+8o4Bb0PZ8v/pj/neoWlnBmU/Zlb1iXn6gjpHANGF9hrpYQetmYfdbtbcM0zA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM5PR11MB1418.namprd11.prod.outlook.com (2603:10b6:3:8::9) by
- MN0PR11MB6088.namprd11.prod.outlook.com (2603:10b6:208:3cc::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6134.19; Fri, 24 Feb 2023 17:25:28 +0000
-Received: from DM5PR11MB1418.namprd11.prod.outlook.com
- ([fe80::7ef8:2573:5a1b:c9f1]) by DM5PR11MB1418.namprd11.prod.outlook.com
- ([fe80::7ef8:2573:5a1b:c9f1%6]) with mapi id 15.20.6134.024; Fri, 24 Feb 2023
- 17:25:28 +0000
-Date:   Sat, 25 Feb 2023 01:25:18 +0800
-From:   "Ye, Xiang" <xiang.ye@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <srinivas.pandruvada@intel.com>, <heikki.krogerus@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <sakari.ailus@linux.intel.com>, <zhifeng.wang@intel.com>,
-        <wentong.wu@intel.com>, <lixu.zhang@intel.com>
-Subject: Re: [PATCH 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-Message-ID: <Y/jy/iElbD8suxGY@ye-NUC7i7DNHE>
-References: <20230219183059.1029525-1-xiang.ye@intel.com>
- <20230219183059.1029525-3-xiang.ye@intel.com>
- <CACRpkdYdDE+B=SF+kAuQBiwUi31y_xELLXuDK+9G+rqD9MQBGg@mail.gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYdDE+B=SF+kAuQBiwUi31y_xELLXuDK+9G+rqD9MQBGg@mail.gmail.com>
-X-ClientProxiedBy: SGAP274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::24)
- To DM5PR11MB1418.namprd11.prod.outlook.com (2603:10b6:3:8::9)
+ bh=4PMq/i/FulQVIpfMseiPXE5FktUUFiMwo7vKnVb/0ao=;
+ b=Fiu29smrDWmot9A1q97npccUiOeF7pQV6HK5qHY/Wl4uzUdmto/S7kD9fOi+QqlFuNxE21yrcFKF1qEoo1rNFwmqTpG+PhOVBU+s9AgfBaCgLVzPcAZ+jek0re55mGU3jdcYIFBIDol8dRDJAvbhcqhaV/RS1PHZOZ8NJZFIRT8XokL+PyxtMgo+RFTddBovWqif9Pmf/GTOP5ljh/2yDbMwghZ3HsWBaIOsIDK+DowisoOtYjFIdXiqM3m0kAwm8dH/hmjbpd9HvZQ/p0UHuLkvM3VqoclFKmjmBWMzTgqrU1Uo8iegIoThe6MYqTj1zlXbTEldNIR+bgh2biNIAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=temperror action=none header.from=nvidia.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4PMq/i/FulQVIpfMseiPXE5FktUUFiMwo7vKnVb/0ao=;
+ b=F4XoxM2YZnzv1aMJ2qVoqiGepz7a7MD1o05GxUr8zMHQrjqmNXy/TSzmnuH9OTWaR3XDQg+Dv0c1rJzaF8W4kHb3f7NwbNSlrp2BE3PHJCybllZADrkrYuElQrsn9LL/RtvBcYb3XeX1IaJ+0Jo4nk47dfUZa4E4pN8I/Dotr3N5UHotpxPoE1Bol7TcPUqIbB7OElQWdSjiadwM2pDZuCcy0ZDD9Xdyrt/MWl/An3dUf8eIV2srlPhAu7b/fAK1OUtTZAbG/aesm9Vd0IpmJbP4sXkd87ecy/PtouVxid76LVgI4GmQN+r3owmhJJLIK9qoYUwMzzdh8n3UUSy/3Q==
+Received: from DM6PR02CA0044.namprd02.prod.outlook.com (2603:10b6:5:177::21)
+ by DS0PR12MB7511.namprd12.prod.outlook.com (2603:10b6:8:139::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24; Fri, 24 Feb
+ 2023 17:40:22 +0000
+Received: from DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:177:cafe::7) by DM6PR02CA0044.outlook.office365.com
+ (2603:10b6:5:177::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24 via Frontend
+ Transport; Fri, 24 Feb 2023 17:40:22 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 216.228.117.160) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=nvidia.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of nvidia.com: DNS Timeout)
+Received: from mail.nvidia.com (216.228.117.160) by
+ DM6NAM11FT076.mail.protection.outlook.com (10.13.173.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.24 via Frontend Transport; Fri, 24 Feb 2023 17:40:21 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 24 Feb
+ 2023 09:40:10 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 24 Feb
+ 2023 09:40:10 -0800
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server id 15.2.986.36 via Frontend Transport; Fri, 24 Feb
+ 2023 09:40:09 -0800
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     <andy.shevchenko@gmail.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH v1] gpio: mmio: handle "ngpios" properly in bgpio_init
+Date:   Fri, 24 Feb 2023 12:40:07 -0500
+Message-ID: <20230224174007.13009-1-asmaa@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR11MB1418:EE_|MN0PR11MB6088:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2d90851b-c941-421e-88f7-08db168c1f70
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT076:EE_|DS0PR12MB7511:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54ec89a9-682b-4688-fd53-08db168e3444
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aRg2aspXetkHULUtPFamAmObopeeahTgUP9hBi8HJ0eI4tlJm+J9F5JHZk2zLIYwqgZQeErzL9zH4O/+0nSQdFWL8HS/HEHTk7EfRIsmIMloTsPk7cgM7DdLsNSzW7bJuQ5g2BueUyVbqFo08XYvGq4yTZ1BosAbNL37PPViXVRxSRLXoZk2oRJfWxea4iJY6jinZa4Qbgmx/3sag1l/DVYoGDrXtn5Ez1LhWzswFXKjTFakKk76BifV44RyOmzCbUb7imzksUBm5PLwvy43kTuyzGT7gzgjpPdj5ZTptKNrj7ytCk+W7sFC0RXkS05M9mz9QZIHy+hF6FvKfpyf1erJ3+kEJsCo4yWoGfMqovJog5yED2/BzWwtTNVy0fAa/pLbf6KW1ytYykIe467Z2RCAhPrrWRScu7wQEOMTlpnlivME/qFDOqzgoQ/d9ZEmx1jOZfTGGhOHacEh0Yg5b0KKL9pgdUjmxJEIfr3hgWfslpUuZofY9aSmqo7Xr96V8cWoGjI7GoabseXCkb2wR7mfxN/SsrcQl/iUmm+rNAlxp0p5N5tQCI6Jg9UYbm6zNSXFgXShEgJgbto2OqtgOJfBeDBAwXzWENgm89EdHS8OZSusiDD6+FKs0MK/VhhZm5QKlhGcZQa04eYasTniRg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(39860400002)(136003)(346002)(376002)(366004)(396003)(451199018)(83380400001)(6666004)(26005)(9686003)(186003)(53546011)(6512007)(6486002)(316002)(6506007)(478600001)(54906003)(2906002)(38100700002)(4326008)(8676002)(8936002)(6916009)(66946007)(66476007)(41300700001)(66556008)(82960400001)(5660300002)(7416002)(33716001)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Mf31/s/Zw7YYRY6OTvw5Tb2FqkGxvBURSdsxRVpDVnnCw1ky8b5u6nPZqJiL?=
- =?us-ascii?Q?Iiy/2cLC8XR+YouioHNKjojQFyYSWhkvHLAGraLR0r25ZLoVDoHcSbrsvKZV?=
- =?us-ascii?Q?KsmuGTBYwokgvWx3CTTIMxW3SSU8QEfRAvsm6wTn1VrWDUcyBVuiqgK60vfi?=
- =?us-ascii?Q?dwKKAw2dM9rAMEjBROXq+NAZHLjmxPw87UZku9P3oJDdDChUsjSKDRXeBwE2?=
- =?us-ascii?Q?Soraz7pYn8Sl34Zg8PjhBA+wErFkcee7JfHHAofWlMgCK3Al0DXqgXPFZKxH?=
- =?us-ascii?Q?iAOuyQoyl3pX28r++hgaz9EtT5BPZsiTSUzwedWAxjiUm+TYODCLdbAPFw/B?=
- =?us-ascii?Q?kR/cVsGRkeRjUe1APuTO5upncqmK3//GO3NIrj+Wda+7KHOW8LwQLsL56RST?=
- =?us-ascii?Q?KBykJsIawxsA4uTg+ljoMcYqKdXA10g6QhSDz1Y1r10R4S9ecEqIoIK1ygy7?=
- =?us-ascii?Q?bMevOSL+3vcdgbEaDDmhCZ6BK7uEyve5lgEjgmfWIfHuv32ndhRmAJlkjoyZ?=
- =?us-ascii?Q?UUNJQQPorUFAhJSE2xnFbpuSgQRrD2e8KEFhQfGuGWJRA6K9OVvi87POQJGk?=
- =?us-ascii?Q?30Yva94tRnkcA/IT4WU27WCcBQZ7wuycbysPaBETM1ww678Q0k0rlNwSkJtk?=
- =?us-ascii?Q?c6GJkAjoiJHqp8mWTVt3UiZQtHDg3h9a98PQXXn/szdtaF8T6tZrSyWCaFaq?=
- =?us-ascii?Q?GBZtRW0rE269IedRM3afwLudFXcpbT37qeTW/N3fr7sXkQFl1ujr9KPoTA8R?=
- =?us-ascii?Q?QigMci6ICi/n8DYLTAjTawq56kNopBU3m5VvJkcwlgouHaYBBDiaTd5tojY7?=
- =?us-ascii?Q?RulG10Ul6aWzu63TWL6x5EzhCJf7jgGbQMqCCGOqYN7dd9GrYNaoJ0uEzraR?=
- =?us-ascii?Q?0S3+OuAKXN0+hZVHYu69JziNKU0rVg06wz08tYUvUk/bboJUP9h9KltJoXdA?=
- =?us-ascii?Q?dO3NVwr4d74wtDZLK4Wxyw0hUOuhVK+kRumLef9ggvR469sotgMDyrJajuLW?=
- =?us-ascii?Q?yvm041HVRGdoEQ3onIRc7pXxJDK42xEp7DFk0gAhOCZoxrC8j6+WIeu98U8u?=
- =?us-ascii?Q?Tok3wZXKnNHwuGGzI4VgjjpzEyqbfIf1KLdRT1tMIbFprPSMalalzEcqi0hA?=
- =?us-ascii?Q?AhDNQtGrdJwaw+l3xoDRRxqCS5iELQjMngjW5mOShOrDQ6OgkTB94/FXndmS?=
- =?us-ascii?Q?uy9X51maZRoHKPu3T+UFCEQ40xoUbBp1FcV3f4jImbTD7A5ShXFmcQ51c5VY?=
- =?us-ascii?Q?hmnroArY1exvACfCItoSSfqSM+PSfbSjYK2vISpBeqOXHJhSWj22hWfC/tgC?=
- =?us-ascii?Q?Sk90jbEIjLOTE708WgexFsDHW8MAiiCGTxzcFj+pvlKCKJAbS++mSMHhVZ0i?=
- =?us-ascii?Q?e2vMKoh5oVF25ZyBJx/ZuhOVGai3EenHCG0aA30s4s/QgQOebmYYBFRJ1gnx?=
- =?us-ascii?Q?uebWWYJS1kvqDq/MAiUKgPkHFDiBnNZPp9ANx3ufO5cF9S9rDeWL9pLk9h/W?=
- =?us-ascii?Q?49OB0r+MgeKcJTstOTjGmwuMkpjeJj3ApXySwirC8IZu9VwWqHlpGytXFnlz?=
- =?us-ascii?Q?b3d6J/W3dWecwV6tGIJy9+ZsWdX8qgyg63XVQjyI?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d90851b-c941-421e-88f7-08db168c1f70
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1418.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2023 17:25:28.4258
+X-Microsoft-Antispam-Message-Info: BSb/K5QOvuvbuAZgjg2roUfMpQIFyU0s+Thgl3l1zFcaLU7QdNu5B9AgnrdXRa30NeXBUmZ5VuQQyKviJaERdA2do1cdZaCi23IkiBKH7oZOltcBBPuOEiRLTuscNs43U0YiKsc/r4ULhg3ljuRwxIO4w2cK+Mv7QjbuKLWZYIwo4sEHyNjUV49ydPtgjRG0LS/nerXvOlan4UWI4sKBhhGmthDgvOhyQd3msRCC19qfCKTSA2YJHGv2Dc5Pzwf+RZIZa0aKCSwyCE5d3C9+NuGj6VoPdEMnGlRQoDh/uKv3R+fxd7Snz01kFazk/SQnT+x2fKko/eJ7tZvJGgEig5gkNZ526LAi40zlY3JAWARiHgMQ9tu1bb7bE24DrgRe97pzS69Vl5BtL7pbiGD+Qpnjaok33y1muDdVNyxVNsvHeclihmtgcfxvty8cbEJP0EiGz4/82yJd8agv/QT2nWI4v4nng/MTKGnAGqMsJNOXZ/gcBbWHCW2uGioRixo9IjzQShHnM0pYHZRXjHI3XTPikWhUWmQ+z+FLi+vizcvHvRVT38CMtZud9x7+EzNY7vffF2XqS1btdbKTjvPHbs+phFipJVBWvW1EbUtcYo99XJU4HsJVqSwIKLRVtbRLw8lD9cTttBk6FPYrdTNHq4k63gd2t/TL3ofb142TgTJhAG+BuNmp2DZ8XyKJ66LwS4nyFDGIBsUtReR14LGyUobAgyHfoGoagxWI2C5flJcRVGhA/9D2V6B+aRvif7mGfCPiW13bODrm/IzLNssbMiL/OVEDn4xOdmE02vGRQf4=
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(396003)(346002)(376002)(136003)(5400799012)(451199018)(40470700004)(46966006)(36840700001)(36860700001)(2906002)(82310400005)(7636003)(82740400003)(86362001)(336012)(478600001)(7696005)(186003)(47076005)(426003)(2616005)(26005)(40480700001)(36756003)(356005)(83380400001)(110136005)(63370400001)(63350400001)(40460700003)(70206006)(4326008)(41300700001)(107886003)(70586007)(316002)(8936002)(1076003)(8676002)(5660300002)(34020700004)(2101003)(12100799015);DIR:OUT;SFP:1501;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2023 17:40:21.9598
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9A8S6rbJhxsvM95oDYIy4/MHKtdunyqqP3iKnFoQBcSoniG+j8VjRd3FKj7FkM6QNg/YHAVek+c5Hf0GKWUcuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6088
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54ec89a9-682b-4688-fd53-08db168e3444
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7511
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Walleij,
+bgpio_init uses "sz" argument to populate ngpio, which is not accurate.
+Instead, read the "ngpios" property from the DT and if it
+doesn't exist, use the "sz" argument. With this change, drivers no
+longer need to overwrite the ngpio variable after calling bgpio_init.
 
-Thanks for the review.
+Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+---
+ drivers/gpio/gpio-mmio.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-On Fri, Feb 24, 2023 at 11:48:08AM +0100, Linus Walleij wrote:
-> Hi Ye,
-> 
-> thanks for your patch!
-> 
-> I think your colleague Andy Shevchenko will provide the most detailed
-> and deep feedback, but here are some things I spotted immediately:
-> 
-> On Sun, Feb 19, 2023 at 7:31 PM Ye Xiang <xiang.ye@intel.com> wrote:
-> 
-> > This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
-> > device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
-> > GPIO module with specific protocol through interfaces exported by LJCA USB
-> > driver.
-> >
-> > Signed-off-by: Ye Xiang <xiang.ye@intel.com>
-> (...)
-> 
-> > +config GPIO_LJCA
-> > +       tristate "INTEL La Jolla Cove Adapter GPIO support"
-> > +       depends on MFD_LJCA
-> 
-> I would add
-> 
->    default MFD_LJCA
-> 
-> so if you activate the MFD you get this subdriver by default
-> as module or built-in depending on what the MFD is built
-> as.
-> 
-> (Same goes for the other subdrivers I guess)
-Agree, I will add "default MFD_LJCA" on all the LJCA subdrivers.
-> 
-> In addition you need:
-> 
-> select GPIOLIB_IRQCHIP
-> 
-> since you use this facility.
-> 
-> > +static struct irq_chip ljca_gpio_irqchip = {
-> 
-> static const ...
-Yes, I will add "select GPIOLIB_IRQCHIP" and use "static const" here.
-> 
-> > +       .name = "ljca-irq",
-> > +       .irq_mask = ljca_irq_mask,
-> > +       .irq_unmask = ljca_irq_unmask,
-> > +       .irq_set_type = ljca_irq_set_type,
-> > +       .irq_bus_lock = ljca_irq_bus_lock,
-> > +       .irq_bus_sync_unlock = ljca_irq_bus_unlock,
-> > +       .flags = IRQCHIP_IMMUTABLE,
-> > +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> > +};
-> 
-> Yours,
-> Linus Walleij
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index d9dff3dc92ae..f317a371c529 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -601,6 +601,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ 	       void __iomem *clr, void __iomem *dirout, void __iomem *dirin,
+ 	       unsigned long flags)
+ {
++	u32 ngpios = 0;
+ 	int ret;
+ 
+ 	if (!is_power_of_2(sz))
+@@ -614,10 +615,15 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ 	gc->parent = dev;
+ 	gc->label = dev_name(dev);
+ 	gc->base = -1;
+-	gc->ngpio = gc->bgpio_bits;
+ 	gc->request = bgpio_request;
+ 	gc->be_bits = !!(flags & BGPIOF_BIG_ENDIAN);
+ 
++	ret = device_property_read_u32(dev, "ngpios", &ngpios);
++	if (!ret)
++		gc->ngpio = ngpios;
++	else
++		gc->ngpio = gc->bgpio_bits;
++
+ 	ret = bgpio_setup_io(gc, dat, set, clr, flags);
+ 	if (ret)
+ 		return ret;
+-- 
+2.30.1
 
-Thanks
-Ye Xiang
