@@ -2,116 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B764C6A1B31
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 12:14:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FDF6A1B7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 12:38:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjBXLOG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 06:14:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
+        id S229572AbjBXLir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 06:38:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbjBXLOE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 06:14:04 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C436A13DF6
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 03:14:02 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id i34so28104940eda.7
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 03:14:02 -0800 (PST)
+        with ESMTP id S229481AbjBXLiq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 06:38:46 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026DF3802A
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 03:38:44 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id l25so13197497wrb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 03:38:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b4D6hX91fb92VP82KNoA4xeL0ZK1TUyb4FSrEk92iZw=;
-        b=zNcNrNzKfAKA5t/pAA7zijWFeVt36mJVhdHAeL4/YAlXPxdmWlKdR6R+xi+LrlWP33
-         z2Dt9BjXIn+4OqbmsvOUYbfiwdwSYia64/Lw2AxfOP49gPuxf+r7nWvl/96yHIQSaZ5D
-         +1bNEERoen9tf9vFvKxn6+SYz7+jID2wwp4PMWG2lkqm61CmdgDJoIJfDMs+sQ7HRiVx
-         uLFboR8A41OR6Mgl8CKjyZPx4ZDnUNuVa9z9bS4I+4wxDNf8EcoPR0YCcIfxtKYuS8tj
-         F6gSTyQBPPWtQ5Uit7thD9i9mwfZvqfj3mQaP5u369414I1D16RU1XlRwAshaGKww/QR
-         329g==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vpzAS3s+Cknt6SusAxCgxYC801c1KRUgoMVD/9jWeaQ=;
+        b=LmvkL2ICUxHCi5JnX6qNtHeCxijsatAjX0YJDWsunnS/ftTbbj5rUec4lgOaXqOG2k
+         OpDu5xoXv2edDxi314/dISSVuwVZMfeGKGpURxqFRt3cjr8ppZhSGKglF1ur2WIC1s5/
+         stmZRhkTs6gP0ldUe2814bB4iuPrAR1KQRCsKUW+eWXBPMYEmGM2hoJsVVXdij0PgJxD
+         8rqa28nLJA5JdrD9i1FHgcr88B3R1vpKiPrszKKKZsKsgQyUVIR5iU5gHY16oGLw/9A2
+         5cAG1oYsurtJHLshKAh3wliUMzdVFsAyOPMxdPVQpNaS7TQ8yXQCwHp9WBQBg1xDgtzk
+         q0JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4D6hX91fb92VP82KNoA4xeL0ZK1TUyb4FSrEk92iZw=;
-        b=oBQF6zvePnkH3b6Z583xf/EPVxFNo7Yp3kGGyT807IGGNOVxLohIFctD8sHddYvKRB
-         mfSL0KKIqYcX8z19YXuUhn6psOTmP1LbOzsDSqo4/JDkmGVNHwi0UlfR2SKcNH3mdL7X
-         5T3aPZigxmiYC2egsc0HPHzAeJSyxBEyC07d/n9WPtvXDTrngrXiCDMXqh8KnMk2gy5Q
-         i8dRHnCkUw54+1O9FlJb3tSyWA3HJAYhIgOPhWIs7q7bB0sEuGMAs3RMBUdJ1DyzHuHV
-         7CQDXRfY/tExW2Cs9N1VNUsUXAJ+dFr/0jSntE0YCXARFNuJfyE1Q3LOpZsUQBauOIbL
-         nmYQ==
-X-Gm-Message-State: AO0yUKVXpKONknOzZqCR5kMtdkiW/JTE1/vPPyjEkoeYOd7N9WnDmCAD
-        Amdq8EVvi1SvA92nIEXK0eS3og==
-X-Google-Smtp-Source: AK7set+gc4yhE+A0IXsPpE9c67JqLb4w2Z5XdXbf0h0MLlfYinTEULSVEUAfshoVmYErhQRuFjwloQ==
-X-Received: by 2002:a05:6402:54c:b0:4ad:7224:ce94 with SMTP id i12-20020a056402054c00b004ad7224ce94mr15016385edx.15.1677237241273;
-        Fri, 24 Feb 2023 03:14:01 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id w15-20020a50c44f000000b004af70c4b4a7sm1534058edf.97.2023.02.24.03.14.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Feb 2023 03:14:00 -0800 (PST)
-Message-ID: <d4d4c5e6-4700-2404-618a-5cb21946b555@linaro.org>
-Date:   Fri, 24 Feb 2023 12:13:59 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vpzAS3s+Cknt6SusAxCgxYC801c1KRUgoMVD/9jWeaQ=;
+        b=uonCM8DDJfg5zLfOer43dnAPj+6R3NiJKGZ7OGKOJmfwwsrFI4UyiaPZe5K3OhfIgA
+         s+LQcppZd6UEIOHNY0GJWPh4kQ7/D4GDxfgmVgKBerMWt8Z3gLTAgSSGA4W0U1rqjpfY
+         +AdMhzPpE/7k++J1+Pu16KWUEjrk+jIlGc/rSQ59J42I1s4D/tDc8dN8TSrJdJO7noPL
+         mEAdotXycLNWSc0k15h5Y15yaxTrcLavmsD5Vb8SB1c/6WCaGe7LHMLaJFygXEWsxegR
+         MtCMN6WSOIT3c2bSEmfmwbUrP0cysS6sgEUwU4lEJJxFUFLIuBDBSDMG4qq7szNzhA+n
+         S69A==
+X-Gm-Message-State: AO0yUKU2VqRgsVwMkKAEBBUzi9A7sOjo72l/oni0YVBrC9zfCG+PN9Lr
+        fWOTD9KvNwy4Xls99JBc/n1yZA==
+X-Google-Smtp-Source: AK7set+ria7amvD5JkJfXPya3WzHNUc0HXURdmyuPFMgJvFkQ3DJiRy+b8Fi+vNUtyDXKbDyj9Qibg==
+X-Received: by 2002:a05:6000:c1:b0:2c5:5308:859c with SMTP id q1-20020a05600000c100b002c55308859cmr11994396wrx.18.1677238722449;
+        Fri, 24 Feb 2023 03:38:42 -0800 (PST)
+Received: from jerome-BL.. (2a02-8440-5241-7427-e801-6f64-356d-2fd7.rev.sfr.net. [2a02:8440:5241:7427:e801:6f64:356d:2fd7])
+        by smtp.gmail.com with ESMTPSA id l11-20020adff48b000000b002c592535839sm12769679wro.17.2023.02.24.03.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Feb 2023 03:38:41 -0800 (PST)
+From:   Jerome Neanne <jneanne@baylibre.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, tony@atomide.com,
+        lee@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org, Jerome Neanne <jneanne@baylibre.com>
+Subject: [PATCH 0/2] Add support for TI TPS65219 PMIC GPIO interface.
+Date:   Fri, 24 Feb 2023 12:38:35 +0100
+Message-Id: <20230224113837.874264-1-jneanne@baylibre.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 2/7] dt-bindings: gpio: rockchip,gpio-bank: add unique
- hardware GPIO ID
-Content-Language: en-US
-To:     Johan Jonker <jbx6244@gmail.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <3eeaa940-9d40-5e33-bc36-c9b0449ded9f@gmail.com>
- <774d712d-bcdf-677a-2d9c-a49ed829e965@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <774d712d-bcdf-677a-2d9c-a49ed829e965@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/02/2023 20:46, Johan Jonker wrote:
-> Add a unique hardware GPIO ID to the Rockchip GPIO nodes with
-> the "rockchip,gpio-controller" property to be independent from aliases
-> and probe order. "gpio-ranges" can't be used for that, because there is
-> no semantic restrictions on how they are set up.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
-> 
-> See discussion:
-> https://lore.kernel.org/u-boot/CACRpkdZx8EaSFLeh4vruRsdC+Sx_ieBiKmuE7t37zhiYqtS3WQ@mail.gmail.com/
-> ---
->  .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml        | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> index 2e9a5179c..39ac41e9d 100644
-> --- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> @@ -52,6 +52,12 @@ properties:
-> 
->    gpio-line-names: true
-> 
-> +  rockchip,gpio-controller:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 8
-> +    description:
-> +      Unique hardware GPIO ID.
+GPIO interface consist in 3 pins:
+Two GPIOS are output only: GPO1, GPO2.
 
-Neither commit msg nor this description explain why do you need it.
-Also: what is a unique ID? why only 8 of them are allowed? Why assigning
-arbitrary numbers should be a property of DT (answer: it's not)?
+GPIO0 is used for multi device support:
+- The input-functionality is only used in multi-PMIC configuration
+- In single-PMIC, it can be used as an output
 
-Best regards,
-Krzysztof
+The configuration is static and flashed in NVM in factory.
+Description tps65219.pdf chapter 7.3.13
+
+Linux must not change MULTI_DEVICE_ENABLE bit at run time.
+
+This was done for test purpose only to check input/output
+correct behavior on EVM board (no access to different NVM config).
+
+Tested on k3-am62x-lp-sk board. This board MULTI_DEVICE_ENABLE=0
+
+Despite the register bits are out of order,
+driver is remapping in natural order:
+GPIO0 is gpiochip line 0
+GPO1/2 are gpiochip line 1/2
+
+ Initial version by Jon Cormier on TI Mainline.
+ Ported upstream by Jerome Neanne
+
+
+Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
+
+Jerome Neanne (2):
+  gpio: tps65219: add GPIO support for TPS65219 PMIC
+  mfd: tps65219: Add gpio cell instance
+
+ MAINTAINERS                  |   1 +
+ drivers/gpio/Kconfig         |  13 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-tps65219.c | 167 +++++++++++++++++++++++++++++++++++
+ drivers/mfd/tps65219.c       |   7 +-
+ 5 files changed, 188 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpio/gpio-tps65219.c
+
+-- 
+2.34.1
 
