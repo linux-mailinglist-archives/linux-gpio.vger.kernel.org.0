@@ -2,215 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 697596A1E3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 16:14:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 096E06A1E45
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 16:15:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjBXPOn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 10:14:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        id S230325AbjBXPPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 10:15:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229845AbjBXPOm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 10:14:42 -0500
-Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B963E0AC;
-        Fri, 24 Feb 2023 07:14:05 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id 7B15E604FC;
-        Fri, 24 Feb 2023 16:12:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1677251558; bh=PixN/IP5wX+lo2rFTBLL6THjWsIy2gpNeb0DU7O+Ufc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=BfSRCG1mFDGffK7qed0cQkZvA0vVv3GhON7FzNiTfo0KrTOxUKQGDUzjQaQskkH08
-         3oww/LfL5n6oCo05tui7aXkjtC4/FoH9zsv9RXn+bHMncOOKJnffDTHvdk9HTHf3zQ
-         bUIo93SpkGw+I70nWRnNOA0DH/WsnCaaR2mmJUnybAQyj4RrRQAGyCqiM/Xuto0ajI
-         9scJiljccurQvj4j5vxM5m7BOA3YXgN9AHSCx5MfH7VUEtbcPd75GCih2YsCQl8ZFz
-         1ugRgXeCJZpugtN4GsiI7LQQdj7oWA6Hs2DbKRNI0uNWPJCwY6lD+GCNGpwOCozgFh
-         5sYX4dQAinI+w==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vmZKoOtxAAER; Fri, 24 Feb 2023 16:12:36 +0100 (CET)
-Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
-        by domac.alu.hr (Postfix) with ESMTPSA id 8CC0A604F9;
-        Fri, 24 Feb 2023 16:12:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1677251556; bh=PixN/IP5wX+lo2rFTBLL6THjWsIy2gpNeb0DU7O+Ufc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=M6xZ8qFrUg6MP8Hib0iGS4mU9Ra/1EWlPDz93e/9s6INR1EVNlP3sCA7i3uE15NRh
-         WPHk8pQIaB+wov3q0mRszn79avLI4amSHVZ2AHan114HKjjmpW6nPuWboqtBFkxuXq
-         mO0+nhoSVcbvT/Bet358sGpmauMECbuOY1MzTeJBNTV4byz9uc6zNCpFm7pQsJ+o6G
-         JZ2ilRb0S1iQhzE6D+IC2uMcecN8Ki6KqCPJax+gHRe4lOv9blPzI8M0Mm1Qb+0BWo
-         nigdYLdfGdVTr2ugWC3KwdL3YdC9uNUkLKAcJq73W/N0mdc2yuGkPblyn91Re/95+2
-         d8moreRKuJcUw==
-Message-ID: <7856e5a8-d84e-4f41-721b-80b6fc413919@alu.unizg.hr>
-Date:   Fri, 24 Feb 2023 16:12:31 +0100
+        with ESMTP id S230298AbjBXPPM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 10:15:12 -0500
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450BC1026A;
+        Fri, 24 Feb 2023 07:14:30 -0800 (PST)
+Received: by mail-vs1-xe2e.google.com with SMTP id v27so14282121vsa.7;
+        Fri, 24 Feb 2023 07:14:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rLFJlemgxUP4zmekRB5aWOhb6GtCq43P1e4KVbVEABM=;
+        b=PtuzvOm8AkxjcsL/YFTT9kogXXLdyIiVdJmOBdcOeONocpAIHeKODBomb/Y7d5wmEs
+         fJwir++HOqAZ/FgwAPVT/gXpO1MqrZbJfZQWL7LHupSYskx6p+X48eygUVdJCFJSbhQs
+         +lpYs+SW0hvwlDqLPfgQigx3TDguk5StAp2ZHh8VbcAJeYfJrwaf3EH74/1ln1kkPGNj
+         k70a/cnFjB7xgRYjXQl/DTqMj4QnQcUWXTw32MtsdT4MDjLoqy+d0KiA1w1Vgk0oirTw
+         qI+TVs7h5VQ+Iv+KQaLmUO7TvxEeNyeYr7lYKQ/fAtm+Z1u0Pd5WPLg8vRguD1Qsf/a2
+         RiHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rLFJlemgxUP4zmekRB5aWOhb6GtCq43P1e4KVbVEABM=;
+        b=5nBXeg3t6OWsVItwzXuaSSuMtrNijBqOjia54BE7WuNp9xeQyqcQFbDC3A8yzQ2S6s
+         YIddDtzxrlYo7MDAZ7kD58sAfnHSenzFAmTbEqo6E31Cw5Sa7OFOfdHh1JxQvRLAxh5g
+         lKcvAkHFmhsT42IxJM/JEtHq5vRxfPAaWT5WfU9+4gxAVk4VdZ9jx2oaM7FvB/nZPNy7
+         c2i1MgIELX7db7e4m4fc4v2MLppD+uMkbAzs7YplBeS+07Gr+5LQ1lxDHb0ifdzQuZ2z
+         8IoAgdS3fbRK7X/ekGpKUdVSEqJqVPymx0EoFFVh4AUVId691U/DwNXUpIwXzWIQ4sPq
+         tB1A==
+X-Gm-Message-State: AO0yUKXf2Bxdr6cLe1cLBEMB6fDZQ18ajTXo4e1pld8+uQ7gY/PHBNPE
+        Q3vPu3FFwAuAdEz0ffjK9FRWuCvstmxPEBU4VnE=
+X-Google-Smtp-Source: AK7set9LiZ49vpiIkbOHzXWEtVIW0PGqKOHz9mI8lvrbqokCFJ4vRaSdLiHwvYoaQ66Rte5CpIaJJ5gZ6XJ42U+Mb8g=
+X-Received: by 2002:a05:6102:3676:b0:402:99ce:1d9f with SMTP id
+ bg22-20020a056102367600b0040299ce1d9fmr2533581vsb.4.1677251667429; Fri, 24
+ Feb 2023 07:14:27 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-References: <cdb562c5-040e-687f-a61f-4273fc356ff3@alu.unizg.hr>
- <fb12086b-ff5f-333a-3199-a8690c4d4bdf@alu.unizg.hr>
- <Y+j1dbZ0A1mndwXp@smile.fi.intel.com>
- <36d8e761-58e2-2515-fd1a-65a11731d1b1@alu.unizg.hr>
- <Y+y5nZJwZ6ykf0Fz@smile.fi.intel.com>
- <3d96e50b-ed17-9bf5-149b-8a50c7b4cca2@alu.unizg.hr>
- <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
- <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr>
- <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
- <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr>
- <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
-Content-Language: en-US, hr
-From:   Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1676042188.git.asmaa@nvidia.com> <cover.1676668853.git.asmaa@nvidia.com>
+ <28f0d670407c127614b64d9c382b11c795f5077d.1676668853.git.asmaa@nvidia.com>
+ <CAHp75VdeVpjzg5Y_4Y+Ke9=3wog28vUBN4Fd8zxfa8dWGrqUUA@mail.gmail.com>
+ <CH2PR12MB3895520749883D912E5021F1D7AA9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CAHp75Vc+iSt2XvpOYzwZnzX7Qg013e-E27CPjPaO-QmtferWVg@mail.gmail.com>
+ <CH2PR12MB389509F68E6AFE776C5B0AC6D7AB9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CAHp75VdoUDMvVk1uMQcAKQteL6gbYGpoKpFn96ysdS81LjPGCQ@mail.gmail.com>
+ <CH2PR12MB389530C5929100CB54396CF5D7AB9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CAHp75VfZ1r_sNus_qMYumja3YrJawA6hRHUbi-uPFUprorQ_Kw@mail.gmail.com> <CH2PR12MB3895124032E3276B54570676D7A89@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895124032E3276B54570676D7A89@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Feb 2023 17:13:50 +0200
+Message-ID: <CAHp75VecFVO4jZa3T7P2N5u4fSb-ruFBv9juyCaHnj8HVTPvtg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: gpio-mlxbf3: Add gpio driver support
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Feb 24, 2023 at 4:42 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 
+>            Package () { "gpio-reserved-ranges", Package () {5, 1, 7, 3, 11, 31}},
 
-On 2/21/23 16:39, Andy Shevchenko wrote:
-> On Tue, Feb 21, 2023 at 02:52:38PM +0100, Mirsad Goran Todorovac wrote:
->> On 20. 02. 2023. 14:43, Andy Shevchenko wrote:
->>> On Mon, Feb 20, 2023 at 02:10:00PM +0100, Mirsad Todorovac wrote:
->>>> On 2/16/23 15:16, Bartosz Golaszewski wrote:
-> 
-> ...
-> 
->>>> As Mr. McKenney once said, a bunch of monkeys with keyboard could
->>>> have done it in a considerable number of trials and errors ;-)
->>>>
->>>> But here I have something that could potentially leak as well. I could not devise a
->>>> reproducer due to the leak being lightly triggered only in extreme memory contention.
->>>>
->>>> See it for yourself:
->>>>
->>>> drivers/gpio/gpio-sim.c:
->>>>   301 static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
->>>>   302 {
->>>>   303         struct device_attribute *val_dev_attr, *pull_dev_attr;
->>>>   304         struct gpio_sim_attribute *val_attr, *pull_attr;
->>>>   305         unsigned int num_lines = chip->gc.ngpio;
->>>>   306         struct device *dev = chip->gc.parent;
->>>>   307         struct attribute_group *attr_group;
->>>>   308         struct attribute **attrs;
->>>>   309         int i, ret;
->>>>   310
->>>>   311         chip->attr_groups = devm_kcalloc(dev, sizeof(*chip->attr_groups),
->>>>   312                                          num_lines + 1, GFP_KERNEL);
->>>>   313         if (!chip->attr_groups)
->>>>   314                 return -ENOMEM;
->>>>   315
->>>>   316         for (i = 0; i < num_lines; i++) {
->>>>   317                 attr_group = devm_kzalloc(dev, sizeof(*attr_group), GFP_KERNEL);
->>>>   318                 attrs = devm_kcalloc(dev, GPIO_SIM_NUM_ATTRS, sizeof(*attrs),
->>>>   319                                      GFP_KERNEL);
->>>>   320                 val_attr = devm_kzalloc(dev, sizeof(*val_attr), GFP_KERNEL);
->>>>   321                 pull_attr = devm_kzalloc(dev, sizeof(*pull_attr), GFP_KERNEL);
->>>>   322                 if (!attr_group || !attrs || !val_attr || !pull_attr)
->>>>   323                         return -ENOMEM;
->>>>   324
->>>>   325                 attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
->>>>   326                                                   "sim_gpio%u", i);
->>>>   327                 if (!attr_group->name)
->>>>   328                         return -ENOMEM;
->>>>
->>>> Apparently, if the memory allocation only partially succeeds, in the theoretical case
->>>> that the system is close to its kernel memory exhaustion, `return -ENOMEM` would not
->>>> free the partially succeeded allocs, would it?
->>>>
->>>> To explain it better, I tried a version that is not yet full doing "all or nothing"
->>>> memory allocation for the gpio-sim driver, because I am not that familiar with the
->>>> driver internals.
->>>
->>> devm_*() mean that the resource allocation is made in a managed manner, so when
->>> it's done, it will be freed automatically.
->>
->> Didn't see that one coming ... :-/ "buzzing though the bush ..."
->>
->>> The question is: is the lifetime of the attr_groups should be lesser or the
->>> same as chip->gc.parent? Maybe it's incorrect to call devm_*() in the first place?
->>
->> Bona fide said, I hope that automatic deallocation does things in the right order.
->> I've realised that devm_kzalloc() calls devm_kmalloc() that registers allocations on
->> a per driver list. But I am not sure how chip->gc was allocated?
->>
->> Here is said it is allocated in drivers/gpio/gpio-sim.c:386 in gpio_sim_add_bank(),
->> as a part of
->>
->> 	struct gpio_sim_chip *chip;
->> 	struct gpio_chip *gc;
->>
->> 	gc = &chip->gc;
->>
->> and gc->parent is set to
->>
->> 	gc->parent = dev;
->>
->> in line 420, which appears called before gpio_sim_setup_sysfs() and the lines above.
->>
->> If I understood well, automatic deallocation on unloading the driver goes
->> in the reverse order, so lifetime of chip appears to be longer than attr_groups,
->> but I am really not that good at this ...
-> 
-> So, the device is instantiated by platform_device_register_full().
-> 
-> It should gone with the platform_device_unregister().
-> 
-> In case of CONFIG_DEBUG_KOBJECT_RELEASE=y the ->release() can be called
-> asynchronously.
-> 
-> So, there are following questions:
-> - is the put_device() is actually called?
-> - is the above mentioned option is set to Y?
-> - if it's in Y, does kmemleak take it into account?
-> - if no, do you get anything new in `dmesg` when enable it?
+Side note, doesn't it the same to
 
-Hi, Andy,
+           Package () { "gpio-reserved-ranges", Package () {5, 1, 7, 34}},
 
-Having set CONFIG_DEBUG_KOBJECT=y.
-CONFIG_DEBUG_KOBJECT_RELEASE=y and CONFIG_DEBUG_OBJECTS_TIMERS=y disappear after "make olddefconfig"
-
-So, I cannot tell about whether release() was called asynchronously, all I get is (after driver unload):
-
-[  810.989742] kobject: 'gpio-sim' (00000000251afa19): kobject_cleanup, parent 00000000447da7a7
-[  810.990216] kobject: 'gpio-sim' (00000000251afa19): auto cleanup kobject_del
-[  810.990674] kobject: 'gpio-sim' (00000000251afa19): auto cleanup 'remove' event
-[  810.991175] kobject: 'gpio-sim' (00000000251afa19): kobject_uevent_env
-[  810.991674] kobject: 'gpio-sim' (00000000251afa19): fill_kobj_path: path = '/bus/platform/drivers/gpio-sim'
-[  810.992154] kobject: 'gpio-sim' (00000000251afa19): calling ktype release
-[  810.992644] kobject: 'gpio-sim': free name
-
-I am still trying to convince "make olddefconfig" to accept the above values he did not like :-/
-
-Regards,
-Mirsad
-
->>> Or maybe the chip->gc.parent should be changed to something else (actual GPIO
->>> device, but then it's unclear how to provide the attributes in non-racy way
->> Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
->>
->> I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
->> device expert nor would be appropriate to try the craft not earned ;-)
-> 
+?
 
 -- 
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
-
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
+With Best Regards,
+Andy Shevchenko
