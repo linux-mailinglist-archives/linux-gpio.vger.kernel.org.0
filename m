@@ -2,116 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A18846A21BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 19:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEBB6A224B
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Feb 2023 20:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjBXSuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Feb 2023 13:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
+        id S229547AbjBXTUm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Feb 2023 14:20:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjBXSuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 13:50:07 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9196A7AE;
-        Fri, 24 Feb 2023 10:50:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677264606; x=1708800606;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Med8FP749QQT3U1NIMdqmYtl7dVRycVXAPaFZGh995w=;
-  b=kUSokPvzYHN+KpXkk6Vgp/sWYaHOS+tXSNZ1PiCLAjqOdREmgUnPzkl1
-   BxMaeQgS4cp2Hde2NsRcXTt18RbOStO4qO9s+bzB4+NtaPgMVI49R+NDi
-   5G144sKtmCUtQ0EzDk2hVKHb5xi7fYor0tMDBTOsOy0d/nV/15E3oERKl
-   qTZPenOMM8c9jQlk+9VqkzFzjCzzwYEwYFiHdPEMBJ3s0ecz4bhMqHDr1
-   ec85bSc3K5mnxLED9YIXj2B+VE7FwASDkDkvzVeGBFs/Wd3FR4QVf05Pq
-   sPSR6Lj+ZWVE43AgaFD15IOQDEAV6xtK3/41rYRkrgNYJ1CQz/EV9fRi8
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="321754308"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="321754308"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 10:50:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="918528349"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="918528349"
-Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Feb 2023 10:50:02 -0800
-Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pVd8s-0002dD-0R;
-        Fri, 24 Feb 2023 18:50:02 +0000
-Date:   Sat, 25 Feb 2023 02:49:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com
-Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jpanis@baylibre.com, jneanne@baylibre.com
-Subject: Re: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
-Message-ID: <202302250208.XGrlUK3B-lkp@intel.com>
-References: <20230224133129.887203-3-eblanc@baylibre.com>
+        with ESMTP id S229512AbjBXTUl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Feb 2023 14:20:41 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11hn2245.outbound.protection.outlook.com [52.100.172.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE5363DDA;
+        Fri, 24 Feb 2023 11:20:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lLqNRE93R9QUOzgROc4IojZVb5I3OBrRhp7WURUDRk9dl3FKLBKNmEkfpo5eKM6bh9hG78YzU/GgcBERPos1zOOqmKjEH17+/bHJcc0BJN9l8fcXqDeQqZWSoqaTieHN/XjFPblHq60CrKaJWpAvn54WCjMKe54VXFq/U69Hw4/Cqk7ePyitehCjHQ1h3AH4sS0D3F8AUzLfSh+ccVvuDLXhm3POGXvNvE0muabhzPYB+MeTKCfJZ3lI/tBcwS9cyEgS5TaCeL7DLpi++k8oe9PQWd+aNbYmmCVmuZ6fnYSr4j8u7k4Ij6f/ksuNLTTXy7Ca/iZSqiGMULrt+Bi+Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9HYmUjtadAdO2hXTJllHHg25Wljp1srnA0w9FCDso4g=;
+ b=Cvr7FKt0BSzaE2y0TyXQl9Jqub1ua0BW+H7w+lV0tEW20RVpZDxBfnJ2HbOkHZugK8ed27FsgTy5SF+Lge8GhNZlN+xW+QxPoKGF26yg7vgq/9dxab+hJBllBk3ym388YVwVLnFXP9u6mK8Hzq47qlW4NN9p6AusVg8CKGfg3m5rpFxXk1ctLyo7dw0OjSqTJCTEgxjEQaDqyVsIHMsPPbvASGHNK0OPYXc413GtxfcC14h8Qid/5NXFJ45eMEFVnm05FORcvVi5EUPOpN3FAoo9wQgoSWkLJzxN+TR0riDz0Yk2X52MxQshinFsA5KD/KDsVB5Jr7TTkvWv9mI/dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9HYmUjtadAdO2hXTJllHHg25Wljp1srnA0w9FCDso4g=;
+ b=cBZP1j6MgLydTFfaa9DYiuUGtNEOKZd5a8hyg/hhN3YvZKrGFVtAF+WNGyWiwnKEX+MnusrtzmHGm3prkS3xG8M32Ugf+dxi6J48uTgcBJvx73A8jfnnuzyPDaIdGlyYpRbbff6Cwy5jttb2eEhT319w8HEjhwHEpJXiKN3T96AQQxLX5cTmnN9+D8ZrFdzUS1KDbQDtFSyQRJCQfH2/8ZpiW8FpeSk1i1nIfA11j4sRtRkwL7Cu5dUzeCJv/qJDi6V3TiqG7WeuPm34wn58ZbS5MJovujNpuBI718DLOVCoYoQ7GbqMSE62tAm03y/Tpedpu4DasnbQGSCFsQld8A==
+Received: from DM6PR03CA0010.namprd03.prod.outlook.com (2603:10b6:5:40::23) by
+ BN9PR12MB5337.namprd12.prod.outlook.com (2603:10b6:408:102::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.24; Fri, 24 Feb 2023 19:20:34 +0000
+Received: from DM6NAM11FT108.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:40:cafe::46) by DM6PR03CA0010.outlook.office365.com
+ (2603:10b6:5:40::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.24 via Frontend
+ Transport; Fri, 24 Feb 2023 19:20:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DM6NAM11FT108.mail.protection.outlook.com (10.13.172.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.24 via Frontend Transport; Fri, 24 Feb 2023 19:20:33 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 24 Feb
+ 2023 11:20:25 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 24 Feb
+ 2023 11:20:24 -0800
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server id 15.2.986.36 via Frontend Transport; Fri, 24 Feb
+ 2023 11:20:23 -0800
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     <andy.shevchenko@gmail.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH v2] gpio: mmio: handle "ngpios" properly in bgpio_init()
+Date:   Fri, 24 Feb 2023 14:20:21 -0500
+Message-ID: <20230224192021.22591-1-asmaa@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230224133129.887203-3-eblanc@baylibre.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT108:EE_|BN9PR12MB5337:EE_
+X-MS-Office365-Filtering-Correlation-Id: d908838a-c322-44e5-6b41-08db169c337f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: atrnj6Z+TzTn0X3W8k5bucD8MVB/UodaKcaeuEPbju17CAVqyvxaFbMV8OSQpXeqOjxYKjdjN8osWnj60ccMSSgSOC80feZtJ+eunbW28URCDnneUmwWJDOvVpBCooKiEJSRrcXDOKuE8WTZoN9WOwoCKUAclp14h5AIpgczuMseKOntW4lsFfp9Q5XkGsClfEuCg4iYIQrRbXZI9U/x1yaILCccIOHxrAWL/iTzhvIihu6yl/UFY84qVlXxFrLFrwVJtPFMhE73zraD66aF0yQV2d9U5dwN5Yeygx5cD7OZHM9m3PCpBEc4Lymo464tBUjXCIv58IMZLXx1uXm5WXB4oBfyuBcgwOM+bgpQ8tMTHRNlX7Y1+JpLc1HdBAqPjHvqt5wo7z0A631SBiRhouXWhfg+TXZUvKcio63fiNHTlv99aAfgQim3SM13ChbpNkUGEEp37Qbz8jN2zgPCEYejuZJtajxt/j2NCG7M1ZyEfDjvXdoxtHb8vOJCOgevwO7RmxhStreNzzEDrIcvA47kPxS34mSo7rDUpZ8VfdQ6j5PARzmLovn+gf4b6+hJp+X6po+UbdgcJ9bH5Mj1A5jPuCex/6/DdDigJ0jEKaQytxOFwU+YQPrk52bwPmhnknswZdF1yNAswutgo0acupYgszPrpBCFeIhos30dOJmQ/PSXDraewUuam0xRh2ch0pc+Zpzrsb6BPfRZ6L5DqsCcRke0TYmsibTFpm1fECYzRWKhQTESe8eApEvUt16Tz54UcNnhtDZ3UQnLC0FP3w==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(346002)(376002)(396003)(5400799012)(451199018)(36840700001)(46966006)(40470700004)(4744005)(86362001)(36756003)(8936002)(41300700001)(5660300002)(2906002)(34020700004)(82740400003)(83380400001)(36860700001)(7636003)(356005)(110136005)(478600001)(70586007)(70206006)(7696005)(40480700001)(186003)(40460700003)(26005)(82310400005)(8676002)(336012)(2616005)(316002)(4326008)(1076003)(107886003)(47076005)(426003)(2101003)(12100799015);DIR:OUT;SFP:1501;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2023 19:20:33.6348
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d908838a-c322-44e5-6b41-08db169c337f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT108.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5337
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Esteban,
+bgpio_init() uses "sz" argument to populate ngpio, which is not
+accurate. Instead, read the "ngpios" property from the DT and if it
+doesn't exist, use the "sz" argument. With this change, drivers no
+longer need to overwrite the ngpio variable after calling bgpio_init.
 
-Thank you for the patch! Perhaps something to improve:
+Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+---
+ drivers/gpio/gpio-mmio.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next broonie-regulator/for-next abelloni/rtc-next linus/master v6.2 next-20230224]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230224133129.887203-3-eblanc%40baylibre.com
-patch subject: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
-config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230225/202302250208.XGrlUK3B-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/5abddc736234d1cd3e28ef7e205bc0bfef263c15
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
-        git checkout 5abddc736234d1cd3e28ef7e205bc0bfef263c15
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc SHELL=/bin/bash drivers/pinctrl/ drivers/regulator/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302250208.XGrlUK3B-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/pinctrl-tps6594.c:8: warning: "DEBUG" redefined
-       8 | #define DEBUG
-         | 
-   <command-line>: note: this is the location of the previous definition
-
-
-vim +/DEBUG +8 drivers/pinctrl/pinctrl-tps6594.c
-
-   > 8	#define DEBUG
-     9	
-
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index d9dff3dc92ae..448fefc4468c 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -614,10 +614,13 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+ 	gc->parent = dev;
+ 	gc->label = dev_name(dev);
+ 	gc->base = -1;
+-	gc->ngpio = gc->bgpio_bits;
+ 	gc->request = bgpio_request;
+ 	gc->be_bits = !!(flags & BGPIOF_BIG_ENDIAN);
+ 
++	ret = device_property_present(dev, "ngpios");
++	if (!ret)
++		gc->ngpio = gc->bgpio_bits;
++
+ 	ret = bgpio_setup_io(gc, dat, set, clr, flags);
+ 	if (ret)
+ 		return ret;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.30.1
+
