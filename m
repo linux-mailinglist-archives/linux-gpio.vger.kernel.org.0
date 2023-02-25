@@ -2,84 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBEA66A2B54
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 19:38:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF3D6A2BAB
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 21:37:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbjBYSin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Feb 2023 13:38:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
+        id S229567AbjBYUhT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Feb 2023 15:37:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjBYSim (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 13:38:42 -0500
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7526113D2
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 10:38:41 -0800 (PST)
-Received: by mail-vs1-xe2f.google.com with SMTP id o6so4638769vsq.10
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 10:38:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RnWWmekMGlDfC5MA5Y61pEFNn2M2wXY9r4f3fFJ8yTs=;
-        b=vSSZBsLccsYuXj+dh119DUBniN9DktveIMOryDVPpxlQM0TyWnHu3uxBhBhRlztNOd
-         7vxxCOJbI9Zd9hEnyJRwNmn2CGMzF0dvcwGCfn2CMRM7w1IsddX40wGqjae2Z6kzuHCu
-         ZN5z13FtVxe1uCvsHaH5Q8Cg1mjmpm5VxFdh/favFmRgq1Z7FBDC5t7lQcdwTAZbe8Ob
-         6hJfIr5vX/WP2cwNxDVQ7Z7vDtzO8H7uR6Zj8QcvZO2GXkPu5IF6pSvrjLzKvc0LUPkF
-         uvj2cMcOK8LD0B2uXHtil7pNv9rxFwF918NnmkiQAboarTu/H4y3aanYJg4a93uLW0gW
-         HeZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RnWWmekMGlDfC5MA5Y61pEFNn2M2wXY9r4f3fFJ8yTs=;
-        b=E2TZbRJqAPrfhZqJzC8agIoZW/YZFENu4SiBHnmkiTmrea4x2ZHjL5y+lFIUdHtWiJ
-         IU0z5PhVSOTbvm8X6Wrmb+G3S+3U1kzDxuvX6PlMHdTrUsMl2RsQOLZfSJQM8HNs0ZZ1
-         e44MZG66ZIAv4qI2UIJBPRRjdBMSO7Oaqxt1HIInDka5VHHIb3zhrE6043I3wrwlP+H7
-         aZVTKFaz/Mzgn0mXnXGTZh7V0cHXebvWVjh2eJafG8L9J8aXLedisYitmNweaCZd9Geq
-         UpNFPm6ktlKu6fibDvEy1CB4ay7+UF5WSP/MsXNtoxvLxhizCSg46dBNtkIrjv/T7UmO
-         DIpQ==
-X-Gm-Message-State: AO0yUKXaeC4hZUTBHXUSclLRENK03SdrWw/w9e7G081JP11uZFpGhIn/
-        OJlT9ki/nnygKtngIeyu78/XwjSkHFbIs0Go69zPeQ==
-X-Google-Smtp-Source: AK7set+xllFJwuwQsfb6lKZ37XHGP7gwwam3zUTOIGyNvbc+SNKdhc/aYRPKZr5QtoeqZ8eESMijlb0eGn8XIU+KIe8=
-X-Received: by 2002:a05:6102:34c6:b0:402:9a0c:b682 with SMTP id
- a6-20020a05610234c600b004029a0cb682mr4669959vst.5.1677350321003; Sat, 25 Feb
- 2023 10:38:41 -0800 (PST)
+        with ESMTP id S229787AbjBYUgr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 15:36:47 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A0215573;
+        Sat, 25 Feb 2023 12:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677357406; x=1708893406;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mqSM0I91U6IAY9Cj5vU5OR9snlGfnxVyIBIv1dpHmOw=;
+  b=Bc8vDyffWPwoQvDr3+HaxLxEwgwvvp73oq1rKkNkPwR0ZJezF9FZWKYA
+   rvOKLAEyppZeYd2PMK0hxsaDpEjGzyUSDZnLO64fRr83NRiM5B/c032U9
+   C6feXIJNeJKGDAACjd1CWSUGxl4E6WZrvat/DVwADarGXiEnhD+8qg0kZ
+   OyhtlPbiOUfDQgkhYjODzi6YSLnmEFdgJAYJXojaC8AtmKHGOM8UxVLs3
+   WCCBXTRYk2Uuo9bcEKZLNtB1XJTg4ByYoBTOYfQVb+EMmldqsUkVRtpYs
+   A6P4xpVMJYljnbOuU7JP+72IkQuzvL3Ua7lW514Nm7OHz2s/Qh3plA991
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10632"; a="419927863"
+X-IronPort-AV: E=Sophos;i="5.97,328,1669104000"; 
+   d="scan'208";a="419927863"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2023 12:36:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10632"; a="1002204939"
+X-IronPort-AV: E=Sophos;i="5.97,328,1669104000"; 
+   d="scan'208";a="1002204939"
+Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Feb 2023 12:36:42 -0800
+Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pW1He-0003Op-04;
+        Sat, 25 Feb 2023 20:36:42 +0000
+Date:   Sun, 26 Feb 2023 04:36:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com
+Subject: Re: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
+Message-ID: <202302260423.CycoSTtT-lkp@intel.com>
+References: <20230224133129.887203-3-eblanc@baylibre.com>
 MIME-Version: 1.0
-References: <20230225031235.3886280-1-benl@squareup.com> <20230225031235.3886280-3-benl@squareup.com>
-In-Reply-To: <20230225031235.3886280-3-benl@squareup.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 25 Feb 2023 19:38:30 +0100
-Message-ID: <CAMRc=Mc=14fp=5nqux2M0OYi1Z=qJF8=G5t=J1oC_xNEOvSTHQ@mail.gmail.com>
-Subject: Re: [libgpiod,v2 2/2] build: add Android.bp to build within Android tree
-To:     Benjamin Li <benl@squareup.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230224133129.887203-3-eblanc@baylibre.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 25, 2023 at 4:12=E2=80=AFAM Benjamin Li <benl@squareup.com> wro=
-te:
->
-> Add an Android.bp file for Soong, the Android build system, to build
-> the library including C++ bindings along with all the CLI tools.
->
-> Signed-off-by: Benjamin Li <benl@squareup.com>
-> ---
+Hi Esteban,
 
-If I take it into the main tree, I would like to be at least able to
-check that it builds correctly. Could you post some instructions on
-how to build the android package in the least number of steps? Will I
-need to jump through all the regular hoops involved in building
-android images?
+Thank you for the patch! Perhaps something to improve:
 
-Bart
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next broonie-regulator/for-next abelloni/rtc-next linus/master v6.2 next-20230225]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230224133129.887203-3-eblanc%40baylibre.com
+patch subject: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
+config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20230226/202302260423.CycoSTtT-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/5abddc736234d1cd3e28ef7e205bc0bfef263c15
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
+        git checkout 5abddc736234d1cd3e28ef7e205bc0bfef263c15
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pinctrl/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302260423.CycoSTtT-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pinctrl/pinctrl-tps6594.c:8:9: warning: 'DEBUG' macro redefined [-Wmacro-redefined]
+   #define DEBUG
+           ^
+   <command line>:6:9: note: previous definition is here
+   #define DEBUG 1
+           ^
+   1 warning generated.
+
+
+vim +/DEBUG +8 drivers/pinctrl/pinctrl-tps6594.c
+
+   > 8	#define DEBUG
+     9	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
