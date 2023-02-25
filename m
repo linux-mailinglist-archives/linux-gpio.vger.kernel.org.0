@@ -2,107 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09AE06A2A3D
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 15:02:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2B86A2A42
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 15:10:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjBYOCB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Feb 2023 09:02:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
+        id S229554AbjBYOKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Feb 2023 09:10:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbjBYOB6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 09:01:58 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB08B19F0E;
-        Sat, 25 Feb 2023 06:01:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677333705; x=1708869705;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=B9y8b6VOGAgZmhcCzXb/p9gXQak0qJFRrYNMZF8AG6M=;
-  b=mSO5p6C45VW1ROF1VxzjrckZfYe/CLdnSCYOuIPnItVrpKYBKiy8f4Dq
-   /Gtlue778c+QP8+ctIpMNxsi8TsKSAadNNfSA+As7uc5q43eosAKwbzaL
-   2jNeExq/KMlqUJYuG1sjxkT4pboZDwCa3pyyvJnWxCrHp5dPcQUiCgRnS
-   6Ftzn27i28u64Bnwk6zE6dghQOSjkBE/xBMeI3NOxim+0Ex4mbu8Tf0cM
-   kf6r8fJVIN7boePkK2KS7QrTPMBR/uz5MMz6bqiNEWRJMWfr1ujZ+yRR8
-   SWuU0sZUqWUPbcdVcHcmCKcAuFhzF/pFOdjXIcH5XxesTc00vVqC7vfTV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="314053475"
-X-IronPort-AV: E=Sophos;i="5.97,327,1669104000"; 
-   d="scan'208";a="314053475"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2023 06:01:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="918740221"
-X-IronPort-AV: E=Sophos;i="5.97,327,1669104000"; 
-   d="scan'208";a="918740221"
-Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.154.52])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Feb 2023 06:01:40 -0800
-From:   Ye Xiang <xiang.ye@intel.com>
-To:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
-        Ye Xiang <xiang.ye@intel.com>
-Subject: [PATCH v2 5/5] Documentation: Add ABI doc for attributes of LJCA device
-Date:   Sat, 25 Feb 2023 22:01:18 +0800
-Message-Id: <20230225140118.2037220-6-xiang.ye@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230225140118.2037220-1-xiang.ye@intel.com>
-References: <20230225140118.2037220-1-xiang.ye@intel.com>
+        with ESMTP id S229445AbjBYOKv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 09:10:51 -0500
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADC8EFA7
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 06:10:49 -0800 (PST)
+Received: by mail-vs1-xe2f.google.com with SMTP id d7so4019860vsj.2
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 06:10:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CV1o4cBRY8P1L1WSKUuxlid+ty8ck5NCkHEAh8wKm3U=;
+        b=bDzh48ctBNIrpAEi9eS08sxhDbeIn3b81nvCRlDxdB+8tL7e/lh9z+JLswj4FBKsmk
+         lwB3vmhiLeOgfHykmaTQum8/vyAFHu57kEZuBslzzKzY2IFWk6TANWruqMQH1WovSiTZ
+         PB5A5RsDwQx8ojVWsIqeS98k2BKXJ8k69FhxBxjc7M2p3vfNx5Z4moHOYs6ZB40GhfvO
+         joflN3xSUMIFcBW5DfGiBudoBg/Ozktmdu8e6pFyTzQs2KqGvF9kP92XhZCWv1XFSur9
+         C5TaMAt8Ce6QZY90W3hdCK4iBAwdO0gISmqdnxpt0TThew1UVWuBJqD70Kc9kbk27NuL
+         YgWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CV1o4cBRY8P1L1WSKUuxlid+ty8ck5NCkHEAh8wKm3U=;
+        b=vglNHNhRBcQxlY53Myl2HPGdKBHqKiMm/Y7rEtWXdDMhQ89SUoYasS3+rYzzXnibas
+         mCmNG6q4TORL5QEghHcE1uTcvIkgdhUowqWbddfGRY4MZXqbO4yP/nqJ5dKW+CjMSE2I
+         oTGHlYQVNZ06JAx9C9TF5lx+XGHzbCo6apy7PewdmJ/Y17xLe/uzQJrbaQRT4Uck831x
+         2LgwBWg1OjlylJdz6/xiIzw2alBj2p7mYEYVw2GCOtcloxI/KGpQe6SqkJpGH6A8i8dB
+         mBKnVnCKj9Ekq8gjopHeqkfh/5qz4BlEbuZDSOeYrdGgZpTY6bQXSNb6rdZcZNTWWkOf
+         Egrw==
+X-Gm-Message-State: AO0yUKVpdUU5Aw2sDKxBDmhbqVJPjvXcmM1J6YcrGb4PUjjfIxH4+wiq
+        sBbp7Xq8AUU1MMZ6/z0j6W+K9BiHwC24Yy4hccspqfwltIlmEQ==
+X-Google-Smtp-Source: AK7set+rptMAvd74js/h/5bpu7tepWG0sipcaJgs/SzaolaGCOmFjp549zlAVpPGGOnVyKOOoLd7D874hMcy9lEkzUs=
+X-Received: by 2002:a05:6102:f99:b0:412:ba5:8002 with SMTP id
+ e25-20020a0561020f9900b004120ba58002mr2231126vsv.1.1677334248320; Sat, 25 Feb
+ 2023 06:10:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230225030813.3885661-1-benl@squareup.com>
+In-Reply-To: <20230225030813.3885661-1-benl@squareup.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 25 Feb 2023 15:10:37 +0100
+Message-ID: <CAMRc=McAAT7A9-XM4QdRtr9mFbDNM8bpDNJXUrxxxg6QppmfHw@mail.gmail.com>
+Subject: Re: [libgpiod,v1.6.x,0/3] build: fix compile issues against non-glibc
+To:     Benjamin Li <benl@squareup.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add sysfs attributes Documentation entries for LJCA device
+On Sat, Feb 25, 2023 at 4:08 AM Benjamin Li <benl@squareup.com> wrote:
+>
+> Fix issues when building against a C library other than glibc, such as
+> Android's Bionic libc. The basename() patch isn't needed on master.
+>
+> A commit with a sample Android.bp file that's working against Android 11 is
+> included for informational purposes, which I don't expect Bartosz to pull.
+>
+> Benjamin Li (3):
+>   tools: use getprogname() when available to remove dependency on glibc
+>   core: add missing #include for basename()
+>   build: add Android.bp to build within Android tree
+>
+>  Android.bp           | 126 +++++++++++++++++++++++++++++++++++++++++++
+>  configure.ac         |   5 ++
+>  lib/core.c           |   1 +
+>  tools/gpiodetect.c   |   4 +-
+>  tools/gpiofind.c     |   4 +-
+>  tools/gpioget.c      |   4 +-
+>  tools/gpioinfo.c     |   4 +-
+>  tools/gpiomon.c      |   4 +-
+>  tools/gpioset.c      |   4 +-
+>  tools/tools-common.c |  12 +++--
+>  tools/tools-common.h |   4 +-
+>  11 files changed, 154 insertions(+), 18 deletions(-)
+>  create mode 100644 Android.bp
+>
+> --
+> 2.25.1
+>
 
-Signed-off-by: Ye Xiang <xiang.ye@intel.com>
----
- .../ABI/testing/sysfs-bus-usb-devices-ljca    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+I applied patch 2/3 as it's a fix. For the rest of them - my goal for
+the v1.6.x series is to not support it anymore, than is absolutely
+necessary - that means no new features and android build looks like
+one to me. Any chance you can carry this locally?
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-new file mode 100644
-index 000000000000..43b95effdefc
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-@@ -0,0 +1,22 @@
-+What:		/sys/bus/usb/.../version
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Provides the current firmware version of LJCA device.
-+		The format is Major.Minor.Patch.Build, where
-+		Major, Minor, Patch, and Build are decimal numbers.
-+		For example: 1.0.0.256
-+
-+What:		/sys/bus/usb/.../cmd
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Commands supported by LJCA device.
-+		When read, it will return valid commands.
-+		When write with a command, it will execute the command.
-+		Valid commands are [dfu, debug]
-+		dfu:	Echo dfu to this file so as to put the device into
-+			DFU mode so the firmware can be updated.
-+		debug:	Enable debug logging.
--- 
-2.34.1
+For v2.x I'm open to adding it but have a couple comments, see the
+relevant email threads.
 
+Bart
