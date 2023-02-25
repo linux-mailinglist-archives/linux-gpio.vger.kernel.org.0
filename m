@@ -2,292 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 944296A2781
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 07:25:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D82D56A2871
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 10:30:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjBYGZj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Feb 2023 01:25:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
+        id S229601AbjBYJa2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Feb 2023 04:30:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjBYGZj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 01:25:39 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DC624480
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 22:25:37 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id h17-20020a17090aea9100b0023739b10792so1400415pjz.1
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Feb 2023 22:25:37 -0800 (PST)
+        with ESMTP id S229522AbjBYJa1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 04:30:27 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B6CFF17
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 01:30:26 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id ce7so843712pfb.9
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Feb 2023 01:30:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4QPCIfZpunPpGQRjZ0CLzZgvh1bMrAOlRsJYurE9VOI=;
-        b=i2OnX+qtVkxWkVFcUUUtHoMVo58k8kPteFOU3yRJoch4UrZVjVtoKgQCILPsSIH2IM
-         9SuCn3vu72nb3n2gCsoCb9MQcwZbuXYf5jgyHDO34s/gR8M5CxRU5gV0+YnHw+9V/jL3
-         UereLqEbLRdif9+wLl1Wv9EJQ5zwKS3GE8nA8qUJSHw1j151949EZ1cDEtx0EJ19hLV9
-         2i4mG+2eo1p0BSS1qZavXyXOVwVlLf24HyC12nbm1kz7x2IzYuc7LLP1/1i2knyLhN87
-         asicV45YD46sfQWagebPdNnXBrCMp8DyEYimgDowgWuBomRC1Gc2M0hNTbO7Evf7ew4Y
-         cwsQ==
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QwJ3djsgu7EpFGFjesrarL0td1XXwZi3NukCRezNELs=;
+        b=optnimXpIydzp/+PWndFOQjbgLlMpy3vFttLCCQRdLUitavfgO3O8hWdo5CjF/sTe0
+         Wm8wrBn7zBQG+1EKFdrRWBOQ83MEHrmfryE0Szri53CrRwl0YalIfzI5VW20MAf73E++
+         6ZFFwJeLOlgkwII48SVvuntW4LeUU27IdF0RvUV4h1JsrMgMyzhc7lhpuSAxtt4VOiW0
+         v0a4/sylwTCgoyKsJZ8Zt7yEY/yEDoFjDPTjl1Mijb1Ya9yoI8hKiYua/iCVVKRScdg8
+         fBBDXNEyJ5ykM5+PslILzk8ey7LhEyOM/AdPbbfitSdV+GE3n7Rs+NztqSEQfTFb81vf
+         WZSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4QPCIfZpunPpGQRjZ0CLzZgvh1bMrAOlRsJYurE9VOI=;
-        b=3OqsHlHpaLpxU8VS4g5heypAaV4vn3YSwQCe1rmZU/vm8Ny5ByEL+ZN/iUDIZJM0/F
-         oJf5Ew2YhaZbpWpLXRkqlJGfZKph85bSDehCAzbSZx+NZ7xUjGlyQJ8p4MIr897hM5O3
-         x2JJ7PdHqwSaw13imsGHyQfl6U+UwM/NfUespDyOdlkUoQEskDkvjL9riLv7fQ89wlG/
-         5NlyY4V7BZOLh9ppTy3WrKyIokIpykYVOyeUNPp7PwgX5csPIhIB+dF7ZEbXijnuFo2N
-         HEY93m9U8hwHumTagehbhDOa8l1nRvE5kEjXlhmmFq44Adtqo4aftsyEyGTn8oTmtD56
-         9h4w==
-X-Gm-Message-State: AO0yUKVSjg/4GxQfn5ZNBQ07ejLUOs3b/hxVFk1YPDoCOk7XYOKJ3QH+
-        RhzXzO++q4Vm+OEmlCUNNupWbwS3GyEcw52EmPlS7A==
-X-Google-Smtp-Source: AK7set/k/0eO1pGMhcQMet0YU6e3h9+c98wFu1JipuFF0QZYfLgw6WY/Kw7NUyUCthebeNVAXRQmnWBsB84kG+im0+I=
-X-Received: by 2002:a17:903:2402:b0:19c:a7a7:7072 with SMTP id
- e2-20020a170903240200b0019ca7a77072mr3005999plo.10.1677306336589; Fri, 24 Feb
- 2023 22:25:36 -0800 (PST)
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QwJ3djsgu7EpFGFjesrarL0td1XXwZi3NukCRezNELs=;
+        b=lsvfvhRHbgVrwNCnhLVp9XZi6m7BxybAm+NyHgYwtP35nI/nLIhEz9WERIvXT/bIif
+         DTbhZuLYbviLgIn+Od/A7UvRw1gDoYj2nVc5rKIRQVqIU/NaS8uR82T25LfYjrjjAEjd
+         H+J8+Pt1eegXmm3a67RE6ODKlOBuoGTx6iwsXHVvvvXghExKtv3BVF6VT2Mx7yO74XjR
+         pSE7eMQkiT9uEIb5jgMUYpHr9sZhzOBhDwWL7m9ohCJ+E4vJ/g5/FgY3DbhasoIZnHDy
+         4cqLGOypR00WWo073cfYrXZrd3B2SuYlUif1UHObZrcTCg8GP9U5U3QbX7lsn5Rd5uPQ
+         nRyw==
+X-Gm-Message-State: AO0yUKXs48Mf5psx04+bZrStwWIBf9rFBRqpDipTFxeb5AHXS1K+CueQ
+        ueoNEJDUFhr/MquuMNky93IlTk4YFho4rrXZuIs=
+X-Google-Smtp-Source: AK7set8DjEjXobqY1+0xwn7dDh6+tMMwGXg8yycT4d+IfKsY14jRQSpBywK26Am9dX6t1Bl5lHQa8e1kSXjNvWKsErw=
+X-Received: by 2002:a05:6a00:7c8:b0:5df:9809:621f with SMTP id
+ n8-20020a056a0007c800b005df9809621fmr2406272pfu.0.1677317426001; Sat, 25 Feb
+ 2023 01:30:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20230207014207.1678715-1-saravanak@google.com> <CAA8EJprMMh3udsKKwtGJW9kBLfMv=_OXFnnPGobK=dK-raX5ew@mail.gmail.com>
-In-Reply-To: <CAA8EJprMMh3udsKKwtGJW9kBLfMv=_OXFnnPGobK=dK-raX5ew@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 24 Feb 2023 22:24:59 -0800
-Message-ID: <CAGETcx8iR20dtrKMu+5VdqqTG8xYY7PFjLnkgUfvMNV2bmfhkw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] fw_devlink improvements
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        John Stultz <jstultz@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Maxim Kiselev <bigunclemax@gmail.com>,
-        Maxim Kochetkov <fido_max@inbox.ru>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Jean-Philippe Brucker <jpb@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-acpi@vger.kernel.org
+Received: by 2002:a17:902:9a87:b0:19c:92af:ad17 with HTTP; Sat, 25 Feb 2023
+ 01:30:25 -0800 (PST)
+Reply-To: lassounadage5@gmail.com
+From:   Ms Nadage Lassou <nadagelassou@gmail.com>
+Date:   Sat, 25 Feb 2023 10:30:25 +0100
+Message-ID: <CAJ97MqQUY4HeeHOPN6sWPSeFG-4bUAmVuOwd3SbU8BnrwM7Zmw@mail.gmail.com>
+Subject: YOUR URGENT ATTENTION
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        SUBJ_ALL_CAPS,SUBJ_ATTENTION,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:436 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [lassounadage5[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [nadagelassou[at]gmail.com]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.5 SUBJ_ATTENTION ATTENTION in Subject
+        *  3.0 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 7:12 PM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On 07/02/2023 03:41, Saravana Kannan wrote:
-> > Naresh, Tony, Abel, Geert, Dmitry, Maxim(s), Miquel, Luca, Doug, Martin,
-> > Jean-Philippe,
-> >
-> > Can I get your Tested-by's for this v3 series please?
-> >
-> > Vladimir,
-> >
-> > Ccing you because DSA's and fw_devlink have known/existing problems
-> > (still in my TODOs to fix). But I want to make sure this series doesn't
-> > cause additional problems for DSA.
-> >
-> > All,
-> >
-> > This patch series improves fw_devlink in the following ways:
-> >
-> > 1. It no longer cares about a fwnode having a "compatible" property. It
-> >     figures this out more dynamically. The only expectation is that
-> >     fwnodes that are converted to devices actually get probed by a driver
-> >     for the dependencies to be enforced correctly.
-> >
-> > 2. Finer grained dependency tracking. fw_devlink will now create device
-> >     links from the consumer to the actual resource's device (if it has one,
-> >     Eg: gpio_device) instead of the parent supplier device. This improves
-> >     things like async suspend/resume ordering, potentially remove the need
-> >     for frameworks to create device links, more parallelized async probing,
-> >     and better sync_state() tracking.
-> >
-> > 3. Handle hardware/software quirks where a child firmware node gets
-> >     populated as a device before its parent firmware node AND actually
-> >     supplies a non-optional resource to the parent firmware node's
-> >     device.
-> >
-> > 4. Way more robust at cycle handling (see patch for the insane cases).
-> >
-> > 5. Stops depending on OF_POPULATED to figure out some corner cases.
-> >
-> > 6. Simplifies the work that needs to be done by the firmware specific
-> >     code.
-> >
-> > The v3 series has gone through my usual testing on my end and looks good
-> > to me.
->
-> Saravana,
->
-> Please excuse me, I was completely overwhelmed with my regular work and
-> had no time to properly test the series, while doing just the light
-> test would defeat the purpose of testing.
->
-> Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> # Qualcomm RB3
->
-> Thanks a lot for going through all the troubles and hunting all the issues!
+Greetings.
 
-You are welcome! Thanks for testing it.
-
-> Just a note: on an RB3 device (arm64 qcom/sdm845-db845c.dtsi) extended
-> with the patch at [3] I got the following messages in dmesg:
->
-> [    1.051325] platform ae00000.mdss: Failed to create device link
-> with ae00000.mdss
-> [    1.059368] platform ae00000.mdss: Failed to create device link
-> with ae00000.mdss
-> [    1.067174] platform ae00000.mdss: Failed to create device link
-> with ae00000.mdss
-> [    1.088322] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    1.096019] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    1.103707] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    1.111400] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    1.119141] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    1.126825] platform c440000.spmi: Failed to create device link
-> with c440000.spmi
-> [    2.024763] qcom-lab-ibb-regulator c440000.spmi:pmic@3:labibb:
-> Failed to create device link with c440000.spmi
-> [    2.035026] qcom-lab-ibb-regulator c440000.spmi:pmic@3:labibb:
-> Failed to create device link with c440000.spmi
->
-> They look to be harmless, but it might be good to filter some of them
-> out? Especially the ones which tell about creating a device link
-> pointing back to the same device.
-
-I'm sure it's harmless when the supplier == consumer. Agreed on
-filtering these out.
-
-I looked at [3], but it's not obvious to me how this is happening for
-your specific case. There are a couple of  ways I can think of:
-1. A SYNC_STATE_ONLY link being created as a proxy link (I don't do as
-many checks here because it can't break anything)
-2. __fw_devlink_pickup_dangling_consumers() causing the consumer and
-supplier to be the same.
-
-But I want to understand which one is happening in your case. Can you
-add a WARN_ON(1) after the error message and give me the list of stack
-dumps that are unique?
-
-Thanks,
-Saravana
-
-
->
-> [3] https://lore.kernel.org/linux-arm-msm/20230118082048.2198715-1-dmitry.baryshkov@linaro.org/
->
-> >
-> > Thanks,
-> > Saravana
-> >
-> > [1] - https://lore.kernel.org/lkml/20220810060040.321697-1-saravanak@google.com/
-> > [2] - https://lore.kernel.org/lkml/CAGETcx-JUV1nj8wBJrTPfyvM7=Mre5j_vkVmZojeiumUGG6QZQ@mail.gmail.com/
-> >
-> > v1 -> v2:
-> > - Fixed Patch 1 to handle a corner case discussed in [2].
-> > - New patch 10 to handle "fsl,imx8mq-gpc" being initialized by 2 drivers.
-> > - New patch 11 to add fw_devlink support for SCMI devices.
-> >
-> > v2 -> v3:
-> > - Addressed most of Andy's comments in v2
-> > - Added Colin and Sudeep's Tested-by for the series (except the imx and
-> >    renesas patches)
-> > - Added Sudeep's Acked-by for the scmi patch.
-> > - Added Geert's Reviewed-by for the renesas patch.
-> > - Fixed gpiolib crash reported by Naresh.
-> > - Patch 6: Fix __fwnode_links_move_consumers() to preserve fwnode link flags.
-> > - New Patch 12 to fix nvmem-cells issue reported by Maxim(s)/Miquel.
-> > - Deleted some stale function doc in Patch 8
-> >
-> > Cc: Abel Vesa <abel.vesa@linaro.org>
-> > Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > Cc: Tony Lindgren <tony@atomide.com>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Cc: John Stultz <jstultz@google.com>
-> > Cc: Doug Anderson <dianders@chromium.org>
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > Cc: Maxim Kiselev <bigunclemax@gmail.com>
-> > Cc: Maxim Kochetkov <fido_max@inbox.ru>
-> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Cc: Luca Weiss <luca.weiss@fairphone.com>
-> > Cc: Colin Foster <colin.foster@in-advantage.com>
-> > Cc: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > Cc: Jean-Philippe Brucker <jpb@kernel.org>
-> > Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > Saravana Kannan (12):
-> >    driver core: fw_devlink: Don't purge child fwnode's consumer links
-> >    driver core: fw_devlink: Improve check for fwnode with no
-> >      device/driver
-> >    soc: renesas: Move away from using OF_POPULATED for fw_devlink
-> >    gpiolib: Clear the gpio_device's fwnode initialized flag before adding
-> >    driver core: fw_devlink: Add DL_FLAG_CYCLE support to device links
-> >    driver core: fw_devlink: Allow marking a fwnode link as being part of
-> >      a cycle
-> >    driver core: fw_devlink: Consolidate device link flag computation
-> >    driver core: fw_devlink: Make cycle detection more robust
-> >    of: property: Simplify of_link_to_phandle()
-> >    irqchip/irq-imx-gpcv2: Mark fwnode device as not initialized
-> >    firmware: arm_scmi: Set fwnode for the scmi_device
-> >    mtd: mtdpart: Don't create platform device that'll never probe
-> >
-> >   drivers/base/core.c             | 449 +++++++++++++++++++++-----------
-> >   drivers/firmware/arm_scmi/bus.c |   3 +-
-> >   drivers/gpio/gpiolib.c          |   7 +
-> >   drivers/irqchip/irq-imx-gpcv2.c |   1 +
-> >   drivers/mtd/mtdpart.c           |  10 +
-> >   drivers/of/property.c           |  84 +-----
-> >   drivers/soc/imx/gpcv2.c         |   2 +-
-> >   drivers/soc/renesas/rcar-sysc.c |   2 +-
-> >   include/linux/device.h          |   1 +
-> >   include/linux/fwnode.h          |  12 +-
-> >   10 files changed, 344 insertions(+), 227 deletions(-)
-> >
->
-> --
-> With best wishes
->
-> Dmitry
+I am Ms Nadage lassou,I have something important to tell you
+Thanks, i will send you the details once i hear from you.
+Regards.
+Ms Nadage Lassou
