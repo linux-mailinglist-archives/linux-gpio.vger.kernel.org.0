@@ -2,119 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF3D6A2BAB
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Feb 2023 21:37:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72AE76A2E64
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Feb 2023 06:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjBYUhT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Feb 2023 15:37:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
+        id S229644AbjBZFkB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Feb 2023 00:40:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbjBYUgr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Feb 2023 15:36:47 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A0215573;
-        Sat, 25 Feb 2023 12:36:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677357406; x=1708893406;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mqSM0I91U6IAY9Cj5vU5OR9snlGfnxVyIBIv1dpHmOw=;
-  b=Bc8vDyffWPwoQvDr3+HaxLxEwgwvvp73oq1rKkNkPwR0ZJezF9FZWKYA
-   rvOKLAEyppZeYd2PMK0hxsaDpEjGzyUSDZnLO64fRr83NRiM5B/c032U9
-   C6feXIJNeJKGDAACjd1CWSUGxl4E6WZrvat/DVwADarGXiEnhD+8qg0kZ
-   OyhtlPbiOUfDQgkhYjODzi6YSLnmEFdgJAYJXojaC8AtmKHGOM8UxVLs3
-   WCCBXTRYk2Uuo9bcEKZLNtB1XJTg4ByYoBTOYfQVb+EMmldqsUkVRtpYs
-   A6P4xpVMJYljnbOuU7JP+72IkQuzvL3Ua7lW514Nm7OHz2s/Qh3plA991
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10632"; a="419927863"
-X-IronPort-AV: E=Sophos;i="5.97,328,1669104000"; 
-   d="scan'208";a="419927863"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2023 12:36:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10632"; a="1002204939"
-X-IronPort-AV: E=Sophos;i="5.97,328,1669104000"; 
-   d="scan'208";a="1002204939"
-Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Feb 2023 12:36:42 -0800
-Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pW1He-0003Op-04;
-        Sat, 25 Feb 2023 20:36:42 +0000
-Date:   Sun, 26 Feb 2023 04:36:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
-        jneanne@baylibre.com
-Subject: Re: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
-Message-ID: <202302260423.CycoSTtT-lkp@intel.com>
-References: <20230224133129.887203-3-eblanc@baylibre.com>
+        with ESMTP id S229601AbjBZFkA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Feb 2023 00:40:00 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21925136F7;
+        Sat, 25 Feb 2023 21:39:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=EI1aXrE2jWnMQpvhJWCxJ0A1m6hExM8zG6kHodDd/Yk=; b=aj3A5Ot6MEhhd9SZR6hiyed6PQ
+        EdZuqG07G/Vk/F8skIZAfGRc6sNw4DC3faae0Cu3vMc4szUf4tDAjvfhrUYJgE2qrG+wA3gREi+N9
+        PxwHUdCcxP7gl8263NKtViUAcgY2zI6M/LMZBz9lNggC95W1ux6ZsuulZKWLDOGTRoKB45Cn6oWKQ
+        wmRpRz9HJa6rXmn93Yj2Kp+oVd2a57W+8ogtuK5beZyvX1IVvMsN0ws+h4BF3CcUdqyDY6oBTAOxv
+        yxF6SU+Dxy/zjph+VaxFK8u1DqBXUvUKhjqVRXd4V3udKqotaho/14nhEhUecI4IwtIGLrTY08V5M
+        lQmQqocw==;
+Received: from [2601:1c2:980:9ec0::df2f] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pW9lK-006qYL-N4; Sun, 26 Feb 2023 05:39:54 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Corey Minyard <minyard@acm.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Riku Voipio <riku.voipio@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Michael Shych <michaelsh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org,
+        Yegnesh S Iyer <yegnesh.s.iyer@intel.com>,
+        Bin Gao <bin.gao@intel.com>, Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
+        Oskar Senft <osk@google.com>, linux-serial@vger.kernel.org
+Subject: [PATCH 0/8] drivers: select REGMAP instead of depending on it
+Date:   Sat, 25 Feb 2023 21:39:45 -0800
+Message-Id: <20230226053953.4681-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230224133129.887203-3-eblanc@baylibre.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Esteban,
+REGMAP is a hidden (not user visible) symbol. Users cannot set it
+directly thru "make *config", so drivers should select it instead of
+depending on it if they need it.
 
-Thank you for the patch! Perhaps something to improve:
+Consistently using "select" or "depends on" can also help reduce
+Kconfig circular dependency issues.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next broonie-regulator/for-next abelloni/rtc-next linus/master v6.2 next-20230225]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+REGMAP is selected 94 times and is depended on 11 times in
+current linux-next. Eliminate the uses of "depends on" by
+converting them to "select".
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230224133129.887203-3-eblanc%40baylibre.com
-patch subject: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20230226/202302260423.CycoSTtT-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/5abddc736234d1cd3e28ef7e205bc0bfef263c15
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230224-213323
-        git checkout 5abddc736234d1cd3e28ef7e205bc0bfef263c15
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pinctrl/
+ [PATCH 1/8] ipmi: ASPEED_BT_IPMI_BMC: select REGMAP_MMIO instead of depending on it
+ [PATCH 2/8] clk: HI655X: select REGMAP instead of depending on it
+ [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
+ [PATCH 4/8] leds: TI_LMU_COMMON: select REGMAP instead of depending on it
+ [PATCH 5/8] platform: mellanox: select REGMAP instead of depending on it
+ [PATCH 6/8] platform: x86: MLX_PLATFORM: select REGMAP instead of depending on it
+ [PATCH 7/8] thermal: intel: BXT_PMIC: select REGMAP instead of depending on it
+ [PATCH 8/8] serial: 8250: ASPEED_VUART: select REGMAP instead of depending on it
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302260423.CycoSTtT-lkp@intel.com/
+diffstat:
+ drivers/char/ipmi/Kconfig         |    3 ++-
+ drivers/clk/Kconfig               |    2 +-
+ drivers/gpio/Kconfig              |    2 +-
+ drivers/leds/Kconfig              |    2 +-
+ drivers/platform/mellanox/Kconfig |    9 ++++-----
+ drivers/platform/x86/Kconfig      |    3 ++-
+ drivers/thermal/intel/Kconfig     |    3 ++-
+ drivers/tty/serial/8250/Kconfig   |    3 ++-
+ 8 files changed, 15 insertions(+), 12 deletions(-)
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pinctrl/pinctrl-tps6594.c:8:9: warning: 'DEBUG' macro redefined [-Wmacro-redefined]
-   #define DEBUG
-           ^
-   <command line>:6:9: note: previous definition is here
-   #define DEBUG 1
-           ^
-   1 warning generated.
-
-
-vim +/DEBUG +8 drivers/pinctrl/pinctrl-tps6594.c
-
-   > 8	#define DEBUG
-     9	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: Corey Minyard <minyard@acm.org>
+Cc: openipmi-developer@lists.sourceforge.net
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Riku Voipio <riku.voipio@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org
+Cc: Michael Walle <michael@walle.cc>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Lee Jones <lee@kernel.org>
+Cc: linux-leds@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Michael Shych <michaelsh@nvidia.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Vadim Pasternak <vadimp@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Yegnesh S Iyer <yegnesh.s.iyer@intel.com>
+Cc: Bin Gao <bin.gao@intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amitk@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: Oskar Senft <osk@google.com>
+Cc: linux-serial@vger.kernel.org
