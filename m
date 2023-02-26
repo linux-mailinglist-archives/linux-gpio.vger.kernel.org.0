@@ -2,82 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D7486A2E61
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Feb 2023 06:40:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE37B6A335D
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Feb 2023 19:06:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjBZFkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Feb 2023 00:40:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56668 "EHLO
+        id S229728AbjBZSGQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Feb 2023 13:06:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbjBZFj7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Feb 2023 00:39:59 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B48136EA;
-        Sat, 25 Feb 2023 21:39:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=6v9IARzIwbKOte5wIp9AIhAolACRtWXmOhlJpgpaN3Y=; b=WFsJLwpKRp042RteZ5099Lv9Q/
-        IYDDh6FBSdDCOpOzVw/X0tnu3oyQrkokrHwzhI9BZmkcL2W81fDAIAwPZtDeOwBbD5LiqSfZa/TaB
-        Lj16t/8lxset8GyzVL5oZzP9mMoQ5JnAJ+9I/CkjkAET9HyYjdZvj62WRvNL7gUclDN8o9gL4wDyv
-        OMHZAZhkoYlAgnpKw9Cu0mI7tUhANa9sZD8/tMuyQ6/21I4TsXvPWoUaqOuJoDnsU4qrvp2ap3x6a
-        DqHfVoNpVCI8TDlyD9jlfsjY2MAvr8hXyCBU4NtKItIUSxIdYPtTOuNrmxqECDTyHhy+ElsYnLCMs
-        y0MfmFqw==;
-Received: from [2601:1c2:980:9ec0::df2f] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pW9lL-006qYL-Sq; Sun, 26 Feb 2023 05:39:56 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Michael Walle <michael@walle.cc>,
+        with ESMTP id S229379AbjBZSGM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Feb 2023 13:06:12 -0500
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B1612070
+        for <linux-gpio@vger.kernel.org>; Sun, 26 Feb 2023 10:06:11 -0800 (PST)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 009CCA6D;
+        Sun, 26 Feb 2023 19:06:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1677434762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=00CSQUks6M18SeC37qz8wpq617p3vtaeoW4alDtoTkg=;
+        b=NbfjNrzuTNlTH5FhSK4QKNKi4cAUo4RIAgfCkxFpaodShUBCMuYc/W5AerxFK9idv/lgRX
+        O/GEPHFS4K5lQpxWTU8GzEP071ktH9LSzGiyM31UdxLJ6CUXCEUb52MM4gBjRIzg8THekM
+        FRKluYf/s2+zFr8QnTOWiv85AsPjMvwzzdIgMM2k0sGv7Gbos8bPoNlzJIncxoGUF9L7dq
+        FUbL6MflU43ciwlIlqCqqjWWYhzeELCffQDtEwsxvYYJZGP1+ygKu22GqYuMi4e4Gul/hd
+        wi+t31zmDz80zoMi4jM/UejJ1QLYpZpC3oS5+y94s3BbMN3mFDRPVDj9Q0s86A==
+MIME-Version: 1.0
+Date:   Sun, 26 Feb 2023 19:06:01 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
-Date:   Sat, 25 Feb 2023 21:39:48 -0800
-Message-Id: <20230226053953.4681-4-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230226053953.4681-1-rdunlap@infradead.org>
+Subject: Re: [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending
+ on it
+In-Reply-To: <20230226053953.4681-4-rdunlap@infradead.org>
 References: <20230226053953.4681-1-rdunlap@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+ <20230226053953.4681-4-rdunlap@infradead.org>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <8846de19ead73575ad4f1f0d9f731405@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-REGMAP is a hidden (not user visible) symbol. Users cannot set it
-directly thru "make *config", so drivers should select it instead of
-depending on it if they need it.
+Am 2023-02-26 06:39, schrieb Randy Dunlap:
+> REGMAP is a hidden (not user visible) symbol. Users cannot set it
+> directly thru "make *config", so drivers should select it instead of
+> depending on it if they need it.
+> 
+> Consistently using "select" or "depends on" can also help reduce
+> Kconfig circular dependency issues.
+> 
+> Therefore, change the use of "depends on REGMAP" to "select REGMAP".
+> 
+> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using 
+> regmap")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Michael Walle <michael@walle.cc>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: linux-gpio@vger.kernel.org
 
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
+Acked-by: Michael Walle <michael@walle.cc>
 
-Therefore, change the use of "depends on REGMAP" to "select REGMAP".
-
-Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Michael Walle <michael@walle.cc>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
----
- drivers/gpio/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff -- a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -100,7 +100,7 @@ config GPIO_GENERIC
- 	tristate
- 
- config GPIO_REGMAP
--	depends on REGMAP
-+	select REGMAP
- 	tristate
- 
- # put drivers in the right section, in alphabetical order
+Thanks,
+-michael
