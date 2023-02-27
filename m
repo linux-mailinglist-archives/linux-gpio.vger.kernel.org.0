@@ -2,68 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D9316A475B
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Feb 2023 17:54:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3554A6A47D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Feb 2023 18:23:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbjB0Qym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Feb 2023 11:54:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
+        id S229636AbjB0RXg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Feb 2023 12:23:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbjB0Qyc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Feb 2023 11:54:32 -0500
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7088123642
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Feb 2023 08:54:29 -0800 (PST)
-Received: by mail-qv1-xf31.google.com with SMTP id nv15so4845883qvb.7
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Feb 2023 08:54:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vj0QltnoAi1JZdrYL3H9FoWyRXqBusk5qG251LO3M8I=;
-        b=MFrzT2MAbznI/qnpkq7O0J7HRVDYgeLtTBPsnBUDvpf05eLY9coaStlbgIsQ3BCFpK
-         HY2MhikGnT7kqGdEpxRH1Z8rgUQdcop0A0OFMqdi1P7DWysGBlNhUQg/mz5vDrbXlp6U
-         7twpoUZXKq/KSxRNomG7r8NHVInFEVT4Y6M3YzaMVpKD0ZsQkjnQ7/27jEl5T5nsnRNP
-         eTkmYPzRnMUNzGChbNBC1ogrQDB3X1oLGZAyKzg3x4J60hv9VjiVVhJDBNqUs09qczuW
-         It0VY6RvlupZ0F4RN5aZsI6K3/vjAA8OTlvz9glHDKJ6KzypzIs1xeWxIqF8bvUvhNFS
-         1/2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vj0QltnoAi1JZdrYL3H9FoWyRXqBusk5qG251LO3M8I=;
-        b=FGW9Wd5v7N3dT7XhizT3QSaCrTEZZnlvGGtEKrvB/FcR0RNyH2MEb5Mtno0Sd2USc3
-         UdMMrrc+wBi6ju3k/iY9CRKCx9R5s+8D2qioZoMBK6pF5ifXm2rhwoVpdv2BK/IKAkm1
-         iWLGL+T3Ziv1btGVv6iEdR+NN3lLAp8JHplT7tgzpaAEax2IwnLBj20lxBoByNdDOr7o
-         AFVWHkhTyZ6cyWKIX5QtCsbTYkZhwXpkP797QQaiT3m7DuXCxclT+RU3BjMxDOrH2x+A
-         sIYXuTSvbxSZ/nwjtCzdnnTuP623FsLTEtK25S/4P1OWKsMmN5DZZY6QyF/tvq27tIRd
-         mlOg==
-X-Gm-Message-State: AO0yUKVG85XUgCvWgsad5IZoVsmkVLyT//rY9Ftru7fo3zN4IsQAwdRN
-        uJkWc9B8YapqEwcMGRuFeyfP7w==
-X-Google-Smtp-Source: AK7set9TkBixM17aDQ9ILlZT8Nzjj8nGnwMZPsn7/T7gp/2A50CFXErkVraD2boi3N2++cPI59Jg8Q==
-X-Received: by 2002:a05:6214:27cf:b0:570:bf43:48c with SMTP id ge15-20020a05621427cf00b00570bf43048cmr179679qvb.17.1677516869044;
-        Mon, 27 Feb 2023 08:54:29 -0800 (PST)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id x15-20020a05620a098f00b0073b929d0371sm5238714qkx.4.2023.02.27.08.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Feb 2023 08:54:28 -0800 (PST)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     broonie@kernel.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH v2 6/6] gpio: idio-16: Remove unused legacy interface
-Date:   Mon, 27 Feb 2023 11:45:27 -0500
-Message-Id: <9720c5c1e4c75d989ee60a6e172de373f7653273.1677515341.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1677515341.git.william.gray@linaro.org>
-References: <cover.1677515341.git.william.gray@linaro.org>
+        with ESMTP id S230348AbjB0RXU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Feb 2023 12:23:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20A21205D;
+        Mon, 27 Feb 2023 09:23:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AE52BB80CAE;
+        Mon, 27 Feb 2023 17:23:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2209CC433D2;
+        Mon, 27 Feb 2023 17:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677518596;
+        bh=+SBZwkALRB0cxBJAoCsB3XkME62yCRKd3uRseS1J/I0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bJUYjCEtD4l38C7r/2OsKb+m59lda5sPVo0k8zL1CA78ooEyfu9im+NP+gS5NuTag
+         5KVesuQRBqS8z4oLkynsemQGkosAxpmZYqev/Jxkqh0Mfo5m2znLsEEXLAeeQhvfWI
+         km3GDcQ3JnfjMmcBLazVb+4V6+HWumdqxXNlkW2Bgf9cAeR+WLpSXGY+S+pUPTNN20
+         aDp/XUGMy6ntE2t3PqpJfDZVuIHMNWdhM4mgEJwswDTWuxsojuAXu6iaFyhJJYarOj
+         zBASj0Fxxsz2IzU/AFyEgYguRBeSphKk4y1whzG2wVFzdUjCFdDxc/eusBOQHTHt8s
+         /HSlsV24Qrevg==
+Date:   Mon, 27 Feb 2023 17:23:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Ye Xiang <xiang.ye@intel.com>
+Cc:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        wentong.wu@intel.com, lixu.zhang@intel.com
+Subject: Re: [PATCH v2 4/5] spi: Add support for Intel LJCA USB SPI driver
+Message-ID: <Y/zm/Uk/d6VRxLBx@sirena.org.uk>
+References: <20230225140118.2037220-1-xiang.ye@intel.com>
+ <20230225140118.2037220-5-xiang.ye@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="N252Zu7nZpqEMZYb"
+Content-Disposition: inline
+In-Reply-To: <20230225140118.2037220-5-xiang.ye@intel.com>
+X-Cookie: On the eighth day, God created FORTRAN.
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,256 +62,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All idio-16 library consumers have migrated to the new interface
-leveraging the gpio-regmap API. Legacy interface functions and code are
-removed as no longer needed.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-idio-16.c | 131 +-----------------------------------
- drivers/gpio/gpio-idio-16.h |  66 ------------------
- 2 files changed, 1 insertion(+), 196 deletions(-)
+--N252Zu7nZpqEMZYb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpio/gpio-idio-16.c b/drivers/gpio/gpio-idio-16.c
-index 13e35d1ef658..26a39aa38426 100644
---- a/drivers/gpio/gpio-idio-16.c
-+++ b/drivers/gpio/gpio-idio-16.c
-@@ -3,15 +3,13 @@
-  * GPIO library for the ACCES IDIO-16 family
-  * Copyright (C) 2022 William Breathitt Gray
-  */
--#include <linux/bitmap.h>
-+#include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/export.h>
- #include <linux/gpio/regmap.h>
--#include <linux/io.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
--#include <linux/spinlock.h>
- #include <linux/types.h>
- 
- #include "gpio-idio-16.h"
-@@ -172,133 +170,6 @@ int devm_idio_16_regmap_register(struct device *const dev,
- }
- EXPORT_SYMBOL_GPL(devm_idio_16_regmap_register);
- 
--/**
-- * idio_16_get - get signal value at signal offset
-- * @reg:	ACCES IDIO-16 device registers
-- * @state:	ACCES IDIO-16 device state
-- * @offset:	offset of signal to get
-- *
-- * Returns the signal value (0=low, 1=high) for the signal at @offset.
-- */
--int idio_16_get(struct idio_16 __iomem *const reg,
--		struct idio_16_state *const state, const unsigned long offset)
--{
--	const unsigned long mask = BIT(offset);
--
--	if (offset < IDIO_16_NOUT)
--		return test_bit(offset, state->out_state);
--
--	if (offset < 24)
--		return !!(ioread8(&reg->in0_7) & (mask >> IDIO_16_NOUT));
--
--	if (offset < 32)
--		return !!(ioread8(&reg->in8_15) & (mask >> 24));
--
--	return -EINVAL;
--}
--EXPORT_SYMBOL_GPL(idio_16_get);
--
--/**
-- * idio_16_get_multiple - get multiple signal values at multiple signal offsets
-- * @reg:	ACCES IDIO-16 device registers
-- * @state:	ACCES IDIO-16 device state
-- * @mask:	mask of signals to get
-- * @bits:	bitmap to store signal values
-- *
-- * Stores in @bits the values (0=low, 1=high) for the signals defined by @mask.
-- */
--void idio_16_get_multiple(struct idio_16 __iomem *const reg,
--			  struct idio_16_state *const state,
--			  const unsigned long *const mask,
--			  unsigned long *const bits)
--{
--	unsigned long flags;
--	const unsigned long out_mask = GENMASK(IDIO_16_NOUT - 1, 0);
--
--	spin_lock_irqsave(&state->lock, flags);
--
--	bitmap_replace(bits, bits, state->out_state, &out_mask, IDIO_16_NOUT);
--	if (*mask & GENMASK(23, 16))
--		bitmap_set_value8(bits, ioread8(&reg->in0_7), 16);
--	if (*mask & GENMASK(31, 24))
--		bitmap_set_value8(bits, ioread8(&reg->in8_15), 24);
--
--	spin_unlock_irqrestore(&state->lock, flags);
--}
--EXPORT_SYMBOL_GPL(idio_16_get_multiple);
--
--/**
-- * idio_16_set - set signal value at signal offset
-- * @reg:	ACCES IDIO-16 device registers
-- * @state:	ACCES IDIO-16 device state
-- * @offset:	offset of signal to set
-- * @value:	value of signal to set
-- *
-- * Assigns output @value for the signal at @offset.
-- */
--void idio_16_set(struct idio_16 __iomem *const reg,
--		 struct idio_16_state *const state, const unsigned long offset,
--		 const unsigned long value)
--{
--	unsigned long flags;
--
--	if (offset >= IDIO_16_NOUT)
--		return;
--
--	spin_lock_irqsave(&state->lock, flags);
--
--	__assign_bit(offset, state->out_state, value);
--	if (offset < 8)
--		iowrite8(bitmap_get_value8(state->out_state, 0), &reg->out0_7);
--	else
--		iowrite8(bitmap_get_value8(state->out_state, 8), &reg->out8_15);
--
--	spin_unlock_irqrestore(&state->lock, flags);
--}
--EXPORT_SYMBOL_GPL(idio_16_set);
--
--/**
-- * idio_16_set_multiple - set signal values at multiple signal offsets
-- * @reg:	ACCES IDIO-16 device registers
-- * @state:	ACCES IDIO-16 device state
-- * @mask:	mask of signals to set
-- * @bits:	bitmap of signal output values
-- *
-- * Assigns output values defined by @bits for the signals defined by @mask.
-- */
--void idio_16_set_multiple(struct idio_16 __iomem *const reg,
--			  struct idio_16_state *const state,
--			  const unsigned long *const mask,
--			  const unsigned long *const bits)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&state->lock, flags);
--
--	bitmap_replace(state->out_state, state->out_state, bits, mask,
--		       IDIO_16_NOUT);
--	if (*mask & GENMASK(7, 0))
--		iowrite8(bitmap_get_value8(state->out_state, 0), &reg->out0_7);
--	if (*mask & GENMASK(15, 8))
--		iowrite8(bitmap_get_value8(state->out_state, 8), &reg->out8_15);
--
--	spin_unlock_irqrestore(&state->lock, flags);
--}
--EXPORT_SYMBOL_GPL(idio_16_set_multiple);
--
--/**
-- * idio_16_state_init - initialize idio_16_state structure
-- * @state:	ACCES IDIO-16 device state
-- *
-- * Initializes the ACCES IDIO-16 device @state for use in idio-16 library
-- * functions.
-- */
--void idio_16_state_init(struct idio_16_state *const state)
--{
--	spin_lock_init(&state->lock);
--}
--EXPORT_SYMBOL_GPL(idio_16_state_init);
--
- MODULE_AUTHOR("William Breathitt Gray");
- MODULE_DESCRIPTION("ACCES IDIO-16 GPIO Library");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/gpio/gpio-idio-16.h b/drivers/gpio/gpio-idio-16.h
-index 22bb591b4ec0..7a4694dae8f5 100644
---- a/drivers/gpio/gpio-idio-16.h
-+++ b/drivers/gpio/gpio-idio-16.h
-@@ -3,9 +3,6 @@
- #ifndef _IDIO_16_H_
- #define _IDIO_16_H_
- 
--#include <linux/spinlock.h>
--#include <linux/types.h>
--
- struct device;
- struct regmap;
- struct regmap_irq;
-@@ -30,69 +27,6 @@ struct idio_16_regmap_config {
- 	bool filters;
- };
- 
--/**
-- * struct idio_16 - IDIO-16 registers structure
-- * @out0_7:	Read: FET Drive Outputs 0-7
-- *		Write: FET Drive Outputs 0-7
-- * @in0_7:	Read: Isolated Inputs 0-7
-- *		Write: Clear Interrupt
-- * @irq_ctl:	Read: Enable IRQ
-- *		Write: Disable IRQ
-- * @filter_ctl:	Read: Activate Input Filters 0-15
-- *		Write: Deactivate Input Filters 0-15
-- * @out8_15:	Read: FET Drive Outputs 8-15
-- *		Write: FET Drive Outputs 8-15
-- * @in8_15:	Read: Isolated Inputs 8-15
-- *		Write: Unused
-- * @irq_status:	Read: Interrupt status
-- *		Write: Unused
-- */
--struct idio_16 {
--	u8 out0_7;
--	u8 in0_7;
--	u8 irq_ctl;
--	u8 filter_ctl;
--	u8 out8_15;
--	u8 in8_15;
--	u8 irq_status;
--};
--
--#define IDIO_16_NOUT 16
--
--/**
-- * struct idio_16_state - IDIO-16 state structure
-- * @lock:	synchronization lock for accessing device state
-- * @out_state:	output signals state
-- * @irq_mask:	IRQ mask state
-- */
--struct idio_16_state {
--	spinlock_t lock;
--	DECLARE_BITMAP(out_state, IDIO_16_NOUT);
--};
--
--/**
-- * idio_16_get_direction - get the I/O direction for a signal offset
-- * @offset:	offset of signal to get direction
-- *
-- * Returns the signal direction (0=output, 1=input) for the signal at @offset.
-- */
--static inline int idio_16_get_direction(const unsigned long offset)
--{
--	return (offset >= IDIO_16_NOUT) ? 1 : 0;
--}
--
--int idio_16_get(struct idio_16 __iomem *reg, struct idio_16_state *state,
--		unsigned long offset);
--void idio_16_get_multiple(struct idio_16 __iomem *reg,
--			  struct idio_16_state *state,
--			  const unsigned long *mask, unsigned long *bits);
--void idio_16_set(struct idio_16 __iomem *reg, struct idio_16_state *state,
--		 unsigned long offset, unsigned long value);
--void idio_16_set_multiple(struct idio_16 __iomem *reg,
--			  struct idio_16_state *state,
--			  const unsigned long *mask, const unsigned long *bits);
--void idio_16_state_init(struct idio_16_state *state);
--
- int devm_idio_16_regmap_register(struct device *dev,
- 				 const struct idio_16_regmap_config *config);
- 
--- 
-2.39.2
+On Sat, Feb 25, 2023 at 10:01:17PM +0800, Ye Xiang wrote:
 
+> +struct spi_xfer_packet {
+> +	u8 indicator;
+> +	s8 len;
+> +	u8 data[];
+> +} __packed;
+
+> +static int ljca_spi_read_write(struct ljca_spi_dev *ljca_spi, const u8 *w_data, u8 *r_data, int len,
+> +			       int id, int complete, int cmd)
+> +{
+> +	struct spi_xfer_packet *w_packet = (struct spi_xfer_packet *)ljca_spi->obuf;
+> +	struct spi_xfer_packet *r_packet = (struct spi_xfer_packet *)ljca_spi->ibuf;
+> +	unsigned int ibuf_len = LJCA_SPI_BUF_SIZE;
+> +	int ret;
+> +
+> +	w_packet->indicator = FIELD_PREP(LJCA_SPI_XFER_INDICATOR_ID, id) |
+> +			      FIELD_PREP(LJCA_SPI_XFER_INDICATOR_CMPL, complete) |
+> +			      FIELD_PREP(LJCA_SPI_XFER_INDICATOR_INDEX,
+> +					 ljca_spi->spi_info->id);
+> +
+> +	if (cmd == LJCA_SPI_READ) {
+> +		w_packet->len = sizeof(u16);
+> +		*(u16 *)&w_packet->data[0] = len;
+
+Are there no endianness considerations here?
+
+> +static int ljca_spi_transfer(struct ljca_spi_dev *ljca_spi, const u8 *tx_data,
+> +			     u8 *rx_data, u16 len)
+> +{
+
+This function has one caller with barely anything in it - perhaps just
+inline it?
+
+--N252Zu7nZpqEMZYb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmP85v0ACgkQJNaLcl1U
+h9BIlwf+Nbje3veuBnpfv+ZeclyBPPaTReO9MEpZHFwpOILoA2mQxVdtQ5DBqObm
+mnXmP3TdRdJvYf4n0MxtflxvgukIGaQoDm7LHx3JxeRESqtTpORJS8S3CkCWQATF
+2Ui/NP1tvJILrljgtOWTI1UmvWXprj8wz4UsUY1mxcDLwKKbEvAe7UOXnB1dZEW8
+m7Bo2PXG9URgmLsk1/nnGyZEkLquy2z2pqXUIWfHz7N1lgbbXbYyB7SWsFUeYGg4
+sUvHu0PcSMbm83+RGm+xzA/LcTJ2BOgKZFXF6scLdijA0nu2nPf0d7UCMonsPDqr
+wxUmVY06/ThUdahIiJArdgBJSkG13g==
+=mOKa
+-----END PGP SIGNATURE-----
+
+--N252Zu7nZpqEMZYb--
