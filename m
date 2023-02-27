@@ -2,118 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3554A6A47D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Feb 2023 18:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 117EA6A4814
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Feb 2023 18:33:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbjB0RXg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Feb 2023 12:23:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        id S229585AbjB0Rd5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Feb 2023 12:33:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbjB0RXU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Feb 2023 12:23:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20A21205D;
-        Mon, 27 Feb 2023 09:23:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AE52BB80CAE;
-        Mon, 27 Feb 2023 17:23:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2209CC433D2;
-        Mon, 27 Feb 2023 17:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677518596;
-        bh=+SBZwkALRB0cxBJAoCsB3XkME62yCRKd3uRseS1J/I0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJUYjCEtD4l38C7r/2OsKb+m59lda5sPVo0k8zL1CA78ooEyfu9im+NP+gS5NuTag
-         5KVesuQRBqS8z4oLkynsemQGkosAxpmZYqev/Jxkqh0Mfo5m2znLsEEXLAeeQhvfWI
-         km3GDcQ3JnfjMmcBLazVb+4V6+HWumdqxXNlkW2Bgf9cAeR+WLpSXGY+S+pUPTNN20
-         aDp/XUGMy6ntE2t3PqpJfDZVuIHMNWdhM4mgEJwswDTWuxsojuAXu6iaFyhJJYarOj
-         zBASj0Fxxsz2IzU/AFyEgYguRBeSphKk4y1whzG2wVFzdUjCFdDxc/eusBOQHTHt8s
-         /HSlsV24Qrevg==
-Date:   Mon, 27 Feb 2023 17:23:09 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Ye Xiang <xiang.ye@intel.com>
-Cc:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
+        with ESMTP id S229685AbjB0Rd4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Feb 2023 12:33:56 -0500
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0C510E3;
+        Mon, 27 Feb 2023 09:33:37 -0800 (PST)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1729bdcca99so8111540fac.12;
+        Mon, 27 Feb 2023 09:33:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/oN8FxBckZtmYaMSZo87sPI384Nrsl3rmx9eLsbfMrE=;
+        b=UfZfQSWmOJp6iLuXrUWUxCazXW0zXROs+OOdDhDQ5dFHrhCGeneptVi1CNglD+7OLZ
+         c5S276vktWy/x4JMKzVJWiBLeUqan5dwztA3wF2adJFq6q6AVbYLI1i+GNtptdMgaels
+         NdEJswK/3WCm78XcmRt8SAMheqPj79TYwxjBWEieEB8IzEPrAE3JMur3aNRsHCxRv/3D
+         2f2nep+6/gSrMGs47TC2iTJ8HjVa4NCwMME7ooDJ3GE5C0ySIAj0FgYO36U85pvAi3jg
+         g45gnR6GtMYqYxVCgr2vHk5Ze61lOY21szDX6Mw+qGTBX1ATFK27Lyq+Ft/jyGq+M+h7
+         UCvA==
+X-Gm-Message-State: AO0yUKWrluBPS14ECP4Yj6VhQKOhyIqhh8ctFA82VnxPUXvzZzWUvLg8
+        yNFRuxuSi5+BaERj+tRKpQ==
+X-Google-Smtp-Source: AK7set9iB+Y2H2YVIxACw0NlHiSHBMwnkJWQVinPxVxj6RyNikXsn6AAahpz+oWM/OgaYUHPeqIz/w==
+X-Received: by 2002:a05:6870:5387:b0:15b:8856:f0cb with SMTP id h7-20020a056870538700b0015b8856f0cbmr20100932oan.57.1677519214294;
+        Mon, 27 Feb 2023 09:33:34 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id w18-20020a4aded2000000b00525270c233asm2828098oou.39.2023.02.27.09.33.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Feb 2023 09:33:33 -0800 (PST)
+Received: (nullmailer pid 504389 invoked by uid 1000);
+        Mon, 27 Feb 2023 17:33:33 -0000
+Date:   Mon, 27 Feb 2023 11:33:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     arinc9.unal@gmail.com
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
-        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v2 4/5] spi: Add support for Intel LJCA USB SPI driver
-Message-ID: <Y/zm/Uk/d6VRxLBx@sirena.org.uk>
-References: <20230225140118.2037220-1-xiang.ye@intel.com>
- <20230225140118.2037220-5-xiang.ye@intel.com>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+Subject: Re: [RFC PATCH 07/16] dt-bindings: pinctrl: ralink: add new
+ compatible strings
+Message-ID: <20230227173333.GA496999-robh@kernel.org>
+References: <20230222183932.33267-1-arinc.unal@arinc9.com>
+ <20230222183932.33267-8-arinc.unal@arinc9.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="N252Zu7nZpqEMZYb"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230225140118.2037220-5-xiang.ye@intel.com>
-X-Cookie: On the eighth day, God created FORTRAN.
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230222183932.33267-8-arinc.unal@arinc9.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Feb 22, 2023 at 09:39:23PM +0300, arinc9.unal@gmail.com wrote:
+> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> Add the ralink,rt2880-pinmux compatible string. It had been removed from
+> the driver which broke the ABI.
+> 
+> Add the mediatek compatible strings. Change the compatible string on the
+> examples with the mediatek compatible strings.
+> 
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
+>  .../devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml | 7 +++++--
+>  .../devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml | 7 +++++--
+>  .../devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml | 7 +++++--
+>  .../devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml | 7 +++++--
+>  .../devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml | 7 +++++--
+>  5 files changed, 25 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> index 1e63ea34146a..531b5f616c3d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> @@ -17,7 +17,10 @@ description:
+>  
+>  properties:
+>    compatible:
+> -    const: ralink,mt7620-pinctrl
+> +    enum:
+> +      - mediatek,mt7620-pinctrl
+> +      - ralink,mt7620-pinctrl
 
---N252Zu7nZpqEMZYb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+We don't update compatible strings based on acquistions nor marketing 
+whims. If you want to use 'mediatek' for new things, then fine.
 
-On Sat, Feb 25, 2023 at 10:01:17PM +0800, Ye Xiang wrote:
-
-> +struct spi_xfer_packet {
-> +	u8 indicator;
-> +	s8 len;
-> +	u8 data[];
-> +} __packed;
-
-> +static int ljca_spi_read_write(struct ljca_spi_dev *ljca_spi, const u8 *w_data, u8 *r_data, int len,
-> +			       int id, int complete, int cmd)
-> +{
-> +	struct spi_xfer_packet *w_packet = (struct spi_xfer_packet *)ljca_spi->obuf;
-> +	struct spi_xfer_packet *r_packet = (struct spi_xfer_packet *)ljca_spi->ibuf;
-> +	unsigned int ibuf_len = LJCA_SPI_BUF_SIZE;
-> +	int ret;
-> +
-> +	w_packet->indicator = FIELD_PREP(LJCA_SPI_XFER_INDICATOR_ID, id) |
-> +			      FIELD_PREP(LJCA_SPI_XFER_INDICATOR_CMPL, complete) |
-> +			      FIELD_PREP(LJCA_SPI_XFER_INDICATOR_INDEX,
-> +					 ljca_spi->spi_info->id);
-> +
-> +	if (cmd == LJCA_SPI_READ) {
-> +		w_packet->len = sizeof(u16);
-> +		*(u16 *)&w_packet->data[0] = len;
-
-Are there no endianness considerations here?
-
-> +static int ljca_spi_transfer(struct ljca_spi_dev *ljca_spi, const u8 *tx_data,
-> +			     u8 *rx_data, u16 len)
-> +{
-
-This function has one caller with barely anything in it - perhaps just
-inline it?
-
---N252Zu7nZpqEMZYb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmP85v0ACgkQJNaLcl1U
-h9BIlwf+Nbje3veuBnpfv+ZeclyBPPaTReO9MEpZHFwpOILoA2mQxVdtQ5DBqObm
-mnXmP3TdRdJvYf4n0MxtflxvgukIGaQoDm7LHx3JxeRESqtTpORJS8S3CkCWQATF
-2Ui/NP1tvJILrljgtOWTI1UmvWXprj8wz4UsUY1mxcDLwKKbEvAe7UOXnB1dZEW8
-m7Bo2PXG9URgmLsk1/nnGyZEkLquy2z2pqXUIWfHz7N1lgbbXbYyB7SWsFUeYGg4
-sUvHu0PcSMbm83+RGm+xzA/LcTJ2BOgKZFXF6scLdijA0nu2nPf0d7UCMonsPDqr
-wxUmVY06/ThUdahIiJArdgBJSkG13g==
-=mOKa
------END PGP SIGNATURE-----
-
---N252Zu7nZpqEMZYb--
+Rob
