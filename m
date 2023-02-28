@@ -2,108 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0936C6A5346
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Feb 2023 07:58:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D66996A53E9
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Feb 2023 08:51:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbjB1G6i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Feb 2023 01:58:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
+        id S229691AbjB1HvN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Feb 2023 02:51:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230183AbjB1G6c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 01:58:32 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8B883ED;
-        Mon, 27 Feb 2023 22:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677567506; x=1709103506;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=B9y8b6VOGAgZmhcCzXb/p9gXQak0qJFRrYNMZF8AG6M=;
-  b=f4Hm9nbuNeAaYjf49EGRXKNo729Ey699dWR/rjGFNIfrWvkySzeCET1q
-   9c1Gc4jmR5ba9JmYp79LYI07lFWWwRy1zeV06iCbYrKNddZpCZEexA1gx
-   uqoltCZjxv1slllNJUfhn3aUNbEMUp40o5fDQ4JE4BNqgpekhyEgpRPuL
-   IjUBSjIVJLK07LbrGaI6pwb+I69v3JZyn9rNgFewSr9TeUFJtIRG7a1rH
-   x94lfraIXMQjHe/6doW44Opxa+DZKHFqE+nUEboXOTmm4avRYYP0fXvOW
-   FJYfLbPfWX3KGlBBAb9WO0gRkUUyqk1Rt9i5T9lZg+k/arWAB4izMHoSD
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="335551143"
-X-IronPort-AV: E=Sophos;i="5.98,221,1673942400"; 
-   d="scan'208";a="335551143"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 22:56:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="797969247"
-X-IronPort-AV: E=Sophos;i="5.98,221,1673942400"; 
-   d="scan'208";a="797969247"
-Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.154.52])
-  by orsmga004.jf.intel.com with ESMTP; 27 Feb 2023 22:56:42 -0800
-From:   Ye Xiang <xiang.ye@intel.com>
-To:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
-        Ye Xiang <xiang.ye@intel.com>
-Subject: [PATCH v3 5/5] Documentation: Add ABI doc for attributes of LJCA device
-Date:   Tue, 28 Feb 2023 14:56:18 +0800
-Message-Id: <20230228065618.2686550-6-xiang.ye@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230228065618.2686550-1-xiang.ye@intel.com>
-References: <20230228065618.2686550-1-xiang.ye@intel.com>
+        with ESMTP id S229520AbjB1HvM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 02:51:12 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1055221944
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Feb 2023 23:51:11 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id d30so36170035eda.4
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Feb 2023 23:51:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1677570669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rs/ZVlAbIvyRpyoU7SPCAUn/F4d7uzw5N+CTKxN3IJc=;
+        b=TALBz3loFyjDnuvvLQFvi9dYtfR9+RRrAhr69Gaps6GHUU1iQpM8GICEHieGnW168g
+         91Fzu3+LBQSt3GRfft/K2/dLI/j2ll84iyXLx/oQT/+OzWTZbhCGssTFYStuOe5R2QO1
+         T05RnCoftobu8P5uvf16KYLaeMjHjxPMSQvSo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677570669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rs/ZVlAbIvyRpyoU7SPCAUn/F4d7uzw5N+CTKxN3IJc=;
+        b=REfNMSGvnfZ2NsR+dG7rBio7drHV0wq4xvC0fWqRTKKB+F71j/Vx5/hTNH8bhJGk7+
+         43rJDgAtkSXlvVPWdWal63VLwQHvFIPXD66JfQhi9cEvlEh6ft3ibwdBVXRPv9RTibjA
+         Y6nx1xwE8HxLwV8G14RrzzDS8zE4TCl294EebtFN1BOSDT0HCOx0z8JtS+WHFmMtTTjg
+         NnFIfDxGbx/1x1Hq0ZYEuCCArPU/yMW4BogygkU6tmtpPdLdX+VsNYQO2Ndn3JlQDfMy
+         P5zaJPQcJ/NgOnZhZt/xJmlKFbPeSYwJ7hLL/AMaeIoeJWJTyN/8v5igv2x1wbmOio4I
+         j2Eg==
+X-Gm-Message-State: AO0yUKVL4jy2TDi9BGC9TPymDx3S+t6Pr19fqd/8capAx7TRGHeJweNj
+        DgA6SEBvD7DhGBd4yvuH+891pdfVZnJaHNAYdjt9Hw==
+X-Google-Smtp-Source: AK7set+UPqQ3W7hX9gBzwu1pqs1eHN/crucwFvOU1kTi+oAzRGnPAs7ASHCWalojiwzvDNElIs5u0n6OtKg+JdGtIR4=
+X-Received: by 2002:a50:9f05:0:b0:4ac:cdd8:fbb5 with SMTP id
+ b5-20020a509f05000000b004accdd8fbb5mr1189859edf.3.1677570669305; Mon, 27 Feb
+ 2023 23:51:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230226205357.1013504-1-dario.binacchi@amarulasolutions.com> <33714d4c-31a9-527c-f80a-1f51c9a37f98@i2se.com>
+In-Reply-To: <33714d4c-31a9-527c-f80a-1f51c9a37f98@i2se.com>
+From:   Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date:   Tue, 28 Feb 2023 08:50:58 +0100
+Message-ID: <CABGWkvo=Qnfi+fciQXZ2NWCW2tyMCctaBsYc=VTo_HjYHphkKQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxs: use dynamic allocation of base
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add sysfs attributes Documentation entries for LJCA device
+Hi Stefan,
 
-Signed-off-by: Ye Xiang <xiang.ye@intel.com>
----
- .../ABI/testing/sysfs-bus-usb-devices-ljca    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+On Mon, Feb 27, 2023 at 6:52=E2=80=AFPM Stefan Wahren <stefan.wahren@i2se.c=
+om> wrote:
+>
+> Hi Dario,
+>
+> Am 26.02.23 um 21:53 schrieb Dario Binacchi:
+> > Since commit 502df79b860563d7 ("gpiolib: Warn on drivers still using st=
+atic
+> > gpiobase allocation"), one or more warnings are printed during boot on
+> > systems where static allocation of GPIO base is used:
+> >
+> > [    0.136834] gpio gpiochip0: Static allocation of GPIO base is deprec=
+ated, use dynamic allocation.
+> > [    0.142753] gpio gpiochip1: Static allocation of GPIO base is deprec=
+ated, use dynamic allocation.
+> > [    0.148452] gpio gpiochip2: Static allocation of GPIO base is deprec=
+ated, use dynamic allocation.
+> > [    0.154341] gpio gpiochip3: Static allocation of GPIO base is deprec=
+ated, use dynamic allocation.
+> > [    0.160097] gpio gpiochip4: Static allocation of GPIO base is deprec=
+ated, use dynamic allocation.
+> >
+> > So let's follow the suggestion and use dynamic allocation.
+>
+> i understand the motivation of avoiding these warnings.
+>
+> AFAIK the MXS platform is older than the dynamic allocation of GPIO
+> base. In the perfect world all applications has been migrated to
+> libgpiod / chardev GPIO. But i'm really concerned this hasn't happend
+> yet, at least for this platform. So i believe this change break
+> applications, since it affects userspace.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-new file mode 100644
-index 000000000000..43b95effdefc
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-@@ -0,0 +1,22 @@
-+What:		/sys/bus/usb/.../version
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Provides the current firmware version of LJCA device.
-+		The format is Major.Minor.Patch.Build, where
-+		Major, Minor, Patch, and Build are decimal numbers.
-+		For example: 1.0.0.256
-+
-+What:		/sys/bus/usb/.../cmd
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Commands supported by LJCA device.
-+		When read, it will return valid commands.
-+		When write with a command, it will execute the command.
-+		Valid commands are [dfu, debug]
-+		dfu:	Echo dfu to this file so as to put the device into
-+			DFU mode so the firmware can be updated.
-+		debug:	Enable debug logging.
--- 
-2.34.1
+Thanks for your explanations.
 
+Do you think it makes sense to use a Kconfig option to enable/disable
+the dynamic allocation of GPIO base?
+As done, if I'm not mistaken, in commit 80d34260f36c6 ("pinctrl:
+renesas: gpio: Use dynamic GPIO base if no function GPIOs")?
+With legacy support enabled by default, but the ability to try out the
+latest dynamic allocation functionality.
+
+Thanks and regards,
+Dario
+
+>
+> Best regards
+>
+> >
+> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> > ---
+> >
+> >   drivers/gpio/gpio-mxs.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpio-mxs.c b/drivers/gpio/gpio-mxs.c
+> > index 7f59e5d936c2..b48a7c1fb7c1 100644
+> > --- a/drivers/gpio/gpio-mxs.c
+> > +++ b/drivers/gpio/gpio-mxs.c
+> > @@ -330,7 +330,7 @@ static int mxs_gpio_probe(struct platform_device *p=
+dev)
+> >
+> >       port->gc.to_irq =3D mxs_gpio_to_irq;
+> >       port->gc.get_direction =3D mxs_gpio_get_direction;
+> > -     port->gc.base =3D port->id * 32;
+> > +     port->gc.base =3D -1;
+> >
+> >       err =3D gpiochip_add_data(&port->gc, port);
+> >       if (err)
+
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
