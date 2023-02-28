@@ -2,70 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E596A5FDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Feb 2023 20:43:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60CE36A60B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Feb 2023 21:50:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjB1TnA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Feb 2023 14:43:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44120 "EHLO
+        id S229841AbjB1Uuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Feb 2023 15:50:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjB1TnA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 14:43:00 -0500
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2525FFD
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Feb 2023 11:42:57 -0800 (PST)
-Received: by mail-qt1-x82d.google.com with SMTP id c18so11873703qte.5
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Feb 2023 11:42:57 -0800 (PST)
+        with ESMTP id S229786AbjB1Uuu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 15:50:50 -0500
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD7E9EEC
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Feb 2023 12:50:49 -0800 (PST)
+Received: by mail-qt1-x831.google.com with SMTP id z6so12194912qtv.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Feb 2023 12:50:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677613376;
+        d=linaro.org; s=google; t=1677617448;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eOLmVC7ejN2NslNDrJPSovA+e0oAlLmLUDFX6bU2iDE=;
-        b=UOmMXfoWjXX3L7h271Pz1av820iIZFA6qfstUFcokEpR9qGkZdJUsPgoqaNNNee2XO
-         +E/CShNg0tEKk1ccgiw20tlWXgouSakcR/Yz7Higekzc8eVeMd9e7ejuL2xg1mZj5ooc
-         w8gl+kFZD0ho4yeqrVBup5kRcCCpQzRNDwACI7PZ0i77aS9RkljAWp5jVAj3lX22oaaU
-         EA9wo2UkVIR2OCAR/XYxyo8SHC9zPHzGEKMJWtaxmV0upOIAip9G2fvIufJqHOCcBMHt
-         R3w4Ud5b4t8JbXK/JdBtjCgrSKhZiF3/6o1Lk0ORnMMYQxZJBvwvo13vsqcre+Tjuwj9
-         pxgQ==
+        bh=9V0E1rJTrvC5d+cKJrObAJitCaY9TIGIgqzXrqAQgnE=;
+        b=ADDop40f3f2P+t2JdmV8VSwYnKONB/KR2gFYPXPVCIp1u+yUIgg/HoVlKadQrcrKFN
+         lT9vBq+1iBO/LhKfUhNXi+UIzRphcKQVwj+bxdvo/BBAiNHlLL8Dpnn4iCz3UyTUXzK4
+         BOUTEMNH28JsmSXIRicAFcAkJVMK5R62eZQoV8JoG9Zi89Q5BMOVvUWpmPKMUa633+R+
+         Fh1PHh1udOznnKxlwFN7+rO3kFUUJ9iUyLlKsWrFaszt/drasVqM/2Dh6Bec7ukUAVY/
+         sWsuMJRiEQTn+IwI0BnEwICbHkPEkWDRPZYcrMiXkV/B/QKw+PLDurNN3uLhNE+SO/05
+         XguQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677613376;
+        d=1e100.net; s=20210112; t=1677617448;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eOLmVC7ejN2NslNDrJPSovA+e0oAlLmLUDFX6bU2iDE=;
-        b=lFNHyAzlh1lUgDgx7Lbu772M0cUlPAuyWQYyUg8mCBlw+wNbn1miXbN086PLxAPsZf
-         onhqxGIzrapcn9DPKUmQ9VvYQ50c6e1omQ4xaR4xIlnG4UOk1Wuj6enPM8x/rM4o5yGh
-         FqdvDwEY01ML8m7Pwx23hPI/yJExJ26Fm0hyXFt5zp9usGO07QNsu6Gc9/wJxAKuUUYc
-         hokakdazTdKbHMRBveint4wIB21QrfqcYmCehiHS8E3xj2G9MV7PkJDkAP1UnWV1jGnf
-         cRz8Enzbnx5TrMvUDTdHhygXjdChSA7lFANoChc9pniX7dUlpL2ktDjH9bLtxCGKiqQJ
-         45eg==
-X-Gm-Message-State: AO0yUKVCBREDc3xkExJRSsKSyrk3Ch1Q38UEpK82leoI9phOCGBGvR5s
-        1yzltycwA19YQzop6e89aFVoaw==
-X-Google-Smtp-Source: AK7set+ttYqmHcaA29zqYdFS6PsD1sZyWny+1cUSaxr3LNkFIkzE2W7iOASVWMBd8RCUp7xYc+8/lQ==
-X-Received: by 2002:a05:622a:1ba4:b0:3bc:dd21:4a0 with SMTP id bp36-20020a05622a1ba400b003bcdd2104a0mr7411969qtb.30.1677613376600;
-        Tue, 28 Feb 2023 11:42:56 -0800 (PST)
+        bh=9V0E1rJTrvC5d+cKJrObAJitCaY9TIGIgqzXrqAQgnE=;
+        b=NZsz4WFtowirNGXrUpn9VLFUgZ9+GElqT6HKY81WYWP53PGMu8gsmn6wjTCAh5+uKq
+         hiEevsATznwRRm2TO2e1JGaalquGKAX8yoRfcGuHhLg58ol+OgkF22QFZfLFPI+T3lAj
+         jzmn9lWgueVeAjNkbR7mONai6/2pJoNz5qGZYUnSgqhDc8imq10pvD1x2AiiRs8F6h6h
+         nqrpeucSjHC/RmwgqzQAGhtqbt36p9GHi2ycYxXUpXpLF4qahnNcdPyRzf5OG+Mqhh5r
+         x6EAuAHJYRVUqbSaFFjHqKdnmv6gtyYSOEapYlI0HPZy9A8lZUVJmhqAEcBHbQSmUk9G
+         JDVQ==
+X-Gm-Message-State: AO0yUKUluoiFpCmUxFGfyLxjqrpGPWCyY3bZQIWz0Fm0Z9uyHCW3pJIX
+        UDJ3YM8BwcBGyB4twriEZ/h8hQ==
+X-Google-Smtp-Source: AK7set+GOU+U/LQWVOHF8IMoL9BLrOCNDHLn5apqJd0S9LVhnZZmMp5D/YOLRluf1Ghyk2KNBH2lfw==
+X-Received: by 2002:a05:622a:50:b0:3bf:c6c9:2f29 with SMTP id y16-20020a05622a005000b003bfc6c92f29mr7906472qtw.27.1677617448146;
+        Tue, 28 Feb 2023 12:50:48 -0800 (PST)
 Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id g3-20020ac84803000000b003be56bdd3b1sm6857999qtq.92.2023.02.28.11.42.55
+        by smtp.gmail.com with ESMTPSA id r23-20020ac85217000000b003b8238114d9sm7047639qtn.12.2023.02.28.12.50.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 11:42:56 -0800 (PST)
-Date:   Mon, 27 Feb 2023 21:40:47 -0500
+        Tue, 28 Feb 2023 12:50:47 -0800 (PST)
+Date:   Mon, 27 Feb 2023 22:12:27 -0500
 From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+To:     Michael Walle <michael@walle.cc>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, broonie@kernel.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michael@walle.cc, quarium@gmail.com, jhentges@accesio.com,
-        jay.dolan@accesio.com
-Subject: Re: [PATCH 0/3] Migrate PCIe-IDIO-24 GPIO driver to the regmap API
-Message-ID: <Y/1pr33s5IAE4QJS@fedora>
+        quarium@gmail.com, jhentges@accesio.com, jay.dolan@accesio.com
+Subject: Re: [PATCH 2/3] gpio: gpio-regmap: Expose struct gpio_regmap in
+ linux/gpio/regmap.h
+Message-ID: <Y/1xG+K1yzcRZtZ4@fedora>
 References: <cover.1677547393.git.william.gray@linaro.org>
- <Y/5RfjJCDdrZbHgJ@sirena.org.uk>
- <Y/1ksJHUENCwg/jy@fedora>
- <Y/5V7a4M+LhZQhsM@sirena.org.uk>
+ <5c0354c87d4d2a082cf0c331076d5aad18a93169.1677547393.git.william.gray@linaro.org>
+ <0e0901de3668baec5ce7cd4836c045a5@walle.cc>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1ZpSqVT8lVV/SEQV"
+        protocol="application/pgp-signature"; boundary="4P2X6kH733MEoG5H"
 Content-Disposition: inline
-In-Reply-To: <Y/5V7a4M+LhZQhsM@sirena.org.uk>
+In-Reply-To: <0e0901de3668baec5ce7cd4836c045a5@walle.cc>
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
@@ -76,67 +75,44 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---1ZpSqVT8lVV/SEQV
+--4P2X6kH733MEoG5H
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 28, 2023 at 07:28:45PM +0000, Mark Brown wrote:
-> On Mon, Feb 27, 2023 at 09:19:28PM -0500, William Breathitt Gray wrote:
-> > On Tue, Feb 28, 2023 at 07:09:50PM +0000, Mark Brown wrote:
+On Tue, Feb 28, 2023 at 09:44:02PM +0100, Michael Walle wrote:
+> Hi,
 >=20
-> > > The values from the config buffer are supposed to be written out in
-> > > regmap_irq_sync_unlock() - why is something custom needed here?
+> Am 2023-02-28 02:53, schrieb William Breathitt Gray:
+> > A struct gpio_regmap is passed as a parameter for reg_mask_xlate(), but
+> > for callbacks to access its members the declaration must be exposed.
 >=20
-> > The PCIe-IDIO-24 "COS Enable" serves a dual purpose of interrupt
-> > enabling/disabling as well as configuring the interrupt types. Since
-> > this register is used for masking, config buffer would clobber the
-> > register if we use it in this particular case. Instead, we ignore the
-> > config buffer and configure the type directly for the device (handling
-> > the case where interrupts are masked and shouldn't be enabled).
+> That parameter is only an opaque one to call any gpio_regmap_*().
 >=20
-> Could you be more concrete about what's going on here please?  In what
-> way does this "COS Enable" serve these dual functions and why do they
-> clobber each other?
+> > Move the struct gpio_regmap declaration from drivers/gpio/gpio-regmap.c
+> > to include/linux/gpio/regmap.h so callbacks can properly interact with
+> > struct gpio_regmap members.
+>=20
+> That struct should be kept private. It seems you only need the
+> regmap. Either introduce a gpio_regmap_get_regmap() or add the
+> regmap to a private struct and use gpio_regmap_get_drvdata().
+>=20
+> -michael
 
-An explanation of the device registers is provided in [PATCH 3/3];
-here's the relevant portion:
-
-The COS Enable register is used to enable/disable interrupts and
-configure the interrupt levels; each bit maps to a group of eight inputs
-as described below:
-
-    Bit 0: IRQ EN Rising Edge IN0-7
-    Bit 1: IRQ EN Rising Edge IN8-15
-    Bit 2: IRQ EN Rising Edge IN16-23
-    Bit 3: IRQ EN Rising Edge TTL0-7
-    Bit 4: IRQ EN Falling Edge IN0-7
-    Bit 5: IRQ EN Falling Edge IN8-15
-    Bit 6: IRQ EN Falling Edge IN16-23
-    Bit 7: IRQ EN Falling Edge TTL0-7
-
-An interrupt is asserted when a change-of-state matching the interrupt
-level configuration respective for a particular group of eight inputs
-with enabled COS is detected.
-
-So in order to mask lines, the respective bits need to be set to 0.
-However, if we use the regmap-irq config buffer to set the type, this
-mask will be cloberred and the disabled lines become enabled. To prevent
-the clobber, we can save the type configuration to irq_drv_data for use
-later in handle_mask_sync() and then update the type in this COS Enable
-register only when the lines are unmasked.
+Ah, I'll drop this patch then and use gpio_regmap_get_drvdata() in v2
+instead to get access to the regmap.
 
 William Breathitt Gray
 
---1ZpSqVT8lVV/SEQV
+--4P2X6kH733MEoG5H
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY/1prwAKCRC1SFbKvhIj
-K9s+AQCtKcJaTgx6IbX3HD2eUty2muCO/guMz/Cm1PjLitiLuQEAlSup7rwoNaBJ
-Pa3mDIMAMQpO0Kugdp57+rXzMlVsvgU=
-=nE8M
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY/1xGwAKCRC1SFbKvhIj
+K6wQAQDYbtyg6tuPPY4lER4AZoJHKCG9Dw5uTQjYToENfO9mhAEAyhvpWcsNNt50
+RwPbG2WFbcZbFB7Ihb9hV9MEZyE9Kg4=
+=JR+8
 -----END PGP SIGNATURE-----
 
---1ZpSqVT8lVV/SEQV--
+--4P2X6kH733MEoG5H--
