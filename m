@@ -2,170 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D67126A684F
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Mar 2023 08:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1376A68A4
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Mar 2023 09:15:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjCAHmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Mar 2023 02:42:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
+        id S229565AbjCAIPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Mar 2023 03:15:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjCAHmw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Mar 2023 02:42:52 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49D52A6C2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Feb 2023 23:42:50 -0800 (PST)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1pXH6G-0008PW-07; Wed, 01 Mar 2023 08:42:08 +0100
-Received: from pengutronix.de (hardanger-7.fritz.box [IPv6:2a03:f580:87bc:d400:23fb:f67d:29a6:be20])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        (Authenticated sender: mkl-all@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 923BE1866E1;
-        Wed,  1 Mar 2023 07:42:03 +0000 (UTC)
-Date:   Wed, 1 Mar 2023 08:42:03 +0100
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix SPI and I2C bus node names in examples
-Message-ID: <87lekgrk9v.fsf@hardanger.mail-host-address-is-not-set>
-References: <20230228215433.3944508-1-robh@kernel.org>
+        with ESMTP id S229534AbjCAIPe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Mar 2023 03:15:34 -0500
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE4B9004;
+        Wed,  1 Mar 2023 00:15:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1677658508; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=K5rqZm5I60Bmtew0uSXmf2QdNGCVWX1lhlyhU8380uu1m8/CKfubPcGBbvh+osbNYNcC8tVs+Gu/OEFciXuZ/aHuCMPN+sErbg5KHGqP3hZRlRxjVxlsNwtv05WtyOEguVdlpg6HDQ71mLqPNZCVkPKxc1FAmozR0Dr3HFCNlCE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1677658508; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=loHyMMxyuLpIik8Ed+HNPAQgCqKfx0atv75vwMAnXyg=; 
+        b=OXSalVxFM3c/JcYzZ8n5+DZDYdhPgKo5DQwJCUwV68BmQCtPp2qW3Jjlb/CLBKuzowWC5ENWp2S6F/ak/lK2AIe4GKhoMrr5tmZa1fcKlIvyQMaIuK4/rf7kXK346372ns5r13TmnH0L57WyuxJOXb8jKh3rO87z3wUlOtiC6ZU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1677658508;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=loHyMMxyuLpIik8Ed+HNPAQgCqKfx0atv75vwMAnXyg=;
+        b=LIMMHzZ2dE9bY9Yig8KeA77aDkINNP4M/XYzhvWOkj633Ejy+RkLTNNwykzdX8QC
+        RDgVO0t6wr/HuR12ifAUHKOgCydy3pU5pxQdfHa2gyTtRKKsgLtqHVpHbwg3Bd/UftA
+        SgurdupqykIt/825g7WuaO2XwA9ICT+eSCEjA3i0=
+Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
+        with SMTPS id 1677658506523162.75111868803015; Wed, 1 Mar 2023 00:15:06 -0800 (PST)
+Message-ID: <ae3346de-140f-f181-b6a3-ccaa694e1548@arinc9.com>
+Date:   Wed, 1 Mar 2023 11:15:00 +0300
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6qigqggvs4mi6q4z"
-Content-Disposition: inline
-In-Reply-To: <20230228215433.3944508-1-robh@kernel.org>
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [RFC PATCH 07/16] dt-bindings: pinctrl: ralink: add new
+ compatible strings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+References: <20230222183932.33267-1-arinc.unal@arinc9.com>
+ <20230222183932.33267-8-arinc.unal@arinc9.com>
+ <20230227173333.GA496999-robh@kernel.org>
+ <d7aea90f-d077-3a41-996c-804c95d72e24@arinc9.com>
+ <20230301024431.GA251215-robh@kernel.org>
+Content-Language: en-US
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20230301024431.GA251215-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 1.03.2023 05:44, Rob Herring wrote:
+> On Tue, Feb 28, 2023 at 07:46:36PM +0300, Arınç ÜNAL wrote:
+>> On 27/02/2023 20:33, Rob Herring wrote:
+>>> On Wed, Feb 22, 2023 at 09:39:23PM +0300, arinc9.unal@gmail.com wrote:
+>>>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>>
+>>>> Add the ralink,rt2880-pinmux compatible string. It had been removed from
+>>>> the driver which broke the ABI.
+>>>>
+>>>> Add the mediatek compatible strings. Change the compatible string on the
+>>>> examples with the mediatek compatible strings.
+>>>>
+>>>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>> ---
+>>>>    .../devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml | 7 +++++--
+>>>>    .../devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml | 7 +++++--
+>>>>    .../devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml | 7 +++++--
+>>>>    .../devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml | 7 +++++--
+>>>>    .../devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml | 7 +++++--
+>>>>    5 files changed, 25 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+>>>> index 1e63ea34146a..531b5f616c3d 100644
+>>>> --- a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+>>>> @@ -17,7 +17,10 @@ description:
+>>>>    properties:
+>>>>      compatible:
+>>>> -    const: ralink,mt7620-pinctrl
+>>>> +    enum:
+>>>> +      - mediatek,mt7620-pinctrl
+>>>> +      - ralink,mt7620-pinctrl
+>>>
+>>> We don't update compatible strings based on acquistions nor marketing
+>>> whims. If you want to use 'mediatek' for new things, then fine.
+>>
+>> Understood. Only the SoCs with rtXXXX were rebranded, the mtXXXX SoCs share
+>> the same architecture from Ralink, so they were incorrectly called Ralink
+>> SoCs.
+>>
+>> I can remove the new strings from Ralink SoCs and add them only for MediaTek
+>> SoCs. Or you could make an exception for this one, regarding the situation.
+>> Whatever you think is best.
+> 
+> I'm not in a position to make an exception as I know little about this
+> platform. Carrying both strings is a NAK. Either you (and everyone using
+> these platforms) care about the ABI and are stuck with the "wrong"
+> string. In the end, they are just unique identifiers. Or you don't care
+> and break the ABI and rename everything. If you do that, do just that in
+> your patches and make it crystal clear in the commit msg that is your
+> intention and why that is okay.
 
---6qigqggvs4mi6q4z
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ralink had their MIPS SoCs pre-acquisition, RT2880, etc. MediaTek 
+introduced new SoCs post-acquisition, MT7620, MT7621, MT7628, and 
+MT7688, utilising the same platform from Ralink, sharing the same 
+architecture code, pinctrl core driver, etc.
 
-On 28.02.2023 15:54:33, Rob Herring wrote:
-> SPI and I2C bus node names are expected to be "spi" or "i2c",
-> respectively, with nothing else, a unit-address, or a '-N' index. A
-> pattern of 'spi0' or 'i2c0' or similar has crept in. Fix all these
-> cases. Mostly scripted with the following commands:
->=20
-> git grep -l '\si2c[0-9] {' Documentation/devicetree/ | xargs sed -i -e 's=
-/i2c[0-9] {/i2c {/'
-> git grep -l '\sspi[0-9] {' Documentation/devicetree/ | xargs sed -i -e 's=
-/spi[0-9] {/spi {/'
->=20
-> With this, a few errors in examples were exposed and fixed.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-> Cc: Neil Armstrong <neil.armstrong@linaro.org>
-> Cc: Robert Foss <rfoss@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Lee Jones <lee@kernel.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-can@vger.kernel.org
-> Cc: linux-wireless@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-usb@vger.kernel.org
-> ---
+I don't intend to break the ABI at all. On the contrary, I fix it where 
+possible.
 
->  .../bindings/net/can/microchip,mcp251xfd.yaml     |  2 +-
+If I understand correctly, from this conversation and what Krzysztof 
+said, all strings must be kept on the schemas so I can do what I said on 
+the composed mail. Only match the pin muxing information on the strings 
+that won't match multiple pin muxing information from other schemas.
 
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for the microchip,mcp251=
-xfd.yaml
+This way we don't break the ABI, introduce new compatible strings while 
+keeping the remaining ones, and make schemas match correctly.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Let me know if this is acceptable to you.
 
---6qigqggvs4mi6q4z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmP/AcgACgkQvlAcSiqK
-BOi6Sgf+JKpaaA+WNPAITJwHhJ6KXpNOhPUfPrEJugitHdIDb6xJeU+KLdpQRHpT
-q3SPi/g56vowFbK8p+8n5g77heG7OjMB2fANmHb+AkMg1Cor8h0cXk+hsKmErvcx
-by+P11OhFxZEVk1lwfMmL9gRHWEvllRcEldvKGZ8cBE5/Wa0yrjRMP50Ocf+cZLT
-11GsPq6kGYbkC8zuIIVCVKZCpfAiLDZiMn3fXwFNELYwb336yBEi98pfAeCdiEWi
-Ko7HE8RwUjZP911rwg6b2eaN/qFHnQ48Rd353T5GUz36nC/+dktJ+V3qMnygq918
-wG5da/tbojnXrBmOBeLNZIqvIJc3pg==
-=0CPB
------END PGP SIGNATURE-----
-
---6qigqggvs4mi6q4z--
+Arınç
