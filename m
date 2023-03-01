@@ -2,134 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F316A65BA
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Mar 2023 03:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF9C86A6659
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Mar 2023 04:11:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjCACof (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Feb 2023 21:44:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        id S229897AbjCADLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Feb 2023 22:11:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjCACoe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 21:44:34 -0500
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10AFD10255;
-        Tue, 28 Feb 2023 18:44:34 -0800 (PST)
-Received: by mail-ot1-f47.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso6813283ota.1;
-        Tue, 28 Feb 2023 18:44:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v2mASzywLLLz3SL9h6D/hbMI9Q5P67uUV6RN/jUkz1w=;
-        b=OR5zDjVCo2f7Mw833Y+AVPRqP4EgXXGFqkTIS2omfRi+ohz7cJG+2BE49DNocWzB60
-         rw+a6Of7PEAS500edZaZ3AFGguEotHG8TE0LlrG+a50NDz+5aWrW8RJAEd8ZaF/2saqV
-         tqXo0b56AeNUGPPqdZ66oAKYT+LmWICvXAjl7aMsG86dDLPjenfP8/xWjkER1McQ/scY
-         VYdKS96kUTbNFrrneyzCJOVR3KKJiii3nZ4+I72A9GBIWqnIfkIg1myAGPt8GR2Zu4eb
-         1UQjVAscNGuUsLgJ3C2stuXLmdy4laBmK7RPDZsEN7u/eWTMBpTcVQ5SzJDP12oBTSJh
-         tH4g==
-X-Gm-Message-State: AO0yUKW+0PMCwGz1GkK8uaJI3O7zpZ3O/ZjNqjJqT0mQxhr8mvIcv6/q
-        3UURgDYajf6bufmXi6+0Uw==
-X-Google-Smtp-Source: AK7set9UBWbgFA1YWvOE33zjSRJM6L7Ce9rJOQ8u6UdOLH1WrhEbJt1fAwKlmQilm3WSZq+MRsPCWg==
-X-Received: by 2002:a9d:17d0:0:b0:690:ece7:62d2 with SMTP id j74-20020a9d17d0000000b00690ece762d2mr2898278otj.19.1677638673290;
-        Tue, 28 Feb 2023 18:44:33 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id c2-20020a9d75c2000000b0068bd6cf405dsm4451250otl.1.2023.02.28.18.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 18:44:32 -0800 (PST)
-Received: (nullmailer pid 260581 invoked by uid 1000);
-        Wed, 01 Mar 2023 02:44:31 -0000
-Date:   Tue, 28 Feb 2023 20:44:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        with ESMTP id S229619AbjCADLJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Feb 2023 22:11:09 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF692E807;
+        Tue, 28 Feb 2023 19:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677640266; x=1709176266;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wk3JjSam+vOSq3prirEXuTOTY39Ksl2q9J269nhLmFA=;
+  b=eL+RqLEdaRFdM6K127BDr2jDG1d2rvf3D9iPphDcYDDXhEHx2zggDD+5
+   WvcGQVMqtoF81n3qjm0CNYGnL8pNSs3QSmqRNiZQbHabdmqJBmhB3Lksx
+   GKcUpDAg4rLjoawuRGy2crs2Zwlg2ouHwD8MteFmBssCgms++PUdAAvhU
+   Df4G29JZt2HgcRtG8TEb1kr7WKmvP0kZXKxGdzJvKAmueEFsnjUBwSsP9
+   m+9XdTYVxfRP/gfi9XmmXxW6UJ7DCeHK5S2JEBxq2E5ymHv6xga2/zYMe
+   6XXwg9/zLNldHt3tYhIBy7OIz7wb2oCbJFVig+9WGo6hsjPctBQgIKcqn
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="334344443"
+X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
+   d="scan'208";a="334344443"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 19:11:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="784154555"
+X-IronPort-AV: E=Sophos;i="5.98,223,1673942400"; 
+   d="scan'208";a="784154555"
+Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2023 19:11:02 -0800
+Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pXCrt-0005qV-24;
+        Wed, 01 Mar 2023 03:11:01 +0000
+Date:   Wed, 1 Mar 2023 11:10:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ye Xiang <xiang.ye@intel.com>, Lee Jones <lee@kernel.org>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        William Dean <williamsukatube@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
-Subject: Re: [RFC PATCH 07/16] dt-bindings: pinctrl: ralink: add new
- compatible strings
-Message-ID: <20230301024431.GA251215-robh@kernel.org>
-References: <20230222183932.33267-1-arinc.unal@arinc9.com>
- <20230222183932.33267-8-arinc.unal@arinc9.com>
- <20230227173333.GA496999-robh@kernel.org>
- <d7aea90f-d077-3a41-996c-804c95d72e24@arinc9.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, srinivas.pandruvada@intel.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        wentong.wu@intel.com, lixu.zhang@intel.com,
+        Ye Xiang <xiang.ye@intel.com>
+Subject: Re: [PATCH v3 5/5] Documentation: Add ABI doc for attributes of LJCA
+ device
+Message-ID: <202303011034.QrSQepq1-lkp@intel.com>
+References: <20230228065618.2686550-6-xiang.ye@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7aea90f-d077-3a41-996c-804c95d72e24@arinc9.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230228065618.2686550-6-xiang.ye@intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 07:46:36PM +0300, Arınç ÜNAL wrote:
-> On 27/02/2023 20:33, Rob Herring wrote:
-> > On Wed, Feb 22, 2023 at 09:39:23PM +0300, arinc9.unal@gmail.com wrote:
-> > > From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> > > 
-> > > Add the ralink,rt2880-pinmux compatible string. It had been removed from
-> > > the driver which broke the ABI.
-> > > 
-> > > Add the mediatek compatible strings. Change the compatible string on the
-> > > examples with the mediatek compatible strings.
-> > > 
-> > > Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> > > ---
-> > >   .../devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml | 7 +++++--
-> > >   .../devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml | 7 +++++--
-> > >   .../devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml | 7 +++++--
-> > >   .../devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml | 7 +++++--
-> > >   .../devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml | 7 +++++--
-> > >   5 files changed, 25 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
-> > > index 1e63ea34146a..531b5f616c3d 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
-> > > @@ -17,7 +17,10 @@ description:
-> > >   properties:
-> > >     compatible:
-> > > -    const: ralink,mt7620-pinctrl
-> > > +    enum:
-> > > +      - mediatek,mt7620-pinctrl
-> > > +      - ralink,mt7620-pinctrl
-> > 
-> > We don't update compatible strings based on acquistions nor marketing
-> > whims. If you want to use 'mediatek' for new things, then fine.
-> 
-> Understood. Only the SoCs with rtXXXX were rebranded, the mtXXXX SoCs share
-> the same architecture from Ralink, so they were incorrectly called Ralink
-> SoCs.
-> 
-> I can remove the new strings from Ralink SoCs and add them only for MediaTek
-> SoCs. Or you could make an exception for this one, regarding the situation.
-> Whatever you think is best.
+Hi Ye,
 
-I'm not in a position to make an exception as I know little about this 
-platform. Carrying both strings is a NAK. Either you (and everyone using 
-these platforms) care about the ABI and are stuck with the "wrong" 
-string. In the end, they are just unique identifiers. Or you don't care 
-and break the ABI and rename everything. If you do that, do just that in 
-your patches and make it crystal clear in the commit msg that is your 
-intention and why that is okay.
+Thank you for the patch! Perhaps something to improve:
 
-Rob
+[auto build test WARNING on lee-mfd/for-mfd-next]
+[also build test WARNING on lee-mfd/for-mfd-fixes wsa/i2c/for-next broonie-spi/for-next linus/master v6.2 next-20230228]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Xiang/mfd-Add-support-for-Intel-LJCA-device/20230228-150024
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+patch link:    https://lore.kernel.org/r/20230228065618.2686550-6-xiang.ye%40intel.com
+patch subject: [PATCH v3 5/5] Documentation: Add ABI doc for attributes of LJCA device
+reproduce:
+        # https://github.com/intel-lab-lkp/linux/commit/4073fac1618098db6eaffaa9b3b8cef9968bfd12
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ye-Xiang/mfd-Add-support-for-Intel-LJCA-device/20230228-150024
+        git checkout 4073fac1618098db6eaffaa9b3b8cef9968bfd12
+        make menuconfig
+        # enable CONFIG_COMPILE_TEST, CONFIG_WARN_MISSING_DOCUMENTS, CONFIG_WARN_ABI_ERRORS
+        make htmldocs
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303011034.QrSQepq1-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Documentation/ABI/testing/sysfs-bus-usb-devices-ljca:12: WARNING: Unexpected indentation.
+>> Documentation/ABI/testing/sysfs-bus-usb-devices-ljca:12: WARNING: Block quote ends without a blank line; unexpected unindent.
+
+vim +12 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+
+  > 12	Date:		July 2023
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
