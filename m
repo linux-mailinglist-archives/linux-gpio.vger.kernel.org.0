@@ -2,197 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 582006A796B
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 03:19:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 032C16A7A30
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 04:52:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjCBCTN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Mar 2023 21:19:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48410 "EHLO
+        id S229453AbjCBDwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Mar 2023 22:52:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjCBCTM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Mar 2023 21:19:12 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A249F22794
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Mar 2023 18:19:11 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id y11so11942260plg.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Mar 2023 18:19:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C+PkF5UhHB+hYsUt7o+JDXfk3/MdTpFJPv5SK4ggULw=;
-        b=U1u/EWbHb2hH4nTy9FraJKAareD5CxBs46+arwA5s3bmsUklL/77ikC70LYbDcI+tY
-         PCbbc0fGGahUq9OqHxMMvRIQmFR0dRIEaqp80y+gx0/XDt7yJSnQZOPYXs4kwBaILJk2
-         qn+qR2CRdEu//GduCVaRHhtj1885OqDcAfSMI1DGX9DRKDb9chgqi6jLq4tniNbfqWgk
-         9YLGJvQZb8WfU+JEclgHG42Wlt1W46B5BmnFW1+X0jNmRtd3eqUku8upZkg/V93ZVC76
-         ZTdWgs4gGH5LKj4CFAEywBEMp9jZ8icNmZTf0HYfErrHSvbSIsWiQjnMVmZFISJcU+qk
-         nJiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C+PkF5UhHB+hYsUt7o+JDXfk3/MdTpFJPv5SK4ggULw=;
-        b=G1YnUkATZmb6bK31UNk0ZLDr8WopbfgKUI+fXsILhTDD08NBIIezm6Ms6Ex41axBGG
-         /RDZvE2hlXCaPTONV6inLmRL9Dhwu1TbrF6yPNy+v/VcqvsaP0EFJ1suoCXtrrQFiSht
-         Ki41yLHZA7tTXuW5HlToqI9lbYYTEny/iC2zrOBwYTbf1MMkxPVDnl5aToMY7GUgX0KX
-         V7gxYR0cKfwmt7muTDp1gQZ81G4onOHrqou3SoAoROtM2oEp5Z7enfsGTB5poxUNYglc
-         kJiSvWCMMtNVQzXyGmnPDksVhUy17aWfLqTDRyb2hq7fseWFvuNNQVAvjnLE0qfsd/DU
-         L3JQ==
-X-Gm-Message-State: AO0yUKWBnGJiz7iJUst8iUeGFUsRDj11w7KGHFgXBlB8p9EJ10L9GHlU
-        3McmBgs+Q35GjYRkKkvvCWg=
-X-Google-Smtp-Source: AK7set/pMCGmYJyTjvPtf6Rm1RYsFOm1fbaLgUQoVyD9RusWEPNrMfRotLwLdEOdJudj1XYIGnEYcQ==
-X-Received: by 2002:a17:90b:33c7:b0:237:d2d8:3264 with SMTP id lk7-20020a17090b33c700b00237d2d83264mr9872093pjb.40.1677723551005;
-        Wed, 01 Mar 2023 18:19:11 -0800 (PST)
-Received: from sol (14-201-52-182.tpgi.com.au. [14.201.52.182])
-        by smtp.gmail.com with ESMTPSA id d17-20020a637351000000b005030136314dsm8053852pgn.71.2023.03.01.18.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Mar 2023 18:19:10 -0800 (PST)
-Date:   Thu, 2 Mar 2023 10:19:03 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Robert Schwebel <r.schwebel@pengutronix.de>
-Cc:     Sascha Hauer <sha@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bartosz.golaszewski@linaro.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        christophe.leroy@csgroup.eu, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de, shawnguo@kernel.org
-Subject: Re: GPIO static allocation warning with v6.2-rcX
-Message-ID: <ZAAHlyjr+pNHTMoo@sol>
-References: <20230120104647.nwki4silrtd7bt3w@pengutronix.de>
- <CAMRc=Mdo0tvJUJ2G+9BGfyVYBwUQKRZU36JEUZdxVVnXETZHLg@mail.gmail.com>
- <20230125093548.GB23347@pengutronix.de>
- <CACRpkdbcrTv+=7Ev750O=UO=V=afp5NnTT4znb0rzWLkom+_cg@mail.gmail.com>
- <20230126104927.GE23347@pengutronix.de>
- <20230129183339.GY24167@pengutronix.de>
+        with ESMTP id S229445AbjCBDwm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Mar 2023 22:52:42 -0500
+X-Greylist: delayed 868 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Mar 2023 19:52:41 PST
+Received: from mail-m11874.qiye.163.com (mail-m11874.qiye.163.com [115.236.118.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF5532532;
+        Wed,  1 Mar 2023 19:52:41 -0800 (PST)
+Received: from [172.16.12.93] (unknown [58.22.7.114])
+        by mail-m11874.qiye.163.com (Hmail) with ESMTPA id 946593C0196;
+        Thu,  2 Mar 2023 11:29:45 +0800 (CST)
+Message-ID: <b86a53d7-778e-5ec7-cc5b-8e741af10986@rock-chips.com>
+Date:   Thu, 2 Mar 2023 11:29:45 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230129183339.GY24167@pengutronix.de>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 3/8] gpio: gpio-rockchip: parse gpio-ranges for bank id
+Content-Language: en-US
+To:     Johan Jonker <jbx6244@gmail.com>, linus.walleij@linaro.org,
+        brgl@bgdev.pl
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        heiko@sntech.de, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sjg@chromium.org, philipp.tomsich@vrull.eu, john@metanate.com,
+        quentin.schulz@theobroma-systems.com
+References: <03627216-54b5-5d9b-f91d-adcd637819e3@gmail.com>
+ <890be9a0-8e82-a8f4-bc15-d5d1597343c2@gmail.com>
+From:   Kever Yang <kever.yang@rock-chips.com>
+In-Reply-To: <890be9a0-8e82-a8f4-bc15-d5d1597343c2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0JDTlYfTktCTExMSR1PHktVEwETFh
+        oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSkpLT0tDVUpLS1VLWQ
+        Y+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTo6ASo*Aj0QPkIoOQ0SLjAW
+        FglPC1ZVSlVKTUxMTElMTENNTk9DVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+        EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFIQkhONwY+
+X-HM-Tid: 0a86a05e64182eb0kusn946593c0196
+X-HM-MType: 1
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I didn't respond to this earlier, as I considered it best to let the
-thread die and not inflame the issue.
+Hi Johan,
 
-Adding Andy as he raised the issue again in another thread.
+On 2023/1/21 19:08, Johan Jonker wrote:
+> Parse the gpio-ranges property in Rockchip gpio nodes to be
+> independent from aliases and probe order for our bank id.
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-On Sun, Jan 29, 2023 at 07:33:39PM +0100, Robert Schwebel wrote:
-> On Thu, Jan 26, 2023 at 11:49:27AM +0100, Sascha Hauer wrote:
-> > What's missing is a way to let a GPIO stay in the current state when I
-> > release a GPIO chip. Unlike the new features you listed above this is a
-> > feature that the sysfs API offers and that's important for us.
-> 
+Looks good to me.
 
-I assume you mean release a line...
+Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
 
-The new (cdev) interface provides access control over lines so you can
-guarantee that you, and only you, have control over the line.
-This is not possible with sysfs.
 
-With cdev, and internally with gpiolib, the state is only guaranteed while
-the line has an owner, and when you release line it becomes unowned -
-ownership effectively reverts to the GPIO chip driver.
-Its state does not become random, it becomes undefined from the
-perspective of the former owner.  Neither cdev nor gpiolib change the
-line state when the line is released - any changes at that point are a
-function of the GPIO chip driver.
-
-(With sysfs, it becomes the owner of exported lines.)
-
-> An example where it is used is labgrid: our test automation controller
-> (LXA-TAC) doesn't run any software for controlling power of the device-
-> under-test; to switch on a DuT, labgrid does
-> 
->   ssh tac echo 1 > /sys/some/path/to/gpio
-> 
-
-As can anything else that can access /sys/some/path/to/gpio.
-So it is possible for multiple test benches to mess with the DuT power at
-the same time.  Using cdev would make that impossible.
-
-cdev providing access control does mean that it is more awkward to use
-than sysfs, but to provide a "set and forget" feature akin to sysfs would
-undermine that access control and the associated benefits.
-
-> While this could also be done with a daemon offering a dbus api, this
-> would be significantly more complex. In a critical environment, one
-> needs to make sure that the daemon process never fails, otherwhise the
-> power of the DuT would maybe be in a random state. Then of course one
-> can add a watchdog, but with the current sysfs interface it's really
-> simple. Of course that would also work if the new interface would offer
-> a "keep this line as it is" feature, but adding a dbus daemon just for
-> keeping the state of a pin sounds overcomplex when the kernel could also
-> provide that functionality.
-> 
-
-So it is non-trivial for your test framework to run a process on a
-remote host for the duration of a test?
-That is a problem.
-Seems like something that would be generally useful, and having it run
-gpioset for the duration of a test *should* be pretty trivial.
-
-Unlike sysfs, when you request a line with cdev nothing else can come
-along and mess with your power switch while your test is using it.
-Which seems like something you might want in a critical environment.
-
-Wrt complexity, I would contend that it is actually more work to add
-this functionality to the kernel.  The state of GPIO lines when not held
-by gpiolib is dependent on the GPIO chip driver, so solving the problem
-for all cases would involve extending the GPIO chip driver API and
-updating *all* GPIO chip drivers to keep the state of the pin as
-requested - even when the line is freed.
-Even if this were to happen, it would take significant time and effort,
-so it would be more practical to try to find a solution that uses cdev
-as it stands.
-
-> Another example that came up on friday when we talked about this is a
-> motor for an airplane: It doesn't have only one "safe state" it could
-> fall back to if something fails (i.e. daemon disappears). The safe state
-> on power-on (with uninitialized external hardware) might be different
-> from the one on the ground (motor-off) or while being in the air
-> (motor-on). Of course one would probably not build an airplane without
-> further safety mechanics, but we have several less-desasterous-but-
-> still-very-expensive-in-the-case-of-failure use cases in the field, like
-> multi hundret kilowatt motors in agricultural or heavy construction
-> machine equipment being switched on/off by a GPIO that cause significant
-> loss of material / work on failure.
-> 
-
-Agreed - such applications should have external safety mechanics, so
-the software safe state is irrelevant.
-
-> I hope those examples help a bit to understand the issues. As Sascha
-> said: when the new interface provides the same features sysfs offers
-> today, without adding tons of new complexity, increasing the pressure on
-> people to move there is perfectly fine. 
-> 
-
-Can you elaborate on "adding tons of new complexity"?
-You mean that you can't drive GPIOs just by echoing into files?
-
-I don't see any GPIO developers "pressuring" anyone to switch.
-The standard process to remove old interfaces is to mark them as
-deprecated and provide time for users to migrate to alternatives.
-This is exactly what has been done.
-The sysfs interface has been deprecated for a very long time (since
-2015??).
-And the deprecation suggested it was scheduled for removal in 2020.
-Exactly how much warning is required for you not to feel "pressured"?
-
-We well understand that there are trade-offs involved in the switch from
-sysfs to cdev, and have endeavoured to accomodate sysfs users.
-The problem as I see it is sysfs users who continue to insist on feature
-parity while not appreciating the associated costs.
-
-Cheers,
-Kent.
+Thanks,
+- Kever
+> ---
+>   drivers/gpio/gpio-rockchip.c | 24 ++++++++++++++++++------
+>   1 file changed, 18 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+> index e5de15a2a..df74b71aa 100644
+> --- a/drivers/gpio/gpio-rockchip.c
+> +++ b/drivers/gpio/gpio-rockchip.c
+> @@ -702,24 +702,36 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+>   	struct device_node *np = dev->of_node;
+> -	struct device_node *pctlnp = of_get_parent(np);
+> +	struct device_node *pctlnp;
+>   	struct pinctrl_dev *pctldev = NULL;
+>   	struct rockchip_pin_bank *bank = NULL;
+>   	struct rockchip_pin_deferred *cfg;
+> +	struct of_phandle_args args;
+>   	static int gpio;
+>   	int id, ret;
+>
+> -	if (!np || !pctlnp)
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &args);
+> +	if (ret == 0) {
+> +		pctlnp = args.np;
+> +		id = args.args[1] / 32;
+> +	} else {
+> +		pctlnp = of_get_parent(np);
+> +		id = of_alias_get_id(np, "gpio");
+> +		if (id < 0)
+> +			id = gpio++;
+> +	}
+> +
+> +	if (!pctlnp)
+>   		return -ENODEV;
+>
+>   	pctldev = of_pinctrl_get(pctlnp);
+> +	of_node_put(pctlnp);
+>   	if (!pctldev)
+>   		return -EPROBE_DEFER;
+>
+> -	id = of_alias_get_id(np, "gpio");
+> -	if (id < 0)
+> -		id = gpio++;
+> -
+>   	bank = rockchip_gpio_find_bank(pctldev, id);
+>   	if (!bank)
+>   		return -EINVAL;
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
