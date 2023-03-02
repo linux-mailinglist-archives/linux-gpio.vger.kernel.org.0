@@ -2,284 +2,265 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E6BE6A7BC7
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 08:21:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57DD86A7C59
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 09:17:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229781AbjCBHVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Mar 2023 02:21:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39642 "EHLO
+        id S229586AbjCBIRY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Mar 2023 03:17:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbjCBHVj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 02:21:39 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D21AE061
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Mar 2023 23:21:37 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id b10so16692083ljr.0
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Mar 2023 23:21:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8SbwyaTUhRFFkR5W3MkeaNXpKy7rQS9sahOylLJtXPo=;
-        b=B0Y9pEUC4la/OMDA2aCD5zt72F/UBm2s+7zXkXnq+HDv3UX5Qv1Xk5NlK7cY09Rd9f
-         w96TA9fqQjVC+YfHHVLvXEW3yU9EAJDHCeqG9BKLXbsEcO2mN5qcuoSU4UnK1Ptw7Zd+
-         PHnJGlmTlSwmi4ytaTmkgCJlk+7jS9neByE00=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8SbwyaTUhRFFkR5W3MkeaNXpKy7rQS9sahOylLJtXPo=;
-        b=pnv37HqkY0Wso+JebyRvESAvZmMQItlejEwkHdQ7AhIG4oEXMW91/grQJVW2oekE58
-         s5A7Lx9qQ7qF4cvZeFI8yp9IDxxq0xCo0x0j+WrhfS/QJPM2FfhbkCS/Kv5eZeNd17WP
-         XwPxkMjQ6g4F98LqwNg9EKv+b/rn4VFu0PxLM5V5Ln+XAXSerDNXYElxklTj5XosPrTr
-         LunzjtacgN3pogs/0VNRt5K5qtGxJ2Pa4EjgCqAgTFi032wHyHfBUDseBLpGEa27tCkV
-         frUouxcHmb84oJrhFNAJtSl8um01FWB6gIav4MTu/F0VGR7GDrSL6SHadPhgglD+Zn4S
-         gtbg==
-X-Gm-Message-State: AO0yUKVC2k0SVgLQpFWgKI8txBnkXXXszgySM8rknaEtorO3CsrG9Jbd
-        2wo2rZs1NnUUHuO2oKyulYGRVQ==
-X-Google-Smtp-Source: AK7set/PbDMi51VZWaCXp9fyye4UKVxz8prgIbI0/8QPgJA0ZsVDT+ZZ8eC52tKodckAedLozPqNsg==
-X-Received: by 2002:a2e:2c12:0:b0:293:5002:80ef with SMTP id s18-20020a2e2c12000000b00293500280efmr2872343ljs.20.1677741695398;
-        Wed, 01 Mar 2023 23:21:35 -0800 (PST)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id s8-20020a05651c048800b00290679ebac1sm1988821ljc.9.2023.03.01.23.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Mar 2023 23:21:35 -0800 (PST)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: freescale: remove generic pin config core support
-Date:   Thu,  2 Mar 2023 08:21:31 +0100
-Message-Id: <20230302072132.1051590-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S229501AbjCBIRX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 03:17:23 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 48A3E32502;
+        Thu,  2 Mar 2023 00:17:20 -0800 (PST)
+Received: from loongson.cn (unknown [10.20.42.35])
+        by gateway (Coremail) with SMTP id _____8DxE1yPWwBk+ioHAA--.7979S3;
+        Thu, 02 Mar 2023 16:17:19 +0800 (CST)
+Received: from user-pc.202.106.0.20 (unknown [10.20.42.35])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxIL+IWwBkYzdGAA--.22878S2;
+        Thu, 02 Mar 2023 16:17:18 +0800 (CST)
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org (open list),
+        Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v12 1/2] dt-bindings: gpio: add loongson gpio
+Date:   Thu,  2 Mar 2023 16:17:10 +0800
+Message-Id: <20230302081711.27334-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8AxIL+IWwBkYzdGAA--.22878S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XrWUWr1xtw17tr18XrWkJFb_yoW7AF1fpF
+        1DZF9xX3y2qr13AFs8Ka17Xr4fAr1kAw1ruwnxC34xtrWUKw13XF4fWFykG3Z3WrWUXF13
+        JanxurWrJ3W3Aw7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bq8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+        A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+        6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+        C2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+        7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCY1x0264kExV
+        AvwVAq07x20xyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCa
+        FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+        aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUxApnDUUUU
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,RCVD_IN_SBL_CSS,
+        SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-No instance of "struct imx_pinctrl_soc_info" sets '.generic_pinconf =
-true', so all of this is effectively dead code.
+Add the Loongson platform gpio binding with DT schema format using
+json-schema.
 
-To make it easier to understand the actual code, remove all the unused
-cruft. This effectively reverts a5cadbbb081c ("pinctrl: imx: add
-generic pin config core support").
-
-It was only in use by a single SOC (imx7ulp) for a few releases, and
-the commit message of dbffda08f0e9 ("pinctrl: fsl: imx7ulp: change to
-use imx legacy binding") suggests that it won't be used in the
-future. Certainly no new user has appeared in 20+ releases, and should
-the need arise, this can be dug out of git history again.
-
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pinctrl/freescale/Kconfig       |  2 +-
- drivers/pinctrl/freescale/pinctrl-imx.c | 80 ++-----------------------
- drivers/pinctrl/freescale/pinctrl-imx.h | 24 --------
- 3 files changed, 6 insertions(+), 100 deletions(-)
+Change in v12:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v11:
+		1. Place this patch in fron of driver patch.
+Change in v10:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v9:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v8:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v7:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v6:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v5:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v4:
+		1. Remove the string "series".
+		2. Add the reviewed-by information.
+Change in v3:
+		1. Separate some changes of MAINTAINERS file and enter the first patch.
+Change in v2:
+		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
+		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
+		   "loongson,support_irq" and kernel driver will initial them that depend
+		   compatible in kernel.
+		3. Fixup maintainer for this driver.
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 7a32f77792d9..27bdc548f3a7 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -4,7 +4,7 @@ config PINCTRL_IMX
- 	depends on OF
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
--	select GENERIC_PINCONF
-+	select PINCONF
- 	select REGMAP
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
+ MAINTAINERS                                   |   6 +
+ 2 files changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+new file mode 100644
+index 000000000000..fb86e8ce6349
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson GPIO controller.
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-gpio
++      - loongson,ls7a-gpio
++
++  reg:
++    maxItems: 1
++
++  ngpios:
++    minimum: 1
++    maximum: 64
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-ranges: true
++
++  interrupts:
++    minItems: 1
++    maxItems: 64
++
++required:
++  - compatible
++  - reg
++  - ngpios
++  - "#gpio-cells"
++  - gpio-controller
++  - gpio-ranges
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    gpio0: gpio@1fe00500 {
++      compatible = "loongson,ls2k-gpio";
++      reg = <0x1fe00500 0x38>;
++      ngpios = <64>;
++      #gpio-cells = <2>;
++      gpio-controller;
++      gpio-ranges = <&pctrl 0 0 15>,
++                    <&pctrl 16 16 15>,
++                    <&pctrl 32 32 10>,
++                    <&pctrl 44 44 20>;
++      interrupt-parent = <&liointc1>;
++      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
++                   <29 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 57d1d6ecb33d..b54b36187e75 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12086,6 +12086,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+ F:	drivers/pinctrl/pinctrl-loongson2.c
  
- config PINCTRL_IMX_SCU
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index e9aef764138f..93ffb5fc04e7 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -292,62 +292,6 @@ struct pinmux_ops imx_pmx_ops = {
- 	.set_mux = imx_pmx_set,
- };
- 
--/* decode generic config into raw register values */
--static u32 imx_pinconf_decode_generic_config(struct imx_pinctrl *ipctl,
--					      unsigned long *configs,
--					      unsigned int num_configs)
--{
--	const struct imx_pinctrl_soc_info *info = ipctl->info;
--	const struct imx_cfg_params_decode *decode;
--	enum pin_config_param param;
--	u32 raw_config = 0;
--	u32 param_val;
--	int i, j;
--
--	WARN_ON(num_configs > info->num_decodes);
--
--	for (i = 0; i < num_configs; i++) {
--		param = pinconf_to_config_param(configs[i]);
--		param_val = pinconf_to_config_argument(configs[i]);
--		decode = info->decodes;
--		for (j = 0; j < info->num_decodes; j++) {
--			if (param == decode->param) {
--				if (decode->invert)
--					param_val = !param_val;
--				raw_config |= (param_val << decode->shift)
--					      & decode->mask;
--				break;
--			}
--			decode++;
--		}
--	}
--
--	if (info->fixup)
--		info->fixup(configs, num_configs, &raw_config);
--
--	return raw_config;
--}
--
--static u32 imx_pinconf_parse_generic_config(struct device_node *np,
--					    struct imx_pinctrl *ipctl)
--{
--	const struct imx_pinctrl_soc_info *info = ipctl->info;
--	struct pinctrl_dev *pctl = ipctl->pctl;
--	unsigned int num_configs;
--	unsigned long *configs;
--	int ret;
--
--	if (!info->generic_pinconf)
--		return 0;
--
--	ret = pinconf_generic_parse_dt_config(np, pctl, &configs,
--					      &num_configs);
--	if (ret)
--		return 0;
--
--	return imx_pinconf_decode_generic_config(ipctl, configs, num_configs);
--}
--
- static int imx_pinconf_get_mmio(struct pinctrl_dev *pctldev, unsigned pin_id,
- 				unsigned long *config)
- {
-@@ -500,7 +444,6 @@ static const struct pinconf_ops imx_pinconf_ops = {
- /*
-  * Each pin represented in fsl,pins consists of a number of u32 PIN_FUNC_ID
-  * and 1 u32 CONFIG, the total size is PIN_FUNC_ID + CONFIG for each pin.
-- * For generic_pinconf case, there's no extra u32 CONFIG.
-  *
-  * PIN_FUNC_ID format:
-  * Default:
-@@ -548,18 +491,12 @@ static void imx_pinctrl_parse_pin_mmio(struct imx_pinctrl *ipctl,
- 	pin_mmio->mux_mode = be32_to_cpu(*list++);
- 	pin_mmio->input_val = be32_to_cpu(*list++);
- 
--	if (info->generic_pinconf) {
--		/* generic pin config decoded */
--		pin_mmio->config = imx_pinconf_parse_generic_config(np, ipctl);
--	} else {
--		/* legacy pin config read from devicetree */
--		config = be32_to_cpu(*list++);
-+	config = be32_to_cpu(*list++);
- 
--		/* SION bit is in mux register */
--		if (config & IMX_PAD_SION)
--			pin_mmio->mux_mode |= IOMUXC_CONFIG_SION;
--		pin_mmio->config = config & ~IMX_PAD_SION;
--	}
-+	/* SION bit is in mux register */
-+	if (config & IMX_PAD_SION)
-+		pin_mmio->mux_mode |= IOMUXC_CONFIG_SION;
-+	pin_mmio->config = config & ~IMX_PAD_SION;
- 
- 	*list_p = list;
- 
-@@ -587,9 +524,6 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
- 	else
- 		pin_size = FSL_PIN_SIZE;
- 
--	if (info->generic_pinconf)
--		pin_size -= 4;
--
- 	/* Initialise group */
- 	grp->name = np->name;
- 
-@@ -855,10 +789,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 	imx_pinctrl_desc->confops = &imx_pinconf_ops;
- 	imx_pinctrl_desc->owner = THIS_MODULE;
- 
--	/* for generic pinconf */
--	imx_pinctrl_desc->custom_params = info->custom_params;
--	imx_pinctrl_desc->num_custom_params = info->num_custom_params;
--
- 	/* platform specific callback */
- 	imx_pmx_ops.gpio_set_direction = info->gpio_set_direction;
- 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-index fd8c4b6b3e36..f65ff45b4003 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.h
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-@@ -11,7 +11,6 @@
- #ifndef __DRIVERS_PINCTRL_IMX_H
- #define __DRIVERS_PINCTRL_IMX_H
- 
--#include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinmux.h>
- 
- struct platform_device;
-@@ -67,14 +66,6 @@ struct imx_pin_reg {
- 	s16 conf_reg;
- };
- 
--/* decode a generic config into raw register value */
--struct imx_cfg_params_decode {
--	enum pin_config_param param;
--	u32 mask;
--	u8 shift;
--	bool invert;
--};
--
- /**
-  * @dev: a pointer back to containing device
-  * @base: the offset to the controller in virtual memory
-@@ -100,15 +91,6 @@ struct imx_pinctrl_soc_info {
- 	unsigned int mux_mask;
- 	u8 mux_shift;
- 
--	/* generic pinconf */
--	bool generic_pinconf;
--	const struct pinconf_generic_params *custom_params;
--	unsigned int num_custom_params;
--	const struct imx_cfg_params_decode *decodes;
--	unsigned int num_decodes;
--	void (*fixup)(unsigned long *configs, unsigned int num_configs,
--		      u32 *raw_config);
--
- 	int (*gpio_set_direction)(struct pinctrl_dev *pctldev,
- 				  struct pinctrl_gpio_range *range,
- 				  unsigned offset,
-@@ -122,12 +104,6 @@ struct imx_pinctrl_soc_info {
- 				      const __be32 **list_p);
- };
- 
--#define IMX_CFG_PARAMS_DECODE(p, m, o) \
--	{ .param = p, .mask = m, .shift = o, .invert = false, }
--
--#define IMX_CFG_PARAMS_DECODE_INVERT(p, m, o) \
--	{ .param = p, .mask = m, .shift = o, .invert = true, }
--
- #define SHARE_MUX_CONF_REG	BIT(0)
- #define ZERO_OFFSET_VALID	BIT(1)
- #define IMX_USE_SCU		BIT(2)
++LOONGSON GPIO DRIVER
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 -- 
-2.37.2
+2.31.1
 
