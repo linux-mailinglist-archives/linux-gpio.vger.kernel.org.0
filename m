@@ -2,62 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA176A7FF1
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 11:29:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 583C16A803D
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 11:47:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbjCBK3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Mar 2023 05:29:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
+        id S229995AbjCBKrf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Mar 2023 05:47:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjCBK3Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 05:29:16 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED3010413
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Mar 2023 02:29:14 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id da10so65685870edb.3
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Mar 2023 02:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677752953;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GRjMQJRtE2Bj9BjD+ekrQkZUrzfyzg03TWtGip3bI4w=;
-        b=fGGD97qyolMbVM2MF8TJC9kNf5yy1V/Nxss8muasMPP04By5S2huAuT6M4F9BEhjw+
-         LZ7ShcpNaOZz49Xm730maLefpmezUuUODHNmDCCkG4h+o7758mUtk++09bXmSvBMVue5
-         jN/Ud8OJeKiMp8BzM0HsmCzTWbuupJyuWWiiy24SACAbx4XfhYA0tAow6F0M2jWto9rA
-         WP5zO7vwBEh942WiyRXNnUgE+PU9UKznVZuuTpSX7nQCE8iiRHZBaQTnkfo0cSeNfDEM
-         hdihAt1v9K1aCoRPflebQKC+KL5W2xSZkJlsDh3UZoSy0y4Ge/FmkPtuPY4ajPM3u3Dq
-         d4Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677752953;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GRjMQJRtE2Bj9BjD+ekrQkZUrzfyzg03TWtGip3bI4w=;
-        b=oCEecQQZQ9yGbKBpTGIQcVdx+o6T3rMtrrz+R7FfH82V0f8nKRv3jPTtGbuK1vL0m6
-         PF97oHDPx6LIZ+hrBV6ZDGkwCMUm1knp5JFi5dJa4ZzpcGiRj9v+Jw1zz4cPGWmQ2FBA
-         zKTdpFbD0adfG7FyjVD6cDU3MMs+Pc1m6WL8dFTXuNK+W83pNVN0PrN35Ch5lcsLu2Ca
-         Se9rg6yxjt0oOlni8awnbOWrxA8skM0HvaMKJWP13twaJlWwobVEb3wIrRs9eBSHSo4f
-         PXWFiDCDvuM3jvbI1OhLfCrGNGvMlVkhlC1x64TbgWyRFBuHs2uPG8kaG1Xng+cI4hhE
-         XneA==
-X-Gm-Message-State: AO0yUKVrBg4eKziCqccL+VgZgh8dCUakqetD+8VoFQ5KUpNSdwSsv+o4
-        nla0O28Dm4nChCiPTckocYZF+w==
-X-Google-Smtp-Source: AK7set8MX5Ca2LfKKYqYHZj9wih46oAtJRMNpT+QV58afPq6J8YNFqnWqw3SqRcubazacAt+XkczUQ==
-X-Received: by 2002:a05:6402:1acd:b0:499:b672:ee30 with SMTP id ba13-20020a0564021acd00b00499b672ee30mr10272126edb.11.1677752953229;
-        Thu, 02 Mar 2023 02:29:13 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id u6-20020a50c046000000b0049ef70a2894sm1756994edd.38.2023.03.02.02.29.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Mar 2023 02:29:12 -0800 (PST)
-Message-ID: <2ccb573d-39f4-cb80-7a3e-63a60c2bc0a8@linaro.org>
-Date:   Thu, 2 Mar 2023 11:29:10 +0100
+        with ESMTP id S229983AbjCBKre (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 05:47:34 -0500
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6E837731;
+        Thu,  2 Mar 2023 02:47:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1677754035; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=c2ZehWxZUtp/cl4T5HNT9vLkzpL5ZwhAJLPiij4+5DTFylmtKpIj/tkT2gErnjGXFessHP1oP/FEub2sFkX6ELT0iu/R5yHXQYsUAQPOZM3jnpkgd4ELTVJwLDYUBw/kYN8i5OZi1jAT5bKwn061+neWje2ZCZAcfaeRZ3mrcOs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1677754035; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=UUcOfchS4C2fgxhPjvGjSCiIN/7y7uTOoaWrQDYPRTM=; 
+        b=I54FU9r9Q+ybNILluTJpCNr5r7Y6HsASeCWFBbE4PjnMoVk8u3wwVumSQTBxNQCuD17z+BpQ6d2UUBje+2vLGxyExel+TbYrkDSHdrgc2YUqP0AVTRa5w6haDkghwCODghjto5CRefiUZm+T0tp2KbwNWRSZ/oSM2jxa9A+4C7g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1677754035;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=UUcOfchS4C2fgxhPjvGjSCiIN/7y7uTOoaWrQDYPRTM=;
+        b=A0A3gKeO6HpQ6VZt5x+Be4cJ3ia0MXGxzuevNkr6FkDoh/8oj88j9epiI175TUDM
+        kx2jOgtkNul1YxLnHPtWbDQqlqSOjjBVyb2/oRi9SGbhDuRPBSLsPF6VHERd64cyde7
+        NIwvdDHiCp/splvG6QbuE2OutO/DPpCer5zXQZ68=
+Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
+        with SMTPS id 1677754033173751.0132443007599; Thu, 2 Mar 2023 02:47:13 -0800 (PST)
+Message-ID: <b48e0a5e-dd45-8b8a-4ee3-357a0985ca9c@arinc9.com>
+Date:   Thu, 2 Mar 2023 13:47:05 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
+ Thunderbird/102.7.1
 Subject: Re: [RFC PATCH 07/16] dt-bindings: pinctrl: ralink: add new
  compatible strings
 Content-Language: en-US
-To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Rob Herring <robh@kernel.org>
 Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -85,43 +70,51 @@ References: <20230222183932.33267-1-arinc.unal@arinc9.com>
  <a9acd3b4-2b03-86c0-711c-a3840aeab574@arinc9.com>
  <1aae7ac9-c83d-71b4-4fce-325f02fcd722@linaro.org>
  <89588f69-9cf0-e7a4-b976-5ce87d42e296@arinc9.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <89588f69-9cf0-e7a4-b976-5ce87d42e296@arinc9.com>
-Content-Type: text/plain; charset=UTF-8
+ <2ccb573d-39f4-cb80-7a3e-63a60c2bc0a8@linaro.org>
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <2ccb573d-39f4-cb80-7a3e-63a60c2bc0a8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02/03/2023 11:22, Arınç ÜNAL wrote:
+On 2.03.2023 13:29, Krzysztof Kozlowski wrote:
+> On 02/03/2023 11:22, Arınç ÜNAL wrote:
+>>>>
+>>>> ## Incorrect naming
+>>>>
+>>>> MT7620, MT7621, MT7628, and MT7688 SoCs are incorrectly called Ralink,
+>>>> introduce new ralink->mediatek compatible strings to address it.
 >>>
->>> ## Incorrect naming
->>>
->>> MT7620, MT7621, MT7628, and MT7688 SoCs are incorrectly called Ralink,
->>> introduce new ralink->mediatek compatible strings to address it.
+>>> So this part was addressed by Rob - we don't do it, because it does not
+>>> matter. Ralink is now Mediatek, thus there is no conflict and no issues
+>>> with different vendor used.
 >>
->> So this part was addressed by Rob - we don't do it, because it does not
->> matter. Ralink is now Mediatek, thus there is no conflict and no issues
->> with different vendor used.
+>> I think Rob was rather addressing that updating compatible strings based
+>> on acquisition or marketing whims is not permitted. This condition does
+>> not apply here as these SoCs were never Ralink.
+>>
+>> I understand your point that Ralink is now MediaTek but still, calling
+>> these SoCs Ralink would be a bit misleading, don't you think?
 > 
-> I think Rob was rather addressing that updating compatible strings based 
-> on acquisition or marketing whims is not permitted. This condition does 
-> not apply here as these SoCs were never Ralink.
-> 
-> I understand your point that Ralink is now MediaTek but still, calling 
-> these SoCs Ralink would be a bit misleading, don't you think?
+> Misleading yes, but also does not matter. At least matter not enough to
+> justify ABI break, so you would need to deprecate old ones and keep
+> everything backwards compatible. You still would affect 3rd party users
+> of DTS, though...
 
-Misleading yes, but also does not matter. At least matter not enough to
-justify ABI break, so you would need to deprecate old ones and keep
-everything backwards compatible. You still would affect 3rd party users
-of DTS, though...
+I intend to do just that. Introduce new mediatek strings, keep the old 
+ones so it's backwards compatible, therefore don't break the ABI.
 
-Best regards,
-Krzysztof
+Instead of deprecating old strings, I intend to introduce the checks I 
+mentioned, on the schema, so the pin muxing bindings only apply if the 
+DT has got a string that won't match multiple schemas. This way it 
+shouldn't affect 3rd party DTs.
 
+Arınç
