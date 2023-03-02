@@ -2,196 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E24A75A3A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 02:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9BBA75A4B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 05:23:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjGTAtM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 20:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        id S229512AbjGTDXI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 23:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjGTAtL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 20:49:11 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519C91BF7
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 17:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689814150; x=1721350150;
-  h=date:from:to:cc:subject:message-id;
-  bh=pI4LNsSJ3HOY7F0/18BPfAeaQZuawZAtJiXF7i9zY4M=;
-  b=EK4byqtgAt299zfb84si4+/qZRpF40CF4+Zk0PgN32jRTUb8xdS/lzto
-   D//2XF0idYoRXdWZ6F7pn+EdT3n9CsjfolRh/PG05tPaPBXP5Y1E1bXlq
-   6GTwsfAx58829rZKSObZk4nResY55tzSqguccaKlRWmXD1zvb0Obp8Vy/
-   UhQjd3RGKIQVbRY1O+jiXCCk1aqIQ5A/tqGQRq/vQIXgRBGRbDzrVGqtr
-   48suEa9sgroqbrMltOq1idffLeUPNlrjcxZGBgTomDZIVlixTel6N6YSX
-   VC7N0kiJjK/VU5dP6vdPJ5g+f9gwJtcC8YejLMfcmFdkGCn+a6L4lyaq2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="370173224"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="370173224"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 17:49:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="867673450"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jul 2023 17:49:08 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qMHqs-0005dH-1l;
-        Thu, 20 Jul 2023 00:49:06 +0000
-Date:   Thu, 20 Jul 2023 08:48:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 1945063eb59e64d2919cb14d54d081476d9e53bb
-Message-ID: <202307200836.1aegFNud-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229825AbjGTDXC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 23:23:02 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.215])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1E74F92;
+        Wed, 19 Jul 2023 20:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+        Content-Type; bh=IY+RAcc1GIlfkxtLHhXfiV6sRGLtLR6DNqK46NMbrwg=;
+        b=InoTSa1nthHTskV/3OhpZy5KvDbQi69GsoTuARVtap3P9xlNy0klQsXf5E+nl7
+        Z3fvVp/7wSU/+XMZsoDfUYsGvsmu6y1CS5ujDlIouJOQBRa5oIaVjsbKfQY/u0PW
+        aegiDYQpxbvKTcVDzTbx61ltQ54ID++PbYIaZ6N+2G7Mc=
+Received: from [172.20.10.2] (unknown [39.144.138.239])
+        by zwqz-smtp-mta-g3-3 (Coremail) with SMTP id _____wA3Le70pLhk5wATAw--.40526S3;
+        Thu, 20 Jul 2023 11:07:39 +0800 (CST)
+Message-ID: <7b8435c9-36ad-9b69-7357-94cb5fcadc99@163.com>
+Date:   Thu, 2 Mar 2023 21:48:57 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
+ gpio pins
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, henning.schild@siemens.com,
+        xingtong.wu@siemens.com
+References: <20230529025011.2806-1-xingtong_wu@163.com>
+ <20230529025011.2806-2-xingtong_wu@163.com>
+ <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com>
+From:   "xingtong.wu" <xingtong_wu@163.com>
+In-Reply-To: <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wA3Le70pLhk5wATAw--.40526S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZr1fZF47ZF18uF18uw1DGFg_yoWxCFg_ur
+        4I9Fn7Jr48GF47Ca909F4kGr4SqFykXF1DCr9xtr4fZw15AF1rKan5JrZ2gF12g3WUCFyS
+        gFna9F1Iyry7XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU80_M3UUUUU==
+X-Originating-IP: [39.144.138.239]
+X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/xtbCfgSy0GDcOxu-gAAAs7
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L3,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 1945063eb59e64d2919cb14d54d081476d9e53bb  gpio: mvebu: Make use of devm_pwmchip_add
 
-elapsed time: 720m
 
-configs tested: 120
-configs skipped: 5
+On 2023/5/29 21:02, Linus Walleij wrote:
+> On Mon, May 29, 2023 at 4:55 AM <xingtong_wu@163.com> wrote:
+> 
+>> From: "xingtong.wu" <xingtong.wu@siemens.com>
+>>
+>> switch pin base from static to automatic allocation to
+>> avoid conflicts and align with other gpio chip drivers
+>>
+>> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> If this platform does not have a ton of userspace using the obsolete
+> sysfs this should be fine to apply. I say let's apply and see what happens.
+> 
+> Yours,
+> Linus Walleij
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r004-20230718   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r031-20230718   gcc  
-arc                  randconfig-r043-20230718   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230718   clang
-arm                  randconfig-r014-20230718   gcc  
-arm                  randconfig-r026-20230718   gcc  
-arm                  randconfig-r046-20230718   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r011-20230718   clang
-arm64                randconfig-r012-20230718   clang
-arm64                randconfig-r021-20230718   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r001-20230718   gcc  
-csky                 randconfig-r034-20230718   gcc  
-hexagon              randconfig-r041-20230718   clang
-hexagon              randconfig-r045-20230718   clang
-i386                             allyesconfig   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230718   gcc  
-i386         buildonly-randconfig-r005-20230718   gcc  
-i386         buildonly-randconfig-r006-20230718   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230718   gcc  
-i386                 randconfig-i002-20230718   gcc  
-i386                 randconfig-i003-20230718   gcc  
-i386                 randconfig-i004-20230718   gcc  
-i386                 randconfig-i005-20230718   gcc  
-i386                 randconfig-i006-20230718   gcc  
-i386                 randconfig-i011-20230718   clang
-i386                 randconfig-i012-20230718   clang
-i386                 randconfig-i013-20230718   clang
-i386                 randconfig-i014-20230718   clang
-i386                 randconfig-i015-20230718   clang
-i386                 randconfig-i016-20230718   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r006-20230718   gcc  
-loongarch            randconfig-r024-20230718   gcc  
-loongarch            randconfig-r031-20230718   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r033-20230718   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r005-20230718   clang
-mips                       rbtx49xx_defconfig   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r011-20230718   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r022-20230718   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r014-20230718   clang
-powerpc              randconfig-r015-20230718   clang
-powerpc              randconfig-r036-20230718   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r005-20230718   gcc  
-riscv                randconfig-r015-20230718   clang
-riscv                randconfig-r025-20230718   clang
-riscv                randconfig-r042-20230718   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r003-20230718   gcc  
-s390                 randconfig-r012-20230718   clang
-s390                 randconfig-r044-20230718   clang
-sh                               allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r016-20230718   gcc  
-sparc64              randconfig-r023-20230718   gcc  
-sparc64              randconfig-r036-20230718   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r002-20230718   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230718   gcc  
-x86_64       buildonly-randconfig-r002-20230718   gcc  
-x86_64       buildonly-randconfig-r003-20230718   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r032-20230718   gcc  
-x86_64               randconfig-x001-20230718   clang
-x86_64               randconfig-x002-20230718   clang
-x86_64               randconfig-x003-20230718   clang
-x86_64               randconfig-x004-20230718   clang
-x86_64               randconfig-x005-20230718   clang
-x86_64               randconfig-x006-20230718   clang
-x86_64               randconfig-x011-20230718   gcc  
-x86_64               randconfig-x012-20230718   gcc  
-x86_64               randconfig-x013-20230718   gcc  
-x86_64               randconfig-x014-20230718   gcc  
-x86_64               randconfig-x015-20230718   gcc  
-x86_64               randconfig-x016-20230718   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r034-20230718   gcc  
+Seems it has been a while since our last discussion, I guess it might
+be fit in.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- XingTong Wu
+
