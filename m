@@ -2,107 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A3C6A815B
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 12:41:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D516A8161
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Mar 2023 12:42:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjCBLlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Mar 2023 06:41:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
+        id S229879AbjCBLme (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Mar 2023 06:42:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbjCBLlS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 06:41:18 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B2E498A3
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Mar 2023 03:40:54 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id u9so16894174edd.2
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Mar 2023 03:40:54 -0800 (PST)
+        with ESMTP id S229813AbjCBLm3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Mar 2023 06:42:29 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4DC028865;
+        Thu,  2 Mar 2023 03:42:04 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id q23so9592441pgt.7;
+        Thu, 02 Mar 2023 03:42:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677757235;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8kgK3rGpvo+xdIFwuswsin4gApQRsnJwFdM+M3smNCU=;
-        b=TnjAMKIfsEuggjoINqOgonvrcbETzjD8x1+K5jU0ps8BhAc1/alvOMpAiwPLPKDYvA
-         u9VxTAUQoBXXB1tB/55OlEaFIokjG9bsEo5LYs7XbPvUQWECBp0HoPg+YmH9+ZBXeZ7m
-         Yssqo3ZQV9hlNMJT5SvBAUBxuGBg87nbyhsd106wrifTvfNpeGK8urRus80z5gXXN3sa
-         ckW26cuhPJjHkafbEgXrFhTHEc2K65OJwrKNV7sMWozGN1D5sA+JOr5k777csAemTHnv
-         qmPpuUOh/tNJkZjzNghEKj3KmnXVx76S3H1JwQNldKkN0FE+YRiJg4BbAfbCAun1nj0+
-         WMtw==
+        d=gmail.com; s=20210112; t=1677757323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NG7UNqNB86Y8R/UV9apCD80Y3KO/Y3+JW11TcbCbY0E=;
+        b=MyapnYJpTgBTS1uMCkafwF8fcsoQWw8jsFJM8bRR1leU+Ekq7z8Q89/d87kuLp8r7z
+         IewW32Ll9kXsDsjfFQ8rBHHVGdRwQmNA0qWjdv2+FZg8+y8TawGIQTso12LD9qauHnF9
+         ZFFECucZxa2Fyacx/WyrSwu91khNJvigZ4KM6xHYgcuIS6Mkk26SkNNczY106Kc2iSG+
+         rXUeW7EYCmQDdIG0qZ4Vyhz/mVPCtFCgb+lPa5teb/92YHDLWU7DUy+0pF04WTrtiPa1
+         gfjMc5oF4ycUpXmNd0T2JIRMRJh/mOij+tOWVo2yOWUMf6jv74Dk0fH83RjftHtaE0W5
+         8fRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677757235;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kgK3rGpvo+xdIFwuswsin4gApQRsnJwFdM+M3smNCU=;
-        b=cLmqaMLNlpydoWuTmq/lqRungWkpatXsZgJig1VfkRBlpql3roQZ0g9AhuwMF7WkMy
-         2i7uOv36UJ+IXAb43D8UhIsRaPLKdk4OxpH08bSTcrK/X4nOjqe677yIfVhid1gxJeq3
-         wYeAe3GgK409v4N6yPmRNYtoWY7VcrdlcfoOouIRHsC+n25E6ytf3oCH9tTl+9CO+fEU
-         qqGK7bErpi1/+xSAo28UwgT1MsHADIp/PORhZA4Ee8hBj1JFeXlRf7Bd1mykkXeFsgkl
-         dwt2Qs67e7NHX0y30ToWGyKSn79YhG6hzo9cqAKl7rMjQeOCnmsEq5/+lGvlovqFNaS5
-         AxbQ==
-X-Gm-Message-State: AO0yUKXpE40s0dRt9HIMhSVoM/qnV6Z24WyPghja64dUzRe+EFlW6ott
-        WaIz9axytjS5T5517unffJbEtw==
-X-Google-Smtp-Source: AK7set+AokLI+Z0baoOmhcQLdIPuG+PuvKtSFZ2aW2WdgG6u9UgL73M7k/KhveB8CV4Yg97vjJalcQ==
-X-Received: by 2002:a17:907:6da2:b0:886:fcbf:a1e5 with SMTP id sb34-20020a1709076da200b00886fcbfa1e5mr15668923ejc.59.1677757235362;
-        Thu, 02 Mar 2023 03:40:35 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id m18-20020a1709061ed200b008d427df3245sm7010607ejj.58.2023.03.02.03.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Mar 2023 03:40:34 -0800 (PST)
-Message-ID: <5cc00c00-7dd3-4b7f-71e6-397f76acaed0@linaro.org>
-Date:   Thu, 2 Mar 2023 12:40:32 +0100
+        d=1e100.net; s=20210112; t=1677757323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NG7UNqNB86Y8R/UV9apCD80Y3KO/Y3+JW11TcbCbY0E=;
+        b=jmE2GsNwuGjv1eZAK/YG/Jg587SaDVv4LV27EroezPBqoXzIgkL7AAXAE2XzGXrKck
+         ZSgan3YAugv3uIbcQkyGNTiHCe1tqmUXacOe46JDvfui0zUPfD7CEIC2N2TVYx6n9IZo
+         I8fcZuaA3HG9vML0daHOaCf6z3zWk18iSLPI5/iVeAPq98W/aM56HV+mMxSGMuiVzV7F
+         7tNzJOULHwsVQxAePKU7KdQ5irVEw5Smk/ser/wRmWm1SXYsN9pcQ8HJ4oiKqTJUKeKY
+         p8954pGBnyWdS9cbNR0K4XR92c1fa7dwhHunhQcO8bcpHy2BPHHGR82AjH1NEBxCpZZX
+         LzYQ==
+X-Gm-Message-State: AO0yUKV6M/B+2aMdAK3BlMCacmqTF3MnMZnj4fYfGI6bFJiH55WAhDUO
+        Jto4A1D0F+5M0B4RQsHtIjbDNOMr9b+5tZADSDs=
+X-Google-Smtp-Source: AK7set8Y2YSnzKuxHDb8Ua/PIx+5Ws8Q40mHDasHqTEzKBbF+I0sI//PiBTLOMC9TG69qvqDtdlUuX56UpZ0oFd0COc=
+X-Received: by 2002:a05:6a00:1646:b0:5a8:4dc1:5916 with SMTP id
+ m6-20020a056a00164600b005a84dc15916mr3586535pfc.2.1677757323528; Thu, 02 Mar
+ 2023 03:42:03 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 1/4] gpio: loongson1: Update copyright
-Content-Language: en-US
-To:     Kelvin Cheung <keguang.zhang@gmail.com>, andy.shevchenko@gmail.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+References: <20230302072132.1051590-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20230302072132.1051590-1-linux@rasmusvillemoes.dk>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 Mar 2023 08:41:51 -0300
+Message-ID: <CAOMZO5DiH1f0u2cs7zKyFU6bMBLHTRpqMFuPCB=T8ZzyJxDT2g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: freescale: remove generic pin config core support
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-References: <20230222111213.2241633-1-keguang.zhang@gmail.com>
- <20230222111213.2241633-2-keguang.zhang@gmail.com>
- <Y/YH20aKp+u+QEwA@surfacebook>
- <CAJhJPsVqPAC_GP0JE98nrpmvDTwXdt4m0z3SZQPX3GFCijT09w@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAJhJPsVqPAC_GP0JE98nrpmvDTwXdt4m0z3SZQPX3GFCijT09w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02/03/2023 12:09, Kelvin Cheung wrote:
-> On Wed, Feb 22, 2023 at 8:18 PM <andy.shevchenko@gmail.com> wrote:
->>
->> Wed, Feb 22, 2023 at 07:12:10PM +0800, Keguang Zhang kirjoitti:
->>> This patch updates copyright and author information.
->>
->> ...
->>
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>
->> Have you talked to your lawers? This is an inequivalent to what was written
->> below.
->>
-> Yes.
+On Thu, Mar 2, 2023 at 4:21=E2=80=AFAM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> No instance of "struct imx_pinctrl_soc_info" sets '.generic_pinconf =3D
+> true', so all of this is effectively dead code.
+>
+> To make it easier to understand the actual code, remove all the unused
+> cruft. This effectively reverts a5cadbbb081c ("pinctrl: imx: add
+> generic pin config core support").
+>
+> It was only in use by a single SOC (imx7ulp) for a few releases, and
+> the commit message of dbffda08f0e9 ("pinctrl: fsl: imx7ulp: change to
+> use imx legacy binding") suggests that it won't be used in the
+> future. Certainly no new user has appeared in 20+ releases, and should
+> the need arise, this can be dug out of git history again.
+>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Yes to what? You now change the license... and commit msg does not
-explain it and does not justifies it. What is even weirder that your
-lawyers agreed on GPLv3! With GPLv3 you need to open a lot from your
-products... Not mentioning that they agreed on future GPLv4 and GPLv5,
-that's even weirder because GPLv4 might be saying you need to buy me
-flowers...
+Yes, this makes sense:
 
-Best regards,
-Krzysztof
-
+Reviewed-by: Fabio Estevam  <festevam@gmail.com>
