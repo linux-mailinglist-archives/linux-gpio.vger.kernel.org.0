@@ -2,74 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B38DA6A99C7
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Mar 2023 15:49:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F4226A9A24
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Mar 2023 16:02:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbjCCOtH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Mar 2023 09:49:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
+        id S229890AbjCCPCh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Mar 2023 10:02:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbjCCOtG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Mar 2023 09:49:06 -0500
+        with ESMTP id S229804AbjCCPCg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Mar 2023 10:02:36 -0500
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD648474F5
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Mar 2023 06:49:03 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id ay29-20020a05600c1e1d00b003e9f4c2b623so4099635wmb.3
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Mar 2023 06:49:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AD71ABF9
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Mar 2023 07:02:34 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id p26so1775570wmc.4
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Mar 2023 07:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Exy3Yn87eaf0ZXgYUzDkdrAAuGVg7rQYYWC6WdwO9g=;
-        b=kbZhL6OAvgwbkNo9fdSYcHXsh9vCMo3TLQzboWgPKF0SDG6svJglPowMGxgKdjXMFW
-         jMVjSps0ou14cXJZjLFj9SywH8cltV3ohEHzAQZ/ApbIXR7kZw+pCmlE1y0jvLAj4r66
-         zJmU7MzDDonT5mMERJHzVD6U6sWeGmDFIg3uKGneC/LWFpZ55O5jnVztDPzAyrLmVr/N
-         /+Yrz3kl0p+NgYkol0eB7FDxiDSGGR2hugkjDRkgB2bTFkCSILP9wtPs1udLjYalDhA4
-         DxWqr9Mgt8oRNxDMuUkDG3sIpDTv1DD8JPDBu03kPrXobtbvWhdXDN7amefCIaFWAcVo
-         2S+Q==
+        bh=UnIOnNRt4JVqThxM0+CX1uQMFZb/6/ZcZPc0zJV+qsU=;
+        b=1NTWDe3nj/7cYwGHxGT/1Dv3jcXKmlBfvIB7ZFF6Eukp99/Q5f0jc8s+NWoEr02K9z
+         73ZyzmWFH+oTrMBPqkcFdHeo4ZIzZPq59uwtXr5K3wHjOeRMEmB++/fj/wKllZGu6mWj
+         tcFJUkFUrOOzZ+2NOLRqjDcrUaYVSCn5xLMSTmA5SxeU5GPflswIBAamOXkb4geXBQuz
+         C7a+CoxZ9NrJZI9Ty+ZUQtfLgKzzLppVi7jK8IUmrDqOTRitSvRQpPkmAfIJsUoz1za8
+         c2n9+U6I3II8LgJpwJBMMXqnlXbMDih7kpp1egeT9hwcdRJFX7++gZH45w5o43ywgNAb
+         3AsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Exy3Yn87eaf0ZXgYUzDkdrAAuGVg7rQYYWC6WdwO9g=;
-        b=Gr5pMWfSaRnh8pdPaHo8zB+zAGesnpQknf/T4OeXNBukP7lNGMU24pMf0lL5Ifrs5z
-         SubKVU1RW3HPqU4pG/K14L4oJYxW470daHK4MDtNBklNx3w23oY58AnaaPHZZVkAQJIz
-         Nl5qQ9exj1QhkDYWTFJATStzm3YV2Z+4VmsFd7aoudXNwykKmjkoohhwxW/vYeuJBIff
-         lXho72Z2bvAOz/fTaQs59/bzmQurbb42a5K9RTMfva2hTTYReVt9mlHsBBiI7ud4ba92
-         I2laXIVsxZlkpeSc4clniScDjyhSpJyJa0S14l+foFbOkXJZM5FsZSrjhuxGOiqMbiF4
-         VdVw==
-X-Gm-Message-State: AO0yUKVJV9ScyhecbaDRyeTA1MxECRLvJOmAEz1L3R1u2nGDJVqXn4Js
-        RWafUfNGYAncPxazYDWaa6mtcg==
-X-Google-Smtp-Source: AK7set+lDVlPjWxNw7wuUK44z3QFiTkfHBkIyGzChGvsvbbsS/tQPd3hiFc811hgMcqj6qPpvf1mPA==
-X-Received: by 2002:a05:600c:1f0a:b0:3ea:9530:22a6 with SMTP id bd10-20020a05600c1f0a00b003ea953022a6mr4242981wmb.1.1677854942041;
-        Fri, 03 Mar 2023 06:49:02 -0800 (PST)
+        bh=UnIOnNRt4JVqThxM0+CX1uQMFZb/6/ZcZPc0zJV+qsU=;
+        b=V1rgw8ZIIHDc4rmkL0TvQmjiAV5spyuPUdAsc99PjWhVTGD/FdV9t1dOgk9bbg6ZaV
+         1TAhr9m6zZ6qeHXOf5nhY8qzi/qstn+oqL0klXkqvzehdkDp7fZAdWUkDteEylZjYVdJ
+         WQ0OApICgmysAOXeXDTnU0hA85f+LnH1xTcZcwA6OXmJEomLuoOXhrv/i80giSdfcVvt
+         PbWz0TTYgUWZdDjT4M0/RMb2rUrRQd5ANKyFAieat0dDrD/zw9p06w3xNKt7ydvjfGBU
+         Bf1vj8ws7pO1ma29NvhKlaAMIh0bI2uAlUEWk3wVFGqA6qsjgyo6TvF88s0a5s8DIfBj
+         njSg==
+X-Gm-Message-State: AO0yUKWD3wWonI02JbuvT5W5jGZL7Rq+h2cxXRpwVO0TjeL7SKG7yY9X
+        xExn6p0SC5V8+rxKwOiWKK3D1w==
+X-Google-Smtp-Source: AK7set/Hs0IS13V87cGQUUtuXtDk4qY0YBJ62x3fonEQK7SCQA+YAxhfYlZ/z74YwVIR7QT2byQv1w==
+X-Received: by 2002:a05:600c:444c:b0:3dc:16d2:ae5e with SMTP id v12-20020a05600c444c00b003dc16d2ae5emr1980396wmn.32.1677855753191;
+        Fri, 03 Mar 2023 07:02:33 -0800 (PST)
 Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
-        by smtp.gmail.com with ESMTPSA id b16-20020a5d4d90000000b002c70851bfcasm2413130wru.28.2023.03.03.06.49.01
+        by smtp.gmail.com with ESMTPSA id hu21-20020a05600ca29500b003eaee9e0d22sm2617183wmb.33.2023.03.03.07.02.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Mar 2023 06:49:01 -0800 (PST)
-Message-ID: <97541a89-7677-8dd4-b852-27f00a253a59@baylibre.com>
-Date:   Fri, 3 Mar 2023 15:49:00 +0100
+        Fri, 03 Mar 2023 07:02:32 -0800 (PST)
+Message-ID: <377c6c53-e2f1-cb0d-c4d5-611efccf9717@baylibre.com>
+Date:   Fri, 3 Mar 2023 16:02:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
 Subject: Re: [PATCH INTERNAL v1 3/3] regulator: tps6594-regulator: Add driver
  for TI TPS6594 regulators
 Content-Language: en-US
-To:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Mark Brown <broonie@kernel.org>,
+        Esteban Blanc <eblanc@baylibre.com>
+Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-rtc@vger.kernel.org, jpanis@baylibre.com
 References: <20230224133129.887203-1-eblanc@baylibre.com>
  <20230224133129.887203-4-eblanc@baylibre.com>
- <ceb76b77-1361-5605-db18-3b6918c029aa@gmail.com>
+ <Y/i+wVSy+eQxDFJ3@sirena.org.uk>
 From:   jerome Neanne <jneanne@baylibre.com>
-In-Reply-To: <ceb76b77-1361-5605-db18-3b6918c029aa@gmail.com>
+In-Reply-To: <Y/i+wVSy+eQxDFJ3@sirena.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -81,10 +81,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 24/02/2023 15:05, Matti Vaittinen wrote:
-> Hi Esteban,
-> 
-> On 2/24/23 15:31, Esteban Blanc wrote:
+On 24/02/2023 14:42, Mark Brown wrote:
+> On Fri, Feb 24, 2023 at 02:31:29PM +0100, Esteban Blanc wrote:
 >> From: Jerome Neanne <jneanne@baylibre.com>
 >>
 >> This patch adds support for TPS6594 regulators (bucks and LDOs).
@@ -95,275 +93,93 @@ On 24/02/2023 15:05, Matti Vaittinen wrote:
 >>
 >> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
 >> ---
->>   drivers/regulator/Kconfig             |  12 +
->>   drivers/regulator/Makefile            |   1 +
->>   drivers/regulator/tps6594-regulator.c | 559 ++++++++++++++++++++++++++
->>   3 files changed, 572 insertions(+)
->>   create mode 100644 drivers/regulator/tps6594-regulator.c
->>
->> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
->> index 820c9a0788e5..921540af6958 100644
->> --- a/drivers/regulator/Kconfig
->> +++ b/drivers/regulator/Kconfig
->> @@ -1432,6 +1432,18 @@ config REGULATOR_TPS65219
->>         voltage regulators. It supports software based voltage control
->>         for different voltage domains.
->> +config REGULATOR_TPS6594
->> +    tristate "TI TPS6594 Power regulators"
->> +    depends on MFD_TPS6594 && OF
->> +    help
->> +      This driver supports TPS6594 voltage regulator chips.
->> +      TPS6594 series of PMICs have 5 BUCKs and 4 LDOs
->> +      voltage regulators.
->> +      BUCKs 1,2,3,4 can be used in single phase or multiphase mode.
->> +      Part number defines which single or multiphase mode is i used.
->> +      It supports software based voltage control
->> +      for different voltage domains.
->> +
->>   config REGULATOR_TPS6524X
->>       tristate "TI TPS6524X Power regulators"
->>       depends on SPI
->> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
->> index b9f5eb35bf5f..948b53f6156b 100644
->> --- a/drivers/regulator/Makefile
->> +++ b/drivers/regulator/Makefile
->> @@ -171,6 +171,7 @@ obj-$(CONFIG_REGULATOR_TPS6524X) += 
->> tps6524x-regulator.o
->>   obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
->>   obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
->>   obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
->> +obj-$(CONFIG_REGULATOR_TPS6594) += tps6594-regulator.o
->>   obj-$(CONFIG_REGULATOR_TPS65132) += tps65132-regulator.o
->>   obj-$(CONFIG_REGULATOR_TPS68470) += tps68470-regulator.o
->>   obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
->> diff --git a/drivers/regulator/tps6594-regulator.c 
->> b/drivers/regulator/tps6594-regulator.c
->> new file mode 100644
->> index 000000000000..c099711fd460
->> --- /dev/null
->> +++ b/drivers/regulator/tps6594-regulator.c
+> 
+> You've not provided a Signed-off-by for this so I can't do anything with
+> it, please see Documentation/process/submitting-patches.rst for details
+> on what this is and why it's important.
+> 
+I did this patch but Esteban sent the whole patch-list. The sign-off has 
+not been updated accordingly. Sorry for disturbance. We'll fix that.
 >> @@ -0,0 +1,559 @@
 >> +// SPDX-License-Identifier: GPL-2.0
 >> +/*
 >> + * Regulator driver for tps6594 PMIC
 >> + *
 >> + * Copyright (C) 2022 BayLibre Incorporated - https://www.baylibre.com/
->> + *
->> + * This implementation derived from tps65218 authored by "J Keerthy 
->> <j-keerthy@ti.com>"
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/regulator/driver.h>
->> +#include <linux/regulator/machine.h>
->> +#include <linux/regulator/of_regulator.h>
->> +
->> +#include <linux/mfd/tps6594.h>
->> +
->> +#define BUCK_NB        5
->> +#define LDO_NB        4
->> +#define MULTI_PHASE_NB    4
->> +
->> +enum tps6594_regulator_id {
->> +    /* DCDC's */
->> +    TPS6594_BUCK_1,
->> +    TPS6594_BUCK_2,
->> +    TPS6594_BUCK_3,
->> +    TPS6594_BUCK_4,
->> +    TPS6594_BUCK_5,
->> +
->> +    /* LDOs */
->> +    TPS6594_LDO_1,
->> +    TPS6594_LDO_2,
->> +    TPS6594_LDO_3,
->> +    TPS6594_LDO_4,
->> +};
->> +
->> +enum tps6594_multi_regulator_id {
->> +    /* Multi-phase DCDC's */
->> +    TPS6594_BUCK_12,
->> +    TPS6594_BUCK_34,
->> +    TPS6594_BUCK_123,
->> +    TPS6594_BUCK_1234,
->> +};
->> +
->> +struct tps6594_regulator_irq_type {
->> +    const char *irq_name;
->> +    const char *regulator_name;
->> +    const char *event_name;
->> +    unsigned long event;
->> +};
->> +
->> +static struct tps6594_regulator_irq_type 
->> tps6594_regulator_irq_types[] = {
->> +    { TPS6594_IRQ_NAME_BUCK1_OV, "BUCK1", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_BUCK1_UV, "BUCK1", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
 > 
-> You have warning level IRQs - which is cool :)
+> Please make the entire comment block a C++ one so things look more
+> intentional.
 > 
-> As warning level IRQs are used for non fatal errors, you probably would 
-> like to also implement a mechanism for consumers to know when the 
-> "warning is over" (assuming the HW provides the status information). 
-> Maybe regulator_get_error_flags() would serve you?
+>> +static unsigned int tps6594_get_mode(struct regulator_dev *dev)
+>> +{
+>> +	return REGULATOR_MODE_NORMAL;
+>> +}
 > 
-> I'd be _really_ interested in hearing if you already have a use-case for 
-> the warnings.
-I double checked with TI PMIC team and so far we don't have any routine.
-The requirement for upstream driver is to raise the warning to the 
-processor nothing else. Up to the final customer to customize further.
-Note that it can be dangerous to handle in sw it in a generic way since 
-those warnings might affect some regulators that is supplying some 
-resources needed by the processor for correct behavior...
+> If configuring modes isn't supported just omit all mode operations.
 > 
->> +    { TPS6594_IRQ_NAME_BUCK1_SC, "BUCK1", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_BUCK1_ILIM, "BUCK1", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_BUCK2_OV, "BUCK2", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_BUCK2_UV, "BUCK2", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_BUCK2_SC, "BUCK2", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_BUCK2_ILIM, "BUCK2", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_BUCK3_OV, "BUCK3", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_BUCK3_UV, "BUCK3", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_BUCK3_SC, "BUCK3", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_BUCK3_ILIM, "BUCK3", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_BUCK4_OV, "BUCK4", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_BUCK4_UV, "BUCK4", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_BUCK4_SC, "BUCK4", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_BUCK4_ILIM, "BUCK4", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_BUCK5_OV, "BUCK5", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_BUCK5_UV, "BUCK5", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_BUCK5_SC, "BUCK5", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_BUCK5_ILIM, "BUCK5", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_LDO1_OV, "LDO1", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_LDO1_UV, "LDO1", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_LDO1_SC, "LDO1", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_LDO1_ILIM, "LDO1", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_LDO2_OV, "LDO2", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_LDO2_UV, "LDO2", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_LDO2_SC, "LDO2", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_LDO2_ILIM, "LDO2", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_LDO3_OV, "LDO3", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_LDO3_UV, "LDO3", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_LDO3_SC, "LDO3", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_LDO3_ILIM, "LDO3", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +    { TPS6594_IRQ_NAME_LDO4_OV, "LDO4", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_LDO4_UV, "LDO4", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_LDO4_SC, "LDO4", "short circuit", 
->> REGULATOR_EVENT_REGULATION_OUT },
->> +    { TPS6594_IRQ_NAME_LDO4_ILIM, "LDO4", "reach ilim, overcurrent",
->> +      REGULATOR_EVENT_OVER_CURRENT },
->> +};
+>> +	}
 >> +
->> +static struct tps6594_regulator_irq_type 
->> tps6594_ext_regulator_irq_types[] = {
->> +    { TPS6594_IRQ_NAME_VCCA_OV, "VCCA", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_VCCA_UV, "VCCA", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_VMON1_OV, "VMON1", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_VMON1_UV, "VMON1", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_VMON1_RV, "VMON1", "residual voltage",
->> +      REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_VMON2_OV, "VMON2", "overvoltage", 
->> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +    { TPS6594_IRQ_NAME_VMON2_UV, "VMON2", "undervoltage", 
->> REGULATOR_EVENT_UNDER_VOLTAGE },
->> +    { TPS6594_IRQ_NAME_VMON2_RV, "VMON2", "residual voltage",
->> +      REGULATOR_EVENT_OVER_VOLTAGE_WARN },
->> +};
+>> +	regulator_notifier_call_chain(irq_data->rdev,
+>> +				      irq_data->type->event, NULL);
 >> +
->> +struct tps6594_regulator_irq_data {
->> +    struct device *dev;
->> +    struct tps6594_regulator_irq_type *type;
->> +    struct regulator_dev *rdev;
->> +};
->> +
->> +struct tps6594_ext_regulator_irq_data {
->> +    struct device *dev;
->> +    struct tps6594_regulator_irq_type *type;
->> +};
->> +
->> +    for (i = 0; i < ARRAY_SIZE(tps6594_regulator_irq_types); ++i) {
->> +        irq_type = &tps6594_regulator_irq_types[i];
->> +
->> +        irq = platform_get_irq_byname(pdev, irq_type->irq_name);
->> +        if (irq < 0)
->> +            return -EINVAL;
->> +
->> +        irq_data[i].dev = tps->dev;
->> +        irq_data[i].type = irq_type;
->> +
->> +        tps6594_get_rdev_by_name(irq_type->regulator_name, rdevbucktbl,
->> +                     rdevldotbl, rdev);
->> +
->> +        if (rdev < 0) {
->> +            dev_err(tps->dev, "Failed to get rdev for %s\n",
->> +                irq_type->regulator_name);
->> +            return -EINVAL;
->> +        }
->> +        irq_data[i].rdev = rdev;
->> +
->> +        error = devm_request_threaded_irq(tps->dev, irq, NULL,
->> +                          tps6594_regulator_irq_handler,
->> +                          IRQF_ONESHOT,
->> +                          irq_type->irq_name,
->> +                          &irq_data[i]);
->> +        if (error) {
->> +            dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
->> +                irq_type->irq_name, irq, error);
->> +            return error;
->> +        }
->> +    }
+>> +	dev_err(irq_data->dev, "Error IRQ trap %s for %s\n",
+>> +		irq_data->type->event_name, irq_data->type->regulator_name);
 > 
-> If I read this correctly, you have exact, 1 to 1 mapping from an IRQ to 
-> regulator and event? Maybe you could slightly simplify the driver by 
-> using the devm_regulator_irq_helper() and 
-> regulator_irq_map_event_simple() with it's map-event? And if the 
-> devm_regulator_irq_helper() does not work for you I'll be interested in 
-> hearing if it could be improved.
+> I suspect it might avoid future confusion to log the error before
+> notifying so that any consequences of the error more clearly happen in
+> response to the error.
 > 
-I'll give it a try.
-
-Thanks
+I'll rework all that section for v2 following your recommendations
+>> +static int tps6594_get_rdev_by_name(const char *regulator_name,
+>> +				    struct regulator_dev *rdevbucktbl[BUCK_NB],
+>> +				    struct regulator_dev *rdevldotbl[LDO_NB],
+>> +				    struct regulator_dev *dev)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i <= BUCK_NB; i++) {
+>> +		if (strcmp(regulator_name, buck_regs[i].name) == 0) {
+>> +			dev = rdevbucktbl[i];
+>> +			return 0;
+>> +		}
+>> +	}
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(ldo_regs); i++) {
+>> +		if (strcmp(regulator_name, ldo_regs[i].name) == 0) {
+>> +			dev = rdevldotbl[i];
+>> +			return 0;
+>> +		}
+>> +	}
+>> +	return -EINVAL;
+>> +}
+> 
+>> +	for (i = 0; i < ARRAY_SIZE(tps6594_regulator_irq_types); ++i) {
+>> +		irq_type = &tps6594_regulator_irq_types[i];
+>> +
+>> +		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>> +		if (irq < 0)
+>> +			return -EINVAL;
+>> +
+>> +		irq_data[i].dev = tps->dev;
+>> +		irq_data[i].type = irq_type;
+>> +
+>> +		tps6594_get_rdev_by_name(irq_type->regulator_name, rdevbucktbl,
+>> +					 rdevldotbl, rdev);
+> 
+> This would be simpler and you wouldn't need this lookup function if the
+> regulator descriptions included their IRQ names, then you could just
+> request the interrupts while registering the regulators.
+> 
+>> +		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>> +						  tps6594_regulator_irq_handler,
+>> +						  IRQF_ONESHOT,
+>> +						  irq_type->irq_name,
+>> +						  &irq_data[i]);
+>> +		if (error) {
+>> +			dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
+>> +				irq_type->irq_name, irq, error);
+>> +			return error;
+>> +		}
+> 
+> This leaks all previously requested interrupts.
+Thanks for your time and precious feedback.
