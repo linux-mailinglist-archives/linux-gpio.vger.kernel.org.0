@@ -2,289 +2,368 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E71F76A994C
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Mar 2023 15:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B38DA6A99C7
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Mar 2023 15:49:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbjCCOSY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Mar 2023 09:18:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
+        id S231281AbjCCOtH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Mar 2023 09:49:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbjCCOSU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Mar 2023 09:18:20 -0500
-Received: from sender4-op-o16.zoho.com (sender4-op-o16.zoho.com [136.143.188.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2953D1167D;
-        Fri,  3 Mar 2023 06:18:17 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1677853069; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=W045bdmzx75s5wZRdqKXSj6MKbsu2H2RGd+UAnNckVvKqLut14P74dngx9EFa3evMrmBYiHdBTRXJyPx2A4RrAaB9laruuFL2SwFjdx9hQUid2fVKXWKx7WL+MK1YPXYFFKHTxgcsJJ3Z6VlRjXLRQ6cNqlTNKsqb7apzFbFe8U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1677853069; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=J1x4ZN9o6V9W+qBh0ggz87xL1gWqHwTlf5r/ePU2u7s=; 
-        b=HJnA1Gl0ulvNFNp12PIcPvVUaBO6ptuEg6ynGu9Yl44nim8zC+8upY72jeHPZRItXgGOYveaI+tR5pZI7GIPIkurvIukwH05ZudxJOyZ9j1NeT95XpvNzgp/Y+QXqj18DFIbH079gA0xokv+XXs7ClCvyKPjG9eW71OFxJMz3WI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1677853069;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=J1x4ZN9o6V9W+qBh0ggz87xL1gWqHwTlf5r/ePU2u7s=;
-        b=MaWvmbrf7SOR8X/C8UKjWp5SLXWJ2UbwfRjhDt+BXZvBSmv3nFgNLQZ5KGi97Y5K
-        ESrqbdmG0ZN1lnt5Rze51IjtCv2PetxHEqIe7SO4WubKJkNu1cmAnGILIpLlwXLq+4T
-        FWKpYkEwBL8lWP22gmTE+9UXhAJ6eDW+Hnt+PMxk=
-Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
-        with SMTPS id 1677853067111992.3122175211197; Fri, 3 Mar 2023 06:17:47 -0800 (PST)
-Message-ID: <fc6dc970-5bae-1c27-9473-8c9d90ac79a1@arinc9.com>
-Date:   Fri, 3 Mar 2023 17:17:39 +0300
+        with ESMTP id S230158AbjCCOtG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Mar 2023 09:49:06 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD648474F5
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Mar 2023 06:49:03 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id ay29-20020a05600c1e1d00b003e9f4c2b623so4099635wmb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Mar 2023 06:49:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Exy3Yn87eaf0ZXgYUzDkdrAAuGVg7rQYYWC6WdwO9g=;
+        b=kbZhL6OAvgwbkNo9fdSYcHXsh9vCMo3TLQzboWgPKF0SDG6svJglPowMGxgKdjXMFW
+         jMVjSps0ou14cXJZjLFj9SywH8cltV3ohEHzAQZ/ApbIXR7kZw+pCmlE1y0jvLAj4r66
+         zJmU7MzDDonT5mMERJHzVD6U6sWeGmDFIg3uKGneC/LWFpZ55O5jnVztDPzAyrLmVr/N
+         /+Yrz3kl0p+NgYkol0eB7FDxiDSGGR2hugkjDRkgB2bTFkCSILP9wtPs1udLjYalDhA4
+         DxWqr9Mgt8oRNxDMuUkDG3sIpDTv1DD8JPDBu03kPrXobtbvWhdXDN7amefCIaFWAcVo
+         2S+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Exy3Yn87eaf0ZXgYUzDkdrAAuGVg7rQYYWC6WdwO9g=;
+        b=Gr5pMWfSaRnh8pdPaHo8zB+zAGesnpQknf/T4OeXNBukP7lNGMU24pMf0lL5Ifrs5z
+         SubKVU1RW3HPqU4pG/K14L4oJYxW470daHK4MDtNBklNx3w23oY58AnaaPHZZVkAQJIz
+         Nl5qQ9exj1QhkDYWTFJATStzm3YV2Z+4VmsFd7aoudXNwykKmjkoohhwxW/vYeuJBIff
+         lXho72Z2bvAOz/fTaQs59/bzmQurbb42a5K9RTMfva2hTTYReVt9mlHsBBiI7ud4ba92
+         I2laXIVsxZlkpeSc4clniScDjyhSpJyJa0S14l+foFbOkXJZM5FsZSrjhuxGOiqMbiF4
+         VdVw==
+X-Gm-Message-State: AO0yUKVJV9ScyhecbaDRyeTA1MxECRLvJOmAEz1L3R1u2nGDJVqXn4Js
+        RWafUfNGYAncPxazYDWaa6mtcg==
+X-Google-Smtp-Source: AK7set+lDVlPjWxNw7wuUK44z3QFiTkfHBkIyGzChGvsvbbsS/tQPd3hiFc811hgMcqj6qPpvf1mPA==
+X-Received: by 2002:a05:600c:1f0a:b0:3ea:9530:22a6 with SMTP id bd10-20020a05600c1f0a00b003ea953022a6mr4242981wmb.1.1677854942041;
+        Fri, 03 Mar 2023 06:49:02 -0800 (PST)
+Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
+        by smtp.gmail.com with ESMTPSA id b16-20020a5d4d90000000b002c70851bfcasm2413130wru.28.2023.03.03.06.49.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Mar 2023 06:49:01 -0800 (PST)
+Message-ID: <97541a89-7677-8dd4-b852-27f00a253a59@baylibre.com>
+Date:   Fri, 3 Mar 2023 15:49:00 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 05/20] pinctrl: ralink: move to mediatek as mtmips
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        William Dean <williamsukatube@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
-References: <20230303002850.51858-1-arinc.unal@arinc9.com>
- <20230303002850.51858-6-arinc.unal@arinc9.com>
- <CAMhs-H-VGjP32AZc2cuY=Co4iqx8xPtvjr+hMg-haMMFaQzzsg@mail.gmail.com>
- <CAMhs-H8OsG-SEWigimG3fT-SGjZruH-7tnjff198Z2qhb0O=yA@mail.gmail.com>
- <2106f6d0-63cc-4656-1e52-19640994fb43@arinc9.com>
- <CAMhs-H869pR6CzaWfvf44w-ak+0OCyxnMEEU4kWYpw=C14ShsQ@mail.gmail.com>
+Subject: Re: [PATCH INTERNAL v1 3/3] regulator: tps6594-regulator: Add driver
+ for TI TPS6594 regulators
 Content-Language: en-US
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <CAMhs-H869pR6CzaWfvf44w-ak+0OCyxnMEEU4kWYpw=C14ShsQ@mail.gmail.com>
+To:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com
+References: <20230224133129.887203-1-eblanc@baylibre.com>
+ <20230224133129.887203-4-eblanc@baylibre.com>
+ <ceb76b77-1361-5605-db18-3b6918c029aa@gmail.com>
+From:   jerome Neanne <jneanne@baylibre.com>
+In-Reply-To: <ceb76b77-1361-5605-db18-3b6918c029aa@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Heyo,
 
-On 3.03.2023 13:57, Sergio Paracuellos wrote:
-> Hi Arınç,
+
+On 24/02/2023 15:05, Matti Vaittinen wrote:
+> Hi Esteban,
 > 
-> On Fri, Mar 3, 2023 at 9:16 AM Arınç ÜNAL <arinc.unal@arinc9.com> wrote:
+> On 2/24/23 15:31, Esteban Blanc wrote:
+>> From: Jerome Neanne <jneanne@baylibre.com>
 >>
->> Hey Sergio,
+>> This patch adds support for TPS6594 regulators (bucks and LDOs).
+>> The output voltages are configurable and are meant to supply power
+>> to the main processor and other components.
+>> Bucks can be used in single or multiphase mode, depending on PMIC
+>> part number.
 >>
->> On 3.03.2023 09:34, Sergio Paracuellos wrote:
->>> On Fri, Mar 3, 2023 at 7:17 AM Sergio Paracuellos
->>> <sergio.paracuellos@gmail.com> wrote:
->>>>
->>>>    Hi Arınç,
->>>>
->>>> On Fri, Mar 3, 2023 at 1:30 AM <arinc9.unal@gmail.com> wrote:
->>>>>
->>>>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>>>>
->>>>> This platform from Ralink was acquired by MediaTek in 2011. Then, MediaTek
->>>>> introduced new SoCs which utilise this platform. Move the driver to
->>>>> mediatek pinctrl directory. Rename the ralink core driver to mtmips.
->>>>>
->>>>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->>>>> ---
->>>>>    drivers/pinctrl/Kconfig                       |  1 -
->>>>>    drivers/pinctrl/Makefile                      |  1 -
->>>>>    drivers/pinctrl/mediatek/Kconfig              | 51 ++++++++++-
->>>>>    drivers/pinctrl/mediatek/Makefile             | 63 +++++++------
->>>>>    .../{ralink => mediatek}/pinctrl-mt7620.c     | 34 +++----
->>>>>    .../{ralink => mediatek}/pinctrl-mt7621.c     | 30 +++----
->>>>>    .../{ralink => mediatek}/pinctrl-mt76x8.c     | 60 ++++++-------
->>>>>    .../pinctrl-mtmips.c}                         | 90 +++++++++----------
->>>>>    .../pinctrl-mtmips.h}                         | 16 ++--
->>>>>    .../{ralink => mediatek}/pinctrl-rt2880.c     | 20 ++---
->>>>>    .../{ralink => mediatek}/pinctrl-rt305x.c     | 44 ++++-----
->>>>>    .../{ralink => mediatek}/pinctrl-rt3883.c     | 28 +++---
->>>>>    drivers/pinctrl/ralink/Kconfig                | 40 ---------
->>>>>    drivers/pinctrl/ralink/Makefile               |  9 --
->>>>>    14 files changed, 246 insertions(+), 241 deletions(-)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-mt7620.c (81%)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-mt7621.c (80%)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-mt76x8.c (81%)
->>>>>    rename drivers/pinctrl/{ralink/pinctrl-ralink.c => mediatek/pinctrl-mtmips.c} (74%)
->>>>>    rename drivers/pinctrl/{ralink/pinctrl-ralink.h => mediatek/pinctrl-mtmips.h} (75%)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-rt2880.c (71%)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-rt305x.c (75%)
->>>>>    rename drivers/pinctrl/{ralink => mediatek}/pinctrl-rt3883.c (80%)
->>>>>    delete mode 100644 drivers/pinctrl/ralink/Kconfig
->>>>>    delete mode 100644 drivers/pinctrl/ralink/Makefile
->>>>>
->>>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->>>>> index dcb53c4a9584..8a6012770640 100644
->>>>> --- a/drivers/pinctrl/Kconfig
->>>>> +++ b/drivers/pinctrl/Kconfig
->>>>> @@ -537,7 +537,6 @@ source "drivers/pinctrl/nomadik/Kconfig"
->>>>>    source "drivers/pinctrl/nuvoton/Kconfig"
->>>>>    source "drivers/pinctrl/pxa/Kconfig"
->>>>>    source "drivers/pinctrl/qcom/Kconfig"
->>>>> -source "drivers/pinctrl/ralink/Kconfig"
->>>>>    source "drivers/pinctrl/renesas/Kconfig"
->>>>>    source "drivers/pinctrl/samsung/Kconfig"
->>>>>    source "drivers/pinctrl/spear/Kconfig"
->>>>> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
->>>>> index d5939840bb2a..ada6ed1d4e91 100644
->>>>> --- a/drivers/pinctrl/Makefile
->>>>> +++ b/drivers/pinctrl/Makefile
->>>>> @@ -66,7 +66,6 @@ obj-y                         += nomadik/
->>>>>    obj-y                          += nuvoton/
->>>>>    obj-$(CONFIG_PINCTRL_PXA)      += pxa/
->>>>>    obj-$(CONFIG_ARCH_QCOM)                += qcom/
->>>>> -obj-$(CONFIG_PINCTRL_RALINK)   += ralink/
->>>>>    obj-$(CONFIG_PINCTRL_RENESAS)  += renesas/
->>>>>    obj-$(CONFIG_PINCTRL_SAMSUNG)  += samsung/
->>>>>    obj-$(CONFIG_PINCTRL_SPEAR)    += spear/
->>>>> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
->>>>> index a71874fed3d6..2eeb55010563 100644
->>>>> --- a/drivers/pinctrl/mediatek/Kconfig
->>>>> +++ b/drivers/pinctrl/mediatek/Kconfig
->>>>> @@ -1,6 +1,6 @@
->>>>>    # SPDX-License-Identifier: GPL-2.0-only
->>>>>    menu "MediaTek pinctrl drivers"
->>>>> -       depends on ARCH_MEDIATEK || COMPILE_TEST
->>>>> +       depends on ARCH_MEDIATEK || RALINK || COMPILE_TEST
->>>>>
->>>>>    config EINT_MTK
->>>>>           tristate "MediaTek External Interrupt Support"
->>>>> @@ -22,6 +22,12 @@ config PINCTRL_MTK
->>>>>    config PINCTRL_MTK_V2
->>>>>           tristate
->>>>>
->>>>> +config PINCTRL_MTK_MTMIPS
->>>>> +       bool
->>>>> +       depends on RALINK
->>>>> +       select PINMUX
->>>>> +       select GENERIC_PINCONF
->>>>> +
->>>>>    config PINCTRL_MTK_MOORE
->>>>>           bool
->>>>>           depends on OF
->>>>> @@ -43,6 +49,49 @@ config PINCTRL_MTK_PARIS
->>>>>           select OF_GPIO
->>>>>           select PINCTRL_MTK_V2
->>>>>
->>>>> +# For MIPS SoCs
->>>>> +config PINCTRL_MT7620
->>>>> +       bool "MediaTek MT7620 pin control"
->>>>> +       depends on SOC_MT7620 || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_MT7620
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>> +config PINCTRL_MT7621
->>>>> +       bool "MediaTek MT7621 pin control"
->>>>> +       depends on SOC_MT7621 || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_MT7621
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>> +config PINCTRL_MT76X8
->>>>> +       bool "MediaTek MT76X8 pin control"
->>>>> +       depends on SOC_MT7620 || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_MT7620
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>> +config PINCTRL_RT2880
->>>>> +       bool "Ralink RT2880 pin control"
->>>>> +       depends on SOC_RT288X || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_RT288X
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>> +config PINCTRL_RT305X
->>>>> +       bool "Ralink RT305X pin control"
->>>>> +       depends on SOC_RT305X || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_RT305X
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>> +config PINCTRL_RT3883
->>>>> +       bool "Ralink RT3883 pin control"
->>>>> +       depends on SOC_RT3883 || COMPILE_TEST
->>>>> +       depends on RALINK
->>>>> +       default SOC_RT3883
->>>>> +       select PINCTRL_MTK_MTMIPS
->>>>> +
->>>>
->>>> I am not a Kconfig expert at all but...
->>>>
->>>> Should not all of these be depends on SOC_XXX || (COMPILE_TEST &&
->>>> RALINK) and avoid the " depends on RALINK" next line in all of them?
+>> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
+>> ---
+>>   drivers/regulator/Kconfig             |  12 +
+>>   drivers/regulator/Makefile            |   1 +
+>>   drivers/regulator/tps6594-regulator.c | 559 ++++++++++++++++++++++++++
+>>   3 files changed, 572 insertions(+)
+>>   create mode 100644 drivers/regulator/tps6594-regulator.c
 >>
->> This seems to do the same thing but I'm following the "either change
->> them all or fit into the crowd" ideology.
->>
->>>>
->>>> Just asking since we have yet arch read and write register operations
->>>> in pinctrl common ralink code. Having in this way, when we address
->>>> this arch thing  in the next series just removing the "&& RALINK" part
->>>> makes the review pretty obvious.
->>
->> You'd have to change RALINK with OF since we're still depending on that.
->> RALINK selects OF by default so it's currently a hidden dependency.
->>
->>>>
->>>> Other than that, changes look good to me.
->>>
->>> I think "depends on SOC_XXX || (COMPILE_TEST && MIPS)" would work also
->>> and might be more accurate for compile testing targets.
+>> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+>> index 820c9a0788e5..921540af6958 100644
+>> --- a/drivers/regulator/Kconfig
+>> +++ b/drivers/regulator/Kconfig
+>> @@ -1432,6 +1432,18 @@ config REGULATOR_TPS65219
+>>         voltage regulators. It supports software based voltage control
+>>         for different voltage domains.
+>> +config REGULATOR_TPS6594
+>> +    tristate "TI TPS6594 Power regulators"
+>> +    depends on MFD_TPS6594 && OF
+>> +    help
+>> +      This driver supports TPS6594 voltage regulator chips.
+>> +      TPS6594 series of PMICs have 5 BUCKs and 4 LDOs
+>> +      voltage regulators.
+>> +      BUCKs 1,2,3,4 can be used in single phase or multiphase mode.
+>> +      Part number defines which single or multiphase mode is i used.
+>> +      It supports software based voltage control
+>> +      for different voltage domains.
+>> +
+>>   config REGULATOR_TPS6524X
+>>       tristate "TI TPS6524X Power regulators"
+>>       depends on SPI
+>> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+>> index b9f5eb35bf5f..948b53f6156b 100644
+>> --- a/drivers/regulator/Makefile
+>> +++ b/drivers/regulator/Makefile
+>> @@ -171,6 +171,7 @@ obj-$(CONFIG_REGULATOR_TPS6524X) += 
+>> tps6524x-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TPS65912) += tps65912-regulator.o
+>> +obj-$(CONFIG_REGULATOR_TPS6594) += tps6594-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TPS65132) += tps65132-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TPS68470) += tps68470-regulator.o
+>>   obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
+>> diff --git a/drivers/regulator/tps6594-regulator.c 
+>> b/drivers/regulator/tps6594-regulator.c
+>> new file mode 100644
+>> index 000000000000..c099711fd460
+>> --- /dev/null
+>> +++ b/drivers/regulator/tps6594-regulator.c
+>> @@ -0,0 +1,559 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Regulator driver for tps6594 PMIC
+>> + *
+>> + * Copyright (C) 2022 BayLibre Incorporated - https://www.baylibre.com/
+>> + *
+>> + * This implementation derived from tps65218 authored by "J Keerthy 
+>> <j-keerthy@ti.com>"
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/regulator/driver.h>
+>> +#include <linux/regulator/machine.h>
+>> +#include <linux/regulator/of_regulator.h>
+>> +
+>> +#include <linux/mfd/tps6594.h>
+>> +
+>> +#define BUCK_NB        5
+>> +#define LDO_NB        4
+>> +#define MULTI_PHASE_NB    4
+>> +
+>> +enum tps6594_regulator_id {
+>> +    /* DCDC's */
+>> +    TPS6594_BUCK_1,
+>> +    TPS6594_BUCK_2,
+>> +    TPS6594_BUCK_3,
+>> +    TPS6594_BUCK_4,
+>> +    TPS6594_BUCK_5,
+>> +
+>> +    /* LDOs */
+>> +    TPS6594_LDO_1,
+>> +    TPS6594_LDO_2,
+>> +    TPS6594_LDO_3,
+>> +    TPS6594_LDO_4,
+>> +};
+>> +
+>> +enum tps6594_multi_regulator_id {
+>> +    /* Multi-phase DCDC's */
+>> +    TPS6594_BUCK_12,
+>> +    TPS6594_BUCK_34,
+>> +    TPS6594_BUCK_123,
+>> +    TPS6594_BUCK_1234,
+>> +};
+>> +
+>> +struct tps6594_regulator_irq_type {
+>> +    const char *irq_name;
+>> +    const char *regulator_name;
+>> +    const char *event_name;
+>> +    unsigned long event;
+>> +};
+>> +
+>> +static struct tps6594_regulator_irq_type 
+>> tps6594_regulator_irq_types[] = {
+>> +    { TPS6594_IRQ_NAME_BUCK1_OV, "BUCK1", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_BUCK1_UV, "BUCK1", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
 > 
-> Are you sure? SOC_XXX here is already being enabled only if RALINK is
-> already enabled, right? [0]
-
-I'm not sure who's your reply to, or what it's about here.
-
+> You have warning level IRQs - which is cool :)
 > 
->>
->> This is not OK in both cases. If the driver is dependent on Ralink
->> architecture code, choosing any other MIPS platform will make the driver
->> available to compile, which will fail.
+> As warning level IRQs are used for non fatal errors, you probably would 
+> like to also implement a mechanism for consumers to know when the 
+> "warning is over" (assuming the HW provides the status information). 
+> Maybe regulator_get_error_flags() would serve you?
 > 
-> SOC_XXX is already dependent on RALINK for real uses but the driver is
-> going to be selected for other MIPS platforms only for COMPILE_TEST
-> targets. Ideally drivers should be arch agnostic so can be selected
-> for any single arch build. Now we have arch dependent read and write
-> calls in the code, so you need the right headers to be properly found
-> to be able to compile testing. I think MIPS is enough dependency here
-> to properly find them. But if not, this should be (COMPILE_TEST &&
-> RALINK)
-
-I expect below to work without requiring the MIPS option.
-
-ifeq ($(CONFIG_COMPILE_TEST),y)
-CFLAGS_pinctrl-mtmips.o		+= -I$(srctree)/arch/mips/include
-endif
-
+> I'd be _really_ interested in hearing if you already have a use-case for 
+> the warnings.
+I double checked with TI PMIC team and so far we don't have any routine.
+The requirement for upstream driver is to raise the warning to the 
+processor nothing else. Up to the final customer to customize further.
+Note that it can be dangerous to handle in sw it in a generic way since 
+those warnings might affect some regulators that is supplying some 
+resources needed by the processor for correct behavior...
 > 
->>
->> If the driver is independent of Ralink architecture code, you're
->> limiting the driver to be compiled only when a MIPS platform is selected.
+>> +    { TPS6594_IRQ_NAME_BUCK1_SC, "BUCK1", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_BUCK1_ILIM, "BUCK1", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_BUCK2_OV, "BUCK2", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_BUCK2_UV, "BUCK2", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_BUCK2_SC, "BUCK2", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_BUCK2_ILIM, "BUCK2", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_BUCK3_OV, "BUCK3", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_BUCK3_UV, "BUCK3", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_BUCK3_SC, "BUCK3", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_BUCK3_ILIM, "BUCK3", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_BUCK4_OV, "BUCK4", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_BUCK4_UV, "BUCK4", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_BUCK4_SC, "BUCK4", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_BUCK4_ILIM, "BUCK4", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_BUCK5_OV, "BUCK5", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_BUCK5_UV, "BUCK5", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_BUCK5_SC, "BUCK5", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_BUCK5_ILIM, "BUCK5", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_LDO1_OV, "LDO1", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_LDO1_UV, "LDO1", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_LDO1_SC, "LDO1", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_LDO1_ILIM, "LDO1", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_LDO2_OV, "LDO2", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_LDO2_UV, "LDO2", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_LDO2_SC, "LDO2", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_LDO2_ILIM, "LDO2", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_LDO3_OV, "LDO3", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_LDO3_UV, "LDO3", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_LDO3_SC, "LDO3", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_LDO3_ILIM, "LDO3", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +    { TPS6594_IRQ_NAME_LDO4_OV, "LDO4", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_LDO4_UV, "LDO4", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_LDO4_SC, "LDO4", "short circuit", 
+>> REGULATOR_EVENT_REGULATION_OUT },
+>> +    { TPS6594_IRQ_NAME_LDO4_ILIM, "LDO4", "reach ilim, overcurrent",
+>> +      REGULATOR_EVENT_OVER_CURRENT },
+>> +};
+>> +
+>> +static struct tps6594_regulator_irq_type 
+>> tps6594_ext_regulator_irq_types[] = {
+>> +    { TPS6594_IRQ_NAME_VCCA_OV, "VCCA", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_VCCA_UV, "VCCA", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_VMON1_OV, "VMON1", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_VMON1_UV, "VMON1", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_VMON1_RV, "VMON1", "residual voltage",
+>> +      REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_VMON2_OV, "VMON2", "overvoltage", 
+>> REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +    { TPS6594_IRQ_NAME_VMON2_UV, "VMON2", "undervoltage", 
+>> REGULATOR_EVENT_UNDER_VOLTAGE },
+>> +    { TPS6594_IRQ_NAME_VMON2_RV, "VMON2", "residual voltage",
+>> +      REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>> +};
+>> +
+>> +struct tps6594_regulator_irq_data {
+>> +    struct device *dev;
+>> +    struct tps6594_regulator_irq_type *type;
+>> +    struct regulator_dev *rdev;
+>> +};
+>> +
+>> +struct tps6594_ext_regulator_irq_data {
+>> +    struct device *dev;
+>> +    struct tps6594_regulator_irq_type *type;
+>> +};
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(tps6594_regulator_irq_types); ++i) {
+>> +        irq_type = &tps6594_regulator_irq_types[i];
+>> +
+>> +        irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>> +        if (irq < 0)
+>> +            return -EINVAL;
+>> +
+>> +        irq_data[i].dev = tps->dev;
+>> +        irq_data[i].type = irq_type;
+>> +
+>> +        tps6594_get_rdev_by_name(irq_type->regulator_name, rdevbucktbl,
+>> +                     rdevldotbl, rdev);
+>> +
+>> +        if (rdev < 0) {
+>> +            dev_err(tps->dev, "Failed to get rdev for %s\n",
+>> +                irq_type->regulator_name);
+>> +            return -EINVAL;
+>> +        }
+>> +        irq_data[i].rdev = rdev;
+>> +
+>> +        error = devm_request_threaded_irq(tps->dev, irq, NULL,
+>> +                          tps6594_regulator_irq_handler,
+>> +                          IRQF_ONESHOT,
+>> +                          irq_type->irq_name,
+>> +                          &irq_data[i]);
+>> +        if (error) {
+>> +            dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
+>> +                irq_type->irq_name, irq, error);
+>> +            return error;
+>> +        }
+>> +    }
 > 
-> So... how are you planning to allow compile testing of the driver in
-> any single arch when we get rid of all the arch dependent code? If you
-> make everything dependent on RALINK you cannot.
+> If I read this correctly, you have exact, 1 to 1 mapping from an IRQ to 
+> regulator and event? Maybe you could slightly simplify the driver by 
+> using the devm_regulator_irq_helper() and 
+> regulator_irq_map_event_simple() with it's map-event? And if the 
+> devm_regulator_irq_helper() does not work for you I'll be interested in 
+> hearing if it could be improved.
+> 
+I'll give it a try.
 
-I intend to make it dependent on OF, not RALINK.
-
-Arınç
+Thanks
