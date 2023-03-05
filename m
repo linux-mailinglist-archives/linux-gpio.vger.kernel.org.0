@@ -2,114 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27A026AAF1C
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Mar 2023 11:35:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 894886AB17A
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Mar 2023 18:01:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbjCEKfK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Mar 2023 05:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42896 "EHLO
+        id S229613AbjCERBu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Mar 2023 12:01:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjCEKfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Mar 2023 05:35:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E439125A7;
-        Sun,  5 Mar 2023 02:35:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EBE47B80A4C;
-        Sun,  5 Mar 2023 10:35:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45133C433D2;
-        Sun,  5 Mar 2023 10:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678012503;
-        bh=kkAo0RWQbrnXSYn3lBtTlTDr7m0uhLYL3o/jC1gwPMI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SeXfxStGobQ1hLFDEsNKBdnTkJmIseIFIIVrEdrFb4/drzfNj8nddBwLQ9bDV2yFE
-         qia0LIo6SgIRdwDFNartZ0/N7cCdGu/usWvGlmFM65qCl0tsHyDWMPhZVI/yD4qQOy
-         oC//1TyrSaAxeJgNz1hZj7hrio52NJxWEWMUHuoc1BAssF260SZ7ul/i/bxOx3Im8v
-         bgeBs2aVkaI60fPM5v1lhMRG3nnMzHy1t9QFRwbPzRUHuheuelH7naEUpPbmXoisQv
-         gvxlLVpidNPMX383CY97/RDYIxPgcy3XhB3QR8yjdBiLw58ZnXlwagNRncTlULrq4A
-         ymlcK7T7CWX0g==
-Date:   Sun, 5 Mar 2023 10:34:56 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Ye Xiang <xiang.ye@intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
-        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH 1/5] mfd: Add support for Intel LJCA device
-Message-ID: <20230305103456.GF2574592@google.com>
-References: <20230219183059.1029525-1-xiang.ye@intel.com>
- <20230219183059.1029525-2-xiang.ye@intel.com>
+        with ESMTP id S229563AbjCERBu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Mar 2023 12:01:50 -0500
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE0D14EA9
+        for <linux-gpio@vger.kernel.org>; Sun,  5 Mar 2023 09:01:48 -0800 (PST)
+Received: by mail-qt1-x82a.google.com with SMTP id d7so8240688qtr.12
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Mar 2023 09:01:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678035707;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VD7JJ18qbpCxrbn9PGOqAjymCnI3P0wfCvSjqvqIeqM=;
+        b=eEXjW8G+nV3xMb8Yq16SNLcbHkB54bf6uY8mfS6kWokKqMGRpIRq9Lna16N5OQZV/9
+         I9dH0MIKs6mO+6njcGrlYVpQ5dLG2m9QXW299nY7e8b0ig3W3v55nCwWVjzrAOiR7HrJ
+         ezWVW+yod3LB9sm3rDBMuoNGCynwUtY9cRnNjl6SPDeZV87uLpN+AXc2cCV6u86Fg9/2
+         YktS+xSYx2cemGy0tlR9wm4iUEJz+whW/26n4Kpp1a++DIfxRTdLlI7N5g8rigoD45PP
+         b8qnoCSq8WbigE9f+xN6pRNSHsNEFeTixU6c7Dlc5Omb9JoEPmSwpCeJGDqGQRTza+Sk
+         JGfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678035707;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VD7JJ18qbpCxrbn9PGOqAjymCnI3P0wfCvSjqvqIeqM=;
+        b=bWXrHi72V7ZWKxdp/RLVFlMbDj4BgQ338wThEyFPckm9UNWWkYcDbWTav86jAdPf/D
+         DNDIaVxw9v7ed6KnyzwFS9A44C54hkZ4DB0p1RQiwqLucEiQIW8twaCHa7gChchMXGa0
+         0G6hVG6q5fPuo/y7YBQck8+fSDO77YYohdseF/6TTv784J40kuJ93HrXjwcFFHdue3vo
+         hjMHulamW4o/gYq69QTk+HQQwrAKTYVpPj9eWC0kVIBUxb0fb/EjqYKm7s1DTqXtg+A6
+         TaM3Qinx5Kht4nEEqC5nv97pvMhIOppzMcJFS/+GwhUzg04pbF/LvzsDAo0HHl7jLeMT
+         tU9Q==
+X-Gm-Message-State: AO0yUKUYLHSq7BqKKtUTlRxQgW0NxNJ7e4looh5ywtRKQGYHO3LCAFSX
+        bhNp1+mHYf2KvHatwQPIgc8Xgg==
+X-Google-Smtp-Source: AK7set8zLgDTip7qAPGC9c+Lz/VbeirSKDwP5NTYtUPVz2mt+9UnVj19xeKCr2LoQDjRA0SUYfdXjQ==
+X-Received: by 2002:ac8:7f4f:0:b0:3bd:16cf:2f17 with SMTP id g15-20020ac87f4f000000b003bd16cf2f17mr13769137qtk.53.1678035707583;
+        Sun, 05 Mar 2023 09:01:47 -0800 (PST)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id c6-20020ac81e86000000b003b9bb59543fsm5810423qtm.61.2023.03.05.09.01.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Mar 2023 09:01:46 -0800 (PST)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>,
+        techsupport@winsystems.com, pdemetrotion@winsystems.com,
+        quarium@gmail.com, jhentges@accesio.com, jay.dolan@accesio.com
+Subject: [PATCH v3 0/3] Migrate the PCIe-IDIO-24 and WS16C48 GPIO drivers to the regmap API
+Date:   Sun,  5 Mar 2023 12:01:31 -0500
+Message-Id: <cover.1678034378.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230219183059.1029525-2-xiang.ye@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Feb 2023, Ye Xiang wrote:
+Changes in v3:
+ - Drop map from set_type_config() parameter list; regmap can be passed
+   by irq_drv_data instead
+ - Adjust ws16c48_set_type_config() for parameter list
+ - Add mutex to prevent clobbering the COS_ENABLE register when masking
+   IRQ and setting their type configuration
+Changes in v2:
+ - Simplify PCIe-IDIO-24 register offset defines to remove superfluous
+   arithmetic
+ - Check for NULL pointer after chip->irq_drv_data allocation
+ - Set gpio_regmap drvdata and use gpio_regmap_get_drvdata() to get the
+   regmap in idio_24_reg_map_xlate()
 
-> This patch implements the USB part of Intel USB-I2C/GPIO/SPI adapter
-> device named "La Jolla Cove Adapter" (LJCA).
+The regmap API supports IO port accessors so we can take advantage of
+regmap abstractions rather than handling access to the device registers
+directly in the driver.
 
-The "USB part" should live in drivers/usb.
+A patch to pass irq_drv_data as a parameter for struct regmap_irq_chip
+set_type_config() is included. This is needed by the
+idio_24_set_type_config() and ws16c48_set_type_config() callbacks in
+order to update the type configuration on their respective devices.
 
-You can use MFD to register each of the components, but all of the USB
-functionality needs moving somewhere else.
- 
-> The communication between the various LJCA module drivers and the
-> hardware will be muxed/demuxed by this driver. The sub-module of
-> LJCA can use ljca_transfer() to issue a transfer between host
-> and hardware.
-> 
-> Each sub-module of LJCA device is identified by type field within
-> the LJCA message header.
-> 
-> The minimum code in ASL that covers this board is
-> Scope (\_SB.PCI0.DWC3.RHUB.HS01)
->     {
->         Device (GPIO)
->         {
->             Name (_ADR, Zero)
->             Name (_STA, 0x0F)
->         }
-> 
->         Device (I2C)
->         {
->             Name (_ADR, One)
->             Name (_STA, 0x0F)
->         }
-> 
->         Device (SPI)
->         {
->             Name (_ADR, 0x02)
->             Name (_STA, 0x0F)
->         }
->     }
-> 
-> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
-> ---
->  drivers/mfd/Kconfig      |  13 +
->  drivers/mfd/Makefile     |   1 +
->  drivers/mfd/ljca.c       | 977 +++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/ljca.h |  95 ++++
->  4 files changed, 1086 insertions(+)
->  create mode 100644 drivers/mfd/ljca.c
->  create mode 100644 include/linux/mfd/ljca.h
+A patch to migrate the WS16C48 GPIO driver to the regmap API is included
+in this patchset due to its dependence on the struct regmap_irq_chip
+set_type_config() change.
 
+William Breathitt Gray (3):
+  regmap: Pass irq_drv_data as a parameter for set_type_config()
+  gpio: pcie-idio-24: Migrate to the regmap API
+  gpio: ws16c48: Migrate to the regmap API
+
+ drivers/base/regmap/regmap-irq.c |   8 +-
+ drivers/gpio/Kconfig             |   6 +
+ drivers/gpio/gpio-pcie-idio-24.c | 709 ++++++++++++-------------------
+ drivers/gpio/gpio-ws16c48.c      | 566 +++++++++---------------
+ include/linux/regmap.h           |   6 +-
+ 5 files changed, 496 insertions(+), 799 deletions(-)
+
+
+base-commit: 4827aae061337251bb91801b316157a78b845ec7
 -- 
-Lee Jones [李琼斯]
+2.39.2
+
