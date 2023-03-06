@@ -2,63 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC596AD0D0
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 22:50:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9F766AD109
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 23:04:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229910AbjCFVuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 16:50:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        id S229806AbjCFWEY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 17:04:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbjCFVuy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 16:50:54 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8EB5FE96
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 13:50:53 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-536be69eadfso210147107b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 13:50:53 -0800 (PST)
+        with ESMTP id S229651AbjCFWEX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 17:04:23 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9141316314
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 14:04:22 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id y144so9687039yby.12
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 14:04:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678139452;
+        d=linaro.org; s=google; t=1678140262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uc3IcYB9YiiZs744OjWKhhD5khz+I9RY3/JZdELOtAc=;
-        b=GfSSl7PKyDALKbXMWEoM0iAvvcBrYHg3/7bNw085mzOfE5gFyvuLhaIifsn/DFb/Gc
-         JHRy11mfz7B1FsBtU4P5NrCO2EHaHe0g6+0znNtcsHXjiz2vDDggpI40PSOjuuSd1ovn
-         ECvTxoGj/o2mEUz8AVKxM8tZYyAqEdFNX9K4xyfLGKcc7fezVbadnvutOwB4HECqW/m7
-         SrBbAEJOvOA7kAMH0jNyjUdR5b2BAL3HGsppQZJLWamtKUeCEsLYqTGzRZinO7J6pHwY
-         PBHsZXKjY3ueYUwGc9CySwFNARJQnSszj5RPSq5CUZX1bzm6dGh36OEfuVODDs6L4lS0
-         tZsw==
+        bh=cj4SlGol6U5c/Lr/TI0kdwQqKkOnoBxkEowA782E81I=;
+        b=cj7ECO5tujuJz/Nv/pvwK/z+E/6PFURiEjAL8ZP6rwxHBj4TymSexHzYdOgSjbwSDg
+         MwQKGhMdlya1ElMltvorZEfo6ZJ73Ip6mNFYPgFoZG3RBG9n8vd8aO3gFOKxb4hLKtcj
+         5UurvCPm2SDS+D03MpgZtk7gpME+iyTgrrdpbUq4a9UamJ4XMWvLnKuADHOuTqCeur8n
+         pzsgEAn2H6bn9WO7y2PbUC5fQdieXYo9qRfN9qAaGlvD+3LwzrYpu2Anrpzsvin4/kIS
+         bCZtYTtSuMj3T6uNjKtmD1D6ZC3ueRRTkRQsADXbaO5VEWWe1Fb3pChYkPpvHmdgyQqM
+         +WbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678139452;
+        d=1e100.net; s=20210112; t=1678140262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uc3IcYB9YiiZs744OjWKhhD5khz+I9RY3/JZdELOtAc=;
-        b=iGhwAnqJY0RcSowgAkuclx71Dq6+fKiyPvB3a12NyLhvugVbo/N93QZ/193pKD7uaz
-         ruLMwPfsm087pS6zmKQ98JlcsAjYTDeCt5lOVBaAEGtM5hCpzkMk67xRzl/EsqiR2klJ
-         MK6uDp7rgY8j1GVKjku54bLif941zxoDM4hwIdHAQgS63TUPus+bE4tqCrw8hi1Dr5Wr
-         22nz+vmtrXnDi8+1Z9hrm0SedCDRtxOW70iWG9/wSbumBvdPWphLoeWeSbuIs7YHjzka
-         WY4sRoXE3kj86ZMf7O6icpyfZ7SQ5oVmE8FF6ZiapJQTtVgJOwHMaGmRyx7jHHZagt0Y
-         3+sg==
-X-Gm-Message-State: AO0yUKW2SoCkfSq6JvS9pA8s64980ZvV15U0Te8yO/HBXTOI1mR+kwZ0
-        xwZxgFVivqj8XGGBoQetIwLTwDbu6a7prAcDR5aJcw==
-X-Google-Smtp-Source: AK7set/bxbNwlhdYCuHRIIVTQ2GDm/hsJjZCgeENcowq1GuXM044zTbVSxx+PaPuxNEkCK4LKPV78uF315Kv+yo6wgg=
-X-Received: by 2002:a81:b705:0:b0:535:fe26:acc with SMTP id
- v5-20020a81b705000000b00535fe260accmr7736619ywh.10.1678139452312; Mon, 06 Mar
- 2023 13:50:52 -0800 (PST)
+        bh=cj4SlGol6U5c/Lr/TI0kdwQqKkOnoBxkEowA782E81I=;
+        b=g41jFkzXldYf0cWpL11y15E3cO7dzjnI1Ca0jvY9coLxiVezV/ihPwczIm4LX97Mpz
+         WwKo2d8OsueMVCOmUEB7pKYDUrK+QlL3OExFLiMD0+oPSkM5QUn1WAMA/jsf3cUNbcOh
+         oLTUeGaIdK6yJm09xFctzGj2w5LnJfSfQallb3zBPpEMJUzgEAmnqu8i6I3pMvo2jtoe
+         Ylmpfc1aPP3JSM4hTAJjG8bCBk01ZNeNTcHaVTw6dguUlyQwwk1DpYdSPTFppmMU+7tA
+         TahA5M5pQeGE1LvAeJEe9iiqoMp6kzlfpSCOb2MzAEPoVked6PK429ylDMcfwozzgmRL
+         TKoA==
+X-Gm-Message-State: AO0yUKXK1mqg4O3ExxR+xC0Gu/W4ywo1EtExCm7HWV7yisNERC9wdIEx
+        sUcVZbsxD+T8j8VCCiwGPQKaH7g8OYvwz7gdZETfXw==
+X-Google-Smtp-Source: AK7set+wFCsgXgUYIDGEpMHMB73UyMnPBcZS5Za+NjqsbNmPAPmuIolhDFJR/AUEXYiry/T4wHPpmiOkMAbODo6SuV8=
+X-Received: by 2002:a25:9281:0:b0:b0a:7108:71e9 with SMTP id
+ y1-20020a259281000000b00b0a710871e9mr3142078ybl.4.1678140261781; Mon, 06 Mar
+ 2023 14:04:21 -0800 (PST)
 MIME-Version: 1.0
-References: <ZAYCRPsKR8Je6LOW@black.fi.intel.com>
-In-Reply-To: <ZAYCRPsKR8Je6LOW@black.fi.intel.com>
+References: <20230306191535.1917656-1-sean.anderson@seco.com> <20230306191535.1917656-4-sean.anderson@seco.com>
+In-Reply-To: <20230306191535.1917656-4-sean.anderson@seco.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 22:50:40 +0100
-Message-ID: <CACRpkdY3pCu6gZ-kA8uHAcCBpx_0AKwVLp+UyYO0dnWdt+fZKw@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 6.3-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
+Date:   Mon, 6 Mar 2023 23:04:10 +0100
+Message-ID: <CACRpkdZ-adsE1siz+MKvewNPoBLfwqhT_EjwDue3N9K9n0ET3A@mail.gmail.com>
+Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,22 +80,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 6, 2023 at 4:14=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi Sean,
 
-> Hi Linux GPIO maintainers et al.,
+thanks for doing this. I never got around to because time.
+
+On Mon, Mar 6, 2023 at 8:16=E2=80=AFPM Sean Anderson <sean.anderson@seco.co=
+m> wrote:
+
+> This is a generic binding for simple MMIO GPIO controllers. Although we
+> have a single driver for these controllers, they were previously spread
+> over several files. Consolidate them. The register descriptions are
+> adapted from the comments in the source. There is no set order for the
+> registers, so I have not specified one.
 >
-> Combined series to clean up headers in the GPIO library and drivers.
-> Along with it, drop a few unused legacy APIs.
->
-> This tag is immutable, enjoy!
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+(...)
 
-Thanks for coordinating and getting this sorted and tested Andy, perfect
-job as always!
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm6345-gpio # Broadcom BCM6345 GPIO controller
+> +      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO con=
+troller
+> +      - ni,169445-nand-gpio # National Instruments 169445 GPIO NAND cont=
+roller
 
-> intel-gpio for v6.3-1
+I think you can inline description: statements in the enum instead of
+the # hash comments, however IIRC you have to use oneOf and
+const: to do it, like I do in
+Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma340.yaml
+but don't overinvest in this if it is cumbersome.
 
-But I think you mean it for v6.4?
+Either way:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
