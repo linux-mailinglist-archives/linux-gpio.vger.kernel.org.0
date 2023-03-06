@@ -2,147 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 002536AC084
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 14:14:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCC386AC0B0
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 14:21:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbjCFNO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 08:14:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52300 "EHLO
+        id S230114AbjCFNVj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 08:21:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjCFNO5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 08:14:57 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0DBE2DE4A
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 05:14:15 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id n18so8003678ybm.10
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 05:14:15 -0800 (PST)
+        with ESMTP id S229619AbjCFNVi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 08:21:38 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4382D2E0FB
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 05:21:08 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id k23so8018333ybk.13
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 05:21:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678108455;
+        d=linaro.org; s=google; t=1678108867;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sjrCU8dfwt2r52mtNocw9w9eS+r3p5I80G2XWIYONwo=;
-        b=imkXfalDXcbd10QyjB+ndurA7z/hros2mKvpPj+lajBxpK6l2mtOWPDMjulcfDSG89
-         crCR8HVY6dBSwt7NVI3bOt+C2Sieo7BRVTCr4+H3hKkjNf3S6ln9WStozd7Kuv1oNJhe
-         N+THPGLK9MWrG9CeSWXXIJxfW2pwgeJNBDIopflzJJJlj6OoubbnBHQ8nEba/EeI76dZ
-         V2eaEoPOTKjg5UFYk2KFzJPDnpdauXGNAeJsSXeW5i045uPT+5Mix3RIqc1v55+LDY7H
-         86RIM/qNIfL1v92hDWXybUJlTfaI17VDaUTlz0ODnx/fc8sIbJdsULEqZM0cuR994xc+
-         wUDg==
+        bh=zG8PAsk5iQpv4ooSAO30iwBH3h8edixexdethfVkxcw=;
+        b=Q9jQcBLYmgbMH/VoiFAQ4x7ARre4GTiZx6sBeohZ/lI/912p1ak6YCLj4e2GWZUB8j
+         sEq+L5afWSj/RYULQSXz6b+o2JnXBeckQbgZX9jdT+EnRUky6uOiXZ/o1Dfb6YMC7e3n
+         Xz/oJHcdb+wf5vKSEgsv2IuD5DEwK4kIGLMTlFEM9N1qSGMg2rK2PpSCYfJXRCirpmyR
+         rwtFtlx2Gmy4xe6kqLocmvhRg2PAIvna/AXd8G/NQgBFEXdz2fLdxWqALC6DYLSNKqnV
+         lZV8wMb7qpk9UhlpTWb93avamCcZnPvkITNE3WnUvnTqRJ2iEc8alx6pHdZfGH6iXLio
+         QOug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678108455;
+        d=1e100.net; s=20210112; t=1678108867;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sjrCU8dfwt2r52mtNocw9w9eS+r3p5I80G2XWIYONwo=;
-        b=0BThyFShfKIoS4MRbjwy1hN8PdGILNCa34iW81A8kKfupR3ZZZQGC2PmYaKZbK56AI
-         RowYhLC2lkiHp6cC/2kqcSCj7dTD5ZuoJS1ebYWDdQ7DuGRK/aF+GliD8aJllMHpa+QT
-         4T3uHKlInZQJbKCjM62LR+YeurbDbxeub5i0LFL2dl+1qjwx0mhaiJZ9M2EPdQy8hR5c
-         rYcZI3jUV2iwsn2L79T45PgqX7bWulcISglDT0ihqR2gzZZM9PHJMyI5KiL0Wo7CKwRX
-         zXIJ5XQ/VGg8fF+slIevoVcRvK/fU2cFDuBo6ETIlzFE2c0nJoXt220yI6ZIhDgh/672
-         omdQ==
-X-Gm-Message-State: AO0yUKWYObiriVQ82f3TdqwouB7AsLx6z7syGpZz8P2LqrJ3BJejzpWL
-        l7lTdBNVPwbAkSt08fpq+63tcqoS7kIHKkZp8aI1lg==
-X-Google-Smtp-Source: AK7set/9eXofjnPoXZfw7UlW58CMp0dIpumH5qKagGWd2A1jVBQssoZ5W4hJK0gzmJ5RZgIOkmp/e1aK3WLMpy2vXoE=
-X-Received: by 2002:a5b:b84:0:b0:ab8:1ed9:cfd2 with SMTP id
- l4-20020a5b0b84000000b00ab81ed9cfd2mr6441002ybq.5.1678108455003; Mon, 06 Mar
- 2023 05:14:15 -0800 (PST)
+        bh=zG8PAsk5iQpv4ooSAO30iwBH3h8edixexdethfVkxcw=;
+        b=4hYI2k770dIRGeAtYE02DMHqUXyvCrbHqFazs0gm15SRKr6n8JPCX2u23ky9kK6RIU
+         DbfOYhiEO7SRSYzN7fUb+LVqYGrLIr+ieO67ot3JTfuI1iOt5m7TwnnA72cV3DoZjsR/
+         ultdTN4XQpZ5mNYpDrv4X3oUju3Lgr+07fikpIinrKATxrWbnklvVB2UzIkeIlShyF6G
+         Qd0fLHXOApk+LyT6vhV0Jg0tM0ucpie9LvZqX9S4Ey0SLOa8pF4CKRzIA/r8zdE0jSSq
+         +PV7b9MRB/5r+EBLc60QR3GnGf6k189pwv65hBKdHcspVTmGK7a/ImvEhgsOYjUsn4qr
+         hXLw==
+X-Gm-Message-State: AO0yUKVK4te9ehaDd5Il6AaDvYDAk83XAKwfBpIZM2yOmdlD4WqdZneB
+        TQcsyue7sNVS+5dz9ZCe1wOlN6913pivkvkaBEEYTA==
+X-Google-Smtp-Source: AK7set9A6CQZnT/dfz7U4hlA9VvtXvYSBqDcRDzjO5o9BsU1ZkSjNPqi6wVSVWLnvQZXhEVVQs/0dRAlC/m4WrS4XoA=
+X-Received: by 2002:a25:9281:0:b0:b0a:7108:71e9 with SMTP id
+ y1-20020a259281000000b00b0a710871e9mr2231178ybl.4.1678108867432; Mon, 06 Mar
+ 2023 05:21:07 -0800 (PST)
 MIME-Version: 1.0
-References: <3eeaa940-9d40-5e33-bc36-c9b0449ded9f@gmail.com> <774d712d-bcdf-677a-2d9c-a49ed829e965@gmail.com>
-In-Reply-To: <774d712d-bcdf-677a-2d9c-a49ed829e965@gmail.com>
+References: <20230216-gpio-at91-immutable-v1-0-44f52f148ab9@kernel.org> <20230216-gpio-at91-immutable-v1-1-44f52f148ab9@kernel.org>
+In-Reply-To: <20230216-gpio-at91-immutable-v1-1-44f52f148ab9@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 14:14:03 +0100
-Message-ID: <CACRpkdbkKgPnkop5V0Diw5goZ9Km4mHXD7=7sb_Nj8k1UtMTvA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] dt-bindings: gpio: rockchip,gpio-bank: add unique
- hardware GPIO ID
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 6 Mar 2023 14:20:56 +0100
+Message-ID: <CACRpkdbeVw1vBikYi3RimOO8K-KKLOpO=9O_yZFBt4oORi=Wgg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: at91: Make the irqchip immutable
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 23, 2023 at 8:46 PM Johan Jonker <jbx6244@gmail.com> wrote:
+On Thu, Feb 16, 2023 at 4:49 PM Mark Brown <broonie@kernel.org> wrote:
 
-> Add a unique hardware GPIO ID to the Rockchip GPIO nodes with
-> the "rockchip,gpio-controller" property to be independent from aliases
-> and probe order. "gpio-ranges" can't be used for that, because there is
-> no semantic restrictions on how they are set up.
+> To help gpiolib not fiddle around with the internals of the irqchip
+> flag the chip as immutable, adding the calls into the gpiolib core
+> required to do so.
 >
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->
-> See discussion:
-> https://lore.kernel.org/u-boot/CACRpkdZx8EaSFLeh4vruRsdC+Sx_ieBiKmuE7t37zhiYqtS3WQ@mail.gmail.com/
-> ---
->  .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml        | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> index 2e9a5179c..39ac41e9d 100644
-> --- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> @@ -52,6 +52,12 @@ properties:
->
->    gpio-line-names: true
->
-> +  rockchip,gpio-controller:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 8
-> +    description:
-> +      Unique hardware GPIO ID.
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-So we need to discuss this with the Device Tree people because if this is needed
-it need to be motivated in terms of "any operating system needs this".
+1) I'm impressed that you're using AT91 hardware
 
-Very similar precedents exist:
-
-pinctrl/renesas,rzg2l-poeg.yaml
-
-  renesas,poeg-id:
-    $ref: /schemas/types.yaml#/definitions/uint32
-    enum: [ 0, 1, 2, 3 ]
-    description: |
-      POEG group index. Valid values are:
-        <0> : POEG group A
-        <1> : POEG group B
-        <2> : POEG group C
-        <3> : POEG group D
-
-pinctrl/st,stm32-pinctrl.yaml
-
-      st,bank-name:
-        description:
-          Should be a name string for this bank as specified in the datasheet.
-        $ref: "/schemas/types.yaml#/definitions/string"
-        enum:
-          - GPIOA
-          - GPIOB
-          - GPIOC
-          - GPIOD
-          - GPIOE
-          - GPIOF
-          - GPIOG
-          - GPIOH
-          - GPIOI
-          - GPIOJ
-          - GPIOK
-          - GPIOZ
-
-I don't know how the above properties are used in practice, but any creative
-driver writer can use them exactly as you intend to do with this, so we need to
-figure out if this is something all operating systems actually need or
-whether we
-should let driver authors just keep smuggling it in under the radar as
-is already
-happening.
+2) Can you respin this on top of my pinctrl devel branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+There are some Andy-cleanups already queued for AT91 so I am a bit
+worried of collisions. (If you feel confident they are orthogonal just
+use v6.3-rc1)
 
 Yours,
 Linus Walleij
