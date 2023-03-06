@@ -2,104 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C0C6AC43A
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 16:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 688A26AC41B
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:56:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbjCFPAM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 10:00:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
+        id S230016AbjCFO4j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:56:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjCFPAL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 10:00:11 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC052A9B6;
-        Mon,  6 Mar 2023 07:00:07 -0800 (PST)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3266RFn2000531;
-        Mon, 6 Mar 2023 14:46:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id; s=qcppdkim1;
- bh=5JRGOQbm0JBuLxYt4MzA6HybTg38jSMU6E2GDw++4aI=;
- b=YvcQA/w0B4Eh5GEtqz1bFrzdyRybeccuvt7or/616AUwSXvc/Amkmx7z16nh+ZMEH31j
- ahZKViNqmJuhXjGVofKRGcQ8II/Q4a/UwuBhrCcVd1zjaMsk5J61zjv8+pPoY/IYMfSD
- BLoiELGjaDdL2pelJC4fR1E32upGn5zW2PiOq6V2AQlU9mqrKKsFcB9awm3fOG8/niHi
- IeVIJ25M7TVK9eiXhov3z36vlnxaHDKUbNViO3OOnJ5RnYDS6uGcAiP45OlbN3ezMUOe
- AO8zYMEfqQeUFJiDTFCMAboZ+FkcxU7w1BfXHmUjTo/N4bKlkD5yAdQmSgrAvA302t9B Tw== 
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p417d4y1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 14:46:46 +0000
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 326EkheE017348;
-        Mon, 6 Mar 2023 14:46:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3p4fft5j33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 06 Mar 2023 14:46:43 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 326EfjQG011965;
-        Mon, 6 Mar 2023 14:46:43 GMT
-Received: from mdalam-linux.qualcomm.com (mdalam-linux.qualcomm.com [10.201.2.71])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 326EkhVT017343;
-        Mon, 06 Mar 2023 14:46:43 +0000
-Received: by mdalam-linux.qualcomm.com (Postfix, from userid 466583)
-        id 51EE712010CA; Mon,  6 Mar 2023 20:16:42 +0530 (IST)
-From:   Md Sadre Alam <quic_mdalam@quicinc.com>
-To:     andersson@kernel.org, agross@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     quic_sjaganat@quicinc.com, quic_srichara@quicinc.com,
-        quic_varada@quicinc.com, quic_mdalam@quicinc.com
-Subject: [PATCH 4/5] pinctrl: qcom: Use devm_platform_get_and_ioremap_resource()
-Date:   Mon,  6 Mar 2023 20:16:41 +0530
-Message-Id: <20230306144641.21955-1-quic_mdalam@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: IYc9OB0druSbGCCo8z-rf0Daqc6MsuQj
-X-Proofpoint-ORIG-GUID: IYc9OB0druSbGCCo8z-rf0Daqc6MsuQj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-06_08,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0 mlxlogscore=656
- phishscore=0 clxscore=1011 adultscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303060130
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S230085AbjCFO4i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:56:38 -0500
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75956CA29;
+        Mon,  6 Mar 2023 06:56:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1678114559; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=msY3Rd6XS3xqaxJl4LGanNjzLlMn4D8qSKys/ZRSpHDX9wFeRnbb2SWGgB1VYyQmaFcq+xB13R8jkUAiwHgQ+g5I0/T+ib1w2bUiMIwNwCxM8pOehbDfH7Mfym5+yPm8Mto8OoBxubperIwcEpq9oSgmIDpcxx/MyshGz2JZY3I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1678114559; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=9nd+k8XAgPSgixGUgbvKDnLLladecVQNt6nXtFJIVZE=; 
+        b=kOGm43Rs2U1fNoz+m4m2WUtxQVDAT0YRuzmw8Owd9FW1Wnyo6hAL8bW5kaoAIwtMLDZ0bjasdubyK6UknMqw2WvTkM7BIlwlL3ECKT7HAQ/bUJMw4gHhF2uAb7N0I0G8FAM95sW7Me1grGlJErpLHA6cTJqwTVRzqJdG3652LcY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1678114559;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=9nd+k8XAgPSgixGUgbvKDnLLladecVQNt6nXtFJIVZE=;
+        b=VA12CC+3jMsU/u8aqp6hpuRoil8nuXF/2ajC2F1arRIzefc4vtLnfnuLu33Z63Et
+        vbfT1meJmQ2UdQ9qZKlSEb1HishyAySPdOVp/LlxD4VjI7BMeP/qhzXCEBM1HYXlyQM
+        DF9nCGtgVgx1lSgqr/wK2qJUP9eCxho9M4FzsBeA=
+Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
+        with SMTPS id 1678114557969142.92607754783864; Mon, 6 Mar 2023 06:55:57 -0800 (PST)
+Message-ID: <486ebf30-dde3-b77d-c292-ba7605313273@arinc9.com>
+Date:   Mon, 6 Mar 2023 17:55:51 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 00/20] pinctrl: ralink: fix ABI, improve driver, move to
+ mediatek, improve dt-bindings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+References: <20230303002850.51858-1-arinc.unal@arinc9.com>
+ <CACRpkdayVLTT0x6hfnwvL-Atafkj8PRw5uwe7Wic3jtn+X-axA@mail.gmail.com>
+Content-Language: en-US
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <CACRpkdayVLTT0x6hfnwvL-Atafkj8PRw5uwe7Wic3jtn+X-axA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert platform_get_resource(), devm_ioremap_resource() to a single
-call to devm_platform_get_and_ioremap_resource(), as this is exactly
-what this function does.
+On 6.03.2023 16:50, Linus Walleij wrote:
+> On Fri, Mar 3, 2023 at 1:29 AM <arinc9.unal@gmail.com> wrote:
+> 
+>> [PATCH 00/20] pinctrl: ralink: fix ABI, improve driver, move to mediatek, improve dt-bindings
+>>
+>> This is an ambitious effort I've been wanting to do for months.
+> 
+> Good with ambitions :)
+> 
+> As long as Sergio is on board and can test the changes and as long
+> as the DT maintainers do not explicitly disapprove, I'm game to merge
+> this.
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Cheers.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index daeb79a9a602..e25e7b5cdda2 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1480,8 +1480,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
- 				return PTR_ERR(pctrl->regs[i]);
- 		}
- 	} else {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
-+		pctrl->regs[0] = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 		if (IS_ERR(pctrl->regs[0]))
- 			return PTR_ERR(pctrl->regs[0]);
- 
--- 
-2.17.1
+> 
+> I guess you will respin on top of v6.3-rc1 when the first round of
+> non-RFC feedback is collected.
 
+Sure, if it's necessary. Once I get feedback, I'll rebase it to your 
+linusw/linux-pinctrl.git for-next tree, see if it needs manual changes. 
+I'll let you know.
+
+Arınç
