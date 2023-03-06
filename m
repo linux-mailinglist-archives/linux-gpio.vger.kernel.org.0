@@ -2,219 +2,298 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83B326AC49C
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 16:15:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F2C6AC4A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 16:18:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbjCFPPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 10:15:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        id S229838AbjCFPSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 10:18:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230189AbjCFPPU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 10:15:20 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255142B2BD;
-        Mon,  6 Mar 2023 07:15:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678115714; x=1709651714;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=rKQuh9h196n6Xnhs+CHc4rwkxt9Wy3guLd/Pq8bxo4Y=;
-  b=D5I+rtqKXT/WQndEl5iMT32cXX0g6qcPxouXlfMt7Xz60FyUVU1+aIvV
-   gUe82VHoJ4xTdeFnpWvLiSEknUt1XjitufeXICx/1/eLfzvYsmDkiuocb
-   s8Nbh6NU2uPSpzAKPvD3rXT7Ii5xrbacbMxs/bV0ojT+1/tgDCKhTAKWp
-   y9u+1fKzpY7xHIMMYp4NBiAqdR0HwC701t6KJlRtJesTHJNoREIKbGug/
-   jLG+iGlkKRCweZzNrYtYpxyHJqgVvxXe6hPHHTdM3Ro5EEo1p50gznlo5
-   QxIj9r3rnokmCaLvZ91MFRE3Bk9Y+iXssvVALDgKfpRJzsH3BZsWdTWb6
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="323884948"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="323884948"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 07:09:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="740361332"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="740361332"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2023 07:09:13 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D5651143; Mon,  6 Mar 2023 17:09:56 +0200 (EET)
-Date:   Mon, 6 Mar 2023 17:09:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [GIT PULL] intel-gpio for 6.3-1
-Message-ID: <ZAYCRPsKR8Je6LOW@black.fi.intel.com>
+        with ESMTP id S229486AbjCFPSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 10:18:13 -0500
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 10444241C8;
+        Mon,  6 Mar 2023 07:18:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=SHcUp
+        svgcZPe8P352lV4erA+ycpq5uT1Gk16abIeYcY=; b=f5288em6renFj/P7/kPeY
+        0rk1Rge6aFNM7878GwMSrJ21CemN47/si+W+TrFQHEQZv6idNm2Bhjk2qpX2/bJY
+        W6m8vuUb0qWEQPGY88WRCrKqM4wdt7ppKHNcL+Cpn5xeLittc+0KQPiqZ2iSK/Un
+        EllatwV1HhBnlwHS/mVyFk=
+Received: from lizhe.. (unknown [120.245.132.120])
+        by zwqz-smtp-mta-g0-3 (Coremail) with SMTP id _____wAXF7WWAwZkMTVDCQ--.5123S4;
+        Mon, 06 Mar 2023 23:16:19 +0800 (CST)
+From:   Lizhe <sensor1010@163.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, geert+renesas@glider.be,
+        info@metux.net, shc_work@mail.ru, j-keerthy@ti.com,
+        hoan@os.amperecomputing.com, fancer.lancer@gmail.com,
+        orsonzhai@gmail.com, baolin.wang@linux.alibaba.com,
+        zhang.lyra@gmail.com, kaloz@openwrt.org, khalasa@piap.pl,
+        keguang.zhang@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        Lizhe <sensor1010@163.com>
+Subject: [PATCH v1] drivers/gpio: remove redundant platform_set_drvdata()
+Date:   Mon,  6 Mar 2023 23:15:32 +0800
+Message-Id: <20230306151532.23246-1-sensor1010@163.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wAXF7WWAwZkMTVDCQ--.5123S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3XFy7GF1kCw18XF1kAw1kKrg_yoW3tr1UpF
+        4jqFy8Cr1UKF43try7A3WrZa4Yka47ta4jgFy7K395Zr1jqryDXFWrJFZ7Zr98tFWDWr43
+        tFnrKr4Uua1Ivr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pNiiSbUUUUU=
+X-Originating-IP: [120.245.132.120]
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBdAQqq1gi5e7C4gAAsg
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO maintainers et al.,
+remove redundant platform_set_drvdata(),
+Because there is no place to use the platform_get_drvdata
 
-Combined series to clean up headers in the GPIO library and drivers.
-Along with it, drop a few unused legacy APIs.
+Signed-off-by: Lizhe <sensor1010@163.com>
+---
+ drivers/gpio/gpio-74xx-mmio.c  | 2 --
+ drivers/gpio/gpio-aggregator.c | 1 -
+ drivers/gpio/gpio-amd-fch.c    | 2 --
+ drivers/gpio/gpio-clps711x.c   | 1 -
+ drivers/gpio/gpio-davinci.c    | 1 -
+ drivers/gpio/gpio-dwapb.c      | 2 --
+ drivers/gpio/gpio-eic-sprd.c   | 1 -
+ drivers/gpio/gpio-exar.c       | 2 --
+ drivers/gpio/gpio-f7188x.c     | 2 --
+ drivers/gpio/gpio-htc-egpio.c  | 2 --
+ drivers/gpio/gpio-ixp4xx.c     | 1 -
+ drivers/gpio/gpio-janz-ttl.c   | 1 -
+ drivers/gpio/gpio-kempld.c     | 2 --
+ drivers/gpio/gpio-logicvc.c    | 2 --
+ drivers/gpio/gpio-loongson1.c  | 1 -
+ drivers/gpio/gpio-lp3943.c     | 2 --
+ drivers/gpio/gpio-lp873x.c     | 2 --
+ 17 files changed, 27 deletions(-)
 
-This tag is immutable, enjoy!
-
-Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6:
-
-  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.3-1
-
-for you to fetch changes up to 380c7ba3923c6e471aff0f951a6cf42e8dec2c79:
-
-  gpiolib: Clean up headers (2023-03-06 12:33:02 +0200)
-
-----------------------------------------------------------------
-intel-gpio for v6.3-1
-
-* Remove some of the legacy APIs that are not used anymore
-* Clean up headers in the GPIO library and drivers
-
-The following is an automated git shortlog grouped by driver:
-
-aggregator:
- -  Add missing header(s)
-
-ARM:
- -  s3c64xx: Use the right include
- -  orion/gpio: Use the right include
-
-gpiolib:
- -  Clean up headers
- -  Group forward declarations in consumer.h
- -  Deduplicate forward declarations in consumer.h
- -  Drop unused forward declaration from driver.h
- -  split of_mm_gpio_chip out of linux/of_gpio.h
- -  split linux/gpio/driver.h out of linux/gpio.h
- -  remove legacy gpio_export()
- -  remove gpio_set_debounce()
- -  remove asm-generic/gpio.h
- -  coldfire: remove custom asm/gpio.h
- -  remove empty asm/gpio.h files
- -  Make the legacy <linux/gpio.h> consumer-only
-
-hte:
- -  tegra-194: Use proper includes
-
-reg:
- -  Add missing header(s)
-
-regmap:
- -  Add missing header(s)
-
-----------------------------------------------------------------
-Andy Shevchenko (7):
-      gpio: aggregator: Add missing header(s)
-      gpio: reg: Add missing header(s)
-      gpio: regmap: Add missing header(s)
-      gpiolib: Drop unused forward declaration from driver.h
-      gpiolib: Deduplicate forward declarations in consumer.h
-      gpiolib: Group forward declarations in consumer.h
-      gpiolib: Clean up headers
-
-Arnd Bergmann (7):
-      gpiolib: remove empty asm/gpio.h files
-      gpiolib: coldfire: remove custom asm/gpio.h
-      gpiolib: remove asm-generic/gpio.h
-      gpiolib: remove gpio_set_debounce()
-      gpiolib: remove legacy gpio_export()
-      gpiolib: split linux/gpio/driver.h out of linux/gpio.h
-      gpiolib: split of_mm_gpio_chip out of linux/of_gpio.h
-
-Linus Walleij (4):
-      ARM: orion/gpio: Use the right include
-      ARM: s3c64xx: Use the right include
-      hte: tegra-194: Use proper includes
-      gpiolib: Make the legacy <linux/gpio.h> consumer-only
-
- Documentation/admin-guide/gpio/sysfs.rst           |   2 +-
- Documentation/driver-api/gpio/legacy.rst           |  23 ----
- .../translations/zh_CN/driver-api/gpio/legacy.rst  |  20 ---
- Documentation/translations/zh_TW/gpio.txt          |  19 ---
- MAINTAINERS                                        |   1 -
- arch/arm/Kconfig                                   |   1 -
- arch/arm/include/asm/gpio.h                        |  21 ---
- arch/arm/mach-omap1/irq.c                          |   1 +
- arch/arm/mach-omap2/pdata-quirks.c                 |   9 +-
- arch/arm/mach-orion5x/board-rd88f5182.c            |   1 +
- arch/arm/mach-s3c/s3c64xx.c                        |   2 +-
- arch/arm/mach-sa1100/assabet.c                     |   1 +
- arch/arm/plat-orion/gpio.c                         |   5 +-
- arch/m68k/Kconfig.cpu                              |   1 -
- arch/m68k/include/asm/gpio.h                       |  95 -------------
- arch/m68k/include/asm/mcfgpio.h                    |   2 +-
- arch/powerpc/platforms/44x/Kconfig                 |   1 +
- arch/powerpc/platforms/4xx/gpio.c                  |   2 +-
- arch/powerpc/platforms/8xx/Kconfig                 |   1 +
- arch/powerpc/platforms/8xx/cpm1.c                  |   2 +-
- arch/powerpc/platforms/Kconfig                     |   2 +
- arch/powerpc/sysdev/cpm_common.c                   |   2 +-
- arch/sh/Kconfig                                    |   1 -
- arch/sh/boards/board-magicpanelr2.c                |   1 +
- arch/sh/boards/mach-ap325rxa/setup.c               |   7 +-
- arch/sh/include/asm/gpio.h                         |  45 -------
- drivers/gpio/Kconfig                               |  19 +--
- drivers/gpio/TODO                                  |  15 ++-
- drivers/gpio/gpio-aggregator.c                     |   9 +-
- drivers/gpio/gpio-altera.c                         |   2 +-
- drivers/gpio/gpio-davinci.c                        |   2 -
- drivers/gpio/gpio-mm-lantiq.c                      |   2 +-
- drivers/gpio/gpio-mpc5200.c                        |   2 +-
- drivers/gpio/gpio-reg.c                            |  12 +-
- drivers/gpio/gpio-regmap.c                         |  12 +-
- drivers/gpio/gpiolib-acpi.c                        |  10 +-
- drivers/gpio/gpiolib-acpi.h                        |   1 -
- drivers/gpio/gpiolib-of.c                          |   9 +-
- drivers/gpio/gpiolib-of.h                          |   1 -
- drivers/gpio/gpiolib-swnode.c                      |   5 +-
- drivers/gpio/gpiolib-sysfs.c                       |  25 +++-
- drivers/gpio/gpiolib.c                             |   9 +-
- drivers/hte/hte-tegra194-test.c                    |  10 +-
- drivers/input/touchscreen/ads7846.c                |   5 +-
- drivers/media/pci/sta2x11/sta2x11_vip.c            |  10 +-
- drivers/net/ieee802154/ca8210.c                    |   3 +-
- .../net/wireless/broadcom/brcm80211/brcmsmac/led.c |   1 +
- drivers/pinctrl/core.c                             |   1 -
- drivers/soc/fsl/qe/gpio.c                          |   2 +-
- include/asm-generic/gpio.h                         | 147 ---------------------
- include/linux/gpio.h                               | 104 +++++++++------
- include/linux/gpio/consumer.h                      |  24 ++--
- include/linux/gpio/driver.h                        |  31 +++--
- include/linux/gpio/legacy-of-mm-gpiochip.h         |  36 +++++
- include/linux/mfd/ucb1x00.h                        |   1 +
- include/linux/of_gpio.h                            |  21 ---
- 56 files changed, 271 insertions(+), 528 deletions(-)
- delete mode 100644 arch/arm/include/asm/gpio.h
- delete mode 100644 arch/m68k/include/asm/gpio.h
- delete mode 100644 arch/sh/include/asm/gpio.h
- delete mode 100644 include/asm-generic/gpio.h
- create mode 100644 include/linux/gpio/legacy-of-mm-gpiochip.h
-
+diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.c
+index 0464f1ecd20d..c7ac5a9ffb1f 100644
+--- a/drivers/gpio/gpio-74xx-mmio.c
++++ b/drivers/gpio/gpio-74xx-mmio.c
+@@ -135,8 +135,6 @@ static int mmio_74xx_gpio_probe(struct platform_device *pdev)
+ 	priv->gc.ngpio = MMIO_74XX_BIT_CNT(priv->flags);
+ 	priv->gc.owner = THIS_MODULE;
+ 
+-	platform_set_drvdata(pdev, priv);
+-
+ 	return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
+ }
+ 
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 6d17d262ad91..f67d1d46c093 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -495,7 +495,6 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
+ 	if (IS_ERR(fwd))
+ 		return PTR_ERR(fwd);
+ 
+-	platform_set_drvdata(pdev, fwd);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
+index 2a21354ed6a0..8a7f861513eb 100644
+--- a/drivers/gpio/gpio-amd-fch.c
++++ b/drivers/gpio/gpio-amd-fch.c
+@@ -172,8 +172,6 @@ static int amd_fch_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+ 
+-	platform_set_drvdata(pdev, priv);
+-
+ 	return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
+ }
+ 
+diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
+index 75f6f8d4323e..b9ba85ef94b2 100644
+--- a/drivers/gpio/gpio-clps711x.c
++++ b/drivers/gpio/gpio-clps711x.c
+@@ -62,7 +62,6 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
+ 
+ 	gc->base = -1;
+ 	gc->owner = THIS_MODULE;
+-	platform_set_drvdata(pdev, gc);
+ 
+ 	return devm_gpiochip_add_data(&pdev->dev, gc, NULL);
+ }
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 26b1f7465e09..ec619c3fde90 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -266,7 +266,6 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	platform_set_drvdata(pdev, chips);
+ 	ret = davinci_gpio_irq_setup(pdev);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index c22fcaa44a61..8db67674078e 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -734,8 +734,6 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
+ 			return err;
+ 	}
+ 
+-	platform_set_drvdata(pdev, gpio);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index 84352a6f4973..53db88ae2a20 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -653,7 +653,6 @@ static int sprd_eic_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	platform_set_drvdata(pdev, sprd_eic);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index df1bdaae441c..5170fe7599cd 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -217,8 +217,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	platform_set_drvdata(pdev, exar_gpio);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+index 9effa7769bef..5475614c1872 100644
+--- a/drivers/gpio/gpio-f7188x.c
++++ b/drivers/gpio/gpio-f7188x.c
+@@ -499,8 +499,6 @@ static int f7188x_gpio_probe(struct platform_device *pdev)
+ 	}
+ 	data->sio = sio;
+ 
+-	platform_set_drvdata(pdev, data);
+-
+ 	/* For each GPIO bank, register a GPIO chip. */
+ 	for (i = 0; i < data->nr_bank; i++) {
+ 		struct f7188x_gpio_bank *bank = &data->bank[i];
+diff --git a/drivers/gpio/gpio-htc-egpio.c b/drivers/gpio/gpio-htc-egpio.c
+index a40bd56673fe..e38352ee25ac 100644
+--- a/drivers/gpio/gpio-htc-egpio.c
++++ b/drivers/gpio/gpio-htc-egpio.c
+@@ -300,8 +300,6 @@ static int __init egpio_probe(struct platform_device *pdev)
+ 
+ 	ei->reg_mask = (1 << pdata->reg_width) - 1;
+ 
+-	platform_set_drvdata(pdev, ei);
+-
+ 	ei->nchips = pdata->num_chips;
+ 	ei->chip = devm_kcalloc(&pdev->dev,
+ 				ei->nchips, sizeof(struct egpio_chip),
+diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
+index 56656fb519f8..3f59658dd316 100644
+--- a/drivers/gpio/gpio-ixp4xx.c
++++ b/drivers/gpio/gpio-ixp4xx.c
+@@ -287,7 +287,6 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	platform_set_drvdata(pdev, g);
+ 	dev_info(dev, "IXP4 GPIO registered\n");
+ 
+ 	return 0;
+diff --git a/drivers/gpio/gpio-janz-ttl.c b/drivers/gpio/gpio-janz-ttl.c
+index cdf50e4ea165..ea68f49c1824 100644
+--- a/drivers/gpio/gpio-janz-ttl.c
++++ b/drivers/gpio/gpio-janz-ttl.c
+@@ -154,7 +154,6 @@ static int ttl_probe(struct platform_device *pdev)
+ 	if (!mod)
+ 		return -ENOMEM;
+ 
+-	platform_set_drvdata(pdev, mod);
+ 	spin_lock_init(&mod->lock);
+ 
+ 	/* get access to the MODULbus registers for this module */
+diff --git a/drivers/gpio/gpio-kempld.c b/drivers/gpio/gpio-kempld.c
+index 4ea15f08e0f4..2065a8a121b2 100644
+--- a/drivers/gpio/gpio-kempld.c
++++ b/drivers/gpio/gpio-kempld.c
+@@ -151,8 +151,6 @@ static int kempld_gpio_probe(struct platform_device *pdev)
+ 
+ 	gpio->pld = pld;
+ 
+-	platform_set_drvdata(pdev, gpio);
+-
+ 	chip = &gpio->chip;
+ 	chip->label = "gpio-kempld";
+ 	chip->owner = THIS_MODULE;
+diff --git a/drivers/gpio/gpio-logicvc.c b/drivers/gpio/gpio-logicvc.c
+index 992cc958a43f..9b4789deae45 100644
+--- a/drivers/gpio/gpio-logicvc.c
++++ b/drivers/gpio/gpio-logicvc.c
+@@ -139,8 +139,6 @@ static int logicvc_gpio_probe(struct platform_device *pdev)
+ 	logicvc->chip.set = logicvc_gpio_set;
+ 	logicvc->chip.direction_output = logicvc_gpio_direction_output;
+ 
+-	platform_set_drvdata(pdev, logicvc);
+-
+ 	return devm_gpiochip_add_data(dev, &logicvc->chip, logicvc);
+ }
+ 
+diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson1.c
+index 5d90b3bc5a25..0ff4ea7af9c0 100644
+--- a/drivers/gpio/gpio-loongson1.c
++++ b/drivers/gpio/gpio-loongson1.c
+@@ -72,7 +72,6 @@ static int ls1x_gpio_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err;
+ 
+-	platform_set_drvdata(pdev, gc);
+ 	dev_info(dev, "Loongson1 GPIO driver registered\n");
+ 
+ 	return 0;
+diff --git a/drivers/gpio/gpio-lp3943.c b/drivers/gpio/gpio-lp3943.c
+index 79edd5db49d2..8e58242f5123 100644
+--- a/drivers/gpio/gpio-lp3943.c
++++ b/drivers/gpio/gpio-lp3943.c
+@@ -199,8 +199,6 @@ static int lp3943_gpio_probe(struct platform_device *pdev)
+ 	lp3943_gpio->chip = lp3943_gpio_chip;
+ 	lp3943_gpio->chip.parent = &pdev->dev;
+ 
+-	platform_set_drvdata(pdev, lp3943_gpio);
+-
+ 	return devm_gpiochip_add_data(&pdev->dev, &lp3943_gpio->chip,
+ 				      lp3943_gpio);
+ }
+diff --git a/drivers/gpio/gpio-lp873x.c b/drivers/gpio/gpio-lp873x.c
+index 5c79ba1f229c..7427a74ce4e2 100644
+--- a/drivers/gpio/gpio-lp873x.c
++++ b/drivers/gpio/gpio-lp873x.c
+@@ -140,8 +140,6 @@ static int lp873x_gpio_probe(struct platform_device *pdev)
+ 	if (!gpio)
+ 		return -ENOMEM;
+ 
+-	platform_set_drvdata(pdev, gpio);
+-
+ 	gpio->lp873 = dev_get_drvdata(pdev->dev.parent);
+ 	gpio->chip = template_chip;
+ 	gpio->chip.parent = gpio->lp873->dev;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
