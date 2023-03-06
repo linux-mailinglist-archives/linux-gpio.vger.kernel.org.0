@@ -2,77 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B1E6AD2E7
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 00:39:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8436AD30D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 00:54:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjCFXjc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 18:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        id S229754AbjCFXyM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 18:54:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjCFXjb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 18:39:31 -0500
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3142E4B803
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 15:39:30 -0800 (PST)
+        with ESMTP id S229688AbjCFXyL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 18:54:11 -0500
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921D8532BA
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 15:54:10 -0800 (PST)
 Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
-        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-        id 22581700-bc78-11ed-a9de-005056bdf889;
-        Tue, 07 Mar 2023 01:39:28 +0200 (EET)
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id 2f0d44cd-bc7a-11ed-b972-005056bdfda7;
+        Tue, 07 Mar 2023 01:54:08 +0200 (EET)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 7 Mar 2023 01:39:27 +0200
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [DO NOT APPLY PATCH v6 10/13] pinctrl: renesas: rzg2l-poeg:
- output-disable request from GPT when both outputs are low.
-Message-ID: <ZAZ5r619EBCmehiI@surfacebook>
-References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
- <20230306090014.128732-11-biju.das.jz@bp.renesas.com>
+Date:   Tue, 7 Mar 2023 01:54:07 +0200
+To:     Francesco Dolcini <francesco@dolcini.it>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] gpio: fxl6408: add I2C GPIO expander driver
+Message-ID: <ZAZ9H4Eh/TUzuJan@surfacebook>
+References: <20230306083446.41082-1-francesco@dolcini.it>
+ <20230306083446.41082-3-francesco@dolcini.it>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230306090014.128732-11-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20230306083446.41082-3-francesco@dolcini.it>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, Mar 06, 2023 at 09:00:11AM +0000, Biju Das kirjoitti:
-> This patch adds support fpr output-disable requests from GPT, when both
-> outputs are low.
+Mon, Mar 06, 2023 at 09:34:46AM +0100, Francesco Dolcini kirjoitti:
+> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 > 
-> Added sysfs to enable/disable for configuring GPT output disable request
-> when both outputs are low.
+> Support Fairchild (now ON Semiconductor) fxl6408 which has 8 GPIO lines
+> and is controlled by I2C bus.
+
+Is it really GPIO expander and not a (semi-)featured pin control with GPIO
+capability?
+
+Can we have a Datasheet: tag here?
+
+> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
 ...
 
-> +static int rzg2l_poeg_output_disable_both_low(struct rzg2l_poeg_chip *chip,
-> +					      bool enable)
-> +{
-> +	if (enable)
-> +		set_bit(RZG2L_GPT_OABLF, chip->gpt_irq);
-> +	else
-> +		clear_bit(RZG2L_GPT_OABLF, chip->gpt_irq);
+> +	help
+> +	  GPIO driver for Fairchild Semiconductor FXL6408 GPIO expander
 
-JFYI: assign_bit()
+Checkpatch usually complains on the help < 3 lines.
+You may add the module name for M choice.
 
+...
 
-> +	rzg2l_gpt_poeg_disable_req_both_low(chip->gpt_dev, chip->index,
-> +					    test_bit(RZG2L_GPT_OABLF, chip->gpt_irq));
+> + * Author: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+
+> + *
+
+Unneeded blank line.
+
+...
+
+> +#include <linux/gpio.h>
+
+No way. This must not be in any code.
+
+...
+
+> +#include <linux/of_platform.h>
+
+Why?
+For discrete components make sure you have not an OF-centric code.
+
+...
+
+> +static const struct regmap_range rd_range[] = {
+> +	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
+> +	{ FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
+> +	{ FXL6408_REG_INPUT_STATUS, FXL6408_REG_INPUT_STATUS }
+
+In all definitions where the entry is _not_ a terminator, leave the trailing
+comma in place.
+
+> +};
+
+...
+
+> +	};
+
+> +	gpio_config.regmap = devm_regmap_init_i2c(client, &regmap);
+
 > +
-> +	return 0;
-> +}
+
+This blank line is misplaced. Should be before devm_regmap_init_i2c() call.
+
+> +	if (IS_ERR(gpio_config.regmap)) {
+
+> +		dev_err(dev, "failed to allocate register map\n");
+> +		return PTR_ERR(gpio_config.regmap);
+
+	return dev_err_probe();
+
+> +	}
+
+...
+
+> +	/* Disable High-Z of outputs, so that our OUTPUT updates
+> +	 * actually take effect.
+> +	 */
+
+/*
+ * This is correct style for multi-line
+ * comments. Yours needs to be fixed.
+ */
+
+...
+
+> +	ret = regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_Z, 0);
+> +	if (ret) {
+
+> +		dev_err(dev, "failed to write 'output high Z' register\n");
+> +		return ret;
+
+	return dev_err_probe(...);
+
+> +	}
+
+...
+
+> +static const struct i2c_device_id fxl6408_id[] = {
+> +	{ "fxl6408", 0 },
+> +	{ },
+
+But no comma for a terminator entry.
+ 
+> +};
+
+...
+
+> +
+
+Unneeded blank line.
+
+> +module_i2c_driver(fxl6408_driver);
 
 -- 
 With Best Regards,
