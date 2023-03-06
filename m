@@ -2,79 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB30C6ACF26
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 21:28:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D9046ACF8E
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 21:52:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbjCFU2j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 15:28:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43036 "EHLO
+        id S229559AbjCFUwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 15:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbjCFU2f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 15:28:35 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB74038669;
-        Mon,  6 Mar 2023 12:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678134510; x=1709670510;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CA7BTCx5BD3LXUxERremA+1xEefI7Dn8mQX68Jkkois=;
-  b=jh3WDihcvOgc43U67iGS6frgwBEx2YfS/4WWuabLIlkJWljprHh91IQx
-   UgmulqVlbwekvPzWMVQqWob7+ubi/H0y107uxcXL4oTsC1NpxqFjhDVHd
-   kaliLvd+U6jtkWuzU9w8l7JSc3nTsn0bhKRhEDlFTeWH9LoC2pMYXFhLW
-   quPUkLA4uDIW3zIjKISj6BASe1lfnw3YNkUvVnehAqVJ+xsqkTv3RwlwT
-   WSVmSkEz7AQbXTRCi1esZi/6adlRVg/EfLnsDg16k7EtXa1EHH1P/Y1fS
-   qyMzBw5+SFXNetqh6DvSUzcXijq1B6QmipJ87BzgT64XQ1Iz1ykCtUAHx
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="316066542"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="316066542"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 12:28:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="850432582"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="850432582"
-Received: from donaldjo-mobl.amr.corp.intel.com (HELO [10.212.158.155]) ([10.212.158.155])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 12:28:29 -0800
-Message-ID: <29e8ec12-4d16-748c-569a-dba5073e4819@linux.intel.com>
-Date:   Mon, 6 Mar 2023 12:28:29 -0800
+        with ESMTP id S229493AbjCFUwL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 15:52:11 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDE823653;
+        Mon,  6 Mar 2023 12:52:09 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id p6so11944026plf.0;
+        Mon, 06 Mar 2023 12:52:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678135929;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oux/kKp1lM08/7grSN0HZ+znLDUrmAGftfv0brXoKpo=;
+        b=dWF4gRYqHh/tEVbtpDIt+W9gf8vs0vpmqkEL7vgV5h8ShMeeeBg4DOA0W0i7Uw27bC
+         fEf2Lwmy99mkXcmn73y7yx3d4WfSl9zmySPV0R19eyzphnQkN7He+pu27N7EX1Ty+B6B
+         g2hfm0rRk1aUdaZjK8wN/CJLg5PEiANFT1ecUTf3aMAv+mxEvvDKt1npJEmSw1qiLilj
+         rdtQ5ihSPW2hH7xDajrfobWXVZMs3iwwLO5+pOExqhIbGSoD1e5Vpg04/8nkj0ltH6nW
+         1v2F/Pd87PpqVvsP4WH9PQqOqZ/K1KobwyEnqw1oIcAJnQdw8+WkovpEtLR72XacW0HB
+         MAlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678135929;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oux/kKp1lM08/7grSN0HZ+znLDUrmAGftfv0brXoKpo=;
+        b=Y1zcSm3CL0B3FG3WGLrleiR8N2xl0XJ1Vhvbhbf1mMXEuGAppVeUwwR5+fHa+WQRrp
+         ZDlfo+kVvtW2L3kSnPJs+cnjACK+U/cxIzLSitlI+4+/hQhMVKOcPkghifkcbKv998ie
+         UV8i/jSvTwDGqFZ3ZPbQ+vMIn6urLk3NEEHTitlIonC0Aw8DUM2sqAIoI712oh4OEnNv
+         fbeclCbXY2ipHYchAbmScIUlYQ5hyaGWYLzq8CsuZtVIRNIa7JKYhsjgl38BQtS/am/z
+         jiVYpfRb5z9SsrFLRRX2HWUV9DtEYLT7WpWG996onzVMnf3yjMuoaF/VwbMaBQnmUE36
+         q6vw==
+X-Gm-Message-State: AO0yUKX7H/SAkzOOExzBp5h4bHXWt50PNFbJtha0ij7p6DnscpQycvg1
+        7yzbcA9JZPEWIPIwL1ak4qLgubv6oQL953JQ0u0=
+X-Google-Smtp-Source: AK7set+U7+BjxK9GuSOyIzk3Mz6GfIoDtNlvzdJ3Qf8VW2ImDlI8u9ebqH7AKGbq+b723nC8ffejrhUx8OcOTjAw69s=
+X-Received: by 2002:a17:903:31d5:b0:19a:f9d9:28d4 with SMTP id
+ v21-20020a17090331d500b0019af9d928d4mr4768103ple.3.1678135929039; Mon, 06 Mar
+ 2023 12:52:09 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH v1 13/16] gpio: wcove: Utilize helpers from
- string_choices.h
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
+References: <20230306191535.1917656-1-sean.anderson@seco.com> <20230306191535.1917656-4-sean.anderson@seco.com>
+In-Reply-To: <20230306191535.1917656-4-sean.anderson@seco.com>
+From:   Jonas Gorski <jonas.gorski@gmail.com>
+Date:   Mon, 6 Mar 2023 21:51:57 +0100
+Message-ID: <CAOiHx=mcANqHTk9=b0TGHa2rk9nppnKa2EB1v05uHb5jhzoawA@mail.gmail.com>
+Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Nandor Han <nandor.han@ge.com>,
-        Semi Malinen <semi.malinen@ge.com>
-References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
- <20230306195556.55475-14-andriy.shevchenko@linux.intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230306195556.55475-14-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -83,59 +81,38 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 3/6/23 11:55 AM, Andy Shevchenko wrote:
-> There are a few helpers available to convert a boolean variable
-> to the dedicated string literals depending on the application.
-> Use them in the driver.
-> 
-> While at, utilize specifier field for padding the strings where
-> it's required.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Looks good to me.
-
-Acked-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
+On Mon, 6 Mar 2023 at 20:16, Sean Anderson <sean.anderson@seco.com> wrote:
+>
+> This is a generic binding for simple MMIO GPIO controllers. Although we
+> have a single driver for these controllers, they were previously spread
+> over several files. Consolidate them. The register descriptions are
+> adapted from the comments in the source. There is no set order for the
+> registers, so I have not specified one.
+>
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
 > ---
->  drivers/gpio/gpio-wcove.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
-> index c18b6b47384f..8d30fd04dede 100644
-> --- a/drivers/gpio/gpio-wcove.c
-> +++ b/drivers/gpio/gpio-wcove.c
-> @@ -15,6 +15,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/seq_file.h>
-> +#include <linux/string_choices.h>
->  
->  /*
->   * Whiskey Cove PMIC has 13 physical GPIO pins divided into 3 banks:
-> @@ -391,14 +392,14 @@ static void wcove_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->  			break;
->  		}
->  
-> -		seq_printf(s, " gpio-%-2d %s %s %s %s ctlo=%2x,%s %s\n",
-> -			   gpio, ctlo & CTLO_DIR_OUT ? "out" : "in ",
-> -			   ctli & 0x1 ? "hi" : "lo",
-> -			   ctli & CTLI_INTCNT_NE ? "fall" : "    ",
-> -			   ctli & CTLI_INTCNT_PE ? "rise" : "    ",
-> +		seq_printf(s, " gpio-%-2d %-3.3s %-2.2s %-4.4s %-4.4s ctlo=%2x,%-6.6s %s\n",
-> +			   gpio, str_out_in(ctlo & CTLO_DIR_OUT),
-> +			   str_hi_lo(ctli & BIT(0)),
-> +			   ctli & CTLI_INTCNT_NE ? "fall" : "",
-> +			   ctli & CTLI_INTCNT_PE ? "rise" : "",
->  			   ctlo,
-> -			   irq_mask & mask ? "mask  " : "unmask",
-> -			   irq_status & mask ? "pending" : "       ");
-> +			   irq_mask & mask ? "mask" : "unmask",
-> +			   irq_status & mask ? "pending" : "");
->  	}
->  }
->  
+>
+> Changes in v10:
+> - New
+>
+>  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
+>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
+>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
+>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
+>  4 files changed, 137 insertions(+), 91 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+> index 4d69f79df859..e11f4af49c52 100644
+> --- a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+You are (re-)moving the compatible this file is named after, you might
+want to rename the file as well then. Going by age bcm6358 would be
+the next oldest one (bcm6318 would be the newest, despite the lowest
+number).
+
+Regards
+Jonas
