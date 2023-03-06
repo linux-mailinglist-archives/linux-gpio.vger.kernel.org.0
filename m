@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C326AB9DF
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 10:30:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B306ABA15
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 10:39:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbjCFJam (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 04:30:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
+        id S229524AbjCFJjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 04:39:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjCFJal (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 04:30:41 -0500
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C83E4EF3
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 01:30:40 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id l24so5935957uac.12
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 01:30:40 -0800 (PST)
+        with ESMTP id S230058AbjCFJjo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 04:39:44 -0500
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40389211DB
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 01:39:41 -0800 (PST)
+Received: by mail-ua1-x932.google.com with SMTP id v48so5973772uad.6
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 01:39:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678095039;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678095580;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rhyyX7ZWIqaD4XJWfrQEGcT4OPAhV+9M2DUIH01bAjM=;
-        b=BxIY+n3hZJbvFmPAco/8/4pLNRsYc7+UzkR+phx5GzbpAsGxD5K7OgaNt6P1WVoW4c
-         tuuIERHPvirxACNyqAgKRi1L5QiI29VQ0xwtVt+gBCW1JNcDs6CPjgOGor/wmG8oYRJx
-         d/FhsRdzxl1ls6x7HTQ6VptdpEXf82GXmGsFyFV2Zmk1Pqt6xSvI3Ur95y+TwreEwULH
-         jQTdN9VO+MBy3JMmvLh9NtoShS0MYNe3xxRhVpAsP+36I6RAoV5741Y3TeLPKk9jbNJY
-         IKnSsiGPhrHdpVazrnsj2OhIZ6YyCXr9hxbuwtlFZqkzNNwWoJ0sIHRmgOuIminBqOk8
-         qC3w==
+        bh=EG4fYlpMlkVYz3KkfqTU8Qlmp6+wB13r9lUMK+XkXD0=;
+        b=aGmb2xBNNCIunGeDl9p7uscsTgiuO1Q8udjIOerQ5AtqIC/QLR0Wa6xi/zpiP1mfXU
+         841m5SKCVKYvBcOME9xiLpz7wXvqzX+5tDMtIqIp6/yd2QGdmbfkSZ0pp8KHlQptuFMO
+         wjyjkzDX7mpfRrY4xWscFNTnz4Q+Bu1i8H/leRauyP3v5YDCVlc5D7nJe48dvF/bOn4i
+         QzqBukZn5lSAXeW6byC5i7/tTYL16Gvq8443z1U93byxXGKgNfYdWcAz+7tJhp1KQG6/
+         AHyFpe6/P5HJRZ9WBZdwRr3cjqsuzSAIOpXgER9y4ivMhw4ZbiH5I+CKiALPec9YZ+zf
+         ARaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678095039;
+        d=1e100.net; s=20210112; t=1678095580;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rhyyX7ZWIqaD4XJWfrQEGcT4OPAhV+9M2DUIH01bAjM=;
-        b=SZWBlGWVqJy/n9ohSxgr0JjAL/7bp5uPbvXV3KirROVhTS99K05568Bf5mGg1PTwma
-         /oZeYGxFzRZ3BRZWf/W+WJDSKuZUZ4rxlHYO5Nsy8mBxpAioVm/d/fylxbGeDHT0VgF5
-         nj8LCUAUWPpsj7hp5Sxoa/FLM64f3d6Sd3UTRz7DYDTk63RStcjsxBLJ9yF4T5qSi5jS
-         ysYgJeSh9G3IHs7f9pHjT0aOFEm7PQ2Vt+el5DYR7DJjtVkN9emH3nSugrgRUR1aJ5K0
-         I11NNWeOtij3xYrGIFYAsx8WyVGe98v8CNKBCZHLCfTYUzWUaPL5dCmU7Irm/nQE5tAn
-         OwHQ==
-X-Gm-Message-State: AO0yUKW2EEyAagKVkDnceWWsfGOCJsf7NEIkyLPwJd17LeqqToZCYuCg
-        EW4rRpjFQVg//z90Io8x3Y8iOd4f0vDIz2AlkinMBg==
-X-Google-Smtp-Source: AK7set8CMBhXcjtepSzrjBUcNLPuzG9Y+Rwsp/XfbDsh+J892oVqowHZWGfFjH9unnRniQeDPRvXY57hqzaSglYRuis=
-X-Received: by 2002:a1f:4a81:0:b0:410:4a2c:1e9a with SMTP id
- x123-20020a1f4a81000000b004104a2c1e9amr5791396vka.1.1678095039505; Mon, 06
- Mar 2023 01:30:39 -0800 (PST)
+        bh=EG4fYlpMlkVYz3KkfqTU8Qlmp6+wB13r9lUMK+XkXD0=;
+        b=bHTyu1O5/d4vCiRWOSWlF4bI8Sv+K3YtDCTc8gwTRh7vp6nPiuWCcaMIfkeV71WAcG
+         XaH9Jv3gga94ZMzjxg9BJgp4gD2qmuFZGlm7wFNDzhjH5SibXwkAMt+xNrLgmBiZYVOO
+         hzdXU2ZfZT3F1bqBv7588ZhvTKz35LHVAm3EUtGURIsYTpTMPjo6AsiLg61JcuZMsWQR
+         oVr1UR9OCpBYOmEVsebCKkHlWm76kMJ5DFMuzLy8b4U9UdPoyJ5BGDxJOrnSCkZKaoHw
+         y5YbMQl1M4UlMXIFkJUImt3PCzRWyorK4jM85+ne6yEVGeYGi5oqjtjtZPtWnuyKzN/o
+         ztsw==
+X-Gm-Message-State: AO0yUKUi76vbMMOhwqVbWJmw1yKvIPA6j1MrhOJkTbuhY0wS1I/6cRKD
+        3bCkpKqp3vpKw5xu8tEI1upy5zJIXrnqlthi2vYcbA==
+X-Google-Smtp-Source: AK7set9u32uo6jrigMFm0tYwWs6u6fKLZKYVnAgovZrS1Q70HbqXU/8l9eDzZI+y+OWVGtClmC8X+d621sscPTLhmHc=
+X-Received: by 2002:a1f:2dcb:0:b0:401:42e5:6d2e with SMTP id
+ t194-20020a1f2dcb000000b0040142e56d2emr6159927vkt.1.1678095580318; Mon, 06
+ Mar 2023 01:39:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20230302125215.214014-1-keguang.zhang@gmail.com> <20230302125215.214014-3-keguang.zhang@gmail.com>
-In-Reply-To: <20230302125215.214014-3-keguang.zhang@gmail.com>
+References: <20230302125215.214014-1-keguang.zhang@gmail.com> <20230302125215.214014-5-keguang.zhang@gmail.com>
+In-Reply-To: <20230302125215.214014-5-keguang.zhang@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 10:30:28 +0100
-Message-ID: <CAMRc=Me3yVwQm8=CmUVM2gyYnFxntW47-OOPdmq1TzXTJB5ETg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] gpio: loongson1: Use readl() & writel()
+Date:   Mon, 6 Mar 2023 10:39:29 +0100
+Message-ID: <CAMRc=McLt2+NJhmzFRuKF5LWMOqyZa-Y-eH7Ecx2ZiMHsTf1ag@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] gpio: loongson1: Add DT support
 To:     Keguang Zhang <keguang.zhang@gmail.com>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -70,53 +70,75 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 1:52=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail.c=
+On Thu, Mar 2, 2023 at 1:53=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail.c=
 om> wrote:
 >
-> This patch replace __raw_readl() & __raw_writel() with readl() & writel()=
-.
+> This patch adds DT support for Loongson-1 GPIO driver.
 >
-
-Please say WHY you're doing this.
-
-Bart
-
 > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
 > ---
-> V1 -> V2: Split this change to a separate patch
+> V1 -> V2: Let gpiolib parse ngpios property
+>           Remove unnecessary alias id parsing
+>           Remove superfluous initialization done by bgpio_init()
+>           Add MODULE_DEVICE_TABLE()
+>           Other minor fixes
 > ---
->  drivers/gpio/gpio-loongson1.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/gpio/gpio-loongson1.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson1.=
 c
-> index 8862c9ea0d41..b6c11caa3ade 100644
+> index 3ac9e49e7efb..94ac0ccb450f 100644
 > --- a/drivers/gpio/gpio-loongson1.c
 > +++ b/drivers/gpio/gpio-loongson1.c
-> @@ -23,8 +23,8 @@ static int ls1x_gpio_request(struct gpio_chip *gc, unsi=
-gned int offset)
->         unsigned long flags;
+> @@ -68,25 +68,38 @@ static int ls1x_gpio_probe(struct platform_device *pd=
+ev)
+>         ls1x_gc->gc.owner =3D THIS_MODULE;
+>         ls1x_gc->gc.request =3D ls1x_gpio_request;
+>         ls1x_gc->gc.free =3D ls1x_gpio_free;
+> -       ls1x_gc->gc.base =3D pdev->id * 32;
+> +       /*
+> +        * Clear ngpio to let gpiolib get the correct number
+> +        * by reading ngpios property
+> +        */
+> +       ls1x_gc->gc.ngpio =3D 0;
 >
->         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -       __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) | BIT(offset),
-> -                    gpio_reg_base + GPIO_CFG);
-> +       writel(readl(gpio_reg_base + GPIO_CFG) | BIT(offset),
-> +              gpio_reg_base + GPIO_CFG);
->         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+
+Who could have set it before and why would this information need to be
+unconditionally discarded?
+
+Bart
+
+>         ret =3D devm_gpiochip_add_data(dev, &ls1x_gc->gc, ls1x_gc);
+>         if (ret)
+>                 goto err;
+>
+>         platform_set_drvdata(pdev, ls1x_gc);
+> -       dev_info(dev, "Loongson1 GPIO driver registered\n");
+> +
+> +       dev_info(dev, "GPIO controller registered with %d pins\n",
+> +                ls1x_gc->gc.ngpio);
 >
 >         return 0;
-> @@ -35,8 +35,8 @@ static void ls1x_gpio_free(struct gpio_chip *gc, unsign=
-ed int offset)
->         unsigned long flags;
->
->         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -       __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) & ~BIT(offset)=
-,
-> -                    gpio_reg_base + GPIO_CFG);
-> +       writel(readl(gpio_reg_base + GPIO_CFG) & ~BIT(offset),
-> +              gpio_reg_base + GPIO_CFG);
->         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  err:
+> -       dev_err(dev, "failed to register GPIO device\n");
+> +       dev_err(dev, "failed to register GPIO controller\n");
+>         return ret;
 >  }
+>
+> +static const struct of_device_id ls1x_gpio_dt_ids[] =3D {
+> +       { .compatible =3D "loongson,ls1x-gpio" },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ls1x_gpio_dt_ids);
+> +
+>  static struct platform_driver ls1x_gpio_driver =3D {
+>         .probe  =3D ls1x_gpio_probe,
+>         .driver =3D {
+>                 .name   =3D "ls1x-gpio",
+> +               .of_match_table =3D ls1x_gpio_dt_ids,
+>         },
+>  };
 >
 > --
 > 2.34.1
