@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DADC76AC2C9
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:16:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F365B6AC324
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:25:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjCFOQF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 09:16:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46402 "EHLO
+        id S230063AbjCFOZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:25:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjCFOOo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:14:44 -0500
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3011FD2
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 06:12:55 -0800 (PST)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5384ff97993so186553397b3.2
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 06:12:55 -0800 (PST)
+        with ESMTP id S229852AbjCFOYd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:24:33 -0500
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32ECAD02
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 06:23:50 -0800 (PST)
+Received: by mail-qv1-f42.google.com with SMTP id ne1so6667763qvb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 06:23:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678111838;
+        d=linaro.org; s=google; t=1678112487;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fFPV3S+fNPRg5F4+BxgnVsec4VIMQRpi6fgWcdHiVA=;
-        b=FIGf5h3w/Z08HcXuh3X1ZpHZHrFPPW41yGGIFmWyf+Aohi+qnbhHYbiBwbqPGyQBn9
-         NXXqtx1HjjBkgxE5rJKm5VPbdFqmjg0Go3gPxH1GrQgcYKwWxmu3ELxR1K1jmkI7hmiM
-         qhgnQ32O2QZyqap+kNQg+E3+2PdmASMpKke7V7bFtyJ78t7xmrtHX0+UHJFKNTHk6olf
-         sU8hO5smfzr/u+n25yU+8CUEX85DC6SHhqCy2+ijdGO5Gk5f/ksH6Z4g26UrvbSDi38P
-         lZ6HGPMchyt1o6b7gijDWXGKu93xj4/hFm65Ta8rLR1ybK3Xu9mlsHMU6V7E3YoDdXV6
-         3+iA==
+        bh=vHCoqws6nzCwLWKubM4RZxyDqCdsgMa8R2vUKk4gvJw=;
+        b=n6HZz35KMtk+PBNOp4x3JV2cgwYu2jlxfI49aV3oWVOPiqBqoGRixHilDBokyFyWOm
+         5X+7RBdek5X+jhEHpqACbmom20/58ijue+So5bnOjVXoGWG3GiuEvFsCwAlwLTbDqjxS
+         fWsqlyrnGyGqmPV8P2OhRO5tWx/7X+bk0/TWCgD7/MYn2sIr6geOGmXiHxTR2vjbPgUC
+         eO1qUDZjRT+ZFfYeIP7RXEBT8ezyu8rXWn5ye6JGAvFVfF0/shWHAc+UotRGbqwEGiBD
+         pOYRtOhTQ5SsdFwo/L/OOrHYl+54cO02KFSHUm2t7RzlBtyG/xEGdyqqeLmjZ0N3cvH7
+         904A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678111838;
+        d=1e100.net; s=20210112; t=1678112487;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2fFPV3S+fNPRg5F4+BxgnVsec4VIMQRpi6fgWcdHiVA=;
-        b=asMfIgpEjDZ+lFB6esDgIb6tFrFlLf8pFhdjUs8Ba7CCbmG6e8TPVOELrQGNDxAVsS
-         V9OIYCZoNUgLOFdtuoDbkwMXJBNrxB7cOP6Kn+08c7G3FyZnt6k9AIHE9RmTzEP+7stw
-         nafSZaMayz61kb6nDtbYkVDOnBtKTpQhynvGp9HeGb5qGglrlw+XWbUC4OXdvFX2eP51
-         odRQKTRafMw6gFCeX++Cu7mvLCnVYXZsxDK0oODrb5QbxAty33rF9oLecdxX35v0nYf1
-         4QAyes0DNJ+yrdn8BfleVlg60PQGm9G8DZY6LUX+0O+omnYTvwwesPqD7wdG9tQRTE5Z
-         u5dA==
-X-Gm-Message-State: AO0yUKXWLYzZOeRfn7BJKLSFiS1mCSwO+5mDol1AbGpaONTO/NvWKFKs
-        /c5pbRyFsHfGIdBocMKG7CwbLyqON/tQCeDbx0Ui6A==
-X-Google-Smtp-Source: AK7set+L8XveTCLOf7uzdZIqX6Ru0O9dDIwJQAPpsGqfycSP5D3nLqQMy0RuH1oMg349JgrwV1dtktPyLhpIbNIwnno=
-X-Received: by 2002:a81:4317:0:b0:52e:dddf:82b9 with SMTP id
- q23-20020a814317000000b0052edddf82b9mr6925941ywa.10.1678111837757; Mon, 06
- Mar 2023 06:10:37 -0800 (PST)
+        bh=vHCoqws6nzCwLWKubM4RZxyDqCdsgMa8R2vUKk4gvJw=;
+        b=aac6f8Wh+bG1CYIXL0h/NCP9kBoGVaLCob9d8A+3XMtqDtW21GTsV9U4YX9cPjLinl
+         oRd5Pdp5j/+YuDvF48yYNch0ujbZ7WYh+mWcO941+mG766FwOlgDny6gKI4QDWUUFwWf
+         dXQ/wcOF0rUnS4gFLmj9AgTZuLilkxykWqVmPxC+md2Ra6FQQLlY98yt5qKF095g/tor
+         JJIJ0aiB0y4PAFOeyqMGNDrmUDZhwrUvYnuWI+WsfMYDs17ffIBkcEVDFfNc+LwvNUAa
+         lIvBlB9OSN+msF2/T+IUDyx7i8VRZ/1Cy/DuDnuTDhO023BInVSNmSh9Su7Cux6S/mwT
+         ncsQ==
+X-Gm-Message-State: AO0yUKWlDr1oRPLhn2O+EWJqPTOiVbhQTHKH5xqoyKiJcn0n6iR9fYz3
+        Y0+1bcirMwphClRUFztZIkbpYH4+GeMc3+RuCif2FYmtKBhhYW7Q
+X-Google-Smtp-Source: AK7set/St9kZ5LRoOkmLszQTz/sb64Pi3//k5vU4LxkcQwJNZMnCqiqjT/Yiky4obv8UCmxEUiW0O/BaB4kC8/5bkSs=
+X-Received: by 2002:a81:b61a:0:b0:52e:c79a:cda with SMTP id
+ u26-20020a81b61a000000b0052ec79a0cdamr6878682ywh.10.1678111987291; Mon, 06
+ Mar 2023 06:13:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20230224133129.887203-1-eblanc@baylibre.com> <20230224133129.887203-3-eblanc@baylibre.com>
-In-Reply-To: <20230224133129.887203-3-eblanc@baylibre.com>
+References: <cover.1677515341.git.william.gray@linaro.org>
+In-Reply-To: <cover.1677515341.git.william.gray@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 15:10:26 +0100
-Message-ID: <CACRpkdYck+=3sUKQbg2j=KMfv_FEiofFxHpDsXgFo=p2uMYfEQ@mail.gmail.com>
-Subject: Re: [PATCH INTERNAL v1 2/3] pinctrl: tps6594: add for TPS6594 PMIC
-To:     Esteban Blanc <eblanc@baylibre.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jpanis@baylibre.com, jneanne@baylibre.com
+Date:   Mon, 6 Mar 2023 15:12:56 +0100
+Message-ID: <CACRpkdbAMQ0OAMnxuyf6gMFu8qJakmT=WvRzBTXavXFmnJ9ObA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Migrate IDIO-16 GPIO drivers to regmap API
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     brgl@bgdev.pl, broonie@kernel.org,
+        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,65 +67,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Esteban,
+On Mon, Feb 27, 2023 at 5:54 PM William Breathitt Gray
+<william.gray@linaro.org> wrote:
 
-thanks for your patch!
+This looks good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-On Fri, Feb 24, 2023 at 2:31 PM Esteban Blanc <eblanc@baylibre.com> wrote:
-
-> TI TPS6594 PMIC has 11 GPIOs which can be used for different
-> functions
->
-> This add a pinctrl and pinmux drivers in order to use those functions
->
-> Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
-
-> +config PINCTRL_TPS6594
-> +       tristate "Pinctrl and GPIO driver for TI TPS6594 PMIC"
-> +       depends on MFD_TPS6594
-
-I would add:
-
-default MFD_TPS6594
-
-so you always get this as module or built in along with the MFD.
-Otherwise Kconfig gets complicated and tedious for users.
-
-> +       select PINMUX
-> +       select GPIOLIB
-> +       help
-> +         This driver supports the GPIO for the TPS6594 PMICs.
-> +         chip family.
-
-(...)
-> +#define DEBUG
-
-Don't put this in production code.
-
-Look in drivers/pinctrl/Kconfig.
-
-config DEBUG_PINCTRL
-        bool "Debug PINCTRL calls"
-        depends on DEBUG_KERNEL
-        help
-          Say Y here to add some extra checks and diagnostics to PINCTRL calls.
-
-Look in drivers/pinctrl/Makefile:
-
-subdir-ccflags-$(CONFIG_DEBUG_PINCTRL)  += -DDEBUG
-
-Nifty eh? :D
-
-> +static const struct tps6594_pinctrl_function pinctrl_functions[] = {
-(...)
-> +       { "scl_i2c2-cs_spi", TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION,
-> +         (const char *[]){ "GPIO0", "GPIO1" }, 2 },
-
-Ow this is starting to look hairy.
-
-Is there some better way to get here?
-
-Other than this the code looks very nice.
+Bartosz, of you merge this you can drop the corresponding
+patches to immutable irqchip conversion for these chips
+that I will be posting shortly (currently on the build servers).
 
 Yours,
 Linus Walleij
