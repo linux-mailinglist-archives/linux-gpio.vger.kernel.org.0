@@ -2,68 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 227606ABA43
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 10:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48EC76ABA4C
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 10:48:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbjCFJpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 04:45:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
+        id S229883AbjCFJsG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 04:48:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjCFJpm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 04:45:42 -0500
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE2E233E6
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 01:45:37 -0800 (PST)
-Received: by mail-vs1-xe32.google.com with SMTP id f31so8548587vsv.1
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 01:45:37 -0800 (PST)
+        with ESMTP id S229726AbjCFJsF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 04:48:05 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB488BDEA
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 01:48:03 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id f17so5991061uax.7
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 01:48:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678095936;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678096083;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oPVmKfCaANAjZJrIKOr0qCt2jk/eMM7c0eTy1k/k5gg=;
-        b=Qvlq96a6Xt557k3cWIbyTrFocT5TD3kvPiOJEyKsEYXHki/ydXIWb2xmvhOADfHM/a
-         ZoGLvKnYnlyQZpRrx0UYfqDE79QWne7tS+wGjH3fFoDuQ5ZJ5CmkHiATukwxLalT0Ayb
-         PURl0e6yQ9jGHTN4T8gRw9CvaVGYzRx0RQ/z/KrlyH7+U7SDiDcWJgLBWxPbVl2hxLDf
-         +0na7w4aiM1cTDxKYmfybSbOTBA8+6QtHzIroNSoVhdrM5uJIF46wO/tinCezU0lhjGV
-         t0iZs0yjR6dlZXXsi2PKQlvyKqHCDXCXafXatn/PXG68WmipzPRjaDCX1o2yvfD8l3DS
-         YuiA==
+        bh=w8Rl9HyT7TpndADVzqj77QvMSEz2A6z3RnfLp60/OTA=;
+        b=mMbeKf/dd3hiLv5nabQcmzL03ke8mho4TlYvtp6dZsNvOghcZX9aKJ9XRvnOTPRut/
+         7e4rdPNtgcS2erMwo3lZIf1PRzs2Ca32C+Uob0eO0l+VtfWwYdV5pOYMroiy6s056M6e
+         N0Iu6jX712QQ8KIdMJu+0ieGIgiqSJxx6rAnJeYCSLlj64wn8EhImXkbxxwfgyCA8OAH
+         MdKA80HgQypjmvmPLrmHUmYYb0QhVNRhu6AdnXcHFx+rHV8Ve4Xyf30L2GetK6FxZWnr
+         lrIZR3RNvi1Sf9IfgRK1+dikcKV4MZ8K3bG2+IVH85e4ie4o88QdGGMyughTrN6aXrK7
+         q5jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678095936;
+        d=1e100.net; s=20210112; t=1678096083;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oPVmKfCaANAjZJrIKOr0qCt2jk/eMM7c0eTy1k/k5gg=;
-        b=mNs9clwHg1GvvpFLRBjOTJGg7LgXM72Ig7m4Yh7aCd0zfZnLgzoMeFj+kSLT5tAE92
-         iMpzNpSpCOFBUpQas1PLp/yf+hx8mwo6sy13IDYTmVcuQhG4iof66fJvShws5j+FecVw
-         nznZf7/Nw6cYIG+bqFYpvcs+qzlbbkR2yV9iSHnAhuUg8/LNEgeuSDa6F3ZSe4vGIEKX
-         CTkryJhw6VrLqlVTDrs3pCywdQXxdxHRHuWoAdVFtIiSaySFTCtsfQgfRQVbji1x4ktL
-         Z9lJI8MAn7nrMKKd8h9tccyTG5rjk5JH21rynveT9WGQW89q2rqLHskTaog/nePo8BHM
-         v1jA==
-X-Gm-Message-State: AO0yUKWzZGC2UyLpct19Y6lPnFOvESW7o/3P6YFyx8+gqDQSvSKyC5+n
-        a9jB5u2F9FNAC1ten+3Mic4zlQBCIUWhMt1b92eFUw==
-X-Google-Smtp-Source: AK7set/RpdGGWkoX++R1aG1uCQFgLfDv9PvyD88Er+OW9sYyv/vmNBtHI4pf/cR9PFe+u5yoCix2+PbH7+znkii6CIA=
-X-Received: by 2002:a67:fe14:0:b0:412:ba5:8002 with SMTP id
- l20-20020a67fe14000000b004120ba58002mr11209499vsr.1.1678095936307; Mon, 06
- Mar 2023 01:45:36 -0800 (PST)
+        bh=w8Rl9HyT7TpndADVzqj77QvMSEz2A6z3RnfLp60/OTA=;
+        b=0F+sCZ6ETKYkOcrnWV5J8FP5gZTtTg361I44JUAi9OrzHABy7mZ5wM7i2z/LhRuZ14
+         68hj3pABi4hjXPOEyNS5IYYAPRv2kz8YHyoN5dyoSGo21d9EKoVDzqZPjyTGRQT7mDYU
+         PLwcLwSmKVUocMcjkEwxfcjb7SFN69oWEM4F98UG8gbEZuka9YfCDl2LefyU/AMzJt1m
+         O6W48pGwy++3EpsSKT3s1Y+FQceXkzdyxX5fvdW1emFC386bEAeoEojvcSy6df2ZZFM/
+         s8WGJSHJjLX0kx0cabBxkY0/BkD0nh77mqvxh4XuvKOssQnOpeVS8VzX1ui89V0lkhm1
+         4hfw==
+X-Gm-Message-State: AO0yUKXG0za6V1zosqEehwLYGjjns8QdjrY/5YNeC6rgiGBUrNG0SbnT
+        bwWs6Em83dK4DXW12/JAH1ms0Yhw7L3j8pILYIKpvA==
+X-Google-Smtp-Source: AK7set/rBe1gA9kJJoLlrDhasNu5WdztZSp7EzW+PxAmySgwXg12yLzxkUiXD5ZHXa70uMMd/HTAsW/Yme3qGANR1i4=
+X-Received: by 2002:a1f:38d6:0:b0:401:a4bf:210d with SMTP id
+ f205-20020a1f38d6000000b00401a4bf210dmr6260158vka.1.1678096082971; Mon, 06
+ Mar 2023 01:48:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20230302081711.27334-1-zhuyinbo@loongson.cn> <20230302081711.27334-2-zhuyinbo@loongson.cn>
-In-Reply-To: <20230302081711.27334-2-zhuyinbo@loongson.cn>
+References: <20230224150811.80316-1-nick.alcock@oracle.com> <20230224150811.80316-2-nick.alcock@oracle.com>
+In-Reply-To: <20230224150811.80316-2-nick.alcock@oracle.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 10:45:25 +0100
-Message-ID: <CAMRc=MeF8mrmLN3Sr62xFFoauaohrABC5=s622S-vnV8mZduHw@mail.gmail.com>
-Subject: Re: [PATCH v12 2/2] gpio: loongson: add gpio driver support
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn,
-        Hongchen Zhang <zhanghongchen@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>
+Date:   Mon, 6 Mar 2023 10:47:52 +0100
+Message-ID: <CAMRc=Mem2mra+4gUcGCvAhWoFpVwB8qBDZxmtgcfxkZ0-JcMiA@mail.gmail.com>
+Subject: Re: [PATCH 01/27] gpio: remove MODULE_LICENSE in non-modules
+To:     Nick Alcock <nick.alcock@oracle.com>
+Cc:     mcgrof@kernel.org, linux-modules@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,23 +72,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 9:17=E2=80=AFAM Yinbo Zhu <zhuyinbo@loongson.cn> wro=
-te:
+On Fri, Feb 24, 2023 at 4:08=E2=80=AFPM Nick Alcock <nick.alcock@oracle.com=
+> wrote:
 >
-> The Loongson platforms GPIO controller contains 60 GPIO pins in total,
-> 4 of which are dedicated GPIO pins, and the remaining 56 are reused
-> with other functions. Each GPIO can set input/output and has the
-> interrupt capability.
+> Since commit 8b41fc4454e ("kbuild: create modules.builtin without
+> Makefile.modbuiltin or tristate.conf"), MODULE_LICENSE declarations
+> are used to identify modules. As a consequence, uses of the macro
+> in non-modules will cause modprobe to misidentify their containing
+> object file as a module when it is not (false positives), and modprobe
+> might succeed rather than failing with a suitable error message.
 >
-> This driver added support for Loongson GPIO controller and support to
-> use DTS or ACPI to descibe GPIO device resources.
+> So remove it in the files in this commit, none of which can be built as
+> modules.
 >
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Nick Alcock <nick.alcock@oracle.com>
+> Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: linux-modules@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > ---
 
 Applied, thanks!
