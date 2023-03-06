@@ -2,66 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 697FC6AC0B8
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 14:23:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9066AC0E5
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 14:29:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230167AbjCFNXt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 08:23:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        id S230410AbjCFN3L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 08:29:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjCFNXs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 08:23:48 -0500
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E116B28209
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 05:23:46 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id 82so8051806ybn.6
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 05:23:46 -0800 (PST)
+        with ESMTP id S230048AbjCFN3K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 08:29:10 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49728A24A
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 05:29:08 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id i6so8062374ybu.8
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 05:29:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678109026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xvyn9YaeJ86q8W8Lig51PjsTK8zYrWmGcOa1PW4eicM=;
-        b=fx9JPxs8+fzKQ6JqYbK+ifFmBjQ8eiYWeu+QMPOh5aQDwncSjoIKNL+6iwAOjYGL09
-         3Faqia2eMlfEynDpLbJsBSy18Shb+rKJvTtBtUgqrHGWJsxEBFUk5jymRW2ciTwgAkBj
-         Po/2KOc34FC5F1VTHjYFGz/7k77mF4aZk6Xu1s8tuGev7TIh09D/mEHWsAaiA7Wq09Ff
-         tvi4rLXv5h/JsFMe/neIUqta45IBBHusMEqepEMZjXSFb1OGWAJOTjlL6QCtSiCbozNh
-         D//3aNiuN/Ed5uiK2252qkssT63iyt6DfhlB2t6qIaaMPbKb7TJO/3+omybR4yL88MJ/
-         g/Ew==
+        d=linaro.org; s=google; t=1678109347;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wdQ6uUXw6eLlqKNPq8Dwry7lvb1Ttr+GrRVdC8+muhc=;
+        b=l2ZAfX/DEvwxQ2Y8xyQQKr4rCOExDvn8sOpBNCt5+XjYpH0mB1IwSGmmArkULngJme
+         gKXkybkiivT1JpXF6SmaEKUZpD9Zcu4jxcL/oe4mrgpjywjTzaVQFvH7iP1+dXjpnNES
+         MsnXD50DsGXnXbq1kBoSIFTZx1xNSd6BWvbG6OHiqwkraELFxDn6HuLb8sc2Vaa0fJ2C
+         glFElm0T6lcrhpeRzfzpP/Of3PWT0egmhJQ1w9lZtGiKivcWdwdCBAW9k3erryYOFT2U
+         8TRNoZT5mW+P/p1V/B2x8iky/xL5DtD0L6WBiilMuOiJKAY/Me5BM7bRKumyAksmRn4f
+         /3iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678109026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xvyn9YaeJ86q8W8Lig51PjsTK8zYrWmGcOa1PW4eicM=;
-        b=a3erVHXDSlNFgkWMPBgUTn4vXq5vIwe/cXkku9EHPDTDUf8ZYdQzI6xipYZPDoXeFd
-         QFiRXJNIx66174MT1JL/j6ZinSu1DJ3dRvEfF2kYpggJTYRfLwr9NdqbY5XZtxrBVNUr
-         R2tqcrxymDvBbCffC/+MVmQY0VsNSOahRKbSQeYgXzTYFmIITR9YaaTOKNHTJaCNrOfv
-         AqMY7o+ujcdm6MjzhFtMsLk0ImKhXQgWg/0+s3xlvIA1vrzBfjOlumtYQoO/E+GwXwAb
-         mgraZ9mQT17uf6A+OFEB6R6qPJRxCK805ruO9FyQrRfSzhkd/3LbHKCi4L8jfpMpYzA5
-         xOOA==
-X-Gm-Message-State: AO0yUKXzgmkcEFKfZjqftp5M3D1KR4llIO6+w2WkpDx3aOKNALSTtqfb
-        p+9lUTN021hqWCiP0LfsyQ748FZGcV7wqZk6oWgKRw==
-X-Google-Smtp-Source: AK7set9u5szpr+wnH4nFcOvWFTNqyAYPnIW16Yn+p0DCJfxCmYIAe+HSI0DHLu7vDQphHfezI+/du5AHMakyD/+qNYI=
-X-Received: by 2002:a05:6902:4c2:b0:ab8:1ed9:cfd6 with SMTP id
- v2-20020a05690204c200b00ab81ed9cfd6mr6273934ybs.5.1678109026098; Mon, 06 Mar
- 2023 05:23:46 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678109347;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wdQ6uUXw6eLlqKNPq8Dwry7lvb1Ttr+GrRVdC8+muhc=;
+        b=pKU0uhEtmz8jnAXFTHIWSYHY1/O/DzZXQJkUH1Ri7WvllA4kYx43AOkg7hrZiTDTQa
+         b0pGThq7LiBBXS8WzWHTaUYlP7Zvku6TW93/fftyVmIB7cPMG7071CiKbQv4xW+IgQgh
+         w1exmIyd5b6vVzFIKWeSP3Z1hFxg+7wK8grWdEUNkKY52fqBGYtq7nwew8QBoShy/ymB
+         G5BrrBL3ZYzIjYw62VB5/eK/GGNiG7Bngt3Wl2BdRcEaxEnqPr1kJTavCYVl2Gj2zcEQ
+         UtqFx4kbg2+1Qm/IEv6qVYn1LcXm8LcqCvLwUOaY9BSu2/AvXryFNnwP61/iQG0sCXXf
+         NQ3A==
+X-Gm-Message-State: AO0yUKU7AGhm/vXbD3cqXz5dVQg6eE7uIfDQrvwNrhjPkqXXHawdqj0y
+        nrUVlOeyYtAwNC/56lzSLMY2gRE17TBL10y+C105Xg==
+X-Google-Smtp-Source: AK7set+OiQbj6mLBs96xasjZbpT5NcfAb8pHkprzWfrKaEEsFheZ9Lhi42qtELHmboMFGuSw2/wd+NFyZSXiKZJmSfA=
+X-Received: by 2002:a5b:38a:0:b0:ac9:cb97:bd0e with SMTP id
+ k10-20020a5b038a000000b00ac9cb97bd0emr4934384ybp.5.1678109347288; Mon, 06 Mar
+ 2023 05:29:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20230218065108.8958-1-arinc.unal@arinc9.com> <20230218065108.8958-2-arinc.unal@arinc9.com>
-In-Reply-To: <20230218065108.8958-2-arinc.unal@arinc9.com>
+References: <20230220023320.3499-1-clin@suse.com>
+In-Reply-To: <20230220023320.3499-1-clin@suse.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 14:23:34 +0100
-Message-ID: <CACRpkdb5vpTW+1VmYjm_28_rFNPpuD1fANdKXN-WdFiajoe30A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: fix naming inconsistency
-To:     arinc9.unal@gmail.com
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+Date:   Mon, 6 Mar 2023 14:28:56 +0100
+Message-ID: <CACRpkdYknZo3Q7_CeSkOL2XwwAmKERskx24o-toaVy=rs0Yf5Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add pinctrl support for S32 SoC family
+To:     Chester Lin <clin@suse.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, s32@nxp.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Daniel Golle <daniel@makrotopia.org>, erkin.bozoglu@xeront.com
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
+        Matthias Brugger <mbrugger@suse.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -72,17 +74,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 18, 2023 at 7:51 AM <arinc9.unal@gmail.com> wrote:
+On Mon, Feb 20, 2023 at 3:33 AM Chester Lin <clin@suse.com> wrote:
 
-> From: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> Here I want to introduce a new patch series, which aims to support IOMUX
+> functions provided by SIUL2 [System Integration Unit Lite2] on S32 SoCs,
+> such as S32G2. This series is originally from NXP's implementation on
+> nxp-auto-linux repo[1] and it will be required by upstream kernel for
+> supporting a variety of devices on S32 SoCs which need to config PINMUXs,
+> such as PHYs and MAC controllers.
 >
-> Some options include "MediaTek", some "Mediatek". Rename all to "MediaTek=
-"
-> to address the naming inconsistency.
+> Thanks,
+> Chester
 >
-> Signed-off-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> Changes in v5:
+> - dt-bindings: No change
+> - driver:
+>   - Refactor register r/w access based on REGMAP_MMIO and regmap APIs.
+>   - Tag PM functions with '__maybe_unused'.
+>   - Add mask check while parsing pin ID from a pinmux value.
+>   - Simplify s32_pinconf_mscr_* functions.
 
-Patch applied for fixes.
+This looks really good any no more comments arrived, so patches are applied
+for v6.4!
+
+Thanks for your work on this so far Chester! (I suppose there will be
+maintenance
+for this family going forward.)
 
 Yours,
 Linus Walleij
