@@ -2,160 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8436AD30D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 00:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B7E26AD312
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 00:58:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbjCFXyM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 18:54:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
+        id S229743AbjCFX6X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 18:58:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbjCFXyL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 18:54:11 -0500
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921D8532BA
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 15:54:10 -0800 (PST)
+        with ESMTP id S229570AbjCFX6W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 18:58:22 -0500
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7261CCA1E
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 15:58:20 -0800 (PST)
 Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
-        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-        id 2f0d44cd-bc7a-11ed-b972-005056bdfda7;
-        Tue, 07 Mar 2023 01:54:08 +0200 (EET)
+        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+        id c4170a49-bc7a-11ed-a9de-005056bdf889;
+        Tue, 07 Mar 2023 01:58:18 +0200 (EET)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 7 Mar 2023 01:54:07 +0200
-To:     Francesco Dolcini <francesco@dolcini.it>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] gpio: fxl6408: add I2C GPIO expander driver
-Message-ID: <ZAZ9H4Eh/TUzuJan@surfacebook>
-References: <20230306083446.41082-1-francesco@dolcini.it>
- <20230306083446.41082-3-francesco@dolcini.it>
+Date:   Tue, 7 Mar 2023 01:58:17 +0200
+To:     Devi Priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
+        marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org,
+        nfraprado@collabora.com, broonie@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+Subject: Re: [PATCH V8 4/7] pinctrl: qcom: Add IPQ9574 pinctrl driver
+Message-ID: <ZAZ+GeGu8mW1XqpG@surfacebook>
+References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
+ <20230214163116.9924-5-quic_devipriy@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230306083446.41082-3-francesco@dolcini.it>
+In-Reply-To: <20230214163116.9924-5-quic_devipriy@quicinc.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, Mar 06, 2023 at 09:34:46AM +0100, Francesco Dolcini kirjoitti:
-> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> 
-> Support Fairchild (now ON Semiconductor) fxl6408 which has 8 GPIO lines
-> and is controlled by I2C bus.
-
-Is it really GPIO expander and not a (semi-)featured pin control with GPIO
-capability?
-
-Can we have a Datasheet: tag here?
-
-> Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Tue, Feb 14, 2023 at 10:01:13PM +0530, Devi Priya kirjoitti:
+> Add pinctrl definitions for the TLMM of IPQ9574
 
 ...
 
-> +	help
-> +	  GPIO driver for Fairchild Semiconductor FXL6408 GPIO expander
+> +	depends on OF
 
-Checkpatch usually complains on the help < 3 lines.
-You may add the module name for M choice.
+No compile test on non-OF configurations?
 
-...
-
-> + * Author: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-
-> + *
-
-Unneeded blank line.
+> +	depends on ARM64 || COMPILE_TEST
 
 ...
 
-> +#include <linux/gpio.h>
+> +#define FUNCTION(fname)			                \
 
-No way. This must not be in any code.
+PINCTRL_PINFUNCTION() ?
 
-...
-
-> +#include <linux/of_platform.h>
-
-Why?
-For discrete components make sure you have not an OF-centric code.
-
-...
-
-> +static const struct regmap_range rd_range[] = {
-> +	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
-> +	{ FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
-> +	{ FXL6408_REG_INPUT_STATUS, FXL6408_REG_INPUT_STATUS }
-
-In all definitions where the entry is _not_ a terminator, leave the trailing
-comma in place.
-
-> +};
-
-...
-
-> +	};
-
-> +	gpio_config.regmap = devm_regmap_init_i2c(client, &regmap);
-
-> +
-
-This blank line is misplaced. Should be before devm_regmap_init_i2c() call.
-
-> +	if (IS_ERR(gpio_config.regmap)) {
-
-> +		dev_err(dev, "failed to allocate register map\n");
-> +		return PTR_ERR(gpio_config.regmap);
-
-	return dev_err_probe();
-
+> +	[msm_mux_##fname] = {		                \
+> +		.name = #fname,				\
+> +		.groups = fname##_groups,               \
+> +		.ngroups = ARRAY_SIZE(fname##_groups),	\
 > +	}
 
 ...
 
-> +	/* Disable High-Z of outputs, so that our OUTPUT updates
-> +	 * actually take effect.
-> +	 */
+> +#define REG_SIZE 0x1000
+> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
+> +	{					        \
+> +		.name = "gpio" #id,			\
+> +		.pins = gpio##id##_pins,		\
+> +		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
 
-/*
- * This is correct style for multi-line
- * comments. Yours needs to be fixed.
- */
+Can you embed struct pingroup?
 
-...
-
-> +	ret = regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_Z, 0);
-> +	if (ret) {
-
-> +		dev_err(dev, "failed to write 'output high Z' register\n");
-> +		return ret;
-
-	return dev_err_probe(...);
-
+> +		.funcs = (int[]){			\
+> +			msm_mux_gpio, /* gpio mode */	\
+> +			msm_mux_##f1,			\
+> +			msm_mux_##f2,			\
+> +			msm_mux_##f3,			\
+> +			msm_mux_##f4,			\
+> +			msm_mux_##f5,			\
+> +			msm_mux_##f6,			\
+> +			msm_mux_##f7,			\
+> +			msm_mux_##f8,			\
+> +			msm_mux_##f9			\
+> +		},				        \
+> +		.nfuncs = 10,				\
+> +		.ctl_reg = REG_SIZE * id,			\
+> +		.io_reg = 0x4 + REG_SIZE * id,		\
+> +		.intr_cfg_reg = 0x8 + REG_SIZE * id,		\
+> +		.intr_status_reg = 0xc + REG_SIZE * id,	\
+> +		.intr_target_reg = 0x8 + REG_SIZE * id,	\
+> +		.mux_bit = 2,			\
+> +		.pull_bit = 0,			\
+> +		.drv_bit = 6,			\
+> +		.oe_bit = 9,			\
+> +		.in_bit = 0,			\
+> +		.out_bit = 1,			\
+> +		.intr_enable_bit = 0,		\
+> +		.intr_status_bit = 0,		\
+> +		.intr_target_bit = 5,		\
+> +		.intr_target_kpss_val = 3,	\
+> +		.intr_raw_status_bit = 4,	\
+> +		.intr_polarity_bit = 1,		\
+> +		.intr_detection_bit = 2,	\
+> +		.intr_detection_width = 2,	\
 > +	}
 
 ...
 
-> +static const struct i2c_device_id fxl6408_id[] = {
-> +	{ "fxl6408", 0 },
+> +	PINGROUP(62, blsp1_spi, audio_sec, audio_pdm1, audio_sec, pta, prng_rosc2, gcc_plltest,
+> +		 _, _),
+
+Can be one line.
+
+...
+
+> +static const struct of_device_id ipq9574_pinctrl_of_match[] = {
+> +	{ .compatible = "qcom,ipq9574-tlmm", },
+
 > +	{ },
 
-But no comma for a terminator entry.
- 
+No comma for terminator line.
+
 > +};
 
-...
-
-> +
-
-Unneeded blank line.
-
-> +module_i2c_driver(fxl6408_driver);
+No MODULE_DEVICE_TABLE()?
 
 -- 
 With Best Regards,
