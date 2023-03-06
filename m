@@ -2,116 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9F766AD109
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 23:04:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 555E96AD12F
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 23:09:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjCFWEY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 17:04:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        id S229890AbjCFWJa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 17:09:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbjCFWEX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 17:04:23 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9141316314
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 14:04:22 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id y144so9687039yby.12
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 14:04:22 -0800 (PST)
+        with ESMTP id S229840AbjCFWJ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 17:09:29 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FCB39CF6
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 14:09:27 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id k199so9745073ybf.4
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 14:09:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678140262;
+        d=linaro.org; s=google; t=1678140567;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cj4SlGol6U5c/Lr/TI0kdwQqKkOnoBxkEowA782E81I=;
-        b=cj7ECO5tujuJz/Nv/pvwK/z+E/6PFURiEjAL8ZP6rwxHBj4TymSexHzYdOgSjbwSDg
-         MwQKGhMdlya1ElMltvorZEfo6ZJ73Ip6mNFYPgFoZG3RBG9n8vd8aO3gFOKxb4hLKtcj
-         5UurvCPm2SDS+D03MpgZtk7gpME+iyTgrrdpbUq4a9UamJ4XMWvLnKuADHOuTqCeur8n
-         pzsgEAn2H6bn9WO7y2PbUC5fQdieXYo9qRfN9qAaGlvD+3LwzrYpu2Anrpzsvin4/kIS
-         bCZtYTtSuMj3T6uNjKtmD1D6ZC3ueRRTkRQsADXbaO5VEWWe1Fb3pChYkPpvHmdgyQqM
-         +WbA==
+        bh=5c358ipi4Vt99BrjRiy5z3SaM/LHgeps04nWxxfLfzs=;
+        b=y6IlTFq9wh6AAJI0b2On9RPaIxlkMAom2XGC3qtLKngFcU+K2v1/dUd6PojmMTJka9
+         LpWy+qNud0PFYrKrnd1OA3FhmUdBnOJCNxmWr2EmTVJEPw7sIQS2L0siDGqIV3esrP6G
+         dAS7U14k2PTv/oEJlzzdbfFZvU+JGd/gxmmoLVc55SE6QmKhLZoi5RYpdgWOmO2z8pND
+         y79Eqhdfzs5V+eJOm5j8N47lPfRnamv3m8rqToNX6Gc+AGXVM9d5dLwPe0FnFOU5Z+Gr
+         Ko9Px+2oN8udbhUyRvJ6xv3RbuOsKljw9PCX7RKhDi0KxPrJRoEWWSA2xhzQOJ99+tDp
+         vMwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678140262;
+        d=1e100.net; s=20210112; t=1678140567;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cj4SlGol6U5c/Lr/TI0kdwQqKkOnoBxkEowA782E81I=;
-        b=g41jFkzXldYf0cWpL11y15E3cO7dzjnI1Ca0jvY9coLxiVezV/ihPwczIm4LX97Mpz
-         WwKo2d8OsueMVCOmUEB7pKYDUrK+QlL3OExFLiMD0+oPSkM5QUn1WAMA/jsf3cUNbcOh
-         oLTUeGaIdK6yJm09xFctzGj2w5LnJfSfQallb3zBPpEMJUzgEAmnqu8i6I3pMvo2jtoe
-         Ylmpfc1aPP3JSM4hTAJjG8bCBk01ZNeNTcHaVTw6dguUlyQwwk1DpYdSPTFppmMU+7tA
-         TahA5M5pQeGE1LvAeJEe9iiqoMp6kzlfpSCOb2MzAEPoVked6PK429ylDMcfwozzgmRL
-         TKoA==
-X-Gm-Message-State: AO0yUKXK1mqg4O3ExxR+xC0Gu/W4ywo1EtExCm7HWV7yisNERC9wdIEx
-        sUcVZbsxD+T8j8VCCiwGPQKaH7g8OYvwz7gdZETfXw==
-X-Google-Smtp-Source: AK7set+wFCsgXgUYIDGEpMHMB73UyMnPBcZS5Za+NjqsbNmPAPmuIolhDFJR/AUEXYiry/T4wHPpmiOkMAbODo6SuV8=
-X-Received: by 2002:a25:9281:0:b0:b0a:7108:71e9 with SMTP id
- y1-20020a259281000000b00b0a710871e9mr3142078ybl.4.1678140261781; Mon, 06 Mar
- 2023 14:04:21 -0800 (PST)
+        bh=5c358ipi4Vt99BrjRiy5z3SaM/LHgeps04nWxxfLfzs=;
+        b=fUvpzytBMSR6aXu8yvSgAPQAxP06iw34vc+LtdQrakC1A5ZLIXz1bBL9InMpom8uqY
+         lB4Je65PougoeOveeFt6rKP8FjUO7dK3ZEOxACw9vn55Ryi0TTdqfmoUYnAxYR+4lRYu
+         tT+oF6+wGj35wHI1YmHaQn5/7cDi9TqVa9z7xUe8HQDP8UHujoK5HtN9v8zH728RyGxl
+         yXEpTH79YOtOMZWRQMQdu2+U0HdUwYcDvC9yoZXcYkK98ZbRj4RdhJLSr+cZGsepO0jv
+         sOFf/WjHLPUmyu0QUwBIlR8XtqKR92n0rfiaUc/w0JhkPDM04dVFBjgEaqZaQQK6UJbD
+         wf+g==
+X-Gm-Message-State: AO0yUKXV0lCjftvCWp4kUtOXnJESaPU9dGe/v5NaLBAC1YgeUMlZjpu5
+        P15lJdXvvwT+2Vn3wu/YqJkyZ3pV0nqtYdui45efRw==
+X-Google-Smtp-Source: AK7set/PdFBK9urMpw+5M7Ji1nzK6dx2LJ23tdjkUepZRyWvDmY3aEBF0cZ+iYqMw1+m4OTu85tD91S/epnMzfXpVHM=
+X-Received: by 2002:a5b:b84:0:b0:ab8:1ed9:cfd2 with SMTP id
+ l4-20020a5b0b84000000b00ab81ed9cfd2mr7363696ybq.5.1678140566986; Mon, 06 Mar
+ 2023 14:09:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20230306191535.1917656-1-sean.anderson@seco.com> <20230306191535.1917656-4-sean.anderson@seco.com>
-In-Reply-To: <20230306191535.1917656-4-sean.anderson@seco.com>
+References: <20230303002850.51858-1-arinc.unal@arinc9.com> <CACRpkdayVLTT0x6hfnwvL-Atafkj8PRw5uwe7Wic3jtn+X-axA@mail.gmail.com>
+ <486ebf30-dde3-b77d-c292-ba7605313273@arinc9.com>
+In-Reply-To: <486ebf30-dde3-b77d-c292-ba7605313273@arinc9.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 23:04:10 +0100
-Message-ID: <CACRpkdZ-adsE1siz+MKvewNPoBLfwqhT_EjwDue3N9K9n0ET3A@mail.gmail.com>
-Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
+Date:   Mon, 6 Mar 2023 23:09:15 +0100
+Message-ID: <CACRpkdagmqfrsZtJrWn9h8ZMiJUrsKF1_B4KV7+LhZdc6C7tLA@mail.gmail.com>
+Subject: Re: [PATCH 00/20] pinctrl: ralink: fix ABI, improve driver, move to
+ mediatek, improve dt-bindings
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        linux-gpio@vger.kernel.org
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sean,
+On Mon, Mar 6, 2023 at 3:56=E2=80=AFPM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.una=
+l@arinc9.com> wrote:
 
-thanks for doing this. I never got around to because time.
+> Sure, if it's necessary. Once I get feedback, I'll rebase it to your
+> linusw/linux-pinctrl.git for-next tree, see if it needs manual changes.
+> I'll let you know.
 
-On Mon, Mar 6, 2023 at 8:16=E2=80=AFPM Sean Anderson <sean.anderson@seco.co=
-m> wrote:
+Hm my for-next branch is a mixdown for linux-next so use the branch
+named "devel" instead.
 
-> This is a generic binding for simple MMIO GPIO controllers. Although we
-> have a single driver for these controllers, they were previously spread
-> over several files. Consolidate them. The register descriptions are
-> adapted from the comments in the source. There is no set order for the
-> registers, so I have not specified one.
->
-> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-(...)
+Thanks!
 
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm6345-gpio # Broadcom BCM6345 GPIO controller
-> +      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO con=
-troller
-> +      - ni,169445-nand-gpio # National Instruments 169445 GPIO NAND cont=
-roller
-
-I think you can inline description: statements in the enum instead of
-the # hash comments, however IIRC you have to use oneOf and
-const: to do it, like I do in
-Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma340.yaml
-but don't overinvest in this if it is cumbersome.
-
-Either way:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
 Linus Walleij
