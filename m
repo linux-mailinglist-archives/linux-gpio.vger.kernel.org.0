@@ -2,92 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA4C6AB612
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 06:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C7386AB711
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 08:28:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjCFFkz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 00:40:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44122 "EHLO
+        id S229750AbjCFH2z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 02:28:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjCFFkx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 00:40:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6311A64E;
-        Sun,  5 Mar 2023 21:40:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0A4ABB80C6E;
-        Mon,  6 Mar 2023 05:40:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264E4C433D2;
-        Mon,  6 Mar 2023 05:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678081249;
-        bh=ozxEJ4XFCHc0BADBdwIy4ELSX5qpfo2qbo1MrODvuy8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bHN+kMHiv4Jyy7FXsPSetvL8Vkg+/m76gScZIzvwjPNjP0ox220En3ejMyHiO+hFc
-         6kjMM2s7Cp9EK7OjylRuauBE0GQH6mJS59b7ZL0ffSqHwky0cchlvSfZq8MDm6OiGt
-         vGigdCflbB3O+hNGcHtpvPfI0rPp1qzxz47eFH98=
-Date:   Mon, 6 Mar 2023 06:40:46 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>
-Cc:     Alexandre Mergnat <amergnat@baylibre.com>,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, lee@kernel.org, linus.walleij@linaro.org,
-        matthias.bgg@gmail.com, daniel.lezcano@linaro.org,
-        chunfeng.yun@mediatek.com, angelogioacchino.delregno@collabora.com,
-        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
-        sean.wang@mediatek.com, zhiyong.tao@mediatek.com,
-        khilman@baylibre.com
-Subject: Re: [PATCH v9 9/9] arm64: dts: mediatek: Initial mt8365-evk support
-Message-ID: <ZAV83gLh+qNqrHrg@kroah.com>
-References: <20230125143503.1015424-1-bero@baylibre.com>
- <20230125143503.1015424-10-bero@baylibre.com>
- <8c348b39-67f3-9210-1929-8b2f093be24c@baylibre.com>
- <Y/XenZUmT7Nh2qGP@kroah.com>
- <CAP2ifjPvsvPyF56=YXrc9Ti6ZSLOxEXbMCOP-Qa4ZSempfod=g@mail.gmail.com>
+        with ESMTP id S229744AbjCFH2z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 02:28:55 -0500
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B19F1C593;
+        Sun,  5 Mar 2023 23:28:54 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 61AC58027;
+        Mon,  6 Mar 2023 07:28:53 +0000 (UTC)
+Date:   Mon, 6 Mar 2023 09:28:52 +0200
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, Alban Bedel <albeu@free.fr>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Jay Fang <f.fangjian@huawei.com>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 15/17] gpio: omap: Convert to immutable irq_chip
+Message-ID: <20230306072852.GB7501@atomide.com>
+References: <20230215-immutable-chips-v1-0-51a8f224a5d0@linaro.org>
+ <20230215-immutable-chips-v1-15-51a8f224a5d0@linaro.org>
+ <Y+8xkV5aUrAajLNP@atomide.com>
+ <20230217173108.1448ce92@aktux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP2ifjPvsvPyF56=YXrc9Ti6ZSLOxEXbMCOP-Qa4ZSempfod=g@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230217173108.1448ce92@aktux>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 06:02:03AM +0100, Bernhard Rosenkränzer wrote:
-> Hi,
+* Andreas Kemnade <andreas@kemnade.info> [230217 16:31]:
+> On Fri, 17 Feb 2023 09:49:37 +0200
+> Tony Lindgren <tony@atomide.com> wrote:
 > 
-> On Wed, Feb 22, 2023 at 10:21 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Feb 22, 2023 at 09:17:39AM +0100, Alexandre Mergnat wrote:
-> > > Hi Matthias,
-> > >
-> > > This is a gentle ping to know if you can take this patch please.
-> > > Sorry for the double mail, I screwed up the first send.
-> >
-> > It's the middle of the merge window, we can't take _ANYTHING_ now.
-> > Please wait until after 6.3-rc1 is out.
-> 
-> Now that 6.3-rc1 is out, can we try to get this patch merged? All the
-> i350 driver patches are waiting for this to land.
+> > Hi,
+> > 
+> > * Linus Walleij <linus.walleij@linaro.org> [230216 09:38]:
+> > > Convert the driver to immutable irq-chip with a bit of
+> > > intuition.
+> > > 
+> > > This driver require some special care: .irq_ack() was copied
+> > > from dummy_irq_chip where it was defined as noop. This only
+> > > makes sense if using handle_edge_irq() that will unconditionally
+> > > call .irq_ack() to avoid a crash, but this driver is not ever
+> > > using handle_edge_irq() so just avoid assigning .irq_ack().
+> > > 
+> > > A separate chip had to be created for the non-wakeup instance.  
+> > 
+> > Nice, works for me.
+> > 
+> > BTW, I still see these warnings remaining on boot:
+> > 
+> > gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> > 
+> > Seems like we might be able to get rid of those too now or are
+> > there still some dependencies with /sys/class/gpio for example?
+> > 
+> on what are you testing? on -next? I thought I have fixed theese warning with
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=92bf78b33b0b463b00c6b0203b49aea845daecc8
 
-$ mdfrm -c ~/mail/todo/
-1459 messages in /home/gregkh/mail/todo/
+You're right, sorry looks like I pasted the wrong line from the dmesg
+output :)
 
-Please relax, it's only been out for a few hours, and our review queues
-are large.  To help out, please help review patches from others to
-reduce our load.
+I intended to paste this example instead of the static allocation line:
 
-thanks,
+gpio gpiochip1: (gpio-32-63): not an immutable chip, please consider fixing it!
 
-greg k-h
+Regards,
+
+Tony
