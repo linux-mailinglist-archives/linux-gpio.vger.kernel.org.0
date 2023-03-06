@@ -2,69 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC196ABFBE
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 13:41:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA21E6AC00B
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 14:00:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjCFMlO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 07:41:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        id S229750AbjCFNAH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 08:00:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbjCFMlO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 07:41:14 -0500
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C132B2B2
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 04:41:12 -0800 (PST)
-Received: by mail-qt1-x832.google.com with SMTP id r5so10240310qtp.4
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 04:41:12 -0800 (PST)
+        with ESMTP id S230307AbjCFNAG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 08:00:06 -0500
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD2328849
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 05:00:05 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id bo10so6467197qvb.12
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 05:00:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678106472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6XrdgZjMDlRLFUbyVPxJfBpwx76lgBG7lHXmFXxIIe0=;
-        b=U92togDggQfebFB+oCNSCcXsZbxpGePUFP3ikADRG6yzR7syMch4sYx3BcPbAHkflT
-         XK1Kj+4jKssvq/kJJq1e8naG9O8KHAnyfxBVzOBoFkIpBEWAh9DPnvxr05kI8FLpl0aj
-         kumC2G3oTOFIk7cWg3iIQjO12DUpbeZ27eyh+PD142mAqUYXfI6XQc2bQW16b7Dm6Anl
-         iVr8ApM5YTEDLOSpsYjlxQZKpKvTHphg2oAtc/e1B3uZ5iiD/PjC8O0R6RyChc+SzMqS
-         e4Wfc2RpqIbpxMTo2MpTDso63NBC9hYdfTUUs4kRyuvJG7E97nsjdO5rurLS0Myq7xaF
-         4vvg==
+        d=linaro.org; s=google; t=1678107604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jEHTLMmujJHBFvBaZCO0u2PeOg0NT5TkLoWfy/fOSX0=;
+        b=r3tcugG5pU/ghMBTbRo47hxsGBCaCcDSCOQztrjJNDCuHD49b2qr08Mz4q4Hl3Nazi
+         yuBAsUl5twFUrbhQ+t3Pf6cXke7gksQeAVABTBT2PhJpid62g/cvjto/I65786jmDoL4
+         UjDRHcSNC0x1jJtuX1taptcJkaYjY5Aerg1cl9vt2WZSnb46iKOhYt/695XJmcJnDgbY
+         3Vuww5KqdIx9PIP7gKbZbgyWFfzpNU9W/QsSuQjX8k3QcGQpkQ6s8rgzkCs3M54RurRK
+         mr8wXdX0xgEHo9QwbTQnQ8Z5lC6fg8xDVfz3ZqTt9u7B3OHcAgIzKeJA69GHQS4N9Y99
+         tvkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678106472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6XrdgZjMDlRLFUbyVPxJfBpwx76lgBG7lHXmFXxIIe0=;
-        b=gexVkObqH/CbF+IPQS2dMslo5kkHpyuDVWM1ubkJViuJN9bGwFTIoCx9qLOYRiVqNK
-         mdxh45pLD/Q2ah9+kKPkRPldUej3kQJso3JkNrqZtq2VILPu880+AqgyKuhCnj641D3p
-         dSGgovBb5oKpppGwf4CLOYZilONeDGXdMi627DfPLbiuDPZBGsnyfeW9AAKpVoapj6nE
-         3JpUevKNcCa8T0yn7avi8EAIjar4qunXMdwS6gYhJXN5PJRlPu+2cbGEDOsHduT6iWCr
-         s8M7om0rcRQXRzgcoxnejSUDFACDHAYjwrxoAAoKu9z6y/+1S9HYdEj7Zyc8QOzLOg+b
-         pmTw==
-X-Gm-Message-State: AO0yUKXQ2d80X8YRgWWan4/4KtaqAPVsNZMJkVUyAacp+CIs7Hg4meH+
-        yNjt5+K7rbXdeTTF3isRO0rdFw==
-X-Google-Smtp-Source: AK7set9TfEy2X1DOujpMKIH+igyL2YEO/hoGzriXXAWSRxRsb3UHkcR/L6n7Onm7AHa1lQCQR1vI8g==
-X-Received: by 2002:a05:622a:34b:b0:3b8:6ca4:bb23 with SMTP id r11-20020a05622a034b00b003b86ca4bb23mr15273152qtw.15.1678106471798;
-        Mon, 06 Mar 2023 04:41:11 -0800 (PST)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id l19-20020a05620a211300b007423c122457sm7340219qkl.63.2023.03.06.04.41.10
+        d=1e100.net; s=20210112; t=1678107604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jEHTLMmujJHBFvBaZCO0u2PeOg0NT5TkLoWfy/fOSX0=;
+        b=VzQ8jxPzqcN5KeKYhEtGz0u5Wy4Db5vw2QuD8H9bxutEVs+TOo32XG306MO/wv8Shm
+         ddgBJBj1j2nVRlMQxjIvbn4YHrMCvRlqlENVv5C2Dv7Xnx96Vfu5aPnWtFTgCRB1PSYS
+         9i1cu5Rvlkn+2J+RiL447Y2675KZLKl1ZvoexWxARI1UiuUz6o/plUlATCVJEZjV48lr
+         LPe6tThzUdtduaClQmuYBniKXrwexr8wzYN76EbK7xyFyeg8snQX+MNiUnGZOFdm2PtD
+         8XWvMH4oxmsURSHn0A4+soPxdBdyq2q92M1zxixMsUyfJYnIBVFovEwZQkkMz4db/mR6
+         42yA==
+X-Gm-Message-State: AO0yUKWUHwZXyOX80okdpRVl1BKK8cjgQpF1xbVo3ib/AAH1m5etO9qf
+        6NKpJw6g6Ln778EwBp2tcL2K+w==
+X-Google-Smtp-Source: AK7set99ljkA7CMz7p4udBuSdxVuWUjt5wiCeogATTDEVpN8VO8mU8mnjAA9jiyw6elKiBubljLT2g==
+X-Received: by 2002:a05:6214:300b:b0:573:179:3caf with SMTP id ke11-20020a056214300b00b0057301793cafmr16634281qvb.2.1678107604178;
+        Mon, 06 Mar 2023 05:00:04 -0800 (PST)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id w19-20020ac843d3000000b003bfbf3afe51sm7419187qtn.93.2023.03.06.05.00.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 04:41:11 -0800 (PST)
-Date:   Mon, 6 Mar 2023 07:41:09 -0500
+        Mon, 06 Mar 2023 05:00:03 -0800 (PST)
 From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, techsupport@winsystems.com,
-        stable@vger.kernel.org,
-        Paul Demetrotion <pdemetrotion@winsystems.com>
-Subject: Re: [RESEND] gpio: ws16c48: Fix off-by-one error in WS16C48 resource
- region extent
-Message-ID: <ZAXfZbywWOo2pg4L@fedora>
-References: <20230228081724.94786-1-william.gray@linaro.org>
- <CAMRc=MfD3=ifo9EJf=5_HZKLXnbASi=ehYm=Zs4WQA+YxfffQw@mail.gmail.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, andriy.shevchenko@linux.intel.com,
+        William Breathitt Gray <william.gray@linaro.org>,
+        techsupport@winsystems.com, pdemetrotion@winsystems.com,
+        quarium@gmail.com, jhentges@accesio.com, jay.dolan@accesio.com
+Subject: [PATCH v4 0/3] Migrate the PCIe-IDIO-24 and WS16C48 GPIO drivers to the regmap API
+Date:   Mon,  6 Mar 2023 07:59:50 -0500
+Message-Id: <cover.1678106722.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zqx7Ofl6bIpHu7bU"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfD3=ifo9EJf=5_HZKLXnbASi=ehYm=Zs4WQA+YxfffQw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -74,46 +70,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Changes in v4:
+ - Allocate idio24gpio before using it in idio_24_probe()
+Changes in v3:
+ - Drop map from set_type_config() parameter list; regmap can be passed
+   by irq_drv_data instead
+ - Adjust idio_24_set_type_config() for parameter list
+ - Add mutex to prevent clobbering the COS_ENABLE register when masking
+   IRQ and setting their type configuration
+Changes in v2:
+ - Simplify PCIe-IDIO-24 register offset defines to remove superfluous
+   arithmetic
+ - Check for NULL pointer after chip->irq_drv_data allocation
+ - Set gpio_regmap drvdata and use gpio_regmap_get_drvdata() to get the
+   regmap in idio_24_reg_map_xlate()
 
---zqx7Ofl6bIpHu7bU
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The regmap API supports IO port accessors so we can take advantage of
+regmap abstractions rather than handling access to the device registers
+directly in the driver.
 
-On Mon, Mar 06, 2023 at 10:23:30AM +0100, Bartosz Golaszewski wrote:
-> On Thu, Mar 2, 2023 at 11:30=E2=80=AFPM William Breathitt Gray
-> <william.gray@linaro.org> wrote:
-> >
-> > The WinSystems WS16C48 I/O address region spans offsets 0x0 through 0xA,
-> > which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
-> > correct value of 11 so that access to necessary device registers is
-> > properly requested in the ws16c48_probe() callback by the
-> > devm_request_region() function call.
-> >
-> > Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize register str=
-uctures")
-> > Cc: stable@vger.kernel.org
-> > Cc: Paul Demetrotion <pdemetrotion@winsystems.com>
-> > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> > ---
->=20
-> Why did you need to resend this? Anything changed?
->=20
-> Bart
+A patch to pass irq_drv_data as a parameter for struct regmap_irq_chip
+set_type_config() is included. This is needed by the
+idio_24_set_type_config() and ws16c48_set_type_config() callbacks in
+order to update the type configuration on their respective devices.
 
-No changes in code, just added the stable@ver.kernel.org Cc tag.
+A patch to migrate the WS16C48 GPIO driver to the regmap API is included
+in this series due to its dependence on the struct regmap_irq_chip
+set_type_config() change.
 
-William Breathitt Gray
+William Breathitt Gray (3):
+  regmap: Pass irq_drv_data as a parameter for set_type_config()
+  gpio: pcie-idio-24: Migrate to the regmap API
+  gpio: ws16c48: Migrate to the regmap API
 
---zqx7Ofl6bIpHu7bU
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/base/regmap/regmap-irq.c |   8 +-
+ drivers/gpio/Kconfig             |   6 +
+ drivers/gpio/gpio-pcie-idio-24.c | 710 ++++++++++++-------------------
+ drivers/gpio/gpio-ws16c48.c      | 566 +++++++++---------------
+ include/linux/regmap.h           |   6 +-
+ 5 files changed, 497 insertions(+), 799 deletions(-)
 
------BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAXfZQAKCRC1SFbKvhIj
-K5j3AQCDDi/opSFAVX095eZN7sUZr/Nq6/HOpDiRxrg0Da27EAD+Ir3Vs4hMQ8ik
-dvGD/xKnfiuEDHex5yeQzjHChNUO6Qo=
-=d1q2
------END PGP SIGNATURE-----
+base-commit: 0d8b4049bb4792da225e2c908282bb9ed1024ac7
+-- 
+2.39.2
 
---zqx7Ofl6bIpHu7bU--
