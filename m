@@ -2,67 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C2906AC210
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:00:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94DF56AC220
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbjCFOAt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 09:00:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
+        id S230167AbjCFOD1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:03:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230132AbjCFOAo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:00:44 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877AC303F8
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 06:00:40 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id t4so8138529ybg.11
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 06:00:40 -0800 (PST)
+        with ESMTP id S230153AbjCFODU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:03:20 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A9024133
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 06:03:16 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id t4so8150369ybg.11
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 06:03:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678111240;
+        d=linaro.org; s=google; t=1678111395;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j/Y94Pc8yhv157LBUch/tn3T/6KugP9L4mHMFv2Mi1c=;
-        b=vA6tYOcfyoBCdfKlR/1Lr7HvkVd06OiCVrXU4TOnwFiit65IdM0kFbVBLqZW5cMmK+
-         A5yUU9Mw/tLMUDAf7NRanaVp4fZU9TqqacCQeyq6sJnEI+FMxoGagywCeMfqEPqOeBlu
-         nXZe3GT1ey9hKarOppW/jvJi0wQDqDiDWkgi+zWo3VL53r/o2qQ6XywZjqGNfVs+aziJ
-         vFDiFhoPpunDokD6pdrYjro1heNldIyNfmCy5fkj2rW2gZBBy0mMduKlEM3Hcg2IYroD
-         KAvVMKy94smfbRsD0o8BkZJR9a+/t+J9dmoQ7IUmtTEfx2oHWkOThNqkknbmyZqubsnk
-         Ti0Q==
+        bh=aeI0dDbLr4/ACidaziQGMHF31Y6IixUFDfRpx8Mx/wA=;
+        b=g4AWy5mBa4Piye7zzeONZ/KCD3ABIJhRYxmedSxh+SOWG8tPrZKnzPn/lLYpDfIhaD
+         +sUAU0U/rlcshjFSEpp26n6nW8vup91Mkjt4WNJPHYwJr4x8EVmLHeqR11H9ga1aWwnq
+         m3YG4+uWwrXHJS0uHABvNicPw4rl265oywFUTja+klA7xl4R162QAbB2DYqm3tuTROrw
+         wf5hKoAm1DU4OHhKwn6HDJlUebPM0w96+m34X0T2y3RVzi2+tOu8oATqra9GTriimdQn
+         sXFMjkmAaPZNdLjxiXegWPRmWKPv1Lk531iwBpsI/jYh8DlSN2KNSVmHCzfFla/VYj+N
+         rQJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678111240;
+        d=1e100.net; s=20210112; t=1678111395;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=j/Y94Pc8yhv157LBUch/tn3T/6KugP9L4mHMFv2Mi1c=;
-        b=sOZ14IWhiofrqzhi8PUMGTUWpYPAH4JtzWF0yGAyAp2fi6I1/FchRMFE7RfQaaZj1p
-         krq4dWFvLeRQ5/jREU+84BafM3xzj1182XwGI159rzSo22pua9f56UloE259qGCAPwxP
-         TCo9+lgpvsOSQOEfXB/iuyimPH9uSXN53vjW2p4GP/yq5U3ZNxXy6XvMdN2Qcqz6wrxX
-         nG4KoEH9v8twxorMsK/1S8vH+Y2Uw5dg60kdnDXzcPzbdgxPazjxxO4yzvoLPWbPwlZT
-         cXD8fbbF0og0Wy9asNaZAoepwUip6b9Bz3HprEvLRfhjkzxWuz/MxEfwGv1gjj8lw0zW
-         1leQ==
-X-Gm-Message-State: AO0yUKUkjIHVl2P2PeXODtbL9oT4m78XpE+DmmehRKI8rwSvw1hNkAmy
-        PdRz/w0TrSPsTKyzKqfLLk39wQL4iJrRLfuSvVF45g==
-X-Google-Smtp-Source: AK7set/+qd3FzcDCbbQjlLKSyczCieknA6kNFFX6l4uSmFR+66HJ7iMYS6i/ooDX/uospypKCFmfiNndLJj2B5M0Ve0=
-X-Received: by 2002:a25:8b8f:0:b0:906:307b:1449 with SMTP id
- j15-20020a258b8f000000b00906307b1449mr6437900ybl.5.1678111239717; Mon, 06 Mar
- 2023 06:00:39 -0800 (PST)
+        bh=aeI0dDbLr4/ACidaziQGMHF31Y6IixUFDfRpx8Mx/wA=;
+        b=s9ir5XXpN5MVFJybNcJ9alybr7nhhOApKAwPH4wkxlLMRVYOsF5zGqlx8OHer2Gk2w
+         zC8YX2StAfR9KRzjldBfEa1z2Owu9qmSQIXxMD7crSEOtsC81ccbb9ZR8tEoGPHY6vey
+         RL2evHQa5cTn9klE9YBRBHK+PFt2vcbguj3/0pIfVbp7ZvYKUWjDIDhrYMe+bhRGKadB
+         w9Hw5mfUASTFWu4KMnSVGQh9bpvu7XXYSEOuAu/hPdHNkwOsogo/WEKr1U/sEPGcDfSW
+         kAs9+bEC9VH6XGVlY9belwxWsIfE93EAPHPXZjZ7RkD9NYESkfwV0ZoaE6VaXlMa6s5r
+         dLtQ==
+X-Gm-Message-State: AO0yUKWqCJNdLPmWf0iS+WXyo4LuJLeQ0gL9jSYFhXPio9FDiiJU6/g3
+        HN103hVihEIOuAXH5ubbojDTcth/7mXBBIyMN+X7TQ==
+X-Google-Smtp-Source: AK7set/HdjPVX0qQf6R2XKUSVQlV3OuX7y4xtLBkiSFmdlwUeEep/Nd0dxjJM+J54cyXaepI50nVK56Wpi2U6362WPI=
+X-Received: by 2002:a05:6902:4f4:b0:a06:5ef5:3a82 with SMTP id
+ w20-20020a05690204f400b00a065ef53a82mr4989421ybs.5.1678111389438; Mon, 06 Mar
+ 2023 06:03:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20230219183059.1029525-1-xiang.ye@intel.com> <20230219183059.1029525-6-xiang.ye@intel.com>
- <CACRpkdbAve++nA0zwHvOm3fy0t9J9g0fR_FO71TTv=TwM6CJYA@mail.gmail.com> <Y/j7cAQaaCXXYe6s@ye-NUC7i7DNHE>
-In-Reply-To: <Y/j7cAQaaCXXYe6s@ye-NUC7i7DNHE>
+References: <20230225140118.2037220-1-xiang.ye@intel.com> <20230225140118.2037220-3-xiang.ye@intel.com>
+In-Reply-To: <20230225140118.2037220-3-xiang.ye@intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 15:00:28 +0100
-Message-ID: <CACRpkdbg4zu9-yKy3AEKqxTiNKa-LUO2Lokg3pufT0nBz3ubKg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] Documentation: Add ABI doc for attributes of LJCA device
-To:     "Ye, Xiang" <xiang.ye@intel.com>
+Date:   Mon, 6 Mar 2023 15:02:58 +0100
+Message-ID: <CACRpkdaHUEG2NJxrU+R-VVcpcMzf-BzfOKDBcKQQqh2_zQrFJg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] gpio: Add support for Intel LJCA USB GPIO driver
+To:     Ye Xiang <xiang.ye@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
         Tyrone Ting <kfting@nuvoton.com>,
         Mark Brown <broonie@kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
-        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
+        heikki.krogerus@linux.intel.com, sakari.ailus@linux.intel.com,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -74,19 +73,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 7:02 PM Ye, Xiang <xiang.ye@intel.com> wrote:
-> On Fri, Feb 24, 2023 at 11:53:08AM +0100, Linus Walleij wrote:
+On Sat, Feb 25, 2023 at 3:01 PM Ye Xiang <xiang.ye@intel.com> wrote:
 
-> > Is the idea that e.g. fwupdmgr should provide a front-end for this?
+> This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
+> device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
+> GPIO module with specific protocol through interfaces exported by LJCA USB
+> driver.
+>
+> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
 
-> We haven't implemented a front-end in fwupdmgr. dfu-util is used to
-> update LJCA firmware manually currently. Maybe we will consider
-> implementing this in fwupdmgr later.
+Looks good to me, also looks like a really helpful adapter.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-It's a matter of process rather than implementation really, but if you can
-please communicate upward to the project that if this is to go into
-consumer hands (i.e. be used by random people on random laptops)
-the firmware update should come via fwupdmgr.
+I would appreciate if Andy could ACK it too, as Intel engineer.
 
 Yours,
 Linus Walleij
