@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C88196ABB48
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 674616ABB9C
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbjCFKMn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 05:12:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
+        id S231129AbjCFKSX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 05:18:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230269AbjCFKMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:12:31 -0500
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10131241E7
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:11:59 -0800 (PST)
-Received: by mail-ua1-x92e.google.com with SMTP id s23so6039884uae.5
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:11:59 -0800 (PST)
+        with ESMTP id S230417AbjCFKRy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:17:54 -0500
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C906122001
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:17:29 -0800 (PST)
+Received: by mail-ua1-x92f.google.com with SMTP id x1so6035655uav.9
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:17:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097497;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HE+8pibrc6sLOKZ/p+IAeXF6PtsUcHKof8qicDz0pEE=;
-        b=1Xa11x5NG/+5EyXyponCNpY/iT7IEHh+nUQqcH8K+W7kCOGp0w9zNaM7TzvrMD18qj
-         gJlZkk6qYQ2usHpKSIsppIoPoDuWS9dws5PDyPsTmhpdMzfBHhg2PDd1RkxFFeyppuq4
-         sBDDeCbdsuzm0DEzrP96snc4lBjVeAEhMisjN0O5odGZWfd/2SY9GbsIGFxuBJ0pICSA
-         d2g3zRNoOCDcfn6VlHBUwe88IeuNGxGz8zVjhqaTL3ypTHLC5plbDrsnP3NfYgVAoIxa
-         8NGR5q0Wfjt4ED/Tb7gwN557uIuSm1kNDDQ+N8/MNvgue7eahTXix45U7uIcfSBlcqWh
-         sm3w==
+        bh=XKtYenUqtd6VLS14GJrUPd5L2ue++xHl4Zvl1BOmIFU=;
+        b=WnA1PDe7IO9i9LNud6CZrnh3mgBD12jgBwRQDB6tfNWrXF9y28VFhW+Flxl/4gNY4e
+         e0TWsqMvgW8RM72Js22NYwfVvtYMLdzmNCYbt8D51secquUaetoU8bYZp4zxkqOEmQcj
+         +8+7zJfzSKuQ7EdEZeTYMcNcE5nO3ShTa0zbkuc3uQGfkguTecW4Lgb18lL6i1GYsSbh
+         8qqE8Fbgqmd11uYDkfwQbbyDr9JYjCgazgIzJjasSucop9ttnlbGajizf5/2Hp0oJpiM
+         zxGgRYswZoJucJz+iPdixZkTEEmOjN7tWBs0Fvw3De6nnit/Bm9dqp7luej92qXu51vJ
+         fmqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678097497;
+        d=1e100.net; s=20210112; t=1678097849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HE+8pibrc6sLOKZ/p+IAeXF6PtsUcHKof8qicDz0pEE=;
-        b=r+3vS2gvQnjIhpoWV7oa2euqrIfDdQPtGLz6rehu06BIq2xVFUfiOJ8+jCdLlLK1ce
-         ylqMkIo4CXw0QlBh0woS6HxipPY3GAn+MIaF3O1d6z2jri0GYnwbnc8WkyVGg1Ll/Y3Y
-         QgBc6sPpdOSRNHJ9E9KRGH3KoAsULADOULZHHZPnZtQtvzw0V5rZcBjHhx9ENKmWavK0
-         Ee6vkHS66EZCiBmO4jbljVPKxYBrhjYOSSlGFwROVXq+7bg04jhX6GDXnYhhACQDWaDV
-         yOHgDKOfd1tiIAzpW/RRoDNcl+1Ksr/YRRlaQmFlcpUY2ma0MydF9wy6mP9BrXDCS6eY
-         2wvA==
-X-Gm-Message-State: AO0yUKUO07EgbbzrwCdDk6Vhq9B2oSJ3Xy1gAUUDeBBtn9yyIXyjtNss
-        oUvqv8EGsNzmIgJUfvx2U3H6MSIM8Q9l5MvMmcUDIVCck3mhr6i7
-X-Google-Smtp-Source: AK7set/lNdPUCm9R6eAxbdwnbS9gYophK34alp7Zmw1mmE64hhaEUGnNRtwu5ZwMBRd5w6pA2mTOot12HagE90NaJoI=
-X-Received: by 2002:a1f:914a:0:b0:401:4007:10c4 with SMTP id
- t71-20020a1f914a000000b00401400710c4mr6539107vkd.1.1678097497106; Mon, 06 Mar
- 2023 02:11:37 -0800 (PST)
+        bh=XKtYenUqtd6VLS14GJrUPd5L2ue++xHl4Zvl1BOmIFU=;
+        b=NYmlsw51zFcze6ZfXc/Z3RWmB3VgRpKvm97Z01ItqW/0fpOGr2SnO7cmMtL8tgAx+S
+         d3a25H//jkeaChGG/xz05z9bGEU23DTPaiiLPlivwp81VsNBHgP0RcoX9GmcLXQFNwpA
+         FJMncm1Ofb21ccze8WX3keRicO4Wb5/Ht4Zx0nyCU708XhOsXriaws0q0UAECahx5vTd
+         hfHOXEsxW3rSqAptvr9tk16MJUxi9YejrGS/yZdL9T27R0gQGB72PmQEBD5MiW7UZxKU
+         cgVAxddjpde4vJenNtwyEpyP8J2CE3jcFuQCLJiiuZb96QnATygj+orgtxLGZZZvkzQ1
+         pzmg==
+X-Gm-Message-State: AO0yUKWdbOM0CnAA4r/zBG0Q5XMxKTUp7pcVrHlAU9lkmEh+kk8I+5ol
+        gE9QNl+Ws9YFaAWcbjwaR9wQ0MTI+QyJSQg1g9kj4A==
+X-Google-Smtp-Source: AK7set/X1gbAlXGfd9w/+La9Un/k7BbX9YRtJU9/AJdwxyPogFCGtQifMzZmGZ0sqrTFpoLiV/EVM8Bh5GgzffrAR7o=
+X-Received: by 2002:a1f:1888:0:b0:401:8c72:4cf4 with SMTP id
+ 130-20020a1f1888000000b004018c724cf4mr6487877vky.1.1678097848924; Mon, 06 Mar
+ 2023 02:17:28 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1677515341.git.william.gray@linaro.org> <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
-In-Reply-To: <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
+References: <20230226053953.4681-1-rdunlap@infradead.org> <20230226053953.4681-4-rdunlap@infradead.org>
+In-Reply-To: <20230226053953.4681-4-rdunlap@infradead.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 11:11:26 +0100
-Message-ID: <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] regmap-irq: Add no_status support
-To:     broonie@kernel.org
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
+Date:   Mon, 6 Mar 2023 11:17:18 +0100
+Message-ID: <CAMRc=McJk4QE_hbjKzPcVTdfOAqT+jcfCenwdPzds8CqRYVtZw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending
+ on it
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -68,102 +69,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 5:54=E2=80=AFPM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Sun, Feb 26, 2023 at 6:40=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org=
+> wrote:
 >
-> Some devices lack status registers, yet expect to handle interrupts.
-> Introduce a no_status flag to indicate such a configuration, where
-> rather than read a status register to verify, all interrupts received
-> are assumed to be active.
+> REGMAP is a hidden (not user visible) symbol. Users cannot set it
+> directly thru "make *config", so drivers should select it instead of
+> depending on it if they need it.
 >
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> Consistently using "select" or "depends on" can also help reduce
+> Kconfig circular dependency issues.
+>
+> Therefore, change the use of "depends on REGMAP" to "select REGMAP".
+>
+> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap=
+")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Michael Walle <michael@walle.cc>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: linux-gpio@vger.kernel.org
 > ---
-> Changes in v2:
->  - Utilize memset32() to set status_buf for no_status case
->  - Utilize GENMASK() to generate status_buf mask
->  - Move no_status kernel doc line under runtime_pm line
+>  drivers/gpio/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->  drivers/base/regmap/regmap-irq.c | 22 +++++++++++++++-------
->  include/linux/regmap.h           |  2 ++
->  2 files changed, 17 insertions(+), 7 deletions(-)
+> diff -- a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -100,7 +100,7 @@ config GPIO_GENERIC
+>         tristate
 >
-> diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regma=
-p-irq.c
-> index a8f185430a07..290e26664a21 100644
-> --- a/drivers/base/regmap/regmap-irq.c
-> +++ b/drivers/base/regmap/regmap-irq.c
-> @@ -437,7 +437,10 @@ static irqreturn_t regmap_irq_thread(int irq, void *=
-d)
->          * possible in order to reduce the I/O overheads.
->          */
+>  config GPIO_REGMAP
+> -       depends on REGMAP
+> +       select REGMAP
+>         tristate
 >
-> -       if (chip->num_main_regs) {
-> +       if (chip->no_status) {
-> +               /* no status register so default to all active */
-> +               memset32(data->status_buf, GENMASK(31, 0), chip->num_regs=
-);
-> +       } else if (chip->num_main_regs) {
->                 unsigned int max_main_bits;
->                 unsigned long size;
->
-> @@ -967,12 +970,17 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle=
- *fwnode,
->                         continue;
->
->                 /* Ack masked but set interrupts */
-> -               reg =3D d->get_irq_reg(d, d->chip->status_base, i);
-> -               ret =3D regmap_read(map, reg, &d->status_buf[i]);
-> -               if (ret !=3D 0) {
-> -                       dev_err(map->dev, "Failed to read IRQ status: %d\=
-n",
-> -                               ret);
-> -                       goto err_alloc;
-> +               if (d->chip->no_status) {
-> +                       /* no status register so default to all active */
-> +                       d->status_buf[i] =3D GENMASK(31, 0);
-> +               } else {
-> +                       reg =3D d->get_irq_reg(d, d->chip->status_base, i=
-);
-> +                       ret =3D regmap_read(map, reg, &d->status_buf[i]);
-> +                       if (ret !=3D 0) {
-> +                               dev_err(map->dev, "Failed to read IRQ sta=
-tus: %d\n",
-> +                                       ret);
-> +                               goto err_alloc;
-> +                       }
->                 }
->
->                 if (chip->status_invert)
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index a3bc695bcca0..c6d80d4e73de 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -1564,6 +1564,7 @@ struct regmap_irq_chip_data;
->   *                   the need for a @sub_reg_offsets table.
->   * @status_invert: Inverted status register: cleared bits are active int=
-errupts.
->   * @runtime_pm:  Hold a runtime PM lock on the device when accessing it.
-> + * @no_status: No status register: all interrupts assumed generated by d=
-evice.
->   *
->   * @num_regs:    Number of registers in each control bank.
->   * @irqs:        Descriptors for individual IRQs.  Interrupt numbers are
-> @@ -1630,6 +1631,7 @@ struct regmap_irq_chip {
->         unsigned int clear_on_unmask:1;
->         unsigned int not_fixed_stride:1;
->         unsigned int status_invert:1;
-> +       unsigned int no_status:1;
->
->         int num_regs;
->
-> --
-> 2.39.2
->
+>  # put drivers in the right section, in alphabetical order
 
-Mark,
-
-If this looks good to you, could you Ack it so that I can take it
-through the GPIO tree?
+Queued for fixes, thanks!
 
 Bart
