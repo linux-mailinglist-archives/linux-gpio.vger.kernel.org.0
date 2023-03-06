@@ -2,90 +2,334 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94DF56AC220
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:03:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF06E6AC284
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:10:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230167AbjCFOD1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 09:03:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
+        id S231157AbjCFOJ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:09:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjCFODU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:03:20 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A9024133
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 06:03:16 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id t4so8150369ybg.11
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 06:03:16 -0800 (PST)
+        with ESMTP id S231345AbjCFOJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:09:22 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417B665B4;
+        Mon,  6 Mar 2023 06:07:57 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso5374791ota.1;
+        Mon, 06 Mar 2023 06:07:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678111395;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aeI0dDbLr4/ACidaziQGMHF31Y6IixUFDfRpx8Mx/wA=;
-        b=g4AWy5mBa4Piye7zzeONZ/KCD3ABIJhRYxmedSxh+SOWG8tPrZKnzPn/lLYpDfIhaD
-         +sUAU0U/rlcshjFSEpp26n6nW8vup91Mkjt4WNJPHYwJr4x8EVmLHeqR11H9ga1aWwnq
-         m3YG4+uWwrXHJS0uHABvNicPw4rl265oywFUTja+klA7xl4R162QAbB2DYqm3tuTROrw
-         wf5hKoAm1DU4OHhKwn6HDJlUebPM0w96+m34X0T2y3RVzi2+tOu8oATqra9GTriimdQn
-         sXFMjkmAaPZNdLjxiXegWPRmWKPv1Lk531iwBpsI/jYh8DlSN2KNSVmHCzfFla/VYj+N
-         rQJw==
+        d=gmail.com; s=20210112; t=1678111664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gtOpygRybRdTgryIFngZaRO49/uV1PlMUt6BGCDduIA=;
+        b=GwOipbKq7AzZLovFhdCldB570JfDMW5z8v/OcUY/hVyl4bcuwX/4Y7hPIgAmjLNfQJ
+         nBEF2xG6Xzs5G9ZCE/6XFUJ9dwIXrigoL9D8Q5+un1AMIV3R1f44Z/AeJ+mI1zOCUkza
+         fiZ6hMopIeoKBHe/1AhfPQD3Nq2wmXiMXysVAoZBC9CZcZPM9zqB/+TnLy2tQVrv4mii
+         gil7J/3NfXQ+HUvnx0JLVPbv4goaDAmcrzIZS14P3JhEc8LsF02Sjnkpxb/3g1Lz/oXe
+         S10DM13WigY4nmIiR5sH3hHAJn/+gf99esve4YTTE1YGDNegIlsPKSB6va8bkmGs2xJs
+         3oDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678111395;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aeI0dDbLr4/ACidaziQGMHF31Y6IixUFDfRpx8Mx/wA=;
-        b=s9ir5XXpN5MVFJybNcJ9alybr7nhhOApKAwPH4wkxlLMRVYOsF5zGqlx8OHer2Gk2w
-         zC8YX2StAfR9KRzjldBfEa1z2Owu9qmSQIXxMD7crSEOtsC81ccbb9ZR8tEoGPHY6vey
-         RL2evHQa5cTn9klE9YBRBHK+PFt2vcbguj3/0pIfVbp7ZvYKUWjDIDhrYMe+bhRGKadB
-         w9Hw5mfUASTFWu4KMnSVGQh9bpvu7XXYSEOuAu/hPdHNkwOsogo/WEKr1U/sEPGcDfSW
-         kAs9+bEC9VH6XGVlY9belwxWsIfE93EAPHPXZjZ7RkD9NYESkfwV0ZoaE6VaXlMa6s5r
-         dLtQ==
-X-Gm-Message-State: AO0yUKWqCJNdLPmWf0iS+WXyo4LuJLeQ0gL9jSYFhXPio9FDiiJU6/g3
-        HN103hVihEIOuAXH5ubbojDTcth/7mXBBIyMN+X7TQ==
-X-Google-Smtp-Source: AK7set/HdjPVX0qQf6R2XKUSVQlV3OuX7y4xtLBkiSFmdlwUeEep/Nd0dxjJM+J54cyXaepI50nVK56Wpi2U6362WPI=
-X-Received: by 2002:a05:6902:4f4:b0:a06:5ef5:3a82 with SMTP id
- w20-20020a05690204f400b00a065ef53a82mr4989421ybs.5.1678111389438; Mon, 06 Mar
- 2023 06:03:09 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678111664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gtOpygRybRdTgryIFngZaRO49/uV1PlMUt6BGCDduIA=;
+        b=PzrB7tRH3Inr4RLbFib5CZwZyHdMxyO6ijHhG6DYaPSyhVv1IC/88tWjnNyykPyKnq
+         jSlNEOl1W2ml6iaMN0BBe3SarQc6/ZbIIDT+xuO0G4UQ8aOP9N4mjg/XGfhxEDfo5kBS
+         0xiWjL21dzdHei4sTN3BzvWGM4Qy/Gf4HhZcSSyX6Wa6sRbpZLtiKfRuVAtsdHy9gIh7
+         125cV0o6NvM898mVendMzAZsRoQMy6TOInJDcCkCuyLqeSALZ0LO+s8C21L9JbzxE5aj
+         7hNNlGhWrJ7qtGd3nhMjsVFfhkXRrEKZLcoUbZqBLgBwjISDD+VR5IWMKD3L1TdvdkQr
+         v7WA==
+X-Gm-Message-State: AO0yUKXNobViv13g3PVFcYJJzuF4PSJuXHd/KjygKjpw1kRJ8ZX4DYoF
+        0n/VGFdQHZ+w1bgrqsKMToV0FsFGmfGut4ffac4=
+X-Google-Smtp-Source: AK7set/KCnaWsNZQY8Vo3wwDI8I9RVvXKdkU0ZmSZlhpP4gSrDFP3rxyVuwxZ5C+PG6ym4BH6FBPS3rqQKNIkZf8jSk=
+X-Received: by 2002:a05:6830:2464:b0:693:d8a3:1f15 with SMTP id
+ x36-20020a056830246400b00693d8a31f15mr3284470otr.6.1678111663787; Mon, 06 Mar
+ 2023 06:07:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20230225140118.2037220-1-xiang.ye@intel.com> <20230225140118.2037220-3-xiang.ye@intel.com>
-In-Reply-To: <20230225140118.2037220-3-xiang.ye@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Mar 2023 15:02:58 +0100
-Message-ID: <CACRpkdaHUEG2NJxrU+R-VVcpcMzf-BzfOKDBcKQQqh2_zQrFJg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-To:     Ye Xiang <xiang.ye@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
-        heikki.krogerus@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
+References: <20230303002850.51858-1-arinc.unal@arinc9.com> <20230303002850.51858-6-arinc.unal@arinc9.com>
+ <CAMhs-H-VGjP32AZc2cuY=Co4iqx8xPtvjr+hMg-haMMFaQzzsg@mail.gmail.com>
+ <CAMhs-H8OsG-SEWigimG3fT-SGjZruH-7tnjff198Z2qhb0O=yA@mail.gmail.com>
+ <2106f6d0-63cc-4656-1e52-19640994fb43@arinc9.com> <CAMhs-H869pR6CzaWfvf44w-ak+0OCyxnMEEU4kWYpw=C14ShsQ@mail.gmail.com>
+ <fc6dc970-5bae-1c27-9473-8c9d90ac79a1@arinc9.com>
+In-Reply-To: <fc6dc970-5bae-1c27-9473-8c9d90ac79a1@arinc9.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 6 Mar 2023 15:07:31 +0100
+Message-ID: <CAMhs-H_SryQqCZ3mB_VsO20ZSvKCMR5V9E7wrt+a-kbcqQxsWQ@mail.gmail.com>
+Subject: Re: [PATCH 05/20] pinctrl: ralink: move to mediatek as mtmips
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 25, 2023 at 3:01 PM Ye Xiang <xiang.ye@intel.com> wrote:
-
-> This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
-> device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
-> GPIO module with specific protocol through interfaces exported by LJCA USB
-> driver.
+On Fri, Mar 3, 2023 at 3:18 PM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9=
+.com> wrote:
 >
-> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
+> Heyo,
+>
+> On 3.03.2023 13:57, Sergio Paracuellos wrote:
+> > Hi Ar=C4=B1n=C3=A7,
+> >
+> > On Fri, Mar 3, 2023 at 9:16 AM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@ar=
+inc9.com> wrote:
+> >>
+> >> Hey Sergio,
+> >>
+> >> On 3.03.2023 09:34, Sergio Paracuellos wrote:
+> >>> On Fri, Mar 3, 2023 at 7:17 AM Sergio Paracuellos
+> >>> <sergio.paracuellos@gmail.com> wrote:
+> >>>>
+> >>>>    Hi Ar=C4=B1n=C3=A7,
+> >>>>
+> >>>> On Fri, Mar 3, 2023 at 1:30 AM <arinc9.unal@gmail.com> wrote:
+> >>>>>
+> >>>>> From: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> >>>>>
+> >>>>> This platform from Ralink was acquired by MediaTek in 2011. Then, M=
+ediaTek
+> >>>>> introduced new SoCs which utilise this platform. Move the driver to
+> >>>>> mediatek pinctrl directory. Rename the ralink core driver to mtmips=
+.
+> >>>>>
+> >>>>> Signed-off-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> >>>>> ---
+> >>>>>    drivers/pinctrl/Kconfig                       |  1 -
+> >>>>>    drivers/pinctrl/Makefile                      |  1 -
+> >>>>>    drivers/pinctrl/mediatek/Kconfig              | 51 ++++++++++-
+> >>>>>    drivers/pinctrl/mediatek/Makefile             | 63 +++++++------
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-mt7620.c     | 34 +++----
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-mt7621.c     | 30 +++----
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-mt76x8.c     | 60 ++++++-----=
+--
+> >>>>>    .../pinctrl-mtmips.c}                         | 90 +++++++++----=
+------
+> >>>>>    .../pinctrl-mtmips.h}                         | 16 ++--
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-rt2880.c     | 20 ++---
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-rt305x.c     | 44 ++++-----
+> >>>>>    .../{ralink =3D> mediatek}/pinctrl-rt3883.c     | 28 +++---
+> >>>>>    drivers/pinctrl/ralink/Kconfig                | 40 ---------
+> >>>>>    drivers/pinctrl/ralink/Makefile               |  9 --
+> >>>>>    14 files changed, 246 insertions(+), 241 deletions(-)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-mt7620.c (=
+81%)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-mt7621.c (=
+80%)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-mt76x8.c (=
+81%)
+> >>>>>    rename drivers/pinctrl/{ralink/pinctrl-ralink.c =3D> mediatek/pi=
+nctrl-mtmips.c} (74%)
+> >>>>>    rename drivers/pinctrl/{ralink/pinctrl-ralink.h =3D> mediatek/pi=
+nctrl-mtmips.h} (75%)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-rt2880.c (=
+71%)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-rt305x.c (=
+75%)
+> >>>>>    rename drivers/pinctrl/{ralink =3D> mediatek}/pinctrl-rt3883.c (=
+80%)
+> >>>>>    delete mode 100644 drivers/pinctrl/ralink/Kconfig
+> >>>>>    delete mode 100644 drivers/pinctrl/ralink/Makefile
+> >>>>>
+> >>>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> >>>>> index dcb53c4a9584..8a6012770640 100644
+> >>>>> --- a/drivers/pinctrl/Kconfig
+> >>>>> +++ b/drivers/pinctrl/Kconfig
+> >>>>> @@ -537,7 +537,6 @@ source "drivers/pinctrl/nomadik/Kconfig"
+> >>>>>    source "drivers/pinctrl/nuvoton/Kconfig"
+> >>>>>    source "drivers/pinctrl/pxa/Kconfig"
+> >>>>>    source "drivers/pinctrl/qcom/Kconfig"
+> >>>>> -source "drivers/pinctrl/ralink/Kconfig"
+> >>>>>    source "drivers/pinctrl/renesas/Kconfig"
+> >>>>>    source "drivers/pinctrl/samsung/Kconfig"
+> >>>>>    source "drivers/pinctrl/spear/Kconfig"
+> >>>>> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> >>>>> index d5939840bb2a..ada6ed1d4e91 100644
+> >>>>> --- a/drivers/pinctrl/Makefile
+> >>>>> +++ b/drivers/pinctrl/Makefile
+> >>>>> @@ -66,7 +66,6 @@ obj-y                         +=3D nomadik/
+> >>>>>    obj-y                          +=3D nuvoton/
+> >>>>>    obj-$(CONFIG_PINCTRL_PXA)      +=3D pxa/
+> >>>>>    obj-$(CONFIG_ARCH_QCOM)                +=3D qcom/
+> >>>>> -obj-$(CONFIG_PINCTRL_RALINK)   +=3D ralink/
+> >>>>>    obj-$(CONFIG_PINCTRL_RENESAS)  +=3D renesas/
+> >>>>>    obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D samsung/
+> >>>>>    obj-$(CONFIG_PINCTRL_SPEAR)    +=3D spear/
+> >>>>> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/med=
+iatek/Kconfig
+> >>>>> index a71874fed3d6..2eeb55010563 100644
+> >>>>> --- a/drivers/pinctrl/mediatek/Kconfig
+> >>>>> +++ b/drivers/pinctrl/mediatek/Kconfig
+> >>>>> @@ -1,6 +1,6 @@
+> >>>>>    # SPDX-License-Identifier: GPL-2.0-only
+> >>>>>    menu "MediaTek pinctrl drivers"
+> >>>>> -       depends on ARCH_MEDIATEK || COMPILE_TEST
+> >>>>> +       depends on ARCH_MEDIATEK || RALINK || COMPILE_TEST
+> >>>>>
+> >>>>>    config EINT_MTK
+> >>>>>           tristate "MediaTek External Interrupt Support"
+> >>>>> @@ -22,6 +22,12 @@ config PINCTRL_MTK
+> >>>>>    config PINCTRL_MTK_V2
+> >>>>>           tristate
+> >>>>>
+> >>>>> +config PINCTRL_MTK_MTMIPS
+> >>>>> +       bool
+> >>>>> +       depends on RALINK
+> >>>>> +       select PINMUX
+> >>>>> +       select GENERIC_PINCONF
+> >>>>> +
+> >>>>>    config PINCTRL_MTK_MOORE
+> >>>>>           bool
+> >>>>>           depends on OF
+> >>>>> @@ -43,6 +49,49 @@ config PINCTRL_MTK_PARIS
+> >>>>>           select OF_GPIO
+> >>>>>           select PINCTRL_MTK_V2
+> >>>>>
+> >>>>> +# For MIPS SoCs
+> >>>>> +config PINCTRL_MT7620
+> >>>>> +       bool "MediaTek MT7620 pin control"
+> >>>>> +       depends on SOC_MT7620 || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_MT7620
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>> +config PINCTRL_MT7621
+> >>>>> +       bool "MediaTek MT7621 pin control"
+> >>>>> +       depends on SOC_MT7621 || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_MT7621
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>> +config PINCTRL_MT76X8
+> >>>>> +       bool "MediaTek MT76X8 pin control"
+> >>>>> +       depends on SOC_MT7620 || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_MT7620
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>> +config PINCTRL_RT2880
+> >>>>> +       bool "Ralink RT2880 pin control"
+> >>>>> +       depends on SOC_RT288X || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_RT288X
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>> +config PINCTRL_RT305X
+> >>>>> +       bool "Ralink RT305X pin control"
+> >>>>> +       depends on SOC_RT305X || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_RT305X
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>> +config PINCTRL_RT3883
+> >>>>> +       bool "Ralink RT3883 pin control"
+> >>>>> +       depends on SOC_RT3883 || COMPILE_TEST
+> >>>>> +       depends on RALINK
+> >>>>> +       default SOC_RT3883
+> >>>>> +       select PINCTRL_MTK_MTMIPS
+> >>>>> +
+> >>>>
+> >>>> I am not a Kconfig expert at all but...
+> >>>>
+> >>>> Should not all of these be depends on SOC_XXX || (COMPILE_TEST &&
+> >>>> RALINK) and avoid the " depends on RALINK" next line in all of them?
+> >>
+> >> This seems to do the same thing but I'm following the "either change
+> >> them all or fit into the crowd" ideology.
+> >>
+> >>>>
+> >>>> Just asking since we have yet arch read and write register operation=
+s
+> >>>> in pinctrl common ralink code. Having in this way, when we address
+> >>>> this arch thing  in the next series just removing the "&& RALINK" pa=
+rt
+> >>>> makes the review pretty obvious.
+> >>
+> >> You'd have to change RALINK with OF since we're still depending on tha=
+t.
+> >> RALINK selects OF by default so it's currently a hidden dependency.
+> >>
+> >>>>
+> >>>> Other than that, changes look good to me.
+> >>>
+> >>> I think "depends on SOC_XXX || (COMPILE_TEST && MIPS)" would work als=
+o
+> >>> and might be more accurate for compile testing targets.
+> >
+> > Are you sure? SOC_XXX here is already being enabled only if RALINK is
+> > already enabled, right? [0]
+>
+> I'm not sure who's your reply to, or what it's about here.
 
-Looks good to me, also looks like a really helpful adapter.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Bad insertion between lines, sorry :). I was just trying to explain to
+you that SOC_RTXX ralink stuff is only available when RALINK is
+already selected.
 
-I would appreciate if Andy could ACK it too, as Intel engineer.
+>
+> >
+> >>
+> >> This is not OK in both cases. If the driver is dependent on Ralink
+> >> architecture code, choosing any other MIPS platform will make the driv=
+er
+> >> available to compile, which will fail.
+> >
+> > SOC_XXX is already dependent on RALINK for real uses but the driver is
+> > going to be selected for other MIPS platforms only for COMPILE_TEST
+> > targets. Ideally drivers should be arch agnostic so can be selected
+> > for any single arch build. Now we have arch dependent read and write
+> > calls in the code, so you need the right headers to be properly found
+> > to be able to compile testing. I think MIPS is enough dependency here
+> > to properly find them. But if not, this should be (COMPILE_TEST &&
+> > RALINK)
+>
+> I expect below to work without requiring the MIPS option.
+>
+> ifeq ($(CONFIG_COMPILE_TEST),y)
+> CFLAGS_pinctrl-mtmips.o         +=3D -I$(srctree)/arch/mips/include
+> endif
 
-Yours,
-Linus Walleij
+Yes, this will work but won't be necessary at all when we get rid of
+ralink arch dependent code in the next series.
+
+>
+> >
+> >>
+> >> If the driver is independent of Ralink architecture code, you're
+> >> limiting the driver to be compiled only when a MIPS platform is select=
+ed.
+> >
+> > So... how are you planning to allow compile testing of the driver in
+> > any single arch when we get rid of all the arch dependent code? If you
+> > make everything dependent on RALINK you cannot.
+>
+> I intend to make it dependent on OF, not RALINK.
+
+Ok, I see, thanks for clarification.
+
+>
+> Ar=C4=B1n=C3=A7
+
+Best regards,
+    Sergio Paracuellos
