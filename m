@@ -2,89 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1702F6ACEB0
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 20:59:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C2F6ACEFB
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 21:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjCFT7L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 14:59:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36374 "EHLO
+        id S229557AbjCFUQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 15:16:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjCFT7K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 14:59:10 -0500
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8131F65070;
-        Mon,  6 Mar 2023 11:58:42 -0800 (PST)
-Received: by mail-qt1-x82f.google.com with SMTP id c3so11930321qtc.8;
-        Mon, 06 Mar 2023 11:58:42 -0800 (PST)
+        with ESMTP id S229484AbjCFUQv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 15:16:51 -0500
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DFE2CC74;
+        Mon,  6 Mar 2023 12:16:50 -0800 (PST)
+Received: by mail-qk1-x729.google.com with SMTP id g25so3660650qki.9;
+        Mon, 06 Mar 2023 12:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678132676;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
-        b=WGjLRckl281DCVlHPpmlzGIN/jVrcmhh5kKLciScBCHtk+amtS/6/t4urkFbS2pA3u
-         07on6PPWceK62oGnAqS7/+v+401JZJqNJB6BdVuRObXwOoLqfl/JVBiS3yGP51CqW/I2
-         ZzY9hwn6PSoKgV9iNYZxZFMSZzetb4rtzLQfN2JTeg1+Qx7gM3TGDUHVJZSGANu/w4jH
-         iksTOHuImXCj/V+tdhzbNGhmbtBhx2OHYXc15vI4VBYpk63ZJUcJcsVc4tdP3AN64uKj
-         +mtBCAYTktuAa1f+p5xWuDHFdvrZgW8nv3WFaZtNsQiGVn6q/UPkrSr6DRxIlRcr30Iz
-         JWkA==
+        d=gmail.com; s=20210112; t=1678133809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aAeoJvapRO4dVYQ2Gtaci6rfxzerkGQDplgvjzlK0uE=;
+        b=bdZ9NbVgZarSVtJrX8qHEHSCRNAzt5xpgO0zTIZ3ZG581Q+G+RLKiCHERz34pYSu59
+         szcpU+97hx40kJp91GxIHUKOmP0f5JxCZym/95UOfS8jCLWWdK0Bb6JdmBFaRvdf65BZ
+         FpB6H+gIMSRwkHEQszd6okaf0a05XE40TTOaUCUfok12wpdbuXQexhQvPSmX7KK0g2qe
+         qz+Jg/lY5VA+541ZLPOkQlcMy1y7h3WeUSlVPD1wA8al1hm0hIljUx+Nk8VANghpW7P7
+         VAQ8ou7J4uzgI2hzVy0Ps8gxKyvleZgW5O7n+uLjytmvqkyYyOhmbv3uTVBRRAWvWvfE
+         1ptA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678132676;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
-        b=QPtgW46JgV6plpKS+39nbUAEaWZMwRUupjOw66CwXrVPowrKFzJkOU57tLFtIyww2T
-         oh7y09NbUqDAJbUSKRcczMWLXmbvKAImdow0yNEYXmv0njV2Rqm/7g9fCJesgxOibot0
-         +khq14Yqk0X8oPFfy3dsyAFs16nwn7rv/LApk9bIaZ8QbXsLKoSlrUU2ri9XYFgEiPTH
-         5uMgWnYXzEHrN9deUz5CfSbGkcAMdswPg8G/1rMS8lbTXyiP0SlNnG8muBDkszCJmDJ9
-         nxK8EYAnp4qjVSeUtk0h7sEej4v3xEfklVThARe2xF4+KzAbI/FxlFslvbQudhlpgKY/
-         9UrQ==
-X-Gm-Message-State: AO0yUKUPhTk+flBUzK9pimDGBrAVijV9VBTidWRWluZNpzhb+qq1ZlVo
-        ybPxHPbIUwsETpNrDbMj6xE=
-X-Google-Smtp-Source: AK7set/670uYwxALTojyHbMIdyaecZVHhjNJyQIIeA/qSS1xpmTRM60vLEXXjINc/dPl+ojNjtYx/g==
-X-Received: by 2002:ac8:4904:0:b0:3ba:2b4:7b39 with SMTP id e4-20020ac84904000000b003ba02b47b39mr13795686qtq.46.1678132676348;
-        Mon, 06 Mar 2023 11:57:56 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x8-20020ac87008000000b003b868cdc689sm8203872qtm.5.2023.03.06.11.57.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 11:57:55 -0800 (PST)
-Message-ID: <738a5705-74eb-d339-60ee-6f18a08822a8@gmail.com>
-Date:   Mon, 6 Mar 2023 11:57:50 -0800
+        d=1e100.net; s=20210112; t=1678133809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aAeoJvapRO4dVYQ2Gtaci6rfxzerkGQDplgvjzlK0uE=;
+        b=a7k93+Np6ab0YfE5lVytfSrd+ILmFLi4rer4cEQ/5fOlJmPMIx0S7NkiiZfEbbuP8H
+         WZlyb/hZ5a3MATtpHpUt4cB7wEsg2ecM80n210kfgbX+bFxFoYFbsRg/B9lmJhv+xow+
+         juMEDV61D/DB/Zw2zlwI40MfyHYaOZuUAF0NTY3KYUB+KVpjvMuI6JMVGjaXnIcsUBQ4
+         bCZBzNdYWpLt+JfOhUbAMgLkAOeDj5IuAT1cVQgGMsDWcC8/ZJfa5XOoniLE2LLolNjD
+         DXqeByqaGFvNAG0MYjMVn+pNNrGO5oJ1M/iTtbq8/AhKdl2nuw7mYjqRlNYMIY6mkTJs
+         nWTA==
+X-Gm-Message-State: AO0yUKWmE21ofNIBFG6KgsAWtyZNwpPsIMAO+xa0VCAt+vWKr+lmRKD5
+        dKkzM5ugl8/JPsrVfYyeP/RFp0G1Fscoy83RdbpPwdLWI5Y=
+X-Google-Smtp-Source: AK7set9UB7bqPgylW/kuCPuna/JHfIKn1y9VfsE0+tUgqwucXEyBgXyPfMs49a9g4K3g1tFeQzKT/4LNPFcwCebBKG4=
+X-Received: by 2002:a05:620a:5360:b0:742:69db:3bf1 with SMTP id
+ op32-20020a05620a536000b0074269db3bf1mr3451654qkn.10.1678133809410; Mon, 06
+ Mar 2023 12:16:49 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v1 07/16] gpio: brcmstb: Utilize helpers from
- string_choices.h
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        patches@opensource.cirrus.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Doug Berger <opendmb@gmail.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Nandor Han <nandor.han@ge.com>,
-        Semi Malinen <semi.malinen@ge.com>
-References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
- <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230303215814.24783-1-asmaa@nvidia.com> <CAHp75VfpRVf3fzBf76mipu3dWDbwGCBFUOzyR-P=DLab3_y=Kw@mail.gmail.com>
+ <CH2PR12MB3895B0A2360B02F0387F9FBBD7B69@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895B0A2360B02F0387F9FBBD7B69@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Mar 2023 22:16:13 +0200
+Message-ID: <CAHp75Vcwcs_+1rdv6Day9U+i2CqbsPzsbFQ44Q-hwuwaW13VRg@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: mmio: handle "ngpios" properly in bgpio_init()
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -93,13 +70,103 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/6/23 11:55, Andy Shevchenko wrote:
-> There are a few helpers available to convert a boolean variable
-> to the dedicated string literals depending on the application.
-> Use them in the driver.
->  > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Mon, Mar 6, 2023 at 8:47 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+...
 
+> > > +       ret =3D gpiochip_get_ngpios(gc, dev);
+> > > +       if (ret)
+> > > +               gc->ngpio =3D gc->bgpio_bits;
+> >
+> > But this doesn't update bgpio_bits in the success case. Can you explain=
+ why
+> > it's not a problem (should be at least in the code as a comment).
+>
+> In the success rate, the bgpio_bits would also be equal to "sz * 8" anywa=
+ys.
+> The argument " unsigned long sz" passed in bgpio_init is specifically for=
+ this purpose. That tells the gpio library the gpio register access size.
+> if (!is_power_of_2(sz))
+>                  return -EINVAL;
+>  gc->bgpio_bits =3D sz * 8;
+>
+> If in the success case, we make it dependent on the ngpio value, we would=
+ need to round it up anyways to the closest (power of 2 && multiple of 8) w=
+hich is the same as "sz * 8"
+> I will add a comment in the code in my next patch.
+
+I believe we should use only a single source for what we need. If we
+rely on ngpios, the bgpio_bits should be recalculated based on it. The
+expression doing this is very simple. Something like round_up(ngpios,
+8);
+
+...
+
+> > > +               ret =3D device_property_read_u32(dev, "ngpios", &ngpi=
+os);
+> > > +               if (ret) {
+> > > +                       chip_err(gc, "Failed to get ngpios property\n=
+");
+> > > +                       return -EINVAL;
+> > > +               }
+> >
+> > This is not an equivalent to what was in the GPIO library. Why is it so=
+?
+>
+> Sure. I will keep it the same in my next patch.
+
+No, you should take care about error codes properly. Now you are
+shadowing anything to -EINVAL. With this you must keep the comment in
+the code untouched (moved, but untouched).
+
+> The reason I didn=E2=80=99t is because I noticed that the final result of=
+ the logic is the same i.e. " goto err_free_dev_name"
+> "if(ret =3D=3D -ENODATA)" is handled separately is to add an informative =
+message: chip_err(gc, "tried to insert a GPIO chip with zero lines\n"); and=
+ return ret =3D -EINVAL.
+
+Yes, but you missed one out of three cases.
+
+> > > +               gc->ngpio =3D ngpios;
+> > > +       }
+
+...
+
+> > >                 pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\=
+n", __func__,
+> > > -                      base, base + (int)ngpios - 1,
+> > > +                      base, base + (int)gc->ngpio - 1,
+> > >                        gc->label ? : "generic", ret);
+> >
+> > AFAIU this will give a different result to what was previous in one of =
+the error
+> > cases.
+>
+> this one provides the "local" gpio pin id i.e. 0->31 for example.
+> chip_warn(gc, "line cnt %u is greater than fast path cnt %u\n", gc->ngpio=
+, FASTPATH_NGPIO);
+>
+> while this one provides the "global" gpio pin id. when bgpio_init sets th=
+e base : gc->base =3D -1; and gpiochip_add_data_with_key applies this logic=
+:
+> pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__, base, =
+base + (int)gc->ngpio - 1,
+> base =3D gc->base;
+>          if (base < 0) {
+>                  base =3D gpiochip_find_base(gc->ngpio);
+> Then the base would be =3D GPIO_DYNAMIC_BASE
+>
+> Apologies if I misunderstood your question?
+
+I'm talking about your change. It behaves differently in case of
+different errors and contents of gc->ngpio and the ngpios local
+variable.
+
+...
+
+Please, check again carefully all possible branches and cases (there
+are few of them, not just a couple).
+
+--=20
+With Best Regards,
+Andy Shevchenko
