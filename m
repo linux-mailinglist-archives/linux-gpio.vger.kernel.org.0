@@ -2,65 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB546ABA92
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 10:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58CE36ABAA2
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:03:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjCFJ7n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 04:59:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
+        id S230008AbjCFKDy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 05:03:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbjCFJ7m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 04:59:42 -0500
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC1310415
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 01:59:34 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id p2so6031092uap.1
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 01:59:34 -0800 (PST)
+        with ESMTP id S229557AbjCFKDw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:03:52 -0500
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0F8170E
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:03:49 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id d20so8541322vsf.11
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:03:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678096773;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097029;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mYIx7+Ak5uvLBEiqCaz2EjTEv5YVga1eqk3WlIV6f4M=;
-        b=zK2NCcCpt9UU5XWW7P556fwgVJnEZEkgL1VUMcs6Mj43IYOEvoEhfp8gfGUsPfLC9y
-         rr++bTyCnBcdN2dngclReRJLaxoST8UztHhb1fDmgWvgza6vB+TGcRfhIZnGtRSmxWAH
-         1CVAD5hZIQVINYG5pgNlKMDawgjanCiHOlNjBOd0Fuk+W/0c+b4uiCC8Xb8KXBnI095x
-         8QLYEPPLxrfg3p8bJIMPf18V36pTcBfCfQstjYus6E0Iq0L5ShKu8Tzt04xYxOeI4YvW
-         nDIag/4yGtMlZV2g1dzKtMLxiEvkUPlPuFxOlgkxt4MZrtxvdOozHO6rLF0cmXE46pon
-         ntHw==
+        bh=SPzr8oFiB9fNElzzDfAoV9vrNYHk5FKfy7JJ4PIAqSE=;
+        b=2RNNu9YkiQ9SLv1yzu0hlw6ycMPTC+jRGdK9O0mV15wx4zfDdLYJ6qq6IyXMjFC2ui
+         RWQNlI0cF75KIRly7kP8H5zxL2Ufsr4KKlbw7MW4tu2lCQEWY3i0F2OTZXl2D9RlLkfD
+         2jRrUv7v+b2vtrK7k/xAwCOMkyJdgxkEfPwkqdoSsmD/skVJPXlkXDFU4vRi+5UTH2kh
+         nJy1mOaur2/OrTCMRw0YO11n+wUwiJ69YXhyRCbQmQAYDP1xmfrzCDaq+iFZlMez8kF5
+         xDlF5OMkj2IsPpyf355iA28pzlByuWb0IlHXeRMWhe6Twio8NJIj67ZBvgesIwjPc9jD
+         OixA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678096773;
+        d=1e100.net; s=20210112; t=1678097029;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mYIx7+Ak5uvLBEiqCaz2EjTEv5YVga1eqk3WlIV6f4M=;
-        b=j5EebTSD34Ong2pQpCiGENw57z+bhHyxG3R03xtZ9DRLj5oUoCaGr3slsPBl5jlz7t
-         l99S762XZs9nzxt/Q8Dpz5urzow2xbUVcgxPKSzbYtBT7Y89RU1ofQ2aiiIXrNg3OKJ8
-         QamWVX1WvqEQr0r+P++/IX3xQVCzS1gU9SL3Oxsg/7nWlzrM/GLaLLMgDsdw9tBzjg0N
-         AcULqgYTQEQ08s28Ahwz/0M7+Bj7tGiGEWhtoYpYZ/BpEhQ5yN18KxrO9pHbn0QG20BQ
-         Ua3+D43EYWLT6F0Ecaz2pjzFY2HF6nS8zYmt3KaPy+eQvEVV2CR5jL4XG153JHzx4Ir8
-         oIsA==
-X-Gm-Message-State: AO0yUKV3WpO5SnEFlu3FGUcooGmwEeDRaE5Z3mVg3bNFzIc1wKmtyTxr
-        10vN/9IxsGQ6WPu+a/DKOefCYr/0j68+h9ZNfe9YdA==
-X-Google-Smtp-Source: AK7set86O3qpveh/FrKfkd3g2XuLPEZoo2Pf5KYA5+piHq15fqYnN6m4NMoJVYTy0MLAeYsy8UJPiyEY5BxmJfkfHGE=
-X-Received: by 2002:a1f:2dcb:0:b0:401:42e5:6d2e with SMTP id
- t194-20020a1f2dcb000000b0040142e56d2emr6188621vkt.1.1678096773108; Mon, 06
- Mar 2023 01:59:33 -0800 (PST)
+        bh=SPzr8oFiB9fNElzzDfAoV9vrNYHk5FKfy7JJ4PIAqSE=;
+        b=RHaNcPlcvogKletei0xgssTDgOIqiX0CExVL6F2dNV+MkyjLMbd/pjllDxyrjQuCpS
+         bXRkU5TMyBdhRbSoICtsHx99rFLOYIREoDPeFLthE2PZSJXiGKKwOY/0FrTGOnnZKdx/
+         BNf1mNqr1Y5dHEBAaFl1gkucEFM0NcaaiwWdTv4jn1JLqW59T/Rk6p8SNtW6d1OgRuMy
+         K+O3G7IS/8b39DVjSfCvb6g7O1i581kiXAzFzXprKGFvyk8VK3XUI4wBHzUfm30CraqE
+         Dy0q292bXV7LOdABkPbcWyfz7rEsuJpWxXPd3tXEtIQsYkRfftVhUrfIWUdW/6GLZ3dm
+         RHTA==
+X-Gm-Message-State: AO0yUKX/8eRRXf5W2pt8P6gj2jUhAlbYBogXGHGVyagvvwiFrKv81gkl
+        WcmqA8y3m5MXQeeFfK5MRj1bV5Wt2KPP/JVCaCO4lA==
+X-Google-Smtp-Source: AK7set/J3QEIzca9ZeSGAD0EnY2yePNuRBAoapV1qPXPpS6dkGzXCjbp2NA254SLfkJPBXsK4Fu6CuDo2QzsnXATQIE=
+X-Received: by 2002:a67:ec4f:0:b0:411:c9c5:59ae with SMTP id
+ z15-20020a67ec4f000000b00411c9c559aemr6817085vso.5.1678097028919; Mon, 06 Mar
+ 2023 02:03:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20230222121453.91915-1-nick.alcock@oracle.com> <20230222121453.91915-28-nick.alcock@oracle.com>
-In-Reply-To: <20230222121453.91915-28-nick.alcock@oracle.com>
+References: <20230226205319.1013332-1-dario.binacchi@amarulasolutions.com>
+In-Reply-To: <20230226205319.1013332-1-dario.binacchi@amarulasolutions.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 10:59:22 +0100
-Message-ID: <CAMRc=Mc76TT+y_OZokRBptgDzA=Tnf6_0BuiBNqB2FRjCEGuHg@mail.gmail.com>
-Subject: Re: [PATCH 27/27] kbuild, gpio: gpio-aspeed-sgpio: remove
- MODULE_LICENSE in non-modules
-To:     Nick Alcock <nick.alcock@oracle.com>
-Cc:     mcgrof@kernel.org, linux-modules@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Joel Stanley <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Date:   Mon, 6 Mar 2023 11:03:38 +0100
+Message-ID: <CAMRc=MdoMPROUVeu3m9Jx+-5deRMC9jm+zbGBQ=OdHaLApmJ-g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: use dynamic allocation of base
+To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,20 +67,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 1:17=E2=80=AFPM Nick Alcock <nick.alcock@oracle.com=
-> wrote:
+On Sun, Feb 26, 2023 at 9:53=E2=80=AFPM Dario Binacchi
+<dario.binacchi@amarulasolutions.com> wrote:
 >
-> Since commit 8b41fc4454e ("kbuild: create modules.builtin without
-> Makefile.modbuiltin or tristate.conf"), MODULE_LICENSE declarations
-> are used to identify modules. As a consequence, uses of the macro
-> in non-modules will cause modprobe to misidentify their containing
-> object file as a module when it is not (false positives), and modprobe
-> might succeed rather than failing with a suitable error message.
+> Since commit 502df79b860563d7 ("gpiolib: Warn on drivers still using stat=
+ic
+> gpiobase allocation"), one or more warnings are printed during boot on
+> systems where static allocation of GPIO base is used:
 >
-> So remove it in the files in this commit, none of which can be built as
-> modules.
+> [    1.611480] gpio gpiochip0: Static allocation of GPIO base is deprecat=
+ed, use dynamic allocation.
+> [    1.622893] gpio gpiochip1: Static allocation of GPIO base is deprecat=
+ed, use dynamic allocation.
+> [    1.633272] gpio gpiochip2: Static allocation of GPIO base is deprecat=
+ed, use dynamic allocation.
+> [    1.643388] gpio gpiochip3: Static allocation of GPIO base is deprecat=
+ed, use dynamic allocation.
+> [    1.653474] gpio gpiochip4: Static allocation of GPIO base is deprecat=
+ed, use dynamic allocation.
+>
+> So let's follow the suggestion and use dynamic allocation.
+>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> ---
+>
+>  drivers/gpio/gpio-mxc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 9d0cec4b82a3..abc129a88a62 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -462,8 +462,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>         port->gc.request =3D gpiochip_generic_request;
+>         port->gc.free =3D gpiochip_generic_free;
+>         port->gc.to_irq =3D mxc_gpio_to_irq;
+> -       port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * =
+32 :
+> -                                            pdev->id * 32;
+> +       port->gc.base =3D -1;
+>
+>         err =3D devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
+>         if (err)
+> --
+> 2.32.0
 >
 
-Applied, thanks!
+Linus,
+
+I'm afraid we'll need to do something about this warning, because
+we're getting the same patch for like 4th time already...
 
 Bart
