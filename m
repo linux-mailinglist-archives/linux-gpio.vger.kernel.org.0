@@ -2,65 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F3376AC334
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:27:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2CBE6AC37D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:39:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229997AbjCFO13 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 09:27:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42134 "EHLO
+        id S229723AbjCFOjK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:39:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbjCFO1T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:27:19 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C5434C08;
-        Mon,  6 Mar 2023 06:26:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678112801; x=1709648801;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CjdLj/FL7OoxvEoICtOu9RnLJghHsRisMxfikCu3WNw=;
-  b=kpS++xnc7srrVTlzJJ5eiSnJyriDwQVTQYJBQNG9tbCz/TjdmhtEKUoO
-   MfoWdqz4hSfDviHCJzKWvfaY5I8Fe/+etqOk5yQsriC4xKDa6F9RIF1T7
-   nUGnRm2vcoCQzZ1QIgdLRJqmclO0dPceRSzhgmQmFr/s7vbNtX6Fhgwzi
-   KieU9DAaDN0W9ljfQbyyYt4Xq5kDDKzxMCpdAvVvBZ21vTVDThF6gZa5N
-   1wZzjEztWwW8GrX5VIbe7GKUhJcdCyPpOOk/yER1WM+tzSUCrdjduebSv
-   cmrboASSCpd/jljo0V1w0gxm/7X0u4PhCzsy7n5PGzew620Vz4K341e74
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="319394146"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="319394146"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 06:25:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="678492972"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="678492972"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Mar 2023 06:25:33 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pZBmN-00GTT1-37;
-        Mon, 06 Mar 2023 16:25:31 +0200
-Date:   Mon, 6 Mar 2023 16:25:31 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, techsupport@winsystems.com,
-        pdemetrotion@winsystems.com, quarium@gmail.com,
-        jhentges@accesio.com, jay.dolan@accesio.com
-Subject: Re: [PATCH v4 0/3] Migrate the PCIe-IDIO-24 and WS16C48 GPIO drivers
- to the regmap API
-Message-ID: <ZAX3243e4mejPEsS@smile.fi.intel.com>
-References: <cover.1678106722.git.william.gray@linaro.org>
+        with ESMTP id S229767AbjCFOjJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:39:09 -0500
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5707B6EBE;
+        Mon,  6 Mar 2023 06:38:40 -0800 (PST)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id A9DF4D27;
+        Mon,  6 Mar 2023 15:33:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1678113198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dcx1Z+mQ9kyIzZhbOPRPBb/rBVGlQz4iqABIHXKcMdQ=;
+        b=qGYyny0k3uTeywGiVxJ/2RN7/630Mg6LmAREuV62PulrksrBG56Gjvo9vd5OzirIkH/dSs
+        M8J7T9Mqg0lFR+mSm1qnsxrHLybpNp96s/mchZac8HrGnNsv8pmtvXxixAUFPowOJ6bbn+
+        Wbsl6GZQNecz36uVxM08f1gsfEsQOvaEL67AI5o4b9VC7E0napHqUZNJSAanD00jdwFv/u
+        /jRs5Lsb0TLXBRrBUiKiGBQxzH93eLCELLngGyh1ct4KQmDIbHGZs7fTTvAVEePUIsruB2
+        cF+QVD8u9HNeli3/8w2anDdJZmcQhLk30oNB1yxZNcZuyCnnh44l7Sr+KakSDw==
+From:   Michael Walle <michael@walle.cc>
+To:     william.gray@linaro.org
+Cc:     andriy.shevchenko@linux.intel.com, brgl@bgdev.pl,
+        broonie@kernel.org, jay.dolan@accesio.com, jhentges@accesio.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quarium@gmail.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v4 2/3] gpio: pcie-idio-24: Migrate to the regmap API
+Date:   Mon,  6 Mar 2023 15:33:09 +0100
+Message-Id: <20230306143309.758690-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
+References: <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1678106722.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,40 +56,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 07:59:50AM -0500, William Breathitt Gray wrote:
-> Changes in v4:
->  - Allocate idio24gpio before using it in idio_24_probe()
-> Changes in v3:
->  - Drop map from set_type_config() parameter list; regmap can be passed
->    by irq_drv_data instead
->  - Adjust idio_24_set_type_config() for parameter list
->  - Add mutex to prevent clobbering the COS_ENABLE register when masking
->    IRQ and setting their type configuration
-> Changes in v2:
->  - Simplify PCIe-IDIO-24 register offset defines to remove superfluous
->    arithmetic
->  - Check for NULL pointer after chip->irq_drv_data allocation
->  - Set gpio_regmap drvdata and use gpio_regmap_get_drvdata() to get the
->    regmap in idio_24_reg_map_xlate()
-> 
 > The regmap API supports IO port accessors so we can take advantage of
 > regmap abstractions rather than handling access to the device registers
 > directly in the driver.
 > 
-> A patch to pass irq_drv_data as a parameter for struct regmap_irq_chip
-> set_type_config() is included. This is needed by the
-> idio_24_set_type_config() and ws16c48_set_type_config() callbacks in
-> order to update the type configuration on their respective devices.
+> For the PCIe-IDIO-24 series of devices, the following BARs are
+> available:
 > 
-> A patch to migrate the WS16C48 GPIO driver to the regmap API is included
-> in this series due to its dependence on the struct regmap_irq_chip
-> set_type_config() change.
+>     BAR[0]: memory mapped PEX8311
+>     BAR[1]: I/O mapped PEX8311
+>     BAR[2]: I/O mapped card registers
+> 
+> There are 24 FET Output lines, 24 Isolated Input lines, and 8 TTL/CMOS
+> lines (which may be configured for either output or input). The GPIO
+> lines are exposed by the following card registers:
+> 
+>     Base +0x0-0x2 (Read/Write): FET Outputs
+>     Base +0xB (Read/Write): TTL/CMOS
+>     Base +0x4-0x6 (Read): Isolated Inputs
+>     Base +0x7 (Read): TTL/CMOS
+> 
+> In order for the device to support interrupts, the PLX PEX8311 internal
+> PCI wire interrupt and local interrupt input must first be enabled.
+> 
+> The following card registers for Change-Of-State may be used:
+> 
+>     Base +0x8-0xA (Read): COS Status Inputs
+>     Base +0x8-0xA (Write): COS Clear Inputs
+>     Base +0xB (Read): COS Status TTL/CMOS
+>     Base +0xB (Write): COS Clear TTL/CMOS
+>     Base +0xE (Read/Write): COS Enable
+> 
+> The COS Enable register is used to enable/disable interrupts and
+> configure the interrupt levels; each bit maps to a group of eight inputs
+> as described below:
+> 
+>     Bit 0: IRQ EN Rising Edge IN0-7
+>     Bit 1: IRQ EN Rising Edge IN8-15
+>     Bit 2: IRQ EN Rising Edge IN16-23
+>     Bit 3: IRQ EN Rising Edge TTL0-7
+>     Bit 4: IRQ EN Falling Edge IN0-7
+>     Bit 5: IRQ EN Falling Edge IN8-15
+>     Bit 6: IRQ EN Falling Edge IN16-23
+>     Bit 7: IRQ EN Falling Edge TTL0-7
+> 
+> An interrupt is asserted when a change-of-state matching the interrupt
+> level configuration respective for a particular group of eight inputs
+> with enabled COS is detected.
+> 
+> The COS Status registers may be read to determine which inputs have
+> changed; if interrupts were enabled, an IRQ will be generated for the
+> set bits in these registers. Writing the value read from the COS Status
+> register back to the respective COS Clear register will clear just those
+> interrupts.
+> 
+> Cc: Arnaud de Turckheim <quarium@gmail.com>
+> Cc: John Hentges <jhentges@accesio.com>
+> Cc: Jay Dolan <jay.dolan@accesio.com>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
-I have found nothing WRT lock type changes.
-Can you shed a light on what's going on here?
+FWIW, the gpio-regmap part looks good:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Michael Walle <michael@walle.cc>
 
-
+-michael
