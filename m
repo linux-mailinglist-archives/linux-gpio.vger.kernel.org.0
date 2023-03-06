@@ -2,121 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58CE36ABAA2
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:03:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C88196ABB48
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:12:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjCFKDy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 05:03:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
+        id S230250AbjCFKMn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 05:12:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjCFKDw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:03:52 -0500
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0F8170E
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:03:49 -0800 (PST)
-Received: by mail-vs1-xe2d.google.com with SMTP id d20so8541322vsf.11
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:03:49 -0800 (PST)
+        with ESMTP id S230269AbjCFKMb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:12:31 -0500
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10131241E7
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:11:59 -0800 (PST)
+Received: by mail-ua1-x92e.google.com with SMTP id s23so6039884uae.5
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:11:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097029;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097497;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SPzr8oFiB9fNElzzDfAoV9vrNYHk5FKfy7JJ4PIAqSE=;
-        b=2RNNu9YkiQ9SLv1yzu0hlw6ycMPTC+jRGdK9O0mV15wx4zfDdLYJ6qq6IyXMjFC2ui
-         RWQNlI0cF75KIRly7kP8H5zxL2Ufsr4KKlbw7MW4tu2lCQEWY3i0F2OTZXl2D9RlLkfD
-         2jRrUv7v+b2vtrK7k/xAwCOMkyJdgxkEfPwkqdoSsmD/skVJPXlkXDFU4vRi+5UTH2kh
-         nJy1mOaur2/OrTCMRw0YO11n+wUwiJ69YXhyRCbQmQAYDP1xmfrzCDaq+iFZlMez8kF5
-         xDlF5OMkj2IsPpyf355iA28pzlByuWb0IlHXeRMWhe6Twio8NJIj67ZBvgesIwjPc9jD
-         OixA==
+        bh=HE+8pibrc6sLOKZ/p+IAeXF6PtsUcHKof8qicDz0pEE=;
+        b=1Xa11x5NG/+5EyXyponCNpY/iT7IEHh+nUQqcH8K+W7kCOGp0w9zNaM7TzvrMD18qj
+         gJlZkk6qYQ2usHpKSIsppIoPoDuWS9dws5PDyPsTmhpdMzfBHhg2PDd1RkxFFeyppuq4
+         sBDDeCbdsuzm0DEzrP96snc4lBjVeAEhMisjN0O5odGZWfd/2SY9GbsIGFxuBJ0pICSA
+         d2g3zRNoOCDcfn6VlHBUwe88IeuNGxGz8zVjhqaTL3ypTHLC5plbDrsnP3NfYgVAoIxa
+         8NGR5q0Wfjt4ED/Tb7gwN557uIuSm1kNDDQ+N8/MNvgue7eahTXix45U7uIcfSBlcqWh
+         sm3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678097029;
+        d=1e100.net; s=20210112; t=1678097497;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SPzr8oFiB9fNElzzDfAoV9vrNYHk5FKfy7JJ4PIAqSE=;
-        b=RHaNcPlcvogKletei0xgssTDgOIqiX0CExVL6F2dNV+MkyjLMbd/pjllDxyrjQuCpS
-         bXRkU5TMyBdhRbSoICtsHx99rFLOYIREoDPeFLthE2PZSJXiGKKwOY/0FrTGOnnZKdx/
-         BNf1mNqr1Y5dHEBAaFl1gkucEFM0NcaaiwWdTv4jn1JLqW59T/Rk6p8SNtW6d1OgRuMy
-         K+O3G7IS/8b39DVjSfCvb6g7O1i581kiXAzFzXprKGFvyk8VK3XUI4wBHzUfm30CraqE
-         Dy0q292bXV7LOdABkPbcWyfz7rEsuJpWxXPd3tXEtIQsYkRfftVhUrfIWUdW/6GLZ3dm
-         RHTA==
-X-Gm-Message-State: AO0yUKX/8eRRXf5W2pt8P6gj2jUhAlbYBogXGHGVyagvvwiFrKv81gkl
-        WcmqA8y3m5MXQeeFfK5MRj1bV5Wt2KPP/JVCaCO4lA==
-X-Google-Smtp-Source: AK7set/J3QEIzca9ZeSGAD0EnY2yePNuRBAoapV1qPXPpS6dkGzXCjbp2NA254SLfkJPBXsK4Fu6CuDo2QzsnXATQIE=
-X-Received: by 2002:a67:ec4f:0:b0:411:c9c5:59ae with SMTP id
- z15-20020a67ec4f000000b00411c9c559aemr6817085vso.5.1678097028919; Mon, 06 Mar
- 2023 02:03:48 -0800 (PST)
+        bh=HE+8pibrc6sLOKZ/p+IAeXF6PtsUcHKof8qicDz0pEE=;
+        b=r+3vS2gvQnjIhpoWV7oa2euqrIfDdQPtGLz6rehu06BIq2xVFUfiOJ8+jCdLlLK1ce
+         ylqMkIo4CXw0QlBh0woS6HxipPY3GAn+MIaF3O1d6z2jri0GYnwbnc8WkyVGg1Ll/Y3Y
+         QgBc6sPpdOSRNHJ9E9KRGH3KoAsULADOULZHHZPnZtQtvzw0V5rZcBjHhx9ENKmWavK0
+         Ee6vkHS66EZCiBmO4jbljVPKxYBrhjYOSSlGFwROVXq+7bg04jhX6GDXnYhhACQDWaDV
+         yOHgDKOfd1tiIAzpW/RRoDNcl+1Ksr/YRRlaQmFlcpUY2ma0MydF9wy6mP9BrXDCS6eY
+         2wvA==
+X-Gm-Message-State: AO0yUKUO07EgbbzrwCdDk6Vhq9B2oSJ3Xy1gAUUDeBBtn9yyIXyjtNss
+        oUvqv8EGsNzmIgJUfvx2U3H6MSIM8Q9l5MvMmcUDIVCck3mhr6i7
+X-Google-Smtp-Source: AK7set/lNdPUCm9R6eAxbdwnbS9gYophK34alp7Zmw1mmE64hhaEUGnNRtwu5ZwMBRd5w6pA2mTOot12HagE90NaJoI=
+X-Received: by 2002:a1f:914a:0:b0:401:4007:10c4 with SMTP id
+ t71-20020a1f914a000000b00401400710c4mr6539107vkd.1.1678097497106; Mon, 06 Mar
+ 2023 02:11:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20230226205319.1013332-1-dario.binacchi@amarulasolutions.com>
-In-Reply-To: <20230226205319.1013332-1-dario.binacchi@amarulasolutions.com>
+References: <cover.1677515341.git.william.gray@linaro.org> <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
+In-Reply-To: <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 11:03:38 +0100
-Message-ID: <CAMRc=MdoMPROUVeu3m9Jx+-5deRMC9jm+zbGBQ=OdHaLApmJ-g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: use dynamic allocation of base
-To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date:   Mon, 6 Mar 2023 11:11:26 +0100
+Message-ID: <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] regmap-irq: Add no_status support
+To:     broonie@kernel.org
+Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Feb 26, 2023 at 9:53=E2=80=AFPM Dario Binacchi
-<dario.binacchi@amarulasolutions.com> wrote:
+On Mon, Feb 27, 2023 at 5:54=E2=80=AFPM William Breathitt Gray
+<william.gray@linaro.org> wrote:
 >
-> Since commit 502df79b860563d7 ("gpiolib: Warn on drivers still using stat=
-ic
-> gpiobase allocation"), one or more warnings are printed during boot on
-> systems where static allocation of GPIO base is used:
+> Some devices lack status registers, yet expect to handle interrupts.
+> Introduce a no_status flag to indicate such a configuration, where
+> rather than read a status register to verify, all interrupts received
+> are assumed to be active.
 >
-> [    1.611480] gpio gpiochip0: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    1.622893] gpio gpiochip1: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    1.633272] gpio gpiochip2: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    1.643388] gpio gpiochip3: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    1.653474] gpio gpiochip4: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
->
-> So let's follow the suggestion and use dynamic allocation.
->
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 > ---
+> Changes in v2:
+>  - Utilize memset32() to set status_buf for no_status case
+>  - Utilize GENMASK() to generate status_buf mask
+>  - Move no_status kernel doc line under runtime_pm line
 >
->  drivers/gpio/gpio-mxc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/base/regmap/regmap-irq.c | 22 +++++++++++++++-------
+>  include/linux/regmap.h           |  2 ++
+>  2 files changed, 17 insertions(+), 7 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 9d0cec4b82a3..abc129a88a62 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -462,8 +462,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
-v)
->         port->gc.request =3D gpiochip_generic_request;
->         port->gc.free =3D gpiochip_generic_free;
->         port->gc.to_irq =3D mxc_gpio_to_irq;
-> -       port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * =
-32 :
-> -                                            pdev->id * 32;
-> +       port->gc.base =3D -1;
+> diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regma=
+p-irq.c
+> index a8f185430a07..290e26664a21 100644
+> --- a/drivers/base/regmap/regmap-irq.c
+> +++ b/drivers/base/regmap/regmap-irq.c
+> @@ -437,7 +437,10 @@ static irqreturn_t regmap_irq_thread(int irq, void *=
+d)
+>          * possible in order to reduce the I/O overheads.
+>          */
 >
->         err =3D devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
->         if (err)
+> -       if (chip->num_main_regs) {
+> +       if (chip->no_status) {
+> +               /* no status register so default to all active */
+> +               memset32(data->status_buf, GENMASK(31, 0), chip->num_regs=
+);
+> +       } else if (chip->num_main_regs) {
+>                 unsigned int max_main_bits;
+>                 unsigned long size;
+>
+> @@ -967,12 +970,17 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle=
+ *fwnode,
+>                         continue;
+>
+>                 /* Ack masked but set interrupts */
+> -               reg =3D d->get_irq_reg(d, d->chip->status_base, i);
+> -               ret =3D regmap_read(map, reg, &d->status_buf[i]);
+> -               if (ret !=3D 0) {
+> -                       dev_err(map->dev, "Failed to read IRQ status: %d\=
+n",
+> -                               ret);
+> -                       goto err_alloc;
+> +               if (d->chip->no_status) {
+> +                       /* no status register so default to all active */
+> +                       d->status_buf[i] =3D GENMASK(31, 0);
+> +               } else {
+> +                       reg =3D d->get_irq_reg(d, d->chip->status_base, i=
+);
+> +                       ret =3D regmap_read(map, reg, &d->status_buf[i]);
+> +                       if (ret !=3D 0) {
+> +                               dev_err(map->dev, "Failed to read IRQ sta=
+tus: %d\n",
+> +                                       ret);
+> +                               goto err_alloc;
+> +                       }
+>                 }
+>
+>                 if (chip->status_invert)
+> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+> index a3bc695bcca0..c6d80d4e73de 100644
+> --- a/include/linux/regmap.h
+> +++ b/include/linux/regmap.h
+> @@ -1564,6 +1564,7 @@ struct regmap_irq_chip_data;
+>   *                   the need for a @sub_reg_offsets table.
+>   * @status_invert: Inverted status register: cleared bits are active int=
+errupts.
+>   * @runtime_pm:  Hold a runtime PM lock on the device when accessing it.
+> + * @no_status: No status register: all interrupts assumed generated by d=
+evice.
+>   *
+>   * @num_regs:    Number of registers in each control bank.
+>   * @irqs:        Descriptors for individual IRQs.  Interrupt numbers are
+> @@ -1630,6 +1631,7 @@ struct regmap_irq_chip {
+>         unsigned int clear_on_unmask:1;
+>         unsigned int not_fixed_stride:1;
+>         unsigned int status_invert:1;
+> +       unsigned int no_status:1;
+>
+>         int num_regs;
+>
 > --
-> 2.32.0
+> 2.39.2
 >
 
-Linus,
+Mark,
 
-I'm afraid we'll need to do something about this warning, because
-we're getting the same patch for like 4th time already...
+If this looks good to you, could you Ack it so that I can take it
+through the GPIO tree?
 
 Bart
