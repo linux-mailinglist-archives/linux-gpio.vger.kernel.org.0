@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2CBE6AC37D
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:39:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F29166AC36D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 15:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjCFOjK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 09:39:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
+        id S230466AbjCFOgp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 09:36:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjCFOjJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:39:09 -0500
+        with ESMTP id S230325AbjCFOgo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 09:36:44 -0500
 Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5707B6EBE;
-        Mon,  6 Mar 2023 06:38:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFE532E42;
+        Mon,  6 Mar 2023 06:36:16 -0800 (PST)
 Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id A9DF4D27;
-        Mon,  6 Mar 2023 15:33:18 +0100 (CET)
+        by mail.3ffe.de (Postfix) with ESMTPSA id E33EB164C;
+        Mon,  6 Mar 2023 15:35:28 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1678113198;
+        t=1678113329;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dcx1Z+mQ9kyIzZhbOPRPBb/rBVGlQz4iqABIHXKcMdQ=;
-        b=qGYyny0k3uTeywGiVxJ/2RN7/630Mg6LmAREuV62PulrksrBG56Gjvo9vd5OzirIkH/dSs
-        M8J7T9Mqg0lFR+mSm1qnsxrHLybpNp96s/mchZac8HrGnNsv8pmtvXxixAUFPowOJ6bbn+
-        Wbsl6GZQNecz36uVxM08f1gsfEsQOvaEL67AI5o4b9VC7E0napHqUZNJSAanD00jdwFv/u
-        /jRs5Lsb0TLXBRrBUiKiGBQxzH93eLCELLngGyh1ct4KQmDIbHGZs7fTTvAVEePUIsruB2
-        cF+QVD8u9HNeli3/8w2anDdJZmcQhLk30oNB1yxZNcZuyCnnh44l7Sr+KakSDw==
+        bh=w1B+vQ9jUvb0XuC28lF696ECAnddLFijBB7M8fB4ToY=;
+        b=VuqXn6OLtrw3jBWI6/XwhgibVi0mKlaVNBqe/bgsLrSvkD9O6DPxZv37h4Nm2RYypZMQQJ
+        2S04l6pWG2Q1VQkuV1KtKdrWLR33Ar60TioR5f+DAehOvbFyAk1QYYrtqpaRyra+0ilopT
+        Bdc7+purDnJHaz4q9Pi9U1kn8NRRLiBUGBeQLVDRzl6qLQ82kxAoLIQEETMOXapTa7Dg0y
+        aFl8WC9dlE4K/AdFCstS8x4ART4KaDX2nWGnSEE0zr6Ijmr6PUnClVpQ5DZXCExnpoVSKs
+        JFpvkq4MO7q/gb7e36ZfU3I0IcHbqT862XyruF6y3udWGflF9fsLCxtJ4ohHog==
 From:   Michael Walle <michael@walle.cc>
 To:     william.gray@linaro.org
 Cc:     andriy.shevchenko@linux.intel.com, brgl@bgdev.pl,
-        broonie@kernel.org, jay.dolan@accesio.com, jhentges@accesio.com,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quarium@gmail.com,
+        broonie@kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pdemetrotion@winsystems.com, techsupport@winsystems.com,
         Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v4 2/3] gpio: pcie-idio-24: Migrate to the regmap API
-Date:   Mon,  6 Mar 2023 15:33:09 +0100
-Message-Id: <20230306143309.758690-1-michael@walle.cc>
+Subject: Re: [PATCH v4 3/3] gpio: ws16c48: Migrate to the regmap API
+Date:   Mon,  6 Mar 2023 15:35:23 +0100
+Message-Id: <20230306143523.759040-1-michael@walle.cc>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
-References: <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
+In-Reply-To: <4b6cd42426521808962d68a44952b95818fc5daf.1678106722.git.william.gray@linaro.org>
+References: <4b6cd42426521808962d68a44952b95818fc5daf.1678106722.git.william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -60,62 +60,57 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 > regmap abstractions rather than handling access to the device registers
 > directly in the driver.
 > 
-> For the PCIe-IDIO-24 series of devices, the following BARs are
-> available:
+> The WinSystems WS16C48 provides the following registers:
 > 
->     BAR[0]: memory mapped PEX8311
->     BAR[1]: I/O mapped PEX8311
->     BAR[2]: I/O mapped card registers
+>     Offset 0x0-0x5: Port 0-5 I/O
+>     Offset 0x6: Int_Pending
+>     Offset 0x7: Page/Lock
+>     Offset 0x8-0xA (Page 1): Pol_0-Pol_2
+>     Offset 0x8-0xA (Page 2): Enab_0-Enab_2
+>     Offset 0x8-0xA (Page 3): Int_ID0-Int_ID2
 > 
-> There are 24 FET Output lines, 24 Isolated Input lines, and 8 TTL/CMOS
-> lines (which may be configured for either output or input). The GPIO
-> lines are exposed by the following card registers:
+> Port 0-5 I/O provides access to 48 lines of digital I/O across six
+> registers, each bit position corresponding to the respective line.
+> Writing a 1 to a respective bit position causes that output pin to sink
+> current, while writing a 0 to the same bit position causes that output
+> pin to go to a high-impedance state and allows it to be used an input.
+> Reads on a port report the inverted state (0 = high, 1 = low) of an I/O
+> pin when used in input mode. Interrupts are supported on Port 0-2.
 > 
->     Base +0x0-0x2 (Read/Write): FET Outputs
->     Base +0xB (Read/Write): TTL/CMOS
->     Base +0x4-0x6 (Read): Isolated Inputs
->     Base +0x7 (Read): TTL/CMOS
+> Int_Pending is a read-only register that reports the combined state of
+> the INT_ID0 through INT_ID2 registers; an interrupt pending is indicated
+> when any of the low three bits are set.
 > 
-> In order for the device to support interrupts, the PLX PEX8311 internal
-> PCI wire interrupt and local interrupt input must first be enabled.
+> The Page/Lock register provides the following bits:
 > 
-> The following card registers for Change-Of-State may be used:
+>     Bit 0-5: Port 0-5 I/O Lock
+>     Bit 6-7: Page 0-3 Selection
 > 
->     Base +0x8-0xA (Read): COS Status Inputs
->     Base +0x8-0xA (Write): COS Clear Inputs
->     Base +0xB (Read): COS Status TTL/CMOS
->     Base +0xB (Write): COS Clear TTL/CMOS
->     Base +0xE (Read/Write): COS Enable
+> For Bits 0-5, writing a 1 to a respective bit position locks the output
+> state of the corresponding I/O port. Writing the page number to Bits 6-7
+> selects that respective register page for use.
 > 
-> The COS Enable register is used to enable/disable interrupts and
-> configure the interrupt levels; each bit maps to a group of eight inputs
-> as described below:
+> Pol_0-Pol_2 are accessible when Page 1 is selected. Writing a 1 to a
+> respective bit position selects the rising edge detection interrupts for
+> that input line, while writing a 0 to the same bit position selects the
+> falling edge detection interrupts.
 > 
->     Bit 0: IRQ EN Rising Edge IN0-7
->     Bit 1: IRQ EN Rising Edge IN8-15
->     Bit 2: IRQ EN Rising Edge IN16-23
->     Bit 3: IRQ EN Rising Edge TTL0-7
->     Bit 4: IRQ EN Falling Edge IN0-7
->     Bit 5: IRQ EN Falling Edge IN8-15
->     Bit 6: IRQ EN Falling Edge IN16-23
->     Bit 7: IRQ EN Falling Edge TTL0-7
+> Enab_0-Enab_2 are accessible when Page 2 is selected. Writing a 1 to a
+> respective bit position enables interrupts for that input line, while
+> writing a 0 to that same bit position clears and disables interrupts for
+> that input line.
 > 
-> An interrupt is asserted when a change-of-state matching the interrupt
-> level configuration respective for a particular group of eight inputs
-> with enabled COS is detected.
+> Int_ID0-Int_ID2 are accessible when Page 3 is selected. A respective bit
+> when read as a 1 indicates that an edge of the polarity set in the
+> corresponding polarity register was detected for the corresponding input
+> line. Writing any value to this register clears all pending interrupts
+> for the register.
 > 
-> The COS Status registers may be read to determine which inputs have
-> changed; if interrupts were enabled, an IRQ will be generated for the
-> set bits in these registers. Writing the value read from the COS Status
-> register back to the respective COS Clear register will clear just those
-> interrupts.
-> 
-> Cc: Arnaud de Turckheim <quarium@gmail.com>
-> Cc: John Hentges <jhentges@accesio.com>
-> Cc: Jay Dolan <jay.dolan@accesio.com>
+> Cc: Paul Demetrotion <pdemetrotion@winsystems.com>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
-FWIW, the gpio-regmap part looks good:
+Same here, gpio-regmap part looks good:
 
 Reviewed-by: Michael Walle <michael@walle.cc>
 
