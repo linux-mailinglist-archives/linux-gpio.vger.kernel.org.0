@@ -2,109 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 674616ABB9C
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C44AA6ABC63
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Mar 2023 11:26:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbjCFKSX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 05:18:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
+        id S231178AbjCFK05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 05:26:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbjCFKRy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:17:54 -0500
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C906122001
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:17:29 -0800 (PST)
-Received: by mail-ua1-x92f.google.com with SMTP id x1so6035655uav.9
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:17:29 -0800 (PST)
+        with ESMTP id S230481AbjCFK0c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 05:26:32 -0500
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C6C26868
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 02:26:04 -0800 (PST)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1755e639b65so10844176fac.3
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Mar 2023 02:26:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678097849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XKtYenUqtd6VLS14GJrUPd5L2ue++xHl4Zvl1BOmIFU=;
-        b=WnA1PDe7IO9i9LNud6CZrnh3mgBD12jgBwRQDB6tfNWrXF9y28VFhW+Flxl/4gNY4e
-         e0TWsqMvgW8RM72Js22NYwfVvtYMLdzmNCYbt8D51secquUaetoU8bYZp4zxkqOEmQcj
-         +8+7zJfzSKuQ7EdEZeTYMcNcE5nO3ShTa0zbkuc3uQGfkguTecW4Lgb18lL6i1GYsSbh
-         8qqE8Fbgqmd11uYDkfwQbbyDr9JYjCgazgIzJjasSucop9ttnlbGajizf5/2Hp0oJpiM
-         zxGgRYswZoJucJz+iPdixZkTEEmOjN7tWBs0Fvw3De6nnit/Bm9dqp7luej92qXu51vJ
-         fmqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678097849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=gmail.com; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XKtYenUqtd6VLS14GJrUPd5L2ue++xHl4Zvl1BOmIFU=;
-        b=NYmlsw51zFcze6ZfXc/Z3RWmB3VgRpKvm97Z01ItqW/0fpOGr2SnO7cmMtL8tgAx+S
-         d3a25H//jkeaChGG/xz05z9bGEU23DTPaiiLPlivwp81VsNBHgP0RcoX9GmcLXQFNwpA
-         FJMncm1Ofb21ccze8WX3keRicO4Wb5/Ht4Zx0nyCU708XhOsXriaws0q0UAECahx5vTd
-         hfHOXEsxW3rSqAptvr9tk16MJUxi9YejrGS/yZdL9T27R0gQGB72PmQEBD5MiW7UZxKU
-         cgVAxddjpde4vJenNtwyEpyP8J2CE3jcFuQCLJiiuZb96QnATygj+orgtxLGZZZvkzQ1
-         pzmg==
-X-Gm-Message-State: AO0yUKWdbOM0CnAA4r/zBG0Q5XMxKTUp7pcVrHlAU9lkmEh+kk8I+5ol
-        gE9QNl+Ws9YFaAWcbjwaR9wQ0MTI+QyJSQg1g9kj4A==
-X-Google-Smtp-Source: AK7set/X1gbAlXGfd9w/+La9Un/k7BbX9YRtJU9/AJdwxyPogFCGtQifMzZmGZ0sqrTFpoLiV/EVM8Bh5GgzffrAR7o=
-X-Received: by 2002:a1f:1888:0:b0:401:8c72:4cf4 with SMTP id
- 130-20020a1f1888000000b004018c724cf4mr6487877vky.1.1678097848924; Mon, 06 Mar
- 2023 02:17:28 -0800 (PST)
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=EDbhPO1WKzSJy97Cp1KR4Ue1wIcLFSscoH9L1E67CyPoJvstONJwP7RxKCqsDiuar/
+         4XZc6UhnyOFrEHlIQ3KmGU6oX8xWOyZpiVA4bD6F27cjopM5KQeiwoXnQq1r2hu/0hkW
+         LgiQ9FGonNq8AsMsEKBqZEvtwgOfW2lv3iUKapY2ocqE+LRWfsVifUNA3eNbIcULbvPT
+         nBBU0ns0xWwmvS7ETCAh5Z5lhdCiLVSRis+m63aq8CObwyUrMLAjGQpDeSf4OVAOQav5
+         5TuEH4NOUnTGCqcHGRIE0/tBavRRplzW4HaWY1DRs+pas+nyfL/37adPjYmqfexbl/Di
+         PS3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=n9pELfv9lbg0xvGtTf5j2lBkB+/7d8ta+o7ZAInCPQ+ws+Vi2/ykXja+pB877S7Dha
+         pJespbUyT84SVDNVSNfIzEMQFvMwXIWIF53yYqV+rR74gjnnIov1HQCqmI+xM9vmF+LL
+         t7eOpykAx/VRX/8+VX9Vkx3HMtT8umTvu9CcQFCsPfLN5rJOVmtbWjBYY1CZj8EXLmGg
+         aVR8yYrH6etErcSuIObnhnSokQOHPE1SYWhVUpSJE/4AZn7yo6PwcVDPyJgR4FI42aM0
+         FSmx6wLhHWJbZ1hqfBTscRuXXhp49SC2kD1yhx425xuZrRStk7oqSxTayQtxs5gWGmyu
+         KXFw==
+X-Gm-Message-State: AO0yUKUmKuUlRkkHCTMztiv/kTP8NE1UAe3cvCT9Ibxv/sZl2ekQ+xDV
+        /Nj0nrakUamynXaiA6mfepulxrEVufYCNf3yE8kKTldpl14=
+X-Google-Smtp-Source: AK7set9YqazPiOkBuGm+YrFZOLe51O90+qKBrIr6WBjXtnVrmZ9RIOYyWRLBWcHI+/rsVoNhMQhwnCpcR6G8n2Z6mzE=
+X-Received: by 2002:a05:6102:e44:b0:402:999f:44d3 with SMTP id
+ p4-20020a0561020e4400b00402999f44d3mr6975472vst.1.1678098330725; Mon, 06 Mar
+ 2023 02:25:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20230226053953.4681-1-rdunlap@infradead.org> <20230226053953.4681-4-rdunlap@infradead.org>
-In-Reply-To: <20230226053953.4681-4-rdunlap@infradead.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Mar 2023 11:17:18 +0100
-Message-ID: <CAMRc=McJk4QE_hbjKzPcVTdfOAqT+jcfCenwdPzds8CqRYVtZw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] gpio: GPIO_REGMAP: select REGMAP instead of depending
- on it
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
+Received: by 2002:a59:ce6f:0:b0:3ae:930b:3e70 with HTTP; Mon, 6 Mar 2023
+ 02:25:30 -0800 (PST)
+Reply-To: madis.scarl@terlera.it
+From:   "Ms Eve from U.N" <denisagotou@gmail.com>
+Date:   Mon, 6 Mar 2023 11:25:30 +0100
+Message-ID: <CAD6bNBi6bPCYboaF4-xBgmeUTFn6JMXqU6TNepQig=NRMqhdUg@mail.gmail.com>
+Subject: Re: Claim of Fund:
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Feb 26, 2023 at 6:40=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
-> REGMAP is a hidden (not user visible) symbol. Users cannot set it
-> directly thru "make *config", so drivers should select it instead of
-> depending on it if they need it.
->
-> Consistently using "select" or "depends on" can also help reduce
-> Kconfig circular dependency issues.
->
-> Therefore, change the use of "depends on REGMAP" to "select REGMAP".
->
-> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap=
-")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Michael Walle <michael@walle.cc>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: linux-gpio@vger.kernel.org
-> ---
->  drivers/gpio/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff -- a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -100,7 +100,7 @@ config GPIO_GENERIC
->         tristate
->
->  config GPIO_REGMAP
-> -       depends on REGMAP
-> +       select REGMAP
->         tristate
->
->  # put drivers in the right section, in alphabetical order
+Hello Good Morning,
+This is to bring to your notice that all our efforts to contact you
+through this your email ID failed Please Kindly contact Barrister.
+Steven Mike { mbarrsteven@gmail.com } on his private email for the
+claim of your compensation entitlement
 
-Queued for fixes, thanks!
-
-Bart
+Note: You have to pay for the delivery fee.
+Yours Sincerely
+Mrs EVE LEWIS
