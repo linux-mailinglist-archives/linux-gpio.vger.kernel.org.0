@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACAC6ADFE8
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 751646ADFEE
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:06:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbjCGNGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 08:06:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        id S230430AbjCGNGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 08:06:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbjCGNFj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:05:39 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F49654CB0
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 05:05:10 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id bi9so17002360lfb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 05:05:10 -0800 (PST)
+        with ESMTP id S230253AbjCGNFm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:05:42 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882EA6A428
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 05:05:12 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id i28so17051392lfv.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 05:05:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678194297;
+        d=linaro.org; s=google; t=1678194298;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Pkmx+b8ik/C6bLfv+4RBCDp/VEmyhMZOMZzx00ojykk=;
-        b=tdXfnpQveQZ13YRTjuwgCi+dCDAKPyozw1qYk19o2EtuyEuikBRxXl6nyMRSB2xKRJ
-         WoI6iAmTDBWherJFYCKCXcxRe/4XJHx/fCeWmZ2DZcA3HbL4fOi6nokat7LiDvCQuXYG
-         gU4udntoQ0XJ6m+b5ON3WpTR8+YyCXOtbXyrqj8uhMVAbxIy6TMWKhfBezu6mscGBj0J
-         TwcV9YsgtwqysWedxow5kbw5KklVoarBDjxm0WDoB0g65+qOJdrsFtY6YuNQA//qVo36
-         AxYfUHWcp7ClBdAzlY8RLrdBA/86dbEVMh44W/lFDzziSOxKOoBukra245PzOwLMl0Pl
-         YYWA==
+        bh=BE0hN/evTOxc8pxKXkniQeMiy8yek7h1H53mI21BTS8=;
+        b=vZKm0sHQNOSMMZoNqibcrK3Qe6Lg01/4Fr1aaxO9TGYf/45NkCHHxU/yfX8ZsCGMx/
+         J9zXwTKz+qF5UBNy0qy4JohKdNJ2XymtlmWrfhlrgGpAO0PHnES4m2FWy9S8RxHJXPUq
+         wzs1CANIN4hrO+6RHsyevTyy1CwkdAbUJYmUtP73VVtm1ucs9J7twojT3oreATjs7YQf
+         UAyT80ziocByhf7ZYiouICdsrHgNauSbu71i+RphcnA7crEl+YsM74LvNV2BN70FI8H5
+         1rVIfU6qqA2Fa9brCUIIg1nI8ecG+TXZBn84g9c2Jfe8TAFLkKN9LLRBCjHzML+yhZq8
+         DdXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678194297;
+        d=1e100.net; s=20210112; t=1678194298;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Pkmx+b8ik/C6bLfv+4RBCDp/VEmyhMZOMZzx00ojykk=;
-        b=3WoZ5ZOST9Smv5vZ0Am7vQ2i5Ibwxkjr80gmuw00dDW63QJ8lNZIOaRjsUWMR0WvhR
-         jKDr3YoxEisJvSFzJXvVBuZD7c6Br/4WbpSlL60hdcxPvv62cSliU1Sz6fENO9TtFLOa
-         Z/5AncnU9OnSpu+sUmHeifELHmLH1VTTs8ijzHZ1W5xsAKxo1pGPMJib7rPNOOAjuFwc
-         j5jRWvs+YSNPHca6rkxds1uPjFoKOgpqIX0td0l5+UnTNd4zF7k1lRRLL8J6jlv0Kppg
-         CMvdnsQ6TCIOHAEOfNqCD0S5MYyTSMYFOIBcmCvCwPHqPzaoSVQt6nr7kMn/DoGf7Mfg
-         dFBA==
-X-Gm-Message-State: AO0yUKXLWFbGzHlI9T63tnQ8hPCw56v97PGZYMh2f6HDEgFjcHHE8Hrv
-        pLiQlHTdkdbrSlkiZxoI+O+mxg==
-X-Google-Smtp-Source: AK7set+BPTrxIQszyBjkoemozr65iYSYHYZLhbySZe0iKuYbn7PX2UF10OfwR0QpBDODuoR5HJXYOw==
-X-Received: by 2002:ac2:46d6:0:b0:4da:f436:d423 with SMTP id p22-20020ac246d6000000b004daf436d423mr3963036lfo.21.1678194296895;
-        Tue, 07 Mar 2023 05:04:56 -0800 (PST)
+        bh=BE0hN/evTOxc8pxKXkniQeMiy8yek7h1H53mI21BTS8=;
+        b=Sv3VCxdaHwtA0BVdpnhdezrnl5uyM6c9q7YR/3rqUEztvWVApJ9abyHVuPgDqYsMxl
+         CeBRkn96ejtqZwFp46GDg8wkt3jBADmdDa9m3XTLwybdn0HDQ6O5fWVE3ZR0jHYjYpTj
+         fkyedrNwiiipyJivrpGgv+Wh1FDgoQRsQsB0DaD3TxWibO54Ma0/nbSq4l9vRualfW5L
+         zzeJhVB1ULBCmP1F3Z5GQK0U3NIABcDRrVLP6uv1JTfLwU5/ETQ0LxQqwHYCmenUNSLn
+         Nbk4QayKdnFbIJTJeUqaMKThecw8zU9jsLE8iHtVMvV6HQDF8pFe52LNixiu7vc1qX/z
+         sSPw==
+X-Gm-Message-State: AO0yUKXBfxXIQZT8dfwCzJlAlS1YsAFkRWnrl9SSmsYdYzapqkNTX2nw
+        942WwcHcqrPvr1cX0f1yaZsbiQ==
+X-Google-Smtp-Source: AK7set9wENuA3GfSq1Bk7Dw+Yjl09qsPMHBsyKksazihCREvuGQFHqQ3k0XZPposjOWqIHAg57giKA==
+X-Received: by 2002:ac2:52bb:0:b0:4d8:5de4:e3b4 with SMTP id r27-20020ac252bb000000b004d85de4e3b4mr4312862lfm.1.1678194297974;
+        Tue, 07 Mar 2023 05:04:57 -0800 (PST)
 Received: from [127.0.1.1] ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id w14-20020ac2598e000000b004caf992bba9sm2030548lfn.268.2023.03.07.05.04.55
+        by smtp.gmail.com with ESMTPSA id w14-20020ac2598e000000b004caf992bba9sm2030548lfn.268.2023.03.07.05.04.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 05:04:56 -0800 (PST)
+        Tue, 07 Mar 2023 05:04:57 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 07 Mar 2023 14:04:53 +0100
-Subject: [PATCH v2 11/16] gpio: mlxbf2: Convert to immutable irq_chip
+Date:   Tue, 07 Mar 2023 14:04:54 +0100
+Subject: [PATCH v2 12/16] gpio: max732x: Convert to immutable irq_chip
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230215-immutable-chips-v2-11-d6b0e3f2d991@linaro.org>
+Message-Id: <20230215-immutable-chips-v2-12-d6b0e3f2d991@linaro.org>
 References: <20230215-immutable-chips-v2-0-d6b0e3f2d991@linaro.org>
 In-Reply-To: <20230215-immutable-chips-v2-0-d6b0e3f2d991@linaro.org>
 To:     Mun Yew Tham <mun.yew.tham@intel.com>,
@@ -79,8 +79,8 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.12.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -94,98 +94,56 @@ Cc: Marc Zyngier <maz@kernel.org>
 Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-mlxbf2.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-max732x.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index 77a41151c921..6abe01bc39c3 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -17,6 +17,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/resource.h>
-+#include <linux/seq_file.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index 68e982cdee73..7f2fde191755 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -351,6 +351,7 @@ static void max732x_irq_mask(struct irq_data *d)
+ 	struct max732x_chip *chip = gpiochip_get_data(gc);
  
-@@ -65,10 +66,10 @@ struct mlxbf2_gpio_context_save_regs {
- /* BlueField-2 gpio block context structure. */
- struct mlxbf2_gpio_context {
- 	struct gpio_chip gc;
--	struct irq_chip irq_chip;
- 
- 	/* YU GPIO blocks address */
- 	void __iomem *gpio_io;
-+	struct device *dev;
- 
- 	struct mlxbf2_gpio_context_save_regs *csave_regs;
- };
-@@ -237,6 +238,7 @@ static void mlxbf2_gpio_irq_enable(struct irq_data *irqd)
- 	unsigned long flags;
- 	u32 val;
- 
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(irqd));
- 	raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
- 	val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
- 	val |= BIT(offset);
-@@ -261,6 +263,7 @@ static void mlxbf2_gpio_irq_disable(struct irq_data *irqd)
- 	val &= ~BIT(offset);
- 	writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
- 	raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(irqd));
+ 	chip->irq_mask_cur &= ~(1 << d->hwirq);
++	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
  }
  
- static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
-@@ -322,6 +325,24 @@ mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
+ static void max732x_irq_unmask(struct irq_data *d)
+@@ -358,6 +359,7 @@ static void max732x_irq_unmask(struct irq_data *d)
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct max732x_chip *chip = gpiochip_get_data(gc);
+ 
++	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+ 	chip->irq_mask_cur |= 1 << d->hwirq;
+ }
+ 
+@@ -429,7 +431,7 @@ static int max732x_irq_set_wake(struct irq_data *data, unsigned int on)
  	return 0;
  }
  
-+static void mlxbf2_gpio_irq_print_chip(struct irq_data *irqd,
-+				       struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-+	struct mlxbf2_gpio_context *gs = gpiochip_get_data(gc);
-+
-+	seq_printf(p, dev_name(gs->dev));
-+}
-+
-+static const struct irq_chip mlxbf2_gpio_irq_chip = {
-+	.irq_set_type = mlxbf2_gpio_irq_set_type,
-+	.irq_enable = mlxbf2_gpio_irq_enable,
-+	.irq_disable = mlxbf2_gpio_irq_disable,
-+	.irq_print_chip = mlxbf2_gpio_irq_print_chip,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- /* BlueField-2 GPIO driver initialization routine. */
- static int
- mlxbf2_gpio_probe(struct platform_device *pdev)
-@@ -340,6 +361,8 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
- 	if (!gs)
- 		return -ENOMEM;
+-static struct irq_chip max732x_irq_chip = {
++static const struct irq_chip max732x_irq_chip = {
+ 	.name			= "max732x",
+ 	.irq_mask		= max732x_irq_mask,
+ 	.irq_unmask		= max732x_irq_unmask,
+@@ -437,6 +439,8 @@ static struct irq_chip max732x_irq_chip = {
+ 	.irq_bus_sync_unlock	= max732x_irq_bus_sync_unlock,
+ 	.irq_set_type		= max732x_irq_set_type,
+ 	.irq_set_wake		= max732x_irq_set_wake,
++	.flags			= IRQCHIP_IMMUTABLE,
++	 GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
  
-+	gs->dev = dev;
-+
- 	/* YU GPIO block address */
- 	gs->gpio_io = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(gs->gpio_io))
-@@ -376,13 +399,8 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
+ static uint8_t max732x_irq_pending(struct max732x_chip *chip)
+@@ -517,7 +521,7 @@ static int max732x_irq_setup(struct max732x_chip *chip,
+ 		}
  
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq >= 0) {
--		gs->irq_chip.name = name;
--		gs->irq_chip.irq_set_type = mlxbf2_gpio_irq_set_type;
--		gs->irq_chip.irq_enable = mlxbf2_gpio_irq_enable;
--		gs->irq_chip.irq_disable = mlxbf2_gpio_irq_disable;
--
- 		girq = &gs->gc.irq;
--		girq->chip = &gs->irq_chip;
-+		gpio_irq_chip_set_chip(girq, &mlxbf2_gpio_irq_chip);
- 		girq->handler = handle_simple_irq;
- 		girq->default_type = IRQ_TYPE_NONE;
+ 		girq = &chip->gpio_chip.irq;
+-		girq->chip = &max732x_irq_chip;
++		gpio_irq_chip_set_chip(girq, &max732x_irq_chip);
  		/* This will let us handle the parent IRQ in the driver */
+ 		girq->parent_handler = NULL;
+ 		girq->num_parents = 0;
 
 -- 
 2.34.1
