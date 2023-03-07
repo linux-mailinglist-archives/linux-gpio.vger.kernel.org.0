@@ -2,178 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 950566AE4DF
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 16:36:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D62F56AE752
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 17:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbjCGPf6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 10:35:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
+        id S229961AbjCGQx3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 11:53:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjCGPf5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 10:35:57 -0500
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05hn2220.outbound.protection.outlook.com [52.100.174.220])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E782F1BF9;
-        Tue,  7 Mar 2023 07:35:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dXteK4Vft4N/Ad2bwozkXL58dzp+8D6gowBR79z/vMU=;
- b=nKuB2MFvJ3peWQdXXyu4fCCGSlmysOreLyHlAmB6jYUKWLb6N+gQM43i151r2eFf0Kqy0BIaCOj2m6a1XypZ29Z+ynt97uvL5/Ekhb6U3QhBgrUkRtJcqPsymhPgZOUIsv0UEUdukoymcIjf4jIKuIFq8Q68ULxyKJHX3Ad+R5STCoYc0qbcveBwAGw3hiRshB2dLtQ79IIEMEshK7vY/Gl8LLTNfZQUJHw+DGxwK+VpKVyJwdl2tkUz+9RYYkfaUAnTdSqVDnelmCSGBW0g3a7deysFkCeI7SPrRwnAxWti0VsOl8Yy7skaJbWU5FOdtwm4MEDXABJBEMmSkVlItA==
-Received: from AS9PR05CA0349.eurprd05.prod.outlook.com (2603:10a6:20b:490::33)
- by AS8PR03MB7637.eurprd03.prod.outlook.com (2603:10a6:20b:345::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.27; Tue, 7 Mar
- 2023 15:35:53 +0000
-Received: from AM6EUR05FT058.eop-eur05.prod.protection.outlook.com
- (2603:10a6:20b:490:cafe::9b) by AS9PR05CA0349.outlook.office365.com
- (2603:10a6:20b:490::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28 via Frontend
- Transport; Tue, 7 Mar 2023 15:35:53 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 20.160.56.86)
- smtp.mailfrom=seco.com; dkim=pass (signature was verified)
- header.d=seco.com;dmarc=pass action=none header.from=seco.com;
-Received-SPF: Fail (protection.outlook.com: domain of seco.com does not
- designate 20.160.56.86 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.160.56.86; helo=inpost-eu.tmcas.trendmicro.com;
-Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.86) by
- AM6EUR05FT058.mail.protection.outlook.com (10.233.240.72) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.16 via Frontend Transport; Tue, 7 Mar 2023 15:35:53 +0000
-Received: from outmta (unknown [192.168.82.133])
-        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id 327CB2008026E;
-        Tue,  7 Mar 2023 15:35:53 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (unknown [104.47.17.105])
-        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 6ADA220080075;
-        Tue,  7 Mar 2023 15:27:37 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=egHi37QIgarby3IrBj0uiJLYnNPlUzHLiiDptIr2PNztExC/FAbF/GMF8UHisQA3lw5hN1IjdFybAhjdO02jW3TW3U+VA53PaPN044MtFwm7s0DWCNV3/+Ur+H4l2jInJTKyjIyPBfAacMnVbOGmLQOVZbUHPjWIdv+AyYCCBrWE7xm6P7/07vDiIFQosqeOIbpob0XTWB/5mPwOa1O9hdX8t8OvC8hk5fnC3/FWJtRuJC+pYP6ObrihOJK2NZtmVtpsdJ5hRfelLtFrYsjkeAwj2HVLEiV5AUboGewoQ/B0w2RrvQ9Q8pCI5ux9qZjJPe6cQvZjhyuMdAIuoDsbkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dXteK4Vft4N/Ad2bwozkXL58dzp+8D6gowBR79z/vMU=;
- b=PrYLloRYT+yrXrwMgrMSo0dabA89vx3BsVY5TN4ibjKiincikCDM5ovynHR8c67YxXZZriXfvOESG5b7C+2jTkGKtkjwQEgWTBazh0LCBvMhFCsSO1SPcWsCbkvx+zruqbV1g+hHIJT3CLEWmHAY3JAwA3YTZNePmtFWuggut3MOCiyWqpw9Rw+JlsDfJEB8h6lOLQUimLFm9415re6P6UO8xqVLBO6aTGaNeeBTCVMSZrSvhKSeNZbCZNvLmsWd+TKCT6XKvZ8k/8WZxIT8qaz5F/0SEh75UTGitBciIGwXzDKgizLEsNwfPxkDpX05OwB091RvOn1EryQkSnIkGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dXteK4Vft4N/Ad2bwozkXL58dzp+8D6gowBR79z/vMU=;
- b=nKuB2MFvJ3peWQdXXyu4fCCGSlmysOreLyHlAmB6jYUKWLb6N+gQM43i151r2eFf0Kqy0BIaCOj2m6a1XypZ29Z+ynt97uvL5/Ekhb6U3QhBgrUkRtJcqPsymhPgZOUIsv0UEUdukoymcIjf4jIKuIFq8Q68ULxyKJHX3Ad+R5STCoYc0qbcveBwAGw3hiRshB2dLtQ79IIEMEshK7vY/Gl8LLTNfZQUJHw+DGxwK+VpKVyJwdl2tkUz+9RYYkfaUAnTdSqVDnelmCSGBW0g3a7deysFkCeI7SPrRwnAxWti0VsOl8Yy7skaJbWU5FOdtwm4MEDXABJBEMmSkVlItA==
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=seco.com;
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
- by GV1PR03MB8687.eurprd03.prod.outlook.com (2603:10a6:150:91::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
- 2023 15:35:48 +0000
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::dbcf:1089:3242:614e]) by DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::dbcf:1089:3242:614e%5]) with mapi id 15.20.6156.027; Tue, 7 Mar 2023
- 15:35:47 +0000
-Message-ID: <42ccbac0-53e2-f599-fb3d-064b896bde4a@seco.com>
-Date:   Tue, 7 Mar 2023 10:35:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org, Niall Leonard <nl250060@ncr.com>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?Q?Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-References: <20230306191535.1917656-1-sean.anderson@seco.com>
- <20230306191535.1917656-4-sean.anderson@seco.com>
- <4c039e53-e3ca-29d7-e5ea-f24e385d28b0@linaro.org>
-From:   Sean Anderson <sean.anderson@seco.com>
-In-Reply-To: <4c039e53-e3ca-29d7-e5ea-f24e385d28b0@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4P288CA0048.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d3::25) To DB9PR03MB8847.eurprd03.prod.outlook.com
- (2603:10a6:10:3dd::13)
+        with ESMTP id S229669AbjCGQw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 11:52:56 -0500
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2147EA25
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 08:49:01 -0800 (PST)
+Received: by mail-vs1-xe34.google.com with SMTP id f13so12873046vsg.6
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 08:49:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678207740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BAM6KLGzntkSWdjqY00tOO6Re1CtThRvd/af47qdcys=;
+        b=sMlSZ99iY1HXbVfOwHWFFNCePy6z5mMJc7oroohOrUO5Kd6B/PA4UN67MKzkTIxBlr
+         0XDLyNp2UMVwMgLjhSbmqBS5pHRXTpRHGdPbbOH5EL64VbBmd/hA/94DVXvxqt+8CNEQ
+         f25B+F75LFjlhslV28C/rEhR0lE6N+uOI6de+I7EMlLSqZj7sdUqm5gDDkTVoYk7KfjJ
+         mUFwn2S2OQ0F6yfEr5zB38OS+OuvtzjMjqBIaoB6iq+T/OSB2JbIjrK7bMxBUr02pIBG
+         x6EZDyyt7243EaX3u/ayDVZJkJwbXwbOPUBv+RVL9FCdEFDyhEz/fb+Qtpow3oyYsAaP
+         iPOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678207740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BAM6KLGzntkSWdjqY00tOO6Re1CtThRvd/af47qdcys=;
+        b=qf0acqplAtrH2XJbjfU/6m72UguqpXT1NsXqrR5CIQvsvV193sgPg1VT+N3leftd96
+         +/NbzwUc0BEZ6LupQaRI4AKP3bmPcOROd9srlzVAlmRX95sXv/ic6aNiovUruBhw+Wgn
+         XV6AYVP+JkfETfWD5/sphw6gvUdchAzJJqSQJKoX4hN6Ry4ydU3QivzQ3gAmZWPALFt7
+         st+IxQBftNxZuUwEIPmkcULcxEBgGO6cMeYCsHH1tQ5BI4/zVMVQq9ADlZc7tMuvlzB8
+         wZQyZpMtkBY6iL83uoMLG7QKUUzt7gJWni//mGm4MoMp+uHeSxYZ7Ig+DU8/EeesNvO2
+         G8Jw==
+X-Gm-Message-State: AO0yUKVP2Ja6SR7kYO19/kxWqFbtmQSAEtPiFWcLlvLE1fKfQ1WkjCPf
+        Logfcvj8v0IoqpiVR1jyOqU6RX9Eh2MU8kWb+RPLpw==
+X-Google-Smtp-Source: AK7set/aGZTSkM0B9sWQYZhfE6LKKIa7JSaHfa8fNaeVAqzf3UgTfODCbnSXRvhpl/MM03uqaOH4EQYIMkUsDvh2F0s=
+X-Received: by 2002:a67:ead9:0:b0:411:ffe1:9c6 with SMTP id
+ s25-20020a67ead9000000b00411ffe109c6mr10136669vso.0.1678207739881; Tue, 07
+ Mar 2023 08:48:59 -0800 (PST)
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|GV1PR03MB8687:EE_|AM6EUR05FT058:EE_|AS8PR03MB7637:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5bb7284-4a89-4fe0-6289-08db1f21a330
-X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: Y9RQ0g87oM8U0C0kPWjZyH9WEtdyYRiTMhqL6BYnIKH0lAFCsig19reFEhY6sPrzlXOv7aHWnLR/8SwSBYD2hfdKNYy8bcYnCAkfB9tjcsrRc1bR/aEtktinWBowALWITUlpiMZExjJu4D8KWOunUlvucM0dPIB8mWNdjvWZzvv0bsEvSHb/55GzPWewYZ4zhqhJ10Lz/Fuq1uJHe4qqSSc4p74AP6NgkU56au4oYNxWIV8X6JxqrjxVkFwfwCdLrI2ZEQeK0QjVfqk8C+n8bOlPYaRZCB7k5xyCn5BEfA6hEdhnK+LC9Xu8kr5VutdHF35rtR9Uus27UIaaOLvBt/0ebrU68xvF6x3NOQSlDV2ZlSa0rsCzOap49+iSvJGBpXbD9mj87CPkeTzSfc+VYscXlzixRZqQ4I/97NRjxMFufPYDURnHZmfR27PUCpqVZ6GU6IVD3sgekFpJvN2yUWjjmGSeg42aUM8FCbknJv90JR/bkyne5X9T6A1INZdJMqQsvI1EiWtxSVsDwGN1E1E/LnpbclxYOW33MJdVYgnSFYc0iN/Kfk+Jts9aoU/A/x7FENWAdpHmcztPPzNziGtWJFoTvpX/3gB9cQ0bruzYM6cmBlO2sex2umNufpwI+oJdDFrYVcy+34rrmZ6sOI2yVAHYJqe2xyMif7v9L7vCOWodVyeLc+4xT59b17t5WmrqZi3lkANiffn/+kDcjYNthbJE2sD7+Mcpw4vzh8Z1/ceZaLZm02mia/Fd+V04
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(39850400004)(366004)(376002)(136003)(396003)(451199018)(5660300002)(186003)(6512007)(26005)(7416002)(8676002)(66946007)(4326008)(66476007)(66556008)(6486002)(478600001)(966005)(52116002)(54906003)(31696002)(86362001)(316002)(110136005)(6506007)(8936002)(41300700001)(38350700002)(53546011)(38100700002)(36756003)(6666004)(83380400001)(2906002)(2616005)(31686004)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB8687
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM6EUR05FT058.eop-eur05.prod.protection.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: f9434d9a-0072-4cf2-1d5d-08db1f219fb2
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iCgRf3re9nGfyJApyzUV5ysBQT9Mi1gzkWAc/yf6MHtqfIdrM+fhNw3fvBILFlt8MJbsV4fLfaeze6jscrxm22IzPrMU9zjjyhFqNq4Wk0Btf0SYn4XJrV+wDlMZ7YNZHagHW7guUXbkDHzVJqgkDEqeVyVKP+bp71Wb/NXrtYvC+ACl9qfJSv4CXu4P/dEkW04o86rp9BNKp/Pj8T0nuErMG7cKb1wVwOO5/S7UzU+hcQcDlW5hoX0whPwURctIfu8S6RcDNnbBtiSLqi4JcFjcZuIvaXe+tmht7JqE2xwfxndwrqqp3eserJrDXd4VAMJ8MXfRt5wJaVS3b8U0blOGqcaoCY6xTdvReH8kKxXGOXs0CImGlUsu/8MZQVBZgDN640ynkSaby59/tkka+3KiKNxsR/X+EZ7Bry2sGzgRVUSUJ9vOdZh/PclyAh1Nt9FwCO/+bFjXhbjKqBL/VhklEL8VV67e/rfRAUELJ8cs28iCBiYLQlb9dAcQexBAIk/bsF2ADERvAtSZzgMy0eNSaMpm5kETYoiETKjM2UAyDYLGP7AH0hbfoA6WsWGK5nZTezoM1n/B8AnN+bTFIPQq6YnXkHdaDRxdBzdZGsNv0LdhTy1cR/kruRJov3LWZrlwmWnync1qW5r/ghHa7Zk6Ck4+LMVrIOz+uWQyDpRnnP5gTCX1hfaneqMUig1nNSVgRzeKf0LTNbDb9XP36zZGVCv+JUkgDMIuX3uVxNoy33p8mKVR094FngX9SgqX/ot84fLkt9kd62RlCnNur7EaBkNc4bnlLFrQuYHBERbKSAjSaqpf1v2DbpXskluBpdTc4cNon0eWqTYU6cmHnRnPKVwMOEaDg06Pl8+G2dE=
-X-Forefront-Antispam-Report: CIP:20.160.56.86;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230025)(39850400004)(376002)(396003)(136003)(346002)(451199018)(5400799012)(46966006)(36840700001)(40470700004)(356005)(82310400005)(8676002)(4326008)(70586007)(70206006)(6512007)(6666004)(6506007)(53546011)(26005)(186003)(7416002)(36756003)(2616005)(8936002)(47076005)(336012)(40480700001)(41300700001)(7636003)(7596003)(44832011)(5660300002)(34070700002)(34020700004)(2906002)(83380400001)(36860700001)(82740400003)(478600001)(40460700003)(86362001)(31696002)(31686004)(6486002)(316002)(966005)(110136005)(54906003)(45980500001)(43740500002)(12100799021);DIR:OUT;SFP:1501;
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 15:35:53.4827
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5bb7284-4a89-4fe0-6289-08db1f21a330
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.86];Helo=[inpost-eu.tmcas.trendmicro.com]
-X-MS-Exchange-CrossTenant-AuthSource: AM6EUR05FT058.eop-eur05.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB7637
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230302125215.214014-1-keguang.zhang@gmail.com>
+ <20230302125215.214014-2-keguang.zhang@gmail.com> <CAMRc=Me=Yrr5BuRaMd4r91URzmdYHWUvVGvLL9YFuZPaV0WYFA@mail.gmail.com>
+ <CAJhJPsVf8EvFc9N8eMtc8Qu2BhODv7PzZm9C5ePR+GdTFiAY1w@mail.gmail.com>
+In-Reply-To: <CAJhJPsVf8EvFc9N8eMtc8Qu2BhODv7PzZm9C5ePR+GdTFiAY1w@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 7 Mar 2023 17:48:49 +0100
+Message-ID: <CAMRc=Me3Lnf0W=Y0oMkUGJ59rVCRb+qGq2Eb3vqRZm5gQUwOxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] gpio: loongson1: Convert to SPDX identifier
+To:     Keguang Zhang <keguang.zhang@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Mar 7, 2023 at 3:25=E2=80=AFAM Keguang Zhang <keguang.zhang@gmail.c=
+om> wrote:
+>
+> On Mon, Mar 6, 2023 at 5:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > On Thu, Mar 2, 2023 at 1:52=E2=80=AFPM Keguang Zhang <keguang.zhang@gma=
+il.com> wrote:
+> > >
+> > > Use SPDX-License-Identifier instead of the license text and
+> > > update the author information.
+> > >
+> > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> > > ---
+> > > V1 -> V2: Keep GPLv2, just convert to SPDX identifier
+> > > ---
+> > >  drivers/gpio/gpio-loongson1.c | 9 +++------
+> > >  1 file changed, 3 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongs=
+on1.c
+> > > index 5d90b3bc5a25..8862c9ea0d41 100644
+> > > --- a/drivers/gpio/gpio-loongson1.c
+> > > +++ b/drivers/gpio/gpio-loongson1.c
+> > > @@ -1,11 +1,8 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > >  /*
+> > >   * GPIO Driver for Loongson 1 SoC
+> > >   *
+> > > - * Copyright (C) 2015-2016 Zhang, Keguang <keguang.zhang@gmail.com>
+> > > - *
+> > > - * This file is licensed under the terms of the GNU General Public
+> > > - * License version 2. This program is licensed "as is" without any
+> > > - * warranty of any kind, whether express or implied.
+> > > + * Copyright (C) 2015-2023 Keguang Zhang <keguang.zhang@gmail.com>
+> > >   */
+> > >
+> > >  #include <linux/module.h>
+> > > @@ -90,6 +87,6 @@ static struct platform_driver ls1x_gpio_driver =3D =
+{
+> > >
+> > >  module_platform_driver(ls1x_gpio_driver);
+> > >
+> > > -MODULE_AUTHOR("Kelvin Cheung <keguang.zhang@gmail.com>");
+> >
+> > Why are you removing credits of the old author?
+> Kelvin Cheung and Keguang Zhang are the same person.
+> This change is to keep pace with the related entry of MAINTAINERS.
+>
 
-On 3/7/23 03:42, Krzysztof Kozlowski wrote:
-> On 06/03/2023 20:15, Sean Anderson wrote:
->> This is a generic binding for simple MMIO GPIO controllers. Although we
->> have a single driver for these controllers, they were previously spread
->> over several files. Consolidate them. The register descriptions are
->> adapted from the comments in the source. There is no set order for the
->> registers, so I have not specified one.
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->> ---
->> 
->> Changes in v10:
->> - New
->> 
->>  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
->>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
->>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
->>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
->>  4 files changed, 137 insertions(+), 91 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
->>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
->>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> 
-> https://lore.kernel.org/all/20230126-gpio-mmio-fix-v2-1-38397aace340@ncr.com/
+Even so - how could I have possibly known this? Please put it into the
+commit message, it's crucial information for this change.
 
-Thanks for linking to that.
-
-I believe this patch should be applied instead of that one because
-
-- It documents all the registers, which were previously only documented
-  in the driver
-- It handles the endianness properties.
-- It consolidates the various descriptions of this binding into one
-  schema.
-
---Sean
+Bart
