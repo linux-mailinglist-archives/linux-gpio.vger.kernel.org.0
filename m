@@ -2,69 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC5CE6AE0E5
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 701696AE175
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:55:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbjCGNmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 08:42:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39512 "EHLO
+        id S230028AbjCGNzE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 08:55:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbjCGNl5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:41:57 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 405018C960
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 05:41:28 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id k23so11361629ybk.13
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 05:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678196487;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HxhnY9ee6S+JKaeqgBDgMPD72VYaOjVliRXgd6QNQIg=;
-        b=VTkXO6ebhtYLpuBvA8pUoWMYs4C8phlf1DPmOYh74IJJyq/Po0AqZnKQi0ntazJC2h
-         iBeHHljzD2QGpETKUsRrjxxdFpLb7vAwRwdPHXyk1hd1DTNuF6t/w33F/6uKs42d3v7a
-         AErL7FjVUVCPuDuWuBsvZJ0rNQ2CsBci/kt4fkW21sotWE8yECAeLIuMd+WzcjudpXut
-         pfd05Hk+8rFW/dB0pqppm+ci414SFjDKcuIE108dIPECHFCT2xhxdccBMpO4w0v16DZD
-         WsS3ra4tYFs9h/uzaI1K/Oe8UTWdZNnNgxggPirf74szSE0RW2oDudbCPQCAhZ2C1aln
-         pWKA==
+        with ESMTP id S231338AbjCGNzB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:55:01 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A147680;
+        Tue,  7 Mar 2023 05:54:58 -0800 (PST)
+Received: by mail-qt1-f179.google.com with SMTP id w23so14295559qtn.6;
+        Tue, 07 Mar 2023 05:54:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678196487;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HxhnY9ee6S+JKaeqgBDgMPD72VYaOjVliRXgd6QNQIg=;
-        b=6f5G4jOHIxeDcafH1/tshG5tCRkWxuuwVdzyagePi0oImjFgtwVW36mtw7sj25n+rV
-         Cb8tTePZN8TqoFlggoWuKKdi1qS3L4Mf39dn4/Rc7LHptikh9JYvBU+ooIdnECD2eoNw
-         gNFLQjKrIoIAodN6UNWfsJBhtkM7FbxVPHy6Dst+Nm5rXjA9SfiN9A/nfVN9rS/C9zJ3
-         d5EK/ceMtfnmCq1AUuiuqkSOuRs/dgCeSDYIjiHKkmyPTpqHco7h86VLWjE2Z3dKfZtk
-         MAeRNHKaGZQeWKpg2MJT8UKy1KanHqrNS1m14G365S05f+y/Ls3e+h/f/RfAHdR+6sj+
-         B+vw==
-X-Gm-Message-State: AO0yUKU0uexobTXlTZEB9Uj4fT8DRLv5Ooi2zIGe4auUxfqUG0twktc6
-        lVF8LL6zCUQFY/AUsQboMSPQOYgq80CkIdEWp4IAULlpOYpEY7FP
-X-Google-Smtp-Source: AK7set8ou4L2bAlX4IYu1rZyZ5XNdsNqitcUOWXI3Qzn29JRmg2qCgTzY+gdBWjIfLE2q8apEc1HT0folW40J64j4nE=
-X-Received: by 2002:a05:6902:4f4:b0:a06:5ef5:3a82 with SMTP id
- w20-20020a05690204f400b00a065ef53a82mr6806214ybs.5.1678196487306; Tue, 07 Mar
- 2023 05:41:27 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678197298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TBuvwas5rakj2aP+tfufeJWmOAoxKZkeTAO/lqCOX7Y=;
+        b=7HJvcClAIyA+e+zYbahKa6RFX54g3JSGOlqkgYLSI6y6Yj17qPOEzqfbGWOHQwFdBr
+         UUKWXjCcegPNpff774L1y8Q6l87GLbzmjmd2Q0b+dSK6eqKyqjPcudkCQR7w+JqDX0OM
+         DxK45P7tCluYboRY2vACdfdMhw0HB409rmjgZ+xRUB+KlPpYkR5mFXxvd8BqwaG1cbfj
+         ylt+IoWZR/OMwrGCKTv9H+0SkvX9PrSk5ipbGEEDPLEjAJhWRH8jgoitEF+Yoti/+a0m
+         bPz9ZiVnv1VqzcRbdCfqWPX83zik3fCLSSQVcjQmPsaXcR9MRmE7NZ2GnBnsJMWR43uj
+         7PuA==
+X-Gm-Message-State: AO0yUKVQzjMpYzF+bfrrHfO1M/AWPGdTl9AmBpA6wkPaK1Pt0bMYHyCp
+        qdlnZJpwFHpmSZYlPYL3Qi3t+RcQXsZd
+X-Google-Smtp-Source: AK7set9zEQJsORvw11+R68g/FTC6hxiSU4XxzVnHwBl7f39BIrqhsnQ4o9WNyTK3wtztOi5cj/ArOg==
+X-Received: by 2002:ac8:5cc5:0:b0:3bf:c849:4971 with SMTP id s5-20020ac85cc5000000b003bfc8494971mr22049332qta.62.1678197297693;
+        Tue, 07 Mar 2023 05:54:57 -0800 (PST)
+Received: from robh_at_kernel.org ([2605:ef80:8082:8c7f:9efe:1ea4:c2ba:e845])
+        by smtp.gmail.com with ESMTPSA id 69-20020a370548000000b007426f115a4esm9572273qkf.129.2023.03.07.05.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 05:54:57 -0800 (PST)
+Received: (nullmailer pid 45537 invoked by uid 1000);
+        Tue, 07 Mar 2023 13:54:54 -0000
+Date:   Tue, 7 Mar 2023 07:54:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Francesco Dolcini <francesco@dolcini.it>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: gpio: add fcs,fxl6408-gpio binding
+ document
+Message-ID: <20230307135454.GA40797-robh@kernel.org>
+References: <20230306083446.41082-1-francesco@dolcini.it>
+ <20230306083446.41082-2-francesco@dolcini.it>
+ <95d5b97c-ccdc-cede-a6d7-8cc64086d62d@linaro.org>
 MIME-Version: 1.0
-References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com> <20230306090014.128732-4-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20230306090014.128732-4-biju.das.jz@bp.renesas.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Mar 2023 14:41:16 +0100
-Message-ID: <CACRpkdb-gyn29ns3tGXXnrGgySNP7R90h0M7fan=zeNMU7-QKg@mail.gmail.com>
-Subject: Re: [PATCH v6 03/13] pinctrl: Add sysfs support
-To:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95d5b97c-ccdc-cede-a6d7-8cc64086d62d@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,48 +70,133 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 6, 2023 at 10:00 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+On Mon, Mar 06, 2023 at 09:41:50AM +0100, Krzysztof Kozlowski wrote:
+> On 06/03/2023 09:34, Francesco Dolcini wrote:
+> > From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> > 
+> > Add binding document for Fairchild FXL6408 GPIO expander.
+> 
+> Subject: drop second/last, redundant "binding document". The
+> "dt-bindings" prefix is already stating that these are bindings.
+> 
+> > 
+> > Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> 
+> Missing SoB.
+> 
+> > ---
+> >  .../bindings/gpio/fcs,fxl6408-gpio.yaml       | 73 +++++++++++++++++++
 
-> Add a simple sysfs interface to the generic pinctrl framework
-> for configuring pins for output disable operation.
->
-> /sys/class/pinctrl/
->   `-- output-disable/
->       |-- configure    (w/o) ask the kernel to configure a pin group
->                              for output disable operation.
->
->   echo "<group-name function-name 0 1>" > configure
->
-> The existing "pinmux-functions" debugfs file lists the pin functions
-> registered for the pin controller. For example:
->
->   function 0: usb0, groups = [ usb0 ]
->   function 1: usb1, groups = [ usb1 ]
->   function 2: gpt4-pins, groups = [ gpt4-pins ]
->   function 3: scif0, groups = [ scif0 ]
->   function 4: scif2, groups = [ scif2 ]
->   function 5: spi1, groups = [ spi1 ]
->
-> To configure gpt4-pins for output disable activation by user:
->
->   echo "gpt4-pins gpt4-pins 0 1" > configure
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Also, match the compatible string here dropping '-gpio'.
 
-
-You have to run things like this by Greg K-H (adde on To)
-
-> +static struct class pinctrl_class = {
-> +       .name = "pinctrl",
-> +       .owner = THIS_MODULE,
-> +       .dev_groups = pinctrl_groups,
-> +};
-
-Why are you adding a new device class?
-
-IIRC Greg don't like them, we should probably just deal with the
-devices directly on the bus where they are, which also implies
-some topology search etc which is a feature.
-
-Yours,
-Linus Walleij
+> >  1 file changed, 73 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/fcs,fxl6408-gpio.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/fcs,fxl6408-gpio.yaml b/Documentation/devicetree/bindings/gpio/fcs,fxl6408-gpio.yaml
+> > new file mode 100644
+> > index 000000000000..ccf946040d00
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/fcs,fxl6408-gpio.yaml
+> > @@ -0,0 +1,73 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/fcs,fxl6408-gpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: FXL6408 GPIO driver
+> 
+> If "driver" means Linux driver, then drop.
+> 
+> Fairchild FXL6408 GPIO Expander
+> 
+> > +
+> > +maintainers:
+> > +  - Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+> > +
+> > +description: |
+> > +  Driver for Fairchild FXL6408 GPIO expander
+> 
+> This is not a driver. Drop entire description as it is duplicating title
+> or add here something useful.
+> 
+> 
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fcs,fxl6408
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#gpio-cells":
+> > +    const: 2
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  gpio-line-names:
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +
+> > +patternProperties:
+> > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+> 
+> >From here....
+> 
+> > +    type: object
+> > +    properties:
+> > +      gpio-hog: true
+> > +      gpios: true
+> > +      input: true
+> > +      output-high: true
+> > +      output-low: true
+> > +      line-name: true
+> > +
+> > +    required:
+> > +      - gpio-hog
+> > +      - gpios
+> > +
+> > +    additionalProperties: false
+> 
+> To here, all this can be simpler:
+> 
+>   "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+>     required:
+>       - gpio-hog
+> 
+> which selects gpio hog schema.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - gpio-controller
+> > +  - "#gpio-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        gpio_expander_43: gpio-expander@43 {
+> > +            compatible = "fcs,fxl6408";
+> > +            gpio-controller;
+> > +            #gpio-cells = <2>;
+> > +            reg = <0x43>;
+> > +            gpio-line-names = "Wi-Fi_W_DISABLE", "Wi-Fi_WKUP_WLAN",
+> > +              "PWR_EN_+V3.3_WiFi_N", "PCIe_REF_CLK_EN",
+> 
+> Align with previous line/entries.
+> 
+> > +              "USB_RESET_N", "USB_BYPASS_N", "Wi-Fi_PDn",
+> > +              "Wi-Fi_WKUP_BT";
+> > +        };
+> > +    };
+> 
+> Best regards,
+> Krzysztof
+> 
