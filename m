@@ -2,60 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26CA66AD5B7
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:27:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2D8C6AD5BB
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:31:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbjCGD1y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 22:27:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
+        id S229525AbjCGDbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 22:31:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjCGD1x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:27:53 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B006A55
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 19:27:52 -0800 (PST)
+        with ESMTP id S229645AbjCGDbj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:31:39 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FE82DE43;
+        Mon,  6 Mar 2023 19:31:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678159672; x=1709695672;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=g+LWQui0V0Fucf+bzTjbA5fRgzLY9SnaqAZIfQZwfQs=;
-  b=EPLIgxKyivLkukPvfwLDiYMjWzq6MO9o+0TL9ZrksRdLeEJxeiJ7bXlo
-   O/djnuex1n2jmnyk5cvEOaIJ6IsfA1UZ86+dC4cyabFImvDBU7MaXDoF5
-   R4bPNiwjb27c/Ax2+Hundn6WaeKv9bTEw0vg8nttTL5msxP+GenEQCXgt
-   LTKPGfgbv4M+40pC5OO9IGiJaGg0IbrF9059kwQYjqUqftnU+qPheglOK
-   7GlH7KgvmJ+Q1xGmSr7rsss2QMYMAehm4PhGT46lEOIQe7rHo1yGh9lIP
-   Aw/B3Z4asWwacA0uvleTaoZiZLvr2yhvVs0fA6of/dzbdmyhtKWGzqR75
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="337272076"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="337272076"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 19:27:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="626383886"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="626383886"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 06 Mar 2023 19:27:49 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pZNzQ-0000uz-14;
-        Tue, 07 Mar 2023 03:27:48 +0000
-Date:   Tue, 07 Mar 2023 11:27:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 46c59901d47930b4782e34720f13d71012ce43a3
-Message-ID: <6406af05.8+TIjOwXWHhGoOOj%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1678159896; x=1709695896;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YOD5nQRRW+7Jh57Qsig/N2Wmv9BwmnlOQex/intAGlw=;
+  b=is8kX2mX1ziLnGAbPuFX6L+rmD8YjNxPG2mdtlYqZxO34k4E9lnjofWy
+   9f3Xxe4bp7dvwKOPAeZdahAUgpUtAiOuUyyIMpqHbVfA+Hq/OMY6Ira/f
+   gFHFThZE3JUTELREYOdkwTEVm/tr9TajXdHkZaFvEsYHlcGFxpK76csCL
+   uqG7xO/6thInOIY7TxxbNOtVWGBf5cBYP81cLGGBbw8HB/Nz+Qvo0+eQt
+   G8z3yJNEFfi8XwMui6t5s5HGyr2/ZP6Fdj2BRFcqZCc8LenirwhcfTSbg
+   DSkF8Xv2861dAcUcz65YUBTU+sPr/fM5HMPqoo/kxWW4w1vps/iPaD2NE
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,238,1673938800"; 
+   d="scan'208";a="200283118"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Mar 2023 20:31:35 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 6 Mar 2023 20:31:28 -0700
+Received: from [10.40.24.46] (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
+ Transport; Mon, 6 Mar 2023 20:31:25 -0700
+Message-ID: <3b16b932-da02-30b4-2eae-29c26b3453a1@microchip.com>
+Date:   Tue, 7 Mar 2023 09:01:18 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 1/2] pinctrl: at91: Make the irqchip immutable
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+CC:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230216-gpio-at91-immutable-v1-0-44f52f148ab9@kernel.org>
+ <20230216-gpio-at91-immutable-v1-1-44f52f148ab9@kernel.org>
+ <CACRpkdbeVw1vBikYi3RimOO8K-KKLOpO=9O_yZFBt4oORi=Wgg@mail.gmail.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <CACRpkdbeVw1vBikYi3RimOO8K-KKLOpO=9O_yZFBt4oORi=Wgg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,61 +70,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 46c59901d47930b4782e34720f13d71012ce43a3  MAINTAINERS: Add NXP S32 pinctrl maintainer and reviewer
+On 06/03/2023 at 18:50, Linus Walleij wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Thu, Feb 16, 2023 at 4:49 PM Mark Brown <broonie@kernel.org> wrote:
+> 
+>> To help gpiolib not fiddle around with the internals of the irqchip
+>> flag the chip as immutable, adding the calls into the gpiolib core
+>> required to do so.
+>>
+>> Signed-off-by: Mark Brown <broonie@kernel.org>
+> 
+> 1) I'm impressed that you're using AT91 hardware
 
-elapsed time: 722m
+I'm delighted that you're using AT91 hardware ;-)
 
-configs tested: 42
-configs skipped: 3
+Thanks for your help Mark!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Regards,
+   Nicolas
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sparc                               defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                               rhel-8.3   gcc  
+> 2) Can you respin this on top of my pinctrl devel branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+> There are some Andy-cleanups already queued for AT91 so I am a bit
+> worried of collisions. (If you feel confident they are orthogonal just
+> use v6.3-rc1)
+> 
+> Yours,
+> Linus Walleij
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Nicolas Ferre
+
