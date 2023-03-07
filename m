@@ -2,69 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADBF46ADB2C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 10:56:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 133A56ADB3D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 10:59:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbjCGJ41 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 04:56:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54728 "EHLO
+        id S230321AbjCGJ7L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 04:59:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230479AbjCGJ4H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 04:56:07 -0500
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39DA50738;
-        Tue,  7 Mar 2023 01:56:05 -0800 (PST)
-Received: by mail-qk1-x734.google.com with SMTP id n8so4190753qkp.5;
-        Tue, 07 Mar 2023 01:56:05 -0800 (PST)
+        with ESMTP id S230462AbjCGJ7J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 04:59:09 -0500
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEEB1F930;
+        Tue,  7 Mar 2023 01:59:08 -0800 (PST)
+Received: by mail-qk1-x72c.google.com with SMTP id u15so4199860qkk.4;
+        Tue, 07 Mar 2023 01:59:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678182965;
+        d=gmail.com; s=20210112; t=1678183147;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ruKcO5BQUbqCHfP7qxmKsrkLuBDDAAab0Ba2+KPmTdo=;
-        b=gksbuVVL/cEZlEwS4NKWJDFQcS1IMDs3psKhZcThkA1Gscp5utOk/7mx+7oCFQh6oV
-         7vyJQE1XzdQ4S2gWi/V8dT9zzWFZyqmPfIEyOYyxRG40sRMS40tL0Rm4jqnf+GkiQkW4
-         0+e3kX1aw64tqrlvwgkjCWUxSHIHUa4BznOXcRxAV8ntMoycGxE5d0UdDYQh+QmjkV2w
-         QURRbZENqt/zn6fzG4a/GXIdEJVYn2U2nQ1lTQa4ZWAdQ1RLiFQWOP0bQVj3D/iilZBV
-         mqYYQxPEs7EPn5YTGNjO8Jq6GHt2uPkui4ldzDZ09dGdXk+wdnPP1lbKWpNTssNEb2PC
-         ZIzg==
+        bh=mJ0tdLQj/jiT8jrWgvMIoZTVxGsykYl9zNPWhiOhfAc=;
+        b=ReAle524orp8GEE9M5UmWik1hU+8JVFWzjGzCyAX7D44nYyb/w3tJZUDeXM6w/yFhI
+         04liiM2AT2vE0o+zJpYZoraFL7GU3qycNvd5E5KHzEWyHycUMpdj62g5SlzP3lfCzPfv
+         5sI13E/D7La/giWYYwRRo2Q3QsLVTR+eTSR0sx8FxU1SvrdLxiCXGdX+kFkNv5TmgGW/
+         XpsZwGogC/yU974aneXSnb0xaKQcxgMCyupCjCeoisk3ZymCbEf6j6XRu4QkNz8PfoBg
+         hXRbi40MFZOndtkBOzWxubX8+9sFlLzDJOev0JA3pyUo5FhEe5yQRz+mMzzLNpoIc04N
+         bTZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678182965;
+        d=1e100.net; s=20210112; t=1678183147;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ruKcO5BQUbqCHfP7qxmKsrkLuBDDAAab0Ba2+KPmTdo=;
-        b=bmQZldigMU8Yg0CG53NC9hw3E78gryOxNqy+CuLj2tZKci9xAZdOhcvbGwVw0Eza6s
-         7G1AolpAjn+/M57cEHWKLPQtOCAuEAaen92ltRWfNmu7VVrqwYTO7uISxBxFF46D6DGY
-         cSGunr6ddX1MW8hZ9bR5+O6+K6Wzakqsp1jZdOGBKXPc4IcuqUhnnME5/yiAVilU80sY
-         ecxqcNB34uK3Qd3FRv80bRlO4/HGbqjTZWqPRLsKHMgZsTgulZ4evZKBOtZFUaKP4QUK
-         JASlZ3fy+wM+DjVO+qGLNEiiNpldd/Pr4wJUf0ZDbrDNcN6VAEv94CRzwBjir8r5KLBq
-         0Frg==
-X-Gm-Message-State: AO0yUKVPYpCD99cJsVd1CasXE3AEGbMwfjbI6enI/Z1u+nOzbrgmvJQs
-        pQ5lh7ORD2H3sktqHJ2XXTHb5X4kPqO+UEDPBJw=
-X-Google-Smtp-Source: AK7set+zoY3TRxMTc1+1o6uSEYS3hDaOyqC1l34cQwmav2RdSpNP+qJVL9kOdViUPzuPotx/GNgWY9Uk3/KVM/Wrwnw=
-X-Received: by 2002:a05:620a:713:b0:742:7e5a:4cee with SMTP id
- 19-20020a05620a071300b007427e5a4ceemr3893704qkc.10.1678182965007; Tue, 07 Mar
- 2023 01:56:05 -0800 (PST)
+        bh=mJ0tdLQj/jiT8jrWgvMIoZTVxGsykYl9zNPWhiOhfAc=;
+        b=pnfk4fda1OMCpUMrGHSmnU2IVvJuR79WYqRJjtbXw3/m34Tu6eLamyOq3UXLwJxae0
+         RvbuPS6fOiR+DPTO1z1GnqbC0DKUMy0r6amr3ooxoWYM0xnw4FY53NdG8jdpXutbxjuW
+         TqqvLldfKz8t6GGkLFiEz7GriMbn0Q+7PgPWV4qLdWJYr9FltbzgYhgOu3JIBO+vDki/
+         aVrqC1gzFrYcl1mWzOAr4V+sxIYbA8HkhY+hQ1mykmLDZHq75rW/m2RNGGLv1MYowuWV
+         ULK4rQqsWn1XFBI57jfYD35DIh5zmzVeRhka+EtG3wn44DdlmsnJ7PS8Cl0Vxx8K2XAz
+         QEYQ==
+X-Gm-Message-State: AO0yUKWNg+ctZt6B1sEHS0g1mws5QZHWBWUHcbQwYXzmcIjr6CZRSUcp
+        2p1iVgqOI+V1/zSFMcOn5UqoJ2UVHhlAul3t8gEzcGPpAjmgXA==
+X-Google-Smtp-Source: AK7set/CiCq707dbpX/hKgH1aTZBUAC8OJjzoVHotLwHp+UdMBoIH1iX7cH8htmAmS2dhpI7VMpR9YiqRKPfAYZNZTM=
+X-Received: by 2002:a37:68ce:0:b0:71f:b8f8:f3db with SMTP id
+ d197-20020a3768ce000000b0071fb8f8f3dbmr3637880qkc.1.1678183147317; Tue, 07
+ Mar 2023 01:59:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20230220023320.3499-1-clin@suse.com> <CACRpkdYknZo3Q7_CeSkOL2XwwAmKERskx24o-toaVy=rs0Yf5Q@mail.gmail.com>
- <ZAZ3JZQ4Tuz5vyH1@surfacebook> <CACRpkdbksZ59ndrRAQpTGa01GTq4c_2EcOQ2mtz1PLjqU8_nug@mail.gmail.com>
-In-Reply-To: <CACRpkdbksZ59ndrRAQpTGa01GTq4c_2EcOQ2mtz1PLjqU8_nug@mail.gmail.com>
+References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
+ <20230306090014.128732-7-biju.das.jz@bp.renesas.com> <ZAZ43tylTNxPIun8@surfacebook>
+ <OS0PR01MB59223AF6B7850592F34CABF086B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB59223AF6B7850592F34CABF086B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Mar 2023 11:55:29 +0200
-Message-ID: <CAHp75Vf3ve-NdMG6iti-KSs=tGGgGf9tNj=aK7Jofk9233WocQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Add pinctrl support for S32 SoC family
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Chester Lin <clin@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, s32@nxp.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Larisa Grigore <larisa.grigore@nxp.com>,
-        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
-        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
-        Radu Pirea <radu-nicolae.pirea@nxp.com>,
-        Matthias Brugger <mbrugger@suse.com>
+Date:   Tue, 7 Mar 2023 11:58:31 +0200
+Message-ID: <CAHp75Vcdyq-XKRFKzEjHFQ_0Qv61HkMEVu0Dg-ffsnVc9R3-ww@mail.gmail.com>
+Subject: Re: [PATCH v6 06/13] drivers: pinctrl: renesas: Add RZ/G2L POEG
+ driver support
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -77,25 +81,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 11:22=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Tue, Mar 7, 2023 at 12:28 AM <andy.shevchenko@gmail.com> wrote:
+On Tue, Mar 7, 2023 at 10:53=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+> > From: andy.shevchenko@gmail.com <andy.shevchenko@gmail.com>
+> > Sent: Monday, March 6, 2023 11:36 PM
+> > Mon, Mar 06, 2023 at 09:00:07AM +0000, Biju Das kirjoitti:
 
 ...
 
-> > Can you unpull this?
-
-> If need be.
+> > > +static void rzg2l_poeg_write(struct rzg2l_poeg_chip *chip, u32 data)
+> > > +{
+> > > +   iowrite32(data, chip->mmio);
+> > > +}
+> > > +
+> > > +static u32 rzg2l_poeg_read(struct rzg2l_poeg_chip *chip) {
+> > > +   return ioread32(chip->mmio);
+> > > +}
+> >
+> > Why not regmap MMIO?
 >
-> Are there serious issues with the patch set such that they cannot be fixe=
-d
-> by add-on patches?
+> Some drivers used iowrite32, some uses writel, some uses regmap.
+>
+> will use regmap for read/write,If the preference is regmap MMIO
+> as it comes with spinlock for MMIO access.
 
-There are a few absent error checks, some error code shadowing, etc.
-I can't tell if these all are serious, but the amount of them is like a doz=
-en.
-
-I reviewed the patch, so you can look into that yourself and decide.
+Lock can be disabled. It's up to the user of regmap.
 
 --=20
 With Best Regards,
