@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88D906ADFCE
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:05:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC2C66ADFCC
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 14:05:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjCGNFo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S230281AbjCGNFo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 7 Mar 2023 08:05:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjCGNFb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:05:31 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314A227D50
+        with ESMTP id S229954AbjCGNFf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 08:05:35 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBFC2DE45
         for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 05:05:04 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id r27so16941731lfe.10
+Received: by mail-lf1-x129.google.com with SMTP id t11so16987554lfr.1
         for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 05:05:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678194290;
+        d=linaro.org; s=google; t=1678194291;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3PUEBNIWi9XlpGpt5vSwoRNt6H80aDlupNA++Rohdv4=;
-        b=QXsMqYlKGC8BIFrpVBwoMJw3jitiZ7aT6M1ELBa0ist/N1XoxIZooLBDUNVrnzAbmI
-         yoXGbnY4TSmgf7jXGuGWkHGSWiFEoZeK9OgM+GuB3nUBU5Ke2z7KpZ3l9kUew9rHrG0T
-         ol3sQvqoMY69wVHCoaCRgnJEegNl1rfkzA3Z5O+Rt9DKDg7otFNmc1o5JfFzrjGu6q0M
-         D4p3rjfwpy1JfLOnf7q2X8U382eYyVR2/3/VsmU20rB8GUKl2jXuqGEf/lzImnl3K4fb
-         55e+VC3ry3ANQT3FMYt24J9jaXKivzjNPkSdFSrMaCq2O8ubTy47vf8VvC9W30vfVpQs
-         w2Mw==
+        bh=YxZa+3MhOrXUUjhkc+LrGW+xXurv1Litsrz7qLnZ7aI=;
+        b=FOsLAFR4aJaT6cegudEG+nQzhg/px9P0RBR3m2KqmJXANgyhdZkOgw0Oqs/2NwomjO
+         cNp7npQYIZ+zBcHN1RcsOqNPaVgcLdlTzLmwbqXXbqyAa6DWI8nttbGR7YVg52zyxiR8
+         QffXvLy84zDBN8oWts17U5XpHOEecbe58+/BwLQ4VQrLqhk6whlyMPWoOYE4iA63xJ+j
+         4wJ+sxiQhb3y2ftp6oQrPLYWIJ4Cbk97ymR5SrP+I1yi/Jf4gNaYHRxRtJ+R4gpuOI/F
+         /Zdq9EgQ+4blVaLXq6zhOfo0Nkyxh1Hprys2CEK6+yjk/dZCdyWL79gAm8XIOJ+ew0Dx
+         xepA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678194290;
+        d=1e100.net; s=20210112; t=1678194291;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3PUEBNIWi9XlpGpt5vSwoRNt6H80aDlupNA++Rohdv4=;
-        b=t/UlLSlpLGoQxsJxND/jvt54Aqa+qsY2wrQR7gPu2DnO5EKao38XM72zLyyKMfGP+C
-         d3Bc2Zj1hfaXBvhi6RNxMj1U+SjDoMyv6Vc0XG2m4ZNJXAxYto9ApsLZ079ckai99AMz
-         upcPBpTx13/uPPvNxtxxeqPt5p4HeAxECAJdaejBMcIM/a/SxAZ3FppKPK24W6p9GDKk
-         ZirSGc5MtgLTEUNrkZoS/gPL3excQiJqlJJxsGfCZgRNjmbNLrB4fWo1SG5MfxNEkRPc
-         eMvjBsKN89z+L8dGzXUTavhc5eeAkx0Ccbv0zAKpbJGBuOY4+9+u6hFdBMdUQSbW0zC1
-         4+jg==
-X-Gm-Message-State: AO0yUKV4EAVclJS7dA8SVCZy3tFFggKNUJPGVlyjTQup8l6ILgYd2ez6
-        Z2lHsvmEKydMDws47HEKt3c8Sg==
-X-Google-Smtp-Source: AK7set/0PjNNMhMg48I9ruK+nxErAAJX2QK/D8hZmLrkYx7SI2vEk66DRWyhtM1nOMOYCHefMnN4Lw==
-X-Received: by 2002:a19:c208:0:b0:4df:9ce8:300 with SMTP id l8-20020a19c208000000b004df9ce80300mr3966975lfc.52.1678194290600;
-        Tue, 07 Mar 2023 05:04:50 -0800 (PST)
+        bh=YxZa+3MhOrXUUjhkc+LrGW+xXurv1Litsrz7qLnZ7aI=;
+        b=v4WFPT8IXWKM48qJc/AbMGcBlwlDEkqaK919H0LleO0MrwTZ/mW6pJVHWSvFUjbPNT
+         JBSKl7nHVGv6jMa2nKHKtjuKucVn5wKJMwopJIWcMktLwBMT8c9JqMOvfUnbScswFVX4
+         nvStlTmitzzYVqV3/b5+IcAJkJtsyvWfHdNIxdEEM4ETGM4KeVk5pzmZAtx434pHsKt4
+         59Q3XfsRwqgp+UalbnnO3eMIXoY4I5X7wYXoEL7rN7InQqO04VB+zjN/Y//ct+yIJjA9
+         nojHSWGtCLaPGoi8ll9SUrceC7XrAjacd3RtCRWBqdjqBbClC61hxR9n6hBda55sJ6rR
+         8nmA==
+X-Gm-Message-State: AO0yUKXEgYBkVN1+FYqkizUAykLJ7HZ2TOV6NJxVA1CUVbyZ+uikHTLf
+        hi/4j9V9XCEwYQBCl0hlMcHMuA==
+X-Google-Smtp-Source: AK7set+G1fG9oVwtlrbXsTuC1Xj1dVb/epzn2WdT/mLhlI1kqvrL2HGEs2SVGZUSSYmXicyy5x+ljw==
+X-Received: by 2002:a05:6512:10c2:b0:4d8:86c1:4772 with SMTP id k2-20020a05651210c200b004d886c14772mr4298774lfg.7.1678194291670;
+        Tue, 07 Mar 2023 05:04:51 -0800 (PST)
 Received: from [127.0.1.1] ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id w14-20020ac2598e000000b004caf992bba9sm2030548lfn.268.2023.03.07.05.04.49
+        by smtp.gmail.com with ESMTPSA id w14-20020ac2598e000000b004caf992bba9sm2030548lfn.268.2023.03.07.05.04.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 05:04:50 -0800 (PST)
+        Tue, 07 Mar 2023 05:04:51 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 07 Mar 2023 14:04:47 +0100
-Subject: [PATCH v2 05/16] gpio: ath79: Convert to immutable irq_chip
+Date:   Tue, 07 Mar 2023 14:04:48 +0100
+Subject: [PATCH v2 06/16] gpio: cadence: Convert to immutable irq_chip
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230215-immutable-chips-v2-5-d6b0e3f2d991@linaro.org>
+Message-Id: <20230215-immutable-chips-v2-6-d6b0e3f2d991@linaro.org>
 References: <20230215-immutable-chips-v2-0-d6b0e3f2d991@linaro.org>
 In-Reply-To: <20230215-immutable-chips-v2-0-d6b0e3f2d991@linaro.org>
 To:     Mun Yew Tham <mun.yew.tham@intel.com>,
@@ -94,55 +94,54 @@ Cc: Marc Zyngier <maz@kernel.org>
 Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-ath79.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-cadence.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-index 3958c6d97639..aa0a954b8392 100644
---- a/drivers/gpio/gpio-ath79.c
-+++ b/drivers/gpio/gpio-ath79.c
-@@ -71,6 +71,7 @@ static void ath79_gpio_irq_unmask(struct irq_data *data)
- 	u32 mask = BIT(irqd_to_hwirq(data));
- 	unsigned long flags;
+diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
+index 137aea49ba02..3720b90cad10 100644
+--- a/drivers/gpio/gpio-cadence.c
++++ b/drivers/gpio/gpio-cadence.c
+@@ -70,6 +70,7 @@ static void cdns_gpio_irq_mask(struct irq_data *d)
+ 	struct cdns_gpio_chip *cgpio = gpiochip_get_data(chip);
  
-+	gpiochip_enable_irq(&ctrl->gc, irqd_to_hwirq(data));
- 	raw_spin_lock_irqsave(&ctrl->lock, flags);
- 	ath79_gpio_update_bits(ctrl, AR71XX_GPIO_REG_INT_MASK, mask, mask);
- 	raw_spin_unlock_irqrestore(&ctrl->lock, flags);
-@@ -85,6 +86,7 @@ static void ath79_gpio_irq_mask(struct irq_data *data)
- 	raw_spin_lock_irqsave(&ctrl->lock, flags);
- 	ath79_gpio_update_bits(ctrl, AR71XX_GPIO_REG_INT_MASK, mask, 0);
- 	raw_spin_unlock_irqrestore(&ctrl->lock, flags);
-+	gpiochip_disable_irq(&ctrl->gc, irqd_to_hwirq(data));
+ 	iowrite32(BIT(d->hwirq), cgpio->regs + CDNS_GPIO_IRQ_DIS);
++	gpiochip_disable_irq(chip, irqd_to_hwirq(d));
  }
  
- static void ath79_gpio_irq_enable(struct irq_data *data)
-@@ -169,13 +171,15 @@ static int ath79_gpio_irq_set_type(struct irq_data *data,
- 	return 0;
+ static void cdns_gpio_irq_unmask(struct irq_data *d)
+@@ -77,6 +78,7 @@ static void cdns_gpio_irq_unmask(struct irq_data *d)
+ 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+ 	struct cdns_gpio_chip *cgpio = gpiochip_get_data(chip);
+ 
++	gpiochip_enable_irq(chip, irqd_to_hwirq(d));
+ 	iowrite32(BIT(d->hwirq), cgpio->regs + CDNS_GPIO_IRQ_EN);
  }
  
--static struct irq_chip ath79_gpio_irqchip = {
-+static const struct irq_chip ath79_gpio_irqchip = {
- 	.name = "gpio-ath79",
- 	.irq_enable = ath79_gpio_irq_enable,
- 	.irq_disable = ath79_gpio_irq_disable,
- 	.irq_mask = ath79_gpio_irq_mask,
- 	.irq_unmask = ath79_gpio_irq_unmask,
- 	.irq_set_type = ath79_gpio_irq_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
+@@ -138,11 +140,13 @@ static void cdns_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(irqchip, desc);
+ }
+ 
+-static struct irq_chip cdns_gpio_irqchip = {
++static const struct irq_chip cdns_gpio_irqchip = {
+ 	.name		= "cdns-gpio",
+ 	.irq_mask	= cdns_gpio_irq_mask,
+ 	.irq_unmask	= cdns_gpio_irq_unmask,
+-	.irq_set_type	= cdns_gpio_irq_set_type
++	.irq_set_type	= cdns_gpio_irq_set_type,
++	.flags		= IRQCHIP_IMMUTABLE,
 +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
  };
  
- static void ath79_gpio_irq_handler(struct irq_desc *desc)
-@@ -274,7 +278,7 @@ static int ath79_gpio_probe(struct platform_device *pdev)
- 	/* Optional interrupt setup */
- 	if (!np || of_property_read_bool(np, "interrupt-controller")) {
- 		girq = &ctrl->gc.irq;
--		girq->chip = &ath79_gpio_irqchip;
-+		gpio_irq_chip_set_chip(girq, &ath79_gpio_irqchip);
- 		girq->parent_handler = ath79_gpio_irq_handler;
+ static int cdns_gpio_probe(struct platform_device *pdev)
+@@ -222,7 +226,7 @@ static int cdns_gpio_probe(struct platform_device *pdev)
+ 		struct gpio_irq_chip *girq;
+ 
+ 		girq = &cgpio->gc.irq;
+-		girq->chip = &cdns_gpio_irqchip;
++		gpio_irq_chip_set_chip(girq, &cdns_gpio_irqchip);
+ 		girq->parent_handler = cdns_gpio_irq_handler;
  		girq->num_parents = 1;
- 		girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+ 		girq->parents = devm_kcalloc(&pdev->dev, 1,
 
 -- 
 2.34.1
