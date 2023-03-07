@@ -2,103 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2D8C6AD5BB
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:31:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABCB06AD5C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:42:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjCGDbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 22:31:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
+        id S229955AbjCGDmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 22:42:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjCGDbj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:31:39 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FE82DE43;
-        Mon,  6 Mar 2023 19:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1678159896; x=1709695896;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YOD5nQRRW+7Jh57Qsig/N2Wmv9BwmnlOQex/intAGlw=;
-  b=is8kX2mX1ziLnGAbPuFX6L+rmD8YjNxPG2mdtlYqZxO34k4E9lnjofWy
-   9f3Xxe4bp7dvwKOPAeZdahAUgpUtAiOuUyyIMpqHbVfA+Hq/OMY6Ira/f
-   gFHFThZE3JUTELREYOdkwTEVm/tr9TajXdHkZaFvEsYHlcGFxpK76csCL
-   uqG7xO/6thInOIY7TxxbNOtVWGBf5cBYP81cLGGBbw8HB/Nz+Qvo0+eQt
-   G8z3yJNEFfi8XwMui6t5s5HGyr2/ZP6Fdj2BRFcqZCc8LenirwhcfTSbg
-   DSkF8Xv2861dAcUcz65YUBTU+sPr/fM5HMPqoo/kxWW4w1vps/iPaD2NE
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,238,1673938800"; 
-   d="scan'208";a="200283118"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Mar 2023 20:31:35 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 6 Mar 2023 20:31:28 -0700
-Received: from [10.40.24.46] (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
- Transport; Mon, 6 Mar 2023 20:31:25 -0700
-Message-ID: <3b16b932-da02-30b4-2eae-29c26b3453a1@microchip.com>
-Date:   Tue, 7 Mar 2023 09:01:18 +0530
+        with ESMTP id S229772AbjCGDmQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:42:16 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74A04A1FD;
+        Mon,  6 Mar 2023 19:42:13 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id cy23so47066962edb.12;
+        Mon, 06 Mar 2023 19:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678160532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tUgly7YYB0R4fj5VR431uxUP1gbN+PQTNeOG+pJqBBQ=;
+        b=EWJEuh3rpJ43SBA5AtoVdrGDZOeqXZUC5ABXGvf+lYX1aeuWQKy+A/vxX00O2h3MFi
+         szOYBq4PCBnyPbPvIE4Rpd1xUR1U84B25dp5iDYvEDZO2U3Mh6ikVeo4aP0n1YWYp0dO
+         QR1MIGhrH7KZR/dOuJlKHsuzMHyFpPp4lNXHgEsJ37QObOLNmsecFWy5M1Wtut3xy8qm
+         5sQa8cMdrg3oDf280aZsxffhy85COb9cMNG9ZrDNgbpfBSYeZO1T7jJbf83YcO+qjV0Q
+         hqZpLVG427b8J9vgPbaps1/TFgcs0LgP5KODVrAm4R9+wYLxdc+k3kJ2DNxxYPgPYdHG
+         dy2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678160532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUgly7YYB0R4fj5VR431uxUP1gbN+PQTNeOG+pJqBBQ=;
+        b=NiJVnBdpatAQKj/NUUz/AoPbehjF6ZBeS/KdhUwoDnIyG9Bl6qBSUi1AMBtarfkG/Z
+         FhJoBKhcMuTUUWoXsKtKHbW65VDI6o2PGQvluhZyI+1nl+x3EbZfMXJIPceXTIiZgQh8
+         G+8LtaGX1qZUSeO03QQCFDVXSabP8FQtGHhUjiNwfo/m+qCFOafA9XXP+x9fErClXADe
+         vzt6uT2VGNoo4f8+hB6rxn9nDzQ1I/jEufukGCKJPiokKgF3edUbhmoVRxX5l7oQWDoN
+         Iv+EdCmk4T3lAqtaHmUP1qw+6YN8q1xWPO9B6JpWnhIB7qDQkSutAthK5l5UY6eXducp
+         DhLw==
+X-Gm-Message-State: AO0yUKXLlaHjSF33vfWNAf7vT8RC2NV+OdWMSR1tAnoXAYagEliAG7wq
+        9mT8FQ5K1ZOyE6Jb8u8Pbd2tzuCzLTmpu4Nph9YaZC9DkRaooA==
+X-Google-Smtp-Source: AK7set/Mm/nt+hqKES4r23aLNO7uHziSS9Peg0Xbn9ZFYMiOBcW8AgPsncil4eCSG1D5hMJuAkllxsNt0ly5qyjVmJ8=
+X-Received: by 2002:a17:906:d041:b0:877:747d:4a82 with SMTP id
+ bo1-20020a170906d04100b00877747d4a82mr6414471ejb.0.1678160532255; Mon, 06 Mar
+ 2023 19:42:12 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 1/2] pinctrl: at91: Make the irqchip immutable
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-CC:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230216-gpio-at91-immutable-v1-0-44f52f148ab9@kernel.org>
- <20230216-gpio-at91-immutable-v1-1-44f52f148ab9@kernel.org>
- <CACRpkdbeVw1vBikYi3RimOO8K-KKLOpO=9O_yZFBt4oORi=Wgg@mail.gmail.com>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <CACRpkdbeVw1vBikYi3RimOO8K-KKLOpO=9O_yZFBt4oORi=Wgg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230302125215.214014-1-keguang.zhang@gmail.com>
+ <20230302125215.214014-5-keguang.zhang@gmail.com> <CAMRc=McLt2+NJhmzFRuKF5LWMOqyZa-Y-eH7Ecx2ZiMHsTf1ag@mail.gmail.com>
+In-Reply-To: <CAMRc=McLt2+NJhmzFRuKF5LWMOqyZa-Y-eH7Ecx2ZiMHsTf1ag@mail.gmail.com>
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+Date:   Tue, 7 Mar 2023 11:41:55 +0800
+Message-ID: <CAJhJPsVJUvWN4PS4-H4iT+3kQJ=5b-4j7ArF=wUHFQka3fhqcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] gpio: loongson1: Add DT support
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/03/2023 at 18:50, Linus Walleij wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Thu, Feb 16, 2023 at 4:49 PM Mark Brown <broonie@kernel.org> wrote:
-> 
->> To help gpiolib not fiddle around with the internals of the irqchip
->> flag the chip as immutable, adding the calls into the gpiolib core
->> required to do so.
->>
->> Signed-off-by: Mark Brown <broonie@kernel.org>
-> 
-> 1) I'm impressed that you're using AT91 hardware
+On Mon, Mar 6, 2023 at 5:39=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Thu, Mar 2, 2023 at 1:53=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail=
+.com> wrote:
+> >
+> > This patch adds DT support for Loongson-1 GPIO driver.
+> >
+> > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> > ---
+> > V1 -> V2: Let gpiolib parse ngpios property
+> >           Remove unnecessary alias id parsing
+> >           Remove superfluous initialization done by bgpio_init()
+> >           Add MODULE_DEVICE_TABLE()
+> >           Other minor fixes
+> > ---
+> >  drivers/gpio/gpio-loongson1.c | 19 ++++++++++++++++---
+> >  1 file changed, 16 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson=
+1.c
+> > index 3ac9e49e7efb..94ac0ccb450f 100644
+> > --- a/drivers/gpio/gpio-loongson1.c
+> > +++ b/drivers/gpio/gpio-loongson1.c
+> > @@ -68,25 +68,38 @@ static int ls1x_gpio_probe(struct platform_device *=
+pdev)
+> >         ls1x_gc->gc.owner =3D THIS_MODULE;
+> >         ls1x_gc->gc.request =3D ls1x_gpio_request;
+> >         ls1x_gc->gc.free =3D ls1x_gpio_free;
+> > -       ls1x_gc->gc.base =3D pdev->id * 32;
+> > +       /*
+> > +        * Clear ngpio to let gpiolib get the correct number
+> > +        * by reading ngpios property
+> > +        */
+> > +       ls1x_gc->gc.ngpio =3D 0;
+> >
+>
+> Who could have set it before and why would this information need to be
+> unconditionally discarded?
+>
+'ngpio' has been set to 32 by bgpio_init().
+But this is incorrect for LS1B who has different number of GPIOs for each g=
+roup.
+To get the right number, I have to discard this default value to let
+gpiolib parse 'ngpios' property.
 
-I'm delighted that you're using AT91 hardware ;-)
 
-Thanks for your help Mark!
+> Bart
+>
+> >         ret =3D devm_gpiochip_add_data(dev, &ls1x_gc->gc, ls1x_gc);
+> >         if (ret)
+> >                 goto err;
+> >
+> >         platform_set_drvdata(pdev, ls1x_gc);
+> > -       dev_info(dev, "Loongson1 GPIO driver registered\n");
+> > +
+> > +       dev_info(dev, "GPIO controller registered with %d pins\n",
+> > +                ls1x_gc->gc.ngpio);
+> >
+> >         return 0;
+> >  err:
+> > -       dev_err(dev, "failed to register GPIO device\n");
+> > +       dev_err(dev, "failed to register GPIO controller\n");
+> >         return ret;
+> >  }
+> >
+> > +static const struct of_device_id ls1x_gpio_dt_ids[] =3D {
+> > +       { .compatible =3D "loongson,ls1x-gpio" },
+> > +       { /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ls1x_gpio_dt_ids);
+> > +
+> >  static struct platform_driver ls1x_gpio_driver =3D {
+> >         .probe  =3D ls1x_gpio_probe,
+> >         .driver =3D {
+> >                 .name   =3D "ls1x-gpio",
+> > +               .of_match_table =3D ls1x_gpio_dt_ids,
+> >         },
+> >  };
+> >
+> > --
+> > 2.34.1
+> >
 
-Regards,
-   Nicolas
 
-> 2) Can you respin this on top of my pinctrl devel branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
-> There are some Andy-cleanups already queued for AT91 so I am a bit
-> worried of collisions. (If you feel confident they are orthogonal just
-> use v6.3-rc1)
-> 
-> Yours,
-> Linus Walleij
 
--- 
-Nicolas Ferre
+--
+Best regards,
 
+Kelvin Cheung
