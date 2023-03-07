@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3C956AD5B6
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:27:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26CA66AD5B7
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 04:27:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjCGD1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Mar 2023 22:27:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49960 "EHLO
+        id S229559AbjCGD1y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Mar 2023 22:27:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjCGD1w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:27:52 -0500
+        with ESMTP id S229605AbjCGD1x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Mar 2023 22:27:53 -0500
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C5C34029
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 19:27:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B006A55
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Mar 2023 19:27:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678159670; x=1709695670;
+  t=1678159672; x=1709695672;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=ESACPnZhK76uB+kB5pU/r55jUrGsC8cnrfuY3vULKUY=;
-  b=P5CIc/hTvuamR6pbzWWb9OnqqBIOl5aUILASsi6OcEq/YJ9IyNHwJ4yD
-   WS3fnsZgBLbJfjHFIWhCumckE6DHkQ97/oe8Q0oVbMOMMJWYr6qixxWWj
-   wHmqwjE7gZoVZqMRFqNjO4zsczlhFZqF4zJWOAipp6qQy+Js14I8co+ka
-   IsiwYVxI6T6Q1VZwSbFCLsPGaDDccV+POdJPbayNZcyivw/50G5fcvssT
-   GWmQU/uWAvtktFP4+QwKC738PSg9Z74oLr3yGxQM1WAwG4EPkhdtpzYDe
-   J7p3wxizM9SA1D1gGCGllc7w+SeRkDRRPtUFCO5js2uDzbQUJw0QwROgl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="337272078"
+  bh=g+LWQui0V0Fucf+bzTjbA5fRgzLY9SnaqAZIfQZwfQs=;
+  b=EPLIgxKyivLkukPvfwLDiYMjWzq6MO9o+0TL9ZrksRdLeEJxeiJ7bXlo
+   O/djnuex1n2jmnyk5cvEOaIJ6IsfA1UZ86+dC4cyabFImvDBU7MaXDoF5
+   R4bPNiwjb27c/Ax2+Hundn6WaeKv9bTEw0vg8nttTL5msxP+GenEQCXgt
+   LTKPGfgbv4M+40pC5OO9IGiJaGg0IbrF9059kwQYjqUqftnU+qPheglOK
+   7GlH7KgvmJ+Q1xGmSr7rsss2QMYMAehm4PhGT46lEOIQe7rHo1yGh9lIP
+   Aw/B3Z4asWwacA0uvleTaoZiZLvr2yhvVs0fA6of/dzbdmyhtKWGzqR75
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="337272076"
 X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="337272078"
+   d="scan'208";a="337272076"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 19:27:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="626383887"
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="626383886"
 X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="626383887"
+   d="scan'208";a="626383886"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
   by orsmga003.jf.intel.com with ESMTP; 06 Mar 2023 19:27:49 -0800
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pZNzQ-0000v5-1C;
+        id 1pZNzQ-0000uz-14;
         Tue, 07 Mar 2023 03:27:48 +0000
-Date:   Tue, 07 Mar 2023 11:26:50 +0800
+Date:   Tue, 07 Mar 2023 11:27:01 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 913a956c4363c3b5fd13d3a00836fad4c46646a7
-Message-ID: <6406aefa.htFJ1WxqPWvJl00A%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 46c59901d47930b4782e34720f13d71012ce43a3
+Message-ID: <6406af05.8+TIjOwXWHhGoOOj%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -63,8 +63,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 913a956c4363c3b5fd13d3a00836fad4c46646a7  pinctrl: stm32: use dynamic allocation of GPIO base
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 46c59901d47930b4782e34720f13d71012ce43a3  MAINTAINERS: Add NXP S32 pinctrl maintainer and reviewer
 
 elapsed time: 722m
 
