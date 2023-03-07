@@ -2,86 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F37B6AD96A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 09:42:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DB286AD99C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Mar 2023 09:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjCGImj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 03:42:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50942 "EHLO
+        id S230000AbjCGIxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 03:53:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjCGImh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 03:42:37 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6434652F4F
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 00:42:36 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id x3so49106987edb.10
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 00:42:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678178555;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=unqTYip/nZX7WkFVVubRKmL0WM29EpJsVS8P0OsOpaE=;
-        b=Eusd+XKKTE+5SuOXFhD4Jk4H8VMkJJ50GMAWk0gBxQei4r0OxVLwrd1mTkzNzFUiz2
-         1wRs9FOXpNIKdrkWQ9ERJnKiotHtLrwu3n36DYL0+5ZEar49+NINtEXWHqwwPn4xNR5Y
-         NWljxAdz10RbCv0R1G1rinKUjT/kKAIOf5kcs1qSA2HLqZOvfrvwYmskUjaxcuvWxnCb
-         zUJc9Vg627t75Taw73EldUXKGTig9uECMUp/+1TqHVlAbwxt/hVAtt+0sJLByiKzYXlk
-         2wdDyyfHBsKcrLjieYpPG1bgTCGHX706/B2Yj2HQG34z5CtkFsHDt0eU1lxIyKGotnaD
-         uaCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678178555;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=unqTYip/nZX7WkFVVubRKmL0WM29EpJsVS8P0OsOpaE=;
-        b=aapJ+Wx78hMv3Ic0I/rrnWW4V6n1HKOM3UqLedS9Zjt3cpz/p8INH6gTZSS1i6UJRP
-         R+wi4MLquqkk9qoQtv11k7K6RAFVOy+1M8PAV65Vua0kvpu4ogFH4NTZ5wTK7mVkYsPx
-         7Odf5b8awVWyNEv6iDAOKaNHl788DGmgR2IWRnZpK0858zG92UD+nLOpPcqA6xuopqG5
-         06speAOxgKd54nXEfpRUGUMwmpNEdUG0R6Coq7tDfvSCge/ojyIHsc1XLvPuytS9pdPn
-         I97XvUadvVAUE7yA5J8iNVx6CxhaL0ZrzWOjSBYkki2/2VSEqerahmzMkPPBM5ReOJku
-         VOrg==
-X-Gm-Message-State: AO0yUKXJVwojJVWNT/klom56cRI4+5ARVEq+WPgt/IGklxF/xIUrAYiu
-        8Wtn6yp7aKQMNI7zx37wgSQWJg==
-X-Google-Smtp-Source: AK7set8Rs3NbWr/+syYwZkWacBKqzhW8dHm3qaImZJYpVxvN4EL2d7wEi9d0aVvqf+tbGrSHBr3kZA==
-X-Received: by 2002:a17:907:7f09:b0:8b1:7e21:f0e9 with SMTP id qf9-20020a1709077f0900b008b17e21f0e9mr16867174ejc.18.1678178554921;
-        Tue, 07 Mar 2023 00:42:34 -0800 (PST)
-Received: from ?IPV6:2a02:810d:15c0:828:5310:35c7:6f9e:2cd3? ([2a02:810d:15c0:828:5310:35c7:6f9e:2cd3])
-        by smtp.gmail.com with ESMTPSA id r17-20020a50aad1000000b004bfa4f747d2sm6301772edc.54.2023.03.07.00.42.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Mar 2023 00:42:34 -0800 (PST)
-Message-ID: <4c039e53-e3ca-29d7-e5ea-f24e385d28b0@linaro.org>
-Date:   Tue, 7 Mar 2023 09:42:33 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
+        with ESMTP id S229580AbjCGIxN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 03:53:13 -0500
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2100.outbound.protection.outlook.com [40.107.113.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74938279A5;
+        Tue,  7 Mar 2023 00:53:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NrWe88LCYbCfojZhA8drmCO9hPu4YTjUYjqxHobPEolV0+tUHHY653VTIzpHh5BzOo5YYgntU5yG5teXcg0dm7ce4cspbrX00r0Xo8ZhqYUoGOZug64WkvbUt9t3g0w4t4igOROrch+Cb9DnkvzXzWWcxhtZa+TMKawWik5Ko2cfPiLuTFn8awEg8tg3f9VwWfLWMnAAHUyR0hBiMTbwrN6dQkzEfGZZQDCcRfjKyKeeyvJAcP8Wm/krN/tfYpP0zpq9a7cjmKPQLyctIYm0+I7YPWJh1mgfGVFuZ+jRseb8LDes8vQKgIsWvJbZoAV5nvKiaNSER0AkzQ+nn8Q/9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AK57tOHcNi+iX45y+whGm7Jl/UCLifTiANtwoWiHRDw=;
+ b=OEFu5o8rScgJzS7aE+fC5thCsmxtkXeU/HwZ7lXmbNwLojEkR95GIE9+0qMDnGiaxvMyG5JGJ2+tImnPXOtN5eHiwbDLl8Ic9NWpLtJvM7/2l8bD9dKX61VR84H8Z5eL4ksFKy3GgNBQP+vKIGZi9CzO8agzLUpLcT8MQpqaCz/GYOHBFOkhIoPSG10FNDTO9T4e17MWwdkZJChh0zpfIzbYh4mwN+k1vqOjuJ8VFvfAFvxDOzcSByy44Q07TG3gvNeAd1r+gA2qAtVNtn6jUA7OOKasCxKuz3RwHi+qCWuzrhgO9i9KjQ1lFE97UcFDfei5UM6sH3cssxm1soACJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AK57tOHcNi+iX45y+whGm7Jl/UCLifTiANtwoWiHRDw=;
+ b=DGu9Bmp19q/sS/BzVpqi7JJQWckYlvQaYPcMjW3IhaBW9SvTcX00vYzBTBAhqNLBcrJNkRshR8ysm2D3AS+rI2s1VmjiX6TDYe0+f/tlk1h11nCVYDwVsFKgqLrIvt1NPpNf5HeaCZbupoEmCUYKRAxyNL4IZhUci5rhI2/Hhgo=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by TYCPR01MB7992.jpnprd01.prod.outlook.com (2603:1096:400:11d::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
+ 2023 08:53:07 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::f54c:4b2:9c7d:f207]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::f54c:4b2:9c7d:f207%7]) with mapi id 15.20.6156.029; Tue, 7 Mar 2023
+ 08:53:07 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v6 06/13] drivers: pinctrl: renesas: Add RZ/G2L POEG
+ driver support
+Thread-Topic: [PATCH v6 06/13] drivers: pinctrl: renesas: Add RZ/G2L POEG
+ driver support
+Thread-Index: AQHZUAojNP3mD44BfE2nuzra+Sv8J67uaLkAgACVQcA=
+Date:   Tue, 7 Mar 2023 08:53:07 +0000
+Message-ID: <OS0PR01MB59223AF6B7850592F34CABF086B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
+ <20230306090014.128732-7-biju.das.jz@bp.renesas.com>
+ <ZAZ43tylTNxPIun8@surfacebook>
+In-Reply-To: <ZAZ43tylTNxPIun8@surfacebook>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?Q?Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-References: <20230306191535.1917656-1-sean.anderson@seco.com>
- <20230306191535.1917656-4-sean.anderson@seco.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230306191535.1917656-4-sean.anderson@seco.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYCPR01MB7992:EE_
+x-ms-office365-filtering-correlation-id: c2e4c278-a916-44c3-8d41-08db1ee95f0b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tFnwGAVoJTspTamaJDPYvovxsHk+yYzIeocRSoB9VmUiEzbT76Pn6mSGXyns666t5KMqZbGoZ72xJVK9yl+ew+yBOd+iPSfNfuMGG43QJsOICR4UAiN6nIs4wok1I7n9O+J9wq7F1aqWYrhrBPTxg2NXxKPHHUvgj6fFMzIb567MjhrymzzTcIeaD5ScZOBI9h2qt4TjbOlfMMhhYLAGz3NY2QBO/iCt93XV6hJPDvEKfyr2vx1sskh0ghuggNoD4EYkSdbaKTOD75T+XS0PcI9xZmzpJxWziyxTg2Xj2N6zD8uo9+GFVNbe6/EVnSnh7F6TkdbCYCiZcFGKHy1cvEu1D/w0eSYzkajmB3W3rq8W2r3U8WkCLIZZ2pG9OCu8BCvAznv01V7F3KRA4UB95pJ8rA3V3VFuH0UiAc0nPgm3VM+8pivpCvAfuScgVOIHxtSSdUFeeLDWHMt8MXN7a+dmfUVFBADGGnkNnu8rVyGZ8RgUwGn2lPLrkSnC7kjVO52ky+BaBv1zNYxBIxMCeR52ztjsj2Je5SAY/8mHxqhxCXZMjkAaQiW1Cn3Nj1OTDwgq/L6v4t6+6YfCxSbi0+5vDWEoi5b5i1SIYCqG1W91pIAm40Xo2UvrS2xc//Ds/fTVqyrJfMoT6B23LpwfVt5ks5prRAl/pBJS6XwDtSyGt1P9GKzaKS42CstD4aE4eUKsc577LSiGR4QDN7QtJA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(136003)(346002)(396003)(39860400002)(376002)(451199018)(107886003)(52536014)(4326008)(76116006)(64756008)(41300700001)(66946007)(66556008)(6916009)(66446008)(8676002)(8936002)(6506007)(5660300002)(2906002)(122000001)(86362001)(38100700002)(38070700005)(33656002)(66476007)(7696005)(26005)(71200400001)(54906003)(55016003)(316002)(478600001)(83380400001)(66574015)(186003)(9686003)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?M4w/8JCkXSdqaxq/ZH5OUml8VeeOARr9uKUKvhjMDnsA7OCJXaZnUcHMS/?=
+ =?iso-8859-1?Q?mh0ReroPOzJQ8uWfkNh58js3/usn+LmNZqq++kOic87JQnpU+GVNv+bE3N?=
+ =?iso-8859-1?Q?elCbHaTrQaPkoX5xPEvJMADhfCPuKlSzcaSqvoZtK75J01cHNnBZ7dC4Wn?=
+ =?iso-8859-1?Q?ruf4aKYxrt2UHcnp7cgxpuia07rsR8unNnrNv+SPfshFy3E3l32IsViG4l?=
+ =?iso-8859-1?Q?zK9y43P/4NYagjjMUVNrQM04X/NYmP1myaj4YI2o2BEMeI6WQClihF4mLM?=
+ =?iso-8859-1?Q?e4v51np2B+OyONMiQNN16kLYZuNi6YGEw+RpFJI6SzkTGw5eLMOYsdozPB?=
+ =?iso-8859-1?Q?PJOCqyZNpf3kMS4weM2Wp8GaM/6KnU0pp/VQGPwI5TcufhHIwBqzEbvnt1?=
+ =?iso-8859-1?Q?bvKsO1URk48F8afdnMlPtrwQWDZhAVNxBnkg3YDQNE7z3n9b8s1vi25wRz?=
+ =?iso-8859-1?Q?Rb57mqm8IiT8/2OMIocw1JAQM7Qbp0WMfus2xEnpXI9mWmNoEFwdKNaJcL?=
+ =?iso-8859-1?Q?4Dt3RoX2ilHahjlP4ibcQv2sqTE/4SWC2nToPKjf6GKiJ7ixNVmCir1OiX?=
+ =?iso-8859-1?Q?6KY4OZJHJEhdfIrphmyGiezU8TcW77N5kPk8lfdlszN08QLQQfNZpVyRvj?=
+ =?iso-8859-1?Q?i1qR0nfrjOqModO2IADqSIrrrB4lD5Gr89xxNCDDCiPbjQvXgsEYoFJGfN?=
+ =?iso-8859-1?Q?4ClZ94Y0s8GeLSXW+22uvbbT0CuKPI4jequ5hGgT8LWKeDHzOrb3S+5qbw?=
+ =?iso-8859-1?Q?F2Ndh9IxblUsWL1fDZFl5hjwemBRNxcu+FE+6uwN/euh1cc0+gTePDsBn/?=
+ =?iso-8859-1?Q?3ImSwlRzbE55Y1g6antSHK4rfNm9AawsuDZ5VHx7BzSM8uPZL1GENct6Mr?=
+ =?iso-8859-1?Q?nAwXZsE1wsunIwpV/69l6ucMEu03Qw4uLRPqJc2JLti+mrqEq+iizgYjG9?=
+ =?iso-8859-1?Q?JurgRGWoizaJmHaDgixSBItOtj8AZJFuNlEa7YNGN7m/Ld806O9sYnDXaM?=
+ =?iso-8859-1?Q?G8eB+RCYOx4YaHV8uQCGXWuVNFikOLO5ft4yV34LbNOdlqA6L5SiRzl9K+?=
+ =?iso-8859-1?Q?/FYPAfFIGAz3EWq50Ow43WFlDl6xztseGWbmi4ESXlJgNQyOkVdmb0bgsB?=
+ =?iso-8859-1?Q?o8+TYqRNRt0QxAcx868Nqa54boOsjHeg1aJUHylk+KrZ+qwuHmlNCMi8iM?=
+ =?iso-8859-1?Q?z7cglzZ4kvJ7tOZo8QrZWEHDX9T265NsJayS3GBVG3bipeT2ibzu4iXx8+?=
+ =?iso-8859-1?Q?FgfauWqOd8GGEvQbuD3hPyb02op/8Mio6M3pM/yZtDTDtbUMrTUefllyfr?=
+ =?iso-8859-1?Q?ddVNOq6ftzZTmGhTKcoNMU8jld3Bb6HvWmsMdVqx0TIpBKmZSJveWVXLvK?=
+ =?iso-8859-1?Q?K5YYCh5e3UkOBU3QwNvCF3U/NRMYi7osSW5XMyvCiL99pZeOqHJTKsxOCO?=
+ =?iso-8859-1?Q?5lsC7wkznwtVXz+xXyS7LbHppxC0RgUFe+iGGBQpitc761E5/EYTfQCGD7?=
+ =?iso-8859-1?Q?3avtctD4mZ3M4GkVk/idE4YrA0CqwzHzk3X0Rc/byCU3qneoyFnbGqcHBL?=
+ =?iso-8859-1?Q?qHksioQ5QN1k4GTMHD91kTx4c8kXaWU0SCscztQLt/4lXMad98OJOcBpmF?=
+ =?iso-8859-1?Q?6gyDdzAiJECMkqooBpH7ZNU09IXCyhkDs6?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2e4c278-a916-44c3-8d41-08db1ee95f0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2023 08:53:07.3394
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BDccrbekl0QT5uJ/pgvc7mRFe1uFyIdV5vaAmVMtFolgYqYF/vc/bJGD4ulKnx4YzMvVEPOmSjfw5+JibM8llWs7uTOm+Yf1RB83UJDsx3k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB7992
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,34 +130,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/03/2023 20:15, Sean Anderson wrote:
-> This is a generic binding for simple MMIO GPIO controllers. Although we
-> have a single driver for these controllers, they were previously spread
-> over several files. Consolidate them. The register descriptions are
-> adapted from the comments in the source. There is no set order for the
-> registers, so I have not specified one.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-> ---
-> 
-> Changes in v10:
-> - New
-> 
->  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
->  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
->  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
->  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
->  4 files changed, 137 insertions(+), 91 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
->  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+Hi Andy Shevchenko,
 
-https://lore.kernel.org/all/20230126-gpio-mmio-fix-v2-1-38397aace340@ncr.com/
+Thanks for the feedback.
 
-https://lore.kernel.org/all/9bc9349d6e13d81c6200b0cd8fa20c76263043f6.1462543458.git.chunkeey@googlemail.com/
+> -----Original Message-----
+> From: andy.shevchenko@gmail.com <andy.shevchenko@gmail.com>
+> Sent: Monday, March 6, 2023 11:36 PM
+> To: Biju Das <biju.das.jz@bp.renesas.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>; Philipp Zabel
+> <p.zabel@pengutronix.de>; Geert Uytterhoeven <geert+renesas@glider.be>;
+> Thierry Reding <thierry.reding@gmail.com>; Uwe Kleine-K=F6nig <u.kleine-
+> koenig@pengutronix.de>; linux-pwm@vger.kernel.org; linux-renesas-
+> soc@vger.kernel.org; linux-gpio@vger.kernel.org; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Prabhakar Mahadev Lad <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>
+> Subject: Re: [PATCH v6 06/13] drivers: pinctrl: renesas: Add RZ/G2L POEG
+> driver support
+>=20
+> Mon, Mar 06, 2023 at 09:00:07AM +0000, Biju Das kirjoitti:
+> > The output pins of the RZ/G2L general PWM timer (GPT) can be disabled
+> > by using the port output enabling function for the GPT (POEG).
+> >
+> > Add basic support using s/w control through generic pincontrol sysfs
+> > to enable/disable output from GPT by registering with RZ/G2L
+> > pincontrol driver.
+>=20
+> You have wrong Subject prefix.
+
+Oops. Will fix.
+
+>=20
+> ...
+>=20
+> > +static void rzg2l_poeg_write(struct rzg2l_poeg_chip *chip, u32 data)
+> > +{
+> > +	iowrite32(data, chip->mmio);
+> > +}
+> > +
+> > +static u32 rzg2l_poeg_read(struct rzg2l_poeg_chip *chip) {
+> > +	return ioread32(chip->mmio);
+> > +}
+>=20
+> Why not regmap MMIO?
+
+Some drivers used iowrite32, some uses writel, some uses regmap.=20
+
+will use regmap for read/write,If the preference is regmap MMIO
+as it comes with spinlock for MMIO access.
+
+>=20
+> ...
+>=20
+> > +static struct platform_driver rzg2l_poeg_driver =3D {
+> > +	.driver =3D {
+> > +		.name =3D "rzg2l-poeg",
+> > +		.of_match_table =3D of_match_ptr(rzg2l_poeg_of_table),
+>=20
+> Why do you need of_match_ptr()?
 
 
+Not needed. Will remove it.
 
-Best regards,
-Krzysztof
+Cheers,
+Biju
+
+>=20
+> > +	},
+> > +	.probe =3D rzg2l_poeg_probe,
+> > +	.remove =3D rzg2l_poeg_remove,
+> > +};
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
 
