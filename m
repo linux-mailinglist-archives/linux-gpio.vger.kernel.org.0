@@ -2,62 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 094C96B0433
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 11:28:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0D186B0450
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 11:29:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbjCHK2P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 05:28:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35198 "EHLO
+        id S231168AbjCHK3k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 05:29:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjCHK2N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 05:28:13 -0500
-Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCCC818AB9
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 02:28:02 -0800 (PST)
-Received: by mail-ua1-x933.google.com with SMTP id n4so10835557ual.13
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 02:28:02 -0800 (PST)
+        with ESMTP id S231183AbjCHK3Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 05:29:24 -0500
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30086B95FF
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 02:28:56 -0800 (PST)
+Received: by mail-ua1-x92c.google.com with SMTP id d12so10845669uak.10
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 02:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678271282;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678271335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w2H34LSs9luC8X2nYjKB2UbV+PWLUKH/eRRQbVVLaZs=;
-        b=kDnaNqwoDaoMIJq3D2LxVEKc+snL+50VUTXKeaqTOIoXTMSqFVMMse0I39ZhPIcDzc
-         mB0IqYj4ysI443lmVx7rR64JJ5rWNRumOb1Sy8mBZvASWwDvE2wQvJsL7/W6WvVcDpT8
-         P6WBVn6WUZ1FdJriCf/Hq2b9uT9Lqcd2yDp4hlSlIDM9Ho+fm5JU8rjdghmMVAhvCNr4
-         o+tiNgHAikFSpP3LgW49DRlSmd1fULUJwPPDt9Dt72365WYd/9EekAjQ0lpMWrxI/2pB
-         PfY4YnS5q+Vzo3mN4nhpsA2ScTSG/keooALILajMvXpPMtEkDBr7DsXijqP5OG/s8zKN
-         VmKA==
+        bh=aczIr75cZ4lMAQlCkdBUDOmKKh/88pRo1/9jBKcFvDo=;
+        b=Ad+P6eTHQUo2gTKSRTn9Q4N9iyb7BgKCWj0uh7Sdu+iKIxEIwT4vSeXmlYiZuXxZnw
+         +CJNujA9+WwwUOANXGnpQ7XPX4Evn9JvB4WKq2fgNuaEtS/kU9XGluayhoF0YIN4D/jM
+         sQ2GtrN2DtK8MQh/IkWDMd43wwGtbq2++qDDAy79yAIEgRYoD85/HLLgCOK6IQBFFx4q
+         VytkhwqH1JdOmOFfqtUJIL2F2HU2PdLFzU4XrexIo8RTpcqDyNQ9DN5WXdYUUqZP+HJD
+         ngzrsOWtVFpvgHdR7Lvy+gOG1ydLu9VyGTMI79eKj6UA4NQARRc8Cv78euvZN7MA5dQJ
+         f9pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678271282;
+        d=1e100.net; s=20210112; t=1678271335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w2H34LSs9luC8X2nYjKB2UbV+PWLUKH/eRRQbVVLaZs=;
-        b=WaHqZDE9Zb12Xr4M/zXyLSUGlarXgyMdlB4WgK0aDYMNoQGFMZZbKB88F4fHV5O0Yn
-         XEZIaqWilxOEJ6Mhc+qAgOF1j5b7PgZPem/XOcVhpqI5d/tsJq71m0V82ZuODxklaFB9
-         rMilxmFLs6Ee5+X5cF0FRFhdWWoza0NfzxN03FRNllDln9IIg93XBpuz9N8URR3Fc0LA
-         T561HXtNPAFGm4DWDecqfdth3kS3fOYkcPSEd6OhEpJukec6WrgOk04S3hA/OUNdFVKU
-         1qhMFDB0hILUB6ZzfP0KwJpiniMHPv2NPXqSthOOzZ5zNW6sjZHg/rK+VJ7fSDT4n4Pu
-         4y/g==
-X-Gm-Message-State: AO0yUKXeRnt119GPaC6ILnEe0BG6UoSzE6O5RXQR366q8SkK/K2MOBG/
-        HBT6oSdeqqf2uWkf5tGEJk0wBNju1ZFnRzpZHgKAGw==
-X-Google-Smtp-Source: AK7set93pHJp55WrjJJbOce1lxNN/L0Rpv+yTU3C/ZyXzLBWI8m14MDoTvphEluEd4D59Xbb+8bjpDcFj1/QMFplqlM=
-X-Received: by 2002:ab0:5402:0:b0:688:d612:2024 with SMTP id
- n2-20020ab05402000000b00688d6122024mr11684729uaa.2.1678271281802; Wed, 08 Mar
- 2023 02:28:01 -0800 (PST)
+        bh=aczIr75cZ4lMAQlCkdBUDOmKKh/88pRo1/9jBKcFvDo=;
+        b=wes9PlTvxCWTLGKia3lFHrS3tIseZXqHqk4py4iirML9HVn/Nrzxz56rjR3+N5X4VY
+         MRbSDlasKhfO8pF/2d0ZeYuxiZf/tFg4VSYV846chTuvIJBQMXlALXhB2ZgFrdXNFj19
+         fHgN6nIWgMirzqBj4L5OgGMq6+bAntEe1pMZsm7iHFXtcQM/EBqQoi7CHUy3rVFbnRfy
+         DMJTRNoxPk+Hkfs6l5vAK04K8PCOVDDW3VJlcvJlOaZ3KkQV7dlSXnVF9orQ9wt8hTSp
+         GaJQ3If82wCEJSEWhj1Nq+EktSzNPucrZh1OJwvQ//Kn4DbusMPI7lFsUGLodhgcPxWY
+         eFYQ==
+X-Gm-Message-State: AO0yUKXlrsC3Nil2N19796WUHSddY3YFNjta7G7lwkI1DQzim47KvT9F
+        cQqTZOWqIn97dbRQPj9w69CIBVMb5HJ5QQ6njTEwAA==
+X-Google-Smtp-Source: AK7set/Pm0l+nHsTAZz1VotySAdwuOD+3PvAICPik5Hdusspob2pPU7Df9/xqtjmmWKkuBY+stebQNQAoPYftB9q1vA=
+X-Received: by 2002:a05:6122:ca1:b0:401:d1f4:bccf with SMTP id
+ ba33-20020a0561220ca100b00401d1f4bccfmr18336766vkb.0.1678271335090; Wed, 08
+ Mar 2023 02:28:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20230307165432.25484-1-afd@ti.com> <20230307165432.25484-4-afd@ti.com>
- <ZAd35D4C96MP5Qrm@smile.fi.intel.com> <b6e4ae3f-a3ff-b118-43ce-a45d007ae2e9@ti.com>
-In-Reply-To: <b6e4ae3f-a3ff-b118-43ce-a45d007ae2e9@ti.com>
+References: <20230307165432.25484-1-afd@ti.com> <20230307165432.25484-5-afd@ti.com>
+In-Reply-To: <20230307165432.25484-5-afd@ti.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 8 Mar 2023 11:27:50 +0100
-Message-ID: <CAMRc=McBp6DQvYTQXwC8hNjpcuOe_TAnj4S__Q79b6wjgYkK8g@mail.gmail.com>
-Subject: Re: [PATCH 4/6] gpio: pisosr: Use devm_gpiochip_add_data() to
+Date:   Wed, 8 Mar 2023 11:28:44 +0100
+Message-ID: <CAMRc=Mehx9Xv=xwd966N0LwEND-mxnPyjEAex8TrbycgbGQrag@mail.gmail.com>
+Subject: Re: [PATCH 5/6] gpio: tpic2810: Use devm_gpiochip_add_data() to
  simplify remove path
 To:     Andrew Davis <afd@ti.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Peter Tyser <ptyser@xes-inc.com>,
+Cc:     Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -71,29 +70,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 6:55=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+On Tue, Mar 7, 2023 at 5:54=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
 >
-> On 3/7/23 11:44 AM, Andy Shevchenko wrote:
-> > On Tue, Mar 07, 2023 at 10:54:30AM -0600, Andrew Davis wrote:
-> >> Use devm version of gpiochip add function to handle removal for us.
-> >>
-> >> While here update copyright and module author.
-> >
-> > ...
-> >
-> >> -    mutex_destroy(&gpio->lock);
-> >
-> > You need to wrap this into devm.
-> >
+> Use devm version of gpiochip add function to handle removal for us.
 >
-> I was thinking that but it seems there is no such thing. Most drivers
-> just ignore unwinding mutex_init() since it doesn't allocate anything.
+> While here update copyright and module author.
 >
-> mutex_destroy() is a NOP unless you are doing DEBUG builds were
-> it sets a magic value to check for use-after-free issues.
->
-> Andrew
+> Signed-off-by: Andrew Davis <afd@ti.com>
+> ---
+>  drivers/gpio/gpio-tpic2810.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
 
-And this is precisely why it's useful to destroy it. :)
+Applied, thanks!
 
 Bart
