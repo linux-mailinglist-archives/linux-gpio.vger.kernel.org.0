@@ -2,70 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71FE76AFCBE
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:11:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D145B6AFCF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:33:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjCHCLl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 21:11:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        id S229579AbjCHCdZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 21:33:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCHCLj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:11:39 -0500
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A60A4008
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 18:11:15 -0800 (PST)
-Received: by mail-qt1-x82d.google.com with SMTP id c19so16734852qtn.13
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 18:11:15 -0800 (PST)
+        with ESMTP id S229477AbjCHCdW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:33:22 -0500
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425982197F
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 18:33:20 -0800 (PST)
+Received: by mail-qv1-xf32.google.com with SMTP id g9so8601856qvt.8
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 18:33:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678241475;
+        d=linaro.org; s=google; t=1678242799;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MhukmpQlx1anGpfCWgT8lkusinTBpaubpbPr6hscTSE=;
-        b=j0nfXSXtMG6SDDtPy8jQOhpJVbk/89NLzashNbHWMTpRXtaYsB/h8hd/0Wa1btmQcn
-         6Azmb6srZCKitw7RMEFili9Xjv1Kj/Z30gZB0l/XnCWJpvoFjvZrFK99F+A2bKL1QqHb
-         Pd+eG+ws0dKIznpLQxxkqYPo/15lCxN6ekyzCjDRkSLizFmY5PYGHf/JHWg1QBqW51kG
-         793SJ5IWw0jY/UXAKUKOMttDyJumY0ul9KiUZzWWh+wJQDwlJedwYOHnj4QhW9q/xXwG
-         YBl5EbxHQwCjpksKCr6DPiNCegSoaBWXWOQ69qTGEtGOI8Jzd3cYG4+Tcz3agROE1wLu
-         gRSA==
+        bh=T7d4avNQ4qTzn+SuqYWgHiW32J80h86PyMsPPQdN+eA=;
+        b=o2Ttwa2SQB0HbezDy4bUDsIFHngLelMxlPtxY0hbYJxSQ00Fqnn6jHLq9SSnQaoNfg
+         FaptAfJkhfmfmk7mrD7PrqA6iNABi3vpVfwdR4KB5YIglS/aL7f9XHCrUgtKC0Ma0E8P
+         sk/jAZt7TQ8K64lGX8/gFgsh2F8Lm5GmwmfRQZ3nmu1YwBh9KqCwDNwpHItK8rQSzBfM
+         uXLb8UwQNDJ7qU6QqeLenjB8S7nl9oaGQkp4WoJI/rurXRvv7t+/0pI2H/JzMSFDEi9l
+         h7m0eEvWQlLmbKqnPFdq5cs9I3iXNhhH+Ve3ePyzJncZYAXqDG2X0tNS6+zVKKITywb3
+         Hd+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678241475;
+        d=1e100.net; s=20210112; t=1678242799;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MhukmpQlx1anGpfCWgT8lkusinTBpaubpbPr6hscTSE=;
-        b=KOe9uYkZ9rbxNRrvV6356ETJcY4rseAn9NTqOD62PTQJNI/7G6fDHFHIMm8KV9+qI3
-         DlRg1yaMUkzQNcxCSlk9ynekP9kXLU5SaxPXFECMAbCiYIOvQTd/lLkKq94Qmq822SVs
-         Aqo1+XDbv4gIHOlxCq4aJB9zOj5xDBq0J1XfhWHIjnx/ls1yfCJ4h9niODWe9D0DlvIv
-         IDRtHw5cvHd8I7KlrK5g/YXG4XahpkkPd5QvTHZ5r9zp/kB4C5HvBLdcYkvt8JcA08rF
-         cALLBosy+T9RXF5WcgmsOcZPp6tL7frV7QfF9bFsApE47YktNEh1uywKqBLaHF/fMf0v
-         vAAw==
-X-Gm-Message-State: AO0yUKV91aaDKRS/ryYcYhfXoOU6ndq5mx71yUmH9w5M6hrOVpGh8gXq
-        n7XFI6tNGmWHWADWotSqWAkqEg==
-X-Google-Smtp-Source: AK7set/Igl2IV3ZCxE+XwTjTMNoJXFOMQWaLicowXYYQqbF3sd/378Hp+Yav2Yg9gSAUYpmtIr02NA==
-X-Received: by 2002:a05:622a:40f:b0:3b3:7d5:a752 with SMTP id n15-20020a05622a040f00b003b307d5a752mr27805640qtx.50.1678241474985;
-        Tue, 07 Mar 2023 18:11:14 -0800 (PST)
+        bh=T7d4avNQ4qTzn+SuqYWgHiW32J80h86PyMsPPQdN+eA=;
+        b=HKGFUhQE4efpDNKffJCdHspV2zt31QzqbGELqSFhpkTdqXH+ahMaUI1QUzamcJnMHB
+         1fzl3le4GJ5eLTaoIb19ceZiTDVr/0rSksHbWWIL1DjuGeLMbbk7fReLPczTlq2yf1we
+         EYpJvVdRz1fyCZwgEeILHeFOPI/CXp9vFRr5PukWmb7XfKbr4dJu2WTviwu0J+c6k4zX
+         eQojckQtqwuNYfD+84IAQdUQ89iij6iqg59mX0yA1aEWCVD/CmRzhr0SMxDZmH0JCEoI
+         eBz1RK7cqLDFMjxq6t+187zcV8daVVfj1KGf72J2T3y7L/QJYCrA/eAM8L1/9nVexkCU
+         XtGQ==
+X-Gm-Message-State: AO0yUKV0BCe+75AvCehBeCcSalgfL0R+KvwexCS2Fq2KiKVIq7aqTuE6
+        X3/FmRvfUU9cAwASTx5hq4X10Q==
+X-Google-Smtp-Source: AK7set+HTgcm7gFO+MYwMi2DWxf2VD4MLB/Hsx2K1yh+WaQ7Jadi/1bD6PFJZFDaMNxfBo+aTi0XZQ==
+X-Received: by 2002:ad4:4eed:0:b0:56e:a7d1:4d65 with SMTP id dv13-20020ad44eed000000b0056ea7d14d65mr29986708qvb.52.1678242799311;
+        Tue, 07 Mar 2023 18:33:19 -0800 (PST)
 Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id r2-20020ac83b42000000b003c034837d8fsm3384513qtf.33.2023.03.07.18.11.13
+        by smtp.gmail.com with ESMTPSA id w29-20020a05620a0e9d00b0072396cb73cdsm10756583qkm.13.2023.03.07.18.33.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 18:11:13 -0800 (PST)
-Date:   Tue, 7 Mar 2023 21:11:11 -0500
+        Tue, 07 Mar 2023 18:33:18 -0800 (PST)
+Date:   Tue, 7 Mar 2023 21:29:34 -0500
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, techsupport@winsystems.com,
-        pdemetrotion@winsystems.com, quarium@gmail.com,
-        jhentges@accesio.com, jay.dolan@accesio.com
-Subject: Re: [PATCH v4 0/3] Migrate the PCIe-IDIO-24 and WS16C48 GPIO drivers
- to the regmap API
-Message-ID: <ZAfuv9RQn9eoXKPX@fedora>
+        broonie@kernel.org, Arnaud de Turckheim <quarium@gmail.com>,
+        John Hentges <jhentges@accesio.com>,
+        Jay Dolan <jay.dolan@accesio.com>
+Subject: Re: [PATCH v4 2/3] gpio: pcie-idio-24: Migrate to the regmap API
+Message-ID: <ZAfzDig+UzgH3QqO@fedora>
 References: <cover.1678106722.git.william.gray@linaro.org>
- <ZAX3243e4mejPEsS@smile.fi.intel.com>
+ <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
+ <ZAX3ntGgO4PjIkxx@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Exj+qic2iP6fmxVn"
+        protocol="application/pgp-signature"; boundary="quWG8+aBeWgbNXre"
 Content-Disposition: inline
-In-Reply-To: <ZAX3243e4mejPEsS@smile.fi.intel.com>
+In-Reply-To: <ZAX3ntGgO4PjIkxx@smile.fi.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -77,62 +77,107 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---Exj+qic2iP6fmxVn
+--quWG8+aBeWgbNXre
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 06, 2023 at 04:25:31PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 06, 2023 at 07:59:50AM -0500, William Breathitt Gray wrote:
-> > Changes in v4:
-> >  - Allocate idio24gpio before using it in idio_24_probe()
-> > Changes in v3:
-> >  - Drop map from set_type_config() parameter list; regmap can be passed
-> >    by irq_drv_data instead
-> >  - Adjust idio_24_set_type_config() for parameter list
-> >  - Add mutex to prevent clobbering the COS_ENABLE register when masking
-> >    IRQ and setting their type configuration
-> > Changes in v2:
-> >  - Simplify PCIe-IDIO-24 register offset defines to remove superfluous
-> >    arithmetic
-> >  - Check for NULL pointer after chip->irq_drv_data allocation
-> >  - Set gpio_regmap drvdata and use gpio_regmap_get_drvdata() to get the
-> >    regmap in idio_24_reg_map_xlate()
-> >=20
+On Mon, Mar 06, 2023 at 04:24:30PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 06, 2023 at 07:59:52AM -0500, William Breathitt Gray wrote:
 > > The regmap API supports IO port accessors so we can take advantage of
 > > regmap abstractions rather than handling access to the device registers
 > > directly in the driver.
 > >=20
-> > A patch to pass irq_drv_data as a parameter for struct regmap_irq_chip
-> > set_type_config() is included. This is needed by the
-> > idio_24_set_type_config() and ws16c48_set_type_config() callbacks in
-> > order to update the type configuration on their respective devices.
+> > For the PCIe-IDIO-24 series of devices, the following BARs are
+> > available:
 > >=20
-> > A patch to migrate the WS16C48 GPIO driver to the regmap API is included
-> > in this series due to its dependence on the struct regmap_irq_chip
-> > set_type_config() change.
+> >     BAR[0]: memory mapped PEX8311
+> >     BAR[1]: I/O mapped PEX8311
+> >     BAR[2]: I/O mapped card registers
+> >=20
+> > There are 24 FET Output lines, 24 Isolated Input lines, and 8 TTL/CMOS
+> > lines (which may be configured for either output or input). The GPIO
+> > lines are exposed by the following card registers:
+> >=20
+> >     Base +0x0-0x2 (Read/Write): FET Outputs
+> >     Base +0xB (Read/Write): TTL/CMOS
+> >     Base +0x4-0x6 (Read): Isolated Inputs
+> >     Base +0x7 (Read): TTL/CMOS
+> >=20
+> > In order for the device to support interrupts, the PLX PEX8311 internal
+> > PCI wire interrupt and local interrupt input must first be enabled.
+> >=20
+> > The following card registers for Change-Of-State may be used:
+> >=20
+> >     Base +0x8-0xA (Read): COS Status Inputs
+> >     Base +0x8-0xA (Write): COS Clear Inputs
+> >     Base +0xB (Read): COS Status TTL/CMOS
+> >     Base +0xB (Write): COS Clear TTL/CMOS
+> >     Base +0xE (Read/Write): COS Enable
+> >=20
+> > The COS Enable register is used to enable/disable interrupts and
+> > configure the interrupt levels; each bit maps to a group of eight inputs
+> > as described below:
+> >=20
+> >     Bit 0: IRQ EN Rising Edge IN0-7
+> >     Bit 1: IRQ EN Rising Edge IN8-15
+> >     Bit 2: IRQ EN Rising Edge IN16-23
+> >     Bit 3: IRQ EN Rising Edge TTL0-7
+> >     Bit 4: IRQ EN Falling Edge IN0-7
+> >     Bit 5: IRQ EN Falling Edge IN8-15
+> >     Bit 6: IRQ EN Falling Edge IN16-23
+> >     Bit 7: IRQ EN Falling Edge TTL0-7
+> >=20
+> > An interrupt is asserted when a change-of-state matching the interrupt
+> > level configuration respective for a particular group of eight inputs
+> > with enabled COS is detected.
+> >=20
+> > The COS Status registers may be read to determine which inputs have
+> > changed; if interrupts were enabled, an IRQ will be generated for the
+> > set bits in these registers. Writing the value read from the COS Status
+> > register back to the respective COS Clear register will clear just those
+> > interrupts.
 >=20
-> I have found nothing WRT lock type changes.
-> Can you shed a light on what's going on here?
+> ...
+>=20
+> >  - Add mutex to prevent clobbering the COS_ENABLE register when masking
+> >    IRQ and setting their type configuration
+>=20
+> But this doesn't explain killing the raw spin lock.
+>=20
+> I don't understand how is it suppose to work then.
+>=20
+> What is this lock for and how IRQ related registers can be updated
+> with RT type of kernel?
+>=20
+> If mutex is okay, doesn't mean we have to add 'can_sleep =3D true'?
 
-Previous versions of this patchset had removed the locks entirely.
-Later, I realized that some locking would be required to prevent
-clobbering registers when updating IRQ masks and type configurations, so
-I added in these new locks with types that seemed appropriate for the
-way they are being used now in the code. I'll explain further in my
-replies to each patch why I chose these particular types.
+I admit that RT locking is an area I often have trouble understanding,
+so perhaps you can help me make sure whether this lock type change makes
+sense here.
+
+My reasoning for why we need a lock is that the COS Enable register is
+modified in both the idio_24_set_type_config() function and the
+idio_24_handle_mask_sync() function. These respectively are called by
+regmap_irq_set_type() and regmap_irq_sync_unlock(), which are callbacks
+for a struct irq_chip irq_set_type() and irq_bus_sync_unlock() members.
+
+I think these callbacks could be executed in parrallel, but are allowed
+to sleep, so that is why I selected mutex as the lock type here (I
+probably do need to add 'can_sleep =3D true'). Is this reasoning correct,
+or have I made a mistake here?
 
 William Breathitt Gray
 
---Exj+qic2iP6fmxVn
+--quWG8+aBeWgbNXre
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAfuvwAKCRC1SFbKvhIj
-K45HAQD7dYrMWAEpvnoorSEWniz+P2SaeI+3v0XjdrY2dIcvDQD/c15u7LPpRTR6
-IKBVIPQowdupymgDr3XjUh2OudYHmgM=
-=lXsO
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAfzDgAKCRC1SFbKvhIj
+K6X6AQCb8V8G87zN4J8+wxzOx7owtXfV4gShJQXpdJzhhHNcNAD9ECtLyove5EKa
+NApOWn2NjlkbJxgx/t7eGKvFk5ViEgo=
+=vvBh
 -----END PGP SIGNATURE-----
 
---Exj+qic2iP6fmxVn--
+--quWG8+aBeWgbNXre--
