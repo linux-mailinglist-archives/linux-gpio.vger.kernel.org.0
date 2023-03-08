@@ -2,63 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE1C6B0A8B
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 15:08:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B4DC6B0AA9
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 15:12:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbjCHOIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 09:08:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        id S232216AbjCHOM1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 09:12:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjCHOHw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 09:07:52 -0500
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172F35C9FB;
-        Wed,  8 Mar 2023 06:06:31 -0800 (PST)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-176d93cd0daso9394872fac.4;
-        Wed, 08 Mar 2023 06:06:31 -0800 (PST)
+        with ESMTP id S232210AbjCHOLz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 09:11:55 -0500
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E621C5A18B;
+        Wed,  8 Mar 2023 06:11:07 -0800 (PST)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-17711f56136so3904840fac.12;
+        Wed, 08 Mar 2023 06:11:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678284391;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8yIx/AU8JzW8uSjkdg01a/PYhxpFU04JXt4ilid73Fg=;
-        b=05hqTsNe/GBJpIiI4Xr8N7xFUSXrqqy/szG2Tn16qnmpAFNWLo7lY2CgPxbCTIkjij
-         TFbtw1VvlQmpg3FkGQZPyDLvx443M5IQu4wmIXf0c3DJSjMkzg3GbROxoWummC/afUI7
-         vqvIvfiBnEHYuQ2IHYHOmC6mehBxiP5W9VPhPAkRWSGhFltYqoZy+W3eOz/XK+yaZ5JV
-         YnTZ1SniAsWmqQQ0YUUIPoPozdBGU59L8j7xB/GbFA4xWoxcWh9P213/KTTu0nLMD+2L
-         Mb9DbSs8NeEz+zbMTUeHA0FapqPnz9N27ky5+s5mOYDUJ+Lbs7Y3DeNmwojrq0n9CIxo
-         HJxA==
-X-Gm-Message-State: AO0yUKVXni7RgvZ1fCPnEnY+QFnJsMbQdPo2b8Ntpa0FBK6z4nsbWygm
-        jiKGCVgbDXrwzv4fSdq8Mg==
-X-Google-Smtp-Source: AK7set9TNvbhYkYF/07vHAjhIjW7nnPGoUTxEfCExr/KeTykPce7GTNhjs/xFb+8h0xD1/EUloG4jQ==
-X-Received: by 2002:a05:6870:414e:b0:176:554d:235b with SMTP id r14-20020a056870414e00b00176554d235bmr690543oad.59.1678284391145;
-        Wed, 08 Mar 2023 06:06:31 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678284654;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BG0LVvFn1C/Da2Gc5O3YD8isCIsXrAwtxSQEVgE87AI=;
+        b=RuXhJut4bN5ftmAJRq/9tiPeccWmierAJ/UbTICusRzkQoNjOG8YL+iO6w9GSVNIuM
+         MPtwwCiEy+25yUZFLSJsd3hKagE0EjYwuuHWlDHqKe5tzf12n1eJ8OjJtouxIvAr3QC7
+         88GZUJLP+OkfWqJCL7HTpUXun+wYZU/uG+o3MEAa5LXcru31ZdoY7MX5vzll1Rv8Dzct
+         zAzR5KnmZc84jvww4EXmvexiilrLMwn6PYBZvDlTfaWgpNgoc0KZZ7lol0aCX4VVNSwg
+         cZ+eAEv1WLNX71i5WEP4zviOzQlZyshApKdpJpw7tMGOzzPVduiQ+NL3jgxyN0jZAyhZ
+         ubGA==
+X-Gm-Message-State: AO0yUKXuLLm7p33VFPZHs4Jkv2fwt77YSwXkDWEog9cgBmjuS5E4ggJk
+        14ELtuV8z/AxECVO1tdDZw==
+X-Google-Smtp-Source: AK7set/cT2sp1M7e47IzQCQD2W8xtmPnZuAp+jI6K0s2N6oikhajQ93ypk71x4/YPZM2+Kr1qDFxTg==
+X-Received: by 2002:a05:6871:b11:b0:176:3849:4e96 with SMTP id fq17-20020a0568710b1100b0017638494e96mr10140723oab.13.1678284654485;
+        Wed, 08 Mar 2023 06:10:54 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v22-20020a4ac916000000b0052532296449sm6208690ooq.20.2023.03.08.06.06.29
+        by smtp.gmail.com with ESMTPSA id f8-20020a9d2c08000000b00690dc5d9b9esm6498673otb.6.2023.03.08.06.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 06:06:30 -0800 (PST)
-Received: (nullmailer pid 2666472 invoked by uid 1000);
-        Wed, 08 Mar 2023 14:06:21 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
+        Wed, 08 Mar 2023 06:10:54 -0800 (PST)
+Received: (nullmailer pid 2719199 invoked by uid 1000);
+        Wed, 08 Mar 2023 14:10:52 -0000
+Date:   Wed, 8 Mar 2023 08:10:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        smangipudi@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20230308114432.27133-1-pshete@nvidia.com>
-References: <20230308114432.27133-1-pshete@nvidia.com>
-Message-Id: <167828360289.2613214.7109201794709064028.robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: tegra234
-Date:   Wed, 08 Mar 2023 08:06:21 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+To:     Rob Herring <robh@kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        linux-leds@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-media@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+        Lee Jones <lee@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        alsa-devel@alsa-project.org, netdev@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>, linux-can@vger.kernel.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Benson Leung <bleung@chromium.org>, linux-i2c@vger.kernel.org,
+        Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH] dt-bindings: Fix SPI and I2C bus node names in examples
+Message-ID: <167828463126.2715010.4541489267949266802.robh@kernel.org>
+References: <20230228215433.3944508-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230228215433.3944508-1-robh@kernel.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,39 +89,146 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Wed, 08 Mar 2023 17:14:30 +0530, Prathamesh Shete wrote:
-> Add DT binding doc for Tegra234 pinmux driver.
+On Tue, 28 Feb 2023 15:54:33 -0600, Rob Herring wrote:
+> SPI and I2C bus node names are expected to be "spi" or "i2c",
+> respectively, with nothing else, a unit-address, or a '-N' index. A
+> pattern of 'spi0' or 'i2c0' or similar has crept in. Fix all these
+> cases. Mostly scripted with the following commands:
 > 
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> git grep -l '\si2c[0-9] {' Documentation/devicetree/ | xargs sed -i -e 's/i2c[0-9] {/i2c {/'
+> git grep -l '\sspi[0-9] {' Documentation/devicetree/ | xargs sed -i -e 's/spi[0-9] {/spi {/'
+> 
+> With this, a few errors in examples were exposed and fixed.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../pinctrl/nvidia,tegra234-pinmux.yaml       | 232 ++++++++++++++++++
->  1 file changed, 232 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Robert Foss <rfoss@kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Lee Jones <lee@kernel.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-can@vger.kernel.org
+> Cc: linux-wireless@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-usb@vger.kernel.org
+> ---
+>  .../bindings/auxdisplay/holtek,ht16k33.yaml       |  2 +-
+>  .../bindings/chrome/google,cros-ec-typec.yaml     |  2 +-
+>  .../chrome/google,cros-kbd-led-backlight.yaml     |  2 +-
+>  .../devicetree/bindings/clock/ti,lmk04832.yaml    |  2 +-
+>  .../bindings/display/bridge/analogix,anx7625.yaml |  2 +-
+>  .../bindings/display/bridge/anx6345.yaml          |  2 +-
+>  .../bindings/display/bridge/lontium,lt8912b.yaml  |  2 +-
+>  .../bindings/display/bridge/nxp,ptn3460.yaml      |  2 +-
+>  .../bindings/display/bridge/ps8640.yaml           |  2 +-
+>  .../bindings/display/bridge/sil,sii9234.yaml      |  2 +-
+>  .../bindings/display/bridge/ti,dlpc3433.yaml      |  2 +-
+>  .../bindings/display/bridge/toshiba,tc358762.yaml |  2 +-
+>  .../bindings/display/bridge/toshiba,tc358768.yaml |  2 +-
+>  .../bindings/display/panel/nec,nl8048hl11.yaml    |  2 +-
+>  .../bindings/display/solomon,ssd1307fb.yaml       |  4 ++--
+>  .../devicetree/bindings/eeprom/at25.yaml          |  2 +-
+>  .../bindings/extcon/extcon-usbc-cros-ec.yaml      |  2 +-
+>  .../bindings/extcon/extcon-usbc-tusb320.yaml      |  2 +-
+>  .../devicetree/bindings/gpio/gpio-pca9570.yaml    |  2 +-
+>  .../devicetree/bindings/gpio/gpio-pca95xx.yaml    |  8 ++++----
+>  .../bindings/i2c/google,cros-ec-i2c-tunnel.yaml   |  2 +-
+>  .../bindings/leds/cznic,turris-omnia-leds.yaml    |  2 +-
+>  .../devicetree/bindings/leds/issi,is31fl319x.yaml |  2 +-
+>  .../devicetree/bindings/leds/leds-aw2013.yaml     |  2 +-
+>  .../devicetree/bindings/leds/leds-rt4505.yaml     |  2 +-
+>  .../devicetree/bindings/leds/ti,tca6507.yaml      |  2 +-
+>  .../bindings/media/i2c/aptina,mt9p031.yaml        |  2 +-
+>  .../bindings/media/i2c/aptina,mt9v111.yaml        |  2 +-
+>  .../devicetree/bindings/media/i2c/imx219.yaml     |  2 +-
+>  .../devicetree/bindings/media/i2c/imx258.yaml     |  4 ++--
+>  .../devicetree/bindings/media/i2c/mipi-ccs.yaml   |  2 +-
+>  .../bindings/media/i2c/ovti,ov5648.yaml           |  2 +-
+>  .../bindings/media/i2c/ovti,ov772x.yaml           |  2 +-
+>  .../bindings/media/i2c/ovti,ov8865.yaml           |  2 +-
+>  .../bindings/media/i2c/ovti,ov9282.yaml           |  2 +-
+>  .../bindings/media/i2c/rda,rda5807.yaml           |  2 +-
+>  .../bindings/media/i2c/sony,imx214.yaml           |  2 +-
+>  .../bindings/media/i2c/sony,imx274.yaml           |  2 +-
+>  .../bindings/media/i2c/sony,imx334.yaml           |  2 +-
+>  .../bindings/media/i2c/sony,imx335.yaml           |  2 +-
+>  .../bindings/media/i2c/sony,imx412.yaml           |  2 +-
+>  .../devicetree/bindings/mfd/actions,atc260x.yaml  |  2 +-
+>  .../devicetree/bindings/mfd/google,cros-ec.yaml   |  6 +++---
+>  .../devicetree/bindings/mfd/ti,tps65086.yaml      |  2 +-
+>  .../devicetree/bindings/mfd/x-powers,axp152.yaml  |  4 ++--
+>  .../devicetree/bindings/net/asix,ax88796c.yaml    |  2 +-
+>  .../bindings/net/can/microchip,mcp251xfd.yaml     |  2 +-
+>  .../bindings/net/dsa/microchip,ksz.yaml           |  2 +-
+>  .../bindings/net/nfc/samsung,s3fwrn5.yaml         |  2 +-
+>  .../bindings/net/vertexcom-mse102x.yaml           |  2 +-
+>  .../bindings/net/wireless/ti,wlcore.yaml          | 10 ++++++++--
+>  .../devicetree/bindings/pinctrl/pinmux-node.yaml  |  2 +-
+>  .../bindings/pinctrl/starfive,jh7100-pinctrl.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq2415x.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq24190.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq24257.yaml |  4 ++--
+>  .../devicetree/bindings/power/supply/bq24735.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq2515x.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq25890.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq25980.yaml |  2 +-
+>  .../devicetree/bindings/power/supply/bq27xxx.yaml | 15 ++++++++-------
+>  .../bindings/power/supply/lltc,ltc294x.yaml       |  2 +-
+>  .../bindings/power/supply/ltc4162-l.yaml          |  2 +-
+>  .../bindings/power/supply/maxim,max14656.yaml     |  2 +-
+>  .../bindings/power/supply/maxim,max17040.yaml     |  4 ++--
+>  .../bindings/power/supply/maxim,max17042.yaml     |  2 +-
+>  .../bindings/power/supply/richtek,rt9455.yaml     |  2 +-
+>  .../bindings/power/supply/ti,lp8727.yaml          |  2 +-
+>  .../bindings/regulator/active-semi,act8865.yaml   |  2 +-
+>  .../regulator/google,cros-ec-regulator.yaml       |  2 +-
+>  .../bindings/regulator/nxp,pf8x00-regulator.yaml  |  2 +-
+>  .../devicetree/bindings/sound/everest,es8316.yaml |  2 +-
+>  .../devicetree/bindings/sound/tas2562.yaml        |  2 +-
+>  .../devicetree/bindings/sound/tas2770.yaml        |  2 +-
+>  .../devicetree/bindings/sound/tas27xx.yaml        |  2 +-
+>  .../devicetree/bindings/sound/tas5805m.yaml       |  2 +-
+>  .../devicetree/bindings/sound/tlv320adcx140.yaml  |  2 +-
+>  .../devicetree/bindings/sound/zl38060.yaml        |  2 +-
+>  .../devicetree/bindings/usb/maxim,max33359.yaml   |  2 +-
+>  .../bindings/usb/maxim,max3420-udc.yaml           |  2 +-
+>  .../bindings/usb/mediatek,mt6360-tcpc.yaml        |  2 +-
+>  .../devicetree/bindings/usb/richtek,rt1711h.yaml  |  2 +-
+>  .../devicetree/bindings/usb/richtek,rt1719.yaml   |  2 +-
+>  .../devicetree/bindings/usb/st,stusb160x.yaml     |  2 +-
+>  .../devicetree/bindings/usb/ti,hd3ss3220.yaml     |  2 +-
+>  .../devicetree/bindings/usb/ti,tps6598x.yaml      |  2 +-
+>  86 files changed, 110 insertions(+), 103 deletions(-)
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.example.dtb: pinmux@2430000: 'pinmux-pex-rst-c5-out' does not match any of the regexes: '^pinmux(-[a-z0-9]+)?$', 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230308114432.27133-1-pshete@nvidia.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Applied, thanks!
 
