@@ -2,65 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92B666B01BA
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 09:41:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA216B01CD
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 09:43:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbjCHIlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 03:41:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
+        id S229894AbjCHInk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 03:43:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbjCHIlA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 03:41:00 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85156570BE;
-        Wed,  8 Mar 2023 00:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678264842; x=1709800842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uI574dYMWHoRIV9dkSEKRQgGOP12iLKca4LFvFOKB2Y=;
-  b=PP3ay2fc7j9WRhJb6PosoGE+Fgp7STtyDF+aCf4kpmzumczxYWO1bWdN
-   UoWlxJRviRJgZb7Syf5mGgjasIA7sGL5m8BUKQQz9iGC7eclxCyWCFewr
-   yEi4LtF9Rr9tz4G71Zy+FFrAjVgyTZ/9alqL6molDwArMb39WT1hVewkX
-   +0nbHzmejS8/NOphIRxa/ERREdjKaPZJwbOWqy3ni9QMi/V86kU/5oqd9
-   230KqeupuPKslwUvE3fyyPyiFsTTj97zlJ2iVr6h1k7lpzx42CQvDjvOl
-   wAg9OS1E9vKZK6K48UuSnGfizgihxut6LjrXFx0THb0eVVticN/TjV+RS
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="422369805"
-X-IronPort-AV: E=Sophos;i="5.98,243,1673942400"; 
-   d="scan'208";a="422369805"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 00:40:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="1006249533"
-X-IronPort-AV: E=Sophos;i="5.98,243,1673942400"; 
-   d="scan'208";a="1006249533"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Mar 2023 00:40:40 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pZpLj-0001zS-2O;
-        Wed, 08 Mar 2023 08:40:39 +0000
-Date:   Wed, 8 Mar 2023 16:39:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Davis <afd@ti.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>
-Subject: Re: [PATCH v2 3/6] gpio: sch311x: Use devm_gpiochip_add_data() to
- simplify remove path
-Message-ID: <202303081607.a3gt8vdz-lkp@intel.com>
-References: <20230307193346.8718-3-afd@ti.com>
+        with ESMTP id S229901AbjCHIni (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 03:43:38 -0500
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02015CC06;
+        Wed,  8 Mar 2023 00:43:34 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3288hM9o043151;
+        Wed, 8 Mar 2023 02:43:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1678265002;
+        bh=S07v7k5mCnE4jl7fW0F3g0GwSSRhhAnlA8v1QkX1zOE=;
+        h=From:To:CC:Subject:Date;
+        b=UZwRXR74f9mPJ9JtahS+iOPmnLDtcBNJjul2mWsIhMHr0dkp2/5aLgpTq6/y6ldOA
+         zVx1EhHpOC2xP2OjopGgKbBTSYdlkYuTUY2Jf5ooRJw9mFKua8vVzhYkt/ySuV95Rh
+         JDqTaCQzK8xNc5eCJqvGoRjVb3ptPBa2gpbVZBTg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3288hMsd017502
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Mar 2023 02:43:22 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 8
+ Mar 2023 02:43:21 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Wed, 8 Mar 2023 02:43:21 -0600
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3288hLem092779;
+        Wed, 8 Mar 2023 02:43:21 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH] dt-bindings: pinctrl: k3: Introduce debounce select mux macros
+Date:   Wed, 8 Mar 2023 02:43:09 -0600
+Message-ID: <20230308084309.396192-1-nm@ti.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230307193346.8718-3-afd@ti.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,55 +67,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andrew,
+Introduce the debounce select mux macros to allow folks to setup
+debounce configuration for pins. Each configuration selected maps
+to a specific timing register as documented in appropriate Technical
+Reference Manual (example:[1]).
 
-Thank you for the patch! Yet something to improve:
+[1] AM625x TRM (section 6.1.2.2): https://www.ti.com/lit/pdf/spruiv7
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ include/dt-bindings/pinctrl/k3.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.3-rc1 next-20230308]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andrew-Davis/gpio-twl4030-Use-devm_gpiochip_add_data-to-simplify-remove-path/20230308-034717
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20230307193346.8718-3-afd%40ti.com
-patch subject: [PATCH v2 3/6] gpio: sch311x: Use devm_gpiochip_add_data() to simplify remove path
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230308/202303081607.a3gt8vdz-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/fcfc10c6817ac3ea88ced58cce2ae8568b0f2030
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Andrew-Davis/gpio-twl4030-Use-devm_gpiochip_add_data-to-simplify-remove-path/20230308-034717
-        git checkout fcfc10c6817ac3ea88ced58cce2ae8568b0f2030
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 olddefconfig
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303081607.a3gt8vdz-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpio/gpio-sch311x.c:322:27: error: 'sch311x_gpio_remove' undeclared here (not in a function); did you mean 'sch311x_gpio_probe'?
-     322 |         .remove         = sch311x_gpio_remove,
-         |                           ^~~~~~~~~~~~~~~~~~~
-         |                           sch311x_gpio_probe
-
-
-vim +322 drivers/gpio/gpio-sch311x.c
-
-12262bef8f4614 Bruno Randolf 2013-12-04  318  
-12262bef8f4614 Bruno Randolf 2013-12-04  319  static struct platform_driver sch311x_gpio_driver = {
-12262bef8f4614 Bruno Randolf 2013-12-04  320  	.driver.name	= DRV_NAME,
-12262bef8f4614 Bruno Randolf 2013-12-04  321  	.probe		= sch311x_gpio_probe,
-12262bef8f4614 Bruno Randolf 2013-12-04 @322  	.remove		= sch311x_gpio_remove,
-12262bef8f4614 Bruno Randolf 2013-12-04  323  };
-12262bef8f4614 Bruno Randolf 2013-12-04  324  
-12262bef8f4614 Bruno Randolf 2013-12-04  325  
-
+diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
+index 6bb9df1a264d..469bd29651db 100644
+--- a/include/dt-bindings/pinctrl/k3.h
++++ b/include/dt-bindings/pinctrl/k3.h
+@@ -11,6 +11,7 @@
+ #define PULLUDEN_SHIFT		(16)
+ #define PULLTYPESEL_SHIFT	(17)
+ #define RXACTIVE_SHIFT		(18)
++#define DEBOUNCE_SHIFT		(11)
+ 
+ #define PULL_DISABLE		(1 << PULLUDEN_SHIFT)
+ #define PULL_ENABLE		(0 << PULLUDEN_SHIFT)
+@@ -29,6 +30,14 @@
+ #define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
+ #define PIN_INPUT_PULLDOWN	(INPUT_EN | PULL_DOWN)
+ 
++#define PIN_DEBOUNCE_DISABLE	(0 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF1	(1 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF2	(2 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF3	(3 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF4	(4 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF5	(5 << DEBOUNCE_SHIFT)
++#define PIN_DEBOUNCE_CONF6	(6 << DEBOUNCE_SHIFT)
++
+ #define AM62AX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+ #define AM62AX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.31.1
+
