@@ -2,195 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69EE06B0C7D
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 16:21:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 890156B0D5D
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 16:51:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjCHPVS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 10:21:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
+        id S231923AbjCHPvE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 10:51:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231495AbjCHPUp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 10:20:45 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D48ED0098;
-        Wed,  8 Mar 2023 07:20:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678288826; x=1709824826;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G1VFHeWFNXdovMcEIzgnzbEz66qM8GYohzZIfUvJoTo=;
-  b=kpSPfvdqdIjFnVpM1K1WrngNFyz8E9o2W99/Bk1wrcvnIVGxD7ROu3OW
-   0elniMsP25/ul4Ne40/IAmI2uUa33PaE9F0TZgf8UvWJtlHnr/62nKit4
-   rVOh4n5sBojFW0hy/8WuwkJ/zZorT8SK27YM+sSaHllmbjt6CGqtlrJXv
-   DXmGqMDLZxMMcyAbTHBs8QZ2ExDMryyRNBEcK/TnuTL/yL73/UFJeFluS
-   RlLWok+EpPOIROImjw3pmIOZV69qSSvQWrqiyvmW5mRNWK7FMGcITQBQQ
-   YI8BlwtV7AClkTTbr/3E35Gz2Ij/8/xtsisuJKcWylzmmmNIQBHKmQHsv
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="398756956"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="398756956"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 07:20:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="670366953"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="670366953"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 08 Mar 2023 07:20:24 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1pZvaY-00HU3B-1N;
-        Wed, 08 Mar 2023 17:20:22 +0200
-Date:   Wed, 8 Mar 2023 17:20:21 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
-Message-ID: <ZAintWngnEtKS9kN@smile.fi.intel.com>
-References: <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
- <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr>
- <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
- <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr>
- <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
- <7856e5a8-d84e-4f41-721b-80b6fc413919@alu.unizg.hr>
- <Y/j2ikfd/wvrDdws@smile.fi.intel.com>
- <2373a9ab-1c38-35fd-e961-9a172f8ce622@alu.unizg.hr>
- <Y/05Nizuc+VJ7GNU@smile.fi.intel.com>
- <93d606c4-fe48-757b-28fa-4786ed3302c3@alu.unizg.hr>
+        with ESMTP id S232022AbjCHPu4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 10:50:56 -0500
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35539C48A9;
+        Wed,  8 Mar 2023 07:50:47 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 328Fogxt002975;
+        Wed, 8 Mar 2023 09:50:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1678290642;
+        bh=jzszyWSCpzcY9s0rXEEp290pik8ZDl2g8aFhW2rZxBc=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=UEjgNcE/C2JyEb6BGTtbaxrAryMp1nU4jz1Sm2JZHGPXnq7AeeMmlGbnynkezBw9v
+         jh3gg5FDIXL1uAwhZvUpfdrOt0Oe3b126vgZQxFw7L1BhOaS+oliQ4OeKnzd9Q0hCA
+         W0T67x1RCKlWPDIn7b8wklMUTkQFFtbyZ3qi4OD4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 328FogP5014225
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Mar 2023 09:50:42 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 8
+ Mar 2023 09:50:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Wed, 8 Mar 2023 09:50:41 -0600
+Received: from [128.247.81.39] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 328FofGt007550;
+        Wed, 8 Mar 2023 09:50:41 -0600
+Message-ID: <9c705260-c04c-da2e-db9a-df3ddfb69efc@ti.com>
+Date:   Wed, 8 Mar 2023 09:50:41 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93d606c4-fe48-757b-28fa-4786ed3302c3@alu.unizg.hr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 3/6] gpio: sch311x: Use devm_gpiochip_add_data() to
+ simplify remove path
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230307165432.25484-1-afd@ti.com>
+ <20230307165432.25484-3-afd@ti.com>
+ <CAMRc=MeLM-S+HEuaDPp0UpbHJYmAXfLuFMU2TyvK5KEywSxtQA@mail.gmail.com>
+ <CAMRc=MfAqx5Wz2d5K1wWM0ZZ4WBu+Jhercw-z95zGvo_-v=OTg@mail.gmail.com>
+From:   Andrew Davis <afd@ti.com>
+In-Reply-To: <CAMRc=MfAqx5Wz2d5K1wWM0ZZ4WBu+Jhercw-z95zGvo_-v=OTg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 02:11:39PM +0100, Mirsad Todorovac wrote:
-> On 2/28/23 00:13, Andy Shevchenko wrote:
-
-...
-
-> > > The logs are extensive if you are willing to skim over them, but I believe the interesting
-> > > part is this:
-> > 
-> > I'm not sure I understand where the problem is.
-> > 
-> > > [ 4830.764748] kobject: 'gpio-sim' (000000005b8d0726): kobject_release, parent 000000007425b13f (delayed 750)
-> > > [ 4833.908238] kobject: 'gpio-sim' (000000005b8d0726): kobject_cleanup, parent 000000007425b13f
-> > > [ 4833.908244] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup kobject_del
-> > > [ 4833.908245] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup 'remove' event
-> > > [ 4833.908247] kobject: 'gpio-sim' (000000005b8d0726): kobject_uevent_env
-> > > [ 4833.908273] kobject: 'gpio-sim' (000000005b8d0726): fill_kobj_path: path = '/bus/platform/drivers/gpio-sim'
-> > > [ 4833.908311] kobject: 'gpio-sim' (000000005b8d0726): calling ktype release
-> > > [ 4833.908315] kobject: 'gpio-sim': free name
-> > > [ 4834.932303] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_release, parent 0000000093357d30 (delayed 250)
-> > > [ 4835.952388] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_cleanup, parent 0000000093357d30
-> > > [ 4835.952413] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup kobject_del
-> > > [ 4835.952415] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup 'remove' event
-> > > [ 4835.952416] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_uevent_env
-> > > [ 4835.952424] kobject: 'gpio_sim' (0000000096ea0bb1): fill_kobj_path: path = '/module/gpio_sim'
-> > > [ 4835.952445] kobject: 'gpio_sim' (0000000096ea0bb1): calling ktype release
-> > > [ 4835.952448] kobject: 'gpio_sim': free name
-> > > 
-> > > Or, with CONFIG_DEBUG_DEVRES=y, it looks like this:
-> > 
-> > I don't see that been enabled (it requires to pass a command line option to the kernel).
+On 3/8/23 4:32 AM, Bartosz Golaszewski wrote:
+> On Wed, Mar 8, 2023 at 11:24 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> On Tue, Mar 7, 2023 at 5:54 PM Andrew Davis <afd@ti.com> wrote:
+>>>
+>>> Use devm version of gpiochip add function to handle removal for us.
+>>>
+>>> Signed-off-by: Andrew Davis <afd@ti.com>
+>>> ---
+>>>   drivers/gpio/gpio-sch311x.c | 25 ++-----------------------
+>>>   1 file changed, 2 insertions(+), 23 deletions(-)
+>>>
+>>
+>> Applied, thanks!
+>>
+>> Bart
 > 
-> I don't think I have found this command line option to LK.
+> I see there's v2 out, backing it out then.
 > 
-> So far it seems that the kobject_release() was called for both /bus/platform/drivers/gpio-sim
-> and /module/gpio_sim . Is there soemthing I'm missing?
 
-Have you read the code in drivers/base/devres.c?
+Looks like I missed something that kernel test robot found, so there
+will be a v3.
 
-https://elixir.bootlin.com/linux/v6.3-rc1/source/drivers/base/devres.c#L53
-
-> However, I've found one relatively unrelated failure to call kobject_release().
-> This happens during shutdown, after the syslog is shutdown, so I can only provide
-> a screenshot as a proof and for diagnostics:
-> 
-> https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123748.jpg
-> 
-> https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123752.jpg
-> 
-> I failed to locate the driver and responsible maintainers to the present moment.
-> It is happening on shutdown and it isn't that critical IMHO, except if it shows
-> some other problem in the code :-/
-
-Congrats, you found a real issue somewhere.  `git grep` usually helps
-with this, like `git grep -n -w '"integrity"'` shows a few files, most
-likely security/integrity/iint.c is the culprit.
-
-> > > > > > > > Or maybe the chip->gc.parent should be changed to something else (actual GPIO
-> > > > > > > > device, but then it's unclear how to provide the attributes in non-racy way
-> > > > > > > Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
-> > > > > > > 
-> > > > > > > I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
-> > > > > > > device expert nor would be appropriate to try the craft not earned ;-)
-> > > 
-> > > With all of these additional debugging, cat /sys/kernel/debug/kmemleak
-> > > showed nothing new.
-> > > 
-> > > I believe this is reasonably safe.
-> > > 
-> > > However, I was unsuccessful in seeing gpio trace, even with
-> > > echo 1 > /sys/kernel/tracing/events/gpio/enable ... :-/
-> > 
-> > It's available in the trace buffer (you need to read a documentation to
-> > understand how it works).
-> 
-> Still working on that, had other tasks to do ... So far I got to this:
-> 
->  1020  echo "1" > /sys/kernel/tracing/events/gpio/enable
->  1021  more /sys/kernel/tracing/trace
->  1022  cd ~marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio/
->  1023  ls
->  1024  ./gpio-sim.sh
->  1025  more /sys/kernel/tracing/trace
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 9/9   #P:6
-> #
-> #                                _-----=> irqs-off/BH-disabled
-> #                               / _----=> need-resched
-> #                              | / _---=> hardirq/softirq
-> #                              || / _--=> preempt-depth
-> #                              ||| / _-=> migrate-disable
-> #                              |||| /     delay
-> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> #              | |         |   |||||     |         |
->      gpio-sim.sh-21157   [000] .....  2705.538025: gpio_direction: 560  in (0)
->  gpio-mockup-cde-21471   [000] .....  2705.579730: gpio_direction: 564  in (0)
->  gpio-mockup-cde-21471   [000] .....  2705.579745: gpio_value: 564 get 1
->  gpio-mockup-cde-21478   [003] .....  2705.589475: gpio_direction: 565  in (0)
->  gpio-mockup-cde-21478   [003] .....  2705.589488: gpio_value: 565 get 0
->  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_value: 589 set 1
->  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_direction: 589 out (0)
->  gpio-mockup-cde-21595   [000] .....  2705.855861: gpio_direction: 597  in (0)
->  gpio-mockup-cde-21595   [000] .....  2705.855875: gpio_value: 597 get 1
-
-> I hope I did this right. However, I have to play a bit with these results before
-> I could make any interpretation.
-
-Yes. Just be sure you have all data dumped.
-
-> I just wanted to provide some feedback.
-
-Thanks.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Andrew
