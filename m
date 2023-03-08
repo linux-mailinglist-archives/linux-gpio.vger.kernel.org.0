@@ -2,395 +2,325 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 310376B1640
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 00:11:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AF416B166A
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 00:17:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230344AbjCHXLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 18:11:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        id S229809AbjCHXRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 18:17:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230347AbjCHXKh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 18:10:37 -0500
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2BA9D49DB;
-        Wed,  8 Mar 2023 15:10:20 -0800 (PST)
-Received: by mail-oo1-f41.google.com with SMTP id o19-20020a056820041300b005259de79accso22986oou.9;
-        Wed, 08 Mar 2023 15:10:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678317020;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XD0ikGmSsZrvW4Icaq2NiBnGVE41WkYau9ANqfCeE4g=;
-        b=uPrDvGyIlwhV/kS0G/w8GGmuECOac8YyXYWxX7ETLIIGzcfq0+rSdogAFMwj/cKR0x
-         N0OTGxv+PKHISveg7iEofBvCpfuYKithxJ5V5QwsuT+mgAQ6bQGd5zleQBt6kCCvjA6E
-         NzKEbQXSSA/L3VPLCuSrKqi4MoshZfXGG8/uH+guP9JzksLaPdAf8v1OhNvvYIhI/mry
-         GrkGW6IwelG+b2iYdDzZw1YZK3ThZ5CVb3hhYrWxH0f3CngFlulcdVj0HJXv0llmNJSv
-         nMxG6cn3GiN9MOc4dw5GnYzlxC7+XgZFSyeCGFlYpVCohMG56lvuVK6HHVE6HWWDYMba
-         eNlg==
-X-Gm-Message-State: AO0yUKW6ZpEuXSSMPR+dNhr56vFwnd6fpm93KEqPUC/MHUbWQtc58yX8
-        xXB38+daLzgowoD9bzT/Gw==
-X-Google-Smtp-Source: AK7set8A0SF0DbY+UQqrMG/aKU7uVszgRiyuv7wgsb0tBBXkzXbyyzJllVMOKOb47Lq8JItYy/gAMw==
-X-Received: by 2002:a4a:8685:0:b0:525:4b8b:8f38 with SMTP id x5-20020a4a8685000000b005254b8b8f38mr46622ooh.3.1678317019733;
-        Wed, 08 Mar 2023 15:10:19 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id d29-20020a9d72dd000000b0068bcef4f543sm3066374otk.21.2023.03.08.15.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 15:10:19 -0800 (PST)
-Received: (nullmailer pid 4046807 invoked by uid 1000);
-        Wed, 08 Mar 2023 23:10:18 -0000
-Date:   Wed, 8 Mar 2023 17:10:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
-Message-ID: <20230308231018.GA4039466-robh@kernel.org>
-References: <20230306191535.1917656-1-sean.anderson@seco.com>
- <20230306191535.1917656-4-sean.anderson@seco.com>
+        with ESMTP id S229462AbjCHXRt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 18:17:49 -0500
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EAE13DDD;
+        Wed,  8 Mar 2023 15:17:47 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id 86B34604EF;
+        Thu,  9 Mar 2023 00:17:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1678317464; bh=jd225+LdObFK2imx8dGnAelenv+8h3wehU9S6tvqC8k=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mvbs1VrTHnXemnbywGzyXTd7i7ITxOTJtDs6X3y4RKL8VLTxrbQTiXuYI4nA21nAk
+         nxftdJR65TNDMajSf/DFQ4x0Arl6w52fXx4wLnsVaXqyUA/HXycCVyNXJbNlqgy88l
+         085KqLB69G10fV6C1xhQ7zSEMi9l21oMubBuXlz7X7Gdj/XsQRZkZ9JgvbaijIk0Pq
+         QS4oc8f7MQmqowbD8ON5XJHYgpHwr3GsqbNikiomrHZ3uEBdmeqGhsW31+AYJo5Bo8
+         Gy26JaJE0pfSvTMijbIX2gg4CfQGNLBUAmHu7z4lJJuaH7LOmsDefNb/3TzzK3og07
+         Z45PE2yy2VEtw==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HDyhDkkTKdYE; Thu,  9 Mar 2023 00:17:41 +0100 (CET)
+Received: from [192.168.1.4] (unknown [77.237.109.125])
+        by domac.alu.hr (Postfix) with ESMTPSA id 13C99604ED;
+        Thu,  9 Mar 2023 00:17:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1678317461; bh=jd225+LdObFK2imx8dGnAelenv+8h3wehU9S6tvqC8k=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=T6bbujf6aJVzamuF/8BQ32Y01YuJvsTim998NogjMfyIiZyrKfVCGfV0bWA8k/xx2
+         IP1JpwmiaQ1TWaXT2Vwolvx71aor3AM3uiKqaV9VBdKJqTJeH4Ou+HkYt4YodBtG2O
+         D8tWgttRNBfYw/V5d+uVaTPAw4BPaLACPVyKWoPdzGnezqyD6JQCpeIFhkld87hbnx
+         2BhkwnvRD7iYGHhU4qQQAQo1VhY4oby+J3u9R2/IVHAi75DjGwA3VOIpSQwrZdzJJA
+         SOfFT9Ds0l5gAek3zD4KSpbVaPUbL32+5DRMNYsK+sQDLAd5jLuyCmSE3+CzEBgXhM
+         9W5vJF/JlrhBA==
+Message-ID: <185285b3-9428-5051-5d07-8a49d6ba75c1@alu.unizg.hr>
+Date:   Thu, 9 Mar 2023 00:17:40 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>
+References: <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
+ <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr>
+ <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
+ <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr>
+ <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
+ <7856e5a8-d84e-4f41-721b-80b6fc413919@alu.unizg.hr>
+ <Y/j2ikfd/wvrDdws@smile.fi.intel.com>
+ <2373a9ab-1c38-35fd-e961-9a172f8ce622@alu.unizg.hr>
+ <Y/05Nizuc+VJ7GNU@smile.fi.intel.com>
+ <93d606c4-fe48-757b-28fa-4786ed3302c3@alu.unizg.hr>
+ <ZAintWngnEtKS9kN@smile.fi.intel.com>
+Content-Language: en-US, hr
+From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <ZAintWngnEtKS9kN@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230306191535.1917656-4-sean.anderson@seco.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 02:15:25PM -0500, Sean Anderson wrote:
-> This is a generic binding for simple MMIO GPIO controllers. Although we
-> have a single driver for these controllers, they were previously spread
-> over several files. Consolidate them. The register descriptions are
-> adapted from the comments in the source. There is no set order for the
-> registers, so I have not specified one.
+On 08. 03. 2023. 16:20, Andy Shevchenko wrote:
+> On Wed, Mar 08, 2023 at 02:11:39PM +0100, Mirsad Todorovac wrote:
+>> On 2/28/23 00:13, Andy Shevchenko wrote:
 > 
-> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
-> ---
+> ...
 > 
-> Changes in v10:
-> - New
+>>>> The logs are extensive if you are willing to skim over them, but I believe the interesting
+>>>> part is this:
+>>>
+>>> I'm not sure I understand where the problem is.
+>>>
+>>>> [ 4830.764748] kobject: 'gpio-sim' (000000005b8d0726): kobject_release, parent 000000007425b13f (delayed 750)
+>>>> [ 4833.908238] kobject: 'gpio-sim' (000000005b8d0726): kobject_cleanup, parent 000000007425b13f
+>>>> [ 4833.908244] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup kobject_del
+>>>> [ 4833.908245] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup 'remove' event
+>>>> [ 4833.908247] kobject: 'gpio-sim' (000000005b8d0726): kobject_uevent_env
+>>>> [ 4833.908273] kobject: 'gpio-sim' (000000005b8d0726): fill_kobj_path: path = '/bus/platform/drivers/gpio-sim'
+>>>> [ 4833.908311] kobject: 'gpio-sim' (000000005b8d0726): calling ktype release
+>>>> [ 4833.908315] kobject: 'gpio-sim': free name
+>>>> [ 4834.932303] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_release, parent 0000000093357d30 (delayed 250)
+>>>> [ 4835.952388] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_cleanup, parent 0000000093357d30
+>>>> [ 4835.952413] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup kobject_del
+>>>> [ 4835.952415] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup 'remove' event
+>>>> [ 4835.952416] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_uevent_env
+>>>> [ 4835.952424] kobject: 'gpio_sim' (0000000096ea0bb1): fill_kobj_path: path = '/module/gpio_sim'
+>>>> [ 4835.952445] kobject: 'gpio_sim' (0000000096ea0bb1): calling ktype release
+>>>> [ 4835.952448] kobject: 'gpio_sim': free name
+>>>>
+>>>> Or, with CONFIG_DEBUG_DEVRES=y, it looks like this:
+>>>
+>>> I don't see that been enabled (it requires to pass a command line option to the kernel).
+>>
+>> I don't think I have found this command line option to LK.
+>>
+>> So far it seems that the kobject_release() was called for both /bus/platform/drivers/gpio-sim
+>> and /module/gpio_sim . Is there soemthing I'm missing?
 > 
->  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
->  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
->  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
->  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
->  4 files changed, 137 insertions(+), 91 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
->  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> Have you read the code in drivers/base/devres.c?
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
-> index 4d69f79df859..e11f4af49c52 100644
-> --- a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/gpio/brcm,bcm6345-gpio.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
-> -title: Broadcom BCM6345 GPIO controller
-> +title: Broadcom BCM63xx GPIO controller
->  
->  maintainers:
->    - �lvaro Fern�ndez Rojas <noltari@gmail.com>
-> @@ -18,8 +18,6 @@ description: |+
->  
->    BCM6338 have 8-bit data and dirout registers, where GPIO state can be read
->    and/or written, and the direction changed from input to output.
-> -  BCM6345 have 16-bit data and dirout registers, where GPIO state can be read
-> -  and/or written, and the direction changed from input to output.
->    BCM6318, BCM6328, BCM6358, BCM6362, BCM6368 and BCM63268 have 32-bit data
->    and dirout registers, where GPIO state can be read and/or written, and the
->    direction changed from input to output.
-> @@ -29,7 +27,6 @@ properties:
->      enum:
->        - brcm,bcm6318-gpio
->        - brcm,bcm6328-gpio
-> -      - brcm,bcm6345-gpio
->        - brcm,bcm6358-gpio
->        - brcm,bcm6362-gpio
->        - brcm,bcm6368-gpio
-> @@ -63,17 +60,6 @@ required:
->  additionalProperties: false
->  
->  examples:
-> -  - |
-> -    gpio@fffe0406 {
-> -      compatible = "brcm,bcm6345-gpio";
-> -      reg-names = "dirout", "dat";
-> -      reg = <0xfffe0406 2>, <0xfffe040a 2>;
-> -      native-endian;
-> -
-> -      gpio-controller;
-> -      #gpio-cells = <2>;
-> -    };
-> -
->    - |
->      gpio@0 {
->        compatible = "brcm,bcm63268-gpio";
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> new file mode 100644
-> index 000000000000..fd5c7055d542
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-mmio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic MMIO GPIO
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +  - Bartosz Golaszewski <brgl@bgdev.pl>
-> +
-> +description: |
+> https://elixir.bootlin.com/linux/v6.3-rc1/source/drivers/base/devres.c#L53
 
-Don't need '|' unless you want line endings preserved. Elsewhere too.
+Actually, it was in the manual all the time, but I have missed it somehow:
+https://cateee.net/lkddb/web-lkddb/DEBUG_DEVRES.html
 
-> +  Some simple GPIO controllers may consist of a single data register or a pair
-> +  of set/clear-bit registers. Such controllers are common for glue logic in
-> +  FPGAs or ASICs. Commonly, these controllers are accessed over memory-mapped
-> +  NAND-style parallel busses.
-> +
-> +properties:
-> +  big-endian:
-> +    true
+Here is the log (DEVRES debug was not in dmesg output, so after rsyslog dies,
+there is no output to debug deallocs past that point):
 
-big-endian: true
+https://domac.alu.hr/~mtodorov/linux/bugreports/gpio/devres_trace.log
 
-> +
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm6345-gpio # Broadcom BCM6345 GPIO controller
-> +      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
-> +      - ni,169445-nand-gpio # National Instruments 169445 GPIO NAND controller
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  gpio-controller:
-> +    true
+Note that last 5 lines occur after `rmmod gpio-sim`:
 
-ditto.
+Mar  8 23:23:55 pc-mtodorov kernel: kobject: 'gpio-sim' (00000000f0ead702): kobject_release, parent 00000000bb6cefbb (delayed 500)
+Mar  8 23:23:55 pc-mtodorov kernel: kobject: 'drivers' (000000004fba12b9): kobject_release, parent 000000002c2cc344 (delayed 750)
+Mar  8 23:23:55 pc-mtodorov kernel: kobject: 'holders' (00000000bfd7f234): kobject_release, parent 000000002c2cc344 (delayed 750)
+Mar  8 23:23:55 pc-mtodorov kernel: kobject: 'notes' (00000000f2d17f82): kobject_release, parent 000000002c2cc344 (delayed 250)
+Mar  8 23:23:59 pc-mtodorov kernel: kobject: 'gpio_sim' (000000002c2cc344): kobject_release, parent 00000000061436c2 (delayed 250)
 
-> +
-> +  reg:
-> +    minItems: 1
-> +    description: |
-> +      A list of registers in the controller. The width of each register is
-> +      determined by its size. All registers must have the same width. The number
-> +      of GPIOs is set by the width, with bit 0 corresponding to GPIO 0.
-> +    items:
-> +      - description: |
-> +          Register to READ the value of the GPIO lines. If GPIO line is high,
-> +          the bit will be set. If the GPIO line is low, the bit will be cleared.
-> +          This register may also be used to drive GPIOs if the SET register is
-> +          omitted.
-> +      - description: |
-> +          Register to SET the value of the GPIO lines. Setting a bit in this
-> +          register will drive the GPIO line high.
-> +      - description: |
-> +          Register to CLEAR the value of the GPIO lines. Setting a bit in this
-> +          register will drive the GPIO line low. If this register is omitted,
-> +          the SET register will be used to clear the GPIO lines as well, by
-> +          actively writing the line with 0.
-> +      - description: |
-> +          Register to set the line as OUTPUT. Setting a bit in this register
-> +          will turn that line into an output line. Conversely, clearing a bit
-> +          will turn that line into an input.
-> +      - description: |
-> +          Register to set this line as INPUT. Setting a bit in this register
-> +          will turn that line into an input line. Conversely, clearing a bit
-> +          will turn that line into an output.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 5
-> +    items:
-> +      enum:
-> +        - dat
-> +        - set
-> +        - clr
-> +        - dirout
-> +        - dirin
-> +
-> +  native-endian:
-> +    true
-> +
-> +  no-output:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: |
-> +      If this property is present, the controller cannot drive the GPIO lines.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - '#gpio-cells'
-> +  - gpio-controller
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    nand-gpio-out@1f300010 {
-
-Use generic node name:
-
-gpio@...
-
-> +      compatible = "ni,169445-nand-gpio";
-> +      reg = <0x1f300010 0x4>;
-> +      reg-names = "dat";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +    };
-> +
-> +    nand-gpio-in@1f300014 {
-> +      compatible = "ni,169445-nand-gpio";
-> +      reg = <0x1f300014 0x4>;
-> +      reg-names = "dat";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      no-output;
-> +    };
-> +
-> +    gpio0@e0000000 {
-> +      compatible = "wd,mbl-gpio";
-> +      reg-names = "dat";
-> +      reg = <0xe0000000 0x1>;
-> +      #gpio-cells = <2>;
-> +      gpio-controller;
-> +    };
-> +
-> +    gpio1@e0100000 {
-> +      compatible = "wd,mbl-gpio";
-> +      reg-names = "dat";
-> +      reg = <0xe0100000 0x1>;
-> +      #gpio-cells = <2>;
-> +      gpio-controller;
-> +      no-output;
-> +    };
-> +
-> +    gpio@fffe0406 {
-> +      compatible = "brcm,bcm6345-gpio";
-> +      reg-names = "dirout", "dat";
-> +      reg = <0xfffe0406 2>, <0xfffe040a 2>;
-> +      native-endian;
-> +
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt b/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
-> deleted file mode 100644
-> index ca2f8c745a27..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -Bindings for the National Instruments 169445 GPIO NAND controller
-> -
-> -The 169445 GPIO NAND controller has two memory mapped GPIO registers, one
-> -for input (the ready signal) and one for output (control signals).  It is
-> -intended to be used with the GPIO NAND driver.
-> -
-> -Required properties:
-> -	- compatible: should be "ni,169445-nand-gpio"
-> -	- reg-names: must contain
-> -		"dat" - data register
-> -	- reg: address + size pairs describing the GPIO register sets;
-> -		order must correspond with the order of entries in reg-names
-> -	- #gpio-cells: must be set to 2. The first cell is the pin number and
-> -			the second cell is used to specify the gpio polarity:
-> -			0 = active high
-> -			1 = active low
-> -	- gpio-controller: Marks the device node as a gpio controller.
-> -
-> -Optional properties:
-> -	- no-output: disables driving output on the pins
-> -
-> -Examples:
-> -	gpio1: nand-gpio-out@1f300010 {
-> -		compatible = "ni,169445-nand-gpio";
-> -		reg = <0x1f300010 0x4>;
-> -		reg-names = "dat";
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -	};
-> -
-> -	gpio2: nand-gpio-in@1f300014 {
-> -		compatible = "ni,169445-nand-gpio";
-> -		reg = <0x1f300014 0x4>;
-> -		reg-names = "dat";
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		no-output;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt b/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> deleted file mode 100644
-> index 038c3a6a1f4d..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
-> +++ /dev/null
-> @@ -1,38 +0,0 @@
-> -Bindings for the Western Digital's MyBook Live memory-mapped GPIO controllers.
-> -
-> -The Western Digital MyBook Live has two memory-mapped GPIO controllers.
-> -Both GPIO controller only have a single 8-bit data register, where GPIO
-> -state can be read and/or written.
-> -
-> -Required properties:
-> -	- compatible: should be "wd,mbl-gpio"
-> -	- reg-names: must contain
-> -		"dat" - data register
-> -	- reg: address + size pairs describing the GPIO register sets;
-> -		order must correspond with the order of entries in reg-names
-> -	- #gpio-cells: must be set to 2. The first cell is the pin number and
-> -			the second cell is used to specify the gpio polarity:
-> -			0 = active high
-> -			1 = active low
-> -	- gpio-controller: Marks the device node as a gpio controller.
-> -
-> -Optional properties:
-> -	- no-output: GPIOs are read-only.
-> -
-> -Examples:
-> -	gpio0: gpio0@e0000000 {
-> -		compatible = "wd,mbl-gpio";
-> -		reg-names = "dat";
-> -		reg = <0xe0000000 0x1>;
-> -		#gpio-cells = <2>;
-> -		gpio-controller;
-> -	};
-> -
-> -	gpio1: gpio1@e0100000 {
-> -		compatible = "wd,mbl-gpio";
-> -		reg-names = "dat";
-> -		reg = <0xe0100000 0x1>;
-> -		#gpio-cells = <2>;
-> -		gpio-controller;
-> -		no-output;
-> -	};
-> -- 
-> 2.35.1.1320.gc452695387.dirty
+>> However, I've found one relatively unrelated failure to call kobject_release().
+>> This happens during shutdown, after the syslog is shutdown, so I can only provide
+>> a screenshot as a proof and for diagnostics:
+>>
+>> https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123748.jpg
+>>
+>> https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123752.jpg
+>>
+>> I failed to locate the driver and responsible maintainers to the present moment.
+>> It is happening on shutdown and it isn't that critical IMHO, except if it shows
+>> some other problem in the code :-/
 > 
+> Congrats, you found a real issue somewhere.  `git grep` usually helps
+> with this, like `git grep -n -w '"integrity"'` shows a few files, most
+> likely security/integrity/iint.c is the culprit.
+
+Looking more closely, this seems to be suspicious:
+
+DEFINE_LSM(integrity) = {
+	.name = "integrity",
+	.init = integrity_iintcache_init,
+};
+
+.release member is missing.
+
+However, struct lsm_info doesn't have the "release" member, so I wonder
+what called release() in the first place?
+
+https://elixir.bootlin.com/linux/v6.3-rc1/source/include/linux/lsm_hooks.h#L1733
+
+struct lsm_info {
+	const char *name;	/* Required. */
+	enum lsm_order order;	/* Optional: default is LSM_ORDER_MUTABLE */
+	unsigned long flags;	/* Optional: flags describing LSM */
+	int *enabled;		/* Optional: controlled by CONFIG_LSM */
+	int (*init)(void);	/* Required. */
+	struct lsm_blob_sizes *blobs; /* Optional: for blob sharing. */
+};
+
+extern struct lsm_info __start_lsm_info[], __end_lsm_info[];
+extern struct lsm_info __start_early_lsm_info[], __end_early_lsm_info[];
+
+#define DEFINE_LSM(lsm)							\
+	static struct lsm_info __lsm_##lsm				\
+		__used __section(".lsm_info.init")			\
+		__aligned(sizeof(unsigned long))
+
+But maybe the object is just deallocated and doesn't need kobject cleanup?
+Actually it allocated "iint_cache".
+
+Just a thought - if lsm_info had a release() member, it would be simple to
+fix this:
+
+ static int __init integrity_iintcache_init(void)
+ { 
+ 	iint_cache =
+ 	    kmem_cache_create("iint_cache", sizeof(struct integrity_iint_cache),
+ 			      0, SLAB_PANIC, init_once);
+ 	return 0;
+ }
+ 
++static void integrity_iintcache_destroy(void)
++{
++	kmem_cache_destroy(iint_cache);
++}
+
+ DEFINE_LSM(integrity) = {
+	.name = "integrity",
+ 	.init = integrity_iintcache_init,
++	.release = integrity_iintcache_destroy,
+ };
+
+However, modifying include/linux/lsm_hooks.h is not for the faint of the heart,
+I suppose.
+
+But it seems too simple (too good to be true) that they just forgot to destroy
+cache, maybe something is still alive when module is unloaded?
+
+I still can't figure out what calls release() for "integrity" and where is the 
+"integrity" kobject allocated?
+
+>>>>>>>>> Or maybe the chip->gc.parent should be changed to something else (actual GPIO
+>>>>>>>>> device, but then it's unclear how to provide the attributes in non-racy way
+>>>>>>>> Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
+>>>>>>>>
+>>>>>>>> I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
+>>>>>>>> device expert nor would be appropriate to try the craft not earned ;-)
+>>>>
+>>>> With all of these additional debugging, cat /sys/kernel/debug/kmemleak
+>>>> showed nothing new.
+>>>>
+>>>> I believe this is reasonably safe.
+>>>>
+>>>> However, I was unsuccessful in seeing gpio trace, even with
+>>>> echo 1 > /sys/kernel/tracing/events/gpio/enable ... :-/
+>>>
+>>> It's available in the trace buffer (you need to read a documentation to
+>>> understand how it works).
+>>
+>> Still working on that, had other tasks to do ... So far I got to this:
+>>
+>>  1020  echo "1" > /sys/kernel/tracing/events/gpio/enable
+>>  1021  more /sys/kernel/tracing/trace
+>>  1022  cd ~marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio/
+>>  1023  ls
+>>  1024  ./gpio-sim.sh
+>>  1025  more /sys/kernel/tracing/trace
+>> # tracer: nop
+>> #
+>> # entries-in-buffer/entries-written: 9/9   #P:6
+>> #
+>> #                                _-----=> irqs-off/BH-disabled
+>> #                               / _----=> need-resched
+>> #                              | / _---=> hardirq/softirq
+>> #                              || / _--=> preempt-depth
+>> #                              ||| / _-=> migrate-disable
+>> #                              |||| /     delay
+>> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>> #              | |         |   |||||     |         |
+>>      gpio-sim.sh-21157   [000] .....  2705.538025: gpio_direction: 560  in (0)
+>>  gpio-mockup-cde-21471   [000] .....  2705.579730: gpio_direction: 564  in (0)
+>>  gpio-mockup-cde-21471   [000] .....  2705.579745: gpio_value: 564 get 1
+>>  gpio-mockup-cde-21478   [003] .....  2705.589475: gpio_direction: 565  in (0)
+>>  gpio-mockup-cde-21478   [003] .....  2705.589488: gpio_value: 565 get 0
+>>  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_value: 589 set 1
+>>  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_direction: 589 out (0)
+>>  gpio-mockup-cde-21595   [000] .....  2705.855861: gpio_direction: 597  in (0)
+>>  gpio-mockup-cde-21595   [000] .....  2705.855875: gpio_value: 597 get 1
+> 
+>> I hope I did this right. However, I have to play a bit with these results before
+>> I could make any interpretation.
+> 
+> Yes. Just be sure you have all data dumped.
+
+The trace from this run is:
+
+[root@pc-mtodorov gpio]# more /sys/kernel/tracing/trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 18/18   #P:6
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+     gpio-sim.sh-4199    [004] .....  1271.367102: gpio_direction: 560  in (0)
+ gpio-mockup-cde-4514    [004] .....  1271.406523: gpio_direction: 564  in (0)
+ gpio-mockup-cde-4514    [004] .....  1271.406537: gpio_value: 564 get 1
+ gpio-mockup-cde-4521    [004] .....  1271.416032: gpio_direction: 565  in (0)
+ gpio-mockup-cde-4521    [004] .....  1271.416045: gpio_value: 565 get 0
+ gpio-mockup-cde-4601    [000] .....  1271.537872: gpio_value: 589 set 1
+ gpio-mockup-cde-4601    [000] .....  1271.537873: gpio_direction: 589 out (0)
+ gpio-mockup-cde-4626    [002] .....  1271.669199: gpio_direction: 597  in (0)
+ gpio-mockup-cde-4626    [002] .....  1271.669212: gpio_value: 597 get 1
+     gpio-sim.sh-4742    [001] .....  1472.168366: gpio_direction: 560  in (0)
+ gpio-mockup-cde-5055    [003] .....  1472.207338: gpio_direction: 564  in (0)
+ gpio-mockup-cde-5055    [003] .....  1472.207351: gpio_value: 564 get 1
+ gpio-mockup-cde-5062    [003] .....  1472.216635: gpio_direction: 565  in (0)
+ gpio-mockup-cde-5062    [003] .....  1472.216646: gpio_value: 565 get 0
+ gpio-mockup-cde-5142    [002] .....  1472.338589: gpio_value: 589 set 1
+ gpio-mockup-cde-5142    [002] .....  1472.338589: gpio_direction: 589 out (0)
+ gpio-mockup-cde-5167    [000] .....  1472.469917: gpio_direction: 597  in (0)
+ gpio-mockup-cde-5167    [000] .....  1472.469934: gpio_value: 597 get 1
+[root@pc-mtodorov gpio]# 
+
+>> I just wanted to provide some feedback.
+> 
+> Thanks.
+
+Not at all, I am really having a great time while assisting your team. :-)
+
+Regards,
+Mirsad
+
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+ 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+
