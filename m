@@ -2,88 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 114006B01F0
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 09:48:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA4D6B034D
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 10:44:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjCHIsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 03:48:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        id S230139AbjCHJob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 04:44:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCHIsa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 03:48:30 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665BA9438D
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 00:48:28 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id da10so62720665edb.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 00:48:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678265307;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1IW/RS0aLSSxBgB22OqTCxBSr+YdxHtk+0LFWe36vG8=;
-        b=fWi10K1WTyMK+4gDA9j0bPprPuyGTBeu+XpocgR0cj+w9BYHj8UpNgU5t7v3PylQf4
-         wY74bZ0VgPsmZ8GVnLZyawG4vExQk4VcpD8Sy0ZZgjLsoHTB/p4JGasSRwFQVP8ViAYf
-         WHpwv0Mg5L+yjUF3WBMF54f2a2kM7teDdMKvcEZ8x1/hxlvMOJa3ayKvTtSdw6XnOinN
-         42qPZITrCQ9SggMQB/mIKJWFKZbdt8OCZwawYh2mDlhPjzhsD2B27DiZmPzywHUBFkmE
-         JZqgDm/dydu/Ju6adDOlnoDIvWPGAZEA9meFjPpRMZWO92uiHM2/um7Ka996PE42nENe
-         VcMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678265307;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IW/RS0aLSSxBgB22OqTCxBSr+YdxHtk+0LFWe36vG8=;
-        b=BqiRHVeTX6hB/lOMj/3tEPpaIm0VLA65c6HUpdZdmaSk6qp7hbAk+Ad+eb8ucBsCJ1
-         ADUB5L9tm13j3KHIu079iyK/DbCjnf14WQqAl7IxcS0NL+TEEKjkSV/a4O0QFErqDRqM
-         Kd6KyvVz/Dxxw07Z+aBLSNU2sZoNjv27GWob7ZB0A+Bb7Un6hQCtfyFyhDIsq4UEdU6G
-         1E6B/y0WOPg2DNSH7n2Ih4UT7PhbG38cwTQ+gKJeQRg/hiSA1ACheWXCQ44A2YXJ44u/
-         0FsgMtUj/dp9+PlfIRVBwNt4DKUjE/Mja/0Xu/AfwW261CMheix+WBdiIHR3r6OrSkAt
-         LJSA==
-X-Gm-Message-State: AO0yUKUC7JPdVboikyUhh1x2dL7oKQgYHpHm3u9JaZZ8q9YwYkRtMrCH
-        kaLvn+jVzUsxvC+0QLVRgGYvQXALM1k9yOhZFPw=
-X-Google-Smtp-Source: AK7set+/a5vYatHyXTm+A6Q49AO+MfL5eXvY6zaULzOwyp5e47XvyDA35K8uivkmDjkP8sa9O9411w==
-X-Received: by 2002:a17:906:1846:b0:8b8:c06e:52d8 with SMTP id w6-20020a170906184600b008b8c06e52d8mr16121027eje.36.1678265306937;
-        Wed, 08 Mar 2023 00:48:26 -0800 (PST)
-Received: from ?IPV6:2a02:810d:15c0:828:bba:fbfa:8aec:a133? ([2a02:810d:15c0:828:bba:fbfa:8aec:a133])
-        by smtp.gmail.com with ESMTPSA id a4-20020a17090682c400b008d4b6f086c9sm7141528ejy.185.2023.03.08.00.48.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Mar 2023 00:48:26 -0800 (PST)
-Message-ID: <0013ce4d-d4a8-2a82-c72b-042dd4d9779c@linaro.org>
-Date:   Wed, 8 Mar 2023 09:48:25 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org, Niall Leonard <nl250060@ncr.com>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?Q?Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
+        with ESMTP id S230172AbjCHJoP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 04:44:15 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE5C4E5D9
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 01:43:09 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-33-CAryPP8kPFqZSO2VJYhQlQ-1; Wed, 08 Mar 2023 09:42:45 +0000
+X-MC-Unique: CAryPP8kPFqZSO2VJYhQlQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.47; Wed, 8 Mar
+ 2023 09:42:43 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.047; Wed, 8 Mar 2023 09:42:43 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Keguang Zhang' <keguang.zhang@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-References: <20230306191535.1917656-1-sean.anderson@seco.com>
- <20230306191535.1917656-4-sean.anderson@seco.com>
- <4c039e53-e3ca-29d7-e5ea-f24e385d28b0@linaro.org>
- <42ccbac0-53e2-f599-fb3d-064b896bde4a@seco.com>
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
+Subject: RE: [PATCH v2 2/5] gpio: loongson1: Use readl() & writel()
+Thread-Topic: [PATCH v2 2/5] gpio: loongson1: Use readl() & writel()
+Thread-Index: AQHZUKdVlp3MaV2isEWZMPAiZIsbQK7woloA
+Date:   Wed, 8 Mar 2023 09:42:43 +0000
+Message-ID: <2d5521ff21ea4b99be3dd2e449f53934@AcuMS.aculab.com>
+References: <20230302125215.214014-1-keguang.zhang@gmail.com>
+ <20230302125215.214014-3-keguang.zhang@gmail.com>
+ <CAMRc=Me3yVwQm8=CmUVM2gyYnFxntW47-OOPdmq1TzXTJB5ETg@mail.gmail.com>
+ <CAJhJPsX1q6PGSb+eoCSdCC2_vDtbaShLLzEbuNOqD_Jzd8Ozdw@mail.gmail.com>
+In-Reply-To: <CAJhJPsX1q6PGSb+eoCSdCC2_vDtbaShLLzEbuNOqD_Jzd8Ozdw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <42ccbac0-53e2-f599-fb3d-064b896bde4a@seco.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,48 +64,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/03/2023 16:35, Sean Anderson wrote:
-> Hi Krzysztof,
-> 
-> On 3/7/23 03:42, Krzysztof Kozlowski wrote:
->> On 06/03/2023 20:15, Sean Anderson wrote:
->>> This is a generic binding for simple MMIO GPIO controllers. Although we
->>> have a single driver for these controllers, they were previously spread
->>> over several files. Consolidate them. The register descriptions are
->>> adapted from the comments in the source. There is no set order for the
->>> registers, so I have not specified one.
->>>
->>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
->>> ---
->>>
->>> Changes in v10:
->>> - New
->>>
->>>  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
->>>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
->>>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
->>>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
->>>  4 files changed, 137 insertions(+), 91 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
->>>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
->>>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
->>
->> https://lore.kernel.org/all/20230126-gpio-mmio-fix-v2-1-38397aace340@ncr.com/
-> 
-> Thanks for linking to that.
-> 
-> I believe this patch should be applied instead of that one because
-> 
-> - It documents all the registers, which were previously only documented
->   in the driver
-> - It handles the endianness properties.
-> - It consolidates the various descriptions of this binding into one
->   schema.
-
-Sure, sounds reasonable. You can just quickly check if my other comments
-apply here as well (but seems not):
-https://lore.kernel.org/all/4df3ec7a-e4af-89bc-9eda-21150395a935@linaro.org/
-
-Best regards,
-Krzysztof
+RnJvbTogS2VndWFuZyBaaGFuZw0KPiBTZW50OiAwNyBNYXJjaCAyMDIzIDAzOjQ2DQo+IA0KPiBP
+biBNb24sIE1hciA2LCAyMDIzIGF0IDU6MzDigK9QTSBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmds
+QGJnZGV2LnBsPiB3cm90ZToNCj4gPg0KPiA+IE9uIFRodSwgTWFyIDIsIDIwMjMgYXQgMTo1MuKA
+r1BNIEtlZ3VhbmcgWmhhbmcgPGtlZ3VhbmcuemhhbmdAZ21haWwuY29tPiB3cm90ZToNCj4gPiA+
+DQo+ID4gPiBUaGlzIHBhdGNoIHJlcGxhY2UgX19yYXdfcmVhZGwoKSAmIF9fcmF3X3dyaXRlbCgp
+IHdpdGggcmVhZGwoKSAmIHdyaXRlbCgpLg0KPiA+ID4NCj4gPg0KPiA+IFBsZWFzZSBzYXkgV0hZ
+IHlvdSdyZSBkb2luZyB0aGlzLg0KPiA+DQo+IHJlYWRsICYgd3JpdGVsIGNvbnRhaW4gbWVtb3J5
+IGJhcnJpZXJzIHdoaWNoIGNhbiBndWFyYW50ZWUgYWNjZXNzIG9yZGVyLg0KDQpTbyB3aGF0Li4u
+DQoNClRoZXJlIGlzIGEgZGF0YSBkZXBlbmRlbmN5IGJldHdlZW4gdGhlIHJlYWQgYW5kIHdyaXRl
+Lg0KVGhlIHJlYWQgY2FuJ3QgYmUgc2NoZWR1bGVkIGJlZm9yZSB0aGUgbG9jayBpcyBhY3F1aXJl
+ZC4NClRoZSB3cml0ZSBjYW4ndCBiZSBzY2hlZHVsZWQgYWZ0ZXIgdGhlIGxvY2sgaXMgcmVsZWFz
+ZWQuDQoNClNvIGFueSBiYXJyaWVycyBpbiByZWFkbCgpL3dyaXRlbCgpIGFyZW4ndCBuZWVkZWQu
+DQoNCklmIHRoZXkgYXJlIG9ubHkgY29tcGlsZSBiYXJyaWVycyB0aGV5J2xsIGhhdmUgbm8gcmVh
+bCBlZmZlY3QuDQpPVE9IIGlmIHRoZSBjcHUgbmVlZHMgYWN0dWFsIHN5bmNocm9uaXNpbmcgaW5z
+dHJ1Y3Rpb25zIChhcyBzb21lDQpwcGMgZG8pIHRoZW4gdGhleSB3aWxsIHNsb3cgdGhpbmdzIGRv
+d24uDQoNCglEYXZpZA0KDQo+IA0KPiA+IEJhcnQNCj4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
+S2VndWFuZyBaaGFuZyA8a2VndWFuZy56aGFuZ0BnbWFpbC5jb20+DQo+ID4gPiAtLS0NCj4gPiA+
+IFYxIC0+IFYyOiBTcGxpdCB0aGlzIGNoYW5nZSB0byBhIHNlcGFyYXRlIHBhdGNoDQo+ID4gPiAt
+LS0NCj4gPiA+ICBkcml2ZXJzL2dwaW8vZ3Bpby1sb29uZ3NvbjEuYyB8IDggKysrKy0tLS0NCj4g
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+
+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1sb29uZ3NvbjEuYyBiL2Ry
+aXZlcnMvZ3Bpby9ncGlvLWxvb25nc29uMS5jDQo+ID4gPiBpbmRleCA4ODYyYzllYTBkNDEuLmI2
+YzExY2FhM2FkZSAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvLWxvb25nc29u
+MS5jDQo+ID4gPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1sb29uZ3NvbjEuYw0KPiA+ID4gQEAg
+LTIzLDggKzIzLDggQEAgc3RhdGljIGludCBsczF4X2dwaW9fcmVxdWVzdChzdHJ1Y3QgZ3Bpb19j
+aGlwICpnYywgdW5zaWduZWQgaW50IG9mZnNldCkNCj4gPiA+ICAgICAgICAgdW5zaWduZWQgbG9u
+ZyBmbGFnczsNCj4gPiA+DQo+ID4gPiAgICAgICAgIHJhd19zcGluX2xvY2tfaXJxc2F2ZSgmZ2Mt
+PmJncGlvX2xvY2ssIGZsYWdzKTsNCj4gPiA+IC0gICAgICAgX19yYXdfd3JpdGVsKF9fcmF3X3Jl
+YWRsKGdwaW9fcmVnX2Jhc2UgKyBHUElPX0NGRykgfCBCSVQob2Zmc2V0KSwNCj4gPiA+IC0gICAg
+ICAgICAgICAgICAgICAgIGdwaW9fcmVnX2Jhc2UgKyBHUElPX0NGRyk7DQo+ID4gPiArICAgICAg
+IHdyaXRlbChyZWFkbChncGlvX3JlZ19iYXNlICsgR1BJT19DRkcpIHwgQklUKG9mZnNldCksDQo+
+ID4gPiArICAgICAgICAgICAgICBncGlvX3JlZ19iYXNlICsgR1BJT19DRkcpOw0KPiA+ID4gICAg
+ICAgICByYXdfc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZ2MtPmJncGlvX2xvY2ssIGZsYWdzKTsN
+Cj4gPiA+DQo+ID4gPiAgICAgICAgIHJldHVybiAwOw0KPiA+ID4gQEAgLTM1LDggKzM1LDggQEAg
+c3RhdGljIHZvaWQgbHMxeF9ncGlvX2ZyZWUoc3RydWN0IGdwaW9fY2hpcCAqZ2MsIHVuc2lnbmVk
+IGludCBvZmZzZXQpDQo+ID4gPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPg0K
+PiA+ID4gICAgICAgICByYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmdjLT5iZ3Bpb19sb2NrLCBmbGFn
+cyk7DQo+ID4gPiAtICAgICAgIF9fcmF3X3dyaXRlbChfX3Jhd19yZWFkbChncGlvX3JlZ19iYXNl
+ICsgR1BJT19DRkcpICYgfkJJVChvZmZzZXQpLA0KPiA+ID4gLSAgICAgICAgICAgICAgICAgICAg
+Z3Bpb19yZWdfYmFzZSArIEdQSU9fQ0ZHKTsNCj4gPiA+ICsgICAgICAgd3JpdGVsKHJlYWRsKGdw
+aW9fcmVnX2Jhc2UgKyBHUElPX0NGRykgJiB+QklUKG9mZnNldCksDQo+ID4gPiArICAgICAgICAg
+ICAgICBncGlvX3JlZ19iYXNlICsgR1BJT19DRkcpOw0KPiA+ID4gICAgICAgICByYXdfc3Bpbl91
+bmxvY2tfaXJxcmVzdG9yZSgmZ2MtPmJncGlvX2xvY2ssIGZsYWdzKTsNCj4gPiA+ICB9DQo+ID4g
+Pg0KPiA+ID4gLS0NCj4gPiA+IDIuMzQuMQ0KPiA+ID4NCj4gDQo+IA0KPiANCj4gLS0NCj4gQmVz
+dCByZWdhcmRzLA0KPiANCj4gS2VsdmluIENoZXVuZw0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
+TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
+VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
