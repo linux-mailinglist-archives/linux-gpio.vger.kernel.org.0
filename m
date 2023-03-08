@@ -2,65 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D304F6B04FD
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 11:51:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F1E6B0613
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 12:37:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjCHKvG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 05:51:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
+        id S230388AbjCHLgg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 06:36:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbjCHKvC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 05:51:02 -0500
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546F3193E9
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 02:51:01 -0800 (PST)
-Received: by mail-ua1-x92e.google.com with SMTP id f20so10918574uam.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 02:51:01 -0800 (PST)
+        with ESMTP id S230059AbjCHLgE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 06:36:04 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31684AF294;
+        Wed,  8 Mar 2023 03:36:03 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id a25so64692931edb.0;
+        Wed, 08 Mar 2023 03:36:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678272660;
+        d=gmail.com; s=20210112; t=1678275361;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ef983/AOehfuTrHSl44XX8UHyvuKulox9O+KoFv9jPk=;
-        b=Pze2C7lWpylDMzWq13sr1zuXSp3kgnKKJi30EgbeD0ZztiM3gdQwN0nbNJycnbOizo
-         z7jRUgMo4PL4aReugZH8uTNZofdnScyvQFaYBX4TS0k2agdcGOmbVGFRCp6qgHltQ8HT
-         ck5D0+pGkba/gQlEoGK63lb8dwEs04t8sLs8+LOxDudx3Hst9kypdEt+YhPMppFbstlt
-         zG0yfCbxZgLSFaEdn2s6/9jGhCSOWGiBzNd33y5N/TLtSQ8aDkm0z1lONrITDXfjVJ4y
-         AFQLSNzEkH9yPhYB7PofiLrz8vo9wSW1GmeMx6fo0REYpsgIloxi7SPjR8RwQG3Y5KDj
-         7g5w==
+        bh=pkqtkcAPDhHcKXHJJhzZGkadcuoCSlM8Je8c/sebOSk=;
+        b=Uxditw6bMjdlAa4tQirez9bPQT80pkxBdU0vkvdov83E7EJCKgtMgvvEzigUMmICqo
+         7r/28EKK/HXqXqGNu15VJbPT/3FwMttnWz4rKiQcNDFj1ZpavEgj7JulU+J/Q0vYFNQO
+         Dg4rQpFnQetRbBsl2TFx10mpdUpQ9XHuPuDagLxxMQ2VCgIYgBul67bTcSjTYfNmluYF
+         WJQvqrJRnlRhnNV10ouHOMtcuwSlTh5yQP9UcydhkTx16LtxJJcFrsk3f0MhooN+RwQ8
+         qHPdkuOKtekXLgETObHPMZqt4UJw/xk5X4tfcJYCHGQ7qCWSpoOspReezBbzdOt2ZpJA
+         lVxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678272660;
+        d=1e100.net; s=20210112; t=1678275361;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ef983/AOehfuTrHSl44XX8UHyvuKulox9O+KoFv9jPk=;
-        b=mF4HgpH/dZ5wEicB3kb7jBA6CbaJ1NFC4rfk9cLHuz2MGERCe7bw5YuHWtqeaNK9PK
-         BVY2YoYrJABlJcU+GkQsMzN6JIDilMryV7Gahupzu7+gXxylOsXSEYWz93myHLF+uAnL
-         /CXqUD0Ni0s7iHQWS8CvZn8CpyGgRxUOhmskrffPJq1yyhrdiEVAewCwKioR6VrywzTx
-         LrBTmkIzmGRoFER//HnWyeMyXQHbykpPmHQsdkE2aefJmyQxyI88V9AEpA+EFQxHaRI8
-         /81S83CJPNOqsX0bWjf8qEV9uHHK4EHkuIlczXMs7+gL1AD5ueH18SLVQFZ+Sdo2GEF9
-         dcqA==
-X-Gm-Message-State: AO0yUKUYhNCSeu1gMqXOnQVMoGbuGP0zw1GjDYmFL8bar7P7vUDKLZIZ
-        VBSivfjt16yXfzBr7LPAVSsmvpRFH7ozo0gJa6fdBw==
-X-Google-Smtp-Source: AK7set/hautO/JuZVqVcpIjSQd/R1iuEi4e77QWPdm9ouCbUx2LGGQvzoei0RpLdyQQLnXwObBCEN0KebrcWJ4BSZ5Y=
-X-Received: by 2002:a9f:37ab:0:b0:67a:2833:5ceb with SMTP id
- q40-20020a9f37ab000000b0067a28335cebmr13370413uaq.0.1678272660417; Wed, 08
- Mar 2023 02:51:00 -0800 (PST)
+        bh=pkqtkcAPDhHcKXHJJhzZGkadcuoCSlM8Je8c/sebOSk=;
+        b=tXNX81rztjA3XYCJ97q0PVaAkPH6rZSWCGMkOMIiKt/qGc8fyF9WTQCn8HZpFs6fAR
+         uk/XCkHdIAqeoplov+ACdx0hsehAblQDgROlbk5MkuNNybDX/XGQ9Oq0io/kdkDaXfZc
+         fI0nPxhosgJN9wBWBaxK7q0J+VR2U6ezRhcCZoAFqMqL0e78F6zKO2SxtJ/0dt+ygopu
+         yfi6R1VeJmFbWU0X80gbRLv6kCS8+kIHHs+uLUdHdz51Vl2gIhbbEzGjydljfMUINCt2
+         5tRYfDDfOK46RtapZtSsLBHHruOiXCjJl69iVUVYujoPMaDpSV/aOG+E7R16F1Hck3JT
+         B+dg==
+X-Gm-Message-State: AO0yUKVzzeRIRrWAHVHtcTdo3PkypiBPJagSdDyzK6k6YxwI1Xjza1RJ
+        ICouQhVxifU4s41IndZcX42dxtBWqhCnSRAdsZ0=
+X-Google-Smtp-Source: AK7set+8IVqHUCP7lpW4Tu0PFR/uGhVXOh2XCgJ0nI8owJdMs3y7iNlYcasQPs28+hxxB5z53ejUH1b0gSyCIQYYEl4=
+X-Received: by 2002:a50:baa6:0:b0:4c1:6acc:ea5 with SMTP id
+ x35-20020a50baa6000000b004c16acc0ea5mr9818706ede.4.1678275361500; Wed, 08 Mar
+ 2023 03:36:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20230307182557.42215-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230307182557.42215-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 8 Mar 2023 11:50:49 +0100
-Message-ID: <CAMRc=MetDO+mr6F8oKSkW3G8vv3nV+K-8QHM+Eov0s_3eCG2HA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] gpiolib: cleanups WRT GPIO device handling
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
+References: <20230302125215.214014-1-keguang.zhang@gmail.com>
+ <20230302125215.214014-3-keguang.zhang@gmail.com> <CAMRc=Me3yVwQm8=CmUVM2gyYnFxntW47-OOPdmq1TzXTJB5ETg@mail.gmail.com>
+ <CAJhJPsX1q6PGSb+eoCSdCC2_vDtbaShLLzEbuNOqD_Jzd8Ozdw@mail.gmail.com> <2d5521ff21ea4b99be3dd2e449f53934@AcuMS.aculab.com>
+In-Reply-To: <2d5521ff21ea4b99be3dd2e449f53934@AcuMS.aculab.com>
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+Date:   Wed, 8 Mar 2023 19:35:45 +0800
+Message-ID: <CAJhJPsUy0U-SdP2Vk9B8qz=CGA=oDSxbaaqqS+HOiDnQoBAThA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] gpio: loongson1: Use readl() & writel()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,23 +76,107 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 7:25=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Wed, Mar 8, 2023 at 5:42=E2=80=AFPM David Laight <David.Laight@aculab.co=
+m> wrote:
 >
-> A few cleanups to GPIO device handling in the library code.
+> From: Keguang Zhang
+> > Sent: 07 March 2023 03:46
+> >
+> > On Mon, Mar 6, 2023 at 5:30=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> > >
+> > > On Thu, Mar 2, 2023 at 1:52=E2=80=AFPM Keguang Zhang <keguang.zhang@g=
+mail.com> wrote:
+> > > >
+> > > > This patch replace __raw_readl() & __raw_writel() with readl() & wr=
+itel().
+> > > >
+> > >
+> > > Please say WHY you're doing this.
+> > >
+> > readl & writel contain memory barriers which can guarantee access order=
+.
 >
-> Andy Shevchenko (3):
->   gpiolib: Access device's fwnode via dev_fwnode()
->   gpiolib: Get rid of gpio_bus_match() forward declaration
->   gpiolib: Move gpiodevice_*() to gpiodev namespace
+> So what...
 >
->  drivers/gpio/gpiolib.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
+> There is a data dependency between the read and write.
+> The read can't be scheduled before the lock is acquired.
+> The write can't be scheduled after the lock is released.
 >
-> --
-> 2.39.1
+> So any barriers in readl()/writel() aren't needed.
 >
+> If they are only compile barriers they'll have no real effect.
+> OTOH if the cpu needs actual synchronising instructions (as some
+> ppc do) then they will slow things down.
+>
+Thanks for the explanation.
+The intention of this change is to prevent possible order issues.
+At present, __raw_readl() & __raw_writel() do work fine.
+I will drop this patch in the next version.
 
-I applied the first two patches, for the third I have a comment.
 
-Bart
+>         David
+>
+> >
+> > > Bart
+> > >
+> > > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> > > > ---
+> > > > V1 -> V2: Split this change to a separate patch
+> > > > ---
+> > > >  drivers/gpio/gpio-loongson1.c | 8 ++++----
+> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loon=
+gson1.c
+> > > > index 8862c9ea0d41..b6c11caa3ade 100644
+> > > > --- a/drivers/gpio/gpio-loongson1.c
+> > > > +++ b/drivers/gpio/gpio-loongson1.c
+> > > > @@ -23,8 +23,8 @@ static int ls1x_gpio_request(struct gpio_chip *gc=
+, unsigned int offset)
+> > > >         unsigned long flags;
+> > > >
+> > > >         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> > > > -       __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) | BIT(of=
+fset),
+> > > > -                    gpio_reg_base + GPIO_CFG);
+> > > > +       writel(readl(gpio_reg_base + GPIO_CFG) | BIT(offset),
+> > > > +              gpio_reg_base + GPIO_CFG);
+> > > >         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> > > >
+> > > >         return 0;
+> > > > @@ -35,8 +35,8 @@ static void ls1x_gpio_free(struct gpio_chip *gc, =
+unsigned int offset)
+> > > >         unsigned long flags;
+> > > >
+> > > >         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> > > > -       __raw_writel(__raw_readl(gpio_reg_base + GPIO_CFG) & ~BIT(o=
+ffset),
+> > > > -                    gpio_reg_base + GPIO_CFG);
+> > > > +       writel(readl(gpio_reg_base + GPIO_CFG) & ~BIT(offset),
+> > > > +              gpio_reg_base + GPIO_CFG);
+> > > >         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> > > >  }
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
+> >
+> >
+> >
+> > --
+> > Best regards,
+> >
+> > Kelvin Cheung
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
+
+
+
+--
+Best regards,
+
+Kelvin Cheung
