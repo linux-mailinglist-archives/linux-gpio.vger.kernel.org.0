@@ -2,192 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1D06B0837
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 14:15:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF08D6B087F
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 14:20:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbjCHNPa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 08:15:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        id S231259AbjCHNUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 08:20:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbjCHNPI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 08:15:08 -0500
-Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07C6D162D;
-        Wed,  8 Mar 2023 05:11:52 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id 1D117604F3;
-        Wed,  8 Mar 2023 14:11:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1678281107; bh=9YOSH9fsyQWwKgc7rYyqDCSYLUM86K9yyDYVc5F0/Vc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=U7VOEF/wK5DEXiApc/3iVem4s5vxgIyWW+BNudaqs37JsDK/w/MCLj7mGBPK/LNEp
-         HGcoUchtNEX5SHW/EN1hGIHKjfyitbGR72Sq+/7Ah20s8VYBOVOY1zlz9kfPTmctO1
-         twQlKkSfiUoME6+17LxQBjEJNS7WCmBYjo+HnHJelUtU/PmSOAg+6X7WjpY/HFwGhq
-         00ETNKpDPjLlz60DnmetHlsDeKZwCxEOWIBQAaJ8Cd37rPhCqXdHN4+rZN3sEMdPFl
-         kl8jkU3bzj3x3w6khSNzeFQbwuzIYu+6qqiaz/qVbrV3o6NKMRjQ66UQTbtjiIy3O4
-         eC8dW3U/zaOQA==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SeE9Gx7tn6T1; Wed,  8 Mar 2023 14:11:44 +0100 (CET)
-Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
-        by domac.alu.hr (Postfix) with ESMTPSA id C6F4D604F5;
-        Wed,  8 Mar 2023 14:11:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1678281104; bh=9YOSH9fsyQWwKgc7rYyqDCSYLUM86K9yyDYVc5F0/Vc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=g3TkGpUQlkwUumtS5q6MmMBvvm9Qy4TdoDMIkg67yvd+dYj79RKFVWM5G1+jPMShW
-         f+ZgKBWBiXj2gtnAjacN5r8VD4EWoxxRHzeNGkJuYWhyae5OWHAbbT3HGEULRADsnW
-         HFe7OnpIZ0S3gNfEf1TTwfQnie7wq/wTq3GTnHHpBZ7f1Ff1BiXjw+Tf4UJMX+s5yS
-         lWwY423Gw0iqjrk3dlPiWHT9KfxDce/xKcP7z3cKv45KzZK2XzN4OK2VvmlIx1HXqU
-         HjyqeOmwa48wWFE686RY9gHpJD04ZqVZwQ9R/J5HgCdC7kwr1qOD9zuksaYasNXu7c
-         R1lELc85gDnlA==
-Message-ID: <93d606c4-fe48-757b-28fa-4786ed3302c3@alu.unizg.hr>
-Date:   Wed, 8 Mar 2023 14:11:39 +0100
+        with ESMTP id S231891AbjCHNUF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 08:20:05 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A766B38B50
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 05:16:22 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id da10so65637031edb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 05:16:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678281377;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BKhRGeYiMtrIvPOSKbF8ADn+p/h16wF2cLPgk7JaFfs=;
+        b=amiD6dJli4aYlZfKmeodUpS/kJhhulzhPrE5TbdTW6VWiHCIlKegOrwADf4mYJoSWF
+         c7KYDD8GtZkrwdwyZAI427dxoYmTvTD1I4YVaSzuBtLImPhLyu1pzNy7Ki859i1xCQ/A
+         SmwRKL1Yr2a5HJltg3uN1l7bMp0jCEJ1ZkWXLXC366B3yXgk6C/gGERp9xB/ywXfx4dL
+         sahVZuJsdjtHhuTbv8pjZXWZkwuKdC3cXLTgq0k5yy3SAQOGxD842JGCvNHBHJJFqFhW
+         /0l/zvgdbLLpxomHMXlNmAsckYUUOeGkiDIhZNH5OhfNlJ3ZS2ui0/Wlsg0e9j5HTDYe
+         vyew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678281377;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKhRGeYiMtrIvPOSKbF8ADn+p/h16wF2cLPgk7JaFfs=;
+        b=WFdaObhijC0ImlC8qubRLjyquhfk1TZXnc5OJGhtNGe9yCoxABwiNHakgDxn42zOdA
+         mPuPaIYxpIv/cmOS///ZTQa69aY7wkfXr545eyE6f5S1wmbk3G2rSi44T//Unf3zU6Ac
+         NXyP+LfnN85p5L4kgPCbScLh7qxXrnO0NueScfJf/uZ85GifFixo70DrxWAhn69WtiSM
+         NBEyLgxXjalD+FIAHfNNFjr4u0EgsP88NnfpuVJ3ZTnsWvSxPKPoh6DcAkJjh/pAo2n9
+         Hca5xBVwQGndN+bsxMA00rt8HXy7l5G0FTnz56wZzU18ioWToGBS5rqbdGQHMhgajk5M
+         a2EA==
+X-Gm-Message-State: AO0yUKVgo8eoKu55RBsgd+54hEbrUfx0fHMKemk3cj3n9VUjf56peVgS
+        VDZ4xfTl2yKkicspdOIpHtA76Q==
+X-Google-Smtp-Source: AK7set/BUttjKBT8na2FT9FF3nX1prnTe9lS4QdGM6JI3QDa3XnMPbcI/tclVrs4UbqWYDdCogXtvw==
+X-Received: by 2002:a17:907:c24:b0:8aa:bf48:aae1 with SMTP id ga36-20020a1709070c2400b008aabf48aae1mr24948653ejc.6.1678281377265;
+        Wed, 08 Mar 2023 05:16:17 -0800 (PST)
+Received: from ?IPV6:2a02:810d:15c0:828:ff33:9b14:bdd2:a3da? ([2a02:810d:15c0:828:ff33:9b14:bdd2:a3da])
+        by smtp.gmail.com with ESMTPSA id ca5-20020a170906a3c500b008bc2c2134c5sm7481072ejb.216.2023.03.08.05.16.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Mar 2023 05:16:16 -0800 (PST)
+Message-ID: <4404869f-5e5f-e53b-f370-357d4055cb47@linaro.org>
+Date:   Wed, 8 Mar 2023 14:16:15 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: INFO: REPRODUCED: memory leak in gpio device in 6.2-rc6
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-References: <Y+y5nZJwZ6ykf0Fz@smile.fi.intel.com>
- <3d96e50b-ed17-9bf5-149b-8a50c7b4cca2@alu.unizg.hr>
- <CAMRc=Mcx=Ko5H_c1YGzA5Jfu3KJqx1pfL3RZuMrV6oTObnUrhQ@mail.gmail.com>
- <4b001ce6-b35d-3ad1-b757-f5f6baca7b51@alu.unizg.hr>
- <Y/N5Dt6G397rkfBd@smile.fi.intel.com>
- <d7762f6f-5b58-cf71-3400-557799de43c0@alu.unizg.hr>
- <Y/Tlq9aY3btfoVUN@smile.fi.intel.com>
- <7856e5a8-d84e-4f41-721b-80b6fc413919@alu.unizg.hr>
- <Y/j2ikfd/wvrDdws@smile.fi.intel.com>
- <2373a9ab-1c38-35fd-e961-9a172f8ce622@alu.unizg.hr>
- <Y/05Nizuc+VJ7GNU@smile.fi.intel.com>
-Content-Language: en-US, hr
-From:   Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <Y/05Nizuc+VJ7GNU@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: tegra234
+Content-Language: en-US
+To:     Prathamesh Shete <pshete@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     smangipudi@nvidia.com
+References: <20230308114432.27133-1-pshete@nvidia.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230308114432.27133-1-pshete@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2/28/23 00:13, Andy Shevchenko wrote:
-
-Hi, Andy!
-
->> The logs are extensive if you are willing to skim over them, but I believe the interesting
->> part is this:
+On 08/03/2023 12:44, Prathamesh Shete wrote:
+> Add DT binding doc for Tegra234 pinmux driver.
 > 
-> I'm not sure I understand where the problem is.
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  .../pinctrl/nvidia,tegra234-pinmux.yaml       | 232 ++++++++++++++++++
+>  1 file changed, 232 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
 > 
->> [ 4830.764748] kobject: 'gpio-sim' (000000005b8d0726): kobject_release, parent 000000007425b13f (delayed 750)
->> [ 4833.908238] kobject: 'gpio-sim' (000000005b8d0726): kobject_cleanup, parent 000000007425b13f
->> [ 4833.908244] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup kobject_del
->> [ 4833.908245] kobject: 'gpio-sim' (000000005b8d0726): auto cleanup 'remove' event
->> [ 4833.908247] kobject: 'gpio-sim' (000000005b8d0726): kobject_uevent_env
->> [ 4833.908273] kobject: 'gpio-sim' (000000005b8d0726): fill_kobj_path: path = '/bus/platform/drivers/gpio-sim'
->> [ 4833.908311] kobject: 'gpio-sim' (000000005b8d0726): calling ktype release
->> [ 4833.908315] kobject: 'gpio-sim': free name
->> [ 4834.932303] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_release, parent 0000000093357d30 (delayed 250)
->> [ 4835.952388] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_cleanup, parent 0000000093357d30
->> [ 4835.952413] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup kobject_del
->> [ 4835.952415] kobject: 'gpio_sim' (0000000096ea0bb1): auto cleanup 'remove' event
->> [ 4835.952416] kobject: 'gpio_sim' (0000000096ea0bb1): kobject_uevent_env
->> [ 4835.952424] kobject: 'gpio_sim' (0000000096ea0bb1): fill_kobj_path: path = '/module/gpio_sim'
->> [ 4835.952445] kobject: 'gpio_sim' (0000000096ea0bb1): calling ktype release
->> [ 4835.952448] kobject: 'gpio_sim': free name
->>
->> Or, with CONFIG_DEBUG_DEVRES=y, it looks like this:
-> 
-> I don't see that been enabled (it requires to pass a command line option to the kernel).
 
-I don't think I have found this command line option to LK.
+I don't see my concerns addressed. You replied to me today, I gave you
+response and then (or shortly before) you sent v2.
 
-So far it seems that the kobject_release() was called for both /bus/platform/drivers/gpio-sim
-and /module/gpio_sim . Is there soemthing I'm missing?
+That's not how it works.
 
-However, I've found one relatively unrelated failure to call kobject_release().
-This happens during shutdown, after the syslog is shutdown, so I can only provide
-a screenshot as a proof and for diagnostics:
+Address the concerns.
 
-https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123748.jpg
+Best regards,
+Krzysztof
 
-https://domac.alu.hr/~mtodorov/linux/bugreports/integrity/20230308_123752.jpg
-
-I failed to locate the driver and responsible maintainers to the present moment.
-It is happening on shutdown and it isn't that critical IMHO, except if it shows
-some other problem in the code :-/
-
->>>>>>> Or maybe the chip->gc.parent should be changed to something else (actual GPIO
->>>>>>> device, but then it's unclear how to provide the attributes in non-racy way
->>>>>> Really, dunno. I have to repeat that my learning curve cannot adapt so quickly.
->>>>>>
->>>>>> I merely gave the report of KMEMLEAK, otherwise I am not a Linux kernel
->>>>>> device expert nor would be appropriate to try the craft not earned ;-)
->>
->> With all of these additional debugging, cat /sys/kernel/debug/kmemleak
->> showed nothing new.
->>
->> I believe this is reasonably safe.
->>
->> However, I was unsuccessful in seeing gpio trace, even with
->> echo 1 > /sys/kernel/tracing/events/gpio/enable ... :-/
-> 
-> It's available in the trace buffer (you need to read a documentation to
-> understand how it works).
-
-Still working on that, had other tasks to do ... So far I got to this:
-
-  1020  echo "1" > /sys/kernel/tracing/events/gpio/enable
-  1021  more /sys/kernel/tracing/trace
-  1022  cd ~marvin/linux/kernel/linux_torvalds/tools/testing/selftests/gpio/
-  1023  ls
-  1024  ./gpio-sim.sh
-  1025  more /sys/kernel/tracing/trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 9/9   #P:6
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-      gpio-sim.sh-21157   [000] .....  2705.538025: gpio_direction: 560  in (0)
-  gpio-mockup-cde-21471   [000] .....  2705.579730: gpio_direction: 564  in (0)
-  gpio-mockup-cde-21471   [000] .....  2705.579745: gpio_value: 564 get 1
-  gpio-mockup-cde-21478   [003] .....  2705.589475: gpio_direction: 565  in (0)
-  gpio-mockup-cde-21478   [003] .....  2705.589488: gpio_value: 565 get 0
-  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_value: 589 set 1
-  gpio-mockup-cde-21561   [003] .....  2705.721427: gpio_direction: 589 out (0)
-  gpio-mockup-cde-21595   [000] .....  2705.855861: gpio_direction: 597  in (0)
-  gpio-mockup-cde-21595   [000] .....  2705.855875: gpio_value: 597 get 1
-[root@pc-mtodorov gpio]#
-
-I hope I did this right. However, I have to play a bit with these results before
-I could make any interpretation.
-
-I just wanted to provide some feedback.
-
-Regards,
-Mirsad
-
--- 
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
-
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
