@@ -2,77 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4946B08A1
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 14:27:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE1C6B0A8B
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 15:08:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231597AbjCHN1n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 08:27:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S231997AbjCHOIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 09:08:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230491AbjCHN1V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 08:27:21 -0500
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17DDC5ACD;
-        Wed,  8 Mar 2023 05:24:37 -0800 (PST)
-Received: by mail-qk1-x734.google.com with SMTP id a65so5638974qkg.13;
-        Wed, 08 Mar 2023 05:24:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678281876;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qZoP71+5c3FVKBx98Aqiaa+ZcAlza86aEyQCRu3z974=;
-        b=Q4QesLjAGlM42tRSwoI+HcvMCyjJlBF+MYJeMSF2XPXBTWsvyYPu6iekvSGCkG7K3M
-         ZU/XdVEunzvpxGOr7gUeUo1E/0qRwzJlaw/1f6N/4eBsyhkMDJA4cnshQDglSrFfkD4r
-         0OeYmtW6Y7gFIdTZBL+6yi9LiE+OSKDMe4d3Hj9AlkKZRWHbYKzqoLZTmfxSnoA0TQa9
-         zaVnSwD7KgYWnPg7f0VHzCVWaqRlF3btsJJBIrXNRxZ4M53M8TkkIRmE36Psy9CG6JQ5
-         chas3FBi7Bsd59EEdSKSCA3Xo/cZW2SzjqHNLdY0G/ZMywVBZSiQNu/la/6XNiavwvp0
-         BOng==
+        with ESMTP id S229482AbjCHOHw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 09:07:52 -0500
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172F35C9FB;
+        Wed,  8 Mar 2023 06:06:31 -0800 (PST)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-176d93cd0daso9394872fac.4;
+        Wed, 08 Mar 2023 06:06:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678281876;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qZoP71+5c3FVKBx98Aqiaa+ZcAlza86aEyQCRu3z974=;
-        b=bReBjz09RD1L5PK5pspcQ2ryeyaC/F/8rWQE269OBxZ/+PppEGsA7fx6hINnWJZ6Z+
-         h+vfRNyEbupHcdSfcQ3dUPYXEGHZafi3LjQu/orTmTYCYXXnr3i2zZgBAmERwmqi1gTj
-         8SQUbm39YSthUVT7YAj56rAoq4XVa0KwA+VUicMWg5eeXiVlWuEqwk9Mn+0viJQ/fhzF
-         1y8aifU3/OiogW4Gp0mLOwmdH1r3juK2o//FQRUURSLIqXlrE6hZLg72iQWxkvBRpiiW
-         pa6/gvxPFty8qnbGXci9trRWNlcDfy8VmCUiH1eH3G84iO+gjhpDnNL5WKRX7XJxQ6B1
-         I44A==
-X-Gm-Message-State: AO0yUKVtBNmwGE0kEpl8E2NDkbv0Tm4lYzKmxlKIViqCDhpzjB2g7jWZ
-        TZycdLIOOn3OAzk5kc1TaiJAE4N9/BiCzlXeZNU=
-X-Google-Smtp-Source: AK7set+3+KOGVmoTKCyVDclv+hazU63yGvn2mTBscxNnBRm23ESammya3zfhhVhmcnKROal6d062iEm7APHU+6r5cjY=
-X-Received: by 2002:a05:620a:713:b0:742:7e5a:4cee with SMTP id
- 19-20020a05620a071300b007427e5a4ceemr5114611qkc.10.1678281876099; Wed, 08 Mar
- 2023 05:24:36 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678284391;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8yIx/AU8JzW8uSjkdg01a/PYhxpFU04JXt4ilid73Fg=;
+        b=05hqTsNe/GBJpIiI4Xr8N7xFUSXrqqy/szG2Tn16qnmpAFNWLo7lY2CgPxbCTIkjij
+         TFbtw1VvlQmpg3FkGQZPyDLvx443M5IQu4wmIXf0c3DJSjMkzg3GbROxoWummC/afUI7
+         vqvIvfiBnEHYuQ2IHYHOmC6mehBxiP5W9VPhPAkRWSGhFltYqoZy+W3eOz/XK+yaZ5JV
+         YnTZ1SniAsWmqQQ0YUUIPoPozdBGU59L8j7xB/GbFA4xWoxcWh9P213/KTTu0nLMD+2L
+         Mb9DbSs8NeEz+zbMTUeHA0FapqPnz9N27ky5+s5mOYDUJ+Lbs7Y3DeNmwojrq0n9CIxo
+         HJxA==
+X-Gm-Message-State: AO0yUKVXni7RgvZ1fCPnEnY+QFnJsMbQdPo2b8Ntpa0FBK6z4nsbWygm
+        jiKGCVgbDXrwzv4fSdq8Mg==
+X-Google-Smtp-Source: AK7set9TNvbhYkYF/07vHAjhIjW7nnPGoUTxEfCExr/KeTykPce7GTNhjs/xFb+8h0xD1/EUloG4jQ==
+X-Received: by 2002:a05:6870:414e:b0:176:554d:235b with SMTP id r14-20020a056870414e00b00176554d235bmr690543oad.59.1678284391145;
+        Wed, 08 Mar 2023 06:06:31 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id v22-20020a4ac916000000b0052532296449sm6208690ooq.20.2023.03.08.06.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Mar 2023 06:06:30 -0800 (PST)
+Received: (nullmailer pid 2666472 invoked by uid 1000);
+        Wed, 08 Mar 2023 14:06:21 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
- <20230214163116.9924-5-quic_devipriy@quicinc.com> <ZAZ+GeGu8mW1XqpG@surfacebook>
- <15d270ca-1068-b926-efc9-a14ddfc90a54@quicinc.com>
-In-Reply-To: <15d270ca-1068-b926-efc9-a14ddfc90a54@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Mar 2023 15:24:00 +0200
-Message-ID: <CAHp75VfMae9M2R0Bw6-sYuHPPberakEzKct65SXV0XEaOFtXTg@mail.gmail.com>
-Subject: Re: [PATCH V8 4/7] pinctrl: qcom: Add IPQ9574 pinctrl driver
-To:     Devi Priya <quic_devipriy@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
-        marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org,
-        nfraprado@collabora.com, broonie@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+From:   Rob Herring <robh@kernel.org>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        smangipudi@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20230308114432.27133-1-pshete@nvidia.com>
+References: <20230308114432.27133-1-pshete@nvidia.com>
+Message-Id: <167828360289.2613214.7109201794709064028.robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: tegra234
+Date:   Wed, 08 Mar 2023 08:06:21 -0600
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,65 +65,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 8, 2023 at 11:52 AM Devi Priya <quic_devipriy@quicinc.com> wrote:
-> On 3/7/2023 5:28 AM, andy.shevchenko@gmail.com wrote:
 
-...
+On Wed, 08 Mar 2023 17:14:30 +0530, Prathamesh Shete wrote:
+> Add DT binding doc for Tegra234 pinmux driver.
+> 
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  .../pinctrl/nvidia,tegra234-pinmux.yaml       | 232 ++++++++++++++++++
+>  1 file changed, 232 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
+> 
 
-> >> +    depends on OF
-> >
-> > No compile test on non-OF configurations?
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> As per the generic convention followed in other
-> SoCs, we do not have compile test on non-OF configurations
+yamllint warnings/errors:
 
-Why not? So, you have to explain the deliberate narrowing of the test coverage.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.example.dtb: pinmux@2430000: 'pinmux-pex-rst-c5-out' does not match any of the regexes: '^pinmux(-[a-z0-9]+)?$', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
 
-> >> +    depends on ARM64 || COMPILE_TEST
+doc reference errors (make refcheckdocs):
 
-...
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230308114432.27133-1-pshete@nvidia.com
 
-> >> +#define FUNCTION(fname)                                     \
-> >
-> > PINCTRL_PINFUNCTION() ?
-> I see that there are quite a bunch of files that has to
-> be modified for using the generic data type and
-> macro for the pin function definition
-> We shall post a separate series to accommodate the changes
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Sure, that's fine. Please do!
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-> >> +    [msm_mux_##fname] = {                           \
-> >> +            .name = #fname,                         \
-> >> +            .groups = fname##_groups,               \
-> >> +            .ngroups = ARRAY_SIZE(fname##_groups),  \
-> >> +    }
+pip3 install dtschema --upgrade
 
-...
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-> >> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)    \
-> >> +    {                                               \
-> >> +            .name = "gpio" #id,                     \
-> >> +            .pins = gpio##id##_pins,                \
-> >> +            .npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),     \
-> >
-> > Can you embed struct pingroup?
-> Will take care of this in a separate series
-
-Ditto. Thanks!
-
-> >> +    }
-
-...
-
-> >> +};
-> >
-> > No MODULE_DEVICE_TABLE()?
-> The MODULE_DEVICE_TABLE(of, ipq9574_pinctrl_of_match) entry has
-> been added at the end of the file
-
-So, you know what to do then to address my comment :-)
-
--- 
-With Best Regards,
-Andy Shevchenko
