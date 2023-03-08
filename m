@@ -2,124 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47E116AFCFD
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C7D6AFD10
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:51:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbjCHCqj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 21:46:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
+        id S229770AbjCHCvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 21:51:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjCHCqi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:46:38 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65404617C;
-        Tue,  7 Mar 2023 18:46:36 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id j11so40781504edq.4;
-        Tue, 07 Mar 2023 18:46:36 -0800 (PST)
+        with ESMTP id S229794AbjCHCvf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:51:35 -0500
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868FFA8E8A
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 18:51:29 -0800 (PST)
+Received: by mail-qt1-x831.google.com with SMTP id h19so16838995qtk.7
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 18:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678243595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RrKMiwGYeVx1STAfxRYkJBqPZfFoqtzB1W9N4+PknWc=;
-        b=NywrVP/0Lx73MjbKGOcCV1MT5EUgqxwK3D+U9hPTdWfVPUmv/DrF39ocdb0BKdYY05
-         y+HJuEhSfvLSoPE761mXyXSU9dHpFvVVbMdb6MNnbrxyRdnGKagWTbP6Zvew6CsJZdQU
-         AqAQDia5yNhbyvl1rrB62puySOAWBt2oyG4moNlV1jT0S7FAeTMgvQc+wSuJkAItJN2y
-         j8MsbA0mT0Epv61gRpuyWIapgj6N+ehBA14lVThzhZf4dHV8w6kEPT5rvCa1Qp/ehl2D
-         KptjFgO/CPYf8EUPHYj1hTnKaiYgxvQ+j2I0bZG3JGPpGHuAKJ+UT3L/xhwZEsu8y9nt
-         utCw==
+        d=linaro.org; s=google; t=1678243888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mBTA60cZTqBtyoITaMc+SEMUbPVKoktbGsvzyY/a5wM=;
+        b=NY3kdFK7QkdkNKWh86qCYTK9vfy3kWbbtMKSHYnaciD6E0uEx7PPj325j++QD8Hs2+
+         GRa1BuQohNmdhJLM0fwxA9g3bzrchyRBuNXWMLcwQYMNNjFFeMA1tXFC48Jwe7q7yOAw
+         8omiQWLFqa5zUlyEPe+bb3MQcTwQIx9cR1wbZN8xbp5GBNvL9WVSCJsAwtbrrz/Vkww4
+         NXdQHipXj9ZPxznRhpIEgUl52BYwCrrHIxkG8N3mQTb5Ozgo6abLCkxwdi86NjjkW4el
+         viZi0CS/VBJVW3uE+t/p+N0WZKvsOM+H9Rk0RW+O2XKHiKum3Jd7g0V/z61GV2ADcbn+
+         Mx5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678243595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RrKMiwGYeVx1STAfxRYkJBqPZfFoqtzB1W9N4+PknWc=;
-        b=Bb22urqu2twdVrqrScXcsjnMm6JRHaeskBapDCjurw5Suzrw+LJIicEXjF83rTSuDc
-         E/PZSmgUKra0G89130EmjI4JJfxf7TX2fk3ycSEXQsT5KN56uqxRq7BGTqk989xcSGRo
-         bs+5NC8II3V9UbuW/isqJf3V8eUGtHN4YW+Zj4N4aQ//1f/hvgRFHpVmgNXfG1nnRwtH
-         f25jbLd/mOZoxp5DH9GCUKUlFZfF/VcLZT0G3BkPVP4g2er7hui8aSI8SEj3YVaUs6sR
-         lo07IxvzMjQSlz7l1SN4hQQUGB2378FH3Rdt/mBM49UPUpB3PDGbmhLb3Vjsj5CkJfs9
-         FpOA==
-X-Gm-Message-State: AO0yUKU3y+oDhGU+f7xa2+npbqaQCrOxR0KLSBkZuylhhFc2SNl2Ch5X
-        c6gHfoazW5KAGE7dVzqaJl2sBskjtoA1dpYHi5RhbwYjU4NP+A==
-X-Google-Smtp-Source: AK7set9aFJDvx+U0Z7Cj5PrVkC8DU9/0MT+LP7J1ksieiqbJxabr8nWd5xbsIEKQlqhz+YGs0xMRfS6oVwr0nKVoPV8=
-X-Received: by 2002:a17:906:498e:b0:901:e556:6e23 with SMTP id
- p14-20020a170906498e00b00901e5566e23mr8310102eju.0.1678243595008; Tue, 07 Mar
- 2023 18:46:35 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678243888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mBTA60cZTqBtyoITaMc+SEMUbPVKoktbGsvzyY/a5wM=;
+        b=Ioym8FLu2SV6/lpq+SahTo3Heucox9teMTcF5VUBIa4I0g2WstEgJdr/+OlVH+fE9o
+         A/8fKqhvpIjsjgfxShI2QKSaMUbzLvk4RKrOjqpELHLuzwmHf+P61vCUQvv3L0mcMkCf
+         IStqT2xF8wIc15E5eWZs5VUrHYfsio/Cw4VKaGjNu8I7Fkjx0eRXYbCVz5gwuSwy/qBl
+         q7SkKFK4+0i59FA+tZKRpABQhghkQ22pG/4t6hqsl2j2dflW3m+qmTg8rKEHWmS4GmDQ
+         jYrCLbWGYKGLmRPuiX7QbqzgMhPSSCosA4Vxka2/zd17MaDYaixu9r1coRxrgGldUtkm
+         N2bg==
+X-Gm-Message-State: AO0yUKUepo04+LPY4XpUeBfdi5uFvfF+SyTowET7d/YXP86r9iHNreLr
+        0k9NNbegPewASMNfryuWsItobGxYOVK3OjJiZyI=
+X-Google-Smtp-Source: AK7set8aR0gyxqI97lIeS6tVAboTuImsID4lv+BvmEQEvfVLjMdwKuNvfLGJ/1alx2KwhzvRMazvSA==
+X-Received: by 2002:a05:622a:1a2a:b0:3bf:b8ae:6ece with SMTP id f42-20020a05622a1a2a00b003bfb8ae6ecemr29496646qtb.10.1678243888643;
+        Tue, 07 Mar 2023 18:51:28 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id r13-20020a05622a034d00b0039cc0fbdb61sm11244768qtw.53.2023.03.07.18.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 18:51:28 -0800 (PST)
+Date:   Tue, 7 Mar 2023 21:51:26 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, techsupport@winsystems.com,
+        Paul Demetrotion <pdemetrotion@winsystems.com>
+Subject: Re: [PATCH v4 3/3] gpio: ws16c48: Migrate to the regmap API
+Message-ID: <ZAf4LudZkYLsWVWh@fedora>
+References: <cover.1678106722.git.william.gray@linaro.org>
+ <4b6cd42426521808962d68a44952b95818fc5daf.1678106722.git.william.gray@linaro.org>
+ <ZAX2k9gW1AA88T/P@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20230302125215.214014-1-keguang.zhang@gmail.com>
- <20230302125215.214014-2-keguang.zhang@gmail.com> <CAMRc=Me=Yrr5BuRaMd4r91URzmdYHWUvVGvLL9YFuZPaV0WYFA@mail.gmail.com>
- <CAJhJPsVf8EvFc9N8eMtc8Qu2BhODv7PzZm9C5ePR+GdTFiAY1w@mail.gmail.com> <CACRpkda_y1Hz69XyDjcDPd=gEi_n2PChJOgKsonXcvYyxQzg4w@mail.gmail.com>
-In-Reply-To: <CACRpkda_y1Hz69XyDjcDPd=gEi_n2PChJOgKsonXcvYyxQzg4w@mail.gmail.com>
-From:   Keguang Zhang <keguang.zhang@gmail.com>
-Date:   Wed, 8 Mar 2023 10:46:18 +0800
-Message-ID: <CAJhJPsXLs6OqHEUrCwoybDP4MiKE1D050Dj2auZ4fdQ-Rb+BWA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] gpio: loongson1: Convert to SPDX identifier
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Mi/wX9MNCaaYw2/s"
+Content-Disposition: inline
+In-Reply-To: <ZAX2k9gW1AA88T/P@smile.fi.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 9:31=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Tue, Mar 7, 2023 at 3:25 AM Keguang Zhang <keguang.zhang@gmail.com> wr=
-ote:
-> > On Mon, Mar 6, 2023 at 5:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
-> > > On Thu, Mar 2, 2023 at 1:52=E2=80=AFPM Keguang Zhang <keguang.zhang@g=
-mail.com> wrote:
-> > > >
-> > > > Use SPDX-License-Identifier instead of the license text and
-> > > > update the author information.
-> > > >
-> > > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
->
-> > > Why are you removing credits of the old author?
->
-> > Kelvin Cheung and Keguang Zhang are the same person.
-> > This change is to keep pace with the related entry of MAINTAINERS.
->
-> That's a pretty interesting change!
->
-> Is Kelvin Cheung the "westernized" name and Keguang Zhang the
-> closer to the real name, such as pinyin form? That would make
-> a lot of sense.
->
-Exactly.
-Kelvin Cheung is easy to pronounce, but has no direct relationship
-with my real name.
-Keguang Zhang, the Pinyin form of my real name, is the official name.
-That is why I'd like to make this change.
 
-> I think some authors even use the native characters these days,
-> as git and all tools and terminals should support Unicode now.
-> It might make it hard for us to answer mails (not knowing which
-> characters to refer to as given name) but I kind of like it when I
-> see it.
->
-Yes, I did see the names written in native characters.
-But it's even harder for western people to identify.
-Maybe the real name with native characters + "westernized" name is better.
+--Mi/wX9MNCaaYw2/s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Yours,
-> Linus Walleij
+On Mon, Mar 06, 2023 at 04:20:03PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 06, 2023 at 07:59:53AM -0500, William Breathitt Gray wrote:
+>=20
+> ...
+>=20
+> > -	raw_spinlock_t lock;
+> > +	spinlock_t lock;
+>=20
+> This is a regression.
+> That said, do we need a support of raw spin locks in the regmap IRQ?
 
+So this code has a similar need as the gpio-pcie-idio-24 patch: guard
+registers between handle_mask_sync() and set_type_config(); however, now
+we also need to protect registers in regmap_irq_thread(). We can't use a
+mutex here because regmap_irq_thread() is executed in an interrupt
+context so we cannot sleep.
 
+This might be a mistake in my understanding: I chose spinlock_t here
+because I believed it to map out to a raw_spinlock_t anyway underneath,
+whereas on RT kernels it would map out to whatever the equivalent is. I
+suspect this is not actually the case. Would using raw_spinlock_t
+explicitly be the correct way to go for this particular case?
 
---=20
-Best regards,
+> > +	u8 irq_mask[WS16C48_NUM_IRQS / WS16C48_NGPIO_PER_REG];
+>=20
+> Can this be a bitmap? Or is it too over engineered with it?
 
-Kelvin Cheung
+I also considered a bitmap at first, but I believe it adds an
+unnecessary abstraction in this particular case: irq_mask is just a
+buffer to hold the previous mask_buf state to check if it's changed when
+ws16c48_handle_mask_sync() is called. Since all we do with it is save
+the mask_buf directly, using the bitmap API seems like overkill.
+
+William Breathitt Gray
+
+--Mi/wX9MNCaaYw2/s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAf4LgAKCRC1SFbKvhIj
+K1BpAP9hFKmskIE63OocEoCF07/hFHcHLdTOgP38UFv3hsndRgD/WPrfTJ+zn4gQ
+vWqp5iK5vJbkyAfUBmKpHHsaXIRTBQo=
+=KG62
+-----END PGP SIGNATURE-----
+
+--Mi/wX9MNCaaYw2/s--
