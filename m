@@ -2,182 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D145B6AFCF2
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:33:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47E116AFCFD
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 03:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjCHCdZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Mar 2023 21:33:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
+        id S229818AbjCHCqj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Mar 2023 21:46:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjCHCdW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:33:22 -0500
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425982197F
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Mar 2023 18:33:20 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id g9so8601856qvt.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Mar 2023 18:33:20 -0800 (PST)
+        with ESMTP id S229477AbjCHCqi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Mar 2023 21:46:38 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65404617C;
+        Tue,  7 Mar 2023 18:46:36 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id j11so40781504edq.4;
+        Tue, 07 Mar 2023 18:46:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678242799;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7d4avNQ4qTzn+SuqYWgHiW32J80h86PyMsPPQdN+eA=;
-        b=o2Ttwa2SQB0HbezDy4bUDsIFHngLelMxlPtxY0hbYJxSQ00Fqnn6jHLq9SSnQaoNfg
-         FaptAfJkhfmfmk7mrD7PrqA6iNABi3vpVfwdR4KB5YIglS/aL7f9XHCrUgtKC0Ma0E8P
-         sk/jAZt7TQ8K64lGX8/gFgsh2F8Lm5GmwmfRQZ3nmu1YwBh9KqCwDNwpHItK8rQSzBfM
-         uXLb8UwQNDJ7qU6QqeLenjB8S7nl9oaGQkp4WoJI/rurXRvv7t+/0pI2H/JzMSFDEi9l
-         h7m0eEvWQlLmbKqnPFdq5cs9I3iXNhhH+Ve3ePyzJncZYAXqDG2X0tNS6+zVKKITywb3
-         Hd+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678242799;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1678243595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T7d4avNQ4qTzn+SuqYWgHiW32J80h86PyMsPPQdN+eA=;
-        b=HKGFUhQE4efpDNKffJCdHspV2zt31QzqbGELqSFhpkTdqXH+ahMaUI1QUzamcJnMHB
-         1fzl3le4GJ5eLTaoIb19ceZiTDVr/0rSksHbWWIL1DjuGeLMbbk7fReLPczTlq2yf1we
-         EYpJvVdRz1fyCZwgEeILHeFOPI/CXp9vFRr5PukWmb7XfKbr4dJu2WTviwu0J+c6k4zX
-         eQojckQtqwuNYfD+84IAQdUQ89iij6iqg59mX0yA1aEWCVD/CmRzhr0SMxDZmH0JCEoI
-         eBz1RK7cqLDFMjxq6t+187zcV8daVVfj1KGf72J2T3y7L/QJYCrA/eAM8L1/9nVexkCU
-         XtGQ==
-X-Gm-Message-State: AO0yUKV0BCe+75AvCehBeCcSalgfL0R+KvwexCS2Fq2KiKVIq7aqTuE6
-        X3/FmRvfUU9cAwASTx5hq4X10Q==
-X-Google-Smtp-Source: AK7set+HTgcm7gFO+MYwMi2DWxf2VD4MLB/Hsx2K1yh+WaQ7Jadi/1bD6PFJZFDaMNxfBo+aTi0XZQ==
-X-Received: by 2002:ad4:4eed:0:b0:56e:a7d1:4d65 with SMTP id dv13-20020ad44eed000000b0056ea7d14d65mr29986708qvb.52.1678242799311;
-        Tue, 07 Mar 2023 18:33:19 -0800 (PST)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id w29-20020a05620a0e9d00b0072396cb73cdsm10756583qkm.13.2023.03.07.18.33.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 18:33:18 -0800 (PST)
-Date:   Tue, 7 Mar 2023 21:29:34 -0500
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, Arnaud de Turckheim <quarium@gmail.com>,
-        John Hentges <jhentges@accesio.com>,
-        Jay Dolan <jay.dolan@accesio.com>
-Subject: Re: [PATCH v4 2/3] gpio: pcie-idio-24: Migrate to the regmap API
-Message-ID: <ZAfzDig+UzgH3QqO@fedora>
-References: <cover.1678106722.git.william.gray@linaro.org>
- <b96429c66e7caca05d9fb93805e11650fdbad312.1678106722.git.william.gray@linaro.org>
- <ZAX3ntGgO4PjIkxx@smile.fi.intel.com>
+        bh=RrKMiwGYeVx1STAfxRYkJBqPZfFoqtzB1W9N4+PknWc=;
+        b=NywrVP/0Lx73MjbKGOcCV1MT5EUgqxwK3D+U9hPTdWfVPUmv/DrF39ocdb0BKdYY05
+         y+HJuEhSfvLSoPE761mXyXSU9dHpFvVVbMdb6MNnbrxyRdnGKagWTbP6Zvew6CsJZdQU
+         AqAQDia5yNhbyvl1rrB62puySOAWBt2oyG4moNlV1jT0S7FAeTMgvQc+wSuJkAItJN2y
+         j8MsbA0mT0Epv61gRpuyWIapgj6N+ehBA14lVThzhZf4dHV8w6kEPT5rvCa1Qp/ehl2D
+         KptjFgO/CPYf8EUPHYj1hTnKaiYgxvQ+j2I0bZG3JGPpGHuAKJ+UT3L/xhwZEsu8y9nt
+         utCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678243595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RrKMiwGYeVx1STAfxRYkJBqPZfFoqtzB1W9N4+PknWc=;
+        b=Bb22urqu2twdVrqrScXcsjnMm6JRHaeskBapDCjurw5Suzrw+LJIicEXjF83rTSuDc
+         E/PZSmgUKra0G89130EmjI4JJfxf7TX2fk3ycSEXQsT5KN56uqxRq7BGTqk989xcSGRo
+         bs+5NC8II3V9UbuW/isqJf3V8eUGtHN4YW+Zj4N4aQ//1f/hvgRFHpVmgNXfG1nnRwtH
+         f25jbLd/mOZoxp5DH9GCUKUlFZfF/VcLZT0G3BkPVP4g2er7hui8aSI8SEj3YVaUs6sR
+         lo07IxvzMjQSlz7l1SN4hQQUGB2378FH3Rdt/mBM49UPUpB3PDGbmhLb3Vjsj5CkJfs9
+         FpOA==
+X-Gm-Message-State: AO0yUKU3y+oDhGU+f7xa2+npbqaQCrOxR0KLSBkZuylhhFc2SNl2Ch5X
+        c6gHfoazW5KAGE7dVzqaJl2sBskjtoA1dpYHi5RhbwYjU4NP+A==
+X-Google-Smtp-Source: AK7set9aFJDvx+U0Z7Cj5PrVkC8DU9/0MT+LP7J1ksieiqbJxabr8nWd5xbsIEKQlqhz+YGs0xMRfS6oVwr0nKVoPV8=
+X-Received: by 2002:a17:906:498e:b0:901:e556:6e23 with SMTP id
+ p14-20020a170906498e00b00901e5566e23mr8310102eju.0.1678243595008; Tue, 07 Mar
+ 2023 18:46:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="quWG8+aBeWgbNXre"
-Content-Disposition: inline
-In-Reply-To: <ZAX3ntGgO4PjIkxx@smile.fi.intel.com>
+References: <20230302125215.214014-1-keguang.zhang@gmail.com>
+ <20230302125215.214014-2-keguang.zhang@gmail.com> <CAMRc=Me=Yrr5BuRaMd4r91URzmdYHWUvVGvLL9YFuZPaV0WYFA@mail.gmail.com>
+ <CAJhJPsVf8EvFc9N8eMtc8Qu2BhODv7PzZm9C5ePR+GdTFiAY1w@mail.gmail.com> <CACRpkda_y1Hz69XyDjcDPd=gEi_n2PChJOgKsonXcvYyxQzg4w@mail.gmail.com>
+In-Reply-To: <CACRpkda_y1Hz69XyDjcDPd=gEi_n2PChJOgKsonXcvYyxQzg4w@mail.gmail.com>
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+Date:   Wed, 8 Mar 2023 10:46:18 +0800
+Message-ID: <CAJhJPsXLs6OqHEUrCwoybDP4MiKE1D050Dj2auZ4fdQ-Rb+BWA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] gpio: loongson1: Convert to SPDX identifier
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Mar 7, 2023 at 9:31=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
+>
+> On Tue, Mar 7, 2023 at 3:25 AM Keguang Zhang <keguang.zhang@gmail.com> wr=
+ote:
+> > On Mon, Mar 6, 2023 at 5:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> > > On Thu, Mar 2, 2023 at 1:52=E2=80=AFPM Keguang Zhang <keguang.zhang@g=
+mail.com> wrote:
+> > > >
+> > > > Use SPDX-License-Identifier instead of the license text and
+> > > > update the author information.
+> > > >
+> > > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+>
+> > > Why are you removing credits of the old author?
+>
+> > Kelvin Cheung and Keguang Zhang are the same person.
+> > This change is to keep pace with the related entry of MAINTAINERS.
+>
+> That's a pretty interesting change!
+>
+> Is Kelvin Cheung the "westernized" name and Keguang Zhang the
+> closer to the real name, such as pinyin form? That would make
+> a lot of sense.
+>
+Exactly.
+Kelvin Cheung is easy to pronounce, but has no direct relationship
+with my real name.
+Keguang Zhang, the Pinyin form of my real name, is the official name.
+That is why I'd like to make this change.
 
---quWG8+aBeWgbNXre
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I think some authors even use the native characters these days,
+> as git and all tools and terminals should support Unicode now.
+> It might make it hard for us to answer mails (not knowing which
+> characters to refer to as given name) but I kind of like it when I
+> see it.
+>
+Yes, I did see the names written in native characters.
+But it's even harder for western people to identify.
+Maybe the real name with native characters + "westernized" name is better.
 
-On Mon, Mar 06, 2023 at 04:24:30PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 06, 2023 at 07:59:52AM -0500, William Breathitt Gray wrote:
-> > The regmap API supports IO port accessors so we can take advantage of
-> > regmap abstractions rather than handling access to the device registers
-> > directly in the driver.
-> >=20
-> > For the PCIe-IDIO-24 series of devices, the following BARs are
-> > available:
-> >=20
-> >     BAR[0]: memory mapped PEX8311
-> >     BAR[1]: I/O mapped PEX8311
-> >     BAR[2]: I/O mapped card registers
-> >=20
-> > There are 24 FET Output lines, 24 Isolated Input lines, and 8 TTL/CMOS
-> > lines (which may be configured for either output or input). The GPIO
-> > lines are exposed by the following card registers:
-> >=20
-> >     Base +0x0-0x2 (Read/Write): FET Outputs
-> >     Base +0xB (Read/Write): TTL/CMOS
-> >     Base +0x4-0x6 (Read): Isolated Inputs
-> >     Base +0x7 (Read): TTL/CMOS
-> >=20
-> > In order for the device to support interrupts, the PLX PEX8311 internal
-> > PCI wire interrupt and local interrupt input must first be enabled.
-> >=20
-> > The following card registers for Change-Of-State may be used:
-> >=20
-> >     Base +0x8-0xA (Read): COS Status Inputs
-> >     Base +0x8-0xA (Write): COS Clear Inputs
-> >     Base +0xB (Read): COS Status TTL/CMOS
-> >     Base +0xB (Write): COS Clear TTL/CMOS
-> >     Base +0xE (Read/Write): COS Enable
-> >=20
-> > The COS Enable register is used to enable/disable interrupts and
-> > configure the interrupt levels; each bit maps to a group of eight inputs
-> > as described below:
-> >=20
-> >     Bit 0: IRQ EN Rising Edge IN0-7
-> >     Bit 1: IRQ EN Rising Edge IN8-15
-> >     Bit 2: IRQ EN Rising Edge IN16-23
-> >     Bit 3: IRQ EN Rising Edge TTL0-7
-> >     Bit 4: IRQ EN Falling Edge IN0-7
-> >     Bit 5: IRQ EN Falling Edge IN8-15
-> >     Bit 6: IRQ EN Falling Edge IN16-23
-> >     Bit 7: IRQ EN Falling Edge TTL0-7
-> >=20
-> > An interrupt is asserted when a change-of-state matching the interrupt
-> > level configuration respective for a particular group of eight inputs
-> > with enabled COS is detected.
-> >=20
-> > The COS Status registers may be read to determine which inputs have
-> > changed; if interrupts were enabled, an IRQ will be generated for the
-> > set bits in these registers. Writing the value read from the COS Status
-> > register back to the respective COS Clear register will clear just those
-> > interrupts.
->=20
-> ...
->=20
-> >  - Add mutex to prevent clobbering the COS_ENABLE register when masking
-> >    IRQ and setting their type configuration
->=20
-> But this doesn't explain killing the raw spin lock.
->=20
-> I don't understand how is it suppose to work then.
->=20
-> What is this lock for and how IRQ related registers can be updated
-> with RT type of kernel?
->=20
-> If mutex is okay, doesn't mean we have to add 'can_sleep =3D true'?
+> Yours,
+> Linus Walleij
 
-I admit that RT locking is an area I often have trouble understanding,
-so perhaps you can help me make sure whether this lock type change makes
-sense here.
 
-My reasoning for why we need a lock is that the COS Enable register is
-modified in both the idio_24_set_type_config() function and the
-idio_24_handle_mask_sync() function. These respectively are called by
-regmap_irq_set_type() and regmap_irq_sync_unlock(), which are callbacks
-for a struct irq_chip irq_set_type() and irq_bus_sync_unlock() members.
 
-I think these callbacks could be executed in parrallel, but are allowed
-to sleep, so that is why I selected mutex as the lock type here (I
-probably do need to add 'can_sleep =3D true'). Is this reasoning correct,
-or have I made a mistake here?
+--=20
+Best regards,
 
-William Breathitt Gray
-
---quWG8+aBeWgbNXre
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAfzDgAKCRC1SFbKvhIj
-K6X6AQCb8V8G87zN4J8+wxzOx7owtXfV4gShJQXpdJzhhHNcNAD9ECtLyove5EKa
-NApOWn2NjlkbJxgx/t7eGKvFk5ViEgo=
-=vvBh
------END PGP SIGNATURE-----
-
---quWG8+aBeWgbNXre--
+Kelvin Cheung
