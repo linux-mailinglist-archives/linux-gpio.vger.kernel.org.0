@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 202346B0457
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 11:30:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 010776B047C
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Mar 2023 11:33:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbjCHKaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Mar 2023 05:30:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38150 "EHLO
+        id S229974AbjCHKdx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Mar 2023 05:33:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbjCHKag (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 05:30:36 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AD4B9BF9
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 02:29:58 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id f23so14887592vsa.13
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 02:29:58 -0800 (PST)
+        with ESMTP id S229866AbjCHKdT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Mar 2023 05:33:19 -0500
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED4F20064
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 02:33:03 -0800 (PST)
+Received: by mail-vs1-xe2a.google.com with SMTP id d20so14928063vsf.11
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 02:33:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678271398;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678271582;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zs6kG7SxJlX0Yk0MstxBWczLimozPECORl9CWMpgGIE=;
-        b=09XXxUisY/HQYXwwxtyhC7SBMwEiIOErSiKN8eKWW87IQlEg8OyXmx1ITZP1UrAhdw
-         78fZ0z+X3gPORRermXoXW7AUucJKgdWV+MBLqRHXM1sFeE0pzZvJUencYjw4+uZVsp3V
-         V/JN0qlgaYCJslTpjwLgjybJsMXvyoCWYsizTehd3T5f0cmaCQtDBpicIGppfCQiRpB4
-         10GD4s4RpMmZhmIuH0QXpRuYbdHo41m6eMuf7WyQS9tkUEHghQ42yOpZ7s1lWX3he33w
-         S0IILgoLcDvJ0Ep6Wpjm4hVRH5kxKi4GWpCapoLdkkrLuaf5HgX7arIAlGyi/hoNH62F
-         MOug==
+        bh=tTy8L/bjoQ+eUTbs+SF3teVKfIdqhIWOgK22nmCkyus=;
+        b=pfMpzZyUSU4NMXOHiamdefO53InD/hLu0bAZST+wrc8Cm21SEFmZWSeC6xc3XoUZD9
+         wFViwQhJVHIKDomTV7MvlXtIpxUra0Ldlk+QL2FpQO8VLt69+2ZtRrd3OcB7N4k9Wyv1
+         SXb622Eh9STkc00RLupgn9pe3fojxDuZbgUWfw7U6dKgaVYNDZvO8Sugwly/uAaXBwxe
+         /qT/phgnapUHsSfhzduyySE2VM/mLf2dFWaiHZVlpyRpdudgkWQC7jnOcQb/WPURNn0u
+         U8limiYANJOkGejj99FvFp+NEqf+3g2oHZftPTwuLYslAZfJIO1Gd9SA//PDDUM5mCce
+         mNqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678271398;
+        d=1e100.net; s=20210112; t=1678271582;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zs6kG7SxJlX0Yk0MstxBWczLimozPECORl9CWMpgGIE=;
-        b=KemspTPQNbFUHCuCCVq4QNoZTpfI8OE/jflKhHMIcDXzZDe9LKRoM7wa6Kz1Uion6+
-         3oDlBE9UfdJ1DOAqJqP7HHRusfVcmW973roFgqkwUMQSqKQYxw6UWF5wYPU9Rx+KZUkb
-         FbNctQeh4qu0/0OZ/dKJ6pLkY3QA2Sp+oF8W+yjWtAUFnu5AyYV2jSapTH9022Oqg+rK
-         c7rC3oiXPjizpaTfYRoa71LCOvGNflRTtt/5m9MuGOqmtabnHrHFaaG+Xm3fRiVVytgt
-         sB7eLQaa34JtRArccG9Ty0rj0mHmKzZ+ixJdcmrH7Mp7tj4xbiw3lAT0j4jD8V3P8nqM
-         3M2w==
-X-Gm-Message-State: AO0yUKW90cmJiPPHAgrOxIFJ+1/ieQT9s1J8F/WHLEkMvK/HSzBt1uRx
-        iu+3rlpGUl4O2mL/cxQ4BNTW+DhJw/njovD8BJX/gA==
-X-Google-Smtp-Source: AK7set/KeAajv23VPgHouLH4U6B4lFCG5Lg3uXjZmL8R9yoeDuIDjWXQeRxkg4Ktp5A2k597WDKVIEY7FkOJiuQ49IU=
-X-Received: by 2002:a67:f406:0:b0:414:48a5:473f with SMTP id
- p6-20020a67f406000000b0041448a5473fmr11779308vsn.0.1678271398011; Wed, 08 Mar
- 2023 02:29:58 -0800 (PST)
+        bh=tTy8L/bjoQ+eUTbs+SF3teVKfIdqhIWOgK22nmCkyus=;
+        b=p52i3x2UFaJ8gfOSoTTELoSTHMiPFhyDyvn0/6Z+y/jSHaZidt0IiP5zMwWqlLg2uf
+         OhfuTFOMqm9GsvdYV7J8aDY4No71HQdgKIBbwqrXRzgtYoYRJullCbhH0/bqLyH4GQ29
+         ucMMwqRT15wfOcqlMmoYBmM3xTk5At8xUwhiJcBCN6gcVF40DqnbYPB58N3VwNaPCbJ5
+         0phs9NkgFRxFw9b4nZsZQhNJV85VqIV+jyl4mQXs4id7YyJ0CvPRUZpSLbYSRoy3OdCj
+         Pv3GB706CfBMvQc4L+6S5AtBBdwk8x//ogdHnwaRzw6nI/u+cizXMcSaSRWwPg9WCrI0
+         OQFg==
+X-Gm-Message-State: AO0yUKWnF2DLT7kICgFspBcR/LkyL82NKCwQSUzEEP129tmSKinMARKz
+        sNaNgUNXn9/WxOKiq73R2EO5F/XDmYrIppxvSKwDWQ==
+X-Google-Smtp-Source: AK7set85zkFB8VYS++p5ySf7PMA2zEfRnO11fBZIjQFxTf6oWJyd1aTxO2CIyS+BSLOpmI2qhfMtISJvRiIHKSvO2O4=
+X-Received: by 2002:a05:6102:38d1:b0:402:99ed:ad3e with SMTP id
+ k17-20020a05610238d100b0040299edad3emr18005363vst.2.1678271582597; Wed, 08
+ Mar 2023 02:33:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20230307165432.25484-1-afd@ti.com> <20230307165432.25484-6-afd@ti.com>
-In-Reply-To: <20230307165432.25484-6-afd@ti.com>
+References: <20230307165432.25484-1-afd@ti.com> <20230307165432.25484-3-afd@ti.com>
+ <CAMRc=MeLM-S+HEuaDPp0UpbHJYmAXfLuFMU2TyvK5KEywSxtQA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeLM-S+HEuaDPp0UpbHJYmAXfLuFMU2TyvK5KEywSxtQA@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 8 Mar 2023 11:29:47 +0100
-Message-ID: <CAMRc=Mcr_yM8Z4bg3EqvxBrRsEqNjigfNoxZAd-5zNeXzG8yeQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] gpio: tps65086: Use devm_gpiochip_add_data() to
+Date:   Wed, 8 Mar 2023 11:32:51 +0100
+Message-ID: <CAMRc=MfAqx5Wz2d5K1wWM0ZZ4WBu+Jhercw-z95zGvo_-v=OTg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] gpio: sch311x: Use devm_gpiochip_add_data() to
  simplify remove path
 To:     Andrew Davis <afd@ti.com>
 Cc:     Peter Tyser <ptyser@xes-inc.com>,
@@ -62,95 +63,31 @@ Cc:     Peter Tyser <ptyser@xes-inc.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 5:54=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+On Wed, Mar 8, 2023 at 11:24=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> Use devm version of gpiochip add function to handle removal for us.
+> On Tue, Mar 7, 2023 at 5:54=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+> >
+> > Use devm version of gpiochip add function to handle removal for us.
+> >
+> > Signed-off-by: Andrew Davis <afd@ti.com>
+> > ---
+> >  drivers/gpio/gpio-sch311x.c | 25 ++-----------------------
+> >  1 file changed, 2 insertions(+), 23 deletions(-)
+> >
 >
-> While here update copyright and module author.
+> Applied, thanks!
 >
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> ---
->  drivers/gpio/gpio-tps65086.c | 20 ++++----------------
->  1 file changed, 4 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-tps65086.c b/drivers/gpio/gpio-tps65086.c
-> index 1e9d8262d0ff..0b8b631441ae 100644
-> --- a/drivers/gpio/gpio-tps65086.c
-> +++ b/drivers/gpio/gpio-tps65086.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com=
-/
-> - *     Andrew F. Davis <afd@ti.com>
-> + * Copyright (C) 2015-2023 Texas Instruments Incorporated - https://www.=
-ti.com/
-> + *     Andrew Davis <afd@ti.com>
->   *
->   * Based on the TPS65912 driver
->   */
-> @@ -86,13 +86,11 @@ static int tps65086_gpio_probe(struct platform_device=
- *pdev)
->         if (!gpio)
->                 return -ENOMEM;
->
-> -       platform_set_drvdata(pdev, gpio);
-> -
->         gpio->tps =3D dev_get_drvdata(pdev->dev.parent);
->         gpio->chip =3D template_chip;
->         gpio->chip.parent =3D gpio->tps->dev;
->
-> -       ret =3D gpiochip_add_data(&gpio->chip, gpio);
-> +       ret =3D devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "Could not register gpiochip, %d\n", =
-ret);
+> Bart
 
-Drop this log and just return directly the result of
-devm_gpiochip_add_data() to save a couple more lines.
+I see there's v2 out, backing it out then.
 
 Bart
-
->                 return ret;
-> @@ -101,15 +99,6 @@ static int tps65086_gpio_probe(struct platform_device=
- *pdev)
->         return 0;
->  }
->
-> -static int tps65086_gpio_remove(struct platform_device *pdev)
-> -{
-> -       struct tps65086_gpio *gpio =3D platform_get_drvdata(pdev);
-> -
-> -       gpiochip_remove(&gpio->chip);
-> -
-> -       return 0;
-> -}
-> -
->  static const struct platform_device_id tps65086_gpio_id_table[] =3D {
->         { "tps65086-gpio", },
->         { /* sentinel */ }
-> @@ -121,11 +110,10 @@ static struct platform_driver tps65086_gpio_driver =
-=3D {
->                 .name =3D "tps65086-gpio",
->         },
->         .probe =3D tps65086_gpio_probe,
-> -       .remove =3D tps65086_gpio_remove,
->         .id_table =3D tps65086_gpio_id_table,
->  };
->  module_platform_driver(tps65086_gpio_driver);
->
-> -MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-> +MODULE_AUTHOR("Andrew Davis <afd@ti.com>");
->  MODULE_DESCRIPTION("TPS65086 GPIO driver");
->  MODULE_LICENSE("GPL v2");
-> --
-> 2.39.2
->
