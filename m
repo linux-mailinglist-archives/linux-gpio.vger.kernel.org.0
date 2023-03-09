@@ -2,121 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 703216B2309
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 12:31:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE786B2317
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 12:33:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230130AbjCILbJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 06:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
+        id S229919AbjCILd2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 06:33:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbjCILbH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 06:31:07 -0500
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0AA1E5D9;
-        Thu,  9 Mar 2023 03:31:01 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 855CB32003D3;
-        Thu,  9 Mar 2023 06:30:57 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 09 Mar 2023 06:30:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1678361457; x=1678447857; bh=Fe
-        qfYyDSqOUmEcEBUp15BGtG58cytd7b24Ewa8plTfQ=; b=V84Rh9jj8AZS2IAtNT
-        A0UPcccrvFwJ7zKIXR/qavsrMnXtNHttEi6al7RjA46duXP0zEX1fUpQcojTOT4k
-        ZJqMhSdsmgPgGmCB7pcbyFlHjXyEHevDs8HZw1B0bXBSPm77Z9WTuN4YkJAo+LDI
-        i/8++X5e75bD0j1P81X69m1kE9x9x5B5dC2OZnzueK74qRFiJ30gJyWSMkSvcUWh
-        VUsenzPp+GPPfrDX8NIlHeF3ZAxH/8xAsEEFFRqQIMxRqqPZLS54bvrjQEIVNulp
-        oRQ0aCm7KBUkKCjKMiLTqfFsIIWQem50D44ZnUuo3ceOfzTRv+/vNWJ5BJXisM3e
-        MWNA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1678361457; x=1678447857; bh=FeqfYyDSqOUmE
-        cEBUp15BGtG58cytd7b24Ewa8plTfQ=; b=UHAF1XwCHhQ34oiPzzd/iX/fyoIJr
-        f2qlucdxwv7m47Dg4b3mXieqeGJlKb3OTcKkk6CwEUlYJ4W2sBZMDDp2+nbzGIYO
-        cbprXOvQz9eQUTAVUETXZ70PbrPsGwbJk3JdMxgDNWDMSNOyJyYlUlBhNfflIwNE
-        96ZC08YhUilgccXp94KjN6s8xIMwve1DbRhh9uANRp7vPnaWFvIenz4vIbbrcJFQ
-        Tgd/pMHRwkcufneAtfWQ+3KN4QLHF6vnMWQci3QwNm0lTBHJ1XbOhhoIGPS5Mjl2
-        4+zqc9B9CDXDMOZkG+7aduqiqioOjVdBTUN0mkkmAErYbEaqiUGfFmM2g==
-X-ME-Sender: <xms:cMMJZDXF50ZDDr497pwkXIXhNvJCWzziE-GBP4FhPOeX4_5UXAIH3w>
-    <xme:cMMJZLmxrnbgDZCwu1TwYvCM10TZsWUvTTBZst1kHXCZfWZlwntWpY6kA7le5hFKY
-    GD9lxOeINPvOSY2y4s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdduiedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:cMMJZPY5-rdhOtpzrfFEPSgbr7I7cMbtdayBOphxI__1HF-wNMYycg>
-    <xmx:cMMJZOUdSS1n3oQ2cJYa_kph0ncl9RBb60vgtc3vMMSsHFoFK7pZoQ>
-    <xmx:cMMJZNk8XVpEfqpmLLav43c2LN8pEjC7ZFsmwHJShU6soK61vA4kEA>
-    <xmx:ccMJZMeOiHiwv7UMXh8pIQrnW2WYgvDXJ9v59zNhUNAp2L15ZvN5AQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3A5A8B60086; Thu,  9 Mar 2023 06:30:56 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
-Mime-Version: 1.0
-Message-Id: <2fffffcb-4f76-405b-acba-1b2e744d75c4@app.fastmail.com>
-In-Reply-To: <8e3c16a7-1155-419c-9bcb-cc3e3630fe5b@sirena.org.uk>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
- <20230309071100.2856899-2-xiang.ye@intel.com>
- <dcb805e1-2b48-481d-8e72-1b515c9d43e6@app.fastmail.com>
- <8e3c16a7-1155-419c-9bcb-cc3e3630fe5b@sirena.org.uk>
-Date:   Thu, 09 Mar 2023 12:30:33 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Mark Brown" <broonie@kernel.org>
-Cc:     "Ye Xiang" <xiang.ye@intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Matthias Kaehlcke" <mka@chromium.org>,
-        "Lee Jones" <lee@kernel.org>, "Wolfram Sang" <wsa@kernel.org>,
-        "Tyrone Ting" <kfting@nuvoton.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v4 1/5] mfd: Add support for Intel LJCA device
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231395AbjCILd0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 06:33:26 -0500
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D73E24C99;
+        Thu,  9 Mar 2023 03:33:14 -0800 (PST)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-17683b570b8so1914300fac.13;
+        Thu, 09 Mar 2023 03:33:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678361594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LVWBr/nHRC2tYP4GHz+Q26dc8LouI1/mTHjWjyy5lJY=;
+        b=E3Y8S/UvtydBi2xb90Ub5S4kXSGQdXRmiDm6/T3ti5CjjF4yk3XqDiG2BQoYthSZeO
+         mxCLl3BdDex+MGfAk9hkp/FpWcZrlTDnxaZCaC4I3v6fw+kKXRqBZP5ZDa5wOsmZlPLD
+         AzGcnuh4h3IRpeeaD5q43gZbfVKIXIHgkPCi+2yEMrPqxFGsyviR99270l6z81M1U4RC
+         nU6zDqwT7dxUWdz9abqEOwMH/o/sX3ldZ1UVhiysDTeWZDWhZeBkgxeelHe/yODPhvdY
+         juJ4EF2KNrVW6cAyuDX99w0UHVJi1G/6CeMPT8r8PBc+A8xbxhckcsQEQTNFzZXBxosG
+         bHAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678361594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LVWBr/nHRC2tYP4GHz+Q26dc8LouI1/mTHjWjyy5lJY=;
+        b=SIf1KeMIYBB/fZv09gDoGt5jqMkiEgZebbSp5XCts1xRxQyRpwBWFuFSZ+dDiwEZkK
+         HA2gqF6yc/Oa6ODOprgHTGfbC1BWs5wW3/uv2jq55IrTe8pBpqCI/ieeJCYxAEUE7gsV
+         xjHmMFCOG/A76sjCQC+u6BLtPXKD+8swWGyeXBJMLznXoB+cEJ9lovWiSh15X8hyTcUk
+         XlKDOGhLRboX2ALrdu4sTuQYr8EOl1mgOjhotPRFvwFMtYn+byJYH+4qjG7RtSs3IYaA
+         8wwMW/1+jAFV0/x1YBxehLO0s67DmfQ6aOruXWQkDVIWFxBlPQGHdPDGJLEWnus3AvvN
+         NtZw==
+X-Gm-Message-State: AO0yUKWDbdUDrnhghTIXVG7+wU98H9qWFCWLVpK2cCQuTy9qSSEemqFk
+        Kk7ZvEoWeOkvtiLUgaDM+gd4HG0ILpAAl97jvNw=
+X-Google-Smtp-Source: AK7set/XSrA5enE/PH73VS6AKR9JL5gUiLM25aDZOjVqo4Juj983qp5aKuXczEDYDKwriek9TOjLmAn4vC6x4VmkCfw=
+X-Received: by 2002:a05:6870:8c28:b0:16d:fb8e:3ba with SMTP id
+ ec40-20020a0568708c2800b0016dfb8e03bamr7334038oab.0.1678361594135; Thu, 09
+ Mar 2023 03:33:14 -0800 (PST)
+MIME-Version: 1.0
+References: <20230303002850.51858-1-arinc.unal@arinc9.com> <20230303002850.51858-10-arinc.unal@arinc9.com>
+ <20230308210514.GA3767521-robh@kernel.org> <12be053e-b70a-faca-71c8-d8eef69a3b73@arinc9.com>
+ <ccdfd262-eaf3-dbbe-7a3c-a911a5ec0fc4@arinc9.com> <9663817e-7f6f-c3b1-8bf9-321f9b067e96@linaro.org>
+ <deca532a-bdf5-c49e-1422-ce6124b61882@arinc9.com>
+In-Reply-To: <deca532a-bdf5-c49e-1422-ce6124b61882@arinc9.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 9 Mar 2023 12:33:01 +0100
+Message-ID: <CAMhs-H8M3ir+DshHF60W=QMn9WG3Jgbo8GgXZnDKCLhs=+WBoQ@mail.gmail.com>
+Subject: Re: [PATCH 09/20] dt-bindings: pinctrl: ralink: {mt7620,mt7621}:
+ rename to mediatek
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 9, 2023, at 12:03, Mark Brown wrote:
-> On Thu, Mar 09, 2023 at 08:56:05AM +0100, Arnd Bergmann wrote:
->> On Thu, Mar 9, 2023, at 08:10, Ye Xiang wrote:
+On Thu, Mar 9, 2023 at 11:34 AM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc=
+9.com> wrote:
 >
->> >  drivers/usb/misc/Kconfig  |  13 +
->> >  drivers/usb/misc/Makefile |   1 +
->> >  drivers/usb/misc/ljca.c   | 969 ++++++++++++++++++++++++++++++++++++++
->> >  include/linux/mfd/ljca.h  |  95 ++++
+> On 9.03.2023 12:52, Krzysztof Kozlowski wrote:
+> > On 09/03/2023 08:53, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >> On 9.03.2023 00:19, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >>> On 9.03.2023 00:05, Rob Herring wrote:
+> >>>> On Fri, Mar 03, 2023 at 03:28:38AM +0300, arinc9.unal@gmail.com wrot=
+e:
+> >>>>> From: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> >>>>>
+> >>>>> This platform from Ralink was acquired by MediaTek in 2011. Then,
+> >>>>> MediaTek
+> >>>>> introduced these SoCs which utilise this platform. Rename the schem=
+as to
+> >>>>> mediatek to address the incorrect naming.
+> >>>>
+> >>>> I said we don't do renames due to acquistions, you said that wasn't =
+the
+> >>>> reason, but then that's your reasoning here.
+> >>>
+> >>> It's not a marketing/acquistion rename as the name of these SoCs were
+> >>> wrong from the get go. The information on the first sentence is to gi=
+ve
+> >>> the idea of why these SoCs were wrongfully named as the base platform
+> >>> that these new MediaTek SoCs share code with was called Ralink.
+> >>>
+> >>>>
+> >>>> To give you another example, *new* i.MX things are still called
+> >>>> 'fsl,imx...' and it has been how many years since merging with NXP?
+> >>>
+> >>> Ok this is a point I see now. Though, I fail to see how this is calle=
+d
+> >>> renaming when there's only new SoCs (from NXP in this case) to be add=
+ed.
+> >>
+> >> If I understand correctly, i.MX is a family from Freescale so the name
+> >
+> > It's the same "family" as your platform, because as you said:
+> > "introduced these SoCs which utilise this platform"
+> >
+> >> was kept the same on new SoC releases from NXP. I believe it's differe=
+nt
+> >> in this case here. There's no family name. The closest thing on the na=
+me
+> >> of the SoC model is, it's RT for Ralink, MT for MediaTek.
+> >
+> > It's not about the name. NXP took Freescale platform and since many
+> > years makes entirely new products, currently far, far away from origina=
+l
+> > platform.
+> >
+> > That's the same case you have here - Mediatek took existing platform an=
+d
+> > started making new products with it.
+> >
+> >>
+> >> On top of that, mediatek strings already exist for MT SoCs already, at
+> >> least for MT7621.
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tr=
+ee/Documentation/devicetree/bindings/mips/ralink.yaml?id=3Ddd3cb467ebb5659d=
+6552999d6f16a616653f9933#n83
+> >
+> > NXP also has compatibles with nxp, thus still not that good reason.
 >
->> Why is this in driver/usb/misc? It looks like a normal
->> mfd driver to me, and it evenhas the header in include/linux/mfd/
+> Ok, makes sense. Am I free to call the SoCs MediaTek, change the schema
+> name from ralink,mtXXXX-pinctrl.yaml to mediatek,mtXXXX-pinctrl.yaml
+> whilst keeping the compatible string ralink?
 >
-> It was a MFD in the original version, Lee asked for it to be moved to
-> USB: https://lore.kernel.org/r/20230305103456.GF2574592@google.com
+> I plan to do some cleanup on ralink.yaml as well. From what I
+> understand, I should change the mediatek,mt7621-soc compatible string to
+> ralink,mt7621-soc?
 
-Ok, I see. That should probably be mentioned in the patch
-description then. I'm still not sure I follow the reasoning
-for the split between "usb functionality" and and mfd part:
-This is just a usb driver as it is attached to a usb bus, and
-drivers usually get put into a directory based on what they
-provide, not how they are attached to a parent bus.
+You have to take care of these SoC strings since they are used in the
+very beginning of the ralink startup platforms for any single ralink
+SoC. See for example [0] and [1] (but they are in all soc init code).
+I think it is better to maintain the ralink.yaml file as it is.
 
-    Arnd
+Best regards,
+    Sergio Paracuellos
+
+[0]: https://elixir.bootlin.com/linux/v6.2.1/source/arch/mips/ralink/mt7621=
+.c#L200
+[1] https://elixir.bootlin.com/linux/v6.2.1/source/arch/mips/ralink/rt305x.=
+c#L161
+
+>
+> Ar=C4=B1n=C3=A7
