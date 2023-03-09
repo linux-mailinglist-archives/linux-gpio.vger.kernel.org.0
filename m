@@ -2,85 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1819D6B25F5
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 14:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A00B6B25FD
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 14:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231325AbjCINx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 08:53:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
+        id S231348AbjCIN5Q convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 9 Mar 2023 08:57:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231446AbjCINxV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 08:53:21 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573E65FA4E
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 05:53:14 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-536bbe5f888so35965197b3.8
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 05:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678369993;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7LtHk164+jNJVNTw0w1syfRD3diTdDk3vz1c25k5WU=;
-        b=pyhGineOoq7VtVBKa/tVdp8iapgbUBGLa7saLRFXJbTszVz6rjNNRWl/C/JhP0qV9y
-         L6vk6X8PyAP8ON8BgVba8N9biBEnH67b0H7Z8qdxHZcJdaLj9VDe1kjf8GBkwfMOXUP+
-         jV8ytfSkyRyUADKkGdCZuehysps07F2afyVxmL6BoolEKsaHQSU4yxT8eZAqIZ3W0LdV
-         bg6FADulT8LzHPkRKOhU2fdYbZw9AyLokzmezHh3Oxar+5RvUyMBlGAhu9881IitPPfs
-         egI1blXnsIW0vaye5YP5+igCutzN1nYx24zSp490lpIbAz5E8nXFThian4I6mBg0iCR9
-         L7eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678369993;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F7LtHk164+jNJVNTw0w1syfRD3diTdDk3vz1c25k5WU=;
-        b=r1cHu7mkjZu7O3Arb2g/qSgzJNvq3uE0NIdjtkGZjbxAL6GBm4bycf89lxPw3vaF1G
-         aBfiqGtQzSWRfSOfuBa4N0U/hrLl/pk+bDVuhZoYj79+jgUr1xMUJHatPoeEVKUhuwGT
-         MltquPMrArEu0xLegEujV111TN/TU50Of1HDSgyNPd8gOC+LJjxEYocb62Ba9I6LFQ/i
-         8ARmfiljVTD605GYM42G+QAf+vgaMSXJSJUwFcWye+OsHB/M0dT1JVyHXkDilETEPGeM
-         ZuHaVhbnVMHMsAmuiBH7qINatJEA1Srsvdie6tDvOAcXmebzRyOd0j+wDhmK2Ej7irIs
-         y6KQ==
-X-Gm-Message-State: AO0yUKUtHtT4q3mpIlE8MYdoh9TBlOeN6BBqeC7sNCPE5REPaE5UHMbx
-        5J6CL0RJnVTth/tewhcw1Pehr7f5F7aZmRqBvka3Pw==
-X-Google-Smtp-Source: AK7set/MFSuC/HUj7dizA/KpaU3B/5meZxhe/0WK2VPN0ertmXN3H73XCjAUkfUHxXF2c+wYtE7AzGD0fQoxzVVkquc=
-X-Received: by 2002:a81:4312:0:b0:52e:b718:24d5 with SMTP id
- q18-20020a814312000000b0052eb71824d5mr14023539ywa.9.1678369993361; Thu, 09
- Mar 2023 05:53:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20230307105645.5285-1-wsa+renesas@sang-engineering.com> <20230307105645.5285-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20230307105645.5285-2-wsa+renesas@sang-engineering.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Mar 2023 14:53:02 +0100
-Message-ID: <CACRpkdZ5vNdakcGrhhOn=q-tXb7CyCCeMbhCMgrO0bD--KcU6Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pinctrl: renesas: remove R-Car H3 ES1.* handling
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+        with ESMTP id S231449AbjCINzP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 08:55:15 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD2D460A4;
+        Thu,  9 Mar 2023 05:55:09 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1paGjS-003nVv-BY; Thu, 09 Mar 2023 14:54:58 +0100
+Received: from dynamic-077-188-003-023.77.188.pool.telefonica.de ([77.188.3.23] helo=[192.168.1.11])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1paGjS-002ozW-3O; Thu, 09 Mar 2023 14:54:58 +0100
+Message-ID: <a1f72b2bb25f8a06a10a436138e1032cc12b6506.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: mach-x3proto: Add missing #include
+ <linux/gpio/driver.h>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-gpio@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Date:   Thu, 09 Mar 2023 14:54:56 +0100
+In-Reply-To: <20230309135255.3861308-1-geert+renesas@glider.be>
+References: <20230309135255.3861308-1-geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4 
+MIME-Version: 1.0
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 77.188.3.23
+X-ZEDAT-Hint: PO
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 11:57 AM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+Hi Geert!
 
-> R-Car H3 ES1.* was only available to an internal development group and
-> needed a lot of quirks and workarounds. These become a maintenance
-> burden now, so our development group decided to remove upstream support
-> and disable booting for this SoC. Public users only have ES2 onwards.
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Thu, 2023-03-09 at 14:52 +0100, Geert Uytterhoeven wrote:
+> shx3_defconfig:
+> 
+>     arch/sh/boards/mach-x3proto/setup.c: In function ‘x3proto_devices_setup’:
+>     arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of undefined type ‘struct gpio_chip’
+>       246 |                 baseboard_buttons[i].gpio = x3proto_gpio_chip.base + i;
+> 	  |                                                              ^
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Link: https://lore.kernel.org/r/CA+G9fYs7suzGsEDK40G0pzxXyR1o2V4Pn-oy1owTsTWRVEVHog@mail.gmail.com
+> Fixes: 21d9526d13b5467b ("gpiolib: Make the legacy <linux/gpio.h> consumer-only")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/sh/boards/mach-x3proto/setup.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/sh/boards/mach-x3proto/setup.c b/arch/sh/boards/mach-x3proto/setup.c
+> index 95b85f2e13dda75b..7f39fca95e57a109 100644
+> --- a/arch/sh/boards/mach-x3proto/setup.c
+> +++ b/arch/sh/boards/mach-x3proto/setup.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/usb/r8a66597.h>
+>  #include <linux/usb/m66592.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/driver.h>
+>  #include <linux/gpio_keys.h>
+>  #include <mach/ilsel.h>
+>  #include <mach/hardware.h>
 
-Good bye ES1.*, I expect that Geert will queue the patches as usual.
+Thanks. You were much faster than me. I didn't even have the time to have a look
+at the problem yet ;-). Is it sufficient to pick this up for 6.4?
 
-Yours,
-Linus Walleij
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
