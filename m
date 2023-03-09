@@ -2,59 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DC856B228C
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 12:18:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 703216B2309
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 12:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbjCILSb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 06:18:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        id S230130AbjCILbJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 06:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230274AbjCILRT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 06:17:19 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7885DDCF7F;
-        Thu,  9 Mar 2023 03:14:21 -0800 (PST)
-Received: from loongson.cn (unknown [10.20.42.35])
-        by gateway (Coremail) with SMTP id _____8AxJPyMvwlk_WEKAA--.13937S3;
-        Thu, 09 Mar 2023 19:14:20 +0800 (CST)
-Received: from user-pc.202.106.0.20 (unknown [10.20.42.35])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxrb6BvwlkfYdQAA--.13915S2;
-        Thu, 09 Mar 2023 19:14:19 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1] gpio: loongson: fixup the warning about OF_GPIO direct dependencies
-Date:   Thu,  9 Mar 2023 19:14:07 +0800
-Message-Id: <20230309111407.3398-1-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dxrb6BvwlkfYdQAA--.13915S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Wr47WFWxKryrZrW5tF1kKrg_yoWDJrg_Kw
-        n3Crs3Wr4DGFyj9r1avr4ftr9Fka13Wr93u3Z2qr9avw17X3yjv34DuFn5JwnrG3yIgF97
-        ZrWfJr9F9r4xtjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        h7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
-        IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84AC
-        jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84
-        ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8I
-        j28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-        WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkE
-        bVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6c
-        x26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG
-        67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-        IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-        14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-        WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcOJ5
-        UUUUU
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        with ESMTP id S230116AbjCILbH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 06:31:07 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0AA1E5D9;
+        Thu,  9 Mar 2023 03:31:01 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 855CB32003D3;
+        Thu,  9 Mar 2023 06:30:57 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 09 Mar 2023 06:30:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678361457; x=1678447857; bh=Fe
+        qfYyDSqOUmEcEBUp15BGtG58cytd7b24Ewa8plTfQ=; b=V84Rh9jj8AZS2IAtNT
+        A0UPcccrvFwJ7zKIXR/qavsrMnXtNHttEi6al7RjA46duXP0zEX1fUpQcojTOT4k
+        ZJqMhSdsmgPgGmCB7pcbyFlHjXyEHevDs8HZw1B0bXBSPm77Z9WTuN4YkJAo+LDI
+        i/8++X5e75bD0j1P81X69m1kE9x9x5B5dC2OZnzueK74qRFiJ30gJyWSMkSvcUWh
+        VUsenzPp+GPPfrDX8NIlHeF3ZAxH/8xAsEEFFRqQIMxRqqPZLS54bvrjQEIVNulp
+        oRQ0aCm7KBUkKCjKMiLTqfFsIIWQem50D44ZnUuo3ceOfzTRv+/vNWJ5BJXisM3e
+        MWNA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1678361457; x=1678447857; bh=FeqfYyDSqOUmE
+        cEBUp15BGtG58cytd7b24Ewa8plTfQ=; b=UHAF1XwCHhQ34oiPzzd/iX/fyoIJr
+        f2qlucdxwv7m47Dg4b3mXieqeGJlKb3OTcKkk6CwEUlYJ4W2sBZMDDp2+nbzGIYO
+        cbprXOvQz9eQUTAVUETXZ70PbrPsGwbJk3JdMxgDNWDMSNOyJyYlUlBhNfflIwNE
+        96ZC08YhUilgccXp94KjN6s8xIMwve1DbRhh9uANRp7vPnaWFvIenz4vIbbrcJFQ
+        Tgd/pMHRwkcufneAtfWQ+3KN4QLHF6vnMWQci3QwNm0lTBHJ1XbOhhoIGPS5Mjl2
+        4+zqc9B9CDXDMOZkG+7aduqiqioOjVdBTUN0mkkmAErYbEaqiUGfFmM2g==
+X-ME-Sender: <xms:cMMJZDXF50ZDDr497pwkXIXhNvJCWzziE-GBP4FhPOeX4_5UXAIH3w>
+    <xme:cMMJZLmxrnbgDZCwu1TwYvCM10TZsWUvTTBZst1kHXCZfWZlwntWpY6kA7le5hFKY
+    GD9lxOeINPvOSY2y4s>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdduiedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
+    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:cMMJZPY5-rdhOtpzrfFEPSgbr7I7cMbtdayBOphxI__1HF-wNMYycg>
+    <xmx:cMMJZOUdSS1n3oQ2cJYa_kph0ncl9RBb60vgtc3vMMSsHFoFK7pZoQ>
+    <xmx:cMMJZNk8XVpEfqpmLLav43c2LN8pEjC7ZFsmwHJShU6soK61vA4kEA>
+    <xmx:ccMJZMeOiHiwv7UMXh8pIQrnW2WYgvDXJ9v59zNhUNAp2L15ZvN5AQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 3A5A8B60086; Thu,  9 Mar 2023 06:30:56 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
+Mime-Version: 1.0
+Message-Id: <2fffffcb-4f76-405b-acba-1b2e744d75c4@app.fastmail.com>
+In-Reply-To: <8e3c16a7-1155-419c-9bcb-cc3e3630fe5b@sirena.org.uk>
+References: <20230309071100.2856899-1-xiang.ye@intel.com>
+ <20230309071100.2856899-2-xiang.ye@intel.com>
+ <dcb805e1-2b48-481d-8e72-1b515c9d43e6@app.fastmail.com>
+ <8e3c16a7-1155-419c-9bcb-cc3e3630fe5b@sirena.org.uk>
+Date:   Thu, 09 Mar 2023 12:30:33 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Mark Brown" <broonie@kernel.org>
+Cc:     "Ye Xiang" <xiang.ye@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Matthias Kaehlcke" <mka@chromium.org>,
+        "Lee Jones" <lee@kernel.org>, "Wolfram Sang" <wsa@kernel.org>,
+        "Tyrone Ting" <kfting@nuvoton.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
+Subject: Re: [PATCH v4 1/5] mfd: Add support for Intel LJCA device
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,31 +97,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-WARNING: unmet direct dependencies detected for OF_GPIO
-  Depends on [n]: GPIOLIB [=y] && OF [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - GPIO_LOONGSON_64BIT [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && (LOONGARCH || COMPILE_TEST [=y])
+On Thu, Mar 9, 2023, at 12:03, Mark Brown wrote:
+> On Thu, Mar 09, 2023 at 08:56:05AM +0100, Arnd Bergmann wrote:
+>> On Thu, Mar 9, 2023, at 08:10, Ye Xiang wrote:
+>
+>> >  drivers/usb/misc/Kconfig  |  13 +
+>> >  drivers/usb/misc/Makefile |   1 +
+>> >  drivers/usb/misc/ljca.c   | 969 ++++++++++++++++++++++++++++++++++++++
+>> >  include/linux/mfd/ljca.h  |  95 ++++
+>
+>> Why is this in driver/usb/misc? It looks like a normal
+>> mfd driver to me, and it evenhas the header in include/linux/mfd/
+>
+> It was a MFD in the original version, Lee asked for it to be moved to
+> USB: https://lore.kernel.org/r/20230305103456.GF2574592@google.com
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/oe-kbuild-all/202303091728.UUe6LWye-lkp@intel.com
----
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok, I see. That should probably be mentioned in the patch
+description then. I'm still not sure I follow the reasoning
+for the split between "usb functionality" and and mfd part:
+This is just a usb driver as it is attached to a usb bus, and
+drivers usually get put into a directory based on what they
+provide, not how they are attached to a parent bus.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 94051fb59043d..c0d6254797800 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -384,7 +384,7 @@ config GPIO_LOONGSON
- config GPIO_LOONGSON_64BIT
- 	tristate "Loongson 64 bit GPIO support"
- 	depends on LOONGARCH || COMPILE_TEST
--	select OF_GPIO
-+	depends on OF_GPIO
- 	select GPIO_GENERIC
- 	help
- 	  Say yes here to support the GPIO functionality of a number of
--- 
-2.31.1
-
+    Arnd
