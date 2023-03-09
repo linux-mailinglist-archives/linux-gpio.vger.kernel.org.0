@@ -2,72 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2D86B2922
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 16:50:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C92B56B293A
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 16:58:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjCIPuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 10:50:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
+        id S231216AbjCIP6y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 10:58:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231496AbjCIPuG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 10:50:06 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C45F28BA
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 07:50:03 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id cy23so8723508edb.12
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 07:50:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678377003;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SgRFCt619WmiOOy/KiaJocmKNsNdPTYaRqkITCznBlQ=;
-        b=VclA2Usv5TOQL2tjYEaywOVcbjTRbt5QTlUyua2Pq3vHwT0lIaQM/mNyIOV0TOQI52
-         IYZaDZIyxI6bfTtSPdkATbzV/vwSKO9WATOYBvvvdfBxINsdOu+9jhVMxgvRVNPKD0DU
-         pBh7wCzQvILtnKTs0D5k9mFn19e2w1H/RLRe+LCuwUq6sN2BP3U82PEETdzvkuDRBatn
-         VC+R8O5s2DjeFay6ztM3X3xLToPRkxTWqQ0+XJHTbOR7nzGi/HLb4CO5t5PSCVMdBptW
-         FJkBfzgxbwDDqL9/oGrik3qqY2WROaHcBKDMY35wBfluGRt2mtPv+Dsin4sC8lt2iHvQ
-         NOig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678377003;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SgRFCt619WmiOOy/KiaJocmKNsNdPTYaRqkITCznBlQ=;
-        b=OHirO7d7CW8gKml75ke7md76LRwmL8XBNW8q84SaRu1ln6XLdL3+kZHRUYLv7Cnz9p
-         7TBr4Qe8VQyVPoaBWkY3IxqNtuZCxTddqSxovdbb281S9LP0xoIdX5T48O/b3oR7FZl0
-         plP6wvEA8Q8jYRN2dCpM1S1Ebilvu3jfHiV/P0DzjnWfoyZX5aY/EjrETmKjAP8LQW9o
-         c6AD1Hlm82TGxb+dhVAQRXkRV/3NUvdXI5zND7epj8VSeXHE3alMVcbwqSpMAd+eZ/mu
-         WhDUc1C0ycFiOqCXbZJ8KsI8d+9+cmNMTZlY5/7+M+VNsHAzxNAtlhXqSNBEfrSGNYh7
-         6xvg==
-X-Gm-Message-State: AO0yUKXx/UzkfvULsizPvbQdDjKXY9u6MTbB2orsNTGY+C5v+kVIuQLp
-        2XDwxcTnG/8QMTeZJGXED8qwQw==
-X-Google-Smtp-Source: AK7set9OUMyp7/zfcn1xB/Hxk4VIhd+uwK0b4bIxnhLcxo97/DDeed+1+0rKVoHM3A7Jm4MeebJXTg==
-X-Received: by 2002:a17:906:d28c:b0:8e5:88ca:ebac with SMTP id ay12-20020a170906d28c00b008e588caebacmr22319782ejb.40.1678377003285;
-        Thu, 09 Mar 2023 07:50:03 -0800 (PST)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:7ee2:e73e:802e:45c1])
-        by smtp.gmail.com with ESMTPSA id h17-20020a17090634d100b008ee5356801dsm8981683ejb.187.2023.03.09.07.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 07:50:03 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        with ESMTP id S230448AbjCIP6u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 10:58:50 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB692055C;
+        Thu,  9 Mar 2023 07:58:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0511761A15;
+        Thu,  9 Mar 2023 15:58:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C7DC433D2;
+        Thu,  9 Mar 2023 15:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1678377528;
+        bh=t69UDhoxhHrHpDpl6paYNWueK0bZtsVn6gfBnfrYROk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JO24IpEK0pSJ3dljpnV0AuGqz2G9JT40zHPjdfl8aYPJhDPNL5jKYkmrV5hnuhuJy
+         3nMB3Oqlv3QfOKiM4Nt4RDU30C0VCjd+c7mbsHN3mVrvL92DZyuwInOuYhg/5JH97g
+         8n5diV3ZsgV1JH6ge/YZw2BIRFq29cY7RmeGyGeQ=
+Date:   Thu, 9 Mar 2023 16:58:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Ye, Xiang" <xiang.ye@intel.com>
+Cc:     Andi Shyti <andi.shyti@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 4/4] pinctrl: qcom: sm8550-lpass-lpi: allow GPIO function
-Date:   Thu,  9 Mar 2023 16:49:49 +0100
-Message-Id: <20230309154949.658380-4-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230309154949.658380-1-krzysztof.kozlowski@linaro.org>
-References: <20230309154949.658380-1-krzysztof.kozlowski@linaro.org>
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
+Subject: Re: [PATCH v4 1/5] mfd: Add support for Intel LJCA device
+Message-ID: <ZAoCNR/iAv3IOJ6D@kroah.com>
+References: <20230309071100.2856899-1-xiang.ye@intel.com>
+ <20230309071100.2856899-2-xiang.ye@intel.com>
+ <ZAmQOIh/71rY4Pa4@kroah.com>
+ <ZAmngB84ty1flD9K@ye-NUC7i7DNHE>
+ <ZAmpse14Evvrfa/f@kroah.com>
+ <ZAmvocpy68qurCvt@intel.intel>
+ <ZAn/L8Dg/Ehx9bMo@ye-NUC7i7DNHE>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZAn/L8Dg/Ehx9bMo@ye-NUC7i7DNHE>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,41 +65,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All LPASS pins have basic GPIO function and most of the code is ready
-for that.  Add missing glue pieces to allow LPASS pins to work as GPIO,
-which is going to be used on MTP8550 and QRD8550 boards.
+On Thu, Mar 09, 2023 at 11:45:51PM +0800, Ye, Xiang wrote:
+> On Thu, Mar 09, 2023 at 11:06:25AM +0100, Andi Shyti wrote:
+> > On Thu, Mar 09, 2023 at 10:41:05AM +0100, Greg Kroah-Hartman wrote:
+> > > On Thu, Mar 09, 2023 at 05:31:44PM +0800, Ye, Xiang wrote:
+> > > > On Thu, Mar 09, 2023 at 08:52:24AM +0100, Greg Kroah-Hartman wrote:
+> > > > > On Thu, Mar 09, 2023 at 03:10:56PM +0800, Ye Xiang wrote:
+> > > > > > +static int ljca_mng_get_version(struct ljca_stub *stub, char *buf)
+> > > > > > +{
+> > > > > > +	struct fw_version version = {};
+> > > > > > +	unsigned int len = sizeof(version);
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	ret = ljca_stub_write(stub, LJCA_MNG_GET_VERSION, NULL, 0, &version, &len, true,
+> > > > > > +			      LJCA_USB_WRITE_ACK_TIMEOUT_MS);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	if (len != sizeof(version)) {
+> > > > > > +		dev_err(&stub->intf->dev, "get version failed, len:%d\n", len);
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	return sysfs_emit(buf, "%d.%d.%d.%d\n", version.major, version.minor,
+> > > > > > +			  le16_to_cpu(version.patch), le16_to_cpu(version.build));
+> > > > > > +}
+> > > > > 
+> > > > > You have sysfs files, yet no Documentation/ABI/ entries?  That's not
+> > > > > allowed, you know this :(
+> > > > The Documentation/ABI/ entries is added for the sysfs on patch 5 of this series.
+> > > > https://patchwork.kernel.org/project/linux-usb/patch/20230309071100.2856899-6-xiang.ye@intel.com/
+> > > 
+> > > Ah, missed that, sorry.
+> > > 
+> > > > > 
+> > > > > > +static ssize_t cmd_store(struct device *dev, struct device_attribute *attr, const char *buf,
+> > > > > > +			 size_t count)
+> > > > > > +{
+> > > > > > +	struct usb_interface *intf = to_usb_interface(dev);
+> > > > > > +	struct ljca_dev *ljca_dev = usb_get_intfdata(intf);
+> > > > > > +	struct ljca_stub *mng_stub = ljca_stub_find(ljca_dev, LJCA_MNG_STUB);
+> > > > > > +	struct ljca_stub *diag_stub = ljca_stub_find(ljca_dev, LJCA_DIAG_STUB);
+> > > > > > +
+> > > > > > +	if (sysfs_streq(buf, "dfu"))
+> > > > > > +		ljca_mng_set_dfu_mode(mng_stub);
+> > > > > > +	else if (sysfs_streq(buf, "debug"))
+> > > > > > +		ljca_diag_set_trace_level(diag_stub, 3);
+> > > > > 
+> > > > > Sorry, but no, you can't do this in a sysfs file.
+> > > > Do you mean that we can't use sysfs to send "debug" command to device?
+> > > 
+> > > That is correct, use the kernel-wide debugging facilities that we have
+> > > for this NEVER create your own custom interface just for one tiny
+> > > driver, that is not allowed.
+> > > 
+> > > > Could you provide some detail or hints?
+> > > 
+> > > dev_dbg().
+> But, this command is sent to SET LJCA Firmware logging level.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+What command?
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
-index c2bdd936d27f..db1a46fee9c6 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
-@@ -102,6 +102,13 @@ static const struct pinctrl_pin_desc sm8550_lpi_pins[] = {
- 	PINCTRL_PIN(22, "gpio22"),
- };
- 
-+static const char * const gpio_groups[] = {
-+	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "gpio7",
-+	"gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14",
-+	"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio21",
-+	"gpio22",
-+};
-+
- static const char * const dmic1_clk_groups[] = { "gpio6" };
- static const char * const dmic1_data_groups[] = { "gpio7" };
- static const char * const dmic2_clk_groups[] = { "gpio8" };
-@@ -168,6 +175,7 @@ static const struct lpi_pingroup sm8550_groups[] = {
- };
- 
- static const struct lpi_function sm8550_functions[] = {
-+	LPI_FUNCTION(gpio),
- 	LPI_FUNCTION(dmic1_clk),
- 	LPI_FUNCTION(dmic1_data),
- 	LPI_FUNCTION(dmic2_clk),
--- 
-2.34.1
+This isn't documented at all, sorry, I don't understand what you are
+trying to do here.
 
+> > I'm not sure this is the same thing, though, as it's not a drvier
+> > to user debug message.
+> > 
+> > Ye, can you please explain better what this command does? You are
+> > sending a LJCA_DIAG_SET_TRACE_LEVEL command to the device with a
+> > parameter "3" which has a meaining only for you :)
+> Sure, the LJCA_DIAG_SET_TRACE_LEVEL command is used to set LJCA FW
+> logging level. 3 means debug level for FW. It is used for LJCA FW
+> debugging: when FW got some issue, we can send debug level to FW
+> to make FW print degging log for analysis.
+
+And where is that printed?  In the kernel log?  Somewhere else?  What
+does the firmware have to do with any of this?
+
+thanks,
+
+greg k-h
