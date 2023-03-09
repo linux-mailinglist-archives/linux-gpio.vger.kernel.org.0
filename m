@@ -2,80 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B486D6B2629
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:01:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB8F86B2640
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:07:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbjCIOBu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:01:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49700 "EHLO
+        id S231513AbjCIOHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 09:07:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231481AbjCIOAY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:00:24 -0500
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04D561317
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 05:58:30 -0800 (PST)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-53916ab0c6bso36424177b3.7
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 05:58:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678370310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9FztTG0yEY1M7up9GTdt6AZAFT3eSix/P5t5wSb4M4Q=;
-        b=yAH/1mbhCjrFmFWF6Ajt/KXo9D7ovq1fnbB7Z+inJdmHtUffl59r1xzmst6ICHNFZg
-         i01B3Qi6MnbM9rpq5S7zRZqOGUGn2M+pX6zPcK87lzJ0QMhOkJxlNLUOiGI5ksen0EgX
-         QA8Ltpbgnks1U7FfkUb9RZW3Pw043jWkUkg9hrgURiXf+wi4qA1t0EdPBZGMDr6H/F+v
-         TT3Jaelr+Z0HPprgak1KyqyRwT1I+2wR8lbR5/7M26kgszUQ4Q6PuVHO3qfMPc4k1Kwz
-         bB0horMRmWBi6gkNGH1sseNwjP9scQpr7q+QMoRgr/zPr5JXHbqw/j98A0ukGCCQa079
-         VRXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678370310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9FztTG0yEY1M7up9GTdt6AZAFT3eSix/P5t5wSb4M4Q=;
-        b=oFBF7Wo+kTbUhopg1vYkNJawpkEGpsPmNPjIN2bB+iL6BB+F9srkqsLUcNOcfyijU1
-         +QwMbiSHDUt95+MWJkzhGP6VcSsa4WAYMHbZdhfANYXM2Inoz0svIBShn0o5dQV62Dsf
-         R23FuFpcvufhiP7h9YHUxHVN/eLLebtjrULj+gSRl4Y5ScNRLUc1eUyMR27TS1ValNUW
-         qvk68M+Lnzf5ftqhNQ4OI1CrPXWg4zhXphiBYe7Y3DzpuDr7+6q5CjJzutWeiCTYpNxF
-         /X85YQtHAv7hdskmbIgW6S97hMr4cetCmz1wecKFbPHmJ0+9Ah267fgXtw8qJyyzOnzz
-         Ia8A==
-X-Gm-Message-State: AO0yUKUlgKLormm6L5+hhs3It3iA74cLtDeu3i5cj990IuDX7YAUD1pA
-        fOvd7l5PGo6uTBtaa7nVCyZboxXbWfeEo6ciN8dEIw==
-X-Google-Smtp-Source: AK7set9Lddr01I7FEPfmy28PrzTHgUL7aK4KyPL5RLNUWqq7nUyUumYXZQJ2gOopwUmMWUHGn85S3hP+MtQ1thjJ2dk=
-X-Received: by 2002:a81:ae4b:0:b0:536:5557:33a8 with SMTP id
- g11-20020a81ae4b000000b00536555733a8mr14124567ywk.9.1678370309858; Thu, 09
- Mar 2023 05:58:29 -0800 (PST)
+        with ESMTP id S231617AbjCIOGr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:06:47 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F0DF2C2E;
+        Thu,  9 Mar 2023 06:05:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678370715; x=1709906715;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xyu2LhQmiWMU7PEtu0Xqa5WBJtDdVhaFUmfdUENtKaQ=;
+  b=X0jppAABYmvm7dDz4YhZfEVFesTTZv6g3TingN8cFot8igaeOLsH1NDn
+   OTueHIqkZg/hmlZl2szP2GEkSWQzdhOe7sUVJtlGyRl8fZGPqb3SuvWyc
+   M+uJYUaHZ2DsTNBfR4W71E/MKaCEvWKNaWplIay675px25r3LZjFGwqkg
+   w7KAzqUEkydzXcmCCe19QUwDqQaaYz/NjCl+LAqDJiqxntmKT8XDUmhr1
+   yA/AiTeryyUzRSIx5VzNuwn6eD/0D5QSogfEShU6tBNZ1Ro+Dnr6DKhBk
+   4eO6QN6w14KJTrDOFor6BofQJPAkM9UascPq6j9L0s33nq8mIy+ACRhR1
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="320279826"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="320279826"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 06:03:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="741571681"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="741571681"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2023 06:03:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1paGrX-000Loh-0G;
+        Thu, 09 Mar 2023 16:03:19 +0200
+Date:   Thu, 9 Mar 2023 16:03:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Kaehn <kaehndan@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
+Message-ID: <ZAnnJpdtlEOS4tiS@smile.fi.intel.com>
+References: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
 MIME-Version: 1.0
-References: <20230307182557.42215-1-andriy.shevchenko@linux.intel.com> <20230307182557.42215-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230307182557.42215-3-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Mar 2023 14:58:18 +0100
-Message-ID: <CACRpkdb1fO3kBhyQbi0Gnw+SK3ejL3ACW=fJPNUitMXQfN3vvA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] gpiolib: Get rid of gpio_bus_match() forward declaration
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 7:25 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Mar 09, 2023 at 02:40:51PM +0100, Benjamin Tissoires wrote:
+> While trying to set up an SSDT override for a USB-2-I2C chip [0],
+> I realized that the function acpi_gpiochip_find() was using the parent
+> of the gpio_chip to do the ACPI matching.
+> 
+> This works fine on my icelake laptop because AFAICT, the DSDT presents
 
-> There is nothing specific about gpio_bus_match(), so we may
-> simply move it to the top of the file and get rid of forward
-> declaration.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Ice Lake
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> the PCI device INT3455 as the "Device (GPI0)", but is in fact handled
+> by the pinctrl driver in Linux.
+> The pinctrl driver then creates a gpio_chip device. This means that the
+> gc->parent device in that case is the GPI0 device from ACPI and everything
+> works.
+> 
+> However, in the hid-cp2112 case, the parent is the USB device, and the
+> gpio_chip is directly under that USB device. Which means that in this case
+> gc->parent points at the USB device, and so we can not do an ACPI match
+> towards the GPIO device.
+> 
+> I think it is safe to resolve the ACPI matching through the fwnode
+> because when we call gpiochip_add_data(), the first thing it does is
+> setting a proper gc->fwnode: if it is not there, it borrows the fwnode
+> of the parent.
+> 
+> So in my icelake case, gc->fwnode is the one from the parent, meaning
 
-Yours,
-Linus Walleij
+Ice Lake
+
+> that the ACPI handle we will get is the one from the GPI0 in the DSDT
+> (the pincrtl one). And in the hid-cp2112 case, we get the actual
+> fwnode from the gpiochip we created in the HID device, making it working.
+
+Thinking more about it. In ACPI we have those nodes defined as devices, right?
+So, strictly speaking the platform tells us that they _are_ devices.
+
+The question here is what this device node in ACPI means:
+1) the physical device or subdevice of the physical device OR
+2) the physical device even if it's a part of combined (Multi-Functional)
+   device.
+
+Second question is, does Device Tree specification allows something
+that is not a device node, but can be enumerated as a subdevice of
+a physical one?
+
+P.S. I don't have objections against the patch, but I would like to
+have a clear picture on what the semantics of the two specifications
+WRT possibilities of device enumeration. It might be that we actually
+abuse ACPI specification in cases of Diolan DLN-2 or other way around
+trying to abuse it with this patch.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
