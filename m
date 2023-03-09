@@ -2,60 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA0986B2646
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:07:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 333046B2656
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:10:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231490AbjCIOHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:07:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
+        id S229914AbjCIOKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 09:10:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbjCIOHI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:07:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02E05D747;
-        Thu,  9 Mar 2023 06:06:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7584C61B5C;
-        Thu,  9 Mar 2023 14:06:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5766AC433EF;
-        Thu,  9 Mar 2023 14:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678370774;
-        bh=HukZ+ILxzTnCQfpiikli+vpJ+j7QZXr1rOExU9Cd028=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A7w0BiKmJDFqnf6FXNmD0HW/rcBRaXuGdvtl/atJt2ssNfdcEieJ5YyfIALm53wLC
-         cgIMAHNHnbHvWfY9g6zZcHICQFsiHvDJNq2sx9TcWl8DAjgCrjnWA/G/jIKMfspZiI
-         PrIOXv6CaBrI25isoxOuosC+ZtG82vx0B9SKkWpM=
-Date:   Thu, 9 Mar 2023 15:06:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Oliver Neukum <oneukum@suse.com>, Ye Xiang <xiang.ye@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v4 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-Message-ID: <ZAnn07XEqxeV8Bpq@kroah.com>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
- <20230309071100.2856899-3-xiang.ye@intel.com>
- <2865f3d0-428b-0df1-fc50-f6af3cb9dac3@suse.com>
- <ZAnku01goVDCuNM+@smile.fi.intel.com>
+        with ESMTP id S231827AbjCIOKH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:10:07 -0500
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A6F1E2AF
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 06:08:59 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5384ff97993so37464377b3.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 06:08:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678370939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DNYpKD19CQMx//TQ6gRIcfYtZetkx8u9yXR+/GYE/OI=;
+        b=BL6MZ9fFBbKkXJ7YOlcNpYgELX9UktkrC9y2EmF8YA0wNHtltEcFQdWuYyb38fzSzQ
+         OP5jmXOaZQEa1/auJWmya8SCK3vVT4ZKiJ7zAJIc3IVy7pTMsWIEJQlMOu1/ZaUQI2zE
+         INc+EdnVAgfpebx9B3pZ5bDCHcg5jjzF/sknKg3tMykWG9SeKoD1VySgTnHmyOkHxGx/
+         cJrNt2v4ljifBdjs4v2YQsiSiIM810xDaFUDUNg0Mst+Oo5ueUeuQNAYUo/mfQfHxv7G
+         mBdg4o8oueL9ALzIuOSrLixjRcTcqnzuVsWqg0rt4vP3oXLbH4/Hzg4cafpcCqOiZ2YM
+         vudg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678370939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DNYpKD19CQMx//TQ6gRIcfYtZetkx8u9yXR+/GYE/OI=;
+        b=yub+8CwQWIEDyuW2NmRzDhrYZqwGtM9XtdHF6cKg76tdPPWXbQjeEeKPkLWBkIOc26
+         YSfT5O4kqVd42cxsLTMmvftRoVs6HhiSbquRIZToj2P5Qb+aMjxZMSjI7s6BEVBsAADS
+         069kFzG/S1WlW9HgQPGfR9Z+Vou807VNcQ92zYmcSGDDvf7ILEMMzzENVAHHYSN2uNBO
+         9OfQdqmit4UYApu4/ZzrXUu3L0hGMw9FtenP5+xZmsaYU+4TIfSPFrLQP+sV1CRFU21K
+         pFBKZNrpbovboRmz1vQXc7xo+V4WW2eRq2rV6mAFNC6IKJgqtLNkD+yJgaxxXNbTK+dp
+         w70g==
+X-Gm-Message-State: AO0yUKUkog99NbNqld5esRtUXF9GxOmtlp2tKoegpfWutMf6ZSfjm3rX
+        RBcPFtEat1ZU0lWroOFVb4MB3xMDDBx8Ld/TjTjUOg==
+X-Google-Smtp-Source: AK7set+lVvVY4FziSRRfPKq3rHn1hWLe9VJbSzh76+m189ZOrx5E2lz7lYSP1nbFspYJ587Bl4JjlyoL5YqLtGZhBXg=
+X-Received: by 2002:a81:b667:0:b0:534:d71f:14e6 with SMTP id
+ h39-20020a81b667000000b00534d71f14e6mr14180137ywk.9.1678370938978; Thu, 09
+ Mar 2023 06:08:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZAnku01goVDCuNM+@smile.fi.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <20230309135255.3861308-1-geert+renesas@glider.be>
+In-Reply-To: <20230309135255.3861308-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Mar 2023 15:08:47 +0100
+Message-ID: <CACRpkdant3mQJX0FM3q65mBaS0fXJ=7tag5dx-1Jp5xpc3EQJg@mail.gmail.com>
+Subject: Re: [PATCH] sh: mach-x3proto: Add missing #include <linux/gpio/driver.h>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-gpio@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,35 +74,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 03:52:59PM +0200, Andy Shevchenko wrote:
-> On Thu, Mar 09, 2023 at 02:40:10PM +0100, Oliver Neukum wrote:
-> > On 09.03.23 08:10, Ye Xiang wrote:
-> > 
-> > > +#define LJCA_GPIO_BUF_SIZE 60
-> > > +struct ljca_gpio_dev {
-> > > +	struct platform_device *pdev;
-> > > +	struct gpio_chip gc;
-> > > +	struct ljca_gpio_info *gpio_info;
-> > > +	DECLARE_BITMAP(unmasked_irqs, LJCA_MAX_GPIO_NUM);
-> > > +	DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
-> > > +	DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
-> > > +	u8 *connect_mode;
-> > > +	/* mutex to protect irq bus */
-> > > +	struct mutex irq_lock;
-> > > +	struct work_struct work;
-> > > +	/* lock to protect package transfer to Hardware */
-> > > +	struct mutex trans_lock;
-> > > +
-> > > +	u8 obuf[LJCA_GPIO_BUF_SIZE];
-> > > +	u8 ibuf[LJCA_GPIO_BUF_SIZE];
-> > 
-> > And here we have a violation of DMA coherency rules.
-> > Basically you cannot embed buffers into other data structures
-> > if they can be subject to DMA.
-> 
-> Huh?!
-> 
-> The problem here is alignment. But other than that I can't see the issue with
-> embedding into structures the instances of which will be allocated on the heap.
+On Thu, Mar 9, 2023 at 2:52 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-As you said, the problem is alignment.
+> shx3_defconfig:
+>
+>     arch/sh/boards/mach-x3proto/setup.c: In function =E2=80=98x3proto_dev=
+ices_setup=E2=80=99:
+>     arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of und=
+efined type =E2=80=98struct gpio_chip=E2=80=99
+>       246 |                 baseboard_buttons[i].gpio =3D x3proto_gpio_ch=
+ip.base + i;
+>           |                                                              =
+^
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Link: https://lore.kernel.org/r/CA+G9fYs7suzGsEDK40G0pzxXyR1o2V4Pn-oy1owT=
+sTWRVEVHog@mail.gmail.com
+> Fixes: 21d9526d13b5467b ("gpiolib: Make the legacy <linux/gpio.h> consume=
+r-only")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+This is fallout from cleanups in Bartosz GPIO tree, so it will be applied t=
+here.
+Make sure Bartosz gets the patch (now on To:)
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
