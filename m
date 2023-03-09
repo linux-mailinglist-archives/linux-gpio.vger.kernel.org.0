@@ -2,455 +2,266 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3496B2A95
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 17:11:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 016DC6B2A8F
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 17:11:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230240AbjCIQLb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 11:11:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
+        id S230144AbjCIQLa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 11:11:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbjCIQIO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 11:08:14 -0500
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8419FC224
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 08:04:03 -0800 (PST)
-Received: by mail-vs1-xe2b.google.com with SMTP id o2so2058712vss.8
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 08:04:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678377829;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VtzxcV9+d+7ddnD0tdQHfmSE6FYbF8HS0Y5dbZjnBYE=;
-        b=XGJ7pYxbIyvSknn+TCVMhtQarUpH5ScMEJFjRxN7fQvKjOTcoxz6zDAEdz07t3w32U
-         0JMgmB4Q7JFgSe7aW+tc6inmAWpmoUrxTcmGIZ7EQx8cerUjuHY9cpiKgSLlxKE+Md63
-         8G976/IGwpd4ZaOeoFkxkqsw3v+tbOF8EefU1CEpOUyBQqTP9qDhxsOmkOw2uQdZqtog
-         RJareruckFQusEqJgkrvxaSIm+i75B74h6tRVW8mt6UkShZGo1vcRINO7AahefiQzO7Z
-         ogOP4gu/kbRupq/Ce4GZ7jQxwkc68QBvDTqyQPAfRMAyEUrJGxOjfLU3d2zXm2FVvUjK
-         UWXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678377829;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VtzxcV9+d+7ddnD0tdQHfmSE6FYbF8HS0Y5dbZjnBYE=;
-        b=m/8Y/vESSY5FKTVD8XWWsH2+YjNIOvbZxsyB64bBD0G8SEJgt/yrhe3IRrrw9IMZYU
-         g8UQLsQsJM9fZezfdXpRqJ5CwatgQ3Y8mPAVVMZFJ/nZxEWHvdxjjuOU0fUiOFIRrWfS
-         quiL6ZsTzHOkMBXm0y6Jgci5xGUL6TvUAtYjSZognvng4yW2m0LriKBP8wKp1bW/UnRO
-         jr0DcBaTFN7fT3wG0tXUETmZYBH2WM5xUYk9Hs72o755/6FM9YZpNm/s+GBNIbc5/v1U
-         wj7QiPRHrciU2/4C+hAWDIq7W4ruh04XuEVo5GYLMjEyVD2PmK8k2EVBP3ahBLTAyYSQ
-         FpWQ==
-X-Gm-Message-State: AO0yUKVsd9dPaK4EQtcaQMSSRW4WMeybNc+dFElS93Lxv4eG09bp8ChE
-        he0/F7xV7LXPuxuOCeRyC16aCBvfsR1ecGX7R6AGle+tFiG1OS+C3c8=
-X-Google-Smtp-Source: AK7set/VwtP920P26uvjHKICcmnsK8dWOuxBbSaNfw/SrllKnQW311Ce3K7pCAO2OZVi4xOqQ0OM92XZJB1VOgEQtQ4=
-X-Received: by 2002:a67:fb19:0:b0:402:99ce:1d9c with SMTP id
- d25-20020a67fb19000000b0040299ce1d9cmr15194342vsr.1.1678377829229; Thu, 09
- Mar 2023 08:03:49 -0800 (PST)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 9 Mar 2023 21:33:29 +0530
-Message-ID: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
-Subject: selftests: gpio: crash on arm64
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
+        with ESMTP id S232417AbjCIQKK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 11:10:10 -0500
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2083.outbound.protection.outlook.com [40.107.22.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6656FCBEE;
+        Thu,  9 Mar 2023 08:04:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ALCbnx/smOEUD8fsEGhFxz5JxREqNJG20b3cNxCGL7L8tc0ytZEbIpN7r3RWwJ4L9l2akqeB3oUCjgOIF25M6bbe/Y3owLCzMwis0yZXgBXWxtmfgVDOP2NKjCTnxpexGcR4ggUEhUHI0OAB4xu4pmvrBJcsyMLW+yY0KCudZqOVYaUPl6slzvJGP3CZRIeVeJhbSYoqOkXf9yJnxFbWA3bvueOO6NTx8MSHb83kER8DRLfy6gubNeEoEfIDSip7t4wPW/OZJYo3RRKeN0udEKM+PyzQdYunIZ/JLt9zLZK6Oj8CclQaaAtUGx4GPJ/CqL4wd++Vx+jJsbXFOZ1Wrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MBzFW3D4ZBMThKsdB4MrbTfftRdYBzghjEmDWMVN+1E=;
+ b=fC3R4OTBvaA05yd2hn/QBhIOI1oPhA+kNo3Qk0KVJmcOmjCHlEv5/0RAf1aZ8060LHQeEK+jYdge5OFG3uxn9qnnxCODTy6jLokFXFM4XzKtQgfF/7RxNGo3/CCf8QanrVuixDH6sylwB1G8VWriLZ8yjOmOYt/DqdEIzM+o6iD1LxXRQyFirGm7Z5tLsyzmQVmJBGTmRPZ5WqFovBvQUFzz6OswioGrBiDcP1dgOWfVsYsQOQzwWSkFU+GylCoFz2YRNmdrN9QhNSUBzxIlh92TBTq+oDsyxnIIWYMn7zrq+KwRathk2cfs5jxsOuiDSTQJtj17T9yhCyQT7kd45g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MBzFW3D4ZBMThKsdB4MrbTfftRdYBzghjEmDWMVN+1E=;
+ b=EFI1fAnk8itR0y22u5ancy4ptW6WRGnz1IPSAwk22Cekpc0mvKWArqSQO54zaFJB8HScXQgSWlRWcOXBY/lr3L//ja0TZ6b6aSWeKz7bAp9uBSExY/tACedNZ+vawluBIN7fhtdxQkPV18ZAsRqKBLCNJ1ar9bpA4p/i0VHavPeuMTm8HlSOpcmd+u1evAHN9RIWX9J1+51/9O2njxHF3hirruK5t80WyBWUozoEfWU3lH5WT+vlk9ZrEUDQmwaTNBoPemRlB6e7tC2A04bkryyBRiL7V35B2jnTfHhpFnQSEQ5kzLY3gLjHYtlE16QZEnl97B6bRs5k+LgXv8YMPg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
+ by PAVPR03MB9211.eurprd03.prod.outlook.com (2603:10a6:102:325::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28; Thu, 9 Mar
+ 2023 16:03:44 +0000
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::dbcf:1089:3242:614e]) by DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::dbcf:1089:3242:614e%5]) with mapi id 15.20.6156.027; Thu, 9 Mar 2023
+ 16:03:44 +0000
+Message-ID: <4fbd84ff-8a0c-669c-2f27-d542640ded24@seco.com>
+Date:   Thu, 9 Mar 2023 11:03:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?Q?Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org
+References: <20230306191535.1917656-1-sean.anderson@seco.com>
+ <20230306191535.1917656-4-sean.anderson@seco.com>
+ <20230308231018.GA4039466-robh@kernel.org>
+From:   Sean Anderson <sean.anderson@seco.com>
+In-Reply-To: <20230308231018.GA4039466-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0386.namprd13.prod.outlook.com
+ (2603:10b6:208:2c0::31) To DB9PR03MB8847.eurprd03.prod.outlook.com
+ (2603:10a6:10:3dd::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|PAVPR03MB9211:EE_
+X-MS-Office365-Filtering-Correlation-Id: 50de237c-7647-434c-bec5-08db20b7dbc9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 83O6ltIldWTsDkxp0qFDA5Yk/RwWUyCZOdXTssY1ubVcX9nUB2x/NX7oOpcMxQw02uwugujGPafK/68MxGy/Dzo6VfVYByWjFQDU3PMvXSHvPaZvt0G6zkpRdTMH+P6f3cVUUAoogA1gZDPaXnatd/YeyynyCvUR2RCEN81RpZIqI1cP2KkXHtFDrqQcgtQt9JGqzQdmo70TXjRJP1UyWdP7JBHvvIQ7IHGa5T1R+6vrFsoFumcbhUtwETFj8tz+LDV+fIdd4nwpRubC3l2VhSorUuq6LCWxR+QXOXyDzEeIMN93LNUWhAXhLltfWHlcuc9QJToy4jbIVOI5WRQvBXlG8BtneQ7P9rGK1Gl7OAS1lL7hHVX/PKlyKGDC+/IInCRrkOIzDHt0O/yhVc2ijqNbxM3gacXrtzv2IseGmAGMTQUqYOP2+YzWpcdu/HEJ8RbzpxslAyg5HnMMwGevhcZZ/sYGmdegivdtDn7a02rh9/5h8qo13ggImnsVcMIO51wCqraSj5f0IQU4UOlc63FJ2YIyb+RK4t8U6TOxHIt46MPVo68BOoklL+Marl76iDLfsf/0OJMDfKEG9yM1W/Cp/+RiEsxKXFCovn3Ng9TdU/JukEWZbWYld25uCcSz5DyZrowHsQIEAdZ9wEp7s+PmaP3XuIotZotkF+4hoegJzK4lNRWxb5WrSTArwdCU7TIr7pl8XWiJyeJCvbvbsMg5/PMbIf/PTfoTgGzkjrc8OCUM4iNObv8E8F4fisUk
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(39850400004)(346002)(376002)(396003)(136003)(451199018)(6506007)(54906003)(316002)(2616005)(83380400001)(31696002)(66574015)(36756003)(38100700002)(478600001)(6666004)(6512007)(966005)(52116002)(86362001)(38350700002)(53546011)(6486002)(186003)(5660300002)(41300700001)(44832011)(26005)(8936002)(31686004)(2906002)(66946007)(8676002)(7416002)(66476007)(6916009)(4326008)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UE1MMGRyZmZMZk03SW8zN3lWQzVLa2thNDE0bmhqV2RzcXY3Qjg1OGFMaFRK?=
+ =?utf-8?B?OW1HTkl6Ri9NMjFkcWxXbFMxd3NQd3BMOU5sdlZpRHdJbGNFQXdkV09CMTRI?=
+ =?utf-8?B?RGs0bWswWFF6anVMTnpWWVk3OG41QXVUOUVoSDYvTVRUdkJKcENkcFlUeUk3?=
+ =?utf-8?B?ckRwS1lXbzhOcDR1Z0RPeHEyZDhrZG54dG1FRm1LKzRySVJGRVY0emRuWEVF?=
+ =?utf-8?B?QTZIYnlqcGhZNmxmM01SWU1MalVWZkFBekxtenRMa2lxSXJvVEIwaCt4WDhq?=
+ =?utf-8?B?c1pqd0JvOXdLTGVGd1p0U25mZFlaVWd5WWJobEtNWTdPWmFVSTVlRi9SQkdI?=
+ =?utf-8?B?c3FYeWV3ZWZBYnUwS25DNjhCSEhhMkpKNWJoRk04bVJkeGRuL3J3UkZ0TTNi?=
+ =?utf-8?B?QUFKQUxFdnJ4Vno2NnBVQ2JqNCtBUTNKUERGU0R6RmRESVFXSWlOVkVjSUVC?=
+ =?utf-8?B?OE5KYzlPd29aZ2crWkdweExhU3lkSGpDMHQyY3RIUHBET0VwNnlzZi9iQjhj?=
+ =?utf-8?B?OVc3QVVhaEYyNy9pSG9ZMmVKVXRxa2VvbnJ1bGcrQ0JIWmQ5NEUzdGhuQVlz?=
+ =?utf-8?B?VlRXT1pYZUxKdGhSdE1PN2tLekV6Vm42dndzRFJXdEtQdCszQlc1VUN2RXdC?=
+ =?utf-8?B?NjVBS2lKK09QcDBBVjVYdnloa09rYzBoZSt2dXpBR1dHb2VxKy80b08xNkxr?=
+ =?utf-8?B?N0ZHK0NQR0s2ZTVaK0JwL3pXbXRtMUVwN0M4czF6dUpzd2E3b3ZqTHZTY05n?=
+ =?utf-8?B?K0RXS3E4Zmoxd3p0ZjJIMlBqejlDUWlac2pUTlEwWkNFc2tMSGluTUNEU3R0?=
+ =?utf-8?B?ZHEwaXowemU2K0VOT2VkUUhFNWptd3dlZDloRjI1MDd4VTR1UnY5RDJxNndJ?=
+ =?utf-8?B?cVJzMjBqVnU4b1p2T1N2SkhlOHI1R1crOFI4Z3Q5T3ZsTVZGbU9rSXdvUWYv?=
+ =?utf-8?B?RjNXWmZEdkRBVHdnSVc1YmptazExTDJyRWJ0OElZd2FBOFB4UE9PdW1LY3Rp?=
+ =?utf-8?B?S3RRUmhjanN1ZWdLT1llNmtyQTl1QndZM21FVHozWi90VjBUWUE4aU5naHJm?=
+ =?utf-8?B?cVM0WU0wd2RKdnJtamt5VlJTQmtSbXJqTStnaGZpL2ZDeW1rMjhkS3JFOEJq?=
+ =?utf-8?B?QzE5RXRvR0VJUys1Z1J0VExYRHQvZENlQkhxRXVnc2xUZ1VINDNUN214d055?=
+ =?utf-8?B?RS94NEJBRFo5M2FOZ0RDQlB0ZDhsU2FTaFcxcWhnbzdDdkZ2Wk5lbmowKzVK?=
+ =?utf-8?B?aEprbll4Y2M3ZG9lUnhyWlppMnNjUGVna01OU25aMWNKeDJEaEQ0cTZpcitz?=
+ =?utf-8?B?UmgvZEd5U0lkLzlkU2VwV0QrY21wL1dUWmlMOGFCSEhQUU8xSmFsR3hoWEpU?=
+ =?utf-8?B?MUpJMVUvcUprSmFNaVYvdHNSNlNBU01FUTJsZHVtUDlqQzZSd1RjZ1pZa1d1?=
+ =?utf-8?B?a2tBS1JxVmJpc0pZdk9MVjRubzB0QzVraXZOUnU4RGE1c0JqMFFwWEI1a2pB?=
+ =?utf-8?B?eUMxRU5CYnc0T1V4VWtEbFRja0lJT3lkdTk4OUYybjVNVDRHQmJmNnFaYW5T?=
+ =?utf-8?B?ajYxQUlndzJORlFQUGNVSnphNStGNjljY1d0eXdSSkZISEIzOXNFa0hrb3p3?=
+ =?utf-8?B?MHUyL1RsRGh3ZDBOSUlMQUQxcjJrNDBEOW5NR20yMEtGTlM5OXhMcWgwb3Jh?=
+ =?utf-8?B?c29xR2JoeHA4UkFRdVppWXU2K1ViUEdaZE9mQURTM0hRb3Z4VVlmWEtyNGFj?=
+ =?utf-8?B?SlRmZjJJcE5mTXFnb2EvQmZEdXBOK05sdHZhWkhNUnRPTm9uQWYvRkJPWUcw?=
+ =?utf-8?B?emlCTXRuMW1KckU1RldyQjJ0YXZVZlEwZ29wM1gycmRWb1JNd0tjMmFZSzhT?=
+ =?utf-8?B?ZmtwZG1ZTUdqTkZRZFRVVkJ1VnExcDVNdG5ENk1zOXlUSTVMN2M1bUVmK0VG?=
+ =?utf-8?B?NnoyY2pNamprMzZSSGtLamJTbkFGanl1VFZLVDZXSUxyUjdCdDU3cGZLU3ph?=
+ =?utf-8?B?TDZydThxOFBXQUlRUXpSeG5jTE1HNVRKM0tZaUJKTk1ickpIQ2xBNFp6Nmlw?=
+ =?utf-8?B?TDkxbkhRaVRYYlpZME1MN0NjM3FtNjErSG9HTmdDUlFWT3o2cy9NSGl4RERv?=
+ =?utf-8?B?dWhjOWxNaEtIUk13aC94MHJ4a0J2eDdOcjRHejdMcFMzeGh4SmJxMmluNzdi?=
+ =?utf-8?B?b3c9PQ==?=
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50de237c-7647-434c-bec5-08db20b7dbc9
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR03MB8847.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2023 16:03:44.3623
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vpxjVuQMjpDNELPdFubUJlKWrhUb5iij9K0988IUjUjlWodH4e5+qrNK1L3wz90SnvkjX7kMhHTZRlXZUmasrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR03MB9211
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Following kernel warnings and crash notices on arm64 Rpi4 device while
-running selftests: gpio on Linux mainline 6.3.0-rc1 kernel and Linux next.
+On 3/8/23 18:10, Rob Herring wrote:
+> On Mon, Mar 06, 2023 at 02:15:25PM -0500, Sean Anderson wrote:
+>> This is a generic binding for simple MMIO GPIO controllers. Although we
+>> have a single driver for these controllers, they were previously spread
+>> over several files. Consolidate them. The register descriptions are
+>> adapted from the comments in the source. There is no set order for the
+>> registers, so I have not specified one.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+>> ---
+>> 
+>> Changes in v10:
+>> - New
+>> 
+>>  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
+>>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
+>>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
+>>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
+>>  4 files changed, 137 insertions(+), 91 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+>>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+>>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+>> index 4d69f79df859..e11f4af49c52 100644
+>> --- a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+>> +++ b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+>> @@ -4,7 +4,7 @@
+>>  $id: http://devicetree.org/schemas/gpio/brcm,bcm6345-gpio.yaml#
+>>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>  
+>> -title: Broadcom BCM6345 GPIO controller
+>> +title: Broadcom BCM63xx GPIO controller
+>>  
+>>  maintainers:
+>>    - Álvaro Fernández Rojas <noltari@gmail.com>
+>> @@ -18,8 +18,6 @@ description: |+
+>>  
+>>    BCM6338 have 8-bit data and dirout registers, where GPIO state can be read
+>>    and/or written, and the direction changed from input to output.
+>> -  BCM6345 have 16-bit data and dirout registers, where GPIO state can be read
+>> -  and/or written, and the direction changed from input to output.
+>>    BCM6318, BCM6328, BCM6358, BCM6362, BCM6368 and BCM63268 have 32-bit data
+>>    and dirout registers, where GPIO state can be read and/or written, and the
+>>    direction changed from input to output.
+>> @@ -29,7 +27,6 @@ properties:
+>>      enum:
+>>        - brcm,bcm6318-gpio
+>>        - brcm,bcm6328-gpio
+>> -      - brcm,bcm6345-gpio
+>>        - brcm,bcm6358-gpio
+>>        - brcm,bcm6362-gpio
+>>        - brcm,bcm6368-gpio
+>> @@ -63,17 +60,6 @@ required:
+>>  additionalProperties: false
+>>  
+>>  examples:
+>> -  - |
+>> -    gpio@fffe0406 {
+>> -      compatible = "brcm,bcm6345-gpio";
+>> -      reg-names = "dirout", "dat";
+>> -      reg = <0xfffe0406 2>, <0xfffe040a 2>;
+>> -      native-endian;
+>> -
+>> -      gpio-controller;
+>> -      #gpio-cells = <2>;
+>> -    };
+>> -
+>>    - |
+>>      gpio@0 {
+>>        compatible = "brcm,bcm63268-gpio";
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+>> new file mode 100644
+>> index 000000000000..fd5c7055d542
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+>> @@ -0,0 +1,136 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/gpio-mmio.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Generic MMIO GPIO
+>> +
+>> +maintainers:
+>> +  - Linus Walleij <linus.walleij@linaro.org>
+>> +  - Bartosz Golaszewski <brgl@bgdev.pl>
+>> +
+>> +description: |
+> 
+> Don't need '|' unless you want line endings preserved. Elsewhere too.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+OK
 
-Please refer to test log links for detailed test plan and kernel crash logs.
-It is reproducible on arm64 juno-r2, Rpi4 and Qualcomm dragonboard 410c
-and qemu-arm64.
+>> +  Some simple GPIO controllers may consist of a single data register or a pair
+>> +  of set/clear-bit registers. Such controllers are common for glue logic in
+>> +  FPGAs or ASICs. Commonly, these controllers are accessed over memory-mapped
+>> +  NAND-style parallel busses.
+>> +
+>> +properties:
+>> +  big-endian:
+>> +    true
+> 
+> big-endian: true
 
-Test log:
------------
-kselftest: Running tests in gpio
-TAP version 13
-1..2
-# selftests: gpio: gpio-mockup.sh
-# 1.  Module load tests
-[   61.176149] =============================================================================
-[   61.176802]
-[   61.176807] ======================================================
-[   61.176809] WARNING: possible circular locking dependency detected
-[   61.176811] 6.3.0-rc1-next-20230307 #1 Not tainted
-[   61.176814] ------------------------------------------------------
-[   61.176816] modprobe/510 is trying to acquire lock:
-[   61.176818] ffff80000b2284e8 (console_owner){..-.}-{0:0}, at:
-console_flush_all (kernel/printk/printk.c:2879
-kernel/printk/printk.c:2942)
-[   61.176846]
-[   61.176846] but task is already holding lock:
-[   61.176848] ffff000040000698 (&n->list_lock){-.-.}-{2:2}, at:
-get_partial_node.part.0 (mm/slub.c:2271)
-[   61.176861]
-[   61.176861] which lock already depends on the new lock.
-[   61.176861]
-[   61.176863]
-[   61.176863] the existing dependency chain (in reverse order) is:
-[   61.176864]
-[   61.176864] -> #2 (&n->list_lock){-.-.}-{2:2}:
-[   61.176871] lock_acquire (kernel/locking/lockdep.c:5673)
-[   61.176879] _raw_spin_lock_irqsave
-(include/linux/spinlock_api_smp.h:111 kernel/locking/spinlock.c:162)
-[   61.176885] get_partial_node.part.0 (mm/slub.c:2271)
-[   61.176890] ___slab_alloc (mm/slub.c:2268 mm/slub.c:2386 mm/slub.c:3188)
-[   61.176894] __slab_alloc.constprop.0 (mm/slub.c:3292)
-[   61.176899] __kmem_cache_alloc_node (mm/slub.c:3345 mm/slub.c:3442
-mm/slub.c:3491)
-[   61.176903] __kmalloc (mm/slab_common.c:968 mm/slab_common.c:980)
-[   61.176908] tty_buffer_alloc (drivers/tty/tty_buffer.c:182)
-[   61.176914] __tty_buffer_request_room (drivers/tty/tty_buffer.c:279)
-[   61.176919] __tty_insert_flip_char (drivers/tty/tty_buffer.c:398)
-[   61.176924] uart_insert_char (drivers/tty/serial/serial_core.c:3341)
-[   61.176929] pl011_fifo_to_tty.isra.0 (drivers/tty/serial/amba-pl011.c:314)
-[   61.176934] pl011_int (include/linux/spinlock.h:390
-drivers/tty/serial/amba-pl011.c:1396
-drivers/tty/serial/amba-pl011.c:1571)
-[   61.176937] __handle_irq_event_percpu (kernel/irq/handle.c:158)
-[   61.176941] handle_irq_event (kernel/irq/handle.c:193
-kernel/irq/handle.c:210)
-[   61.176944] handle_fasteoi_irq (kernel/irq/chip.c:716)
-[   61.176950] generic_handle_domain_irq (kernel/irq/irqdesc.c:652
-kernel/irq/irqdesc.c:707)
-[   61.176953] gic_handle_irq (arch/arm64/include/asm/io.h:75
-include/asm-generic/io.h:335 drivers/irqchip/irq-gic.c:344)
-[   61.176958] call_on_irq_stack (arch/arm64/kernel/entry.S:905)
-[   61.176962] do_interrupt_handler (arch/arm64/kernel/entry-common.c:274)
-[   61.176968] el1_interrupt (arch/arm64/kernel/entry-common.c:472
-arch/arm64/kernel/entry-common.c:486)
-[   61.176971] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:492)
-[   61.176975] el1h_64_irq (arch/arm64/kernel/entry.S:587)
-[   61.176978] __kmem_cache_alloc_node (mm/slub.c:3490)
-[   61.176983] kmalloc_trace (mm/slab_common.c:1064 (discriminator 4))
-[   61.176986] inet6_dump_fib (net/ipv6/ip6_fib.c:657)
-[   61.176991] rtnl_dump_all (net/core/rtnetlink.c:3964)
-[   61.176997] netlink_dump (net/netlink/af_netlink.c:2296)
-[   61.177004] netlink_recvmsg (net/netlink/af_netlink.c:2024)
-[   61.177009] ____sys_recvmsg (net/socket.c:1015 net/socket.c:1036
-net/socket.c:2723)
-[   61.177014] ___sys_recvmsg (net/socket.c:2765)
-[   61.177019] __sys_recvmsg (include/linux/file.h:31 net/socket.c:2797)
-[   61.177025] __arm64_sys_recvmsg (net/socket.c:2802)
-[   61.177030] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   61.177037] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   61.177043] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   61.177049] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   61.177052] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   61.177055] el0t_64_sync (arch/arm64/kernel/entry.S:591)
-[   61.177058]
-[   61.177058] -> #1 (&port_lock_key){-.-.}-{2:2}:
-[   61.177065] lock_acquire (kernel/locking/lockdep.c:5673)
-[   61.177071] _raw_spin_lock_irqsave
-(include/linux/spinlock_api_smp.h:111 kernel/locking/spinlock.c:162)
-[   61.177074] serial8250_console_write
-(drivers/tty/serial/8250/8250_port.c:3394)
-[   61.177082] univ8250_console_write (drivers/tty/serial/8250/8250_core.c:585)
-[   61.177087] console_flush_all (kernel/printk/printk.c:2888
-kernel/printk/printk.c:2942)
-[   61.177093] console_unlock.part.0 (kernel/printk/printk.c:3017)
-[   61.177098] vprintk_emit (kernel/printk/printk.c:2317)
-[   61.177104] vprintk_default (kernel/printk/printk.c:2328)
-[   61.177110] vprintk (kernel/printk/printk_safe.c:50)
-[   61.177116] _printk (kernel/printk/printk.c:2341)
-[   61.177121] register_console (kernel/printk/printk.c:3468)
-[   61.177126] uart_add_one_port
-(drivers/tty/serial/serial_core.c:2579
-drivers/tty/serial/serial_core.c:3100)
-[   61.177130] serial8250_register_8250_port
-(drivers/tty/serial/8250/8250_core.c:1093)
-[   61.177135] bcm2835aux_serial_probe
-(drivers/tty/serial/8250/8250_bcm2835aux.c:184)
-[   61.177141] platform_probe (drivers/base/platform.c:1405)
-[   61.177148] really_probe (drivers/base/dd.c:552 drivers/base/dd.c:631)
-[   61.177152] __driver_probe_device (drivers/base/dd.c:768)
-[   61.177157] driver_probe_device (drivers/base/dd.c:798)
-[   61.177161] __driver_attach (drivers/base/dd.c:1185)
-[   61.177166] bus_for_each_dev (drivers/base/bus.c:368)
-[   61.177170] driver_attach (drivers/base/dd.c:1202)
-[   61.177173] bus_add_driver (drivers/base/bus.c:673)
-[   61.177177] driver_register (drivers/base/driver.c:246)
-[   61.177182] __platform_driver_register (drivers/base/platform.c:868)
-[   61.177188] bcm2835aux_serial_driver_init
-(drivers/tty/serial/8250/8250_bcm2835aux.c:233)
-[   61.177195] do_one_initcall (init/main.c:1306)
-[   61.177199] kernel_init_freeable (init/main.c:1378 init/main.c:1395
-init/main.c:1414 init/main.c:1634)
-[   61.177207] kernel_init (init/main.c:1524)
-[   61.177212] ret_from_fork (arch/arm64/kernel/entry.S:871)
-[   61.177216]
-[   61.177216] -> #0 (console_owner){..-.}-{0:0}:
-[   61.177222] __lock_acquire (kernel/locking/lockdep.c:3099
-kernel/locking/lockdep.c:3217 kernel/locking/lockdep.c:3832
-kernel/locking/lockdep.c:5056)
-[   61.177228] lock_acquire.part.0 (arch/arm64/include/asm/percpu.h:40
-kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5671)
-[   61.177233] lock_acquire (kernel/locking/lockdep.c:5673)
-[   61.177238] console_flush_all (kernel/printk/printk.c:2883
-kernel/printk/printk.c:2942)
-[   61.177244] console_unlock.part.0 (kernel/printk/printk.c:3017)
-[   61.177250] vprintk_emit (kernel/printk/printk.c:2317)
-[   61.177255] vprintk_default (kernel/printk/printk.c:2328)
-[   61.177261] vprintk (kernel/printk/printk_safe.c:50)
-[   61.177267] _printk (kernel/printk/printk.c:2341)
-[   61.177271] slab_bug (mm/slub.c:892)
-[   61.177274] check_bytes_and_report (mm/slub.c:1054)
-[   61.177279] check_object (mm/slub.c:1196 (discriminator 2))
-[   61.177283] alloc_debug_processing (mm/slub.c:1415 mm/slub.c:1425)
-[   61.177287] get_partial_node.part.0 (mm/slub.c:2146 mm/slub.c:2279)
-[   61.177291] ___slab_alloc (mm/slub.c:2268 mm/slub.c:2386 mm/slub.c:3188)
-[   61.177295] __slab_alloc.constprop.0 (mm/slub.c:3292)
-[   61.177300] __kmem_cache_alloc_node (mm/slub.c:3345 mm/slub.c:3442
-mm/slub.c:3491)
-[   61.177304] kmalloc_trace (mm/slab_common.c:1064 (discriminator 4))
-[   61.177308] device_add (drivers/base/core.c:3436 drivers/base/core.c:3486)
-[   61.177311] platform_device_add (drivers/base/platform.c:717)
-[   61.177317] platform_device_register_full (drivers/base/platform.c:844)
-[   61.177323] gpio_mockup_register_chip+0x1ec/0x2b8 gpio_mockup
-[   61.177342] gpio_mockup_init+0xf0/0xd40 gpio_mockup
-[   61.177352] do_one_initcall (init/main.c:1306)
-[   61.177356] do_init_module (kernel/module/main.c:2457)
-[   61.177363] load_module (kernel/module/main.c:2859)
-[   61.177369] __do_sys_finit_module (kernel/module/main.c:2961)
-[   61.177375] __arm64_sys_finit_module (kernel/module/main.c:2928)
-[   61.177381] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   61.177387] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   61.177393] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   61.177398] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   61.177402] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   61.177405] el0t_64_sync (arch/arm64/kernel/entry.S:591)
-[   61.177408]
-[   61.177408] other info that might help us debug this:
-[   61.177408]
-[   61.177410] Chain exists of:
-[   61.177410]   console_owner --> &port_lock_key --> &n->list_lock
-[   61.177410]
-[   61.177417]  Possible unsafe locking scenario:
-[   61.177417]
-[   61.177418]        CPU0                    CPU1
-[   61.177419]        ----                    ----
-[   61.177420]   lock(&n->list_lock);
-[   61.177423]                                lock(&port_lock_key);
-[   61.177426]                                lock(&n->list_lock);
-[   61.177429]   lock(console_owner);
-[   61.177432]
-[   61.177432]  *** DEADLOCK ***
-[   61.177432]
-[   61.177434] 3 locks held by modprobe/510:
-[   61.177436] #0: ffff000040000698 (&n->list_lock){-.-.}-{2:2}, at:
-get_partial_node.part.0 (mm/slub.c:2271)
-[   61.177448] #1: ffff80000b227f18 (console_lock){+.+.}-{0:0}, at:
-vprintk_emit (kernel/printk/printk.c:1936 kernel/printk/printk.c:2315)
-[   61.177460] #2: ffff80000b228388 (console_srcu){....}-{0:0}, at:
-console_flush_all (include/linux/srcu.h:200 kernel/printk/printk.c:290
-kernel/printk/printk.c:2934)
-[   61.177471]
-[   61.177471] stack backtrace:
-[   61.177474] CPU: 3 PID: 510 Comm: modprobe Not tainted
-6.3.0-rc1-next-20230307 #1
-[   61.177479] Hardware name: Raspberry Pi 4 Model B (DT)
-[   61.177482] Call trace:
-[   61.177483] dump_backtrace (arch/arm64/kernel/stacktrace.c:160)
-[   61.177487] show_stack (arch/arm64/kernel/stacktrace.c:167)
-[   61.177490] dump_stack_lvl (lib/dump_stack.c:107)
-[   61.177498] dump_stack (lib/dump_stack.c:114)
-[   61.177504] print_circular_bug (kernel/locking/lockdep.c:2057)
-[   61.177509] check_noncircular (kernel/locking/lockdep.c:2181)
-[   61.177514] __lock_acquire (kernel/locking/lockdep.c:3099
-kernel/locking/lockdep.c:3217 kernel/locking/lockdep.c:3832
-kernel/locking/lockdep.c:5056)
-[   61.177520] lock_acquire.part.0 (arch/arm64/include/asm/percpu.h:40
-kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5671)
-[   61.177525] lock_acquire (kernel/locking/lockdep.c:5673)
-[   61.177530] console_flush_all (kernel/printk/printk.c:2883
-kernel/printk/printk.c:2942)
-[   61.177536] console_unlock.part.0 (kernel/printk/printk.c:3017)
-[   61.177542] vprintk_emit (kernel/printk/printk.c:2317)
-[   61.177547] vprintk_default (kernel/printk/printk.c:2328)
-[   61.177553] vprintk (kernel/printk/printk_safe.c:50)
-[   61.177559] _printk (kernel/printk/printk.c:2341)
-[   61.177564] slab_bug (mm/slub.c:892)
-[   61.177567] check_bytes_and_report (mm/slub.c:1054)
-[   61.177571] check_object (mm/slub.c:1196 (discriminator 2))
-[   61.177575] alloc_debug_processing (mm/slub.c:1415 mm/slub.c:1425)
-[   61.177579] get_partial_node.part.0 (mm/slub.c:2146 mm/slub.c:2279)
-[   61.177583] ___slab_alloc (mm/slub.c:2268 mm/slub.c:2386 mm/slub.c:3188)
-[   61.177587] __slab_alloc.constprop.0 (mm/slub.c:3292)
-[   61.177592] __kmem_cache_alloc_node (mm/slub.c:3345 mm/slub.c:3442
-mm/slub.c:3491)
-[   61.177596] kmalloc_trace (mm/slab_common.c:1064 (discriminator 4))
-[   61.177600] device_add (drivers/base/core.c:3436 drivers/base/core.c:3486)
-[   61.177603] platform_device_add (drivers/base/platform.c:717)
-[   61.177609] platform_device_register_full (drivers/base/platform.c:844)
-[   61.177615] gpio_mockup_register_chip+0x1ec/0x2b8 gpio_mockup
-[   61.177625] gpio_mockup_init+0xf0/0xd40 gpio_mockup
-[   61.177634] do_one_initcall (init/main.c:1306)
-[   61.177638] do_init_module (kernel/module/main.c:2457)
-[   61.177644] load_module (kernel/module/main.c:2859)
-[   61.177650] __do_sys_finit_module (kernel/module/main.c:2961)
-[   61.177656] __arm64_sys_finit_module (kernel/module/main.c:2928)
-[   61.177662] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   61.177668] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   61.177674] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   61.177680] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   61.177683] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   61.177686] el0t_64_sync (arch/arm64/kernel/entry.S:591)
-[   62.011685] BUG kmalloc-512 (Not tainted): Poison overwritten
-[   62.017513] -----------------------------------------------------------------------------
-[   62.017513]
-[   62.027300] 0xffff00004ecb7a38-0xffff00004ecb7a47 @offset=31288.
-First byte 0x6a instead of 0x6b
-[   62.036210] Allocated in swnode_register+0x40/0x218 age=808 cpu=3 pid=386
-[   62.043101] __kmem_cache_alloc_node (mm/slub.c:3345 mm/slub.c:3442
-mm/slub.c:3491)
-[   62.047784] kmalloc_trace (mm/slab_common.c:1064 (discriminator 4))
-[   62.051406] swnode_register (drivers/base/swnode.c:776)
-[   62.055293] fwnode_create_software_node (drivers/base/swnode.c:934
-(discriminator 4))
-[   62.060238] gpio_mockup_register_chip+0x1c4/0x2b8 gpio_mockup
-[   62.066337] gpio_mockup_init+0xf0/0xd40 gpio_mockup
-[   62.071551] do_one_initcall (init/main.c:1306)
-[   62.075437] do_init_module (kernel/module/main.c:2457)
-[   62.079238] load_module (kernel/module/main.c:2859)
-[   62.083037] __do_sys_finit_module (kernel/module/main.c:2961)
-[   62.087455] __arm64_sys_finit_module (kernel/module/main.c:2928)
-[   62.092048] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   62.095848] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   62.100793] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   62.104151] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   62.107244] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   62.111570] Freed in software_node_release+0xdc/0x108 age=632 cpu=0 pid=428
-[   62.118633] __kmem_cache_free (mm/slub.c:3732 mm/slub.c:3788 mm/slub.c:3800)
-[   62.122784] kfree (mm/slab_common.c:1020)
-[   62.125788] software_node_release (drivers/base/swnode.c:761)
-[   62.130204] kobject_put (lib/kobject.c:685 lib/kobject.c:712
-include/linux/kref.h:65 lib/kobject.c:729)
-[   62.133739] software_node_notify_remove (drivers/base/swnode.c:1093)
-[   62.138597] device_del (drivers/base/core.c:2265 drivers/base/core.c:3778)
-[   62.142134] platform_device_del.part.0 (drivers/base/platform.c:753)
-[   62.146903] platform_device_unregister (drivers/base/platform.c:551
-drivers/base/platform.c:794)
-[   62.151672] gpio_mockup_exit+0x54/0x280 gpio_mockup
-[   62.156888] __arm64_sys_delete_module (kernel/module/main.c:756
-kernel/module/main.c:698 kernel/module/main.c:698)
-[   62.161745] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   62.165545] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   62.170490] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   62.173850] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   62.176941] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   62.181267] el0t_64_sync (arch/arm64/kernel/entry.S:591)
-[   62.184975] Slab 0xfffffc00013b2c00 objects=21 used=7
-fp=0xffff00004ecb7400
-flags=0x7fffc0000010200(slab|head|node=0|zone=1|lastcpupid=0xffff)
-[   62.197943] Object 0xffff00004ecb7a00 @offset=31232 fp=0xffff00004ecb7400
-[   62.197943]
-[   62.206325] Redzone  ffff00004ecb7800:
+OK
 
-...
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - brcm,bcm6345-gpio # Broadcom BCM6345 GPIO controller
+>> +      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
+>> +      - ni,169445-nand-gpio # National Instruments 169445 GPIO NAND controller
+>> +
+>> +  '#gpio-cells':
+>> +    const: 2
+>> +
+>> +  gpio-controller:
+>> +    true
+> 
+> ditto.
 
-[   63.089597] CPU: 3 PID: 510 Comm: modprobe Not tainted
-6.3.0-rc1-next-20230307 #1
-[   63.097186] Hardware name: Raspberry Pi 4 Model B (DT)
-[   63.102392] Call trace:
-[   63.104865] dump_backtrace (arch/arm64/kernel/stacktrace.c:160)
-[   63.108665] show_stack (arch/arm64/kernel/stacktrace.c:167)
-[   63.112021] dump_stack_lvl (lib/dump_stack.c:107)
-[   63.115734] dump_stack (lib/dump_stack.c:114)
-[   63.119093] print_trailer (mm/slub.c:953)
-[   63.122892] check_bytes_and_report (mm/slub.c:1058)
-[   63.127395] check_object (mm/slub.c:1196 (discriminator 2))
-[   63.131104] alloc_debug_processing (mm/slub.c:1415 mm/slub.c:1425)
-[   63.135606] get_partial_node.part.0 (mm/slub.c:2146 mm/slub.c:2279)
-[   63.140286] ___slab_alloc (mm/slub.c:2268 mm/slub.c:2386 mm/slub.c:3188)
-[   63.144084] __slab_alloc.constprop.0 (mm/slub.c:3292)
-[   63.148674] __kmem_cache_alloc_node (mm/slub.c:3345 mm/slub.c:3442
-mm/slub.c:3491)
-[   63.153354] kmalloc_trace (mm/slab_common.c:1064 (discriminator 4))
-[   63.156974] device_add (drivers/base/core.c:3436 drivers/base/core.c:3486)
-[   63.160508] platform_device_add (drivers/base/platform.c:717)
-[   63.164837] platform_device_register_full (drivers/base/platform.c:844)
-[   63.169959] gpio_mockup_register_chip+0x1ec/0x2b8 gpio_mockup
-[   63.176057] gpio_mockup_init+0xf0/0xd40 gpio_mockup
-[   63.181269] do_one_initcall (init/main.c:1306)
-[   63.185155] do_init_module (kernel/module/main.c:2457)
-[   63.188956] load_module (kernel/module/main.c:2859)
-[   63.192755] __do_sys_finit_module (kernel/module/main.c:2961)
-[   63.197171] __arm64_sys_finit_module (kernel/module/main.c:2928)
-[   63.201765] invoke_syscall (arch/arm64/include/asm/current.h:19
-arch/arm64/kernel/syscall.c:57)
-[   63.205565] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:149)
-[   63.210510] do_el0_svc (arch/arm64/kernel/syscall.c:194)
-[   63.213869] el0_svc (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:638)
-[   63.216961] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:656)
-[   63.221287] el0t_64_sync (arch/arm64/kernel/entry.S:591)
-[   63.224998] FIX kmalloc-512: Restoring Poison
-0xffff00004ecb7a38-0xffff00004ecb7a47=0x6b
-[   63.233202] FIX kmalloc-512: Marking all objects used
-[   63.399213] =============================================================================
+OK
 
-links to the crash:
-  - https://lkft.validation.linaro.org/scheduler/job/6224830#L1291
-  - https://lkft.validation.linaro.org/scheduler/job/6224742#L1202
-  - https://lkft.validation.linaro.org/scheduler/job/6224784#L3415
-   - https://lkft.validation.linaro.org/scheduler/job/6224810#L2029
-
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 709c6adf19dc558e44ab5c01659b09a16a2d3c82
-  git_describe: next-20230307
-  kernel_version: 6.3.0-rc1
-  kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2MfXESbRAbSUj9oic6d8dK2d7Q8/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/798095907
-  artifact-location:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2MfXESbRAbSUj9oic6d8dK2d7Q8
-  toolchain: gcc-11
-
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--Sean
