@@ -2,147 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F2D6B2DCB
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 20:35:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1046B2F32
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 22:04:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjCITeq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 14:34:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37778 "EHLO
+        id S230036AbjCIVED (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 16:04:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229652AbjCITeU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 14:34:20 -0500
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33647BD4C1
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 11:33:25 -0800 (PST)
-Received: by mail-qt1-x829.google.com with SMTP id y10so3284452qtj.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 11:33:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678390403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fQXs/idENx3qQbq6dtiVnbHhxQA0BF/uYGUOEUZAl98=;
-        b=gVBEZw0VDUt77IcUdGYsdclvBJ7Tsv+GAfXBCkkcD9YweytbnLTIFr634g+gKtoICi
-         W6lhKIGYJpsWte3bVMmfT9ByNLefYQKWVUDn2Q/hkdmkoSJ4gWiAx1Pc5CIOMvZvhI3m
-         m38SYc2NQm3Cv1M9UIPt20MLpM3SpVIDRBlPHq1sufQbgs79dbhHccuppXaa13J+p/cd
-         YE34GjdQFO88P6SvjB/VWpnweaXERaQnvaBmJncp0xHverI5RUIa30xLpeBtoo61jHvY
-         E41E7csqVc4Sqi+CttjfiuBycEiWPXnmwCVwHjGbsVmBGpzgKLTjXzmplwcYxuKVaMDy
-         W8Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678390403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fQXs/idENx3qQbq6dtiVnbHhxQA0BF/uYGUOEUZAl98=;
-        b=YZfx7Y8eDneyg7DQl9qmzcFfPQeecM59y7gB+078OJ9+UNI2zuJpnWFn6HkoPWd2OH
-         WbQ1Js+9umqfjcMHbvQx0gvVOwFS8kSBhlliQrAatkJjbR5uqJsXryH6mVrTai9RBcN5
-         irs//7hyUZrWthxrLVb0qVsiRQFjAje1opEmp4uGrFaATMrCdr9eRDWQJmnHnqS9Dm9j
-         0rPU4yfqN5icdYjCygxeNQNgVDWWRvHLP4R1Pj6fCT1+OCFe7kmRk2JYOQ/kHkOjZjQv
-         DkXU1mka9cX85c3s5+ybnzc4QRbbD1hnbN/I214up7gPxl5uQhclmsvrTGTLfJBSXW0N
-         QCmw==
-X-Gm-Message-State: AO0yUKXdIMzKvqFSPFARiG/sMm0zkFY26/Ba1a4VpVqHLhvn+tVbnv60
-        E99itQUn9+dvr5Fu7pni47Ogaw==
-X-Google-Smtp-Source: AK7set9F+b44FJJ86PB8yQaXX4WkIky8I65o1fY/NEFRt2DJH5tadal7H+G/NW9ITUuo+MTstN9VrQ==
-X-Received: by 2002:a05:622a:1b8a:b0:3bf:aa39:982b with SMTP id bp10-20020a05622a1b8a00b003bfaa39982bmr38862455qtb.32.1678390402153;
-        Thu, 09 Mar 2023 11:33:22 -0800 (PST)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id l19-20020ac84593000000b003c03ae61af9sm5769003qtn.3.2023.03.09.11.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 11:33:21 -0800 (PST)
-Date:   Thu, 9 Mar 2023 14:33:19 -0500
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, techsupport@winsystems.com,
-        Paul Demetrotion <pdemetrotion@winsystems.com>
-Subject: Re: [PATCH v4 3/3] gpio: ws16c48: Migrate to the regmap API
-Message-ID: <ZAo0f0VG8eRrtMIH@fedora>
-References: <cover.1678106722.git.william.gray@linaro.org>
- <4b6cd42426521808962d68a44952b95818fc5daf.1678106722.git.william.gray@linaro.org>
- <ZAX2k9gW1AA88T/P@smile.fi.intel.com>
- <ZAf4LudZkYLsWVWh@fedora>
- <ZAiISgAroSD3YOfk@smile.fi.intel.com>
+        with ESMTP id S229453AbjCIVEB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 16:04:01 -0500
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99955F6C68;
+        Thu,  9 Mar 2023 13:03:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1678395811; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=iUtNpgy7wTPxrPi44CtDxe9pL384jteIpM1fm+A98ORXPdq+UaPSKDykCx3EQXEGSz+L4bKr8DXtXfEKsHJdqX0+hajKIQiSd0GheN/cMnR5Khx/lFV8Br5ijZUQ+7nVWL3yY+H0h1CX6slim3gKSUBejO+tGW/qy0YshEA8Oxc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1678395811; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=pKW6CVfdiVcKOlVrCdWthABuRy5PpI7KcCv16cmfRas=; 
+        b=icpvHqeFQc83D9F+ipYP+chSTw4pPC2vXawJQ2lH/mKR7UwprFpwG6h9KVY+KZXrwAKGuXvt9Rn+Mw2p4JuhOsRRem0cMRuDudhwpUubipLQS1SsCBh32fSmeMBzEIrC4/aQvtrrQuH4kxYCWxQQH0rd4qfMtYnjdS64aU7yews=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1678395811;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=pKW6CVfdiVcKOlVrCdWthABuRy5PpI7KcCv16cmfRas=;
+        b=fngNA3Q/fEZCSjXlSDhe+7kagjEII/8DPv7AJTBWY1Vqx1TmEp5/rYJEHb+xgKYx
+        2nRPYvJlRro7O4D2Ep1m5ICFA5LmXRZac9NN+GeTQ0r7YFxzyDZFvOSsrYWnfVvko/p
+        Am/dfZq20vEyLyy3LH5G5R7lYO0vh2E6Gcv1WowE=
+Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
+        with SMTPS id 1678395808981366.07781513789814; Thu, 9 Mar 2023 13:03:28 -0800 (PST)
+Message-ID: <a53a4792-c9e5-fce9-ac37-cc0a64447813@arinc9.com>
+Date:   Fri, 10 Mar 2023 00:03:21 +0300
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gYdWBrdL+KqBcWeI"
-Content-Disposition: inline
-In-Reply-To: <ZAiISgAroSD3YOfk@smile.fi.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 19/20] dt-bindings: pinctrl: mediatek: mt7620: split
+ binding
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+References: <20230303002850.51858-1-arinc.unal@arinc9.com>
+ <20230303002850.51858-20-arinc.unal@arinc9.com>
+ <61539204-afbf-f504-dfe7-237824dc0d6c@linaro.org>
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <61539204-afbf-f504-dfe7-237824dc0d6c@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 9.03.2023 12:54, Krzysztof Kozlowski wrote:
+> On 03/03/2023 01:28, arinc9.unal@gmail.com wrote:
+>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>
+>> The MT7628 and MT7688 SoCs contain different pin muxing information,
+>> therefore, should be split. This can be done now that there are compatible
+>> strings to distinguish them from other SoCs.
+>>
+>> Split the schema out to mediatek,mt76x8-pinctrl.yaml.
+>>
+>> Remove mediatek,mt76x8-pinctrl from mt7620.
+>>
+>> Deprecate ralink,mt7620-pinctrl. The reason is, the DTs for mt76x8 which
+>> use this string will incorrectly match the pin muxing information for
+>> mt7620. There's a new string, mediatek,mt7620-pinctrl, which makes the
+>> deprecation possible.
+>>
+>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+>> ---
+>>   .../pinctrl/mediatek,mt7620-pinctrl.yaml      | 380 +--------------
+>>   .../pinctrl/mediatek,mt76x8-pinctrl.yaml      | 450 ++++++++++++++++++
+>>   2 files changed, 459 insertions(+), 371 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt76x8-pinctrl.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7620-pinctrl.yaml
+>> index 11530b29d52b..38b71c74b9a0 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7620-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7620-pinctrl.yaml
+>> @@ -11,16 +11,13 @@ maintainers:
+>>     - Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>>   
+>>   description: |
+>> -  MediaTek MT7620 pin controller for MT7620, MT7628 and MT7688 SoCs.
+>> +  MediaTek MT7620 pin controller for MT7620 SoC.
+>>     The pin controller can only set the muxing of pin groups. Muxing individual
+>>     pins is not supported. There is no pinconf support.
+>>   
+>>   properties:
+>>     compatible:
+>> -    enum:
+>> -      - mediatek,mt7620-pinctrl
+>> -      - mediatek,mt76x8-pinctrl
+>> -      - ralink,mt7620-pinctrl
+> 
+> I see removal, not deprecation.
 
---gYdWBrdL+KqBcWeI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I thought deprecation meant removing a string with explanation on the 
+patch log, as I remember from my conversation with you and Rob on this 
+patch series.
 
-On Wed, Mar 08, 2023 at 03:06:18PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 07, 2023 at 09:51:26PM -0500, William Breathitt Gray wrote:
-> > On Mon, Mar 06, 2023 at 04:20:03PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Mar 06, 2023 at 07:59:53AM -0500, William Breathitt Gray wrot=
-e:
->=20
-> ...
->=20
-> > > > -	raw_spinlock_t lock;
-> > > > +	spinlock_t lock;
-> > >=20
-> > > This is a regression.
-> > > That said, do we need a support of raw spin locks in the regmap IRQ?
-> >=20
-> > So this code has a similar need as the gpio-pcie-idio-24 patch: guard
-> > registers between handle_mask_sync() and set_type_config(); however, now
-> > we also need to protect registers in regmap_irq_thread(). We can't use a
-> > mutex here because regmap_irq_thread() is executed in an interrupt
-> > context so we cannot sleep.
-> >=20
-> > This might be a mistake in my understanding: I chose spinlock_t here
-> > because I believed it to map out to a raw_spinlock_t anyway underneath,
-> > whereas on RT kernels it would map out to whatever the equivalent is. I
-> > suspect this is not actually the case. Would using raw_spinlock_t
-> > explicitly be the correct way to go for this particular case?
->=20
-> You may read the commit message of the 27d9098cff6e ("pinctrl: intel:
-> Use raw_spinlock for locking"). TL;DR: this is only affects IRQ chips,
-> so if your GPIO controller is _not_ an IRQ chip, you are fine.
->=20
-> WRT the other driver, can_sleep may reduce scope of the use of GPIOs
-> and even make a regression if any consumer don't want that behaviour
-> and currently works.
+https://lore.kernel.org/linux-devicetree/87c9bf7e-f290-7d38-0844-7a7243688f5a@arinc9.com/
 
-Looking through kernel/irq/manage.c, I see the raw_spinlock desc->lock
-is taken in __setup_irq() before potentially calling __irq_set_trigger()
-which ultimate calls the chip->irq_set_type() callback. So it seems
-unsafe to sleep within at least this callback which is utilized by both
-drivers, so both gpio-pcie-idio-24 and gpio-ws16c48 will need the
-raw_spinlock lock type afterall.
+I won't have to deprecate this now that we straightened things out but 
+I'd like to know the proper way to deprecate compatible strings regardless.
 
-I'll make the necessary changes and release a v5 of this patchset.
-
-As an aside, I wonder if locking is not needed if we only utilize the
-set_type_config() callback, because the desc->lock taken by the irq
-subsystem will be enough to guard between regmap_irq_set_type() and
-regmap_irq_thread(). It's not valid for our particular case here because
-we also utilize a handle_mask_sync() callback (chip_bus_lock() is not
-protected by desc->chip) but it's something to think about.
-
-William Breathitt Gray
-
---gYdWBrdL+KqBcWeI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAo0fwAKCRC1SFbKvhIj
-K0GCAPsH4oQt3CLZycxBwi4Kq5J9EIU2IK7jPmsloJkz5HKO3QEAzcBw1CEUwlq6
-bpcLQ/rnxaWqs1u1vlASpoDW4U/9swQ=
-=aBu6
------END PGP SIGNATURE-----
-
---gYdWBrdL+KqBcWeI--
+Arınç
