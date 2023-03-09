@@ -2,84 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B267E6B242B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 13:27:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E676B246E
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 13:43:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbjCIM1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 07:27:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45140 "EHLO
+        id S229685AbjCIMnQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 07:43:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbjCIM1a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 07:27:30 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31404ED0F9
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 04:27:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678364822; x=1709900822;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XqAWvSGaYD1G+RObKmSZv2X4i13keN+Yfo57Kq55Wks=;
-  b=g++0bjzbodRC3hNFVrF4mcw3ICF9qhb3ytZMuLbVwZNPYs48UMlKEYBN
-   LbS7/DfYoY7eBSgn82tYD6VNk815Ckh1e3SdTKHdTzPYayWaf+EtcGkKU
-   YhN1aRg3jq9KXqvT1RcmhHTKNsjP+68wa+iHtPHKyz5p0AYUYApOU9sLm
-   AFLe6+n7A0T2SlMWo2BwKW4JBP5LfTsNfvfP3hjJAzoq81iCV26r6D4FV
-   SRmUnZ+vMkQxGZ4kfh4xsv66myVtKjdFpqyKgV/DbYL95Cx0hyh+Kf7Vm
-   JyqD7WrYQg8J7DVFUUa7/19ZpYfkebsB0sUb9YfY0oo3D8xUAi+uEVkrE
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="324752634"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="324752634"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 04:27:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="679741529"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="679741529"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Mar 2023 04:26:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1paFMH-000JIb-2a;
-        Thu, 09 Mar 2023 14:26:57 +0200
-Date:   Thu, 9 Mar 2023 14:26:57 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Subject: Re: gpiolib of_node removal
-Message-ID: <ZAnQkX5olfH7MCBc@smile.fi.intel.com>
-References: <760827e8-6e55-177a-851e-677f54edb3a7@nvidia.com>
+        with ESMTP id S229628AbjCIMnO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 07:43:14 -0500
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48A430EC
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 04:42:54 -0800 (PST)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-53d277c1834so32361777b3.10
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 04:42:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678365774;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pN4h/1ijmbo7VcsXSDhCDWn4G5XmpjpXno/f0xaIyH0=;
+        b=Z+Dx/+gYAzdVBzbs1310VdlarysCjTY7EJ0rFvu03NmOB2bCGJJpVcrl3DUUZIpjF8
+         c4S/yb7P4PhRkamTNhXU/D0mPpYCxlfr0YPRrKnX10BxaSnYtvq7l/uaT4bAp5aHvjBO
+         C0l0UsHnkYs29Pub8UnHUpg13Nvd1+BMo5O88tWJNlYKV+9+Dg3QHgzm7G5nfdFUGyGz
+         1R4ysnXcIpXRSZeJv0mfLX4EVcutBkOwy2xB/JtCG3Dd9wturQtpCfgfoH75IYMQPmgh
+         zLmr0kww0Rlih1l29fLF/wACXNwFxlVv8JCBYWCNBCooiKq7SK9W7K048R1Sst0VcnT2
+         oEaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678365774;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pN4h/1ijmbo7VcsXSDhCDWn4G5XmpjpXno/f0xaIyH0=;
+        b=Yb+9/o7l8j9HBHF3RH+MeLZSXqqbINlDHKW/MMvp2oiASVMGsP+tTzXKeEp6VL4tCn
+         wyStOZ1gcJgCKB7+voRxldzR6uZtmSYK8Vie623bp9jBDl/GACq1Mzvad/pqf1nHEgoJ
+         r3JEkOFBEYKQDPICeDLUx8L/F19y1cPgyj838xK78P6w6k+E2FbEtqkd76jvpdy28eXx
+         LBrq4SvKhMcUyCcIsPTVpv2ExRBxyOCYHMBgLXDWancWkYcaymc6pJ9kt2PCAxp8dnE6
+         RoGwZtxSg1vv21Vn3CZ51sGn46GlwjAqEBGSPXu2apo8xYS49nFGn0UgN3qMcfXlxoU3
+         UG0w==
+X-Gm-Message-State: AO0yUKXJe0E19POGBCgWFqVccD9NA/gCxldcBAWyS/hH9m6p3Od2FgUH
+        Ie1BX+SQKxac23Iz30WYCRg+XHTzZrR6JB0jsoqPBw==
+X-Google-Smtp-Source: AK7set/t/ge+RffANMD5Twp9435UGbkRmNCv0AEAYK/3L6JZ6ekMYOHyplvfHdKHhHHxUHJQvqTR3l+dEHfrX3PkKNg=
+X-Received: by 2002:a81:ad63:0:b0:52a:9f66:80c6 with SMTP id
+ l35-20020a81ad63000000b0052a9f6680c6mr13398613ywk.9.1678365773932; Thu, 09
+ Mar 2023 04:42:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <760827e8-6e55-177a-851e-677f54edb3a7@nvidia.com>
 In-Reply-To: <760827e8-6e55-177a-851e-677f54edb3a7@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Mar 2023 13:42:42 +0100
+Message-ID: <CACRpkdZHXU7mrep-SnEYQiz0MFv4EaMpsnp_Q_AuwO4-s9iRhw@mail.gmail.com>
+Subject: Re: gpiolib of_node removal
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     andriy.shevchenko@linux.intel.com,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 05:17:40PM -0800, Dipen Patel wrote:
-> Hi Andy, Bartosz,
-> 
-> I see that 6.3-rc1 has https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/include/linux/gpio/driver.h?id=70d0fc4288dabd65025fde7774b4f9262afa9034
-> commit which removes of_node data member as it was deemed unused. Incidentally, I actually am using that member in ongoing patch series
-> https://patchwork.kernel.org/project/timestamp/patch/20230214115553.10416-3-dipenp@nvidia.com/ and specifically in tegra_get_gpiochip_from_of_node function.
-> 
+On Thu, Mar 9, 2023 at 2:17 AM Dipen Patel <dipenp@nvidia.com> wrote:
+
 > Should I revert that patch and add it in my next patch series or is there any other way to retrieve gpio_chip?
 
-I don't know what you are doing exactly, but either use parent device for GPIO
-chip or supply a custom fwnode. The OF node won't be resurrected.
+So what you want is a function to pass to gpiochip_find() to match
+the chip corresponding to a certain OF node. You have this:
 
--- 
-With Best Regards,
-Andy Shevchenko
+static int tegra_get_gpiochip_from_of_node(struct gpio_chip *chip, void *data)
+{
+    return chip->of_node == data;
+}
 
+1) Rename this function tegra_gpiochip_match() as that is what it does.
 
+2) Do something like:
+
+static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
+{
+    return chip->fwnode == of_node_to_fwnode(data);
+}
+
+I think that should work?
+
+Yours,
+Linus Walleij
