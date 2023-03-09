@@ -2,131 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3CBD6B1B44
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 07:17:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B19956B1BFF
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 08:11:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjCIGQ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 01:16:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
+        id S229764AbjCIHK7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 02:10:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjCIGQ5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 01:16:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE992DBB5F;
-        Wed,  8 Mar 2023 22:16:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 690A8619A9;
-        Thu,  9 Mar 2023 06:16:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E589C433D2;
-        Thu,  9 Mar 2023 06:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678342612;
-        bh=BtthgR0zbwmyvaFDelFkF+Pa981UtRRUf5qDW/VObEI=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=N9DWIXFLEWQU7zpt7PMFfgOh9+s008I4WsuaTbdcLwGtw1dAcwh1KI6FRxxqRPihR
-         w2lgJS3F2FZtXLChCFLoduHaMIglZG7pqEyaKSR8KyGiHeNCKI1AnAPrCf95aaVbKX
-         K8y9DVVCFp7OEfwyLaeEYCnl0IYDcwcGJqFRMVVJSncGDu9cKYpwchUa/ZsOmgUQaw
-         KjeTCdYRDv2rd/tRqg5O1Rj86jrgb8leRoWzS5VhOV+sPUdaDU4htL7No7UnDpEiko
-         t/ATUSKPQcVZqUwT1nWjVG47mqk2WaPRWJmJd6VVgAtwsYdLBYm86O3CZlB3jPhukf
-         neZ8wK1iuQHsg==
-Message-ID: <ab9f7730-d399-0786-67e5-aad57716809e@kernel.org>
-Date:   Thu, 9 Mar 2023 07:16:47 +0100
+        with ESMTP id S229742AbjCIHK6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 02:10:58 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12729A3B40;
+        Wed,  8 Mar 2023 23:10:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678345858; x=1709881858;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0JC8EdQCQu79Tbr/nJ/2g2CWrJledfFqbEALgkGmyiQ=;
+  b=VOyYJtkE4o6lgzpqFzgwXwHo7WT1xtjMGEk1wp7J4PwnNJa/tfz4VeTC
+   v3n4XuSr1JKBKuUGfGDsrnFm+HILfw/oRrPk+bqyWyddg4YmsMUurSzxB
+   n+RtJ1ZMXF32eflXdLb5oHbd1bLW04h+nCS/wYB6fpPR28ET1qfNte6T0
+   0jYrRt3eG3DDO93knILVaD0b+VOTQTzjDSMKf4ZfRRoQcWaBHw7C58CjK
+   u71l2YxB2Y69hEFxC/Mx6890vvKCgp3tbwaRDZTffWLBRbChk/G7QOfVl
+   podqxlCNuio8espO2tM6IBdu16shjoqqPhsft59UOAkhb2KmiRQDO2AFs
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="316767645"
+X-IronPort-AV: E=Sophos;i="5.98,245,1673942400"; 
+   d="scan'208";a="316767645"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 23:10:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="923126288"
+X-IronPort-AV: E=Sophos;i="5.98,245,1673942400"; 
+   d="scan'208";a="923126288"
+Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.154.52])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Mar 2023 23:10:53 -0800
+From:   Ye Xiang <xiang.ye@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
+        Ye Xiang <xiang.ye@intel.com>
+Subject: [PATCH v4 0/5] Add Intel LJCA device driver
+Date:   Thu,  9 Mar 2023 15:10:55 +0800
+Message-Id: <20230309071100.2856899-1-xiang.ye@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH V2 4/6] dt-bindings: timestamp: Add Tegra234 support
-To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org,
-        timestamp@lists.linux.dev
-References: <20230214115553.10416-1-dipenp@nvidia.com>
- <20230214115553.10416-5-dipenp@nvidia.com>
- <3c0ad963-ce69-bd5b-20cd-888e5fbdecaf@kernel.org>
- <7a8027c9-dc73-3684-c5f2-3071f315b3cd@nvidia.com>
- <a5e897e5-4cb9-d50f-47a8-ffb8bd8774cb@kernel.org>
- <18f9a6ca-a61b-4cbb-b729-1fdb6d48651a@nvidia.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <18f9a6ca-a61b-4cbb-b729-1fdb6d48651a@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08/03/2023 21:09, Dipen Patel wrote:
-> On 3/8/23 11:05 AM, Krzysztof Kozlowski wrote:
->> On 08/03/2023 19:45, Dipen Patel wrote:
->>> On 2/16/23 6:17 AM, Krzysztof Kozlowski wrote:
->>>> On 14/02/2023 12:55, Dipen Patel wrote:
->>>>> Added timestamp provider support for the Tegra234 in devicetree
->>>>> bindings.
->>>>
->>>> 1. Your commit does much more. You need to explain it why you drop some
->>>> property.
->>> ACK, will address it next patch
->>>>
->>>> 2. Bindings go before its usage (in the patchset).
->>> Ack...
->>>>
->>>> 3. Please use scripts/get_maintainers.pl to get a list of necessary
->>>> people and lists to CC.  It might happen, that command when run on an
->>>> older kernel, gives you outdated entries.  Therefore please be sure you
->>>> base your patches on recent Linux kernel.
->>> It is based on recent linux at the time patch series was sent...
->>
->> That's good but then why you do not use scripts/get_maintainers.pl? The
->> hint about recent kernel was just a hint... Just do not invent addresses
->> by yourself and use the tool to get them right.
->>
-> I will take a note for the next patch series to add any missing people. The current
-> list of people/group is what historically helped review this new timestamp/hte subsystem.
-> 
->> (...)
->>
->>>>> +  properties:
->>>>> +    compatible:
->>>>> +      contains:
->>>>> +        enum:
->>>>> +          - nvidia,tegra194-gte-aon
->>>>
->>>> This is an ABI break. Does your driver handle it?
->>> yes, handling patch is part of this patch series.
->>
->> Can you point me to the code which does it? I see "return -ENODEV;", so
->> I think you do not handle ABI break. I could miss something but since
->> you disagree with me, please at least bring some arguments...
-> Refer to patch https://patchwork.kernel.org/project/timestamp/patch/20230214115553.10416-3-dipenp@nvidia.com/
-> which has compatible properties added and also code changes to reflect addition/deletion of some
-> properties.
+Add driver for Intel La Jolla Cove Adapter (LJCA) device.
+This is a USB-GPIO, USB-I2C and USB-SPI device. We add 4
+drivers to support this device: a USB driver, a GPIO chip
+driver, a I2C controller driver and a SPI controller driver.
 
-I referred to the code which breaks the ABI.
+---
+v4:
+ - move ljca.c from drivers/mfd to drivers/usb/misc folder.
+ - fix index warning in sysfs-bus-devices-ljca.
 
-> 
-> I am not sure I have understood about ABI break comment. How else one should handle if
-> there is no related gpio controller property found?
+v3:
+ - spi: make ljca_spi_transfer inline and fix an endian issue.
 
-In a way it does not break existing users? There are many ways to handle
-it, but I don't know your code to point you.
+v2:
+ - ljca: remove reset command.
+ - gpio/spi/i2c: add `default MFD_LJCA` in Kconfig.
+ - gpio: add "select GPIOLIB_IRQCHIP" in Kconfig.
 
-> I am assuming you are referring to the
-> below code from the patch 2 (link above) when you said "return -ENODEV".
+Ye Xiang (5):
+  mfd: Add support for Intel LJCA device
+  gpio: Add support for Intel LJCA USB GPIO driver
+  i2c: Add support for Intel LJCA USB I2C driver
+  spi: Add support for Intel LJCA USB SPI driver
+  Documentation: Add ABI doc for attributes of LJCA device
 
+ .../ABI/testing/sysfs-bus-usb-devices-ljca    |  22 +
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-ljca.c                      | 454 ++++++++
+ drivers/i2c/busses/Kconfig                    |  11 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-ljca.c                 | 357 +++++++
+ drivers/spi/Kconfig                           |  11 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ljca.c                        | 291 ++++++
+ drivers/usb/misc/Kconfig                      |  13 +
+ drivers/usb/misc/Makefile                     |   1 +
+ drivers/usb/misc/ljca.c                       | 969 ++++++++++++++++++
+ include/linux/mfd/ljca.h                      |  95 ++
+ 14 files changed, 2239 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+ create mode 100644 drivers/gpio/gpio-ljca.c
+ create mode 100644 drivers/i2c/busses/i2c-ljca.c
+ create mode 100644 drivers/spi/spi-ljca.c
+ create mode 100644 drivers/usb/misc/ljca.c
+ create mode 100644 include/linux/mfd/ljca.h
 
-Your bindings patch points to ABI break without any
-explanation/justification. Then your code #2 patch actually breaks it,
-also without any justification.
-
-Best regards,
-Krzysztof
+-- 
+2.34.1
 
