@@ -2,124 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8F86B2640
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:07:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 513936B263B
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbjCIOHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:07:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38982 "EHLO
+        id S230063AbjCIOG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 09:06:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231617AbjCIOGr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:06:47 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F0DF2C2E;
-        Thu,  9 Mar 2023 06:05:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678370715; x=1709906715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xyu2LhQmiWMU7PEtu0Xqa5WBJtDdVhaFUmfdUENtKaQ=;
-  b=X0jppAABYmvm7dDz4YhZfEVFesTTZv6g3TingN8cFot8igaeOLsH1NDn
-   OTueHIqkZg/hmlZl2szP2GEkSWQzdhOe7sUVJtlGyRl8fZGPqb3SuvWyc
-   M+uJYUaHZ2DsTNBfR4W71E/MKaCEvWKNaWplIay675px25r3LZjFGwqkg
-   w7KAzqUEkydzXcmCCe19QUwDqQaaYz/NjCl+LAqDJiqxntmKT8XDUmhr1
-   yA/AiTeryyUzRSIx5VzNuwn6eD/0D5QSogfEShU6tBNZ1Ro+Dnr6DKhBk
-   4eO6QN6w14KJTrDOFor6BofQJPAkM9UascPq6j9L0s33nq8mIy+ACRhR1
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="320279826"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="320279826"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 06:03:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="741571681"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="741571681"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2023 06:03:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1paGrX-000Loh-0G;
-        Thu, 09 Mar 2023 16:03:19 +0200
-Date:   Thu, 9 Mar 2023 16:03:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Kaehn <kaehndan@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
-Message-ID: <ZAnnJpdtlEOS4tiS@smile.fi.intel.com>
-References: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
+        with ESMTP id S231599AbjCIOGF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:06:05 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C9B9CBE6
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 06:03:45 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id v13so2077858ybu.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 06:03:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678370625;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rfLw2hJ09K7juhM7ToFdGQXgPnTRU+N2reGUNJs1fMk=;
+        b=te5CmTZZaAREe6I9IbC5fP+cua4HnFYEfZjzKQLmEgXgfZVYTDH4bb328fgwm8hJdZ
+         ASiGe0w+uRx9ZgsYg7fklWrSM2QC+cEPqkokwrRPDzH8CD+54vu1vE/BxGH64Vred9Nr
+         Fvuky2dufM0aJY16tRiaVtupHqsK2ALSzEUOcecjwHCtjxKNTQ+6GMCxEIdpz/jV+iwz
+         XEQsfxoWv/URUbKerklvhBjOWH35qUazvHwD2dqHQHY0GZmIoqBgNuDdvcoWBgY4d30U
+         KHBq50GVm54ah6w0eLg0PCz14auugvv9pJzszHof3kyE8tjlCIRcr0xSfM6Lz7tw/kHq
+         xVPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678370625;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rfLw2hJ09K7juhM7ToFdGQXgPnTRU+N2reGUNJs1fMk=;
+        b=4ZNwdy8JAGXt4hR2rCyMYg1pZ1Yu3oJ6uw1G3SG1Dr9kiRcw6Amu6cpNkEdYIRpG/4
+         nr+yMEVhebXFrVacOqI7ZVd/Z/dgs0kNw2HMmWbic2f+cnvKa7k4LokpBwz2OhGj1EAe
+         BW6DoeTm2el9ETuwENRhX7ByBVHml9HVZUfgatQgvheRWQxqNEViW3LA22Kss2oDm1qK
+         /m6VQog6LRUifEgQqDvzWlARsC2eSzurjrDvI6YT80NsmkupBAGrWlcVmgxE43gw0qDN
+         VZW/pyh/lZGnybA60xcsJKeSNkkTGnjUClHZjWAFSmvqhl0B3SnUlfiCy04U82FQVjIO
+         13nw==
+X-Gm-Message-State: AO0yUKV75Bb8OeTu/OIgWz2M0VdhB0gW5gCSDR2HnlVdmT9gCI/NpRE5
+        seUMZYhiSsgP9RUYpmHd4Ob2lbuSfZkEiSDYScPp5Q==
+X-Google-Smtp-Source: AK7set/V9g47LXb/8bVVYX4aEcUjsLMStk6C108ueaS9M+e5hKMWh6BL/B8P3j74SyJtKGeS1gB7pU0gGTbjZfKvQFQ=
+X-Received: by 2002:a25:8c84:0:b0:b23:4649:7ef3 with SMTP id
+ m4-20020a258c84000000b00b2346497ef3mr707871ybl.4.1678370624827; Thu, 09 Mar
+ 2023 06:03:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230308084309.396192-1-nm@ti.com>
+In-Reply-To: <20230308084309.396192-1-nm@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Mar 2023 15:03:33 +0100
+Message-ID: <CACRpkdbBWeFupRin=JuMCGDWkzbsR18N+4ZEbQOPJq=p3w0yLw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: k3: Introduce debounce select mux macros
+To:     Nishanth Menon <nm@ti.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 02:40:51PM +0100, Benjamin Tissoires wrote:
-> While trying to set up an SSDT override for a USB-2-I2C chip [0],
-> I realized that the function acpi_gpiochip_find() was using the parent
-> of the gpio_chip to do the ACPI matching.
-> 
-> This works fine on my icelake laptop because AFAICT, the DSDT presents
+On Wed, Mar 8, 2023 at 9:43 AM Nishanth Menon <nm@ti.com> wrote:
 
-Ice Lake
+> Introduce the debounce select mux macros to allow folks to setup
+> debounce configuration for pins. Each configuration selected maps
+> to a specific timing register as documented in appropriate Technical
+> Reference Manual (example:[1]).
+>
+> [1] AM625x TRM (section 6.1.2.2): https://www.ti.com/lit/pdf/spruiv7
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-> the PCI device INT3455 as the "Device (GPI0)", but is in fact handled
-> by the pinctrl driver in Linux.
-> The pinctrl driver then creates a gpio_chip device. This means that the
-> gc->parent device in that case is the GPI0 device from ACPI and everything
-> works.
-> 
-> However, in the hid-cp2112 case, the parent is the USB device, and the
-> gpio_chip is directly under that USB device. Which means that in this case
-> gc->parent points at the USB device, and so we can not do an ACPI match
-> towards the GPIO device.
-> 
-> I think it is safe to resolve the ACPI matching through the fwnode
-> because when we call gpiochip_add_data(), the first thing it does is
-> setting a proper gc->fwnode: if it is not there, it borrows the fwnode
-> of the parent.
-> 
-> So in my icelake case, gc->fwnode is the one from the parent, meaning
+Patch applied.
 
-Ice Lake
+Consider doing what Krzysztof recommends: move thes <dt-bindings/*.h>
+down to the arch where you're using it and have them as .dtsi files instead
+or something.
 
-> that the ACPI handle we will get is the one from the GPI0 in the DSDT
-> (the pincrtl one). And in the hid-cp2112 case, we get the actual
-> fwnode from the gpiochip we created in the HID device, making it working.
-
-Thinking more about it. In ACPI we have those nodes defined as devices, right?
-So, strictly speaking the platform tells us that they _are_ devices.
-
-The question here is what this device node in ACPI means:
-1) the physical device or subdevice of the physical device OR
-2) the physical device even if it's a part of combined (Multi-Functional)
-   device.
-
-Second question is, does Device Tree specification allows something
-that is not a device node, but can be enumerated as a subdevice of
-a physical one?
-
-P.S. I don't have objections against the patch, but I would like to
-have a clear picture on what the semantics of the two specifications
-WRT possibilities of device enumeration. It might be that we actually
-abuse ACPI specification in cases of Diolan DLN-2 or other way around
-trying to abuse it with this patch.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
