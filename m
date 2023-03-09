@@ -2,67 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167366B2C44
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 18:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FDDD6B2C57
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 18:50:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbjCIRrD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 12:47:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51206 "EHLO
+        id S230473AbjCIRuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 12:50:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbjCIRrC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 12:47:02 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34650FB257;
-        Thu,  9 Mar 2023 09:47:01 -0800 (PST)
+        with ESMTP id S230093AbjCIRuh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 12:50:37 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4537F6B43;
+        Thu,  9 Mar 2023 09:50:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678384021; x=1709920021;
+  t=1678384235; x=1709920235;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=I8UicG17Q/faH5uDUFSsbeEZfZYosSYwUWWJFsU2Qzo=;
-  b=SgSHIFSt86SSWe4jioQG5+qYiIDiRV5/XiaAuftm9VL20MyT+DZeqb3f
-   ptJEa6gIvJId/+m5TE7ezuc/4agjvDqHU6saCfpLVewGjIhR+sRx5UPTe
-   kv0I9ma2+JMmqyk0Aqk3GLz+0FDh7V/vQRJVX8uupWHtDqDpAMD917jOO
-   P21j+Gefz+nevjjJ8Q6gBhySmjAY0Ip7LxIJEKE4xHfafuoAyYvM36Xkz
-   FMQqkslEFieBRcMF8hwwdx6MEt20MuNE3AgWxIC7KClkuYgYXMZJrbIna
-   imaGDhmT3PuQUESQ/+ysuN0PpRADQ4l5y8XiCQE9CG2JeYvutFuzpeBP8
+   mime-version:in-reply-to;
+  bh=ogVypCdkPt8E5X9bDUGx7JSe5g2+nmoHHjkYAcaFWFg=;
+  b=nUHKITiAJVDNLlPabHZzAzGakVZaLNBYVATMvCMy/VQYQ5c556EjDgk5
+   kThnEpGQhS0KjVDgeMwN0Lp2UEvJelKHVcMA61FTMldUTcxYGt8M4vd2S
+   Osd0iTjrnJjTvCiy9iFzVZBxCtv0Kc6vNAk/+Hu2MVWr2Ie0qx4/d2dKe
+   hZA1/ck+HBlPt3DZOyJG1i0JtwFrrPkMGDTB76FZ91uVvoX6C70hYfz0z
+   cbgVhsIYumm2pMGQCl+t1FUETTcGW0NCCN9aJDSDdYjc6iWy3PV/zZ28z
+   r2n5HQusIrnh920a0s3Fcjrtqn343eoRxlOQMudp9GKDY/sn3kHc2qSaq
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="338062370"
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="324855414"
 X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
-   d="scan'208";a="338062370"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 09:47:00 -0800
+   d="scan'208";a="324855414"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 09:50:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="627451541"
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="677462919"
 X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
-   d="scan'208";a="627451541"
+   d="scan'208";a="677462919"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 09 Mar 2023 09:46:57 -0800
+  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2023 09:50:32 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1paKLv-000SVg-1X;
-        Thu, 09 Mar 2023 19:46:55 +0200
-Date:   Thu, 9 Mar 2023 19:46:55 +0200
+        id 1paKPO-000Sb6-0d;
+        Thu, 09 Mar 2023 19:50:30 +0200
+Date:   Thu, 9 Mar 2023 19:50:29 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        linux-gpio@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH v2] sh: mach-x3proto: Add missing #include
- <linux/gpio/driver.h>
-Message-ID: <ZAobj3hZuhQ2pLb6@smile.fi.intel.com>
-References: <20230309144113.3922386-1-geert+renesas@glider.be>
+        Anders Roxell <anders.roxell@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: selftests: gpio: crash on arm64
+Message-ID: <ZAocZRZh4FQRH3lc@smile.fi.intel.com>
+References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230309144113.3922386-1-geert+renesas@glider.be>
+In-Reply-To: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -74,18 +74,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 03:41:13PM +0100, Geert Uytterhoeven wrote:
-> shx3_defconfig:
+On Thu, Mar 09, 2023 at 09:33:29PM +0530, Naresh Kamboju wrote:
+> Following kernel warnings and crash notices on arm64 Rpi4 device while
+> running selftests: gpio on Linux mainline 6.3.0-rc1 kernel and Linux next.
 > 
->     arch/sh/boards/mach-x3proto/setup.c: In function ‘x3proto_devices_setup’:
->     arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of undefined type ‘struct gpio_chip’
->       246 |                 baseboard_buttons[i].gpio = x3proto_gpio_chip.base + i;
-> 	  |                                                              ^
-> 
-> Fix this by replacing the include of the legacy <linux/gpio.h> by
-> <linux/gpio/driver.h>.
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Pushed to my review and testing queue, thanks!
+...
+
+> [   61.177432]  *** DEADLOCK ***
+> [   61.177432]
+> [   61.177434] 3 locks held by modprobe/510:
+> [   61.177436] #0: ffff000040000698 (&n->list_lock){-.-.}-{2:2}, at:
+> get_partial_node.part.0 (mm/slub.c:2271)
+> [   61.177448] #1: ffff80000b227f18 (console_lock){+.+.}-{0:0}, at:
+> vprintk_emit (kernel/printk/printk.c:1936 kernel/printk/printk.c:2315)
+> [   61.177460] #2: ffff80000b228388 (console_srcu){....}-{0:0}, at:
+> console_flush_all (include/linux/srcu.h:200 kernel/printk/printk.c:290
+> kernel/printk/printk.c:2934)
+
+How is it related to the GPIO?
+Can you bisect if it's a regression somewhere?
 
 -- 
 With Best Regards,
