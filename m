@@ -2,113 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACFCA6B27FA
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:55:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F956B2857
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 16:07:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232131AbjCIOze (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:55:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
+        id S231690AbjCIPHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 10:07:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232334AbjCIOy7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:54:59 -0500
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78437F0C56
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 06:51:56 -0800 (PST)
-Received: by mail-oi1-x235.google.com with SMTP id q15so1792854oiw.11
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 06:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678373516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gpqy2UwJbTsT8CSlsBkekwaizPbfI6waBJSct+QDKo8=;
-        b=7VnZ8eoq8JCRR9LWSoq6SXSKIYIRedzcewZzSE9gKx6AQQB2Ax7dwKBcAYwJrjlsWs
-         4TCezR69X8MwfD4+CKaz/SObaltdvIIieLVdJ+BWlplOPFiALrUJwDgjMU47Vf51qRDl
-         xdFrwA1rnPNMA0GVzeDnkpXSGfyag6vAi04knNO8VIXj+D5n+705no78/qGHcnD2tLqc
-         nohnomuGXgF8COo7QbluFk8QfItIs5fLy7I2ZnAC1v81iSP6Ds1uiOBx5oP32kgrJXPW
-         yTtqYLrIVGryvFjGoykGRd0Kl8dTZeGhvhFDQoCSZrB7mIPyeb5SEOWrMbUnxfz7JmgZ
-         oQYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678373516;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gpqy2UwJbTsT8CSlsBkekwaizPbfI6waBJSct+QDKo8=;
-        b=DodcEcO3eBdw/ln1Z+wtrmiMxdcb8PPUhgtGKz2+yRMq8juwCzS94ExnHFsoNHxIKO
-         mScZNiQioj0rbFjIL3sKOB7X6zmjHHBKAQi/A+L7TlRS3XxbR4vq33AIuygTlHCrLWBp
-         3XlFVmRLujL8IhyRn7fP1U0QmMfA3IRzOglLud24WCql5XfXPfHG2vK41b+n2ecLbkdz
-         MoNlY6rPdgQ6CtSnYDULbeb/+AAWvldNo4RPcxNrr06mFcXxsC9h0aK94c9A0bXv4qma
-         tQmq4/d62oFmCHQYwhvXe+j51T5Pf/cwP7gQzcKjkMFTRZof8wI489Ip8f9Ewn0JQsGL
-         WR9A==
-X-Gm-Message-State: AO0yUKWHZc1Y20FU7SQjRjqhBlwCkh+Ih1Qi0sLIanBy1/Mhry2ih86c
-        uSxxcEQBUuDlLtDHQnAb9+SBEo3XCRHUyitAphniRg==
-X-Google-Smtp-Source: AK7set8A8FpW9dqaR73G09blcvv/Ti7DIE1vGNLlncw0hLE8FnQCoXHRSlvX0YUqfVCqYXdazGxGSi3CnqOThNIO2y8=
-X-Received: by 2002:a05:6808:2208:b0:37a:2bed:5756 with SMTP id
- bd8-20020a056808220800b0037a2bed5756mr12243997oib.0.1678373515531; Thu, 09
- Mar 2023 06:51:55 -0800 (PST)
+        with ESMTP id S231751AbjCIPGg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 10:06:36 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5035062DB2;
+        Thu,  9 Mar 2023 07:04:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678374261; x=1709910261;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=tt3B9Fexw4wbXb5Yt6Q5BrpLm009eJmCrL/GUqJ/75k=;
+  b=gsepB0da1+RRgZvHAS4iCSHVisLfklDGzyglVTDTcHkMBFntEqH8sCbq
+   CxqKBRtF3GzsyTHVJgxmEiEGvbITJKXLIZHinddfbtAv7QihUNyo7Mty8
+   L/j2pEGBjsdfgugTQEdSCDQ947TFoiPmi69eAJBfWRfW6/VhKbfNmFiiF
+   8WM6fBSCuuSPQ825UlVcpwxd+vjmLshU1GpPw1P6hVTIc5b3KXrDZnCcW
+   XeQJz/6arTXFE8/pocGHZVmHDkzUAZzunXlcGlXHAXYGaW2R9PDTlmFYx
+   KvgvVK4ANXT9RP8YCZCezpK5/AqN68zdKwAm/tK3hfZplBWnB2qDUmBaz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="320309154"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="320309154"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 06:36:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="820618114"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="820618114"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2023 06:36:10 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1paHNI-000Mtx-2e;
+        Thu, 09 Mar 2023 16:36:08 +0200
+Date:   Thu, 9 Mar 2023 16:36:08 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-gpio@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: [PATCH] sh: mach-x3proto: Add missing #include
+ <linux/gpio/driver.h>
+Message-ID: <ZAnu2LwZWm3wi2l5@smile.fi.intel.com>
+References: <20230309135255.3861308-1-geert+renesas@glider.be>
+ <CACRpkdant3mQJX0FM3q65mBaS0fXJ=7tag5dx-1Jp5xpc3EQJg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
- <20230203-evk-board-support-v2-17-6ec7cdb10ccf@baylibre.com> <0fb37a8f-f284-76f2-e2f3-ff0f23eaa200@collabora.com>
-In-Reply-To: <0fb37a8f-f284-76f2-e2f3-ff0f23eaa200@collabora.com>
-From:   =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>
-Date:   Thu, 9 Mar 2023 15:51:44 +0100
-Message-ID: <CAP2ifjOtORrGKEBMw-CzPR4B8CPDaRKnqKHyKL7mC_8qH08=iA@mail.gmail.com>
-Subject: Re: [PATCH v2 17/18] arm64: dts: mediatek: fix systimer properties
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     Alexandre Mergnat <amergnat@baylibre.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdant3mQJX0FM3q65mBaS0fXJ=7tag5dx-1Jp5xpc3EQJg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Thu, Mar 9, 2023 at 2:32=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 07/03/23 14:17, Alexandre Mergnat ha scritto:
-> > From: Amjad Ouled-Ameur <aouledameur@baylibre.com>
+On Thu, Mar 09, 2023 at 03:08:47PM +0100, Linus Walleij wrote:
+> On Thu, Mar 9, 2023 at 2:52 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> 
+> > shx3_defconfig:
 > >
-> > MT8365 has a SYST timer (System Timer), therefore the compatible node
-> > should be "mediatek,mt6765-timer" instead of "mediatek,mt6795-systimer"
-> > (which corresponds to ARM/ARM64 System Timer).
->
-> So this is not a CPUXGPT, not a GPT, but a SYST?
->
-> At this point, this should not be even introduced because commit [1] is
-> not in linux-next yet.
->
-> [1]: https://lore.kernel.org/all/20230125143503.1015424-10-bero@baylibre.=
-com/
+> >     arch/sh/boards/mach-x3proto/setup.c: In function ‘x3proto_devices_setup’:
+> >     arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of undefined type ‘struct gpio_chip’
+> >       246 |                 baseboard_buttons[i].gpio = x3proto_gpio_chip.base + i;
+> >           |                                                              ^
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > Link: https://lore.kernel.org/r/CA+G9fYs7suzGsEDK40G0pzxXyR1o2V4Pn-oy1owTsTWRVEVHog@mail.gmail.com
+> > Fixes: 21d9526d13b5467b ("gpiolib: Make the legacy <linux/gpio.h> consumer-only")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> This is fallout from cleanups in Bartosz GPIO tree, so it will be applied there.
+> Make sure Bartosz gets the patch (now on To:)
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I've posted a new revision of this patchset containing the systimer fix.
+Thanks, as for previous patch on the same topic, I am collecting this one.
 
-https://lore.kernel.org/linux-mediatek/20230309143459.401783-1-bero@baylibr=
-e.com/
+I will sent a new PR to Bart including all fixes, but I would wait one or a
+couple of weeks before doing that. Meanwhile these will be in Linux Next.
 
-ttyl
-bero
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
