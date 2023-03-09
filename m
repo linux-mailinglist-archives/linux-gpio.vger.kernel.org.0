@@ -2,112 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E31706B2716
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:37:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE526B272A
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:41:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbjCIOhk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:37:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36704 "EHLO
+        id S229532AbjCIOlW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 09:41:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231871AbjCIOhD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:37:03 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C82EF7EDB;
-        Thu,  9 Mar 2023 06:36:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 83592B81F64;
-        Thu,  9 Mar 2023 14:36:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D55C433D2;
-        Thu,  9 Mar 2023 14:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678372607;
-        bh=cv3mRrc0sgN9ywJSYCA+9wt3Wst1MMWKr0adp0O6Ytc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZnlJg+V+FlDZKUMZYNweebr4HU0P3ux8UprrorgPpU/iAGltdDeYk9lMEx3iqcRGP
-         OUWFc608w3PwiGVkEHqS7I+izSZOsSYFmdNrE1VVOPPb0+M33frIdVQ59kW0087Wkw
-         e/cJZzKSgKNWX4426M5uYZxVpGj2NQg37Zzep5Rg=
-Date:   Thu, 9 Mar 2023 15:36:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Ye Xiang <xiang.ye@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v4 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-Message-ID: <ZAnu/GlpS32BgmqG@kroah.com>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
- <20230309071100.2856899-3-xiang.ye@intel.com>
- <2865f3d0-428b-0df1-fc50-f6af3cb9dac3@suse.com>
- <ZAnku01goVDCuNM+@smile.fi.intel.com>
- <CACRpkdYQfT=JXvmjKR_9O74H2dmwx1EF4QjCHM6fKAetpbrMOg@mail.gmail.com>
+        with ESMTP id S229963AbjCIOlU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:41:20 -0500
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D437114221
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 06:41:18 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed50:3a77:63e:b168:ae06])
+        by albert.telenet-ops.be with bizsmtp
+        id WEhE2900554Hw2A06EhEPr; Thu, 09 Mar 2023 15:41:17 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1paHRf-00BKy0-Cr;
+        Thu, 09 Mar 2023 15:41:14 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1paHSD-00GSOV-UM;
+        Thu, 09 Mar 2023 15:41:13 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-gpio@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: [PATCH v2] sh: mach-x3proto: Add missing #include <linux/gpio/driver.h>
+Date:   Thu,  9 Mar 2023 15:41:13 +0100
+Message-Id: <20230309144113.3922386-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYQfT=JXvmjKR_9O74H2dmwx1EF4QjCHM6fKAetpbrMOg@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 03:18:53PM +0100, Linus Walleij wrote:
-> On Thu, Mar 9, 2023 at 2:53 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Mar 09, 2023 at 02:40:10PM +0100, Oliver Neukum wrote:
-> > > On 09.03.23 08:10, Ye Xiang wrote:
-> > >
-> > > > +#define LJCA_GPIO_BUF_SIZE 60
-> > > > +struct ljca_gpio_dev {
-> > > > +   struct platform_device *pdev;
-> > > > +   struct gpio_chip gc;
-> > > > +   struct ljca_gpio_info *gpio_info;
-> > > > +   DECLARE_BITMAP(unmasked_irqs, LJCA_MAX_GPIO_NUM);
-> > > > +   DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
-> > > > +   DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
-> > > > +   u8 *connect_mode;
-> > > > +   /* mutex to protect irq bus */
-> > > > +   struct mutex irq_lock;
-> > > > +   struct work_struct work;
-> > > > +   /* lock to protect package transfer to Hardware */
-> > > > +   struct mutex trans_lock;
-> > > > +
-> > > > +   u8 obuf[LJCA_GPIO_BUF_SIZE];
-> > > > +   u8 ibuf[LJCA_GPIO_BUF_SIZE];
-> > >
-> > > And here we have a violation of DMA coherency rules.
-> > > Basically you cannot embed buffers into other data structures
-> > > if they can be subject to DMA.
-> >
-> > Huh?!
-> >
-> > The problem here is alignment. But other than that I can't see the issue with
-> > embedding into structures the instances of which will be allocated on the heap.
-> 
-> Yups. And I think the solution looks something like this:
-> 
-> u8 obuf[LJCA_GPIO_BUF_SIZE] __aligned(8);
-> u8 ibuf[LJCA_GPIO_BUF_SIZE] __aligned(8);
-> 
-> __aligned(4) if it's 32bit DMA I guess? 8 always works that's
-> why we use it all over the IIO subsystem.
+shx3_defconfig:
 
-To make it all simple, just make obuf and ibuf pointers to the data you
-allocate with a call to kmalloc().
+    arch/sh/boards/mach-x3proto/setup.c: In function ‘x3proto_devices_setup’:
+    arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of undefined type ‘struct gpio_chip’
+      246 |                 baseboard_buttons[i].gpio = x3proto_gpio_chip.base + i;
+	  |                                                              ^
 
-thanks,
+Fix this by replacing the include of the legacy <linux/gpio.h> by
+<linux/gpio/driver.h>.
 
-greg k-h
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Link: https://lore.kernel.org/r/CA+G9fYs7suzGsEDK40G0pzxXyR1o2V4Pn-oy1owTsTWRVEVHog@mail.gmail.com
+Fixes: 21d9526d13b5467b ("gpiolib: Make the legacy <linux/gpio.h> consumer-only")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v2:
+  - Add Reviewed-by,
+  - Drop inclusion of <linux/gpio.h>.
+---
+ arch/sh/boards/mach-x3proto/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/sh/boards/mach-x3proto/setup.c b/arch/sh/boards/mach-x3proto/setup.c
+index 95b85f2e13dda75b..ca2802d3056503cb 100644
+--- a/arch/sh/boards/mach-x3proto/setup.c
++++ b/arch/sh/boards/mach-x3proto/setup.c
+@@ -16,7 +16,7 @@
+ #include <linux/input.h>
+ #include <linux/usb/r8a66597.h>
+ #include <linux/usb/m66592.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/driver.h>
+ #include <linux/gpio_keys.h>
+ #include <mach/ilsel.h>
+ #include <mach/hardware.h>
+-- 
+2.34.1
+
