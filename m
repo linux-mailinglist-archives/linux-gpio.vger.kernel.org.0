@@ -2,197 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52E746B2122
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 11:18:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 020436B2188
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 11:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231406AbjCIKSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 05:18:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
+        id S229572AbjCIKfF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 05:35:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbjCIKRw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 05:17:52 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD314E4DA4;
-        Thu,  9 Mar 2023 02:17:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678357022; x=1709893022;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=yeK+CKcSeZTgGrl2C1M7AGM5ukanLMocF99shhaVTVI=;
-  b=Do16Ej4GQf0Bh7I88yP99wDY74ZOrjG/zo4KW/fJzhlLhX+dickiKDgw
-   mVtwtHrCrEGLDE1yUZmDsyVpa4cbiVHbA1nZUt076zGrNAdHKXAXHNOYO
-   HbKmQy+wKpILq/hozVSCRdAsx9uOXWbuP4cK3XvKteUuPI5ubBNOtbqtX
-   E6v2XmFGQIGaee5jLqpP7it3MemIZCBNtUv2O8wuAbQkvI6YPSkfb4uFK
-   mePamdfhL8KDpaJt+naXGmYWzg+xhATMdIwEd/pieWoZixIzEB3470N61
-   boI/jfL6w0Fd7wWXm8UrDjwwbSgG1r1PBAchtZGaBjScKMSTSky3BSLde
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="336421868"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="336421868"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 02:16:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="766376039"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="766376039"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2023 02:16:57 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 9 Mar 2023 02:16:57 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 9 Mar 2023 02:16:57 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Thu, 9 Mar 2023 02:16:57 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Thu, 9 Mar 2023 02:16:56 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i1/3BDZ8DfRKDbiGFydsMOR2/iZi7fOJ2vr4BNsTWIsCEwm0cndD0BTeBbPN1BbOwrlC49HKZfF+WvJGRQXuk8GyBWS3WZgpQX+T5SV3bnRaSArDnRYj9BjznhVlwwfUWEzXqZfmRSzVIfN/lYwYWJwNuGgZ4gqLBqxnYEV3dEYIfvyjQKiSex2DN0HMLmrK+8d8wTVEuKIqCPXdnhQ3cnn77mnRgTNoKIp3EcuYdjzXN2lQb8xfN36aXfwq0k8yjyC/W1eVWhjIvb6jGsEqVkGcfEGVX2P4DUacSPJRz7mNzHJVtz8yJIVT9QnRos4EegMRwp5RJ5yUcGN7qLJ16Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OZ0bUP4t3JePEQXXaSOoQ6KTfYzVGsflLOfBVYHu3i8=;
- b=a7/3C2ZWonU70vYEGdZpUFQvLm7hR/5NWoIhLryN759tlY8dUKLpUgTMlzPFjXNMODzo/I9bt+ZZ8WzKLgw5Ke0/IdQFjuH7oSVlWr9tGDRsRTcBPw1C6LHkirSh2RO1TGtzlLn9drqJG7zNrCrcL6wNei+zSIJFAdL8vmRHAg69ysGrBgpctHXMIGOqsGXCKvsbl+zQISD4zXXv2CjEv59giUU52zvCt6XyGFl5A994z+jUXVgotzm2EjFtxvSwYgi2JCIqS56yRV8bNCk76oIIOUSxbltlaigqC8LuyXKbGYcMC4cLMCbCh7xQMM1D1ekayztkMIlkH9yRek3+cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN6PR11MB1409.namprd11.prod.outlook.com (2603:10b6:404:46::19)
- by SA2PR11MB4956.namprd11.prod.outlook.com (2603:10b6:806:112::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.19; Thu, 9 Mar
- 2023 10:16:55 +0000
-Received: from BN6PR11MB1409.namprd11.prod.outlook.com
- ([fe80::6c96:45b2:ca7c:4e79]) by BN6PR11MB1409.namprd11.prod.outlook.com
- ([fe80::6c96:45b2:ca7c:4e79%6]) with mapi id 15.20.6178.018; Thu, 9 Mar 2023
- 10:16:55 +0000
-Date:   Thu, 9 Mar 2023 18:16:47 +0800
-From:   "Ye, Xiang" <xiang.ye@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "Lee Jones" <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        <linux-usb@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.pandruvada@intel.com>,
-        <heikki.krogerus@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <sakari.ailus@linux.intel.com>, <zhifeng.wang@intel.com>,
-        <wentong.wu@intel.com>, <lixu.zhang@intel.com>
-Subject: Re: [PATCH v4 1/5] mfd: Add support for Intel LJCA device
-Message-ID: <ZAmyD9k1o4mA/VdV@ye-NUC7i7DNHE>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
- <20230309071100.2856899-2-xiang.ye@intel.com>
- <ZAmPjfH6rA0pbiUa@kroah.com>
- <ZAmimLMY49ktjagX@ye-NUC7i7DNHE>
- <ZAmmQ/yKYnOG7xOS@kroah.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZAmmQ/yKYnOG7xOS@kroah.com>
-X-ClientProxiedBy: SG2PR04CA0202.apcprd04.prod.outlook.com
- (2603:1096:4:187::20) To BN6PR11MB1409.namprd11.prod.outlook.com
- (2603:10b6:404:46::19)
+        with ESMTP id S231299AbjCIKez (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 05:34:55 -0500
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1035CA337B;
+        Thu,  9 Mar 2023 02:34:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1678358067; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=OWpl8tvz0qnNpiG4Vs+J4Iu6UsRWaLvsmkni8KKQuT4infLkOEXMQIzFJdpv5TKppd1v7gAtf+g8AGcNRpxUM5ODfe2iQGhkUE6Z4EcHFf2hmwBIPo+byN9J2X8ct69Slf17YdzxrtgNczOygFMOkt6OgbOywD52mEiRzP5NvhU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1678358067; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Mg4iT5L29dJa7AVQIwcXw9Gg2iG7ZPIvfRGXtutmKSE=; 
+        b=emZsj0DaXxwJxm0+A5FBl/c1bJ7BJ8Z7+TjisBaO35T5zLCXaPaj7OcVwT51c2vjyKE4EjinvCgcAWUDmfMsAmObw2lME82Mop8LjYwTpT69rgY4QMfJVZ+gQ8UbvJ1goypEv8OFrdHNWdjYnW7cNqx/ZMoZh66HMi4CdvFzbRI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=arinc9.com;
+        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
+        dmarc=pass header.from=<arinc.unal@arinc9.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1678358067;
+        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
+        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+        bh=Mg4iT5L29dJa7AVQIwcXw9Gg2iG7ZPIvfRGXtutmKSE=;
+        b=iPqCEhOlGpIA5S1VoIwq0w9pqGbd369vSTPpixmehcg+6H6xYgrKB3mVdPwInSDF
+        ZFWa42Ij22TTk61dRDnKnA8x1gqx24tQgVO5ZaRXgALv87A85W9wnwl0DLeMPTCVj77
+        VnI2BO9GoNHfkRWXe0t9OAvY7QyTB53Ra46sEqbo=
+Received: from [10.10.125.234] (37.120.152.236 [37.120.152.236]) by mx.zohomail.com
+        with SMTPS id 1678358065042379.7623954106633; Thu, 9 Mar 2023 02:34:25 -0800 (PST)
+Message-ID: <deca532a-bdf5-c49e-1422-ce6124b61882@arinc9.com>
+Date:   Thu, 9 Mar 2023 13:34:18 +0300
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR11MB1409:EE_|SA2PR11MB4956:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d94fb32-a8e9-46a8-5603-08db208767ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ctYLm+zll8WVi+5oHPn2umsM06r6ng5qZK5pH96ebBpLuMZdCyJQSIAOxA5lpE9DLe9rxzGj0h3ghCwJNhBe/qC0lGTh82fwTfASWSXAm2yAkEaKsAFo31c5rwCwYL2MSa8LE4QKgQYm4guS4sM+g7nAgatoMbk7IxX8tQXiD2k3s1YnwIXpKrhs75yGtakKGj2wub2cNs8bWguMBEpMDxRNyASoOuTP6Jz1uckL/XzWc6a4Y+tsiWnEbzoyr1or5kGWFQY+hdC8lXXuFM6F6IsscH3N44YbekMu93N1ml0tWvNnscv/IuQ5siCexeuzv7gm+/j1AuZKAuCh8BbUCWvtx+3ksWkj2DZI+l51Ek+FG/2NdFejXQj0IK1sY78P2my7+UeEGpagHpY1yds/cF9O7E598bs8lj1K+n60GgoOcAiMCGK3Kx8OS0vzULU5s9fim/4YxZlEASCOhqFcEmUueyeFcuzdC7KqosXM8GbylSNGS6/MlZMp8Y/SiyFKYZ7hSOL0LwYGD+Q+S+g/vup9NiwveaUVR+157hjDBUCql1bCivmCa5Cnc7LYFB9CxxWooJBbqYOvIkCTJnRDv88FoV1InDPwb3ObE8wap1BWFrx9qgpXSKcTUKDXxCID
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1409.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(346002)(39860400002)(366004)(376002)(136003)(396003)(451199018)(54906003)(478600001)(6486002)(966005)(316002)(5660300002)(7416002)(41300700001)(2906002)(66476007)(8936002)(8676002)(66556008)(66946007)(6916009)(4326008)(82960400001)(86362001)(186003)(6666004)(9686003)(33716001)(6512007)(26005)(6506007)(83380400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eWrMxNq7g+/Di+Fm5TKl7rEFPuEglkOBoG8Lq6kbQ+3yqUDfouRzDHt5IMXR?=
- =?us-ascii?Q?66s/SvYDGwwT4WVjAxfu6NO6BvxPnmMFOq1xB0vjtVoWg7IPP3VMwC6VculQ?=
- =?us-ascii?Q?N2g5KnLLhO0vOWv8/tIQyxGUqlVTbFjGi1Wbm2WbQfwX5SdGTwkkvdJcFlaV?=
- =?us-ascii?Q?sYT84NUGRTaxYVSqfN9bdHCtutaXt8xQFcq7y35K/4v4JfJu7QKLNqASb0ml?=
- =?us-ascii?Q?eMzqRecTxX2lalMLldMAr6cckAhX3FJdb9J4vn4puewbVtPpNCWyQGvvjebS?=
- =?us-ascii?Q?nmlr7qaIBMzqXw55qUK4UKVoe567NvYFFw95MIbvIXBPjNRjfd4UGJUWu302?=
- =?us-ascii?Q?HIpvEubrNf8vf1DlK4lxDT2h2t/5cwWG69pOj7PhsGqbwH+bT0xHbHcGCD1P?=
- =?us-ascii?Q?UH4ApvAUIGELwRAvQ/U1p6x4H6hg96C8xOn8YDjyNZ7xlEQ1fa6SDkxaRiE6?=
- =?us-ascii?Q?MvemzlBql7jb7M9/URfHBNevHopTebWWY7pexI3EIsSrlSLrrOpk4cXdP3Vp?=
- =?us-ascii?Q?zUhIHL4jbsUCdfDmUG2JXY1bSf/tN9ph3QF6zMKowS4c5g86a84n2u3ndkZT?=
- =?us-ascii?Q?9iGFnJmN95u61rZKYfkM7KzBUwnAXL6AnAAEFDRa0+Tqm8tqUv7HuTnFoIKl?=
- =?us-ascii?Q?jYiutNVKSIM9FXoxYU1bgQjU1+hliAIDAM7u61aQYnkY5/lnsCzF3R3lCzgL?=
- =?us-ascii?Q?+dWVCV0u95eHCXOaYPIkKx12DxbUJhhmEpUXkVD0Zphz5G/moSSQsmNTv5rH?=
- =?us-ascii?Q?kQHaepWWG5SysQ+TdtySJmSTVBY/U45uWjghi25zH0bIL2RNZqGQy5boNsiI?=
- =?us-ascii?Q?xbMNCy+VItPoeeBxwbp11fyVd+tK5kiRqHjzp2ZLykPEJqEIPH/6a9gCddy0?=
- =?us-ascii?Q?MJOEV1U2/jSYuJYAnaiL949Yx3cQSXg6jp8vO/YCNI1BTUEaRoEGUeVbVJg3?=
- =?us-ascii?Q?TZKwzZJ9/EEn4J9baDC8FZt5XOa91BHKWIvio1qt+NHErZELLJcNsjjfUzLM?=
- =?us-ascii?Q?z7TYrpfsfjJuhCOxlRaxxCf0/5SGyKlBaUHvQF94PavnxxRgCG4N5KlY+O9s?=
- =?us-ascii?Q?yKDRGaYckd9ErhldwmVUF1h48g7X8IcG+rrc3M/zKf0k0NKN9XkzW2FnHvhk?=
- =?us-ascii?Q?A38iJ2JmvFvPxN1g4o2TU5VF+pL0taMGtl6DeMFArLMEuJ046ZqqwbprLH83?=
- =?us-ascii?Q?2nxt1Jf7qfZpdtvnZKkLBS/BeaYzsc9JLjStA4cRbslh8GX59qsOx5QzoMpH?=
- =?us-ascii?Q?pflhD8ZNiSNLnll9OVBjyW5Rpjy0yeI/rUBMsapk7nvFp71Kh5cgFLLEumOM?=
- =?us-ascii?Q?ph0WVVwL3dJ0C9c528ay9rvp04NGPxx5njhPX4+fD9d0iWTNzTe57X5XEG3V?=
- =?us-ascii?Q?JOSoOra8Jt7Zf9A9i3L8xf4Ngyh13cGGFDjaBKafJ6oL+0CaY2R2ZPtY9WZp?=
- =?us-ascii?Q?4r8vHgjsmlfe33etwz8kcHo+2j6oSDNNBTFjw+6dYN2ChTXfrGpOlbWG4hO5?=
- =?us-ascii?Q?QP6C7AdwEisfJfBWZ19S97OUtxA8+Xn90v6R1yPhSmFOR9AgsWtuvdrFNaMR?=
- =?us-ascii?Q?E0NmCNHnZlwfOBaeD9aRis8OCmnSvmxhDCMcakAu?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d94fb32-a8e9-46a8-5603-08db208767ec
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR11MB1409.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2023 10:16:54.2085
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s60J+2kGw65o4yWjKSyYxXL9YjQXNVE5LIPz6U+gCZuEUPO0Q8URHhVFtWJX2UPAWd/51lIVP7bBTfyZhYoiyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4956
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 09/20] dt-bindings: pinctrl: ralink: {mt7620,mt7621}:
+ rename to mediatek
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+References: <20230303002850.51858-1-arinc.unal@arinc9.com>
+ <20230303002850.51858-10-arinc.unal@arinc9.com>
+ <20230308210514.GA3767521-robh@kernel.org>
+ <12be053e-b70a-faca-71c8-d8eef69a3b73@arinc9.com>
+ <ccdfd262-eaf3-dbbe-7a3c-a911a5ec0fc4@arinc9.com>
+ <9663817e-7f6f-c3b1-8bf9-321f9b067e96@linaro.org>
+Content-Language: en-US
+From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <9663817e-7f6f-c3b1-8bf9-321f9b067e96@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 10:26:27AM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Mar 09, 2023 at 05:10:48PM +0800, Ye, Xiang wrote:
-> > Hi Greg,
-> > 
-> > Thanks for the review.
-> > On Thu, Mar 09, 2023 at 08:49:33AM +0100, Greg Kroah-Hartman wrote:
-> > > On Thu, Mar 09, 2023 at 03:10:56PM +0800, Ye Xiang wrote:
-> > > > This patch implements the USB part of Intel USB-I2C/GPIO/SPI adapter
-> > > > device named "La Jolla Cove Adapter" (LJCA).
-> > > 
-> > > Then why is this called "mfd" in the subject line?
-> > Sorry, it's a mistake. I forget to change mfd to usb in the commit message
-> > because I just move the ljca.c from driver/mfd to drivers/usb/misc according
-> > to previous review comments[1]. And I will address this on v5.
-> > 
-> > [1] https://www.spinics.net/lists/kernel/msg4708451.html
-> > > 
-> > > >  include/linux/mfd/ljca.h  |  95 ++++
-> > > 
-> > > Why is this .h file in the mfd directory?
-> > It's a mistake as well. Will address it by moving include/linux/mfd/ljca.h
-> > to include/linux/usb/ljca.h.
+On 9.03.2023 12:52, Krzysztof Kozlowski wrote:
+> On 09/03/2023 08:53, Arınç ÜNAL wrote:
+>> On 9.03.2023 00:19, Arınç ÜNAL wrote:
+>>> On 9.03.2023 00:05, Rob Herring wrote:
+>>>> On Fri, Mar 03, 2023 at 03:28:38AM +0300, arinc9.unal@gmail.com wrote:
+>>>>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>>>
+>>>>> This platform from Ralink was acquired by MediaTek in 2011. Then,
+>>>>> MediaTek
+>>>>> introduced these SoCs which utilise this platform. Rename the schemas to
+>>>>> mediatek to address the incorrect naming.
+>>>>
+>>>> I said we don't do renames due to acquistions, you said that wasn't the
+>>>> reason, but then that's your reasoning here.
+>>>
+>>> It's not a marketing/acquistion rename as the name of these SoCs were
+>>> wrong from the get go. The information on the first sentence is to give
+>>> the idea of why these SoCs were wrongfully named as the base platform
+>>> that these new MediaTek SoCs share code with was called Ralink.
+>>>
+>>>>
+>>>> To give you another example, *new* i.MX things are still called
+>>>> 'fsl,imx...' and it has been how many years since merging with NXP?
+>>>
+>>> Ok this is a point I see now. Though, I fail to see how this is called
+>>> renaming when there's only new SoCs (from NXP in this case) to be added.
+>>
+>> If I understand correctly, i.MX is a family from Freescale so the name
 > 
-> Why do you need a .h file at all for such a tiny .c file?  If you don't
-> need it, don't have one please.
-The ljca.h file is needed because there are three function driver in
-this series (LJCA-SPI, LJCA-GPIO, and LJCA-I2C) which needs LJCA API
-to do actual transfers. LJCA-USB can be considered as a transport driver,
-and the other three function driver use LJCA API to transfer their own
-packages.
+> It's the same "family" as your platform, because as you said:
+> "introduced these SoCs which utilise this platform"
+> 
+>> was kept the same on new SoC releases from NXP. I believe it's different
+>> in this case here. There's no family name. The closest thing on the name
+>> of the SoC model is, it's RT for Ralink, MT for MediaTek.
+> 
+> It's not about the name. NXP took Freescale platform and since many
+> years makes entirely new products, currently far, far away from original
+> platform.
+> 
+> That's the same case you have here - Mediatek took existing platform and
+> started making new products with it.
+> 
+>>
+>> On top of that, mediatek strings already exist for MT SoCs already, at
+>> least for MT7621.
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/Documentation/devicetree/bindings/mips/ralink.yaml?id=dd3cb467ebb5659d6552999d6f16a616653f9933#n83
+> 
+> NXP also has compatibles with nxp, thus still not that good reason.
 
---
-Thanks
-Ye Xiang
+Ok, makes sense. Am I free to call the SoCs MediaTek, change the schema 
+name from ralink,mtXXXX-pinctrl.yaml to mediatek,mtXXXX-pinctrl.yaml 
+whilst keeping the compatible string ralink?
+
+I plan to do some cleanup on ralink.yaml as well. From what I 
+understand, I should change the mediatek,mt7621-soc compatible string to 
+ralink,mt7621-soc?
+
+Arınç
