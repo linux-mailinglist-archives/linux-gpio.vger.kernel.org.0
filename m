@@ -2,186 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 501E96B2D3C
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 19:57:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74F2D6B2DCB
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 20:35:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjCIS5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 13:57:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
+        id S229596AbjCITeq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 14:34:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjCIS5m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 13:57:42 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3894699648;
-        Thu,  9 Mar 2023 10:57:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678388261; x=1709924261;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=c5dTu2CZvuq1hBNYCmGy0MCK7h9+S2ynqISd2D698T8=;
-  b=dWAoyBH0bFvjKoKdsJ4ht5NlViYoUfh8zz2SEdzWpCmzizP8oBVSgkL4
-   mjf0sTKYihidfa8P1cUxl0N9d9lL6G0DC7fEBr2HzsAOMW9MYMynwBdHs
-   R5JC4D4cIJRm8ZX1WfFnMqeRRhExqDU2/59qxzW6urR6H9qoXG544bbda
-   Yhpw9u0FTdUXohA9iTupnJTSTrnV8eRmjaoihTjgvfXTrhWKpHKLmX3JY
-   DpWEooSmxXScLDbuD5dN0+l0I3QSeDcfkkaMep2/r3mcOTmij7QvswJgb
-   VnM0yRxcT7VkY8vAYy0S35tGzZIMmgEXSDmwopptkpBs9J3QobzW+zFw4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="401387672"
-X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
-   d="scan'208";a="401387672"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 10:57:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="766543583"
-X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
-   d="scan'208";a="766543583"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2023 10:57:38 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 561B2143; Thu,  9 Mar 2023 20:58:22 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 1/1] gpiolib: Use IRQ hardware number getter instead of direct access
-Date:   Thu,  9 Mar 2023 20:58:19 +0200
-Message-Id: <20230309185819.85050-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
+        with ESMTP id S229652AbjCITeU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 14:34:20 -0500
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33647BD4C1
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 11:33:25 -0800 (PST)
+Received: by mail-qt1-x829.google.com with SMTP id y10so3284452qtj.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 11:33:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678390403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQXs/idENx3qQbq6dtiVnbHhxQA0BF/uYGUOEUZAl98=;
+        b=gVBEZw0VDUt77IcUdGYsdclvBJ7Tsv+GAfXBCkkcD9YweytbnLTIFr634g+gKtoICi
+         W6lhKIGYJpsWte3bVMmfT9ByNLefYQKWVUDn2Q/hkdmkoSJ4gWiAx1Pc5CIOMvZvhI3m
+         m38SYc2NQm3Cv1M9UIPt20MLpM3SpVIDRBlPHq1sufQbgs79dbhHccuppXaa13J+p/cd
+         YE34GjdQFO88P6SvjB/VWpnweaXERaQnvaBmJncp0xHverI5RUIa30xLpeBtoo61jHvY
+         E41E7csqVc4Sqi+CttjfiuBycEiWPXnmwCVwHjGbsVmBGpzgKLTjXzmplwcYxuKVaMDy
+         W8Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678390403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fQXs/idENx3qQbq6dtiVnbHhxQA0BF/uYGUOEUZAl98=;
+        b=YZfx7Y8eDneyg7DQl9qmzcFfPQeecM59y7gB+078OJ9+UNI2zuJpnWFn6HkoPWd2OH
+         WbQ1Js+9umqfjcMHbvQx0gvVOwFS8kSBhlliQrAatkJjbR5uqJsXryH6mVrTai9RBcN5
+         irs//7hyUZrWthxrLVb0qVsiRQFjAje1opEmp4uGrFaATMrCdr9eRDWQJmnHnqS9Dm9j
+         0rPU4yfqN5icdYjCygxeNQNgVDWWRvHLP4R1Pj6fCT1+OCFe7kmRk2JYOQ/kHkOjZjQv
+         DkXU1mka9cX85c3s5+ybnzc4QRbbD1hnbN/I214up7gPxl5uQhclmsvrTGTLfJBSXW0N
+         QCmw==
+X-Gm-Message-State: AO0yUKXdIMzKvqFSPFARiG/sMm0zkFY26/Ba1a4VpVqHLhvn+tVbnv60
+        E99itQUn9+dvr5Fu7pni47Ogaw==
+X-Google-Smtp-Source: AK7set9F+b44FJJ86PB8yQaXX4WkIky8I65o1fY/NEFRt2DJH5tadal7H+G/NW9ITUuo+MTstN9VrQ==
+X-Received: by 2002:a05:622a:1b8a:b0:3bf:aa39:982b with SMTP id bp10-20020a05622a1b8a00b003bfaa39982bmr38862455qtb.32.1678390402153;
+        Thu, 09 Mar 2023 11:33:22 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id l19-20020ac84593000000b003c03ae61af9sm5769003qtn.3.2023.03.09.11.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Mar 2023 11:33:21 -0800 (PST)
+Date:   Thu, 9 Mar 2023 14:33:19 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, techsupport@winsystems.com,
+        Paul Demetrotion <pdemetrotion@winsystems.com>
+Subject: Re: [PATCH v4 3/3] gpio: ws16c48: Migrate to the regmap API
+Message-ID: <ZAo0f0VG8eRrtMIH@fedora>
+References: <cover.1678106722.git.william.gray@linaro.org>
+ <4b6cd42426521808962d68a44952b95818fc5daf.1678106722.git.william.gray@linaro.org>
+ <ZAX2k9gW1AA88T/P@smile.fi.intel.com>
+ <ZAf4LudZkYLsWVWh@fedora>
+ <ZAiISgAroSD3YOfk@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gYdWBrdL+KqBcWeI"
+Content-Disposition: inline
+In-Reply-To: <ZAiISgAroSD3YOfk@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-IRQ framework provides special type and getter to transform
-the Linux IRQ to the hardware pin. Use that type and getter
-function instead of direct access.
 
-While at it, amend an indentation in a couple of places.
+--gYdWBrdL+KqBcWeI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+On Wed, Mar 08, 2023 at 03:06:18PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 07, 2023 at 09:51:26PM -0500, William Breathitt Gray wrote:
+> > On Mon, Mar 06, 2023 at 04:20:03PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 06, 2023 at 07:59:53AM -0500, William Breathitt Gray wrot=
+e:
+>=20
+> ...
+>=20
+> > > > -	raw_spinlock_t lock;
+> > > > +	spinlock_t lock;
+> > >=20
+> > > This is a regression.
+> > > That said, do we need a support of raw spin locks in the regmap IRQ?
+> >=20
+> > So this code has a similar need as the gpio-pcie-idio-24 patch: guard
+> > registers between handle_mask_sync() and set_type_config(); however, now
+> > we also need to protect registers in regmap_irq_thread(). We can't use a
+> > mutex here because regmap_irq_thread() is executed in an interrupt
+> > context so we cannot sleep.
+> >=20
+> > This might be a mistake in my understanding: I chose spinlock_t here
+> > because I believed it to map out to a raw_spinlock_t anyway underneath,
+> > whereas on RT kernels it would map out to whatever the equivalent is. I
+> > suspect this is not actually the case. Would using raw_spinlock_t
+> > explicitly be the correct way to go for this particular case?
+>=20
+> You may read the commit message of the 27d9098cff6e ("pinctrl: intel:
+> Use raw_spinlock for locking"). TL;DR: this is only affects IRQ chips,
+> so if your GPIO controller is _not_ an IRQ chip, you are fine.
+>=20
+> WRT the other driver, can_sleep may reduce scope of the use of GPIOs
+> and even make a regression if any consumer don't want that behaviour
+> and currently works.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e47e462b14ed..72e907134bac 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1216,7 +1216,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
- 	if (ret)
- 		return ret;
- 
--	chip_dbg(gc, "allocate IRQ %d, hwirq %lu\n", irq,  hwirq);
-+	chip_dbg(gc, "allocate IRQ %d, hwirq %lu\n", irq, hwirq);
- 
- 	ret = girq->child_to_parent_hwirq(gc, hwirq, type,
- 					  &parent_hwirq, &parent_type);
-@@ -1384,8 +1384,7 @@ static bool gpiochip_hierarchy_is_hierarchical(struct gpio_chip *gc)
-  * gpiochip by assigning the gpiochip as chip data, and using the irqchip
-  * stored inside the gpiochip.
-  */
--int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
--		     irq_hw_number_t hwirq)
-+int gpiochip_irq_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hwirq)
- {
- 	struct gpio_chip *gc = d->host_data;
- 	int ret = 0;
-@@ -1461,8 +1460,9 @@ int gpiochip_irq_domain_activate(struct irq_domain *domain,
- 				 struct irq_data *data, bool reserve)
- {
- 	struct gpio_chip *gc = domain->host_data;
-+	unsigned int hwirq = irqd_to_hwirq(data);
- 
--	return gpiochip_lock_as_irq(gc, data->hwirq);
-+	return gpiochip_lock_as_irq(gc, hwirq);
- }
- EXPORT_SYMBOL_GPL(gpiochip_irq_domain_activate);
- 
-@@ -1479,8 +1479,9 @@ void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
- 				    struct irq_data *data)
- {
- 	struct gpio_chip *gc = domain->host_data;
-+	unsigned int hwirq = irqd_to_hwirq(data);
- 
--	return gpiochip_unlock_as_irq(gc, data->hwirq);
-+	return gpiochip_unlock_as_irq(gc, hwirq);
- }
- EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
- 
-@@ -1520,33 +1521,37 @@ static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
- int gpiochip_irq_reqres(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
--	return gpiochip_reqres_irq(gc, d->hwirq);
-+	return gpiochip_reqres_irq(gc, hwirq);
- }
- EXPORT_SYMBOL(gpiochip_irq_reqres);
- 
- void gpiochip_irq_relres(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
--	gpiochip_relres_irq(gc, d->hwirq);
-+	gpiochip_relres_irq(gc, hwirq);
- }
- EXPORT_SYMBOL(gpiochip_irq_relres);
- 
- static void gpiochip_irq_mask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
- 	if (gc->irq.irq_mask)
- 		gc->irq.irq_mask(d);
--	gpiochip_disable_irq(gc, d->hwirq);
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void gpiochip_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
--	gpiochip_enable_irq(gc, d->hwirq);
-+	gpiochip_enable_irq(gc, hwirq);
- 	if (gc->irq.irq_unmask)
- 		gc->irq.irq_unmask(d);
- }
-@@ -1554,17 +1559,19 @@ static void gpiochip_irq_unmask(struct irq_data *d)
- static void gpiochip_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
--	gpiochip_enable_irq(gc, d->hwirq);
-+	gpiochip_enable_irq(gc, hwirq);
- 	gc->irq.irq_enable(d);
- }
- 
- static void gpiochip_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	unsigned int hwirq = irqd_to_hwirq(d);
- 
- 	gc->irq.irq_disable(d);
--	gpiochip_disable_irq(gc, d->hwirq);
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
--- 
-2.39.1
+Looking through kernel/irq/manage.c, I see the raw_spinlock desc->lock
+is taken in __setup_irq() before potentially calling __irq_set_trigger()
+which ultimate calls the chip->irq_set_type() callback. So it seems
+unsafe to sleep within at least this callback which is utilized by both
+drivers, so both gpio-pcie-idio-24 and gpio-ws16c48 will need the
+raw_spinlock lock type afterall.
 
+I'll make the necessary changes and release a v5 of this patchset.
+
+As an aside, I wonder if locking is not needed if we only utilize the
+set_type_config() callback, because the desc->lock taken by the irq
+subsystem will be enough to guard between regmap_irq_set_type() and
+regmap_irq_thread(). It's not valid for our particular case here because
+we also utilize a handle_mask_sync() callback (chip_bus_lock() is not
+protected by desc->chip) but it's something to think about.
+
+William Breathitt Gray
+
+--gYdWBrdL+KqBcWeI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAo0fwAKCRC1SFbKvhIj
+K0GCAPsH4oQt3CLZycxBwi4Kq5J9EIU2IK7jPmsloJkz5HKO3QEAzcBw1CEUwlq6
+bpcLQ/rnxaWqs1u1vlASpoDW4U/9swQ=
+=aBu6
+-----END PGP SIGNATURE-----
+
+--gYdWBrdL+KqBcWeI--
