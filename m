@@ -2,111 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01DE36B1C0E
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 08:12:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A12006B1C83
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 08:38:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjCIHLx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 02:11:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
+        id S229927AbjCIHiq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 02:38:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbjCIHLv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 02:11:51 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A92C083C;
-        Wed,  8 Mar 2023 23:11:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678345910; x=1709881910;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BP2bXE/lj12e2qlD1IN4mt1PlpUOPgNqQR5Qy9flS0M=;
-  b=gE9QNbSywiaf8HwwOi1MR8S66fnHA+x6SZobYN+z4FesBATRNNUneGJx
-   OU495hd2p3XCUHWwL+HZy9Exiw3dGvWJnNU9tkiIH/SvwB+zztW1B63tU
-   ybJI1w7qtE2QfT3eu1wyKO8OJnqnkyeKqtIKgY509ppOdwzKNY+MZHY8A
-   y4tXMOnFSm6FYlwHAaZbZNZ4Ad87ByVcHTD/UmACEIjsbTt1UVCzzB5HN
-   l8RphImPgHvy1p2qz1vSeuqsWUQvFhCLYIKme/U++LruA2B74kl/fAzQb
-   BmgrEU10ONySXZ0LvhmHoN3Z0pqjX+k3wQtJEK8Ggy3ftu5iPNZTNBJo5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="316767835"
-X-IronPort-AV: E=Sophos;i="5.98,245,1673942400"; 
-   d="scan'208";a="316767835"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 23:11:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="923126491"
-X-IronPort-AV: E=Sophos;i="5.98,245,1673942400"; 
-   d="scan'208";a="923126491"
-Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.154.52])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Mar 2023 23:11:43 -0800
-From:   Ye Xiang <xiang.ye@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
-        Ye Xiang <xiang.ye@intel.com>
-Subject: [PATCH v4 5/5] Documentation: Add ABI doc for attributes of LJCA device
-Date:   Thu,  9 Mar 2023 15:11:00 +0800
-Message-Id: <20230309071100.2856899-6-xiang.ye@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230309071100.2856899-1-xiang.ye@intel.com>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
+        with ESMTP id S230182AbjCIHi2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 02:38:28 -0500
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1589497C7
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Mar 2023 23:38:23 -0800 (PST)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-53d277c1834so19257767b3.10
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Mar 2023 23:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678347503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a/LUZgYrR0Ysr7+Ej1P1ngFsSFpgqj0GwvWlQto+e2M=;
+        b=lg+58u/rcX6KGQPiFTKChAzbGLROJbQGHgi2GeDH7tA+SuLf7B3lMURC2xAV8tmUjs
+         eL2AYYrAMAKfw2GJ3rS6E0e1q5R6/WxLffLj03MaSglH3QcPM1Tgb26jkddhQKKNnl4K
+         XABYDocIuff0tU/0kshegshi4OmkMUyV9QUjGRSJRWxKITpJUFX/W+2FyctkX5jRaCyP
+         8HV/cIQ/36vQ6MOiSXmBdwamKtYvRqflEgOh+Nv+dekd0vux+8t7uWNBFIAEp3dJBCCT
+         VdHJtm4jZAj8lZrxiKnV73HizqZ7rM4JMUTWXbE87bJGcluA4nOMrruGx6KP9QPRwL60
+         l12w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678347503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a/LUZgYrR0Ysr7+Ej1P1ngFsSFpgqj0GwvWlQto+e2M=;
+        b=TaRG9heYkKhTRrTXJCvyoEPtUyC/A2WAiS1Qq6l0iSRaJnau1NBTBW8YwRpwEDF/y/
+         vDorxCv9BBK8Ca0qXWW5gdycMOC5WtDARScCi52wqOuvQ5/GiEZZc2L3O7Y2as8DzNye
+         gM+ESglHR7idxdm42roLajoKEizhZxduRBa94bGmyuqC4AL/oizXSCj0W/qbGqMrQP8v
+         ZKqNvmFb1uhCi82hdixSeZIY2ZWgjrxzhKwCP9ibkcZkPplfvAmkpX3T6oKXpc0gOQL9
+         2+2VqeuR5LVxXd5OJcTCfs09pRNVYkHKx/SRLuaL/JTceV3fCBXRYnsr+yxGERH48Q2a
+         /yrg==
+X-Gm-Message-State: AO0yUKUwkMtiyJE2XLeBnOb6hT1GJDFyvQJrw5JzJ5EkjzpZviqhezXg
+        LONfTPI4/dGk0GB+4QsIOZvN7B0+JPubPsrZUxYgnA609cGv2CO8
+X-Google-Smtp-Source: AK7set+9L5i2dic4vjPaEUChT97wsmBnVt2hJYHC48czJtDtf4Yau2W0U2eTlSW/M6bcbCj5zYcbrf3yuIFHsYNbXWU=
+X-Received: by 2002:a81:b615:0:b0:52e:c77d:3739 with SMTP id
+ u21-20020a81b615000000b0052ec77d3739mr12131466ywh.9.1678347502993; Wed, 08
+ Mar 2023 23:38:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230309050855.3311834-1-joel@jms.id.au>
+In-Reply-To: <20230309050855.3311834-1-joel@jms.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Mar 2023 08:38:11 +0100
+Message-ID: <CACRpkdba--WpCGEF7jF=oWowps1JpieoTo6UswcCZyvs2s5z6g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aspeed: Always register the irqchip
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add sysfs attributes Documentation entries for LJCA device
+On Thu, Mar 9, 2023 at 6:09=E2=80=AFAM Joel Stanley <joel@jms.id.au> wrote:
 
-Signed-off-by: Ye Xiang <xiang.ye@intel.com>
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- .../ABI/testing/sysfs-bus-usb-devices-ljca    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+> The driver was implemented in a way that made the irqchip optional, if a
+> irq was not present in the device tree. However, all of the device trees
+> have always had an irq, so the optional-ness has never been used.
+>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+> Linus, feel free to put this in your immutable gpiochip series
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-new file mode 100644
-index 000000000000..e12fe78ae58b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
-@@ -0,0 +1,22 @@
-+What:		/sys/bus/usb/.../version
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Provides the current firmware version of LJCA device.
-+		The format is Major.Minor.Patch.Build, where
-+		Major, Minor, Patch, and Build are decimal numbers.
-+		For example: 1.0.0.256
-+
-+What:		/sys/bus/usb/.../cmd
-+Date:		July 2023
-+KernelVersion:	6.4
-+Contact:	Ye Xiang <xiang.ye@intel.com>
-+Description:
-+		Commands supported by LJCA device.
-+		When read, it will return valid commands.
-+		When write with a command, it will execute the command.
-+		Valid commands are [dfu, debug]
-+		- Writing "dfu" to this file so as to put the device into
-+		DFU mode so the firmware can be updated.
-+		- Writing "debug" to this file to enable debug logging.
--- 
-2.34.1
+Perfect, I will merge it into my v3 set to help Bartosz avoid merge
+conflicts.
 
+Yours,
+Linus Walleij
