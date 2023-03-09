@@ -2,88 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 513936B263B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC566B266A
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 15:12:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbjCIOG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 09:06:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38302 "EHLO
+        id S231310AbjCIOMX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 09:12:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231599AbjCIOGF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:06:05 -0500
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C9B9CBE6
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 06:03:45 -0800 (PST)
-Received: by mail-yb1-xb29.google.com with SMTP id v13so2077858ybu.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 06:03:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678370625;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rfLw2hJ09K7juhM7ToFdGQXgPnTRU+N2reGUNJs1fMk=;
-        b=te5CmTZZaAREe6I9IbC5fP+cua4HnFYEfZjzKQLmEgXgfZVYTDH4bb328fgwm8hJdZ
-         ASiGe0w+uRx9ZgsYg7fklWrSM2QC+cEPqkokwrRPDzH8CD+54vu1vE/BxGH64Vred9Nr
-         Fvuky2dufM0aJY16tRiaVtupHqsK2ALSzEUOcecjwHCtjxKNTQ+6GMCxEIdpz/jV+iwz
-         XEQsfxoWv/URUbKerklvhBjOWH35qUazvHwD2dqHQHY0GZmIoqBgNuDdvcoWBgY4d30U
-         KHBq50GVm54ah6w0eLg0PCz14auugvv9pJzszHof3kyE8tjlCIRcr0xSfM6Lz7tw/kHq
-         xVPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678370625;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rfLw2hJ09K7juhM7ToFdGQXgPnTRU+N2reGUNJs1fMk=;
-        b=4ZNwdy8JAGXt4hR2rCyMYg1pZ1Yu3oJ6uw1G3SG1Dr9kiRcw6Amu6cpNkEdYIRpG/4
-         nr+yMEVhebXFrVacOqI7ZVd/Z/dgs0kNw2HMmWbic2f+cnvKa7k4LokpBwz2OhGj1EAe
-         BW6DoeTm2el9ETuwENRhX7ByBVHml9HVZUfgatQgvheRWQxqNEViW3LA22Kss2oDm1qK
-         /m6VQog6LRUifEgQqDvzWlARsC2eSzurjrDvI6YT80NsmkupBAGrWlcVmgxE43gw0qDN
-         VZW/pyh/lZGnybA60xcsJKeSNkkTGnjUClHZjWAFSmvqhl0B3SnUlfiCy04U82FQVjIO
-         13nw==
-X-Gm-Message-State: AO0yUKV75Bb8OeTu/OIgWz2M0VdhB0gW5gCSDR2HnlVdmT9gCI/NpRE5
-        seUMZYhiSsgP9RUYpmHd4Ob2lbuSfZkEiSDYScPp5Q==
-X-Google-Smtp-Source: AK7set/V9g47LXb/8bVVYX4aEcUjsLMStk6C108ueaS9M+e5hKMWh6BL/B8P3j74SyJtKGeS1gB7pU0gGTbjZfKvQFQ=
-X-Received: by 2002:a25:8c84:0:b0:b23:4649:7ef3 with SMTP id
- m4-20020a258c84000000b00b2346497ef3mr707871ybl.4.1678370624827; Thu, 09 Mar
- 2023 06:03:44 -0800 (PST)
+        with ESMTP id S231386AbjCIOLz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 09:11:55 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D4CCF16B6;
+        Thu,  9 Mar 2023 06:10:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678371043; x=1709907043;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Ke25aAr1RwAUHCxg3kvQY9jKyxSYBDAeHeJlTlHQ8tk=;
+  b=DrALIIB7DTWDubX9UArfOo0BY9fsiot0MCTu64Y6Uu1FkPxeKcTGCQsM
+   h3vNZYoOGe5/+8gvsUXnsVm9K3MVXhfYiPy8LI+TkCoWJ5Zdubkg6e8A3
+   V5cIWF+TgQKXUyIHwCcWcIrT7wZwNnWLFEZFINJl0PLG9dzZAtS71EHC8
+   MQmSgqjLoo23n+70aPni+06vdWkoyh60YXyIJAWD4/uMeGCFrvqT1hEVW
+   +0uCuVxVMdB3vELWgoCTpnCh8tz/+FYbq4ef62qtY/D4+IJlrYhFMZ8PP
+   SseE6vUfr3JkQCF8414nrTyJBxifozaGMCarn2PD1GZdaZ0a7DwV5NnAO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="338789586"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="338789586"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 06:04:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="801180904"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="801180904"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 09 Mar 2023 06:04:29 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1paGsd-000LqH-2E;
+        Thu, 09 Mar 2023 16:04:27 +0200
+Date:   Thu, 9 Mar 2023 16:04:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-gpio@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: [PATCH] sh: mach-x3proto: Add missing #include
+ <linux/gpio/driver.h>
+Message-ID: <ZAnna6xIhBZPG/nD@smile.fi.intel.com>
+References: <20230309135255.3861308-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <20230308084309.396192-1-nm@ti.com>
-In-Reply-To: <20230308084309.396192-1-nm@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Mar 2023 15:03:33 +0100
-Message-ID: <CACRpkdbBWeFupRin=JuMCGDWkzbsR18N+4ZEbQOPJq=p3w0yLw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: k3: Introduce debounce select mux macros
-To:     Nishanth Menon <nm@ti.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Tero Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230309135255.3861308-1-geert+renesas@glider.be>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 8, 2023 at 9:43 AM Nishanth Menon <nm@ti.com> wrote:
+On Thu, Mar 09, 2023 at 02:52:55PM +0100, Geert Uytterhoeven wrote:
+> shx3_defconfig:
+> 
+>     arch/sh/boards/mach-x3proto/setup.c: In function ‘x3proto_devices_setup’:
+>     arch/sh/boards/mach-x3proto/setup.c:246:62: error: invalid use of undefined type ‘struct gpio_chip’
+>       246 |                 baseboard_buttons[i].gpio = x3proto_gpio_chip.base + i;
+> 	  |                                                              ^
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Link: https://lore.kernel.org/r/CA+G9fYs7suzGsEDK40G0pzxXyR1o2V4Pn-oy1owTsTWRVEVHog@mail.gmail.com
+> Fixes: 21d9526d13b5467b ("gpiolib: Make the legacy <linux/gpio.h> consumer-only")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Introduce the debounce select mux macros to allow folks to setup
-> debounce configuration for pins. Each configuration selected maps
-> to a specific timing register as documented in appropriate Technical
-> Reference Manual (example:[1]).
->
-> [1] AM625x TRM (section 6.1.2.2): https://www.ti.com/lit/pdf/spruiv7
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+Thank you!
 
-Patch applied.
+...
 
-Consider doing what Krzysztof recommends: move thes <dt-bindings/*.h>
-down to the arch where you're using it and have them as .dtsi files instead
-or something.
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/driver.h>
 
-Yours,
-Linus Walleij
+Do we still need the legacy header?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
