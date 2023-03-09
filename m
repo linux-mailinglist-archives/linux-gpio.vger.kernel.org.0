@@ -2,115 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC59F6B1D02
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 08:54:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 234056B1D37
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Mar 2023 08:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjCIHyd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 02:54:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
+        id S230186AbjCIH72 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 02:59:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbjCIHyN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 02:54:13 -0500
-X-Greylist: delayed 37824 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 08 Mar 2023 23:53:54 PST
-Received: from sender3-op-o17.zoho.com (sender3-op-o17.zoho.com [136.143.184.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48EE6B957;
-        Wed,  8 Mar 2023 23:53:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1678348406; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=nzz/SZmrVGDdioH8gd2ceSR5S33TJJH1SOWXyGiilM4kIIYmJDlDBzMtTQ+VoPAiKa3na2dZEWt10SamAIAm3IPtth/hbtRgABWsXdeh9IeTC6iRNqa5Hux+9ShYkfPMJySSKZ9LNs6+nEOV6pkV734PZyM+f/b2WWup8sN71wU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1678348406; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=1fd7a9BQQqeefatGkptmpq6+Xp+BD4kDPIyZZcKeqWo=; 
-        b=PBivApT/Xh8cQ5OYjSTQ4L1H1J0tTBWlnsbY/K9fFNglEdtqU0KiZzIqwrSWCami65hEklncFHjgkGy/Qc4bC918kPplGxjcw0qkFYby4bh6jt8LIBJVdvGIePL+H8cqr8GS8kHC49i9+BTx+6P1WSHL6MBqdyeYAZdKMqt+6uU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1678348406;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=1fd7a9BQQqeefatGkptmpq6+Xp+BD4kDPIyZZcKeqWo=;
-        b=LCrfBHk2uzlnL8inI09VTobjR/W4aJWYPiPnu+/P5ig6K+WNHIsWVAL1LpengfMp
-        xulJpbe0jGodtkiggMHWyMmT8ZDaz/PLdOrFsk3hIL1/5qpiouFgb5iZKoNMSi6EeVd
-        kp28eEcce2u0hDMWNR4OU0pboJv2ub6Fai1hlLjk=
-Received: from [10.10.10.3] (212.68.60.226 [212.68.60.226]) by mx.zohomail.com
-        with SMTPS id 167834840432473.9346941163709; Wed, 8 Mar 2023 23:53:24 -0800 (PST)
-Message-ID: <ccdfd262-eaf3-dbbe-7a3c-a911a5ec0fc4@arinc9.com>
-Date:   Thu, 9 Mar 2023 10:53:17 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 09/20] dt-bindings: pinctrl: ralink: {mt7620,mt7621}:
- rename to mediatek
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        William Dean <williamsukatube@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
-References: <20230303002850.51858-1-arinc.unal@arinc9.com>
- <20230303002850.51858-10-arinc.unal@arinc9.com>
- <20230308210514.GA3767521-robh@kernel.org>
- <12be053e-b70a-faca-71c8-d8eef69a3b73@arinc9.com>
-Content-Language: en-US
-In-Reply-To: <12be053e-b70a-faca-71c8-d8eef69a3b73@arinc9.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229983AbjCIH67 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 02:58:59 -0500
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744065FC6;
+        Wed,  8 Mar 2023 23:57:51 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 5654932008FB;
+        Thu,  9 Mar 2023 02:56:26 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 09 Mar 2023 02:56:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678348585; x=1678434985; bh=Vq
+        HIsQcXhmqCYt+w/wEu8RmoQ3k2P8+3OVZu3PbvqhE=; b=ZyKR18tm0jVHMTk0/g
+        fEr4c5is3Y+8DOnmfQ8koV4ykwXfF2K7sni1t0+ukEoym+NrGqUgiWLEu5rPTyJw
+        0YJM5pudrsxt8LzgOGh+hgE0OQ5jS2lY5cyw83Xhmlim0XjkCHM0H9qWimqmYycC
+        jMZr7PhbnKrR6YPo3NULp+hFYo0LXakcP6Us1x7ZZq3P1cuIkQ5MK9g9m5pMMWAY
+        94x0bpxOEonwuiBw+e9KS2EXFhKKOCu0kboq90Rb6LZ3pfmk6HoYl6K+vaxUSeNf
+        nSWyjC3LN8IoYkrpMPY6uqpJCeSqM2nXl/4KiGEn0IfSm3wYg6kix6tCmq0pn6/T
+        qj/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1678348585; x=1678434985; bh=VqHIsQcXhmqCY
+        t+w/wEu8RmoQ3k2P8+3OVZu3PbvqhE=; b=kE2DfbWp52mBUvnYmds56m2l8GWvR
+        6GisiRWu8lAU75Rv5FAF4jJ2hFJ/LC5tGjDStSyTS1iItd7/vS5hVccX0w1KHn7j
+        AMAd1QJ/QpiUtF6G3AnzOa0Ot8irhJtBnd9UwowSATJtI/hGvpeXALZU/QOJ4gz+
+        7/9zyNxa2IRRZzB1RrJ5abxNyi75ZkOHbk4H9I49QuQWX+0iw+hwBUMdW0zq+Xky
+        8D/SGXUNP2rrlgZ2O8EETa7PFO/sGdFWZMdzbS37gl3JBjUb2v+8pFjj4lPa9zaC
+        SgjcXwKL7pnFnXfSvIRlNwygO01bJ6N0erbQFzsxkXIu5so12+ruTqsIA==
+X-ME-Sender: <xms:KZEJZEFzmjgvQ6uO2ftJj_-kxWGpZhRRGB_GkAVGwrxq9A03tly-5Q>
+    <xme:KZEJZNWUMcNTL0GWBNYkqDhVDri41fz3kdz7Wg3srSjJkkSjBHFiguZIcVwzUa8dt
+    nIKVTFu-g7oeAn0zIQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdduhedgudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:KZEJZOIUkInEUKpGIXLCFnAVXmNNPG5T0akKB765VFpDrnh6IdT_BQ>
+    <xmx:KZEJZGFcV4YYZcEx5-_EJsWCtCjMAvUKr6pMJOHUc0Z-CYkZfsApXQ>
+    <xmx:KZEJZKU_4TOUeTPHHuDUuOUSlhaFpcLokYxbsKbSXFh2Rc3DGU39xg>
+    <xmx:KZEJZBNKmsfCZViwzTGZkeNK4ExQdsAcupMuQIxrtJLk2h7cBf53Qg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 777CBB60086; Thu,  9 Mar 2023 02:56:25 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
+Mime-Version: 1.0
+Message-Id: <dcb805e1-2b48-481d-8e72-1b515c9d43e6@app.fastmail.com>
+In-Reply-To: <20230309071100.2856899-2-xiang.ye@intel.com>
+References: <20230309071100.2856899-1-xiang.ye@intel.com>
+ <20230309071100.2856899-2-xiang.ye@intel.com>
+Date:   Thu, 09 Mar 2023 08:56:05 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Ye Xiang" <xiang.ye@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Matthias Kaehlcke" <mka@chromium.org>,
+        "Lee Jones" <lee@kernel.org>, "Wolfram Sang" <wsa@kernel.org>,
+        "Tyrone Ting" <kfting@nuvoton.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
+Subject: Re: [PATCH v4 1/5] mfd: Add support for Intel LJCA device
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9.03.2023 00:19, Arınç ÜNAL wrote:
-> On 9.03.2023 00:05, Rob Herring wrote:
->> On Fri, Mar 03, 2023 at 03:28:38AM +0300, arinc9.unal@gmail.com wrote:
->>> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>>
->>> This platform from Ralink was acquired by MediaTek in 2011. Then, 
->>> MediaTek
->>> introduced these SoCs which utilise this platform. Rename the schemas to
->>> mediatek to address the incorrect naming.
->>
->> I said we don't do renames due to acquistions, you said that wasn't the
->> reason, but then that's your reasoning here.
-> 
-> It's not a marketing/acquistion rename as the name of these SoCs were 
-> wrong from the get go. The information on the first sentence is to give 
-> the idea of why these SoCs were wrongfully named as the base platform 
-> that these new MediaTek SoCs share code with was called Ralink.
-> 
->>
->> To give you another example, *new* i.MX things are still called
->> 'fsl,imx...' and it has been how many years since merging with NXP?
-> 
-> Ok this is a point I see now. Though, I fail to see how this is called 
-> renaming when there's only new SoCs (from NXP in this case) to be added.
+On Thu, Mar 9, 2023, at 08:10, Ye Xiang wrote:
 
-If I understand correctly, i.MX is a family from Freescale so the name 
-was kept the same on new SoC releases from NXP. I believe it's different 
-in this case here. There's no family name. The closest thing on the name 
-of the SoC model is, it's RT for Ralink, MT for MediaTek.
+> The minimum code in ASL that covers this board is
+> Scope (\_SB.PCI0.DWC3.RHUB.HS01)
+>     {
+>         Device (GPIO)
+>         {
+>             Name (_ADR, Zero)
+>             Name (_STA, 0x0F)
+>         }
+>
+>         Device (I2C)
+>         {
+>             Name (_ADR, One)
+>             Name (_STA, 0x0F)
+>         }
+>
+>         Device (SPI)
+>         {
+>             Name (_ADR, 0x02)
+>             Name (_STA, 0x0F)
+>         }
+>     }
 
-On top of that, mediatek strings already exist for MT SoCs already, at 
-least for MT7621.
+I'm a bit confused by this bit, does that mean this only works
+if the device is integrated on the mainboard and the BIOS is
+aware of it? This won't work if  you plug it into a random
+USB port, or have no ACPI firmware, right?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/Documentation/devicetree/bindings/mips/ralink.yaml?id=dd3cb467ebb5659d6552999d6f16a616653f9933#n83
+> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/usb/misc/Kconfig  |  13 +
+>  drivers/usb/misc/Makefile |   1 +
+>  drivers/usb/misc/ljca.c   | 969 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ljca.h  |  95 ++++
 
-Arınç
+Why is this in driver/usb/misc? It looks like a normal
+mfd driver to me, and it evenhas the header in include/linux/mfd/
+
+     Arnd
