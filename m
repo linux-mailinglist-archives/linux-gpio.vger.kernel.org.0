@@ -2,59 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 082616B4736
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 15:49:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 651B66B47DF
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 15:56:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233241AbjCJOtR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 09:49:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
+        id S233599AbjCJOyp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 09:54:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233103AbjCJOrv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 09:47:51 -0500
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9581110D313;
-        Fri, 10 Mar 2023 06:47:28 -0800 (PST)
-Received: by mail-ot1-f53.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso3053006ota.1;
-        Fri, 10 Mar 2023 06:47:28 -0800 (PST)
+        with ESMTP id S233465AbjCJOyI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 09:54:08 -0500
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B9E20568;
+        Fri, 10 Mar 2023 06:49:59 -0800 (PST)
+Received: by mail-oi1-f170.google.com with SMTP id bg11so4402221oib.5;
+        Fri, 10 Mar 2023 06:49:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678459647;
+        d=1e100.net; s=20210112; t=1678459722;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sWY2GX4eL6wZkhkiIWtA/liprN4JQfKjQKIiOmXpvZU=;
-        b=bphTHhTm/oauiHy3BsT9wsb5CwBpI0O19Rsmxf8fWXS2te/7YTOW4R2f1fhpSFD88G
-         QjpAn2eVSc5+NV6j43wkVqORCju2ysFWpGCVacKV0orVLSdfqj7D4Xn5IJar22gU3hmo
-         V9JhGTjzyVhAdc1uLKFOb+fDltbn527skAKUvHFez7mTFdSjdxIPl+aOlDVqn0ZH0CLn
-         xtKktdh0xW/8N4DhQ4jA2T6Nzep7cKw95htCEOSmZrR13BqT7JeUxWwFooNYSYavA7Mf
-         MmdAgzp7MTEkT4JOmmO4lwN2jfM8Qrs4NwEZjeh0lmUYbxiAs2XWISEgkKLs+zGr+Qm/
-         5zrg==
-X-Gm-Message-State: AO0yUKUMnZegfT/PI9AeJAnZCfihiJK6PCiMkwln3YLU8+Xt/LihSbwH
-        Cu1tHxG/+uioYAie3zI6P5YReZlYeQ==
-X-Google-Smtp-Source: AK7set/g/J528yueiUEp7/Gtg/+1utQPchlRkg8KoGoFS8QmEvkXwzmHP6rgldWE4NWPenP1TeOFfQ==
-X-Received: by 2002:a05:6830:1f4c:b0:68b:d7c1:d095 with SMTP id u12-20020a0568301f4c00b0068bd7c1d095mr13413767oth.25.1678459646783;
-        Fri, 10 Mar 2023 06:47:26 -0800 (PST)
+        bh=hwhYtKzDnXEsLBl9Tm3BqnXbNzyUsQ3KuTYFbJoohGM=;
+        b=Y+Bo8TYkfnbYROW59aHEiy7Loa7w9Lyr2OAeBGvM7lJF5afIzUtUSZvGwtKD+hjuTY
+         ZQ2roLOk2gO/0hn0+oULU6rCw3HO/fXBA1R7QRfiLyUVdlzQsIFC8thLGNXzrLPLC45q
+         eDNdwIhZQOmE4FJzD9KIlb5JNtARl4EXUKOBiAlPXL/FibOYKPT9JIX9kcVZfNfYUaTQ
+         ruUVb8Fa5MKHd+67psArxoKOKjUlAqEtKzM5I++WX6AwFJ/KmzWu/+ui9REkpLFtTu4K
+         n5fbPGCBt435CK1dfVWFxpBTXQFem2xsrgF6sbUXZidpCralIoJoO6AKas776SdKJjiJ
+         1yZQ==
+X-Gm-Message-State: AO0yUKVRlAfqWW5rXrIewugzAK/HbX5+6HUaJmc7z0zlEQvQUrm7JrbQ
+        cH4aCOxznbwBrmvYMWCyPg==
+X-Google-Smtp-Source: AK7set/2Hv/GHCQ4CWKw9+OchH8gffT8eqBP4iLmC17qsMPdXt7UFyt1xWM3HZum7IWwuaM8TqbJlg==
+X-Received: by 2002:a05:6808:1d7:b0:383:ef56:a34c with SMTP id x23-20020a05680801d700b00383ef56a34cmr1364469oic.2.1678459722220;
+        Fri, 10 Mar 2023 06:48:42 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e1-20020a9d0181000000b00670461b8be4sm125104ote.33.2023.03.10.06.47.24
+        by smtp.gmail.com with ESMTPSA id y129-20020acae187000000b0038476262f65sm967331oig.33.2023.03.10.06.48.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 06:47:26 -0800 (PST)
-Received: (nullmailer pid 1542164 invoked by uid 1000);
-        Fri, 10 Mar 2023 14:47:04 -0000
+        Fri, 10 Mar 2023 06:48:41 -0800 (PST)
+Received: (nullmailer pid 1544713 invoked by uid 1000);
+        Fri, 10 Mar 2023 14:47:21 -0000
 From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: Use of_property_read_bool() for boolean properties
-Date:   Fri, 10 Mar 2023 08:47:04 -0600
-Message-Id: <20230310144704.1542114-1-robh@kernel.org>
+To:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-renesas-soc@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH] pinctrl: Use of_property_present() for testing DT property presence
+Date:   Fri, 10 Mar 2023 08:47:20 -0600
+Message-Id: <20230310144721.1544669-1-robh@kernel.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -63,41 +76,146 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 It is preferred to use typed property access functions (i.e.
 of_property_read_<type> functions) rather than low-level
-of_get_property/of_find_property functions for reading properties.
-Convert reading boolean properties to to of_property_read_bool().
+of_get_property/of_find_property functions for reading properties. As
+part of this, convert of_get_property/of_find_property calls to the
+recently added of_property_present() helper when we just want to test
+for presence of a property and nothing more.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpio/gpio-stp-xway.c | 2 +-
- drivers/gpio/gpio-tb10x.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-moore.c |  2 +-
+ drivers/pinctrl/pinctrl-single.c         |  4 ++--
+ drivers/pinctrl/pinctrl-stmfx.c          |  2 +-
+ drivers/pinctrl/renesas/pinctrl.c        |  4 ++--
+ drivers/pinctrl/stm32/pinctrl-stm32.c    |  2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c    | 20 ++++++++++----------
+ 6 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
-index 0ce1543426a4..dd3bdc221b94 100644
---- a/drivers/gpio/gpio-stp-xway.c
-+++ b/drivers/gpio/gpio-stp-xway.c
-@@ -292,7 +292,7 @@ static int xway_stp_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+index 007b98ce5631..8649a2f9d324 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
++++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+@@ -586,7 +586,7 @@ static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+ 	 * Documentation/devicetree/bindings/gpio/gpio.txt on how to
+ 	 * bind pinctrl and gpio drivers via the "gpio-ranges" property.
+ 	 */
+-	if (!of_find_property(hw->dev->of_node, "gpio-ranges", NULL)) {
++	if (!of_property_present(hw->dev->of_node, "gpio-ranges")) {
+ 		ret = gpiochip_add_pin_range(chip, dev_name(hw->dev), 0, 0,
+ 					     chip->ngpio);
+ 		if (ret < 0) {
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 190923757cda..0dabbcf68b9f 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -939,11 +939,11 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+-		if (of_find_property(np, prop2[i].name, NULL))
++		if (of_property_present(np, prop2[i].name))
+ 			nconfs++;
  	}
+ 	for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+-		if (of_find_property(np, prop4[i].name, NULL))
++		if (of_property_present(np, prop4[i].name))
+ 			nconfs++;
+ 	}
+ 	if (!nconfs)
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 1181c4b506b1..3c031692e44d 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -632,7 +632,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->dev = &pdev->dev;
+ 	pctl->stmfx = stmfx;
  
- 	/* check which edge trigger we should use, default to a falling edge */
--	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
-+	if (!of_property_present(pdev->dev.of_node, "lantiq,rising"))
- 		chip->edge = XWAY_STP_FALLING;
+-	if (!of_find_property(np, "gpio-ranges", NULL)) {
++	if (!of_property_present(np, "gpio-ranges")) {
+ 		dev_err(pctl->dev, "missing required gpio-ranges property\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
+index b74147800319..5c71e168b370 100644
+--- a/drivers/pinctrl/renesas/pinctrl.c
++++ b/drivers/pinctrl/renesas/pinctrl.c
+@@ -125,8 +125,8 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	 * inside a subnode nor across subnodes.
+ 	 */
+ 	if (!pmx->func_prop_name) {
+-		if (of_find_property(np, "groups", NULL) ||
+-		    of_find_property(np, "pins", NULL)) {
++		if (of_property_present(np, "groups")||
++		    of_property_present(np, "pins")) {
+ 			pmx->func_prop_name = "function";
+ 			pmx->groups_prop_name = "groups";
+ 			pmx->pins_prop_name = "pins";
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index cb33a23ab0c1..66a25becd8f5 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1374,7 +1374,7 @@ static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pde
+ 	struct device_node *parent;
+ 	struct irq_domain *domain;
  
- 	clk = devm_clk_get(&pdev->dev, NULL);
-diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
-index de6afa3f9716..0422637796cb 100644
---- a/drivers/gpio/gpio-tb10x.c
-+++ b/drivers/gpio/gpio-tb10x.c
-@@ -167,7 +167,7 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
+-	if (!of_find_property(np, "interrupt-parent", NULL))
++	if (!of_property_present(np, "interrupt-parent"))
+ 		return NULL;
  
- 	platform_set_drvdata(pdev, tb10x_gpio);
+ 	parent = of_irq_find_parent(np);
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index f35179eceb4e..1dc1882cbdd7 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -224,16 +224,16 @@ static int sunxi_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
  
--	if (of_find_property(np, "interrupt-controller", NULL)) {
-+	if (of_property_present(np, "interrupt-controller")) {
- 		struct irq_chip_generic *gc;
+ static bool sunxi_pctrl_has_bias_prop(struct device_node *node)
+ {
+-	return of_find_property(node, "bias-pull-up", NULL) ||
+-		of_find_property(node, "bias-pull-down", NULL) ||
+-		of_find_property(node, "bias-disable", NULL) ||
+-		of_find_property(node, "allwinner,pull", NULL);
++	return of_property_present(node, "bias-pull-up") ||
++		of_property_present(node, "bias-pull-down") ||
++		of_property_present(node, "bias-disable") ||
++		of_property_present(node, "allwinner,pull");
+ }
  
- 		ret = platform_get_irq(pdev, 0);
+ static bool sunxi_pctrl_has_drive_prop(struct device_node *node)
+ {
+-	return of_find_property(node, "drive-strength", NULL) ||
+-		of_find_property(node, "allwinner,drive", NULL);
++	return of_property_present(node, "drive-strength") ||
++		of_property_present(node, "allwinner,drive");
+ }
+ 
+ static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
+@@ -241,13 +241,13 @@ static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
+ 	u32 val;
+ 
+ 	/* Try the new style binding */
+-	if (of_find_property(node, "bias-pull-up", NULL))
++	if (of_property_present(node, "bias-pull-up"))
+ 		return PIN_CONFIG_BIAS_PULL_UP;
+ 
+-	if (of_find_property(node, "bias-pull-down", NULL))
++	if (of_property_present(node, "bias-pull-down"))
+ 		return PIN_CONFIG_BIAS_PULL_DOWN;
+ 
+-	if (of_find_property(node, "bias-disable", NULL))
++	if (of_property_present(node, "bias-disable"))
+ 		return PIN_CONFIG_BIAS_DISABLE;
+ 
+ 	/* And fall back to the old binding */
+@@ -1424,7 +1424,7 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
+ 		return 0;
+ 
+ 	/* If we don't have any setup, bail out */
+-	if (!of_find_property(node, "input-debounce", NULL))
++	if (!of_property_present(node, "input-debounce"))
+ 		return 0;
+ 
+ 	losc = devm_clk_get(pctl->dev, "losc");
 -- 
 2.39.2
 
