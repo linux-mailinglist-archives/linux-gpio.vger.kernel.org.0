@@ -2,80 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D385A6B4AD9
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 16:27:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42AE76B4B48
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 16:38:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234209AbjCJP1Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 10:27:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55580 "EHLO
+        id S234434AbjCJPin (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 10:38:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234021AbjCJP04 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 10:26:56 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C16514ACFA
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 07:15:59 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id kb15so5619048pjb.1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 07:15:59 -0800 (PST)
+        with ESMTP id S234330AbjCJPiS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 10:38:18 -0500
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8632D7E7AF
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 07:25:48 -0800 (PST)
+Received: by mail-ua1-x92d.google.com with SMTP id f20so3759283uam.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 07:25:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678461319;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FUSLMud1/EUO2NdxXWv5FFRYsGvYVv9Bj/E6FNg3XM=;
-        b=KSYL0HeBee6gC3Ooo5RDvQ/NDo7NPFYFWoexV+6YlpPeBL6uPGEaAhIssTKs8/hOmj
-         FEVHYrXZGi8/E6F/NRYAnX4IewU6GMRlWIQwRv/urg11l/hIiEaX4Ao4OMblkslH3T+g
-         xtctco4x3tmMfWf15OmHVER+prZt8kcCIpGvAOlTc9cteSgE5YuzbfHtkckPXTqKJ6Ow
-         VnezORrkqdvYUpUqdLCt5jFhQQOE0vOl3hALjZlWpMR2RnVm0WIBN0/oFOylw1QTGxWV
-         diKo5pC9r3aWeEY9FQw/EKIxzy1GWafAFOAJi3rLsbPd/L3h1qk388sZHtIPBfR4A0z4
-         dDpg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678461947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fdQamsC4vi5DdWnwK5HVEMpNIaeepKJtcchj23r+Ns8=;
+        b=xRgf8zpxpRcJiHDvwUeCgbDOhtkP0Co5sv+gAy33WegXPv7/8fF4TChaKaOtJk7Zib
+         p9248LVUG2Op1wOvSOlIN3/odHqRfA5uyWhQ+RCL/D4KcgIdvEK7nTGgRWvrJu7DwF68
+         sG9v09jiWmvcWoAMA4OCSI8OUiY6S1+HZGGVvsKUEhzElhGVBwNBQ+A+mX6wTv8S8gzJ
+         hMO8c8uEn1awYHv22BiJGlHel8L4nMzk7d8nnDK4iOpmrUHA4WqQN1E/ncqGT+JXGAxf
+         1MgZ/5aFZSZ+zMeSbZ4OgVDyVDApZSpdwrT/vE+wCvVqciX5oRp7fbLAcCZvvo6aOWTX
+         UDjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678461319;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1FUSLMud1/EUO2NdxXWv5FFRYsGvYVv9Bj/E6FNg3XM=;
-        b=vsTHxk/cnW9YXQKbpRbZgrGH8NazVGDXdNewTGGpBQCzSEuICmWXQ+ylX3dReHXZJn
-         xg4eEsk5WDUuKrl75KpI0quZ4y0rva5nbx5dUp8W4KjvRz5+VRh/StWoSvcpYQb6YHH8
-         b4Re/lVxA0ELOxlRj1fnIdUNM0YS613puGGkj/c9wdvRe10m4/yvjVTws2mPYZUbZZSC
-         gC6eVH9n8Jj2810cljKELx5SKl66h4xN6Whg3cWV4IfcDXJ+/wqoWVDoKo1Js1sKEwp9
-         xLfeQ+seQKhIiyX2wlvOkCOnM5OEe7yHoWT4Pq+g5ElvLWk+A8lXpa9NScNDVurw294q
-         HRDA==
-X-Gm-Message-State: AO0yUKXVdossqTnoljK03fthu7g68aJWxwEicZ0iPoSBaNfDXVVV58Ea
-        n51urzWCViJwB/CzSfFZ8P7lwTtoMskRznCxyVIIJg==
-X-Google-Smtp-Source: AK7set8Y8SU2ADi3YJHj/fTmISh50U8e7aW35JZfQM4zz8PalMuTuLly1fUEosqA7lI1e3N8DnOnGTzVYF7XqEfZhTI=
-X-Received: by 2002:a17:90b:1283:b0:234:925b:7d61 with SMTP id
- fw3-20020a17090b128300b00234925b7d61mr9645464pjb.9.1678461319609; Fri, 10 Mar
- 2023 07:15:19 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678461947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fdQamsC4vi5DdWnwK5HVEMpNIaeepKJtcchj23r+Ns8=;
+        b=gKrqJWpZggURdnHkvTxRTkG1N/Vb7I4fLN1nTgC4T5U7aLoeaA+xE3EG9nqEICyUnk
+         sDSCSVMxAJezU5hOTyrocTK1jjldJ1AHszyDNrd64mPuQUw85IWC4T5XFNOPSDCjLJ6M
+         aByK2A6C/UFp81NxTgsoY01mhIEOjeyF6cJj8O0v7o0d5F/4wdsiCO03XEXIvHCVaZIT
+         BVsF9rK+pYSTLMq0SsWxTY9+S+T4ksandmO7rkFDf8rDM1TWRKtSka77XcAJp+wAejVV
+         eklc4+JxVgZHYtTQj39tXAv6Ey7K7imPZLRfLOt6GPHplziDkHWP9VnG5DDGd0hcDp2t
+         i8MQ==
+X-Gm-Message-State: AO0yUKUumG64yLfDn2wK0LfHTe8hbiSWTO/AUc1G3BDczU8ESbCmaG1a
+        du+lYZYnlKe6YsQDQ329O6gVaZe5m1EVUluNk1tYzw==
+X-Google-Smtp-Source: AK7set8JKIa0SDKefJ5/5r0bsBT4FjcaTDkUOLiUSu4UpVWrx/n+FeDaLWhaBvyJsXFMK706ylGuz6gzvS1T6/qS6zA=
+X-Received: by 2002:a05:6122:588:b0:42f:6cba:201f with SMTP id
+ i8-20020a056122058800b0042f6cba201fmr3007297vko.1.1678461947541; Fri, 10 Mar
+ 2023 07:25:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com> <20230203-evk-board-support-v2-2-6ec7cdb10ccf@baylibre.com>
-In-Reply-To: <20230203-evk-board-support-v2-2-6ec7cdb10ccf@baylibre.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 10 Mar 2023 16:14:43 +0100
-Message-ID: <CAPDyKFp-2H_7G4bOjYHpXBHe2=8VTEwF3w6HmrPsOwKaZ+auiA@mail.gmail.com>
-Subject: Re: [PATCH v2 02/18] dt-bindings: mmc: mediatek,mtk-sd: add mt8365
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>
+References: <20230215-immutable-chips-v3-0-972542092a77@linaro.org>
+In-Reply-To: <20230215-immutable-chips-v3-0-972542092a77@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Mar 2023 16:25:36 +0100
+Message-ID: <CAMRc=MdyjQDEMNxGYOKwWHry7MnEFMHYZSg=-FPohNwn6dxjaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/17] Mass convert GPIO IRQ chips to be immutable
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, Alban Bedel <albeu@free.fr>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Jay Fang <f.fangjian@huawei.com>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,34 +84,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 7 Mar 2023 at 14:18, Alexandre Mergnat <amergnat@baylibre.com> wrote:
+On Thu, Mar 9, 2023 at 8:45=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
 >
-> Add binding description for mediatek,mt8365-mmc
+> We are getting tired of these irq_chips not getting converted
+> to be immutable, so I just take out the big hammer and fix
+> some that I deem not too complex as best I can.
 >
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
+> I stopped after doing some, I will take another sweep at some
+> point I guess.
+>
+> This is v6.4 material.
+>
+> The last two patches to pci-idio-* (patch 15 and 16) can be
+> omitted if William's patches to convert this driver to
+> regmap GPIO are merged first.
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Changes in v3:
+> - Deleted the irq_chip->name assignment in the Aspeed driver
+> - Fold in a patch from Joel to make aspeed IRQs compulsory
+> - Link to v2: https://lore.kernel.org/r/20230215-immutable-chips-v2-0-d6b=
+0e3f2d991@linaro.org
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
-> index 7a649ebc688c..46eefdd19a2c 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.yaml
-> @@ -34,6 +34,7 @@ properties:
->                - mediatek,mt8188-mmc
->                - mediatek,mt8192-mmc
->                - mediatek,mt8195-mmc
-> +              - mediatek,mt8365-mmc
->            - const: mediatek,mt8183-mmc
+> Changes in v2:
+> - Rebased on v6.3-rc1
+> - Collected some test and ACK tags
+> - Link to v1: https://lore.kernel.org/r/20230215-immutable-chips-v1-0-51a=
+8f224a5d0@linaro.org
 >
->    reg:
+> ---
+> Joel Stanley (1):
+>       gpio: aspeed: Always register the irqchip
 >
+> Linus Walleij (16):
+>       gpio: altera: Convert to immutable irq_chip
+>       gpio: adnp: Convert to immutable irq_chip
+>       gpio: aspeed: Convert to immutable irq_chip
+>       gpio: aspeed-sgpio: Convert to immutable irq_chip
+>       gpio: ath79: Convert to immutable irq_chip
+>       gpio: cadence: Convert to immutable irq_chip
+>       gpio: hisi: Convert to immutable irq_chip
+>       gpio: hlwd: Convert to immutable irq_chip
+>       gpio: idt3243x: Convert to immutable irq_chip
+>       gpio: msc313: Convert to immutable irq_chip
+>       gpio: mlxbf2: Convert to immutable irq_chip
+>       gpio: max732x: Convert to immutable irq_chip
+>       gpio: omap: Drop irq_base
+>       gpio: omap: Convert to immutable irq_chip
+>       gpio: pci-idio-16: Convert to immutable irq_chip
+>       gpio: pcie-idio-24: Convert to immutable irq_chip
+>
+>  drivers/gpio/gpio-adnp.c         |  9 ++++-
+>  drivers/gpio/gpio-altera.c       | 25 +++++++-----
+>  drivers/gpio/gpio-aspeed-sgpio.c | 44 +++++++++++++++++----
+>  drivers/gpio/gpio-aspeed.c       | 82 ++++++++++++++++++++++++++--------=
+-----
+>  drivers/gpio/gpio-ath79.c        |  8 +++-
+>  drivers/gpio/gpio-cadence.c      | 10 +++--
+>  drivers/gpio/gpio-hisi.c         | 25 +++++++-----
+>  drivers/gpio/gpio-hlwd.c         | 33 ++++++++++++----
+>  drivers/gpio/gpio-idt3243x.c     | 11 ++++--
+>  drivers/gpio/gpio-max732x.c      |  8 +++-
+>  drivers/gpio/gpio-mlxbf2.c       | 32 ++++++++++++----
+>  drivers/gpio/gpio-msc313.c       | 26 +++++++++++--
+>  drivers/gpio/gpio-omap.c         | 83 ++++++++++++++++++++++------------=
+------
+>  drivers/gpio/gpio-pci-idio-16.c  | 12 ++++--
+>  drivers/gpio/gpio-pcie-idio-24.c | 12 ++++--
+>  15 files changed, 290 insertions(+), 130 deletions(-)
+> ---
+> base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
+> change-id: 20230215-immutable-chips-762922277f1e
+>
+> Best regards,
 > --
-> b4 0.10.1
+> Linus Walleij <linus.walleij@linaro.org>
+>
+
+Normally these irq_chip conversions would go upstream as fixes but
+this time there are too many at once. I applied them to my
+gpio/for-next branch. Let's give them some time in next and later we
+can backport them if necessary.
+
+Bartosz
