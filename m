@@ -2,103 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7066B3A96
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 10:33:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6EF6B3AA5
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 10:35:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbjCJJdQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 04:33:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
+        id S229960AbjCJJfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 04:35:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjCJJcc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 04:32:32 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029155BA0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:29:39 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id bw19so4390980wrb.13
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:29:38 -0800 (PST)
+        with ESMTP id S231577AbjCJJfO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 04:35:14 -0500
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4FB0105F0D
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:32:19 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-536bf92b55cso86457097b3.12
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678440575;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zgmj6Sg9L2ou/8zxflPP2jSH57vOs9BFT58z7CAixTI=;
-        b=PoIf0ci7/VXdvs9kGTLcG8ZMvkEMWD1ILsfhEKy1b8OyCpvOiJ1bZ/3ypqQN3fbHEU
-         QSIe1f/wMI0+NHmEjJZEtQau0dvXUPsKOVTw3JeYThn3XvAUIyNFM+CVM8Gd12UXMr/W
-         1ej0Y20HI/pLKRIFkV7GrOsYLdM4TWrq5dL+O8WqnwWioQS7Q+MuduePmvk2QDQ96zdd
-         NlqEShU415rU6IGL7104PmFuFuDJ/vAXu93RizA5NGa2LP0gkr25s0gahyLkL49QZ7bz
-         KszFSQ3qUSHP11gtV2ncWk5gnGLnw5dN18hq/aN4KOMI88AWhH5ochS91+QouT0BE8gY
-         pTTQ==
+        d=linaro.org; s=google; t=1678440737;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Njdqrsn+QSy6WW8NbM32NbcKQVZ2VRKXnbBVlDR43PE=;
+        b=I4V7wPWYRdZegJ8DhUHATpp0Vxwip13k/L0Q9o2h/IqJJ4HQ8nQHgrYEpOhZxEFSVl
+         4xLe8AJCo+ll9a6vAqMKqlwWRdJHamEN+RBPOZ3y3rmuYMV1YaX9x+iUq3EsABUBSRIh
+         jlUmsgbotNkL3QXBBPIAUH5yfbk7Qgbk4L0bjMnxotUL2DocWwrxb4mmtD/YEL1g2qa2
+         yDcRrygRlC/k6fdd+fdRxEp2toTVcXgN/vHKHU8VoQ2lFoHBiYw7Jv4L832qtkbRNjQk
+         4em/Xk4rT08xX49fZyrlCYk0im75utMZdJUK5ONjBMOV+SWdNI0iCYN9kzFhDUBRAJPU
+         5iwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678440575;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20210112; t=1678440737;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Zgmj6Sg9L2ou/8zxflPP2jSH57vOs9BFT58z7CAixTI=;
-        b=pfhREelOwpLPto0eWUORoinFCOm3HwOJAAQXD9FZL2K87nSgKd1QxCqZT3fA2lYIqb
-         qDX9nf3wSKHV2jRAHJVjcpt6UnU1+j7vGqJ5dLIZ0RVXrAtbrPVj+Zrjrw7ZuIx3T4M7
-         5PCLTyqZSoACSL9TY+tp8RvsZu4VEgPjhuffYlhHZIMGgu2fGt9U4ypfNCS/RXoSfHWM
-         TaWd6KgSFSxbZvTzkZvSyzcfY91hH0Rv25Y9jFzgtIQyPKqHsCpHVvDZOlBfabKoh7RZ
-         739hR5JK+Oh/DSNKkO9x4zc+zqBZAdVoKHxha9GEnz1toV2lxzYtolM2+pXBaMIe/ucr
-         r6xw==
-X-Gm-Message-State: AO0yUKXvH6xUA45EcfUhQX2Qv9Ptm4Kt21UVlECQNSlPA3/MzmEKbx4D
-        YM21Uxni0EVUtnWdqB1Sh+UooxQbVQPKwVX7PsU=
-X-Google-Smtp-Source: AK7set9t7vuDHlDX36d9u24k+W2NmU6GnYv+SNRr7ewFPBs9w5FqbWvD6dSkWviHH/GUWBy1XkjPTw==
-X-Received: by 2002:adf:dc85:0:b0:2c7:d87:7a3f with SMTP id r5-20020adfdc85000000b002c70d877a3fmr16305043wrj.50.1678440574456;
-        Fri, 10 Mar 2023 01:29:34 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:60e1:2dd9:3b20:5b74])
-        by smtp.gmail.com with ESMTPSA id k13-20020a5d6e8d000000b002be505ab59asm1677614wrz.97.2023.03.10.01.29.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 01:29:34 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] core: make the chip file descriptor blocking
-Date:   Fri, 10 Mar 2023 10:29:32 +0100
-Message-Id: <20230310092932.51756-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        bh=Njdqrsn+QSy6WW8NbM32NbcKQVZ2VRKXnbBVlDR43PE=;
+        b=Tf7WIaLyeGIocr1axJ5kP5q21NrhN1CwDWXCVHifHtnJcATQ/CLHWJib2mzY2pdNfP
+         A0q5a4PIvPxZG+EbdcT/J5muN3Tf0VynuIDXvUYVXCM9tLsTPM0GalsaP/xqkYyeLiyj
+         e5BVkLJSnC9qXWiZFnFad48LCh2dsWPjmudnGfX5GAk8s9QCoNjdYOJ9cMIYT/HrpOOI
+         xis8a+QCr9H5WN84pgBuqn/HEFluB8oTu1tFwCVPWOjyUbkJsTnn0Q/LcIOiqO7Z5zxN
+         LIYbsWIQtK1AswCTNOcmzcKSQeqPPJ9+3oQGXpuAdAmT8rBsuvzNhI6ceBmGQOmXHOV/
+         f+oQ==
+X-Gm-Message-State: AO0yUKVfCFIcGcLc+FbjWLn+pbzOkXJiBIXycFLu948hrH+fWaoZ0esO
+        M/s78igF54/tVjidBMJDAu22h2MTOGYOSpHcnknhYw==
+X-Google-Smtp-Source: AK7set9uX6AxQgDrnxQYufSXnfjSvA23OWB2dnkfvaqc1us5wsw0bn5Hf9b8WA3gyUWET9UjY31bpqu63bKUd+bXlng=
+X-Received: by 2002:a81:ac4b:0:b0:533:9ffb:cb12 with SMTP id
+ z11-20020a81ac4b000000b005339ffbcb12mr16453153ywj.10.1678440737032; Fri, 10
+ Mar 2023 01:32:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NO_DNS_FOR_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        T_SPF_TEMPERROR autolearn=no autolearn_force=no version=3.4.6
+References: <20230308084309.396192-1-nm@ti.com> <CACRpkdbBWeFupRin=JuMCGDWkzbsR18N+4ZEbQOPJq=p3w0yLw@mail.gmail.com>
+ <20230310004311.5e5ekv7edpbahjap@groggily>
+In-Reply-To: <20230310004311.5e5ekv7edpbahjap@groggily>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Mar 2023 10:32:05 +0100
+Message-ID: <CACRpkdaL3Sbn8Jv_etgFcVZT1spD0qa9RuMGon2LF-SvgTs6+A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: k3: Introduce debounce select mux macros
+To:     Nishanth Menon <nm@ti.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Mar 10, 2023 at 1:43 AM Nishanth Menon <nm@ti.com> wrote:
+> On 15:03-20230309, Linus Walleij wrote:
+> > On Wed, Mar 8, 2023 at 9:43 AM Nishanth Menon <nm@ti.com> wrote:
+> >
+> > > Introduce the debounce select mux macros to allow folks to setup
+> > > debounce configuration for pins. Each configuration selected maps
+> > > to a specific timing register as documented in appropriate Technical
+> > > Reference Manual (example:[1]).
+> > >
+> > > [1] AM625x TRM (section 6.1.2.2): https://www.ti.com/lit/pdf/spruiv7
+> > > Signed-off-by: Nishanth Menon <nm@ti.com>
+> >
+> > Patch applied.
+> >
+> > Consider doing what Krzysztof recommends: move thes <dt-bindings/*.h>
+> > down to the arch where you're using it and have them as .dtsi files instead
+> > or something.
+>
+> Yep, that sounds like a better idea. If you are ok to drop this
+> patch, then lets do the cleanup first and move the pinctrl to something like
+> arch/arm64/boot/dts/ti/k3-pinctrl.h
 
-After discussing this a while back we removed the call to fcntl() that
-would make the request file descriptor non-blocking so that a call to
-gpiod_line_request_read_edge_events() would block if no events are
-pending. We agreed that the same behavior should apply to info events and
-made the docs state that. Unfortunately we still pass the O_NONBLOCK flag
-to open() making read() called on the chip file descriptor return
-immediately if no info events are pending. Fix it by removing this flag.
+OK let's proceed like that, I dropped it!
 
-Fixes: b7ba732e6a93 ("treewide: libgpiod v2 implementation")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- lib/chip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/chip.c b/lib/chip.c
-index 507c79d..7d4d21e 100644
---- a/lib/chip.c
-+++ b/lib/chip.c
-@@ -30,7 +30,7 @@ GPIOD_API struct gpiod_chip *gpiod_chip_open(const char *path)
- 	if (!gpiod_check_gpiochip_device(path, true))
- 		return NULL;
- 
--	fd = open(path, O_RDWR | O_CLOEXEC | O_NONBLOCK);
-+	fd = open(path, O_RDWR | O_CLOEXEC);
- 	if (fd < 0)
- 		return NULL;
- 
--- 
-2.37.2
-
+Yours,
+Linus Walleij
