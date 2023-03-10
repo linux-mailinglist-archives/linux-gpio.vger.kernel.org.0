@@ -2,93 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E296B4E71
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 18:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BFF56B4FCB
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 19:08:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbjCJRZU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 12:25:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57966 "EHLO
+        id S231311AbjCJSIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 13:08:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbjCJRZT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 12:25:19 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38EE5B9C;
-        Fri, 10 Mar 2023 09:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678469118; x=1710005118;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GsLnhiYrMaYeFzjQo7MAFHM9kLVSoa7vMje66c4oWB4=;
-  b=i5igMe73ewO4QRoXULD76he26+1bExrMS0Xjda21CikLa+hzSqIMjqiU
-   UtdfsJvwS6mTRtGYVz9Yeof4WoWycMiA4cqcZ8bk4n0CaX1awGDIm42GU
-   6THxGl7gZQiauh+37MFoNxZyMJ6O6LFYYTn4lNLaE5BT0erVKqqofGPBl
-   vr+d1YAyN0nd2WWuYGGUgThsddiy/WDrlp9LBwqjZN0QPzdjp3uehIMxY
-   6ihTct+AmdLSajGrq2/SCBDiT80gDQqVbfLkstz6QmsohU+niBJQGdit+
-   QX/Erz67LLsRMcrfTPhf7laesWsTQzmiJoZIJPFXgktnHikO+6ZMe/9q0
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="334259876"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="334259876"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 09:25:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="671152676"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="671152676"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2023 09:25:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pagUT-00134s-2r;
-        Fri, 10 Mar 2023 19:25:13 +0200
-Date:   Fri, 10 Mar 2023 19:25:13 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 1/3] Documentation: gpio: Input mode is not true Hi-Z
-Message-ID: <ZAtn+TIB/5ngaF7w@smile.fi.intel.com>
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYVU2KJMw=FRxCLXbpWY+42RGheHvnqzg2bo2=JjTRCOw@mail.gmail.com>
+        with ESMTP id S230161AbjCJSIL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 13:08:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98EF1B318;
+        Fri, 10 Mar 2023 10:08:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 14EF061BB2;
+        Fri, 10 Mar 2023 18:08:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92FFC433EF;
+        Fri, 10 Mar 2023 18:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678471685;
+        bh=1Z0qzAWjdgjpl9cppEGMQkzvMHIUxky2AMt6JDpGnN4=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=dRKOZR4q0d/gZV1FcaOoD2TkSsBp9tJ4pMk6uHCG63pE7rD44jrwd3yDEJpLuJEqO
+         lJOhyy1MGFgQsUa9Gvzv8CEJm0mtnWngZKfPR6hZ5ZqkjHjW5Q4xGXI9IU1gXYDwSn
+         Lww/AAS7YhRd2h54aQHyr3an+NDRKO0dO+elLmjUUt2id6pyTHOhP9hJ+sLRcHPig2
+         f9E4lMl3dhLIvkCpzAczBixCwMzpo6P7sh54erF2w+tA8KYfu/WsuGHIhDS/plSnax
+         2n8mqX7AkBjtTXQ+oeqrW9gYPftC5rn7j0uSj20O/nlYk6/OpaJbkcXgL+riX3s9kD
+         5upRoX6NQy3MA==
+Message-ID: <d80001de-3cf7-59e9-5ae7-d8dfe0a1c21e@kernel.org>
+Date:   Fri, 10 Mar 2023 19:08:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYVU2KJMw=FRxCLXbpWY+42RGheHvnqzg2bo2=JjTRCOw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V2 4/6] dt-bindings: timestamp: Add Tegra234 support
+To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev
+References: <20230214115553.10416-1-dipenp@nvidia.com>
+ <20230214115553.10416-5-dipenp@nvidia.com>
+ <3c0ad963-ce69-bd5b-20cd-888e5fbdecaf@kernel.org>
+ <7a8027c9-dc73-3684-c5f2-3071f315b3cd@nvidia.com>
+ <a5e897e5-4cb9-d50f-47a8-ffb8bd8774cb@kernel.org>
+ <18f9a6ca-a61b-4cbb-b729-1fdb6d48651a@nvidia.com>
+ <ab9f7730-d399-0786-67e5-aad57716809e@kernel.org>
+ <c1a78a59-c8ae-81e5-b641-a7cb75062ab3@nvidia.com>
+ <f661f27f-f367-2948-1435-5b5fa43a3b46@kernel.org>
+ <6733c921-3cca-cd7b-3846-0ab6ce172c14@nvidia.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <6733c921-3cca-cd7b-3846-0ab6ce172c14@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 03, 2022 at 10:33:50AM +0100, Linus Walleij wrote:
-> On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On 10/03/2023 18:19, Dipen Patel wrote:
+> On 3/10/23 12:45 AM, Krzysztof Kozlowski wrote:
+>> On 09/03/2023 19:49, Dipen Patel wrote:
+>>> On 3/8/23 10:16 PM, Krzysztof Kozlowski wrote:
+>>>> On 08/03/2023 21:09, Dipen Patel wrote:
+>>>>> On 3/8/23 11:05 AM, Krzysztof Kozlowski wrote:
+>>>>>> On 08/03/2023 19:45, Dipen Patel wrote:
+>>>>>>> On 2/16/23 6:17 AM, Krzysztof Kozlowski wrote:
+>>>>>>>> On 14/02/2023 12:55, Dipen Patel wrote:
+>>>>>>>>> Added timestamp provider support for the Tegra234 in devicetree
+>>>>>>>>> bindings.
+>>>>>>>>
+>>>>>>>> 1. Your commit does much more. You need to explain it why you drop some
+>>>>>>>> property.
+>>>>>>> ACK, will address it next patch
+>>>>>>>>
+>>>>>>>> 2. Bindings go before its usage (in the patchset).
+>>>>>>> Ack...
+>>>>>>>>
+>>>>>>>> 3. Please use scripts/get_maintainers.pl to get a list of necessary
+>>>>>>>> people and lists to CC.  It might happen, that command when run on an
+>>>>>>>> older kernel, gives you outdated entries.  Therefore please be sure you
+>>>>>>>> base your patches on recent Linux kernel.
+>>>>>>> It is based on recent linux at the time patch series was sent...
+>>>>>>
+>>>>>> That's good but then why you do not use scripts/get_maintainers.pl? The
+>>>>>> hint about recent kernel was just a hint... Just do not invent addresses
+>>>>>> by yourself and use the tool to get them right.
+>>>>>>
+>>>>> I will take a note for the next patch series to add any missing people. The current
+>>>>> list of people/group is what historically helped review this new timestamp/hte subsystem.
+>>>>>
+>>>>>> (...)
+>>>>>>
+>>>>>>>>> +  properties:
+>>>>>>>>> +    compatible:
+>>>>>>>>> +      contains:
+>>>>>>>>> +        enum:
+>>>>>>>>> +          - nvidia,tegra194-gte-aon
+>>>>>>>>
+>>>>>>>> This is an ABI break. Does your driver handle it?
+>>>>>>> yes, handling patch is part of this patch series.
+>>>>>>
+>>>>>> Can you point me to the code which does it? I see "return -ENODEV;", so
+>>>>>> I think you do not handle ABI break. I could miss something but since
+>>>>>> you disagree with me, please at least bring some arguments...
+>>>>> Refer to patch https://patchwork.kernel.org/project/timestamp/patch/20230214115553.10416-3-dipenp@nvidia.com/
+>>>>> which has compatible properties added and also code changes to reflect addition/deletion of some
+>>>>> properties.
+>>>>
+>>>> I referred to the code which breaks the ABI.
+>>>>
+>>>>>
+>>>>> I am not sure I have understood about ABI break comment. How else one should handle if
+>>>>> there is no related gpio controller property found?
+>>>>
+>>>> In a way it does not break existing users? There are many ways to handle
+>>>> it, but I don't know your code to point you.
+>>>
+>>> It is new subsystem and has only one driver which uses it so far. 
+>>
+>> We do not talk about subsystem, but Tegra SoC, which is not new. Unless
+>> you meant this is new SoC/DTS?
+>>
+>>> This was a decision taken
+>>> after review comments (By Thierry, also in the mailing list) to add this property (nvidia,gpio-controller)
+>>> and necessary changes have been made to existing user. From now on, it has to follow this change.
+>>
+>> What is "it" which has to follow? There are rules for stable ABI and
+>> commit msg does not explain why they should not be followed.
 > 
-> > The true Hi-Z (a.k.a. high impedance) mode is when pin is completely
-> > disconnected from the chip. This includes input buffer as well.
-> > Nevertheless, some hardware may not support that mode and they are
-> > considering input only as Hi-Z, but more precisely it is an equivalent
-> > to that, in electronics it's basically "an antenna mode".
-> >
-> > Sligthly correct documentation to take the above into consideration.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> "It" here means hte-tegra194.c HTE provider which is the only one and not being used by any entity
+> yet.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>>>
+>>>>
+>>>>> I am assuming you are referring to the
+>>>>> below code from the patch 2 (link above) when you said "return -ENODEV".
+>>>>
+>>>>
+>>>> Your bindings patch points to ABI break without any
+>>>> explanation/justification. Then your code #2 patch actually breaks it,
+>>>> also without any justification.
+>>> I am going to add explanation/justification in the commit message in the next patch series. But to give
+>>> you context, discussion happened here https://patchwork.ozlabs.org/project/linux-gpio/patch/20221103174523.29592-3-dipenp@nvidia.com/
+>>
+>> Either too many messages (and I missed something) or I could not find
+>> why ABI break is accepted and justified.
+> 
+> https://patchwork.ozlabs.org/project/linux-gpio/patch/20221103174523.29592-5-dipenp@nvidia.com/#3000908 and
+> affected code/comment at https://patchwork.ozlabs.org/project/linux-gpio/patch/20221103174523.29592-5-dipenp@nvidia.com/#3000908.
+> 
+> Will it help if I send new patch series with detailed commit message?
 
-Bart, can you apply only the first patch from the series, on which we have
-a consensus (I believe?).
+Yes. If the binding is not used, it's a perfectly valid reason and
+should be mentioned in commit msg.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
