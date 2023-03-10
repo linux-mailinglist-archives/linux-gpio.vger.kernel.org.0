@@ -2,65 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC486B438C
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 15:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 082616B4736
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 15:49:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232057AbjCJOPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 09:15:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
+        id S233241AbjCJOtR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 09:49:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231770AbjCJOPS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 09:15:18 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378AB11786A;
-        Fri, 10 Mar 2023 06:14:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678457646; x=1709993646;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wnHp8QotpEXnl4syrGWTVi+ZzBP8IVSR7jssb+hIwqU=;
-  b=e25VbFKxeO1nlE7ALxE6pf2eYKtsx1Xpiko1CAvgvDJ8Oum8OjmR4Pm6
-   JYNUdHyOHL7PeqCUmt8rF2RMXLAJmk+B7NcDkizl54bYME2Ua1xZWADKx
-   /1NJBB/jXhA9vGRyhWTKGtmEPUlM9k1dcYWW8oH3sf8SX+26ubuvQod5q
-   sqDAcMpsPbhcORzmrvg8GVP/Oeq0VobByTguFoqgEgF828RLpm8uMzQ3w
-   hX1RMU/sPKXwCCycso+op7tQMDPsNUBZaL3owz1tMKMtJA9L7+wMS4ApZ
-   fwui31txsrFvM+TzJLjOlYWBllxhlwHzHnIZinE8+ze5kIyvIMDEB6UET
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="401593953"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="401593953"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 06:13:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="671093619"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="671093619"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2023 06:13:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1padVJ-000wyG-1H;
-        Fri, 10 Mar 2023 16:13:53 +0200
-Date:   Fri, 10 Mar 2023 16:13:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Kaehn <kaehndan@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
-Message-ID: <ZAs7IS8tcc92RVCM@smile.fi.intel.com>
-References: <20230309-fix-acpi-gpio-v2-1-9eb20a1fd42c@redhat.com>
+        with ESMTP id S233103AbjCJOrv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 09:47:51 -0500
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9581110D313;
+        Fri, 10 Mar 2023 06:47:28 -0800 (PST)
+Received: by mail-ot1-f53.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso3053006ota.1;
+        Fri, 10 Mar 2023 06:47:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678459647;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sWY2GX4eL6wZkhkiIWtA/liprN4JQfKjQKIiOmXpvZU=;
+        b=bphTHhTm/oauiHy3BsT9wsb5CwBpI0O19Rsmxf8fWXS2te/7YTOW4R2f1fhpSFD88G
+         QjpAn2eVSc5+NV6j43wkVqORCju2ysFWpGCVacKV0orVLSdfqj7D4Xn5IJar22gU3hmo
+         V9JhGTjzyVhAdc1uLKFOb+fDltbn527skAKUvHFez7mTFdSjdxIPl+aOlDVqn0ZH0CLn
+         xtKktdh0xW/8N4DhQ4jA2T6Nzep7cKw95htCEOSmZrR13BqT7JeUxWwFooNYSYavA7Mf
+         MmdAgzp7MTEkT4JOmmO4lwN2jfM8Qrs4NwEZjeh0lmUYbxiAs2XWISEgkKLs+zGr+Qm/
+         5zrg==
+X-Gm-Message-State: AO0yUKUMnZegfT/PI9AeJAnZCfihiJK6PCiMkwln3YLU8+Xt/LihSbwH
+        Cu1tHxG/+uioYAie3zI6P5YReZlYeQ==
+X-Google-Smtp-Source: AK7set/g/J528yueiUEp7/Gtg/+1utQPchlRkg8KoGoFS8QmEvkXwzmHP6rgldWE4NWPenP1TeOFfQ==
+X-Received: by 2002:a05:6830:1f4c:b0:68b:d7c1:d095 with SMTP id u12-20020a0568301f4c00b0068bd7c1d095mr13413767oth.25.1678459646783;
+        Fri, 10 Mar 2023 06:47:26 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id e1-20020a9d0181000000b00670461b8be4sm125104ote.33.2023.03.10.06.47.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Mar 2023 06:47:26 -0800 (PST)
+Received: (nullmailer pid 1542164 invoked by uid 1000);
+        Fri, 10 Mar 2023 14:47:04 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: Use of_property_read_bool() for boolean properties
+Date:   Fri, 10 Mar 2023 08:47:04 -0600
+Message-Id: <20230310144704.1542114-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230309-fix-acpi-gpio-v2-1-9eb20a1fd42c@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,37 +61,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 02:38:10PM +0100, Benjamin Tissoires wrote:
-> While trying to set up an SSDT override for a USB-2-I2C chip [0],
-> I realized that the function acpi_gpiochip_find() was using the parent
-> of the gpio_chip to do the ACPI matching.
-> 
-> This works fine on my Ice Lake laptop because AFAICT, the DSDT presents
-> the PCI device INT3455 as the "Device (GPI0)", but is in fact handled
-> by the pinctrl driver in Linux.
-> The pinctrl driver then creates a gpio_chip device. This means that the
-> gc->parent device in that case is the GPI0 device from ACPI and everything
-> works.
-> 
-> However, in the hid-cp2112 case, the parent is the USB device, and the
-> gpio_chip is directly under that USB device. Which means that in this case
-> gc->parent points at the USB device, and so we can not do an ACPI match
-> towards the GPIO device.
-> 
-> I think it is safe to resolve the ACPI matching through the fwnode
-> because when we call gpiochip_add_data(), the first thing it does is
-> setting a proper gc->fwnode: if it is not there, it borrows the fwnode
-> of the parent.
-> 
-> So in my Ice Lake case, gc->fwnode is the one from the parent, meaning
-> that the ACPI handle we will get is the one from the GPI0 in the DSDT
-> (the pincrtl one). And in the hid-cp2112 case, we get the actual
-> fwnode from the gpiochip we created in the HID device, making it working.
+It is preferred to use typed property access functions (i.e.
+of_property_read_<type> functions) rather than low-level
+of_get_property/of_find_property functions for reading properties.
+Convert reading boolean properties to to of_property_read_bool().
 
-Pushed to my review and testing queue, thanks!
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/gpio/gpio-stp-xway.c | 2 +-
+ drivers/gpio/gpio-tb10x.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index 0ce1543426a4..dd3bdc221b94 100644
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -292,7 +292,7 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* check which edge trigger we should use, default to a falling edge */
+-	if (!of_find_property(pdev->dev.of_node, "lantiq,rising", NULL))
++	if (!of_property_present(pdev->dev.of_node, "lantiq,rising"))
+ 		chip->edge = XWAY_STP_FALLING;
+ 
+ 	clk = devm_clk_get(&pdev->dev, NULL);
+diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
+index de6afa3f9716..0422637796cb 100644
+--- a/drivers/gpio/gpio-tb10x.c
++++ b/drivers/gpio/gpio-tb10x.c
+@@ -167,7 +167,7 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, tb10x_gpio);
+ 
+-	if (of_find_property(np, "interrupt-controller", NULL)) {
++	if (of_property_present(np, "interrupt-controller")) {
+ 		struct irq_chip_generic *gc;
+ 
+ 		ret = platform_get_irq(pdev, 0);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
