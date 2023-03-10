@@ -2,123 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 724176B37CD
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 08:53:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A9A6B3818
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 09:07:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjCJHxT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 02:53:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
+        id S229623AbjCJIHo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 03:07:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjCJHxR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 02:53:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B432A9BA;
-        Thu,  9 Mar 2023 23:53:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BB74CB821CF;
-        Fri, 10 Mar 2023 07:53:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023D7C433D2;
-        Fri, 10 Mar 2023 07:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678434793;
-        bh=9+QnbrppRJUwYF5GQ0ybibMT/QYcq+oKbMtLdejGYtw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bMC/euHR3lJgI/9XAsPmsikWdtsw7K6Acm68qQcRF105K4vwO660CvWNSph8rTWWM
-         908+o8hbQsIOh158ciTspUwYqA02OhIBFs/4Zn/dvwKeJsOLC96ZUwYtFdjb1aKUL7
-         jjNAfj7/L6iPoUFPvCHM2D9cQouWrHimGHkbBx5I=
-Date:   Fri, 10 Mar 2023 08:53:10 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Ye, Xiang" <xiang.ye@intel.com>
-Cc:     Oliver Neukum <oneukum@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v4 2/5] gpio: Add support for Intel LJCA USB GPIO driver
-Message-ID: <ZArh5iMkdj0L9AXZ@kroah.com>
-References: <20230309071100.2856899-1-xiang.ye@intel.com>
- <20230309071100.2856899-3-xiang.ye@intel.com>
- <2865f3d0-428b-0df1-fc50-f6af3cb9dac3@suse.com>
- <ZAqyhXt9nNIE9Ej7@ye-NUC7i7DNHE>
- <ZArYCD0r6n0sJ7LI@kroah.com>
- <ZArem5MwWrgOY2nJ@ye-NUC7i7DNHE>
+        with ESMTP id S229846AbjCJIHl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 03:07:41 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24E65ED0D9;
+        Fri, 10 Mar 2023 00:07:08 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id v48so2942033uad.6;
+        Fri, 10 Mar 2023 00:07:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678435609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ompnZ/3O4+0ABFbvCAC6GsX78rObx/mdpREpnU4Oecc=;
+        b=cbg0wETPSFur5F3ohH6/3YUQUCSwXh/+CObEvJt4g2MpmNZh7VpVTvfi+R/DkrLdME
+         Gl5ebrrnijQocAEx1ZUwF/botmS0rV7JbhaOZnwtPhrb1YszIIwNq+lpGzW9SZcp4u3x
+         fj2aCPNJ8i6ajYYyaZOiicTI8Mo72RX0aXW/q2JKVKxHymZurjK1l1+OLwoMr/ttGeR/
+         KRFDIifCS28nqitPTq3c0/oMJO8bt3E4FDu0ly5uFd0RyfpOcoGG61XQDAp8NKrfg9gX
+         7ZYrdVAy0ae78C8fCXP07GddGi6Bd6X5GAw7eR5LcTAqu5bdW9s1EuhcOvzDyoWqYzD2
+         txdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678435609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ompnZ/3O4+0ABFbvCAC6GsX78rObx/mdpREpnU4Oecc=;
+        b=c/1y1cBZ0yf5x74k9QH8uzj75MBxjQo0uim2hOG5gotKkgNgt8eiXdGwg+Cv6vcueF
+         HXIG2YRNl5bQ/ruZmd59/PRqXLpxV/WRer45jxd0jryaFwFDtpMsXCZIEH44lQSs0LIA
+         bPBhGRr9xu1epNiWMpNJpeUqL1PxyO+DHNi95jDPT3ghiSHk/EJa/airEQZ1rljlN1b0
+         LbcF0fGjArDs6i9FBLOT9n4LSJknIrhpFNpVJCQmS08pVJM0ClxACsEwBVBBQcxJeK6/
+         kAZfHyauzbYfEwRg3BCotknHVbMn1SCTVBcHDumDwur/DjghfTfaJ1DIZv6QBx87IJWd
+         mVzg==
+X-Gm-Message-State: AO0yUKXqHXzVKOJV8jmLq54fNZznhDPYXtKXzNQ927aRhxVFYO/GAXhQ
+        2rj8/GWxRMe7ONAM/d/51BXz7Zr3n4D64Kl8u7w=
+X-Google-Smtp-Source: AK7set/qlJvjYuXoCyUYfAj6ozy+Oqc/tvsnLRcTu8sRCueO0ZP2nsCHjERtM+2sxUEh0L/Qs4oOjOXfDAA0Sh/rI6w=
+X-Received: by 2002:ab0:5402:0:b0:688:d612:2024 with SMTP id
+ n2-20020ab05402000000b00688d6122024mr16280357uaa.2.1678435609291; Fri, 10 Mar
+ 2023 00:06:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZArem5MwWrgOY2nJ@ye-NUC7i7DNHE>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230215-immutable-chips-v3-0-972542092a77@linaro.org> <20230215-immutable-chips-v3-11-972542092a77@linaro.org>
+In-Reply-To: <20230215-immutable-chips-v3-11-972542092a77@linaro.org>
+From:   Romain Perier <romain.perier@gmail.com>
+Date:   Fri, 10 Mar 2023 09:06:38 +0100
+Message-ID: <CABgxDoLkhOR=eq5TAoLk-GfOvPgKzbRyedaM+j-8YsRYn27DMw@mail.gmail.com>
+Subject: Re: [PATCH v3 11/17] gpio: msc313: Convert to immutable irq_chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mun Yew Tham <mun.yew.tham@intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, Alban Bedel <albeu@free.fr>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Jay Fang <f.fangjian@huawei.com>,
+        Daniel Palmer <daniel@thingy.jp>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 03:39:07PM +0800, Ye, Xiang wrote:
-> On Fri, Mar 10, 2023 at 08:11:04AM +0100, Greg Kroah-Hartman wrote:
-> > On Fri, Mar 10, 2023 at 01:01:11PM +0800, Ye, Xiang wrote:
-> > > On Thu, Mar 09, 2023 at 02:40:10PM +0100, Oliver Neukum wrote:
-> > > > 
-> > > > 
-> > > > On 09.03.23 08:10, Ye Xiang wrote:
-> > > > 
-> > > > > +#define LJCA_GPIO_BUF_SIZE 60
-> > > > > +struct ljca_gpio_dev {
-> > > > > +	struct platform_device *pdev;
-> > > > > +	struct gpio_chip gc;
-> > > > > +	struct ljca_gpio_info *gpio_info;
-> > > > > +	DECLARE_BITMAP(unmasked_irqs, LJCA_MAX_GPIO_NUM);
-> > > > > +	DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
-> > > > > +	DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
-> > > > > +	u8 *connect_mode;
-> > > > > +	/* mutex to protect irq bus */
-> > > > > +	struct mutex irq_lock;
-> > > > > +	struct work_struct work;
-> > > > > +	/* lock to protect package transfer to Hardware */
-> > > > > +	struct mutex trans_lock;
-> > > > > +
-> > > > > +	u8 obuf[LJCA_GPIO_BUF_SIZE];
-> > > > > +	u8 ibuf[LJCA_GPIO_BUF_SIZE];
-> > > > 
-> > > > And here we have a violation of DMA coherency rules.
-> > > > Basically you cannot embed buffers into other data structures
-> > > > if they can be subject to DMA.
-> > > But obuf and ibuf does not used to do DMA transfer here.
-> > > It is actually copied from or to ljca buffer to do URB transfer.
-> > 
-> > urb transfers _ARE_ DMA transfers.
-> > 
-> > > Should it still need to follow the DMA coherency rules?
-> > 
-> > Yes, all buffers for USB urbs are required to follow those rules.
-> But these two buffers are not used to do USB urb transfer directly.
-> For the "u8 obuf[LJCA_GPIO_BUF_SIZE]",  it will be copied to ljca buffer
-> ("header->data" as below code [1] showed) first. Then the "header" is used
-> to do the actual urb transfer.
-> 
-> And the "header" is allocated by using kmalloc. It should has met the DMA
-> coherency rules.
-> 
-> [1] """
-> struct ljca_msg *header;
-> ...
-> header = kmalloc(msg_len, GFP_KERNEL);
-> if (!header)
-> 	return -ENOMEM;
+Le jeu. 9 mars 2023 =C3=A0 08:46, Linus Walleij <linus.walleij@linaro.org> =
+a =C3=A9crit :
+>
+> Convert the driver to immutable irq-chip with a bit of
+> intuition.
+>
+> This conversion follows the pattern of the gpio-ixp4xx
+> hierarchical GPIO interrupt driver.
 
-Ok, that's good, but why have 2 buffers for this then?
+Hi,
 
-thanks,
+lgtm
 
-greg k-h
+>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Reviewed-by: Romain Perier <romain.perier@gmail.com>
+
+> ---
+>  drivers/gpio/gpio-msc313.c | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+> index b0773e5652fa..036ad2324892 100644
+> --- a/drivers/gpio/gpio-msc313.c
+> +++ b/drivers/gpio/gpio-msc313.c
+> @@ -532,17 +532,35 @@ static int msc313_gpio_direction_output(struct gpio=
+_chip *chip, unsigned int off
+>         return 0;
+>  }
+>
+> +static void msc313_gpio_irq_mask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +
+> +       irq_chip_mask_parent(d);
+> +       gpiochip_disable_irq(gc, d->hwirq);
+> +}
+> +
+> +static void msc313_gpio_irq_unmask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +
+> +       gpiochip_enable_irq(gc, d->hwirq);
+> +       irq_chip_unmask_parent(d);
+> +}
+> +
+>  /*
+>   * The interrupt handling happens in the parent interrupt controller,
+>   * we don't do anything here.
+>   */
+> -static struct irq_chip msc313_gpio_irqchip =3D {
+> +static const struct irq_chip msc313_gpio_irqchip =3D {
+>         .name =3D "GPIO",
+>         .irq_eoi =3D irq_chip_eoi_parent,
+> -       .irq_mask =3D irq_chip_mask_parent,
+> -       .irq_unmask =3D irq_chip_unmask_parent,
+> +       .irq_mask =3D msc313_gpio_irq_mask,
+> +       .irq_unmask =3D msc313_gpio_irq_unmask,
+>         .irq_set_type =3D irq_chip_set_type_parent,
+>         .irq_set_affinity =3D irq_chip_set_affinity_parent,
+> +       .flags =3D IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>
+>  /*
+> @@ -644,7 +662,7 @@ static int msc313_gpio_probe(struct platform_device *=
+pdev)
+>         gpiochip->names =3D gpio->gpio_data->names;
+>
+>         gpioirqchip =3D &gpiochip->irq;
+> -       gpioirqchip->chip =3D &msc313_gpio_irqchip;
+> +       gpio_irq_chip_set_chip(gpioirqchip, &msc313_gpio_irqchip);
+>         gpioirqchip->fwnode =3D of_node_to_fwnode(dev->of_node);
+>         gpioirqchip->parent_domain =3D parent_domain;
+>         gpioirqchip->child_to_parent_hwirq =3D msc313e_gpio_child_to_pare=
+nt_hwirq;
+>
+> --
+> 2.34.1
+>
