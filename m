@@ -2,81 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE976B3B0E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 10:43:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 205B86B3B3E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 10:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbjCJJn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 04:43:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58072 "EHLO
+        id S230283AbjCJJrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 04:47:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjCJJnG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 04:43:06 -0500
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C419719C78
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:42:22 -0800 (PST)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-536af432ee5so88196607b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 01:42:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678441339;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5RPb4A7Oehz3TfZh3XBHKc5TBgIrGnLCc3ffP1cCitU=;
-        b=MzOOMi0GL5DKa62OrIN7/U4wGQnlbLjfAlGAs/Xs+tOMkEbKA0MmI4L6mzOtMIA/ys
-         p6TX67w+sn0XFdhNwBJF+9jKfImTb9ckr6r2HfjXPkDhqkKC0dVG+z7ma3hGhd9rJ69s
-         nMs4yt164ThmTdxhp+adSNepWyWaZ19CS3rqGINyYP3K7lKTQcrXK2HOGtu4sahsTslw
-         y/v3oAGAPmQymktIaddrrSufOCpHslB/9N33wDDm3Vl6UsI6Fey+AtaXp9lk36D2YKGB
-         MtZ2ZmSIAyWXqZJpnarlIAkBQArj3QYqHCPUJ3nHDWNzjVxqtz/DDe4fNDjemCYGFF0y
-         2jMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678441339;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5RPb4A7Oehz3TfZh3XBHKc5TBgIrGnLCc3ffP1cCitU=;
-        b=AY3u3RJVrw/3AMVVJtLWFOnGXngQhet1co31TfGbPRS2/hvXGdl/dcNKH+F62eN7KJ
-         IQRvdU2842ZiGUFHR1nisdIX6/dYyOPAq6LH6Ax28GS6V2la0mqofP+bxw9QvFLb8RhK
-         GpYeTr46NumfSki0W8170zxmoArSVqlJ1t8AuaQ9XpLevMnL//PUw6NHRyrIIK5o7FTe
-         7ARGdsPowxWrX5cx9KLxy0OIg78jjfDyJyCmA+j3DDpwhk8ggxqs2L8IkTALL0OOEzfc
-         jvQ0TJkWefWW7cpIakFGnxbIWZcgGoglSl0ogJpMntoPwhiPlv2E3g1l6hJYoGKxwfky
-         oAKA==
-X-Gm-Message-State: AO0yUKU2ZGFugSG2EjRShl3YHf5zDqNNAnBrfUoCoqt0QQTrlG4wXUbQ
-        /Gsz2/eTwPsYXt//PK+SnKJ9hq5Bx89eqUvzuI+aAY3e4WfheUIQ
-X-Google-Smtp-Source: AK7set9Eri1PaWk76cPuC7cN4Fh3u33L7yyaQ/62+5jggQn2bpqi9YHGkwx5xLBoI4OzTQ8KnM9EyFoGwA0zlu2XEEY=
-X-Received: by 2002:a81:ad44:0:b0:52a:92e9:27c1 with SMTP id
- l4-20020a81ad44000000b0052a92e927c1mr16067704ywk.10.1678441339671; Fri, 10
- Mar 2023 01:42:19 -0800 (PST)
+        with ESMTP id S230319AbjCJJrB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 04:47:01 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6FD1ABE2;
+        Fri, 10 Mar 2023 01:46:42 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id AEC9A660305B;
+        Fri, 10 Mar 2023 09:46:40 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1678441601;
+        bh=HxvEW4kpMKirQlHHWsuDOAOqCEYgv8lxN0TWIGQVEBI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=XDf5AC/d8cr83nZOhzyatXkW6DXH384345+3/ZzDL+5wV2e/PdrnNN2LCohdjxJue
+         62Uw0St/zP2zuK4cxGc1LE04Lt35HYs1gS3tfJFKKJDJ6zP2Y4UhdEsIVCz9UYz67F
+         +5tdlpNmGZmJD3n5zsRqjOvrUlgtlSOcl1ac+dIJoyEBAEM2uwLrOB09DKVjv4qgDk
+         Yr4A/wnahZ9uzdt1hxtclCbXLwjOUDptreNjD4rvFVCdeVQ3nRvwc2L5DkweAu5jNB
+         19WukUduzdVF92Qo6P13+5YR5y2gf6YQPcrUo6q9s8CR/oMdJtH9YCDp5txEz2pWmn
+         d7o+3AWce9KQw==
+Message-ID: <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
+Date:   Fri, 10 Mar 2023 10:46:37 +0100
 MIME-Version: 1.0
-References: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Mar 2023 10:42:08 +0100
-Message-ID: <CACRpkdan8+RHDomBQHwHG=Xt3XRwTxXrdksxKKQc-OSY0UdUzQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Remove duplicative check in gpiod_find_and_request()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 03/18] dt-bindings: pinctrl: mediatek,mt8365-pinctrl:
+ add drive strength property
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>
+References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
+ <20230203-evk-board-support-v2-3-6ec7cdb10ccf@baylibre.com>
+ <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 9, 2023 at 7:56 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Il 10/03/23 09:32, Krzysztof Kozlowski ha scritto:
+> On 07/03/2023 14:17, Alexandre Mergnat wrote:
+>> This SoC is able to drive the following output current:
+>> - 2 mA
+>> - 4 mA
+>> - 6 mA
+>> - 8 mA
+>> - 10 mA
+>> - 12 mA
+>> - 14 mA
+>> - 16 mA
+>>
+>> Then drive-strength property is set with enum to reflect its HW capability.
+>>
+>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>> ---
+>>   Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> index 4b96884a1afc..101871ec6693 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> @@ -79,6 +79,9 @@ patternProperties:
+>>   
+>>             bias-pull-down: true
+>>   
+>> +          drive-strength:
+>> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> 
+> Isn't this conflicting with mediatek,drive-strength-adv? Your commit msg
+> suggests you add a missing property, but I would say nothing was missing
+> here.
+> 
+> You need review from (pinctrl) Mediatek maintainers how the bindings for
+> all Mediateks are organized.
 
-> The gpiod_find_by_fwnode() already checks for NULL and returns
-> correct error code in case fwnode is invalid. Drop the respective
-> check and assignment in the gpiod_find_and_request().
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hello Krzysztof,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+mediatek,drive-strength-adv *shall not exist*, that was an unnecessary property
+that leaked upstream from downstream kernels and there's no reason to use it.
 
-Yours,
-Linus Walleij
+Upstream, we have drive-strength-microamp and mediatek,rsel-resistance-in-si-unit.
+
+Since mediatek,mt8365-pinctrl.yaml got picked with that property already, I have
+nothing to complain about this specific commit... drive-strength does not conflict
+with the mediatek,drive-strength-adv property, as the "adv" is for microamp
+adjustments.
+
+You can pick it, it's fine.
+
+Anyway, Alexandre: can you please perform a cleanup to the MT8365 pinctrl binding?
+The cleanup means you're setting mediatek,drive-strength-adv as deprecated and
+adding the right properties (...and possibly changing the devicetrees to use it).
+
+For more information, you can look at commit history for the (unfortunately, named
+incorrectly) MT8195 pinctrl documentation: bindings/pinctrl/pinctrl-mt8195.yaml
+where we performed the same cleanup that I'm asking you to do, except we didn't
+have to set any property as deprecated because there was *no devicetree upstream*
+that was actually using that property (hence not an ABI breakage).
+
+Cheers!
+Angelo
