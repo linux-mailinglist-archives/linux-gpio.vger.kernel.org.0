@@ -2,68 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 666466B3E90
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 13:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E44D6B3EEA
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 13:15:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbjCJMBa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 07:01:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
+        id S229737AbjCJMO7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 07:14:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbjCJMB3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 07:01:29 -0500
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A57CBD4C1
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:01:28 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id y10so5351649qtj.2
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:01:28 -0800 (PST)
+        with ESMTP id S229914AbjCJMOu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 07:14:50 -0500
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D71CEBFB6
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:14:49 -0800 (PST)
+Received: by mail-qt1-x82c.google.com with SMTP id c3so5343580qtc.8
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:14:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678449687;
+        d=linaro.org; s=google; t=1678450488;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+M6lRCbmrYVP1gh6D5uqx/6F49PKyrQU5AeobR2iPlc=;
-        b=tyd2JbpZ1ozjYqn2KGkMtnvlik2iD7XK49rK/Y8hq+f46VRxOs5FJlKXQ9EeIXqqDe
-         h2d4RAA7dDVjj3ScMyAK2lcvtuJoN3LCSQ8Exvuq78ezXmeuskgTfgafEGtWnwm1zjQz
-         Z2+v4f1sAQYmx4kRPL29m3+Nn1XbsugKZvLsHppRT4o/LOrshbLnHdVr9jcve8Mpmdui
-         IUlkKXMWogZXV+wkRu1ADMwdrnYL/09BFKLHgdoXxdbr/ZroesG0Gw8Ob6gxqb9DV7pM
-         kFwlqJl3KVJXudte24FZLCbaO70X26gZGhKHpwjc1UC0X1NJzQHyCZosElfe5nRohs1G
-         Wvzg==
+        bh=dgdFUoryZdcFhfgDIhaRXlxP8edd+zQniGh40m7BgBA=;
+        b=z4y8yBIHLGZzYb4Ph5txtLxbBpo8VWigUsvsVudWqw0eM0N49YsTRQPtlf5jnFTf9/
+         EvO6tx2VqMncbBDd6LuzgNI4jmhta6qJSkd8h+lqIe6zwMQz0467QAHAP7ijedOuhKFk
+         HAal28UBSfBX/CLZ7Ap4hE229dY71orMZWfbuzhxU68tbXg0TUd9z6F3r39U71hqr/56
+         2VnqI6SIFoyv63IGE9c7sYRn4Pj4/v9IYeRSn9lphH7JaHnCAljyFWp5++jVgmTuAth6
+         IWTJK4qmy1DeKnefehu5oGBz/ilwlmVXx00zJT1T8DUg60cpOl6q339d1In9mdk5ev60
+         mBpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678449687;
+        d=1e100.net; s=20210112; t=1678450488;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+M6lRCbmrYVP1gh6D5uqx/6F49PKyrQU5AeobR2iPlc=;
-        b=KHtRetWJjk7TxcRffpaF8EVWi691DnkMboBT/b60jVHn+RLpxrA1lgQBctI8ej9LvO
-         hBY5FSAjuRu3OyXr4zyPSbNRmEhrSVXJsNT10DW7c2k0Ijnx/uAbT9lygn/4EB2t9PuY
-         nG5AX4FQ+IHU3OjXnSE4TDS2y09SkoKvTgpxhhSbdN+ae0X/U7MBNd9YqKQCzqgYjQIF
-         4699PEYSk0/dvH644GevMPKZr+h5QuCMhHBjDtOYK/UwcJih+lm4oeHmv8Xu/C8+iyrJ
-         pMXikFTMaKcHKCfM/3jW7+uiMNCmP+2uN4Vsm0c44G1ZndV6phOp3840vTT3R3YRHnPL
-         Sy7A==
-X-Gm-Message-State: AO0yUKUgcQwvqpjBaUXm+Mz8jcEEPYxsykxykvzXwId1SzUwIADXmjjt
-        kVnn3xgmgSqbCsYLbNCgOkPQ8w==
-X-Google-Smtp-Source: AK7set9+lMbGEsxRTqC4YM9HMcTT4AmoC4toTeCzxQbEVJHu8ZuFVTa9R1FOZDNvGVH83ICOh4n/Kw==
-X-Received: by 2002:ac8:5e08:0:b0:3bf:c83d:5d4c with SMTP id h8-20020ac85e08000000b003bfc83d5d4cmr37742949qtx.64.1678449686971;
-        Fri, 10 Mar 2023 04:01:26 -0800 (PST)
+        bh=dgdFUoryZdcFhfgDIhaRXlxP8edd+zQniGh40m7BgBA=;
+        b=0uk6DHoUr+rkfbEOAWD6ypqGNKg8l6it7jLTLrcRdunrXFT4JgVB8xRuTjpkRsCkj9
+         JGCE6ULBGKYEAY0BgQYfZuUhQIITRtm9pKTzjfn/WtLzp/xa/MjvDyJPAXV6hR3ijCaK
+         UJL4Ouirg/f5FAOUt4K7cBx0wJVHh5CliiOwI5dTHkdMFs/CVOuZK38WXSmvh2NFDci5
+         x5ICS0TlqbBVe5VgV12fe2Ds7YY6HxblgYAaGfgebumjEa7shUmbOvu0TYGpO7bPZRLi
+         3Es7aeKTpOGnXeOBUE5K0N8qWTIOc+kpBxNhbDTUfGEf9tBBjKa8TgCoR1PfU/9geBq6
+         WBeA==
+X-Gm-Message-State: AO0yUKUHps7/1u2XPN+caBo0kNCOPmK6cES5GKalmbeUYoiSKqAe7Kzp
+        PNOhfjfhV5soxpjx3l5y+mt/FQ==
+X-Google-Smtp-Source: AK7set8rte1NSJarWcgGPb6PCPs3oXjSbz/6z8voZ27tvgO/xY5SsP/HR0n8nzon4hr4kjJX/qq8xA==
+X-Received: by 2002:ac8:5903:0:b0:3b9:b817:e9a8 with SMTP id 3-20020ac85903000000b003b9b817e9a8mr44742379qty.27.1678450488089;
+        Fri, 10 Mar 2023 04:14:48 -0800 (PST)
 Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id t21-20020ac85315000000b003b34650039bsm1216162qtn.76.2023.03.10.04.01.25
+        by smtp.gmail.com with ESMTPSA id z17-20020ac83e11000000b003bfd27755d7sm1301282qtf.19.2023.03.10.04.14.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 04:01:26 -0800 (PST)
-Date:   Fri, 10 Mar 2023 07:01:23 -0500
+        Fri, 10 Mar 2023 04:14:47 -0800 (PST)
+Date:   Fri, 10 Mar 2023 07:14:45 -0500
 From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     broonie@kernel.org, linus.walleij@linaro.org,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] regmap-irq: Add no_status support
-Message-ID: <ZAscE+AQVgikm74J@fedora>
-References: <cover.1677515341.git.william.gray@linaro.org>
- <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
- <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
+To:     broonie@kernel.org
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] regmap-irq: Drop map from handle_mask_sync() parameters
+Message-ID: <ZAsfNel4835E+i6O@fedora>
+References: <20230309232009.2938-1-william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QOsQSVvg4l9X3RSV"
+        protocol="application/pgp-signature"; boundary="2fUeKbfcSIUebyxb"
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
+In-Reply-To: <20230309232009.2938-1-william.gray@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -75,54 +72,91 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---QOsQSVvg4l9X3RSV
-Content-Type: text/plain; charset=utf-8
+--2fUeKbfcSIUebyxb
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 06, 2023 at 11:11:26AM +0100, Bartosz Golaszewski wrote:
-> On Mon, Feb 27, 2023 at 5:54=E2=80=AFPM William Breathitt Gray
-> <william.gray@linaro.org> wrote:
-> >
-> > Some devices lack status registers, yet expect to handle interrupts.
-> > Introduce a no_status flag to indicate such a configuration, where
-> > rather than read a status register to verify, all interrupts received
-> > are assumed to be active.
-> >
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+On Thu, Mar 09, 2023 at 06:20:09PM -0500, William Breathitt Gray wrote:
+> Remove the map parameter from the struct regmap_irq_chip callback
+> handle_mask_sync() because it can be passed via the irq_drv_data
+> parameter instead. The gpio-104-dio-48e driver is the only consumer of
+> this callback and is thus updated accordingly.
+>=20
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
 [...]
 
-> Mark,
->=20
-> If this looks good to you, could you Ack it so that I can take it
-> through the GPIO tree?
->=20
-> Bart
+> diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-=
+48e.c
+> index a3846faf3..1de551677 100644
+> --- a/drivers/gpio/gpio-104-dio-48e.c
+> +++ b/drivers/gpio/gpio-104-dio-48e.c
+> @@ -99,14 +99,25 @@ static const struct regmap_irq dio48e_regmap_irqs[] =
+=3D {
+>  	DIO48E_REGMAP_IRQ(0), DIO48E_REGMAP_IRQ(1),
+>  };
+> =20
+> -static int dio48e_handle_mask_sync(struct regmap *const map, const int i=
+ndex,
+> +/**
+> + * struct dio48e_gpio - GPIO device private data structure
+> + * @map:	Regmap for the device
+> + * @irq_mask:	Current IRQ mask state on the device
+> + */
+> +struct dio48e_gpio {
+> +	struct regmap *map;
+> +	unsigned int irq_mask;
+> +};
+> +
+> +static int dio48e_handle_mask_sync(const int index,
+>  				   const unsigned int mask_buf_def,
+>  				   const unsigned int mask_buf,
+>  				   void *const irq_drv_data)
+>  {
+> -	unsigned int *const irq_mask =3D irq_drv_data;
+> -	const unsigned int prev_mask =3D *irq_mask;
+> +	struct dio48e_gpio *const dio48egpio =3D irq_drv_data;
+> +	const unsigned int prev_mask =3D dio48egpio->irq_mask;
+>  	const unsigned int all_masked =3D GENMASK(1, 0);
+> +	struct regmap *const map =3D dio48egpio->map;
+>  	int err;
+>  	unsigned int val;
+> =20
+> @@ -115,7 +126,7 @@ static int dio48e_handle_mask_sync(struct regmap *con=
+st map, const int index,
+>  		return 0;
+> =20
+>  	/* remember the current mask for the next mask sync */
+> -	*irq_mask =3D mask_buf;
+> +	dio48egpio->irq_mask =3D mask_buf;
+> =20
+>  	/* if all previously masked, enable interrupts when unmasking */
+>  	if (prev_mask =3D=3D all_masked) {
 
-Bart,
+Mark,
 
-There's a change to the regmap-irq handle_mask_sync() callback I
-submitted that will affect these patches [0]. If you haven't already
-picked up this series, I suggest waiting until the handle_mask_sync()
-change is resolved, after which I can rebase this series on top of it
-and we'll end up with a cleaner git history.
+These two hunks conflict with a minor gpio-104-dio-48e change in the
+gpio/for-next branch [0]. I can rebase this patch on top of that change,
+or would you prefer that this goes through the gpio tree?
 
-[0] https://lore.kernel.org/all/20230309232009.2938-1-william.gray@linaro.o=
-rg/
+I'll also split out the gpio-104-dio-48e changes to a precursor patch to
+keep the focus here on the regmap-irq changes.
 
 William Breathitt Gray
 
---QOsQSVvg4l9X3RSV
+[0] Commit b961b2aa2f64 ("gpio: 104-dio-48e: Utilize mask_buf_def in handle=
+_mask_sync() callback")
+
+--2fUeKbfcSIUebyxb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAscEwAKCRC1SFbKvhIj
-K46/AQDAXrIURWz/WQaeH1a4LfNpDLKlYHNfZzDo9dJdsZej7AD/U9urckXZD23X
-2V8lnh2ZuGpnbmB4SUpuOHj3P9O0Ewk=
-=XeWK
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAsfNQAKCRC1SFbKvhIj
+K3mWAQC6H/iV7npLxE9mPKpFhWGyskMYJjEodN3tR6eDth2EYgEAi/YP3ZqUeKLQ
+22duU3HpZYULXOEAPY6BYOqr0pBIlgo=
+=yaME
 -----END PGP SIGNATURE-----
 
---QOsQSVvg4l9X3RSV--
+--2fUeKbfcSIUebyxb--
