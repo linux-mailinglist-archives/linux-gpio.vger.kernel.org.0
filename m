@@ -2,150 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 689806B3B50
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 10:50:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 967AD6B3C63
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 11:36:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230221AbjCJJuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 04:50:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47154 "EHLO
+        id S231318AbjCJKgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 05:36:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231584AbjCJJuA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 04:50:00 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66241BC78B;
-        Fri, 10 Mar 2023 01:49:35 -0800 (PST)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id F07B8660305B;
-        Fri, 10 Mar 2023 09:49:32 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1678441774;
-        bh=yiAeYd9DeEU6lHZ8YggZjRVIamxT29ljlgOsGQz7ulU=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=joULOdS9TNE4snx3Otmzxqjaqu2JQJm69oUVShdIYRkDD5Ev1sXLTFDYYfmgj5dk4
-         AhAgj8mxVtYLMaT00QVTdRn87varPFkK1Nl5ASHoSLBwf8kAL39iEjLvxTnz/U9OkH
-         xajLDjozMCAe9J1TJg0RyDnLt9f6b7ZuH+crOz5qL+ZDCfcf3zpV65jgVYBbXPg8Aw
-         ct6jHgr4cheu7UM+FXDUuI7t6aQZTYnlNxhlQE9gOyVqFFFqPVqCa0+OmvXpxf0E8l
-         bG362xEVxzLosPscZmBsN5NhikQsLlFmxwEZIB+quCssiaK499mUwig5mLe0e2Bu9U
-         3PySLDmrP4B0w==
-Message-ID: <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
-Date:   Fri, 10 Mar 2023 10:49:30 +0100
+        with ESMTP id S230197AbjCJKfl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 05:35:41 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067E9136C9;
+        Fri, 10 Mar 2023 02:35:01 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id p6so2803851pga.0;
+        Fri, 10 Mar 2023 02:35:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678444420;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YrNzsS4yDEQMUDPv9ek+bekWTDdRMD0SzIqqeBsqXfs=;
+        b=j7yDOF4vjuMwEC50NwSCaNecKzZ2/3xLGtDe67+v5aE7gFEJV+8w+NQx8s0kvgTst5
+         +naqkoEiK0kI7PmpwOb5Z39aKZNATOodTn+e4rIODobgKz7qibnXmEGO/zSzsEwxaEJJ
+         Nya/2AXZC+NK7iLeBBktVHDwyoQAIODH98bn6kKcHWhTGloTdt3wjzwXQoip9pUe+SAx
+         S1gDd/X+962d6qPwwzxeYCGWzsx5BicoCCYEy0jICNUfQuZ41zQly40a/C1JQkQ+f45C
+         AAtJkeim9GRcRkFMG0hHD0Dvbfnm8eHHdMcarpnh5n/nKRsDyvu3YQLBU9/HVR3/9ruY
+         ZBQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678444420;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YrNzsS4yDEQMUDPv9ek+bekWTDdRMD0SzIqqeBsqXfs=;
+        b=FILFd50cMvM3VCkDxVdxW/T4kpuRWZLP0eYXg2YBSsskBhHn6n8P+YSY+noLnXP1xi
+         rivo28g5wJ09MottbJ2nU/myd6OtlMiYf2JXfjQbG6pvQ8prr7Xxx/5jTM+OCUcz/y1u
+         k3qhajMLuZ2v8gJ9kWlHpiRF5557yb4i3phfxacl5d5UFCpYnd/N3IChToivqojCgR78
+         xOAqRN2mxrktbvrBSToKzUD63MTiG7Fxqf1MEpbVqJzW9phurbRAr61t6UfXFw8uTpe6
+         p/9e00R2AOh77I1Z6pqyUZRgBxofSZmhATBPoArrGfIfvObKJMzUCWziwCfKNspDjo2f
+         VktA==
+X-Gm-Message-State: AO0yUKU/piPmC1FhfGXXE2FRtEaCFE8+NXvSYfz8Qsa0ubeqGu+u1y3G
+        n2eEhWuHyc6ZgfFx1DTt+8hNgVwt2SK6hI1yjYg=
+X-Google-Smtp-Source: AK7set8WnxbFY5oTrVIKnhdrvft3bVtLVrqnp8sLn5OeESTjitANPmUjpUeCrnOQfk59jWma/T/rN7BdO7v9GpO4T8o=
+X-Received: by 2002:a62:828e:0:b0:593:da6f:fb1c with SMTP id
+ w136-20020a62828e000000b00593da6ffb1cmr10533664pfd.4.1678444419668; Fri, 10
+ Mar 2023 02:33:39 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 03/18] dt-bindings: pinctrl: mediatek,mt8365-pinctrl:
- add drive strength property
-Content-Language: en-US
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alexandre Mergnat <amergnat@baylibre.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
+References: <20230306191535.1917656-1-sean.anderson@seco.com>
+ <20230306191535.1917656-4-sean.anderson@seco.com> <CAOiHx=mcANqHTk9=b0TGHa2rk9nppnKa2EB1v05uHb5jhzoawA@mail.gmail.com>
+ <49b24502-1b21-f05b-ef4a-18d5aa375f8d@seco.com>
+In-Reply-To: <49b24502-1b21-f05b-ef4a-18d5aa375f8d@seco.com>
+From:   Jonas Gorski <jonas.gorski@gmail.com>
+Date:   Fri, 10 Mar 2023 11:33:28 +0100
+Message-ID: <CAOiHx=k8f6irVChBOtSoUJZiW6VS3sdg_KWhTo+C+ZWoGmmfdQ@mail.gmail.com>
+Subject: Re: [PATCH v10 03/13] dt-bindings: Convert gpio-mmio to yaml
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>
-References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
- <20230203-evk-board-support-v2-3-6ec7cdb10ccf@baylibre.com>
- <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org>
- <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
-In-Reply-To: <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 10/03/23 10:46, AngeloGioacchino Del Regno ha scritto:
-> Il 10/03/23 09:32, Krzysztof Kozlowski ha scritto:
->> On 07/03/2023 14:17, Alexandre Mergnat wrote:
->>> This SoC is able to drive the following output current:
->>> - 2 mA
->>> - 4 mA
->>> - 6 mA
->>> - 8 mA
->>> - 10 mA
->>> - 12 mA
->>> - 14 mA
->>> - 16 mA
->>>
->>> Then drive-strength property is set with enum to reflect its HW capability.
->>>
->>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
->>> ---
->>>   Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml | 3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml 
->>> b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
->>> index 4b96884a1afc..101871ec6693 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
->>> @@ -79,6 +79,9 @@ patternProperties:
->>>             bias-pull-down: true
->>> +          drive-strength:
->>> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
->>
->> Isn't this conflicting with mediatek,drive-strength-adv? Your commit msg
->> suggests you add a missing property, but I would say nothing was missing
->> here.
->>
->> You need review from (pinctrl) Mediatek maintainers how the bindings for
->> all Mediateks are organized.
-> 
-> Hello Krzysztof,
-> 
-> mediatek,drive-strength-adv *shall not exist*, that was an unnecessary property
-> that leaked upstream from downstream kernels and there's no reason to use it.
-> 
-> Upstream, we have drive-strength-microamp and mediatek,rsel-resistance-in-si-unit.
-> 
-> Since mediatek,mt8365-pinctrl.yaml got picked with that property already, I have
-> nothing to complain about this specific commit... drive-strength does not conflict
-> with the mediatek,drive-strength-adv property, as the "adv" is for microamp
-> adjustments.
-> 
-> You can pick it, it's fine.
-> 
-> Anyway, Alexandre: can you please perform a cleanup to the MT8365 pinctrl binding?
-> The cleanup means you're setting mediatek,drive-strength-adv as deprecated and
-> adding the right properties (...and possibly changing the devicetrees to use it).
-> 
-> For more information, you can look at commit history for the (unfortunately, named
-> incorrectly) MT8195 pinctrl documentation: bindings/pinctrl/pinctrl-mt8195.yaml
-> where we performed the same cleanup that I'm asking you to do, except we didn't
-> have to set any property as deprecated because there was *no devicetree upstream*
-> that was actually using that property (hence not an ABI breakage).
-> 
-> Cheers!
-> Angelo
+On Mon, 6 Mar 2023 at 22:27, Sean Anderson <sean.anderson@seco.com> wrote:
+>
+> On 3/6/23 15:51, Jonas Gorski wrote:
+> > Hi,
+> >
+> > On Mon, 6 Mar 2023 at 20:16, Sean Anderson <sean.anderson@seco.com> wrote:
+> >>
+> >> This is a generic binding for simple MMIO GPIO controllers. Although we
+> >> have a single driver for these controllers, they were previously spread
+> >> over several files. Consolidate them. The register descriptions are
+> >> adapted from the comments in the source. There is no set order for the
+> >> registers, so I have not specified one.
+> >>
+> >> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> >> ---
+> >>
+> >> Changes in v10:
+> >> - New
+> >>
+> >>  .../bindings/gpio/brcm,bcm6345-gpio.yaml      |  16 +--
+> >>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 136 ++++++++++++++++++
+> >>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 -----
+> >>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 -----
+> >>  4 files changed, 137 insertions(+), 91 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+> >>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+> >>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+> >> index 4d69f79df859..e11f4af49c52 100644
+> >> --- a/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+> >> +++ b/Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
+> >
+> > You are (re-)moving the compatible this file is named after, you might
+> > want to rename the file as well then. Going by age bcm6358 would be
+> > the next oldest one (bcm6318 would be the newest, despite the lowest
+> > number).
+>
+> I can do that. Would it be fine to rename to e.g. brcm,bcm63xx-gpio.yaml?
 
-Sorry for the double email. I forgot to give my:
+I'm not up to date with current naming policies (if there are any at
+all), but looking at what's currently there this should be fine.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Whoops!
-Cheers again  :-)
-
+Jonas
