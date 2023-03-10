@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A7A6B3221
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 00:39:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E87F6B32DF
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 01:43:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230449AbjCIXjy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Mar 2023 18:39:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41748 "EHLO
+        id S229685AbjCJAna (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Mar 2023 19:43:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231218AbjCIXjt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 18:39:49 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2BC6F4029
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Mar 2023 15:39:38 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id w23so4020701qtn.6
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Mar 2023 15:39:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678405177;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LfbdnVACOXWFKvpaR6ZYYYKh9TQ65GrCLW0cjjoDSa0=;
-        b=WA0SmQ8OfAc6yStQQzRy5viQ3UelwGn1Y2JR6spqAbgzUhYkK4WVrLggh3T6UCL7/j
-         u0UCfA0h9Ua/91H/YgVZ5L5K888s1eghGDtydQvvWRItf8c0ak0BD9431LXhMoDsCwNA
-         j4zhNs1QYW94OAgREY99n7RtimhcJsRnqJ+erlv+Ui3qEbK+tvCo0UD3mWOYo6dHzxxj
-         /nuBmhPmhBOYrkh4ysw6xYaeMLBOxtDesgKkFxrtk9b1WEq83jLbVgm8ohv9XDgwiYx2
-         XRbejbIC820iGw/upjltd3zKHCoJdpqAxQTPoQkM4IB/UXxko2NukNfurDdZc4woTy56
-         kTag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678405177;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LfbdnVACOXWFKvpaR6ZYYYKh9TQ65GrCLW0cjjoDSa0=;
-        b=5I+v019jmb0XI2qxbCqARqpyaMETtLoRY8inySctZcALhzhWbROXC9y66N5oG8FDZI
-         s9t54Vhz+9O0L3LcOD+/uSpbIVwNO4Dp19ZhKnPuGKLHQJN0HHkQbJWj7Myjx+XW1ozr
-         gfjuW0MqYldyKAaayWP2Xw900BvJSXwhuuAciKxvqbZn8RoQRtcrVN3TMCNyyPPsf7KM
-         0vfPekDGaq3O8TSZ3LhC8u8iHOCJ81iOOckYtwf8h+O48wX3Tl/F4JrSRKLb9v3lkf5e
-         YqoE04EFnF0JXZ5j/FgigBDTSQGz/TNcbhofZ/rLcLB4NTus1DKTOm4Q+mEFQX1padLH
-         fNPw==
-X-Gm-Message-State: AO0yUKVGjEiI72PJJ/Q8ao8emq/6gW558D4LU14VyyL4N4BLs9APXYEi
-        x0y92sSqoh5QnrjI0aSuxSKvkw==
-X-Google-Smtp-Source: AK7set/27O+VSg6eKWmrbJko17JKICop1H/qgTd9axOzbCFp0BbNbvNJCnXLLr1NlzhxXCCittxG8g==
-X-Received: by 2002:a05:622a:4d4:b0:3bf:b614:bcba with SMTP id q20-20020a05622a04d400b003bfb614bcbamr42639391qtx.42.1678405177170;
-        Thu, 09 Mar 2023 15:39:37 -0800 (PST)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id g12-20020ac842cc000000b003b68d445654sm253547qtm.91.2023.03.09.15.39.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 15:39:36 -0800 (PST)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH] gpio: pcie-idio-24: Prune superfluous license boilerplate
-Date:   Thu,  9 Mar 2023 18:39:29 -0500
-Message-Id: <20230309233929.3998-1-william.gray@linaro.org>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229521AbjCJAn3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Mar 2023 19:43:29 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9066B5D251;
+        Thu,  9 Mar 2023 16:43:26 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32A0hCmC055370;
+        Thu, 9 Mar 2023 18:43:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1678408992;
+        bh=CuyET4dXI3Nb3R8yiBlQC4XOd23d1xfB0IxLQQdd8K4=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=HYKu5ExPKfvwtKDgvwCikSrVZeZMrhXLUVnK+cITyR5EiBy6sJbULEDv4NgjG0Tiy
+         5DAs5Grc7i0qYJo/BIAdVB9qkn4PT8OdGsw15SiQTHlGQvkdBjrkIXCDRZMEnfU/mR
+         nvgQoeuPjTzGXk6ZWhtBE9aqzLkrX9k66Rie2nec=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32A0hCFl013382
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Mar 2023 18:43:12 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 9
+ Mar 2023 18:43:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 9 Mar 2023 18:43:11 -0600
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32A0hBc6095856;
+        Thu, 9 Mar 2023 18:43:11 -0600
+Date:   Thu, 9 Mar 2023 18:43:11 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: k3: Introduce debounce select mux
+ macros
+Message-ID: <20230310004311.5e5ekv7edpbahjap@groggily>
+References: <20230308084309.396192-1-nm@ti.com>
+ <CACRpkdbBWeFupRin=JuMCGDWkzbsR18N+4ZEbQOPJq=p3w0yLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbBWeFupRin=JuMCGDWkzbsR18N+4ZEbQOPJq=p3w0yLw@mail.gmail.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,36 +69,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SPDX License Identifier line renders the GPL boilerplate text
-superfluous, so let's remove it.
+On 15:03-20230309, Linus Walleij wrote:
+> On Wed, Mar 8, 2023 at 9:43 AM Nishanth Menon <nm@ti.com> wrote:
+> 
+> > Introduce the debounce select mux macros to allow folks to setup
+> > debounce configuration for pins. Each configuration selected maps
+> > to a specific timing register as documented in appropriate Technical
+> > Reference Manual (example:[1]).
+> >
+> > [1] AM625x TRM (section 6.1.2.2): https://www.ti.com/lit/pdf/spruiv7
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> 
+> Patch applied.
+> 
+> Consider doing what Krzysztof recommends: move thes <dt-bindings/*.h>
+> down to the arch where you're using it and have them as .dtsi files instead
+> or something.
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-pcie-idio-24.c | 9 ---------
- 1 file changed, 9 deletions(-)
+Yep, that sounds like a better idea. If you are ok to drop this
+patch, then lets do the cleanup first and move the pinctrl to something like
+arch/arm64/boot/dts/ti/k3-pinctrl.h
 
-diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-idio-24.c
-index 8a9b98fa418f..92e693b69fc8 100644
---- a/drivers/gpio/gpio-pcie-idio-24.c
-+++ b/drivers/gpio/gpio-pcie-idio-24.c
-@@ -3,15 +3,6 @@
-  * GPIO driver for the ACCES PCIe-IDIO-24 family
-  * Copyright (C) 2018 William Breathitt Gray
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License, version 2, as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-  * This driver supports the following ACCES devices: PCIe-IDIO-24,
-  * PCIe-IDI-24, PCIe-IDO-24, and PCIe-IDIO-12.
-  */
-
-base-commit: b96eb88f59c023bb27891b5ab3dbd2b1a5200d53
 -- 
-2.39.2
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
