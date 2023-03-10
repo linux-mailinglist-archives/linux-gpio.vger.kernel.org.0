@@ -2,142 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4BE6B36C0
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 07:42:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 284AB6B370F
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 08:05:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbjCJGmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 01:42:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
+        id S229680AbjCJHFv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 02:05:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjCJGm2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 01:42:28 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D42DCA45;
-        Thu,  9 Mar 2023 22:42:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678430546; x=1709966546;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HqgvZtjOayYUzOC46Z2VKVj5sGkB2Yka1uFwzIGH5Fg=;
-  b=YtMvM/LGsNnimBfaA+kgGc6q3cJiYIaK9FtJsXQ6r1VUwiRzRn01Mfyg
-   NOJEsWNV43pfrBLeOm/cxo7kgIs0Nn0hay+t9EINRsJs06oWrniQx1MI5
-   dlfTUydosf7KKjDAVrhW2Dh2yibMLjtqfGdGvvNUFsaULJctiGW9wEOS/
-   k4WNMl//tgN30SftJIB+UIsyk85ONSDTg4K4rTqqDOlNJZtoWJ5ImT+jG
-   lh8RLjpJI5ljSWhV/wtCw0YLIuMTFfy+CFIix8zyUN0doC+hYqoVr7xpO
-   uuA0BX08AM5AZMkypz8W2n0E1JyQQ56c/meU75pU1Rf49J5h6Ag3xGkAT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="316313744"
-X-IronPort-AV: E=Sophos;i="5.98,248,1673942400"; 
-   d="scan'208";a="316313744"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 22:42:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="923555136"
-X-IronPort-AV: E=Sophos;i="5.98,248,1673942400"; 
-   d="scan'208";a="923555136"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Mar 2023 22:42:23 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2B529143; Fri, 10 Mar 2023 08:43:08 +0200 (EET)
-Date:   Fri, 10 Mar 2023 08:43:08 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Kaehn <kaehndan@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
-Message-ID: <20230310064308.GW62143@black.fi.intel.com>
-References: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
- <ZAnnJpdtlEOS4tiS@smile.fi.intel.com>
- <ZAnxgooAixXAJvDn@smile.fi.intel.com>
+        with ESMTP id S229916AbjCJHFs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 02:05:48 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29488FAD4F;
+        Thu,  9 Mar 2023 23:05:45 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id bj30so3547116oib.6;
+        Thu, 09 Mar 2023 23:05:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678431944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Apt9Dk2CoziEfGeeXSNDKcm/bw3e59igOKBoc9kqRQ=;
+        b=cODHW23nSAnCvbakw46m/53/O/w9otESK75OxxEupLEIYQIdR5uoOiqe+IUMmsIrfa
+         sLA8+U1GZJFly3Kc+O8qM5/LBChLX50Z3lCRKw0rgG0A4ZAOAtgo6+isHaMY4gw3yT2G
+         dDqTa2VDHWzd8jb1rs0+Lh85Il5qBhBx4RrX1dkfIDyR8HDzCuK0a3qkVknpWSAwauHN
+         +i/kRmInCOlH6JsXxKSn1ODbPiLwZmeaDpDTsvQOXWh0UMDhFvjHw3AjszKczXdEFXCB
+         rPaGakwJyuvhSQ7lfiHdBmdDZzALeQSFF9SQEyZIPeDGODuUhiXCh8Djelf2BVmzqwZY
+         eiaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678431944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Apt9Dk2CoziEfGeeXSNDKcm/bw3e59igOKBoc9kqRQ=;
+        b=OmSsLZLKsK3gowmKk6ztZ2nAZ+3Za3FadiI+HSveeNhrdHMv9tazmzk2VdWnY7Jgn/
+         n45o6QlydmaL2dCmRUaXfCtkjJvSX4byDOzoXL5T+dCDPXr1WY1N+SAAxUsr7Lbikgtp
+         eyV/6rrFJJ8lpThriGxyGCe3bPQ2Quse7Zl8lbmN2384Lr4reikoF2AGFigFVf4oxiA+
+         XAkkRIjDC2vGBvyPepcCVkfjviTTGiLtCybFl6oTcma8uACd/LfqVejHpQP5fO08y3Dy
+         Qj+8p5MxnAeck3r0ai0Fgf4U9Ck+nYIQTV5fNtPyXuUpvjNPl0zwu5nD8Cy4cZPkqBAu
+         JpqA==
+X-Gm-Message-State: AO0yUKV/LRg1073xAmjSdXq+flY9t5SU1oTX8a4W9HbEn20PELwQ8qt0
+        o8v6uRtbuQ7/DkGOf3ZLqhBT8W4i0UFqI/gVoUA=
+X-Google-Smtp-Source: AK7set+Dm/R3lBw0fzhFuTzV5Lb+E9hla4HLfDXtL8iri21EzQdxnwTyxFKAsn39JI7FHQUQeGMGpEFMqrEAbnm3Bcg=
+X-Received: by 2002:a05:6808:aa1:b0:384:2022:f9b1 with SMTP id
+ r1-20020a0568080aa100b003842022f9b1mr8254384oij.2.1678431944516; Thu, 09 Mar
+ 2023 23:05:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZAnxgooAixXAJvDn@smile.fi.intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230303002850.51858-1-arinc.unal@arinc9.com> <20230303002850.51858-10-arinc.unal@arinc9.com>
+ <20230308210514.GA3767521-robh@kernel.org> <12be053e-b70a-faca-71c8-d8eef69a3b73@arinc9.com>
+ <ccdfd262-eaf3-dbbe-7a3c-a911a5ec0fc4@arinc9.com> <9663817e-7f6f-c3b1-8bf9-321f9b067e96@linaro.org>
+ <deca532a-bdf5-c49e-1422-ce6124b61882@arinc9.com> <CAMhs-H8M3ir+DshHF60W=QMn9WG3Jgbo8GgXZnDKCLhs=+WBoQ@mail.gmail.com>
+ <81cf9e50-d626-cbb3-ebb1-56d080eca66d@arinc9.com>
+In-Reply-To: <81cf9e50-d626-cbb3-ebb1-56d080eca66d@arinc9.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Fri, 10 Mar 2023 08:05:31 +0100
+Message-ID: <CAMhs-H_YkdacZXE2xqn=_JQtitLvqRFB20s7rjS63dFabAL4qw@mail.gmail.com>
+Subject: Re: [PATCH 09/20] dt-bindings: pinctrl: ralink: {mt7620,mt7621}:
+ rename to mediatek
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        William Dean <williamsukatube@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Thu, Mar 9, 2023 at 10:09 PM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc=
+9.com> wrote:
+>
+> On 9.03.2023 14:33, Sergio Paracuellos wrote:
+> > On Thu, Mar 9, 2023 at 11:34 AM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@a=
+rinc9.com> wrote:
+> >>
+> >> On 9.03.2023 12:52, Krzysztof Kozlowski wrote:
+> >>> On 09/03/2023 08:53, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >>>> On 9.03.2023 00:19, Ar=C4=B1n=C3=A7 =C3=9CNAL wrote:
+> >>>>> On 9.03.2023 00:05, Rob Herring wrote:
+> >>>>>> On Fri, Mar 03, 2023 at 03:28:38AM +0300, arinc9.unal@gmail.com wr=
+ote:
+> >>>>>>> From: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> >>>>>>>
+> >>>>>>> This platform from Ralink was acquired by MediaTek in 2011. Then,
+> >>>>>>> MediaTek
+> >>>>>>> introduced these SoCs which utilise this platform. Rename the sch=
+emas to
+> >>>>>>> mediatek to address the incorrect naming.
+> >>>>>>
+> >>>>>> I said we don't do renames due to acquistions, you said that wasn'=
+t the
+> >>>>>> reason, but then that's your reasoning here.
+> >>>>>
+> >>>>> It's not a marketing/acquistion rename as the name of these SoCs we=
+re
+> >>>>> wrong from the get go. The information on the first sentence is to =
+give
+> >>>>> the idea of why these SoCs were wrongfully named as the base platfo=
+rm
+> >>>>> that these new MediaTek SoCs share code with was called Ralink.
+> >>>>>
+> >>>>>>
+> >>>>>> To give you another example, *new* i.MX things are still called
+> >>>>>> 'fsl,imx...' and it has been how many years since merging with NXP=
+?
+> >>>>>
+> >>>>> Ok this is a point I see now. Though, I fail to see how this is cal=
+led
+> >>>>> renaming when there's only new SoCs (from NXP in this case) to be a=
+dded.
+> >>>>
+> >>>> If I understand correctly, i.MX is a family from Freescale so the na=
+me
+> >>>
+> >>> It's the same "family" as your platform, because as you said:
+> >>> "introduced these SoCs which utilise this platform"
+> >>>
+> >>>> was kept the same on new SoC releases from NXP. I believe it's diffe=
+rent
+> >>>> in this case here. There's no family name. The closest thing on the =
+name
+> >>>> of the SoC model is, it's RT for Ralink, MT for MediaTek.
+> >>>
+> >>> It's not about the name. NXP took Freescale platform and since many
+> >>> years makes entirely new products, currently far, far away from origi=
+nal
+> >>> platform.
+> >>>
+> >>> That's the same case you have here - Mediatek took existing platform =
+and
+> >>> started making new products with it.
+> >>>
+> >>>>
+> >>>> On top of that, mediatek strings already exist for MT SoCs already, =
+at
+> >>>> least for MT7621.
+> >>>>
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/=
+tree/Documentation/devicetree/bindings/mips/ralink.yaml?id=3Ddd3cb467ebb565=
+9d6552999d6f16a616653f9933#n83
+> >>>
+> >>> NXP also has compatibles with nxp, thus still not that good reason.
+> >>
+> >> Ok, makes sense. Am I free to call the SoCs MediaTek, change the schem=
+a
+> >> name from ralink,mtXXXX-pinctrl.yaml to mediatek,mtXXXX-pinctrl.yaml
+> >> whilst keeping the compatible string ralink?
+> >>
+> >> I plan to do some cleanup on ralink.yaml as well. From what I
+> >> understand, I should change the mediatek,mt7621-soc compatible string =
+to
+> >> ralink,mt7621-soc?
+> >
+> > You have to take care of these SoC strings since they are used in the
+> > very beginning of the ralink startup platforms for any single ralink
+> > SoC. See for example [0] and [1] (but they are in all soc init code).
+> > I think it is better to maintain the ralink.yaml file as it is.
+>
+> I'd really rather address this inconsistency everywhere possible. The
+> code you pointed out looks different than what I did on the pinctrl
+> driver but, surely it's possible on the code to introduce ralink and
+> keep the mediatek string for the sake of old DTs, no?
 
-On Thu, Mar 09, 2023 at 04:47:30PM +0200, Andy Shevchenko wrote:
-> On Thu, Mar 09, 2023 at 04:03:19PM +0200, Andy Shevchenko wrote:
-> > On Thu, Mar 09, 2023 at 02:40:51PM +0100, Benjamin Tissoires wrote:
-> > > While trying to set up an SSDT override for a USB-2-I2C chip [0],
-> > > I realized that the function acpi_gpiochip_find() was using the parent
-> > > of the gpio_chip to do the ACPI matching.
-> > > 
-> > > This works fine on my icelake laptop because AFAICT, the DSDT presents
-> > 
-> > Ice Lake
-> > 
-> > > the PCI device INT3455 as the "Device (GPI0)", but is in fact handled
-> > > by the pinctrl driver in Linux.
-> > > The pinctrl driver then creates a gpio_chip device. This means that the
-> > > gc->parent device in that case is the GPI0 device from ACPI and everything
-> > > works.
-> > > 
-> > > However, in the hid-cp2112 case, the parent is the USB device, and the
-> > > gpio_chip is directly under that USB device. Which means that in this case
-> > > gc->parent points at the USB device, and so we can not do an ACPI match
-> > > towards the GPIO device.
-> > > 
-> > > I think it is safe to resolve the ACPI matching through the fwnode
-> > > because when we call gpiochip_add_data(), the first thing it does is
-> > > setting a proper gc->fwnode: if it is not there, it borrows the fwnode
-> > > of the parent.
-> > > 
-> > > So in my icelake case, gc->fwnode is the one from the parent, meaning
-> > 
-> > Ice Lake
-> > 
-> > > that the ACPI handle we will get is the one from the GPI0 in the DSDT
-> > > (the pincrtl one). And in the hid-cp2112 case, we get the actual
-> > > fwnode from the gpiochip we created in the HID device, making it working.
-> > 
-> > Thinking more about it. In ACPI we have those nodes defined as devices, right?
-> > So, strictly speaking the platform tells us that they _are_ devices.
-> > 
-> > The question here is what this device node in ACPI means:
-> > 1) the physical device or subdevice of the physical device OR
-> > 2) the physical device even if it's a part of combined (Multi-Functional)
-> >    device.
-> > 
-> > Second question is, does Device Tree specification allows something
-> > that is not a device node, but can be enumerated as a subdevice of
-> > a physical one?
-> > 
-> > P.S. I don't have objections against the patch, but I would like to
-> > have a clear picture on what the semantics of the two specifications
-> > WRT possibilities of device enumeration. It might be that we actually
-> > abuse ACPI specification in cases of Diolan DLN-2 or other way around
-> > trying to abuse it with this patch.
-> 
-> I have read the ACPI specification and it doesn't tell that Device is allowed
-> to describe non-hardware entity. It means that in the Linux driver model,
-> whenever we use Device() in the ACPI, we have an accompanying struct device.
-> 
-> For GPIO chip case, we have physical device (parent) and GPIO device, which
-> is Linux internal representation. So, physical device should have a description
-> in the ACPI table, or other way around: any Device() in ACPI has to be
-> considered as physical. That said, I think that Daniel was right and we need
-> to have parent properly assigned (to the Device(GPI0) node).
-> 
-> Another way, is to drop children from the descripton and use a single device
-> node for entire box.
-> 
-> TL;DR: if Device() is present we must use it as a parent to Linux
-> representation.
-> 
-> I would like also to hear Mika's opinion on this.
+In any case, the changes you might have in mind for this should be a
+different patch series.
 
-Agree with the patch. We should be using whatever the gc->fwnode points
-to.
+Best regards,
+     Sergio Paracuellos
+>
+> Ar=C4=B1n=C3=A7
