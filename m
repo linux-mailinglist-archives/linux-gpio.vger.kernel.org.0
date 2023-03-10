@@ -2,96 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D1A6B3E32
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 12:42:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 666466B3E90
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Mar 2023 13:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbjCJLlq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Mar 2023 06:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        id S229814AbjCJMBa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Mar 2023 07:01:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjCJLlY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 06:41:24 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABCA1102B9;
-        Fri, 10 Mar 2023 03:41:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678448470; x=1709984470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8uJ+SHxf2x4/ypjczFk1TZ2tA36nKyiU5NKtQOsNtTE=;
-  b=Ja/NdsA8JIkXo2p0dZPH+O9e4f9C7wtgB0GW8O7FIEpCGtnANPvHkC6n
-   MCea3XN7iY7xUTm43A+WsYVfIkYPEEh0PMqrhAvQ3ItvOMS0H0HD+oCi2
-   5YvT/xLQF4ep6LEs6E9BDUymu8lwZWnqjZNMAIU8S4dq8KP13qKaMrxVR
-   DrNT2bYgkBOBVOVqAL4s1X+4xq+wFn62PhLpx5CZBptnqJ7MNH45xGG4K
-   T5dpCeQ0SRH/OTVPd97/ah2A2kSx74TR5c2AQYz5uPWQrAPEAMCYNTTp8
-   VEQyxSuuU7ahTzHKUaLZHy3Qw6PP7Zmw0FrGzurBOyponICbhe1TkyQ+S
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="399307817"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="399307817"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 03:41:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="923655089"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="923655089"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Mar 2023 03:41:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 32ACF143; Fri, 10 Mar 2023 13:41:50 +0200 (EET)
-Date:   Fri, 10 Mar 2023 13:41:50 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Kaehn <kaehndan@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
-Message-ID: <20230310114150.GA62143@black.fi.intel.com>
-References: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
+        with ESMTP id S229774AbjCJMB3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Mar 2023 07:01:29 -0500
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A57CBD4C1
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:01:28 -0800 (PST)
+Received: by mail-qt1-x830.google.com with SMTP id y10so5351649qtj.2
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Mar 2023 04:01:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678449687;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+M6lRCbmrYVP1gh6D5uqx/6F49PKyrQU5AeobR2iPlc=;
+        b=tyd2JbpZ1ozjYqn2KGkMtnvlik2iD7XK49rK/Y8hq+f46VRxOs5FJlKXQ9EeIXqqDe
+         h2d4RAA7dDVjj3ScMyAK2lcvtuJoN3LCSQ8Exvuq78ezXmeuskgTfgafEGtWnwm1zjQz
+         Z2+v4f1sAQYmx4kRPL29m3+Nn1XbsugKZvLsHppRT4o/LOrshbLnHdVr9jcve8Mpmdui
+         IUlkKXMWogZXV+wkRu1ADMwdrnYL/09BFKLHgdoXxdbr/ZroesG0Gw8Ob6gxqb9DV7pM
+         kFwlqJl3KVJXudte24FZLCbaO70X26gZGhKHpwjc1UC0X1NJzQHyCZosElfe5nRohs1G
+         Wvzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678449687;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+M6lRCbmrYVP1gh6D5uqx/6F49PKyrQU5AeobR2iPlc=;
+        b=KHtRetWJjk7TxcRffpaF8EVWi691DnkMboBT/b60jVHn+RLpxrA1lgQBctI8ej9LvO
+         hBY5FSAjuRu3OyXr4zyPSbNRmEhrSVXJsNT10DW7c2k0Ijnx/uAbT9lygn/4EB2t9PuY
+         nG5AX4FQ+IHU3OjXnSE4TDS2y09SkoKvTgpxhhSbdN+ae0X/U7MBNd9YqKQCzqgYjQIF
+         4699PEYSk0/dvH644GevMPKZr+h5QuCMhHBjDtOYK/UwcJih+lm4oeHmv8Xu/C8+iyrJ
+         pMXikFTMaKcHKCfM/3jW7+uiMNCmP+2uN4Vsm0c44G1ZndV6phOp3840vTT3R3YRHnPL
+         Sy7A==
+X-Gm-Message-State: AO0yUKUgcQwvqpjBaUXm+Mz8jcEEPYxsykxykvzXwId1SzUwIADXmjjt
+        kVnn3xgmgSqbCsYLbNCgOkPQ8w==
+X-Google-Smtp-Source: AK7set9+lMbGEsxRTqC4YM9HMcTT4AmoC4toTeCzxQbEVJHu8ZuFVTa9R1FOZDNvGVH83ICOh4n/Kw==
+X-Received: by 2002:ac8:5e08:0:b0:3bf:c83d:5d4c with SMTP id h8-20020ac85e08000000b003bfc83d5d4cmr37742949qtx.64.1678449686971;
+        Fri, 10 Mar 2023 04:01:26 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id t21-20020ac85315000000b003b34650039bsm1216162qtn.76.2023.03.10.04.01.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Mar 2023 04:01:26 -0800 (PST)
+Date:   Fri, 10 Mar 2023 07:01:23 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org,
+        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] regmap-irq: Add no_status support
+Message-ID: <ZAscE+AQVgikm74J@fedora>
+References: <cover.1677515341.git.william.gray@linaro.org>
+ <bd501b4b5ff88da24d467f75e8c71b4e0e6f21e2.1677515341.git.william.gray@linaro.org>
+ <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QOsQSVvg4l9X3RSV"
 Content-Disposition: inline
-In-Reply-To: <20230309-fix-acpi-gpio-v1-1-b392d225efe8@redhat.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=MdkkO4DpdLJA4SkEbAFFrdDtfZBOtLFPmkTBnSMDz=gCQ@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 02:40:51PM +0100, Benjamin Tissoires wrote:
-> While trying to set up an SSDT override for a USB-2-I2C chip [0],
-> I realized that the function acpi_gpiochip_find() was using the parent
-> of the gpio_chip to do the ACPI matching.
-> 
-> This works fine on my icelake laptop because AFAICT, the DSDT presents
-> the PCI device INT3455 as the "Device (GPI0)", but is in fact handled
-> by the pinctrl driver in Linux.
-> The pinctrl driver then creates a gpio_chip device. This means that the
-> gc->parent device in that case is the GPI0 device from ACPI and everything
-> works.
-> 
-> However, in the hid-cp2112 case, the parent is the USB device, and the
-> gpio_chip is directly under that USB device. Which means that in this case
-> gc->parent points at the USB device, and so we can not do an ACPI match
-> towards the GPIO device.
-> 
-> I think it is safe to resolve the ACPI matching through the fwnode
-> because when we call gpiochip_add_data(), the first thing it does is
-> setting a proper gc->fwnode: if it is not there, it borrows the fwnode
-> of the parent.
-> 
-> So in my icelake case, gc->fwnode is the one from the parent, meaning
-> that the ACPI handle we will get is the one from the GPI0 in the DSDT
-> (the pincrtl one). And in the hid-cp2112 case, we get the actual
-> fwnode from the gpiochip we created in the HID device, making it working.
-> 
-> Link: https://lore.kernel.org/linux-input/20230227140758.1575-1-kaehndan@gmail.com/T/#m592f18081ef3b95b618694a612ff864420c5aaf3 [0]
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+--QOsQSVvg4l9X3RSV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 06, 2023 at 11:11:26AM +0100, Bartosz Golaszewski wrote:
+> On Mon, Feb 27, 2023 at 5:54=E2=80=AFPM William Breathitt Gray
+> <william.gray@linaro.org> wrote:
+> >
+> > Some devices lack status registers, yet expect to handle interrupts.
+> > Introduce a no_status flag to indicate such a configuration, where
+> > rather than read a status register to verify, all interrupts received
+> > are assumed to be active.
+> >
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+
+[...]
+
+> Mark,
+>=20
+> If this looks good to you, could you Ack it so that I can take it
+> through the GPIO tree?
+>=20
+> Bart
+
+Bart,
+
+There's a change to the regmap-irq handle_mask_sync() callback I
+submitted that will affect these patches [0]. If you haven't already
+picked up this series, I suggest waiting until the handle_mask_sync()
+change is resolved, after which I can rebase this series on top of it
+and we'll end up with a cleaner git history.
+
+[0] https://lore.kernel.org/all/20230309232009.2938-1-william.gray@linaro.o=
+rg/
+
+William Breathitt Gray
+
+--QOsQSVvg4l9X3RSV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZAscEwAKCRC1SFbKvhIj
+K46/AQDAXrIURWz/WQaeH1a4LfNpDLKlYHNfZzDo9dJdsZej7AD/U9urckXZD23X
+2V8lnh2ZuGpnbmB4SUpuOHj3P9O0Ewk=
+=XeWK
+-----END PGP SIGNATURE-----
+
+--QOsQSVvg4l9X3RSV--
