@@ -2,113 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6304A6B5984
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Mar 2023 09:41:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF9E6B5ACC
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Mar 2023 12:13:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjCKIlV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Mar 2023 03:41:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43404 "EHLO
+        id S229478AbjCKLNZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Mar 2023 06:13:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjCKIlU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Mar 2023 03:41:20 -0500
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6AD12DC31
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 00:41:17 -0800 (PST)
-Received: by mail-vs1-xe2a.google.com with SMTP id o32so6765687vsv.12
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 00:41:17 -0800 (PST)
+        with ESMTP id S229912AbjCKLNS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Mar 2023 06:13:18 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96B310AA2
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:10 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id x3so30651665edb.10
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678524077;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8+CEZRZEOJVmAfb07UohKPHalX/8xKQCW3mCwVUhKXY=;
-        b=nAg3aRYpKJ/hSn+VSxABMDRWPWo6y0rzV3xB6/sc+X4rRL05pskCAJzzNJ208lTKk7
-         SQIZ3i8CgA3o7Qg/+Q1TRJcJ/L2IxaWGfx2SLPKmH13wfPWzKaVm2ZgXwBZWk0Mi6nbI
-         MBKodwEgtI03EmYwCcR1n4sXPPYVSOYls/ihTA7pFpvwy6ZSDtMWtG6vmJxR6qvjcgNX
-         IEeL++7g3f7WsQZmDoMyo3WjcIJxoELZTbUlgaRDkzHtUF08eREiTiZQe+AF3vmOCnhD
-         oZGsbMgBqyHz79V9m/NM2xR/JdspjC+HIm8z3iLnWWGO2r8l9zomtTjPDgzOlZYHwm6/
-         /V8Q==
+        d=linaro.org; s=google; t=1678533189;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bq/suyyejHELTOKo5Lqe9JDVsAF8B3eTSU6jYYaw5rs=;
+        b=GcR1BBQCdR4Nyqe7Dp9VmqBVN4+13vTx5EQOi44pJiaYeXD+D+mKtO4fvpp9GIPG7r
+         BRskmMZAc7XIdFRRJjgBgEQ1P5GIFa4CF13JemkF79TJICvhP2c10MUllTPK1seye4pi
+         re5dV0XML2v+mh3EmItQ33rYyB5W+zffyWOzFosg/rs/L4s7KEG0ns7ppsI7jsSDRr5F
+         W2qiVDcRrk8B46+pmYoU4PIX7mUPqicOY9cvI7rvl/lClgykghEKJdGipn0oy64VBbz9
+         cZ3ElInRGqJOoyxjVR0VwTCWuuHRceQZLGarrhTJRQ2bWjnZs0TKtT3xc/PFhZQxHq1+
+         0p0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678524077;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8+CEZRZEOJVmAfb07UohKPHalX/8xKQCW3mCwVUhKXY=;
-        b=zcKGwmRHe9TBegzgCfx92aMfeY6iT1b7OY9yGOAbo3cM9idmvIuum+3w35tfGRmEC+
-         ASIjadafdnncu1sL8S0xYEay4xcIhXD4XRAC3F6YgSimIoHEM+S+PkxuR/IrcViyCsSm
-         CbWefc2dOyVyfQOxgJcqtd/Hs7JgaBgcUO5Ln69U6jlsaidMJtBf5elxNg5iZPmREmpz
-         D0FQFcDom9+roqW0jtYWJw0ATF88cmotUdo3D2mjkBLH3CINFYNKeYG0nGDqnE/S26Lt
-         CwtACdBhEcAESnekcaMH3GwN/luoFtsQi/0pSlkHWEUdy4cx42/OZ2yTc5M1lWy8vWkf
-         oklQ==
-X-Gm-Message-State: AO0yUKUOzeruuSLHHNe3uflmBJi+YzyMrS49WTGVlctJy8aV9TAsHE4c
-        fDi0mJGHYa0cvMPryolyaYJVeuSSB7NEyEUeHPg=
-X-Google-Smtp-Source: AK7set/qyTDdlZmmHNBS8kaPfxi8HjbCGQztkWTWoK3AziyJ63Rg+SkSjIjEAJRb7PtIstZtpdoQImtqXTcugcpKEC0=
-X-Received: by 2002:a67:e902:0:b0:416:2ad3:35ba with SMTP id
- c2-20020a67e902000000b004162ad335bamr18502895vso.1.1678524076711; Sat, 11 Mar
- 2023 00:41:16 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678533189;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bq/suyyejHELTOKo5Lqe9JDVsAF8B3eTSU6jYYaw5rs=;
+        b=fKR6KDwrm4H6d5rfbTGr0/47V3IsyhRMDMie/slVSDGJ1g9AKGS79eb8cG1ZXrMTuO
+         5kX0JyqUfAeALl4avI6hETXE2Q8eosVSe/2TbFaWgMLcPLjYxcmyz9qglVCPpHXKRAW5
+         42Ln7ZHGgQoRlBmKctltE4IRNGoCaSiaGsaLuTTULKpWdM6YxHrHA77kR+JsD848VnPb
+         YLyMyD4E2aNT8Xie3l7M3wGbMnK2B+bk9/3DdbnXvz+yG4OH+Lf7s6SsPIaLow9JI2nS
+         jiKJJb0bSR39oGxLNHZFkRm97LDQMWnIZ9RVmdnmMIXDZAfjlLv5HDuisdjE5R4WeKiV
+         hc7Q==
+X-Gm-Message-State: AO0yUKVfbJL19yPmL6ZP1ofVBq51HBqGw/TCNgtOUFaxWuH43Z2fOC7J
+        yqD9f7NJTiwsxLMQfvwg5pNOKQ==
+X-Google-Smtp-Source: AK7set9dk+CAqDZes0jxHQYmgJHEtMKUFbr5JbHgUMiQ/8tZWwFWDoce+nP6IcyAWHRx026mDdaNnQ==
+X-Received: by 2002:a17:907:c61b:b0:878:4e5a:18b8 with SMTP id ud27-20020a170907c61b00b008784e5a18b8mr30977606ejc.66.1678533189212;
+        Sat, 11 Mar 2023 03:13:09 -0800 (PST)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:fa97:2d7c:bdd7:e1b])
+        by smtp.gmail.com with ESMTPSA id s11-20020a170906bc4b00b008ee95ccfe06sm973189ejv.119.2023.03.11.03.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Mar 2023 03:13:08 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Mun Yew Tham <mun.yew.tham@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Nandor Han <nandor.han@ge.com>,
+        Semi Malinen <semi.malinen@ge.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/8] gpio: ftgpio010: drop of_match_ptr for ID table
+Date:   Sat, 11 Mar 2023 12:13:00 +0100
+Message-Id: <20230311111307.251123-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a59:c90f:0:b0:3af:2d22:adb1 with HTTP; Sat, 11 Mar 2023
- 00:41:16 -0800 (PST)
-Reply-To: godwinrichard700@gmail.com
-From:   Richard Godwin <wr9236251@gmail.com>
-Date:   Sat, 11 Mar 2023 00:41:16 -0800
-Message-ID: <CABx9BKDCK1aN0AZmuJbadU5BVQN7ynat=eTEBDbqvGiFVBuUzA@mail.gmail.com>
-Subject: URGENT
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e2a listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5041]
-        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: ear.so]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [wr9236251[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [wr9236251[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [godwinrichard700[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The driver can match only via the DT table so the table should be always
+used and the of_match_ptr does not have any sense (this also allows ACPI
+matching via PRP0001, even though it might not be relevant here).
+
+  drivers/gpio/gpio-ftgpio010.c:336:34: error: ‘ftgpio_gpio_of_match’ defined but not used [-Werror=unused-const-variable=]
+
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/gpio/gpio-ftgpio010.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+index 2728672ef9f8..31e26072f6ae 100644
+--- a/drivers/gpio/gpio-ftgpio010.c
++++ b/drivers/gpio/gpio-ftgpio010.c
+@@ -349,7 +349,7 @@ static const struct of_device_id ftgpio_gpio_of_match[] = {
+ static struct platform_driver ftgpio_gpio_driver = {
+ 	.driver = {
+ 		.name		= "ftgpio010-gpio",
+-		.of_match_table = of_match_ptr(ftgpio_gpio_of_match),
++		.of_match_table = ftgpio_gpio_of_match,
+ 	},
+ 	.probe = ftgpio_gpio_probe,
+ 	.remove = ftgpio_gpio_remove,
 -- 
-Hello Dear Good Day,
+2.34.1
 
-I hope you are doing great,
-
-I have something important to discuss with you
-
-if you give me a listening ear.so that I can
-
-write you in details thank you as i wait for
-
-your reply.
-
-Mr Richard Godwin
