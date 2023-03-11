@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 894096B5AD8
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Mar 2023 12:13:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 255266B5AD6
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Mar 2023 12:13:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbjCKLNp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Mar 2023 06:13:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44220 "EHLO
+        id S229958AbjCKLNm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Mar 2023 06:13:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbjCKLNW (ORCPT
+        with ESMTP id S229963AbjCKLNW (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Mar 2023 06:13:22 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0A813DF4
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:16 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id s11so30720321edy.8
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:16 -0800 (PST)
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B589213DFA
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:17 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id x3so30652311edb.10
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Mar 2023 03:13:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678533195;
+        d=linaro.org; s=google; t=1678533196;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0wsjEFg411f3j1GspmCDAJvrOGJIOzP6/PbM4Sd3D2A=;
-        b=XhfSoLEog6AUz2J6PG6GYohg6cYoVFocyuaGxSFjpkU1pCGqvxorZPijHHSMQi/xKo
-         /P0LizNb/zLTXk+vbMrXMpGlmU+jdQg9dAiHeT8/aCRS1sbq6HffoLTmD1eu2YwMS/IX
-         sGWA2Y7kTrdUsfwemZA10Gc43Rln2DPpIUAymagKYYysvnv0ZlUBY1Y8/0xWSsB0iOAa
-         RAyY7ZOUWIpAX/CnRWX4PdK6wCHSLVHpqv47VIufbYQPX7BYtdCqnYDsQ2HiOT+BgoX1
-         TM9CKg3QC0oqE9ZS/8HLT++P2NsNRrZ7VLUs0EbKFvIh6Im+cCvKfF4NPdtAWmOf4MKj
-         wQaQ==
+        bh=SV/dLCNcysuQ7CKaIgag1w22Gn4yS1/4xn0PDWGs4Eo=;
+        b=aewFZRIKniBekuXeMaGJNez/58uZHOVwAjNPwR+B2kHBdCJ63CkilQSENhCJYv1pG8
+         zcdnWH8Q+yGhNsdegLlOpHWz7AwkjhUo95EFhrKrhmzfm1bOy3rn2FLD0oFpAV7LWLEj
+         v3vF0mvNf0CiJkdaUGzWtA0y0C65mtU2nG6C7ACOubceuA5VnzGpt7TduSKrg1nOpJRr
+         ia6lVsJaLdTEQsL1KCrPsaeT7F1X85eZ/ho87my7n2LIlKlqaRn762ULmRFIxorqevxu
+         JVa0UPmb8expOEojDdKdP9vfyvMKf7Aja4zcK8MX/wkFeoGATANvM2Dl7hg0aqiNPoxQ
+         Zqiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678533195;
+        d=1e100.net; s=20210112; t=1678533196;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0wsjEFg411f3j1GspmCDAJvrOGJIOzP6/PbM4Sd3D2A=;
-        b=f3SjJAaqJTbxYoX90SWLPhCxMkInrrNHWNoR1jnntajIqHCv4J4vwLFoxMkmSHHXti
-         jZGXHn55NV90vmXjn6363Vtp8pU1j+TEJVg33PWUn1D1fJV7alEltmeCtsLSiQc5WTPc
-         iHjyIJ+BYvU9McM5yn02634kLuqfTPBYVqcDzsmPbRXvf6lCq0UzXBG4uOWgYvC6VWHg
-         5u/Kqr77xw7civMxPRv3E1zeIRYJvjzKCgcox+OHygyfz9hWeaGkpe5Z9+PSNIZL7r6I
-         ldpFs/JE4hLepvst+xjxSApTYYIYjBPFyigOpWYb8s0H/NZwnwtr+NhCjD/CaeRjiv8u
-         ZXLw==
-X-Gm-Message-State: AO0yUKWsB+1qc8h34PKrQYnFVivpxLzMtrdCtHOHByM6B6FbL5t8zYGG
-        dZB6esB8PXcvcILpzp3taYUeag==
-X-Google-Smtp-Source: AK7set8+yT6UzSrYOGn3LNs3My65y6SinT09SwukP5nlfb5NWOHN8GOPBLSL/652xN3+evwtWbuaFA==
-X-Received: by 2002:a17:906:7f8c:b0:921:5cce:6592 with SMTP id f12-20020a1709067f8c00b009215cce6592mr1057307ejr.59.1678533195246;
-        Sat, 11 Mar 2023 03:13:15 -0800 (PST)
+        bh=SV/dLCNcysuQ7CKaIgag1w22Gn4yS1/4xn0PDWGs4Eo=;
+        b=OM2l69ocpZ4tib0c28pgd4nbbXY5C5U+pez3xgfajDvCfDnLP/f9u1CQZpPDtyVrrn
+         dzyWRCSoC/ALM4RzghAOoFfnaf1yz40HktT4ApcjOREDO2m87BE4hz5oyJbThgupjS9S
+         pVqvGEXZJI41q8xJhna4FPqzIiRjLQaJ4+XAa6cgmkqmstOhZDtvBY0cLjiiwCeqPziw
+         IqEqT7PpvMiqHVHwRU+ZdCMufJpLZNWw70mxFlgWt1/HQC0ecK3MlPdy2JBA2qfLgzdn
+         87qZmNzkZV0Tlrw5Hw08zbFPnXOPIpU2gnl6luAVmZt5q4PXDTT0nrgNfhfpjPYXkUPt
+         5GLg==
+X-Gm-Message-State: AO0yUKW/pUrjAyh0e7T0IE+f6S91RNjoj9OvHA5N6oEE2xSO8CqofMWs
+        dI5jrzc8QexWSimgFE+/x65xtIJHlRQfMSptocI=
+X-Google-Smtp-Source: AK7set+zT8di1EH1vwo5WQtIvhf3MGOHHVEN7hy7axJP4iQDi22LYOiHLEsY77pHOuQpGOh2MpfNuA==
+X-Received: by 2002:aa7:d78e:0:b0:4fa:d75c:16c6 with SMTP id s14-20020aa7d78e000000b004fad75c16c6mr515662edq.38.1678533196359;
+        Sat, 11 Mar 2023 03:13:16 -0800 (PST)
 Received: from krzk-bin.. ([2a02:810d:15c0:828:fa97:2d7c:bdd7:e1b])
-        by smtp.gmail.com with ESMTPSA id s11-20020a170906bc4b00b008ee95ccfe06sm973189ejv.119.2023.03.11.03.13.14
+        by smtp.gmail.com with ESMTPSA id s11-20020a170906bc4b00b008ee95ccfe06sm973189ejv.119.2023.03.11.03.13.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Mar 2023 03:13:14 -0800 (PST)
+        Sat, 11 Mar 2023 03:13:16 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Mun Yew Tham <mun.yew.tham@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -66,9 +66,9 @@ To:     Mun Yew Tham <mun.yew.tham@intel.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-riscv@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 6/8] gpio: sama5d2-piobu: drop of_match_ptr for ID table
-Date:   Sat, 11 Mar 2023 12:13:05 +0100
-Message-Id: <20230311111307.251123-6-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 7/8] gpio: xra1403: mark OF related data as maybe unused
+Date:   Sat, 11 Mar 2023 12:13:06 +0100
+Message-Id: <20230311111307.251123-7-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230311111307.251123-1-krzysztof.kozlowski@linaro.org>
 References: <20230311111307.251123-1-krzysztof.kozlowski@linaro.org>
@@ -85,29 +85,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver can match only via the DT table so the table should be always
-used and the of_match_ptr does not have any sense (this also allows ACPI
-matching via PRP0001, even though it might not be relevant here).
+The driver can be compile tested with !CONFIG_OF making certain data
+unused:
 
-  drivers/gpio/gpio-sama5d2-piobu.c:230:34: error: ‘sama5d2_piobu_ids’ defined but not used [-Werror=unused-const-variable=]
+  drivers/gpio/gpio-xra1403.c:198:34: error: ‘xra1403_spi_of_match’ defined but not used [-Werror=unused-const-variable=]
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/gpio/gpio-sama5d2-piobu.c | 2 +-
+ drivers/gpio/gpio-xra1403.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-sama5d2-piobu.c b/drivers/gpio/gpio-sama5d2-piobu.c
-index 3e95da717fc9..767c33ae3213 100644
---- a/drivers/gpio/gpio-sama5d2-piobu.c
-+++ b/drivers/gpio/gpio-sama5d2-piobu.c
-@@ -236,7 +236,7 @@ MODULE_DEVICE_TABLE(of, sama5d2_piobu_ids);
- static struct platform_driver sama5d2_piobu_driver = {
- 	.driver = {
- 		.name		= "sama5d2-piobu",
--		.of_match_table	= of_match_ptr(sama5d2_piobu_ids)
-+		.of_match_table	= sama5d2_piobu_ids,
- 	},
- 	.probe = sama5d2_piobu_probe,
+diff --git a/drivers/gpio/gpio-xra1403.c b/drivers/gpio/gpio-xra1403.c
+index 49c878cfd5c6..51d6119e1bb4 100644
+--- a/drivers/gpio/gpio-xra1403.c
++++ b/drivers/gpio/gpio-xra1403.c
+@@ -195,7 +195,7 @@ static const struct spi_device_id xra1403_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, xra1403_ids);
+ 
+-static const struct of_device_id xra1403_spi_of_match[] = {
++static const struct of_device_id xra1403_spi_of_match[] __maybe_unused = {
+ 	{ .compatible = "exar,xra1403" },
+ 	{},
  };
 -- 
 2.34.1
