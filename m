@@ -2,116 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE0046B67A5
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Mar 2023 16:49:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A5486B6A66
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Mar 2023 20:04:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbjCLPtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Mar 2023 11:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35768 "EHLO
+        id S230111AbjCLTEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Mar 2023 15:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjCLPtW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Mar 2023 11:49:22 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A0037F28
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Mar 2023 08:49:20 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id er25so11206809edb.5
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Mar 2023 08:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678636159;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ze1sZZfvq/o3HPIuxYy3C9whN6R344n7Jno797TGzZw=;
-        b=EdYr9Y2NNVd69Fe8ci4f1VHqYC77SF2qg/Jlybb2r7i6w9HWYRoDi3prZL6yLzRE8u
-         zz4EZEEKzCvM+/kerG/cumr0hQs1hEkBBJfXfmXEHrJcbgUSf0l6lOTBudAG5Yudq1yZ
-         z8l3mKtb5w+NwMPXFKZFOUwcy5qycSIyK99s+zo53XoIsl11nUwotJQD1cnHHCMN65VX
-         mrSTQtqAhT3YNU207Oh300USWGnoSu7eIEWeCVS1XPVnZpn97/2h3MGCTOHD+NK4YV/y
-         7zlveTFIHrRgwdp8tjAsvJyuxn666YWoURqbrrKWMnipMpxHOLkh1EeqG4Mcbna4v/uz
-         5l3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678636159;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ze1sZZfvq/o3HPIuxYy3C9whN6R344n7Jno797TGzZw=;
-        b=xqVg08gv/8p71X3aLf5LlXqdAiNkolVOdiSwBSRYhX7Fals19MgotDqn8kwbyzzO9q
-         7roQVXskOWN+x4EJBoPDktOhqXGy3tgKaPwDntwGPbp9d40QpJIp9ftP1ayIAGPo/BZi
-         jljEmCh92k63mq34XS158jQVtLy+Zo0m6Y0DUubRm3R82juK6egGBvu7YcR8CYqvWz2u
-         PifvSsFuF5HsWe6CMR632LdP3W0ukrcDcxQ6txjVmgxQa95LGSveqd235edUs/S61fZm
-         u91M3B+GXtRuCt0B5jqmvhsDU6ZShEDpU9cwPKdBFeYu6Og2Y0bpPWsHlHukb01vnKVk
-         XFog==
-X-Gm-Message-State: AO0yUKVeLSicK0QyF0zzqKl2Qm9BLHmngutZUo92d4+DfJVYBJFJy2bh
-        IFbsj/WV54QqjfPryaht2JSYI4Is+DdnIZ5jJaA=
-X-Google-Smtp-Source: AK7set8udaJr3jonmmaxfmotBUdoyBVYzuKxMre3xI0ZisJg58IQP/BbH1HtpCaF3M/edo7bzjfXEg==
-X-Received: by 2002:a17:907:2ceb:b0:88a:8e57:f063 with SMTP id hz11-20020a1709072ceb00b0088a8e57f063mr27906362ejc.62.1678636159425;
-        Sun, 12 Mar 2023 08:49:19 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:d9f6:3e61:beeb:295a? ([2a02:810d:15c0:828:d9f6:3e61:beeb:295a])
-        by smtp.gmail.com with ESMTPSA id pk10-20020a170906d7aa00b008d1693c212csm2349659ejb.8.2023.03.12.08.49.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Mar 2023 08:49:19 -0700 (PDT)
-Message-ID: <be1eea98-ee16-751d-b833-72a8a667b553@linaro.org>
-Date:   Sun, 12 Mar 2023 16:49:17 +0100
+        with ESMTP id S229713AbjCLTEd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Mar 2023 15:04:33 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A8C172A;
+        Sun, 12 Mar 2023 12:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678647872; x=1710183872;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TSnwn0TySxJCCKYtlGkoxoE5mTRoz3cqkkbx1mBjmF0=;
+  b=emWN2z1PQmhs+dYifm/n5DwDi3aEZp3+Lgkv+STAY2ohDvj2c6KZdCfc
+   Irl2oAhW06KXrZU78clqGf1DWybtFkn9tcvseqwGp70o6FrV5Dg73tSjY
+   SOM+vuoTwsa9tVlffp44yNRo8mGBw3Pvl7J6xt13cYRdG2ZoXXG0sKco8
+   T6yiTYPo5OwP+Mj6N283nyMOOnrWUXm6GLXNhv1RQ3L/Nt+9KxjobwmtW
+   aNtF8qiESQL3l4YWcETXPB6PjCU2aabDHjQYOwgvr26EleANk3Zhnuavi
+   EZtMlboGnvSMWjrwP0ayeD1I3kpfMzrk/Hzw3QQMBWmeqm4FHGmaSjGbg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10647"; a="338568291"
+X-IronPort-AV: E=Sophos;i="5.98,254,1673942400"; 
+   d="scan'208";a="338568291"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2023 12:04:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10647"; a="655749326"
+X-IronPort-AV: E=Sophos;i="5.98,254,1673942400"; 
+   d="scan'208";a="655749326"
+Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.154.52])
+  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2023 12:04:27 -0700
+From:   Ye Xiang <xiang.ye@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
+        Ye Xiang <xiang.ye@intel.com>
+Subject: [PATCH v5 0/5] Add Intel LJCA device driver
+Date:   Mon, 13 Mar 2023 03:04:30 +0800
+Message-Id: <20230312190435.3568212-1-xiang.ye@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH V3 4/6] hte: Add Tegra234 provider
-Content-Language: en-US
-To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org,
-        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
-References: <20230310190634.5053-1-dipenp@nvidia.com>
- <20230310190634.5053-5-dipenp@nvidia.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230310190634.5053-5-dipenp@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/03/2023 20:06, Dipen Patel wrote:
-> This patch adds HTE provider support for the Tegra234 and reflects the
-> changes made in the device tree as follow.
-> - Add slices field in the SoC specific structure
-> - Remove gpio chip find by name function instead make use of the phandle
-> parsed from the DT node
-> 
-> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+Add driver for Intel La Jolla Cove Adapter (LJCA) device.
+This is a USB-GPIO, USB-I2C and USB-SPI device. We add 4
+drivers to support this device: a USB driver, a GPIO chip
+driver, a I2C controller driver and a SPI controller driver.
 
-(...)
+---
+v5:
+ - move ljca.h from drivers/include/mfd to drivers/include/usb.
+ - ljca: fix a potential memory leak issue.
+ - add a blank line before return to adust to kernel code style.
+ - ljca: sysfs: split "cmd" to "ljca_dfu" and "ljca_trace_level".
 
->  	hte_dev->regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(hte_dev->regs))
->  		return PTR_ERR(hte_dev->regs);
-> @@ -635,8 +750,15 @@ static int tegra_hte_probe(struct platform_device *pdev)
->  
->  		gc->match_from_linedata = tegra_hte_match_from_linedata;
->  
-> -		hte_dev->c = gpiochip_find("tegra194-gpio-aon",
-> -					   tegra_get_gpiochip_from_name);
-> +		gpio_ctrl = of_parse_phandle(dev->of_node,
-> +					     "nvidia,gpio-controller", 0);
-> +		if (!gpio_ctrl) {
-> +			dev_err(dev, "gpio controller node not found\n");
-> +			return -ENODEV;
+v4:
+ - move ljca.c from drivers/mfd to drivers/usb/misc folder.
+ - fix index warning in sysfs-bus-devices-ljca.
 
-This is non-bisectable patchset. Remember that DTS cannot go with the
-code, thus your code should handle existing DTS (which is BTW already
-released with v6.2).
+v3:
+ - spi: make ljca_spi_transfer inline and fix an endian issue.
 
-Any remarks to comments that no ABI was broken back then in 2022 are not
-valid now. They were valid that time, but sorry, the time passed.
+v2:
+ - ljca: remove reset command.
+ - gpio/spi/i2c: add `default MFD_LJCA` in Kconfig.
+ - gpio: add "select GPIOLIB_IRQCHIP" in Kconfig.
 
-Best regards,
-Krzysztof
+Ye Xiang (5):
+  usb: Add support for Intel LJCA device
+  gpio: Add support for Intel LJCA USB GPIO driver
+  i2c: Add support for Intel LJCA USB I2C driver
+  spi: Add support for Intel LJCA USB SPI driver
+  Documentation: Add ABI doc for attributes of LJCA device
+
+ .../ABI/testing/sysfs-bus-usb-devices-ljca    |  36 +
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-ljca.c                      | 459 ++++++++
+ drivers/i2c/busses/Kconfig                    |  11 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-ljca.c                 | 355 +++++++
+ drivers/spi/Kconfig                           |  11 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ljca.c                        | 293 +++++
+ drivers/usb/misc/Kconfig                      |  13 +
+ drivers/usb/misc/Makefile                     |   1 +
+ drivers/usb/misc/ljca.c                       | 998 ++++++++++++++++++
+ include/linux/usb/ljca.h                      |  95 ++
+ 14 files changed, 2287 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+ create mode 100644 drivers/gpio/gpio-ljca.c
+ create mode 100644 drivers/i2c/busses/i2c-ljca.c
+ create mode 100644 drivers/spi/spi-ljca.c
+ create mode 100644 drivers/usb/misc/ljca.c
+ create mode 100644 include/linux/usb/ljca.h
+
+-- 
+2.34.1
 
