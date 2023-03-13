@@ -2,265 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D1CD6B760E
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 12:34:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E7F06B7733
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 13:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbjCMLe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 07:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        id S229906AbjCMMKp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 08:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjCMLe1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 07:34:27 -0400
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E54E1A493;
-        Mon, 13 Mar 2023 04:34:01 -0700 (PDT)
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-        by mail11.truemail.it (Postfix) with ESMTPA id 4A36221DF3;
-        Mon, 13 Mar 2023 12:33:15 +0100 (CET)
-From:   Francesco Dolcini <francesco@dolcini.it>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v2 2/2] gpio: fxl6408: add I2C GPIO expander driver
-Date:   Mon, 13 Mar 2023 12:33:08 +0100
-Message-Id: <20230313113308.157930-3-francesco@dolcini.it>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230313113308.157930-1-francesco@dolcini.it>
-References: <20230313113308.157930-1-francesco@dolcini.it>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229814AbjCMMKo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 08:10:44 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF5734C07
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 05:10:41 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id j2so11065873wrh.9
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 05:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678709440;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3GQdHiuhV8qcwtZCrgLpmIG7i8TQyBjFWs+jLg6cK9I=;
+        b=YjN+/sfQrVtEHFnNa7CD1R+ohcYIxX4rAYXHTfbDoDlUUsxElUHtD7b8qdRIgYvvjF
+         TpydeuG8YcAxvysqENM+ZLs2VovI4itwmvOdGeazAgB67lp4/CZ0sJ1vmnRaING9xiQd
+         vbxttPNvNn9ilAgJcDV8ZGZoHnrhRnrSqg3s1I1BKEdUhG0dEN/64r5DPoj0XBZIDBcJ
+         16eCrTx/n+hOUky+fS5BuyuI3EZMTeyzvAUgUPIBQXYL1IN81EeV7+ncTC8lr1U1pIA+
+         qJa2sQ6BUoLysZVtG638AiykkV1hkJfKEQNQj9qQom0a9skUvs5Wn7H2MJ7Wunl6XXpA
+         oJ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678709440;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3GQdHiuhV8qcwtZCrgLpmIG7i8TQyBjFWs+jLg6cK9I=;
+        b=1XpTM+SRWXpstL0Fpj2WKGM+jtewHMt7RJGRLjR4mwF+DgrQLw1tgfQuxYSYr4XdUa
+         qGiSytW4rT5+a6Ty6ctzqCTvvWaRLLVX37HCMQ8tYffQ9D2H0Fm4I4DjLiWgOrFuMIdS
+         n/Rvact15lZi3kph5ikv+ttbUsasizCGqrAzWeY7MeUYKUwYgWlyhB6ZwRDAVnHOIBIQ
+         S/OnYAUDjl1fDiT8su8IdgYyNN4v5VyqPnZtxLt4mZd6+DX3SkkcLcGe8Bxib9V6NVH6
+         uf1ad3biDhgxlyNaurxu9tHmcEgApV1kg1936SCKNFa2Hxfzc96amblCgYKX12PzAmo0
+         obFw==
+X-Gm-Message-State: AO0yUKUSzeqaAhQLx75QTxXymQbwuraNm+1+hDmoEQ345c1kg6VTGy5d
+        Yi2mGW6hh9203dxE41cG77axNA==
+X-Google-Smtp-Source: AK7set9GdQPxf5ICUKtYJ/RP6unuyLgdOzr7MbGdghf6aL//AXX4x/y08dJdSndDoJN7h27+hzwYeA==
+X-Received: by 2002:adf:ef90:0:b0:2c5:a38f:ca31 with SMTP id d16-20020adfef90000000b002c5a38fca31mr8003174wro.7.1678709439797;
+        Mon, 13 Mar 2023 05:10:39 -0700 (PDT)
+Received: from localhost (91-170-53-155.subs.proxad.net. [91.170.53.155])
+        by smtp.gmail.com with ESMTPSA id e29-20020a5d595d000000b002c5706f7c6dsm7714376wri.94.2023.03.13.05.10.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Mar 2023 05:10:39 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 13 Mar 2023 13:10:37 +0100
+Message-Id: <CR58TXDRGAUA.3CSML8HXRI97S@burritosblues>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <jpanis@baylibre.com>,
+        <jneanne@baylibre.com>
+Subject: Re: [PATCH INTERNAL v1 1/3] rtc: tps6594: add driver for TPS6594
+ PMIC RTC
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+X-Mailer: aerc 0.14.0
+References: <20230224133129.887203-1-eblanc@baylibre.com>
+ <20230224133129.887203-2-eblanc@baylibre.com> <ZAcbJxrNtWTTTSjR@mail.local>
+ <CR556BV2M4I4.2L3LLJ8V1I352@burritosblues>
+ <20230313110158f5c27b63@mail.local>
+In-Reply-To: <20230313110158f5c27b63@mail.local>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+On Mon Mar 13, 2023 at 12:01 PM CET, Alexandre Belloni wrote:
+> On 13/03/2023 10:18:45+0100, Esteban Blanc wrote:
+> > On Tue Mar 7, 2023 at 12:08 PM CET, Alexandre Belloni wrote:
+> > > On 24/02/2023 14:31:27+0100, Esteban Blanc wrote:
+> > > > +/*
+> > > > + * Gets current tps6594 RTC time and date parameters.
+> > > > + *
+> > > > + * The RTC's time/alarm representation is not what gmtime(3) requi=
+res
+> > > > + * Linux to use:
+> > > > + *
+> > > > + *  - Months are 1..12 vs Linux 0-11
+> > > > + *  - Years are 0..99 vs Linux 1900..N (we assume 21st century)
+> > > > + */
+> > >
+> > > I don't find this comment to be particularly useful.
+> >=20
+> > Ok. I propose that I add 2 constants for the -1 and +100 in the month a=
+nd year
+> > calculation. This way, without the comment the computation would be a
+> > bit more self explanatory.
+> > What do you think?
+>
+> I don't think this is necessary, keep -1 for the month and +100 for the
+> year, those are very common operations in the subsystem and don't really
+> need any explanation
 
-Add minimal driver for Fairchild FXL6408 8-bit I2C-controlled GPIO expander
-using the generic regmap based GPIO driver (GPIO_REGMAP).
+Ok. I will just remove the comment then.
 
-The driver implements setting the GPIO direction, reading inputs
-and writing outputs.
+> > > > +static int tps6594_rtc_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +   struct tps6594 *tps6594;
+> > > > +   struct tps6594_rtc *tps_rtc;
+> > > > +   int irq;
+> > > > +   int ret;
+> > > > +
+> > > > +   tps6594 =3D dev_get_drvdata(pdev->dev.parent);
+> > > > +
+> > > > +   tps_rtc =3D devm_kzalloc(&pdev->dev, sizeof(struct tps6594_rtc)=
+,
+> > > > +                          GFP_KERNEL);
+> > > > +   if (!tps_rtc)
+> > > > +           return -ENOMEM;
+> > > > +
+> > > > +   tps_rtc->rtc =3D devm_rtc_allocate_device(&pdev->dev);
+> > > > +   if (IS_ERR(tps_rtc->rtc))
+> > > > +           return PTR_ERR(tps_rtc->rtc);
+> > > > +
+> > > > +   /* Enable crystal oscillator */
+> > > > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_2=
+,
+> > > > +                         TPS6594_BIT_XTAL_EN);
+> > > > +   if (ret < 0)
+> > > > +           return ret;
+> > > > +
+> > > > +   /* Start rtc */
+> > > > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_1=
+,
+> > > > +                         TPS6594_BIT_STOP_RTC);
+> > > > +   if (ret < 0)
+> > > > +           return ret;
+> > >
+> > > Do that (XTAL_EN and clearing STOP) only once the time is known to be
+> > > set to a correct value so read_time doesn't have a chance to return a
+> > > bogus value.
+> > >
+> >=20
+> > (...)
+> >=20
+> > I understand your point, however I'm not sure of the canonical way to d=
+o
+> > this. Simply calling `tps6594_rtc_set_time` is enough?
+>
+> Yeah, let userspace set the time and start the rtc at that point.
 
-In addition to that the FXL6408 has the following functionalities:
-- allows to monitor input ports for data transitions with an interrupt pin
-- all inputs can be configured with pull-up or pull-down resistors
+The problem with that is we might have some RTCs that will just not be
+usable. We have boards with multiple TP6594 PMICs where only one of them
+has a crystal oscillator. The way to detect this is to start the RTC
+then checked if the STOP_RTC bit is still 0. By doing this in the probe,
+I'm able to not register an RTC device that doesn't work.
 
-Datasheet: https://www.onsemi.com/download/data-sheet/pdf/fxl6408-d.pdf
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
-v2:
- * remove includes: <linux/gpio.h> and <linux/of_platform.h>
- * add missing and required select REGMAP_I2C in KConfig
- * use dev_err_probe()
- * add "Datasheet:" tag in commit message
- * improve KConfig help section
- * fix newlines, multi-line comments and trailing commas
----
- drivers/gpio/Kconfig        |  10 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-fxl6408.c | 152 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/gpio/gpio-fxl6408.c
+If I just start the RTC on the first call to `tps6594_rtc_set_time`, it
+will work for the RTC with the crystal and fails for all the others=20
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 13be729710f2..56a73007ebcb 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1000,6 +1000,16 @@ config GPIO_ADNP
- 	  enough to represent all pins, but the driver will assume a
- 	  register layout for 64 pins (8 registers).
- 
-+config GPIO_FXL6408
-+	tristate "FXL6408 I2C GPIO expander"
-+	select GPIO_REGMAP
-+	select REGMAP_I2C
-+	help
-+	  GPIO driver for Fairchild Semiconductor FXL6408 GPIO expander.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-fxl6408.
-+
- config GPIO_GW_PLD
- 	tristate "Gateworks PLD GPIO Expander"
- 	depends on OF_GPIO
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index c048ba003367..12027f4c3bee 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -60,6 +60,7 @@ obj-$(CONFIG_GPIO_EP93XX)		+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_EXAR)			+= gpio-exar.o
- obj-$(CONFIG_GPIO_F7188X)		+= gpio-f7188x.o
- obj-$(CONFIG_GPIO_FTGPIO010)		+= gpio-ftgpio010.o
-+obj-$(CONFIG_GPIO_FXL6408)		+= gpio-fxl6408.o
- obj-$(CONFIG_GPIO_GE_FPGA)		+= gpio-ge.o
- obj-$(CONFIG_GPIO_GPIO_MM)		+= gpio-gpio-mm.o
- obj-$(CONFIG_GPIO_GRGPIO)		+= gpio-grgpio.o
-diff --git a/drivers/gpio/gpio-fxl6408.c b/drivers/gpio/gpio-fxl6408.c
-new file mode 100644
-index 000000000000..2560fe99c2d6
---- /dev/null
-+++ b/drivers/gpio/gpio-fxl6408.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * FXL6408 GPIO driver
-+ *
-+ * Copyright 2023 Toradex
-+ *
-+ * Author: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-+ */
-+
-+#include <linux/gpio/regmap.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#define FXL6408_REG_DEVICE_ID		0x01
-+#define FXL6408_MF_FAIRCHILD		0b101
-+#define FXL6408_MF_SHIFT		5
-+
-+/* Bits set here indicate that the GPIO is an output. */
-+#define FXL6408_REG_IO_DIR		0x03
-+
-+/*
-+ * Bits set here, when the corresponding bit of IO_DIR is set, drive
-+ * the output high instead of low.
-+ */
-+#define FXL6408_REG_OUTPUT		0x05
-+
-+/* Bits here make the output High-Z, instead of the OUTPUT value. */
-+#define FXL6408_REG_OUTPUT_HIGH_Z	0x07
-+
-+/* Returns the current status (1 = HIGH) of the input pins. */
-+#define FXL6408_REG_INPUT_STATUS	0x0f
-+
-+#define FXL6408_MAX_REGISTER		0x13
-+
-+#define FXL6408_NGPIO			8
-+
-+static const struct regmap_range rd_range[] = {
-+	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
-+	{ FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
-+	{ FXL6408_REG_INPUT_STATUS, FXL6408_REG_INPUT_STATUS },
-+};
-+
-+static const struct regmap_range wr_range[] = {
-+	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
-+	{ FXL6408_REG_IO_DIR, FXL6408_REG_OUTPUT },
-+	{ FXL6408_REG_OUTPUT_HIGH_Z, FXL6408_REG_OUTPUT_HIGH_Z },
-+};
-+
-+static const struct regmap_range volatile_range[] = {
-+	{ FXL6408_REG_DEVICE_ID, FXL6408_REG_DEVICE_ID },
-+	{ FXL6408_REG_INPUT_STATUS, FXL6408_REG_INPUT_STATUS },
-+};
-+
-+static const struct regmap_access_table rd_table = {
-+	.yes_ranges = rd_range,
-+	.n_yes_ranges = ARRAY_SIZE(rd_range),
-+};
-+
-+static const struct regmap_access_table wr_table = {
-+	.yes_ranges = wr_range,
-+	.n_yes_ranges = ARRAY_SIZE(wr_range),
-+};
-+
-+static const struct regmap_access_table volatile_table = {
-+	.yes_ranges = volatile_range,
-+	.n_yes_ranges = ARRAY_SIZE(volatile_range),
-+};
-+
-+static const struct regmap_config regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = FXL6408_MAX_REGISTER,
-+	.wr_table = &wr_table,
-+	.rd_table = &rd_table,
-+	.volatile_table = &volatile_table,
-+
-+	.cache_type = REGCACHE_RBTREE,
-+	.num_reg_defaults_raw = FXL6408_MAX_REGISTER + 1,
-+};
-+
-+static int fxl6408_identify(struct device *dev, struct regmap *regmap)
-+{
-+	int val, ret;
-+
-+	ret = regmap_read(regmap, FXL6408_REG_DEVICE_ID, &val);
-+	if (ret) {
-+		dev_err(dev, "error %d reading DEVICE_ID\n", ret);
-+	} else if (val >> FXL6408_MF_SHIFT != FXL6408_MF_FAIRCHILD) {
-+		dev_err(dev, "invalid device id 0x%02x\n", val);
-+		ret = -ENODEV;
-+	}
-+
-+	return ret;
-+}
-+
-+static int fxl6408_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	int ret;
-+	struct gpio_regmap_config gpio_config = {
-+		.parent = dev,
-+		.ngpio = FXL6408_NGPIO,
-+		.reg_dat_base = GPIO_REGMAP_ADDR(FXL6408_REG_INPUT_STATUS),
-+		.reg_set_base = GPIO_REGMAP_ADDR(FXL6408_REG_OUTPUT),
-+		.reg_dir_out_base = GPIO_REGMAP_ADDR(FXL6408_REG_IO_DIR),
-+		.ngpio_per_reg = FXL6408_NGPIO,
-+	};
-+
-+	gpio_config.regmap = devm_regmap_init_i2c(client, &regmap);
-+	if (IS_ERR(gpio_config.regmap))
-+		return dev_err_probe(dev, PTR_ERR(gpio_config.regmap),
-+				     "failed to allocate register map\n");
-+
-+	ret = fxl6408_identify(dev, gpio_config.regmap);
-+	if (ret)
-+		return ret;
-+
-+	/* Disable High-Z of outputs, so that our OUTPUT updates actually take effect. */
-+	ret = regmap_write(gpio_config.regmap, FXL6408_REG_OUTPUT_HIGH_Z, 0);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to write 'output high Z' register\n");
-+
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-+}
-+
-+static const __maybe_unused struct of_device_id fxl6408_dt_ids[] = {
-+	{ .compatible = "fcs,fxl6408" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, fxl6408_dt_ids);
-+
-+static const struct i2c_device_id fxl6408_id[] = {
-+	{ "fxl6408", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, fxl6408_id);
-+
-+static struct i2c_driver fxl6408_driver = {
-+	.driver = {
-+		.name	= "fxl6408",
-+		.of_match_table = fxl6408_dt_ids,
-+	},
-+	.probe_new	= fxl6408_probe,
-+	.id_table	= fxl6408_id,
-+};
-+module_i2c_driver(fxl6408_driver);
-+
-+MODULE_AUTHOR("Emanuele Ghidoli <emanuele.ghidoli@toradex.com>");
-+MODULE_DESCRIPTION("FXL6408 GPIO driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+I can stop the RTC at the end of the probe, after the check to rule out
+unusable devices. If I add the check you proposed in
+`tps6594_rtc_read_time` it will fail until a successful call to
+`tps6594_rtc_set_time`. Would that be a suitable solution?
+
+Best regards,
+--=20
+Esteban Blanc
+BayLibre
 
