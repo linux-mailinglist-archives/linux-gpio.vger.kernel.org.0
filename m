@@ -2,79 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 798836B7FB6
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 18:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC13E6B7FD0
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 18:55:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbjCMRuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 13:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
+        id S229854AbjCMRzz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 13:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229861AbjCMRuM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 13:50:12 -0400
-Received: from mail11.truemail.it (mail11.truemail.it [IPv6:2001:4b7e:0:8::81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A6579B25;
-        Mon, 13 Mar 2023 10:49:57 -0700 (PDT)
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-        by mail11.truemail.it (Postfix) with ESMTPA id 6731E20765;
-        Mon, 13 Mar 2023 18:49:55 +0100 (CET)
-Date:   Mon, 13 Mar 2023 18:49:50 +0100
-From:   Francesco Dolcini <francesco@dolcini.it>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Francesco Dolcini <francesco@dolcini.it>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-        linux-kernel@vger.kernel.org,
-        Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH v3 2/2] gpio: fxl6408: add I2C GPIO expander driver
-Message-ID: <ZA9iPnmgNO7PSv6O@francesco-nb.int.toradex.com>
-References: <20230313170950.256964-1-francesco@dolcini.it>
- <20230313170950.256964-3-francesco@dolcini.it>
- <CAHp75VetwU3pr59sE5zHPf5jPxYb6yJnXZWpD_qn4o6d5Dnmog@mail.gmail.com>
+        with ESMTP id S229865AbjCMRzv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 13:55:51 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A0C33466
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 10:55:48 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id ek18so20949422edb.6
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 10:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678730146;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JlcrnhxuRd6rV69CEfffZDmaaf6zxlWaBbyK92fytus=;
+        b=zrT7N+L4i1OOmHooCUtuKQxSOa3Hl/v/al9JW1jb/ccugW//3tZctpe8h8XqOLPVPd
+         28FTmDGBe/txValWJ4yjwNiFKkBvn1KymKVGg/ybUJgLljp//aUkiRZ50xC7kl4Tbbbj
+         aiXj4BhUOmS+nYtWQ9V3TMbGRJDLU9OTqUWEyvNLqXpbcdsbGJnsYaHtBcEbR1NxYFSh
+         3TPQAbpAovUx1vfywwYojF4mNL5fHu7ax1zJ99q/wW1LOwJM2pkmAOPuzXjU+QLl044f
+         3i19gjqQNSucPGQdcdgsl+/fuoVl0xUvb3nM2+ZYkuy0CI5+fnQwDijoTSmIFrC58wP+
+         1Png==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678730146;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JlcrnhxuRd6rV69CEfffZDmaaf6zxlWaBbyK92fytus=;
+        b=y8q7CZWGQeOOtxU3IuLOg7u3kOeQFmJDWTZNZL8bfM+iIg0sEFtVcyscLcpGqhkfnQ
+         HMIjo1Ejj0uTZLzdwO3702BT7tEKCSlY6pR+S8UIumkLZJCymVrylh248yrCeSJz6uSR
+         CpKIafpdVx8RbSfEqBn40gRAu00cjt+++qQaMkp7z96iyr0/E1ku07X5bqLqG92bizBo
+         7wyY0DxbueGLIKTVWh0HnAOZzAlJSjU2D5+tlHGaAgHGiDHjOYlA5HfhwJNHcDI7JiqN
+         835FjOYhxgopmlUrtABbvqz27A1HNBNhsO7+jury98KGeipz9sByS7mXJsuWfPMjW+5r
+         uYsg==
+X-Gm-Message-State: AO0yUKVI3wnJPEmtq9IYENAXF7MKHyNpJSppOzOZbcjPbQw4wm2tJEtR
+        wNzUv6CWUl+AtPc6Waw6oifzLg==
+X-Google-Smtp-Source: AK7set+F+T0O61QUAlFi1WKTG8LwavM0EbkptZ54DncABKfzh7oDSD7DKJnsUeNG6kb6uO0yUhNKyQ==
+X-Received: by 2002:a17:906:2843:b0:8b1:15ab:f4cd with SMTP id s3-20020a170906284300b008b115abf4cdmr31342450ejc.53.1678730146574;
+        Mon, 13 Mar 2023 10:55:46 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:69db:4882:d071:27c4? ([2a02:810d:15c0:828:69db:4882:d071:27c4])
+        by smtp.gmail.com with ESMTPSA id h7-20020a170906718700b009289de993e2sm65306ejk.216.2023.03.13.10.55.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Mar 2023 10:55:46 -0700 (PDT)
+Message-ID: <6c5045d9-4f4a-5018-3f3f-7746b08ab2b5@linaro.org>
+Date:   Mon, 13 Mar 2023 18:55:45 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VetwU3pr59sE5zHPf5jPxYb6yJnXZWpD_qn4o6d5Dnmog@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V3 2/6] dt-bindings: timestamp: Add Tegra234 support
+To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
+References: <20230310190634.5053-1-dipenp@nvidia.com>
+ <20230310190634.5053-3-dipenp@nvidia.com>
+ <f6d9c84a-1c75-d9b4-59ed-39d6c5b310a9@linaro.org>
+ <b4195142-6cfe-df3c-6edf-0c40b64ad02a@nvidia.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <b4195142-6cfe-df3c-6edf-0c40b64ad02a@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 07:35:20PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 13, 2023 at 7:09 PM Francesco Dolcini <francesco@dolcini.it> wrote:
-> >
-> > From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> >
-> > Add minimal driver for Fairchild FXL6408 8-bit I2C-controlled GPIO expander
-> > using the generic regmap based GPIO driver (GPIO_REGMAP).
-> >
-> > The driver implements setting the GPIO direction, reading inputs
-> > and writing outputs.
-> >
-> > In addition to that the FXL6408 has the following functionalities:
-> > - allows to monitor input ports for data transitions with an interrupt pin
-> > - all inputs can be configured with pull-up or pull-down resistors
+On 13/03/2023 18:05, Dipen Patel wrote:
+> On 3/12/23 8:47 AM, Krzysztof Kozlowski wrote:
+>> On 10/03/2023 20:06, Dipen Patel wrote:
+>>> Added timestamp provider support for the Tegra234 in devicetree
+>>> bindings. In addition, it addresses review comments from the
+>>> previous review round as follows:
+>>> - Removes nvidia,slices property. This was not necessary as it
+>>> is a constant value and can be hardcoded inside the driver code.
+>>> - Adds nvidia,gpio-controller property. This simplifies how GTE driver
+>>> retrieves GPIO controller instance, see below explanation.
+>>>
+>>> Without this property code would look like:
+>>> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
+>>> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
+>>> 				   tegra_get_gpiochip_from_name);
+>>> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
+>>> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
+>>> 				   tegra_get_gpiochip_from_name);
+>>> else
+>>> 	return -ENODEV;
+>>>
+>>> This means for every future addition of the compatible string, if else
+>>> condition statements have to be expanded.
+>>>
+>>> With the property:
+>>> gpio_ctrl = of_parse_phandle(dev->of_node, "nvidia,gpio-controller", 0);
+>>> ....
+>>> hte_dev->c = gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_node);
+>>>
+>>> We haven't technically started making use of these bindings, so
+>>> backwards-compatibility shouldn't be an issue yet.
+>>
+>> Unfortunately, I don't understand this statement. The
+>> nvidia,tegra194-gte-aon with removed property is in a released kernel
+>> v6.2. What does it mean "technically"? It's a released kernel thus it is
+>> a released ABI.
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> There is no active user of that driver, so even if it breaks 6.2, it is fine
+> as there is no one to complain about it.
 
-Thanks for the review, appreciated.
+How do you know? It's a released kernel, thus how can you ask millions
+of people if they use it or not?
 
-> > +#include <linux/err.h>
-> > +#include <linux/gpio/regmap.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/i2c.h>
-> 
-> Seems unordered?
-
-Whoops :-/
-
-Bartosz: if you or others have additional comments I'll change this for
-sure, if not up to you - please let me know.
-
-Francesco
+Best regards,
+Krzysztof
 
