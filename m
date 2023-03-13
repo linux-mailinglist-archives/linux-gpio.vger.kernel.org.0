@@ -2,159 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A486B725A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 10:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C4B6B726F
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 10:23:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjCMJS6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 05:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
+        id S230111AbjCMJXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 05:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230018AbjCMJSt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 05:18:49 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B372CC69
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:18:48 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id t15so10562464wrz.7
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:18:48 -0700 (PDT)
+        with ESMTP id S230308AbjCMJXT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 05:23:19 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC83CC2D
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:23:17 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id da10so45927783edb.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678699127;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=819sPWiRDLbyXTj9lMI3wSZfzf6rbkGsUCg2JBu7bxs=;
-        b=HEuvy6TUvSYW5RtpVkz10SjI+9Ax3kWRYRPXvmBLU3VhxDaq0cDEwvydJKd+cxoUjc
-         3busOreQ9i39DHCjQqAO2/NIV7WATtltZwTZB0JclxrU9Mpjg4fs8aWnzLbVv9Ca9++g
-         Rac5GSjH8A8qS+nqaKXi9ONuQsIkX6fxpMKGfsl9EqUJvwUrRX15dQ1AxSI1TYd2ttBm
-         qUoCp3LUtxevls+mep5w0NCD4+/TQBHA3KLIF2ArkX83Kch/4drsZIexiDFywCJ178rs
-         dolm91ISx3Xf09e/BGhPyo5Xg18GyMCxYvmVvk8Mqkg3ulkeT6FF5nYuEy70HTwDSIRB
-         ZZXA==
+        d=linaro.org; s=google; t=1678699396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/CKjAglWz/Z0UKapvGTWzM4Jv1UJAkt9JJZQVmUC3Ag=;
+        b=kmwXNbdX6Yv5B0qf+FtauS1FWClKukDF9UgPFNhKKnvj3K64MQafXL/WI+R6y8qTh+
+         S48Vfrx3f88DR6Nzr/XKhxVmGETrRGdG0g0kg0bDkIPc5Jw6WFYvxpjmrsX14FlWHSij
+         KPKm+8uSU/A2apZi/zx40Bt+OjAMMh4x4g5Rx7cjrnFAXUiLLWDt2hTGrWTLgSCPgLpX
+         nOD4FtNK+DSDHwiWbURmNQkjDJCLv5hH/Yyx62MdsaDJx4zGLzT4Lme+ll/CF+kkU5w3
+         k0/OUnGGrmR68sYOHavrGTmWs/p2W5Oza1MbBf64CSUeUcXAvqIDQitGl96s0kQebDNz
+         muUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678699127;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=819sPWiRDLbyXTj9lMI3wSZfzf6rbkGsUCg2JBu7bxs=;
-        b=YvxGfeWeW9Vxaowgmp1YWdsClQNM3aN8sARfXAyw0+YWQomiNylERp38M3NzLIinOV
-         q5rFxtgOxeSnJ8RTJ+HsdIvl7mClLIb3dFsnBfpRL/9daPP5aM2AZMTg/fwY1i7m7Qj3
-         Hc8E2PUjdYSte1N+P/Tdj5mbb5I2oyHwY5zPyCT44LwCVFncxM122MNKPkkekuumg5co
-         3FSNJXIlUxnRkjX0tCWS3eqY0pl3OcZk+xMIZQLcDzyFfA5tdoSO7rnhXq8LAEl5gU4k
-         0gNOxsxkkGNcwlnpsTT/FB3VM1tjzLD+wu+0PjgLmps5JirKVBtkQJg2xtUTViEKHh7y
-         CDfw==
-X-Gm-Message-State: AO0yUKVXfNIwpH8W7DyoWWYMZmOBxkZ3FNIxM/BDlzOr5Ox301Mf7JbF
-        RS1yN+MqKncXaxTW0wZV24go+A==
-X-Google-Smtp-Source: AK7set9TLdu1nH2qB5bjiwDrkGH1cNy+YauBVt/YbewUUWhgEQWBNzt8sbYpWdKlwBvw5FPmT3lLWw==
-X-Received: by 2002:a5d:610e:0:b0:2cb:5b58:74a with SMTP id v14-20020a5d610e000000b002cb5b58074amr22200673wrt.56.1678699126908;
-        Mon, 13 Mar 2023 02:18:46 -0700 (PDT)
-Received: from localhost ([2a01:e0a:28d:66d0:7e56:113b:5d10:d06b])
-        by smtp.gmail.com with ESMTPSA id b12-20020adff90c000000b002c71d206329sm7356587wrr.55.2023.03.13.02.18.45
+        d=1e100.net; s=20210112; t=1678699396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CKjAglWz/Z0UKapvGTWzM4Jv1UJAkt9JJZQVmUC3Ag=;
+        b=rsDnHQWDKiVnl0QyR7EC6rGjw8KfbSfc2BSSkbUiyY2681M+p3R6PjAHJ5YpvB8yqH
+         EWXVXu/8IRaz+tQ29BBxHf6oJrOJ0NQb1UeE8cpyYrqCYTmorSG7U2CuYmEjK8E9/SNf
+         XaZPcQX+lTPpZ6/xBDtmjoyIfi/f+2qmKczfUJLTlYtozmBN3jTXCo4IoUZZdKUzKKtp
+         G1FnJKG3QhId4BOfKcsL1p1THllcF19pTOlNcm+19mVNDV2ysoM17Fe/Mnn/rHCqoRey
+         xPKPWvC8ZvFuEqWXgqz0mjMhlcQBLfxcJzvqlHYebrYZynMfbyXeZgwKq0onsb74xy7B
+         5z5g==
+X-Gm-Message-State: AO0yUKV3iYAbrQqj5RQlknffkmy1SfRZnABqEr2PSRt0hSTXa4Cl9meJ
+        mru2spEj0+wuvgBUzhFKUGmhBA==
+X-Google-Smtp-Source: AK7set9wfWWQkWIGbAxb6yUogzNu1z4CVCuICv4FoGu1LamMcQdgG9VchIghpJTSxnSr++q9G9F+9A==
+X-Received: by 2002:a17:907:6092:b0:888:b471:8e46 with SMTP id ht18-20020a170907609200b00888b4718e46mr42341888ejc.50.1678699396039;
+        Mon, 13 Mar 2023 02:23:16 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:f052:f15:3f90:fcb3? ([2a02:810d:15c0:828:f052:f15:3f90:fcb3])
+        by smtp.gmail.com with ESMTPSA id m2-20020a509302000000b004f1e91c9f87sm2991131eda.3.2023.03.13.02.23.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 02:18:46 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Mar 2023 02:23:15 -0700 (PDT)
+Message-ID: <91ebf91e-99ac-2733-2dcd-860af318a03a@linaro.org>
+Date:   Mon, 13 Mar 2023 10:23:14 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 3/3] dt-bindings: gpio: add NPCM sgpio driver bindings
+Content-Language: en-US
+To:     Jim Liu <jim.t90615@gmail.com>, Rob Herring <robh@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, JJLIU0@nuvoton.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, KWLIU@nuvoton.com,
+        openbmc@lists.ozlabs.org, brgl@bgdev.pl,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org
+References: <20230110083238.19230-1-jim.t90615@gmail.com>
+ <20230110083238.19230-4-jim.t90615@gmail.com>
+ <167335661623.1967925.9927691364268671668.robh@kernel.org>
+ <CAKUZ0+HQYiwp0pGLhQUckk9zOYg42MSWucYss6iP68YRmHyAxA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAKUZ0+HQYiwp0pGLhQUckk9zOYg42MSWucYss6iP68YRmHyAxA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 13 Mar 2023 10:18:45 +0100
-Message-Id: <CR556BV2M4I4.2L3LLJ8V1I352@burritosblues>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <jpanis@baylibre.com>,
-        <jneanne@baylibre.com>
-Subject: Re: [PATCH INTERNAL v1 1/3] rtc: tps6594: add driver for TPS6594
- PMIC RTC
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-X-Mailer: aerc 0.14.0
-References: <20230224133129.887203-1-eblanc@baylibre.com>
- <20230224133129.887203-2-eblanc@baylibre.com> <ZAcbJxrNtWTTTSjR@mail.local>
-In-Reply-To: <ZAcbJxrNtWTTTSjR@mail.local>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue Mar 7, 2023 at 12:08 PM CET, Alexandre Belloni wrote:
-> On 24/02/2023 14:31:27+0100, Esteban Blanc wrote:
-> > +struct tps6594_rtc {
-> > +   struct rtc_device *rtc;
-> > +};
->
-> Is the struct actually useful?
+On 13/03/2023 09:54, Jim Liu wrote:
+> Hi Krzysztof
+> 
+> sorry for reply late.
+> I think I need to explain more details about the clock.
 
-Good catch, it's not. I will remove it for V2.
+You top posted to Rob's bot's email, so I have no clue what do you refer to.
 
-(...)
-
-> > +/*
-> > + * Gets current tps6594 RTC time and date parameters.
-> > + *
-> > + * The RTC's time/alarm representation is not what gmtime(3) requires
-> > + * Linux to use:
-> > + *
-> > + *  - Months are 1..12 vs Linux 0-11
-> > + *  - Years are 0..99 vs Linux 1900..N (we assume 21st century)
-> > + */
->
-> I don't find this comment to be particularly useful.
-
-Ok. I propose that I add 2 constants for the -1 and +100 in the month and y=
-ear
-calculation. This way, without the comment the computation would be a
-bit more self explanatory.
-What do you think?
-
-(...)
-
-> > +static int tps6594_rtc_probe(struct platform_device *pdev)
-> > +{
-> > +   struct tps6594 *tps6594;
-> > +   struct tps6594_rtc *tps_rtc;
-> > +   int irq;
-> > +   int ret;
-> > +
-> > +   tps6594 =3D dev_get_drvdata(pdev->dev.parent);
-> > +
-> > +   tps_rtc =3D devm_kzalloc(&pdev->dev, sizeof(struct tps6594_rtc),
-> > +                          GFP_KERNEL);
-> > +   if (!tps_rtc)
-> > +           return -ENOMEM;
-> > +
-> > +   tps_rtc->rtc =3D devm_rtc_allocate_device(&pdev->dev);
-> > +   if (IS_ERR(tps_rtc->rtc))
-> > +           return PTR_ERR(tps_rtc->rtc);
-> > +
-> > +   /* Enable crystal oscillator */
-> > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_2,
-> > +                         TPS6594_BIT_XTAL_EN);
-> > +   if (ret < 0)
-> > +           return ret;
-> > +
-> > +   /* Start rtc */
-> > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_1,
-> > +                         TPS6594_BIT_STOP_RTC);
-> > +   if (ret < 0)
-> > +           return ret;
->
-> Do that (XTAL_EN and clearing STOP) only once the time is known to be
-> set to a correct value so read_time doesn't have a chance to return a
-> bogus value.
->
-
-(...)
-
-I understand your point, however I'm not sure of the canonical way to do
-this. Simply calling `tps6594_rtc_set_time` is enough?
-
-> --=20
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-Thanks for your time. Best regards,
---=20
-Esteban Blanc
-BayLibre
+Best regards,
+Krzysztof
 
