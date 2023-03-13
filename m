@@ -2,157 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C6E6B83A8
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 22:02:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B01EC6B8424
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 22:43:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231173AbjCMVC1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 17:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        id S229548AbjCMVnd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 17:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230422AbjCMVCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 17:02:00 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C60C8C955;
-        Mon, 13 Mar 2023 14:00:56 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id j11so54046627edq.4;
-        Mon, 13 Mar 2023 14:00:56 -0700 (PDT)
+        with ESMTP id S229624AbjCMVnc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 17:43:32 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F3419C40
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 14:43:26 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id j7so2700666ybg.4
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 14:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678741244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1678743806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gA3EusZCOhK627Wk0FirSH/GwKNGmUqwf4ijzEsCNuk=;
-        b=DiOQ7LpQ9BueYA5S5WwnImfMJeB+W428SPYWHW2VPcXaBWdV53EPgkhu8Uunn2HLDX
-         H3l+hmiEN6HwBhf+Bk80dRnMkuOp2Dd+bZwsDGFGfZiYxBqzAIpJf7yPEQHIsA+yoSNp
-         Mj6SHaJJs4wlgjhEdiWuol833lJWGTgED9Nri7CGIr1cYgeicyOw/FDN+oYemLy52Zhj
-         WGTVC2Td3pK4CBvNPuXlNv+7rbvTM8kAP/pJufiN6g4LQ2Y63kzC/A2V3IX1DIqkvrM/
-         KWoG/vb/GelWeH5k1uP5n60zzE8pPCe8SQQgyKAGOQFjwkhG7KLB3GZM6yYfHW9Tc8NI
-         gS/g==
+        bh=RSd3V+HZ2T3mn2cPqXWrHfR5YkKZfdZAyYpCo4chbXU=;
+        b=wNETqUCxQ2QTd0peBTohCpYEJ2IuKEYfhzChAAwi15Ax+cZ7Nu5/9on8O8dEN3/Yhk
+         uUGfMvg+3ONZHcO34fS2YEBbMgnkk0EjwRwnZsdKpZoc5KuSgpvVSqF//mB1TCI7rcr4
+         DHyrzg0Rc6r31JQtJXvJJR4kaM/Sb6kinPnzSv/iHCW5UCe6wbyk8dQIZB0PkpSMnWGe
+         ttkmmIR2DJNzR+RoFcTUnKUx/ndmMrYASfV+2JBR/gqgzJDHaSw1/wb3/vHHmbOc5Moj
+         v1D7GhXJa6ikrvJDzXnH1h0rYF3IQJnTCt4v6ikbPATQZBqEJ8YkTZNNhxRUOMTsjBRy
+         T30w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678741244;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1678743806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gA3EusZCOhK627Wk0FirSH/GwKNGmUqwf4ijzEsCNuk=;
-        b=ZeQrmvDYd6OvSSweVU+6FsxB8gvlr54m2DXuhh5OXB9T6lTv7ONgxgsd0+hup2PwqQ
-         jWTssI373U++h7BlZU6hNT7w5aGEEZNUXuMcBx3lZs65UtSrJtWGS4GbxvaZanNc6DRa
-         wgLBh9FpWWuih9Xis7pUcq2F1OgkPxING3EHSqL6NECqjv5yChbruAcEES6pCc5x/ceV
-         mOKNMFoihDEMNIWUcZYjhJrut6lmpoqVi9ikV61/MVBIsEbCNlrAVYmABCFhyjIZWfKm
-         D5BXPIIWWM4fd0z4rXvA0a/Hg5hD5o+vTTRklCdSvAzneNyRS/0a45s40u2WYcDwjvT+
-         1r7w==
-X-Gm-Message-State: AO0yUKVALl31+aAUE2s1DAbqEkk+TjFa2sy4WtAp6F2YWsKhjhaI50OF
-        b0cNOVehpakYpZD08Z6RSCA=
-X-Google-Smtp-Source: AK7set+xc/A2AUsEpnkeSAPo/NefGhegXt8FflrkGyYZI98MGsPQwOInyI7rwtArMe68neAJkvQ48A==
-X-Received: by 2002:a17:907:7241:b0:884:fd73:8053 with SMTP id ds1-20020a170907724100b00884fd738053mr46136247ejc.9.1678741244643;
-        Mon, 13 Mar 2023 14:00:44 -0700 (PDT)
-Received: from arinc9-PC.lan ([149.91.1.15])
-        by smtp.gmail.com with ESMTPSA id j11-20020a170906830b00b008ee5356801dsm219853ejx.187.2023.03.13.14.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 14:00:44 -0700 (PDT)
-From:   arinc9.unal@gmail.com
-X-Google-Original-From: arinc.unal@arinc9.com
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        William Dean <williamsukatube@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Del Regno <angelogioacchino.delregno@collabora.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Hui Liu <hui.liu@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-Subject: [PATCH v2 21/21] MAINTAINERS: move ralink pinctrl to mediatek mips pinctrl
-Date:   Mon, 13 Mar 2023 23:59:21 +0300
-Message-Id: <20230313205921.35342-22-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230313205921.35342-1-arinc.unal@arinc9.com>
-References: <20230313205921.35342-1-arinc.unal@arinc9.com>
+        bh=RSd3V+HZ2T3mn2cPqXWrHfR5YkKZfdZAyYpCo4chbXU=;
+        b=Fm81vCjH+z4bWSA933Qq1oWsCLKr5qcH3bPtU8U/uPRtA8ScjFdhtpG/YMuCMQcSDp
+         0u/pE4gyyTleSB/rPDcBwIhLWZBJD0II2GAtJvPTwOwPWQd5EFLY0nDbns+TvXfxn5qB
+         apblzTW7tOlYsxQnT+zIO1H3Vl5qEVYSKHKSqtjej4MiIkXkFs1MCtMsxXDR+dPdEXxS
+         qxuPZYjsbaIyEUkWbfXmObgz5qw1gUyHdGWDHoNHMUmGIaY0R7Ixac17FOvgplH8ttZb
+         HMSJU6AHyrSOMgYdIxbQostm+i/24+PWNdQhuq811AzyXoYZXip/LPrhxnfWX/q64xHD
+         kL2w==
+X-Gm-Message-State: AO0yUKUHmXjVacIl7AwhqUGu2oLGTctaXrdpzxDP+570QIIJ6RfNWti1
+        FnfkRsnI+5wwRyddT3al1ntY50+3c+4hyvKQ/MbETA==
+X-Google-Smtp-Source: AK7set/44tdYO4dx/yFdy6mWrlex/dEJSg8Dq1+hFA0Q9cUVadFi5fLDSwyepQRkDs4fZQ1h3nRg33KAEHniI/POZO0=
+X-Received: by 2002:a5b:c7:0:b0:b3b:d433:b063 with SMTP id d7-20020a5b00c7000000b00b3bd433b063mr168215ybp.4.1678743806009;
+ Mon, 13 Mar 2023 14:43:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230313161138.3598068-1-sean.anderson@seco.com> <20230313161138.3598068-4-sean.anderson@seco.com>
+In-Reply-To: <20230313161138.3598068-4-sean.anderson@seco.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 13 Mar 2023 22:43:14 +0100
+Message-ID: <CACRpkdan3xZPWazk5tS-i9uAvKB=UO3kt5WS0VALkwnUk6ckgg@mail.gmail.com>
+Subject: Re: [PATCH v11 03/13] dt-bindings: Convert gpio-mmio to yaml
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Mon, Mar 13, 2023 at 5:12=E2=80=AFPM Sean Anderson <sean.anderson@seco.c=
+om> wrote:
 
-The Ralink pinctrl driver is now under the name of MediaTek MIPS pin
-controller. Move the maintainer information accordingly. Add dt-binding
-schema files. Add linux-mediatek@lists.infradead.org as an associated
-mailing list.
+> This is a generic binding for simple MMIO GPIO controllers. Although we
+> have a single driver for these controllers, they were previously spread
+> over several files. Consolidate them. The register descriptions are
+> adapted from the comments in the source. There is no set order for the
+> registers, so I have not specified one.
+>
+> Rename brcm,bcm6345-gpio to brcm,bcm63xx-gpio to reflect that bcm6345
+> has moved.
+>
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Linus or Bartosz, feel free to pick this up as the rest of this series
+> may not be merged any time soon.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- MAINTAINERS | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+I think Bartosz will pick this as soon as the DT maintainers ACK it.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6048bbe0e672..f4ee11dab1ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16521,6 +16521,28 @@ F:	Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
- F:	Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
- F:	drivers/pinctrl/mediatek/
- 
-+PIN CONTROLLER - MEDIATEK MIPS
-+M:	Arınç ÜNAL <arinc.unal@arinc9.com>
-+M:	Sergio Paracuellos <sergio.paracuellos@gmail.com>
-+L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-mips@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pinctrl/mediatek,mt7620-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/mediatek,mt7621-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/mediatek,mt76x8-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/ralink,rt3352-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/ralink,rt5350-pinctrl.yaml
-+F:	drivers/pinctrl/mediatek/pinctrl-mt7620.c
-+F:	drivers/pinctrl/mediatek/pinctrl-mt7621.c
-+F:	drivers/pinctrl/mediatek/pinctrl-mt76x8.c
-+F:	drivers/pinctrl/mediatek/pinctrl-mtmips.*
-+F:	drivers/pinctrl/mediatek/pinctrl-rt2880.c
-+F:	drivers/pinctrl/mediatek/pinctrl-rt305x.c
-+F:	drivers/pinctrl/mediatek/pinctrl-rt3883.c
-+
- PIN CONTROLLER - MICROCHIP AT91
- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-@@ -17496,13 +17518,6 @@ L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/ralink/mt7621*
- 
--RALINK PINCTRL DRIVER
--M:	Arınç ÜNAL <arinc.unal@arinc9.com>
--M:	Sergio Paracuellos <sergio.paracuellos@gmail.com>
--L:	linux-mips@vger.kernel.org
--S:	Maintained
--F:	drivers/pinctrl/ralink/
--
- RALINK RT2X00 WIRELESS LAN DRIVER
- M:	Stanislaw Gruszka <stf_xl@wp.pl>
- M:	Helmut Schaa <helmut.schaa@googlemail.com>
--- 
-2.37.2
-
+Yours,
+Linus Walleij
