@@ -2,75 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E7F06B7733
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 13:10:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 133616B7761
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 13:25:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbjCMMKp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 08:10:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
+        id S229586AbjCMMZf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 08:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbjCMMKo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 08:10:44 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF5734C07
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 05:10:41 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id j2so11065873wrh.9
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 05:10:41 -0700 (PDT)
+        with ESMTP id S229573AbjCMMZZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 08:25:25 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E942160A95;
+        Mon, 13 Mar 2023 05:25:24 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id s12so12795317qtq.11;
+        Mon, 13 Mar 2023 05:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678709440;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1678710324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3GQdHiuhV8qcwtZCrgLpmIG7i8TQyBjFWs+jLg6cK9I=;
-        b=YjN+/sfQrVtEHFnNa7CD1R+ohcYIxX4rAYXHTfbDoDlUUsxElUHtD7b8qdRIgYvvjF
-         TpydeuG8YcAxvysqENM+ZLs2VovI4itwmvOdGeazAgB67lp4/CZ0sJ1vmnRaING9xiQd
-         vbxttPNvNn9ilAgJcDV8ZGZoHnrhRnrSqg3s1I1BKEdUhG0dEN/64r5DPoj0XBZIDBcJ
-         16eCrTx/n+hOUky+fS5BuyuI3EZMTeyzvAUgUPIBQXYL1IN81EeV7+ncTC8lr1U1pIA+
-         qJa2sQ6BUoLysZVtG638AiykkV1hkJfKEQNQj9qQom0a9skUvs5Wn7H2MJ7Wunl6XXpA
-         oJ4g==
+        bh=h82fuy/Xe+ZNGMTcjSSICeQm5bCkEaKlx+5Bu+WICBI=;
+        b=pGxacxUR96iVXxjWaCmxttADxxSrQltgRR0PnC9PI/J+h40kv2SJj8W7HZ1VCVnF2I
+         fikiNSz4yLsThd860k494OtDWWcZRQWPgAZpCjiuKGchkwIzbIN5b+IwRoTi2lSlqAqC
+         rXE2ezhC1LNrKF6L7qZLmD6K2orz4Q8BnviMDXKCMVuIyLIXh0OWV0R5utTTlbZOJAe5
+         bKajmx2X8KUir7cLnNQ11tGf/8gSMoX4fkUu4u2t6EZLH1mWbqqhiaJqHYO+oXLMx5Dc
+         41rgf3kcGdDbD3AHHpMgA2UEE4HRx0VevN7kZu0/UfdUPqcHLUqI3GFnwfBPvIDW3KKy
+         eDwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678709440;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3GQdHiuhV8qcwtZCrgLpmIG7i8TQyBjFWs+jLg6cK9I=;
-        b=1XpTM+SRWXpstL0Fpj2WKGM+jtewHMt7RJGRLjR4mwF+DgrQLw1tgfQuxYSYr4XdUa
-         qGiSytW4rT5+a6Ty6ctzqCTvvWaRLLVX37HCMQ8tYffQ9D2H0Fm4I4DjLiWgOrFuMIdS
-         n/Rvact15lZi3kph5ikv+ttbUsasizCGqrAzWeY7MeUYKUwYgWlyhB6ZwRDAVnHOIBIQ
-         S/OnYAUDjl1fDiT8su8IdgYyNN4v5VyqPnZtxLt4mZd6+DX3SkkcLcGe8Bxib9V6NVH6
-         uf1ad3biDhgxlyNaurxu9tHmcEgApV1kg1936SCKNFa2Hxfzc96amblCgYKX12PzAmo0
-         obFw==
-X-Gm-Message-State: AO0yUKUSzeqaAhQLx75QTxXymQbwuraNm+1+hDmoEQ345c1kg6VTGy5d
-        Yi2mGW6hh9203dxE41cG77axNA==
-X-Google-Smtp-Source: AK7set9GdQPxf5ICUKtYJ/RP6unuyLgdOzr7MbGdghf6aL//AXX4x/y08dJdSndDoJN7h27+hzwYeA==
-X-Received: by 2002:adf:ef90:0:b0:2c5:a38f:ca31 with SMTP id d16-20020adfef90000000b002c5a38fca31mr8003174wro.7.1678709439797;
-        Mon, 13 Mar 2023 05:10:39 -0700 (PDT)
-Received: from localhost (91-170-53-155.subs.proxad.net. [91.170.53.155])
-        by smtp.gmail.com with ESMTPSA id e29-20020a5d595d000000b002c5706f7c6dsm7714376wri.94.2023.03.13.05.10.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 05:10:39 -0700 (PDT)
-Mime-Version: 1.0
+        d=1e100.net; s=20210112; t=1678710324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h82fuy/Xe+ZNGMTcjSSICeQm5bCkEaKlx+5Bu+WICBI=;
+        b=Wm9dziA8FnbBTS5F0QliLdooIoHv9re3fyz2uQZ06woBfWZuMmL2A7Pweh3zciGdgJ
+         KAee316JYUu0pkIGn5GOZayGyFPCM4RC/OttEaP8XJbqncpY5OD8h7QuN/z/5+m537pl
+         qxi/rDqC7zPLL4vUhiJVV+ihaTN9obXcWB40kJGyRdvQKj/NXpeuqWuNcyKANscnTdWr
+         3hQYHReQO+Los4q8eUDgfKmJoOQTw/kLIYp0PVxmW7oyUSHcibccv4zM4wKOQM3WMV5s
+         sVqICtJ+lALeurT9DRn+YEJXiBHNLCsPeIByMuSPMKcThguBuoRLres1qIqqP8O7/Gp5
+         aDiQ==
+X-Gm-Message-State: AO0yUKWNIWqTmNG88gZnpLtImft8qbxaeXKJmQB3YzoClyIsmwPQjSLS
+        07nHO3Oq8mWRYUACQ7Zxt0UpozSlkUVfN0Zogjk=
+X-Google-Smtp-Source: AK7set8rFznMusOPXIFxOAv8d4dBTmfh57Iqr5vPJYLwoM3uJILFy9N3++dbJ6GMtncS++nlZkdAsnpP1Uh/odkNzaA=
+X-Received: by 2002:a05:622a:18d:b0:3b8:57a7:7827 with SMTP id
+ s13-20020a05622a018d00b003b857a77827mr10428711qtw.0.1678710323965; Mon, 13
+ Mar 2023 05:25:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230313113308.157930-1-francesco@dolcini.it> <20230313113308.157930-3-francesco@dolcini.it>
+In-Reply-To: <20230313113308.157930-3-francesco@dolcini.it>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 13 Mar 2023 14:24:47 +0200
+Message-ID: <CAHp75VePJ76nhwX-1cyo-uD=2+w4dbyGNhazJzKkkQOfDma6aQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: fxl6408: add I2C GPIO expander driver
+To:     Francesco Dolcini <francesco@dolcini.it>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+        linux-kernel@vger.kernel.org,
+        Francesco Dolcini <francesco.dolcini@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 13 Mar 2023 13:10:37 +0100
-Message-Id: <CR58TXDRGAUA.3CSML8HXRI97S@burritosblues>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <jpanis@baylibre.com>,
-        <jneanne@baylibre.com>
-Subject: Re: [PATCH INTERNAL v1 1/3] rtc: tps6594: add driver for TPS6594
- PMIC RTC
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-X-Mailer: aerc 0.14.0
-References: <20230224133129.887203-1-eblanc@baylibre.com>
- <20230224133129.887203-2-eblanc@baylibre.com> <ZAcbJxrNtWTTTSjR@mail.local>
- <CR556BV2M4I4.2L3LLJ8V1I352@burritosblues>
- <20230313110158f5c27b63@mail.local>
-In-Reply-To: <20230313110158f5c27b63@mail.local>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,97 +72,92 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon Mar 13, 2023 at 12:01 PM CET, Alexandre Belloni wrote:
-> On 13/03/2023 10:18:45+0100, Esteban Blanc wrote:
-> > On Tue Mar 7, 2023 at 12:08 PM CET, Alexandre Belloni wrote:
-> > > On 24/02/2023 14:31:27+0100, Esteban Blanc wrote:
-> > > > +/*
-> > > > + * Gets current tps6594 RTC time and date parameters.
-> > > > + *
-> > > > + * The RTC's time/alarm representation is not what gmtime(3) requi=
-res
-> > > > + * Linux to use:
-> > > > + *
-> > > > + *  - Months are 1..12 vs Linux 0-11
-> > > > + *  - Years are 0..99 vs Linux 1900..N (we assume 21st century)
-> > > > + */
-> > >
-> > > I don't find this comment to be particularly useful.
-> >=20
-> > Ok. I propose that I add 2 constants for the -1 and +100 in the month a=
-nd year
-> > calculation. This way, without the comment the computation would be a
-> > bit more self explanatory.
-> > What do you think?
+On Mon, Mar 13, 2023 at 1:33=E2=80=AFPM Francesco Dolcini <francesco@dolcin=
+i.it> wrote:
 >
-> I don't think this is necessary, keep -1 for the month and +100 for the
-> year, those are very common operations in the subsystem and don't really
-> need any explanation
-
-Ok. I will just remove the comment then.
-
-> > > > +static int tps6594_rtc_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +   struct tps6594 *tps6594;
-> > > > +   struct tps6594_rtc *tps_rtc;
-> > > > +   int irq;
-> > > > +   int ret;
-> > > > +
-> > > > +   tps6594 =3D dev_get_drvdata(pdev->dev.parent);
-> > > > +
-> > > > +   tps_rtc =3D devm_kzalloc(&pdev->dev, sizeof(struct tps6594_rtc)=
-,
-> > > > +                          GFP_KERNEL);
-> > > > +   if (!tps_rtc)
-> > > > +           return -ENOMEM;
-> > > > +
-> > > > +   tps_rtc->rtc =3D devm_rtc_allocate_device(&pdev->dev);
-> > > > +   if (IS_ERR(tps_rtc->rtc))
-> > > > +           return PTR_ERR(tps_rtc->rtc);
-> > > > +
-> > > > +   /* Enable crystal oscillator */
-> > > > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_2=
-,
-> > > > +                         TPS6594_BIT_XTAL_EN);
-> > > > +   if (ret < 0)
-> > > > +           return ret;
-> > > > +
-> > > > +   /* Start rtc */
-> > > > +   ret =3D regmap_set_bits(tps6594->regmap, TPS6594_REG_RTC_CTRL_1=
-,
-> > > > +                         TPS6594_BIT_STOP_RTC);
-> > > > +   if (ret < 0)
-> > > > +           return ret;
-> > >
-> > > Do that (XTAL_EN and clearing STOP) only once the time is known to be
-> > > set to a correct value so read_time doesn't have a chance to return a
-> > > bogus value.
-> > >
-> >=20
-> > (...)
-> >=20
-> > I understand your point, however I'm not sure of the canonical way to d=
-o
-> > this. Simply calling `tps6594_rtc_set_time` is enough?
+> From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 >
-> Yeah, let userspace set the time and start the rtc at that point.
+> Add minimal driver for Fairchild FXL6408 8-bit I2C-controlled GPIO expand=
+er
+> using the generic regmap based GPIO driver (GPIO_REGMAP).
+>
+> The driver implements setting the GPIO direction, reading inputs
+> and writing outputs.
+>
+> In addition to that the FXL6408 has the following functionalities:
+> - allows to monitor input ports for data transitions with an interrupt pi=
+n
+> - all inputs can be configured with pull-up or pull-down resistors
 
-The problem with that is we might have some RTCs that will just not be
-usable. We have boards with multiple TP6594 PMICs where only one of them
-has a crystal oscillator. The way to detect this is to start the RTC
-then checked if the STOP_RTC bit is still 0. By doing this in the probe,
-I'm able to not register an RTC device that doesn't work.
+Thank you for the update, my comments below.
 
-If I just start the RTC on the first call to `tps6594_rtc_set_time`, it
-will work for the RTC with the crystal and fails for all the others=20
+...
 
-I can stop the RTC at the end of the probe, after the check to rule out
-unusable devices. If I add the check you proposed in
-`tps6594_rtc_read_time` it will fail until a successful call to
-`tps6594_rtc_set_time`. Would that be a suitable solution?
++ Co-developed-by: your name + email ?
 
-Best regards,
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+
+...
+
+> +config GPIO_FXL6408
+> +       tristate "FXL6408 I2C GPIO expander"
+> +       select GPIO_REGMAP
+
+> +       select REGMAP_I2C
+
+Somebody pointed out that this might require
+
+    depends on I2C
+
+being added as well.
+
+...
+
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+
+Missing kernel.h for ARRAY_SIZE(), but I prefer the array_size.h to
+appear (nevertheless, the latter is out of scope of this one).
+Missing err.h for error handling macros.
+
+...
+
+> +#define FXL6408_MAX_REGISTER           0x13
+
+This is used as a range, but why? If we can have a proper name for
+this register, why bother dumping all this or even having access to?
+
+...
+
+> +static int fxl6408_identify(struct device *dev, struct regmap *regmap)
+> +{
+> +       int val, ret;
+> +
+> +       ret =3D regmap_read(regmap, FXL6408_REG_DEVICE_ID, &val);
+> +       if (ret) {
+> +               dev_err(dev, "error %d reading DEVICE_ID\n", ret);
+> +       } else if (val >> FXL6408_MF_SHIFT !=3D FXL6408_MF_FAIRCHILD) {
+> +               dev_err(dev, "invalid device id 0x%02x\n", val);
+> +               ret =3D -ENODEV;
+> +       }
+> +
+> +       return ret;
+
+This function is only used at ->probe(), you may refactor it like
+
+       ret =3D regmap_read(regmap, FXL6408_REG_DEVICE_ID, &val);
+       if (ret)
+               return dev_err_probe(dev, ret, "error reading DEVICE_ID\n");
+       if (val >> FXL6408_MF_SHIFT !=3D FXL6408_MF_FAIRCHILD)
+               return dev_err_probe(dev, -ENODEV, "invalid device id
+0x%02x\n", val);
+
+       return 0;
+
+> +}
+
 --=20
-Esteban Blanc
-BayLibre
-
+With Best Regards,
+Andy Shevchenko
