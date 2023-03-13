@@ -2,92 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77C4B6B726F
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 10:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0916F6B73A3
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Mar 2023 11:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbjCMJXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Mar 2023 05:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
+        id S229663AbjCMKST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Mar 2023 06:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjCMJXT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 05:23:19 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC83CC2D
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:23:17 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id da10so45927783edb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Mar 2023 02:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678699396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/CKjAglWz/Z0UKapvGTWzM4Jv1UJAkt9JJZQVmUC3Ag=;
-        b=kmwXNbdX6Yv5B0qf+FtauS1FWClKukDF9UgPFNhKKnvj3K64MQafXL/WI+R6y8qTh+
-         S48Vfrx3f88DR6Nzr/XKhxVmGETrRGdG0g0kg0bDkIPc5Jw6WFYvxpjmrsX14FlWHSij
-         KPKm+8uSU/A2apZi/zx40Bt+OjAMMh4x4g5Rx7cjrnFAXUiLLWDt2hTGrWTLgSCPgLpX
-         nOD4FtNK+DSDHwiWbURmNQkjDJCLv5hH/Yyx62MdsaDJx4zGLzT4Lme+ll/CF+kkU5w3
-         k0/OUnGGrmR68sYOHavrGTmWs/p2W5Oza1MbBf64CSUeUcXAvqIDQitGl96s0kQebDNz
-         muUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678699396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CKjAglWz/Z0UKapvGTWzM4Jv1UJAkt9JJZQVmUC3Ag=;
-        b=rsDnHQWDKiVnl0QyR7EC6rGjw8KfbSfc2BSSkbUiyY2681M+p3R6PjAHJ5YpvB8yqH
-         EWXVXu/8IRaz+tQ29BBxHf6oJrOJ0NQb1UeE8cpyYrqCYTmorSG7U2CuYmEjK8E9/SNf
-         XaZPcQX+lTPpZ6/xBDtmjoyIfi/f+2qmKczfUJLTlYtozmBN3jTXCo4IoUZZdKUzKKtp
-         G1FnJKG3QhId4BOfKcsL1p1THllcF19pTOlNcm+19mVNDV2ysoM17Fe/Mnn/rHCqoRey
-         xPKPWvC8ZvFuEqWXgqz0mjMhlcQBLfxcJzvqlHYebrYZynMfbyXeZgwKq0onsb74xy7B
-         5z5g==
-X-Gm-Message-State: AO0yUKV3iYAbrQqj5RQlknffkmy1SfRZnABqEr2PSRt0hSTXa4Cl9meJ
-        mru2spEj0+wuvgBUzhFKUGmhBA==
-X-Google-Smtp-Source: AK7set9wfWWQkWIGbAxb6yUogzNu1z4CVCuICv4FoGu1LamMcQdgG9VchIghpJTSxnSr++q9G9F+9A==
-X-Received: by 2002:a17:907:6092:b0:888:b471:8e46 with SMTP id ht18-20020a170907609200b00888b4718e46mr42341888ejc.50.1678699396039;
-        Mon, 13 Mar 2023 02:23:16 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:f052:f15:3f90:fcb3? ([2a02:810d:15c0:828:f052:f15:3f90:fcb3])
-        by smtp.gmail.com with ESMTPSA id m2-20020a509302000000b004f1e91c9f87sm2991131eda.3.2023.03.13.02.23.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 02:23:15 -0700 (PDT)
-Message-ID: <91ebf91e-99ac-2733-2dcd-860af318a03a@linaro.org>
-Date:   Mon, 13 Mar 2023 10:23:14 +0100
+        with ESMTP id S229587AbjCMKSR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Mar 2023 06:18:17 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC2B2CC2E;
+        Mon, 13 Mar 2023 03:18:14 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44B714B3;
+        Mon, 13 Mar 2023 03:18:58 -0700 (PDT)
+Received: from slackpad.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A408A3F71A;
+        Mon, 13 Mar 2023 03:18:11 -0700 (PDT)
+Date:   Mon, 13 Mar 2023 10:17:51 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-renesas-soc@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH] pinctrl: Use of_property_present() for testing DT
+ property presence
+Message-ID: <20230313101751.18003b2d@slackpad.lan>
+In-Reply-To: <20230310144721.1544669-1-robh@kernel.org>
+References: <20230310144721.1544669-1-robh@kernel.org>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 3/3] dt-bindings: gpio: add NPCM sgpio driver bindings
-Content-Language: en-US
-To:     Jim Liu <jim.t90615@gmail.com>, Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, JJLIU0@nuvoton.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, KWLIU@nuvoton.com,
-        openbmc@lists.ozlabs.org, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org
-References: <20230110083238.19230-1-jim.t90615@gmail.com>
- <20230110083238.19230-4-jim.t90615@gmail.com>
- <167335661623.1967925.9927691364268671668.robh@kernel.org>
- <CAKUZ0+HQYiwp0pGLhQUckk9zOYg42MSWucYss6iP68YRmHyAxA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAKUZ0+HQYiwp0pGLhQUckk9zOYg42MSWucYss6iP68YRmHyAxA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/03/2023 09:54, Jim Liu wrote:
-> Hi Krzysztof
+On Fri, 10 Mar 2023 08:47:20 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> It is preferred to use typed property access functions (i.e.
+> of_property_read_<type> functions) rather than low-level
+> of_get_property/of_find_property functions for reading properties. As
+> part of this, convert of_get_property/of_find_property calls to the
+> recently added of_property_present() helper when we just want to test
+> for presence of a property and nothing more.
 > 
-> sorry for reply late.
-> I think I need to explain more details about the clock.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-moore.c |  2 +-
+>  drivers/pinctrl/pinctrl-single.c         |  4 ++--
+>  drivers/pinctrl/pinctrl-stmfx.c          |  2 +-
+>  drivers/pinctrl/renesas/pinctrl.c        |  4 ++--
+>  drivers/pinctrl/stm32/pinctrl-stm32.c    |  2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c    | 20 ++++++++++----------
 
-You top posted to Rob's bot's email, so I have no clue what do you refer to.
 
-Best regards,
-Krzysztof
+For sunxi: Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+>  6 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+> index 007b98ce5631..8649a2f9d324 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-moore.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+> @@ -586,7 +586,7 @@ static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+>  	 * Documentation/devicetree/bindings/gpio/gpio.txt on how to
+>  	 * bind pinctrl and gpio drivers via the "gpio-ranges" property.
+>  	 */
+> -	if (!of_find_property(hw->dev->of_node, "gpio-ranges", NULL)) {
+> +	if (!of_property_present(hw->dev->of_node, "gpio-ranges")) {
+>  		ret = gpiochip_add_pin_range(chip, dev_name(hw->dev), 0, 0,
+>  					     chip->ngpio);
+>  		if (ret < 0) {
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index 190923757cda..0dabbcf68b9f 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -939,11 +939,11 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  
+>  	/* cacluate how much properties are supported in current node */
+>  	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+> -		if (of_find_property(np, prop2[i].name, NULL))
+> +		if (of_property_present(np, prop2[i].name))
+>  			nconfs++;
+>  	}
+>  	for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+> -		if (of_find_property(np, prop4[i].name, NULL))
+> +		if (of_property_present(np, prop4[i].name))
+>  			nconfs++;
+>  	}
+>  	if (!nconfs)
+> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+> index 1181c4b506b1..3c031692e44d 100644
+> --- a/drivers/pinctrl/pinctrl-stmfx.c
+> +++ b/drivers/pinctrl/pinctrl-stmfx.c
+> @@ -632,7 +632,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>  	pctl->dev = &pdev->dev;
+>  	pctl->stmfx = stmfx;
+>  
+> -	if (!of_find_property(np, "gpio-ranges", NULL)) {
+> +	if (!of_property_present(np, "gpio-ranges")) {
+>  		dev_err(pctl->dev, "missing required gpio-ranges property\n");
+>  		return -EINVAL;
+>  	}
+> diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
+> index b74147800319..5c71e168b370 100644
+> --- a/drivers/pinctrl/renesas/pinctrl.c
+> +++ b/drivers/pinctrl/renesas/pinctrl.c
+> @@ -125,8 +125,8 @@ static int sh_pfc_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+>  	 * inside a subnode nor across subnodes.
+>  	 */
+>  	if (!pmx->func_prop_name) {
+> -		if (of_find_property(np, "groups", NULL) ||
+> -		    of_find_property(np, "pins", NULL)) {
+> +		if (of_property_present(np, "groups")||
+> +		    of_property_present(np, "pins")) {
+>  			pmx->func_prop_name = "function";
+>  			pmx->groups_prop_name = "groups";
+>  			pmx->pins_prop_name = "pins";
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index cb33a23ab0c1..66a25becd8f5 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -1374,7 +1374,7 @@ static struct irq_domain *stm32_pctrl_get_irq_domain(struct platform_device *pde
+>  	struct device_node *parent;
+>  	struct irq_domain *domain;
+>  
+> -	if (!of_find_property(np, "interrupt-parent", NULL))
+> +	if (!of_property_present(np, "interrupt-parent"))
+>  		return NULL;
+>  
+>  	parent = of_irq_find_parent(np);
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index f35179eceb4e..1dc1882cbdd7 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -224,16 +224,16 @@ static int sunxi_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+>  
+>  static bool sunxi_pctrl_has_bias_prop(struct device_node *node)
+>  {
+> -	return of_find_property(node, "bias-pull-up", NULL) ||
+> -		of_find_property(node, "bias-pull-down", NULL) ||
+> -		of_find_property(node, "bias-disable", NULL) ||
+> -		of_find_property(node, "allwinner,pull", NULL);
+> +	return of_property_present(node, "bias-pull-up") ||
+> +		of_property_present(node, "bias-pull-down") ||
+> +		of_property_present(node, "bias-disable") ||
+> +		of_property_present(node, "allwinner,pull");
+>  }
+>  
+>  static bool sunxi_pctrl_has_drive_prop(struct device_node *node)
+>  {
+> -	return of_find_property(node, "drive-strength", NULL) ||
+> -		of_find_property(node, "allwinner,drive", NULL);
+> +	return of_property_present(node, "drive-strength") ||
+> +		of_property_present(node, "allwinner,drive");
+>  }
+>  
+>  static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
+> @@ -241,13 +241,13 @@ static int sunxi_pctrl_parse_bias_prop(struct device_node *node)
+>  	u32 val;
+>  
+>  	/* Try the new style binding */
+> -	if (of_find_property(node, "bias-pull-up", NULL))
+> +	if (of_property_present(node, "bias-pull-up"))
+>  		return PIN_CONFIG_BIAS_PULL_UP;
+>  
+> -	if (of_find_property(node, "bias-pull-down", NULL))
+> +	if (of_property_present(node, "bias-pull-down"))
+>  		return PIN_CONFIG_BIAS_PULL_DOWN;
+>  
+> -	if (of_find_property(node, "bias-disable", NULL))
+> +	if (of_property_present(node, "bias-disable"))
+>  		return PIN_CONFIG_BIAS_DISABLE;
+>  
+>  	/* And fall back to the old binding */
+> @@ -1424,7 +1424,7 @@ static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
+>  		return 0;
+>  
+>  	/* If we don't have any setup, bail out */
+> -	if (!of_find_property(node, "input-debounce", NULL))
+> +	if (!of_property_present(node, "input-debounce"))
+>  		return 0;
+>  
+>  	losc = devm_clk_get(pctl->dev, "losc");
 
