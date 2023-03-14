@@ -2,75 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5844A6B8DAF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:43:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19A8B6B8DE2
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:55:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbjCNInX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 04:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54482 "EHLO
+        id S229667AbjCNIzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 04:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjCNInV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:43:21 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA367C9C1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:43:17 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id eh3so2873998edb.11
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:43:17 -0700 (PDT)
+        with ESMTP id S230432AbjCNIzI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:55:08 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBA31C32D
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:55:05 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id r11so7265968edd.5
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678783396;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=92MwtSwPGSC0xtheTxnGf3j9jdTI96ljx0ZviUFHG1I=;
-        b=oyQ4dMvk2UK11GA1WdnLBvMyOHcESeY2TG2Mmo7ok3Q9m+xGNXdYROfuQAKcVbAeop
-         Ypje+0WERfKpYGPxleCN9OtJzftIVgKUBc5JIb13qfCZFPI/NYFqwKGlUZjN71SIoatX
-         pGOlFeNXz5MQm2TqOl1c1YiZ8U8SrKN3HN0Xa/iRIHXnfGJXKrDUlcEvNKufmwbFp6G/
-         Y1kKx9sjvYjV70mOO8H6g71hlUpPZyhRnjSjmCE92X/8U0Engwihxc/Dh2nNK26HXorc
-         5P+2J/pqtcku5I82Ocxod6uh8zsexw+ZjZSwQdKEF2K8rbJhwNtdYR2Ty8ObFhOiKZxy
-         0oDQ==
+        d=linaro.org; s=google; t=1678784104;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A6U/uGEVGcYZ2SfTqWK2MgrOGjdTMzTC47YcrnnaB+Q=;
+        b=gS7wvuQiexUbPWSR4Wu5b73eEKV6mwSjV7T5a2BsFaoMNrvpHiV1WfUye2RBEUTm3g
+         PNhizCHnBo+wE6dH4aXvvj7K15krxY7j+NgKXRy7AKs1eA9TAJBR42ZeUn5sQl5xMDdG
+         AUfhagi+poWWe9lEA4pO4ehdG8nJF85X/PK3OXmKt8OU2rhf0eecc23ju1CTMVAoaBwM
+         uaNqIZRGj3rHxPR+sqMicND++DeMu2FhbErxICZMEzB1z8xz1f5VMcz771K/749gq9R2
+         La1vbj8mC4ENDZIJzECoiz8sIbRPsq5SEJvSW/cTX53Bo2XwI0gGCRk82L7czK0z5HW7
+         mg+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678783396;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:subject:from:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1678784104;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=92MwtSwPGSC0xtheTxnGf3j9jdTI96ljx0ZviUFHG1I=;
-        b=E7hcYU6Os1aampvZBoTBgJyoT7w5kjhCC/axHSJ3VOiCWfu7TGvcEUsEO5w2raYiC5
-         9B4V3CvG3eL5NLxMR2h8iHwY0oNyBRYjuEJkBzn2DH7xN0v3qB4P/t1Zi7bxUQZlIN1p
-         GSoVKErBlCnb720CZxN/6p6CZPp2bXUiE9UsLGUgdLfMDARsbHqTU/xZ8GKN015QQfE8
-         V+Sf9JPr7aWZUc6Ppz3Udy5HIJpMQBng821BmCTMN4k5y2QOZikVuA5ACnTmKy4nbsFJ
-         lpgO2JlFZLHuub4z0zJAhmuwXRmPcqJ5+5W9QlcNu7sOhOkf6HsivAYN9vofW60+ZmIH
-         sg8Q==
-X-Gm-Message-State: AO0yUKXi3rRo2jCJ8TniLiBOdTTiYthNmsgU3iY3+izGHJUltfDsqgpb
-        4RaS1ef3yQCvyqkNq548+23gHysGirXW5K4pn5w=
-X-Google-Smtp-Source: AK7set901qm2G8O222Nxqy1a/eOE1oERM7/AJ9yV62Vn5yPr980uV5IcS9c7byN3Xdxgf4K2Fu+Tuw==
-X-Received: by 2002:aa7:df83:0:b0:4fc:812a:ec25 with SMTP id b3-20020aa7df83000000b004fc812aec25mr5962025edy.16.1678783396420;
-        Tue, 14 Mar 2023 01:43:16 -0700 (PDT)
+        bh=A6U/uGEVGcYZ2SfTqWK2MgrOGjdTMzTC47YcrnnaB+Q=;
+        b=vPXtJK/uEd8zNLdx9twvMMUCgMid8GLv8Y4awTa1epjLiiMGX/f3HetltYAcnPYGa8
+         K25LrnbnM2Zo84uo9n6+uAby1/ygQCtGYcvAQ1pUbHrTqslIgsZM+0faIXCq9ipk9DIy
+         pUSQD5MTV0LnT9e1iyPyR9jeo+l9NQqXHW0COnhVu4xZJqdvym3QrIAPP/HMVgyf/RSV
+         UkxoWX6J+vJKbR3Vfof8J0vJyCRXk4qrU8iEta4hJBMcZD5C2Wh87+r72ML9ABCIsxhl
+         yqEMrCXOtl8iKHUBtTcKXMkw8QPu/UmDjLyUPKJ8T9GA3pPmGGS2Ucl5wJ1icGNCEVfy
+         TsUw==
+X-Gm-Message-State: AO0yUKU4CtO59pA/vRYLWdeJxlYyu4iDKq5U4GJga2S6p+OOS6HhVqJ7
+        vH0BPBtXp5Wqrm79RNoPs9IAGQ==
+X-Google-Smtp-Source: AK7set88dBI4MNpRSsXzSu4Pa9XR4EBKiSomqWEgimS8om0+IeObYoc4JuH1FJ/mAykHIV3sR8Bwew==
+X-Received: by 2002:a17:906:f193:b0:907:68b9:e04e with SMTP id gs19-20020a170906f19300b0090768b9e04emr1881779ejb.19.1678784103895;
+        Tue, 14 Mar 2023 01:55:03 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:59be:4b3f:994b:e78c? ([2a02:810d:15c0:828:59be:4b3f:994b:e78c])
-        by smtp.gmail.com with ESMTPSA id q11-20020a5085cb000000b004bd6e3ed196sm632505edh.86.2023.03.14.01.43.15
+        by smtp.gmail.com with ESMTPSA id cf23-20020a170906b2d700b008d6e551e1bcsm836536ejb.2.2023.03.14.01.55.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 01:43:16 -0700 (PDT)
-Message-ID: <c45df83a-a6ac-16bd-1872-64fd0794b421@linaro.org>
-Date:   Tue, 14 Mar 2023 09:43:14 +0100
+        Tue, 14 Mar 2023 01:55:03 -0700 (PDT)
+Message-ID: <63a24be0-da17-5892-f761-5c5f68ea7d87@linaro.org>
+Date:   Tue, 14 Mar 2023 09:55:02 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH V3 2/6] dt-bindings: timestamp: Add Tegra234 support
-To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org,
-        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
-References: <20230310190634.5053-1-dipenp@nvidia.com>
- <20230310190634.5053-3-dipenp@nvidia.com>
- <f6d9c84a-1c75-d9b4-59ed-39d6c5b310a9@linaro.org>
- <b4195142-6cfe-df3c-6edf-0c40b64ad02a@nvidia.com>
- <6c5045d9-4f4a-5018-3f3f-7746b08ab2b5@linaro.org>
- <fad52df6-38e8-ba8a-117a-8514e09af0ee@nvidia.com>
+Subject: Re: [PATCH v4] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
+ binding
 Content-Language: en-US
-In-Reply-To: <fad52df6-38e8-ba8a-117a-8514e09af0ee@nvidia.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <26d5c603-41e7-1d38-de2d-7367eed1be05@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <26d5c603-41e7-1d38-de2d-7367eed1be05@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,68 +85,210 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/03/2023 22:49, Dipen Patel wrote:
-> On 3/13/23 10:55 AM, Krzysztof Kozlowski wrote:
->> On 13/03/2023 18:05, Dipen Patel wrote:
->>> On 3/12/23 8:47 AM, Krzysztof Kozlowski wrote:
->>>> On 10/03/2023 20:06, Dipen Patel wrote:
->>>>> Added timestamp provider support for the Tegra234 in devicetree
->>>>> bindings. In addition, it addresses review comments from the
->>>>> previous review round as follows:
->>>>> - Removes nvidia,slices property. This was not necessary as it
->>>>> is a constant value and can be hardcoded inside the driver code.
->>>>> - Adds nvidia,gpio-controller property. This simplifies how GTE driver
->>>>> retrieves GPIO controller instance, see below explanation.
->>>>>
->>>>> Without this property code would look like:
->>>>> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
->>>>> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
->>>>> 				   tegra_get_gpiochip_from_name);
->>>>> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
->>>>> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
->>>>> 				   tegra_get_gpiochip_from_name);
->>>>> else
->>>>> 	return -ENODEV;
->>>>>
->>>>> This means for every future addition of the compatible string, if else
->>>>> condition statements have to be expanded.
->>>>>
->>>>> With the property:
->>>>> gpio_ctrl = of_parse_phandle(dev->of_node, "nvidia,gpio-controller", 0);
->>>>> ....
->>>>> hte_dev->c = gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_node);
->>>>>
->>>>> We haven't technically started making use of these bindings, so
->>>>> backwards-compatibility shouldn't be an issue yet.
->>>>
->>>> Unfortunately, I don't understand this statement. The
->>>> nvidia,tegra194-gte-aon with removed property is in a released kernel
->>>> v6.2. What does it mean "technically"? It's a released kernel thus it is
->>>> a released ABI.
->>>
->>> There is no active user of that driver, so even if it breaks 6.2, it is fine
->>> as there is no one to complain about it.
->>
->> How do you know? It's a released kernel, thus how can you ask millions
->> of people if they use it or not?
+On 12/03/2023 23:06, Heiner Kallweit wrote:
+> Convert Amlogic Meson pin controller binding to yaml.
 > 
-> Please help me understand, if I am targeting these set of changes for the kernel
-> 6.4, wouldn't all the patches land on v6.4 at the same time no matter the tree it
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v2:
+> - consider that more than one compatible can be set
+> - remove bus part from example
+> v3:
+> - remove minItem/maxItem properties for compatible
+> v4:
+> - split patch to be able to deal with the different reg/reg-names
+> ---
+>  .../pinctrl/amlogic,meson-pinctrl-a1.yaml     | 60 ++++++++++++
+>  .../pinctrl/amlogic,meson-pinctrl-common.yaml | 53 +++++++++++
+>  .../amlogic,meson-pinctrl-g12a-aobus.yaml     | 61 ++++++++++++
+>  .../amlogic,meson-pinctrl-g12a-periphs.yaml   | 65 +++++++++++++
+>  .../pinctrl/amlogic,meson8-pinctrl-aobus.yaml | 69 ++++++++++++++
+>  .../pinctrl/amlogic,meson8-pinctrl-cbus.yaml  | 71 ++++++++++++++
+>  .../bindings/pinctrl/meson,pinctrl.txt        | 94 -------------------
+>  7 files changed, 379 insertions(+), 94 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml
+> new file mode 100644
+> index 000000000..1db9d8453
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl-a1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Meson A1 pinmux controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +
+> +allOf:
+> +  - $ref: amlogic,meson-pinctrl-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-a1-periphs-pinctrl
+> +      - amlogic,meson-s4-periphs-pinctrl
+> +
+> +additionalProperties: true
 
-No, that's not how we do things. Changes *must be bisectable* and *DTS
-always* goes to separate branch, so how do you ensure this in your
-current flow? I don't see it. The patch #4 should break the bisectability.
+No, this cannot be true.
 
-> will go from? Also, if user is at v6.2, how this will break as at that version, it
-> will have the old bindings and old driver, right?
+This goes to the same place as in example-schema, so before required.
 
-Bindings define ABI. You defined them like this in v6.2 thus someone is
-using them:
-1. In other systems, bootloaders, firmwares, SW.
-2. via DTS written for v6.2 ABI. Newer kernel should not break existing
-DTS and we do not talk about in-kernel DTS, just like we do not talk
-about in-kernel user-space applications when using same argument for
-their compatibility.
+> +
+> +patternProperties:
+> +  "^bank@[0-9a-z]+$":
+> +    $ref: amlogic,meson-pinctrl-common.yaml#/$defs/meson-gpio
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 2
+> +
+> +      reg-names:
+> +        items:
+> +          - const: mux
+> +          - const: gpio
+
+Missing required-compatible.
+
+> +
+> +examples:
+> +  - |
+> +    periphs_pinctrl: pinctrl {
+> +      compatible = "amlogic,meson-a1-periphs-pinctrl";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges;
+> +
+> +      bank@400 {
+> +        reg = <0x0400 0x003c>,
+> +              <0x0480 0x0118>;
+> +        reg-names = "mux", "gpio";
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&periphs_pinctrl 0 0 62>;
+> +
+> +        cec_ao_a_h_pins: cec_ao_a_h {
+> +          mux {
+> +            groups = "cec_ao_a_h";
+> +            function = "cec_ao_a_h";
+> +            bias-disable;
+> +          };
+> +        };
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
+> new file mode 100644
+> index 000000000..035219f6e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Meson pinmux controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +properties:
+> +  compatible: true
+
+Drop.
+
+> +  ranges: true
+> +
+> +  "#address-cells":
+> +    enum: [1, 2]
+> +
+> +  "#size-cells":
+> +    enum: [1, 2]
+> +
+> +required:
+> +  - compatible
+
+Drop
+
+> +  - ranges
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +additionalProperties:
+> +  allOf:
+> +    - $ref: pincfg-node.yaml#
+> +    - $ref: pinmux-node.yaml#
+
+I don't think this readable. Properties should rather reference the
+schema, and now you allow evaluation of anything. Which probably caused
+your wrong additionalProperties in the first place.
+
+This could be part of node definition below.
+
+
+> +
+> +$defs:
+> +  meson-gpio:
+> +    type: object
+> +    properties:
+> +      gpio-controller: true
+> +
+> +      "#gpio-cells":
+> +        const: 2
+> +
+> +      gpio-ranges:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +      - reg-names
+> +      - gpio-controller
+> +      - "#gpio-cells"
+> +      - gpio-ranges
+> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml
+> new file mode 100644
+> index 000000000..5a84e17f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Meson G12 AOBUS pinmux controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +
+> +allOf:
+> +  - $ref: amlogic,meson-pinctrl-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-g12a-aobus-pinctrl
+> +
+> +additionalProperties: true
+
+Same problems... and further as well.
 
 
 Best regards,
