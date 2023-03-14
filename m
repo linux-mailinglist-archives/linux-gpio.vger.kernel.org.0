@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B356B9EED
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 19:45:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 807476B9EFE
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 19:48:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbjCNSpz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 14:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
+        id S230458AbjCNSsf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 14:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230355AbjCNSpx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 14:45:53 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E38AAA722
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 11:45:18 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id r11so14355713edd.5
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 11:45:18 -0700 (PDT)
+        with ESMTP id S229720AbjCNSse (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 14:48:34 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601A71352E
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 11:48:00 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id h8so22236134ede.8
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 11:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678819516;
+        d=linaro.org; s=google; t=1678819666;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3e0XrssLpWfwddgXm6DOZQwWrZom8cEXvIhhh3wG1qI=;
-        b=xWIJSpLHMJVKap3DIw4+xWgcWudWCl48RiIZ2xMh9ewJpKF+vFNfQSg9JjvPUbmZbk
-         1hqVMrdVkwxL3gn67SMLz0FccT8nUPndbR2ApOyng/x3heaAahvCpfQZbdQlStdIzPxV
-         ZcWsl4Vr03Z7yFmqSwuVyECCNBkYFBGsD08E29GqL18Q3u7gPGSQOI62cMO2/pX3Kn5j
-         1q1GCpmAlQQHPJfQRUtkT1VBHcENrm5wDavbXWEmDOT4lzcQpK47ETmeGltpETmZymjo
-         D9W4qEbPcNxpU/r1WOCEwUNb8gKTsm/AOb20Z/mecN4t6+Jvr8Qvl13K5hp2EpZrdwXS
-         PUeg==
+        bh=+0E+xigiB17bD19Ft1OI4VkQ2MZYZmKweeBcvoB72Rs=;
+        b=YigdWQIosMHQ0uwI6NV1qo/kEazE4MRaQrrBOJxvDfyalKd01D3gpanAoihY2FXpA9
+         mysNbShlD8d842l8t0mqZuTYOWtxrxcOZ5v0wT8yhW3dO37i50HRu6oXpAq3uO0foh/U
+         36ZPF+q1RkxcNJ524PfPe7zG4chguGaeE0PcvY/GA6GJrRlC+WVrS2UBMxzHgeFlpwNT
+         uVLELKAylADqlNeh4FjoUDoJdo5n+Jl2lWrOyJGZZxCqoYEn/ZQiOelas847OQZ32s5K
+         scJXd40Mh+CYb9goOkMGagbTuyopd9eLFxqTxpzyWrgygXCeW3aN22Sr7kPsHmKAterD
+         wauw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678819516;
+        d=1e100.net; s=20210112; t=1678819666;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3e0XrssLpWfwddgXm6DOZQwWrZom8cEXvIhhh3wG1qI=;
-        b=jNyYOzq5h1rPI79C7tExxtW7jOofaZA4ke4Nti9Ns5Kzs5vdw+231hoy2CCJsx1Q05
-         q449RBrbMdjDZLuv5jjdO4JYyerB4PgmOUAvP9fdJqp+Dl8UG/sItVwZ5yNT0WSymT8p
-         PyqPl3xMmgi77oJN93yDT7JFarpZlLMjAOjXm2P2l/SdZFdC5vxxIsNFSKESI3VbsDS4
-         d/nSx/S8IqHnk8YEUoVvfygj41baKAiYWu9WKnrkLqseADw3ni4AtQjaTCorJDPgJ4Sr
-         cOpl7/CpaQOrbHZ8+1nY5VLMi6Nviffu45Rzr4TxAfOuQLGUgfS9bsKuo8FPUQMSpqQh
-         xEMQ==
-X-Gm-Message-State: AO0yUKVJFGoTnQwi+na6sh6wy/BieWyaeZG1kWGWsXt1C8B+Hfa+gbnH
-        RT7s00WVUXIGzLai249NKG8IZQ==
-X-Google-Smtp-Source: AK7set+Z8mXR8DZjRvSP+hy3BG7rVczN+OZ63MeksAV5k25Mn2bn3PBX7CRh2Wm+r7W4Z2cM8k9fkg==
-X-Received: by 2002:aa7:d852:0:b0:4fb:9b54:ccbf with SMTP id f18-20020aa7d852000000b004fb9b54ccbfmr83307eds.22.1678819516668;
-        Tue, 14 Mar 2023 11:45:16 -0700 (PDT)
+        bh=+0E+xigiB17bD19Ft1OI4VkQ2MZYZmKweeBcvoB72Rs=;
+        b=spmuUnRLVZzMgHW3u5AgdBo8+hLOcQ3tU9eoyOZV711Q412AlFN8HbFQotl3FhgEyh
+         XarwR0fmLbcc1zt6QYrjBC6E0BBOJv9ePfwRKNNCnJbi8P89x/N9F0IZr2Reo7fxMxPS
+         ugji0TXwcMrVDq4l8Upa3sOgwY1K/85UhXOECqauQfzj9fnFzFZDRHxYdkSlAFJ5C5qK
+         XkzdZv1W8w35B5Gbvjr+dbmPA8Rilx0P+eOXZoYIY2XG+ZZmQ+nNjfT4h85VEnIFAO1P
+         vkqmUuig3rFqIJaSd/3xGQcBsBondLrnN4aWfC2mXSxV7u84Obki9WuNhOz/QbwYbVcD
+         DNCA==
+X-Gm-Message-State: AO0yUKXILPqcZVOH7JnUXTGgpGM1k6k6N4uRZJalb1QmO7nOgzYh9yi9
+        a+/zgSUJj0ezAjCtNrmI2qXXNLRzEgscr8Hk4Cw=
+X-Google-Smtp-Source: AK7set/hrg4y2EF/d46uwVHqaUa/dmc95hxkjUEOoufHZs6dTSLU74yvmxmSKXK2LYRPOei8kPbWlA==
+X-Received: by 2002:aa7:dd0e:0:b0:4fa:ada1:796d with SMTP id i14-20020aa7dd0e000000b004faada1796dmr123531edv.10.1678819665954;
+        Tue, 14 Mar 2023 11:47:45 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:59be:4b3f:994b:e78c? ([2a02:810d:15c0:828:59be:4b3f:994b:e78c])
-        by smtp.gmail.com with ESMTPSA id g24-20020a50d0d8000000b004fd29e87535sm1435591edf.14.2023.03.14.11.45.15
+        by smtp.gmail.com with ESMTPSA id m20-20020a509994000000b004aef147add6sm1445859edb.47.2023.03.14.11.47.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 11:45:16 -0700 (PDT)
-Message-ID: <bfb04dde-8429-215f-3aae-7e3823ee154c@linaro.org>
-Date:   Tue, 14 Mar 2023 19:45:15 +0100
+        Tue, 14 Mar 2023 11:47:45 -0700 (PDT)
+Message-ID: <5c38d97d-af2a-51b5-7b4d-bac69321e5ad@linaro.org>
+Date:   Tue, 14 Mar 2023 19:47:44 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v5 3/3] dt-bindings: gpio: add NPCM sgpio driver bindings
+Subject: Re: [PATCH v5 2/3] arm: dts: nuvoton: npcm: Add sgpio feature
 Content-Language: en-US
 To:     Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
         KWLIU@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
@@ -62,9 +62,9 @@ To:     Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 References: <20230314092311.8924-1-jim.t90615@gmail.com>
- <20230314092311.8924-4-jim.t90615@gmail.com>
+ <20230314092311.8924-3-jim.t90615@gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230314092311.8924-4-jim.t90615@gmail.com>
+In-Reply-To: <20230314092311.8924-3-jim.t90615@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -78,156 +78,63 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 14/03/2023 10:23, Jim Liu wrote:
-> Add dt-bindings document for the Nuvoton NPCM7xx sgpio driver
+> Add the SGPIO controller to the NPCM7xx devicetree
 > 
 > Signed-off-by: Jim Liu <jim.t90615@gmail.com>
 > ---
+> Changes for v5:
+>    - remove npcm8xx node
 > Changes for v4:
->    - remove bus bus-frequency
->    - modify in/out description
-
-NAK at the end... you ignore a lot of feedback. Read everything carefully.
-
-> Changes for v4:
->    - modify in/out property
->    - modify bus-frequency property
+>    - add npcm8xx gpio node
 > Changes for v3:
->    - modify description
+>    - modify node name
 >    - modify in/out property name
 > Changes for v2:
->    - modify description
+>    - modify dts node
 > ---
->  .../bindings/gpio/nuvoton,sgpio.yaml          | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+>  arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
-> new file mode 100644
-> index 000000000000..9237376eda18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/nuvoton,sgpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> index c7b5ef15b716..7f53774a01ec 100644
+> --- a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> +++ b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> @@ -330,6 +330,36 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			gpio8: gpio@101000 {
+> +				compatible = "nuvoton,npcm750-sgpio";
+> +				reg = <0x101000 0x200>;
+> +				clocks = <&clk NPCM7XX_CLK_APB3>;
+> +				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +				bus-frequency = <8000000>;
+
+Does not look like you tested the bindings. Please run `make
+dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&iox1_pins>;
+> +				nuvoton,input-ngpios = <64>;
+> +				nuvoton,output-ngpios = <64>;
+> +				status = "disabled";
+> +			};
 > +
-> +title: Nuvoton SGPIO controller
-> +
-> +maintainers:
-> +  - Jim LIU <JJLIU0@nuvoton.com>
-> +
-> +description:
+> +			gpio9: gpio@102000 {
+> +				compatible = "nuvoton,npcm750-sgpio";
+> +				reg = <0x102000 0x200>;
+> +				clocks = <&clk NPCM7XX_CLK_APB3>;
+> +				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +				bus-frequency = <8000000>;
 
-description: |
+Does not look like you tested the bindings. Please run `make
+dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
 
-(because formatting is now important)
 
-> +  This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
-> +  Nuvoton NPCM7xx SGPIO module is combine serial to parallel IC (HC595)
-> +  and parallel to serial IC (HC165), and use APB3 clock to control it.
-> +  This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
-> +  NPCM7xx/NPCM8xx have two sgpio module each module can support up
-> +  to 64 output pins,and up to 64 input pin, the pin is only for gpi or gpo.
-> +  GPIO pins have sequential, First half is gpo and second half is gpi.
-> +  GPIO pins can be programmed to support the following options
-> +  - Support interrupt option for each input port and various interrupt
-> +    sensitivity option (level-high, level-low, edge-high, edge-low)
-> +  - ngpios is number of nuvoton,input-ngpios GPIO lines and nuvoton,output-ngpios GPIO lines.
-> +    nuvoton,input-ngpios GPIO lines is only for gpi.
-> +    nuvoton,output-ngpios GPIO lines is only for gpo.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,npcm750-sgpio
-> +      - nuvoton,npcm845-sgpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  nuvoton,input-ngpios:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-
-Drop quotes.
-
-> +    description: |
-
-Drop '|' because end line formatting here is not important.
-
-> +      The numbers of GPIO's exposed.GPIO lines is only for gpi.
-
-Missing space after 'exposed.'
-
-> +    minimum: 0
-> +    maximum: 64
-> +
-> +  nuvoton,output-ngpios:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-
-Ditto
-
-> +    description: |
-> +      The numbers of GPIO's exposed.GPIO lines is only for gpo.
-
-Ditto
-
-> +    minimum: 0
-> +    maximum: 64
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clock
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - interrupts
-> +  - nuvoton,input-ngpios
-> +  - nuvoton,output-ngpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    gpio8: gpio@101000 {
-> +        compatible = "nuvoton,npcm750-sgpio";
-> +        reg = <0x101000 0x200>;
-> +        clocks = <&clk NPCM7XX_CLK_APB3>;
-> +        interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        nuvoton,input-ngpios = <64>;
-> +        nuvoton,output-ngpios = <64>;
-> +        status = "disabled";
-
-So this is fifth reminder...
-
-https://lore.kernel.org/all/d56c24c2-a017-8468-0b3a-bd93d6024c69@linaro.org/
-
-https://lore.kernel.org/all/39efdb85-f881-12ab-e258-61175f209b4c@linaro.org/
-
-https://lore.kernel.org/all/9fc4d874-a0d0-6c5c-aeee-61ab817fdd9f@linaro.org/
-
-This is a not-that-friendly-anymore reminder during the review process.
-
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
 
 Best regards,
 Krzysztof
