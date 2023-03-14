@@ -2,107 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 410526B8D81
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:37:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A6C76B8DAC
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:42:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230346AbjCNIhj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 04:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        id S229757AbjCNImn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 04:42:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjCNIhg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:37:36 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D3D7302A;
-        Tue, 14 Mar 2023 01:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678783034; x=1710319034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7W0I/PhY7JPekbwd4aR0lUx73mBpPX/p3TSCW0u/h7I=;
-  b=AP9LDq+E+Yu/RtcLsW2KVe17FDB95yPHBb+XJxk1doSnbPoyYeBjUAmD
-   gWKLo2ZwWdDoeO4UoseuFiT3qtRtTYtPjQPmM33NEHghXzpOFxtE3piJa
-   HREJV2Wb7iBITWBBz49nJY0GBRHRMJx6T8vYYfzEA+1PxrJaeie1hi9+3
-   Lk5ZaiLriMYWHgj49ck7mDH2AcCpyPP4+vseH4pWnrOXyW4gZV/msMxEb
-   PgSKKt5dqAGRgBx/hWC/qQSGA4RBzCuIdXAKbydnUmIS+DCxpdg8rjlZ8
-   C4U8IfVeDRXPyr/4iUr7ip8xssTX7OHEzGw2CQej5NP3th/EzXy+y9wny
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="399954398"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="399954398"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2023 01:37:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="822283207"
-X-IronPort-AV: E=Sophos;i="5.98,259,1673942400"; 
-   d="scan'208";a="822283207"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 14 Mar 2023 01:36:58 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 14 Mar 2023 10:36:57 +0200
-Date:   Tue, 14 Mar 2023 10:36:57 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Ye, Xiang" <xiang.ye@intel.com>
-Cc:     Lee Jones <lee@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, andriy.shevchenko@linux.intel.com,
-        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
-        wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v5 1/5] usb: Add support for Intel LJCA device
-Message-ID: <ZBAyKQwnQ8fxHRuU@kuha.fi.intel.com>
-References: <20230312190435.3568212-1-xiang.ye@intel.com>
- <20230312190435.3568212-2-xiang.ye@intel.com>
- <20230313170341.GV9667@google.com>
- <ZBAqTqZEDz/vAwVC@ye-NUC7i7DNHE>
+        with ESMTP id S229789AbjCNIml (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:42:41 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDAA64846
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:42:23 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-53916ab0c6bso290427817b3.7
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:42:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678783343;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RyfJlLPgjERQcTzZdEIvIGdNCCYbhGHEmYJcVkMFQx8=;
+        b=sAKlkh+PD8fSIcuCtZF3dp6H2rffw4yT6e/1S6gniQdexILJ4kNwGDKmWE5Yb/Z7Rf
+         J4nTSihP/wcKeEb6OlFGId6CldujUB2jfNkKJeQbZ6IiUWPQMMvrf9RiTBt+BYPnMoml
+         WFEgS1t8TaPpiy5QmNNUqbegmtn22gfHHQsS+L1o1/r07vxUdHth+NZsPgfAZkx3bfX6
+         SPmw2tAfweH/Mjyc0qIY35493OZu49je1M6yqTLgmbIeu3UnB7McqZKb+J1xX1be+Rs9
+         SMo8GVkG//UPQL5EZSObC//ZwnqvROh9sHb1IqA8UabHg/d3I77dZAxJhP5h6npQE9Hg
+         YA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678783343;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RyfJlLPgjERQcTzZdEIvIGdNCCYbhGHEmYJcVkMFQx8=;
+        b=ej1u0EhUVPUb7rfNr7tnmFH9E3zI7iktAmKWsizRKDXT2E7XRRpwnmgheTO+lGl8Ve
+         vGsHsj9h/eb8CiRKem50DIhWQfsSqJgPf2azmHwD3SxeiDE4AFRR8PbDuy7Py6kU9cIm
+         QaVcGiVNNrXPL2wkUg7D5PUegytvYQzrcro3Rmuk5BBIaNmId9jH2DLpbnkpY/sdFCu3
+         bsA/WMF8CJSGVDovWqIybL2mbKmp0cttkC8HNB5vHTkGGNh4CIomdWhrUGWL996otEP/
+         hhN96gUMIk7cBUuAh1ieWqtdGLsbBchvVKNkkO8gFOmmFZaTON9+Ls9TZtHYJ4nGuA1i
+         nsaQ==
+X-Gm-Message-State: AO0yUKVFRvfZ2BPL5WR5lzrxuFbRrzMoKEmTXym2B8tF8aFp3dsAjghH
+        bCh01siToqfoXwvGTiAvqfzp06ihJVrovkNoZ42Y2g==
+X-Google-Smtp-Source: AK7set+5W+F4WPOOqhDRx4CVAT8IMDCIBpyCU/Ol0rUg1nVe96Ns9ilnkVMyyby2mh6+/aPqtuVgkHjoUuUWlWwpiPc=
+X-Received: by 2002:a81:b605:0:b0:541:9895:4ce9 with SMTP id
+ u5-20020a81b605000000b0054198954ce9mr4816352ywh.9.1678783342936; Tue, 14 Mar
+ 2023 01:42:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZBAqTqZEDz/vAwVC@ye-NUC7i7DNHE>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
+ <20230306090014.128732-2-biju.das.jz@bp.renesas.com> <ZAZ4LY+xG2LGiHwh@surfacebook>
+ <OS0PR01MB5922EA0703F259A99C157D3286B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAHp75Vd6qTG67_1DGiemy8n-mQn=9kiGrC0rEYw2XO0rm4Tbag@mail.gmail.com>
+ <OS0PR01MB59224CECBB888ADC9214145286B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAHp75VfDL74cEUQkxC1JuUB7SS1vYTPj_K7+VkQ-i-MKXad5Lw@mail.gmail.com>
+ <OS0PR01MB5922CC51889D094129820C0C86B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CACRpkdZS5UKc7bDPs-zx_QyJU9GwJAhB7372oSC9tB-txgghtw@mail.gmail.com> <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 14 Mar 2023 09:42:11 +0100
+Message-ID: <CACRpkdbLonPgBMD6f2Rc-E3sFtMhoc0Mzt00uTUmiAnx59JC2Q@mail.gmail.com>
+Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Xiang,
+On Tue, Mar 14, 2023 at 9:27 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 
-On Tue, Mar 14, 2023 at 04:03:26PM +0800, Ye, Xiang wrote:
-> > Please don't use the MFD API outside of drivers/mfd.
-> > 
-> > If you wish to use the API, please do.
-> > 
-> > Strip out (only) the MFD parts and move them into drivers/mfd.
-> I have no idea about how to split MFD parts out from this driver
-> currently. The MFD part just have mfd cells filling and the call
-> mfd_add_hotplug_devices to register mfd devices. How to module them
-> as an independent driver?
-> Would you give some hints or recommendations?
-> 
-> And I am a little comfused about where this USB device driver should
-> be put to (drivers/mfd or drivers/usb).
-> 
-> As far as I know, where a driver should be put is based on what
-> it provides. This driver just do some urb package transfer to provides
-> multi-functions, such as GPIO function, I2C function, SPI function.
-> so it should be under drivers/mfd folder. Please correct me, if
-> something is wrong. Thanks
+> If we cannot do it in user space, then we need to make it as part of
+> Dt bindings and users will define the use case they need in DT.
 
-You don't really seem to get any benefit from MFD. Perhaps it would be
-more appropriate and clear if you just registered auxiliary devices in
-this driver. Check drivers/base/auxiliary.c.
+That sounds like a much better idea :)
 
-thanks,
+The kernel is for protecting hardware from users after all, and it
+seems you want to select one of these use cases and DT is
+excellent for system config like this.
 
--- 
-heikki
+So I would say work ahead on this path.
+
+Yours,
+Linus Walleij
