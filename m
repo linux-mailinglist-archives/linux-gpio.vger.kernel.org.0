@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 747836B9CE3
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 18:19:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E489B6B9CEE
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 18:22:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbjCNRTt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 13:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
+        id S229535AbjCNRWd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 13:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbjCNRTs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 13:19:48 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF49A2A171;
-        Tue, 14 Mar 2023 10:19:47 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id m15so2363207qkn.9;
-        Tue, 14 Mar 2023 10:19:47 -0700 (PDT)
+        with ESMTP id S229525AbjCNRWc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 13:22:32 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D773645D;
+        Tue, 14 Mar 2023 10:22:31 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id 133so43805qkh.8;
+        Tue, 14 Mar 2023 10:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678814387;
+        d=gmail.com; s=20210112; t=1678814551;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WnQUIsJCZ6UmwE5GOvHliMVqSQ/A95JvCqwd5/j+yHo=;
-        b=p3RADmW6SkvGIK/4EVPzXSu5AJfkAciKEUkF9EHvbGectNN97kFwN014S0SQ4VNfKi
-         C8DFypHCThYnCHLmHAI7WmL46ARq5XE7biyM/tDzDOESH+CwNfWjecQmhVmyB1jBcbNG
-         yly9nUCUeCpKbsxQ6y6Gr0nObDee+ttY+WHKQnHoUtXpdOxEOO/WdffxtKfMTx9wA10L
-         e3lzbHJslpPaE2nPX9EvM0mEmFyoq/djDN+hrbPAk3fJjghdQ1Aj+9ZBicikwW5Q1ouZ
-         CyouRD2TnY8wDB4TiB3arPZSLrcOENE8j65ayvoUjlPXFDAYIlOm4vnXCHviE6xDJoBC
-         4EsA==
+        bh=suEo5q4kBDDywmWFC0XZhac6bHzCgGm7WzrS+eIxQzA=;
+        b=X8LuaWCi/cWCn/yhB5ScJGMvBRnfM0+Ub6iYLGHGnV94OovJiLjEQC7n426B13xuyQ
+         yi3vyJiGj5rwxFDaZ8fgKHeQNjUC227GpXPiQ5Cmv1d4sFZMDHk/FvgQHD5Dv+HAWtLp
+         kMLzT0XNkROfT/+3ff0h4th9Dwx+oHxEJC1GuYutIsW5yw6j8RP62TJSwqEWm4fYzBhj
+         CF3Vl+2I7fm9zLMzfoTqLeXELKxsAx/BBfC95NrbKBvBZqHh29/7VA5D0z28lJK4BxIB
+         adcvhyeoU/Xs9KLOI9Ul2AlkwccYiKQwCzqr9W3Ly/ixubYoTexjTUW+cdQobdhvWCeH
+         uAsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678814387;
+        d=1e100.net; s=20210112; t=1678814551;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WnQUIsJCZ6UmwE5GOvHliMVqSQ/A95JvCqwd5/j+yHo=;
-        b=EQf/zTzE3vN1ANkppkVRXf3ohY+gLict9TcdiyAfbcTSawxHnqkYRV8r6q22njsifE
-         mpfcZ4Tu0OQ5wuk4cTP3upd0H48x6a7IhuEx1GCME/Y+7uA+4gsRGCj+DJMmwLoSSngA
-         iymgXspxyiCyy1Bpj3TutaUcy9DS7iepn3URGiHUS0GC/7BvmmT3IyFEGLSxeHeTJSG9
-         xW1yYR1IeG9cPJfX9Rhn3aVBUPGuodPMI3GcqAsVs9BT4n93myOnToEHKH2FNBIVYshn
-         b22qGTL69rtPPx0AI1EobZOnuJ2tt+QElTQ7BuaS7K5GyUfQnuIrtbXV5z+748k6e4l0
-         k5sw==
-X-Gm-Message-State: AO0yUKUmMVRg2hnFT35PM/GqeBAv0TUTCWA8tpW4Vh9vB6B7PUbZGOM9
-        nBZwa+nqgobYmz2nJFlnHPq9B+/VlM94PS4DvtI=
-X-Google-Smtp-Source: AK7set/XstngtVdzeXSX3rMRNMnXygcqmEIqcMB4Qa6iyPMPZTvIlN7BsG6/rIXuPJIM5kuT0hfmy+wPOJ2nGPLCjKc=
-X-Received: by 2002:a05:620a:c81:b0:743:6092:91b4 with SMTP id
- q1-20020a05620a0c8100b00743609291b4mr4370897qki.14.1678814386793; Tue, 14 Mar
- 2023 10:19:46 -0700 (PDT)
+        bh=suEo5q4kBDDywmWFC0XZhac6bHzCgGm7WzrS+eIxQzA=;
+        b=43SBC9fnOEZTHLkCHaZKKChFVYBu+V7dhYyb7Jx7BZWzt5wAZvBoNxM5F2FGjFv1da
+         Nso6SgcSfaTxJ1NwjjKkUo6FJmxLQ/0mla//1qP+YNwBTLPDF3oZ3y2SulmMSMb3BPxO
+         vBLTcIauYIcl9zHbKWgDDPI/tlRcPQ8Oo58/S/uEv3OjiqYZsikaPuvRZx/XIInsY9kc
+         r4egTfhkJ47AUvH7ZWnUJP75hVKZiotj4SC1+3qmBuPUYv877VvyLfDOLjrAiIBxL1ET
+         Pel2BCPHNBYKwM3BR3ODG1V8lQ8y/fuEwc0uVvH7Fo0Ueky9+n7ixBEhQNFK5V4wrAZl
+         uxCw==
+X-Gm-Message-State: AO0yUKUammmyc7ftoI/2ls4ZMjleest+VGtIQhN+Wx50A1uTGhBdjeKO
+        1QZUmvxNJycZIEVn0rK9vxUXhGeG6UoE1bwtCfI=
+X-Google-Smtp-Source: AK7set9phtGasDo2TuEdzNNmfyK0DFe73IrasByKBzcM2xELmwyqQdsCnTFNgda2x3qPRe+CtJYcaQ0cBgR5SL4Idkc=
+X-Received: by 2002:a05:620a:d5a:b0:742:412d:1dc6 with SMTP id
+ o26-20020a05620a0d5a00b00742412d1dc6mr4298690qkl.14.1678814550818; Tue, 14
+ Mar 2023 10:22:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230314134642.21535-1-clin@suse.com> <20230314134642.21535-4-clin@suse.com>
-In-Reply-To: <20230314134642.21535-4-clin@suse.com>
+References: <20230314134642.21535-1-clin@suse.com>
+In-Reply-To: <20230314134642.21535-1-clin@suse.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Mar 2023 19:19:10 +0200
-Message-ID: <CAHp75Vc838SyGSRfnHEj4925efOhH3WwjVkdnGR+_a2VF3Z6gw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: s32cc: embed generic struct pingroup and pinfunction
+Date:   Tue, 14 Mar 2023 19:21:55 +0200
+Message-ID: <CAHp75Ve=U_rkgL6ohpy1r4RejXK-PqgrqfkPmCrhzK9O3necnw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: s32: driver improvements and generic struct use
 To:     Chester Lin <clin@suse.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         NXP S32 Linux Team <s32@nxp.com>,
@@ -75,27 +75,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 3:47=E2=80=AFPM Chester Lin <clin@suse.com> wrote:
+On Tue, Mar 14, 2023 at 3:46=E2=80=AFPM Chester Lin <clin@suse.com> wrote:
 >
-> Use generic data structure to describe pin control functions and groups i=
-n
-> S32 SoC family and drop duplicated struct members.
+> Hello,
+>
+> This patch series contains some improvements for s32 pinctrl drivers sugg=
+ested
+> by upstream[1], such as
+>
+>   - Fix error shadowings and improve return value handlings.
+>   - Fix print format.
+>   - Remove unnecessary blanks.
+>   - Use proper macros and helpers to simplify codes.
+>   - Refactor config param parsing and remove config arguments that are ne=
+ver used.
+>   - Use generic struct pingroup and struct pinfunction to describe pin da=
+ta.
 
-...
-
->  struct s32_pmx_func {
-> -       const char *name;
-> -       const char **groups;
-> -       unsigned int num_groups;
-> +       struct pinfunction data;
->  };
-
-Since you have a single driver with this, just kill the entire custom
-structure.
-
-The way it's done in the pinctrl-intel.c is due to dozens of drivers
-sharing the same data type and hence converting that will provoke
-quite a noise for no benefit. Here it's not the case, so just kill it.
+Overall it looks not bad, thank you for doing this.
+Individual patches have been reviewed and commented accordingly.
 
 --=20
 With Best Regards,
