@@ -2,96 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 579236BA110
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 21:57:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7986BA118
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 22:01:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230220AbjCNU5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 16:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
+        id S230034AbjCNVB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 17:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbjCNU5m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 16:57:42 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB19238EBD
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 13:57:39 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id cj14so6028495ybb.12
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 13:57:39 -0700 (PDT)
+        with ESMTP id S229986AbjCNVBF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 17:01:05 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80FA302B9
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 14:01:03 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id o8so1743781lfo.0
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 14:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678827459;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V3ztFzbMFz4GgzdRrfMvLDzmZX+459984qycma9uQHw=;
-        b=VBpwWDrzYdEp1ft+FUN1m8JOwEf3D9QrYed13Hd/fLcV8BAAaY7S64+WXm01N9LyiF
-         2wxqBQkPY50ykfD76rFUUjZxZ+jHSUC9Np1vaived7mXq5jeN8kaHyhchCZDDRCJXR7h
-         gDVe5fRvPC2dYmJ4FEHTMVaAaP3Bpp7DTIA8Pdp6iouBcOk8RKu2oEMdfXiUbt4kWUx9
-         Bwq4QLVh345FqKVO7DFOqGLlT0IYBJYFUU3Tse/IDY+DcDamO/aC4QtmHYRkXy14yVed
-         TpqE934TK4t3/j5Pk9ohKlDeK7aprdHNaiNAwohWKtB/XERrq9tTtnJAP2xApJ8ywpUS
-         uuhQ==
+        d=linaro.org; s=google; t=1678827662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=it6U6WO4SiAWUoCqFbqqzyS2RHciCqhrcTh+M14Dd8c=;
+        b=x2BqJ/d316iVmCsG/M4+IT0D9zF6fgy5dQ5YTgHOkxxGKhogWk1SGv3C6n/OPL9UsQ
+         LSMYvAhNA20TSvx3GV1gYKcIn3M/Kwp0FPSWRc2UQx2BbMLpEUeERNXz8VHaTkaGqMCB
+         NNWb8x53LRNbcR7HsMP0Cei0wx+ElIlhnNMHPx87S3hNSaFgs7dVE9z2WnMylGVE5sw/
+         4lLWzIf7mPDAbkvIwdK7DIzUuAPrkWK5TyQjlCnBliHY/ULUA9efcryqdF9vN6GaM82C
+         K4bUBTL0DaiYuoyATgl96oeqeLTBPzs9LBbdfXIl5jL3cZf50bB81K2YWv/wrTwyMRx5
+         LuGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678827459;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3ztFzbMFz4GgzdRrfMvLDzmZX+459984qycma9uQHw=;
-        b=6uEZnil2BDuqGR83TxgFn+Nn2z9ENqv5y0XEFVNW2BbIoa1kZ7MjoVuzQAUd3KdLpt
-         HXSqK96Fek3p7Z+9bVOCCOOShiY2ig2UtSJ3iIV33yeDrtLimzuPhtv1PptIiy2OutPl
-         fa1hiRlm9de/HQwyabE3YiqUrNozse5X2pAk5wYNYYLZSfTrjtc/UyMkFXRMt7hIcG2r
-         VvBZ7sd7zdoiMJwLIgqCQJ2QUV54hBIqDo9YdKIpQNy/sq3Cs50FruNvguh0c26MalUB
-         mTyViXd7ero1yKuFCROaU3Ig3oD0dl+bH6sl1Jv+LNgviReZ7ZVtH2O4tmiST+pWJ1eI
-         L3Qw==
-X-Gm-Message-State: AO0yUKVf+seLvEWgqZSDFNG9UqP5/vZX0fqZ/heynFySRdqnEHzOlE6G
-        pmFGWcMLC41QG4S8j6r9UnVYT9YDxVlEWwyXZauFxQ==
-X-Google-Smtp-Source: AK7set8aHSVUvaWYOjwHasl69xJtuRoR6g+KV1DjiIgNas25tUZm0ME8ujF4OKJjodfSvxp2Mc1ZXbScJJQhu9jA14c=
-X-Received: by 2002:a5b:1cb:0:b0:a6b:bc64:a0af with SMTP id
- f11-20020a5b01cb000000b00a6bbc64a0afmr24420478ybp.4.1678827458614; Tue, 14
- Mar 2023 13:57:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230314115940.411939-1-linus.walleij@linaro.org> <ZBDZLgb1+2aMTE7A@duo.ucw.cz>
-In-Reply-To: <ZBDZLgb1+2aMTE7A@duo.ucw.cz>
+        d=1e100.net; s=20210112; t=1678827662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=it6U6WO4SiAWUoCqFbqqzyS2RHciCqhrcTh+M14Dd8c=;
+        b=0f2Jf7pPDo7j4v+e0D0DGORJU50Hw9YycmD3NhUIvtzXMxs+6q1koB3UEVCQcCNk+n
+         llkTl8zlxW7PeTuhm+n3gN5uUocfwLFWYAyRZcwv+Vg2Wtw/lyQJePKwTwNbuG9zYT7C
+         tYgQXkF/M3O7mFu/sVVCplWkZ72a/qyYejifT7I14Sp+QN/gEGAs2oo9k1zbAlO0XIXD
+         TUE4uChayXSQeVvhuS5pxghwaxJ99DjO98e6Oo7Hw45H70/F/ynY/nEtSLckkuxx8odP
+         9oBrEi0ceG8wNCzddIFMv/LZlPkjkqphdL5UTaDpIq/OOKH6z86RZSryIi/1aYyZZpe2
+         L66Q==
+X-Gm-Message-State: AO0yUKVRe60t3EwCNSsv62aTFXNnyYzyFGcnQ/Hz/xJ0clUNcWxlPZAy
+        Tk9Q6h7CDKX40R9dX7t3JiIROw==
+X-Google-Smtp-Source: AK7set+SxLoExkCQSz/+xVmYkfJyVnthfsz93f3Np4W6+v/0mpZ151kKOnunY08rK9LkoDAWw2qWaw==
+X-Received: by 2002:a05:6512:21a7:b0:4dd:9f86:859d with SMTP id c7-20020a05651221a700b004dd9f86859dmr1179976lft.13.1678827661896;
+        Tue, 14 Mar 2023 14:01:01 -0700 (PDT)
+Received: from fedora.. ([85.235.12.219])
+        by smtp.gmail.com with ESMTPSA id c3-20020ac244a3000000b0048a982ad0a8sm538081lfm.23.2023.03.14.14.01.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Mar 2023 14:01:01 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 14 Mar 2023 21:57:27 +0100
-Message-ID: <CACRpkda1gHeBYnZgMgrF3h=FJ=1NZ5RVgoquYbp75Y3zcs8=gQ@mail.gmail.com>
-Subject: Re: [PATCH] leds: Delete GPIO LED trigger
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+To:     Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Tony Lindgren <tony@atomide.com>,
         Felipe Balbi <balbi@kernel.org>, linux-omap@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v2] leds: Mark GPIO LED trigger broken
+Date:   Tue, 14 Mar 2023 22:00:59 +0100
+Message-Id: <20230314210059.419159-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 9:29=E2=80=AFPM Pavel Machek <pavel@ucw.cz> wrote:
+The GPIO LED trigger exposes a userspace ABI where a user
+can echo a GPIO number from the global GPIO numberspace into
+a file that will trigger a certain LED when active.
 
-> > We have since moved to dynamic allocation of GPIO numbers
-> > and there is no real guarantee that a GPIO number will stay
-> > consistent even across a reboot: consider a USB attached
-> > GPIO controller for example. Or two. Or the effect of
-> > probe order after adding -EPROBE_DEFER to the kernel.
->
-> So... what? If your system is one of those with single GPIO
-> controller, you can still use it. If you have modern "complex" system,
-> your userspace can find out desired GPIO number and then use it.
+This is problematic because the global GPIO numberspace is
+inherently instable. The trigger came about at a time when
+systems had one GPIO controller that defined hard-wired
+GPIOs numbered 0..N and this number space was stable.
 
-It's not about the complexity of the GPIO controller but
-whether it uses static GPIO number allocations.
-One of the GPIO controllers that nowadays use dynamic
-GPIO number allocation is the OMAP controller.
+We have since moved to dynamic allocation of GPIO numbers
+and there is no real guarantee that a GPIO number will stay
+consistent even across a reboot: consider a USB attached
+GPIO controller for example. Or two. Or the effect of
+probe order after adding -EPROBE_DEFER to the kernel.
 
-> Likely noone will miss this trigger, but correct way is to mark it as
-> deprecated / broken in Kconfig, first, and see who screams.
+The trigger was added to support keypad LEDs on the Nokia
+n810 from the GPIO event when a user slides up/down the
+keypad. This is arch/arm/boot/dts/omap2420-n810.dts.
+A userspace script is needed to activate the trigger.
+This will be broken unless the script was updated recently
+since the OMAP GPIO controller now uses dynamic GPIO
+number allocations.
 
-OK fair enough I'll send a patch like that.
+I want to know that this trigger has active users that
+cannot live without it if we are to continue to support it.
 
-Yours,
-Linus Walleij
+Option if this is really needed: I can develop a new trigger
+that can associate GPIOs with LEDs as triggers using device
+tree, which should also remove the use of userspace custom
+scripts to achieve this and be much more trustworthy, if
+someone with the Nokia n810 or a device with a similar need
+is willing to test it.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: linux-omap@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Be less intrusive and just mark the feature broken
+  for now.
+---
+ drivers/leds/trigger/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
+index dc6816d36d06..2a57328eca20 100644
+--- a/drivers/leds/trigger/Kconfig
++++ b/drivers/leds/trigger/Kconfig
+@@ -83,6 +83,7 @@ config LEDS_TRIGGER_ACTIVITY
+ config LEDS_TRIGGER_GPIO
+ 	tristate "LED GPIO Trigger"
+ 	depends on GPIOLIB || COMPILE_TEST
++	depends on BROKEN
+ 	help
+ 	  This allows LEDs to be controlled by gpio events. It's good
+ 	  when using gpios as switches and triggering the needed LEDs
+-- 
+2.34.1
+
