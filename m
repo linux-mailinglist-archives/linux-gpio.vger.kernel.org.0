@@ -2,98 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6C76B8DAC
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:42:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5844A6B8DAF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 09:43:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjCNImn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 04:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        id S229881AbjCNInX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 04:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbjCNIml (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:42:41 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDAA64846
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:42:23 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-53916ab0c6bso290427817b3.7
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:42:23 -0700 (PDT)
+        with ESMTP id S229813AbjCNInV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 04:43:21 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA367C9C1
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:43:17 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id eh3so2873998edb.11
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 01:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678783343;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RyfJlLPgjERQcTzZdEIvIGdNCCYbhGHEmYJcVkMFQx8=;
-        b=sAKlkh+PD8fSIcuCtZF3dp6H2rffw4yT6e/1S6gniQdexILJ4kNwGDKmWE5Yb/Z7Rf
-         J4nTSihP/wcKeEb6OlFGId6CldujUB2jfNkKJeQbZ6IiUWPQMMvrf9RiTBt+BYPnMoml
-         WFEgS1t8TaPpiy5QmNNUqbegmtn22gfHHQsS+L1o1/r07vxUdHth+NZsPgfAZkx3bfX6
-         SPmw2tAfweH/Mjyc0qIY35493OZu49je1M6yqTLgmbIeu3UnB7McqZKb+J1xX1be+Rs9
-         SMo8GVkG//UPQL5EZSObC//ZwnqvROh9sHb1IqA8UabHg/d3I77dZAxJhP5h6npQE9Hg
-         YA0w==
+        d=linaro.org; s=google; t=1678783396;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=92MwtSwPGSC0xtheTxnGf3j9jdTI96ljx0ZviUFHG1I=;
+        b=oyQ4dMvk2UK11GA1WdnLBvMyOHcESeY2TG2Mmo7ok3Q9m+xGNXdYROfuQAKcVbAeop
+         Ypje+0WERfKpYGPxleCN9OtJzftIVgKUBc5JIb13qfCZFPI/NYFqwKGlUZjN71SIoatX
+         pGOlFeNXz5MQm2TqOl1c1YiZ8U8SrKN3HN0Xa/iRIHXnfGJXKrDUlcEvNKufmwbFp6G/
+         Y1kKx9sjvYjV70mOO8H6g71hlUpPZyhRnjSjmCE92X/8U0Engwihxc/Dh2nNK26HXorc
+         5P+2J/pqtcku5I82Ocxod6uh8zsexw+ZjZSwQdKEF2K8rbJhwNtdYR2Ty8ObFhOiKZxy
+         0oDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678783343;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RyfJlLPgjERQcTzZdEIvIGdNCCYbhGHEmYJcVkMFQx8=;
-        b=ej1u0EhUVPUb7rfNr7tnmFH9E3zI7iktAmKWsizRKDXT2E7XRRpwnmgheTO+lGl8Ve
-         vGsHsj9h/eb8CiRKem50DIhWQfsSqJgPf2azmHwD3SxeiDE4AFRR8PbDuy7Py6kU9cIm
-         QaVcGiVNNrXPL2wkUg7D5PUegytvYQzrcro3Rmuk5BBIaNmId9jH2DLpbnkpY/sdFCu3
-         bsA/WMF8CJSGVDovWqIybL2mbKmp0cttkC8HNB5vHTkGGNh4CIomdWhrUGWL996otEP/
-         hhN96gUMIk7cBUuAh1ieWqtdGLsbBchvVKNkkO8gFOmmFZaTON9+Ls9TZtHYJ4nGuA1i
-         nsaQ==
-X-Gm-Message-State: AO0yUKVFRvfZ2BPL5WR5lzrxuFbRrzMoKEmTXym2B8tF8aFp3dsAjghH
-        bCh01siToqfoXwvGTiAvqfzp06ihJVrovkNoZ42Y2g==
-X-Google-Smtp-Source: AK7set+5W+F4WPOOqhDRx4CVAT8IMDCIBpyCU/Ol0rUg1nVe96Ns9ilnkVMyyby2mh6+/aPqtuVgkHjoUuUWlWwpiPc=
-X-Received: by 2002:a81:b605:0:b0:541:9895:4ce9 with SMTP id
- u5-20020a81b605000000b0054198954ce9mr4816352ywh.9.1678783342936; Tue, 14 Mar
- 2023 01:42:22 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678783396;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=92MwtSwPGSC0xtheTxnGf3j9jdTI96ljx0ZviUFHG1I=;
+        b=E7hcYU6Os1aampvZBoTBgJyoT7w5kjhCC/axHSJ3VOiCWfu7TGvcEUsEO5w2raYiC5
+         9B4V3CvG3eL5NLxMR2h8iHwY0oNyBRYjuEJkBzn2DH7xN0v3qB4P/t1Zi7bxUQZlIN1p
+         GSoVKErBlCnb720CZxN/6p6CZPp2bXUiE9UsLGUgdLfMDARsbHqTU/xZ8GKN015QQfE8
+         V+Sf9JPr7aWZUc6Ppz3Udy5HIJpMQBng821BmCTMN4k5y2QOZikVuA5ACnTmKy4nbsFJ
+         lpgO2JlFZLHuub4z0zJAhmuwXRmPcqJ5+5W9QlcNu7sOhOkf6HsivAYN9vofW60+ZmIH
+         sg8Q==
+X-Gm-Message-State: AO0yUKXi3rRo2jCJ8TniLiBOdTTiYthNmsgU3iY3+izGHJUltfDsqgpb
+        4RaS1ef3yQCvyqkNq548+23gHysGirXW5K4pn5w=
+X-Google-Smtp-Source: AK7set901qm2G8O222Nxqy1a/eOE1oERM7/AJ9yV62Vn5yPr980uV5IcS9c7byN3Xdxgf4K2Fu+Tuw==
+X-Received: by 2002:aa7:df83:0:b0:4fc:812a:ec25 with SMTP id b3-20020aa7df83000000b004fc812aec25mr5962025edy.16.1678783396420;
+        Tue, 14 Mar 2023 01:43:16 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:59be:4b3f:994b:e78c? ([2a02:810d:15c0:828:59be:4b3f:994b:e78c])
+        by smtp.gmail.com with ESMTPSA id q11-20020a5085cb000000b004bd6e3ed196sm632505edh.86.2023.03.14.01.43.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Mar 2023 01:43:16 -0700 (PDT)
+Message-ID: <c45df83a-a6ac-16bd-1872-64fd0794b421@linaro.org>
+Date:   Tue, 14 Mar 2023 09:43:14 +0100
 MIME-Version: 1.0
-References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
- <20230306090014.128732-2-biju.das.jz@bp.renesas.com> <ZAZ4LY+xG2LGiHwh@surfacebook>
- <OS0PR01MB5922EA0703F259A99C157D3286B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAHp75Vd6qTG67_1DGiemy8n-mQn=9kiGrC0rEYw2XO0rm4Tbag@mail.gmail.com>
- <OS0PR01MB59224CECBB888ADC9214145286B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAHp75VfDL74cEUQkxC1JuUB7SS1vYTPj_K7+VkQ-i-MKXad5Lw@mail.gmail.com>
- <OS0PR01MB5922CC51889D094129820C0C86B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CACRpkdZS5UKc7bDPs-zx_QyJU9GwJAhB7372oSC9tB-txgghtw@mail.gmail.com> <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 14 Mar 2023 09:42:11 +0100
-Message-ID: <CACRpkdbLonPgBMD6f2Rc-E3sFtMhoc0Mzt00uTUmiAnx59JC2Q@mail.gmail.com>
-Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH V3 2/6] dt-bindings: timestamp: Add Tegra234 support
+To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
+References: <20230310190634.5053-1-dipenp@nvidia.com>
+ <20230310190634.5053-3-dipenp@nvidia.com>
+ <f6d9c84a-1c75-d9b4-59ed-39d6c5b310a9@linaro.org>
+ <b4195142-6cfe-df3c-6edf-0c40b64ad02a@nvidia.com>
+ <6c5045d9-4f4a-5018-3f3f-7746b08ab2b5@linaro.org>
+ <fad52df6-38e8-ba8a-117a-8514e09af0ee@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <fad52df6-38e8-ba8a-117a-8514e09af0ee@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 9:27 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+On 13/03/2023 22:49, Dipen Patel wrote:
+> On 3/13/23 10:55 AM, Krzysztof Kozlowski wrote:
+>> On 13/03/2023 18:05, Dipen Patel wrote:
+>>> On 3/12/23 8:47 AM, Krzysztof Kozlowski wrote:
+>>>> On 10/03/2023 20:06, Dipen Patel wrote:
+>>>>> Added timestamp provider support for the Tegra234 in devicetree
+>>>>> bindings. In addition, it addresses review comments from the
+>>>>> previous review round as follows:
+>>>>> - Removes nvidia,slices property. This was not necessary as it
+>>>>> is a constant value and can be hardcoded inside the driver code.
+>>>>> - Adds nvidia,gpio-controller property. This simplifies how GTE driver
+>>>>> retrieves GPIO controller instance, see below explanation.
+>>>>>
+>>>>> Without this property code would look like:
+>>>>> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
+>>>>> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
+>>>>> 				   tegra_get_gpiochip_from_name);
+>>>>> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
+>>>>> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
+>>>>> 				   tegra_get_gpiochip_from_name);
+>>>>> else
+>>>>> 	return -ENODEV;
+>>>>>
+>>>>> This means for every future addition of the compatible string, if else
+>>>>> condition statements have to be expanded.
+>>>>>
+>>>>> With the property:
+>>>>> gpio_ctrl = of_parse_phandle(dev->of_node, "nvidia,gpio-controller", 0);
+>>>>> ....
+>>>>> hte_dev->c = gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_node);
+>>>>>
+>>>>> We haven't technically started making use of these bindings, so
+>>>>> backwards-compatibility shouldn't be an issue yet.
+>>>>
+>>>> Unfortunately, I don't understand this statement. The
+>>>> nvidia,tegra194-gte-aon with removed property is in a released kernel
+>>>> v6.2. What does it mean "technically"? It's a released kernel thus it is
+>>>> a released ABI.
+>>>
+>>> There is no active user of that driver, so even if it breaks 6.2, it is fine
+>>> as there is no one to complain about it.
+>>
+>> How do you know? It's a released kernel, thus how can you ask millions
+>> of people if they use it or not?
+> 
+> Please help me understand, if I am targeting these set of changes for the kernel
+> 6.4, wouldn't all the patches land on v6.4 at the same time no matter the tree it
 
-> If we cannot do it in user space, then we need to make it as part of
-> Dt bindings and users will define the use case they need in DT.
+No, that's not how we do things. Changes *must be bisectable* and *DTS
+always* goes to separate branch, so how do you ensure this in your
+current flow? I don't see it. The patch #4 should break the bisectability.
 
-That sounds like a much better idea :)
+> will go from? Also, if user is at v6.2, how this will break as at that version, it
+> will have the old bindings and old driver, right?
 
-The kernel is for protecting hardware from users after all, and it
-seems you want to select one of these use cases and DT is
-excellent for system config like this.
+Bindings define ABI. You defined them like this in v6.2 thus someone is
+using them:
+1. In other systems, bootloaders, firmwares, SW.
+2. via DTS written for v6.2 ABI. Newer kernel should not break existing
+DTS and we do not talk about in-kernel DTS, just like we do not talk
+about in-kernel user-space applications when using same argument for
+their compatibility.
 
-So I would say work ahead on this path.
 
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
+
