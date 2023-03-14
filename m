@@ -2,136 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D7986BA118
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 22:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83FBD6BA195
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Mar 2023 22:50:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbjCNVB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Mar 2023 17:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34408 "EHLO
+        id S230141AbjCNVuy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Mar 2023 17:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229986AbjCNVBF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 17:01:05 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80FA302B9
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 14:01:03 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id o8so1743781lfo.0
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Mar 2023 14:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678827662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=it6U6WO4SiAWUoCqFbqqzyS2RHciCqhrcTh+M14Dd8c=;
-        b=x2BqJ/d316iVmCsG/M4+IT0D9zF6fgy5dQ5YTgHOkxxGKhogWk1SGv3C6n/OPL9UsQ
-         LSMYvAhNA20TSvx3GV1gYKcIn3M/Kwp0FPSWRc2UQx2BbMLpEUeERNXz8VHaTkaGqMCB
-         NNWb8x53LRNbcR7HsMP0Cei0wx+ElIlhnNMHPx87S3hNSaFgs7dVE9z2WnMylGVE5sw/
-         4lLWzIf7mPDAbkvIwdK7DIzUuAPrkWK5TyQjlCnBliHY/ULUA9efcryqdF9vN6GaM82C
-         K4bUBTL0DaiYuoyATgl96oeqeLTBPzs9LBbdfXIl5jL3cZf50bB81K2YWv/wrTwyMRx5
-         LuGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678827662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=it6U6WO4SiAWUoCqFbqqzyS2RHciCqhrcTh+M14Dd8c=;
-        b=0f2Jf7pPDo7j4v+e0D0DGORJU50Hw9YycmD3NhUIvtzXMxs+6q1koB3UEVCQcCNk+n
-         llkTl8zlxW7PeTuhm+n3gN5uUocfwLFWYAyRZcwv+Vg2Wtw/lyQJePKwTwNbuG9zYT7C
-         tYgQXkF/M3O7mFu/sVVCplWkZ72a/qyYejifT7I14Sp+QN/gEGAs2oo9k1zbAlO0XIXD
-         TUE4uChayXSQeVvhuS5pxghwaxJ99DjO98e6Oo7Hw45H70/F/ynY/nEtSLckkuxx8odP
-         9oBrEi0ceG8wNCzddIFMv/LZlPkjkqphdL5UTaDpIq/OOKH6z86RZSryIi/1aYyZZpe2
-         L66Q==
-X-Gm-Message-State: AO0yUKVRe60t3EwCNSsv62aTFXNnyYzyFGcnQ/Hz/xJ0clUNcWxlPZAy
-        Tk9Q6h7CDKX40R9dX7t3JiIROw==
-X-Google-Smtp-Source: AK7set+SxLoExkCQSz/+xVmYkfJyVnthfsz93f3Np4W6+v/0mpZ151kKOnunY08rK9LkoDAWw2qWaw==
-X-Received: by 2002:a05:6512:21a7:b0:4dd:9f86:859d with SMTP id c7-20020a05651221a700b004dd9f86859dmr1179976lft.13.1678827661896;
-        Tue, 14 Mar 2023 14:01:01 -0700 (PDT)
-Received: from fedora.. ([85.235.12.219])
-        by smtp.gmail.com with ESMTPSA id c3-20020ac244a3000000b0048a982ad0a8sm538081lfm.23.2023.03.14.14.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 14:01:01 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Felipe Balbi <balbi@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2] leds: Mark GPIO LED trigger broken
-Date:   Tue, 14 Mar 2023 22:00:59 +0100
-Message-Id: <20230314210059.419159-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229666AbjCNVux (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Mar 2023 17:50:53 -0400
+X-Greylist: delayed 598 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Mar 2023 14:50:52 PDT
+Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A7051F9B;
+        Tue, 14 Mar 2023 14:50:52 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailnew.west.internal (Postfix) with ESMTP id 4D0D92B06998;
+        Tue, 14 Mar 2023 17:40:49 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 14 Mar 2023 17:40:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678830048; x=1678837248; bh=5b
+        KacenUJfm/nP5sO5Oy+iL59bFvwd5SQ5iWdLqSo4g=; b=YqOtIxPA+cenlSXmEi
+        oE/uy4NZjAva5jR+QabiGcAlnZf+GRYmdaLPuezreOWpGLeK+79HKWs5ovQI73Qy
+        /ZdzNjiELcZ0Khc7tQThlji9o9aFMFZDN1xjHPZogp5+qVudhvyJBfye7KCv95DC
+        DA+WVurirmQ/hdAM0KmQ78F7b431AfMs4xX720iKXEh57fiNLCmqxob4UQcj2k6h
+        jxK1y4kfRwDcGvPtfoUOWFPfquGeblyJ65toUwiq++c0GqUijdGGcCvvfFmFojtj
+        cotFBBTH/22V7ya8bJJ9JJtgDzbHMwh+fxM74Qt+tT6qeY7BgHaDdR8gfXi7o+u7
+        cBmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1678830048; x=1678837248; bh=5bKacenUJfm/n
+        P5sO5Oy+iL59bFvwd5SQ5iWdLqSo4g=; b=qRxUZQAmpg5QJcl9WX1S5CgDDmK0M
+        cxCVreIPFl1JJRODX1xb4GquKGhrsmBy8O3olaVB7KlQESzM3cVmXuskNOSzrJgb
+        S9Z/B0JQlGb/YhDjY6VSdF3E7DN7H8owbH4HUBBtrRMBp0Ci08hhEUZ1kAaHAIJo
+        2rAf9fiTU90Hmiwbr7F6C//na42jhy/xR4LsZ++HpA3R8ebSlyb4Qyw7G/orPVMs
+        hguqbgIDqFeARu2762LQbprGfPc9ZG2DT+9203hBJLU4YqnS6GNsG9bFadE/oE8H
+        iZdZR5j5H7MH9/gW7rq4twT0rf+5+NOOUpu+sl9kcfPGS9xI9Mn5oTS9A==
+X-ME-Sender: <xms:3-kQZJXFQJHQkta4QvilzNqcOzjithYjaaFBh78TLVaLM_y9qNiIFQ>
+    <xme:3-kQZJkaaq3elsxKt3gPqWaNSR6jxEhGj-_9oZoVjaPEHGPycq4VASFWz9afPRKcc
+    bbAEfPxyGdTyozlP8A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddviedgudehhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:3-kQZFYhf1TsT3pLLX6NZmaCfIf3H5wp84LFusnJJ-Pp3lKSQxYTcw>
+    <xmx:3-kQZMXhP8b3Tp_w9haN4FT9huU5zgBLyGlGmPBxE4InX9Bagld48g>
+    <xmx:3-kQZDnj6QFV9Xb2HDYBWc7nJILXRyYWy5rv6CJdxk0EcLsKHxZxpA>
+    <xmx:4OkQZBFL9QqWRkq4JlCzjiqgfKAqW_oC1iZCdZn2Rj279g00Z1zyPhldr-E>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 5FE61B60089; Tue, 14 Mar 2023 17:40:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
+Mime-Version: 1.0
+Message-Id: <e19fd8bc-5944-409d-a4a1-3a3d53691634@app.fastmail.com>
+In-Reply-To: <4ac809d2-3924-3839-479f-0b4be9f18a1f@linaro.org>
+References: <20230314163201.955689-1-arnd@kernel.org>
+ <4ac809d2-3924-3839-479f-0b4be9f18a1f@linaro.org>
+Date:   Tue, 14 Mar 2023 22:40:26 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+        "Arnd Bergmann" <arnd@kernel.org>,
+        "Christian Lamparter" <chunkeey@googlemail.com>,
+        "Kalle Valo" <kvalo@kernel.org>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "Tony Lindgren" <tony@atomide.com>,
+        "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        "Russell King" <linux@armlinux.org.uk>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Johannes Berg" <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] p54spi: convert to devicetree
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The GPIO LED trigger exposes a userspace ABI where a user
-can echo a GPIO number from the global GPIO numberspace into
-a file that will trigger a certain LED when active.
+On Tue, Mar 14, 2023, at 20:57, Krzysztof Kozlowski wrote:
+> On 14/03/2023 17:30, Arnd Bergmann wrote:
+>
+> Please split bindings to separate patch.
+>
+>>  MAINTAINERS                                   |  1 +
+>>  arch/arm/boot/dts/omap2.dtsi                  |  4 ++
+>>  arch/arm/boot/dts/omap2420-n8x0-common.dtsi   | 12 ++++
+>
+> DTS as well...
 
-This is problematic because the global GPIO numberspace is
-inherently instable. The trigger came about at a time when
-systems had one GPIO controller that defined hard-wired
-GPIOs numbered 0..N and this number space was stable.
+ok
 
-We have since moved to dynamic allocation of GPIO numbers
-and there is no real guarantee that a GPIO number will stay
-consistent even across a reboot: consider a USB attached
-GPIO controller for example. Or two. Or the effect of
-probe order after adding -EPROBE_DEFER to the kernel.
+>> +maintainers:
+>> +  - Johannes Berg <johannes@sipsolutions.net>
+>> +  - Christian Lamparter <chunkeey@web.de>
+>> +
+>> +description: |
+>
+> You can drop '|'.
 
-The trigger was added to support keypad LEDs on the Nokia
-n810 from the GPIO event when a user slides up/down the
-keypad. This is arch/arm/boot/dts/omap2420-n810.dts.
-A userspace script is needed to activate the trigger.
-This will be broken unless the script was updated recently
-since the OMAP GPIO controller now uses dynamic GPIO
-number allocations.
+ok
 
-I want to know that this trigger has active users that
-cannot live without it if we are to continue to support it.
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - st,stlc4550
+>> +      - st,stlc4560
+>> +      - isil,p54spi
+>> +      - cnxt,3110x
+>
+> Order above entries by name.
 
-Option if this is really needed: I can develop a new trigger
-that can associate GPIOs with LEDs as triggers using device
-tree, which should also remove the use of userspace custom
-scripts to achieve this and be much more trustworthy, if
-someone with the Nokia n810 or a device with a similar need
-is willing to test it.
+ok
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: linux-omap@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
+>> +
+>> +  power-gpios:
+>
+> If this is GPIO driving some power pin, then it should be
+> "powerdown-gpios" (like in /bindings/gpio/gpio-consumer-common.yaml)
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Be less intrusive and just mark the feature broken
-  for now.
----
- drivers/leds/trigger/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+As far as I can tell, it's the opposite: the gpio turns the power on
+in 'high' state. I could make it GPIO_ACTIVE_LOW and call it powerdown,
+if you think that's better, but I don't think that is how it was
+meant.
 
-diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
-index dc6816d36d06..2a57328eca20 100644
---- a/drivers/leds/trigger/Kconfig
-+++ b/drivers/leds/trigger/Kconfig
-@@ -83,6 +83,7 @@ config LEDS_TRIGGER_ACTIVITY
- config LEDS_TRIGGER_GPIO
- 	tristate "LED GPIO Trigger"
- 	depends on GPIOLIB || COMPILE_TEST
-+	depends on BROKEN
- 	help
- 	  This allows LEDs to be controlled by gpio events. It's good
- 	  when using gpios as switches and triggering the needed LEDs
--- 
-2.34.1
+>> +examples:
+>> +  - |
+>> +   gpio {
+>
+> Align example with above |, so four spaces. Or better indent entire
+> example with four spaces.
 
+Ok, that makes it much more readable.
+
+>> +     gpio-controller;
+>> +     #gpio-cells = <1>;
+>> +     #interupt-cells = <1>;
+>> +   };
+>
+> Drop "gpio" node. It's not needed for the example.
+
+ok.
+
+>> +   spi {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      wifi@0 {
+>> +        reg = <0>;
+>> +        compatible = "st,stlc4560";
+>
+> compatible before reg.
+
+ok.
+
+       Arnd
