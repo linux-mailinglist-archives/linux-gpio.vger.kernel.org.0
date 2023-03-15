@@ -2,148 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 780EA6BAED4
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 12:10:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DD4D6BAF2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 12:24:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231231AbjCOLKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 07:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44190 "EHLO
+        id S230356AbjCOLYz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 07:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231998AbjCOLJR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 07:09:17 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF72D8B053;
-        Wed, 15 Mar 2023 04:07:22 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id p13-20020a17090a284d00b0023d2e945aebso3226778pjf.0;
-        Wed, 15 Mar 2023 04:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678878440;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y9Xe7G0mUprolJIwH6MJzsVRZJv7ADzG9ZALSt3qn7I=;
-        b=bnlcAHsnJ4trii4aCzzIEel+4/5DQsER6/JTZL5KRxvcnFIvy+SHL0ICtnSnNvLA6G
-         Qo6rtncYrZnNuagheheDLAbDFfQSrPW2CwEvkEcow494V0zxgnnYIAg5yx0JqFo8r0fu
-         BjjNrAt0yyNOg0i+FrIRhcjUg7cQLV8n0E+PDHc9tHBsvQXQxmYocWj+iGduLVQzawnY
-         Bd78sI5+psvQjm3jSilslwd1O6vkJ7R+qDYksjRyhcZC7xQbiNxiYyU6vMhIaAktGYg7
-         9EjktWCLeOov+70/Hftb/eoI9eshHpi1a/+6xmxJrj2vIxbmhndClulTsSywPbQvTJ4j
-         KpxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678878440;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y9Xe7G0mUprolJIwH6MJzsVRZJv7ADzG9ZALSt3qn7I=;
-        b=bzT8fRemRi4vtWxo0It+A0psyzYu9PyeaQXj6574Hd9GnzbBSH3eaRso6rqK4F+RMf
-         OucQDZ5dGL5V/lKFpUE8TVKsvfrYsFda2cmczu7cGsGHatvjUW9iyyCYMt7egs4ZL4Sz
-         fEgpnDqQC46cBpi2fBntgWavAKX81d224WiSML0cszURjy4VjJ4BlNDkIKOaXuvltvS/
-         wXJ2ayh9qavwL7qZPVMXI+zo90MLJtEqG2gaADsceN8V/LErOhs0YiC7qynszHOcele5
-         UCQrGu4jvY48oQ3fQ0bAcoW+YW+yDKAWbszluIJv3ygqaEYoivbk5qywsTZoV7he4D9B
-         pNhQ==
-X-Gm-Message-State: AO0yUKUiYkPpv7FHJm76mpdixZPeVUSvGCMvUh9cw6Hie+JxHMfmnIM3
-        SqTRMFad6O/ITmxgBb2MtjGRwJyo15KJOQ==
-X-Google-Smtp-Source: AK7set9sqKEiYZykBR5KsaGrFDgczaih/so64Py9emYlckhNQJ57WA1xmCZS8OAdFvUMLn7DhqaBpA==
-X-Received: by 2002:a05:6a21:328a:b0:cd:5334:e240 with SMTP id yt10-20020a056a21328a00b000cd5334e240mr46959597pzb.5.1678878439968;
-        Wed, 15 Mar 2023 04:07:19 -0700 (PDT)
-Received: from kelvin-ThinkPad-L14-Gen-1.. (94.130.220.35.bc.googleusercontent.com. [35.220.130.94])
-        by smtp.gmail.com with ESMTPSA id v4-20020aa78084000000b005892ea4f092sm3337489pff.95.2023.03.15.04.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 04:07:19 -0700 (PDT)
-From:   Keguang Zhang <keguang.zhang@gmail.com>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 4/4] dt-bindings: gpio: Add Loongson-1 GPIO
-Date:   Wed, 15 Mar 2023 19:06:50 +0800
-Message-Id: <20230315110650.142577-5-keguang.zhang@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230315110650.142577-1-keguang.zhang@gmail.com>
-References: <20230315110650.142577-1-keguang.zhang@gmail.com>
+        with ESMTP id S231807AbjCOLYf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 07:24:35 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E398EA2F;
+        Wed, 15 Mar 2023 04:23:48 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32FATaYi025361;
+        Wed, 15 Mar 2023 11:23:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=aYH1IAU5lpVLRcwPmpY5z2BHPzzxvgI4uSFyVQBkL+0=;
+ b=WW2+4NRZT0RH/AdK6eiRjHdnalwywc69U4qra2iIg9FjVmMDazDD/2n34A9SD3V4sNt6
+ J0qSlwLkSdDmw2Jo534OkjEWSaVSK2M7k1+LDnPd1hCI1TCJigmjkPqo/ougdYEaDEl5
+ A8NwFb/C362ALK+Wa5GUwg36X67jw4iKv0KFLulNoVYIbSrWzotbjxO3Nt6nl6o0PFLW
+ amOEc6gQu9NUd9lUsc9PfnQvPDSzJ1VzVv6ghS1rGqQYqMpcrJVMwKa6YSdr9DGAen/8
+ Fnm3/qqKpDZlDEr8Vd3wdOw1DV1NFz6P4VqPVTx74ZoLde2dZ2wrrsLWYavNFR5tayrb qQ== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pb2c99b45-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 11:22:59 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32FBMwwU027486
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 11:22:58 GMT
+Received: from [10.216.13.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 15 Mar
+ 2023 04:22:48 -0700
+Message-ID: <e482a189-823f-35b1-b411-4c4db22a86a6@quicinc.com>
+Date:   Wed, 15 Mar 2023 16:52:39 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH V8 4/7] pinctrl: qcom: Add IPQ9574 pinctrl driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_poovendh@quicinc.com>
+References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
+ <20230214163116.9924-5-quic_devipriy@quicinc.com>
+ <ZAZ+GeGu8mW1XqpG@surfacebook>
+ <15d270ca-1068-b926-efc9-a14ddfc90a54@quicinc.com>
+ <CAHp75VfMae9M2R0Bw6-sYuHPPberakEzKct65SXV0XEaOFtXTg@mail.gmail.com>
+Content-Language: en-US
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <CAHp75VfMae9M2R0Bw6-sYuHPPberakEzKct65SXV0XEaOFtXTg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: D0mbF0bygG_qOvrQGKZ46Ph7JFlKDuzE
+X-Proofpoint-GUID: D0mbF0bygG_qOvrQGKZ46Ph7JFlKDuzE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-15_05,2023-03-15_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxlogscore=908 clxscore=1015 spamscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 impostorscore=0
+ suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2302240000 definitions=main-2303150097
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add devicetree binding document for Loongson-1 GPIO.
 
-Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-V2 -> V3: Add Reviewed-by tag from Krzysztof Kozlowski
-V1 -> V2: Use the same consistent quotes
-          Delete superfluous examples
----
- .../bindings/gpio/loongson,ls1x-gpio.yaml     | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
-new file mode 100644
-index 000000000000..1a472c05697c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/loongson,ls1x-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-1 GPIO controller
-+
-+maintainers:
-+  - Keguang Zhang <keguang.zhang@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: loongson,ls1x-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 32
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - ngpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio0: gpio@1fd010c0 {
-+        compatible = "loongson,ls1x-gpio";
-+        reg = <0x1fd010c0 0x4>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+
-+        ngpios = <32>;
-+    };
-+
-+...
--- 
-2.34.1
+On 3/8/2023 6:54 PM, Andy Shevchenko wrote:
+> On Wed, Mar 8, 2023 at 11:52 AM Devi Priya <quic_devipriy@quicinc.com> wrote:
+>> On 3/7/2023 5:28 AM, andy.shevchenko@gmail.com wrote:
+> 
+> ...
+> 
+>>>> +    depends on OF
+>>>
+>>> No compile test on non-OF configurations?
+> 
+>> As per the generic convention followed in other
+>> SoCs, we do not have compile test on non-OF configurations
+> 
+> Why not? So, you have to explain the deliberate narrowing of the test coverageOn adding 'depends on OF || COMPILE_TEST', the driver compiles
+for non-OF configuration as well.
+Will update this in the next spin!
+> 
+>>>> +    depends on ARM64 || COMPILE_TEST
+> 
+> ...
+> 
+>>>> +#define FUNCTION(fname)                                     \
+>>>
+>>> PINCTRL_PINFUNCTION() ?
+>> I see that there are quite a bunch of files that has to
+>> be modified for using the generic data type and
+>> macro for the pin function definition
+>> We shall post a separate series to accommodate the changes
+> 
+> Sure, that's fine. Please do!
+Sure, thanks
+> 
+>>>> +    [msm_mux_##fname] = {                           \
+>>>> +            .name = #fname,                         \
+>>>> +            .groups = fname##_groups,               \
+>>>> +            .ngroups = ARRAY_SIZE(fname##_groups),  \
+>>>> +    }
+> 
+> ...
+> 
+>>>> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)    \
+>>>> +    {                                               \
+>>>> +            .name = "gpio" #id,                     \
+>>>> +            .pins = gpio##id##_pins,                \
+>>>> +            .npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),     \
+>>>
+>>> Can you embed struct pingroup?
+>> Will take care of this in a separate series
+> 
+> Ditto. Thanks!
+Sure, thanks
+> 
+>>>> +    }
+> 
+> ...
+> 
+>>>> +};
+>>>
+>>> No MODULE_DEVICE_TABLE()?
+>> The MODULE_DEVICE_TABLE(of, ipq9574_pinctrl_of_match) entry has
+>> been added at the end of the file
+> 
+> So, you know what to do then to address my comment :-)
+Yep, got it!
+> 
 
+Best Regards,
+Devi Priya
