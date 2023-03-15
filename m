@@ -2,85 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D18D96BBC43
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 19:37:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 187186BBC45
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 19:37:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231990AbjCOShd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 14:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54760 "EHLO
+        id S231645AbjCOSht (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 14:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbjCOShb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 14:37:31 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2FC5C121;
-        Wed, 15 Mar 2023 11:36:57 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id qh28so1017620qvb.7;
-        Wed, 15 Mar 2023 11:36:57 -0700 (PDT)
+        with ESMTP id S231773AbjCOShs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 14:37:48 -0400
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792F896614
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 11:37:17 -0700 (PDT)
+Received: by mail-ua1-x935.google.com with SMTP id 89so6526291uao.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 11:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678905395;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fxNYErZCrfGfRXfeO3dgaPxxF1hWcdtOVMtdVcYuQQc=;
-        b=Kn43xN6xfZwvD2Ctkiuxu7VjVm3lqxMlcj4SLzsDOhsWp2+HXgQnMG4Wr7sUqfPiGA
-         cTzsoG6HZfaiM3eLhFkm6aQmCn035w0oqNJ0bK7QY9TPvjpf514DG56aQCb8IZ7mOc4r
-         NFx7Te2chWKfy0RK++nT+SOKSX/dR8k0TxB9ZwdVey1dFEbbCxtxZ+rsUT88y43j7IQd
-         o0FHCn1mVq8NMtvinHEazJRVAGyy7+zt00JFmPMCMmZOarQSKa5erQ+WOMlBBhZoPDto
-         ZvjYx5HnNbF73Uk1DuFsj9+cUayRGgdEYTIdCZ+1i/nKdXQU+QWdj1FEdwCpHEIx8e/W
-         XXJg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678905427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OYD0sTo43bzjcOIAl6PFP/c66GLC0lASmxL17zSZKNg=;
+        b=XslfhGghkSG+zDIYsRZ64xAAunotj3/GAhwVwpy53HUCBymZJ0GvaY4sgjUpxO5gB9
+         OOZUaPif08Z+aLA4xZLSppPHUb46qHJyIkFZ5WSUM0j1QL5nu58ymoMGBMK7grLRg/yn
+         /x87rYm5+gk7fL2uAHiOJaqoxWPi//PWk9tKpeOapTJfZavBxjK7YxjGo3z1UPv7RmAE
+         42jY0iv395NZMH/uNEAf0WdxecktCYDU7akIcj5wEQ9Q8K2S97FMnu3NiIFqLk+fUdBi
+         C+QK5q/ET3towhZ9T2Hki0VOHcLq5wRqni2WMpEHPtXJSUWJ/Fwr3t9Ft5f62k7MdkB1
+         ebBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678905395;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fxNYErZCrfGfRXfeO3dgaPxxF1hWcdtOVMtdVcYuQQc=;
-        b=FfzPT5VYs+gvlgHyV/u/tNRZZrIkfQXKg/mCJ5FcLYynvuO7BgpthzvT3ZK1nt6hAR
-         u3I7Bsz0/NccW17kHLFpijEcgdBpdde05AWptUK/RkM0mfa0qYitjnktNBfuLpngCfrv
-         ps3y/jmlwZk6t2V5TchmrWGD1J/CGcuM+nt6WzTyR+svC8eNHB+O8IgA30rYKyWUs7Kp
-         RSp6BZa7nLFIq8QKFf6oMQ6RQAHCFsh38SNhcWNUSBbdCqFmh740mKzUa0flxVQjoAs/
-         cTxHcCwQhtcFZKn6k31uuCjVtWgA9jqIiXgDast+hNnuEmyVhUEEDTR4fQZP467WXnfx
-         +1CA==
-X-Gm-Message-State: AO0yUKVBDVNHe53AzRZcSkqzikNyoKAnOGRf7paFt59fdn8CBZbPkwb0
-        3qb1PjjrBc4pIzJkRcY+nNU=
-X-Google-Smtp-Source: AK7set+RtYb66umwPKKntudB0fcmO34SwQhaaHR0fuiHwZ1TPC7UhdryBvT46uIAEFhjOFJyH97Q5g==
-X-Received: by 2002:ad4:5bac:0:b0:5b2:458e:9240 with SMTP id 12-20020ad45bac000000b005b2458e9240mr2463411qvq.41.1678905395213;
-        Wed, 15 Mar 2023 11:36:35 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id m125-20020a375883000000b007428e743508sm4172499qkb.70.2023.03.15.11.36.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Mar 2023 11:36:34 -0700 (PDT)
-Message-ID: <4a258d74-0c9c-141a-078c-d49a7c0106e2@gmail.com>
-Date:   Wed, 15 Mar 2023 11:36:24 -0700
+        d=1e100.net; s=20210112; t=1678905427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OYD0sTo43bzjcOIAl6PFP/c66GLC0lASmxL17zSZKNg=;
+        b=zGgoyn98seTSbPq/NrJJ2Tvv5nZopffDsXvi9J9LDFu3UEE9/yJy2MD4da4IUrjx9m
+         HEbHw6XKlITUktYuXUP/5nwNjy+aPUAiSKYZR7RsSToCl1D9FA3OTmtEy4b6O78vOCiB
+         AxFKsgIe0wLV9I798l7It5DtSvszCIlk8XDPRCZfShvblUHQJuHCiMtLa8kkpCR8LcrL
+         MFM9yYT4NykVgxx6g3hyXiMG10M25VIOXPW3wdvh5IUsNLMdVv2gzFOH6PH+WLs1LRYd
+         kQ5QE+3HZdWZ5Au9ur1TyD2jdxF8U9bYUaZnXy3QMNQsvJVy8TyAxvS/cb9quKYOQ3UX
+         Qb5A==
+X-Gm-Message-State: AO0yUKWW6x36Wf4TDTRg9rYtTLaYxsAgJnD8q0M/5Haeuf9WdhgltcV0
+        hNOflcT/E6brHPY6UGOsQSLxhPha0NRN4iDoq+lwzGpkrviechQH
+X-Google-Smtp-Source: AK7set8XM+pa3TBFheZp6PC/ergmg6hjjex54gv0BWUBarmkLCeRw5Rgtgq/X1xOfDhgp29nEOkb9Zlqec39WVH/7Bs=
+X-Received: by 2002:ab0:16c9:0:b0:755:9b3:fef8 with SMTP id
+ g9-20020ab016c9000000b0075509b3fef8mr5092192uaf.2.1678905427268; Wed, 15 Mar
+ 2023 11:37:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 8/8] gpio: raspberrypi-exp: mark OF related data as maybe
- unused
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
+References: <20230315083456.27590-1-brgl@bgdev.pl>
+In-Reply-To: <20230315083456.27590-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 15 Mar 2023 19:36:55 +0100
+Message-ID: <CAMRc=Mco_Kp_+kRJD=hryN1aV58Z5vavNS8ZL+AtFtHT8nk-BQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] tools: gpiomon: fix setting event clock type
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Nandor Han <nandor.han@ge.com>,
-        Semi Malinen <semi.malinen@ge.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org
-References: <20230311111307.251123-1-krzysztof.kozlowski@linaro.org>
- <20230311111307.251123-8-krzysztof.kozlowski@linaro.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230311111307.251123-8-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Wes Tarro <wes.tarro@azuresummit.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,15 +71,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/11/23 03:13, Krzysztof Kozlowski wrote:
-> The driver can be compile tested with !CONFIG_OF making certain data
-> unused:
-> 
->    drivers/gpio/gpio-raspberrypi-exp.c:237:34: error: ‘rpi_exp_gpio_ids’ defined but not used [-Werror=unused-const-variable=]
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Wed, Mar 15, 2023 at 9:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Fix an inverted logic bug when parsing event clock type in gpiomon.
+>
+> Fixes: 8ffb6489286f ("tools: line name focussed rework")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Reported-by: Wes Tarro <wes.tarro@azuresummit.com>
+> ---
+>  tools/gpiomon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+> index ec177df..c2684c2 100644
+> --- a/tools/gpiomon.c
+> +++ b/tools/gpiomon.c
+> @@ -99,7 +99,7 @@ static int parse_event_clock_or_die(const char *option)
+>  {
+>         if (strcmp(option, "realtime") =3D=3D 0)
+>                 return GPIOD_LINE_CLOCK_REALTIME;
+> -       if (strcmp(option, "hte") !=3D 0)
+> +       if (strcmp(option, "hte") =3D=3D 0)
+>                 return GPIOD_LINE_CLOCK_HTE;
+>         if (strcmp(option, "monotonic") !=3D 0)
+>                 die("invalid event clock: %s", option);
+> --
+> 2.37.2
+>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Patch applied.
 
+Bart
