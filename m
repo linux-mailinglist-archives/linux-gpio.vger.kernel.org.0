@@ -2,73 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B93076BAAF7
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C7FA6BAB04
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:44:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbjCOImS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 04:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
+        id S231782AbjCOIoe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 04:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231626AbjCOImR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:42:17 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B038A6B97D
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:42:15 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-54195ef155aso175423647b3.9
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:42:15 -0700 (PDT)
+        with ESMTP id S231437AbjCOIoa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:44:30 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF7D1026E
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:44:28 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id e65so9673643ybh.10
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678869735;
+        d=linaro.org; s=google; t=1678869868;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XTuGpc9zZDajgS9JdSbz5gYMdquT7uBEBxyEc8YStMs=;
-        b=X8dfDUdc1qERLh7GivTSF6wAoPsVAkvj2ArHJf+sy5lK6lCJ+gnt6wL8G/qq14xTSw
-         mjda5Rut3a1LWApmKqwfqQTT+tSBy26JXXW25TL9FtRcv9N6sx/LgxDS08V/QhsObugK
-         NPhFuy1fii5SXPjmXcWltoGvZ6O5zXLeT6G2mVMXU285VJC3/FnnB0qxQjSQBWCD73sb
-         /rvd5t2nXr/fON39K8yDlmtX/XXXNBJXURsvDMLp87WsLKuIFCJcj+zScVTEDm7QRkIs
-         JxXTDcIVqpp185Vi2Vqj2pWjdXkl22umV2cZKBxBJtkQkgT1Lrsv7TWOmyXJuVuz3FE+
-         3XKA==
+        bh=CjzCtPEm6HcJP3Dyqv3r8CH6xuRjgHHwwVWtAY22KeA=;
+        b=TmAKOF7M8OJRv6ijewUFhsz3aDwUQXGJFsVcEjkqXtGHxFyIxFaPm4kq7cmash4Tps
+         5X+ndCgSF3JCUp2XUR7/xccFw1BoHwrqyFqPg+TE6Je0mZxAPI0SWN9nYSYzgQml8fHL
+         475jPB+I77i7uO+gBEiRINVPBUe3wRqbnOJao9vPHiSJAc/n+HCiUBFJNrM8wfu2jag7
+         x86kemVHY9TVE6LFfAXFWbVy+I7thtntU4qCEGn2icSO5o0NBPLuquU6xo6Rhx5mzTBY
+         HKZNNEwuEWJktmXqExPil0H88/bpR2qWFZy895iv6eW9cFOOw45+1bEz1AMxaJvEetpn
+         bi7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678869735;
+        d=1e100.net; s=20210112; t=1678869868;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XTuGpc9zZDajgS9JdSbz5gYMdquT7uBEBxyEc8YStMs=;
-        b=qk6kbNeXZQAG0fVnO2lk/gEGJvfyafQvcWJLNaic7I78W3M9ry0T/i2iErA1sY7WLc
-         66vYg+FLXwFfgKIU3p9Sk7qqSq+LKoOqaMZMQEqCKQC4qe8U/xYf6yeu5HJPe7Pi+Pkg
-         P8rzTbZNUXAZUb4k4vgnfCOuCAf3NMwDTP6o/x+fE6g8GLTuUCSb5O/dmdXX6FCybA97
-         EjxsN4xqlqlk4oyf2P5vC9EUqP1IVC5u++u6tyLZwdk05De3D0TH56rYsyC4rjKbp7yC
-         E9F/48AjKCrpfkDs8/fffOst64z4wFRTTId266dAK5cc5YmmeqCCxewTrKhzMhZyCPWR
-         zyIg==
-X-Gm-Message-State: AO0yUKUZgkVx5gXfK98VUHZZxG5ZF/HQsoHu0MSPyqyc2Evwih1tn9yt
-        DXejzzBRtmiqC10JLugTAXjPiBMyHtphAvP8fcLSPQ==
-X-Google-Smtp-Source: AK7set+PctbN8J4oXDXLyGrk3edHfMzatYBNgyGgTDyeQWW1ATtsR/bDqC9DIp18hftEPIAszZ48FGEmsyi1yIHsDoc=
-X-Received: by 2002:a81:ad19:0:b0:541:a0ab:bd28 with SMTP id
- l25-20020a81ad19000000b00541a0abbd28mr6948301ywh.4.1678869734933; Wed, 15 Mar
- 2023 01:42:14 -0700 (PDT)
+        bh=CjzCtPEm6HcJP3Dyqv3r8CH6xuRjgHHwwVWtAY22KeA=;
+        b=AwMtb0V4imMAO0TXfrKRVkTXLGZRfFyg/7u9Od595Iz+ErXola4NLJ90tOooGecaIs
+         FnqQfTDu5ZYjw4z/eV+YlhAZ3IxBobwXLPMk62Qzee9lbDdAMFMspmbJ6D/X2iPuCern
+         3QuYoPmAf/vjtUUOIQFyUOHYaggEq0edztix/wiQ8VlUTMAVUPPk1QalhF1NCR459qpB
+         B6xt9CywazAdqLt242EhuH1YMJiq4brz7iQwIc0hvz0VcjcT7kzFtuLVMDxzsk20rORd
+         cIpFVJPiCtoiUcPw9voAUmQN7N4/8wvDsKdRQCJX1ryddUfkJGGMQwYDNpJpnMDiHtmv
+         KAZA==
+X-Gm-Message-State: AO0yUKXOdH290GTKCu8xR64lrqk7WwJRAa3x4AiJY6QSUdli8HrprdOb
+        OAFWT0v4WLS2EPgHVmezUo82X+iB3HY/fz/ii8QWKg==
+X-Google-Smtp-Source: AK7set97ddda+/faZwlXgWPk9c7UeZbGH6FDRFXD/3tQR7P7H+odvFOuRJFu9/lgw3QfrzznGBXduFWqXqPqn2fPMU4=
+X-Received: by 2002:a5b:1cb:0:b0:a6b:bc64:a0af with SMTP id
+ f11-20020a5b01cb000000b00a6bbc64a0afmr25466480ybp.4.1678869868070; Wed, 15
+ Mar 2023 01:44:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230314121216.413434-1-schnelle@linux.ibm.com> <20230314121216.413434-10-schnelle@linux.ibm.com>
-In-Reply-To: <20230314121216.413434-10-schnelle@linux.ibm.com>
+References: <20230315083456.27590-1-brgl@bgdev.pl>
+In-Reply-To: <20230315083456.27590-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Mar 2023 09:42:03 +0100
-Message-ID: <CACRpkdbS1U8_qakdWV0YZq3bhr1NvFuL0Umv3QsXD0wYu7Hd9A@mail.gmail.com>
-Subject: Re: [PATCH v3 09/38] gpio: add HAS_IOPORT dependencies
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-gpio@vger.kernel.org
+Date:   Wed, 15 Mar 2023 09:44:17 +0100
+Message-ID: <CACRpkdaBKxSbRxCoYRyNJMfjiDZ5TswYg7s-Z0Loy+aha4ZFLQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] tools: gpiomon: fix setting event clock type
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Wes Tarro <wes.tarro@azuresummit.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -81,52 +72,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Niklas,
+On Wed, Mar 15, 2023 at 9:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-thanks for your patch!
-
-On Tue, Mar 14, 2023 at 1:12=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
-.com> wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
+> Fix an inverted logic bug when parsing event clock type in gpiomon.
 >
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/gpio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 13be729710f2..5a874e67fc13 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -688,7 +688,7 @@ config GPIO_VISCONTI
->
->  config GPIO_VX855
->         tristate "VIA VX855/VX875 GPIO"
-> -       depends on (X86 || COMPILE_TEST) && PCI
-> +       depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
+> Fixes: 8ffb6489286f ("tools: line name focussed rework")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Reported-by: Wes Tarro <wes.tarro@azuresummit.com>
 
-But is this the right fix? Further down in the Kconfig we have:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-menu "Port-mapped I/O GPIO drivers"
-        depends on X86 # Unconditional I/O space access
+> -       if (strcmp(option, "hte") !=3D 0)
+> +       if (strcmp(option, "hte") =3D=3D 0)
 
-config GPIO_I8255
-        tristate
-        select GPIO_REGMAP
-
-(...)
-
-Isn't the right fix to:
-
-1) Move this Kconfig entry (VX855) down under the Port-mapped /O drivers,
-   and then:
-
-2) Make the whole submenu for port-mapped IO drivers depend on
-   X86 && HAS_IOPORT
+I tend to code if (!strcmp(option, "hte")) but taste differs.
 
 Yours,
 Linus Walleij
