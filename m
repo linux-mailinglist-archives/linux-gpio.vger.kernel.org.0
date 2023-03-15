@@ -2,61 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1171D6BAC78
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 10:45:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 886DE6BAC88
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 10:49:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbjCOJpu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 05:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
+        id S231455AbjCOJtZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 05:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbjCOJpZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 05:45:25 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C3B80936
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:44:40 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id t4so1052881vsq.1
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:44:40 -0700 (PDT)
+        with ESMTP id S232105AbjCOJsj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 05:48:39 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877315BD91
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:48:27 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id x25so8352084vsj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678873475;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678873706;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XOvLakKT9+2TAyCPTEaJvYevbrhH+vEqwUBVj+ptxrU=;
-        b=7Iz3DM3Mga9TzTZujMLhDnkwTPGvaeXwx6pCKQaseJ1Gpt2jjPWTLrOOa1Ddpn+hiC
-         ba+ouXeDhKbqYRmoeQKO44ngc7SUHFJBLOjJ0S0ZetRmGUZzGn1Mk5CDVc+frpuDEi/t
-         zV5ngYAIQiuO2b9gUw/n5pKs9uG4M4eI67QJy9VyF6s+SraHMsU/vuYpLkxhm4+7i3T8
-         9VZ17PQERyZxyP/CkSuw3kz6vF1NXJ3Gz1JHBIN3i8uuztdLV6IXguxxLec5Zxu71Vo9
-         Y/vkP8JtMLoEIpIyPGAgT74Oy6JfdHW4lPZtr5kZks5QVQwcAeq3DuqFfbWr+8cBKCZE
-         CSdA==
+        bh=i9wrGaACCmAawpvI5IWRWR5riYVn9bE721EgbamNCo8=;
+        b=M3I5pqT0ftPGbU3JaYLh3CiD3Ge+e+0lK8AcQCt7aB7PF8QByEm6O/bbsd7ZvCk1yd
+         odUDFSa9CLgnP6U9nZnpsD9vN70O8UXTK16HB64m7k528iHbd33Gu3HzLARTz1wHwDvV
+         ZM8XD2odSOLMq1n5xx0vdB3sb4tv7RmpkRI65qO4mYibDZdraZkcE977MdHxYecZHpUw
+         fJhgyOFNy1+TF/1tjvmkHsVlDYLFT6fQubCmefWUKlm+MvZFy2VMeK/jLUfzGRIDFdX7
+         KWqhtI5eYAzLBJTsFWmJnTbUmRkYWwcfPF0A0seS+qxxCG9jQlfPE+vR09SjRSURvtIV
+         Z2PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678873475;
+        d=1e100.net; s=20210112; t=1678873706;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XOvLakKT9+2TAyCPTEaJvYevbrhH+vEqwUBVj+ptxrU=;
-        b=oTgRYjxbCzDdV3Gxu3ELGYcxFup9JdJlIcSnisXUCDuHEcfvF3CLl8CkREjfxpjOgt
-         iMmmh0CQDvf2FMgU9qkJBbynNWVb1iQ7HZYQQwoQMaR54ew4/1N7hvjoVa1UpZa+mPdc
-         AmZvd0nJoovQOPHbWs8cgwjO/hQeXw8t7R/Oyo6XCNcikvjq+dNCCkNOsObx7yIpEK7O
-         2axxjV/XTJMZ01hzm2+jwP35bo3XHjoVK46GiBkbRZ1NAbHShyPe369HZbKHcIkj2VyC
-         TzAhyB2vyZBz+2BjpJoupzH+1nW+oIhpTQM1/pCfxN5dLCU36Yg4v+ChHVixqL5DI1rW
-         z6Zg==
-X-Gm-Message-State: AO0yUKXDp1HfrhFPk9DgJrvf43JkxYUCTett/XXU2wk/P43uQDS8lcBI
-        hCz8YUrpHr8T7+5bSChJ5anPIK5X/DabJltNrOUUlA==
-X-Google-Smtp-Source: AK7set/61AMYkN1IcvzWoMbfVQGVWVJ6sXe80yDD2sl8IBIw0pKpIZjfs38pXwO6Fk7CuNio/c4iwV+JAnE9bV44NlQ=
-X-Received: by 2002:a67:ea49:0:b0:411:a740:c3ea with SMTP id
- r9-20020a67ea49000000b00411a740c3eamr27072531vso.0.1678873475032; Wed, 15 Mar
- 2023 02:44:35 -0700 (PDT)
+        bh=i9wrGaACCmAawpvI5IWRWR5riYVn9bE721EgbamNCo8=;
+        b=TWn5WQJnWBlS5Gxd8yIOcHU9U3O3x5xwF4Y45B+ajjp7dTdvLMcvmP1InbtiCwg8UD
+         V4cF9jOG4p/ThxbJBmQhWMNRPseIwF8FwZw7Uioq/QAYutatP8gdvy53JPlHJY5HS+jZ
+         goVbqBvPwdiar8Wkmyt+sv/CLUSQ0dAUuwKFfN1U0zGUS2oXittWXCNTwnmUVN3asD35
+         hK+tVn7K30RyMfzjBGF2ntlh0pUQbAlLx7aUCarMMPfemQH/KS6uNNWJJR7QtlNvrK4t
+         1YjMW9dEX/MOdZtdcAdxk6e00MXhXWzanpnAjS7GwgZonbX95NUxen/BxqqAB/JgLfnm
+         oQzw==
+X-Gm-Message-State: AO0yUKWy5HwwRofIVqMAUp0YQf3vIRV45BvCKQhE+gmiUhWDaKrANAJu
+        fNfONyGl9W6r5fVUxuAfyGYyar6JMCPFhFnix7pT2g==
+X-Google-Smtp-Source: AK7set9AFjmytAOZT2FHo+ktlYDH9ACmI1Dub/5Du0LrMXs2zgBbrQAxme3xfQUJ2jg0BJ7+0oGr3YhpKWzuXaFHdkI=
+X-Received: by 2002:a67:ee48:0:b0:425:a141:2af5 with SMTP id
+ g8-20020a67ee48000000b00425a1412af5mr4480269vsp.2.1678873706649; Wed, 15 Mar
+ 2023 02:48:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230307182557.42215-1-andriy.shevchenko@linux.intel.com>
- <20230307182557.42215-4-andriy.shevchenko@linux.intel.com>
- <CAMRc=MdW7JjWvJUtvwJDwWLB5ygPiCRWLNM8E0iyRoD=HbzfVw@mail.gmail.com>
- <ZAoq+yAyPnI4zgto@smile.fi.intel.com> <CAMRc=McQKK2e86m1w7q4ysGCJcSSgDjV-tkAkFa626ko+eTeUA@mail.gmail.com>
- <ZAtiZn+rIaNmYoZs@smile.fi.intel.com>
-In-Reply-To: <ZAtiZn+rIaNmYoZs@smile.fi.intel.com>
+References: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 15 Mar 2023 10:44:24 +0100
-Message-ID: <CAMRc=McMnbWqAYf024bhaG3OERUzzdzRyp4gj-n20i108L65Jg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpiolib: Move gpiodevice_*() to gpiodev namespace
+Date:   Wed, 15 Mar 2023 10:48:16 +0100
+Message-ID: <CAMRc=Mdsnvrh1NtKoSHwG-5NETGqjiZytPOJ-45YJvya1k0Ngg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Remove duplicative check in gpiod_find_and_request()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,85 +60,55 @@ Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 6:01=E2=80=AFPM Andy Shevchenko
+On Thu, Mar 9, 2023 at 7:56=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Fri, Mar 10, 2023 at 05:48:39PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Mar 9, 2023 at 7:52=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Wed, Mar 08, 2023 at 11:49:53AM +0100, Bartosz Golaszewski wrote:
-> > > > On Tue, Mar 7, 2023 at 7:25=E2=80=AFPM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > The functions that operates on the same device object would
-> > > > > have the same namespace for better code understanding and
-> > > > > maintenance.
+> The gpiod_find_by_fwnode() already checks for NULL and returns
+> correct error code in case fwnode is invalid. Drop the respective
+> check and assignment in the gpiod_find_and_request().
 >
-> ...
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> > > > > -static void gpiodevice_release(struct device *dev)
-> > > > > +static void gpiodev_release(struct device *dev)
-> > > > >  {
-> > > > >         struct gpio_device *gdev =3D to_gpio_device(dev);
-> > > > >         unsigned long flags;
-> > > > > @@ -617,7 +617,7 @@ static int gpiochip_setup_dev(struct gpio_dev=
-ice *gdev)
-> > > > >                 return ret;
-> > > > >
-> > > > >         /* From this point, the .release() function cleans up gpi=
-o_device */
-> > > > > -       gdev->dev.release =3D gpiodevice_release;
-> > > > > +       gdev->dev.release =3D gpiodev_release;
-> > > > >
-> > > > >         ret =3D gpiochip_sysfs_register(gdev);
-> > > > >         if (ret)
-> > >
-> > > > But the only other function that's in the gpiodev_ namespace operat=
-es
-> > > > on struct gpio_device so that change doesn't make much sense to me.
-> > >
-> > > I'm not sure I understood the comment.
-> > > After this change we will have
-> > >
-> > > static int gpiodev_add_to_list(struct gpio_device *gdev)
-> > > static void gpiodev_release(struct device *dev)
-> > >
-> >
-> > Do you want to use the same prefix for both because struct device in
-> > the latter is embedded in struct gpio_device in the former?
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 8ecfe3afde1e..333ccd44e2b2 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -3927,13 +3927,10 @@ static struct gpio_desc *gpiod_find_and_request(s=
+truct device *consumer,
+>                                                 bool platform_lookup_allo=
+wed)
+>  {
+>         unsigned long lookupflags =3D GPIO_LOOKUP_FLAGS_DEFAULT;
+> -       struct gpio_desc *desc =3D ERR_PTR(-ENOENT);
+> +       struct gpio_desc *desc;
+>         int ret;
 >
-> Yes, the logic to have logically grouped namespace for these APIs.
-> Meaning on what they are taking as an effective object to proceed
-> with.
+> -       if (!IS_ERR_OR_NULL(fwnode))
+> -               desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, i=
+dx,
+> -                                           &flags, &lookupflags);
+> -
+> +       desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, &fla=
+gs, &lookupflags);
+>         if (gpiod_not_found(desc) && platform_lookup_allowed) {
+>                 /*
+>                  * Either we are not using DT or ACPI, or their lookup di=
+d not
+> --
+> 2.39.1
 >
 
-I don't have a better idea so applied it.
+Applied, thanks!
 
 Bart
-
-> > > There are also gpio_device_*() I have noticed, so may be these should=
- be
-> > > actually in that namespace?
-> > >
-> > > And we have
-> > >
-> > > static int gpiochip_setup_dev(struct gpio_device *gdev)
-> > > static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *=
-gdev)
-> > >
-> > > That said, what do you think is the best to make this more consistent=
-?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
