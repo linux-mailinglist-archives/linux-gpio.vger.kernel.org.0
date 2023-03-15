@@ -2,103 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F22C6BB038
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 13:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6151D6BB0C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 13:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbjCOMQd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 08:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
+        id S232292AbjCOMVH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 08:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231842AbjCOMQ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 08:16:26 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32568F736
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:16:11 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id n17so5686434uaj.10
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:16:11 -0700 (PDT)
+        with ESMTP id S232156AbjCOMUg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 08:20:36 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD38849883
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:20:14 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id by13so16800458vsb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678882570;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678882814;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PzgtuMSfYssFcR6AaTEq8LEPYe/fsdaQKwPpEYrgic4=;
-        b=k3Rp96Q41gIHkxWl46EzvcWsbg9XDbuPnEwhG1PjwX6Xr1s+nIM7LYjeM9B2UORuSW
-         VI+IpGXP8JadT0gZJHx6i86d+SVB/6zvk8f12f6vLgeXgooy/yAT5jecP3GtLuBXepJ0
-         ExKTOOQ4Ai6fyKLRkB8MirMRjkAWnQaD0Z+QTiigFQcd4pOX4F8wHUeRbscZJovG9PAp
-         pn/x4i30NMz802/Qe6pVcWg011WMldRe8NUQTDslX0drhhMrTJsjh+tKyf4+uqLGxKIt
-         OHakhlV/CKY+yb0Ypg2Q+pY9l9SC9/yXJjR8+8PWP678oiPOlKCtiLcVCNegFGmAeKnN
-         xe3Q==
+        bh=T7ECRY0Te14ADf7d1i4el7TwH1rvkn6nOgcFPiWQeeE=;
+        b=qfV7NVpQG2DvX+Cj58PBVyZL6NOvhyh3tUT4nWftgX1LcK7MVqiP1AWrrKOEcNa6Sd
+         2mObvmjze4rBW3GbOX7GdaQMcaHGETycNH5CuXEYX0TApmcVW34vXSnJylFSWo79niya
+         oyq7D7qYpmLgkEoMm8zgpW4CuCzA4FKVRHlY54Q5WP480NhFbZJFydD7l3aqwRc8h6e0
+         bFp5knWRl73B+XFEowhf6qCH3nCy8yO9gafgGNc9IYzNxob1jw9Ry5uYghSuJ8kYhP35
+         9ht3aN7i4WBoHFQLZkCGGOW4pSHkGa5Z4YHtGsL4688cPfZXe74oEqJ4oYIZK4hUIfc9
+         gX9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678882570;
+        d=1e100.net; s=20210112; t=1678882814;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PzgtuMSfYssFcR6AaTEq8LEPYe/fsdaQKwPpEYrgic4=;
-        b=CqUEhzmOgbk3Wxw110y0RBCOyKD9f4WXa4tWeVrjtEVl2mjRuJeuc2LMIfBmeBd2dc
-         MH9nd8YMzbmQAAkeKcvfyKoQCZB3bmfMt6uB/SAUv8ShnC/kfjKik35VHFwwdVlcB8fT
-         NobkX33iENqhyRsDAAoTMxXqhYU97qrLSC6y8HvQbSH6ucI3jEk5dITunwv8bys/Ln2H
-         g/JeXX1c3OB07b4tLFIWXfKqROkgBYQPUGYw/qs3tD/n1Sqhtf+AfCIRHChgiVlS5OzQ
-         +f0tFg57abS2lcxsJ/iOdLjzUpZrOjULoNZ8jevyctYZ+uTBhQ4y/ijvQuQqWBShWXiX
-         oqAA==
-X-Gm-Message-State: AO0yUKURxTv9wdSXSsDfLBrdW0EcsyrMqkEFs5TClKwTmau5b0HMIBCJ
-        yo9sGC/f0wf/x3qvLoicEKGsa3AsRYdOKYkg+/hptg==
-X-Google-Smtp-Source: AK7set/aG+bFALcuRIRUQTR6qqfdF0rarM40hOIYBqY24ynLEqKWSLA6YkzVNlk2cI4HcNeuGu1jAfrbV+hUwnjZZqo=
-X-Received: by 2002:ab0:5402:0:b0:68a:6c1e:1aab with SMTP id
- n2-20020ab05402000000b0068a6c1e1aabmr25631831uaa.2.1678882570399; Wed, 15 Mar
- 2023 05:16:10 -0700 (PDT)
+        bh=T7ECRY0Te14ADf7d1i4el7TwH1rvkn6nOgcFPiWQeeE=;
+        b=lRsUIF/F0CTntzKQD964Uo1Rqv78C+0TcGL84VMMLz4tDTtpM/oVSrZvflHZCeO37A
+         i+2AvVOE8UgNlvZqbUbij4lMDsrXi48lGjTULLezZ9Pzyz0Gyqkb6hSb3VzyZZmY9dZL
+         xmbPdKeEY/bHKV4HBi2w2bwoT8s17NgEtMjSgeaPto6Zvo7lLXJC31r3CNxbBgqBqJGt
+         WGY+ZYxoAVmP249ZDjSCmP1hV+f/b6/z7DCLoYxSbUHZdWR0vlZgZpx99MnHYz0Jm30F
+         DeepU1ALPzTgUNYzn72eARAj9NgHxcD2509xcA8CTQecuuYsGhetAO5jzrXroZg87nY0
+         GcJQ==
+X-Gm-Message-State: AO0yUKVs+gEjnw4jjxmCtMvS3MNWIUoVBJKis4kTyPqq1YPQjieH2yDM
+        WBxcw6WkX9QjqXhTXNaf99FuLDOip+dNuys7kmd1yQ==
+X-Google-Smtp-Source: AK7set8xf9erliFQjg7b8zKj5RwEcJ2NN9wMH4S6n+20ZmGyEH+og3UG9ei8Qjt+sSDngPD1/GcLB+pn3QA5m4E3CK8=
+X-Received: by 2002:a67:f254:0:b0:425:b61a:9c13 with SMTP id
+ y20-20020a67f254000000b00425b61a9c13mr2414569vsm.0.1678882813726; Wed, 15 Mar
+ 2023 05:20:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230310190634.5053-1-dipenp@nvidia.com> <20230310190634.5053-6-dipenp@nvidia.com>
-In-Reply-To: <20230310190634.5053-6-dipenp@nvidia.com>
+References: <20230312190435.3568212-1-xiang.ye@intel.com> <20230312190435.3568212-3-xiang.ye@intel.com>
+In-Reply-To: <20230312190435.3568212-3-xiang.ye@intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 15 Mar 2023 13:15:59 +0100
-Message-ID: <CAMRc=MfG0de07p7nJMya5RfK6a_wQhrKSDZxGMk2L=vhw=_oUQ@mail.gmail.com>
-Subject: Re: [PATCH V3 5/6] gpio: tegra186: Add Tegra234 hte support
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, timestamp@lists.linux.dev,
-        krzysztof.kozlowski+dt@linaro.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org
+Date:   Wed, 15 Mar 2023 13:20:02 +0100
+Message-ID: <CAMRc=Mfynj1STC54v7SBKZxBk2rJ6VTW+XV56hZ896rOCpKd1Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] gpio: Add support for Intel LJCA USB GPIO driver
+To:     Ye Xiang <xiang.ye@intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, srinivas.pandruvada@intel.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        wentong.wu@intel.com, lixu.zhang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 8:06=E2=80=AFPM Dipen Patel <dipenp@nvidia.com> wro=
-te:
+On Sun, Mar 12, 2023 at 8:05=E2=80=AFPM Ye Xiang <xiang.ye@intel.com> wrote=
+:
 >
-> To enable timestamp support for the Tegra234, has_gte variable needs
-> to be set true.
+> This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
+> device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
+> GPIO module with specific protocol through interfaces exported by LJCA US=
+B
+> driver.
 >
-> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/gpio/gpio-tegra186.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 14c872b6ad05..b904de0b1784 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -1134,6 +1134,7 @@ static const struct tegra_gpio_soc tegra234_aon_soc=
- =3D {
->         .name =3D "tegra234-gpio-aon",
->         .instance =3D 1,
->         .num_irqs_per_bank =3D 8,
-> +       .has_gte =3D true,
->  };
->
->  #define TEGRA241_MAIN_GPIO_PORT(_name, _bank, _port, _pins)    \
-> --
-> 2.17.1
->
 
 Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
