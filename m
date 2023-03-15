@@ -2,105 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D24136BB587
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 15:11:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B4026BB748
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 16:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231663AbjCOOLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 10:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        id S232329AbjCOPOY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 11:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbjCOOLJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 10:11:09 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FADE188
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 07:11:08 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-54195ef155aso191953757b3.9
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 07:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678889468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FGX60x9p4oWuTiJf6B1ZfJk1mMaS0COQOMjg31wuy5o=;
-        b=jENBxPi/XCO1ht6RtCcBuyftc73bosjpr4Fq7+CIme9kjWAFxy0LeMfta8bR3JpF8v
-         wpOqB77QeVXbn/pJx9DAskJM18XfmUPbKxC6/FI7UOpA5wYt5SH9NseMyaHeIW2Ah3FJ
-         oGfm2G6uOWL65Lp9zOJREX//P8V1zW32gmSYZqG+Dpkzie9Bjuq9scXdau+37Cvr6ZJ7
-         7kW+yUvZKUx9ijfDN1WsgdVUZ0BYX2vqCcPaj4c3stVTZMH5ua/kDvqt7ocUNqE/ldqO
-         EAnChm9hyUrVoQrg8DSf9dLSIrUkiTJ0mLQjv4ZlxYXXBgd5XxSjVtk66cycZg3G0OYd
-         /t/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678889468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FGX60x9p4oWuTiJf6B1ZfJk1mMaS0COQOMjg31wuy5o=;
-        b=HX89GJfB0XNtGhQgKu+b3LieoBiirsIh3U7ht/00sUPL36H2/W5QSZ7O4yVw+CtwMS
-         QzSeNloJiocyHalcSq33ehHB7VaIJ4MXwBJvC7zapmLduaL2meYK6ChwqRcxlot7jZs2
-         oV4RUusSDTm6cG/h36AEalle6duJvu6wG9HDbFjKdG7IYJQNdBqfw2wu2dI7iCoB/9rZ
-         ubdY6B47IBtuTOgSVExEnqEWH5bsIpFaC6AahJ4td4A2OxGMV4J3I4gL6zTyWJFc+n7y
-         iXDGcfEVfkEdY2B9eu+NyRj79fAuSCdO0m2ZHUdrGBzQNdw4lOBxSvHvWOmgsEBVCyXv
-         AHgQ==
-X-Gm-Message-State: AO0yUKU1rIGQ1GPbXcwHzSc7D/iEAsGpdSKzSvMEd/aIicjn71WieQmD
-        E73UNyjjbfpiLWAcFz+7idtYiB6ggzs6BMftZa81Og==
-X-Google-Smtp-Source: AK7set/W9PNttG875z0fRt5a96OQ0tJa2XI0ULNOTLG3Ee+idMtjmLVV8oFoFRTDD/YYkA9YVnsmPUX620lVxiT03M8=
-X-Received: by 2002:a81:ac53:0:b0:541:e84a:9d9 with SMTP id
- z19-20020a81ac53000000b00541e84a09d9mr8978ywj.7.1678889468162; Wed, 15 Mar
- 2023 07:11:08 -0700 (PDT)
+        with ESMTP id S232069AbjCOPOW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 11:14:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338D215C87;
+        Wed, 15 Mar 2023 08:14:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C298D616F0;
+        Wed, 15 Mar 2023 15:14:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45977C433D2;
+        Wed, 15 Mar 2023 15:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678893260;
+        bh=1aEGn0I/sJkreuvZWctVb3fO08m2I27PC3lgARoKKRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jMnGB/X0RGUKUDzg8ge8mix5aU30MmvkInAhVoE2j2wLBR1q4KmZs6yEItwMngx5e
+         AaDCtgLNxZyUlnQ1u7Z4c9w1WVJnrAwtuOopB1HpAxo0rQ6sqhIwVQi3wzv2ub+FG1
+         ZqpW3e53qpf8AIuwxHfoaodF7riVBz29p7lxAQaS++I+qyKu2J8noHjJmziydMznm3
+         1NTJdgGE48WZy5Jh7iSg19NC8wHi4IVhJqqavdwMSGfa0CWmWfBtxq0Gu+UUg2z7tl
+         AF+QZWWSeR4lEhitiixzr4E/b3BFzIhXuZikqixrxeYCDIFIOQQ7baVx4BwbpwhCn1
+         cRNN1bdb9gA2g==
+Date:   Wed, 15 Mar 2023 15:14:14 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Felipe Balbi <balbi@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2] leds: Mark GPIO LED trigger broken
+Message-ID: <20230315151414.GZ9667@google.com>
+References: <20230314210059.419159-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-References: <20230315083456.27590-1-brgl@bgdev.pl> <CACRpkdaBKxSbRxCoYRyNJMfjiDZ5TswYg7s-Z0Loy+aha4ZFLQ@mail.gmail.com>
- <ZBHQP3e0/iDs0Jyn@smile.fi.intel.com>
-In-Reply-To: <ZBHQP3e0/iDs0Jyn@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date:   Wed, 15 Mar 2023 15:10:57 +0100
-Message-ID: <CACMJSes1uQV=eNSTjhG+EWoOOZ8OrO1Y7=9K3DmbkV0qi4b_PQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] tools: gpiomon: fix setting event clock type
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, Wes Tarro <wes.tarro@azuresummit.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230314210059.419159-1-linus.walleij@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 15 Mar 2023 at 15:04, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Mar 15, 2023 at 09:44:17AM +0100, Linus Walleij wrote:
-> > On Wed, Mar 15, 2023 at 9:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Fix an inverted logic bug when parsing event clock type in gpiomon.
-> > >
-> > > Fixes: 8ffb6489286f ("tools: line name focussed rework")
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > Reported-by: Wes Tarro <wes.tarro@azuresummit.com>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > > -       if (strcmp(option, "hte") !=3D 0)
-> > > +       if (strcmp(option, "hte") =3D=3D 0)
-> >
-> > I tend to code if (!strcmp(option, "hte")) but taste differs.
->
-> Pity we don't have match_string() API in a libc or somewhere in the user =
-space.
-> Allows to avoid such mistakes at once.
->
+On Tue, 14 Mar 2023, Linus Walleij wrote:
 
-We have several instances of such string parsing in tools/ in libgpiod
-so feel free to add and use it. You can even port linux code verbatim
-- libgpiod is GPL after all. :)
+> The GPIO LED trigger exposes a userspace ABI where a user
+> can echo a GPIO number from the global GPIO numberspace into
+> a file that will trigger a certain LED when active.
+>
+> This is problematic because the global GPIO numberspace is
+> inherently instable. The trigger came about at a time when
+> systems had one GPIO controller that defined hard-wired
+> GPIOs numbered 0..N and this number space was stable.
+>
+> We have since moved to dynamic allocation of GPIO numbers
+> and there is no real guarantee that a GPIO number will stay
+> consistent even across a reboot: consider a USB attached
+> GPIO controller for example. Or two. Or the effect of
+> probe order after adding -EPROBE_DEFER to the kernel.
+>
+> The trigger was added to support keypad LEDs on the Nokia
+> n810 from the GPIO event when a user slides up/down the
+> keypad. This is arch/arm/boot/dts/omap2420-n810.dts.
+> A userspace script is needed to activate the trigger.
+> This will be broken unless the script was updated recently
+> since the OMAP GPIO controller now uses dynamic GPIO
+> number allocations.
+>
+> I want to know that this trigger has active users that
+> cannot live without it if we are to continue to support it.
+>
+> Option if this is really needed: I can develop a new trigger
+> that can associate GPIOs with LEDs as triggers using device
+> tree, which should also remove the use of userspace custom
+> scripts to achieve this and be much more trustworthy, if
+> someone with the Nokia n810 or a device with a similar need
+> is willing to test it.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v1->v2:
+> - Be less intrusive and just mark the feature broken
+>   for now.
+> ---
+>  drivers/leds/trigger/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Bart
+Added Pavel's Suggested-by:
+
+Applied, thanks
+
+--
+Lee Jones [李琼斯]
