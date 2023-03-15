@@ -2,98 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 126EE6BAD52
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C5A6BAE11
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231986AbjCOKPe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 06:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
+        id S232380AbjCOKrV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 06:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231987AbjCOKPd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 06:15:33 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DAE2472F
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 03:14:57 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id p203so11426416ybb.13
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 03:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678875295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PuHAtbYWTW6xbphRQ0UVmubUbbrmzEvZg9EDtKN2tX0=;
-        b=hw5X+lY7q6R/R1JcozeqwndOrE/2ThrtZi4MMpN2mGEgFSDgTs2VZBFL3LUo9GUWoB
-         vpYsGHy3sc0+XzT7mnQFb1wa5x/BnslBPny/8knjjZ/51WXoQBmYXnv6WqqyAGjQ3qys
-         IT3yE1Khe0tflDtqilUsYwTfXrYOt1sCyay5HPCs2Rk8oxdWsFsRDYC4aPsvL77+nW7H
-         hAJHZH0ITFjPAxoFhKLWu5UqbgP8umfTCjnl0Z50sae+iuOEFBVfpxIE8916HSQyWyh7
-         gVKXAasnwhLsztlUzJNxl/kg+xUSJIQ91m01XzrCgYzuQIOewgEeqSbOr9lh9ukBGQad
-         SkqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678875295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PuHAtbYWTW6xbphRQ0UVmubUbbrmzEvZg9EDtKN2tX0=;
-        b=Ad13/EB/hM33F7DpypqrVeJUcgXaEB1AuAI3uX2X4O+QBK/UFZ3EbOmk1TIm1PAF1U
-         Toq06jVdy2g+p7BZAmU/4dd+WfSbfRpR4Uq8Ip69TQkcHTwa9LTxNDONH819G4LvNz1Y
-         ii3hW1b/DlZ+X8F/nd7h4H7137GA7kQdr6Sqr0MQ6VIDJfThGyddCF6ztEsKsizx2LXy
-         9lT+WL6rFvyZ5zMEwyKPpZCLO4h3HlYdR4wAYjF1MdDANApHgnR9i0X2XWAxN6zKlEyo
-         02M0FHE8uy2apgLTY4nnLGuH4xFARi9TwBqenwNRydgzJurb66bpXyOAEO8/krOttgj/
-         Qutw==
-X-Gm-Message-State: AO0yUKU0uTvjcjVqACVZCAm2Dr+7PkLJDIKcFdi741IhCCiLQEAqFpZA
-        W/tLzrTWv5PE/qPgEmEO344JE7gBChJLSquNVv/lxA==
-X-Google-Smtp-Source: AK7set+rPVJh1mommx+MiSZXhKbPtqCHgOXsenWEXVmlojgyvLjXuIW6mpbV5LyWvVilu4vm1oHMYIbVcuq9QY++rAw=
-X-Received: by 2002:a5b:c7:0:b0:b3b:d433:b063 with SMTP id d7-20020a5b00c7000000b00b3bd433b063mr3089486ybp.4.1678875294928;
- Wed, 15 Mar 2023 03:14:54 -0700 (PDT)
+        with ESMTP id S232360AbjCOKqq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 06:46:46 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C091E7E7B8;
+        Wed, 15 Mar 2023 03:46:06 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 41C8D66015F1;
+        Wed, 15 Mar 2023 10:45:59 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1678877160;
+        bh=2lu6PO85yn+bXYwQVx0BtD+c64sEAEGM7jdKQhcGME8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=XiamhNz3BoS2Am/A916XWJivnLGJ5CbmEZpenv49PmVgRCy5qL1V/oXw16h6Mnotl
+         Z94E0gppdt/i81ppf7yISjD6rvxasFgEInXQPNXHDlX3uS8J6ayjDYaAhNHcywlCeg
+         1iuk1I6lqn39B6HRHiUSBqH7GDRIuKL3uoU2u3Oj4ob/DGjeeI4+qpmj0ErBLFkKgw
+         uwPEGsOULUOvOZwmlK6orcLbZr2fcPnaWkQdEonEXQFnJdynrI+8iw0r/TbinPVYnI
+         o6qiJhlEpNs7qK7S0eYk2ECctMGxZveWgc9Pt2T6+RwJ2tAlPC2ZFdl4yKFtU+tYZ/
+         Y1W0EDhUVPbtA==
+Message-ID: <e55bc87c-c174-6acb-d48e-9a05b9551754@collabora.com>
+Date:   Wed, 15 Mar 2023 11:45:56 +0100
 MIME-Version: 1.0
-References: <cover.1677515341.git.william.gray@linaro.org> <CACRpkdbAMQ0OAMnxuyf6gMFu8qJakmT=WvRzBTXavXFmnJ9ObA@mail.gmail.com>
- <CAMRc=Mem3TsNM5coFLKAFQ74Rk4vvXLscuBhWoR-G6mLtxaSPQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mem3TsNM5coFLKAFQ74Rk4vvXLscuBhWoR-G6mLtxaSPQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Mar 2023 11:14:43 +0100
-Message-ID: <CACRpkda2_WNAWZLH3nOZe=gzArMxAdO6XD3R42i6RTrvNZNPjQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Migrate IDIO-16 GPIO drivers to regmap API
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     broonie@kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 03/18] dt-bindings: pinctrl: mediatek,mt8365-pinctrl:
+ add drive strength property
+Content-Language: en-US
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>
+References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
+ <20230203-evk-board-support-v2-3-6ec7cdb10ccf@baylibre.com>
+ <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org>
+ <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
+ <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
+ <CAFGrd9rZxwtxx5f8Gp35-5152EPGiyEdZjps1Mhn5bL6QfufnA@mail.gmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAFGrd9rZxwtxx5f8Gp35-5152EPGiyEdZjps1Mhn5bL6QfufnA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 11:02=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> On Mon, Mar 6, 2023 at 3:13=E2=80=AFPM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
-> >
-> > On Mon, Feb 27, 2023 at 5:54 PM William Breathitt Gray
-> > <william.gray@linaro.org> wrote:
-> >
-> > This looks good to me.
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Bartosz, of you merge this you can drop the corresponding
-> > patches to immutable irqchip conversion for these chips
-> > that I will be posting shortly (currently on the build servers).
-> >
-> > Yours,
-> > Linus Walleij
->
-> Mark, can you provide me with an immutable tag for the regmap tree
-> containing commit 1/6 from this series, please?
+Il 15/03/23 09:11, Alexandre Mergnat ha scritto:
+> Le ven. 10 mars 2023 à 10:49, AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> a écrit :
+>>
+>> Il 10/03/23 10:46, AngeloGioacchino Del Regno ha scritto:
+>>>
+>>> Anyway, Alexandre: can you please perform a cleanup to the MT8365 pinctrl binding?
+> 
+> Yes I can ! :D
+> Should I do it directly in this patch series or (I prefer) in a new one ?
+> 
 
-I think there will be a conflict with the immutable irq_chip patches
-that are merged, but maybe the conflict isn't that bad so you can
-resolve it while applying.
+Doing that in a new one is fine... it's a cleanup that is not strictly related to
+what you're introducing in this series.
 
-Yours,
-Linus Walleij
+>>> The cleanup means you're setting mediatek,drive-strength-adv as deprecated and
+>>> adding the right properties (...and possibly changing the devicetrees to use it).
+>>>
+>>> For more information, you can look at commit history for the (unfortunately, named
+>>> incorrectly) MT8195 pinctrl documentation: bindings/pinctrl/pinctrl-mt8195.yaml
+>>> where we performed the same cleanup that I'm asking you to do, except we didn't
+>>> have to set any property as deprecated because there was *no devicetree upstream*
+>>> that was actually using that property (hence not an ABI breakage).
+> 
+> Thanks for the information, that helps.
+
+You're welcome!
+
+Regards,
+Angelo
+
