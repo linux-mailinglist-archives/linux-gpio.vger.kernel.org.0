@@ -2,86 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5951D6BAA7D
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:11:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 459EF6BAAD7
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:35:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbjCOILg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 04:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
+        id S230457AbjCOIfF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 04:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231398AbjCOILc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:11:32 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92CE20041
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:11:22 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id j7so7497404ybg.4
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:11:22 -0700 (PDT)
+        with ESMTP id S230426AbjCOIfE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:35:04 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD42193C8
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:35:02 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id bi20so2070237wmb.2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678867882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pvx2PL8LGDK3W8+E79pZBCoBzTKmBaY+LVdR8n5TD/g=;
-        b=MADLCMC7roVI8wwfAlxv6wEFm5zfJjNwB3x2CYtI/1xlOad5kMNBsm+9wMB1y2vb/o
-         426UTDd7tLaZlGxGEGQB3jyu+LNU4kQqXlnpSD+KWHAjH+q+iFRib6Q0dD4YXaiFRA9F
-         QJkGlLx0mO6VNDaY7KeG+RLoj94r8PqDhp5SHTCBLH5VUzQwtcN+F+pJcUSpGDj7Mpjh
-         1sPr3i+6R1l53pYS2+ib2V2t6wEj0Y9G72h6mYJtyVwBjDOXecFbWxOtIRf1FwKzNMzM
-         PgFzBGDqHoyXvW9VlzHbIo5zLl0wM5Z7Y8/oAoa/DrA2ApWE4tGM9BTkxkT72lfvtcPy
-         4LmA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678869301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a3SCWw7W3l4vhawK/FCucZgOumVK6W00MgYt5iADk0Q=;
+        b=PyGfgCguiFQe70l3svjqh6w0M5VJVPVMMTxPQnqDPg1Psl1BAvYHi/Xho3y/8KI4qY
+         QljcvvSR3HXWp5JWcgc4cNCA9uFvQCNibeilrouCDl7KWwd3YGOje5iRxiKGRal/EjyA
+         Rc/aCtpuJ4Cm3NVcjgShRcjcyeFXGuNOkskJGkOnAeGAMvRMH3d1BlBwElr01iydvE/g
+         21FVxeAAVZwIBWqqMZiL4g8mlv9oWd6mi/w87CmfNCrWgoybDdYHmV2zfVJNZYavpMKs
+         Bl9m69QGlPmRpZtIjwZNJjm0cgEpnHpCCIMppCXCZo6CKcw7YkPhSEwBMlwl5b32T5hN
+         GX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678867882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pvx2PL8LGDK3W8+E79pZBCoBzTKmBaY+LVdR8n5TD/g=;
-        b=pAHFRdT7CZwZjEnF+sEjpOdc0pV42UrTVjeVptcRRbNsDsV7sDtW7AKzOnEAiT4A1d
-         U13fPnUi1qXcRjyNGKfnN9oHmWMSa8pSPCcm3KfI06txVd8Mj/OmrsHZYfyssVYhNoJz
-         wZMTgKHuhgK7Fz/YqlqewfoeQjcrgXWWKJrktvjfrwTld4X1/8Qz3r65um5K3ziMv87i
-         cxqYbsykYS27zXa8AX8PX46kE0444cZsz2EJHCPYshcbW/i9wbl3NG3gq4MLAqIKB0Zi
-         Z84RxtK9j2ORSYLL+7k3IOTirrieSHR52WedtwgFGVbgU4jZV1xhmPvg1BaK5w/wg+0v
-         4cvw==
-X-Gm-Message-State: AO0yUKVL9Ty3KpCYN9/XsZ5cly/zAkRvFLgk9pweb/2bRRCPUwQ2Ffgb
-        6lRr8+OvmNvZDmsu1amt9Oz+DgSzJXcmt8dNGQguAw==
-X-Google-Smtp-Source: AK7set9A2zYI6pMRgNbXuK7nABMIl97HViLafw5PcRY262FGkwm8Z05z1Fr8by8LQaDAAqC5HXIwCelI1ertWu8vEmg=
-X-Received: by 2002:a25:8d89:0:b0:b33:531b:3dd4 with SMTP id
- o9-20020a258d89000000b00b33531b3dd4mr8108839ybl.1.1678867882064; Wed, 15 Mar
- 2023 01:11:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
- <20230203-evk-board-support-v2-3-6ec7cdb10ccf@baylibre.com>
- <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org> <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
- <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
-In-Reply-To: <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Wed, 15 Mar 2023 09:11:11 +0100
-Message-ID: <CAFGrd9rZxwtxx5f8Gp35-5152EPGiyEdZjps1Mhn5bL6QfufnA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/18] dt-bindings: pinctrl: mediatek,mt8365-pinctrl:
- add drive strength property
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        d=1e100.net; s=20210112; t=1678869301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a3SCWw7W3l4vhawK/FCucZgOumVK6W00MgYt5iADk0Q=;
+        b=g+5Sm/Cegc5npEE5jgpQQH8xuc0Y7jufR0ep4vZ8ZLdVORmF8t1SqiUsevWV+Qi2EP
+         ZSZFmOs+ug7bOQs0iRNZrU6bPifAml+GXjd3nYu8znQLC30bWWgGKgqAArCIjeg5oZ1R
+         75LPJsV04vLcgue50qgAjvbAlPFJ6qqh0vgd5Sh7L//BMzJRkc3yL0OahYzauyss3q8E
+         gjZ0IzsXo3G0U7t3f6lSHoVd5RCntkPHzs9NVHA8mb1hEXB4H9H9wvXSP/gKhxCPh109
+         a2E9v9vnwlnxoyoNKiwmrC8DGOi0AQSr1VQIz3lSgCEND5eLF1IcEF8U0DbtcbYYqm5g
+         j6Sw==
+X-Gm-Message-State: AO0yUKX8PKV/fijWAFphdEVXpzNyK6Sk3hhVwrFRWu0k55QEqzVGb1fQ
+        zIcH2iqY7pS56Q5cjA89kzTgSg==
+X-Google-Smtp-Source: AK7set82rSovb7+Rg5Zvyp9MlA4iM6uIxVJERe5RkED98hlv/w6P+gLV0aiaYcAtW0/94vFySp+meA==
+X-Received: by 2002:a05:600c:4f4e:b0:3eb:3945:d406 with SMTP id m14-20020a05600c4f4e00b003eb3945d406mr16976236wmq.16.1678869301056;
+        Wed, 15 Mar 2023 01:35:01 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:dc34:6420:c408:f64e])
+        by smtp.gmail.com with ESMTPSA id l3-20020a1ced03000000b003ed29f5616dsm1094588wmh.4.2023.03.15.01.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Mar 2023 01:35:00 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Wes Tarro <wes.tarro@azuresummit.com>
+Subject: [libgpiod][PATCH] tools: gpiomon: fix setting event clock type
+Date:   Wed, 15 Mar 2023 09:34:56 +0100
+Message-Id: <20230315083456.27590-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,33 +71,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le ven. 10 mars 2023 =C3=A0 10:49, AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> a =C3=A9crit :
->
-> Il 10/03/23 10:46, AngeloGioacchino Del Regno ha scritto:
-> >
-> > Anyway, Alexandre: can you please perform a cleanup to the MT8365 pinct=
-rl binding?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes I can ! :D
-Should I do it directly in this patch series or (I prefer) in a new one ?
+Fix an inverted logic bug when parsing event clock type in gpiomon.
 
-> > The cleanup means you're setting mediatek,drive-strength-adv as depreca=
-ted and
-> > adding the right properties (...and possibly changing the devicetrees t=
-o use it).
-> >
-> > For more information, you can look at commit history for the (unfortuna=
-tely, named
-> > incorrectly) MT8195 pinctrl documentation: bindings/pinctrl/pinctrl-mt8=
-195.yaml
-> > where we performed the same cleanup that I'm asking you to do, except w=
-e didn't
-> > have to set any property as deprecated because there was *no devicetree=
- upstream*
-> > that was actually using that property (hence not an ABI breakage).
+Fixes: 8ffb6489286f ("tools: line name focussed rework")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reported-by: Wes Tarro <wes.tarro@azuresummit.com>
+---
+ tools/gpiomon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the information, that helps.
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index ec177df..c2684c2 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -99,7 +99,7 @@ static int parse_event_clock_or_die(const char *option)
+ {
+ 	if (strcmp(option, "realtime") == 0)
+ 		return GPIOD_LINE_CLOCK_REALTIME;
+-	if (strcmp(option, "hte") != 0)
++	if (strcmp(option, "hte") == 0)
+ 		return GPIOD_LINE_CLOCK_HTE;
+ 	if (strcmp(option, "monotonic") != 0)
+ 		die("invalid event clock: %s", option);
+-- 
+2.37.2
 
-Regards,
-Alex
