@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 886DE6BAC88
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 10:49:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5997F6BACDD
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:00:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231455AbjCOJtZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 05:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
+        id S231416AbjCOKAR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 06:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232105AbjCOJsj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 05:48:39 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877315BD91
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:48:27 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id x25so8352084vsj.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:48:27 -0700 (PDT)
+        with ESMTP id S232286AbjCOJ77 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 05:59:59 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEED8235D
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:58:47 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id x25so8373104vsj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678873706;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678874327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i9wrGaACCmAawpvI5IWRWR5riYVn9bE721EgbamNCo8=;
-        b=M3I5pqT0ftPGbU3JaYLh3CiD3Ge+e+0lK8AcQCt7aB7PF8QByEm6O/bbsd7ZvCk1yd
-         odUDFSa9CLgnP6U9nZnpsD9vN70O8UXTK16HB64m7k528iHbd33Gu3HzLARTz1wHwDvV
-         ZM8XD2odSOLMq1n5xx0vdB3sb4tv7RmpkRI65qO4mYibDZdraZkcE977MdHxYecZHpUw
-         fJhgyOFNy1+TF/1tjvmkHsVlDYLFT6fQubCmefWUKlm+MvZFy2VMeK/jLUfzGRIDFdX7
-         KWqhtI5eYAzLBJTsFWmJnTbUmRkYWwcfPF0A0seS+qxxCG9jQlfPE+vR09SjRSURvtIV
-         Z2PA==
+        bh=UETJniz/O98zlZqk47leCUow9oRq7Z1Nu1ZbHvmon2o=;
+        b=o+EHwii/d5xrY6gJdZXhjFyqlJxcgQNljiMv/03XnA8vj6caGtGWtHkszWV2bRZ7Ir
+         /qLCNojgvrMs5IzKarEd2Dw4775PBEgnq3nAr8Sg3RTqLUGertjL71RwQvZkDZ3F6OyF
+         tx9H2c/CXQ4GhxCbxpgsGACgKORSa7taJhg9L681+DemE2jzRSxiTIcM27j1GRwOyQz2
+         hWrLN12tiYcOWuHf3R0e6Vleu9k379w1decYL9li/q+gR/M1q65g1JLYcgisMymoB0vq
+         Pfz/ZTgO4cjhb7kxaSwtrcNJ8e3IcRn8ROp6tEFRESlkA0bb1f0tVbRwtt70vCLSLXQl
+         q/Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678873706;
+        d=1e100.net; s=20210112; t=1678874327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i9wrGaACCmAawpvI5IWRWR5riYVn9bE721EgbamNCo8=;
-        b=TWn5WQJnWBlS5Gxd8yIOcHU9U3O3x5xwF4Y45B+ajjp7dTdvLMcvmP1InbtiCwg8UD
-         V4cF9jOG4p/ThxbJBmQhWMNRPseIwF8FwZw7Uioq/QAYutatP8gdvy53JPlHJY5HS+jZ
-         goVbqBvPwdiar8Wkmyt+sv/CLUSQ0dAUuwKFfN1U0zGUS2oXittWXCNTwnmUVN3asD35
-         hK+tVn7K30RyMfzjBGF2ntlh0pUQbAlLx7aUCarMMPfemQH/KS6uNNWJJR7QtlNvrK4t
-         1YjMW9dEX/MOdZtdcAdxk6e00MXhXWzanpnAjS7GwgZonbX95NUxen/BxqqAB/JgLfnm
-         oQzw==
-X-Gm-Message-State: AO0yUKWy5HwwRofIVqMAUp0YQf3vIRV45BvCKQhE+gmiUhWDaKrANAJu
-        fNfONyGl9W6r5fVUxuAfyGYyar6JMCPFhFnix7pT2g==
-X-Google-Smtp-Source: AK7set9AFjmytAOZT2FHo+ktlYDH9ACmI1Dub/5Du0LrMXs2zgBbrQAxme3xfQUJ2jg0BJ7+0oGr3YhpKWzuXaFHdkI=
-X-Received: by 2002:a67:ee48:0:b0:425:a141:2af5 with SMTP id
- g8-20020a67ee48000000b00425a1412af5mr4480269vsp.2.1678873706649; Wed, 15 Mar
- 2023 02:48:26 -0700 (PDT)
+        bh=UETJniz/O98zlZqk47leCUow9oRq7Z1Nu1ZbHvmon2o=;
+        b=4Q0WGIedloPOwHKNZQ0wYjBMJncGuFGSMbZPaIp5VNWtMY1OmvlakZJyKtXH2gy7EU
+         dWoShGG28rLXdqdgVt2REyBu95cRgv7xCkdjIeimIqKvJIOpv9tljv5ItXjHzvdN63bP
+         JRHyh3NkXLl+n+6ux6AtGMDWRjqufrdEPooHOg0gZUHLwuZ8p7Qq8h/hbclf2E0OitQl
+         Ti2LTnsdADPTMc24g+B+wb/Z6gK7Wt52NJrlQw+BQh1n9bj5Q6ahOnACEzL+9jefJjUE
+         D+4gM0ob6V7SgRm72YfWSLvaxfPC57jChmU3OX5UJ7vwJl2HWEXttj9Vcz9XizbFuaI8
+         Rq7Q==
+X-Gm-Message-State: AO0yUKWhbli4wjCpYqyYqbV8jf1a0hBvhNexbreubXHfW9GaRifQMqaP
+        tUZqOrSozwKCxF9OXC8yKwSpj16FPnKzBH7V68JODw==
+X-Google-Smtp-Source: AK7set8voa2ABEzOIvwhhpmNpGSSvP8pFb9vDR5UZCgRGxqHFsg+97YEyw5/5hJWqpJIkXyLLYj97Bk7gs7ujv+B3bA=
+X-Received: by 2002:a67:ea49:0:b0:411:a740:c3ea with SMTP id
+ r9-20020a67ea49000000b00411a740c3eamr27093080vso.0.1678874327058; Wed, 15 Mar
+ 2023 02:58:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230309185626.84997-1-andriy.shevchenko@linux.intel.com>
+References: <20230309185819.85050-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230309185819.85050-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 15 Mar 2023 10:48:16 +0100
-Message-ID: <CAMRc=Mdsnvrh1NtKoSHwG-5NETGqjiZytPOJ-45YJvya1k0Ngg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Remove duplicative check in gpiod_find_and_request()
+Date:   Wed, 15 Mar 2023 10:58:36 +0100
+Message-ID: <CAMRc=Mcp+oU-ujr9inAwD_cG=MVCTUR82sd0CwoZFujch4HcHQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Use IRQ hardware number getter instead of
+ direct access
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -60,54 +61,25 @@ Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 9, 2023 at 7:56=E2=80=AFPM Andy Shevchenko
+On Thu, Mar 9, 2023 at 7:57=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> The gpiod_find_by_fwnode() already checks for NULL and returns
-> correct error code in case fwnode is invalid. Drop the respective
-> check and assignment in the gpiod_find_and_request().
+> IRQ framework provides special type and getter to transform
+> the Linux IRQ to the hardware pin. Use that type and getter
+> function instead of direct access.
+>
+> While at it, amend an indentation in a couple of places.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpiolib.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 8ecfe3afde1e..333ccd44e2b2 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3927,13 +3927,10 @@ static struct gpio_desc *gpiod_find_and_request(s=
-truct device *consumer,
->                                                 bool platform_lookup_allo=
-wed)
->  {
->         unsigned long lookupflags =3D GPIO_LOOKUP_FLAGS_DEFAULT;
-> -       struct gpio_desc *desc =3D ERR_PTR(-ENOENT);
-> +       struct gpio_desc *desc;
->         int ret;
->
-> -       if (!IS_ERR_OR_NULL(fwnode))
-> -               desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, i=
-dx,
-> -                                           &flags, &lookupflags);
-> -
-> +       desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, &fla=
-gs, &lookupflags);
->         if (gpiod_not_found(desc) && platform_lookup_allowed) {
->                 /*
->                  * Either we are not using DT or ACPI, or their lookup di=
-d not
-> --
-> 2.39.1
->
 
 Applied, thanks!
 
