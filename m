@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5997F6BACDD
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:00:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D5BA6BACF3
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:04:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231416AbjCOKAR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 06:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
+        id S231303AbjCOKEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 06:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232286AbjCOJ77 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 05:59:59 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEED8235D
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:58:47 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id x25so8373104vsj.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 02:58:47 -0700 (PDT)
+        with ESMTP id S230009AbjCOKDo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 06:03:44 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA2924BED
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 03:02:56 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id m5so12342501uae.11
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 03:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678874327;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678874576;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UETJniz/O98zlZqk47leCUow9oRq7Z1Nu1ZbHvmon2o=;
-        b=o+EHwii/d5xrY6gJdZXhjFyqlJxcgQNljiMv/03XnA8vj6caGtGWtHkszWV2bRZ7Ir
-         /qLCNojgvrMs5IzKarEd2Dw4775PBEgnq3nAr8Sg3RTqLUGertjL71RwQvZkDZ3F6OyF
-         tx9H2c/CXQ4GhxCbxpgsGACgKORSa7taJhg9L681+DemE2jzRSxiTIcM27j1GRwOyQz2
-         hWrLN12tiYcOWuHf3R0e6Vleu9k379w1decYL9li/q+gR/M1q65g1JLYcgisMymoB0vq
-         Pfz/ZTgO4cjhb7kxaSwtrcNJ8e3IcRn8ROp6tEFRESlkA0bb1f0tVbRwtt70vCLSLXQl
-         q/Tg==
+        bh=TF6LBLKlsT6uT4Hak2vOqFMzvPLvdsa/UHZ3r6EJWvE=;
+        b=erG0GtDtO6s1Iq5EloXAvSzFqpHnKqnX2G6uN3ILHe6gHt9SB1qPM6sbLXkQMtwm68
+         cnoMVUaWWBqvoBydH9Vl+aVXv7jPdcojydxM6qwNS/hDM64VXgKsqHKcb8DoscrN7/TP
+         1eFBPnOBAMeS8YgwQMtSto5wvzY8ayk9sPQXZU7y4UIhbXAl3IpFQCX/wee5tvMNGnxp
+         EHde934aJWCU8oHJfx+264PoH3RuZ4sgdoGO0dYj0un1GoA/j8KpRDFnzxTL9u/bpkc7
+         rdP4uhnzAAQ614qTtovXlv05O1zbTreNwZLul/sJ0j8itRfb21kj55p2vkKKImR9bnUY
+         VRog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678874327;
+        d=1e100.net; s=20210112; t=1678874576;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UETJniz/O98zlZqk47leCUow9oRq7Z1Nu1ZbHvmon2o=;
-        b=4Q0WGIedloPOwHKNZQ0wYjBMJncGuFGSMbZPaIp5VNWtMY1OmvlakZJyKtXH2gy7EU
-         dWoShGG28rLXdqdgVt2REyBu95cRgv7xCkdjIeimIqKvJIOpv9tljv5ItXjHzvdN63bP
-         JRHyh3NkXLl+n+6ux6AtGMDWRjqufrdEPooHOg0gZUHLwuZ8p7Qq8h/hbclf2E0OitQl
-         Ti2LTnsdADPTMc24g+B+wb/Z6gK7Wt52NJrlQw+BQh1n9bj5Q6ahOnACEzL+9jefJjUE
-         D+4gM0ob6V7SgRm72YfWSLvaxfPC57jChmU3OX5UJ7vwJl2HWEXttj9Vcz9XizbFuaI8
-         Rq7Q==
-X-Gm-Message-State: AO0yUKWhbli4wjCpYqyYqbV8jf1a0hBvhNexbreubXHfW9GaRifQMqaP
-        tUZqOrSozwKCxF9OXC8yKwSpj16FPnKzBH7V68JODw==
-X-Google-Smtp-Source: AK7set8voa2ABEzOIvwhhpmNpGSSvP8pFb9vDR5UZCgRGxqHFsg+97YEyw5/5hJWqpJIkXyLLYj97Bk7gs7ujv+B3bA=
-X-Received: by 2002:a67:ea49:0:b0:411:a740:c3ea with SMTP id
- r9-20020a67ea49000000b00411a740c3eamr27093080vso.0.1678874327058; Wed, 15 Mar
- 2023 02:58:47 -0700 (PDT)
+        bh=TF6LBLKlsT6uT4Hak2vOqFMzvPLvdsa/UHZ3r6EJWvE=;
+        b=6oxoqTdfW4wpRi9v2DUOR3AmF5v7+sI6JnUq5E820FhTYE4Kqq0x2l437JEYA1mGZB
+         8L+VLKbBk1ERt6qeLVW/29kRdoXugjvS4K2xWhouX/jm6fC9dzqywH8Go0+yYaM8bpGz
+         AcTVRqJkgqmdIYKtZPfQMo9BxauJjiK394OiIrTSws7kJUxH/JWDSrazMzbZeaDh+kZ9
+         8Nu443Nq0kzBSSZi8AkRhlOgYzo77LJlTH45nAwOP074LUKSt9yn+/6HDBU5MD4in1fa
+         /t00PpQ/J/N/lU1rhnXGlIkx1Gm5JETrIBkeADach8bC323auco4fwSSthaw8C8P0GCF
+         YcKg==
+X-Gm-Message-State: AO0yUKWdi92Bv35xqLDmEa1krvq/Fa/noX0kM6F1cQoNCB9nB9m5A0Rh
+        auNCRTSAC9KeaThD9+WJCNfYMPZpCrH45kuPpqqX6g==
+X-Google-Smtp-Source: AK7set/qkuKoVcngfib97GKcYJc9/yISAk/PKjRHQUasazdErdyzZQKMIM8sMTTNGAmM6n9NhfAB3+I5c9OL16Rbdc8=
+X-Received: by 2002:a1f:7c8b:0:b0:432:5951:176a with SMTP id
+ x133-20020a1f7c8b000000b004325951176amr1739375vkc.2.1678874575897; Wed, 15
+ Mar 2023 03:02:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230309185819.85050-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230309185819.85050-1-andriy.shevchenko@linux.intel.com>
+References: <cover.1677515341.git.william.gray@linaro.org> <CACRpkdbAMQ0OAMnxuyf6gMFu8qJakmT=WvRzBTXavXFmnJ9ObA@mail.gmail.com>
+In-Reply-To: <CACRpkdbAMQ0OAMnxuyf6gMFu8qJakmT=WvRzBTXavXFmnJ9ObA@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 15 Mar 2023 10:58:36 +0100
-Message-ID: <CAMRc=Mcp+oU-ujr9inAwD_cG=MVCTUR82sd0CwoZFujch4HcHQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Use IRQ hardware number getter instead of
- direct access
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+Date:   Wed, 15 Mar 2023 11:02:45 +0100
+Message-ID: <CAMRc=Mem3TsNM5coFLKAFQ74Rk4vvXLscuBhWoR-G6mLtxaSPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Migrate IDIO-16 GPIO drivers to regmap API
+To:     broonie@kernel.org
+Cc:     William Breathitt Gray <william.gray@linaro.org>,
+        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -69,18 +69,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 9, 2023 at 7:57=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Mar 6, 2023 at 3:13=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
 >
-> IRQ framework provides special type and getter to transform
-> the Linux IRQ to the hardware pin. Use that type and getter
-> function instead of direct access.
+> On Mon, Feb 27, 2023 at 5:54 PM William Breathitt Gray
+> <william.gray@linaro.org> wrote:
 >
-> While at it, amend an indentation in a couple of places.
+> This looks good to me.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+> Bartosz, of you merge this you can drop the corresponding
+> patches to immutable irqchip conversion for these chips
+> that I will be posting shortly (currently on the build servers).
+>
+> Yours,
+> Linus Walleij
 
-Applied, thanks!
+Mark, can you provide me with an immutable tag for the regmap tree
+containing commit 1/6 from this series, please?
 
-Bart
+Bartosz
