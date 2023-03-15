@@ -2,117 +2,230 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BABE76BAA1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 08:55:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6CD96BAA4A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:01:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231401AbjCOHy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 03:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
+        id S231672AbjCOIBs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 15 Mar 2023 04:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231852AbjCOHyu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 03:54:50 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85AB17CF9
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:54:47 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id r11so20325291edd.5
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678866886;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CGokAd+Dr918esPUzr/DO2T6cLuzXjG29Q1I7nlcsV4=;
-        b=Aq3pUPe+Yq9odw4NiSk5BikfXNxFmlbS2PeDaEbS9kMtEK6DjQJJ0a050lQd2priML
-         Q+vIec6EmfSDB3ORVgN6E5YiCGXK5Mbv11KpwR5+5m0Pe88oZKDIrJByCiWZ5b/4wpCh
-         qiWdq6LSw6IgYNHy/wfIhLhhL5awFZiQvYBTdEvZ74km59oa0XCtRae1Qw4wDvXcH/t4
-         YzVFwKUM/e1EsqzgYhzNfYeP+K3/+wWAweyQlM6Qkz6GH/veZNtm2cMAFWqV2C1VGw5X
-         Bly1QRNALqa0biIBqSarZxtcPdFCtwTyMw9kA/ITmhVlE27zt0OrzWH8WgbbRlJnLH5t
-         4nqQ==
+        with ESMTP id S231898AbjCOIBi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:01:38 -0400
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DFF73007;
+        Wed, 15 Mar 2023 01:01:18 -0700 (PDT)
+Received: by mail-qv1-f46.google.com with SMTP id m6so6379093qvq.0;
+        Wed, 15 Mar 2023 01:01:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678866886;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CGokAd+Dr918esPUzr/DO2T6cLuzXjG29Q1I7nlcsV4=;
-        b=YV3OBe802pYzn/HjBx+Ric29opkJrgc0nPCZK8yVyGigXO2xxvjSbtxiYvXTn92kPf
-         q2266iaUUu2sw0e7feIJRYLidCZ/dN3UX2MVs9IksfJLp+tK97nbxLyqpYJO/SbdhHPr
-         ker6rKUY0x/d/i2TLDiRGYGSqg7eUMpzfeKXBB5EGOn/YVbOysrGtagS1pDZI3ftTC6A
-         S1xaSD1p4KKMj14H4Ek9MLuxsULauGWT3q4VFUQl+QdlYKTYYLPzvsdH5snk32oqQg3d
-         241nS9NnlEZM5SwJ2H6nz6oWjgnWdUsqjIoctgvkg/YlweKDc5W3jJbJfubA2QwqxLQF
-         ualA==
-X-Gm-Message-State: AO0yUKVE1c4bPiPbtM1NgWabu21EiNT1ESWlTL0g1X4ycGHyk4SxlMXo
-        goD8kqYz2J+yCQooHgFTUTNeFQ==
-X-Google-Smtp-Source: AK7set9rj23a2BjdFJHQhkbMlpCGEw31BGoFvqoNcch9d2eIw6+5ljDRSISrD9pb1w3muiNZB3U70g==
-X-Received: by 2002:aa7:cd15:0:b0:4ad:f811:e267 with SMTP id b21-20020aa7cd15000000b004adf811e267mr1371897edw.12.1678866886093;
-        Wed, 15 Mar 2023 00:54:46 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:940e:8615:37dc:c2bd? ([2a02:810d:15c0:828:940e:8615:37dc:c2bd])
-        by smtp.gmail.com with ESMTPSA id k5-20020a50ce45000000b004bf76fdfdb3sm1981430edj.26.2023.03.15.00.54.45
+        d=1e100.net; s=20210112; t=1678867270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4bAr1YxX2lXoaSWFJY0KULcLlOSxq2AmJaIre8Xos3Q=;
+        b=j0uT4+jZABOT4vzaAtrpnzJyo0FraYlLss24YxU5VoLblEuBtHRxonCs5fu7BoCHZL
+         pukEmF2rSkDp1owQ+LUeuvJKqbW1sFEZqKQJO8WTZlSCvH8t5fG9vNhSj3x6TigpEVf0
+         o8qogGWK+i3WlCK18xyavkP7APBBn7zjuG5NR5jbmiTxUJ5sYQlQQHF0kzh05T7oLu+H
+         AbaGN8gF+BRMVQCy0zwfGvuz+y44euJC+g21imJO90eQuCRdYcl/XTcyMg0Ff5TzI5FP
+         uJQf+7xIwcwA1wbnokwYs9E2kbNpiYlJ3f7TdCu/G08IqUqFCbVzSJd6pCj+ZTnMCrFX
+         m/WQ==
+X-Gm-Message-State: AO0yUKU6OR2uydrafWXBWHeTsjtQaxgdYxb1fxQQOyph5PMosmAnEo7W
+        gjaAqfBBIHp2o7O5/38pVdyqMdF4F87+KV21
+X-Google-Smtp-Source: AK7set91qYsWE8iC3Q8UIqBnDuS73CFoWYi6XW3mw4sgaf6ipKjsHfRHI1Jg2QnvUw5D98Nl0JykGQ==
+X-Received: by 2002:a05:6214:194a:b0:570:bf43:48c with SMTP id q10-20020a056214194a00b00570bf43048cmr28074018qvk.17.1678867270024;
+        Wed, 15 Mar 2023 01:01:10 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id dt5-20020a05620a478500b007456e020846sm3352262qkb.13.2023.03.15.01.01.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Mar 2023 00:54:45 -0700 (PDT)
-Message-ID: <064b170a-c26e-f9a6-9d17-01edeeec55a8@linaro.org>
-Date:   Wed, 15 Mar 2023 08:54:44 +0100
+        Wed, 15 Mar 2023 01:01:09 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5416b0ab0ecso223252287b3.6;
+        Wed, 15 Mar 2023 01:01:09 -0700 (PDT)
+X-Received: by 2002:a81:ae5e:0:b0:541:a17f:c779 with SMTP id
+ g30-20020a81ae5e000000b00541a17fc779mr6864622ywk.4.1678867269018; Wed, 15 Mar
+ 2023 01:01:09 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v5 3/3] dt-bindings: gpio: add NPCM sgpio driver bindings
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
-        KWLIU@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-References: <20230314092311.8924-1-jim.t90615@gmail.com>
- <20230314092311.8924-4-jim.t90615@gmail.com>
- <bfb04dde-8429-215f-3aae-7e3823ee154c@linaro.org>
-In-Reply-To: <bfb04dde-8429-215f-3aae-7e3823ee154c@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
+ <20230306090014.128732-2-biju.das.jz@bp.renesas.com> <ZAZ4LY+xG2LGiHwh@surfacebook>
+ <OS0PR01MB5922EA0703F259A99C157D3286B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAHp75Vd6qTG67_1DGiemy8n-mQn=9kiGrC0rEYw2XO0rm4Tbag@mail.gmail.com>
+ <OS0PR01MB59224CECBB888ADC9214145286B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAHp75VfDL74cEUQkxC1JuUB7SS1vYTPj_K7+VkQ-i-MKXad5Lw@mail.gmail.com>
+ <OS0PR01MB5922CC51889D094129820C0C86B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CACRpkdZS5UKc7bDPs-zx_QyJU9GwJAhB7372oSC9tB-txgghtw@mail.gmail.com>
+ <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAMuHMdXqXg7xa3wvk3hvoxUAD+sg_OD-QpAXDpm8qdvuuDK4Rw@mail.gmail.com> <OS0PR01MB5922232D53D31CA09210A5ED86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB5922232D53D31CA09210A5ED86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Mar 2023 09:00:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVW+dQcCpfYJA6Xf97PXjpE4HNgN8=OgcJ4HZG_Paoymw@mail.gmail.com>
+Message-ID: <CAMuHMdVW+dQcCpfYJA6Xf97PXjpE4HNgN8=OgcJ4HZG_Paoymw@mail.gmail.com>
+Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/03/2023 19:45, Krzysztof Kozlowski wrote:
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    gpio8: gpio@101000 {
->> +        compatible = "nuvoton,npcm750-sgpio";
->> +        reg = <0x101000 0x200>;
->> +        clocks = <&clk NPCM7XX_CLK_APB3>;
->> +        interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
->> +        nuvoton,input-ngpios = <64>;
->> +        nuvoton,output-ngpios = <64>;
->> +        status = "disabled";
-> 
-> So this is fifth reminder...
-> 
-> https://lore.kernel.org/all/d56c24c2-a017-8468-0b3a-bd93d6024c69@linaro.org/
-> 
-> https://lore.kernel.org/all/39efdb85-f881-12ab-e258-61175f209b4c@linaro.org/
-> 
-> https://lore.kernel.org/all/9fc4d874-a0d0-6c5c-aeee-61ab817fdd9f@linaro.org/
-> 
-> This is a not-that-friendly-anymore reminder during the review process.
-> 
-> It seems my previous comments were not fully addressed. Maybe my
-> feedback got lost between the quotes, maybe you just forgot to apply it.
-> Please go back to the previous discussion and either implement all
-> requested changes or keep discussing them.
+Hi Biju,
 
-BTW, you never responded that my comment is unclear, but I can imagine
-that this was the cause of some misunderstanding. Therefore just in case
-let's be clear: drop the "status line". Entire line.
+On Tue, Mar 14, 2023 at 12:33 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
+> > On Tue, Mar 14, 2023 at 9:27 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > > > Subject: Re: [PATCH v6 01/13] pinctrl: core: Add
+> > > > pinctrl_get_device() On Thu, Mar 9, 2023 at 3:19 PM Biju Das
+> > <biju.das.jz@bp.renesas.com> wrote:
+> > > > > I have an IP which detects short circuit between the output
+> > > > > terminals and disable the output from pwm pins ,when it detects
+> > > > > short circuit to protect from system failure.
+> > > > >
+> > > > > pwm-pins are involved in this operation.
+> > > > >
+> > > > > From user space we need to configure the type of protection for
+> > > > > this pins (eg: disable PWM output, when both pwm outputs are high
+> > > > > at same
+> > > > time).
+> > > >
+> > > > Why do you want to do this from user space?
+> > >
+> > > To take care of the below features provided by Port Output Enable for
+> > > GPT(a.k.a PWM)
+> > > (POEG) IP.
+> > >
+> > > The output pins of the general PWM timer (GPT) can be disabled by
+> > > using the port output enabling function for the GPT (POEG).
+> > > Specifically, either of the following ways can be used[1].
+> > >
+> > > [1]
+> > >
+> > > Use case 1)
+> > > ● Input level detection of the GTETRGA to GTETRGD pins (i.e: detect
+> > > short circuit in switching circuit externally and use an external
+> > > pin(GTETRGA to GTETRGD) to disable the output pins of PWM)
+> > >
+> > > Use case 2)
+> > > ● Output-disable request from the GPT (GPT detects short circuit in
+> > > switching circuit internally and disable the output pins of PWM)
+> > >
+> > > Use case 3)
+> > > ● Register settings(Detect short circuit in switching circuit
+> > > externally and use internal register to disable the output pins of
+> > > PWM)
+> > >
+> > > The advantage of providing these options from user space is, it is
+> > flexible.
+> > > Runtime user can configure the use case he wants to use for his product.
+> > >
+> > > +Rob, + Krzysztof Kozlowski
+> > >
+> > > If we cannot do it in user space, then we need to make it as part of
+> > > Dt bindings and users will define the use case they need in DT.
+> > >
+> > > Some of the failure conditions in switching circuits are like below
+> > >
+> > > when you use PWM push-pull configuration you SHOULD have a dead time.
+> > > When + mosfet is turned off - mosfet can't be immediately turned on
+> > > because you will create a direct path (short circuit) between + and -
+> > > as parasitic capacitance will leave + mosfet turned on for a while .
+> > > This will destroy your mosfets.
+> > >
+> > > Dead time is the delay measured from turning off the driver switch
+> > > connected to one rail of the power supply to the time the switch
+> > > connected to the other rail of the power supply is turned on.
+> > > Switching devices like MOSFETs and IGBTs turn off after a delay when
+> > > the gate drive is turned off. If the other switch on the half bridge
+> > > is turned on immediately, both upper and lower switches may be in a
+> > > conductive region for a brief moment, shorting the power rail.
+> > > In order to avoid this, a dead time is maintained between turning off
+> > > of one switch and turning on the other in a half bridge.
+> > >
+> > > POEG IP provides the below protections,
+> > >
+> > > 1) When the GTIOCA pin and the GTIOCB pin(PWM pins) are driven to an
+> > > active level simultaneously, the PWM generates an output-disable
+> > > request to the POEG. Through reception of these requests, the POEG can
+> > > control whether the GTIOCA and GTIOCB pins are output-disabled
+> > >
+> > > 2) PWM output pins can be set to be disabled when the PWM output pins
+> > > detect a dead time error or short circuit detection between the output
+> > > terminals
+> > >
+> > > >
+> > > > It sounds like something the kernel should be doing.
+> > >
+> > > If we cannot do the above use cases[1] in user space, then we need to
+> > > make it as part of Dt bindings and it will be fully taken care in kernel.
+> > >
+> > > >
+> > > > The kernel has a PWM subsystem, and a pin control subsystem, and we
+> > > > don't even have a userspace ABI for pin control.
+> > > > Pin control is designed to avoid electrical disasters and a driver
+> > > > can add further policy for sure.
+> > > >
+> > > > If you want to add policy of different types to avoid electrical
+> > > > disaster into the pin control driver, go ahead, just run it by Geert
+> > > > so he's on board with the ideas.
+> > >
+> > > OK. Geert Can you please provide valuable suggestion how to address
+> > > this use cases[1] As mentioned above?
+> >
+> > Is this configuration you need to do once, based on the hardware, or do you
+> > need to change it at run-time?
+>
+> I think this configuration needed only once based on the hardware.
 
-Best regards,
-Krzysztof
+OK, so using DT for that would be fine.
 
+> > Before, I was under the impression you needed to change the configuration at
+> > run-time, hence the need for a sysfs API.
+> > If configuration is static, DT is the way to go.
+>
+> At that time, I was not explored the possibility of creating poeg char device.
+>
+> For eg: After the initial setting in DT, I guess with poeg char device we should be able to
+> achieve below use cases.
+>
+> Use case 1)
+>  We can provide user space event indicating, Output-disable request from the GTETRGn pin occurred.
+> and provide some options (rd/wr file ops) to user space to clear the fault.
+>
+> Use case 2)
+>  We can provide user space event indicating, Output-disable request from GPT disable request occurred.
+>  and provide some options(rd/wr file ops) to user space to clear the fault.
+>
+> Use case 3)
+>  User space to control Output-disable through rd/wr file ops.
+>
+> Please let me know is it ok or am I missing something here??
+
+Using a char device for that sounds fine to me.
+
+If you just needed to clear the fault, you could use a device property in sysfs.
+But that would still leave us without a way to provide events to userspace.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
