@@ -2,90 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2D2C6BA8C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 08:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BABE76BAA1A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 08:55:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbjCOHLO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 03:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44394 "EHLO
+        id S231401AbjCOHy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 03:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjCOHLN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 03:11:13 -0400
+        with ESMTP id S231852AbjCOHyu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 03:54:50 -0400
 Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023445582
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:11:11 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id h8so27834769ede.8
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:11:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85AB17CF9
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:54:47 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id r11so20325291edd.5
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 00:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678864270;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=linaro.org; s=google; t=1678866886;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RJKjy9eK5wZQcLG5fFeMeaK9idc1WueAlGl5cn4lHVQ=;
-        b=Bsyq91aeeTKsmlxTlYJI010C+B/lkrmiPlzr++t5RiGJkiL9FWgJQAMu4ndc0dD+qt
-         bEyp1MWTUlzNQHtaC2+56g8+iWouWBuRidMKrm2RUOdt6+3iAfCmPd6IY+SP59Fp+coY
-         oZkjnHSaUlA6DtLSvwYNivKPiKWBC8j52WMFZiitR7bz62y11hQ1c2IrhCXVGnLV1NwZ
-         zQHiswP6WArtrzrbxtmHYCe5SCUCGS9tYVy6SGZMoBXzxjg62E/GdCHaqDufA0ieDEM5
-         EOKs7EC6GXQNpkpvS50aAVqarob3qGI1wwL8dt7TT5vv9io2zPkKrG01Hwg9AmHHoxb8
-         iqBg==
+        bh=CGokAd+Dr918esPUzr/DO2T6cLuzXjG29Q1I7nlcsV4=;
+        b=Aq3pUPe+Yq9odw4NiSk5BikfXNxFmlbS2PeDaEbS9kMtEK6DjQJJ0a050lQd2priML
+         Q+vIec6EmfSDB3ORVgN6E5YiCGXK5Mbv11KpwR5+5m0Pe88oZKDIrJByCiWZ5b/4wpCh
+         qiWdq6LSw6IgYNHy/wfIhLhhL5awFZiQvYBTdEvZ74km59oa0XCtRae1Qw4wDvXcH/t4
+         YzVFwKUM/e1EsqzgYhzNfYeP+K3/+wWAweyQlM6Qkz6GH/veZNtm2cMAFWqV2C1VGw5X
+         Bly1QRNALqa0biIBqSarZxtcPdFCtwTyMw9kA/ITmhVlE27zt0OrzWH8WgbbRlJnLH5t
+         4nqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678864270;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20210112; t=1678866886;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJKjy9eK5wZQcLG5fFeMeaK9idc1WueAlGl5cn4lHVQ=;
-        b=szWWvdtldJusl5R+8j+nsjVHhmRycfoUXF24pVNfo4sAjRtqYZRr/bbY6bwCLK8HKT
-         0feov3unKwzT1VFmTubLya31VUuTCdRxmWeKOtsJkqZyn/MlFCiRmWSqUQHbC++czeje
-         P2XCVj2ltANHlFEppTYR1RJ+wKlPJ+vSzisvRxlfnKYgTtErYyZdoLh98xj7x9cCea5I
-         h6DJuUSrCqkRO8+1FoZ+prlJzH2ScxaJBFcoBrFzq+b6DcbFmY57DJyOQoxq8Qf8Us5y
-         eawV4QtE4t0/YtgDuESdcJOGMhl2EZQR086JYUJN4g6lqFOcH291JkKIPeusVYvQ/T5C
-         nrBg==
-X-Gm-Message-State: AO0yUKUvKm0zbasJEIa8PweV1ignsducGAB7M8oo1dPl/nyIL21ZOe8d
-        jY4nTGU1AxYkX4ekPcL+Ueo+VQ==
-X-Google-Smtp-Source: AK7set/qDWN5EGtvyO4q718AHYQ/mq+PNb2Tfe4xtM7aMrCVi4QxJZNgnoNyQ52prNArRS2/pT1mwg==
-X-Received: by 2002:a05:6402:453:b0:4ea:a9b0:a518 with SMTP id p19-20020a056402045300b004eaa9b0a518mr1200057edw.17.1678864270104;
-        Wed, 15 Mar 2023 00:11:10 -0700 (PDT)
+        bh=CGokAd+Dr918esPUzr/DO2T6cLuzXjG29Q1I7nlcsV4=;
+        b=YV3OBe802pYzn/HjBx+Ric29opkJrgc0nPCZK8yVyGigXO2xxvjSbtxiYvXTn92kPf
+         q2266iaUUu2sw0e7feIJRYLidCZ/dN3UX2MVs9IksfJLp+tK97nbxLyqpYJO/SbdhHPr
+         ker6rKUY0x/d/i2TLDiRGYGSqg7eUMpzfeKXBB5EGOn/YVbOysrGtagS1pDZI3ftTC6A
+         S1xaSD1p4KKMj14H4Ek9MLuxsULauGWT3q4VFUQl+QdlYKTYYLPzvsdH5snk32oqQg3d
+         241nS9NnlEZM5SwJ2H6nz6oWjgnWdUsqjIoctgvkg/YlweKDc5W3jJbJfubA2QwqxLQF
+         ualA==
+X-Gm-Message-State: AO0yUKVE1c4bPiPbtM1NgWabu21EiNT1ESWlTL0g1X4ycGHyk4SxlMXo
+        goD8kqYz2J+yCQooHgFTUTNeFQ==
+X-Google-Smtp-Source: AK7set9rj23a2BjdFJHQhkbMlpCGEw31BGoFvqoNcch9d2eIw6+5ljDRSISrD9pb1w3muiNZB3U70g==
+X-Received: by 2002:aa7:cd15:0:b0:4ad:f811:e267 with SMTP id b21-20020aa7cd15000000b004adf811e267mr1371897edw.12.1678866886093;
+        Wed, 15 Mar 2023 00:54:46 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:940e:8615:37dc:c2bd? ([2a02:810d:15c0:828:940e:8615:37dc:c2bd])
-        by smtp.gmail.com with ESMTPSA id u14-20020a50a40e000000b004bbb691a334sm1960301edb.2.2023.03.15.00.11.08
+        by smtp.gmail.com with ESMTPSA id k5-20020a50ce45000000b004bf76fdfdb3sm1981430edj.26.2023.03.15.00.54.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Mar 2023 00:11:09 -0700 (PDT)
-Message-ID: <19ca470e-8219-5ba9-3de6-f4560278f87b@linaro.org>
-Date:   Wed, 15 Mar 2023 08:11:07 +0100
+        Wed, 15 Mar 2023 00:54:45 -0700 (PDT)
+Message-ID: <064b170a-c26e-f9a6-9d17-01edeeec55a8@linaro.org>
+Date:   Wed, 15 Mar 2023 08:54:44 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH] p54spi: convert to devicetree
+Subject: Re: [PATCH v5 3/3] dt-bindings: gpio: add NPCM sgpio driver bindings
 Content-Language: en-US
-To:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Felipe Balbi <balbi@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230314163201.955689-1-arnd@kernel.org>
- <4ac809d2-3924-3839-479f-0b4be9f18a1f@linaro.org>
- <e19fd8bc-5944-409d-a4a1-3a3d53691634@app.fastmail.com>
- <57c42604-38b0-61ce-2fc4-2284fbb9d708@linaro.org>
- <afee6a67-2406-4f52-99a2-ee7eb26e587b@app.fastmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <afee6a67-2406-4f52-99a2-ee7eb26e587b@app.fastmail.com>
+To:     Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+        KWLIU@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20230314092311.8924-1-jim.t90615@gmail.com>
+ <20230314092311.8924-4-jim.t90615@gmail.com>
+ <bfb04dde-8429-215f-3aae-7e3823ee154c@linaro.org>
+In-Reply-To: <bfb04dde-8429-215f-3aae-7e3823ee154c@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -98,32 +78,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/03/2023 07:50, Arnd Bergmann wrote:
-> On Wed, Mar 15, 2023, at 07:32, Krzysztof Kozlowski wrote:
->> On 14/03/2023 22:40, Arnd Bergmann wrote:
->>
->>>>> +
->>>>> +  power-gpios:
->>>>
->>>> If this is GPIO driving some power pin, then it should be
->>>> "powerdown-gpios" (like in /bindings/gpio/gpio-consumer-common.yaml)
->>>
->>> As far as I can tell, it's the opposite: the gpio turns the power on
->>> in 'high' state. I could make it GPIO_ACTIVE_LOW and call it powerdown,
->>> if you think that's better, but I don't think that is how it was
->>> meant.
->>
->> Whether this is active low or high, I think does not matter. If this is
->> pin responsible to control the power, then we use the name
->> "powerdown-gpios". Effectively powerup GPIO is the same as powerdown,
->> just reversed.
+On 14/03/2023 19:45, Krzysztof Kozlowski wrote:
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    gpio8: gpio@101000 {
+>> +        compatible = "nuvoton,npcm750-sgpio";
+>> +        reg = <0x101000 0x200>;
+>> +        clocks = <&clk NPCM7XX_CLK_APB3>;
+>> +        interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+>> +        gpio-controller;
+>> +        #gpio-cells = <2>;
+>> +        nuvoton,input-ngpios = <64>;
+>> +        nuvoton,output-ngpios = <64>;
+>> +        status = "disabled";
 > 
-> Ok, so should I make this GPIO_ACTIVE_LOW and adapt the patch to
-> call it powerdown in both the code and dt for consistency?
+> So this is fifth reminder...
+> 
+> https://lore.kernel.org/all/d56c24c2-a017-8468-0b3a-bd93d6024c69@linaro.org/
+> 
+> https://lore.kernel.org/all/39efdb85-f881-12ab-e258-61175f209b4c@linaro.org/
+> 
+> https://lore.kernel.org/all/9fc4d874-a0d0-6c5c-aeee-61ab817fdd9f@linaro.org/
+> 
+> This is a not-that-friendly-anymore reminder during the review process.
+> 
+> It seems my previous comments were not fully addressed. Maybe my
+> feedback got lost between the quotes, maybe you just forgot to apply it.
+> Please go back to the previous discussion and either implement all
+> requested changes or keep discussing them.
 
-If you have schematics (or datasheet) then this should reflect truth. If
-not, then judging by the old code it is something like powerdown, so yes
-- ACTIVE_LOW and reverse values in the code.
+BTW, you never responded that my comment is unclear, but I can imagine
+that this was the cause of some misunderstanding. Therefore just in case
+let's be clear: drop the "status line". Entire line.
 
 Best regards,
 Krzysztof
