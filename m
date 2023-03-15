@@ -2,44 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A956BAE51
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 11:57:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4AA46BAEBC
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 12:09:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231508AbjCOK5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 06:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
+        id S231981AbjCOLJP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 07:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbjCOK5V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 06:57:21 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B3E7FD6F;
-        Wed, 15 Mar 2023 03:57:05 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pcOoa-0000aX-95; Wed, 15 Mar 2023 11:57:04 +0100
-Message-ID: <0968796e-c6a7-0340-09ec-222f2f9b325a@leemhuis.info>
-Date:   Wed, 15 Mar 2023 11:57:03 +0100
+        with ESMTP id S232086AbjCOLHr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 07:07:47 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 440D888EEB;
+        Wed, 15 Mar 2023 04:07:06 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id u5so19585070plq.7;
+        Wed, 15 Mar 2023 04:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678878422;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yAqG1Kr2Uolyjf/GxkqX22B3ljt5De835XrdxJINeQY=;
+        b=CZnaHbV27A42TrjHQe+T4hgAkd3u0QBLJNrHYmNxQh/vgyC8J2YcmmNSWutL9J4Ceh
+         jFvMJLrlcj98Gmxelxu78rQJ+W9C5z/G8aNNp4wA3M5345xKwGE++1U12GrwffHbss//
+         twoi1SXVewa8Dy3kWjjUcRr4MqWM/wXwhM+ahex2r36hNOUrUP84eq+1PgciW7SVwPlu
+         veRBkUwUOmi9wnLLkW9kGMgBkO15+BJCNVVzbG0TkWt91a5r6uWrtdUdar3rPurkr5j+
+         pw0APzRkjBpjUr3grHd/PA+YV/Z7dtTeqGyqDzLu3rpAMbX0GtnOOq/dFbQZpBF8Zn36
+         l2tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678878422;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yAqG1Kr2Uolyjf/GxkqX22B3ljt5De835XrdxJINeQY=;
+        b=eEtSWBZfllFGlqR680AX4YrJRJ7yUYAum5COJg5Ip9y12WcoZOlrP9It/MQycISf2t
+         PB6vb8MS9ICqFShUxl3gXxvoCpL+a1tV+ZnCKnRYFUahJa0QgtiKWjDawwp9zmDvKoLg
+         XnzBdyOvUUwltfrCEnSePKF/g0evAbRhOSQdKqKScACH2b/kndRq0kJcnkT8TrI1Pd0b
+         zym53upag1iMev3LIOiqZAFia0S9fC1l1l6TR9QX9Nw3oUGMJvSWn1R1eJQPxmeeu1EG
+         ckjefMLVLoLxUe4nZCvtPhhJSwes9UxGcg4+8g0S6gBzKhDaL418aja/p0w1pmIXv3vc
+         +lNQ==
+X-Gm-Message-State: AO0yUKVE/YgiuMG4J40OtKnBpDr5JCvhc3YTcozPS8oq2eSmnwbvP7G3
+        BJrtxtcsC+A9F7DRYdX3x56mH9GYPH3+3A==
+X-Google-Smtp-Source: AK7set/3Y3jEPnvR1RngK4q5SDmu6erxClP8orPtqlpRlvLoscW0Q5Hkc86iiluUlokORxnGbKaTSw==
+X-Received: by 2002:a05:6a20:6914:b0:d4:90ce:ae1d with SMTP id q20-20020a056a20691400b000d490ceae1dmr9879234pzj.20.1678878422327;
+        Wed, 15 Mar 2023 04:07:02 -0700 (PDT)
+Received: from kelvin-ThinkPad-L14-Gen-1.. (94.130.220.35.bc.googleusercontent.com. [35.220.130.94])
+        by smtp.gmail.com with ESMTPSA id v4-20020aa78084000000b005892ea4f092sm3337489pff.95.2023.03.15.04.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Mar 2023 04:07:01 -0700 (PDT)
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Keguang Zhang <keguang.zhang@gmail.com>
+Subject: [PATCH v3 0/4] Devicetree support for Loongson-1 GPIO
+Date:   Wed, 15 Mar 2023 19:06:46 +0800
+Message-Id: <20230315110650.142577-1-keguang.zhang@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [Regression] Bug 216371 - acpi wake up with black screen with msg
- "amd_gpio AMDI0030:00: failed to get iomux index" #forregzbot
-Content-Language: en-US, de-DE
-From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
- <b6aeaf85-c88f-c526-30c8-e040b99c66ea@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <b6aeaf85-c88f-c526-30c8-e040b99c66ea@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1678877826;82843baa;
-X-HE-SMSGID: 1pcOoa-0000aX-95
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,43 +72,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Update the driver to add DT support and dt-binding document,
+along with other minor changes.
 
-On 18.09.22 18:24, Thorsten Leemhuis wrote:
-> On 25.08.22 11:42, Thorsten Leemhuis wrote:
-> 
->> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216371 :
->>
->>>  neoe 2022-08-17 01:50:41 UTC
->>>
->>> just upgrade from 5.18 to 6.0.0-rc1
->>>
->>> `acpitool -s` 
->>> to set to sleep, it seems a little slow.
->>>
->>> then wake up, black screen,
->>>
->>> everything works fine before.
->>>
->>> AMD 3900X
->>>
->>> [reply] [−] Comment 1 neoe 2022-08-22 02:39:12 UTC
->>>
->>> dmesg
->>>
->>> amd_gpio AMDI0030:00: failed to get iomux index
->> See the ticket for details.
-> 
-> #regzbot backburner: likely bad bisect and reporter apparently ignoring
-> the issue for now
+Changelog
+V2 -> V3: Explain the reason for changing the author name in commit message
+          Drop the patch "gpio: loongson1: Use readl() & writel()"
+          Restore the calling of __raw_readl() & __raw_writel()
+          Add Reviewed-by tag from Krzysztof Kozlowski
+V1 -> V2: Keep GPLv2, just convert to SPDX identifier
+          Split the change of calling readl() & writel() to a separate patch
+          Let gpiolib parse ngpios property
+          Remove unnecessary alias id parsing
+          Remove superfluous initialization done by bgpio_init()
+          Add MODULE_DEVICE_TABLE()
+          Other minor fixes
+          Use the same consistent quotes
+          Delete superfluous examples
 
-#regzbot inconclusive: likely bad bisect and reporter MIA
+Keguang Zhang (4):
+  gpio: loongson1: Convert to SPDX identifier
+  gpio: loongson1: Introduce ls1x_gpio_chip struct
+  gpio: loongson1: Add DT support
+  dt-bindings: gpio: Add Loongson-1 GPIO
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+ .../bindings/gpio/loongson,ls1x-gpio.yaml     | 49 +++++++++++++
+ drivers/gpio/gpio-loongson1.c                 | 71 +++++++++++--------
+ 2 files changed, 92 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
 
-#regzbot ignore-activity
+
+base-commit: 0c14f3aa388d3becd38923869e17f9947a5e5926
+-- 
+2.34.1
+
