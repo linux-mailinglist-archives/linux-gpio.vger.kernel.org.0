@@ -2,120 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C86D6BB165
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 13:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78C4A6BB32C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 13:42:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232360AbjCOM1F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 08:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57406 "EHLO
+        id S233058AbjCOMmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 08:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232356AbjCOM0r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 08:26:47 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DACF574A5D;
-        Wed, 15 Mar 2023 05:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678883153; x=1710419153;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sqa5ETRPA8mWWtxvPChxrgVub4MEZRvt0xOoJBar2EI=;
-  b=KRwbziyEAfpz2/ctQFmbnsQ4Hp3DgwGMTPzo9uZmIF3aiBg5nk0b4Byr
-   7a53MCYO4KsPS2NTI9MBscdPGCc8kEtEOKcvipiRjtxZ4ComWn+Gqan8T
-   2PYkCr+c7WMJAolO7+A0XuPUVC67wPnlL9p0g4Ss+iOnpBMUoXZC7RfV4
-   6hEqOXtmltIy9xG/7wi9Hxjh5BMj8dobmD7NbwscpZun6x59r9UOV5lXS
-   V1BEzyxLH4dw+hfQqvaudZCLnvL5fueuiurl/1JRkuxv1IDds/IVRALNm
-   ogBBQZVifXvwWIJww3kl3SJLJrVT6d6BGfvQYDcWjSOhxLmvjNmSYQINu
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="335171849"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="335171849"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 05:23:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="768464686"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="768464686"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Mar 2023 05:23:46 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pcQAT-0007f8-0r;
-        Wed, 15 Mar 2023 12:23:45 +0000
-Date:   Wed, 15 Mar 2023 20:23:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Sean Anderson <sean.anderson@seco.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v11 03/13] dt-bindings: Convert gpio-mmio to yaml
-Message-ID: <202303152008.kxRjSW73-lkp@intel.com>
-References: <20230313161138.3598068-4-sean.anderson@seco.com>
+        with ESMTP id S233050AbjCOMlv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 08:41:51 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69485A21B0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:40:40 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id by13so16853310vsb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 05:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678884038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oGB5TAVKgn+JcILTjBLEo3Nqv38rQmrITjGsZ3/q3RE=;
+        b=5n/hTpt58q4I598NU4JHUH3nYG+EL32Sg6Jo+1++it5F30xId/SwVkkTBIKuMgzUTg
+         VxZAJwBPt2ntUnzNHScF9w3/YQ3lVvKuyzuqXAKRm0PDDHZqWGXJXjV4J2dG1xQplcN6
+         T1894NTFRqOIEhtkUmWgniVcjE6IY7V0HcfAi2sJlAlTamvg3lPKOvIg956y9hF3nGuu
+         YwIzt8d8W5CCLzT3al/JZcM5mDESuVC09DbJyASwf6/U/llGV++mwAZqNRz+08QPAhqR
+         hcaYklVgtjv6Of5K+O4bf056Ut5UQtbXnhPLA6GBfxOH8+Cr2Tqek/26+AY70w1RCq7O
+         8+qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678884038;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oGB5TAVKgn+JcILTjBLEo3Nqv38rQmrITjGsZ3/q3RE=;
+        b=NSFBfQhiBtilcMAm1HJXqpedTt5o01vkBUm9c4p2NwuAboDXfbQsY6U//XpP/ytCR1
+         HQYu+otXun+JZQOu4jkmRUFlWZdLPvGseuE0o0DQuNZhERADuOCGW4iHZ7VhcrVgbnRN
+         fp89kCfgJOmUNuX2RbHPehgO3G8hc2Ok+l/5+Be0ec2Wn6UXGYy1rZFK8IDcRTDU5weU
+         c/HM6GLQ2aACMKPxJCd0IH0buRj/5Y9lAsAm1R8s+LJ4LrXm9/KQKsVP2lYgavHdhY3N
+         JVfsH5rMzPaTkiRkfptaW26S9Cn/K/TeNpA4meWgKbpibWnZDyFbOG4JvH70npUGFH7X
+         gjOQ==
+X-Gm-Message-State: AO0yUKUiyUiIUn40rSVWf863TpS6WZNSxOnlrU33kUNUN3qPvuMb0iMt
+        Bs32bem/P3hjE3TV30q80F02RywNfHpE8zqtoYg9Rg==
+X-Google-Smtp-Source: AK7set9i1vZR7QtDsiNzc05auoCocbWDaCPTtalDun15RYYZFlTRyYRm6WIDu3Mdp92FyZ391FDgsMxzChtD9/7ScXo=
+X-Received: by 2002:a05:6102:3196:b0:423:e7a3:aedf with SMTP id
+ c22-20020a056102319600b00423e7a3aedfmr7683678vsh.0.1678884038731; Wed, 15 Mar
+ 2023 05:40:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230313161138.3598068-4-sean.anderson@seco.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230309233929.3998-1-william.gray@linaro.org>
+In-Reply-To: <20230309233929.3998-1-william.gray@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 15 Mar 2023 13:40:27 +0100
+Message-ID: <CAMRc=McfEpxmSe4cSWRywbDYeeChmutGNbSOkVJaiFH23gQ8Ug@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pcie-idio-24: Prune superfluous license boilerplate
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sean,
+On Fri, Mar 10, 2023 at 12:39=E2=80=AFAM William Breathitt Gray
+<william.gray@linaro.org> wrote:
+>
+> The SPDX License Identifier line renders the GPL boilerplate text
+> superfluous, so let's remove it.
+>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> ---
+>  drivers/gpio/gpio-pcie-idio-24.c | 9 ---------
+>  1 file changed, 9 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-id=
+io-24.c
+> index 8a9b98fa418f..92e693b69fc8 100644
+> --- a/drivers/gpio/gpio-pcie-idio-24.c
+> +++ b/drivers/gpio/gpio-pcie-idio-24.c
+> @@ -3,15 +3,6 @@
+>   * GPIO driver for the ACCES PCIe-IDIO-24 family
+>   * Copyright (C) 2018 William Breathitt Gray
+>   *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License, version 2, as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful, but
+> - * WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> - * General Public License for more details.
+> - *
+>   * This driver supports the following ACCES devices: PCIe-IDIO-24,
+>   * PCIe-IDI-24, PCIe-IDO-24, and PCIe-IDIO-12.
+>   */
+>
+> base-commit: b96eb88f59c023bb27891b5ab3dbd2b1a5200d53
+> --
+> 2.39.2
+>
 
-I love your patch! Perhaps something to improve:
+Applied, thanks!
 
-[auto build test WARNING on shawnguo/for-next]
-[also build test WARNING on brgl/gpio/for-next clk/clk-next linus/master v6.3-rc2 next-20230315]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-phy-Add-2500BASE-X-and-10GBASE-R/20230314-001522
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git for-next
-patch link:    https://lore.kernel.org/r/20230313161138.3598068-4-sean.anderson%40seco.com
-patch subject: [PATCH v11 03/13] dt-bindings: Convert gpio-mmio to yaml
-reproduce:
-        # https://github.com/intel-lab-lkp/linux/commit/2d1e86be168e32ea3d3f11325881f7cb1e5492f8
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sean-Anderson/dt-bindings-phy-Add-2500BASE-X-and-10GBASE-R/20230314-001522
-        git checkout 2d1e86be168e32ea3d3f11325881f7cb1e5492f8
-        make menuconfig
-        # enable CONFIG_COMPILE_TEST, CONFIG_WARN_MISSING_DOCUMENTS, CONFIG_WARN_ABI_ERRORS
-        make htmldocs
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303152008.kxRjSW73-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm6318-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm63268-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm6328-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm6358-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm6362-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
->> Warning: Documentation/devicetree/bindings/mfd/brcm,bcm6368-gpio-sysctl.yaml references a file that doesn't exist: Documentation/devicetree/bindings/gpio/brcm,bcm6345-gpio.yaml
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Bart
