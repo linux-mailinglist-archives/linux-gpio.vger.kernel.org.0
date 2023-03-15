@@ -2,230 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6CD96BAA4A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5951D6BAA7D
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Mar 2023 09:11:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231672AbjCOIBs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 15 Mar 2023 04:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
+        id S231354AbjCOILg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Mar 2023 04:11:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231898AbjCOIBi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:01:38 -0400
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DFF73007;
-        Wed, 15 Mar 2023 01:01:18 -0700 (PDT)
-Received: by mail-qv1-f46.google.com with SMTP id m6so6379093qvq.0;
-        Wed, 15 Mar 2023 01:01:18 -0700 (PDT)
+        with ESMTP id S231398AbjCOILc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 04:11:32 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92CE20041
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:11:22 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id j7so7497404ybg.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 01:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678867882;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pvx2PL8LGDK3W8+E79pZBCoBzTKmBaY+LVdR8n5TD/g=;
+        b=MADLCMC7roVI8wwfAlxv6wEFm5zfJjNwB3x2CYtI/1xlOad5kMNBsm+9wMB1y2vb/o
+         426UTDd7tLaZlGxGEGQB3jyu+LNU4kQqXlnpSD+KWHAjH+q+iFRib6Q0dD4YXaiFRA9F
+         QJkGlLx0mO6VNDaY7KeG+RLoj94r8PqDhp5SHTCBLH5VUzQwtcN+F+pJcUSpGDj7Mpjh
+         1sPr3i+6R1l53pYS2+ib2V2t6wEj0Y9G72h6mYJtyVwBjDOXecFbWxOtIRf1FwKzNMzM
+         PgFzBGDqHoyXvW9VlzHbIo5zLl0wM5Z7Y8/oAoa/DrA2ApWE4tGM9BTkxkT72lfvtcPy
+         4LmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678867270;
+        d=1e100.net; s=20210112; t=1678867882;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4bAr1YxX2lXoaSWFJY0KULcLlOSxq2AmJaIre8Xos3Q=;
-        b=j0uT4+jZABOT4vzaAtrpnzJyo0FraYlLss24YxU5VoLblEuBtHRxonCs5fu7BoCHZL
-         pukEmF2rSkDp1owQ+LUeuvJKqbW1sFEZqKQJO8WTZlSCvH8t5fG9vNhSj3x6TigpEVf0
-         o8qogGWK+i3WlCK18xyavkP7APBBn7zjuG5NR5jbmiTxUJ5sYQlQQHF0kzh05T7oLu+H
-         AbaGN8gF+BRMVQCy0zwfGvuz+y44euJC+g21imJO90eQuCRdYcl/XTcyMg0Ff5TzI5FP
-         uJQf+7xIwcwA1wbnokwYs9E2kbNpiYlJ3f7TdCu/G08IqUqFCbVzSJd6pCj+ZTnMCrFX
-         m/WQ==
-X-Gm-Message-State: AO0yUKU6OR2uydrafWXBWHeTsjtQaxgdYxb1fxQQOyph5PMosmAnEo7W
-        gjaAqfBBIHp2o7O5/38pVdyqMdF4F87+KV21
-X-Google-Smtp-Source: AK7set91qYsWE8iC3Q8UIqBnDuS73CFoWYi6XW3mw4sgaf6ipKjsHfRHI1Jg2QnvUw5D98Nl0JykGQ==
-X-Received: by 2002:a05:6214:194a:b0:570:bf43:48c with SMTP id q10-20020a056214194a00b00570bf43048cmr28074018qvk.17.1678867270024;
-        Wed, 15 Mar 2023 01:01:10 -0700 (PDT)
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
-        by smtp.gmail.com with ESMTPSA id dt5-20020a05620a478500b007456e020846sm3352262qkb.13.2023.03.15.01.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Mar 2023 01:01:09 -0700 (PDT)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5416b0ab0ecso223252287b3.6;
-        Wed, 15 Mar 2023 01:01:09 -0700 (PDT)
-X-Received: by 2002:a81:ae5e:0:b0:541:a17f:c779 with SMTP id
- g30-20020a81ae5e000000b00541a17fc779mr6864622ywk.4.1678867269018; Wed, 15 Mar
- 2023 01:01:09 -0700 (PDT)
+        bh=Pvx2PL8LGDK3W8+E79pZBCoBzTKmBaY+LVdR8n5TD/g=;
+        b=pAHFRdT7CZwZjEnF+sEjpOdc0pV42UrTVjeVptcRRbNsDsV7sDtW7AKzOnEAiT4A1d
+         U13fPnUi1qXcRjyNGKfnN9oHmWMSa8pSPCcm3KfI06txVd8Mj/OmrsHZYfyssVYhNoJz
+         wZMTgKHuhgK7Fz/YqlqewfoeQjcrgXWWKJrktvjfrwTld4X1/8Qz3r65um5K3ziMv87i
+         cxqYbsykYS27zXa8AX8PX46kE0444cZsz2EJHCPYshcbW/i9wbl3NG3gq4MLAqIKB0Zi
+         Z84RxtK9j2ORSYLL+7k3IOTirrieSHR52WedtwgFGVbgU4jZV1xhmPvg1BaK5w/wg+0v
+         4cvw==
+X-Gm-Message-State: AO0yUKVL9Ty3KpCYN9/XsZ5cly/zAkRvFLgk9pweb/2bRRCPUwQ2Ffgb
+        6lRr8+OvmNvZDmsu1amt9Oz+DgSzJXcmt8dNGQguAw==
+X-Google-Smtp-Source: AK7set9A2zYI6pMRgNbXuK7nABMIl97HViLafw5PcRY262FGkwm8Z05z1Fr8by8LQaDAAqC5HXIwCelI1ertWu8vEmg=
+X-Received: by 2002:a25:8d89:0:b0:b33:531b:3dd4 with SMTP id
+ o9-20020a258d89000000b00b33531b3dd4mr8108839ybl.1.1678867882064; Wed, 15 Mar
+ 2023 01:11:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
- <20230306090014.128732-2-biju.das.jz@bp.renesas.com> <ZAZ4LY+xG2LGiHwh@surfacebook>
- <OS0PR01MB5922EA0703F259A99C157D3286B79@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAHp75Vd6qTG67_1DGiemy8n-mQn=9kiGrC0rEYw2XO0rm4Tbag@mail.gmail.com>
- <OS0PR01MB59224CECBB888ADC9214145286B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAHp75VfDL74cEUQkxC1JuUB7SS1vYTPj_K7+VkQ-i-MKXad5Lw@mail.gmail.com>
- <OS0PR01MB5922CC51889D094129820C0C86B59@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CACRpkdZS5UKc7bDPs-zx_QyJU9GwJAhB7372oSC9tB-txgghtw@mail.gmail.com>
- <OS0PR01MB5922D0321A0779A8E78B96AA86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAMuHMdXqXg7xa3wvk3hvoxUAD+sg_OD-QpAXDpm8qdvuuDK4Rw@mail.gmail.com> <OS0PR01MB5922232D53D31CA09210A5ED86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB5922232D53D31CA09210A5ED86BE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Mar 2023 09:00:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVW+dQcCpfYJA6Xf97PXjpE4HNgN8=OgcJ4HZG_Paoymw@mail.gmail.com>
-Message-ID: <CAMuHMdVW+dQcCpfYJA6Xf97PXjpE4HNgN8=OgcJ4HZG_Paoymw@mail.gmail.com>
-Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
+References: <20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com>
+ <20230203-evk-board-support-v2-3-6ec7cdb10ccf@baylibre.com>
+ <3b7c6f28-57bd-33de-5531-8c4eae8cf6eb@linaro.org> <6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com>
+ <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
+In-Reply-To: <62ed2988-2347-9fd9-82f9-6dcc9ae75808@collabora.com>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Date:   Wed, 15 Mar 2023 09:11:11 +0100
+Message-ID: <CAFGrd9rZxwtxx5f8Gp35-5152EPGiyEdZjps1Mhn5bL6QfufnA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/18] dt-bindings: pinctrl: mediatek,mt8365-pinctrl:
+ add drive strength property
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mmc@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Biju,
-
-On Tue, Mar 14, 2023 at 12:33 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > Subject: Re: [PATCH v6 01/13] pinctrl: core: Add pinctrl_get_device()
-> > On Tue, Mar 14, 2023 at 9:27 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > > > Subject: Re: [PATCH v6 01/13] pinctrl: core: Add
-> > > > pinctrl_get_device() On Thu, Mar 9, 2023 at 3:19 PM Biju Das
-> > <biju.das.jz@bp.renesas.com> wrote:
-> > > > > I have an IP which detects short circuit between the output
-> > > > > terminals and disable the output from pwm pins ,when it detects
-> > > > > short circuit to protect from system failure.
-> > > > >
-> > > > > pwm-pins are involved in this operation.
-> > > > >
-> > > > > From user space we need to configure the type of protection for
-> > > > > this pins (eg: disable PWM output, when both pwm outputs are high
-> > > > > at same
-> > > > time).
-> > > >
-> > > > Why do you want to do this from user space?
-> > >
-> > > To take care of the below features provided by Port Output Enable for
-> > > GPT(a.k.a PWM)
-> > > (POEG) IP.
-> > >
-> > > The output pins of the general PWM timer (GPT) can be disabled by
-> > > using the port output enabling function for the GPT (POEG).
-> > > Specifically, either of the following ways can be used[1].
-> > >
-> > > [1]
-> > >
-> > > Use case 1)
-> > > ● Input level detection of the GTETRGA to GTETRGD pins (i.e: detect
-> > > short circuit in switching circuit externally and use an external
-> > > pin(GTETRGA to GTETRGD) to disable the output pins of PWM)
-> > >
-> > > Use case 2)
-> > > ● Output-disable request from the GPT (GPT detects short circuit in
-> > > switching circuit internally and disable the output pins of PWM)
-> > >
-> > > Use case 3)
-> > > ● Register settings(Detect short circuit in switching circuit
-> > > externally and use internal register to disable the output pins of
-> > > PWM)
-> > >
-> > > The advantage of providing these options from user space is, it is
-> > flexible.
-> > > Runtime user can configure the use case he wants to use for his product.
-> > >
-> > > +Rob, + Krzysztof Kozlowski
-> > >
-> > > If we cannot do it in user space, then we need to make it as part of
-> > > Dt bindings and users will define the use case they need in DT.
-> > >
-> > > Some of the failure conditions in switching circuits are like below
-> > >
-> > > when you use PWM push-pull configuration you SHOULD have a dead time.
-> > > When + mosfet is turned off - mosfet can't be immediately turned on
-> > > because you will create a direct path (short circuit) between + and -
-> > > as parasitic capacitance will leave + mosfet turned on for a while .
-> > > This will destroy your mosfets.
-> > >
-> > > Dead time is the delay measured from turning off the driver switch
-> > > connected to one rail of the power supply to the time the switch
-> > > connected to the other rail of the power supply is turned on.
-> > > Switching devices like MOSFETs and IGBTs turn off after a delay when
-> > > the gate drive is turned off. If the other switch on the half bridge
-> > > is turned on immediately, both upper and lower switches may be in a
-> > > conductive region for a brief moment, shorting the power rail.
-> > > In order to avoid this, a dead time is maintained between turning off
-> > > of one switch and turning on the other in a half bridge.
-> > >
-> > > POEG IP provides the below protections,
-> > >
-> > > 1) When the GTIOCA pin and the GTIOCB pin(PWM pins) are driven to an
-> > > active level simultaneously, the PWM generates an output-disable
-> > > request to the POEG. Through reception of these requests, the POEG can
-> > > control whether the GTIOCA and GTIOCB pins are output-disabled
-> > >
-> > > 2) PWM output pins can be set to be disabled when the PWM output pins
-> > > detect a dead time error or short circuit detection between the output
-> > > terminals
-> > >
-> > > >
-> > > > It sounds like something the kernel should be doing.
-> > >
-> > > If we cannot do the above use cases[1] in user space, then we need to
-> > > make it as part of Dt bindings and it will be fully taken care in kernel.
-> > >
-> > > >
-> > > > The kernel has a PWM subsystem, and a pin control subsystem, and we
-> > > > don't even have a userspace ABI for pin control.
-> > > > Pin control is designed to avoid electrical disasters and a driver
-> > > > can add further policy for sure.
-> > > >
-> > > > If you want to add policy of different types to avoid electrical
-> > > > disaster into the pin control driver, go ahead, just run it by Geert
-> > > > so he's on board with the ideas.
-> > >
-> > > OK. Geert Can you please provide valuable suggestion how to address
-> > > this use cases[1] As mentioned above?
+Le ven. 10 mars 2023 =C3=A0 10:49, AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> a =C3=A9crit :
+>
+> Il 10/03/23 10:46, AngeloGioacchino Del Regno ha scritto:
 > >
-> > Is this configuration you need to do once, based on the hardware, or do you
-> > need to change it at run-time?
->
-> I think this configuration needed only once based on the hardware.
+> > Anyway, Alexandre: can you please perform a cleanup to the MT8365 pinct=
+rl binding?
 
-OK, so using DT for that would be fine.
+Yes I can ! :D
+Should I do it directly in this patch series or (I prefer) in a new one ?
 
-> > Before, I was under the impression you needed to change the configuration at
-> > run-time, hence the need for a sysfs API.
-> > If configuration is static, DT is the way to go.
->
-> At that time, I was not explored the possibility of creating poeg char device.
->
-> For eg: After the initial setting in DT, I guess with poeg char device we should be able to
-> achieve below use cases.
->
-> Use case 1)
->  We can provide user space event indicating, Output-disable request from the GTETRGn pin occurred.
-> and provide some options (rd/wr file ops) to user space to clear the fault.
->
-> Use case 2)
->  We can provide user space event indicating, Output-disable request from GPT disable request occurred.
->  and provide some options(rd/wr file ops) to user space to clear the fault.
->
-> Use case 3)
->  User space to control Output-disable through rd/wr file ops.
->
-> Please let me know is it ok or am I missing something here??
+> > The cleanup means you're setting mediatek,drive-strength-adv as depreca=
+ted and
+> > adding the right properties (...and possibly changing the devicetrees t=
+o use it).
+> >
+> > For more information, you can look at commit history for the (unfortuna=
+tely, named
+> > incorrectly) MT8195 pinctrl documentation: bindings/pinctrl/pinctrl-mt8=
+195.yaml
+> > where we performed the same cleanup that I'm asking you to do, except w=
+e didn't
+> > have to set any property as deprecated because there was *no devicetree=
+ upstream*
+> > that was actually using that property (hence not an ABI breakage).
 
-Using a char device for that sounds fine to me.
+Thanks for the information, that helps.
 
-If you just needed to clear the fault, you could use a device property in sysfs.
-But that would still leave us without a way to provide events to userspace.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Alex
