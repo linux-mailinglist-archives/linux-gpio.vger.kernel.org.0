@@ -2,63 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF70A6BC47F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Mar 2023 04:19:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 194FE6BC624
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Mar 2023 07:36:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbjCPDSi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Mar 2023 23:18:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
+        id S229686AbjCPGgN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Mar 2023 02:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjCPDSM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Mar 2023 23:18:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC81A227BD;
-        Wed, 15 Mar 2023 20:18:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1F4D7B81FB5;
-        Thu, 16 Mar 2023 03:17:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EB7C433EF;
-        Thu, 16 Mar 2023 03:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678936677;
-        bh=r8bi8T9JqW69l43H5Xq4H0aADjitOt9a8QMkuP/OUK4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNVtj/TjWPD6O95H6T0HmgPefZ+riF4Fk055zWJAFDGHGAaeHpPnq0m+EcYuSPyhB
-         mJ+f+E/JcLyK+QznSZZYOWM60ZylRClhNwqd5bWVM2BBuReV8X5eVMmh0CqovygD/h
-         7Eo+7pQ+lASaDF7TFhZpxlbbSzYWbVl298aOFVvAqBxHtKqvZC7YSKktDrgNgXWHg2
-         zfXTnuR75ETst5U7x4kFE7PPuM9Ca0Ql+uDgx34LPQ3mx1CKqg+y3Yk9bHHsCsVtSR
-         cMLZHSq75i1tf7mM0XHRBTTriK7mvmfMqei8mQ/8gCAJMdxxmL37C5DxVdwO3N0Yl3
-         wFm5sJmDMwtZg==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     p.zabel@pengutronix.de, will@kernel.org, mturquette@baylibre.com,
-        marcel.ziswiler@toradex.com, sboyd@kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org,
-        Devi Priya <quic_devipriy@quicinc.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, dmitry.baryshkov@linaro.org,
-        broonie@kernel.org, konrad.dybcio@linaro.org,
-        linux-clk@vger.kernel.org, nfraprado@collabora.com, arnd@arndb.de,
-        catalin.marinas@arm.com, shawnguo@kernel.org
-Cc:     quic_arajkuma@quicinc.com, quic_sjaganat@quicinc.com,
-        quic_poovendh@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_anusha@quicinc.com, quic_srichara@quicinc.com,
-        quic_kathirav@quicinc.com
-Subject: Re: (subset) [PATCH V8 0/7] Add minimal boot support for IPQ9574
-Date:   Wed, 15 Mar 2023 20:21:00 -0700
-Message-Id: <167893686409.303819.11238056331180309772.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230214163116.9924-1-quic_devipriy@quicinc.com>
-References: <20230214163116.9924-1-quic_devipriy@quicinc.com>
+        with ESMTP id S229651AbjCPGgL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Mar 2023 02:36:11 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC44AB0B7
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 23:36:08 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id z21so3503062edb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Mar 2023 23:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678948567;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fovyIQAjFmbxZjHrRNqlRgLVptlFZhMPqR9qekHWsJg=;
+        b=O/O6Xeye8p4jA9+skOZPgQ9oY/7XkY3bTEEBwWtZWGRorC1oiSGkpyle/ycSCRM7lI
+         8izECdvRQ9w5+PoaVJKJc/y0f2HJ7GH8WJB95EEKdi3kNCzXFBJJw5o9RyScfnz8mleU
+         aXr7koiwvgq0ARhr++0G2+jcQSvx6eiCKju7mvwiAVcnE5h0q/0HU/KQH0wfmCVcsz6O
+         vDlIJCXJCiyvFrH6/lJ6QK+8Dc/acZudEqODEfRkdXPNYaRKwKsLrSQTz9cvYJvuO8uh
+         dZrhlL4nZlYVjPyLXPYnIKkYLDreZ20rljM4APGtnfi5EzDB77av0pNMmcKEx+VE/NpA
+         5fPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678948567;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fovyIQAjFmbxZjHrRNqlRgLVptlFZhMPqR9qekHWsJg=;
+        b=2UAm0XhlLpMZ8eLDM4a2X7MDoDad6oEqVT2x71UF7+SIHam+y3tYh1DNvGaPrQ9nW/
+         2Q55FzYEWhfwah+I/JcPPbZPiFPlY7QRizfmxPcWOh8RgeOKT/7PTznW/eM46z3NZ2Ml
+         inC2gycCpLGl2IGV+bj+0cHWwrhWkURdUaeZGTeylgZTJZeEKNqDYnD96Wz9szyCyhx6
+         9pNZgidyRIqbd22SABaRpHn6OX2fmHtksbbTRijGxT5EhvVlLg55c2gGt0tNJLB2gS3C
+         7rPK8VMRf3zKCmsXpGBOkDONmUDlYtLNldLq6zFVb3sV1WWFGWsmc0XZHdnpYkR4ep2y
+         rTug==
+X-Gm-Message-State: AO0yUKX2JHQIu3yFSElL2NY9rfPJIZdFpK+Y9GURGHgK0ss25QYeD2SZ
+        jx5D9Qaijz5Psj8FVvJtb6V14Q==
+X-Google-Smtp-Source: AK7set+z25Iv9a+H5iw4e/zFhuh98gKh8sTZxrAFPzyJTLf5GgKWIR8yViwOIldZlCXPQ1uTzgXeqg==
+X-Received: by 2002:a05:6402:444:b0:4fd:22a4:e88c with SMTP id p4-20020a056402044400b004fd22a4e88cmr4577999edw.39.1678948567003;
+        Wed, 15 Mar 2023 23:36:07 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:9827:5f65:8269:a95f? ([2a02:810d:15c0:828:9827:5f65:8269:a95f])
+        by smtp.gmail.com with ESMTPSA id e12-20020a50a68c000000b004ac54d4da22sm3344864edc.71.2023.03.15.23.36.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Mar 2023 23:36:06 -0700 (PDT)
+Message-ID: <eecb70bd-2738-eb28-21de-f936620769cd@linaro.org>
+Date:   Thu, 16 Mar 2023 07:36:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V2 2/3] arm64: dts: ti: Use local header for pinctrl
+ register values
+Content-Language: en-US
+To:     Nishanth Menon <nm@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Sekhar Nori <nsekhar@ti.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Tero Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20230315155228.1566883-1-nm@ti.com>
+ <20230315155228.1566883-3-nm@ti.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230315155228.1566883-3-nm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,22 +85,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 14 Feb 2023 22:01:09 +0530, Devi Priya wrote:
-> The IPQ9574 is Qualcomm's 802.11ax SoC for Routers,
-> Gateways and Access Points
+On 15/03/2023 16:52, Nishanth Menon wrote:
+> The DTS uses hardware register values directly in pin controller pin
+> configuration and not an abstraction of any form.
 > 
-> This series adds minimal board boot support for ipq9574-al02-c7 board
+> These definitions were previously put in the bindings header to avoid
+> code duplication and to provide some context meaning (name), but they
+> do not fit the purpose of bindings.
 > 
-> V7 can be found at:
-> https://lore.kernel.org/linux-arm-kernel/20230206103337.21000-1-quic_devipriy@quicinc.com/
+> Store the constants in a header next to DTS and use them instead of
+> bindings.
 > 
-> [...]
+> Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+> Link: https://lore.kernel.org/all/c4d53e9c-dac0-8ccc-dc86-faada324beba@linaro.org/
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
 
-Applied, thanks!
-
-[5/7] dt-bindings: arm: qcom: Add ipq9574 compatible
-      commit: 64d5c8a46890010e7cf5a72c0616d1141f84494f
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Krzysztof
+
