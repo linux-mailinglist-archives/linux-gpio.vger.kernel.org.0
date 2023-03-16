@@ -2,136 +2,336 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C27936BD176
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Mar 2023 14:53:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8316BD291
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Mar 2023 15:43:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230435AbjCPNxm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Mar 2023 09:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
+        id S230202AbjCPOnn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Mar 2023 10:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbjCPNxi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Mar 2023 09:53:38 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C071968C;
-        Thu, 16 Mar 2023 06:53:36 -0700 (PDT)
-Received: by mail-il1-f173.google.com with SMTP id s7so1005383ilv.12;
-        Thu, 16 Mar 2023 06:53:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678974816;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D2YWliqp5lNeWu2afRd3ESu/UMsrFmX/tSRvg7IvURw=;
-        b=Gv/VYHm07FjHFR/tABOWCAFQUfwWhJoU0l9mcKOLLg0TH5Ix3qv5DUdL9zfzddzvR+
-         rr1Fnc7GvTop8ffc8yaGMtlv1ImROHhL7CYR8L2dPlLXcouQWrKlBMg3FJ8a+/ZetfpO
-         WkBailZRMUIkmWrMbh3L4tKD916zRvB7AsocUQDkAxYjU2WFfJWV6thCQetWLpDi10pM
-         YJYWvmcELCu3y2myIZrQRQ6ln+QS5y/ZFIffjt3oMDLWLjPVn3/PBEqTU+AgDTOtVCzB
-         mECuc6e94j/AO3yypdZSyw3JG0NLNizbOYYkxMzJsC5ffAYijebonHllTcgw2tJTJX3u
-         7pgQ==
-X-Gm-Message-State: AO0yUKXyVrwaZkuK+1VwLZ39kLkWtoe7wnmRT2A/W4He5UN7h6quFFTF
-        X++kImoj8hUOh2AZQDlI7A==
-X-Google-Smtp-Source: AK7set9+ROvBZ84DStyZ/uJRXWEQwE8vC++tqt8GomgY6VU/ZPg3glzuUD1UFHjHk1y+Mx6YW2MsHA==
-X-Received: by 2002:a05:6e02:1a2f:b0:316:6c68:73df with SMTP id g15-20020a056e021a2f00b003166c6873dfmr9633016ile.31.1678974815995;
-        Thu, 16 Mar 2023 06:53:35 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id k26-20020a02c77a000000b003eb1eee43a7sm2515373jao.112.2023.03.16.06.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 06:53:35 -0700 (PDT)
-Received: (nullmailer pid 2744941 invoked by uid 1000);
-        Thu, 16 Mar 2023 13:53:34 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S229659AbjCPOnk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Mar 2023 10:43:40 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E883211D;
+        Thu, 16 Mar 2023 07:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678977816; x=1710513816;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0v8x1C5VEZNs5wGyskU503X9ow31HPWVC3p4bfXL5/o=;
+  b=H9Zb15Y7DDv9dpVqsHrR/h3eD7VMrvvIo7Vph8lj5X+gmMR8EvgKrrKE
+   1SHvAvs5JVf2Nb1Q7OShghabORW2qrOFIPQOXPOzYe/WXzX/MTjqXBsvu
+   rMpklytlekeQKmRLdpSmKnQEmqlfCK3tjgAFbZigRmUI9yrEj7aqgShjH
+   5wwm2Mkj74t5kCjsc6xJeQsYMfbEZ6ewsSuKas9wDxYtT4UNkab4EcypZ
+   VVIf9zTHOPj36u+9GyUuRY/CwNFTr7nAiSl8MgaZkishi9ZKpZr/47qzO
+   bHydCjJ0ushpZCDKF8P2m9hIlCzbvziUH1q4xFqUGqpo6AZMlaXBtgA67
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="400596364"
+X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
+   d="scan'208";a="400596364"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 07:43:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="768980481"
+X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
+   d="scan'208";a="768980481"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Mar 2023 07:43:32 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pcopI-0008Zq-0L;
+        Thu, 16 Mar 2023 14:43:32 +0000
+Date:   Thu, 16 Mar 2023 22:42:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-wireless@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-modules@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-crypto@vger.kernel.org, io-uring@vger.kernel.org,
+        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 6f72958a49f68553f2b6ff713e8c8e51a34c1e1e
+Message-ID: <64132af1.wtWgGZt+l6ToHgUb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-In-Reply-To: <2c2fa53f-ff8d-6b7d-3037-4d11a9fb82df@gmail.com>
-References: <2c2fa53f-ff8d-6b7d-3037-4d11a9fb82df@gmail.com>
-Message-Id: <167897435071.2729635.1810239851912837866.robh@kernel.org>
-Subject: Re: [PATCH v5] dt-bindings: pinctrl: Convert Amlogic Meson pinctrl
- binding
-Date:   Thu, 16 Mar 2023 08:53:34 -0500
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 6f72958a49f68553f2b6ff713e8c8e51a34c1e1e  Add linux-next specific files for 20230316
 
-On Wed, 15 Mar 2023 22:23:57 +0100, Heiner Kallweit wrote:
-> Convert Amlogic Meson pin controller binding to yaml.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> v2:
-> - consider that more than one compatible can be set
-> - remove bus part from example
-> v3:
-> - remove minItem/maxItem properties for compatible
-> v4:
-> - split patch to be able to deal with the different reg/reg-names
-> v5:
-> - remove compatible definition from common yaml
-> - move pincfg-node and pinmux-node definition to meson-gpio object definition
-> ---
->  .../pinctrl/amlogic,meson-pinctrl-a1.yaml     | 63 +++++++++++++
->  .../pinctrl/amlogic,meson-pinctrl-common.yaml | 52 ++++++++++
->  .../amlogic,meson-pinctrl-g12a-aobus.yaml     | 64 +++++++++++++
->  .../amlogic,meson-pinctrl-g12a-periphs.yaml   | 68 ++++++++++++++
->  .../pinctrl/amlogic,meson8-pinctrl-aobus.yaml | 72 ++++++++++++++
->  .../pinctrl/amlogic,meson8-pinctrl-cbus.yaml  | 74 +++++++++++++++
->  .../bindings/pinctrl/meson,pinctrl.txt        | 94 -------------------
->  7 files changed, 393 insertions(+), 94 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> 
+Error/Warning reports:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+https://lore.kernel.org/oe-kbuild-all/202303081807.lBLWKmpX-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303151409.por0SBf7-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161311.Qv4gDU9T-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161354.T2OZFUFZ-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161404.OrmfCy09-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161507.ZUkKisp2-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161521.jbGbaFjJ-lkp@intel.com
 
-yamllint warnings/errors:
+Error/Warning: (recently discovered and may have been fixed)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml: 'unevaluedProperties' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'dependentRequired', 'dependentSchemas', 'patternProperties', 'properties', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml: 'oneOf' conditional failed, one must be fixed:
-	'unevaluatedProperties' is a required property
-	'additionalProperties' is a required property
-	hint: Either unevaluatedProperties or additionalProperties must be present
-	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+cc_driver.c:(.text+0x1232): undefined reference to `devm_platform_get_and_ioremap_resource'
+drivers/crypto/ccree/cc_driver.c:354: undefined reference to `devm_platform_get_and_ioremap_resource'
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:258:10: warning: no previous prototype for 'link_timing_bandwidth_kbps' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:2184: warning: expecting prototype for Check if there is a native DP or passive DP(). Prototype was for dp_is_sink_present() instead
+drivers/net/wireless/legacy/ray_cs.c:628:17: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+kernel/bpf/../module/internal.h:212:2: error: assigning to 'struct module *' from incompatible type 'void'
+kernel/bpf/../module/internal.h:212:2: error: incomplete definition of type 'struct module'
+kernel/bpf/../module/internal.h:212:2: error: offsetof of incomplete type 'typeof (*mod)' (aka 'struct module')
+kernel/bpf/../module/internal.h:212:2: error: operand of type 'void' where arithmetic or pointer type is required
+kernel/bpf/../module/internal.h:260:56: error: expected ';', ',' or ')' before 'const'
+kernel/bpf/verifier.c:18488:48: error: implicit declaration of function 'find_kallsyms_symbol_value'; did you mean 'kallsyms_symbol_value'? [-Werror=implicit-function-declaration]
+kernel/module/internal.h:260:56: error: expected ';', ',' or ')' before 'const'
+lib/dynamic_debug.c:947:6: warning: no previous prototype for function '__dynamic_ibdev_dbg' [-Wmissing-prototypes]
 
-doc reference errors (make refcheckdocs):
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2c2fa53f-ff8d-6b7d-3037-4d11a9fb82df@gmail.com
+crypto/acompress.c:191:32: warning: Value stored to 'istat' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+crypto/ahash.c:311:26: warning: Value stored to 'alg' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+crypto/shash.c:573:28: warning: Value stored to 'istat' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+drivers/watchdog/imx2_wdt.c:442:22: sparse: sparse: symbol 'imx_wdt' was not declared. Should it be static?
+drivers/watchdog/imx2_wdt.c:446:22: sparse: sparse: symbol 'imx_wdt_legacy' was not declared. Should it be static?
+include/linux/gpio/consumer.h: linux/err.h is included more than once.
+include/linux/gpio/driver.h: asm/bug.h is included more than once.
+io_uring/io_uring.c:432 io_prep_async_work() error: we previously assumed 'req->file' could be null (see line 425)
+io_uring/kbuf.c:221 __io_remove_buffers() warn: variable dereferenced before check 'bl->buf_ring' (see line 219)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Error/Warning ids grouped by kconfigs:
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm-randconfig-r001-20230312
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- csky-buildonly-randconfig-r004-20230312
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- ia64-randconfig-s043-20230313
+|   |-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt-was-not-declared.-Should-it-be-static
+|   `-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt_legacy-was-not-declared.-Should-it-be-static
+|-- loongarch-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- loongarch-defconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- loongarch-randconfig-r001-20230313
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- m68k-randconfig-r001-20230313
+|   |-- kernel-bpf-..-module-internal.h:error:expected-or-)-before-const
+|   |-- kernel-bpf-verifier.c:error:implicit-declaration-of-function-find_kallsyms_symbol_value
+|   `-- kernel-module-internal.h:error:expected-or-)-before-const
+|-- mips-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- mips-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- parisc-allmodconfig
+clang_recent_errors
+|-- arm-randconfig-c002-20230312
+|   |-- crypto-acompress.c:warning:Value-stored-to-istat-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+|   |-- crypto-ahash.c:warning:Value-stored-to-alg-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+|   `-- crypto-shash.c:warning:Value-stored-to-istat-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+|-- hexagon-randconfig-r031-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- i386-randconfig-a012-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- i386-randconfig-a013-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- i386-randconfig-a016-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+`-- riscv-randconfig-r042-20230313
+    |-- kernel-bpf-..-module-internal.h:error:assigning-to-struct-module-from-incompatible-type-void
+    |-- kernel-bpf-..-module-internal.h:error:incomplete-definition-of-type-struct-module
+    |-- kernel-bpf-..-module-internal.h:error:offsetof-of-incomplete-type-typeof-(-mod)-(aka-struct-module-)
+    `-- kernel-bpf-..-module-internal.h:error:operand-of-type-void-where-arithmetic-or-pointer-type-is-required
 
-pip3 install dtschema --upgrade
+elapsed time: 728m
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+configs tested: 146
+configs skipped: 8
 
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r006-20230312   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r026-20230313   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r012-20230312   gcc  
+arc                  randconfig-r024-20230313   gcc  
+arc                  randconfig-r043-20230312   gcc  
+arc                  randconfig-r043-20230313   gcc  
+arc                  randconfig-r043-20230315   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                  randconfig-r001-20230312   gcc  
+arm                  randconfig-r006-20230313   clang
+arm                  randconfig-r024-20230312   clang
+arm                  randconfig-r046-20230312   clang
+arm                  randconfig-r046-20230313   gcc  
+arm                  randconfig-r046-20230315   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r004-20230312   clang
+arm64                randconfig-r006-20230312   clang
+csky         buildonly-randconfig-r003-20230312   gcc  
+csky         buildonly-randconfig-r004-20230312   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r025-20230312   gcc  
+csky                 randconfig-r033-20230313   gcc  
+csky                 randconfig-r036-20230312   gcc  
+hexagon              randconfig-r015-20230312   clang
+hexagon              randconfig-r031-20230313   clang
+hexagon              randconfig-r041-20230312   clang
+hexagon              randconfig-r041-20230313   clang
+hexagon              randconfig-r041-20230315   clang
+hexagon              randconfig-r045-20230312   clang
+hexagon              randconfig-r045-20230313   clang
+hexagon              randconfig-r045-20230315   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230313   gcc  
+i386                 randconfig-a002-20230313   gcc  
+i386                 randconfig-a003-20230313   gcc  
+i386                 randconfig-a004-20230313   gcc  
+i386                 randconfig-a005-20230313   gcc  
+i386                 randconfig-a006-20230313   gcc  
+i386                 randconfig-a011-20230313   clang
+i386                 randconfig-a012-20230313   clang
+i386                 randconfig-a013-20230313   clang
+i386                 randconfig-a014-20230313   clang
+i386                 randconfig-a015-20230313   clang
+i386                 randconfig-a016-20230313   clang
+i386                          randconfig-c001   gcc  
+i386                 randconfig-r004-20230313   gcc  
+i386                 randconfig-r023-20230313   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r001-20230313   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r002-20230313   gcc  
+m68k                 randconfig-r005-20230312   gcc  
+m68k                 randconfig-r031-20230312   gcc  
+m68k                 randconfig-r035-20230313   gcc  
+m68k                           virt_defconfig   gcc  
+microblaze   buildonly-randconfig-r002-20230312   gcc  
+microblaze           randconfig-r011-20230312   gcc  
+microblaze           randconfig-r012-20230313   gcc  
+microblaze           randconfig-r015-20230313   gcc  
+microblaze           randconfig-r023-20230312   gcc  
+microblaze           randconfig-r032-20230313   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
+mips         buildonly-randconfig-r001-20230312   gcc  
+mips                      maltasmvp_defconfig   gcc  
+mips                 randconfig-r013-20230312   clang
+mips                 randconfig-r034-20230313   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r014-20230312   gcc  
+openrisc     buildonly-randconfig-r003-20230313   gcc  
+openrisc     buildonly-randconfig-r006-20230313   gcc  
+openrisc             randconfig-r003-20230312   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r011-20230313   gcc  
+parisc               randconfig-r034-20230312   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r005-20230312   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r005-20230313   clang
+riscv                               defconfig   gcc  
+riscv                randconfig-r033-20230312   clang
+riscv                randconfig-r042-20230312   gcc  
+riscv                randconfig-r042-20230313   clang
+riscv                randconfig-r042-20230315   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r005-20230313   gcc  
+s390                 randconfig-r025-20230313   clang
+s390                 randconfig-r032-20230312   clang
+s390                 randconfig-r044-20230312   gcc  
+s390                 randconfig-r044-20230313   clang
+s390                 randconfig-r044-20230315   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r022-20230312   gcc  
+sh                   randconfig-r022-20230313   gcc  
+sparc        buildonly-randconfig-r001-20230313   gcc  
+sparc                               defconfig   gcc  
+sparc64              randconfig-r021-20230313   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230313   gcc  
+x86_64               randconfig-a002-20230313   gcc  
+x86_64               randconfig-a003-20230313   gcc  
+x86_64               randconfig-a004-20230313   gcc  
+x86_64               randconfig-a005-20230313   gcc  
+x86_64               randconfig-a006-20230313   gcc  
+x86_64               randconfig-a011-20230313   clang
+x86_64               randconfig-a012-20230313   clang
+x86_64               randconfig-a013-20230313   clang
+x86_64               randconfig-a014-20230313   clang
+x86_64               randconfig-a015-20230313   clang
+x86_64               randconfig-a016-20230313   clang
+x86_64               randconfig-r016-20230313   clang
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r002-20230313   gcc  
+xtensa               randconfig-r002-20230312   gcc  
+xtensa               randconfig-r013-20230313   gcc  
+xtensa               randconfig-r014-20230313   gcc  
+xtensa               randconfig-r016-20230312   gcc  
+xtensa               randconfig-r035-20230312   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
