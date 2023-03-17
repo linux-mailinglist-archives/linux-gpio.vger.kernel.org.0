@@ -2,79 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8F296BF2F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 21:44:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 943366BF320
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 21:53:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230260AbjCQUoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Mar 2023 16:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
+        id S230088AbjCQUxz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Mar 2023 16:53:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbjCQUoQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 16:44:16 -0400
-Received: from sender3-op-o18.zoho.com (sender3-op-o18.zoho.com [136.143.184.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F60AF1D;
-        Fri, 17 Mar 2023 13:44:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1679085824; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Y582FsUn/rvAl46zKQ+vg4iZzkvmjmgeLYIeb6p6N+RCtmnykIySNbxgvrY3+keXPRSCUvjQUT9gnZu36OP3HktHEexvoRisyL318F1H6GZbOF/Pr+6Cr+r6WBMwl6FPkuU2QPQTXppwxx74rO1530KPDA52+5ZQklU5zH0gO1o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1679085824; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=JO6TDZk1gNuJY9zhmyYqZtSQKRJFrNsjLtQ8d66Q7jI=; 
-        b=astSoG+O232junYv52KbuDV3+OERfLYkkFL3VzhfERG4UhxYbBhgG/gBVNXhyKEsZ/i6RpRh1pAfSr7auQ9y9y0JJkucK+boniqrR1cfuUSoHficKFaagGLXBIxic20Aw1n+qZO/s0iHDVe0ts/zBsETtk57BOl0apylvZCD16E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1679085824;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=JO6TDZk1gNuJY9zhmyYqZtSQKRJFrNsjLtQ8d66Q7jI=;
-        b=DkOoJ1RNcWXF0uQERlD1A2iMK2YQxgwdrzUfevcgasCEU6QgVAXqk29bIC6dT94v
-        p6woSXG3i/DgvBxuEQADeby3gGhRk2PtPwWw9RXN3JDD+euf+I9Tydgz82LHI9dL6Ya
-        Uagm474kthEqGGrrCh8hUtXYHwi5h9yx7kkeLWOk=
-Received: from [10.10.10.3] (149.91.1.15 [149.91.1.15]) by mx.zohomail.com
-        with SMTPS id 1679085823481812.3752234065518; Fri, 17 Mar 2023 13:43:43 -0700 (PDT)
-Message-ID: <d7cc6264-48e1-4aab-ef6a-a106ffaee87e@arinc9.com>
-Date:   Fri, 17 Mar 2023 23:43:36 +0300
+        with ESMTP id S229772AbjCQUxy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 16:53:54 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACA71B572
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:53:52 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id e65so7097542ybh.10
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679086432;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=81k/wsN5LJHSw7IMmKprz7MljTYWXfOO3qNXbhpMYDY=;
+        b=GbicmX698aU6P3ndLa71hM7B5bhfNOjyuIQiA9eX8PBOUq1/RzNGBMXbQ0iECrEv5q
+         Qs2X2vRlWaonAomu6hJyTwJyst53I6ZQ3AwexcFFxvypToqzgoHD0fkw2SQ2SPgYDhQR
+         9YJ8jnhRejBiis4ni0UupkquEUOOR9t1B4kTsa+LnMK4mG+TfWQwbJZmH+Ig8uje91Dh
+         9TageZMNT90SRCTnPZvM+X195DHkOewu9tGsi5ElbC+A16u6x8o1p0fGf+3NYX48p5Pm
+         3EYTdu4fPQ8e7qhaNJFLLBWfW480I1Nua6D65Pmpkq/ezNlYQ+TljEyo4C433zu+IWft
+         T1jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679086432;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=81k/wsN5LJHSw7IMmKprz7MljTYWXfOO3qNXbhpMYDY=;
+        b=mio2GpvQ7jbka6gGkMa64425prZAXVC6iOHvrTepIDLnqvI6UPBxdWlRMJeq918QI0
+         1LsxQv2IbHr1+LFEloW8Gb7N8mV8ccltGGR7cCXLMVz3ReMyCzqsSNjaw8veOeFBCX5G
+         9cYAY5NxDa1Ujz0HuSOIuX0DBsLajO2Bm8lSu4W38tsNSFYz9CVc9ZH0IDN5j/aOLSzq
+         kauWudHUJKj4eB17x2vjC2bUKV2NPrTmstBE5eT5GUGgOBrLF9w+Ncub5YFF/pX84jEb
+         YXj8gHXyOeUNwAABKvXWKxWJY1hsLdBFncBO5BexS6jaoW2RPCbp2YHxJcYnmd5FC7QX
+         WOOQ==
+X-Gm-Message-State: AO0yUKU+bQV4hZAFC5xq/ejQRdEtQB5Gi+Il0DcpxrUNVtbFxfeRRKet
+        N+PxwHbHTom5IS+9IIi9u4PfCDF2pP12sC4ZjlSHMo5ZmFQgXNd+VIE=
+X-Google-Smtp-Source: AK7set/xMcJB36hfzj7lWnW/tGG+jyb989JVS6ZTe5X+GsibjG7yhs/EkXgKMrPvyfaL3Ej3pxGpi4IcL7WRbw5L0/o=
+X-Received: by 2002:a5b:611:0:b0:b67:f07:d180 with SMTP id d17-20020a5b0611000000b00b670f07d180mr357039ybq.5.1679086431900;
+ Fri, 17 Mar 2023 13:53:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 09/21] dt-bindings: pinctrl: ralink: {mt7620,mt7621}:
- rename to mediatek
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        William Dean <williamsukatube@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Del Regno <angelogioacchino.delregno@collabora.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Hui Liu <hui.liu@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-References: <20230313205921.35342-1-arinc.unal@arinc9.com>
- <20230313205921.35342-10-arinc.unal@arinc9.com>
- <20230317185810.GA2619692-robh@kernel.org>
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <20230317185810.GA2619692-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20230317185230.46189-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230317185230.46189-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Mar 2023 21:53:40 +0100
+Message-ID: <CACRpkdYXTk2pzXEM9MTjt=oT-CbhENABSLeb9dN7ZvEy8oqiag@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] backlight: hx8357: Convert to agnostic GPIO API
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,25 +73,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17.03.2023 21:58, Rob Herring wrote:
-> On Mon, Mar 13, 2023 at 11:59:09PM +0300, arinc9.unal@gmail.com wrote:
->> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> Rename schemas of pin controllers for MediaTek MT7620 and MT7621 SoCs to be
->> on par with other pin controllers for MediaTek SoCs.
->>
->> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->> ---
->>
->> I'm not changing the compatible string. I asked if it's accepted to do this
->> whilst keeping the compatible string but haven't received a response.
-> 
-> It's fine with me though I'd somewhat rather keep the filename matching
-> the compatible. Either way:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Fri, Mar 17, 2023 at 7:51=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-I prefer to do this so I'm going to keep it as is. Thanks for being OK 
-with either way.
+> The of_gpio.h is going to be removed. In preparation of that convert
+> the driver to the agnostic API.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Arınç
+Thanks for fixing this Andy!
+
+> -#if !IS_ENABLED(CONFIG_LCD_HX8357)
+> +#if IS_ENABLED(CONFIG_LCD_HX8357)
+>                 /*
+>                  * Himax LCD controllers used incorrectly named
+>                  * "gpios-reset" property and also specified wrong
+> @@ -452,7 +452,7 @@ static struct gpio_desc *of_find_gpio_rename(struct d=
+evice_node *np,
+>                  */
+>                 const char *compatible;
+>         } gpios[] =3D {
+> -#if !IS_ENABLED(CONFIG_LCD_HX8357)
+> +#if IS_ENABLED(CONFIG_LCD_HX8357)
+>                 /* Himax LCD controllers used "gpios-reset" */
+>                 { "reset",      "gpios-reset",  "himax,hx8357" },
+>                 { "reset",      "gpios-reset",  "himax,hx8369" },
+
+Eh what happened here .. it's even intuitively wrong.
+I would add
+Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
+with legacy bindings")
+
+It wasn't used until now it seems so not a regression and no
+need for a separate patch.
+
+Other than that it looks correct.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
