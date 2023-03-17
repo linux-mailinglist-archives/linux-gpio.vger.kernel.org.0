@@ -2,113 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 943366BF320
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 21:53:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D999F6BF33F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 21:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbjCQUxz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Mar 2023 16:53:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        id S229499AbjCQU5S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Mar 2023 16:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjCQUxy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 16:53:54 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACA71B572
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:53:52 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id e65so7097542ybh.10
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:53:52 -0700 (PDT)
+        with ESMTP id S230061AbjCQU5R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 16:57:17 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF9161AA7
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:57:11 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-544b959a971so82116277b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 13:57:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679086432;
+        d=linaro.org; s=google; t=1679086631;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=81k/wsN5LJHSw7IMmKprz7MljTYWXfOO3qNXbhpMYDY=;
-        b=GbicmX698aU6P3ndLa71hM7B5bhfNOjyuIQiA9eX8PBOUq1/RzNGBMXbQ0iECrEv5q
-         Qs2X2vRlWaonAomu6hJyTwJyst53I6ZQ3AwexcFFxvypToqzgoHD0fkw2SQ2SPgYDhQR
-         9YJ8jnhRejBiis4ni0UupkquEUOOR9t1B4kTsa+LnMK4mG+TfWQwbJZmH+Ig8uje91Dh
-         9TageZMNT90SRCTnPZvM+X195DHkOewu9tGsi5ElbC+A16u6x8o1p0fGf+3NYX48p5Pm
-         3EYTdu4fPQ8e7qhaNJFLLBWfW480I1Nua6D65Pmpkq/ezNlYQ+TljEyo4C433zu+IWft
-         T1jg==
+        bh=tq4CiYTqfmf4TaYq5krJqAFk8s/TIaovR9UIi5ez0rA=;
+        b=RlTeA4P4YaiZyOkLV7otxazXH3cO0lIxxBRDRJqSXbn64TwP+BYDWF+mWAe5HXF7G+
+         VoraJA1LYZhAfYMOBwEbigA81sDYZaJQ0Ze+xjeRG5bNqcFhNxXLQSs/sCl/gl9M8d3G
+         vY+3m5pTY0rJ7cf1EOVQ2w4kAelvyTMjkOeIwEo1ZVTSzkLDUo+z5mBgAvc0x3NIDIVs
+         8L2Ho4IoASnObAL0ItBoxrN0aGrSJ5xjwZarN5AXXV4kLPj3fVixox3lkvA4mQ4iwP2f
+         1rqU9V9itwkYqPznGSUHiYI0Joh/xKiD8xkUTa7fVoI6jjbA7DPTFTHZawkOIVXNcFZB
+         6Arg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679086432;
+        d=1e100.net; s=20210112; t=1679086631;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=81k/wsN5LJHSw7IMmKprz7MljTYWXfOO3qNXbhpMYDY=;
-        b=mio2GpvQ7jbka6gGkMa64425prZAXVC6iOHvrTepIDLnqvI6UPBxdWlRMJeq918QI0
-         1LsxQv2IbHr1+LFEloW8Gb7N8mV8ccltGGR7cCXLMVz3ReMyCzqsSNjaw8veOeFBCX5G
-         9cYAY5NxDa1Ujz0HuSOIuX0DBsLajO2Bm8lSu4W38tsNSFYz9CVc9ZH0IDN5j/aOLSzq
-         kauWudHUJKj4eB17x2vjC2bUKV2NPrTmstBE5eT5GUGgOBrLF9w+Ncub5YFF/pX84jEb
-         YXj8gHXyOeUNwAABKvXWKxWJY1hsLdBFncBO5BexS6jaoW2RPCbp2YHxJcYnmd5FC7QX
-         WOOQ==
-X-Gm-Message-State: AO0yUKU+bQV4hZAFC5xq/ejQRdEtQB5Gi+Il0DcpxrUNVtbFxfeRRKet
-        N+PxwHbHTom5IS+9IIi9u4PfCDF2pP12sC4ZjlSHMo5ZmFQgXNd+VIE=
-X-Google-Smtp-Source: AK7set/xMcJB36hfzj7lWnW/tGG+jyb989JVS6ZTe5X+GsibjG7yhs/EkXgKMrPvyfaL3Ej3pxGpi4IcL7WRbw5L0/o=
-X-Received: by 2002:a5b:611:0:b0:b67:f07:d180 with SMTP id d17-20020a5b0611000000b00b670f07d180mr357039ybq.5.1679086431900;
- Fri, 17 Mar 2023 13:53:51 -0700 (PDT)
+        bh=tq4CiYTqfmf4TaYq5krJqAFk8s/TIaovR9UIi5ez0rA=;
+        b=f9I+BO01fUs08AK/kSu5Xbvx2YOEg6a3FQNYwrGCe9v8zp5x7syY4WrVkqu8sSn5TY
+         CzrAAg+VpgXdd2UEFNIAWR/Llw+kIE6R1BuydPZN/Fse/fKE3brSmPNLPcB8hAeXqKGf
+         qrGkSk7t/moK64TXWm2lAxAW16xtVudcFCVCpuWzP1s/P6MM5urjXmefq/Ox5sii4wIe
+         pjPnd1+LmYHud2jQrNU8JYimEM4txbRBctLGL3e6oqzaEtXFr5q2sqnIhZ29udZySpx4
+         9kpxxNOGRQFtXM1aOsmp1SSTZ8/utdO/GLHNYbJqSgPaARznlMq38oGdyxu7XW+aE5fY
+         zrNA==
+X-Gm-Message-State: AO0yUKVuEoIiE6QQLUsNQ2Dxv0wRm56Gk/TIby2lTtRpHh86e9+ZQTxg
+        UBtPVMgpF4T/BsS39UZP85+GijBsF6qz9gY8JCr2pw==
+X-Google-Smtp-Source: AK7set8EcpfwxeXanBkExM/pG+0cpQ1FDxMPFkbktFbcuhw7+EsIYJGKUkkqcd/xAts8rpwpBbNFjlTJKeIYxUdRUaw=
+X-Received: by 2002:a81:af46:0:b0:541:693f:cdd1 with SMTP id
+ x6-20020a81af46000000b00541693fcdd1mr5289306ywj.9.1679086631025; Fri, 17 Mar
+ 2023 13:57:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230317185230.46189-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230317185230.46189-1-andriy.shevchenko@linux.intel.com>
+References: <1679070482-8391-1-git-send-email-quic_mojha@quicinc.com> <1679070482-8391-2-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <1679070482-8391-2-git-send-email-quic_mojha@quicinc.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Mar 2023 21:53:40 +0100
-Message-ID: <CACRpkdYXTk2pzXEM9MTjt=oT-CbhENABSLeb9dN7ZvEy8oqiag@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] backlight: hx8357: Convert to agnostic GPIO API
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Date:   Fri, 17 Mar 2023 21:56:59 +0100
+Message-ID: <CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJeC9SDQA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] firmware: qcom_scm: provide a read-modify-write function
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 7:51=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Mar 17, 2023 at 5:28=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
+> wrote:
 
-> The of_gpio.h is going to be removed. In preparation of that convert
-> the driver to the agnostic API.
+> It was released by Srinivas K. that there is a need of
+> read-modify-write scm exported function so that it can
+> be used by multiple clients.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Let's introduce qcom_scm_io_update_field() which masks
+> out the bits and write the passed value to that
+> bit-offset. Subsequent patch will use this function.
+>
+> Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-Thanks for fixing this Andy!
+This is starting to reimplement regmap.
+In this case regmap_update_bits().
 
-> -#if !IS_ENABLED(CONFIG_LCD_HX8357)
-> +#if IS_ENABLED(CONFIG_LCD_HX8357)
->                 /*
->                  * Himax LCD controllers used incorrectly named
->                  * "gpios-reset" property and also specified wrong
-> @@ -452,7 +452,7 @@ static struct gpio_desc *of_find_gpio_rename(struct d=
-evice_node *np,
->                  */
->                 const char *compatible;
->         } gpios[] =3D {
-> -#if !IS_ENABLED(CONFIG_LCD_HX8357)
-> +#if IS_ENABLED(CONFIG_LCD_HX8357)
->                 /* Himax LCD controllers used "gpios-reset" */
->                 { "reset",      "gpios-reset",  "himax,hx8357" },
->                 { "reset",      "gpios-reset",  "himax,hx8369" },
-
-Eh what happened here .. it's even intuitively wrong.
-I would add
-Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
-with legacy bindings")
-
-It wasn't used until now it seems so not a regression and no
-need for a separate patch.
-
-Other than that it looks correct.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+What about just using regmap as accessor for these
+registers instead?
 
 Yours,
 Linus Walleij
