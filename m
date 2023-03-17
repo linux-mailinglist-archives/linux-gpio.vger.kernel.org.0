@@ -2,401 +2,344 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80F886BE9B3
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 13:55:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 494AE6BECD3
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 16:27:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbjCQMy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Mar 2023 08:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        id S229913AbjCQP1T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Mar 2023 11:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjCQMy6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 08:54:58 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D43B457F5;
-        Fri, 17 Mar 2023 05:54:52 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id qh28so3338473qvb.7;
-        Fri, 17 Mar 2023 05:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679057691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2zMBAE4pq1Ef3AkTHVavFAi9picZzZQoMWV5WLBVAX8=;
-        b=RKosEANw26NYnguJtkZEMsQt/Lke9+gAxpVRg/M1+vhatD1J75LV9+M5xRswCFBZpL
-         y5cZuNPUg5fX17I9IwTbC9y/3Z0sLw/NUvIVnFi+KbF9y4wjZO9fCLhWK3YUPFf+GpPn
-         JUfSC6YxqGnKPNu9l7rxcgXUjkR6a+Lgue9LVku7elNG3ZYgMQpgnUXoQOekijHweSti
-         8n4o4TPeS5K+nvwGVaKOZWu+gReGcjkuySfLpn4qYKZu3i4PpPje6tI7qf6IEldWFZ8v
-         BaZbi2bsYLQxp5i80pgo6kaQvxO4eTOZ29S/+omhgbxE6f+wt95rfH399aLP4OHV2AAx
-         FWiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679057691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2zMBAE4pq1Ef3AkTHVavFAi9picZzZQoMWV5WLBVAX8=;
-        b=3Tq7cDtSLPKJOBY6bAayz0Bea5uV5UCSCUhR4ocjG3ZbYAAiVSfzDkVLXFLzJGsQ1a
-         z6S4PvQED1mgA4CAmJCrmTsoB/01mCFCM5HM2uUls2X0Ioz0i4mQ9vEh5kRJWNxoBN1g
-         B6sAQIpJ7TPB3BI32I+ye+9qORwbfiWa1TwLWLjzori0KvkmIfHGw4BR9xfDp9e1aFYA
-         y5zHPbsrWC1ZBmzU6EaRcVQosW7IHEbDDpz9axvZJ1M4dkjYTnU3H0CJhlFN1W4Ygj+i
-         kbbopFPgIQmjAcZD8iCy1UVt7BOGkJq3ECP1H6Pwfsqe2mygt1OmTYSGeEAzA41OXjtT
-         /Slw==
-X-Gm-Message-State: AO0yUKXObY4KICo7vZFnZbrGRcKtxMUbYn2XkZg5M2Q0nEjElDcwKaee
-        kkaEejGg8r5fwK5ytxu+EyqDeMSsj0NWmGhPETE=
-X-Google-Smtp-Source: AK7set/c7NHqemWXNIckmpW5HoBd4CU/t+gILrDxZCI1x3uyoNUZRlGutN6LGCuHsI+/gRG2R71cM9Qb8YRpGmTZNhg=
-X-Received: by 2002:ad4:5505:0:b0:56f:6925:eb2c with SMTP id
- pz5-20020ad45505000000b0056f6925eb2cmr4871942qvb.10.1679057691386; Fri, 17
- Mar 2023 05:54:51 -0700 (PDT)
+        with ESMTP id S229669AbjCQP1S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 11:27:18 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814A0900B6;
+        Fri, 17 Mar 2023 08:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679066836; x=1710602836;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4nsKQfG2TXVFlzS0a2xqd6TUaOzPnDxZ9w+isDZMppc=;
+  b=Ra2/GTkWhkqzxVWbNPlW7azYgc23bRdQTrnvByIuM/oxVcvqEZNHIM65
+   CUmw+M7NuWAEwi2EKIegXqvi7xqI62FI3lp8l9jJSxIl6cH4cxLWNdtYF
+   YW8zAhVKALQm1S+Dk0XmENRLN1uP/vP8kRZ229kS+s5t/d1K3vFXen+HI
+   r3qSTRHkP+kjelIpWFw1WkLcY79iKMtRkaK/ovjrycjNb4hKkWPAhrXY7
+   5tvAv1A/nYUiGwrLjZbkRnPxIPhdASHI9G1GwgaEEl2pFOxZXhf8LEPr9
+   pSCnNTFaA8Pr4wU6Pwp29kiuu26ep49ddZDSM1EKEEpS/a3EadO/TXg1f
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="318684204"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="318684204"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 08:26:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="854469627"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="854469627"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 17 Mar 2023 08:26:17 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pdBy7-0009RE-27;
+        Fri, 17 Mar 2023 15:26:11 +0000
+Date:   Fri, 17 Mar 2023 23:25:46 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     rcu@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-modules@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-crypto@vger.kernel.org, io-uring@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 6f08c1de13a9403341c18b66638a05588b2663ce
+Message-ID: <6414867a.CJX/i0yulQyJmAbH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20230315215027.30685-1-asmaa@nvidia.com> <20230315215027.30685-2-asmaa@nvidia.com>
-In-Reply-To: <20230315215027.30685-2-asmaa@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Mar 2023 14:54:15 +0200
-Message-ID: <CAHp75VfnNOsfcyLM-UP61CMAF9sLOwMbRkAe5Ljhs2p8F=4Pgw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] gpio: mlxbf3: Add gpio driver support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 11:50=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wr=
-ote:
->
-> Add support for the BlueField-3 SoC GPIO driver.
-> This driver configures and handles GPIO interrupts. It also enables a use=
-r
-> to manipulate certain GPIO pins via libgpiod tools or other kernel driver=
-s.
-> The usables pins are defined via the "gpio-reserved-ranges" property.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 6f08c1de13a9403341c18b66638a05588b2663ce  Add linux-next specific files for 20230317
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Error/Warning reports:
 
-> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-> ---
->  drivers/gpio/Kconfig       |  13 ++
->  drivers/gpio/Makefile      |   1 +
->  drivers/gpio/gpio-mlxbf3.c | 248 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 262 insertions(+)
->  create mode 100644 drivers/gpio/gpio-mlxbf3.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index ec7cfd4f52b1..beec1f6c34ff 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1534,6 +1534,19 @@ config GPIO_MLXBF2
->         help
->           Say Y here if you want GPIO support on Mellanox BlueField 2 SoC=
-.
->
-> +config GPIO_MLXBF3
-> +       tristate "Mellanox BlueField 3 SoC GPIO"
-> +       depends on (MELLANOX_PLATFORM && ARM64) || COMPILE_TEST
-> +       select GPIO_GENERIC
-> +       select GPIOLIB_IRQCHIP
-> +       help
-> +         Say Y if you want GPIO support on Mellanox BlueField 3 SoC.
-> +         This GPIO controller supports interrupt handling and enables th=
-e
-> +         manipulation of certain GPIO pins.
-> +         This controller should be used in parallel with pinctrl-mlxbf3 =
-to
-> +         control the desired GPIOs.
-> +         This driver can also be built as a module called mlxbf3-gpio.
-> +
->  config GPIO_ML_IOH
->         tristate "OKI SEMICONDUCTOR ML7213 IOH GPIO support"
->         depends on X86 || COMPILE_TEST
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 010587025fc8..76545ca31457 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -101,6 +101,7 @@ obj-$(CONFIG_GPIO_MERRIFIELD)               +=3D gpio=
--merrifield.o
->  obj-$(CONFIG_GPIO_ML_IOH)              +=3D gpio-ml-ioh.o
->  obj-$(CONFIG_GPIO_MLXBF)               +=3D gpio-mlxbf.o
->  obj-$(CONFIG_GPIO_MLXBF2)              +=3D gpio-mlxbf2.o
-> +obj-$(CONFIG_GPIO_MLXBF3)              +=3D gpio-mlxbf3.o
->  obj-$(CONFIG_GPIO_MM_LANTIQ)           +=3D gpio-mm-lantiq.o
->  obj-$(CONFIG_GPIO_MOCKUP)              +=3D gpio-mockup.o
->  obj-$(CONFIG_GPIO_MOXTET)              +=3D gpio-moxtet.o
-> diff --git a/drivers/gpio/gpio-mlxbf3.c b/drivers/gpio/gpio-mlxbf3.c
-> new file mode 100644
-> index 000000000000..e30cee108986
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-mlxbf3.c
-> @@ -0,0 +1,248 @@
-> +// SPDX-License-Identifier: GPL-2.0-only or BSD-3-Clause
-> +/* Copyright (C) 2022 NVIDIA CORPORATION & AFFILIATES */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +/*
-> + * There are 2 YU GPIO blocks:
-> + * gpio[0]: HOST_GPIO0->HOST_GPIO31
-> + * gpio[1]: HOST_GPIO32->HOST_GPIO55
-> + */
-> +#define MLXBF3_GPIO_MAX_PINS_PER_BLOCK 32
-> +
-> +/*
-> + * fw_gpio[x] block registers and their offset
-> + */
-> +#define MLXBF_GPIO_FW_OUTPUT_ENABLE_SET          0x00
-> +#define MLXBF_GPIO_FW_DATA_OUT_SET        0x04
-> +
-> +#define MLXBF_GPIO_FW_OUTPUT_ENABLE_CLEAR 0x00
-> +#define MLXBF_GPIO_FW_DATA_OUT_CLEAR      0x04
-> +
-> +#define MLXBF_GPIO_CAUSE_RISE_EN          0x00
-> +#define MLXBF_GPIO_CAUSE_FALL_EN          0x04
-> +#define MLXBF_GPIO_READ_DATA_IN           0x08
-> +
-> +#define MLXBF_GPIO_CAUSE_OR_CAUSE_EVTEN0  0x00
-> +#define MLXBF_GPIO_CAUSE_OR_EVTEN0        0x14
-> +#define MLXBF_GPIO_CAUSE_OR_CLRCAUSE      0x18
-> +
-> +struct mlxbf3_gpio_context {
-> +       struct gpio_chip gc;
-> +
-> +       /* YU GPIO block address */
-> +       void __iomem *gpio_set_io;
-> +       void __iomem *gpio_clr_io;
-> +       void __iomem *gpio_io;
-> +
-> +       /* YU GPIO cause block address */
-> +       void __iomem *gpio_cause_io;
-> +};
-> +
-> +static void mlxbf3_gpio_irq_enable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf3_gpio_context *gs =3D gpiochip_get_data(gc);
-> +       irq_hw_number_t offset =3D irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       gpiochip_enable_irq(gc, offset);
-> +
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       writel(BIT(offset), gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_CLRCA=
-USE);
-> +
-> +       val =3D readl(gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       val |=3D BIT(offset);
-> +       writel(val, gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +}
-> +
-> +static void mlxbf3_gpio_irq_disable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf3_gpio_context *gs =3D gpiochip_get_data(gc);
-> +       irq_hw_number_t offset =3D irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       val =3D readl(gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       val &=3D ~BIT(offset);
-> +       writel(val, gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_EVTEN0);
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +
-> +       gpiochip_disable_irq(gc, offset);
-> +}
-> +
-> +static irqreturn_t mlxbf3_gpio_irq_handler(int irq, void *ptr)
-> +{
-> +       struct mlxbf3_gpio_context *gs =3D ptr;
-> +       struct gpio_chip *gc =3D &gs->gc;
-> +       unsigned long pending;
-> +       u32 level;
-> +
-> +       pending =3D readl(gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_CAUSE_E=
-VTEN0);
-> +       writel(pending, gs->gpio_cause_io + MLXBF_GPIO_CAUSE_OR_CLRCAUSE)=
-;
-> +
-> +       for_each_set_bit(level, &pending, gc->ngpio)
-> +               generic_handle_domain_irq(gc->irq.domain, level);
-> +
-> +       return IRQ_RETVAL(pending);
-> +}
-> +
-> +static int
-> +mlxbf3_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
-> +{
-> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf3_gpio_context *gs =3D gpiochip_get_data(gc);
-> +       irq_hw_number_t offset =3D irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       raw_spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +
-> +       switch (type & IRQ_TYPE_SENSE_MASK) {
-> +       case IRQ_TYPE_EDGE_BOTH:
-> +               val =3D readl(gs->gpio_io + MLXBF_GPIO_CAUSE_FALL_EN);
-> +               val |=3D BIT(offset);
-> +               writel(val, gs->gpio_io + MLXBF_GPIO_CAUSE_FALL_EN);
-> +               val =3D readl(gs->gpio_io + MLXBF_GPIO_CAUSE_RISE_EN);
-> +               val |=3D BIT(offset);
-> +               writel(val, gs->gpio_io + MLXBF_GPIO_CAUSE_RISE_EN);
-> +               break;
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               val =3D readl(gs->gpio_io + MLXBF_GPIO_CAUSE_RISE_EN);
-> +               val |=3D BIT(offset);
-> +               writel(val, gs->gpio_io + MLXBF_GPIO_CAUSE_RISE_EN);
-> +               break;
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               val =3D readl(gs->gpio_io + MLXBF_GPIO_CAUSE_FALL_EN);
-> +               val |=3D BIT(offset);
-> +               writel(val, gs->gpio_io + MLXBF_GPIO_CAUSE_FALL_EN);
-> +               break;
-> +       default:
-> +               raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +               return -EINVAL;
-> +       }
-> +
-> +       raw_spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +
-> +       irq_set_handler_locked(irqd, handle_edge_irq);
-> +
-> +       return 0;
-> +}
-> +
-> +/* This function needs to be defined for handle_edge_irq() */
-> +static void mlxbf3_gpio_irq_ack(struct irq_data *data)
-> +{
-> +}
-> +
-> +static const struct irq_chip gpio_mlxbf3_irqchip =3D {
-> +       .name =3D "MLNXBF33",
-> +       .irq_ack =3D mlxbf3_gpio_irq_ack,
-> +       .irq_set_type =3D mlxbf3_gpio_irq_set_type,
-> +       .irq_enable =3D mlxbf3_gpio_irq_enable,
-> +       .irq_disable =3D mlxbf3_gpio_irq_disable,
-> +       .flags =3D IRQCHIP_IMMUTABLE,
-> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> +};
-> +
-> +static int mlxbf3_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct mlxbf3_gpio_context *gs;
-> +       struct gpio_irq_chip *girq;
-> +       struct gpio_chip *gc;
-> +       int ret, irq;
-> +
-> +       gs =3D devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
-> +       if (!gs)
-> +               return -ENOMEM;
-> +
-> +       gs->gpio_io =3D devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(gs->gpio_io))
-> +               return PTR_ERR(gs->gpio_io);
-> +
-> +       gs->gpio_cause_io =3D devm_platform_ioremap_resource(pdev, 1);
-> +       if (IS_ERR(gs->gpio_cause_io))
-> +               return PTR_ERR(gs->gpio_cause_io);
-> +
-> +       gs->gpio_set_io =3D devm_platform_ioremap_resource(pdev, 2);
-> +       if (IS_ERR(gs->gpio_set_io))
-> +               return PTR_ERR(gs->gpio_set_io);
-> +
-> +       gs->gpio_clr_io =3D devm_platform_ioremap_resource(pdev, 3);
-> +       if (IS_ERR(gs->gpio_clr_io))
-> +               return PTR_ERR(gs->gpio_clr_io);
-> +       gc =3D &gs->gc;
-> +
-> +       ret =3D bgpio_init(gc, dev, 4,
-> +                       gs->gpio_io + MLXBF_GPIO_READ_DATA_IN,
-> +                       gs->gpio_set_io + MLXBF_GPIO_FW_DATA_OUT_SET,
-> +                       gs->gpio_clr_io + MLXBF_GPIO_FW_DATA_OUT_CLEAR,
-> +                       gs->gpio_set_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_SET=
-,
-> +                       gs->gpio_clr_io + MLXBF_GPIO_FW_OUTPUT_ENABLE_CLE=
-AR, 0);
-> +
-> +       gc->request =3D gpiochip_generic_request;
-> +       gc->free =3D gpiochip_generic_free;
-> +       gc->owner =3D THIS_MODULE;
-> +
-> +       irq =3D platform_get_irq(pdev, 0);
-> +       if (irq >=3D 0) {
-> +               girq =3D &gs->gc.irq;
-> +               gpio_irq_chip_set_chip(girq, &gpio_mlxbf3_irqchip);
-> +               girq->default_type =3D IRQ_TYPE_NONE;
-> +               /* This will let us handle the parent IRQ in the driver *=
-/
-> +               girq->num_parents =3D 0;
-> +               girq->parents =3D NULL;
-> +               girq->parent_handler =3D NULL;
-> +               girq->handler =3D handle_bad_irq;
-> +
-> +               /*
-> +                * Directly request the irq here instead of passing
-> +                * a flow-handler because the irq is shared.
-> +                */
-> +               ret =3D devm_request_irq(dev, irq, mlxbf3_gpio_irq_handle=
-r,
-> +                                      IRQF_SHARED, dev_name(dev), gs);
-> +               if (ret)
-> +                       return dev_err_probe(dev, ret, "failed to request=
- IRQ");
-> +       }
-> +
-> +       platform_set_drvdata(pdev, gs);
-> +
-> +       ret =3D devm_gpiochip_add_data(dev, &gs->gc, gs);
-> +       if (ret)
-> +               dev_err_probe(dev, ret, "Failed adding memory mapped gpio=
-chip\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct acpi_device_id mlxbf3_gpio_acpi_match[] =3D {
-> +       { "MLNXBF33", 0 },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, mlxbf3_gpio_acpi_match);
-> +
-> +static struct platform_driver mlxbf3_gpio_driver =3D {
-> +       .driver =3D {
-> +               .name =3D "mlxbf3_gpio",
-> +               .acpi_match_table =3D mlxbf3_gpio_acpi_match,
-> +       },
-> +       .probe    =3D mlxbf3_gpio_probe,
-> +};
-> +module_platform_driver(mlxbf3_gpio_driver);
-> +
-> +MODULE_DESCRIPTION("NVIDIA BlueField-3 GPIO Driver");
-> +MODULE_AUTHOR("Asmaa Mnebhi <asmaa@nvidia.com>");
-> +MODULE_LICENSE("Dual BSD/GPL");
-> --
-> 2.30.1
->
+https://lore.kernel.org/oe-kbuild-all/202303081807.lBLWKmpX-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303082135.NjdX1Bij-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303151409.por0SBf7-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161404.OrmfCy09-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303161521.jbGbaFjJ-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303171300.g6uEM0X9-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303171506.Af2gNUDA-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303171606.xoYwr7Lj-lkp@intel.com
 
+Error/Warning: (recently discovered and may have been fixed)
 
---=20
-With Best Regards,
-Andy Shevchenko
+Warning: Documentation/devicetree/bindings/input/snvs-pwrkey.txt references a file that doesn't exist: Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+Warning: Documentation/devicetree/bindings/rtc/snvs-rtc.txt references a file that doesn't exist: Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:258:10: warning: no previous prototype for 'link_timing_bandwidth_kbps' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:2184: warning: expecting prototype for Check if there is a native DP or passive DP(). Prototype was for dp_is_sink_present() instead
+drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    int
+drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    void
+drivers/net/wireless/legacy/ray_cs.c:628:17: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+include/linux/compiler_types.h:338:27: error: expression in static assertion is not an integer
+include/linux/compiler_types.h:340:27: error: expression in static assertion is not an integer
+include/linux/container_of.h:20:54: error: invalid use of undefined type 'struct module'
+include/linux/rculist.h:392:21: error: invalid use of undefined type 'struct module'
+include/linux/stddef.h:16:33: error: invalid use of undefined type 'struct module'
+kernel/bpf/../module/internal.h:205:2: error: assigning to 'struct module *' from incompatible type 'void'
+kernel/bpf/../module/internal.h:205:2: error: incomplete definition of type 'struct module'
+kernel/bpf/../module/internal.h:205:2: error: offsetof of incomplete type 'typeof (*mod)' (aka 'struct module')
+kernel/bpf/../module/internal.h:205:2: error: operand of type 'void' where arithmetic or pointer type is required
+kernel/bpf/../module/internal.h:212:2: error: operand of type 'void' where arithmetic or pointer type is required
+lib/dynamic_debug.c:947:6: warning: no previous prototype for function '__dynamic_ibdev_dbg' [-Wmissing-prototypes]
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+crypto/rng.c:206:27: warning: Value stored to 'istat' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+drivers/usb/host/xhci-rcar.c:239:34: warning: unused variable 'usb_xhci_of_match' [-Wunused-const-variable]
+drivers/watchdog/imx2_wdt.c:442:22: sparse: sparse: symbol 'imx_wdt' was not declared. Should it be static?
+drivers/watchdog/imx2_wdt.c:446:22: sparse: sparse: symbol 'imx_wdt_legacy' was not declared. Should it be static?
+include/linux/gpio/consumer.h: linux/err.h is included more than once.
+include/linux/gpio/driver.h: asm/bug.h is included more than once.
+io_uring/io_uring.c:432 io_prep_async_work() error: we previously assumed 'req->file' could be null (see line 425)
+io_uring/kbuf.c:221 __io_remove_buffers() warn: variable dereferenced before check 'bl->buf_ring' (see line 219)
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arc-randconfig-r006-20230313
+|   |-- include-linux-compiler_types.h:error:expression-in-static-assertion-is-not-an-integer
+|   |-- include-linux-container_of.h:error:invalid-use-of-undefined-type-struct-module
+|   |-- include-linux-rculist.h:error:invalid-use-of-undefined-type-struct-module
+|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-module
+|-- arc-randconfig-r013-20230312
+|   |-- include-linux-compiler_types.h:error:expression-in-static-assertion-is-not-an-integer
+|   |-- include-linux-container_of.h:error:invalid-use-of-undefined-type-struct-module
+|   |-- include-linux-rculist.h:error:invalid-use-of-undefined-type-struct-module
+|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-module
+|-- arm-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- arm-buildonly-randconfig-r003-20230313
+|   |-- include-linux-compiler_types.h:error:expression-in-static-assertion-is-not-an-integer
+|   |-- include-linux-container_of.h:error:invalid-use-of-undefined-type-struct-module
+|   |-- include-linux-rculist.h:error:invalid-use-of-undefined-type-struct-module
+|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-module
+|-- arm-randconfig-s051-20230312
+|   |-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt-was-not-declared.-Should-it-be-static
+|   `-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt_legacy-was-not-declared.-Should-it-be-static
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- csky-randconfig-r025-20230313
+|   |-- include-linux-compiler_types.h:error:expression-in-static-assertion-is-not-an-integer
+|   |-- include-linux-container_of.h:error:invalid-use-of-undefined-type-struct-module
+|   |-- include-linux-rculist.h:error:invalid-use-of-undefined-type-struct-module
+|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-module
+|-- csky-randconfig-r031-20230313
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- csky-randconfig-s043-20230312
+|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:int
+|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:sparse:incompatible-types-in-conditional-expression-(different-base-types):
+|   `-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:void
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:no-previous-prototype-for-link_timing_bandwidth_kbps
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:expecting-prototype-for-Check-if-there-is-a-native-DP-or-passive-DP().-Prototype-was-for-dp_is_sink_present()-inste
+|-- ia64-allmodconfig
+clang_recent_errors
+|-- arm-randconfig-c002-20230312
+|   `-- crypto-rng.c:warning:Value-stored-to-istat-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+|-- arm64-randconfig-r005-20230312
+|   |-- kernel-bpf-..-module-internal.h:error:assigning-to-struct-module-from-incompatible-type-void
+|   |-- kernel-bpf-..-module-internal.h:error:incomplete-definition-of-type-struct-module
+|   |-- kernel-bpf-..-module-internal.h:error:offsetof-of-incomplete-type-typeof-(-mod)-(aka-struct-module-)
+|   `-- kernel-bpf-..-module-internal.h:error:operand-of-type-void-where-arithmetic-or-pointer-type-is-required
+|-- hexagon-buildonly-randconfig-r004-20230312
+|   |-- drivers-usb-host-xhci-rcar.c:warning:unused-variable-usb_xhci_of_match
+|   |-- kernel-bpf-..-module-internal.h:error:assigning-to-struct-module-from-incompatible-type-void
+|   |-- kernel-bpf-..-module-internal.h:error:incomplete-definition-of-type-struct-module
+|   `-- kernel-bpf-..-module-internal.h:error:offsetof-of-incomplete-type-typeof-(-mod)-(aka-struct-module-)
+|-- i386-randconfig-a012-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- i386-randconfig-a013-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- i386-randconfig-a016-20230313
+|   `-- lib-dynamic_debug.c:warning:no-previous-prototype-for-function-__dynamic_ibdev_dbg
+|-- powerpc-randconfig-r002-20230312
+|   `-- kernel-bpf-..-module-internal.h:error:operand-of-type-void-where-arithmetic-or-pointer-type-is-required
+|-- riscv-randconfig-r002-20230312
+|   |-- kernel-bpf-..-module-internal.h:error:assigning-to-struct-module-from-incompatible-type-void
+|   |-- kernel-bpf-..-module-internal.h:error:incomplete-definition-of-type-struct-module
+|   |-- kernel-bpf-..-module-internal.h:error:offsetof-of-incomplete-type-typeof-(-mod)-(aka-struct-module-)
+|   `-- kernel-bpf-..-module-internal.h:error:operand-of-type-void-where-arithmetic-or-pointer-type-is-required
+`-- riscv-randconfig-r042-20230313
+    |-- kernel-bpf-..-module-internal.h:error:assigning-to-struct-module-from-incompatible-type-void
+    |-- kernel-bpf-..-module-internal.h:error:incomplete-definition-of-type-struct-module
+    |-- kernel-bpf-..-module-internal.h:error:offsetof-of-incomplete-type-typeof-(-mod)-(aka-struct-module-)
+    `-- kernel-bpf-..-module-internal.h:error:operand-of-type-void-where-arithmetic-or-pointer-type-is-required
+
+elapsed time: 723m
+
+configs tested: 133
+configs skipped: 9
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r002-20230313   gcc  
+arc                  randconfig-r006-20230313   gcc  
+arc                  randconfig-r013-20230312   gcc  
+arc                  randconfig-r023-20230313   gcc  
+arc                  randconfig-r043-20230312   gcc  
+arc                  randconfig-r043-20230313   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r003-20230313   gcc  
+arm                                 defconfig   gcc  
+arm                       imx_v4_v5_defconfig   clang
+arm                         lpc18xx_defconfig   gcc  
+arm                  randconfig-r004-20230313   clang
+arm                  randconfig-r012-20230312   clang
+arm                  randconfig-r046-20230312   clang
+arm                  randconfig-r046-20230313   gcc  
+arm                           sama5_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r005-20230312   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r022-20230313   gcc  
+csky                 randconfig-r023-20230312   gcc  
+csky                 randconfig-r025-20230313   gcc  
+csky                 randconfig-r031-20230313   gcc  
+hexagon      buildonly-randconfig-r004-20230312   clang
+hexagon      buildonly-randconfig-r005-20230313   clang
+hexagon              randconfig-r001-20230313   clang
+hexagon              randconfig-r022-20230312   clang
+hexagon              randconfig-r041-20230312   clang
+hexagon              randconfig-r041-20230313   clang
+hexagon              randconfig-r045-20230312   clang
+hexagon              randconfig-r045-20230313   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r002-20230313   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230313   gcc  
+i386                 randconfig-a002-20230313   gcc  
+i386                 randconfig-a003-20230313   gcc  
+i386                 randconfig-a004-20230313   gcc  
+i386                 randconfig-a005-20230313   gcc  
+i386                 randconfig-a006-20230313   gcc  
+i386                 randconfig-a011-20230313   clang
+i386                 randconfig-a012-20230313   clang
+i386                 randconfig-a013-20230313   clang
+i386                 randconfig-a014-20230313   clang
+i386                 randconfig-a015-20230313   clang
+i386                 randconfig-a016-20230313   clang
+i386                          randconfig-c001   gcc  
+i386                 randconfig-r032-20230313   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r001-20230312   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r006-20230312   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            q40_defconfig   gcc  
+microblaze   buildonly-randconfig-r003-20230312   gcc  
+microblaze           randconfig-r011-20230312   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1000-neo_defconfig   clang
+mips                      pic32mzda_defconfig   clang
+mips                 randconfig-r025-20230312   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r003-20230313   gcc  
+nios2                randconfig-r015-20230312   gcc  
+nios2                randconfig-r036-20230313   gcc  
+openrisc     buildonly-randconfig-r001-20230312   gcc  
+openrisc     buildonly-randconfig-r006-20230312   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r021-20230313   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                    amigaone_defconfig   gcc  
+powerpc                      bamboo_defconfig   gcc  
+powerpc                   bluestone_defconfig   clang
+powerpc      buildonly-randconfig-r001-20230313   clang
+powerpc      buildonly-randconfig-r004-20230313   clang
+powerpc                  iss476-smp_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r002-20230312   clang
+riscv                randconfig-r042-20230312   gcc  
+riscv                randconfig-r042-20230313   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230312   gcc  
+s390                 randconfig-r044-20230313   clang
+sh                               allmodconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                   randconfig-r024-20230313   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r004-20230312   gcc  
+sparc                randconfig-r014-20230312   gcc  
+sparc                randconfig-r033-20230313   gcc  
+sparc                randconfig-r035-20230313   gcc  
+sparc64              randconfig-r021-20230312   gcc  
+sparc64              randconfig-r026-20230312   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230313   gcc  
+x86_64               randconfig-a002-20230313   gcc  
+x86_64               randconfig-a003-20230313   gcc  
+x86_64               randconfig-a004-20230313   gcc  
+x86_64               randconfig-a005-20230313   gcc  
+x86_64               randconfig-a006-20230313   gcc  
+x86_64                        randconfig-a011   gcc  
+x86_64                        randconfig-a012   clang
+x86_64                        randconfig-a013   gcc  
+x86_64                        randconfig-a014   clang
+x86_64                        randconfig-a015   gcc  
+x86_64                        randconfig-a016   clang
+x86_64               randconfig-r026-20230313   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r005-20230313   gcc  
+xtensa               randconfig-r016-20230312   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
