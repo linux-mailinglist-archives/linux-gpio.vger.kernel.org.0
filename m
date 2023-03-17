@@ -2,86 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2B6D6BF35B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 22:00:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E49196BF3AE
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Mar 2023 22:16:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjCQVAT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Mar 2023 17:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        id S229868AbjCQVQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Mar 2023 17:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjCQVAS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 17:00:18 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF94A25284
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 14:00:15 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-544787916d9so115739337b3.13
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Mar 2023 14:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679086815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4pSPDsSpYr0yzHIhE9QqHD/oXvXGj/zx+/wwbZGGiKE=;
-        b=TLAPZObVbM6RimvFIq982tCnrphh2E8b4WnAsFslm59mu9C4n4OLg2kQev1+xjLbg+
-         2mitKhD5cGv5G0XN85Rp4tPSNxVr85FQkGJGSwdK7KmCwJlM9e3kSu9hoM9x1IkIi/FA
-         KEkxamYocSxlBIZKihAGoh5y8a68DWfU1du9MsCvsWkDvnf+uZZqM5N1n/Wp/CsSGO0p
-         jSariuFyMrAx5ZnvxcUe71YEAwSQrFdGoEtyq2PudpolSPN3Yoe5lF3DAliDLyiT7h4w
-         DeeKwiRKTDJO3zD/+N4mYgfokEIrqie0/2tPnMxROJ5K9GRx/jKrfJ/S+ws05JAf3CXr
-         0lCA==
+        with ESMTP id S229734AbjCQVQ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Mar 2023 17:16:27 -0400
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD1469CFB;
+        Fri, 17 Mar 2023 14:16:26 -0700 (PDT)
+Received: by mail-il1-f175.google.com with SMTP id i19so3409878ila.10;
+        Fri, 17 Mar 2023 14:16:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679086815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4pSPDsSpYr0yzHIhE9QqHD/oXvXGj/zx+/wwbZGGiKE=;
-        b=IjQ9KTJ2f9vbeDJSfX+2nw4FZL4yve9+pr+rzqqigC5/vKkWak3/vkUZVdZHiWpTFU
-         CxKeCysVvrZ4o8qyyVMJ5eW7Hgvl/iX/xW98dtpF+LvvEgJQqx3EdTy83EvCdVgnTi3A
-         Zv6XpmLAKVBnfMcGCKCAG+7g4CvRhANUCh9IKDkh2gNzFqa0z+dKJLErnr2MJfCH4aRu
-         FaJ8dillhvKsBG57c0kLZxpqX0hS3QO5fSqzpb1onDBySZNQjH4lCp+itvQ3Lm/dgodD
-         RMWIxlk920fqc+F86d5e3xCLgeBQ3MP46kBPWqd03Ce/TU9oCc+iHwAG/nUFYnqm2mu0
-         fP5g==
-X-Gm-Message-State: AO0yUKUJ5RMhKSc3Bt2xLhNXlQoMfqrqPuu25IZLe8gdHkN3L/PRpJeD
-        WM5k1LfH+m+UvmFZIkgVmI50UQfWYaXBRYATtDea5A==
-X-Google-Smtp-Source: AK7set/QsTUG3EEsvs9ExltdFx7/LqW6bRg6UIEkaEIPkBXihYNrXoghB4S0x7WKrIwB3mTvAVKhXTm20ajPQWcQ48Q=
-X-Received: by 2002:a81:ac1f:0:b0:541:9895:4ce9 with SMTP id
- k31-20020a81ac1f000000b0054198954ce9mr5307886ywh.9.1679086815073; Fri, 17 Mar
- 2023 14:00:15 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679087785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E8EReBm37JWyJO8L1kIPOgKUl1U5FCQclLtDZ/qXfAs=;
+        b=T9OD8EDmmspN5qP6O0f9aqn23exd9IXa16FNFPu9CWKpEB6ZJdDN2SZYeKENQQG5Ef
+         fWY9t1SLe/M/Z9CZAAnsfuUSOSp7Oqquo7QN8gsMKC1U1BPWnun6YWISwZMWrRAyAoPW
+         mTW3MBSi6+9pZFblEhNr39Q672Uq9tn9FiIx1+XK1kbXENjlVrDX7WV1UcC0TilOPZF8
+         qqOrikKJnz8uyFGtl9f74h5ZcphO5DVL6kc6u4PcK6Yd4Q9/J+a5x98oqimeXLEeX23p
+         ubUZ6cloyeRehh8OJ9jKEWSTMsR4XvQkX8VSejJH11HjBrZp9cOzv9cA85blkSoMBB8N
+         N8gw==
+X-Gm-Message-State: AO0yUKWiwyBiUE9fqyYObhX5SfGwCBqeLxjAVE9YReg2bSWzqA07UcoL
+        bqLPWKVPzdczxfVfYTLtksl5rKLPBA==
+X-Google-Smtp-Source: AK7set+44jDdZQnQ5gK5eSj07BZtp0lA+8sBDtriRGbUAZiENzi39wMOmMGgf61Ip66/ii32uJBABg==
+X-Received: by 2002:a92:cc08:0:b0:317:99b9:3d1c with SMTP id s8-20020a92cc08000000b0031799b93d1cmr12777ilp.26.1679087785257;
+        Fri, 17 Mar 2023 14:16:25 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c7-20020a929407000000b003232362a4c2sm879970ili.8.2023.03.17.14.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 14:16:23 -0700 (PDT)
+Received: (nullmailer pid 2819364 invoked by uid 1000);
+        Fri, 17 Mar 2023 21:16:21 -0000
+Date:   Fri, 17 Mar 2023 16:16:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] p54spi: convert to devicetree
+Message-ID: <20230317211621.GA2814846-robh@kernel.org>
+References: <20230314163201.955689-1-arnd@kernel.org>
 MIME-Version: 1.0
-References: <20230315215027.30685-1-asmaa@nvidia.com> <20230315215027.30685-2-asmaa@nvidia.com>
-In-Reply-To: <20230315215027.30685-2-asmaa@nvidia.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Mar 2023 22:00:03 +0100
-Message-ID: <CACRpkdZwpU_ZSC2KnTjgMCwKY8iDcBt7EyEUipSm0caMUG9BxQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] gpio: mlxbf3: Add gpio driver support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230314163201.955689-1-arnd@kernel.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 10:50=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wr=
-ote:
+On Tue, Mar 14, 2023 at 05:30:56PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The Prism54 SPI driver hardcodes GPIO numbers and expects users to
+> pass them as module parameters, apparently a relic from its life as a
+> staging driver. This works because there is only one user, the Nokia
+> N8x0 tablet.
+> 
+> Convert this to the gpio descriptor interface and move the gpio
+> line information into devicetree to improve this and simplify the
+> code at the same time.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> As I don't have an N8x0, this is completely untested.
+> 
+> I listed the driver authors (Johannes and Christian) as the maintainers
+> of the binding document, but I don't know if they actually have this
+> hardware. It might be better to list someone who is actually using it.
+> 
+> Among the various chip identifications, I wasn't sure which one to
+> use for the compatible string and the name of the binding document.
+> I picked st,stlc4560 as that was cited as the version in the N800
+> on multiple websites.
+> ---
+>  .../bindings/net/wireless/st,stlc45xx.yaml    | 64 +++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  arch/arm/boot/dts/omap2.dtsi                  |  4 ++
+>  arch/arm/boot/dts/omap2420-n8x0-common.dtsi   | 12 ++++
+>  arch/arm/mach-omap2/board-n8x0.c              | 18 -----
+>  drivers/net/wireless/intersil/p54/p54spi.c    | 69 +++++++------------
+>  drivers/net/wireless/intersil/p54/p54spi.h    |  3 +
+>  7 files changed, 109 insertions(+), 62 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/st,stlc45xx.yaml
 
-> Add support for the BlueField-3 SoC GPIO driver.
-> This driver configures and handles GPIO interrupts. It also enables a use=
-r
-> to manipulate certain GPIO pins via libgpiod tools or other kernel driver=
-s.
-> The usables pins are defined via the "gpio-reserved-ranges" property.
->
-> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+Binding looks fine, but I assume you'll split this into at least 3 
+patches?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Rob
