@@ -2,93 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E5DD6C122A
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 13:45:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FD756C14CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 15:34:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjCTMpW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Mar 2023 08:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
+        id S229967AbjCTOe5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Mar 2023 10:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231524AbjCTMpN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 08:45:13 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972D1525A;
-        Mon, 20 Mar 2023 05:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679316287; x=1710852287;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tdLDCcBx+GEfk7tj+nGn51mFKS2z+cvwXx7rQAgBk1k=;
-  b=nHHVp6O4JM5zhtayvRd7xrDy9PLTwyg7CdOQR4GpgfUWDuYylm6knkFs
-   vrS/yE1LF8V+GZkbN+4nzrG10U5i1tuJc33G5ElvZNlthQ/WdK/CfWjox
-   p67kJDnG10rQWuK4kQppy4us789ZeZJ4Hrnj3T2xTuwSC3KnmcagF+U55
-   9pwZalr8iIwPr+Zu1W1mOgPjkCKJRJEYKfSOFQT3GuxQeF1dGUB4UuBYg
-   GwfgBRAHOfemKckvhiaEQq0j6EWsroJikGjHF/2fbco1pZKPv6Ppyt2QW
-   cA78k8si+0VNc7oI72Yh6ooZtTyv721SU9vm5+wyPvapjkrfrAEDxeOQM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="318300662"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="318300662"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 05:44:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="681058814"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="681058814"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 20 Mar 2023 05:44:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1peEsV-006Gif-13;
-        Mon, 20 Mar 2023 14:44:43 +0200
-Date:   Mon, 20 Mar 2023 14:44:43 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
+        with ESMTP id S230159AbjCTOer (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 10:34:47 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA241E9E4
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 07:34:45 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id bz27so1476958qtb.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 07:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679322884;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9A9e3OlK5++HHhObFEXf5ESYCXtuXqccANVGQ+6I21U=;
+        b=n4DZ72ZWghNDwCj3HzI/lGvHUwnh+1IQkFPYY0zRUyHL7JvoSfIDz3beMw2rwhx41g
+         ZSsfOEDtBBlX/kiMrruCjNkvJLP3l3vWyV0U7pCZB4pU7vP9nwvaKVsW13IFQa+DL59L
+         mR+q1RyVXGgfuzZ+kG+U0ewengBMUKhsmyXy7zYCAyC3XuWTCTYbQtPIBwjRSrF56ol5
+         dwTxgS0P+bGqNRo4SQ7XvBwYn9+u8s5VBx/nwuxlIUI727A9dvHXEs7Kc/K2cxptuCDQ
+         VdODXlmBPgGK4PQ4zFhma3Wf2UVMDBwyRGN47VEuLQKeSzf7HEYXKMwQ63MwXAk6OKYZ
+         ICQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679322884;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9A9e3OlK5++HHhObFEXf5ESYCXtuXqccANVGQ+6I21U=;
+        b=kAlU/lB3qrL3H6QWLQlcNH759hAvwed/+01vkzTtb5lM64mJBMPISsAvclZLjH7xTW
+         W9Y5oSEgrrXtbzk1cBqZLRb9KdOoAaWWOIOSUUPvGnFfeO2mCR8Iktc0RFzroWUtGujX
+         +GjTXRJzcEsoXIarNnXxENvIM1Ssmkipngj/V5FCf8+xC7zX8YZqE1nBsecSUEFW7RVO
+         E0ZsglIVgrCqwUNpsT00FTLtj9+PMq0+KcZHPPvKfsl3eEEmjru2LdTcvRZBccQTwrIo
+         P3TzZeM4SsWptDbZBjrprwjYwAN1FJI0lazYzDpOYjenQpcEhQwBdAmd9T4y44vUeqzG
+         cClQ==
+X-Gm-Message-State: AO0yUKU/7/U/g2ZxHDJJ0K0SaGCpG3Fu22xfoeNTW6DXV6K/KR34K9iM
+        st+VrWOSIzRMSRlvAkPoIKhXeqkNMoxEel9zXS8=
+X-Google-Smtp-Source: AK7set97FZ456GPwpd2kSRrqh5hWiRZHJjIdfRskJViD/7gWDTYz3XhhIwnya2T2lX+ryW8RDoXA2Q==
+X-Received: by 2002:ac8:5c13:0:b0:3d4:8ce9:cef7 with SMTP id i19-20020ac85c13000000b003d48ce9cef7mr25710279qti.8.1679322884444;
+        Mon, 20 Mar 2023 07:34:44 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id r16-20020a05620a299000b0074305413c73sm7463490qkp.95.2023.03.20.07.34.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Mar 2023 07:34:43 -0700 (PDT)
+Date:   Sun, 19 Mar 2023 17:18:53 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mark Brown <broonie@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH v2 0/2] regmap-irq: Drop map from handle_mask_sync()
  parameters
-Message-ID: <ZBhVOziLz6WL6vv7@smile.fi.intel.com>
+Message-ID: <ZBd8PZa0kCcG4MQD@fedora>
 References: <cover.1679259085.git.william.gray@linaro.org>
+ <ZBhVOziLz6WL6vv7@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yJ3RjQKbw+mthOrU"
 Content-Disposition: inline
-In-Reply-To: <cover.1679259085.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZBhVOziLz6WL6vv7@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 05:02:00PM -0400, William Breathitt Gray wrote:
-> Changes in v2:
->  - Pull out 104-dio-48e refactor to a precursor patch
-> 
-> Remove the map parameter from the struct regmap_irq_chip callback
-> handle_mask_sync() because it can be passed via the irq_drv_data
-> parameter instead. The gpio-104-dio-48e driver is the only consumer of
-> this callback and is thus updated accordingly.
-> 
-> A couple pending patchsets also utilize handle_mask_sync() [0][1], so
-> it'll be useful to merge the changes in this series first to avoid
-> subsequent noise adjusting the dependent drivers.
-> 
-> [0] https://lore.kernel.org/r/cover.1677515341.git.william.gray@linaro.org/
-> [1] https://lore.kernel.org/r/cover.1678106722.git.william.gray@linaro.org/
 
-Good idea and intention, but something went wrong with bisectability as pointed
-out by the build bot. As a last resort you would need to squash these two, but
-try first another possible patch series split.
+--yJ3RjQKbw+mthOrU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Mar 20, 2023 at 02:44:43PM +0200, Andy Shevchenko wrote:
+> On Sun, Mar 19, 2023 at 05:02:00PM -0400, William Breathitt Gray wrote:
+> > Changes in v2:
+> >  - Pull out 104-dio-48e refactor to a precursor patch
+> >=20
+> > Remove the map parameter from the struct regmap_irq_chip callback
+> > handle_mask_sync() because it can be passed via the irq_drv_data
+> > parameter instead. The gpio-104-dio-48e driver is the only consumer of
+> > this callback and is thus updated accordingly.
+> >=20
+> > A couple pending patchsets also utilize handle_mask_sync() [0][1], so
+> > it'll be useful to merge the changes in this series first to avoid
+> > subsequent noise adjusting the dependent drivers.
+> >=20
+> > [0] https://lore.kernel.org/r/cover.1677515341.git.william.gray@linaro.=
+org/
+> > [1] https://lore.kernel.org/r/cover.1678106722.git.william.gray@linaro.=
+org/
+>=20
+> Good idea and intention, but something went wrong with bisectability as p=
+ointed
+> out by the build bot. As a last resort you would need to squash these two=
+, but
+> try first another possible patch series split.
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
 
+I should have build tested each commit when I rebased rather than just
+the last. I'd rather avoid a squash so that these changes are distinct
+for the sake of a clear git history on the regmap API change; I'll
+submit a v3 soon with the minor changes needed.
 
+William Breathitt Gray
+
+--yJ3RjQKbw+mthOrU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZBd8PQAKCRC1SFbKvhIj
+K7RQAQDfk4YWJnxcERWnwB2mljw7M5GixdW+XeoUvcJG1FFcvwEAkF1+dcfljnmv
+gnkb42RMyBqecCEsyWOkr1gmf93vng4=
+=NFFG
+-----END PGP SIGNATURE-----
+
+--yJ3RjQKbw+mthOrU--
