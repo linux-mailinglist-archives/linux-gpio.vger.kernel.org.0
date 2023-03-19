@@ -2,84 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A8636C0560
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:18:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A1E6C0567
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:20:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjCSVSD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Mar 2023 17:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
+        id S230242AbjCSVUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 17:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjCSVSC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:18:02 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC6D19F2C
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:18:01 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id l16so1302272ybe.6
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:18:01 -0700 (PDT)
+        with ESMTP id S230223AbjCSVUt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:20:49 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED500113C3
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5418d54d77bso192458927b3.12
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679260681;
+        d=linaro.org; s=google; t=1679260846;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OvuN9jR+G4W2pj0hYHw8fCbcQee3vmX+JNF1Jp+xXy4=;
-        b=ZvR6jfv7uP8WYBs2D1jZNN/C/OpwONxAwGY8g4y5Y6CCqtOnA+7n//k/XDwV9VBgTa
-         XM1qNRq51rD9AuUOu3/TFVWZUsVA80XFrgGOUEvzM2KJWwA9VPihrLwVvSQAxa5k4JNt
-         lTEBuZBYSCyL5+W3TcAAfnSixOanlqLP4dVI/9bdXGeS6XQEjHuVZSoZXF2vTFJ/J+lZ
-         loH1NcRrBf4DdaCt6DSvW4YDdStWURtLpVJJ2SRk7Vi9AROqZhZ8kr17hjzuDUjnzAq0
-         v8OIHE8q0sw9XszdserPpgjcmpYtOsWJNmWcBTYD6NRza3pzELR1Zl+AL6J3nz7s3npM
-         Jx0w==
+        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
+        b=yxYOpG1BTRH8mP4CO9pabOiIVp8JZr5VwAuFO8HU6vbaqpTxWmCE4iIgG/OVL1bC1K
+         h3LhfvJ9Emngr37qgSs4y3135OyBRvx5CQrGOhqBQ1h52Thw6LlPUCXerXAafRWoy3r/
+         FDFDT9ERbcJkGc+2G4eLkbvA5KcKtQ6KYbmnVg4lq1vniUExZ2sFYpXbvCD7hKDVMLon
+         QLx20N80Tf488Dgbj44gJ9XeDYP2w0y+6+La+/a0ASo0Dh+zkjSg2/P4RcnR2PKoZR8Z
+         jdQ+VbU+0FFOQcGsff14UjVnV15EfKcDuX6yib3W9b/IG0H6KARxUCDOXylMZHreZLWk
+         0npg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679260681;
+        d=1e100.net; s=20210112; t=1679260846;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OvuN9jR+G4W2pj0hYHw8fCbcQee3vmX+JNF1Jp+xXy4=;
-        b=r1FCbyR1nYbU4FnBqyt2VdqqOwC9/Mcfor9ZZJelVdg3suNlfRKh21tXNixclEJU12
-         rmDPtFkoDke4zeq681fVC8bG6bGvhIC60bSh1bS94ZINrXvAPFGd9HFpIp+seaj7mGG4
-         mEZPikUaD4QvZaSRRTA4GUrTH++ax8zZqDnNek+A2zRNYubjzbnrgX8tndpKXk1YeKyp
-         JqtIpK5wbd0+eVzcuu5PzxQMUPSGBFEgk7VdTF5gOBYh3XjUNfU2Hl4MpEELiNd/mFdz
-         O48knuhbYkDY5n90GlMsmVEhfA9jq+FugOS/H+HjRePPsTCX4TZW0t/twQrmth5fLSIe
-         oxuQ==
-X-Gm-Message-State: AO0yUKXLWx/i2yfd6bWYPedj3zYnoIPgZ4QQ4dYC9KASKxsgMUKxGG0s
-        FlfAqxnMCGZYHh9ep5N8mfovdG/pcCmecvnMAqGAoQ==
-X-Google-Smtp-Source: AK7set+9VnS+Zx/Lf+kkoI5Pn5uEfuXiMP/8MBqDkugjbYgC+nPgXVZvyjCbx64znVipe6WWNffPhmpNXjZ+Lq3mMew=
-X-Received: by 2002:a05:6902:1243:b0:b13:7a6:f462 with SMTP id
- t3-20020a056902124300b00b1307a6f462mr5166402ybu.3.1679260680938; Sun, 19 Mar
- 2023 14:18:00 -0700 (PDT)
+        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
+        b=ZLMrQNfmLZcyy5nuZe3xDNHTa2H8NT1WKEdLATBP8TSg011vTIgonnf3MRfleJrOGB
+         ibY2JxNqjAQEomW2gNQAwe4IbbcS56pxkTJee/K0TWgtwlhJnGdJaB84L91WrQtZUWHt
+         w2uTQa6hMBUwNcnZcIcKG5A/y2TDqh8AYGxpbGe/swJkAuw3tll9MpvV1Q+pwjpz0kJ6
+         JMsEtFmdlsPqXD5ZwU3rbQvsZeS1L4RSY3G1nG5COfg2iYofOktAghXuFQWuPp7eTnJx
+         B4itYo131I9JFiOgF8ko9cwLJFv81NAzfx/Ln3Qaod9MOqPluu9JteUPjgG9Tl6IWVgH
+         4ETw==
+X-Gm-Message-State: AO0yUKWRvZtAdHgQyGPyb1RNFk8QEp1ng+ywGlXJoay4zooEv9q6ItVY
+        /XfA1oZ43AIFwccQn1DXXFcNN6qqptAZdJTPYIafhg==
+X-Google-Smtp-Source: AK7set/4tcKb2KcMcmhkFSECkX9UEXl6Q7CPyM6DmVWY/gBDswc6Du79KNPC9UhC3cNpQzNAw1FAAnNdRAYmdab1914=
+X-Received: by 2002:a81:ae5f:0:b0:532:e887:2c23 with SMTP id
+ g31-20020a81ae5f000000b00532e8872c23mr9029129ywk.9.1679260846054; Sun, 19 Mar
+ 2023 14:20:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230319143640.1704735-1-trix@redhat.com>
-In-Reply-To: <20230319143640.1704735-1-trix@redhat.com>
+References: <20230319115925.1317654-1-sensor1010@163.com>
+In-Reply-To: <20230319115925.1317654-1-sensor1010@163.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 22:17:50 +0100
-Message-ID: <CACRpkdZW0_tdUaoykjE9TkeQ2e-+CfmOVEHmKLuoqyf1AzL1nQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pxa: remove unused gpio_is_pxa_type function
-To:     Tom Rix <trix@redhat.com>
-Cc:     robert.jarzmik@free.fr, brgl@bgdev.pl, nathan@kernel.org,
-        ndesaulniers@google.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Date:   Sun, 19 Mar 2023 22:20:35 +0100
+Message-ID: <CACRpkdbxSNCKNfous7h2dBQ_AW9KS9qyxPfPxOO=3PMDsDxcng@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/gpio : Remove redundant platform_set_drvdata().
+To:     Lizhe <sensor1010@163.com>
+Cc:     brgl@bgdev.pl, geert+renesas@glider.be, info@metux.net,
+        rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        f.fainelli@gmail.com, sbranden@broadcom.com, shc_work@mail.ru,
+        j-keerthy@ti.com, hoan@os.amperecomputing.com,
+        fancer.lancer@gmail.com, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, kaloz@openwrt.org,
+        khalasa@piap.pl, keguang.zhang@gmail.com, daniel@thingy.jp,
+        romain.perier@gmail.com, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, mani@kernel.org,
+        ludovic.desroches@microchip.com, andy@kernel.org,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, jonathanh@nvidia.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-tegra@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 3:36=E2=80=AFPM Tom Rix <trix@redhat.com> wrote:
+On Sun, Mar 19, 2023 at 1:02=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
 
-> clang with W=3D1 reports
-> drivers/gpio/gpio-pxa.c:174:19: error: unused function
->   'gpio_is_pxa_type' [-Werror,-Wunused-function]
-> static inline int gpio_is_pxa_type(int type)
->                   ^
-> This function is not used, so remove it.
+> platform_set_drvdata() is redundant in these functions.
+> the purpose of calling this function is to place data
+> in *driver_data. but the data is not retrieved in these
+> functions
 >
-> Signed-off-by: Tom Rix <trix@redhat.com>
+> Signed-off-by: Lizhe <sensor1010@163.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+You have to also ascertain that the data is not used elsewhere
+like in some callbacks or even in other drivers in some odd cases.
 
 Yours,
 Linus Walleij
