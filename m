@@ -2,80 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34A1E6C0567
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:20:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F5C26C056C
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:23:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjCSVUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Mar 2023 17:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
+        id S229676AbjCSVXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 17:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbjCSVUt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:20:49 -0400
+        with ESMTP id S230034AbjCSVXF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:23:05 -0400
 Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED500113C3
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5418d54d77bso192458927b3.12
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EC41ACC2
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:23:03 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5447d217bc6so192849107b3.7
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:23:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679260846;
+        d=linaro.org; s=google; t=1679260983;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
-        b=yxYOpG1BTRH8mP4CO9pabOiIVp8JZr5VwAuFO8HU6vbaqpTxWmCE4iIgG/OVL1bC1K
-         h3LhfvJ9Emngr37qgSs4y3135OyBRvx5CQrGOhqBQ1h52Thw6LlPUCXerXAafRWoy3r/
-         FDFDT9ERbcJkGc+2G4eLkbvA5KcKtQ6KYbmnVg4lq1vniUExZ2sFYpXbvCD7hKDVMLon
-         QLx20N80Tf488Dgbj44gJ9XeDYP2w0y+6+La+/a0ASo0Dh+zkjSg2/P4RcnR2PKoZR8Z
-         jdQ+VbU+0FFOQcGsff14UjVnV15EfKcDuX6yib3W9b/IG0H6KARxUCDOXylMZHreZLWk
-         0npg==
+        bh=3t4BVzD4fCwm/HjgI/nJs48qtp+oLOMusPFc01YzK68=;
+        b=TxS+vK7pTMznDKj3CJxwaBZob2zK5huyzq98Gm/aC23LIAYJVq4l0ODUnNxKq8qzf3
+         gFdMAjRw2OSyleyxzwHStOUTjzeh7wc7zyPgrtiNbdQvTfGr2dK3OAvT0Dh1+4P/SOJ5
+         jeG1LFFvp4qoZs6amOAQv97eMYIOE7mYbGaY+etY5XYYe2kaIXE5e2l2TB1O3xXcM+Rr
+         T91vs7EzG2ZPXm+7O7OOq8xIgs2kRBsWHUR+TOrDAWtJ0vxSmMXIT4bEEcHZ9q2sTn2G
+         C5QBBEgQbHVJB5mZZwbdCHYNMxyFs1n2LShnmUgIOfdtRNFaEG8K6i5VooLslhfSPWr9
+         DJow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679260846;
+        d=1e100.net; s=20210112; t=1679260983;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
-        b=ZLMrQNfmLZcyy5nuZe3xDNHTa2H8NT1WKEdLATBP8TSg011vTIgonnf3MRfleJrOGB
-         ibY2JxNqjAQEomW2gNQAwe4IbbcS56pxkTJee/K0TWgtwlhJnGdJaB84L91WrQtZUWHt
-         w2uTQa6hMBUwNcnZcIcKG5A/y2TDqh8AYGxpbGe/swJkAuw3tll9MpvV1Q+pwjpz0kJ6
-         JMsEtFmdlsPqXD5ZwU3rbQvsZeS1L4RSY3G1nG5COfg2iYofOktAghXuFQWuPp7eTnJx
-         B4itYo131I9JFiOgF8ko9cwLJFv81NAzfx/Ln3Qaod9MOqPluu9JteUPjgG9Tl6IWVgH
-         4ETw==
-X-Gm-Message-State: AO0yUKWRvZtAdHgQyGPyb1RNFk8QEp1ng+ywGlXJoay4zooEv9q6ItVY
-        /XfA1oZ43AIFwccQn1DXXFcNN6qqptAZdJTPYIafhg==
-X-Google-Smtp-Source: AK7set/4tcKb2KcMcmhkFSECkX9UEXl6Q7CPyM6DmVWY/gBDswc6Du79KNPC9UhC3cNpQzNAw1FAAnNdRAYmdab1914=
-X-Received: by 2002:a81:ae5f:0:b0:532:e887:2c23 with SMTP id
- g31-20020a81ae5f000000b00532e8872c23mr9029129ywk.9.1679260846054; Sun, 19 Mar
- 2023 14:20:46 -0700 (PDT)
+        bh=3t4BVzD4fCwm/HjgI/nJs48qtp+oLOMusPFc01YzK68=;
+        b=BST8s8y3fjuti0wNvBkGG3k/DrJZUftI5HgIxaX2CfTavlH0B3u2aqTFkA9SlyKSJR
+         SGRq/k+k8tbWOeO5xwxPpAHzqh5wu5p/BBteAdU4Dl8J2w/ro38UcyTDaQ0l39PHjcVG
+         282uijPCxm+KjBhpbqDQGE5oaNsX28dFEuFvfa+rnv3zdsG2XQhn41WVVQUpdwoBLxBl
+         bNCYc3YcOpZeHl5egQuvjb8Jt5+ardAenSCrnY45FPjxOws52DzQjhNb6UNqjOrNl+Gu
+         ss6dh+l8v+4FE5S/h13EJq+FnMEo+IObawOmPcdpNScU34SA6qWn22G5AB756UL0n/NI
+         9DQQ==
+X-Gm-Message-State: AO0yUKUIt6EyPJdtp8Eu1PcuVb+BEYkcyM9GylmQM+9LLHJO0bKvMLO5
+        /6lHgnSeO9sUFs/klv5I1JNZr7OQlTGnVFn2wbFe7Q==
+X-Google-Smtp-Source: AK7set+pmdlQsPUnH5++AclP/7dWprIh5EcdFa4L0ZPpOIjc6rfvFJoBLHUbrWdYf9tHxqedfQz612iLyZqa4UO6nQU=
+X-Received: by 2002:a81:af46:0:b0:541:693f:cdd1 with SMTP id
+ x6-20020a81af46000000b00541693fcdd1mr8699456ywj.9.1679260983115; Sun, 19 Mar
+ 2023 14:23:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230319115925.1317654-1-sensor1010@163.com>
-In-Reply-To: <20230319115925.1317654-1-sensor1010@163.com>
+References: <cover.1679259085.git.william.gray@linaro.org>
+In-Reply-To: <cover.1679259085.git.william.gray@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 22:20:35 +0100
-Message-ID: <CACRpkdbxSNCKNfous7h2dBQ_AW9KS9qyxPfPxOO=3PMDsDxcng@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/gpio : Remove redundant platform_set_drvdata().
-To:     Lizhe <sensor1010@163.com>
-Cc:     brgl@bgdev.pl, geert+renesas@glider.be, info@metux.net,
-        rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        f.fainelli@gmail.com, sbranden@broadcom.com, shc_work@mail.ru,
-        j-keerthy@ti.com, hoan@os.amperecomputing.com,
-        fancer.lancer@gmail.com, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, kaloz@openwrt.org,
-        khalasa@piap.pl, keguang.zhang@gmail.com, daniel@thingy.jp,
-        romain.perier@gmail.com, matthias.bgg@gmail.com,
-        angelogioacchino.delregno@collabora.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, mani@kernel.org,
-        ludovic.desroches@microchip.com, andy@kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, jonathanh@nvidia.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-tegra@vger.kernel.org
+Date:   Sun, 19 Mar 2023 22:22:52 +0100
+Message-ID: <CACRpkdYFSu3DAY4+EeoRk4cTkypgWg1C=UgforDO7mT96f0GDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] regmap-irq: Drop map from handle_mask_sync() parameters
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -88,17 +70,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 1:02=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
+On Sun, Mar 19, 2023 at 10:02=E2=80=AFPM William Breathitt Gray
+<william.gray@linaro.org> wrote:
 
-> platform_set_drvdata() is redundant in these functions.
-> the purpose of calling this function is to place data
-> in *driver_data. but the data is not retrieved in these
-> functions
+> Changes in v2:
+>  - Pull out 104-dio-48e refactor to a precursor patch
 >
-> Signed-off-by: Lizhe <sensor1010@163.com>
+> Remove the map parameter from the struct regmap_irq_chip callback
+> handle_mask_sync() because it can be passed via the irq_drv_data
+> parameter instead. The gpio-104-dio-48e driver is the only consumer of
+> this callback and is thus updated accordingly.
 
-You have to also ascertain that the data is not used elsewhere
-like in some callbacks or even in other drivers in some odd cases.
+Looks reasonable:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
