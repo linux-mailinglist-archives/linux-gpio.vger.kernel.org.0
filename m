@@ -2,73 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C796C052E
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:04:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E33A46C0532
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 22:05:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230173AbjCSVEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Mar 2023 17:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45944 "EHLO
+        id S229964AbjCSVFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 17:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbjCSVEI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:04:08 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C63B451
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:04:04 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-544f7c176easo47960287b3.9
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:04:04 -0700 (PDT)
+        with ESMTP id S230126AbjCSVFR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 17:05:17 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072CDEB77
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:05:15 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-544f7c176easo47989507b3.9
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 14:05:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679259844;
+        d=linaro.org; s=google; t=1679259914;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uHlOtmRhbXRseoAMuvDfv2S+ldzj7KSVKxvkV6Isssc=;
-        b=bruA6+gbtnYJyIR7+WxFwZh5y5zLSPKx/augfql2C6/nmpu7P6VXCh8UcAfqFv/bfn
-         85Zt6k1m7oTqnT9BnoJnir3on8cb0wciQMS7CU4IXYFMypjpwIDuQIn7krMKKiw6eeH7
-         0b6u4UbBuOhu0LKA+OpI1AyqhWAhJbgTGnzMykdV5A1WE/k7/BfxoQjlpqSJ5oKCZ2le
-         nxTXbVG6pcKXzqghfgGhgJCkPpSis9kLJxr0x+O22dwmMP/7+y8i1UFdh1LRmuLkBiK4
-         y10+CdjVj9/R9uetTf2biaAUsmsOSwcE+i8iIsymvaikFVt0oT2qayPe66Da+lSgiCe8
-         w6gg==
+        bh=uJwr32nXo3n3jCAviEoeLqs6lIUA78kCP1VpZbyNQgg=;
+        b=CL+UY8SopOn9ob1vM7RQAWFKv3P1o5tmKWr0GBhdBtvGJeilM1qaiBUS12BV7T77aS
+         sktmDLln7XEEo1Zb1BFKsV+IOlm8f8/eEAyjtQ8ICoYDI6iXiVoMsh52xuIlCzL/Bon0
+         jCSS3T7aTPzQ079DapAu1+cJSQUi9Iifgz2vPh1RtY6afQ9TeLK/aEusRym625gF3Oul
+         5pHKSAFD4t0KTRY13yse7lyNLD+zhIUVC3CQWz9iImuR7uFyMw63OIVM+Swlax+OsgEu
+         2GpLEC8FrcB5lY7uuxuffDLGzZJ5cQAsZ2DYKjOOIasZTWmXpscgF+eLkTtRq2AcJ/CF
+         mEyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679259844;
+        d=1e100.net; s=20210112; t=1679259914;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uHlOtmRhbXRseoAMuvDfv2S+ldzj7KSVKxvkV6Isssc=;
-        b=DbRD6vQMp37nFYeyrxE5Ohtd5ZMzQIk2tSZElP4LSk90fZJPGcM9SIALB7IosY8C9G
-         lgNVPSDGVlDSAMDjMJlRZqKreDtNqV4yUbUN3FmunXIF3TGFbAWH/SUa+v2JnpCzBHyh
-         2cnT3Rgv2BU2RxR6OrreTEH9Uy0qoB/JHRQu2EHGwy2JYB1ql5RheiVUgwORBua6l6e2
-         w5/+AFpPm9utGiGUAGAY4N2Dl8VbnR9Yh7ZRgNVtujTZhCPCXOS/mqgh4V3vU+z2N6es
-         EGdUZZit5sloxEnMUbEhICAs2EXn5JPBusw4H2wHHB3jl/3xgfUrGWQ+kaWkfXWeFn5t
-         Zwaw==
-X-Gm-Message-State: AO0yUKXOn4ORaitLQjNAfGQKWJRY2zSqtmGX9FErJ60A1rE46uoztNxV
-        r4loZQDKyuCj+f/mPfWsjaV8Aahh4TIYstYSIae3aQ==
-X-Google-Smtp-Source: AK7set/04BNL1IZQ2ZoTv/hKzO515Y7fhbtJesHPiD/G6odhiwBO82T6HTUjnRKfAgbfZp4XgBZ6kJZDWB83+4HIHcg=
-X-Received: by 2002:a81:e205:0:b0:52a:9f66:80c6 with SMTP id
- p5-20020a81e205000000b0052a9f6680c6mr8233006ywl.9.1679259843810; Sun, 19 Mar
- 2023 14:04:03 -0700 (PDT)
+        bh=uJwr32nXo3n3jCAviEoeLqs6lIUA78kCP1VpZbyNQgg=;
+        b=Qfs8sVLd5N1DM3v0cYgLkxbLUZl/akTFOwPNcmuIRwZjCmLy6pfTRSIJsC1tz44pcL
+         xfLNcDS9iCmo+XNqOjfGbJsgBIbJgiOyC2Vw2kwlksFmeqsuk989xxAyzs92VJsi/geu
+         g0A404J8mLjZA0FVoAfu1+S+P6ON9DWFWyrrbSaRYpwAw0pOZAFKlGpnq4bnfJYD6vRB
+         oYMJbLrpXsgPzryNw4amDZ2/8n3ImpdOKbDzd5fQKRM3rdY9vwqHMsgrqFV3s9pM2L/c
+         MpUc1jJfciiLUgHcDcTTe1hmg2mnqoWGyP2F7edqIZd0KCpQDflQqW7mPBoRk3YVYn21
+         X8mA==
+X-Gm-Message-State: AO0yUKW8tGrv7Dmssc9U361C+UCpKYlUcvCRuVUlx+IU7ROddUSkz3mo
+        Wh5VCUGKCbaE7eC8f9H30Md91HYsVg9ldpVsb1wxOg==
+X-Google-Smtp-Source: AK7set+xsBN/Np6Fm5HDOI9Y0MBGXMYg1Su1jiQMnSUNnee2Q6cteK4f+D2SVzraHD9lMSM2HujZ4D5MerQnoteiJIk=
+X-Received: by 2002:a81:a807:0:b0:536:4ad1:f71 with SMTP id
+ f7-20020a81a807000000b005364ad10f71mr8255817ywh.9.1679259914203; Sun, 19 Mar
+ 2023 14:05:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230316072940.29137-1-quic_devipriy@quicinc.com>
- <20230316072940.29137-5-quic_devipriy@quicinc.com> <CACRpkdZYOQ6JvQvg5gcUb1x+FOeTn-H5rOnK=8EgDBmZh9DYig@mail.gmail.com>
-In-Reply-To: <CACRpkdZYOQ6JvQvg5gcUb1x+FOeTn-H5rOnK=8EgDBmZh9DYig@mail.gmail.com>
+References: <20230314222705.2940258-1-konrad.dybcio@linaro.org>
+In-Reply-To: <20230314222705.2940258-1-konrad.dybcio@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 22:03:52 +0100
-Message-ID: <CACRpkdZUhkZ0FcdAMGBfu6SX7EMpMjeikx4soU5SWi1UJRBHBQ@mail.gmail.com>
-Subject: Re: [PATCH V9 4/6] pinctrl: qcom: Add IPQ9574 pinctrl driver
-To:     Devi Priya <quic_devipriy@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     agross@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
-        marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org,
-        nfraprado@collabora.com, broonie@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
+Date:   Sun, 19 Mar 2023 22:05:02 +0100
+Message-ID: <CACRpkdYpTFncS476ud16RsSv7sraLtJzOVzEL_bNaZRdkSg3CQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,qcm2290-tlmm: Allow input-enable
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org, marijn.suijten@somainline.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Shawn Guo <shawn.guo@linaro.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -81,33 +72,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 10:02=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+On Tue, Mar 14, 2023 at 11:27=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linar=
 o.org> wrote:
-> On Thu, Mar 16, 2023 at 8:31=E2=80=AFAM Devi Priya <quic_devipriy@quicinc=
-.com> wrote:
->
-> > Add pinctrl definitions for the TLMM of IPQ9574
-> >
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> > Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> > Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> > ---
-> >  Changes in V9:
-> >         - Added COMPILE_TEST for non-OF configurations in config PINCTR=
-L_IPQ9574
-> >         - Unwrapped the lines for PINGROUP 34 & 62 in ipq9574_groups
-> >         - Removed the comma from terminator line in ipq9574_pinctrl_of_=
-match[] array
-> >         - Moved the MODULE_DEVICE_TABLE entry just below the array
-> >           ipq9574_pinctrl_of_match[]
->
-> Looks good to me but I would like Bjorns ACK on this patch before I merge=
- it
-> if possible.
 
-Ah wait I see that bjorn already merged the DTS file so I guess he's fine
-with the set. Patch applied!
+> Allow the common input-enable. This was missed with the
+> initial submission.
+>
+> Fixes: 5147022214db ("dt-bindings: pinctrl: qcom: Add QCM2290 pinctrl bin=
+dings")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Patch applied as non-urgent fix.
 
 Yours,
 Linus Walleij
