@@ -2,80 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C666C04F8
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 21:52:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E38C06C0506
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 21:55:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbjCSUw0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Mar 2023 16:52:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32880 "EHLO
+        id S229676AbjCSUzo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 16:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjCSUwY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 16:52:24 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DB915CAD
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:52:23 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id y5so10840691ybu.3
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:52:22 -0700 (PDT)
+        with ESMTP id S229805AbjCSUzn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 16:55:43 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAB912BD6
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:55:41 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id z83so10844639ybb.2
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:55:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679259142;
+        d=linaro.org; s=google; t=1679259340;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7eau3b7zPmqe7SmciaTScsBbHt1A+72uIepOJsfjNRg=;
-        b=d9rPCtzOByh1+cJSI9d+76Q8bzYJmz1Ss1IdljLbzJW1S2zN1kEkjYm0FbFBc1UO2z
-         4VKgH2omJwDFhFG3kHc7m+cN7CVCXDwLdJF1INgIXvceYTfbyGzn3NusESedXEphCaJi
-         fYf1Eyb3H5GHmP/iTIyZTllbV3z56rO7Fq/eyPoWUWIq2Jk12zv2MKsCelc6vdAXl7Oh
-         lGK7qmVJaa5htjrPA2WYArc6QRp5h5Wx2PlI8V/9WGd3jM9AM+LNs7cKR0Gq3brf/2kT
-         8Ncw4tWtcVDLCihENNmB2PvhUwKZFgaB3KEpr1jqcaF/XRtFzyqzc0W8+99Qoyj4AFos
-         3MnQ==
+        bh=Ac/NF/X3Ce1vR1hDDyKBTJ707og2BXuZP/lMQW+OCrs=;
+        b=H/USSk17Fu5IdWFmU2HYEVwZ92SC2T/aL/5nOvlVpJeD0L0do87jcAsTliaBEz0MCA
+         mMqeZBU9urZirZ7zxW11auSX7+tkHYp0K9XThAE/wLNlnvSVJ8GdNjd8zqxEnyfC6R+S
+         bF0GNyNi0+l9Pp7ASmve9a2w4hwTf3i3d+4y1vux+85gQW4f0GI7kaHZLVj6jXu3zltE
+         7jVl7Q6CBsq+1I5qhe0Ga3XfgMounIvMwgwAAF156gYYGaIPQ8+xRHnk/kIV9uZT6MuK
+         aofXXYTTc5isXyhzb02mMH9GFNLJv1AQNxp4DslX98DqL+NC2qt8ieSTjsvVDSUikCvp
+         WBRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679259142;
+        d=1e100.net; s=20210112; t=1679259340;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7eau3b7zPmqe7SmciaTScsBbHt1A+72uIepOJsfjNRg=;
-        b=cDyqLXARU8dTUKgr0WXbMPuFWfnzj/L/W75JrWtzhQGkamm9cLxoFWU/ZEZXU7S2EA
-         vMQq1F1Zh48cpjcyNPULofD8OgfKRc+gcN6kynrBKmILf7VUYcBR2RgRzLpIFHLpCA6Q
-         is8PyE/2CiOsPIE66ptGvxl+XpilIMhaEXiEyFw1aavMrTJ6s5AyNf1zd+pi8maKQoHU
-         j1qboJfl2hsHq4WEm/TyPcNXIUsxIdeNFYUp724A6vpKebTASHeeWgGKXQaSCosnjYlK
-         FBO9zbYkWu6onjs3Gah2aDUnIeyYF0+09rGbp3G7iArV//qe6Etw7L7xFQ5SA3bTrLQm
-         k1KA==
-X-Gm-Message-State: AO0yUKUt0TvLvSSWYCZnfGv7QMm4+U8vgyLqKDYulCLfdM7xDVX+qu7l
-        Du/71DwoowKeLuwcbmBzseBk3trqQimaAAqRuYhx2g==
-X-Google-Smtp-Source: AK7set/tQ7OCelzEWdJsjsAkSRB+acENSH9SOXjaQ+EzOAXU2pgfkbMlHMfZQKUnyi4ylSBu7BTeUegXoKPqED2SmRY=
-X-Received: by 2002:a05:6902:1025:b0:b3b:d433:b063 with SMTP id
- x5-20020a056902102500b00b3bd433b063mr2931680ybt.4.1679259142289; Sun, 19 Mar
- 2023 13:52:22 -0700 (PDT)
+        bh=Ac/NF/X3Ce1vR1hDDyKBTJ707og2BXuZP/lMQW+OCrs=;
+        b=4RztCWfSXG64MRFRV5lrupH+4cDL2UlWggtNrxHMaPQuA9mgRSOPyuouu6od27RVKF
+         lt98WBdnkqkHHHM5OWp4Iy+7RiWcPmDCzcFSMCXtUDIiTZUs0T4WTL1gI44pVuN1gOuZ
+         P4ji/39Fq37zN7tVDMsuj45wsVYxt/8hhPG3XvdRaGm6qYJ/5x01KC5+GHpeYQPvyDby
+         Tz5opjsO3KONemVHQjGP4My3wtq1tV9FYEiCI4BaBrwuLjPQfzFlOODsp0WacHGGfoVc
+         ulu+5lrucLqsX0QutwZEbopdTvulVT71XTl7jM4PY7foJZ+xJ4R4+QtY8geHrTIa4m8w
+         Q4QA==
+X-Gm-Message-State: AO0yUKWhJ8cn/J5e3PCIbOmkBXxiascmsfLwgTFOma/+dVL32DVTtCDL
+        IiNW60mKjfQDvRM9cA1fdnyXcNQe+Vt8Ao6dH8knQQ==
+X-Google-Smtp-Source: AK7set96jMMXsU1lpAmC3W40A6khl6vhFPSlLdYAPpPspd35ltaJhYbiXGg5BwG99gy+Dk9b8AqTCwMdTjF2Un45KI0=
+X-Received: by 2002:a05:6902:110e:b0:b26:47f3:6cb with SMTP id
+ o14-20020a056902110e00b00b2647f306cbmr3222772ybu.4.1679259340445; Sun, 19 Mar
+ 2023 13:55:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230311212114.108870-1-danila@jiaxyga.com>
-In-Reply-To: <20230311212114.108870-1-danila@jiaxyga.com>
+References: <20230310144721.1544669-1-robh@kernel.org> <CAMuHMdUaeyHs9fQxS+16F62uHaifJYMXKJpL2-xi-SL5HCrTHQ@mail.gmail.com>
+ <CAMuHMdX1=+WwWjfiWDYOjSzTjcYBEY+QR=XKuU+o5_SCyU7rag@mail.gmail.com>
+In-Reply-To: <CAMuHMdX1=+WwWjfiWDYOjSzTjcYBEY+QR=XKuU+o5_SCyU7rag@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 21:52:11 +0100
-Message-ID: <CACRpkdboobW7dQ=77=e+-EBEQAxQCkmVG_J49EaYcDFBUquS-w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: qcom: Add support for SM7150
-To:     Danila Tikhonov <danila@jiaxyga.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sun, 19 Mar 2023 21:55:29 +0100
+Message-ID: <CACRpkdaw7TodD0hr3vD8cGB80k0qtEiaC1ne-ivCj6YEefi44w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Use of_property_present() for testing DT
+ property presence
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh@kernel.org>, Sean Wang <sean.wang@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-renesas-soc@vger.kernel.org, linux-sunxi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 11, 2023 at 10:21=E2=80=AFPM Danila Tikhonov <danila@jiaxyga.co=
-m> wrote:
+On Mon, Mar 13, 2023 at 12:00=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Mon, Mar 13, 2023 at 10:00=E2=80=AFAM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Fri, Mar 10, 2023 at 3:56=E2=80=AFPM Rob Herring <robh@kernel.org> w=
+rote:
+> > > It is preferred to use typed property access functions (i.e.
+> > > of_property_read_<type> functions) rather than low-level
+> > > of_get_property/of_find_property functions for reading properties. As
+> > > part of this, convert of_get_property/of_find_property calls to the
+> > > recently added of_property_present() helper when we just want to test
+> > > for presence of a property and nothing more.
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/pinctrl/renesas/pinctrl.c
+> > > +++ b/drivers/pinctrl/renesas/pinctrl.c
+> > > @@ -125,8 +125,8 @@ static int sh_pfc_dt_subnode_to_map(struct pinctr=
+l_dev *pctldev,
+> > >          * inside a subnode nor across subnodes.
+> > >          */
+> > >         if (!pmx->func_prop_name) {
+> > > -               if (of_find_property(np, "groups", NULL) ||
+> > > -                   of_find_property(np, "pins", NULL)) {
+> > > +               if (of_property_present(np, "groups")||
+> > > +                   of_property_present(np, "pins")) {
+> > >                         pmx->func_prop_name =3D "function";
+> > >                         pmx->groups_prop_name =3D "groups";
+> > >                         pmx->pins_prop_name =3D "pins";
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > This check is used to auto-detect if the standard property names
+> > should be used, or the "renesas,"-prefixed ones.
+> > As the last users of the latter were removed from DTS in v4.10,
+> > perhaps I should just remove these checks instead?
+>
+> Sent a patch just doing that, so you can drop this chunk.
+> https://lore.kernel.org/linux-renesas-soc/ff9c14781110bbf19b56b45dd1f01e6=
+da90319ad.1678704441.git.geert+renesas@glider.be
 
-> This series adds pinctrl support for Qualcomm SM7150 SoC.
-
-I don't see any issues with it and the DT bindings are reviewed so
-patches applied, unless Bjorn get upset they stay in.
+So I need a new version of this patch before I can apply it
+I guess, or there will be conflict with Reseas stuff?
 
 Yours,
 Linus Walleij
