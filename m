@@ -2,101 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9DA96C04F2
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 21:49:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C666C04F8
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 21:52:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbjCSUtv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Mar 2023 16:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58080 "EHLO
+        id S230063AbjCSUw0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 16:52:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjCSUtt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 16:49:49 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C527B13DC4
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:49:47 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id cj14so10811282ybb.12
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:49:47 -0700 (PDT)
+        with ESMTP id S230027AbjCSUwY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 16:52:24 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DB915CAD
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:52:23 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id y5so10840691ybu.3
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Mar 2023 13:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679258987;
+        d=linaro.org; s=google; t=1679259142;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zrqBLpgMvGAw26DRaowqtZ6KNMhJt4QDsaLfvV/8J2M=;
-        b=hcVlyh6SCc01tHQEQKl+rMRkXdRlZaBR4PAhhkEscLByfqRTPISUDdvRSlA5rhmVVl
-         sthqa0S2nU+jceZDprhsd0t7PBSto5gQblrnyO+mFunTfH+7zT2SHpA4c3HoBI4hI8IE
-         8HPXCMvMV/3MqFjwnD9pIPu8B+/kZt8jR2cihllfOHlSnCymg1XkkC9YluVHeYuWeXoo
-         IsjCiVSDPun7MF60EXMPWmudtUj5UjGdlsmGVCZj7CD1S8xEQQ8o9bG58eDECB5cR1IV
-         InMCxoDbSJyW2nf8uwuTZMEF8pZ4ZP/U2JswAboP/a7fc731qPbcUMwumSeVaXNIVvhj
-         79+Q==
+        bh=7eau3b7zPmqe7SmciaTScsBbHt1A+72uIepOJsfjNRg=;
+        b=d9rPCtzOByh1+cJSI9d+76Q8bzYJmz1Ss1IdljLbzJW1S2zN1kEkjYm0FbFBc1UO2z
+         4VKgH2omJwDFhFG3kHc7m+cN7CVCXDwLdJF1INgIXvceYTfbyGzn3NusESedXEphCaJi
+         fYf1Eyb3H5GHmP/iTIyZTllbV3z56rO7Fq/eyPoWUWIq2Jk12zv2MKsCelc6vdAXl7Oh
+         lGK7qmVJaa5htjrPA2WYArc6QRp5h5Wx2PlI8V/9WGd3jM9AM+LNs7cKR0Gq3brf/2kT
+         8Ncw4tWtcVDLCihENNmB2PvhUwKZFgaB3KEpr1jqcaF/XRtFzyqzc0W8+99Qoyj4AFos
+         3MnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679258987;
+        d=1e100.net; s=20210112; t=1679259142;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zrqBLpgMvGAw26DRaowqtZ6KNMhJt4QDsaLfvV/8J2M=;
-        b=5VLP0CpNuLQxlIGp8YjZJUAaI2ERXFXpmhqBkeUg7c+IBtPNSxwLKB3m7EenPGys8+
-         61wzBipP1Hk0XoXI/bbukwLAWJY6613RXH1QqJmsCiT2d85yLvgM79VgUtWYDaMVnkho
-         pfeBp2xISMDrAFQHE/4qG/bNP8ECujkIm+trj/zEFfCIkbZiArvbkx1afoAErCQrS6pb
-         WnYtl6WMGrTJGvNyqh1D9SMyz+zNO4X2ZtBTTJGJOlldxStABsu9ZC3pIAJFw4fkYRXU
-         +xDDQpNxUNiEug9amHpX5XRjEZekTtUk1XgYfH65zVaDXG6+PkXodLTU6NNG2QBLBYkM
-         IaKQ==
-X-Gm-Message-State: AO0yUKVE0/gXmY3EIISJYBhKc8KsgUGzt9xiAmzEzV/4pjohv/KtkgqE
-        2kI9WCcnCViIWJ/cEZfxH7OzHepfUrtOGruU04m+qg==
-X-Google-Smtp-Source: AK7set9UmCKLhMhtD1XyfXAykvchqeWDh0btzTty+BysNe0ltmHg+QaEhAeymn18rA2vpcmu4EmZo8R4MRqI+S7yupE=
-X-Received: by 2002:a05:6902:102d:b0:a6b:bc64:a0af with SMTP id
- x13-20020a056902102d00b00a6bbc64a0afmr4087551ybt.4.1679258987014; Sun, 19 Mar
- 2023 13:49:47 -0700 (PDT)
+        bh=7eau3b7zPmqe7SmciaTScsBbHt1A+72uIepOJsfjNRg=;
+        b=cDyqLXARU8dTUKgr0WXbMPuFWfnzj/L/W75JrWtzhQGkamm9cLxoFWU/ZEZXU7S2EA
+         vMQq1F1Zh48cpjcyNPULofD8OgfKRc+gcN6kynrBKmILf7VUYcBR2RgRzLpIFHLpCA6Q
+         is8PyE/2CiOsPIE66ptGvxl+XpilIMhaEXiEyFw1aavMrTJ6s5AyNf1zd+pi8maKQoHU
+         j1qboJfl2hsHq4WEm/TyPcNXIUsxIdeNFYUp724A6vpKebTASHeeWgGKXQaSCosnjYlK
+         FBO9zbYkWu6onjs3Gah2aDUnIeyYF0+09rGbp3G7iArV//qe6Etw7L7xFQ5SA3bTrLQm
+         k1KA==
+X-Gm-Message-State: AO0yUKUt0TvLvSSWYCZnfGv7QMm4+U8vgyLqKDYulCLfdM7xDVX+qu7l
+        Du/71DwoowKeLuwcbmBzseBk3trqQimaAAqRuYhx2g==
+X-Google-Smtp-Source: AK7set/tQ7OCelzEWdJsjsAkSRB+acENSH9SOXjaQ+EzOAXU2pgfkbMlHMfZQKUnyi4ylSBu7BTeUegXoKPqED2SmRY=
+X-Received: by 2002:a05:6902:1025:b0:b3b:d433:b063 with SMTP id
+ x5-20020a056902102500b00b3bd433b063mr2931680ybt.4.1679259142289; Sun, 19 Mar
+ 2023 13:52:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230317213011.13656-1-arinc.unal@arinc9.com>
-In-Reply-To: <20230317213011.13656-1-arinc.unal@arinc9.com>
+References: <20230311212114.108870-1-danila@jiaxyga.com>
+In-Reply-To: <20230311212114.108870-1-danila@jiaxyga.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 21:49:35 +0100
-Message-ID: <CACRpkdbWmtBtpkW2=DUX2v6CR7aJz52R6y5mJ=W+VDena+Fzng@mail.gmail.com>
-Subject: Re: [PATCH v3 00/21] pinctrl: ralink: fix ABI, improve driver, move
- to mediatek, improve dt-bindings
-To:     arinc9.unal@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-        William Dean <williamsukatube@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Del Regno <angelogioacchino.delregno@collabora.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Hui Liu <hui.liu@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+Date:   Sun, 19 Mar 2023 21:52:11 +0100
+Message-ID: <CACRpkdboobW7dQ=77=e+-EBEQAxQCkmVG_J49EaYcDFBUquS-w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: qcom: Add support for SM7150
+To:     Danila Tikhonov <danila@jiaxyga.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 10:30=E2=80=AFPM <arinc9.unal@gmail.com> wrote:
+On Sat, Mar 11, 2023 at 10:21=E2=80=AFPM Danila Tikhonov <danila@jiaxyga.co=
+m> wrote:
 
-> This is an ambitious effort I've been wanting to do for months.
+> This series adds pinctrl support for Qualcomm SM7150 SoC.
 
-I don't see any major missing ACKs so I just applied the patches, we
-can fix any remaining issues in-tree.
-
-Good work!
+I don't see any issues with it and the DT bindings are reviewed so
+patches applied, unless Bjorn get upset they stay in.
 
 Yours,
 Linus Walleij
