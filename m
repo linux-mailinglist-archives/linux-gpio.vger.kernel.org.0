@@ -2,63 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C05CE6BF8E7
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Mar 2023 09:21:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9426BFF7A
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Mar 2023 06:45:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbjCRIVN convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sat, 18 Mar 2023 04:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
+        id S230043AbjCSFo5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Mar 2023 01:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbjCRIVM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Mar 2023 04:21:12 -0400
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586E833478;
-        Sat, 18 Mar 2023 01:21:09 -0700 (PDT)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1755e639b65so8141858fac.3;
-        Sat, 18 Mar 2023 01:21:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679127668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ok0/fcUUjYf3VJvre1cNZ96FcwH4JhSJwBxsOnlRNhc=;
-        b=qZWEsFhzHRJZkcuJmX2/mdMLFmOrmNggM/JbtW2caq8rLirifAjQLOizUuPGFQAi3Q
-         0l1DcvQYtRWRpRTv7A39853DOvxY5rKF1bHkogPNBWwbG1VACZcZEHsrNPvId0EB0FRQ
-         4BNp/t3d4tQJ44yNVL3n6uo6eV4e4xaZJQM8RZZWHqTxxey5rBbHxI2ZQibDNnsTrWMK
-         LFnfx00JV1H4bCaCE2EF2kzQdqy+sUMLconu+Ao8h74dbl9gPCPVjO+IT5M1Jen7bTv0
-         b9quvZZsjAoX+QrPse3LaQ1fQ8VDqBU/cBv40gKI/beZTsROaAERvY7cYhCrmylD/OjH
-         cdnA==
-X-Gm-Message-State: AO0yUKVdhs9XYGrk8LcEzsc1Xxmt2irptqH2kNU6TsRPqE0M6/o7Asqr
-        wnPjEA1XrjMZj4uULjQycl55Rqjl5d9gvQ==
-X-Google-Smtp-Source: AK7set+Tj5UH+vZLQ6TI99gE10rqmaYCZ9efyRbmglGBxLsFwvaQzAr0kdwHRi0GsUIaFrXo+NX6Lg==
-X-Received: by 2002:a05:6870:8a0d:b0:177:b62d:cc18 with SMTP id p13-20020a0568708a0d00b00177b62dcc18mr876450oaq.25.1679127668316;
-        Sat, 18 Mar 2023 01:21:08 -0700 (PDT)
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com. [209.85.160.46])
-        by smtp.gmail.com with ESMTPSA id v23-20020a056870709700b0017280f7d653sm1596803oae.35.2023.03.18.01.21.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Mar 2023 01:21:07 -0700 (PDT)
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-17997ccf711so8175867fac.0;
-        Sat, 18 Mar 2023 01:21:06 -0700 (PDT)
-X-Received: by 2002:a5b:c47:0:b0:b56:1f24:7e9f with SMTP id
- d7-20020a5b0c47000000b00b561f247e9fmr897441ybr.12.1679127645593; Sat, 18 Mar
- 2023 01:20:45 -0700 (PDT)
+        with ESMTP id S229774AbjCSFoz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Mar 2023 01:44:55 -0400
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEF110AA5;
+        Sat, 18 Mar 2023 22:44:42 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 73051433BC;
+        Sun, 19 Mar 2023 05:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+        t=1679204680; bh=S7t2fyqFWeRj61w7L+I7nEPRN6E5SfAYaAUmmZVDSDw=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=btpM3ZwjMZ9GRlqYclPKjwp+9RWpO07drd1SBxHvk3yYdAwFZL1n1814WAzK/vCNn
+         UAasFHosX5v5WTOFAG0OgR/yWp4wYa35IA17XnHS4I+gO/7pidfuob3/CCXnrYn1Hp
+         YOP92MDJYw9tXhH9p6+rtu81hg6eI8MuQQgOGdhVYshaJ07/nGSAYRIfoPyzFbn4YP
+         wbos34Ey3gc7ebCWtT77hBPpN6Gm+FbfV4vNUxggAFofnJJc/jImkAXKWtBH4n0hzS
+         GrxfwaHzOx4i7U5ICilxJxbnP11m6jGD80n/VDun5J79Fxm0jP3ZerXiz9/NOIeUMv
+         lXq63p2kDEd6g==
+Message-ID: <9f073332-0cd8-b2fb-3750-1f8086e9b95d@marcan.st>
+Date:   Sun, 19 Mar 2023 14:44:23 +0900
 MIME-Version: 1.0
-References: <20230317233623.3968172-1-robh@kernel.org>
-In-Reply-To: <20230317233623.3968172-1-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 18 Mar 2023 09:20:34 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU8uu=2EZ1dmtY-eGj+ORGdepsKgpNcL7qKfW3FkVJw7g@mail.gmail.com>
-Message-ID: <CAMuHMdU8uu=2EZ1dmtY-eGj+ORGdepsKgpNcL7qKfW3FkVJw7g@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
 Subject: Re: [PATCH] dt-bindings: pinctrl: Drop unneeded quotes
-To:     Rob Herring <robh@kernel.org>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <mani@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@gmail.com>,
         Samuel Holland <samuel@sholland.org>,
-        Hector Martin <marcan@marcan.st>,
         Sven Peter <sven@svenpeter.dev>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Andrew Jeffery <andrew@aj.id.au>,
@@ -93,8 +79,8 @@ Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
         Dvorkin Dmitry <dvorkin@tibbo.com>,
         Wells Lu <wellslutw@gmail.com>,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@lists.linux.dev, asahi@lists.linux.dev,
@@ -105,41 +91,1165 @@ Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
         linux-rockchip@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20230317233623.3968172-1-robh@kernel.org>
+From:   Hector Martin <marcan@marcan.st>
+In-Reply-To: <20230317233623.3968172-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 18, 2023 at 12:37 AM Rob Herring <robh@kernel.org> wrote:
->
+On 18/03/2023 08.36, Rob Herring wrote:
 > Cleanup bindings dropping unneeded quotes. Once all these are fixed,
 > checking for this can be enabled in yamllint.
->
+> 
 > Signed-off-by: Rob Herring <robh@kernel.org>
-
+> ---
+>  .../bindings/pinctrl/actions,s500-pinctrl.yaml         |  2 +-
+>  .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  2 +-
+>  .../devicetree/bindings/pinctrl/apple,pinctrl.yaml     |  2 +-
+>  .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml       |  4 ++--
+>  .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml       |  4 ++--
+>  .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml       |  6 +++---
+>  .../bindings/pinctrl/brcm,bcm6318-pinctrl.yaml         |  2 +-
+>  .../bindings/pinctrl/brcm,bcm63268-pinctrl.yaml        |  2 +-
+>  .../bindings/pinctrl/brcm,bcm6328-pinctrl.yaml         |  2 +-
+>  .../bindings/pinctrl/brcm,bcm6358-pinctrl.yaml         |  2 +-
+>  .../bindings/pinctrl/brcm,bcm6362-pinctrl.yaml         |  2 +-
+>  .../bindings/pinctrl/brcm,bcm6368-pinctrl.yaml         |  2 +-
+>  .../devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml    |  2 +-
+>  .../devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml |  2 +-
+>  .../devicetree/bindings/pinctrl/cirrus,lochnagar.yaml  |  2 +-
+>  .../devicetree/bindings/pinctrl/cirrus,madera.yaml     |  4 ++--
+>  .../devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml  |  2 +-
+>  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml |  2 +-
+>  .../devicetree/bindings/pinctrl/fsl,imx8m-pinctrl.yaml |  2 +-
+>  .../bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml          |  2 +-
+>  .../devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml |  2 +-
+>  .../devicetree/bindings/pinctrl/ingenic,pinctrl.yaml   |  2 +-
+>  .../devicetree/bindings/pinctrl/intel,lgm-io.yaml      |  2 +-
+>  .../bindings/pinctrl/marvell,ac5-pinctrl.yaml          |  4 ++--
+>  .../bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml      |  4 ++--
+>  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml      |  4 ++--
+>  .../bindings/pinctrl/mediatek,mt7622-pinctrl.yaml      |  6 +++---
+>  .../bindings/pinctrl/mediatek,mt7986-pinctrl.yaml      |  6 +++---
+>  .../bindings/pinctrl/mediatek,mt8183-pinctrl.yaml      |  4 ++--
+>  .../bindings/pinctrl/mediatek,mt8188-pinctrl.yaml      |  2 +-
+>  .../bindings/pinctrl/mediatek,pinctrl-mt6795.yaml      |  4 ++--
+>  .../bindings/pinctrl/mscc,ocelot-pinctrl.yaml          |  6 +++---
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8186.yaml    |  2 +-
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8192.yaml    |  4 ++--
+>  .../devicetree/bindings/pinctrl/pinctrl-mt8195.yaml    |  4 ++--
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml    |  4 ++--
+>  .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml     |  4 ++--
+>  .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml         |  2 +-
+>  .../pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml         |  2 +-
+>  .../devicetree/bindings/pinctrl/qcom,tlmm-common.yaml  |  2 +-
+>  .../bindings/pinctrl/ralink,mt7620-pinctrl.yaml        |  2 +-
+>  .../bindings/pinctrl/ralink,mt7621-pinctrl.yaml        |  2 +-
+>  .../bindings/pinctrl/ralink,rt2880-pinctrl.yaml        |  2 +-
+>  .../bindings/pinctrl/ralink,rt305x-pinctrl.yaml        |  2 +-
+>  .../bindings/pinctrl/ralink,rt3883-pinctrl.yaml        |  2 +-
 >  .../devicetree/bindings/pinctrl/renesas,pfc.yaml       |  2 +-
 >  .../bindings/pinctrl/renesas,rza1-ports.yaml           |  2 +-
 >  .../bindings/pinctrl/renesas,rza2-pinctrl.yaml         |  2 +-
 >  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml        |  2 +-
 >  .../bindings/pinctrl/renesas,rzn1-pinctrl.yaml         |  2 +-
 >  .../bindings/pinctrl/renesas,rzv2m-pinctrl.yaml        |  2 +-
+>  .../devicetree/bindings/pinctrl/rockchip,pinctrl.yaml  | 10 +++++-----
+>  .../devicetree/bindings/pinctrl/samsung,pinctrl.yaml   |  2 +-
+>  .../devicetree/bindings/pinctrl/semtech,sx1501q.yaml   |  6 +++---
+>  .../bindings/pinctrl/socionext,uniphier-pinctrl.yaml   |  2 +-
+>  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml  | 10 +++++-----
+>  .../bindings/pinctrl/starfive,jh7100-pinctrl.yaml      |  6 +++---
+>  .../bindings/pinctrl/sunplus,sp7021-pinctrl.yaml       |  6 +++---
+>  .../bindings/pinctrl/toshiba,visconti-pinctrl.yaml     |  8 ++++----
+>  .../devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml |  2 +-
+>  60 files changed, 97 insertions(+), 97 deletions(-)
+> 
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+For apple:
+Acked-by: Hector Martin <marcan@marcan.st>
 
-Gr{oetje,eeting}s,
+> diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> index fb0f69ce9c16..7cb8a747feee 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> @@ -185,7 +185,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> index 1e3c8de6cae1..467016cbb037 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+> @@ -142,7 +142,7 @@ allOf:
+>    # boards are defining it at the moment so it would generate a lot of
+>    # warnings.
+>  
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        not:
+>          properties:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> index d3b11351ca45..9b4e0ae61ffe 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> @@ -73,7 +73,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> index f4f1ee6b116e..bef85c25cdef 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> @@ -32,7 +32,7 @@ patternProperties:
+>      then:
+>        patternProperties:
+>          "^function|groups$":
+> -          $ref: "/schemas/types.yaml#/definitions/string"
+> +          $ref: /schemas/types.yaml#/definitions/string
+>            enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15,
+>                    ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK, DDCDAT,
+>                    EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2, GPID4, GPID6, GPIE0,
+> @@ -51,7 +51,7 @@ patternProperties:
+>                    VGAHS, VGAVS, VPI18, VPI24, VPI30, VPO12, VPO24, WDTRST1, WDTRST2]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+> index 8168f0088471..14c391f16899 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+> @@ -44,7 +44,7 @@ patternProperties:
+>      then:
+>        patternProperties:
+>          "^function|groups$":
+> -          $ref: "/schemas/types.yaml#/definitions/string"
+> +          $ref: /schemas/types.yaml#/definitions/string
+>            enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15,
+>                    ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK, DDCDAT,
+>                    ESPI, FWSPICS1, FWSPICS2, GPID0, GPID2, GPID4, GPID6, GPIE0, GPIE2,
+> @@ -65,7 +65,7 @@ patternProperties:
+>                    VGAVS, VPI24, VPO, WDTRST1, WDTRST2]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> index 62424c42c981..859a1889dc1e 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+> @@ -30,7 +30,7 @@ patternProperties:
+>      then:
+>        properties:
+>          function:
+> -          $ref: "/schemas/types.yaml#/definitions/string"
+> +          $ref: /schemas/types.yaml#/definitions/string
+>            enum: [ ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15, ADC2,
+>                    ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, EMMC, ESPI, ESPIALT,
+>                    FSI1, FSI2, FWQSPI, FWSPIABR, FWSPID, FWSPIWP, GPIT0, GPIT1, GPIT2, GPIT3,
+> @@ -55,7 +55,7 @@ patternProperties:
+>                    USB2BD, USB2BH, VB, VGAHS, VGAVS, WDTRST1, WDTRST2, WDTRST3, WDTRST4 ]
+>  
+>          groups:
+> -          $ref: "/schemas/types.yaml#/definitions/string"
+> +          $ref: /schemas/types.yaml#/definitions/string
+>            enum: [ ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15, ADC2,
+>                    ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, EMMCG1, EMMCG4,
+>                    EMMCG8, ESPI, ESPIALT, FSI1, FSI2, FWQSPI, FWSPIABR, FWSPID, FWSPIWP,
+> @@ -84,7 +84,7 @@ patternProperties:
+>                    WDTRST3, WDTRST4]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+> index ab019a1998e8..4478a76171f7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6318-pinctrl.yaml
+> @@ -38,7 +38,7 @@ patternProperties:
+>                  gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio40 ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+> index 8c9d4668c8c4..73e1caa7c011 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.yaml
+> @@ -42,7 +42,7 @@ patternProperties:
+>                  vdsl_phy_override_3_grp, dsl_gpio8, dsl_gpio9 ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+> index a8e22ec02215..2750ba42aeb8 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.yaml
+> @@ -37,7 +37,7 @@ patternProperties:
+>                  usb_port1 ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+> index 35867355a47a..2f6c540498bc 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.yaml
+> @@ -35,7 +35,7 @@ patternProperties:
+>                  led_grp, spi_cs_grp, utopia_grp, pwm_syn_clk, sys_irq_grp ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+> index b584d4b27223..b3044f805753 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.yaml
+> @@ -42,7 +42,7 @@ patternProperties:
+>                  gpio22, gpio23, gpio24, gpio25, gpio26, gpio27, nand_grp ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+> index 229323d9237d..3236871827df 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.yaml
+> @@ -43,7 +43,7 @@ patternProperties:
+>                  gpio31, uart1_grp ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> index 8d1e5b1cdd5f..0a39dd26ee1a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+> @@ -53,7 +53,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+> index a78cb2796001..7f4f36a58e56 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml
+> @@ -144,7 +144,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
+> index 5cd512b7d5ba..5e000b3fadde 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
+> @@ -173,7 +173,7 @@ properties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> index 6bd42e43cdab..bb61a30321a1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+> @@ -40,8 +40,8 @@ properties:
+>        '-pins$':
+>          type: object
+>          allOf:
+> -          - $ref: "pincfg-node.yaml#"
+> -          - $ref: "pinmux-node.yaml#"
+> +          - $ref: pincfg-node.yaml#
+> +          - $ref: pinmux-node.yaml#
+>          properties:
+>            groups:
+>              description:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> index 915cbbcc3555..222d57541b65 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> @@ -109,7 +109,7 @@ required:
+>  additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  examples:
+>    - |
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml
+> index 621038662188..7bd723ab1281 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml
+> @@ -68,7 +68,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8m-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8m-pinctrl.yaml
+> index 7ae084397258..6068be11dfe2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8m-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8m-pinctrl.yaml
+> @@ -65,7 +65,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml
+> index 693398d88223..7dcf681271d3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8ulp-pinctrl.yaml
+> @@ -57,7 +57,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> index 66baa6082a4f..2f2405102996 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> @@ -14,7 +14,7 @@ description:
+>    for common binding part and usage.
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  properties:
+>    compatible:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> index a4397930e0e8..35723966b70a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> @@ -119,7 +119,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> index ca0fef6e535e..1144ca2896e3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> @@ -48,7 +48,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
+> index 491f67e7cc4f..afea9424c7e1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
+> @@ -28,7 +28,7 @@ patternProperties:
+>  
+>      properties:
+>        marvell,function:
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          description:
+>            Indicates the function to select.
+>          enum: [ dev_init_done, ge, gpio, i2c0, i2c1, int_out, led, nand, pcie, ptp, sdio,
+> @@ -47,7 +47,7 @@ patternProperties:
+>                    mpp40, mpp41, mpp42, mpp43, mpp44, mpp45 ]
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+> index a55c8e4ff26e..b903126bb9be 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml
+> @@ -67,7 +67,7 @@ required:
+>    - "#gpio-cells"
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  patternProperties:
+>    'pins$':
+> @@ -83,7 +83,7 @@ patternProperties:
+>            pins it needs, and how they should be configured, with regard to muxer
+>            configuration, pullups, drive strength, input enable/disable and input
+>            schmitt.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            pinmux:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> index a2141eb0854e..9bb563cea1a8 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> @@ -58,7 +58,7 @@ required:
+>    - "#gpio-cells"
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        properties:
+>          compatible:
+> @@ -123,7 +123,7 @@ patternProperties:
+>            pinctrl groups available on the machine. Each subnode will list the
+>            pins it needs, and how they should be configured, with regard to muxer
+>            configuration, pullups, drive strength, input enable/disable and input schmitt.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            pinmux:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+> index ac93eb8f01a6..37f8666e258b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+> @@ -43,7 +43,7 @@ properties:
+>      const: 2
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> @@ -70,7 +70,7 @@ patternProperties:
+>          additionalProperties: false
+>          description: |
+>            pinmux configuration nodes.
+> -        $ref: "/schemas/pinctrl/pinmux-node.yaml"
+> +        $ref: /schemas/pinctrl/pinmux-node.yaml
+>          properties:
+>            function:
+>              description: |
+> @@ -249,7 +249,7 @@ patternProperties:
+>          additionalProperties: false
+>          description: |
+>            pinconf configuration nodes.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            groups:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+> index 216b356cd519..275ed99f78d2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+> @@ -57,7 +57,7 @@ properties:
+>      const: 2
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> @@ -126,7 +126,7 @@ patternProperties:
+>            "wf_dbdc"         "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
+>                                          84, 85
+>  
+> -        $ref: "/schemas/pinctrl/pinmux-node.yaml"
+> +        $ref: /schemas/pinctrl/pinmux-node.yaml
+>          properties:
+>            function:
+>              description: |
+> @@ -260,7 +260,7 @@ patternProperties:
+>          additionalProperties: false
+>          description: |
+>            pinconf configuration nodes.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            pins:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> index c30cd0d010dd..5f7d3113a83a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> @@ -57,7 +57,7 @@ properties:
+>      const: 2
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> @@ -80,7 +80,7 @@ patternProperties:
+>            pins it needs, and how they should be configured, with regard to muxer
+>            configuration, pullups, drive strength, input enable/disable and input
+>            schmitt.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            pinmux:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.yaml
+> index 7e750f1e643d..941d38752431 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.yaml
+> @@ -73,7 +73,7 @@ patternProperties:
+>      patternProperties:
+>        '^pins':
+>          type: object
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>          additionalProperties: false
+>          description: |
+>            A pinctrl node should contain at least one subnode representing the
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+> index 9399e0215526..50f0d5b59e12 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+> @@ -82,7 +82,7 @@ patternProperties:
+>                }
+>              };
+>            };
+> -        $ref: "pinmux-node.yaml"
+> +        $ref: pinmux-node.yaml
+>  
+>          properties:
+>            pinmux:
+> @@ -155,7 +155,7 @@ patternProperties:
+>            - pinmux
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> index 98d547c34ef3..dbb3e1bd58c1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> @@ -54,8 +54,8 @@ patternProperties:
+>    '-pins$':
+>      type: object
+>      allOf:
+> -      - $ref: "pinmux-node.yaml"
+> -      - $ref: "pincfg-node.yaml"
+> +      - $ref: pinmux-node.yaml
+> +      - $ref: pincfg-node.yaml
+>  
+>      properties:
+>        function: true
+> @@ -78,7 +78,7 @@ required:
+>    - gpio-ranges
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+> index 26573a793b57..d5175001b6f0 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+> @@ -94,7 +94,7 @@ patternProperties:
+>                }
+>              };
+>            };
+> -        $ref: "pinmux-node.yaml"
+> +        $ref: pinmux-node.yaml
+>  
+>          properties:
+>            pinmux:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> index a09ebbfec574..3fd20f07bf0f 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> @@ -65,7 +65,7 @@ patternProperties:
+>            pins it needs, and how they should be configured, with regard to muxer
+>            configuration, pullups, drive strength, input enable/disable and
+>            input schmitt.
+> -        $ref: "pinmux-node.yaml"
+> +        $ref: pinmux-node.yaml
+>  
+>          properties:
+>            pinmux:
+> @@ -125,7 +125,7 @@ patternProperties:
+>          additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> index 66fe17e9e4d3..a8703a5c386b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> @@ -87,7 +87,7 @@ patternProperties:
+>                }
+>              };
+>            };
+> -        $ref: "pinmux-node.yaml"
+> +        $ref: pinmux-node.yaml
+>  
+>          properties:
+>            pinmux:
+> @@ -217,7 +217,7 @@ patternProperties:
+>            - pinmux
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> index db505fdeac86..1096655961f7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> @@ -395,8 +395,8 @@ $defs:
+>    qcom-pmic-gpio-state:
+>      type: object
+>      allOf:
+> -      - $ref: "pinmux-node.yaml"
+> -      - $ref: "pincfg-node.yaml"
+> +      - $ref: pinmux-node.yaml
+> +      - $ref: pincfg-node.yaml
+>      properties:
+>        pins:
+>          description:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> index 9412b9362328..c91d3e3a094b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> @@ -82,8 +82,8 @@ $defs:
+>    qcom-pmic-mpp-state:
+>      type: object
+>      allOf:
+> -      - $ref: "pinmux-node.yaml"
+> -      - $ref: "pincfg-node.yaml"
+> +      - $ref: pinmux-node.yaml
+> +      - $ref: pincfg-node.yaml
+>      properties:
+>        pins:
+>          description:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> index e51feb4c0700..fa51fa9536f7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+> @@ -50,7 +50,7 @@ $defs:
+>      description:
+>        Pinctrl node's client devices use subnodes for desired pin configuration.
+>        Client device subnodes use below standard properties.
+> -    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +    $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>      properties:
+>        pins:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+> index de9d8854c690..4b4be7efc150 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+> @@ -55,7 +55,7 @@ $defs:
+>      description:
+>        Pinctrl node's client devices use subnodes for desired pin configuration.
+>        Client device subnodes use below standard properties.
+> -    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +    $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>      properties:
+>        pins:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+> index cb5ba1bd6f8d..2da1437358b7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
+> @@ -52,7 +52,7 @@ properties:
+>        information.
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - interrupts
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> index 1e63ea34146a..19d741c09cb2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7620-pinctrl.yaml
+> @@ -637,7 +637,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml
+> index 1b1d37b981d9..39d04621b4f9 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,mt7621-pinctrl.yaml
+> @@ -241,7 +241,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> index 7fd0df880a76..7fb42ba9a7c1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinctrl.yaml
+> @@ -121,7 +121,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
+> index 4d66ca752a30..02780dcc38f2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt305x-pinctrl.yaml
+> @@ -254,7 +254,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+> index 008d93181aea..ec5b38415dcd 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt3883-pinctrl.yaml
+> @@ -241,7 +241,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> index 4fc758fea7e6..0fc3c0f52c19 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> @@ -73,7 +73,7 @@ properties:
+>      maxItems: 1
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-ports.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-ports.yaml
+> index 9083040c996a..83800fcf0ce4 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-ports.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-ports.yaml
+> @@ -32,7 +32,7 @@ properties:
+>      maxItems: 1
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> index d761fddc2206..37173a64fed2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> @@ -73,7 +73,7 @@ patternProperties:
+>        additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> index f081acb7ba04..9ce1a07fc015 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> @@ -113,7 +113,7 @@ additionalProperties:
+>          $ref: "#/additionalProperties/anyOf/0"
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+> index 70b1788ab594..f3b85b7eae31 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+> @@ -32,7 +32,7 @@ properties:
+>        The bus clock, sometimes described as pclk, for register accesses.
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+> index eac6245db7dc..03f084292d68 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+> @@ -94,7 +94,7 @@ additionalProperties:
+>          $ref: "#/additionalProperties/anyOf/0"
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> index 45b767986a87..10c335efe619 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -50,12 +50,12 @@ properties:
+>        - rockchip,rv1126-pinctrl
+>  
+>    rockchip,grf:
+> -    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+>        The phandle of the syscon node for the GRF registers.
+>  
+>    rockchip,pmu:
+> -    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+>        The phandle of the syscon node for the PMU registers,
+>        as some SoCs carry parts of the iomux controller registers there.
+> @@ -71,7 +71,7 @@ properties:
+>    ranges: true
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> @@ -81,7 +81,7 @@ patternProperties:
+>    "gpio@[0-9a-f]+$":
+>      type: object
+>  
+> -    $ref: "/schemas/gpio/rockchip,gpio-bank.yaml#"
+> +    $ref: /schemas/gpio/rockchip,gpio-bank.yaml#
+>      deprecated: true
+>  
+>      unevaluatedProperties: false
+> @@ -117,7 +117,7 @@ additionalProperties:
+>      type: object
+>      properties:
+>        rockchip,pins:
+> -        $ref: "/schemas/types.yaml#/definitions/uint32-matrix"
+> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>          minItems: 1
+>          items:
+>            items:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> index eb2b2692607d..26614621774a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> @@ -117,7 +117,7 @@ required:
+>    - reg
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
+> index 0719c03d6f4b..4214d7311f6b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
+> @@ -62,8 +62,8 @@ patternProperties:
+>        - pins
+>  
+>      allOf:
+> -      - $ref: "pincfg-node.yaml#"
+> -      - $ref: "pinmux-node.yaml#"
+> +      - $ref: pincfg-node.yaml#
+> +      - $ref: pinmux-node.yaml#
+>        - if:
+>            properties:
+>              pins:
+> @@ -86,7 +86,7 @@ required:
+>    - gpio-controller
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>    - if:
+>        not:
+>          properties:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+> index bc34e2c872bc..a6f34df82e90 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+> @@ -61,7 +61,7 @@ additionalProperties:
+>      unevaluatedProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> index eeb29b4ad4d1..1ab0f8dde477 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> @@ -44,7 +44,7 @@ properties:
+>  
+>    st,syscfg:
+>      description: Phandle+args to the syscon node which includes IRQ mux selection.
+> -    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>      items:
+>        - items:
+>            - description: syscon node which includes IRQ mux selection
+> @@ -89,7 +89,7 @@ patternProperties:
+>        st,bank-name:
+>          description:
+>            Should be a name string for this bank as specified in the datasheet.
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          enum:
+>            - GPIOA
+>            - GPIOB
+> @@ -108,7 +108,7 @@ patternProperties:
+>          description:
+>            Should correspond to the EXTI IOport selection (EXTI line used
+>            to select GPIOs as interrupts).
+> -        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+>          minimum: 0
+>          maximum: 11
+>  
+> @@ -140,7 +140,7 @@ patternProperties:
+>            configuration, pullups, drive, output high/low and output speed.
+>          properties:
+>            pinmux:
+> -            $ref: "/schemas/types.yaml#/definitions/uint32-array"
+> +            $ref: /schemas/types.yaml#/definitions/uint32-array
+>              description: |
+>                Integer array, represents gpio pin number and mux setting.
+>                Supported pin number and mux varies for different SoCs, and are
+> @@ -201,7 +201,7 @@ patternProperties:
+>            - pinmux
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml
+> index 69c0dd9998ea..27eff891685b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml
+> @@ -111,7 +111,7 @@ patternProperties:
+>            pins it needs, and how they should be configured, with regard to
+>            muxer configuration, bias, input enable/disable, input schmitt
+>            trigger enable/disable, slew-rate and drive strength.
+> -        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+>  
+>          properties:
+>            pins:
+> @@ -120,14 +120,14 @@ patternProperties:
+>                This should be set using either the PAD_GPIO or PAD_FUNC_SHARE
+>                macros.
+>                Either this or "pinmux" has to be specified, but not both.
+> -            $ref: "/schemas/pinctrl/pinmux-node.yaml#/properties/pins"
+> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pins
+>  
+>            pinmux:
+>              description: |
+>                The list of GPIOs and their mux settings that properties in the
+>                node apply to. This should be set using the GPIOMUX macro.
+>                Either this or "pins" has to be specified, but not both.
+> -            $ref: "/schemas/pinctrl/pinmux-node.yaml#/properties/pinmux"
+> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
+>  
+>            bias-disable: true
+>  
+> diff --git a/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+> index 347061eece9e..94b868c7ceb1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+> @@ -138,7 +138,7 @@ patternProperties:
+>          description: |
+>            Define pin-function which is used by pinctrl node's client device.
+>            The name should be one of string in the following enumeration.
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          enum: [ SPI_FLASH, SPI_FLASH_4BIT, SPI_NAND, CARD0_EMMC, SD_CARD,
+>                  UA0, FPGA_IFX, HDMI_TX, LCDIF, USB0_OTG, USB1_OTG ]
+>  
+> @@ -146,7 +146,7 @@ patternProperties:
+>          description: |
+>            Define pin-group in a specified pin-function.
+>            The name should be one of string in the following enumeration.
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          enum: [ SPI_FLASH1, SPI_FLASH2, SPI_FLASH_4BIT1, SPI_FLASH_4BIT2,
+>                  SPI_NAND, CARD0_EMMC, SD_CARD, UA0, FPGA_IFX, HDMI_TX1,
+>                  HDMI_TX2, HDMI_TX3, LCDIF, USB0_OTG, USB1_OTG ]
+> @@ -289,7 +289,7 @@ required:
+>  additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  examples:
+>    - |
+> diff --git a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> index 98b4663f9766..19d47fd414bc 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> @@ -21,7 +21,7 @@ properties:
+>      maxItems: 1
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
+> @@ -35,14 +35,14 @@ patternProperties:
+>        pinctrl groups available on the machine. Each subnode will list the
+>        pins it needs, and how they should be configured, with regard to muxer
+>        configuration, pullups, drive strength.
+> -    $ref: "pinmux-node.yaml"
+> +    $ref: pinmux-node.yaml
+>      additionalProperties: false
+>  
+>      properties:
+>        function:
+>          description:
+>            Function to mux.
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          enum: [i2c0, i2c1, i2c2, i2c3, i2c4, i2c5, i2c6, i2c7, i2c8,
+>                 spi0, spi1, spi2, spi3, spi4, spi5, spi6,
+>                 uart0, uart1, uart2, uart3, pwm, pcmif_out, pcmif_in]
+> @@ -50,7 +50,7 @@ patternProperties:
+>        groups:
+>          description:
+>            Name of the pin group to use for the functions.
+> -        $ref: "/schemas/types.yaml#/definitions/string"
+> +        $ref: /schemas/types.yaml#/definitions/string
+>          enum: [i2c0_grp, i2c1_grp, i2c2_grp, i2c3_grp, i2c4_grp,
+>                 i2c5_grp, i2c6_grp, i2c7_grp, i2c8_grp,
+>                 spi0_grp, spi0_cs0_grp, spi0_cs1_grp, spi0_cs2_grp,
+> diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+> index cfd0cc549a7b..598a042850b8 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+> @@ -168,7 +168,7 @@ patternProperties:
+>      additionalProperties: false
+>  
+>  allOf:
+> -  - $ref: "pinctrl.yaml#"
+> +  - $ref: pinctrl.yaml#
+>  
+>  required:
+>    - compatible
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+- Hector
