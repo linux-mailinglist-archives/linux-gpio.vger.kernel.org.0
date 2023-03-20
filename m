@@ -2,150 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F1A6C1E47
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 18:40:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7266C1FA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 19:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbjCTRkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Mar 2023 13:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
+        id S231310AbjCTS0A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Mar 2023 14:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233645AbjCTRkH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 13:40:07 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B226A269
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 10:36:19 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id eh3so49829963edb.11
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 10:36:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679333758;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JaK1FcRwkMamAspffUihcNnqOOe0rFedFLTh7UEKOP4=;
-        b=q2+0GQ4ca+9rxW4ELMVguPlAgyC5BI4CYHivIaVymMM/+m4Ok0xDQO8UJ19SyNcBWq
-         10ZQq1kP32zhH9N8MA9T4UMG+Dh91sCFYAdHsjax6WxqhpXE6ejWfyBeqMRbd33xpti7
-         vpJTQnwsCzLQIWD7RQSPojO5PLIkBkM06ArztABv9YTVTGYToZ9kvK9MedLE5fyEEXYk
-         7foy6P5h2iZMRFUg9VtpIDRITqq5C5me0ADZkT622Mc0v8GPQavi5q0+y85zWLmsZrVg
-         bq+zT2zSk6Uk7g8BbZNPvSeRVkoe/RWzy4oAxuYzXP32rLM2ATiA+/YpMc9sHhNu/rAP
-         CYuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679333758;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JaK1FcRwkMamAspffUihcNnqOOe0rFedFLTh7UEKOP4=;
-        b=oBTP3Mc/wWMiDkPZrbqJJHCZIsoikVY/GVTA6ylaH1HpYtpQiPN5czQRijOEbyGMQ9
-         bFOsoXK1hVvYZh4k4hTH3nnqWEsnbRsqhDe4FEc7nPDqqjrTnffjTyzcEuVH9CqFLV3G
-         K8IoPaqI5GxUE+dBHJUJzEZvb/6ck3ccrZvXLPkoSwFBCEAjtwsJQCDk3dA41GOPp+jb
-         h3b1+cOEmI/ozUuRcA9rndB0U5GgiWPLA0ZtQAFR0uXbAWbuJtvXs/B1Fg7N8c7Tc4N8
-         GhheNMq3SxY+pmqQrCU6G/tURPbNCz20VYRf/WZa42B74fGmE77EjxA4reUG8UFq6w2a
-         eF2w==
-X-Gm-Message-State: AO0yUKUvDz3gmBHvoARciaRBx+O8bPKGPQSa8dlB4EkP7tQC7MXdWwXe
-        iM+isX2zaYKCtZlGn4+gRD8EGw==
-X-Google-Smtp-Source: AK7set9Qw6i6STl9atpvvImsPZbi6y7G4oN8QkTErnRZmai4FnQgeTcK8ajIj7MGNIOK5VLlRA9ThQ==
-X-Received: by 2002:a17:907:3f95:b0:935:1565:d661 with SMTP id hr21-20020a1709073f9500b009351565d661mr3929597ejc.66.1679333757942;
-        Mon, 20 Mar 2023 10:35:57 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id r29-20020a50d69d000000b004c2158e87e6sm5132110edi.97.2023.03.20.10.35.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Mar 2023 10:35:57 -0700 (PDT)
-Message-ID: <eb23cc13-9738-8e82-6b13-76cc7ccbe280@linaro.org>
-Date:   Mon, 20 Mar 2023 17:35:53 +0000
+        with ESMTP id S231522AbjCTSZR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 14:25:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CF01816B;
+        Mon, 20 Mar 2023 11:18:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B56161787;
+        Mon, 20 Mar 2023 18:18:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1E4C433A4;
+        Mon, 20 Mar 2023 18:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679336284;
+        bh=vWg765y10j4OS331b9rPl2+YrzmXue9TgKc5uUPg6SE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d0EShuTb90IYTui1Yvb5dTQm0ZdBzbLHwIdXjNMjBe1t4/PYzPQmrgKqZ9bAcsDOT
+         GKvGwIH+xdTtkmTMMyOdiGo67BhnrM2V4uBqV7oONOcdyRoGVLSzOWeKb2Y6Av8sgm
+         2Pve+TPBIQMb5xiNwMGaxCLrKdA9f+b/WGE+aWoeTJY8rDFmBkgqiyj8aY0/xrNc+W
+         7uTb9rrP+PCxabfTATj2ZosK1TWPRLrUv6rkGo+OwIfhgdb177MgnR8ndTccPIfYD1
+         pbEg99edRbwyz7LbDlOYQojGgNYi2hc0LoXGMB755eho1B412HFdkGcXJj9s1brLCw
+         h5MqK9ObmFgXg==
+Received: by mail-ua1-f50.google.com with SMTP id 89so8589968uao.0;
+        Mon, 20 Mar 2023 11:18:04 -0700 (PDT)
+X-Gm-Message-State: AO0yUKUIgQargX+s2l5qMqI2Ova8ZnyuhOsNGwV2rJYhLjp8Cyfg5cXj
+        I35nqC5e8t8tyf6gW8SuV2zACfT9wqcTutCitg==
+X-Google-Smtp-Source: AK7set9vhgJMbGJRf/P0PPWHB2mniWwp+5MfPmkCG1+Fia2Jvmr6Jhb32FMBmmkaSyyxxpPtHEVnEx5LGAkbE4I2Yng=
+X-Received: by 2002:a1f:2982:0:b0:401:8898:ea44 with SMTP id
+ p124-20020a1f2982000000b004018898ea44mr142394vkp.3.1679336283507; Mon, 20 Mar
+ 2023 11:18:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v3 1/5] firmware: qcom_scm: provide a read-modify-write
- function
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <1679070482-8391-1-git-send-email-quic_mojha@quicinc.com>
- <1679070482-8391-2-git-send-email-quic_mojha@quicinc.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <1679070482-8391-2-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230310144721.1544669-1-robh@kernel.org> <CAMuHMdUaeyHs9fQxS+16F62uHaifJYMXKJpL2-xi-SL5HCrTHQ@mail.gmail.com>
+ <CAMuHMdX1=+WwWjfiWDYOjSzTjcYBEY+QR=XKuU+o5_SCyU7rag@mail.gmail.com> <CACRpkdaw7TodD0hr3vD8cGB80k0qtEiaC1ne-ivCj6YEefi44w@mail.gmail.com>
+In-Reply-To: <CACRpkdaw7TodD0hr3vD8cGB80k0qtEiaC1ne-ivCj6YEefi44w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 20 Mar 2023 13:17:51 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+pzQvsvk8KiyVZPrebMvV6-PfxFXFXcPOf0C21+-yo9A@mail.gmail.com>
+Message-ID: <CAL_Jsq+pzQvsvk8KiyVZPrebMvV6-PfxFXFXcPOf0C21+-yo9A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Use of_property_present() for testing DT
+ property presence
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-renesas-soc@vger.kernel.org, linux-sunxi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Mar 19, 2023 at 3:55=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Mon, Mar 13, 2023 at 12:00=E2=80=AFPM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Mon, Mar 13, 2023 at 10:00=E2=80=AFAM Geert Uytterhoeven
+> > <geert@linux-m68k.org> wrote:
+> > > On Fri, Mar 10, 2023 at 3:56=E2=80=AFPM Rob Herring <robh@kernel.org>=
+ wrote:
+> > > > It is preferred to use typed property access functions (i.e.
+> > > > of_property_read_<type> functions) rather than low-level
+> > > > of_get_property/of_find_property functions for reading properties. =
+As
+> > > > part of this, convert of_get_property/of_find_property calls to the
+> > > > recently added of_property_present() helper when we just want to te=
+st
+> > > > for presence of a property and nothing more.
+> > > >
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- a/drivers/pinctrl/renesas/pinctrl.c
+> > > > +++ b/drivers/pinctrl/renesas/pinctrl.c
+> > > > @@ -125,8 +125,8 @@ static int sh_pfc_dt_subnode_to_map(struct pinc=
+trl_dev *pctldev,
+> > > >          * inside a subnode nor across subnodes.
+> > > >          */
+> > > >         if (!pmx->func_prop_name) {
+> > > > -               if (of_find_property(np, "groups", NULL) ||
+> > > > -                   of_find_property(np, "pins", NULL)) {
+> > > > +               if (of_property_present(np, "groups")||
+> > > > +                   of_property_present(np, "pins")) {
+> > > >                         pmx->func_prop_name =3D "function";
+> > > >                         pmx->groups_prop_name =3D "groups";
+> > > >                         pmx->pins_prop_name =3D "pins";
+> > >
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >
+> > > This check is used to auto-detect if the standard property names
+> > > should be used, or the "renesas,"-prefixed ones.
+> > > As the last users of the latter were removed from DTS in v4.10,
+> > > perhaps I should just remove these checks instead?
+> >
+> > Sent a patch just doing that, so you can drop this chunk.
+> > https://lore.kernel.org/linux-renesas-soc/ff9c14781110bbf19b56b45dd1f01=
+e6da90319ad.1678704441.git.geert+renesas@glider.be
+>
+> So I need a new version of this patch before I can apply it
+> I guess, or there will be conflict with Reseas stuff?
 
+Can you just drop drivers/pinctrl/renesas/pinctrl.c from this patch?
 
-On 17/03/2023 16:27, Mukesh Ojha wrote:
-> It was released by Srinivas K. that there is a need of
-> read-modify-write scm exported function so that it can
-> be used by multiple clients.
-> 
-> Let's introduce qcom_scm_io_update_field() which masks
-> out the bits and write the passed value to that
-> bit-offset. Subsequent patch will use this function.
-> 
-> Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->   drivers/firmware/qcom_scm.c            | 15 +++++++++++++++
->   include/linux/firmware/qcom/qcom_scm.h |  2 ++
->   2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 3e020d1..aca2556 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -407,6 +407,21 @@ int qcom_scm_set_remote_state(u32 state, u32 id)
->   }
->   EXPORT_SYMBOL(qcom_scm_set_remote_state);
->   
-> +int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask, unsigned int val)
-> +{
-> +	unsigned int old, new;
-> +	int ret;
-> +
-> +	ret = qcom_scm_io_readl(addr, &old);
-> +	if (ret)
-> +		return ret;
-> +
-> +	new = (old & ~mask) | val;
-
-thanks for doing this,
-
-With field semantics, val should be shifted within the function, so the 
-caller only sets value for field rather than passing a shifted value.
-so this should be:
-
-new = (old & ~mask) | (val << ffs(mask) - 1);
-
-
---srini
-
-
-
-> +
-> +	return qcom_scm_io_writel(addr, new);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_io_update_field);
-> +
->   static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
->   {
->   	struct qcom_scm_desc desc = {
-> diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-> index 1e449a5..203a781 100644
-> --- a/include/linux/firmware/qcom/qcom_scm.h
-> +++ b/include/linux/firmware/qcom/qcom_scm.h
-> @@ -84,6 +84,8 @@ extern bool qcom_scm_pas_supported(u32 peripheral);
->   
->   extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
->   extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
-> +extern int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask,
-> +				    unsigned int val);
->   
->   extern bool qcom_scm_restore_sec_cfg_available(void);
->   extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+Rob
