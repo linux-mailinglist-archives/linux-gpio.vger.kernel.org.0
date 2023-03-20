@@ -2,109 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33BB86C1571
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 15:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FF4C6C158D
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 15:52:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbjCTOq4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Mar 2023 10:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54190 "EHLO
+        id S232046AbjCTOwD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Mar 2023 10:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbjCTOqQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 10:46:16 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECE7B757;
-        Mon, 20 Mar 2023 07:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679323512; x=1710859512;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qK1L3tZe5U3jouCMbrv1LYBji2zf9KQMH40R1IURD58=;
-  b=NerxX3xEsER7gE80DYJTpKO04+SY0rOdNIWIdS7AzqkxCIN/VbhUTh4X
-   sBY0kvXUVNdUNB/E0QTHDaqfG79I90/u6Q50FFV/49gHvPL8B0GugQIHD
-   W8wmkRqPrhwmbv1plCSGaLQ5UatWUGFsSleTtNoOp/uz2wNhK5yYco3fJ
-   WG61Wnb3oJdHuJ76+/onR8KcTN8AOBvY9hWfGjx72wXIaYmf3Y7a+1l/a
-   eoSGupskeFoCfsyQ/wjuSgkmdAa15niryYyT1JOlxVg9S/N7WKI/tEK+W
-   qKYzxJkjAS4azR0Ac9kAUnaZOHdIig6Tdc84oe/hqd5i351ox0XRp0crR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="338704713"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="338704713"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 07:45:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="631157408"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="631157408"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 20 Mar 2023 07:45:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1peGkv-006Jk7-0Z;
-        Mon, 20 Mar 2023 16:45:01 +0200
-Date:   Mon, 20 Mar 2023 16:45:00 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] regmap-irq: Drop map from handle_mask_sync()
- parameters
-Message-ID: <ZBhxbAlvjplGcAie@smile.fi.intel.com>
-References: <cover.1679259085.git.william.gray@linaro.org>
- <ZBhVOziLz6WL6vv7@smile.fi.intel.com>
- <ZBd8PZa0kCcG4MQD@fedora>
+        with ESMTP id S231949AbjCTOvo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 10:51:44 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1DBC2A99A;
+        Mon, 20 Mar 2023 07:50:10 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-17aa62d0a4aso13302709fac.4;
+        Mon, 20 Mar 2023 07:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679323784;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=24gLtemlwEwclYk97xQS3tgIiOLty5AImjT/aeDGFUU=;
+        b=OwgEJApZxGZEEEwdblDsB3ZaQxjElwpHGGuBAzOdzg2yNCmCuJjdhzpC/lS9LD6gR9
+         HUZt/gN91IlQY3r0a2/6fi1uNAf/FYZ87EVFkpyn6zqTdWnUOZIjGHHplH8gn0fTTIms
+         zvwDBKMaSYua1JfQQxq/B00jVUUYYEI2WklLQLuzsdPhTCrdpq0x6lEyKCfQgn9zGqaI
+         80gNEJHc8kiFXkWuEij0uBVmoHlMKLaGL971sGghzQcuN16LUYSRi7vYSc1K/62Cp8S1
+         DDd/JSm/hu/qw04xzcmqivT3ZdbmoJWPnUsRXLciSHG0zH4d/tjYczcNGk+827bNCFaI
+         m47Q==
+X-Gm-Message-State: AO0yUKWmoy+GCeZdnGxqyQQ6KQqy57sZrOSulMJVhYLY+8ggRsjHqUSF
+        4MY0ef4KbujJAPLoCHFlyw==
+X-Google-Smtp-Source: AK7set+RqlXkEMahjquygOnExk5k9/cbtl8ORARJq5x3F2i+ux3p2b42vHbNFUCMROqdgqtZnFU/nA==
+X-Received: by 2002:a05:6870:8a1e:b0:17a:a825:6be9 with SMTP id p30-20020a0568708a1e00b0017aa8256be9mr5620143oaq.43.1679323783824;
+        Mon, 20 Mar 2023 07:49:43 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t1-20020a9d7741000000b0068bc48c61a5sm140647otl.19.2023.03.20.07.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Mar 2023 07:49:43 -0700 (PDT)
+Received: (nullmailer pid 1616110 invoked by uid 1000);
+        Mon, 20 Mar 2023 14:49:42 -0000
+Date:   Mon, 20 Mar 2023 09:49:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH 04/14] dt-bindings: mfd: qcom,spmi-pmic: add compatible
+ for pmm8654au
+Message-ID: <167932378237.1616052.3467011584315312595.robh@kernel.org>
+References: <20230314183043.619997-1-brgl@bgdev.pl>
+ <20230314183043.619997-5-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZBd8PZa0kCcG4MQD@fedora>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230314183043.619997-5-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 05:18:53PM -0400, William Breathitt Gray wrote:
-> On Mon, Mar 20, 2023 at 02:44:43PM +0200, Andy Shevchenko wrote:
-> > On Sun, Mar 19, 2023 at 05:02:00PM -0400, William Breathitt Gray wrote:
-> > > Changes in v2:
-> > >  - Pull out 104-dio-48e refactor to a precursor patch
-> > > 
-> > > Remove the map parameter from the struct regmap_irq_chip callback
-> > > handle_mask_sync() because it can be passed via the irq_drv_data
-> > > parameter instead. The gpio-104-dio-48e driver is the only consumer of
-> > > this callback and is thus updated accordingly.
-> > > 
-> > > A couple pending patchsets also utilize handle_mask_sync() [0][1], so
-> > > it'll be useful to merge the changes in this series first to avoid
-> > > subsequent noise adjusting the dependent drivers.
-> > > 
-> > > [0] https://lore.kernel.org/r/cover.1677515341.git.william.gray@linaro.org/
-> > > [1] https://lore.kernel.org/r/cover.1678106722.git.william.gray@linaro.org/
-> > 
-> > Good idea and intention, but something went wrong with bisectability as pointed
-> > out by the build bot. As a last resort you would need to squash these two, but
-> > try first another possible patch series split.
 
-> I should have build tested each commit when I rebased rather than just
-> the last.
+On Tue, 14 Mar 2023 19:30:33 +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> PMM8654au is the SPMI PMIC variant used on sa8775p-ride. Add a compatible
+> for it.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Cc: Lee Jones <lee@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Right, that's what we call a "compile time bisectability".
-
-> I'd rather avoid a squash so that these changes are distinct
-> for the sake of a clear git history on the regmap API change;
-
-That's my point! I glad we are on the same page.
-
-> I'll submit a v3 soon with the minor changes needed.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Acked-by: Rob Herring <robh@kernel.org>
 
