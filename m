@@ -2,109 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C006C19FD
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 16:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A52306C1A7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 16:57:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233272AbjCTPlj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Mar 2023 11:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
+        id S232036AbjCTP5v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Mar 2023 11:57:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233279AbjCTPlS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 11:41:18 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69641399C8;
-        Mon, 20 Mar 2023 08:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679326367; x=1710862367;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Kgkj6Y8F+5Jx6zTUBcgjZbkpzW1rHfF/zDqpvU7TZ9Q=;
-  b=gZgfANx+OoPM4sPSKewq9yha07+D0tP+XyQbH9Q7HXWRbZgC5CdI7O5f
-   0ZciB5DshVLGqSd9xnj+ACEt3mEKK8SrVkixXLjw8hfMJmYFDF8liSrc5
-   SqVMDZvJTRh+WwBmtlTUhcH9oVF4pnJjGeH2KxQSDZFvriVvory3q+tb4
-   pIyR5g+C1PmqoXKHz73TZdVnXDZKFZu7TXOIV690h4nZeIYHxnxFfkWy3
-   kh3E5EszYbyzIvp4RE7YOFTYeGqQFL4BjVOnAABVjg/totCfdGwDHjt1V
-   warYSQvIokyI/ptgDhTBwikSLrqXtLOtbprpagNdsqJHzqRaaM+aLol3y
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="341055247"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="341055247"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 08:32:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="674427438"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="674427438"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 20 Mar 2023 08:32:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1peHUk-006KXt-2i;
-        Mon, 20 Mar 2023 17:32:22 +0200
-Date:   Mon, 20 Mar 2023 17:32:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Drop map from handle_mask_sync() parameters
-Message-ID: <ZBh8hgdRq+kydPBw@smile.fi.intel.com>
-References: <cover.1679323449.git.william.gray@linaro.org>
+        with ESMTP id S232054AbjCTP51 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 11:57:27 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFF33B3FF
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 08:48:52 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id r29so10795471wra.13
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 08:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679327331;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tWjazqOLlYGDzjTqrRkMP7kRAts7dnn/Yh7ecc/9Lj0=;
+        b=dN+GGAvYV5hDPt7YWV0h9AriUvWQwB6ZGPfj3n7P9th9ZSafdGN10WTjoJciikeG0C
+         o/aBJEwVjJWxOm7RKge+aeN8mFtJfXb0Lc3VZzaTER5lwXAW1YTBzbUReAp8/FxFI936
+         Xz4gGMVr8u5QDoSSH+kAF1E7iLjluC3/XCR2UisTuDjJvWUtwwbdoZMBQcLdxVR6iXQD
+         8qEs4jXXPaau9xrcwCceyF8bzz56Deo13vvMKatwzu1RhYfOFBaE77ijSjf7akd/L5sw
+         SoZ12TuckKRbVaMs19yAFDv9ZX88bsmlDvRdRzh/tdjvS+lCe+N4V9FPIZsNf8qsdQ6U
+         0IoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679327331;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tWjazqOLlYGDzjTqrRkMP7kRAts7dnn/Yh7ecc/9Lj0=;
+        b=LIb43dNzt3+IVs9EpQR4x8f/MmVxPyRRRP60RlZf3ZhAQMC+68i59+Kl8yIhdbeLPt
+         5/HkhyJeoTxrpWZzp1yKLgjcXaooqMAYKQ74DYNzE83eMN2k6INeJh1mZMj0d6JH+P0t
+         n0YR8/TzB2yCShe5ofp50ZJd+t2CoTcLqEthpos4OZ0yxiZ1SCj8VhU0qFe2JDAJT7bK
+         zmVbAyeq5d8MPS4nsovtHWzLaTf6rOssM4U9knj/zh2zxodywfcUXSaQtbkAcEEBuBLc
+         L5efyEaMc6ysq9GSrFPIND5cNbWby4xOdaL3x0HdWI6RfdzUxPGvOmLns+T9cSjeomHx
+         PG1A==
+X-Gm-Message-State: AO0yUKVNG9/cQAmS/TxbtARj3o4EFn6aMSU2oY+JhdFQzxyGTSfxiguk
+        ZVOmq31jwadkUB4Q58Pm9pTzOw==
+X-Google-Smtp-Source: AK7set+hFMpIJOxf6sMzO3nG/+O9/CrgrwaDUf0HMQmKAadnn0TX7IZB1y9WL6Z/4ohCAPlO3vsZ5A==
+X-Received: by 2002:a5d:468c:0:b0:2ce:ac31:54fb with SMTP id u12-20020a5d468c000000b002ceac3154fbmr13481212wrq.33.1679327330851;
+        Mon, 20 Mar 2023 08:48:50 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d7d9:4f38:38b4:82b4])
+        by smtp.gmail.com with ESMTPSA id o6-20020adfeac6000000b002c71a32394dsm9202578wrn.64.2023.03.20.08.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Mar 2023 08:48:50 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 00/15] arm64: dts: qcom: sa8775p: add basic PMIC support
+Date:   Mon, 20 Mar 2023 16:48:26 +0100
+Message-Id: <20230320154841.327908-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1679323449.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 10:50:14AM -0400, William Breathitt Gray wrote:
-> Changes in v3:
->  - Inline dio48gpio->map usage in dio48e_handle_mask_sync() to avoid
->    redefining map parameter
-> 
-> Remove the map parameter from the struct regmap_irq_chip callback
-> handle_mask_sync() because it can be passed via the irq_drv_data
-> parameter instead. The gpio-104-dio-48e driver is the only consumer of
-> this callback and is thus updated accordingly.
-> 
-> A couple pending patchsets also utilize handle_mask_sync() [0][1], so
-> it'll be useful to merge the changes in this series first to avoid
-> subsequent noise adjusting the dependent drivers.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This adds support for a number of PMIC functionalities on sa8775p. The PMIC
+used on the reference board is pm8654au which is another variant of the SPMI
+PMIC from Qualcomm. This series doesn't yet add regulators as these will be
+added separately together with upcoming users (UFS, USB, etc.). The RTC
+doesn't allow setting time and needs to be used in conjunction with SDAM
+the support for which will also be added separately.
 
-I believe this should go to the immutable branch somewhere, so GPIO and regmap
-subsystems can pull from.
+This series technically doesn't depend on [1] but it comes after it in my
+integration tree and as it's already reviewed and ready to be picked up, I'm
+making this one depend on it in terms of patch application to avoid future
+merge conflicts.
 
-> [0] https://lore.kernel.org/r/cover.1677515341.git.william.gray@linaro.org/
-> [1] https://lore.kernel.org/r/cover.1678106722.git.william.gray@linaro.org/
-> 
-> William Breathitt Gray (2):
->   gpio: 104-dio-48e: Implement struct dio48e_gpio
->   regmap-irq: Drop map from handle_mask_sync() parameters
-> 
->  drivers/base/regmap/regmap-irq.c |  5 ++---
->  drivers/gpio/gpio-104-dio-48e.c  | 37 +++++++++++++++++++++-----------
->  include/linux/regmap.h           |  3 +--
->  3 files changed, 28 insertions(+), 17 deletions(-)
-> 
-> 
-> base-commit: 03810031c91dfe448cd116ee987d5dc4139006f4
-> -- 
-> 2.39.2
-> 
+[1] https://lore.kernel.org/linux-arm-msm/20230309103752.173541-1-brgl@bgdev.pl/
+
+v1 -> v2:
+- improve DT coding style where needed
+- don't disable the power button in PMIC's .dtsi
+- add debounce time for pwrkey and resin inputs
+- use the official PMIC's name in DT labels
+- add reg-names property for the PON node
+- add patches that tidy up the dtsi before the PMIC stuff
+
+Bartosz Golaszewski (15):
+  arm64: dts: qcom: sa8775p: pad reg properties to 8 digits
+  arm64: dts: qcom: sa8775p: sort soc nodes by reg property
+  dt-bindings: interrupt-controller: qcom-pdc: add compatible for
+    sa8775p
+  arm64: dts: qcom: sa8775p: add the pdc node
+  arm64: dts: qcom: sa8775p: add the spmi node
+  dt-bindings: mfd: qcom,spmi-pmic: add compatible for pmm8654au
+  arm64: dts: qcom: sa8775p: add support for the on-board PMICs
+  arm64: dts: qcom: sa8775p-ride: enable PMIC support
+  arm64: dts: qcom: sa8775p: add the Power On device node
+  arm64: dts: qcom: sa8775p: pmic: add the power key
+  arm64: dts: qcom: sa8775p: pmic: add support for the pmm8654 RESIN
+    input
+  arm64: dts: qcom: sa8775p: pmic: add thermal zones
+  dt-bindings: pinctrl: qcom,pmic-gpio: add compatible for
+    pmm8654au-gpio
+  pinctrl: qcom: spmi-gpio: add support for pmm8654au-gpio
+  arm64: dts: qcom: sa8775p: add PMIC GPIO controller nodes
+
+ .../interrupt-controller/qcom,pdc.yaml        |   1 +
+ .../bindings/mfd/qcom,spmi-pmic.yaml          |   1 +
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml      |   2 +
+ arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi   | 137 ++++++
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts     |   1 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 459 ++++++++++--------
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      |   1 +
+ 7 files changed, 404 insertions(+), 198 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.37.2
 
