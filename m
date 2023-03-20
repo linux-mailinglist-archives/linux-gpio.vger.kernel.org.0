@@ -2,97 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 895D36C1063
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 12:11:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 931856C1077
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Mar 2023 12:13:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjCTLLp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Mar 2023 07:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
+        id S229652AbjCTLNy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Mar 2023 07:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbjCTLLT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 07:11:19 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B17283E1
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 04:07:43 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id bm1so3499218qkb.13
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Mar 2023 04:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679310462;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1nhhh3ZAx0xZch5t5NtSJYd3fI/Bc023/J/5SBijWjM=;
-        b=UWb/p11JlyjTRspUh9LLV29UvG4RRfmZMQkZt/vWq+FGLIsHlgyjrZ/2Cgn+yxNOgX
-         3KdcFXpbnZfOZJwbiD4r1J/zESQRvrAQS/ZLxvPYc/QXiWazfYeSuMxXHq83I5ykTwZp
-         rTk0AeQUy6RZtagfmPEuLkUOUNQXvsyxeACws=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679310462;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1nhhh3ZAx0xZch5t5NtSJYd3fI/Bc023/J/5SBijWjM=;
-        b=nWCLLX6Nkgfu8+moigX9f7LiFlyb94SzL2fC1Pwk74oiG37DQWa8X4oKW2ACXekxZf
-         60QlM2Bze9N3OpHfetju8IUjvJ0jLFeHhHyGRj4Cydw4edbSi82Lzd+Xz/+jc8CMKHvZ
-         chXGgycE8UefttQY12MhaG6zHWuOOKe0IoluOzuRLQC0spSf9+weDxDRC9f2RFom3NGc
-         SxFqtjBf7pxDKuxf/DAm81EFSlSR9GFHj0isGg2Qunkz2NkM6MWvkviQeJ8jYpAEY8be
-         Cgzss/booNBH6DH+5iUOGs+gcq3KbpKZD2qRhTCZGTe6bxWZ4+0DID7XhNUPyokEIP5O
-         N+pg==
-X-Gm-Message-State: AO0yUKUliyXfqajphgnPo2wTlFypx3PFlA17uhw1Um8ieq+tAoxDb1L8
-        4IJkGA/mKuVlXGF9IYLjadhe9bfVYlaYx2JcYwpuug==
-X-Google-Smtp-Source: AK7set8cb9/s4D03g/8LJ0LA4+vl/0316AdPNeF6DMM8RwcazkcFYHdLNsSwoFGJC+C2MkiQGnQpuJ8FObIZiCkQPPc=
-X-Received: by 2002:a05:620a:b44:b0:746:9174:3d3c with SMTP id
- x4-20020a05620a0b4400b0074691743d3cmr159611qkg.13.1679310461788; Mon, 20 Mar
- 2023 04:07:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230320093259.845178-1-korneld@chromium.org> <CACRpkdbhV1qE+Kx4cqAKiv4Zacv6tQ8wKF8C6+0kZ-Dw=0cx7Q@mail.gmail.com>
-In-Reply-To: <CACRpkdbhV1qE+Kx4cqAKiv4Zacv6tQ8wKF8C6+0kZ-Dw=0cx7Q@mail.gmail.com>
-From:   =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
-Date:   Mon, 20 Mar 2023 12:07:31 +0100
-Message-ID: <CAD=Nsqwc2YwoEvvAFJd-QBKsP75vjqbCcAjB=k2s5=oYL7AtgA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
+        with ESMTP id S229653AbjCTLNe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Mar 2023 07:13:34 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BB6241C2;
+        Mon, 20 Mar 2023 04:11:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 1A8C6CE1255;
+        Mon, 20 Mar 2023 11:10:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58416C433EF;
+        Mon, 20 Mar 2023 11:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679310657;
+        bh=PO8rFWVjDQ03FjCBwUu+d7DAMWi1Byr7dRcudlhPKho=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Cf6yTgiIgSlzwaVDhmF9455r7gJ64sp75RN3etwodQR6etvuSDj5r6DC5cNTS9sHq
+         fpXhmeJuuDyaWfetHKv1OCJCJMgpd9S919Yyz7YD+svag/qiOlnYLY0+m3nng5QZ0A
+         py+QfjhlMybrLpQck7R3axvxn+amwxW7PEwC6osD0U7qC07OezNtxWXbfyHb0McAg/
+         Ac+qxWXb2wCeF0AyJv/CZh3L3jyNo30GdVTqQgALGDpMdhffwfTULJEdw/h6RK4oCk
+         2rSqpVscJZquhqgBCH/746z6/t8dztSTzkPlGK5fqLLOOe7l715gzr/yhwRGJEGj3C
+         TdeYTfST+RXPg==
+Received: from [82.3.55.74] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1peDPi-001b6K-Pe;
+        Mon, 20 Mar 2023 11:10:54 +0000
+Date:   Mon, 20 Mar 2023 11:10:46 +0000
+Message-ID: <87ttyfhe4p.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Robert Richter <rric@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-unisoc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 0/9] Mass convert GPIO IRQ chips to be immutable part 2
+In-Reply-To: <20230316-immutable-chips-2-v1-0-053d6ede831b@linaro.org>
+References: <20230316-immutable-chips-2-v1-0-053d6ede831b@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.3.55.74
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, mani@kernel.org, t.scherer@eckelmann.de, u.kleine-koenig@pengutronix.de, kernel@pengutronix.de, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, rric@kernel.org, nobuhiro1.iwamatsu@toshiba.co.jp, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, shubhrajyoti.datta@xilinx.com, srinivas.neeli@xilinx.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 11:05=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> On Mon, Mar 20, 2023 at 10:33=E2=80=AFAM Kornel Dul=C4=99ba <korneld@chro=
-mium.org> wrote:
->
-> > This fixes a similar problem to the one observed in:
-> > commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on prob=
-e").
-> >
-> > On some systems, during suspend/resume cycle firmware leaves
-> > an interrupt enabled on a pin that is not used by the kernel.
-> > This confuses the AMD pinctrl driver and causes spurious interrupts.
-> >
-> > The driver already has logic to detect if a pin is used by the kernel.
-> > Leverage it to re-initialize interrupt fields of a pin only if it's not
-> > used by us.
-> >
-> > Signed-off-by: Kornel Dul=C4=99ba <korneld@chromium.org>
->
-> Uh oh this looks serious.
-> Do we need a Fixes: tag and Cc: stable on this patch?
+On Mon, 20 Mar 2023 09:55:07 +0000,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> Following up on my first series with this second series
+> concluding all the low-hanging immutable irqchip conversions
+> in the GPIO subsystem. These are all I could easily
+> convert.
+> 
+> The remaining irqchips are not using the GPIOLIB_IRQCHIP
+> for one or another reason, or too complex for me to
+> deal with. Mostly they are using generic irqchip, and
+> I guess those are fine as-is.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-I suppose so.
-I didn't add them since I'm not sure what commit Fixes: should point to.
-This issue seems to have always been there, so probably the first
-commit of this driver?
+FWIW:
 
-Regards
-Kornel Dul=C4=99ba
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
