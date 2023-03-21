@@ -2,78 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 806196C3A58
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 20:25:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E1256C3B5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 21:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbjCUTY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Mar 2023 15:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        id S229651AbjCUUNx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Mar 2023 16:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjCUTY6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 15:24:58 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55532210F
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Mar 2023 12:24:55 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id k37so7553711lfv.0
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Mar 2023 12:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679426694;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NwQBE2MYCQF1v4SYWqw5fgn23Mz+rAnsm7yXsaxMFlI=;
-        b=RCx7d1GM/F9upQOB7cEaANvqutDnYI09t83fwsfVtvRlktKeGXM9sn5n/rKSGL9eJI
-         8OjR8s0ChXJ/T/ZPTTbsrt0BqlLFsUmZcLVDGHpQxAkFYRYri4J0EbnMOL/x7jf350GA
-         92lEh9snB4I05owxQR35JwEhffJ33XdRRFzGUG6kg19WntqdBk3H6s99Z3OQTjGiyls8
-         J3K6aNrUF3J9W+vvnYAtMNVm4JklzgISLPr1PPGRdDDUWmkPcGnoj9fl/W1fkwLpprMW
-         skg4c4a9h9QC2I25XeBzX4pweAQeUkuExdmWScrn/LkNbDyrCJ/CKzy0P03TG7SUHziG
-         hA1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679426694;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NwQBE2MYCQF1v4SYWqw5fgn23Mz+rAnsm7yXsaxMFlI=;
-        b=DNR4Zzk5oWxLShu49UcYFZHG30oStKf35OAP0tTbRkCeLiclSTd4Ilo5aKP0HihObW
-         gmaYxso/xtuDYMmUz+byE2ZY/fskDdtRnSB7hARCoaTJ18THZGKaMs1kzkjKK/UPtO2c
-         tEqJ6hbRgZjq/TgXx6qbzn4hTMxItNl3tHqCzHMboHVGxNr0fmXLP2pU2oV4aCwdvGvp
-         GSDWZzCAzz1u29kEgCfe4pewM883pPcugV2mYFp/1gezpnZLcwEDuH0+uY/ilaCrDEMk
-         W1qS59f8dKVBsSgG9UOwfJJn1ebqj3fka3YcE9LZhXavlg1bxPe8DqLzxOhZxt95/Y0m
-         j3dw==
-X-Gm-Message-State: AO0yUKUdkMkTokPSFkqSICh6z4w4H6So6PBKS9Wvw6/ygWc+Nvl16qmJ
-        d2r8Kej+8fjYOmQ5aSbDbMyGbg==
-X-Google-Smtp-Source: AK7set/PQvxO4sL67uyAbVu8tO6ZDGiQLVN7nj9+2j2Zbs1sGvZodzuY4FAwq5wN5MbVJoeZhKkvvQ==
-X-Received: by 2002:ac2:5939:0:b0:4e8:50e8:b96d with SMTP id v25-20020ac25939000000b004e850e8b96dmr1192449lfi.39.1679426693567;
-        Tue, 21 Mar 2023 12:24:53 -0700 (PDT)
-Received: from [192.168.1.101] (abym238.neoplus.adsl.tpnet.pl. [83.9.32.238])
-        by smtp.gmail.com with ESMTPSA id z2-20020ac24182000000b004dc4bb2f4bcsm2263657lfh.276.2023.03.21.12.24.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Mar 2023 12:24:53 -0700 (PDT)
-Message-ID: <0a029829-1663-4302-bef8-ed6636387d5e@linaro.org>
-Date:   Tue, 21 Mar 2023 20:24:46 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 02/15] arm64: dts: qcom: sa8775p: sort soc nodes by reg
- property
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230320154841.327908-1-brgl@bgdev.pl>
- <20230320154841.327908-3-brgl@bgdev.pl>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230320154841.327908-3-brgl@bgdev.pl>
+        with ESMTP id S229734AbjCUUNw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 16:13:52 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04hn2244.outbound.protection.outlook.com [52.100.17.244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297B34C6DD;
+        Tue, 21 Mar 2023 13:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N7SjqAGJWUCrdMlqLs8dOLrwOazJcdUmBiLXczJHDao=;
+ b=YAqeS6pjEuLAnJihQeWKRnlZfbAHV8S+E4KZ3HHbgTtJwXd83lg1f3I5RIpf7LDbb4ItY5lSQbJtj7vl5MNsP5EJ1/aAJFTcphbO28ubuK4CKt3URKk1NOziBnTlMYZLQKPGA5pXdiFK3PVrDd0IaljU2+wvCKUX1plE1GM71R3hlwarCfOQFTP9h9LygjoWXYcz+TMPZmQqU4uVNceK0OqYQFQUfjxKxF64wOJzDYyzmjB8wSSAY+sRj61bEQX4oIXuxgaHGv9gwM0Pw0Aw1efIOEVVFTPlo02C7ldbg5QFc6s/wOn0doQgppVZk4Ur9qrYw9nccoN9lLbCQzHdkA==
+Received: from ZR2P278CA0071.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:52::17)
+ by PAXPR03MB7548.eurprd03.prod.outlook.com (2603:10a6:102:1db::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
+ 2023 20:13:38 +0000
+Received: from VI1EUR05FT035.eop-eur05.prod.protection.outlook.com
+ (2603:10a6:910:52:cafe::f4) by ZR2P278CA0071.outlook.office365.com
+ (2603:10a6:910:52::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37 via Frontend
+ Transport; Tue, 21 Mar 2023 20:13:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.87)
+ smtp.mailfrom=seco.com; dkim=pass (signature was verified)
+ header.d=seco.com;dmarc=pass action=none header.from=seco.com;
+Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
+ 20.160.56.87 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.160.56.87; helo=inpost-eu.tmcas.trendmicro.com; pr=C
+Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.87) by
+ VI1EUR05FT035.mail.protection.outlook.com (10.233.242.114) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6222.17 via Frontend Transport; Tue, 21 Mar 2023 20:13:37 +0000
+Received: from outmta (unknown [192.168.82.133])
+        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id 3EA762008088A;
+        Tue, 21 Mar 2023 20:13:37 +0000 (UTC)
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (unknown [104.47.51.176])
+        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id EA88C2008006F;
+        Tue, 21 Mar 2023 20:11:43 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ks7GQ1WqzJudXHKEGTIbEEMw4v/8ali4lwilNiYzACwekgOnrdCjOmXNSgEaoZs8n3BNqvBQSb7gdizGIO8+eET9wZelNSnFkHf+M+pQnItPq0WbLGnqs5P4WtrlgWC9hEJUmwCaI8tYzazDkBFfRl1p3FMkqBeeCYdHytsndyKTzG/kXenG/tUcHJPfqsdKugbWWBX3sAi9h/zTlfwKAHDctf1E6jkuMSvYj1nJnoJUVq3UGzeUyqCpTyEkfg7a68xIULQB4hlS9jrOVKgX6QO4VUSce38OCyabiVMYRPJiHQRdJY4GjTuVMofFUDIzlsMoAdckZqMDO0JqKnP8ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N7SjqAGJWUCrdMlqLs8dOLrwOazJcdUmBiLXczJHDao=;
+ b=kFkfcN3+uTjmzQKavTWief0Z4Ocb31CWNAwAz1tDb5fTGMfUxhwSDdw+Ov0abIxrPijT1otRPZrDYSdjZaQM2jJPN8YVcm9cGljHjkb4HYuZEreS1EJdI9ojy3/0Hqto/ITP+I+kyrz5hPF6x/T84s0BOG6LC/5d0ApHUv7yJYIvterCBSm1Yi9z1PD7QU1iUB72GKnbBnxL00zvExXoRsTiPPCT7AN5u7E9bHqN805XKiEunAKRFN2r0u7BEPItO49QxCVBXqI2iZNI1R0sk+ozKXMY/JdMCL0G7Wfz2Gac2FeFxWlD5YJ4foGMcYfPkRzIFzz9S5v02qz9klrOCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N7SjqAGJWUCrdMlqLs8dOLrwOazJcdUmBiLXczJHDao=;
+ b=YAqeS6pjEuLAnJihQeWKRnlZfbAHV8S+E4KZ3HHbgTtJwXd83lg1f3I5RIpf7LDbb4ItY5lSQbJtj7vl5MNsP5EJ1/aAJFTcphbO28ubuK4CKt3URKk1NOziBnTlMYZLQKPGA5pXdiFK3PVrDd0IaljU2+wvCKUX1plE1GM71R3hlwarCfOQFTP9h9LygjoWXYcz+TMPZmQqU4uVNceK0OqYQFQUfjxKxF64wOJzDYyzmjB8wSSAY+sRj61bEQX4oIXuxgaHGv9gwM0Pw0Aw1efIOEVVFTPlo02C7ldbg5QFc6s/wOn0doQgppVZk4Ur9qrYw9nccoN9lLbCQzHdkA==
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
+ by AM9PR03MB7044.eurprd03.prod.outlook.com (2603:10a6:20b:2d9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
+ 2023 20:13:32 +0000
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::dbcf:1089:3242:614e]) by DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::dbcf:1089:3242:614e%6]) with mapi id 15.20.6178.037; Tue, 21 Mar 2023
+ 20:13:32 +0000
+From:   Sean Anderson <sean.anderson@seco.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?q?Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v12 00/13] phy: Add support for Lynx 10G SerDes
+Date:   Tue, 21 Mar 2023 16:12:59 -0400
+Message-Id: <20230321201313.2507539-1-sean.anderson@seco.com>
+X-Mailer: git-send-email 2.35.1.1320.gc452695387.dirty
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR20CA0026.namprd20.prod.outlook.com
+ (2603:10b6:208:e8::39) To DB9PR03MB8847.eurprd03.prod.outlook.com
+ (2603:10a6:10:3dd::13)
+MIME-Version: 1.0
+X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AM9PR03MB7044:EE_|VI1EUR05FT035:EE_|PAXPR03MB7548:EE_
+X-MS-Office365-Filtering-Correlation-Id: aba9a379-ed43-4b70-99dc-08db2a48c1cf
+X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Urcdlt0Dw08nzYIs+i4hYp3xmSvXIJ6wyO30rTkME1DlW0s1QDW7zqw5J8tnVRJgSv7PMpd8TR7nD3P99ZCOh+jaAAA+Z8uJeVf4tOYqSqdw64d+EYM1WHxWAf7MQjZrKLi0JiBZPgCH3fMACuX8VpvJQAe+Fgm0YM5KlugqS+wtKiHKqS2wXww0kfADeSBbKqKRF4PHqLMKRxhHyacacNg4pF2IbN71DhEjYK+1jIdUf1AU5UvdL5fKqXCXXqUk6KqH6Nca4LuKxjDVsDzp6vrD92ZxccupepJzDJtLyh0Jl7LnBZraHbRtDfLJg9bRHoQVfZPR0oOGgrOS5osnhAYJVUS8DlqeX2qUA+x7QcXlh9hxEHLs/ouY1MJvjW5ju3E0MZcf4CsxP7RBWIVZdq4C75iiAjDdG2ewtT0ktYwdB2eQ9Upl/S3+mSNDrqHIod+lKyqBbYEjarj7hYoCjEDNn7MsYZkXxIKxuq9U8m7vzNnDcrCmJyOmfDCIP8MZJTRa1u3lKifaIX/LTt4qv0QCDFLNxk+yiY+BF+sqf0vEa7Qbfc1jMBORWRChtrZ+DAHXF0YLCj4afofxCb/dMOcPTOD8ujiynxCHEoJ3xI40y3SB1ZON9d1mQPLIdcX3pGUg94vrYtRILNVa+FmZp6G5xp7Fe3IvZFi4VnJcaYK4mKNohjPI+Pb0zIJJQHP0EwzToJ1A/ifb32Md3dbRcw==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(396003)(346002)(39860400002)(366004)(136003)(451199018)(2616005)(54906003)(83380400001)(6512007)(7416002)(6506007)(6486002)(478600001)(316002)(1076003)(26005)(52116002)(5660300002)(6666004)(186003)(110136005)(86362001)(38350700002)(38100700002)(30864003)(66946007)(41300700001)(44832011)(2906002)(8936002)(66476007)(66556008)(8676002)(4326008)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR03MB7044
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VI1EUR05FT035.eop-eur05.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: d7a46605-91a4-49dd-5488-08db2a48be4f
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IHVhZfievzphSiMslJQnBnO/81jJwQr1Ey1wjmHQ4S7qKT9IBhps3lNSkL1GFNwqYY0tyWuQHhHE7W4b7nykN2NJmE2Qk5yqVEzy4dHUnNRUrEBsRIaVxyIzhtills26hm8EcdDTfL596qIUszz4mNyQfiqmuYRuO+Ig5tNxuklDcXIZ5SdNyrL+XBwapOUBHXXGcv5YrRotVkK8H3Bh6zPXL3YByX1aNVIiTN0GOYV6TtCJXnLilwn0HZn3K1WC9VBl+/8kBZvYBdTqd0K1G7cHj6k2hzmzUSRhAcC4kiezIrpvkDwYyLicBowvCdC2Lom7A9jiN/zdz5G3AtYt92b+A7FT/Pi04FQfSDVj0lZVuvqrARBkXNayYsGeRYvmLNosHrBPB1mDTD4qUDRt1xQ3L9hjuP/Ja3PKLsQL/f7Ta1Qb5ChIaXeFXxDj/4w32uiPyaZQpWHhiCqtS5R2bxvO7fxhCL45qeKLsuL5Yo/m3DWHKOXve16+gSb8fRLyFuA5HPpgGOXEMqpzQqg3KlRIlwqN9uVMQScPeMzLTAoAcCLdjcuaVU/5Sc2zgjV21inWPe1JP/7eLitVNmWcSpymj14RNrtRctlTagomh4mlAXozkUO8yDzfH58wNiiYeZN6ZVN8lVSribWjNI3DSW3Z/Agn/k3cBpidmXvCOM8jZep9JJaZ08Y1xzhe2YIaKCz5KkuvOe7iA8hXnnI5MYE1QkhWqpnIfskrBTW60HIMCuKMQ42/ieQung1Fqr235RKg/gBFcFdqKX5wY7UZtA==
+X-Forefront-Antispam-Report: CIP:20.160.56.87;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230025)(136003)(376002)(396003)(346002)(39860400002)(5400799012)(451199018)(36840700001)(40470700004)(46966006)(47076005)(86362001)(30864003)(110136005)(54906003)(316002)(8676002)(8936002)(40480700001)(44832011)(36756003)(36860700001)(70206006)(34070700002)(5660300002)(41300700001)(7416002)(70586007)(4326008)(478600001)(2906002)(7596003)(40460700003)(7636003)(83380400001)(82310400005)(82740400003)(336012)(6666004)(356005)(2616005)(26005)(1076003)(6512007)(186003)(6506007)(6486002)(12100799024);DIR:OUT;SFP:1501;
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2023 20:13:37.9739
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aba9a379-ed43-4b70-99dc-08db2a48c1cf
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.87];Helo=[inpost-eu.tmcas.trendmicro.com]
+X-MS-Exchange-CrossTenant-AuthSource: VI1EUR05FT035.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR03MB7548
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,453 +137,257 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This adds support for the Lynx 10G SerDes found on the QorIQ T-series
+and Layerscape series. Due to limited time and hardware, only support
+for the LS1046ARDB and LS1088ARDB is added in this initial series.
 
+This series is ready for review by the phy maintainers. I have addressed
+all known feedback and there are no outstanding issues.
 
-On 20.03.2023 16:48, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Sort all children of the soc node by the first address in their reg
-> property. This was mostly already the case but there were some nodes
-> that didn't follow it so fix it now for consistency.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Major reconfiguration of baud rate (e.g. 1G->10G) does not work. From my
+testing, SerDes register settings appear identical. The issue appears to
+be between the PCS and the MAC. The link itself comes up at both ends,
+and a mac loopback succeeds. However, a PCS loopback results in dropped
+packets. Perhaps there is some undocumented register in the PCS?
 
-Konrad
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 394 +++++++++++++-------------
->  1 file changed, 197 insertions(+), 197 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index 5aa28a3b12ae..296ba69b81ab 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -471,50 +471,6 @@ ipcc: mailbox@408000 {
->  			#mbox-cells = <2>;
->  		};
->  
-> -		qupv3_id_1: geniqup@ac0000 {
-> -			compatible = "qcom,geni-se-qup";
-> -			reg = <0x0 0x00ac0000 0x0 0x6000>;
-> -			#address-cells = <2>;
-> -			#size-cells = <2>;
-> -			ranges;
-> -			clock-names = "m-ahb", "s-ahb";
-> -			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-> -				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
-> -			iommus = <&apps_smmu 0x443 0x0>;
-> -			status = "disabled";
-> -
-> -			uart10: serial@a8c000 {
-> -				compatible = "qcom,geni-uart";
-> -				reg = <0x0 0x00a8c000 0x0 0x4000>;
-> -				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-> -				clock-names = "se";
-> -				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
-> -				interconnect-names = "qup-core", "qup-config";
-> -				interconnects = <&clk_virt MASTER_QUP_CORE_1 0
-> -						 &clk_virt SLAVE_QUP_CORE_1 0>,
-> -						<&gem_noc MASTER_APPSS_PROC 0
-> -						 &config_noc SLAVE_QUP_1 0>;
-> -				power-domains = <&rpmhpd SA8775P_CX>;
-> -				operating-points-v2 = <&qup_opp_table_100mhz>;
-> -				status = "disabled";
-> -			};
-> -
-> -			uart12: serial@a94000 {
-> -				compatible = "qcom,geni-uart";
-> -				reg = <0x0 0x00a94000 0x0 0x4000>;
-> -				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-> -				clock-names = "se";
-> -				interconnects = <&clk_virt MASTER_QUP_CORE_1 QCOM_ICC_TAG_ALWAYS
-> -						 &clk_virt SLAVE_QUP_CORE_1 QCOM_ICC_TAG_ALWAYS>,
-> -						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-> -						 &config_noc SLAVE_QUP_1 QCOM_ICC_TAG_ALWAYS>;
-> -				interconnect-names = "qup-core", "qup-config";
-> -				power-domains = <&rpmhpd SA8775P_CX>;
-> -				status = "disabled";
-> -			};
-> -		};
-> -
->  		qupv3_id_2: geniqup@8c0000 {
->  			compatible = "qcom,geni-se-qup";
->  			reg = <0x0 0x008c0000 0x0 0x6000>;
-> @@ -585,173 +541,56 @@ &config_noc SLAVE_QUP_2 QCOM_ICC_TAG_ALWAYS>,
->  			};
->  		};
->  
-> -		intc: interrupt-controller@17a00000 {
-> -			compatible = "arm,gic-v3";
-> -			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-> -			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-> -			interrupt-controller;
-> -			#interrupt-cells = <3>;
-> -			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> -			#redistributor-regions = <1>;
-> -			redistributor-stride = <0x0 0x20000>;
-> -		};
-> -
-> -		memtimer: timer@17c20000 {
-> -			compatible = "arm,armv7-timer-mem";
-> -			reg = <0x0 0x17c20000 0x0 0x1000>;
-> -			ranges = <0x0 0x0 0x0 0x20000000>;
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -
-> -			frame@17c21000 {
-> -				reg = <0x17c21000 0x1000>,
-> -				      <0x17c22000 0x1000>;
-> -				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <0>;
-> -			};
-> -
-> -			frame@17c23000 {
-> -				reg = <0x17c23000 0x1000>;
-> -				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <1>;
-> -				status = "disabled";
-> -			};
-> -
-> -			frame@17c25000 {
-> -				reg = <0x17c25000 0x1000>;
-> -				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <2>;
-> -				status = "disabled";
-> -			};
-> -
-> -			frame@17c27000 {
-> -				reg = <0x17c27000 0x1000>;
-> -				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <3>;
-> -				status = "disabled";
-> -			};
-> -
-> -			frame@17c29000 {
-> -				reg = <0x17c29000 0x1000>;
-> -				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <4>;
-> -				status = "disabled";
-> -			};
-> +		qupv3_id_1: geniqup@ac0000 {
-> +			compatible = "qcom,geni-se-qup";
-> +			reg = <0x0 0x00ac0000 0x0 0x6000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			clock-names = "m-ahb", "s-ahb";
-> +			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-> +				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
-> +			iommus = <&apps_smmu 0x443 0x0>;
-> +			status = "disabled";
->  
-> -			frame@17c2b000 {
-> -				reg = <0x17c2b000 0x1000>;
-> -				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <5>;
-> +			uart10: serial@a8c000 {
-> +				compatible = "qcom,geni-uart";
-> +				reg = <0x0 0x00a8c000 0x0 0x4000>;
-> +				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-names = "se";
-> +				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
-> +				interconnect-names = "qup-core", "qup-config";
-> +				interconnects = <&clk_virt MASTER_QUP_CORE_1 0
-> +						 &clk_virt SLAVE_QUP_CORE_1 0>,
-> +						<&gem_noc MASTER_APPSS_PROC 0
-> +						 &config_noc SLAVE_QUP_1 0>;
-> +				power-domains = <&rpmhpd SA8775P_CX>;
-> +				operating-points-v2 = <&qup_opp_table_100mhz>;
->  				status = "disabled";
->  			};
->  
-> -			frame@17c2d000 {
-> -				reg = <0x17c2d000 0x1000>;
-> -				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> -				frame-number = <6>;
-> +			uart12: serial@a94000 {
-> +				compatible = "qcom,geni-uart";
-> +				reg = <0x0 0x00a94000 0x0 0x4000>;
-> +				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
-> +				clock-names = "se";
-> +				interconnects = <&clk_virt MASTER_QUP_CORE_1 QCOM_ICC_TAG_ALWAYS
-> +						 &clk_virt SLAVE_QUP_CORE_1 QCOM_ICC_TAG_ALWAYS>,
-> +						<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
-> +						 &config_noc SLAVE_QUP_1 QCOM_ICC_TAG_ALWAYS>;
-> +				interconnect-names = "qup-core", "qup-config";
-> +				power-domains = <&rpmhpd SA8775P_CX>;
->  				status = "disabled";
->  			};
->  		};
->  
-> -		apps_rsc: rsc@18200000 {
-> -			compatible = "qcom,rpmh-rsc";
-> -			reg = <0x0 0x18200000 0x0 0x10000>,
-> -			      <0x0 0x18210000 0x0 0x10000>,
-> -			      <0x0 0x18220000 0x0 0x10000>;
-> -			reg-names = "drv-0", "drv-1", "drv-2";
-> -			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> -			      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> -			      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> -			qcom,tcs-offset = <0xd00>;
-> -			qcom,drv-id = <2>;
-> -			qcom,tcs-config = <ACTIVE_TCS 2>,
-> -					  <SLEEP_TCS 3>,
-> -					  <WAKE_TCS 3>,
-> -					  <CONTROL_TCS 0>;
-> -			label = "apps_rsc";
-> -
-> -			apps_bcm_voter: bcm-voter {
-> -				compatible = "qcom,bcm-voter";
-> -			};
-> -
-> -			rpmhcc: clock-controller {
-> -				compatible = "qcom,sa8775p-rpmh-clk";
-> -				#clock-cells = <1>;
-> -				clock-names = "xo";
-> -				clocks = <&xo_board_clk>;
-> -			};
-> -
-> -			rpmhpd: power-controller {
-> -				compatible = "qcom,sa8775p-rpmhpd";
-> -				#power-domain-cells = <1>;
-> -				operating-points-v2 = <&rpmhpd_opp_table>;
-> -
-> -				rpmhpd_opp_table: opp-table {
-> -					compatible = "operating-points-v2";
-> -
-> -					rpmhpd_opp_ret: opp-0 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> -					};
-> -
-> -					rpmhpd_opp_min_svs: opp-1 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_low_svs: opp2 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_svs: opp3 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> -					};
-> -
-> -					rpmhpd_opp_svs_l1: opp-4 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> -					};
-> -
-> -					rpmhpd_opp_nom: opp-5 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> -					};
-> -
-> -					rpmhpd_opp_nom_l1: opp-6 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> -					};
-> -
-> -					rpmhpd_opp_nom_l2: opp-7 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> -					};
-> -
-> -					rpmhpd_opp_turbo: opp-8 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> -					};
-> -
-> -					rpmhpd_opp_turbo_l1: opp-9 {
-> -						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> -					};
-> -				};
-> -			};
-> -		};
-> -
->  		tcsr_mutex: hwlock@1f40000 {
->  			compatible = "qcom,tcsr-mutex";
->  			reg = <0x0 0x01f40000 0x0 0x20000>;
->  			#hwlock-cells = <1>;
->  		};
->  
-> -		cpufreq_hw: cpufreq@18591000 {
-> -			compatible = "qcom,sa8775p-cpufreq-epss",
-> -				     "qcom,cpufreq-epss";
-> -			reg = <0x0 0x18591000 0x0 0x1000>,
-> -			      <0x0 0x18593000 0x0 0x1000>;
-> -			reg-names = "freq-domain0", "freq-domain1";
-> -
-> -			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
-> -			clock-names = "xo", "alternate";
-> -
-> -			#freq-domain-cells = <1>;
-> -		};
-> -
->  		tlmm: pinctrl@f000000 {
->  			compatible = "qcom,sa8775p-tlmm";
->  			reg = <0x0 0x0f000000 0x0 0x1000000>;
-> @@ -900,6 +739,167 @@ apps_smmu: iommu@15000000 {
->  				     <GIC_SPI 892 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 891 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> +
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-> +			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +			#redistributor-regions = <1>;
-> +			redistributor-stride = <0x0 0x20000>;
-> +		};
-> +
-> +		memtimer: timer@17c20000 {
-> +			compatible = "arm,armv7-timer-mem";
-> +			reg = <0x0 0x17c20000 0x0 0x1000>;
-> +			ranges = <0x0 0x0 0x0 0x20000000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			frame@17c21000 {
-> +				reg = <0x17c21000 0x1000>,
-> +				      <0x17c22000 0x1000>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <0>;
-> +			};
-> +
-> +			frame@17c23000 {
-> +				reg = <0x17c23000 0x1000>;
-> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <1>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c25000 {
-> +				reg = <0x17c25000 0x1000>;
-> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <2>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c27000 {
-> +				reg = <0x17c27000 0x1000>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <3>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c29000 {
-> +				reg = <0x17c29000 0x1000>;
-> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <4>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c2b000 {
-> +				reg = <0x17c2b000 0x1000>;
-> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <5>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c2d000 {
-> +				reg = <0x17c2d000 0x1000>;
-> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +				frame-number = <6>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		apps_rsc: rsc@18200000 {
-> +			compatible = "qcom,rpmh-rsc";
-> +			reg = <0x0 0x18200000 0x0 0x10000>,
-> +			      <0x0 0x18210000 0x0 0x10000>,
-> +			      <0x0 0x18220000 0x0 0x10000>;
-> +			reg-names = "drv-0", "drv-1", "drv-2";
-> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,tcs-offset = <0xd00>;
-> +			qcom,drv-id = <2>;
-> +			qcom,tcs-config = <ACTIVE_TCS 2>,
-> +					  <SLEEP_TCS 3>,
-> +					  <WAKE_TCS 3>,
-> +					  <CONTROL_TCS 0>;
-> +			label = "apps_rsc";
-> +
-> +			apps_bcm_voter: bcm-voter {
-> +				compatible = "qcom,bcm-voter";
-> +			};
-> +
-> +			rpmhcc: clock-controller {
-> +				compatible = "qcom,sa8775p-rpmh-clk";
-> +				#clock-cells = <1>;
-> +				clock-names = "xo";
-> +				clocks = <&xo_board_clk>;
-> +			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sa8775p-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp-0 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp-1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp-4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp-5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp-6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp-7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp-8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp-9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		cpufreq_hw: cpufreq@18591000 {
-> +			compatible = "qcom,sa8775p-cpufreq-epss",
-> +				     "qcom,cpufreq-epss";
-> +			reg = <0x0 0x18591000 0x0 0x1000>,
-> +			      <0x0 0x18593000 0x0 0x1000>;
-> +			reg-names = "freq-domain0", "freq-domain1";
-> +
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
-> +			clock-names = "xo", "alternate";
-> +
-> +			#freq-domain-cells = <1>;
-> +		};
->  	};
->  
->  	arch_timer: timer {
+I suspect this driver is around 95% complete, but I don't have the
+documentation to make it work completely. At the very least it is useful
+for two cases:
+
+- Although this is untested, it should support 2.5G SGMII as well as
+  1000BASE-KX. The latter needs MAC and PCS support, but the former
+  should work out of the box.
+- It allows for clock configurations not supported by the RCW. This is
+  very useful if you want to use e.g. SRDS_PRTCL_S1=0x3333 and =0x1133
+  on the same board. This is because the former setting will use PLL1
+  as the 1G reference, but the latter will use PLL1 as the 10G
+  reference. Because we can reconfigure the PLLs, it is possible to
+  always use PLL1 as the 1G reference.
+
+Changes in v12:
+- Put compatible first
+- Keep gpio-controller to one line
+- Add little-endian property
+- Alphabetize compatibles
+- Remove some comments
+- Remove some examples with insufficient novelty
+
+Changes in v11:
+- Keep empty (or almost-empty) properties on a single line
+- Don't use | unnecessarily
+- Use gpio as the node name for examples
+- Rename brcm,bcm6345-gpio.yaml to brcm,bcm63xx-gpio.yaml
+
+Changes in v10:
+- Convert gpio-mmio to yaml
+- Add compatible for QIXIS
+- Remove unnecessary inclusion of clk.h
+- Don't gate clocks in compatibility mode
+- Fix debugging print with incorrect error variable
+- Move serdes bindings to SoC dtsi
+- Add support for all (ethernet) serdes modes
+- Refer to "nodes" instead of "bindings"
+- Move compatible/reg first
+
+Changes in v9:
+- Add fsl,unused-lanes-reserved to allow for a gradual transition
+  between firmware and Linux control of the SerDes
+- Change phy-type back to fsl,type, as I was getting the error
+    '#phy-cells' is a dependency of 'phy-type'
+- Convert some u32s to unsigned long to match arguments
+- Switch from round_rate to determine_rate
+- Drop explicit reference to reference clock
+- Use .parent_names when requesting parents
+- Use devm_clk_hw_get_clk to pass clocks back to serdes
+- Fix indentation
+- Split off clock "driver" into its own patch to allow for better
+  review.
+- Add ability to defer lane initialization to phy_init. This allows
+  for easier transitioning between firmware-managed serdes and Linux-
+  managed serdes, as the consumer (such as dpaa2, which knows what the
+  firmware is doing) has the last say on who gets control.
+- Fix name of phy mode node
+- Add fsl,unused-lanes-reserved to allow a gradual transition, depending
+  on the mac link type.
+- Remove unused clocks
+- Fix some phy mode node names
+
+Changes in v8:
+- Remove unused variable from lynx_ls_mode_init
+- Rename serdes phy handles to use _A, _B, etc. instead of _0, _1, etc.
+  This should help remind readers that the numbering corresponds to the
+  physical layout of the registers, and not the lane (pin) number.
+- Prevent PCSs from probing as phys
+- Rename serdes phy handles like the LS1046A
+- Add SFP slot binding
+- Fix incorrect lane ordering (it's backwards on the LS1088A just like it is in
+  the LS1046A).
+- Fix duplicated lane 2 (it should have been lane 3).
+- Fix incorrectly-documented value for XFI1.
+- Remove interrupt for aquantia phy. It never fired for whatever reason,
+  preventing the link from coming up.
+- Add GPIOs for QIXIS FPGA.
+- Enable MAC1 PCS
+- Remove si5341 binding
+
+Changes in v7:
+- Use double quotes everywhere in yaml
+- Break out call order into generic documentation
+- Refuse to switch "major" protocols
+- Update Kconfig to reflect restrictions
+- Remove set/clear of "pcs reset" bit, since it doesn't seem to fix
+  anything.
+
+Changes in v6:
+- Bump PHY_TYPE_2500BASEX to 13, since PHY_TYPE_USXGMII was added in the
+  meantime
+- fsl,type -> phy-type
+- frequence -> frequency
+- Update MAINTAINERS to include new files
+- Include bitfield.h and slab.h to allow compilation on non-arm64
+  arches.
+- Depend on COMMON_CLK and either layerscape/ppc
+- XGI.9 -> XFI.9
+
+Changes in v5:
+- Update commit description
+- Dual id header
+- Remove references to PHY_INTERFACE_MODE_1000BASEKX to allow this
+  series to be applied directly to linux/master.
+- Add fsl,lynx-10g.h to MAINTAINERS
+
+Changes in v4:
+- Add 2500BASE-X and 10GBASE-R phy types
+- Use subnodes to describe lane configuration, instead of describing
+  PCCRs. This is the same style used by phy-cadence-sierra et al.
+- Add ids for Lynx 10g PLLs
+- Rework all debug statements to remove use of __func__. Additional
+  information has been provided as necessary.
+- Consider alternative parent rates in round_rate and not in set_rate.
+  Trying to modify out parent's rate in set_rate will deadlock.
+- Explicitly perform a stop/reset sequence in set_rate. This way we
+  always ensure that the PLL is properly stopped.
+- Set the power-down bit when disabling the PLL. We can do this now that
+  enable/disable aren't abused during the set rate sequence.
+- Fix typos in QSGMII_OFFSET and XFI_OFFSET
+- Rename LNmTECR0_TEQ_TYPE_PRE to LNmTECR0_TEQ_TYPE_POST to better
+  reflect its function (adding post-cursor equalization).
+- Use of_clk_hw_onecell_get instead of a custom function.
+- Return struct clks from lynx_clks_init instead of embedding lynx_clk
+  in lynx_priv.
+- Rework PCCR helper functions; T-series SoCs differ from Layerscape SoCs
+  primarily in the layout and offset of the PCCRs. This will help bring a
+  cleaner abstraction layer. The caps have been removed, since this handles the
+  only current usage.
+- Convert to use new binding format. As a result of this, we no longer need to
+  have protocols for PCIe or SATA. Additionally, modes now live in lynx_group
+  instead of lynx_priv.
+- Remove teq from lynx_proto_params, since it can be determined from
+  preq_ratio/postq_ratio.
+- Fix an early return from lynx_set_mode not releasing serdes->lock.
+- Rename lynx_priv.conf to .cfg, since I kept mistyping it.
+
+Changes in v3:
+- Manually expand yaml references
+- Add mode configuration to device tree
+- Rename remaining references to QorIQ SerDes to Lynx 10G
+- Fix PLL enable sequence by waiting for our reset request to be cleared
+  before continuing. Do the same for the lock, even though it isn't as
+  critical. Because we will delay for 1.5ms on average, use prepare
+  instead of enable so we can sleep.
+- Document the status of each protocol
+- Fix offset of several bitfields in RECR0
+- Take into account PLLRST_B, SDRST_B, and SDEN when considering whether
+  a PLL is "enabled."
+- Only power off unused lanes.
+- Split mode lane mask into first/last lane (like group)
+- Read modes from device tree
+- Use caps to determine whether KX/KR are supported
+- Move modes to lynx_priv
+- Ensure that the protocol controller is not already in-use when we try
+  to configure a new mode. This should only occur if the device tree is
+  misconfigured (e.g. when QSGMII is selected on two lanes but there is
+  only one QSGMII controller).
+- Split PLL drivers off into their own file
+- Add clock for "ext_dly" instead of writing the bit directly (and
+  racing with any clock code).
+- Use kasprintf instead of open-coding the snprintf dance
+- Support 1000BASE-KX in lynx_lookup_proto. This still requires PCS
+  support, so nothing is truly "enabled" yet.
+- Describe modes in device tree
+- ls1088a: Add serdes bindings
+
+Changes in v2:
+- Rename to fsl,lynx-10g.yaml
+- Refer to the device in the documentation, rather than the binding
+- Move compatible first
+- Document phy cells in the description
+- Allow a value of 1 for phy-cells. This allows for compatibility with
+  the similar (but according to Ioana Ciornei different enough) lynx-28g
+  binding.
+- Remove minItems
+- Use list for clock-names
+- Fix example binding having too many cells in regs
+- Add #clock-cells. This will allow using assigned-clocks* to configure
+  the PLLs.
+- Document the structure of the compatible strings
+- Rename driver to Lynx 10G (etc.)
+- Fix not clearing group->pll after disabling it
+- Support 1 and 2 phy-cells
+- Power off lanes during probe
+- Clear SGMIIaCR1_PCS_EN during probe
+- Rename LYNX_PROTO_UNKNOWN to LYNX_PROTO_NONE
+- Handle 1000BASE-KX in lynx_proto_mode_prep
+- Use one phy cell for SerDes1, since no lanes can be grouped
+- Disable SerDes by default to prevent breaking boards inadvertently.
+
+Sean Anderson (13):
+  dt-bindings: phy: Add 2500BASE-X and 10GBASE-R
+  dt-bindings: phy: Add Lynx 10G phy binding
+  dt-bindings: Convert gpio-mmio to yaml
+  dt-bindings: gpio-mmio: Add compatible for QIXIS
+  dt-bindings: clock: Add ids for Lynx 10g PLLs
+  clk: Add Lynx 10G SerDes PLL driver
+  phy: fsl: Add Lynx 10G SerDes driver
+  phy: lynx10g: Enable by default on Layerscape
+  arm64: dts: ls1046a: Add serdes nodes
+  arm64: dts: ls1046ardb: Add serdes descriptions
+  arm64: dts: ls1088a: Add serdes nodes
+  arm64: dts: ls1088a: Prevent PCSs from probing as phys
+  arm64: dts: ls1088ardb: Add serdes descriptions
+
+ ...m6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} |   16 +-
+ .../devicetree/bindings/gpio/gpio-mmio.yaml   |  123 ++
+ .../bindings/gpio/ni,169445-nand-gpio.txt     |   38 -
+ .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |   38 -
+ .../devicetree/bindings/phy/fsl,lynx-10g.yaml |  248 ++++
+ Documentation/driver-api/phy/index.rst        |    1 +
+ Documentation/driver-api/phy/lynx_10g.rst     |   58 +
+ MAINTAINERS                                   |    9 +
+ .../boot/dts/freescale/fsl-ls1046a-rdb.dts    |   26 +
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  111 ++
+ .../boot/dts/freescale/fsl-ls1088a-rdb.dts    |   82 +-
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi |  156 ++-
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-fsl-lynx-10g.c                |  510 +++++++
+ drivers/phy/freescale/Kconfig                 |   23 +
+ drivers/phy/freescale/Makefile                |    1 +
+ drivers/phy/freescale/phy-fsl-lynx-10g.c      | 1224 +++++++++++++++++
+ include/dt-bindings/clock/fsl,lynx-10g.h      |   14 +
+ include/dt-bindings/phy/phy.h                 |    2 +
+ include/linux/phy/lynx-10g.h                  |   16 +
+ 20 files changed, 2594 insertions(+), 103 deletions(-)
+ rename Documentation/devicetree/bindings/gpio/{brcm,bcm6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} (78%)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/fsl,lynx-10g.yaml
+ create mode 100644 Documentation/driver-api/phy/lynx_10g.rst
+ create mode 100644 drivers/clk/clk-fsl-lynx-10g.c
+ create mode 100644 drivers/phy/freescale/phy-fsl-lynx-10g.c
+ create mode 100644 include/dt-bindings/clock/fsl,lynx-10g.h
+ create mode 100644 include/linux/phy/lynx-10g.h
+
+-- 
+2.35.1.1320.gc452695387.dirty
+
