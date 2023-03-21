@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7826C298C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 06:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 505D06C299E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 06:11:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbjCUFD1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Mar 2023 01:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
+        id S229746AbjCUFLD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Mar 2023 01:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbjCUFCz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 01:02:55 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on20600.outbound.protection.outlook.com [IPv6:2a01:111:f400:7d00::600])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A1936473;
-        Mon, 20 Mar 2023 22:02:10 -0700 (PDT)
+        with ESMTP id S229736AbjCUFLB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 01:11:01 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2074.outbound.protection.outlook.com [40.107.7.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A21C34C28;
+        Mon, 20 Mar 2023 22:10:21 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NuNujZizJFpi4Ed2mN06es6UqO+2m+ZR+r7cViXkrRyFSiJgQoV9BUU8Qk/nZz3s9V/ytTUufEKiXOI+0yTvHzI18pseE17BvqTbRnOIseruxmlWWe0rgMP8qsTr1+Lce3O9tVYIwkTnhwBQhHPLK4kS9b0ck4mWIPb/tXepFmZPAZVCZ1FM0ARxJYO3xVJq5yBpeJdUI/x2Spiw+vOpSm5F2w+scIzwewplDOLoD5s0ulzFa3NU6tfuY71D8m0Jl6e9VUMNkCl7EdLOE1dgHdz+m7fmVIuVjx+DGGE7cCRdAYCVCbefZmmtqqgfyXrxdc03T6VV0rYQUcjNRTv0IQ==
+ b=AioHCcPA5F8I3D+l27QL92mwXL524hwIefYqxMJRHS2KIOknVzRngV3lk3pvEBfdxBLzvZqNA7kcBPM8YayC1pWRJpil2klNBQIvwTK1kt04Jl52GQKurRMP12PfsAqwfLygpC0nzSpzsd48XZufXEHLtcDvF5d6xsDcyGIM4DU3ROBrg+S7bQqkJlYuX4ALvlVDT/hhX4f+B8Fe8cg1e/zSEXBzO5qOviJvLEYXUC8Kz44rkUqBQhkNKmNzCaMpRv3oztW6E1/sB6txglqDFmjWwKmxor+0/gRzEpJsar0EV9qyZzToCEoPyhupQs98430YoEdt9Fxin0DOYtwr+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k0WcVAtnh6FN/Wl65r684DFwhHpzUCGGhsQMZWaHszg=;
- b=f1SvrQhyaA5rb0KHBcD75mNVV7hVCAnd9xHYi0KmrWrnG+y59a5bm5wtuLnBRJ9I7qywClrFmoTHw+PNAzgQQU1mleX7ZeD6hdwDN6wOBUtTunHbJC7Dy2SfbRE8haGiZGJ7xG9vktbCLVNmLpw8HJosZcZIRJoNThLZK2zMhXvbTUva6v/UuxgZpymvnnzUVA2ucZEP+hBGEj133diqfIhG7G1TIMFvS0MlWr/u3Re11Du2A2TeZOmQongcbdzu6hzO3yAxR7j9qFGHi/scGuNmSEqNko6HK8A+EAU+7oeAoRkAjvMb4IiY2Fd1hVREaUaSiZ4EFr4IFvML0Ug5fQ==
+ bh=ysjQpHp2o1y4RgL3OZJueo+b1SptdMMHry6dea+91bU=;
+ b=QB+FhZtN5gmelBijXs2us302teweIKQr/mb4b7Rl5a1BbX4BLxqBiJl6kudV2dtCZUHgGtWRvpSWTmwKzT1xOyPq0lO+LkebhcBCC4GOZNbQ9El92Ia00OJlC7/yfIFhq+9RKA1xkaQfZB5nRCdib8T7teLvidkv3KKq2p7e2LnWHeNy2Q92ewUoV3wHRBzP1GCy7r+YNjymKgjm4RjVRu8uZZEeaHGiXUAT38pHtdYlR4IY+QQFCzFB5VCvvJv8DVBRVFuCqrEBL2vH5EWF9YGiI01VSoAVdi0MhbFiZCVb3QSoQ1QDnDTzWXohs2EuRH65ZwDNIYIRBI0YP5Qo5A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0WcVAtnh6FN/Wl65r684DFwhHpzUCGGhsQMZWaHszg=;
- b=M9LSxn7VNNALsZRSUKtrWtiq+BcuNBcRiCOJ2M7BMworHHB/hPrfeQDjulyuRj4oObBnQo27TZmQ3zh32kX+nZq7gN/N7iARlGYA25KovVaRMlockGJu4Q5tUfiacV+1rXatrEVg23oPagJRVH/9VCFH10bKnhQFxGgUSgEaHqsA57l6xOS25UMF/jSJTmR1P44ZAv4VUf7lAbMMMctvkHsgKUmIzBn89kYjp2tp3RdzCzkxkoY3CqhgUzz26bk/afR8JGErmR2jL22V7SeNK9FFuwFXcA9syDxNZEV+cD0HI66YlnY83gyWPgp20joA+LB/zkngZ/m6+7UhFrC3Ew==
+ bh=ysjQpHp2o1y4RgL3OZJueo+b1SptdMMHry6dea+91bU=;
+ b=E5gzwBfSia8R8exjP/DOtJPLkeq06BysHNa9Ty31k/S8JyMku562tdjRdHsY5+5AQ6Oev2wNlmweNuvJGLKdf3ttdseunul2NSGDLFTD8wktxVCbqju4GPXIFlL7r6nnHRqCT2vh18ZmarX+dg9otd35g0nRCLEmaS89Onui+cE6V+b2SLqjCw5GIBmIZ2Oe5dZSICyso+MnygsweLL1lThSmwZBd9a7gNT/Iur/f231etPepjsCu21WK+zOPbRTaQhQhxh2tEEMKuiszr619NuTBJfkyFTUqlPqwGQXvEYRmEIpxCKBJyqD4CY/8PlSmNj+z5o7c8Wr9XzK6ttytg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from VI1PR0402MB3439.eurprd04.prod.outlook.com (2603:10a6:803:4::13)
- by DUZPR04MB10013.eurprd04.prod.outlook.com (2603:10a6:10:4d8::5) with
+ by DB9PR04MB8218.eurprd04.prod.outlook.com (2603:10a6:10:24a::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
- 2023 05:01:33 +0000
+ 2023 05:09:32 +0000
 Received: from VI1PR0402MB3439.eurprd04.prod.outlook.com
  ([fe80::6802:b2c3:5f12:8f9f]) by VI1PR0402MB3439.eurprd04.prod.outlook.com
  ([fe80::6802:b2c3:5f12:8f9f%2]) with mapi id 15.20.6178.037; Tue, 21 Mar 2023
- 05:01:32 +0000
-Date:   Tue, 21 Mar 2023 13:01:15 +0800
+ 05:09:32 +0000
+Date:   Tue, 21 Mar 2023 13:09:18 +0800
 From:   Chester Lin <clin@suse.com>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -51,131 +51,358 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Radu Pirea <radu-nicolae.pirea@nxp.com>,
         Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
         Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v2 3/4] pinctrl: s32cc: refactor pin config parsing
-Message-ID: <ZBk6G61RUbFPIV3G@linux-8mug>
+Subject: Re: [PATCH v2 4/4] pinctrl: s32cc: embed generic struct pingroup and
+ pinfunction
+Message-ID: <ZBk7/h4nquwZShv1@linux-8mug>
 References: <20230320163823.886-1-clin@suse.com>
- <20230320163823.886-4-clin@suse.com>
- <CAHp75Ve325yfz1P4=vYndUOhV-VkqNCWVEObm1RURbKHgcLKrw@mail.gmail.com>
+ <20230320163823.886-5-clin@suse.com>
+ <CAHp75VfFTjPFMQ91yHC4O1enTJqtww7ur8ppwa1rqT_7WNzDTQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Ve325yfz1P4=vYndUOhV-VkqNCWVEObm1RURbKHgcLKrw@mail.gmail.com>
-X-ClientProxiedBy: TYCPR01CA0177.jpnprd01.prod.outlook.com
- (2603:1096:400:2b2::16) To VI1PR0402MB3439.eurprd04.prod.outlook.com
+In-Reply-To: <CAHp75VfFTjPFMQ91yHC4O1enTJqtww7ur8ppwa1rqT_7WNzDTQ@mail.gmail.com>
+X-ClientProxiedBy: TYCP286CA0124.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b6::6) To VI1PR0402MB3439.eurprd04.prod.outlook.com
  (2603:10a6:803:4::13)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3439:EE_|DUZPR04MB10013:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6b4a162-d957-4911-50bd-08db29c956bc
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3439:EE_|DB9PR04MB8218:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac6a480f-d405-4a68-2dbe-08db29ca7476
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gixqHaDNe7iGF+Nyoouaqlk1BP4MD0owyl9fzXSw2YHNx0AT2ZJMIz/uAZT38mBvoe4WFUrMM8upZY+Zl/xKmkqPjwwTLeijUcYG7Ks7XKj76eS7D54Iou44EnZGupIuJOrdH2Gee9j3T5zuaybtZELMlsWzc/AVh4JVuYGjOZbA3fR5hc8jCYVPWQdV+UJz1mVBFnU00KSjB1heM9GB6dkvcSCUhXYVW9QE4EAPeHYYiH/qSHM2nh9pL/tBVnRuKRSTl/zTDY4vwey/3rFjvjgM9jwV/wvjbV5j5xFotSDXCZShGrxWxNXVLTqnO4OyP9Jj7YlH5xwazZBTcubL1yaHpryHxFnoOr5dR1M8jBAZZCCbzXMuq1OB8lxpucKCyegPhyaQLpzWxIvTf/FSdJ933/g8BH7fkNWCEDAF7Sg5hkp993Q3qtovDSQ2rfgOVmENO9kYSzm2Sf5e72RmZP9vGOquS+nyjzYi1QEQRpIqxX2sMxfJ9xtU2FiIcCb6LBrNahxLyMGWDJqAn5askW5OfoDyqAJTAXZgkLgY9aRo+YIefI9ZZlTtkBaOaR7WQT9wJu68Vq9H2F9Xx1YX2imHE6S0vgQ2K6Y2Dw6mYsJ1WO4gNWKDFQcc5nLqDYliiF0SNlP6Ugigt2cHJYTbwQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3439.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(136003)(366004)(376002)(346002)(39860400002)(396003)(451199018)(33716001)(107886003)(478600001)(83380400001)(316002)(6486002)(6512007)(54906003)(186003)(6666004)(53546011)(26005)(7416002)(6506007)(9686003)(8936002)(38100700002)(86362001)(2906002)(66946007)(5660300002)(6916009)(66556008)(66476007)(4326008)(41300700001)(8676002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: fURAf4bolx0nEkfhGwspvqAi+EUjZh3yR633yd4evI6NAIX7kgLtOmtdhp1HLXTMZMfrhLq3q29eCYAIUk6Gdvz87FIFwPf63KPgcJDTYs/8tn88wua3QyDIk5B/jn3jfWBV7ZH3ugqXYWGAuQzEHHxwBJXPyrJFlUzL5bfBfE25srvKRUXbOqhCcdbUtJxAROxv19ivapJBHsKt5+hSga557BSl59e3c+QqZyToKCTe1cT8wyMcsJN4mfkN8m2UH7VJyfvTlvEUUatX0+eDsGYP3HM2CcAahTA/bXcT/wFgzwZjQHhvv7m4ba22t2iYit8edGQmkeSQBvCtHejiHUKj8sJwwondpLWqLT1I/c41neJhl8sZOaie0eqQ5UktwvimB5G3wv15Pr+C6MsxqNWaLVQLarX4ZkBF8n5X+oEl+VBu4cv0DYSX4OtmtlqXL2pyU7PnfsqkUvTeaSkwFiSm3XIhSctnCPk3klgHsLDKaZTwTv6LM4ixcYRrhGZ0ZpQzMD4s9I7MwNPly5951BDv0xvQanJWdTClRdB6Arwqw7TfjDGahJcAzBPtWGyp1safeEqNkOdl9PPIoXPDujzfzfJ9nwR+wgFzK2eVID4JPdBNpuaD/0ahhTB2G+CoZ7vsAIMQQsQ+niPbK/45Gr9fcBYhAxV5BuU3Z4d0T74R2wS2GuPbHljorFbnu497
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3439.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(7916004)(346002)(366004)(136003)(396003)(39860400002)(376002)(451199018)(7416002)(5660300002)(41300700001)(86362001)(8936002)(33716001)(38100700002)(2906002)(6666004)(4326008)(6486002)(107886003)(83380400001)(478600001)(53546011)(186003)(26005)(6506007)(9686003)(6512007)(8676002)(54906003)(316002)(66946007)(6916009)(66476007)(66556008)(41533002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1ZwbXVOUm8xc1IrNENGUjhWS2RnNTVuZUhVdldJbjB6WllTZGQ4a0JUNWsv?=
- =?utf-8?B?YzJnaXhWRkJlZWp5VThXMVdhMWtzQzlkNFd2N2FBSUptRmtSQmtLaU1lN3Mr?=
- =?utf-8?B?ek5XYXc1VElYQXRYdWZDa1c5VXpncjVFeEI2UGZraURUbUpBbEtMaUp1MHVh?=
- =?utf-8?B?eFFET2x0bDZUNFlFN2NjbFNjNjVTV21Ha2hsVzIxWFZnVEFSRjRvWVQ5MC9P?=
- =?utf-8?B?UTZKN0lRbWtabGxIeWplK1JDeUVZV2FCOG5jZEVhaDVIUUVTaTlvV3JYU2k0?=
- =?utf-8?B?aVFDRVEvYTJkdnozekdlNDFJaWZPN2s4YkxMU3FObitubURZM3lkQjU5NFpS?=
- =?utf-8?B?eU43WVRtR1c0N0twM0V5VFpCM2Z3dzF0TUMxNWo3MTZ4ZTBjbTd3VVZnRjR1?=
- =?utf-8?B?QjFJdWJhVGo2ZkEyY0lWb052a0I5U3hoeFd5VVVMVFMvY1JLRTg2ek1sclV1?=
- =?utf-8?B?S2FOR0ZTei9KbFRyWmhjNjFUdmlDN1RvT0dRTUYvK3JnL3QzQ3g5NzZvVjBk?=
- =?utf-8?B?aFNUMDJVYXU4bTFGdHdBZmRaZXRDZVFIM3p0UXhkWnY0Ui9kS01yVW80cTZN?=
- =?utf-8?B?YmxBYjU0clNiYmFjcVNJTTdyWWhweDFNS2JwTExCT3JGZlpSdXhvMW5OWHhM?=
- =?utf-8?B?eGNlem5xM1Q5dnlveG5ZL1FqQ241Wm45QnNwTkJtTG92SmVQZGd6b2xXQm9y?=
- =?utf-8?B?OXVyazBJRjRTeXZFdDU5NmVvd29MNUN5WU0yN3Q1d2hxQzZVdnJBeUtzeEpX?=
- =?utf-8?B?TjdJM3BROU1TSEtub3RtWkhQdTZkeVJyU1lTVVgzWDdFbEM0dnIrT0ViN3lG?=
- =?utf-8?B?c2ttUTdQcWZwbWRELzlhSWlUbC8zSkpOWk9yRHJQcGJaaEw2QnBpd0NISWZW?=
- =?utf-8?B?dXRsZ3lKeEdsbWpHbUU5K05SUEM0ZUxnaldDRzdXNkdNbGlxYzRuQTRFMS9R?=
- =?utf-8?B?YlQvZDR4b01jTFozVjM1UnBsUDh4SjU2NTNDZno1c1J6V0VwcWlzOS9meXNm?=
- =?utf-8?B?WlpnUkdLdmdIWWN6QjlEOXZZdTFZYndBMzd3RWFFeUhJS1hNRHgxMHVzWm1P?=
- =?utf-8?B?OXBpd1JwUGlCd2lZUVh0RDVQeXB4ZzdGYkpDUzFubVIzeEpuSGhkZHRYMVFt?=
- =?utf-8?B?ZDJNQTd5dWxIcHhRd1QyTDlHd2lxQm1JSGJiQitzUDU5TEowNWl1cGR3Mkh0?=
- =?utf-8?B?UGZDc1lHWlJyTWxYaGNmQnNpQU1ReHRQQ3RxdmVOeVZaMU9HdlVoUE1wNUp3?=
- =?utf-8?B?czJ0V3h6TVBnVm5GQmVseGZ5SnJiZHdQaStuVTFjeHlHZzVSL2hYRExWcENQ?=
- =?utf-8?B?a0JaRDB5UDUrUjhRajVrb0NWZ0NkR3J6Y0tiTmhWdU91dERDMWtFbjJQNmMr?=
- =?utf-8?B?S2UrbW8yTFJ4Mk9vcTE5YytveVU3SFZScGt3SHJqZnlWd0pXSmNuQVZvNHJq?=
- =?utf-8?B?cUU0MzQrZkxZejgxd3hPZTlvSFlwUU1tam5xOHFQSk15TERrVytmQm9VYjhx?=
- =?utf-8?B?RkVsMkNOZ3dRV2k2Q05qSDBlMmpmeHFydjIxNnBtMDBYYWNxRHJmbUdzSjcx?=
- =?utf-8?B?SHZuVWxEZ0tIdTR2bndqL0tyUmFNOWRyVjFoV3AvVUI1cHFnVlE1TE9uTEdS?=
- =?utf-8?B?czJmb0RNZW4zOEdtRm9vUFNJSWI5V3FRSUtUQkExZG1uNWZLeFVwK2U4aGhB?=
- =?utf-8?B?eitzVncxamFBcFI2TlB6eDlJNE9jK0hldDhIME1kL0kyMFM3S2RLZWFadVEv?=
- =?utf-8?B?bHZaSmJNVDJxMURnZ2RGQW9qT2UvaXpzd01IODJjZlYrTjIwdUx0WjZ3SkZJ?=
- =?utf-8?B?SmVaeWlEK0lINkNNNWJjSDU4d1EwTFVvdzViNFN1bjRvZGVXTThsWVFrY0JI?=
- =?utf-8?B?OU1sSFpuMEpxai8wQ3FDN3pkZG1DK3hoSVJGN2IweFUzazZqaW1PTzNLcHZr?=
- =?utf-8?B?V2M5dDhSLytUeHh6ZDdlL0k2aTdPazFYTXNIVTZmcHlXSUdJdWdXMUlFaXIr?=
- =?utf-8?B?Y3k1MVpFU1FHQXFWS29IUzlDdzdDWWVOblU3RC9xemNLWmY3ZDFmaGErcWt5?=
- =?utf-8?B?ZDZoZ3NtM21STnlqNmtiV0d1MzFaQUtDQm52YkE0N3l6YWI3NitidGo4WU1V?=
- =?utf-8?Q?iMzA=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ek9ua05Ud2JyQ01KNjdEVDk0bkdDTk1TZnMwRWxIV1pjMVR4M2pWUnptSVQ5?=
+ =?utf-8?B?OStTUTdjbnE4YmhFMllCQWF1K0dENXFWa2NVN3F1eTMwMEdVTitKM3IxWjNE?=
+ =?utf-8?B?ZVQ3V1FFUW50VDRiYWMwaGhXVE51VFRaWHRKMjlGWUZCMWU0dlJPOWZXQkdQ?=
+ =?utf-8?B?RUQwaXVSTUc2YjEyVVBES3pZS0o2dmJMT2xvWTJTME5zeGtiZXFyak5Rd295?=
+ =?utf-8?B?Slo4NisrSE5UbUJhT21WQ016Rk5DTEFjbDE4VGVxaHpKaTBOOVE5bU1PUE1t?=
+ =?utf-8?B?Ykg5YTVhMmxkSG56R3hGbG1URUNXY0xwYnRZRCtXK0dPQzJlTDVSa0RwcUw1?=
+ =?utf-8?B?bXhkVDF3bGRsS0JPSEhKWmREUjNUVVN0VE1OYTJ6TTN0Zms4Rk9xYVBIbU1C?=
+ =?utf-8?B?bGdTdGU1aHdicFMyc2JrdFR2cVJNVHlSeGdwK2NHcFV5YlBIRTNKbHh0Wkxu?=
+ =?utf-8?B?QXovRkt6dXlpcTFFWTk4SUJjLzQ0ZVlzSGwxb3RsbHlZQlJ4T3BjVVRHcTIx?=
+ =?utf-8?B?dlBseERYR21LQzlwVjhObCtUVXR5bVA1UGhOUjRndW1UZmdWN1dwT0N4QmU0?=
+ =?utf-8?B?ZlgwM3R5a3dRMVBsOFpOT1Z6L1VrczFrRGZvZUZEczRrRFd0V0JKenpxWHhO?=
+ =?utf-8?B?NC9TM2hZa0dFQ2JMdXkvWUpwWWRxMktyVnk1MXlCdUxDS2lXdlZpZSttUGF3?=
+ =?utf-8?B?eGZkK01zS1B5TXZGMlBBU0ZOdGNObEtYaFJKMlBDQjdKV0xSbXpwUUN6bDRt?=
+ =?utf-8?B?aHJZZEZRZW9JLzF0UmNrKzhLMXAzb1dzSFM1QnpSbGxWQXZISzhweFFaYkZZ?=
+ =?utf-8?B?MWZwUER4eFMxNVo3dlp3TVl0dlZUMTJYSUVOUzBjNzdNZzR3c2I5SjRMaFpR?=
+ =?utf-8?B?ZS8zUWlweTNuemxIYmptOWFiYVZSQStjUjBjdlVFVW1MenNGUmY3cjRoMTB5?=
+ =?utf-8?B?anA0bDlIWkRBUUpFVEd6M2ZNT0t3aG00ank0emFJQmVOdGtCN0hlY2JvVHlk?=
+ =?utf-8?B?MFQ4aFlBZU9Ia3dGUmw5cjBDMjBqWVgyTC8vS2xHZE1IUnRxdElYakVvb3l4?=
+ =?utf-8?B?ODFMbEFnamxPY1hFcXFVTnUrenRtVG5KQlBJZncxSkhsdzdsamkzNU5nVlJK?=
+ =?utf-8?B?YzNOTTZUQ3FsK0ZTS0RNeGdzN3pYS3pEQnpEUW1heXcrSGoyZUlDdXN1YWE0?=
+ =?utf-8?B?L2xBaWN3VzdHSXk1Y3JnSTAzcDNZa0NPVGxjMlRJK09FWDFuR0xab2V2ZWs3?=
+ =?utf-8?B?T25lYWRVOTFRTjdBTTE3ZTNRbXFtNlFGYlRJUGdFYVdWVTduSUlvNmdrNTN5?=
+ =?utf-8?B?VGpBRTlqT09XcnlFaXlheWowaEtqSFhsNEdYeUp0NWgrZ3k1ZWgwVnFDYUtm?=
+ =?utf-8?B?Z1dRejhFdzAvNFN0ejhlSjVoQnIzWWhaLzE4WWNKZjU2M2Z0QUgwZUtHQTBs?=
+ =?utf-8?B?eE80VHc5RmNsNSt2YjRYRUE2Vk5lY0F1Zjl6RVl1cDJCdzFSbGdKcmdjVjdP?=
+ =?utf-8?B?U2FLeCs4QmcyMU5vZmRRejFEbXN1VzlHSnVsWG8wWEF4Ky9nMkZxajZaT0RC?=
+ =?utf-8?B?ZTdLdTcrTS9yUUptMFZGN1Z1LzlVQjRENHFaanlBekhvOFBRTWI4MWc2dExO?=
+ =?utf-8?B?dXMxWm8yci9HV2tkSW9TSE9IZ3l5VHdiY2VFaFB5VWJmcURkS2NzQWZtQ0dw?=
+ =?utf-8?B?eUFZTCttQ1JCRkQvMFdtZ2F3ZEtDcG1ia2Y5MFFkMkxMcDJrWUNqWnk5UXJq?=
+ =?utf-8?B?M015ZW1UWVNkcXd6enlFN0pQdWh2SVNSUmhCUFBnQWllL2RkTzNEbUd4WUZx?=
+ =?utf-8?B?TVdzNkN1aHJoUnFmOU94TEF5UmJETktUL3BjbVdBTmVNcGtUejNXMGQ4OTdP?=
+ =?utf-8?B?aGhCZ0pkblcxNklUNTUvclNqWk9EbVcxR0JHTDNLZ3UxNXl4bk5hY2JtNENa?=
+ =?utf-8?B?VFd5Q3NLb0JjMUhXLyt2QVdVNG0wMEsvbENCajVvOFhqTVp2ZlQ3WE9SQjJT?=
+ =?utf-8?B?VDg5dGRtZ2FNSDJEeVBOcVVuYW1EZFdyNTVVNTZmQ2wwMG42WmR6bGR4UzJ1?=
+ =?utf-8?B?V1B1Qkx2VTZWUXE0UEJzcC9mbmhJL0ZLL0t4TFNCZnVkMnMyS1RwbG13WGMv?=
+ =?utf-8?Q?Nv7s=3D?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6b4a162-d957-4911-50bd-08db29c956bc
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac6a480f-d405-4a68-2dbe-08db29ca7476
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3439.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2023 05:01:32.5591
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2023 05:09:32.0997
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q4cW9C3qIUe+I8U0QBM6Rh/1bAUvUFvNFhYVMb9pT1cMR+wZJQpRHM70pR8Q3jGY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10013
+X-MS-Exchange-CrossTenant-UserPrincipalName: tVyZ7yjPpeuydqUt3z4t+RJD0T+CJH+NMTT9kN0Z3KVOBeaHG6GwG9XUwKej5DuT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8218
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 07:06:53PM +0200, Andy Shevchenko wrote:
+On Mon, Mar 20, 2023 at 07:10:40PM +0200, Andy Shevchenko wrote:
 > On Mon, Mar 20, 2023 at 6:39 PM Chester Lin <clin@suse.com> wrote:
 > >
-> > Move common codes into smaller inline functions and remove some argument
-> > handlings that are not actually used by either S32 MSCR register or generic
-> > config params.
+> > Use generic data structure to describe pin control functions and groups in
+> > S32 SoC family and drop duplicated struct members.
 > 
-> ...
+> Not sure about the need of the casting, see below, otherwise LGTM.
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > 
-> >         case PIN_CONFIG_OUTPUT_ENABLE:
-> > -               if (arg)
-> > -                       *config |= S32_MSCR_OBE;
-> > -               else
-> > -                       *config &= ~S32_MSCR_OBE;
-> > +               *config |= S32_MSCR_OBE;
-> >                 *mask |= S32_MSCR_OBE;
-> >                 break;
-> >         case PIN_CONFIG_INPUT_ENABLE:
-> > -               if (arg)
-> > -                       *config |= S32_MSCR_IBE;
-> > -               else
-> > -                       *config &= ~S32_MSCR_IBE;
-> > +               *config |= S32_MSCR_IBE;
-> >                 *mask |= S32_MSCR_IBE;
-> >                 break;
+> > Signed-off-by: Chester Lin <clin@suse.com>
+> > ---
+> > Changes in v2:
+> > - Simply use generic 'struct pinfunction' rather than having extra 'struct
+> >   s32_pmx_func'.
+> >
+> >  drivers/pinctrl/nxp/pinctrl-s32.h   | 26 ++--------
+> >  drivers/pinctrl/nxp/pinctrl-s32cc.c | 76 +++++++++++++++--------------
+> >  2 files changed, 45 insertions(+), 57 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/nxp/pinctrl-s32.h b/drivers/pinctrl/nxp/pinctrl-s32.h
+> > index 545bf16b988d..2f7aecd462e4 100644
+> > --- a/drivers/pinctrl/nxp/pinctrl-s32.h
+> > +++ b/drivers/pinctrl/nxp/pinctrl-s32.h
+> > @@ -15,31 +15,15 @@ struct platform_device;
+> >
+> >  /**
+> >   * struct s32_pin_group - describes an S32 pin group
+> > - * @name: the name of this specific pin group
+> > - * @npins: the number of pins in this group array, i.e. the number of
+> > - *         elements in pin_ids and pin_sss so we can iterate over that array
+> > - * @pin_ids: an array of pin IDs in this group
+> > - * @pin_sss: an array of source signal select configs paired with pin_ids
+> > + * @data: generic data describes group name, number of pins, and a pin array in
+> > +       this group.
+> > + * @pin_sss: an array of source signal select configs paired with pin array.
+> >   */
+> >  struct s32_pin_group {
+> > -       const char *name;
+> > -       unsigned int npins;
+> > -       unsigned int *pin_ids;
+> > +       struct pingroup data;
+> >         unsigned int *pin_sss;
+> >  };
+> >
+> > -/**
+> > - * struct s32_pmx_func - describes S32 pinmux functions
+> > - * @name: the name of this specific function
+> > - * @groups: corresponding pin groups
+> > - * @num_groups: the number of groups
+> > - */
+> > -struct s32_pmx_func {
+> > -       const char *name;
+> > -       const char **groups;
+> > -       unsigned int num_groups;
+> > -};
+> > -
+> >  /**
+> >   * struct s32_pin_range - pin ID range for each memory region.
+> >   * @start: start pin ID
+> > @@ -56,7 +40,7 @@ struct s32_pinctrl_soc_info {
+> >         unsigned int npins;
+> >         struct s32_pin_group *groups;
+> >         unsigned int ngroups;
+> > -       struct s32_pmx_func *functions;
+> > +       struct pinfunction *functions;
+> >         unsigned int nfunctions;
+> >         unsigned int grp_index;
+> >         const struct s32_pin_range *mem_pin_ranges;
+> > diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+> > index cb8a0844c0fa..4ed0cc905232 100644
+> > --- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
+> > +++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+> > @@ -188,7 +188,7 @@ static const char *s32_get_group_name(struct pinctrl_dev *pctldev,
+> >         struct s32_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
+> >         const struct s32_pinctrl_soc_info *info = ipctl->info;
+> >
+> > -       return info->groups[selector].name;
+> > +       return info->groups[selector].data.name;
+> >  }
+> >
+> >  static int s32_get_group_pins(struct pinctrl_dev *pctldev,
+> > @@ -198,8 +198,8 @@ static int s32_get_group_pins(struct pinctrl_dev *pctldev,
+> >         struct s32_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
+> >         const struct s32_pinctrl_soc_info *info = ipctl->info;
+> >
+> > -       *pins = info->groups[selector].pin_ids;
+> > -       *npins = info->groups[selector].npins;
+> > +       *pins = info->groups[selector].data.pins;
+> > +       *npins = info->groups[selector].data.npins;
+> >
+> >         return 0;
+> >  }
+> > @@ -314,23 +314,23 @@ static int s32_pmx_set(struct pinctrl_dev *pctldev, unsigned int selector,
+> >         grp = &info->groups[group];
+> >
+> >         dev_dbg(ipctl->dev, "set mux for function %s group %s\n",
+> > -               info->functions[selector].name, grp->name);
+> > +               info->functions[selector].name, grp->data.name);
+> >
+> >         /* Check beforehand so we don't have a partial config. */
+> > -       for (i = 0; i < grp->npins; i++) {
+> > -               if (s32_check_pin(pctldev, grp->pin_ids[i]) != 0) {
+> > +       for (i = 0; i < grp->data.npins; i++) {
+> > +               if (s32_check_pin(pctldev, grp->data.pins[i]) != 0) {
+> >                         dev_err(info->dev, "invalid pin: %u in group: %u\n",
+> > -                               grp->pin_ids[i], group);
+> > +                               grp->data.pins[i], group);
+> >                         return -EINVAL;
+> >                 }
+> >         }
+> >
+> > -       for (i = 0, ret = 0; i < grp->npins && !ret; i++) {
+> > -               ret = s32_regmap_update(pctldev, grp->pin_ids[i],
+> > +       for (i = 0, ret = 0; i < grp->data.npins && !ret; i++) {
+> > +               ret = s32_regmap_update(pctldev, grp->data.pins[i],
+> >                                         S32_MSCR_SSS_MASK, grp->pin_sss[i]);
+> >                 if (ret) {
+> >                         dev_err(info->dev, "Failed to set pin %u\n",
+> > -                               grp->pin_ids[i]);
+> > +                               grp->data.pins[i]);
+> >                         return ret;
+> >                 }
+> >         }
+> > @@ -364,7 +364,7 @@ static int s32_pmx_get_groups(struct pinctrl_dev *pctldev,
+> >         const struct s32_pinctrl_soc_info *info = ipctl->info;
+> >
+> >         *groups = info->functions[selector].groups;
+> > -       *num_groups = info->functions[selector].num_groups;
+> > +       *num_groups = info->functions[selector].ngroups;
+> >
+> >         return 0;
+> >  }
+> > @@ -602,8 +602,8 @@ static int s32_pconf_group_set(struct pinctrl_dev *pctldev, unsigned int selecto
+> >         int i, ret;
+> >
+> >         grp = &info->groups[selector];
+> > -       for (i = 0; i < grp->npins; i++) {
+> > -               ret = s32_pinconf_mscr_update(pctldev, grp->pin_ids[i],
+> > +       for (i = 0; i < grp->data.npins; i++) {
+> > +               ret = s32_pinconf_mscr_update(pctldev, grp->data.pins[i],
+> >                                               configs, num_configs);
+> >                 if (ret)
+> >                         return ret;
+> > @@ -637,9 +637,9 @@ static void s32_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
+> >
+> >         seq_puts(s, "\n");
+> >         grp = &info->groups[selector];
+> > -       for (i = 0; i < grp->npins; i++) {
+> > -               name = pin_get_name(pctldev, grp->pin_ids[i]);
+> > -               ret = s32_regmap_read(pctldev, grp->pin_ids[i], &config);
+> > +       for (i = 0; i < grp->data.npins; i++) {
+> > +               name = pin_get_name(pctldev, grp->data.pins[i]);
+> > +               ret = s32_regmap_read(pctldev, grp->data.pins[i], &config);
+> >                 if (ret)
+> >                         return;
+> >                 seq_printf(s, "%s: 0x%x\n", name, config);
+> > @@ -732,6 +732,7 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
+> >         const __be32 *p;
+> >         struct device *dev;
+> >         struct property *prop;
+> > +       unsigned int *pins, *sss;
+> >         int i, npins;
+> >         u32 pinmux;
+> >
+> > @@ -740,38 +741,38 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
+> >         dev_dbg(dev, "group: %pOFn\n", np);
+> >
+> >         /* Initialise group */
+> > -       grp->name = np->name;
+> > +       grp->data.name = np->name;
+> >
+> >         npins = of_property_count_elems_of_size(np, "pinmux", sizeof(u32));
+> >         if (npins < 0) {
+> >                 dev_err(dev, "Failed to read 'pinmux' property in node %s.\n",
+> > -                       grp->name);
+> > +                       grp->data.name);
+> >                 return -EINVAL;
+> >         }
+> >         if (!npins) {
+> > -               dev_err(dev, "The group %s has no pins.\n", grp->name);
+> > +               dev_err(dev, "The group %s has no pins.\n", grp->data.name);
+> >                 return -EINVAL;
+> >         }
+> >
+> > -       grp->npins = npins;
+> > +       grp->data.npins = npins;
+> >
+> > -       grp->pin_ids = devm_kcalloc(info->dev, grp->npins,
+> > -                                   sizeof(unsigned int), GFP_KERNEL);
+> > -       grp->pin_sss = devm_kcalloc(info->dev, grp->npins,
+> > -                                   sizeof(unsigned int), GFP_KERNEL);
+> > -       if (!grp->pin_ids || !grp->pin_sss)
+> > +       pins = devm_kcalloc(info->dev, npins, sizeof(*pins), GFP_KERNEL);
+> > +       sss = devm_kcalloc(info->dev, npins, sizeof(*sss), GFP_KERNEL);
+> > +       if (!pins || !sss)
+> >                 return -ENOMEM;
+> >
+> >         i = 0;
+> >         of_property_for_each_u32(np, "pinmux", prop, p, pinmux) {
+> > -               grp->pin_ids[i] = get_pin_no(pinmux);
+> > -               grp->pin_sss[i] = get_pin_func(pinmux);
+> > +               pins[i] = get_pin_no(pinmux);
+> > +               sss[i] = get_pin_func(pinmux);
+> >
+> > -               dev_dbg(info->dev, "pin-id: 0x%x, sss: 0x%x",
+> > -                       grp->pin_ids[i], grp->pin_sss[i]);
+> > +               dev_dbg(info->dev, "pin: 0x%x, sss: 0x%x", pins[i], sss[i]);
+> >                 i++;
+> >         }
+> >
+> > +       grp->data.pins = pins;
+> > +       grp->pin_sss = sss;
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -780,8 +781,9 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
+> >                                         u32 index)
+> >  {
+> >         struct device_node *child;
+> > -       struct s32_pmx_func *func;
+> > +       struct pinfunction *func;
+> >         struct s32_pin_group *grp;
+> > +       char **groups;
+> >         u32 i = 0;
+> >         int ret = 0;
+> >
+> > @@ -791,18 +793,18 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
+> >
+> >         /* Initialise function */
+> >         func->name = np->name;
+> > -       func->num_groups = of_get_child_count(np);
+> > -       if (func->num_groups == 0) {
+> > +       func->ngroups = of_get_child_count(np);
+> > +       if (func->ngroups == 0) {
+> >                 dev_err(info->dev, "no groups defined in %pOF\n", np);
+> >                 return -EINVAL;
+> >         }
+> > -       func->groups = devm_kcalloc(info->dev, func->num_groups,
+> > -                                   sizeof(*func->groups), GFP_KERNEL);
+> > -       if (!func->groups)
+> > +       groups = devm_kcalloc(info->dev, func->ngroups,
+> > +                             sizeof(*func->groups), GFP_KERNEL);
+> > +       if (!groups)
+> >                 return -ENOMEM;
+> >
+> >         for_each_child_of_node(np, child) {
+> > -               func->groups[i] = child->name;
+> > +               groups[i] = (char *)child->name;
+> >                 grp = &info->groups[info->grp_index++];
+> >                 ret = s32_pinctrl_parse_groups(child, grp, info);
+> >                 if (ret)
+> > @@ -810,6 +812,8 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
+> >                 i++;
+> >         }
+> >
+> > +       func->groups = (const char **)groups;
 > 
-> Isn't it a regression here?
-> Otherwise needs an explicit explanation in the commit message on
-> what's going on here and why it's not a regression.
+> Hmm... Why is casting needed?
 
-Oops, it's wrong implementation. The argument checks of OUTPUT_EN and INPUT_EN
-shouldn't be dropped. Thanks for the reminder and I will fix it.
+It's used for fulfilling the type checking done by kbuild otherwise an error will occur:
+
+drivers/pinctrl/nxp/pinctrl-s32cc.c:815:22: error: assignment to 'const char * const*' from incompatible pointer type 'char **' [-Werror=incompatible-pointer-types]
+
+In 'struct pinfunction', the member 'groups' is declared as (const char * const *).
 
 Regards,
 Chester
 
 > 
-> ...
-> 
-> >         case PIN_CONFIG_BIAS_DISABLE:
-> > -               *config &= ~(S32_MSCR_PUS | S32_MSCR_PUE);
-> > -               *mask |= S32_MSCR_PUS | S32_MSCR_PUE;
-> > +               s32_pin_set_pull(param, mask, config);
-> >                 break;
-> 
-> This now can be unified with PU and PD cases above.
+> >         return 0;
+> >  }
 > 
 > -- 
 > With Best Regards,
