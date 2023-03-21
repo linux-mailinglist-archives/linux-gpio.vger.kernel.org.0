@@ -2,132 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2936A6C3371
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 14:54:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 961B56C33E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 15:18:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbjCUNyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Mar 2023 09:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
+        id S230509AbjCUOSC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Mar 2023 10:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbjCUNyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 09:54:21 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34094FCD8;
-        Tue, 21 Mar 2023 06:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679406839; x=1710942839;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0ghqHSYYR9HkUFWf0Y7Mfj7c4+87GevTnsySVxln5WI=;
-  b=CMFrIPzf6Inu55SPI4rE+3V4VJ4WEZ0+CQcPYObqyQRXGwGGFY3459LY
-   6DIM9PNUoxL9r3/N1qDNMKGSi4mRI/hFowN7kscvwj/YbUvF5lQyw4Cjz
-   rbPbSxHNJSUmfSR3f1sIU0Xuo7NatJnTVOYkA9R4hl9qSy/fQpcw4LvO7
-   7X7oiGgM9+G0fs4xwG8UY137PJYDFHD2DsOFDBv8TPpFBbaLW5rWc6omw
-   vvDBufdG++ei1fpYs4sPQEI7kfgxe3p2ySwY44J6fAsMV7lIQ8zt0K0nD
-   zOe5fAjT5+BEUsIDmaysRuc52ELR4OLO0VIGSmk5ndG4Q8LYrREy9wKeo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="319333155"
-X-IronPort-AV: E=Sophos;i="5.98,279,1673942400"; 
-   d="scan'208";a="319333155"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 06:53:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="713999591"
-X-IronPort-AV: E=Sophos;i="5.98,279,1673942400"; 
-   d="scan'208";a="713999591"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2023 06:53:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 028C64FF; Tue, 21 Mar 2023 15:54:16 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 2/2] gpiolib: Check array_info for NULL only once in gpiod_get_array()
-Date:   Tue, 21 Mar 2023 15:54:12 +0200
-Message-Id: <20230321135412.73240-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20230321135412.73240-1-andriy.shevchenko@linux.intel.com>
-References: <20230321135412.73240-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230495AbjCUOSA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 10:18:00 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E223FCC1F
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Mar 2023 07:17:50 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id y14so15673632ljq.4
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Mar 2023 07:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679408269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tMn7LHKKTu4Ns9vFmGoBtS8cTIhQAr15IAlChqCRIjg=;
+        b=XNmIG6LCixSgb0IbQeT7vxzIHWMRiNclEzB7QBxzg+WYYt2jEZNuEIrOFo2bGCmdk2
+         Sjbl+pBpHvovFPW7yF74xFa4B9WUOkxNhoOge0xavCIjfKbZm4JB+4EAhBPBlvwGZZcg
+         xP05I38BIyJxDjUtlct1p3PRgWTylor6TbfUlQvxXA4gFsGMxyK2kNGgsMLi1ScKip7Q
+         OXhhehwButp4x98UVyIvVYHQPAuP+8HzSjqvtI3KBwSA1HJG2tScxkEaca4/9cKGFdFg
+         WsrKIgUgJ7Xi70lJPWPUs6V2WIBG/muqmycPiNNF3jnlNez3kTH45mqbrnPYvE2aRsOh
+         utrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679408269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tMn7LHKKTu4Ns9vFmGoBtS8cTIhQAr15IAlChqCRIjg=;
+        b=K/7YxrEhidwG29IgeiF9XQVBIjAyLzYr3TFq3F5AH+yw6SHyTk96AvxM5+PAsJtWk2
+         zHkmcLOgViQ/PDA9tzfcd713fXSLVb5i2JS1ga/c9cIaoEtwH2u4LwLGgQD3liqBp7AE
+         DJjjNiFdlboOGR+v+5mbxp8B+gzkDS5gk5ovEmwygNrtaB0APG0JOpbTOjmxk9GeaoG9
+         He0TGYdSdQHw8tSbrVMmOWHKuwltJMbgl2t9apqMn/o/RGX3yi0eO+3bS2jS5mtYRtAD
+         td6IJceOayJTwFINHJEyZ245MpW9OGbICcIY2UG+MOPuIz4OQe60yipf5EP6jvRsunvu
+         SDtA==
+X-Gm-Message-State: AO0yUKXUBgqM0X1rr1AUskZBJqwQInSr0IsM8UcqfWrN8xGDu6tenIB6
+        DbXLHaF0VudBIQ0At4gUnjfwkKjXMmgLchBMAo0wxg==
+X-Google-Smtp-Source: AK7set8b0x6Hc/6GcdfBaiyGfeNfULbWOK7+qOwTD2eBr42E8cIkkxgtVYted3CNCO2pKDyXkWKZbmkwrodDXaQN4ck=
+X-Received: by 2002:a2e:901a:0:b0:299:aa7a:94c8 with SMTP id
+ h26-20020a2e901a000000b00299aa7a94c8mr896022ljg.10.1679408269057; Tue, 21 Mar
+ 2023 07:17:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230320154841.327908-1-brgl@bgdev.pl> <20230320154841.327908-10-brgl@bgdev.pl>
+ <65d15d82-c106-b0a7-11b4-703bf22c28b1@linaro.org> <c74e0683-304d-7571-1d22-c2c65d02dc6a@linaro.org>
+In-Reply-To: <c74e0683-304d-7571-1d22-c2c65d02dc6a@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 21 Mar 2023 15:17:35 +0100
+Message-ID: <CAMRc=McNAy_08es7CRwhyE+OGHM-+GSsd0xGJNAdNcOs9eNq7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] arm64: dts: qcom: sa8775p: add the Power On
+ device node
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpiod_get_array() has a long if-else-if branching where each of them
-tests for the same variable to be not NULL. Instead, check for NULL
-before even going to that flow.
+On Mon, Mar 20, 2023 at 6:25=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro=
+.org> wrote:
+>
+>
+>
+> On 20.03.2023 18:23, Konrad Dybcio wrote:
+> >
+> >
+> > On 20.03.2023 16:48, Bartosz Golaszewski wrote:
+> >> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>
+> >> Add the PON node to PMIC #0 for sa8775p platforms.
+> >>
+> >> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >> ---
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> >
+> > Konrad
+> Hold up, I am not sure if PBS is there on PMM8654AU. Check the
+> -pmic-overlay.dtsi.
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Yep, it's there alright.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 3e94990f1f90..ee24428c5fe3 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4294,7 +4294,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 	if (!descs)
- 		return ERR_PTR(-ENOMEM);
- 
--	for (descs->ndescs = 0; descs->ndescs < count; ) {
-+	for (descs->ndescs = 0; descs->ndescs < count; descs->ndescs++) {
- 		desc = gpiod_get_index(dev, con_id, descs->ndescs, flags);
- 		if (IS_ERR(desc)) {
- 			gpiod_put_array(descs);
-@@ -4339,8 +4339,13 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 				   count - descs->ndescs);
- 			descs->info = array_info;
- 		}
-+
-+		/* If there is no cache for fast bitmap processing path, continue */
-+		if (!array_info)
-+			continue;
-+
- 		/* Unmark array members which don't belong to the 'fast' chip */
--		if (array_info && array_info->chip != gc) {
-+		if (array_info->chip != gc) {
- 			__clear_bit(descs->ndescs, array_info->get_mask);
- 			__clear_bit(descs->ndescs, array_info->set_mask);
- 		}
-@@ -4348,8 +4353,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 		 * Detect array members which belong to the 'fast' chip
- 		 * but their pins are not in hardware order.
- 		 */
--		else if (array_info &&
--			   gpio_chip_hwgpio(desc) != descs->ndescs) {
-+		else if (gpio_chip_hwgpio(desc) != descs->ndescs) {
- 			/*
- 			 * Don't use fast path if all array members processed so
- 			 * far belong to the same chip as this one but its pin
-@@ -4363,7 +4367,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 				__clear_bit(descs->ndescs,
- 					    array_info->set_mask);
- 			}
--		} else if (array_info) {
-+		} else {
- 			/* Exclude open drain or open source from fast output */
- 			if (gpiochip_line_is_open_drain(gc, descs->ndescs) ||
- 			    gpiochip_line_is_open_source(gc, descs->ndescs))
-@@ -4374,8 +4378,6 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 				__set_bit(descs->ndescs,
- 					  array_info->invert_mask);
- 		}
--
--		descs->ndescs++;
- 	}
- 	if (array_info)
- 		dev_dbg(dev,
--- 
-2.40.0.1.gaa8946217a0b
+Bartosz
 
+> Konrad
+> >>  arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi | 8 ++++++++
+> >>  1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi b/arch/arm64/=
+boot/dts/qcom/sa8775p-pmics.dtsi
+> >> index afe220b374c2..dbc596e32253 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
+> >> @@ -12,6 +12,14 @@ pmm8654au_0: pmic@0 {
+> >>              reg =3D <0x0 SPMI_USID>;
+> >>              #address-cells =3D <1>;
+> >>              #size-cells =3D <0>;
+> >> +
+> >> +            pmm8654au_0_pon: pon@1200 {
+> >> +                    compatible =3D "qcom,pmk8350-pon";
+> >> +                    reg =3D <0x1200>, <0x800>;
+> >> +                    reg-names =3D "hlos", "pbs";
+> >> +                    mode-recovery =3D <0x1>;
+> >> +                    mode-bootloader =3D <0x2>;
+> >> +            };
+> >>      };
+> >>
+> >>      pmm8654au_1: pmic@2 {
