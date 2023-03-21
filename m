@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E866C2B63
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 08:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0960C6C2B7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Mar 2023 08:40:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbjCUHdM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Mar 2023 03:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
+        id S229648AbjCUHkH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Mar 2023 03:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjCUHdL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 03:33:11 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF7726A9;
-        Tue, 21 Mar 2023 00:33:10 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id n2so16913327qtp.0;
-        Tue, 21 Mar 2023 00:33:10 -0700 (PDT)
+        with ESMTP id S229511AbjCUHkG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Mar 2023 03:40:06 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD79399CD;
+        Tue, 21 Mar 2023 00:40:05 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id hf2so12710923qtb.3;
+        Tue, 21 Mar 2023 00:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679383989;
+        d=gmail.com; s=20210112; t=1679384404;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hbvwfX4HdFVcFa9ONSDF5jyL9MuoCdO7UcrZvzzJA0s=;
-        b=qe5G4aUH9rC1OF6SnnmwoVmoWoruFcMTUFvk0cF5ismoqM5Bspv4C22Aua25ZEkJrj
-         /WQRa+QYBdikD/JxuAsDOXMs2IIfmQw+TZXjt8vZRVqr2bP/BWZOMwbiQ5MFtzS6eAuS
-         869utLwajNBfvFYC/lx0lsNb8VntgeU7d5KzQ9R/a/0ybJwbssHE6OsycroBXvARWwZY
-         YuaXC0oYZqbTKUvf56OCapHxJ2DTr1mVAkghx+RDSKZFCvg4en0JkYkSgF2142pb8Y6h
-         EuIfLl4qIFVJxQdu/s4V252Cv2bHbH6G5UHZUpwPnOVappRXupoMEPI/nEtmzOxZdRzj
-         ysFQ==
+        bh=BnIPjLUX4Z510IIWWpC84rJwmT7E/XQS4mQtVQn1qpY=;
+        b=a84YNjiDt/ukjiaAMrfaImmA6dl//kFXJyl1tEzAMKAmwAEZOnT8mlIJxmreZCxQGD
+         Pg6cU7xcgVnCvbEJRvYuzSiLZW2c2rtaeN3A0Z5AaLwuy0DhQ1rskthn447GR6vOG2wX
+         XTy0xC6pmIggXXQ9qVp07/XLNj2tb7QQkRq1rbnMJ1tusCvCGrU+QU/uAo9WuiYyufLk
+         LlDtigTyw+ngkIxzqb5h1ML7ZNEdVxq8kuZ3FkrZuIwx4JGs9iqlY2cesSPldLvQossi
+         tQU6y/YINoY64htu9OUYOrOOuu1x7bvMVZHxsx06TJt0ZfuBWfmNP5OIwtxCUJn/wF6f
+         zmJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679383989;
+        d=1e100.net; s=20210112; t=1679384404;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hbvwfX4HdFVcFa9ONSDF5jyL9MuoCdO7UcrZvzzJA0s=;
-        b=V0LxrVUhLG9N/Kn3hyTBFezUpyFI32DqFVgNFYUfAX47C24WVXzT7xcm8I5mpcnA2n
-         mibte34QOagdT6pb+tL0A9Ycz9yu9IwT2pMdAUG2s+T2pkjboOmBFDlDwZ/9K/MuIcSG
-         zP/3xhkPS56FUpGdFg6oUc3yzOLBb/rKY5p+RSYBx5HTwVvph+BQ/ZSonO4aubsewRky
-         OWVezlbXfAvZXUW8a8Rky1azqkf7On3q62DR5yzBTm2oWmkrjj65VaZ25g+21+7J+vtt
-         7yhz6ytT9ahx94yjEJO+iZOhPvBIXEdtH9UOL/3AlsRxWCLpqdu2Zj+rhK9DiEZSzYLz
-         4sCA==
-X-Gm-Message-State: AO0yUKX51+YTDWhwBYDYr6NyUyRZmS2L2qP7OP9Y1Vhp3+sAVJhIYHzp
-        4cMYZXldqkw8YE2fXrO1TC/AnQOxz36iWVY1t/c=
-X-Google-Smtp-Source: AK7set9ynhqpq7o/wR7ADvwgTLq4BtW5iz8QTCgPqR8XntZv7eGLlKQABZEHV8QtvJkztSq6+4QvEccNDw/Y8LtNdng=
-X-Received: by 2002:a05:622a:1996:b0:3e2:efb6:9d9e with SMTP id
- u22-20020a05622a199600b003e2efb69d9emr714164qtc.0.1679383989015; Tue, 21 Mar
- 2023 00:33:09 -0700 (PDT)
+        bh=BnIPjLUX4Z510IIWWpC84rJwmT7E/XQS4mQtVQn1qpY=;
+        b=lq1ph+EaiutfNbS69kfk5btDn4+uSf7cA639vwSd8EeiVLwJnL55OvXya/BuJyJI0D
+         TxzzBoUMYB06Ul1VolVdGsXD06BA+7eoz7DEsNY2Of8e4t8QQlkDfFw2+0LMWx5SIk8+
+         aZKeCNB7XyqYCwgm8vU2CJ3IhDXTj3NBou9nIhcqwz9JxmQ6Aec5eGAyaBr/Kn0UCeWf
+         SaME2Bo7de8jumCBFMNMb8n7YAXc/q3hl6LHnESteZIHEGaBQuKwY0txttq8iqrePgiq
+         nwe5VeXPC0CP1WJMUrc50ll9EflmAx1SvifEPiMrowFSdtjCLTkB7xXNM3Q7MhDpe9ZE
+         EFBg==
+X-Gm-Message-State: AO0yUKVwD4dUayRHDfoQ1+4UIEfpJ1a0+l5bMmi6Q1sq5fVoLQTnFIlj
+        9KzWLVuGaeRQyWutrU6GynSRqNwpAXmrjddyP1Q=
+X-Google-Smtp-Source: AK7set+JdDi4nQCqWcqZ+QfR6HDyzcHEPETHG6UZatxhiS8BK8WqbOlmhGsM6+JKmWiYGS1oXBRO8vq3k/tfWwFzlhE=
+X-Received: by 2002:a05:622a:189c:b0:3de:fa64:ff2b with SMTP id
+ v28-20020a05622a189c00b003defa64ff2bmr697114qtc.0.1679384404132; Tue, 21 Mar
+ 2023 00:40:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230320163823.886-1-clin@suse.com> <20230320163823.886-2-clin@suse.com>
- <CAHp75VeVbV8iC6J63PgnE=i7EajvrDhFnEUcq0H_fRGfMMh+7g@mail.gmail.com> <ZBk2IksVZ7N6wKeP@linux-8mug>
-In-Reply-To: <ZBk2IksVZ7N6wKeP@linux-8mug>
+References: <20230320163823.886-1-clin@suse.com> <20230320163823.886-5-clin@suse.com>
+ <CAHp75VfFTjPFMQ91yHC4O1enTJqtww7ur8ppwa1rqT_7WNzDTQ@mail.gmail.com> <ZBk7/h4nquwZShv1@linux-8mug>
+In-Reply-To: <ZBk7/h4nquwZShv1@linux-8mug>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Mar 2023 09:32:32 +0200
-Message-ID: <CAHp75VcJ08JL_2X8T6OXEhL0cb2iqYhhVr_jQ4N=4NC_tTU_Tw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] pinctrl: s32: use of_device_get_match_data() to
- get device data
+Date:   Tue, 21 Mar 2023 09:39:28 +0200
+Message-ID: <CAHp75VdbUH6D2drFwpdX06EwqqJhkNm1jq8ABrw5oZw79frziw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] pinctrl: s32cc: embed generic struct pingroup and pinfunction
 To:     Chester Lin <clin@suse.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         NXP S32 Linux Team <s32@nxp.com>,
@@ -77,33 +76,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 6:44=E2=80=AFAM Chester Lin <clin@suse.com> wrote:
-> On Mon, Mar 20, 2023 at 06:59:41PM +0200, Andy Shevchenko wrote:
+On Tue, Mar 21, 2023 at 7:09=E2=80=AFAM Chester Lin <clin@suse.com> wrote:
+> On Mon, Mar 20, 2023 at 07:10:40PM +0200, Andy Shevchenko wrote:
 > > On Mon, Mar 20, 2023 at 6:39=E2=80=AFPM Chester Lin <clin@suse.com> wro=
 te:
 
 ...
 
-> > > +       soc_info =3D (struct s32_pinctrl_soc_info *)
-> > > +                       of_device_get_match_data(&pdev->dev);
-> >
-> > Drop the ugly casting, it's not needed.
->
-> Actually it's used for suppressing the compiler warning since some member=
-s in
-> this soc_info need to be filled by pinctrl-s32cc.
+> > >         for_each_child_of_node(np, child) {
+> > > -               func->groups[i] =3D child->name;
+> > > +               groups[i] =3D (char *)child->name;
 
-Yes, that's one way to solve this.
+Here is also questionable casting.
 
 ...
 
-> +       info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> +       if (!info)
-> +               return -ENOMEM;
-> +
-> +       memcpy(info, soc_data, sizeof(*info));
+> > > +       func->groups =3D (const char **)groups;
+> >
+> > Hmm... Why is casting needed?
+>
+> It's used for fulfilling the type checking done by kbuild otherwise an er=
+ror will occur:
+>
+> drivers/pinctrl/nxp/pinctrl-s32cc.c:815:22: error: assignment to 'const c=
+har * const*' from incompatible pointer type 'char **' [-Werror=3Dincompati=
+ble-pointer-types]
+>
+> In 'struct pinfunction', the member 'groups' is declared as (const char *=
+ const *).
 
-Right, but use devm_kmemdup() instead.
+So, please decouple `struct pingroup` change to a separate patch and
+hence `struct pinfunction` on its own.
+
+After, consider changing types elsewhere that are following the types
+in that data structures.
 
 --=20
 With Best Regards,
