@@ -2,61 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6136C50E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 17:37:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 198E36C50FE
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 17:42:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbjCVQhy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Mar 2023 12:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
+        id S230408AbjCVQmh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Mar 2023 12:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230258AbjCVQhx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 12:37:53 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4836130E
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:37:51 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id e19so16715173vsu.4
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:37:51 -0700 (PDT)
+        with ESMTP id S230364AbjCVQme (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 12:42:34 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A5064204
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:42:32 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id i10so1381558vss.5
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679503070;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679503351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SDwWxR2C8imvh8J9/5EbHiWJIV6of+hEInMJyXUJk6s=;
-        b=ZMyOV1xjHRdSNEvZ2kyE4+WSV4dk1uc8qq9y9cXGL9a93XClfi3aT6DJdqEy/Ynj7r
-         /MTUl/o05aeca/R8JHYomeNu0KYojtXB14gkBAhFG7ZC3R9vUXyWqy5ul8Xv53t0gGRp
-         rUNbAY/kmcDpkGFKQV1byycV2Bdg4n+bOLzOmMB/cv3nBruvZYcjIOfAVpM/2k3LZNpV
-         i0dEY51KoscLuex/zwihXLTXxEVkk1XEVb9HXPtJ/9swBLjLFaDCvk1neAS56nljzTQ1
-         2dTtKZr4DJj5Jhsv1Uj8Fw45X+P8NH9FYRSD4jqZEw5nb5kTIKpQWXzlQ7Qg488i+Z+p
-         IVUg==
+        bh=VmnnMMvSLOdA65bN5I8O3X2sjkCjbZFK9esp/HZ4bO0=;
+        b=K1X5LlHD1KTJx0CtsGxmvT1jE0SyIa+A1BAiMv9cuDnLDanH5SXhjPHHh9Xtr5jp6F
+         nVHCZPDozIw3JZGlsg++BV692DK6olE41R2lKzV2VJHsbav2rzbmnS4ippdZ4czCAOTU
+         DsoN4AIA5q2ltgI9R3GWi5nS59j9fC54oVN1ukEXlnsw/ecAq1BTY+b2EhsxT7YaV7+R
+         ACL+wGuTiYlkUacdKR2fB6rtRYC6WAWZAiPoAExnbRgfzDIn+9xmNUmJgO6fMa7JAKY7
+         PVxN0Jpfrrlwu9OCzuEhOwDUqv0CYGtGqFGhUwlCu9h0rCrpK808feWrv8akmGxgohTP
+         oHrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679503070;
+        d=1e100.net; s=20210112; t=1679503351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SDwWxR2C8imvh8J9/5EbHiWJIV6of+hEInMJyXUJk6s=;
-        b=MEirNt3ttZw5jwL0GQayc3RLCsACVvqs8El4DQvu/htRYtTTWAWEZZUjZ/9oeJPuRJ
-         jDDj8FOZO2rhfvjTqYLp2v8Z5ezGqjsvCbpe+eWco2IgN36W70vISeM5anSDnRAAXKiK
-         Zf67+bDe43gc07UqyLc17g2qhdovJ6Om/RsrJdtfjnqSanuJ0JZz3it4cOLvAXwsZwgV
-         iFRgM9+a8vvkklVHvAlIUeQdACEfB6FzNIsYNeOEzyPbK74cfPii31QtkGUcZctQkeci
-         IGlFet4U1SjBF92cMwv3k7EZZm74dFMJTDh+mbT2flPoTV5+EN3Gsyo2ZA0bBRQ3lJrd
-         eaFw==
-X-Gm-Message-State: AO0yUKWyIlTYFWOQEzdZCiT+Pm6+P5tpNtCT/00T7O6u8gCaeVZOHsOu
-        Z3pnqGGBKQfapXNQzo+mtCvY/qpkB4OjzyNdVhjbqA==
-X-Google-Smtp-Source: AK7set+bqP8uo5+tkUexX6+p9iJOvr9iT4N/iJBrltoYtpQrPaOJgVmgUu/p7sYrjZXgSMDYj1knt7/yFH2mIvShKSw=
-X-Received: by 2002:a67:c38b:0:b0:411:b4c2:c6c0 with SMTP id
- s11-20020a67c38b000000b00411b4c2c6c0mr74966vsj.0.1679503069881; Wed, 22 Mar
- 2023 09:37:49 -0700 (PDT)
+        bh=VmnnMMvSLOdA65bN5I8O3X2sjkCjbZFK9esp/HZ4bO0=;
+        b=45VX8xNsGl3BiHeEYhcLkoPRHsWCi6oBzYFBMuHVYI3FhqZZtY+vEoL10T4QRAWfCM
+         eGdXe5+VynOJIAlpqXAsX95boTim8hzyPLfz6Toy/EjF5Aa3Hbqt7/Ou7P9NQl3TK61w
+         t1bFbFzqVDFiV6ytLNB6mwRWvlqTJ3l93J2g82i6AwqKRaq6GyojLHa2y6+qV6JEMSuk
+         5JaaM3V0/74rYB0Zd3ORGIr48U6PBuheavqlRoPSk5jTRZAI9PxxO7OaibCtzrsEj3YG
+         9drL+uwewn/uwnUXRdQh+BEZF/deyibBO50prOTGPG1e2aS7UcwniJZkjh//G239iHmc
+         b46w==
+X-Gm-Message-State: AO0yUKWAsrYFXJNK3G+FLxnGecBatSrdtEc55gqrxqWUPj4nCXuEqNq3
+        IzmYzsn3qVCSuGTzVAUFlbWa8SUfh2dXN5QkbZoV5A==
+X-Google-Smtp-Source: AK7set/RWj8MjG2qYfMV5NINsPkCRSFEKkqgR6XZHjCzh22PdBgdXg7kYsGksZ26QMzp8O/PYzJ6qyyWSjXqVS6WxWQ=
+X-Received: by 2002:a05:6102:4751:b0:425:dd2d:1c0 with SMTP id
+ ej17-20020a056102475100b00425dd2d01c0mr75732vsb.0.1679503351764; Wed, 22 Mar
+ 2023 09:42:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1677515341.git.william.gray@linaro.org> <16c8b165d84df82dd6f1230d14fb6ecf27b5363b.1677515341.git.william.gray@linaro.org>
-In-Reply-To: <16c8b165d84df82dd6f1230d14fb6ecf27b5363b.1677515341.git.william.gray@linaro.org>
+References: <20230315110650.142577-1-keguang.zhang@gmail.com> <20230315110650.142577-2-keguang.zhang@gmail.com>
+In-Reply-To: <20230315110650.142577-2-keguang.zhang@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 22 Mar 2023 17:37:39 +0100
-Message-ID: <CAMRc=MfPp7=K244cz6xLPKr9C6mwvrG48-yp0EmPA9faHDqyjQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] gpio: pci-idio-16: Migrate to the regmap API
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     linus.walleij@linaro.org, broonie@kernel.org,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Wed, 22 Mar 2023 17:42:21 +0100
+Message-ID: <CAMRc=Megxi64KcDsaj+FEtzbLK8ohT9D8g_p-kWrKjXc89t5yQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] gpio: loongson1: Convert to SPDX identifier
+To:     Keguang Zhang <keguang.zhang@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -68,22 +70,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 5:54=E2=80=AFPM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Wed, Mar 15, 2023 at 12:07=E2=80=AFPM Keguang Zhang <keguang.zhang@gmail=
+.com> wrote:
 >
-> The regmap API supports IO port accessors so we can take advantage of
-> regmap abstractions rather than handling access to the device registers
-> directly in the driver. Migrate the pci-idio-16 module to the new
-> idio-16 library interface leveraging the gpio-regmap API.
+> Use SPDX-License-Identifier instead of the license text.
 >
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> The current author name is unofficial, change it to my real name.
+>
+> Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
 > ---
+> V2 -> V3: Explain the reason for changing the author name in commit messa=
+ge
+> V1 -> V2: Keep GPLv2, just convert to SPDX identifier
+> ---
+>  drivers/gpio/gpio-loongson1.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson1.=
+c
+> index 5d90b3bc5a25..8862c9ea0d41 100644
+> --- a/drivers/gpio/gpio-loongson1.c
+> +++ b/drivers/gpio/gpio-loongson1.c
+> @@ -1,11 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * GPIO Driver for Loongson 1 SoC
+>   *
+> - * Copyright (C) 2015-2016 Zhang, Keguang <keguang.zhang@gmail.com>
+> - *
+> - * This file is licensed under the terms of the GNU General Public
+> - * License version 2. This program is licensed "as is" without any
+> - * warranty of any kind, whether express or implied.
+> + * Copyright (C) 2015-2023 Keguang Zhang <keguang.zhang@gmail.com>
+>   */
+>
+>  #include <linux/module.h>
+> @@ -90,6 +87,6 @@ static struct platform_driver ls1x_gpio_driver =3D {
+>
+>  module_platform_driver(ls1x_gpio_driver);
+>
+> -MODULE_AUTHOR("Kelvin Cheung <keguang.zhang@gmail.com>");
+> +MODULE_AUTHOR("Keguang Zhang <keguang.zhang@gmail.com>");
+>  MODULE_DESCRIPTION("Loongson1 GPIO driver");
+>  MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+>
 
-This doesn't apply as Linus predicted with Linus' series in my for-next tre=
-e.
-
-Can you rebase and resend?
+Applied, thanks!
 
 Bart
