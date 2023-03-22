@@ -2,127 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E74F96C4EA4
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 15:56:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A66AF6C4F79
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 16:31:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbjCVO4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Mar 2023 10:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
+        id S231616AbjCVPbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Mar 2023 11:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbjCVOzz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 10:55:55 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7189B7D98;
-        Wed, 22 Mar 2023 07:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679496934; x=1711032934;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h6hskFbHw7KYbk2YVxQW62X04Lp2hb/hxK+OlVrcXP4=;
-  b=Rxxgqsu8UAdQnb1h6K303HVluCyVmnz5D30/nhwmcJpyS2ZenbrSU+gm
-   xor7pUpiJDVctjX0QEwTy3seq0xPXoPnUc9sMuncpewpEuXtcL3mniXxA
-   msnsVqGNYn7nCZ7Sb7m0sbzmR7G+1u+K8Ye68+b+MN+95fXd1m8ubkisk
-   u6eIYjWQwJILL7weXKA2jg/GiseLs3iwxvzB/QC89bJUxcQarhb9UI8mQ
-   WSqCikoydSgBJNovxKH/rIJ6w9qeLtAJLQCgQ5NFTPq52bsQ0vtRPuAyj
-   0MwEwHlTehZrvJvtw4bvhQe8b/XPKlVafmzQygqFre+2ip37Y4pdHvYKi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="327613246"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="327613246"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 07:55:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="792583313"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="792583313"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2023 07:55:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pezsA-007Agk-0e;
-        Wed, 22 Mar 2023 16:55:30 +0200
-Date:   Wed, 22 Mar 2023 16:55:29 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Werner Sembach <wse@tuxedocomputers.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NL5xNU
-Message-ID: <ZBsW4XzDvBXNSy2C@smile.fi.intel.com>
-References: <20230322121547.14997-1-wse@tuxedocomputers.com>
+        with ESMTP id S231655AbjCVPbN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 11:31:13 -0400
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0EE6703A
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 08:31:10 -0700 (PDT)
+Received: by mail-ua1-x92c.google.com with SMTP id e12so7996118uaa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 08:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679499069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0JTo8jph/aEjP08QKbcmScKBA9sBPX+GiZwkKubY1Gk=;
+        b=eauVrq3lCS2jOzGbplgI8zdDDffe6LpWln3OvKIInQDiOix8KTpVLFGH8+AQ0TdRo8
+         F4xd74EfYHgpAkeccXwraHZ5ytlfu/C0mX4ktGEarHhyxUnbgyvdi6ExPEjngzOWjnah
+         FUOIg7Imp5Yh3y/ba1zTCNBvH5Pr1xp6Vs1XXN7XpXs3rddczEPODsYOPyIVlwK0lhxG
+         LGsEyFttuQOQm+B/UJEViFBMojvgEgWcLnE7KzvsRKz5m8eNdAqxdf+uSKDxoiuGsqRi
+         SD0fPbnaouPtIHo9ZELWnjqSBwMpPF0hIvNHTZ0+4+hI7Rc20uxdM1HHuW2W3/2aRzeJ
+         skIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679499069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0JTo8jph/aEjP08QKbcmScKBA9sBPX+GiZwkKubY1Gk=;
+        b=AlUXJBuwsBZGRsOVb4Ohww9VMrWiXGladPBCyhQjgiNSZ0t0nZX7VtKRvWM6xbZpyM
+         HFoKhqfg2K5uVD/YNtbHUzPes/7qyv9UrBDrjBlokpFggnSgljbp1Ihx+QEUfULNPYpk
+         R+OycIHf/H7mJDBE7Vb+5Rb4wRQxiU8qIfAuPco6TDyCqEtpl28YjGHnqPQNB1aJfR/o
+         A4jev9gLJ3kRI4huAt9wCbDaFR3a1ULgnAdXe2lMAx5ZnMaKJZVCobUg6uUBV6sP1SCs
+         I9NETnHgA+PafOtHoF/yz7jn79Pb67+3Pvko1lt06YEz/fUunDr/YYaDvgi8jODRTkPZ
+         1Hdw==
+X-Gm-Message-State: AAQBX9d7g0PKXUmBerIBRJaBlFPZnzI54UHfhmQxsrcGFeMPUJt+fGI4
+        US5UqR5XXsORDaLe/9o+gyjlvOpskR8rNBRWHVLfaA==
+X-Google-Smtp-Source: AKy350bgPvOaa5GVQyfGusKzp7YCG85tu9N7HftX4ULnuhznxfaZFYV1rSSglte4O1kEw+RW+KtprQo8LzYWDFTtwz8=
+X-Received: by 2002:ab0:3c4a:0:b0:68e:2dce:3162 with SMTP id
+ u10-20020ab03c4a000000b0068e2dce3162mr3757083uaw.2.1679499069601; Wed, 22 Mar
+ 2023 08:31:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230322121547.14997-1-wse@tuxedocomputers.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230320154841.327908-1-brgl@bgdev.pl> <20230320154841.327908-13-brgl@bgdev.pl>
+ <a215c54b-c12e-4463-f9fe-588053f74300@linaro.org> <20230322025047.gvo252mh2flcbzuc@ripper>
+In-Reply-To: <20230322025047.gvo252mh2flcbzuc@ripper>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 22 Mar 2023 16:30:58 +0100
+Message-ID: <CAMRc=MeVaMaQMsLUPH0QDjuOBt3TjVofbj7SgA5zMg3sQGBh=w@mail.gmail.com>
+Subject: Re: [PATCH v2 12/15] arm64: dts: qcom: sa8775p: pmic: add thermal zones
+To:     Bjorn Andersson <andersson@kernel.org>
+Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 01:15:47PM +0100, Werner Sembach wrote:
-> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
-> changed the policy such that I2C touchpads may be able to wake up the
-> system by default if the system is configured as such.
-> 
-> However on Clevo NL5xNU there is a mistake in the ACPI tables that the
-> TP_ATTN# signal connected to GPIO 9 is configured as ActiveLow and level
-> triggered but connected to a pull up. As soon as the system suspends the
-> touchpad loses power and then the system wakes up.
-> 
-> To avoid this problem, introduce a quirk for this model that will prevent
-> the wakeup capability for being set for GPIO 9.
-> 
-> This patch is analoge to a very similar patch for NL5xRU, just the DMI
-> string changed.
+On Wed, Mar 22, 2023 at 3:47=E2=80=AFAM Bjorn Andersson <andersson@kernel.o=
+rg> wrote:
+>
+> On Mon, Mar 20, 2023 at 06:28:20PM +0100, Konrad Dybcio wrote:
+> >
+> >
+> > On 20.03.2023 16:48, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Add the thermal zones and associated alarm nodes for the PMICs that h=
+ave
+> > > them hooked up on sa8775p-ride.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi | 58 +++++++++++++++++++=
+++
+> > >  1 file changed, 58 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi b/arch/arm64=
+/boot/dts/qcom/sa8775p-pmics.dtsi
+> > > index 8616ead3daf5..276070b62ccd 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
+> > > @@ -6,6 +6,50 @@
+> > >  #include <dt-bindings/input/input.h>
+> > >  #include <dt-bindings/spmi/spmi.h>
+> > >
+> > > +/ {
+> > > +   thermal-zones {
+> > > +           pmm8654au_1_thermal: pm8775-1-thermal {
+> > Please reindex this, downstream uses _1 for pmic@0, but this
+> > makes little sense. Make it match the SID.
+> >
+>
+> Please use the naming from the schematics for these things, rather than
+> just an iterator (which might be what Bartosz is doing here).
+>
 
-Fine,
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Not sure how to approach that. All currently existing
+"qcom,spmi-temp-alarm" nodes use the PMIC name for the label.
+Otherwise it would have to go into the board file and be replicated
+for each board using the same PMIC?
 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/gpio/gpiolib-acpi.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 34ff048e70d0e..055013f959b25 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -1624,6 +1624,19 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
->  			.ignore_interrupt = "AMDI0030:00@18",
->  		},
->  	},
-> +	{
-> +		/*
-> +		 * Spurious wakeups from TP_ATTN# pin
-> +		 * Found in BIOS 1.7.8
-> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627
-> +		 */
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "NL5xNU"),
-> +		},
-> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-> +			.ignore_wake = "ELAN0415:00@9",
-> +		},
-> +	},
->  	{
->  		/*
->  		 * Spurious wakeups from TP_ATTN# pin
-> -- 
-> 2.34.1
-> 
+Bart
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Regards,
+> Bjorn
+>
+> > > +                   polling-delay-passive =3D <100>;
+> > > +                   polling-delay =3D <0>;
+> > > +                   thermal-sensors =3D <&pmm8654au_1_temp_alarm>;
+> > > +
+> > > +                   trips {
+> > > +                           trip0 {
+> > > +                                   temperature =3D <105000>;
+> > > +                                   hysteresis =3D <0>;
+> > > +                                   type =3D "passive";
+> > > +                           };
+> > > +
+> > > +                           trip1 {
+> > > +                                   temperature =3D <125000>;
+> > > +                                   hysteresis =3D <0>;
+> > > +                                   type =3D "critical";
+> > > +                           };
+> > > +                   };
+> > > +           };
+> > > +
+> > What happened to the downstream _2 (pmic@2) one and _4 (pmic@6)?
+> >
+> > Konrad
+> >
+> > > +           pmm8654au_3_thermal: pm8775-3-thermal {
+> > > +                   polling-delay-passive =3D <100>;
+> > > +                   polling-delay =3D <0>;
+> > > +                   thermal-sensors =3D <&pmm8654au_3_temp_alarm>;
+> > > +
+> > > +                   trips {
+> > > +                           trip0 {
+> > > +                                   temperature =3D <105000>;
+> > > +                                   hysteresis =3D <0>;
+> > > +                                   type =3D "passive";
+> > > +                           };
+> > > +
+> > > +                           trip1 {
+> > > +                                   temperature =3D <125000>;
+> > > +                                   hysteresis =3D <0>;
+> > > +                                   type =3D "critical";
+> > > +                           };
+> > > +                   };
+> > > +           };
+> > > +   };
+> > > +};
+> > > +
+> > >  &spmi_bus {
+> > >     pmm8654au_0: pmic@0 {
+> > >             compatible =3D "qcom,pmm8654au", "qcom,spmi-pmic";
+> > > @@ -41,6 +85,13 @@ pmm8654au_1: pmic@2 {
+> > >             reg =3D <0x2 SPMI_USID>;
+> > >             #address-cells =3D <1>;
+> > >             #size-cells =3D <0>;
+> > > +
+> > > +           pmm8654au_1_temp_alarm: temp-alarm@a00 {
+> > > +                   compatible =3D "qcom,spmi-temp-alarm";
+> > > +                   reg =3D <0xa00>;
+> > > +                   interrupts-extended =3D <&spmi_bus 0x2 0xa 0x0 IR=
+Q_TYPE_EDGE_BOTH>;
+> > > +                   #thermal-sensor-cells =3D <0>;
+> > > +           };
+> > >     };
+> > >
+> > >     pmm8654au_2: pmic@4 {
+> > > @@ -55,5 +106,12 @@ pmm8654au_3: pmic@6 {
+> > >             reg =3D <0x6 SPMI_USID>;
+> > >             #address-cells =3D <1>;
+> > >             #size-cells =3D <0>;
+> > > +
+> > > +           pmm8654au_3_temp_alarm: temp-alarm@a00 {
+> > > +                   compatible =3D "qcom,spmi-temp-alarm";
+> > > +                   reg =3D <0xa00>;
+> > > +                   interrupts-extended =3D <&spmi_bus 0x6 0xa 0x0 IR=
+Q_TYPE_EDGE_BOTH>;
+> > > +                   #thermal-sensor-cells =3D <0>;
+> > > +           };
+> > >     };
+> > >  };
