@@ -2,207 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 453026C559A
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 20:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E48F6C57CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 21:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbjCVT7e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Mar 2023 15:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
+        id S231517AbjCVUkk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 22 Mar 2023 16:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230331AbjCVT7M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 15:59:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DA55FDC;
-        Wed, 22 Mar 2023 12:57:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9FCDC6229C;
-        Wed, 22 Mar 2023 19:57:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEEBC433D2;
-        Wed, 22 Mar 2023 19:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679515077;
-        bh=NVXZZ5yC36CpYxH5yyM4z2kGumAqqmOLjTipL8mbS4E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsiNOqiA3lxIx8g8vjeWDYPM+J/U3vttjOGA6Da9fbTDfs0wuF34JNuTBHF/tTAdy
-         zojxYLsx+P0yEn4A7hgtS67HZiseOtW++JGA53idF4aSdqpquTy4TqJn0OVhkYCplK
-         xS8EAN0s8l+CeozeELsdETEtPbS30VJzYajM8uNNKI8PZiWYLABXClODRVIHn1/DjV
-         vvB1fse4ikzIjqa3GqRJ8q+oqstGQMxblTvsORXu7zLB4aXVla4X5/P1ZlkudIF/FG
-         1Xo2QMO/cgYqHdlKEIRcvFjO9/8Rtgd7Ond7yBPd4VQhj3mQNwz059m8tfrxJ8Maun
-         Ot6d+Tg7qOr7A==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sasha Levin <sashal@kernel.org>, rafael@kernel.org,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        linus.walleij@linaro.org, brgl@bgdev.pl, robert.moore@intel.com,
-        mario.limonciello@amd.com, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, acpica-devel@lists.linuxfoundation.org
-Subject: [PATCH AUTOSEL 6.2 11/45] ACPI: x86: Introduce an acpi_quirk_skip_gpio_event_handlers() helper
-Date:   Wed, 22 Mar 2023 15:56:05 -0400
-Message-Id: <20230322195639.1995821-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230322195639.1995821-1-sashal@kernel.org>
-References: <20230322195639.1995821-1-sashal@kernel.org>
+        with ESMTP id S230211AbjCVUk2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 16:40:28 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8918019F18;
+        Wed, 22 Mar 2023 13:32:39 -0700 (PDT)
+Received: from p508fd58e.dip0.t-ipconnect.de ([80.143.213.142] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <heiko@sntech.de>)
+        id 1pf56y-0004XT-Oa; Wed, 22 Mar 2023 21:31:08 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Wells Lu <wellslutw@gmail.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, asahi@lists.linux.dev,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org, linux-mediatek@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH] dt-bindings: pinctrl: Drop unneeded quotes
+Date:   Wed, 22 Mar 2023 21:31:06 +0100
+Message-ID: <14697371.uLZWGnKmhe@phil>
+In-Reply-To: <20230317233623.3968172-1-robh@kernel.org>
+References: <20230317233623.3968172-1-robh@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_PASS,T_SPF_HELO_TEMPERROR
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Am Samstag, 18. März 2023, 00:36:18 CET schrieb Rob Herring:
+> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+> checking for this can be enabled in yamllint.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 5adc409340b1fc82bc1175e602d14ac82ac685e3 ]
+>  .../devicetree/bindings/pinctrl/rockchip,pinctrl.yaml  | 10 +++++-----
 
-x86 ACPI boards which ship with only Android as their factory image usually
-have pretty broken ACPI tables, relying on everything being hardcoded in
-the factory kernel image and often disabling parts of the ACPI enumeration
-kernel code to avoid the broken tables causing issues.
+Reviewed-by: Heiko Stuebner <heiko@sntech.de> #rockchip
 
-Part of this broken ACPI code is that sometimes these boards have _AEI
-ACPI GPIO event handlers which are broken.
-
-So far this has been dealt with in the platform/x86/x86-android-tablets.c
-module, which contains various workarounds for these devices, by it calling
-acpi_gpiochip_free_interrupts() on gpiochip-s with troublesome handlers to
-disable the handlers.
-
-But in some cases this is too late, if the handlers are of the edge type
-then gpiolib-acpi.c's code will already have run them at boot.
-This can cause issues such as GPIOs ending up as owned by "ACPI:OpRegion",
-making them unavailable for drivers which actually need them.
-
-Boards with these broken ACPI tables are already listed in
-drivers/acpi/x86/utils.c for e.g. acpi_quirk_skip_i2c_client_enumeration().
-Extend the quirks mechanism for a new acpi_quirk_skip_gpio_event_handlers()
-helper, this re-uses the DMI-ids rather then having to duplicate the same
-DMI table in gpiolib-acpi.c .
-
-Also add the new ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS quirk to existing
-boards with troublesome ACPI gpio event handlers, so that the current
-acpi_gpiochip_free_interrupts() hack can be removed from
-x86-android-tablets.c .
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rjw@rjwysocki.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/x86/utils.c    | 24 +++++++++++++++++++++---
- drivers/gpio/gpiolib-acpi.c |  3 +++
- include/acpi/acpi_bus.h     |  5 +++++
- 3 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
-index 4e816bb402f68..4a6f3a6726d04 100644
---- a/drivers/acpi/x86/utils.c
-+++ b/drivers/acpi/x86/utils.c
-@@ -262,6 +262,7 @@ bool force_storage_d3(void)
- #define ACPI_QUIRK_UART1_TTY_UART2_SKIP				BIT(1)
- #define ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY			BIT(2)
- #define ACPI_QUIRK_USE_ACPI_AC_AND_BATTERY			BIT(3)
-+#define ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS			BIT(4)
- 
- static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 	/*
-@@ -297,7 +298,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 		},
- 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
- 					ACPI_QUIRK_UART1_TTY_UART2_SKIP |
--					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
-+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
-+					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
- 	},
- 	{
- 		.matches = {
-@@ -305,7 +307,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TF103C"),
- 		},
- 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
--					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
-+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
-+					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
- 	},
- 	{
- 		/* Lenovo Yoga Tablet 2 1050F/L */
-@@ -347,7 +350,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "M890BAP"),
- 		},
- 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
--					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
-+					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
-+					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
- 	},
- 	{
- 		/* Whitelabel (sold as various brands) TM800A550L */
-@@ -424,6 +428,20 @@ int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *s
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(acpi_quirk_skip_serdev_enumeration);
-+
-+bool acpi_quirk_skip_gpio_event_handlers(void)
-+{
-+	const struct dmi_system_id *dmi_id;
-+	long quirks;
-+
-+	dmi_id = dmi_first_match(acpi_quirk_skip_dmi_ids);
-+	if (!dmi_id)
-+		return false;
-+
-+	quirks = (unsigned long)dmi_id->driver_data;
-+	return (quirks & ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS);
-+}
-+EXPORT_SYMBOL_GPL(acpi_quirk_skip_gpio_event_handlers);
- #endif
- 
- /* Lists of PMIC ACPI HIDs with an (often better) native charger driver */
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 34ff048e70d0e..7c9175619a1dc 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -536,6 +536,9 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
- 	if (ACPI_FAILURE(status))
- 		return;
- 
-+	if (acpi_quirk_skip_gpio_event_handlers())
-+		return;
-+
- 	acpi_walk_resources(handle, METHOD_NAME__AEI,
- 			    acpi_gpiochip_alloc_event, acpi_gpio);
- 
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 0584e9f6e3397..57acb895c0381 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -657,6 +657,7 @@ static inline bool acpi_quirk_skip_acpi_ac_and_battery(void)
- #if IS_ENABLED(CONFIG_X86_ANDROID_TABLETS)
- bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev);
- int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip);
-+bool acpi_quirk_skip_gpio_event_handlers(void);
- #else
- static inline bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev)
- {
-@@ -668,6 +669,10 @@ acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip)
- 	*skip = false;
- 	return 0;
- }
-+static inline bool acpi_quirk_skip_gpio_event_handlers(void)
-+{
-+	return false;
-+}
- #endif
- 
- #ifdef CONFIG_PM
--- 
-2.39.2
 
