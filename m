@@ -2,77 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D056C4C02
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 14:40:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E74F96C4EA4
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 15:56:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjCVNkP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Mar 2023 09:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        id S231305AbjCVO4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Mar 2023 10:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjCVNkO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 09:40:14 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1EB54AFF8
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 06:40:12 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id r29so17100667wra.13
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 06:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1679492411;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VHNsw7LxlCqFoMl8EWjBKiEZL4o59QoD2UHFpV8/WBQ=;
-        b=caba7aVPU6lnf+BBBU3K0f1qmo+uKqFlE6l6h44agRSSrtj20S6XpgSa2rd5WdBKyC
-         u0Ipx+BvSlR+JBzx7NBe8uvaONUl81uWcyRL7+RFyOKIvuXTc8agXOazlHHDDXsCwLoN
-         +2BlOHNyuYWss/a43M6g05BdeUhLnFH4pXR7yzF0+7uvjnENS9/vCUwCff7j3LPpFCwn
-         qZ0pO/Er+LlNAmBFI4qQvw6rNNJh+Vk2i7fxfPxTjRS4jQIXRmp92xPzV/n+fNUHmOkU
-         jhqXZUKc3ImlL4uiFBG0i3x9eLrEGYH9h3l6+4CqyyZdqR9B8DyLC4UlYZZsr303eIYN
-         R8CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679492411;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VHNsw7LxlCqFoMl8EWjBKiEZL4o59QoD2UHFpV8/WBQ=;
-        b=T6MpN7mmVGhj7n4VVCcjH2q6ycFzG4mI1a+CZidrvknfHSzRHZg7rAAXER2bkw5gJD
-         i1ZP3/cmCK5TtYwhYCZrUx15xWxn6i/Z5Zg1hpWP94w8OdOKgE7wZum8NPcZ5LyOfS5V
-         yMIZ/uzKzWZkIdjOvusa/CGbZTGs93yu/j+Jl0JgRHB+Ex7GSHesOg1PUtp/XhR4Wmx1
-         KbKGaJvcBvDrN9PfmGLP1oV4Eo3+9P5CwNNuFW8kDSfLyxlTTCgX5HQPg6PZl9eZljJE
-         +ikYmWK4iXOvUR79AvX7BJCafA94f1T833I7oYSMYca0TFl1QV1hmYG5ajqptKpadvky
-         Plcg==
-X-Gm-Message-State: AO0yUKUq6+pXinCZ92rFanTAcfY3SlGA85v8d6FyZhj3yNiOkX4d9Qd8
-        Zo/MJkXrSqDURNcUJK1jmTpHXA==
-X-Google-Smtp-Source: AK7set+TloqbMZ+vJGhqg1CScqLm59HoY+1s0hGrELHfVbcANa48Mh0hMTkdbKsbqLDM7ulS1fQs3A==
-X-Received: by 2002:a5d:644b:0:b0:2d2:3ca:8c43 with SMTP id d11-20020a5d644b000000b002d203ca8c43mr5025509wrw.31.1679492411230;
-        Wed, 22 Mar 2023 06:40:11 -0700 (PDT)
-Received: from [192.168.1.70] (151.31.102.84.rev.sfr.net. [84.102.31.151])
-        by smtp.gmail.com with ESMTPSA id b9-20020adfde09000000b002daeb108304sm791234wrm.33.2023.03.22.06.40.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 06:40:10 -0700 (PDT)
-Message-ID: <3cb28b7e-fc43-a222-77be-137e04118bd8@baylibre.com>
-Date:   Wed, 22 Mar 2023 14:40:09 +0100
+        with ESMTP id S230144AbjCVOzz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 10:55:55 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7189B7D98;
+        Wed, 22 Mar 2023 07:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679496934; x=1711032934;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h6hskFbHw7KYbk2YVxQW62X04Lp2hb/hxK+OlVrcXP4=;
+  b=Rxxgqsu8UAdQnb1h6K303HVluCyVmnz5D30/nhwmcJpyS2ZenbrSU+gm
+   xor7pUpiJDVctjX0QEwTy3seq0xPXoPnUc9sMuncpewpEuXtcL3mniXxA
+   msnsVqGNYn7nCZ7Sb7m0sbzmR7G+1u+K8Ye68+b+MN+95fXd1m8ubkisk
+   u6eIYjWQwJILL7weXKA2jg/GiseLs3iwxvzB/QC89bJUxcQarhb9UI8mQ
+   WSqCikoydSgBJNovxKH/rIJ6w9qeLtAJLQCgQ5NFTPq52bsQ0vtRPuAyj
+   0MwEwHlTehZrvJvtw4bvhQe8b/XPKlVafmzQygqFre+2ip37Y4pdHvYKi
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="327613246"
+X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
+   d="scan'208";a="327613246"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 07:55:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="792583313"
+X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
+   d="scan'208";a="792583313"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Mar 2023 07:55:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pezsA-007Agk-0e;
+        Wed, 22 Mar 2023 16:55:30 +0200
+Date:   Wed, 22 Mar 2023 16:55:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Werner Sembach <wse@tuxedocomputers.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NL5xNU
+Message-ID: <ZBsW4XzDvBXNSy2C@smile.fi.intel.com>
+References: <20230322121547.14997-1-wse@tuxedocomputers.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH INTERNAL v1 3/3] regulator: tps6594-regulator: Add driver
- for TI TPS6594 regulators
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jneanne@baylibre.com
-References: <20230224133129.887203-1-eblanc@baylibre.com>
- <20230224133129.887203-4-eblanc@baylibre.com>
- <205a4e62-fd87-629c-ea34-d863ff1549d8@baylibre.com>
- <ZBr+7X3lcFdI8p/o@sirena.org.uk>
-From:   Julien Panis <jpanis@baylibre.com>
-In-Reply-To: <ZBr+7X3lcFdI8p/o@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230322121547.14997-1-wse@tuxedocomputers.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,31 +68,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Mar 22, 2023 at 01:15:47PM +0100, Werner Sembach wrote:
+> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> changed the policy such that I2C touchpads may be able to wake up the
+> system by default if the system is configured as such.
+> 
+> However on Clevo NL5xNU there is a mistake in the ACPI tables that the
+> TP_ATTN# signal connected to GPIO 9 is configured as ActiveLow and level
+> triggered but connected to a pull up. As soon as the system suspends the
+> touchpad loses power and then the system wakes up.
+> 
+> To avoid this problem, introduce a quirk for this model that will prevent
+> the wakeup capability for being set for GPIO 9.
+> 
+> This patch is analoge to a very similar patch for NL5xRU, just the DMI
+> string changed.
+
+Fine,
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/gpio/gpiolib-acpi.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 34ff048e70d0e..055013f959b25 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1624,6 +1624,19 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>  			.ignore_interrupt = "AMDI0030:00@18",
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * Spurious wakeups from TP_ATTN# pin
+> +		 * Found in BIOS 1.7.8
+> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "NL5xNU"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_wake = "ELAN0415:00@9",
+> +		},
+> +	},
+>  	{
+>  		/*
+>  		 * Spurious wakeups from TP_ATTN# pin
+> -- 
+> 2.34.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 3/22/23 14:13, Mark Brown wrote:
-> On Wed, Mar 22, 2023 at 10:10:23AM +0100, Julien Panis wrote:
->
->> Question @ Mark/Liam:
->> Shouldn't we use the generic 'regulator-coupled-with' property
->> instead of 'ti,multi-phase-id' ?
-> My understanding was that this was a hardware configuration where
-> two regulators operate as one with only one set of registers used
-> for configuration.
-
-Your understanding was correct.
-
->
->> I am in charge of upstreaming dt-bindings and maintainers
->> pointed out the similarity between 'multi-phase' and 'coupled'
->> regulator concepts. Does 'regulator-coupled-with' mean that
->> outputs of buck converters are combined ? If so, this generic
->> property should replace our specific 'ti,multi-phase-id' prop,
->> I guess.
-> No, coupled regulators are regulators where the voltages can vary
-> but there's a constraint that their configurations need to be
-> related somehow, for example they must be within 200mV of each
-> other or something like that.
-
-OK, thank you for this explanation.
-So, we keep 'ti,multi-phase-id' property.
