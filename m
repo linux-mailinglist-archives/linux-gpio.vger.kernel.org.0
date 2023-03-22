@@ -2,124 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6B636C5157
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 17:55:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 453026C559A
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Mar 2023 20:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbjCVQzx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Mar 2023 12:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
+        id S231303AbjCVT7e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Mar 2023 15:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjCVQzw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 12:55:52 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88EF255AB
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:55:51 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id cu36so8062109vsb.7
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Mar 2023 09:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679504150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iN9XlJJdD0wdM8hHUTPISoSh6U/BkfuxtSdOC1SlQBc=;
-        b=XSpbXcbNoEHM2+cv/MaUT4komgPFFkNAi2EA+3nRoq0Z+XKShmzQb1HYqkcxs4Ad84
-         RklJw0OSvW4r6NWkkfyeq44he0XoTw865C+GSEXGwzBeUy8kMccju0O+trBfGBTTtEnK
-         itr+ZmoeAqA/GG2RfPojV3VUXLiMqYU+9j0kAE2KZJHRIKN2T94I49bMAnuQpwDCgTPK
-         RxQuTwveFomoQPAYSGVXAusTLBLF9+9KpQS/z9AE7ZfDKm7KVSOl/rrkYz9jGFmjBK6l
-         pupEdS4thX8Imlfc01a24L7aKTqgUklRNcconXRJpA8UK41+jzhTINHYmRVoBD7i5EQ1
-         PFPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679504150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iN9XlJJdD0wdM8hHUTPISoSh6U/BkfuxtSdOC1SlQBc=;
-        b=540UDO2qUY94lkpaqyqeuFKB+8i/hvoh9wECv2zK7wuRsaiubVZE/ZLJYBT4hyDhX/
-         kKOO7izkiG2CuSX3BZsjW2iQlAk1gc3XSLopcDGpfqo/ijFzmB8hfKjbDcVRNnjHdRhc
-         VaTfOKvAjeRe/dtKYU0bjcRtvjGhNY0rFMSa+GWeYuFZQ8wco2xhWD5ZnSpuQXY8GCUb
-         CZQWad3FRnQLsFZ60/QQMmng/AIfv0mQ8dnOfoYYH1lBESQ8uOqKATMgMXjVXg6alKHB
-         xXx2no2x92MFidmdz7OwXDgt2OB67sykJ4pC9lzNhls0VFodYAyoXO5DQOsmXjwN3TVy
-         E9Cg==
-X-Gm-Message-State: AO0yUKUkc+fdc+J0kApt3KKCW/jvw8Iz92i2X4zyYk0cvzTpSfbdBWDb
-        lWmLzRSG9xwpMfQIWHhVuAEFUwlJar07ngiBSybBtQ==
-X-Google-Smtp-Source: AK7set/CqNKnacEs94tVobaB8uz0cm9h/EKIzrR4X439yPye+TCQAPYpoEjoElKKld5os7hFOVRUq5gFDLVBTTGwmBw=
-X-Received: by 2002:a67:d605:0:b0:425:e5e6:d1d9 with SMTP id
- n5-20020a67d605000000b00425e5e6d1d9mr180575vsj.2.1679504150619; Wed, 22 Mar
- 2023 09:55:50 -0700 (PDT)
+        with ESMTP id S230331AbjCVT7M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Mar 2023 15:59:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DA55FDC;
+        Wed, 22 Mar 2023 12:57:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9FCDC6229C;
+        Wed, 22 Mar 2023 19:57:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEEBC433D2;
+        Wed, 22 Mar 2023 19:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679515077;
+        bh=NVXZZ5yC36CpYxH5yyM4z2kGumAqqmOLjTipL8mbS4E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tsiNOqiA3lxIx8g8vjeWDYPM+J/U3vttjOGA6Da9fbTDfs0wuF34JNuTBHF/tTAdy
+         zojxYLsx+P0yEn4A7hgtS67HZiseOtW++JGA53idF4aSdqpquTy4TqJn0OVhkYCplK
+         xS8EAN0s8l+CeozeELsdETEtPbS30VJzYajM8uNNKI8PZiWYLABXClODRVIHn1/DjV
+         vvB1fse4ikzIjqa3GqRJ8q+oqstGQMxblTvsORXu7zLB4aXVla4X5/P1ZlkudIF/FG
+         1Xo2QMO/cgYqHdlKEIRcvFjO9/8Rtgd7Ond7yBPd4VQhj3mQNwz059m8tfrxJ8Maun
+         Ot6d+Tg7qOr7A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Sasha Levin <sashal@kernel.org>, rafael@kernel.org,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robert.moore@intel.com,
+        mario.limonciello@amd.com, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, acpica-devel@lists.linuxfoundation.org
+Subject: [PATCH AUTOSEL 6.2 11/45] ACPI: x86: Introduce an acpi_quirk_skip_gpio_event_handlers() helper
+Date:   Wed, 22 Mar 2023 15:56:05 -0400
+Message-Id: <20230322195639.1995821-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230322195639.1995821-1-sashal@kernel.org>
+References: <20230322195639.1995821-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <cover.1679323449.git.william.gray@linaro.org> <ZBh8hgdRq+kydPBw@smile.fi.intel.com>
-In-Reply-To: <ZBh8hgdRq+kydPBw@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 22 Mar 2023 17:55:39 +0100
-Message-ID: <CAMRc=MeDZVLmj9+sBQngbqr25HmX0O1BCEohOyij0SOhY_cwgg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Drop map from handle_mask_sync() parameters
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     William Breathitt Gray <william.gray@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 4:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Mar 20, 2023 at 10:50:14AM -0400, William Breathitt Gray wrote:
-> > Changes in v3:
-> >  - Inline dio48gpio->map usage in dio48e_handle_mask_sync() to avoid
-> >    redefining map parameter
-> >
-> > Remove the map parameter from the struct regmap_irq_chip callback
-> > handle_mask_sync() because it can be passed via the irq_drv_data
-> > parameter instead. The gpio-104-dio-48e driver is the only consumer of
-> > this callback and is thus updated accordingly.
-> >
-> > A couple pending patchsets also utilize handle_mask_sync() [0][1], so
-> > it'll be useful to merge the changes in this series first to avoid
-> > subsequent noise adjusting the dependent drivers.
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> I believe this should go to the immutable branch somewhere, so GPIO and r=
-egmap
-> subsystems can pull from.
->
-> > [0] https://lore.kernel.org/r/cover.1677515341.git.william.gray@linaro.=
-org/
-> > [1] https://lore.kernel.org/r/cover.1678106722.git.william.gray@linaro.=
-org/
-> >
-> > William Breathitt Gray (2):
-> >   gpio: 104-dio-48e: Implement struct dio48e_gpio
-> >   regmap-irq: Drop map from handle_mask_sync() parameters
-> >
-> >  drivers/base/regmap/regmap-irq.c |  5 ++---
-> >  drivers/gpio/gpio-104-dio-48e.c  | 37 +++++++++++++++++++++-----------
-> >  include/linux/regmap.h           |  3 +--
-> >  3 files changed, 28 insertions(+), 17 deletions(-)
-> >
-> >
-> > base-commit: 03810031c91dfe448cd116ee987d5dc4139006f4
-> > --
-> > 2.39.2
-> >
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+From: Hans de Goede <hdegoede@redhat.com>
 
-Since patch 2/2 touches both GPIO and regmap, ideally I would get an
-Ack from Mark and take it through GPIO tree and then possibly provide
-Mark with a tag.
+[ Upstream commit 5adc409340b1fc82bc1175e602d14ac82ac685e3 ]
 
-Bart
+x86 ACPI boards which ship with only Android as their factory image usually
+have pretty broken ACPI tables, relying on everything being hardcoded in
+the factory kernel image and often disabling parts of the ACPI enumeration
+kernel code to avoid the broken tables causing issues.
+
+Part of this broken ACPI code is that sometimes these boards have _AEI
+ACPI GPIO event handlers which are broken.
+
+So far this has been dealt with in the platform/x86/x86-android-tablets.c
+module, which contains various workarounds for these devices, by it calling
+acpi_gpiochip_free_interrupts() on gpiochip-s with troublesome handlers to
+disable the handlers.
+
+But in some cases this is too late, if the handlers are of the edge type
+then gpiolib-acpi.c's code will already have run them at boot.
+This can cause issues such as GPIOs ending up as owned by "ACPI:OpRegion",
+making them unavailable for drivers which actually need them.
+
+Boards with these broken ACPI tables are already listed in
+drivers/acpi/x86/utils.c for e.g. acpi_quirk_skip_i2c_client_enumeration().
+Extend the quirks mechanism for a new acpi_quirk_skip_gpio_event_handlers()
+helper, this re-uses the DMI-ids rather then having to duplicate the same
+DMI table in gpiolib-acpi.c .
+
+Also add the new ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS quirk to existing
+boards with troublesome ACPI gpio event handlers, so that the current
+acpi_gpiochip_free_interrupts() hack can be removed from
+x86-android-tablets.c .
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rjw@rjwysocki.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/x86/utils.c    | 24 +++++++++++++++++++++---
+ drivers/gpio/gpiolib-acpi.c |  3 +++
+ include/acpi/acpi_bus.h     |  5 +++++
+ 3 files changed, 29 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+index 4e816bb402f68..4a6f3a6726d04 100644
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -262,6 +262,7 @@ bool force_storage_d3(void)
+ #define ACPI_QUIRK_UART1_TTY_UART2_SKIP				BIT(1)
+ #define ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY			BIT(2)
+ #define ACPI_QUIRK_USE_ACPI_AC_AND_BATTERY			BIT(3)
++#define ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS			BIT(4)
+ 
+ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 	/*
+@@ -297,7 +298,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 		},
+ 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+ 					ACPI_QUIRK_UART1_TTY_UART2_SKIP |
+-					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
++					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
++					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
+ 	},
+ 	{
+ 		.matches = {
+@@ -305,7 +307,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "TF103C"),
+ 		},
+ 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+-					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
++					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
++					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
+ 	},
+ 	{
+ 		/* Lenovo Yoga Tablet 2 1050F/L */
+@@ -347,7 +350,8 @@ static const struct dmi_system_id acpi_quirk_skip_dmi_ids[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "M890BAP"),
+ 		},
+ 		.driver_data = (void *)(ACPI_QUIRK_SKIP_I2C_CLIENTS |
+-					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY),
++					ACPI_QUIRK_SKIP_ACPI_AC_AND_BATTERY |
++					ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS),
+ 	},
+ 	{
+ 		/* Whitelabel (sold as various brands) TM800A550L */
+@@ -424,6 +428,20 @@ int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *s
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(acpi_quirk_skip_serdev_enumeration);
++
++bool acpi_quirk_skip_gpio_event_handlers(void)
++{
++	const struct dmi_system_id *dmi_id;
++	long quirks;
++
++	dmi_id = dmi_first_match(acpi_quirk_skip_dmi_ids);
++	if (!dmi_id)
++		return false;
++
++	quirks = (unsigned long)dmi_id->driver_data;
++	return (quirks & ACPI_QUIRK_SKIP_GPIO_EVENT_HANDLERS);
++}
++EXPORT_SYMBOL_GPL(acpi_quirk_skip_gpio_event_handlers);
+ #endif
+ 
+ /* Lists of PMIC ACPI HIDs with an (often better) native charger driver */
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 34ff048e70d0e..7c9175619a1dc 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -536,6 +536,9 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+ 	if (ACPI_FAILURE(status))
+ 		return;
+ 
++	if (acpi_quirk_skip_gpio_event_handlers())
++		return;
++
+ 	acpi_walk_resources(handle, METHOD_NAME__AEI,
+ 			    acpi_gpiochip_alloc_event, acpi_gpio);
+ 
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index 0584e9f6e3397..57acb895c0381 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -657,6 +657,7 @@ static inline bool acpi_quirk_skip_acpi_ac_and_battery(void)
+ #if IS_ENABLED(CONFIG_X86_ANDROID_TABLETS)
+ bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev);
+ int acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip);
++bool acpi_quirk_skip_gpio_event_handlers(void);
+ #else
+ static inline bool acpi_quirk_skip_i2c_client_enumeration(struct acpi_device *adev)
+ {
+@@ -668,6 +669,10 @@ acpi_quirk_skip_serdev_enumeration(struct device *controller_parent, bool *skip)
+ 	*skip = false;
+ 	return 0;
+ }
++static inline bool acpi_quirk_skip_gpio_event_handlers(void)
++{
++	return false;
++}
+ #endif
+ 
+ #ifdef CONFIG_PM
+-- 
+2.39.2
+
