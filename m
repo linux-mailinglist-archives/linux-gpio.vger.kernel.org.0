@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D686C66D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 12:38:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F115F6C6851
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 13:29:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjCWLiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 07:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
+        id S230496AbjCWM3s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 08:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbjCWLiv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 07:38:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B4412B9D8;
-        Thu, 23 Mar 2023 04:38:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C71C362606;
-        Thu, 23 Mar 2023 11:38:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE66C4339C;
-        Thu, 23 Mar 2023 11:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679571518;
-        bh=F+fuZgEG2+3pg4JMJViOzTfJymZjqTVxKp+YQTYEjPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rZ1vsGM/uhS/KS4c5iFJXuu1zo2wqLgBBLScOmRAdh58WEw5+c+xsOPLB4m2gmXal
-         BirrIeFQN2LOtz8XqB/AqkXHe2EmpkmWK3hGEIODV+Amfjie+fqe40nr3NXf3uhbbQ
-         8ui9cDolyQVhhDalr8MrWlstaEOewESjQG52fV97ZOmtg7LrFOIC6WOpCTsFH+OpOd
-         edXh3daVpt0ck5AWKrzec5Vv8N44HmuaKpY2Ax+f1cSJpQCF6SuH1ER6Snj1mfxjzL
-         mjupBIID94DnqGvwSAdi9CRo4dmwyRdfjzcQtf3WrzstNhyIkIVqcCnGGTYRGpfY0r
-         +ln0zEWMzYXbQ==
-Date:   Thu, 23 Mar 2023 11:38:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     jerome Neanne <jneanne@baylibre.com>
-Cc:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jpanis@baylibre.com
-Subject: Re: [PATCH INTERNAL v1 3/3] regulator: tps6594-regulator: Add driver
- for TI TPS6594 regulators
-Message-ID: <e08686be-0b46-403b-b3cd-3462db92dd60@sirena.org.uk>
-References: <20230224133129.887203-1-eblanc@baylibre.com>
- <20230224133129.887203-4-eblanc@baylibre.com>
- <Y/i+wVSy+eQxDFJ3@sirena.org.uk>
- <bd4aa2ad-4535-94ca-7630-846546ae3d82@baylibre.com>
+        with ESMTP id S230216AbjCWM3r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 08:29:47 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66856868B;
+        Thu, 23 Mar 2023 05:29:44 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32NCTfn5129015;
+        Thu, 23 Mar 2023 07:29:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1679574581;
+        bh=WBtmHvLCnXFwimXJYXKj87tMDRRpgcs5A8ej9EYRbcw=;
+        h=From:To:CC:Subject:Date;
+        b=Daf6nrkjTVha6r2zrZ8D7JAq9IT5+ZVwIsW4AVEK16LcophOYeNO34mvWXZxgbxF7
+         zCzhq7w1fAw/g8xvkOU2hI0Evnadw2Z+fkawrikWqVsvMUZO9/sG9uiJOxs/Klq5kv
+         6P9Svc3j9Mmv5LQc/K06iO0fx3QnErazY2JdWdvE=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32NCTfU1031374
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Mar 2023 07:29:41 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 23
+ Mar 2023 07:29:41 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 23 Mar 2023 07:29:41 -0500
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32NCTeVY010812;
+        Thu, 23 Mar 2023 07:29:40 -0500
+From:   Dhruva Gole <d-gole@ti.com>
+To:     Keerthy <j-keerthy@ti.com>
+CC:     Vibhore Vardhan <vibhore@ti.com>, Dhruva Gole <d-gole@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh <vigneshr@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Devarsh Thakkar <devarsht@ti.com>
+Subject: [RFC PATCH 1/2] gpio: davinci: Do not clear the bank intr enable bit in save_context
+Date:   Thu, 23 Mar 2023 17:59:09 +0530
+Message-ID: <20230323122910.991148-1-d-gole@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sqyr3pdl018Qcdzn"
-Content-Disposition: inline
-In-Reply-To: <bd4aa2ad-4535-94ca-7630-846546ae3d82@baylibre.com>
-X-Cookie: A lie in time saves nine.
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,64 +64,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The interrupt enable bits might be set if we want to use the GPIO as
+wakeup source. Clearing this will mean disabling of interrupts in the GPIO
+banks that we may want to wakeup from.
+Thus remove the line that was clearing this bit from the driver's save
+context function.
 
---sqyr3pdl018Qcdzn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: 0651a730924b ("gpio: davinci: Add support for system suspend/resume PM")
+Cc: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Dhruva Gole <d-gole@ti.com>
+---
+ drivers/gpio/gpio-davinci.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-On Thu, Mar 23, 2023 at 10:12:21AM +0100, jerome Neanne wrote:
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 7fc83057990a..d7595b39e8c4 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -639,9 +639,6 @@ static void davinci_gpio_save_context(struct davinci_gpio_controller *chips,
+ 		context->set_falling = readl_relaxed(&g->set_falling);
+ 	}
+ 
+-	/* Clear Bank interrupt enable bit */
+-	writel_relaxed(0, base + BINTEN);
+-
+ 	/* Clear all interrupt status registers */
+ 	writel_relaxed(GENMASK(31, 0), &g->intstat);
+ }
+-- 
+2.25.1
 
-> > This would be simpler and you wouldn't need this lookup function if the
-> > regulator descriptions included their IRQ names, then you could just
-> > request the interrupts while registering the regulators.
-
-> I changed the code to follow your recommendations then now in case of a
-> multiphase buck, only one set of interrupt is requested.
-
-> buck2, buck3, buck4 are not associated to a regulator device because buck1
-> registers control all the multiphase bucks (only one logic regulator).
-> Consequently the mapping for the associated interrupts does not occur.
-> I'm not sure it's the right option.
-> Do you suggest to keep it like that for multiphase?
-> Is it better to request all the interrupts anyway and map it to the same
-> rdev?
-
-Do the other interrupts do anything useful for this configuration?  With
-a lot of hardware the whole control interface gets merged into one which
-includes the interrupts.
-
-> > > +		error = devm_request_threaded_irq(tps->dev, irq, NULL,
-> > > +						  tps6594_regulator_irq_handler,
-> > > +						  IRQF_ONESHOT,
-> > > +						  irq_type->irq_name,
-> > > +						  &irq_data[i]);
-> > > +		if (error) {
-> > > +			dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
-> > > +				irq_type->irq_name, irq, error);
-> > > +			return error;
-> > > +		}
-
-> > This leaks all previously requested interrupts.
-
-> I'm not sure to understand this sentence correctly. You mean all the
-> interrupts already requested are still allocated after the error occurs?
-
-Yes, I'd either not registered the devm or thought there was some other
-interrupt wasn't devm.
-
---sqyr3pdl018Qcdzn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQcOjQACgkQJNaLcl1U
-h9Auuwf+PN5kS1OlVilZrrkY1SzeCUq5W+chBmTUcyD85lp5xFNkACPMHE1lYwjE
-uVj1L15Dqzt9wbKb5i5/c1p2aiumc4Uz6EYkgn5JIQ5ozBBUI9JYzhyWdPOWKw4/
-Vr3NvPPkXLy/na7nRyuGJKmexIo/189mXkIRya3jDLIV7iI0arIc4wdXRJDe3YyO
-DbFIaBVG3nudg6GGf1zKJ9rrkB/HMd4WFfbDURoQm4yicpTx2sP7SQQ4zk1KC4QT
-hcRVB60RoXOYaESfSvPavmEwMXcrNgQrGCiePgvOUHI1VTMtqDN/3DfM+HD5YgNF
-pN2QCR1QG69NJC6jSt3EpqYcayQsJw==
-=T/Ls
------END PGP SIGNATURE-----
-
---sqyr3pdl018Qcdzn--
