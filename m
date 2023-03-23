@@ -2,96 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C4046C708A
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 19:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28DD86C71E3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 21:53:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjCWSvU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 14:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
+        id S231161AbjCWUxJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 16:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230023AbjCWSvT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 14:51:19 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2052B9D8;
-        Thu, 23 Mar 2023 11:51:18 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id v48so15661862uad.6;
-        Thu, 23 Mar 2023 11:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679597478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x7rJrp2dOHV1j5NCWXM4QuReU2h7dm4LnETqwXvwR/g=;
-        b=b3L07cJbUDjD4qPaniBzGrNLTuAzXaafn1ZV902PTvHWo0lB2Hw03KSbl3ZrF1s8TM
-         SC3DXK30ttYijF39AbWWaRX0yY2nFY/umHdtMFf9IovBu/jusmta4s37SgrjkHn9Qyfq
-         cEm/Jyc1WEPiQvL6Xbtuqb/DUoNFe6NYtRQq10UasIQB+NqjdH1MSG1z+S1fms528akD
-         GiD0II80li+W06q+VsgOqDvgP/A2qbwSaZ6GKzUhtpZ3Z1vKuYVfnmJgF90fKyNFARC7
-         fkwOVuv/LK9iCGYG0kuLSl5v3buV8a4ZlgsNc8/+U/uVSfFPCd7l+rZZhpJxtj60opBx
-         I0TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679597478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x7rJrp2dOHV1j5NCWXM4QuReU2h7dm4LnETqwXvwR/g=;
-        b=TjFo6PI/JAZ7Kcf4sKTMYmXFtE4J3s29GwhdYULztIJH7dEqzNYJg2KnvJ3/1jy4wf
-         Hm0UIa2Nzns8BCJFyyG5NNsb4HVqsrHgK7+XeUsaBW+e9uzKdo2jOmII5owDp6gVcDot
-         +fGpzgiMcu4F0dSFTOQBp0Thw/TJzUpx7WjmvOKQufAudwrWMz0MJXYMzjY6bfNJ/n5V
-         8MYbT6uUtdx+TiIQnM/yKRRLV6v/2v9h0OzuNv1Nx4FO/bU2n2vwvH4s+3ahiXziBH2F
-         ZWDobjiGdmFyVvx1iRKHRTGzwDOTOek7pzRD1p/lXj/ob9si17hCQteq4mj2bEbzhlpT
-         O5zg==
-X-Gm-Message-State: AAQBX9fCFsOEDc6IKIhTsLk3EUMzScTBYqtyyB3i1kzcNT5W+485KOEe
-        370Ggr+Ca3Tgqr7Zbv0IQRNzZ9T7uywZ1dx9o/8=
-X-Google-Smtp-Source: AKy350ZK0vvIo4tWch8s5Vr3XQgaPQ2E9jDGSvj8F+I9wcF4sewDw7ErDRFmxK3SPo4XdYzwdoB3XkCbipaM4yEVvEg=
-X-Received: by 2002:a1f:9cd3:0:b0:435:b6ce:23e7 with SMTP id
- f202-20020a1f9cd3000000b00435b6ce23e7mr399976vke.0.1679597477953; Thu, 23 Mar
- 2023 11:51:17 -0700 (PDT)
+        with ESMTP id S229499AbjCWUxH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 16:53:07 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237B3211D9;
+        Thu, 23 Mar 2023 13:53:07 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1679604785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/1rYDeXeXdW0cuqWo9UuJC5RYidgtmZSNCr4/RwqvXg=;
+        b=kCFatXP07k+7ELzDIE3JTCvp4GpTnFsSYJVF8TY++iD9F33t0ypFsp2djOR123wyiPBUFl
+        edUT3UFpBESREWBdgBB0RdGstybe1YRSlALb74nyo36FQPCCvjNaZautJKFq71MAg33Zfu
+        7DgkXp/TCDMoObM5KIrAjBONh0jSQSVIzaKBKuqzS21tN+o3pLms6sIH4olxjTQOlUhDcd
+        lEU7aGONdS5+0lqIOcIquj2cdG45IcD7/801f6UyE4sl5rTI2KAoHEypMTlEW4Gieq0T3T
+        aiT1jG4LhuuBEuFZOHrvl8eqbAAmEXnTYNEnxtuyO6qj6ejw4TUz3UWvsn5Oaw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1679604785;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/1rYDeXeXdW0cuqWo9UuJC5RYidgtmZSNCr4/RwqvXg=;
+        b=en2d05+owSRS5DeKKg4zUpsBpaYDlKJlhWl+48pw84bzkbJyCo+8luXKBa/JrihpiQjr1n
+        GD174VWof6W8QVBw==
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2] irq domain: drop IRQ_DOMAIN_HIERARCHY option, make
+ it always on
+In-Reply-To: <20230313023935.31037-1-rdunlap@infradead.org>
+References: <20230313023935.31037-1-rdunlap@infradead.org>
+Date:   Thu, 23 Mar 2023 21:53:04 +0100
+Message-ID: <877cv78a1b.ffs@tglx>
 MIME-Version: 1.0
-References: <20230323144833.28562-1-clin@suse.com> <20230323144833.28562-7-clin@suse.com>
-In-Reply-To: <20230323144833.28562-7-clin@suse.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 23 Mar 2023 20:50:41 +0200
-Message-ID: <CAHp75VfnVzrVLUpXdspw1H-e4qxVzia+hf_2uJ5xgSm6Q0C7ug@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] pinctrl: s32: separate const device data from
- struct s32_pinctrl_soc_info
-To:     Chester Lin <clin@suse.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        NXP S32 Linux Team <s32@nxp.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
-        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
-        Radu Pirea <radu-nicolae.pirea@nxp.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 4:49=E2=80=AFPM Chester Lin <clin@suse.com> wrote:
+On Sun, Mar 12 2023 at 19:39, Randy Dunlap wrote:
+> In preparation for dropping the IRQ_DOMAIN Kconfig option (effectively
+> making it always set/on), first drop IRQ_DOMAIN_HIERARCHY as an option,
+> making its code always set/on.
 >
-> The .data field in struct of_device_id is used as a const member so it's
-> inappropriate to attach struct s32_pinctrl_soc_info with of_device_id
-> because some members in s32_pinctrl_soc_info need to be filled by
-> pinctrl-s32cc at runtime.
->
-> For this reason, struct s32_pinctrl_soc_info must be allocated in
-> pinctrl-s32cc and then create a new struct s32_pinctrl_soc_data in order
-> to represent const .data in of_device_id. To combine these two structures=
-,
-> a s32_pinctrl_soc_data pointer is introduced in s32_pinctrl_soc_info.
+> This has been built successfully on all ARCHes except hexagon,
+> both 32-bit and 64-bit where applicable.
 
-So, the first patch has to be embedded in this one, correct?
-Don't forget to compile and test your contributions beforehand.
+I really like where this is going, but reviewing this is a pain. I tried
+to split it up into more digestable pieces:
 
---=20
-With Best Regards,
-Andy Shevchenko
+   https://tglx.de/~tglx/patches.tar
+
+That's not completely equivalent to your patch as I did some of the
+changes below. It builds on various oddball architectures with
+IRQ_DOMAIN=n, but is otherwise completely untested.
+
+It should be actually trivial after that to make IRQ_DOMAIN def_bool y
+and then gradually remove the IRQ_DOMAIN selects and ifdeffery.
+
+> v2: add stubs in include/linux/irqdomain.h for the config case of
+> IRQ_DOMAIN is not set. If these are not added, there will be plenty
+> of build errors (not so much for modern arches as for older ones).
+
+I'm not really convinced that all of these stubs are required. Why would
+there suddenly be a requirement to expose stubs for functions which
+depend on CONFIG_IRQ_DOMAIN=y already today just by removing the
+hierarchy config?
+
+Even exposing stubs for functions which have been only available via
+CONFIG_IRQ_DOMAIN_HIERARCHY is questionable simply because there cannot
+be any code which invokes them unconditionally if
+CONFIG_IRQ_DOMAIN_HIERARCHY=n today.
+
+IOW, the sum of required stubs cannot be larger than number of stubs
+required today.
+
+If there is code which has a #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY then
+this needs to be changed to CONFIG_IRQ_DOMAIN or the required functions
+have to be exposed unconditionally, right?
+
+> diff -- a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -361,7 +361,7 @@ config GPIO_IXP4XX
+>  	depends on OF
+>  	select GPIO_GENERIC
+>  	select GPIOLIB_IRQCHIP
+> -	select IRQ_DOMAIN_HIERARCHY
+> +	select IRQ_DOMAIN
+
+IRQ_DOMAIN is already selected by GPIOLIB_IRQCHIP, so this select is
+redundant for all GPIO configs which select GPIOLIB_IRQCHIP.
+
+Thanks,
+
+        tglx
