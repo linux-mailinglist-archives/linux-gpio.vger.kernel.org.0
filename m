@@ -2,91 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1971A6C6853
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 13:29:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA1A6C6983
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 14:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231449AbjCWM3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 08:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        id S231283AbjCWNat (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 09:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231357AbjCWM3v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 08:29:51 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB0386B6;
-        Thu, 23 Mar 2023 05:29:47 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32NCTjRY129022;
-        Thu, 23 Mar 2023 07:29:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1679574585;
-        bh=jfAz3nNZtnM8wt/Xe8+Ol2GrO9qEEqrh7IFYH6+9tvI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F4Npmk6XB15R4qhvjoMrOsFj1MLYc5fT2eYdcJXhvxjU1PvnRxBi9DZ7FK6YcOO38
-         5lYLSRZ6J13inonE9vkRHgUxX3dDYuk1Ao65MYd5pAFMya7sVGxGU1QYEIhHGyyrKQ
-         hogZhsoUSmTrNozxThZt2N2RyeZQWnidRnK1NcyI=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32NCTj6W038925
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Mar 2023 07:29:45 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 23
- Mar 2023 07:29:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Thu, 23 Mar 2023 07:29:45 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32NCTicN019249;
-        Thu, 23 Mar 2023 07:29:44 -0500
-From:   Dhruva Gole <d-gole@ti.com>
-To:     Keerthy <j-keerthy@ti.com>
-CC:     Vibhore Vardhan <vibhore@ti.com>, Dhruva Gole <d-gole@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vignesh <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 2/2] gpio: davinci: Add irq chip flag to skip set wake
-Date:   Thu, 23 Mar 2023 17:59:10 +0530
-Message-ID: <20230323122910.991148-2-d-gole@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230323122910.991148-1-d-gole@ti.com>
-References: <20230323122910.991148-1-d-gole@ti.com>
+        with ESMTP id S231637AbjCWNas (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 09:30:48 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230741EBCF
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 06:30:46 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id p203so24744093ybb.13
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 06:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679578245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=POEuRTDfD76yVtPjpz6e7Zpqb1wE30JgXP8hEso3HTc=;
+        b=HH4+ndnzdvlY3JhCmtdsmp/90t5m9pcor6aLegfw4O4KZmF546FjXyvROi59nAUCcT
+         9CUPAsnUIfDww5tW0IQQtjokKMSOilHYJgSTQG/zqDSTrWYxfq891Pv1FONfybGrSX3v
+         n4rQ0CC1tdQl6FAXDKihm+vMXte0WnU/qgeBK34WRO1CvVKMHQ2WknGMaedpVDtjjot9
+         6n1HffX1hTKqEHApEQ2+yYXTtlmZonqleGh49r8mWf1qMy9gfwhy41ZZCN/gyAIvMRXC
+         1r71+xhErz8AQew6JNXWPYB4p5igCBzHehqaJzL5TL7N/f8RCx4+ZUNqnvdIy+kTKHXl
+         mSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679578245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=POEuRTDfD76yVtPjpz6e7Zpqb1wE30JgXP8hEso3HTc=;
+        b=CbsU2vX1JqtwmXGSgNIn8KBweZ6CIXjeMY8ZV1+HCC47qgIlNHafuizGdkEqIoaY56
+         Y5qheSLsLAK2BRdwyWUm3m7gNQVG7KwlDg3a3v5Rc6304sfO5B5K/5+lFgIDyUI4o9RV
+         bLSUx12QJor2M0Uogb3Ocy2RHs0DtSn4Jg9JLyWG5qsc5gEPyu+5dlEseuRJalLZg0Nb
+         WMGUrtlzmjC2A7YTD6mekTg8mBNEXBr5Z8WaI6Qb73yXJuR2q8Z0TRHIIhzxOOsjILvn
+         1xHl9leVvm//Z+WA6YwviengghJYUYKSHBNNFuDjF3Vyy/PiJfpHmwfbWdn9q/9KAthV
+         82Vw==
+X-Gm-Message-State: AAQBX9cZ2gLDsiEAG5RPdSH5qa/H0/GYT8Kv77nsSCwmqmOAsJjVzW9q
+        sr0AvWT7VeJTxyJtwRoc9fAWGludP/J+md4Ms9URjw==
+X-Google-Smtp-Source: AKy350bW7YryWmNV10nIYpSf2fDZPBo7gtCJkSo2GQsrHdPOV1g+wopBCzngtDtNEyL3V/yqOc1fy4lJJrO8gRDaW/8=
+X-Received: by 2002:a05:6902:1896:b0:a02:a3a6:78fa with SMTP id
+ cj22-20020a056902189600b00a02a3a678famr1929129ybb.12.1679578245315; Thu, 23
+ Mar 2023 06:30:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230314183043.619997-1-brgl@bgdev.pl> <20230314183043.619997-13-brgl@bgdev.pl>
+ <CACRpkdanAd8J2b4Ky=2jmwchVi9_yojnUQoM1OrzW79_inFV4A@mail.gmail.com>
+In-Reply-To: <CACRpkdanAd8J2b4Ky=2jmwchVi9_yojnUQoM1OrzW79_inFV4A@mail.gmail.com>
+From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Thu, 23 Mar 2023 14:30:34 +0100
+Message-ID: <CACMJSeuJm1qA4dc1fftq9JNe_a0dvRnAZvDeG9C5FEXQsqNABg@mail.gmail.com>
+Subject: Re: [PATCH 12/14] dt-bindings: pinctrl: qcom,pmic-gpio: add
+ compatible for pmm8654au-gpio
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the IRQCHIP_SKIP_SET_WAKE flag since there are no special IRQ Wake
-bits that can be set to enable wakeup IRQ.
+On Thu, 23 Mar 2023 at 09:23, Linus Walleij <linus.walleij@linaro.org> wrot=
+e:
+>
+> On Tue, Mar 14, 2023 at 7:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add a new compatible for the GPIO controller on the pm8654au PMIC. It
+> > has 12 pins with no holes.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+>
+> Bartosz are these two something I should apply to the pinctrl
+> tree or will you queue them?
+> Either way:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
 
-Fixes: 3d9edf09d452 ("[ARM] 4457/2: davinci: GPIO support")
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
----
- drivers/gpio/gpio-davinci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think it's better if Bjorn takes it through the arm-msm tree if you
+don't mind.
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index d7595b39e8c4..aaaf61dc2632 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -322,7 +322,7 @@ static struct irq_chip gpio_irqchip = {
- 	.irq_enable	= gpio_irq_enable,
- 	.irq_disable	= gpio_irq_disable,
- 	.irq_set_type	= gpio_irq_type,
--	.flags		= IRQCHIP_SET_TYPE_MASKED,
-+	.flags		= IRQCHIP_SET_TYPE_MASKED | IRQCHIP_SKIP_SET_WAKE,
- };
- 
- static void gpio_irq_handler(struct irq_desc *desc)
--- 
-2.25.1
-
+Bart
