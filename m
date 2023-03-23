@@ -2,78 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DB0B6C69E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 14:50:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B78A96C6A34
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 14:59:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231774AbjCWNuD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 09:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
+        id S231951AbjCWN7C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 09:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231825AbjCWNuA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 09:50:00 -0400
-X-Greylist: delayed 436 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Mar 2023 06:49:57 PDT
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C219EC48
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 06:49:57 -0700 (PDT)
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4Pj63M2Y1Fz1r2Z4;
-        Thu, 23 Mar 2023 14:42:39 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4Pj63M1gxDz1qqlb;
-        Thu, 23 Mar 2023 14:42:39 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id L941TGtA4KFG; Thu, 23 Mar 2023 14:42:38 +0100 (CET)
-X-Auth-Info: Y9ljV7DUgiDa0xJFxkULtCmdxBb9ocJEGCmvDHDXVPnz+6sqxe7kkrxP8wnJBm45
-Received: from hawking (unknown [81.95.8.244])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu, 23 Mar 2023 14:42:38 +0100 (CET)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] m68k: Pass a pointer to virt_to_pfn() virt_to_page()
-References: <20230323133656.679478-1-linus.walleij@linaro.org>
-X-Yow:  I fill MY industrial waste containers with old copies
- of the ``WATCHTOWER'' and then add HAWAIIAN PUNCH to
- the top..  They look NICE in the yard--
-Date:   Thu, 23 Mar 2023 14:42:37 +0100
-In-Reply-To: <20230323133656.679478-1-linus.walleij@linaro.org> (Linus
-        Walleij's message of "Thu, 23 Mar 2023 14:36:56 +0100")
-Message-ID: <mvmfs9vwpma.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        with ESMTP id S231445AbjCWN6q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 09:58:46 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8707ECD;
+        Thu, 23 Mar 2023 06:58:40 -0700 (PDT)
+Received: by mail-oi1-f171.google.com with SMTP id bo10so16192959oib.11;
+        Thu, 23 Mar 2023 06:58:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679579919;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JVw/HyiqQinxdmesEdwJBI8XqbksiKkvSMPWgnEyvB0=;
+        b=Lkzd0ZQd1LhjqRG+EhLJrXvBtD8AWxgmm63nQOU1jRgIHZ824Td50GogOtrNPkH+yv
+         9fNiisQkWuqi7SQ/n9DzoGJPD5FyoUNtbwV3uiK9HlNe4etfSZfH2QH81THmQ0rAEjt6
+         +8+Uj4QRvVkxhzmQQuAy95LFy5gWMwhvQZXUMFKc9NV/UyNiApgx0ZSgskrgEv1/wWi6
+         nwMjXUkILNvuEzWktvbI26jc9nhjTvZ2BarUZpk2B776xgjDksfZz+Rsl41m9n8Gyijf
+         4Njsh1TG/m2cOckL1liH9+PtXNR6lezFqBz900pIyychk1PpXdKOENgbrxayLFTtQ3Lo
+         wRAA==
+X-Gm-Message-State: AO0yUKXZAsNSDpKGRAYUAoYb7FrH7YsuBoit9p2TGvrkHdzWkUgwJTXc
+        J/9VXzyvlgdFyOfXf/QPLoJD6jizaA==
+X-Google-Smtp-Source: AK7set/M5HHQwM6tdu9DT7OW94VOkCo2pd0A9F13matxGUFM6Kj1MGiUiuoa8Vc7kGOWUK7VJ/fchA==
+X-Received: by 2002:a05:6808:a09:b0:387:558e:c06e with SMTP id n9-20020a0568080a0900b00387558ec06emr1601283oij.43.1679579919325;
+        Thu, 23 Mar 2023 06:58:39 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id h22-20020a9d7996000000b0069d9a319817sm7531521otm.12.2023.03.23.06.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Mar 2023 06:58:38 -0700 (PDT)
+Received: (nullmailer pid 3103737 invoked by uid 1000);
+        Thu, 23 Mar 2023 13:58:37 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.7 required=5.0 tests=RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     brgl@bgdev.pl, devicetree@vger.kernel.org,
+        timestamp@lists.linux.dev, linux-doc@vger.kernel.org,
+        corbet@lwn.net, jonathanh@nvidia.com,
+        krzysztof.kozlowski+dt@linaro.org, gregkh@linuxfoundation.org,
+        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
+        thierry.reding@gmail.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linus.walleij@linaro.org
+In-Reply-To: <20230323012929.10815-5-dipenp@nvidia.com>
+References: <20230323012929.10815-1-dipenp@nvidia.com>
+ <20230323012929.10815-5-dipenp@nvidia.com>
+Message-Id: <167957962972.3095212.10275948205449867756.robh@kernel.org>
+Subject: Re: [PATCH V4 04/10] dt-bindings: timestamp: Add
+ nvidia,gpio-controller
+Date:   Thu, 23 Mar 2023 08:58:37 -0500
+X-Spam-Status: No, score=0.8 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mär 23 2023, Linus Walleij wrote:
 
-> diff --git a/arch/m68k/mm/motorola.c b/arch/m68k/mm/motorola.c
-> index 911301224078..0a9bc8292f78 100644
-> --- a/arch/m68k/mm/motorola.c
-> +++ b/arch/m68k/mm/motorola.c
-> @@ -102,7 +102,7 @@ static struct list_head ptable_list[2] = {
->  	LIST_HEAD_INIT(ptable_list[1]),
->  };
->  
-> -#define PD_PTABLE(page) ((ptable_desc *)&(virt_to_page(page)->lru))
-> +#define PD_PTABLE(page) ((ptable_desc *)&(virt_to_page((void *)page)->lru))
+On Wed, 22 Mar 2023 18:29:23 -0700, Dipen Patel wrote:
+> Introducing nvidia,gpio-controller property from Tegra234 SoCs onwards.
+> This is done to help below case.
+> 
+> Without this property code would look like:
+> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
+> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
+> 				   tegra_get_gpiochip_from_name);
+> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
+> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
+> 				   tegra_get_gpiochip_from_name);
+> else
+> 	return -ENODEV;
+> 
+> This means for every future addition of the compatible string, if else
+> condition statements have to be expanded.
+> 
+> With the property:
+> gpio_ctrl = of_parse_phandle(dev->of_node, "nvidia,gpio-controller", 0);
+> ....
+> hte_dev->c = gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_node);
+> 
+> This simplifies the code significantly. The introdunction of this
+> property/binding does not break existing Tegra194 provider driver.
+> 
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> ---
+>  .../timestamp/nvidia,tegra194-hte.yaml        | 31 +++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
+> 
 
-That should probably get a pair of parens around the macro argument.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.example.dtb: timestamp@c1e0000: reg: [[0, 203292672], [0, 65536]] is too long
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.example.dtb: timestamp@c1e0000: reg: [[0, 203292672], [0, 65536]] is too long
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.example.dtb: timestamp@3aa0000: reg: [[0, 61472768], [0, 65536]] is too long
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230323012929.10815-5-dipenp@nvidia.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
