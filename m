@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 375046C706F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 19:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C7596C7086
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 19:49:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjCWSpH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 14:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S230025AbjCWSt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 14:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbjCWSpG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 14:45:06 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A7DFF24;
-        Thu, 23 Mar 2023 11:45:05 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id e12so10745619uaa.3;
-        Thu, 23 Mar 2023 11:45:05 -0700 (PDT)
+        with ESMTP id S229529AbjCWStz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 14:49:55 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DC72887E;
+        Thu, 23 Mar 2023 11:49:54 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id cu36so11014595vsb.7;
+        Thu, 23 Mar 2023 11:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679597104;
+        d=gmail.com; s=20210112; t=1679597394;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iBDC4YqSAlgVBo8jKYk3v5jKYzycCpJsqxMwBoNPQHc=;
-        b=UDQUaTiM3Ol49YOYEaeIUV8i6kXJ0/rUqSHOrix46bMOBVgNbpsJgfUBoEx9iPVV4b
-         rKGEJQ8MwG16gdGoO+RXiL+uX5MbOGczBKE3HmK2zTcpkQaGSOtEDVMgGWHTT6w/7JiM
-         iXMR44j6znM3JDjoywrdSnqYB37yHgOIHsQr5HSH2ubU7RyF6RAyYhgDoCjnruC9Vci6
-         w7mpg14fB0pTc/3HWWeL0QzgPxDim7rW9u9L6L6861mnOKBDC+4Io9OFZ7+u+0t9JltE
-         wrWb1+DPFoCp6Mpo3w0RXX7w7t2AmUQ1vjsQJtt1LE+7u2wiO98o0rfTUQzmvawKo6V2
-         vsXg==
+        bh=ncX8iuqCgbqtJzMgPUPEHF36WyRojpiwD54nsqA/TSM=;
+        b=Y6qbUgEKHn+oxb9buZaR78gFvNl9rTwMxRkXd6zX3MwoWrDAWPCDEeux/8G+qAFYS4
+         d2j2oe0k21G7vvzaeWDK2tffYUd19TlN9BiGv8CgnGmPH5r1gdCOSkY1ZFPoLn2oGsbW
+         /qt5oCGz8WAPvO/BQCHunLNur8g4wnGFDRcWPM3g77R8bDT5qS6FDigP0njEFHc1mYnI
+         bsym6xWfmMBC8JAXEVlDmcS0wEnFV7u29jbhOvFXTgt7y81GkiO2fJsUdZgwQiuayFg3
+         plC6H4T4K8vfZR6e+n8lBvGRpNH39knNIdnzXdMzHAb4iMV01XyywIWjdrneKzTQGoGb
+         cNzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679597104;
+        d=1e100.net; s=20210112; t=1679597394;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iBDC4YqSAlgVBo8jKYk3v5jKYzycCpJsqxMwBoNPQHc=;
-        b=T6PcskDLgjf0INWY7/lW+MGSNse4bxWjdETj7U5fFECXDfRmt4QNipdRnp9A06KdMF
-         WHYSVW4ezYcUtHcovAhjfh0KpeFVmwGoEXUamuxr4fNcgV32GNX+fxL4EiC5TS6iP0Ec
-         dA9VKh8djog1GA0lBiSpGYNrIprrQnOjgbff3tE4MChwzWxdg/qMmWyqbhAbR31gLUQ2
-         ZCqIDnJjxL7pasqTjtx6xFWBO0UvqRXHErPv0nyHuEiJPwCe47M/kGwhlf9J6mdqU/lf
-         KHb54FeA8R2DiTdMqa+UI8jz7cTk74IftFueborQYMJf+fM8TbsFmknRF0raoYZTamfD
-         ikQQ==
-X-Gm-Message-State: AAQBX9eiXaxUSfI3tKIk1IlJCZyvJUa8V9K3LCqlFu/8oTCUl7L9o1n+
-        AfFCjEaFlJWeAq0kI/Ayq8GnK0FEN2+gniZanqg=
-X-Google-Smtp-Source: AKy350YeNXJkSX/tlhFD+Slv47JiiTHx1k8LWpgsM0iesU7f43QZt8XyntJ5ViDjN245LJNzev8d1Ai3xZ7oRFvEaxk=
-X-Received: by 2002:a1f:2d56:0:b0:439:d3e1:112b with SMTP id
- t83-20020a1f2d56000000b00439d3e1112bmr385078vkt.0.1679597104229; Thu, 23 Mar
- 2023 11:45:04 -0700 (PDT)
+        bh=ncX8iuqCgbqtJzMgPUPEHF36WyRojpiwD54nsqA/TSM=;
+        b=iOeZ4LasmyNcVaAdiIzj+7RSAgjb5v6klMiW1n2YBj3JEkIqbY+F8yj+mdDI6jO2GU
+         q1E0ngyrwjJ2u8Y+paliERX7SZeTKu3C/Uh+7TK6HI5fEdrqZQFAfeQ6VQ/+mBlNaNXP
+         Bil9I7/QE8IxwczxHmce1Rr4b1FPj27eS0TxwyOddXMeKEQfFd1iXooHMShtEC+U3DsG
+         kh0tEIQ2oc0VAam8Q1RLvkLt5fBnF3jqdD6bXL17xXzlRuKT4eb6T1BtHrNrBL7KpwlS
+         LOI2pOOL0xhx8HG+Yk744+oHcefJwtxnmnhw3m2Z4JaaU9/tjYf4QJelNTP5N+myzjq4
+         wwAA==
+X-Gm-Message-State: AO0yUKVlpKp/r4MBd6T19wh/HBI6j++fYHQv7c3hekobTgpG4suksW4c
+        qsb5XIdxe48GekMs8/T75Eufu5BIs5mF1qqZ6V7a59+1llo=
+X-Google-Smtp-Source: AK7set9ar+rqlol3nFwlTx8Fiw9JLSTiZasb66JIGqWd104vRvIu9rVxuftxdl4EAr/ItIIX0Rwou3wIC2YhQHr+1YU=
+X-Received: by 2002:a67:c31c:0:b0:425:e372:e0e4 with SMTP id
+ r28-20020a67c31c000000b00425e372e0e4mr2358622vsj.4.1679597393800; Thu, 23 Mar
+ 2023 11:49:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230323144833.28562-1-clin@suse.com> <20230323144833.28562-4-clin@suse.com>
-In-Reply-To: <20230323144833.28562-4-clin@suse.com>
+References: <20230323144833.28562-1-clin@suse.com> <20230323144833.28562-6-clin@suse.com>
+In-Reply-To: <20230323144833.28562-6-clin@suse.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 23 Mar 2023 20:44:28 +0200
-Message-ID: <CAHp75Vfue6TNNbNh8b_fCFKF7+rACd=hgXdoQd7drfojDWOvUw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] pinctrl: s32cc: refactor pin config parsing
+Date:   Thu, 23 Mar 2023 20:49:17 +0200
+Message-ID: <CAHp75VeC_xv3C2b4xQB98=pLdUT_pQf_OF5O1fSjXud9W8ptXg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] pinctrl: s32cc: Use generic struct data to
+ describe pin function
 To:     Chester Lin <clin@suse.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         NXP S32 Linux Team <s32@nxp.com>,
@@ -77,118 +78,120 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Mar 23, 2023 at 4:49=E2=80=AFPM Chester Lin <clin@suse.com> wrote:
 >
-> Move common codes into smaller inline functions and remove argument check=
-s
-> that are not actually used by pull up/down bits in S32 MSCR register.
+> Replace struct s32_pmx_func with generic struct pinfunction since they
+> have the same data fields.
 
-in the S32
-
+LGTM,
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Signed-off-by: Chester Lin <clin@suse.com>
 > ---
-> Changes v3:
-> - Move the PIN_CONFIG_BIAS_DISABLE case to be with PU and PD cases since
->   they have the same function call.
-> - Roll back the argument checks of OUTPUT_ENABLE and INPUT_ENABLE cases
->   since they were wrongly removed with the PU & PD parts in v2.
+> Changes in v3:
+> - Separate the generic pinfunction patch from [PATCH v2 4/4]
+> - Fix the data type declaration and remove unncessary type casting
+>   developed in v2.
 >
->  drivers/pinctrl/nxp/pinctrl-s32cc.c | 52 ++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 19 deletions(-)
+>  drivers/pinctrl/nxp/pinctrl-s32.h   | 14 +-------------
+>  drivers/pinctrl/nxp/pinctrl-s32cc.c | 18 +++++++++++-------
+>  2 files changed, 12 insertions(+), 20 deletions(-)
 >
+> diff --git a/drivers/pinctrl/nxp/pinctrl-s32.h b/drivers/pinctrl/nxp/pinc=
+trl-s32.h
+> index 850cd668f406..2f7aecd462e4 100644
+> --- a/drivers/pinctrl/nxp/pinctrl-s32.h
+> +++ b/drivers/pinctrl/nxp/pinctrl-s32.h
+> @@ -24,18 +24,6 @@ struct s32_pin_group {
+>         unsigned int *pin_sss;
+>  };
+>
+> -/**
+> - * struct s32_pmx_func - describes S32 pinmux functions
+> - * @name: the name of this specific function
+> - * @groups: corresponding pin groups
+> - * @num_groups: the number of groups
+> - */
+> -struct s32_pmx_func {
+> -       const char *name;
+> -       const char **groups;
+> -       unsigned int num_groups;
+> -};
+> -
+>  /**
+>   * struct s32_pin_range - pin ID range for each memory region.
+>   * @start: start pin ID
+> @@ -52,7 +40,7 @@ struct s32_pinctrl_soc_info {
+>         unsigned int npins;
+>         struct s32_pin_group *groups;
+>         unsigned int ngroups;
+> -       struct s32_pmx_func *functions;
+> +       struct pinfunction *functions;
+>         unsigned int nfunctions;
+>         unsigned int grp_index;
+>         const struct s32_pin_range *mem_pin_ranges;
 > diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pi=
 nctrl-s32cc.c
-> index f698e1a240ef..36f323f87785 100644
+> index e65c88162d7f..8373468719b6 100644
 > --- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
 > +++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-> @@ -474,11 +474,38 @@ static int s32_get_slew_regval(int arg)
->         return -EINVAL;
+> @@ -364,7 +364,7 @@ static int s32_pmx_get_groups(struct pinctrl_dev *pct=
+ldev,
+>         const struct s32_pinctrl_soc_info *info =3D ipctl->info;
+>
+>         *groups =3D info->functions[selector].groups;
+> -       *num_groups =3D info->functions[selector].num_groups;
+> +       *num_groups =3D info->functions[selector].ngroups;
+>
+>         return 0;
+>  }
+> @@ -785,8 +785,9 @@ static int s32_pinctrl_parse_functions(struct device_=
+node *np,
+>                                         u32 index)
+>  {
+>         struct device_node *child;
+> -       struct s32_pmx_func *func;
+> +       struct pinfunction *func;
+>         struct s32_pin_group *grp;
+> +       const char **groups;
+>         u32 i =3D 0;
+>         int ret =3D 0;
+>
+> @@ -796,18 +797,19 @@ static int s32_pinctrl_parse_functions(struct devic=
+e_node *np,
+>
+>         /* Initialise function */
+>         func->name =3D np->name;
+> -       func->num_groups =3D of_get_child_count(np);
+> -       if (func->num_groups =3D=3D 0) {
+> +       func->ngroups =3D of_get_child_count(np);
+> +       if (func->ngroups =3D=3D 0) {
+>                 dev_err(info->dev, "no groups defined in %pOF\n", np);
+>                 return -EINVAL;
+>         }
+> -       func->groups =3D devm_kcalloc(info->dev, func->num_groups,
+> +
+> +       groups =3D devm_kcalloc(info->dev, func->ngroups,
+>                                     sizeof(*func->groups), GFP_KERNEL);
+> -       if (!func->groups)
+> +       if (!groups)
+>                 return -ENOMEM;
+>
+>         for_each_child_of_node(np, child) {
+> -               func->groups[i] =3D child->name;
+> +               groups[i] =3D child->name;
+>                 grp =3D &info->groups[info->grp_index++];
+>                 ret =3D s32_pinctrl_parse_groups(child, grp, info);
+>                 if (ret)
+> @@ -815,6 +817,8 @@ static int s32_pinctrl_parse_functions(struct device_=
+node *np,
+>                 i++;
+>         }
+>
+> +       func->groups =3D groups;
+> +
+>         return 0;
 >  }
 >
-> -static int s32_get_pin_conf(enum pin_config_param param, u32 arg,
-> -                           unsigned int *mask, unsigned int *config)
-> +static inline void s32_pin_set_pull(enum pin_config_param param,
-> +                                  unsigned int *mask, unsigned int *conf=
-ig)
->  {
-> +       switch (param) {
-> +       case PIN_CONFIG_BIAS_DISABLE:
-> +       case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-> +               *config &=3D ~(S32_MSCR_PUS | S32_MSCR_PUE);
-> +               break;
-> +       case PIN_CONFIG_BIAS_PULL_UP:
-> +               *config |=3D S32_MSCR_PUS | S32_MSCR_PUE;
-> +               break;
-> +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> +               *config &=3D ~S32_MSCR_PUS;
-> +               *config |=3D S32_MSCR_PUE;
-> +               break;
-> +       default:
-> +               return;
-> +       }
-> +
-> +       *mask |=3D S32_MSCR_PUS | S32_MSCR_PUE;
-> +}
-> +
-> +static int s32_parse_pincfg(unsigned long pincfg, unsigned int *mask,
-> +                           unsigned int *config)
-> +{
-> +       enum pin_config_param param;
-> +       u32 arg;
->         int ret;
->
-> +       param =3D pinconf_to_config_param(pincfg);
-> +       arg =3D pinconf_to_config_argument(pincfg);
-> +
->         switch (param) {
->         /* All pins are persistent over suspend */
->         case PIN_CONFIG_PERSIST_STATE:
-> @@ -508,26 +535,15 @@ static int s32_get_pin_conf(enum pin_config_param p=
-aram, u32 arg,
->                 *config |=3D S32_MSCR_SRE((u32)ret);
->                 *mask |=3D S32_MSCR_SRE(~0);
->                 break;
-> +       case PIN_CONFIG_BIAS_DISABLE:
->         case PIN_CONFIG_BIAS_PULL_UP:
-> -               if (arg)
-> -                       *config |=3D S32_MSCR_PUS;
-> -               else
-> -                       *config &=3D ~S32_MSCR_PUS;
-> -               fallthrough;
->         case PIN_CONFIG_BIAS_PULL_DOWN:
-> -               if (arg)
-> -                       *config |=3D S32_MSCR_PUE;
-> -               else
-> -                       *config &=3D ~S32_MSCR_PUE;
-> -               *mask |=3D S32_MSCR_PUE | S32_MSCR_PUS;
-> +               s32_pin_set_pull(param, mask, config);
->                 break;
->         case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
->                 *config &=3D ~(S32_MSCR_ODE | S32_MSCR_OBE | S32_MSCR_IBE=
-);
->                 *mask |=3D S32_MSCR_ODE | S32_MSCR_OBE | S32_MSCR_IBE;
-> -               fallthrough;
-> -       case PIN_CONFIG_BIAS_DISABLE:
-> -               *config &=3D ~(S32_MSCR_PUS | S32_MSCR_PUE);
-> -               *mask |=3D S32_MSCR_PUS | S32_MSCR_PUE;
-> +               s32_pin_set_pull(param, mask, config);
->                 break;
->         default:
->                 return -EOPNOTSUPP;
-> @@ -553,9 +569,7 @@ static int s32_pinconf_mscr_update(struct pinctrl_dev=
- *pctldev,
->                 pin_get_name(pctldev, pin_id), num_configs);
->
->         for (i =3D 0; i < num_configs; i++) {
-> -               ret =3D s32_get_pin_conf(pinconf_to_config_param(configs[=
-i]),
-> -                                      pinconf_to_config_argument(configs=
-[i]),
-> -                                      &mask, &config);
-> +               ret =3D s32_parse_pincfg(configs[i], &mask, &config);
->                 if (ret)
->                         return ret;
->         }
 > --
 > 2.37.3
 >
