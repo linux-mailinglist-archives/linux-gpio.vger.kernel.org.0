@@ -2,79 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2701A6C61AD
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 09:30:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C06A6C61DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 09:35:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbjCWIaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 04:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
+        id S231418AbjCWIfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 04:35:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbjCWIaC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 04:30:02 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293FA149A1
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 01:30:00 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5418d54d77bso382249217b3.12
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 01:30:00 -0700 (PDT)
+        with ESMTP id S231449AbjCWIfH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 04:35:07 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDCB12074
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 01:34:28 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-53d277c1834so382717797b3.10
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Mar 2023 01:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679560199;
+        d=linaro.org; s=google; t=1679560465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ESqicvrtxMjgfv2DQ/MbAC2UcJgHBWQRNQuYleU6Lxc=;
-        b=auh9w4//9ZjxHavJWL3nkpB/8hz0Qp657Qd/SCGI99yNlonXV4rVy5V4S1re8qkcn1
-         wkHuP4yLqaLpr3BATeYTwZhpHFNYMfhfFvBhiaCPBw/43c/9AHaP5/WD1W6q26CxW/vS
-         lDzn2Qownfc29i6U6Qtbr59OzMfkO34zvh/5tfqdspVIwECXzBhf/LUIKt4b4RECX1wZ
-         0CNn004ZOkQV1DzcmtML/tSlFQkB2aeZRstUu/ubRvYRPMUI0u3BBd1ay5qU/mNNTDqk
-         sZdrN1sJgL8NQhS71hyQ6ktPfYar/qav4R/fpkO1+qUOzmGfL8gHp/MFV+mULzky+X56
-         ZOJA==
+        bh=J4RYoPJ1LErLnjfKLVajCu6GU5STQHSZ9DUFEBKc2Ss=;
+        b=GrRWMTpR78EiK4AGRh+wmlmCJc3yCLkLpH/UHF4e9cGS6u0ubEfnOhxJ/TlOwky0s8
+         WB6++T3F+9k6IZ4E6+AnMDkgBvTHjHkZssw2T5snvgHlVXVPzEJ6Lhy0yxo616B3KUTU
+         7XXdpc6YcBqJoe2ZM6oL5xe8PYDGY+d8y/Xt5QMGsideAAPUH7yrMGJrZrmRx5+uzFon
+         jgdS8g/ujPnYr53RqC/hbmGIU9ZTPYW4D9iIrTFbAxBWC/Tkxy1GXf52JO1bIRBLV35U
+         wd0qCFxzRzWpV6lqBEIAUjokdAC1KQf8QK7ezjT3lAgU8GP3x/f/kbyhwAIVnwj0lwNL
+         MzNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679560199;
+        d=1e100.net; s=20210112; t=1679560465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ESqicvrtxMjgfv2DQ/MbAC2UcJgHBWQRNQuYleU6Lxc=;
-        b=YwOFpNEqrdEp/P6UuIhRqcCmX3G4lCGvdEBL5Q76xqgNqo3UFn/7LFMiCjXf0JLq0m
-         WKpJ9YELondcaN8tcbLCL3voY6VH0wK+/7p38cgLZSTY8CMUedrpIVD50R0COGWRKrtw
-         dpGtIduh1dwXKegiqTNrcN2sWnsRHSK6v492+iHLlbOs3iNiDtoFbJDlloUbFCw62Oly
-         Vf9h1WanqAN7tG8jOGkCSAsXfQ0WrdMA5WKVPH+k/T5Kx9E//sXdgvJtwKBDgnaxL/+O
-         zG+YivtTI6+LwTI9zyO0Q3jDluULgtIKNdYmiWmsEl2Ice+39vCnKEKvKkjw86J1gN9g
-         pH+A==
-X-Gm-Message-State: AAQBX9ea01/oiDKwuA9a7s0/qWcxbQ3UjlF9q9oZMwgso7fnHVS7zSUO
-        RNqbi2Hff8mWR9geQPPO5lyUZPAXGjhZxGQYOxwf/w==
-X-Google-Smtp-Source: AKy350ZNlg5R5/BZzQajdKFhT8TJ5d/EfLNOqmBrkrroUQh7Bq9HML1sAQV9tmcb+eMmwJWymvt43FU84C+ft7dowAo=
-X-Received: by 2002:a0d:ec4a:0:b0:541:753d:32f9 with SMTP id
- r10-20020a0dec4a000000b00541753d32f9mr1395590ywn.9.1679560199380; Thu, 23 Mar
- 2023 01:29:59 -0700 (PDT)
+        bh=J4RYoPJ1LErLnjfKLVajCu6GU5STQHSZ9DUFEBKc2Ss=;
+        b=pMmWORvhyfRHUD88WPYnEDyUO92fflaoDC2F5rGA3IhpYYcud3lxYkzeXSIjMkQjyT
+         s8gGdu0gum5up8fRDnDqgQV0uDBTFSPdPC2gCXgk1owHyha3DziGVRoPQLPq5gLtRap0
+         8GvMOZHBJ4fBUYIofuHwekUNyMKAUEPDqmbhb074fKiVIuNDuzNd9KkiXrXYk5MYNYpx
+         qm3e7sQPJGecjpHBn1N+dEwt7muIU43dZ0YFtpx4OAOEQlQKL5MMBV/FCKRPCjfJo+my
+         S7AgYiKciiblQUgEFP5cnORUo4Xz0gm3F6sW9q+j2KyQYZ+DOMQbuPiB+bJwCcLnNI2R
+         S5KQ==
+X-Gm-Message-State: AAQBX9dtMuIQlNvLCILSX6Qu03juaAoOJu/rPbzsnowUBJUluxokDwSb
+        aV/X8Qzb0+912rG5pgLQBK+0Ef7OCTrfydqzEDdbfA==
+X-Google-Smtp-Source: AKy350ZaGM1U6Ub4iMxUNlQn/D6/CcT7QXGB3nXKmuAYzeKKqb6dW4NRFfS7v1XCoePQnsn6MuXULcyXhrBnNby8wqc=
+X-Received: by 2002:a81:bd11:0:b0:532:e887:2c23 with SMTP id
+ b17-20020a81bd11000000b00532e8872c23mr1431390ywi.9.1679560465580; Thu, 23 Mar
+ 2023 01:34:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230310144721.1544669-1-robh@kernel.org> <CAMuHMdUaeyHs9fQxS+16F62uHaifJYMXKJpL2-xi-SL5HCrTHQ@mail.gmail.com>
- <CAMuHMdX1=+WwWjfiWDYOjSzTjcYBEY+QR=XKuU+o5_SCyU7rag@mail.gmail.com>
- <CACRpkdaw7TodD0hr3vD8cGB80k0qtEiaC1ne-ivCj6YEefi44w@mail.gmail.com> <CAL_Jsq+pzQvsvk8KiyVZPrebMvV6-PfxFXFXcPOf0C21+-yo9A@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+pzQvsvk8KiyVZPrebMvV6-PfxFXFXcPOf0C21+-yo9A@mail.gmail.com>
+References: <20230323012929.10815-1-dipenp@nvidia.com> <20230323012929.10815-4-dipenp@nvidia.com>
+In-Reply-To: <20230323012929.10815-4-dipenp@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Mar 2023 09:29:48 +0100
-Message-ID: <CACRpkdbaCX0Fdr5guWZqCO_iVQrnOMmN-FYMV=LfFDsz9cdULA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Use of_property_present() for testing DT
- property presence
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-renesas-soc@vger.kernel.org, linux-sunxi@lists.linux.dev
+Date:   Thu, 23 Mar 2023 09:34:14 +0100
+Message-ID: <CACRpkdbPSyQbe8pC8EzhyGoVor+piaKRCoXLfoW_n_9JyYLu1g@mail.gmail.com>
+Subject: Re: [PATCH V4 03/10] dt-bindings: timestamp: Deprecate nvidia,slices property
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -86,17 +71,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 7:18=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
+On Thu, Mar 23, 2023 at 2:29=E2=80=AFAM Dipen Patel <dipenp@nvidia.com> wro=
+te:
 
-> > So I need a new version of this patch before I can apply it
-> > I guess, or there will be conflict with Reseas stuff?
+> The property is not necessary as it is a constant value and can be
+> hardcoded in the driver code.
 >
-> Can you just drop drivers/pinctrl/renesas/pinctrl.c from this patch?
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 
-You just exposed how lazy I am ;)
-
-OK I did that, patch applied sans the renesas hunk.
+Looks completely reasonable to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
