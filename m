@@ -2,129 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D58746C71FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 21:58:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD1196C72A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Mar 2023 22:59:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229849AbjCWU60 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Mar 2023 16:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
+        id S231411AbjCWV7y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Mar 2023 17:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbjCWU6Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 16:58:24 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627CD211F3;
-        Thu, 23 Mar 2023 13:58:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K7rqsNw1HG8KjoQWWs5Uorow4qWiJi/KaLKuHBCpijfDP3WM7aq5GPjVeQ0tobqDxOfb8vcwVr7IGREdI1boaFy2IPbjZIKzjeevUS/kze2ddwiPhLMBuWr7epuLRqeOWd4pmFgsC4F9Yg/+l9xPsJ9sAxoenmz6t2KsRRYkKHzlgqgmvfUfCVvj+ZyIh/8Ewd3iL83lyiShNVdGIEATVpx6NmbFVVwh8PWmCILHQ+84lbEwgDiTO5uTprUFQpJF8HZnbhWAEV/xid8/OL/4XiBW6PvmuGuMltfwMjwTkYeaKY3KNbrxEB/zydK8ila1UXCODYyxGwmEfkvLkexfeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4Gy/49iwHAImWPsLmW8jPpDcIBB3Ap6uG5BaW/9Qya0=;
- b=AhWMLRsZepXkcK0PakzETfKWPUjo3lrWPu7KshGaP0G5+VhxxXtoF7dLiPfR1UXCu5XAtwTkwXkpKt7mZMUlJwSDSQUMqT0WJXyhfUJJVgf+aE+58cV3/7ySF9HdFTqYYT61a/K/EQ+cJjLQN1O+Tn9/kTCtkzdSKGZ/wJc4HdW2aImrNT6tZL/dZlfBQe2OL0qlfnUe6CdoDtmIP4Bzx5S/A+jQ0YOANlyvdt7lj2tCabNlsz4gdg5Jz239KbXb/M4FuJ2zPx2Z7O62SsMuCByIIvkpvYr0+2HDetgGiRmElNhTj3SiHavBztn5QEEu/Y/DhJszDblCsuiCJRenSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Gy/49iwHAImWPsLmW8jPpDcIBB3Ap6uG5BaW/9Qya0=;
- b=LnK9xHHfA7dXXmBef6SuXVd5R96ihra8RD0m8t7mc70NjeKeWoGKDuEH0toqQA+d4DuOGutTD11wJvN1CjkhAkxep02rl1jcLjChFU84pj0R1d6sp7rGM4JNw/Rw71BeKdhJ1f5keD0BQ/DaSpYB755koMq59hN7wnIKn3TEFZvwD/vqhSwbjI+wuFGuY5gKMEjqyKkt+m4b/FTG/mFttc5pgTWe2w9NH8Rg/bisHwoZJSTQbjhkHxttn6b2grVHOuJCaKlcMJYkUKsHhY/qF02fRRjdoPqSoZ/Sf98xziCftvGO1RAkUKo/4AtSc5SGZOV8hABjxQgQ6O0eG2Cc2g==
-Received: from MW4PR03CA0100.namprd03.prod.outlook.com (2603:10b6:303:b7::15)
- by DS0PR12MB7534.namprd12.prod.outlook.com (2603:10b6:8:139::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38; Thu, 23 Mar
- 2023 20:57:50 +0000
-Received: from CO1NAM11FT095.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b7:cafe::60) by MW4PR03CA0100.outlook.office365.com
- (2603:10b6:303:b7::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38 via Frontend
- Transport; Thu, 23 Mar 2023 20:57:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT095.mail.protection.outlook.com (10.13.174.179) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6222.17 via Frontend Transport; Thu, 23 Mar 2023 20:57:50 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 23 Mar 2023
- 13:57:37 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Thu, 23 Mar
- 2023 13:57:37 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.986.37 via Frontend Transport; Thu, 23 Mar
- 2023 13:57:36 -0700
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     <andy.shevchenko@gmail.com>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Asmaa Mnebhi <asmaa@nvidia.com>
-Subject: [PATCH v1] gpio: mmio: fix calculation of bgpio_bits
-Date:   Thu, 23 Mar 2023 16:57:33 -0400
-Message-ID: <20230323205733.20763-1-asmaa@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+        with ESMTP id S231436AbjCWV7w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Mar 2023 17:59:52 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A1E18ABC;
+        Thu, 23 Mar 2023 14:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679608791; x=1711144791;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MIYwnVhINEUPfIqisXDzCHTh2MVhn+l+clvK/i9lXUw=;
+  b=Va+NTwX4xQo/3kYiDIl8LtbATMbPoSj6UL5Ab0O169pKbgxZJDdi/UxB
+   C1RRl5WtZkWA9XPQUBk0sg24maFx/KodP0c+CWxUouUmNlyyjJzBYhpsE
+   hSp2StRKfM47VMtsHjmghCISBBau+PBlODZFBCsuIhM2zsD0xgpk+nUOz
+   Xz+xqTB5cI5rdHjCD/M98/GcOdvELFDak4ot10HWeiWzcGlgIebVzgFdX
+   T0TOwGarvIp2v9AgIZ75nWoxLjJfmpJwI6CuZednTEHVLrKtsFDghrVf5
+   4IIqqde7c42LfABrfIH/qxoPCzlv2vt5ngzo5QXswTGh1nEevXqeXVKPn
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="402216027"
+X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
+   d="scan'208";a="402216027"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 14:59:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="682452314"
+X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
+   d="scan'208";a="682452314"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 23 Mar 2023 14:59:45 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfSyH-000Ejc-0q;
+        Thu, 23 Mar 2023 21:59:45 +0000
+Date:   Fri, 24 Mar 2023 05:59:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ye Xiang <xiang.ye@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, srinivas.pandruvada@intel.com,
+        heikki.krogerus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        wentong.wu@intel.com, lixu.zhang@intel.com,
+        Ye Xiang <xiang.ye@intel.com>
+Subject: Re: [PATCH v6 1/6] usb: Add support for Intel LJCA device
+Message-ID: <202303240545.fhNNvhZt-lkp@intel.com>
+References: <20230323172113.1231050-2-xiang.ye@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT095:EE_|DS0PR12MB7534:EE_
-X-MS-Office365-Filtering-Correlation-Id: eccd70ed-11c0-4f13-d8c9-08db2be143ce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K+0rAvllmmM/9QJeY6Lkz+OzOepVS6T7RZHJ5V+Z56Twn+k99eeeSyYpgHINlmiUpSxvldIRQvCSlqdG6i/txOYvdLEQkR7zPvVs11Yuaguh9s8YzCRc2zGer8uB1liaIABwiW18A3QWG83nkGLroQ9Z9vkXni/8t+tURN9SPP8tfhQ3Ty7ix/MeWUAchKakvNiklS/5af+26uoelISUngMM14rw+iVmBKLuNjGub6tEX3mbfE476DdBxQEszEz9nt0dwveMDmOqyNpZG15j0y5C86Ikxw0uAnDOwyJ1faSrSuUQki4T1plcxXCBPcXJCQl9CmCo9hjF7SiCi289j/vUMCFrd10hy2+OSqa8scxrySW56bPF4cWoQv3UBUh9ICE3jsXm953PGQ95WIS2cUQhfB3K6V0cmaQoBzpEwGfo0CT09bmA2kZRjW1yQHDMfCOJkwheBPBgECVp+4zend/VMCEgJOpU8Dff0FSZ1Ftbjn5nEXtEXXvYbOVyeQ77Lg0A2gES7vnuzaafyZXy+QXOOcxLuDIo/fXLdXl5Z/mbfdc2znk8EuyLk1yahARXFrHGg1jXki0copmJ5lz07NPf7MHxidVZgYHXh/Wv56HfL9T05SHgo5SXcwDeyeIB2yG1T5gAh6hSexNxzxsCO90j0KLGbOXPFwa4/3S8dWhpzwiIsUYryMBaKJrkRqnAdTqxzOAR04Xck8g8Eh8GT4N738X5yflNQXR13y8zRM3VxrT+hQ5hK9wwaGChuWsO8gBp/JaLsEDgHg34+JjBJA==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(346002)(396003)(376002)(451199018)(40470700004)(36840700001)(46966006)(5660300002)(2906002)(82740400003)(7636003)(4744005)(41300700001)(8936002)(40480700001)(82310400005)(36756003)(86362001)(40460700003)(36860700001)(356005)(6666004)(107886003)(47076005)(426003)(7696005)(478600001)(110136005)(83380400001)(2616005)(336012)(26005)(186003)(70586007)(1076003)(70206006)(8676002)(316002)(4326008)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2023 20:57:50.6760
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eccd70ed-11c0-4f13-d8c9-08db2be143ce
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT095.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7534
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230323172113.1231050-2-xiang.ye@intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If the "ngpios" property is specified, bgpio_bits is calculated
-as the round up value of ngpio. At the moment, the only requirement
-specified is that the round up value must be a multiple of 8 but
-it should also be a power of 2 because we provide accessors based
-on the bank size in bgpio_setup_accessors().
+Hi Ye,
 
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
----
- drivers/gpio/gpio-mmio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for the patch! Yet something to improve:
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index b52a3dd511ca..74fdf0d87b2c 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -623,7 +623,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- 	if (ret)
- 		gc->ngpio = gc->bgpio_bits;
- 	else
--		gc->bgpio_bits = round_up(gc->ngpio, 8);
-+		gc->bgpio_bits = roundup_pow_of_two(round_up(gc->ngpio, 8));
- 
- 	ret = bgpio_setup_io(gc, dat, set, clr, flags);
- 	if (ret)
+[auto build test ERROR on usb/usb-testing]
+[also build test ERROR on usb/usb-next usb/usb-linus brgl/gpio/for-next wsa/i2c/for-next broonie-spi/for-next linus/master v6.3-rc3 next-20230323]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Xiang/usb-Add-support-for-Intel-LJCA-device/20230324-012303
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+patch link:    https://lore.kernel.org/r/20230323172113.1231050-2-xiang.ye%40intel.com
+patch subject: [PATCH v6 1/6] usb: Add support for Intel LJCA device
+config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20230324/202303240545.fhNNvhZt-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/606c371c73fa37d233b47bd34d4789a1a157a9e4
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ye-Xiang/usb-Add-support-for-Intel-LJCA-device/20230324-012303
+        git checkout 606c371c73fa37d233b47bd34d4789a1a157a9e4
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=riscv olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/usb/misc/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303240545.fhNNvhZt-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/usb/misc/ljca.c:133:9: error: unknown type name 'ljca_event_cb_t'
+     133 |         ljca_event_cb_t notify;
+         |         ^~~~~~~~~~~~~~~
+   drivers/usb/misc/ljca.c: In function 'ljca_stub_notify':
+   drivers/usb/misc/ljca.c:252:17: error: called object is not a function or function pointer
+     252 |                 stub->event_entry.notify(stub->event_entry.context, cmd, evt_data, len);
+         |                 ^~~~
+   drivers/usb/misc/ljca.c: In function 'ljca_add_aux_dev':
+>> drivers/usb/misc/ljca.c:498:16: error: implicit declaration of function 'acpi_find_child_device'; did you mean 'acpi_match_device'? [-Werror=implicit-function-declaration]
+     498 |         adev = acpi_find_child_device(parent, adr, false);
+         |                ^~~~~~~~~~~~~~~~~~~~~~
+         |                acpi_match_device
+>> drivers/usb/misc/ljca.c:498:14: warning: assignment to 'struct acpi_device *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     498 |         adev = acpi_find_child_device(parent, adr, false);
+         |              ^
+>> drivers/usb/misc/ljca.c:479:29: warning: variable 'adev' set but not used [-Wunused-but-set-variable]
+     479 |         struct acpi_device *adev = NULL;
+         |                             ^~~~
+   drivers/usb/misc/ljca.c: At top level:
+   drivers/usb/misc/ljca.c:369:12: warning: 'ljca_transfer_internal' defined but not used [-Wunused-function]
+     369 | static int ljca_transfer_internal(struct ljca *ljca, u8 cmd, const void *obuf,
+         |            ^~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +498 drivers/usb/misc/ljca.c
+
+   473	
+   474	static int ljca_add_aux_dev(struct ljca_dev *dev, char *name, unsigned int id, unsigned int adr,
+   475				    void *data)
+   476	{
+   477		struct auxiliary_device *auxdev;
+   478		struct acpi_device *parent;
+ > 479		struct acpi_device *adev = NULL;
+   480		int ret;
+   481	
+   482		if (dev->auxdev_count >= ARRAY_SIZE(dev->auxdevs))
+   483			return -EINVAL;
+   484	
+   485		auxdev = &dev->auxdevs[dev->auxdev_count];
+   486		auxdev->name = name;
+   487		auxdev->id = id;
+   488		auxdev->dev.platform_data = data;
+   489		auxdev->dev.parent = &dev->intf->dev;
+   490		auxdev->dev.release = ljca_aux_release;
+   491	
+   492		ret = auxiliary_device_init(auxdev);
+   493		if (ret)
+   494			return ret;
+   495	
+   496		/* new auxiliary device bind to acpi device */
+   497		parent = ACPI_COMPANION(&dev->intf->dev);
+ > 498		adev = acpi_find_child_device(parent, adr, false);
+   499		ACPI_COMPANION_SET(&auxdev->dev, adev ?: parent);
+   500	
+   501		ret = auxiliary_device_add(auxdev);
+   502		if (ret) {
+   503			dev_err(&dev->intf->dev, "failed to add auxiliary dev %s.%d\n", name, id);
+   504			auxiliary_device_uninit(auxdev);
+   505			return ret;
+   506		}
+   507	
+   508		dev->auxdev_count++;
+   509	
+   510		return 0;
+   511	}
+   512	
+
 -- 
-2.30.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
