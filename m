@@ -2,78 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1956C7947
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 09:00:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72FA86C7A04
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 09:41:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjCXIAK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Mar 2023 04:00:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45618 "EHLO
+        id S230329AbjCXIle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Mar 2023 04:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjCXIAJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 04:00:09 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94751E1E2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:00:06 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id p34so582217wms.3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:00:06 -0700 (PDT)
+        with ESMTP id S229753AbjCXIld (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 04:41:33 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7307320A35
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:41:31 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id cn12so4905395edb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1679644805;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Et+I6m2/3M3ihrXodAsozWva/ZYQ4ukUjISIAm7jl7w=;
-        b=7uTrwDQ1t1lwRIveny17vL0ua24bvr+rukAwV8ZAU/Bh/9eHLfPnqzJcagHhJ77xc1
-         R12KpmviwRpqJ4y6Y7xZIAjO5cSmC7a20FEkkQ031zyw3mgdRfGkV9F4b0WXVo//BDWb
-         pv33ubHZsRu1o5S6esuayqgduq2qg1o1BR+zc4rnXRk4R7JxDuvuyoUZvrWGQggjnFpg
-         HFKdo01a2yCcEWZbpylOeM49mBx2kRTMZIlUJ8Acg29QyPuKSkobnONi1GVPP8xdXPtk
-         SS+d9gHTVyKvmxTlJaUNIYst+zO15RsLKQpmIe06ziCZcvuCWRJgRKMT0WC97EwRPFTv
-         UW5Q==
+        d=linaro.org; s=google; t=1679647290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKxYNXZ9eHTtJMVzM82IFy1ZfYeyHo24UX4/jj8J0vg=;
+        b=kk5HtABnn5CNziEd/v+xSZlemVkOLRPoG6I2hvVCXKOXwnkXJPXcUb0Ve7gBTCcfRJ
+         7xrAPksf0pAY1yRhsrtiq589Lf8myv2QtpFWIytfC8j1nmsQsCh9pT4f6PjVs1C547nx
+         GO/tL4XEzbeWHEj1NmtSTPEW13+croi5sgRokLh3/evQnhhD6KbqOH9mM9SJoKHymp0v
+         GhWh6CKtzqT/tQjLDQerKcrznVZzvwQR9XtJPL6H/FyK6GwMKt8imm5MCrrRSZehTwK+
+         MSi/hsYRjiBULZhNJ8rm52md2WJawZPgfEQAG89XJIYRITGj2sGDTbau/tkAwE5Uddj1
+         DFUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679644805;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Et+I6m2/3M3ihrXodAsozWva/ZYQ4ukUjISIAm7jl7w=;
-        b=WW+Ao81UrarlugzZhtWjB4jvS7ltm+dvmY6ZYwcixPcS4Z7j49c9BRuJ8E1x16Ndk9
-         HDEsUapSaIQK1oFLY4yduAN3KLyBbqXWUdCUh9ArH4q/oMx67lBgf4gmxu4/ukDlI+67
-         LebDP/qOS45BMTuqdDYdqr2gsprDqvwZnyiyH3nmsDmxhhOumSKWBQbgXVSKslKVh1pp
-         0ddh4AB9oCqv5YBLS0ufLbMgtIAmyE7qecB+YnHLRmKQ4gsc6JF8Dogmv720v9KZNHNw
-         iuAnqqVZGcdVxoNmkzJ/lyTzNwf6yrI5v421xeRQFnk7WWc7DjjMcYoaTVAtW3uq0hN0
-         cS8Q==
-X-Gm-Message-State: AO0yUKUp/BA4mUGBvAa775bCWSdTQFzkh9hyNXXHzsRLj1OWo8/JWU5t
-        KleO6vvdsgk4s0dQ64r0fl1Rrw==
-X-Google-Smtp-Source: AK7set+7GtYYYBL2VrSmA9bJmuExAPTlzEC0BfGfpIDI3vPJ/0MYCH4+pz2gUQPasqmxOJoLCzyLKw==
-X-Received: by 2002:a7b:c409:0:b0:3ea:f6c4:305e with SMTP id k9-20020a7bc409000000b003eaf6c4305emr1653541wmi.38.1679644804698;
-        Fri, 24 Mar 2023 01:00:04 -0700 (PDT)
-Received: from [192.168.1.91] ([85.68.201.192])
-        by smtp.gmail.com with ESMTPSA id c18-20020a7bc852000000b003ed2c0a0f37sm4082775wml.35.2023.03.24.01.00.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Mar 2023 01:00:04 -0700 (PDT)
-Message-ID: <3d684dec-338a-085f-3ef1-1642e5067fb2@baylibre.com>
-Date:   Fri, 24 Mar 2023 09:00:01 +0100
+        d=1e100.net; s=20210112; t=1679647290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qKxYNXZ9eHTtJMVzM82IFy1ZfYeyHo24UX4/jj8J0vg=;
+        b=3oig0Uoj3GjuV6Hxfm83fBg9Rs00uIy1uC0ROGCEz9DtQz0dI24WxGMuo5k8Jwaob6
+         hzGKjET/r2gR2lIraOTtgwUbzoEUxwP47MMFp+Jd3IDsCX4vyrY5p8KdeJptpjY6RdCs
+         JMP6H0awkN8eajv6SvMqjzAdHyo0lspMydIMD12GX3cZm/sEnq2aDHzKQiAng6SUythE
+         0slwbFD9g49nAzJj4imwKBus7CYWJj8dhQyZjSbwVbe6Lh17bkZswe8iCaC659vNcy+m
+         qcP1we/KxPoS7bMLz6aTv8w7cfMgd9XmhaB7jW7S07VmkMbsq/ey5onHCz8XTYg2DCsl
+         4AfQ==
+X-Gm-Message-State: AAQBX9fOoLg9BliMP0Ud3TfDwF1PWDXE/eyHtC+Pp0CYQlpVFcJ1+0eY
+        wfJWJvgJKCwc/AQdxoJ5+qm+tw==
+X-Google-Smtp-Source: AKy350ai1hGJUdWv5AuStbzO8s918lkqS+DUjEbLx6cM/VEYzEvuynYhgcBLqUsfPvWFwGGEarki4Q==
+X-Received: by 2002:a17:907:3fa3:b0:93d:425a:b935 with SMTP id hr35-20020a1709073fa300b0093d425ab935mr2493419ejc.25.1679647289984;
+        Fri, 24 Mar 2023 01:41:29 -0700 (PDT)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:ce50:243f:54cc:5373])
+        by smtp.gmail.com with ESMTPSA id o12-20020a170906358c00b0093b6d1db84asm3552002ejb.120.2023.03.24.01.41.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Mar 2023 01:41:29 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: allow input-enabled and bias-bus-hold
+Date:   Fri, 24 Mar 2023 09:41:27 +0100
+Message-Id: <20230324084127.29362-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH INTERNAL v1 3/3] regulator: tps6594-regulator: Add driver
- for TI TPS6594 regulators
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
-        lgirdwood@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jpanis@baylibre.com
-References: <20230224133129.887203-1-eblanc@baylibre.com>
- <20230224133129.887203-4-eblanc@baylibre.com>
- <Y/i+wVSy+eQxDFJ3@sirena.org.uk>
- <bd4aa2ad-4535-94ca-7630-846546ae3d82@baylibre.com>
- <e08686be-0b46-403b-b3cd-3462db92dd60@sirena.org.uk>
-From:   jerome Neanne <jneanne@baylibre.com>
-In-Reply-To: <e08686be-0b46-403b-b3cd-3462db92dd60@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,52 +74,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Add missing common pin configuration properties: input-enabled and
+bias-bus-hold.
 
+Fixes: 268e97ccc311 ("dt-bindings: pinctrl: qcom,sm8550-lpass-lpi-pinctrl: add SM8550 LPASS")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 23/03/2023 12:38, Mark Brown wrote:
-> On Thu, Mar 23, 2023 at 10:12:21AM +0100, jerome Neanne wrote:
-> 
->>> This would be simpler and you wouldn't need this lookup function if the
->>> regulator descriptions included their IRQ names, then you could just
->>> request the interrupts while registering the regulators.
-> 
->> I changed the code to follow your recommendations then now in case of a
->> multiphase buck, only one set of interrupt is requested.
-> 
->> buck2, buck3, buck4 are not associated to a regulator device because buck1
->> registers control all the multiphase bucks (only one logic regulator).
->> Consequently the mapping for the associated interrupts does not occur.
->> I'm not sure it's the right option.
->> Do you suggest to keep it like that for multiphase?
->> Is it better to request all the interrupts anyway and map it to the same
->> rdev?
-> 
-> Do the other interrupts do anything useful for this configuration?  With
-> a lot of hardware the whole control interface gets merged into one which
-> includes the interrupts.
-> 
-Discussed the point with TI in //. In case of multiphase buck ex: buck12
-All the control is delegated to buck1 registers but there is still a 
-possibility that an interrupt triggers on buck2 (overcurrent typically).
-I slightly changed the logic so that all the interrupts are registered 
-even in multiphase mode. In that case interrupts for buck2 are attached 
-to rdev buck12.
->>>> +		error = devm_request_threaded_irq(tps->dev, irq, NULL,
->>>> +						  tps6594_regulator_irq_handler,
->>>> +						  IRQF_ONESHOT,
->>>> +						  irq_type->irq_name,
->>>> +						  &irq_data[i]);
->>>> +		if (error) {
->>>> +			dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
->>>> +				irq_type->irq_name, irq, error);
->>>> +			return error;
->>>> +		}
-> 
->>> This leaks all previously requested interrupts.
-> 
->> I'm not sure to understand this sentence correctly. You mean all the
->> interrupts already requested are still allocated after the error occurs?
-> 
-> Yes, I'd either not registered the devm or thought there was some other
-> interrupt wasn't devm.
-All the interrupts are requested with devm, then should be fine.
+---
+
+Linus, please take it directly.
+---
+ .../bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml         | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
+index 691bf60abb8c..ef9743246849 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
+@@ -96,9 +96,11 @@ $defs:
+           2: Lower Slew rate (slower edges)
+           3: Reserved (No adjustments)
+ 
++      bias-bus-hold: true
+       bias-pull-down: true
+       bias-pull-up: true
+       bias-disable: true
++      input-enable: true
+       output-high: true
+       output-low: true
+ 
+-- 
+2.34.1
+
