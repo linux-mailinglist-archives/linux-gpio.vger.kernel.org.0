@@ -2,128 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D072B6C7F77
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 15:04:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 367F46C7FF2
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 15:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232158AbjCXOEm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Mar 2023 10:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        id S230456AbjCXOeR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Mar 2023 10:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232088AbjCXOES (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 10:04:18 -0400
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1CB1F4B0
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 07:03:19 -0700 (PDT)
-Received: by mail-ua1-x92b.google.com with SMTP id h34so1469732uag.4
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 07:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679666590;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PnbpfcqGanbrwxTimMfIRYuXDJDuBG+s0gPnBVVk/Bo=;
-        b=vHBto2XQMyBoDyv2V3lWV93YknLET2STEkfA7BDeD0Rib/Bfn9J/fWb2Ikjp1f+TuE
-         TJpJR1VryraL97ejyEKLYhaYXWaEzKTVZ4B5fA5fXspfeiCFjpX1GheQOvw1+qoaX1zN
-         P7B0fsSpK0OV4Neu8d1gEnVoKPkHKcZDKAeqyz1G4UEv5CdQaN0MvHzPT3jGwDcuIt/K
-         PS7bOPrJ+HgAXeBSYTywBwveDk93HLiiGJc6mI3pb7iP3ZcucuJcbhNYb8Xw/cUYkOGv
-         DAp9Gw3TQddBAz4EfEnKG1f2xq+PyZOJv5Yrjv8Z7MdWU+blpCox61DdDcatzW9+3lEr
-         ydMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679666590;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PnbpfcqGanbrwxTimMfIRYuXDJDuBG+s0gPnBVVk/Bo=;
-        b=fpoeQ0D4K+dQlLgv0wrfxnp9gV8vjXPpqqKvRwHwltunq2xmR7KVV52FCI0A1sJga6
-         wJ5ODLciQGkttqcyuxlAgaws8Gu0vbEdMdJwqpDoNu65JuOwbiTTrBj81NkKIn2HF2hY
-         h3Yg4Fa+qd79IYmXsv94h6mh53TrPt4FsiZUIU2d7Nhz1BGcmeiXnOylBD/husuCGoZ3
-         R8X4Ehuz2myAFCgGZtfp09/PuMh2EgHB2ihkhocPHEEIvmH36PiUPl4P3nOXfvZlLJNy
-         j4UATth7LyY0QCtrPtsxy5a7PYwvhY/Rn7QAAoomD6A0RFUyhUNTm/RoktgJWo8dSnte
-         cwUQ==
-X-Gm-Message-State: AO0yUKURW7TgHTDj5E/+hVEDfh9lJn54MM2ZXCfa6ZGhoow/0zVDolNh
-        M1vSCW51YP/haQlhvuqTwZhCmIHN+x14cFzMoCaaGzxShMEpRVEe
-X-Google-Smtp-Source: AK7set+9WcFXpz0boVN0YWBQl1e+e1tBYWi5noB1uxTlSy+gP+ccbS/F9Q5p1wp+yz7yqVLFoA39hP/gmG3hBXX6Wt0=
-X-Received: by 2002:a05:6122:11af:b0:401:d1f4:bccf with SMTP id
- y15-20020a05612211af00b00401d1f4bccfmr5291512vkn.0.1679666590340; Fri, 24 Mar
- 2023 07:03:10 -0700 (PDT)
+        with ESMTP id S229551AbjCXOeQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 10:34:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0654B10EB;
+        Fri, 24 Mar 2023 07:34:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9EA5862B31;
+        Fri, 24 Mar 2023 14:34:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED42C433A4;
+        Fri, 24 Mar 2023 14:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679668455;
+        bh=ozq+vH75mAjNkKi3jfaobvjryF3L2Ni1S1Tn6tmagvQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZnhWOCjRHBVl6jMFyTdz2uJBPpSM2kij2cHeCYfnvMal7mOe3nevgli12nKSVyo1+
+         rZlC/eiRp+q6eYz1wuvLbURRo4cOa1ihg2sXmqlhxeiwE/5uyDJZb5KiFkbR81W5wr
+         Mihu8blBLIIPZzPzXG+mtcNvBqAxymxPA4pqExAf5yA8RL9wTslmj93FUvsxYqap4Q
+         U4sDe3114VPd8xkzxxSl3wiRrlADe7/VvdzGpRwnCFQhUCrAMQiONqvicHZNOAzuqU
+         qvkUUlLWORUAOjqfuxV3S76W62ttb0Hz0+kSU2MB9UaOHxxmARqzQALHu2NEdEOapF
+         9LgGCEDTVE4Ew==
+Received: by mail-pl1-f173.google.com with SMTP id ix20so1978358plb.3;
+        Fri, 24 Mar 2023 07:34:15 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fyxFGJ2Q7V/4XTxyFgsG+S3SoSPtgcDKoRmveKbIlYoNbAyKn/
+        oGawmAEbx0daUxX9Zpt4COpTTvA0lLKbTPlqTQ==
+X-Google-Smtp-Source: AKy350Y57cQ3/TzcctMtJeBkZVGy3RaGVnEiqyzqBxcgVPo3gFc72P+HHXJ3tIgI+qnw4mjDX3xPaiNQsV4yB10ee/Y=
+X-Received: by 2002:a81:b149:0:b0:543:9065:b225 with SMTP id
+ p70-20020a81b149000000b005439065b225mr1122523ywh.5.1679668433642; Fri, 24 Mar
+ 2023 07:33:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230322121547.14997-1-wse@tuxedocomputers.com>
-In-Reply-To: <20230322121547.14997-1-wse@tuxedocomputers.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 24 Mar 2023 15:02:59 +0100
-Message-ID: <CAMRc=MfOPiG9cbxqZLN53uEizW50ey4dH28oY47qR0BhmMFnPg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NL5xNU
-To:     Werner Sembach <wse@tuxedocomputers.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20230317233623.3968172-1-robh@kernel.org> <CACRpkdYq4jE7Qn1w8iPeGz7vxj_CeZ+H48B0TVYmeF4Tt=kHgA@mail.gmail.com>
+In-Reply-To: <CACRpkdYq4jE7Qn1w8iPeGz7vxj_CeZ+H48B0TVYmeF4Tt=kHgA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 24 Mar 2023 09:33:42 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL+nF_WwZ-EDpUSD2yrxPLZWxaeb=WpTtPnnbpgcXT7qA@mail.gmail.com>
+Message-ID: <CAL_JsqL+nF_WwZ-EDpUSD2yrxPLZWxaeb=WpTtPnnbpgcXT7qA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Drop unneeded quotes
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Wells Lu <wellslutw@gmail.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, asahi@lists.linux.dev,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org, linux-mediatek@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 1:16=E2=80=AFPM Werner Sembach <wse@tuxedocomputers=
-.com> wrote:
+On Thu, Mar 23, 2023 at 3:40=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 >
-> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
-> changed the policy such that I2C touchpads may be able to wake up the
-> system by default if the system is configured as such.
+> On Sat, Mar 18, 2023 at 12:36=E2=80=AFAM Rob Herring <robh@kernel.org> wr=
+ote:
 >
-> However on Clevo NL5xNU there is a mistake in the ACPI tables that the
-> TP_ATTN# signal connected to GPIO 9 is configured as ActiveLow and level
-> triggered but connected to a pull up. As soon as the system suspends the
-> touchpad loses power and then the system wakes up.
+> > Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+> > checking for this can be enabled in yamllint.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
 >
-> To avoid this problem, introduce a quirk for this model that will prevent
-> the wakeup capability for being set for GPIO 9.
->
-> This patch is analoge to a very similar patch for NL5xRU, just the DMI
-> string changed.
->
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/gpio/gpiolib-acpi.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 34ff048e70d0e..055013f959b25 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -1624,6 +1624,19 @@ static const struct dmi_system_id gpiolib_acpi_qui=
-rks[] __initconst =3D {
->                         .ignore_interrupt =3D "AMDI0030:00@18",
->                 },
->         },
-> +       {
-> +               /*
-> +                * Spurious wakeups from TP_ATTN# pin
-> +                * Found in BIOS 1.7.8
-> +                * https://gitlab.freedesktop.org/drm/amd/-/issues/1722#n=
-ote_1720627
-> +                */
-> +               .matches =3D {
-> +                       DMI_MATCH(DMI_BOARD_NAME, "NL5xNU"),
-> +               },
-> +               .driver_data =3D &(struct acpi_gpiolib_dmi_quirk) {
-> +                       .ignore_wake =3D "ELAN0415:00@9",
-> +               },
-> +       },
->         {
->                 /*
->                  * Spurious wakeups from TP_ATTN# pin
-> --
-> 2.34.1
->
+> Should I queue this patch by the way, or do you need it to go into some
+> DT-related tree?
 
-Queued for fixes.
+Stands on its own. You can take it.
 
-Bart
+Rob
