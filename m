@@ -2,127 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E18CC6C829E
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 17:50:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE61A6C82DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 18:06:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbjCXQuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Mar 2023 12:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
+        id S231843AbjCXRG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Mar 2023 13:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbjCXQuF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 12:50:05 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE5D10279
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 09:50:02 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pfkc5-0001sG-4v; Fri, 24 Mar 2023 17:50:01 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pfkc4-006QTy-Fw; Fri, 24 Mar 2023 17:50:00 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pfkc3-007faP-Nw; Fri, 24 Mar 2023 17:49:59 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v2 2/2] pinctrl: mcp23s08: Implement gpio bulk functions
-Date:   Fri, 24 Mar 2023 17:49:57 +0100
-Message-Id: <20230324164957.485924-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230324164957.485924-1-u.kleine-koenig@pengutronix.de>
-References: <20230324164957.485924-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S231346AbjCXRG2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 13:06:28 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEEBE38F
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 10:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679677587; x=1711213587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o5mUISulh/MDnqWYRdYZ/FehlZoB6mAyPtoR7nzFgBE=;
+  b=PqNpUyBZssmFHf3XA39ZbsW5aKkRzWxjWn4Qr4coBVVtrGfLrZaK/gGS
+   CLFLCcYWaESnUS2qxb758NwR+2Lw6u2RY6n3uZHcvfieUs59HWMkucJaO
+   jm0969rqbrN84CPUg4LgTNv9F1bCI0AZOb4WWTBGchasSb86OTr2mtCdy
+   QIqZ/HWto4ZgxSPgypvfWdCAItUfJWdSRdj6iWsTLQQXLRJ5To2PSLgiO
+   GEmzGuuSo5p47zNVJGtFnqdoDeJCq12VBKPqBirGGIsrqP+Rpcnn8PajW
+   bONoIoU55IQN8SGZ0TzkBR4iVCIDGPYlhWJpOdfcZIdOgDkMQOPfnAl/E
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="367566267"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="367566267"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 10:06:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="682754219"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="682754219"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 24 Mar 2023 10:06:25 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfkrw-000FUe-1I;
+        Fri, 24 Mar 2023 17:06:24 +0000
+Date:   Sat, 25 Mar 2023 01:05:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 2/2] pinctrl: mcp23s08: Implement gpio bulk functions
+Message-ID: <202303250001.YzK908so-lkp@intel.com>
+References: <20230324140148.479125-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2173; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=F8r3COYlwj3Rj1J64pj+YOUb3QQUseyUN2mNsajV4VA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkHdS0UbUXHYFVX4UEoB4B5CCM0lwDkQq+c9ON2 HNqLjwsnB+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZB3UtAAKCRCPgPtYfRL+ TkdWCAC3QeidYcCxor19BjP9vzJlociDbm6AWisKzrkcpTQYMK3urepTaFqEYsEIdHrYVqSTkOd BRcYCQ+YpgkEa0CWSxxOE1xvUU3gyo2nEcKwRKzXgh1uI0PXiJJDOiHC4YsKIMpxmfesWmzbQuK mz49XKfKI5Ql8QgskAELYTmwRkSkiqb4WZ+4o1YtnHRnlsUWGKsruuI0GNydu41ZOo2bMOkwRlm 1r6+Z4a/2Q7/sZVF7QmM7Uqde9rGagUiKTFQlchLeINXZNK4CI31rqDWLfO4147pg6/kxpA1Wfq ey5xSjCyQ3KbXHa20kctnRp4kb3YvzDzIm4b30b5dHuCoCUb
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230324140148.479125-2-u.kleine-koenig@pengutronix.de>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-To speed up some usecases implement reading and writing several IO lines
-at once.
+Hi Uwe,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pinctrl/pinctrl-mcp23s08.c | 34 ++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+I love your patch! Perhaps something to improve:
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 79a41d418482..8ec7f2a3d009 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -307,6 +307,28 @@ static int mcp23s08_get(struct gpio_chip *chip, unsigned offset)
- 	return status;
- }
- 
-+static int mcp23s08_get_multiple(struct gpio_chip *chip,
-+				 unsigned long *mask, unsigned long *bits)
-+{
-+	struct mcp23s08 *mcp = gpiochip_get_data(chip);
-+	unsigned int status;
-+	int ret;
-+
-+	mutex_lock(&mcp->lock);
-+
-+	/* REVISIT reading this clears any IRQ ... */
-+	ret = mcp_read(mcp, MCP_GPIO, &status);
-+	if (ret < 0)
-+		status = 0;
-+	else {
-+		mcp->cached_gpio = status;
-+		*bits = status;
-+	}
-+
-+	mutex_unlock(&mcp->lock);
-+	return ret;
-+}
-+
- static int __mcp23s08_set(struct mcp23s08 *mcp, unsigned mask, bool value)
- {
- 	return mcp_update_bits(mcp, MCP_OLAT, mask, value ? mask : 0);
-@@ -322,6 +344,16 @@ static void mcp23s08_set(struct gpio_chip *chip, unsigned offset, int value)
- 	mutex_unlock(&mcp->lock);
- }
- 
-+static void mcp23s08_set_multiple(struct gpio_chip *chip,
-+				  unsigned long *mask, unsigned long *bits)
-+{
-+	struct mcp23s08	*mcp = gpiochip_get_data(chip);
-+
-+	mutex_lock(&mcp->lock);
-+	mcp_update_bits(mcp, MCP_OLAT, *mask, *bits);
-+	mutex_unlock(&mcp->lock);
-+}
-+
- static int
- mcp23s08_direction_output(struct gpio_chip *chip, unsigned offset, int value)
- {
-@@ -546,8 +578,10 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 
- 	mcp->chip.direction_input = mcp23s08_direction_input;
- 	mcp->chip.get = mcp23s08_get;
-+	mcp->chip.get_multiple = mcp23s08_get_multiple;
- 	mcp->chip.direction_output = mcp23s08_direction_output;
- 	mcp->chip.set = mcp23s08_set;
-+	mcp->chip.set_multiple = mcp23s08_set_multiple;
- 
- 	mcp->chip.base = base;
- 	mcp->chip.can_sleep = true;
+[auto build test WARNING on fe15c26ee26efa11741a7b632e9f23b01aca4cc6]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Uwe-Kleine-K-nig/pinctrl-mcp23s08-Implement-gpio-bulk-functions/20230324-220530
+base:   fe15c26ee26efa11741a7b632e9f23b01aca4cc6
+patch link:    https://lore.kernel.org/r/20230324140148.479125-2-u.kleine-koenig%40pengutronix.de
+patch subject: [PATCH 2/2] pinctrl: mcp23s08: Implement gpio bulk functions
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230325/202303250001.YzK908so-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/0e7980f9275391601f384ff6fe0c4713114f0f0b
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Uwe-Kleine-K-nig/pinctrl-mcp23s08-Implement-gpio-bulk-functions/20230324-220530
+        git checkout 0e7980f9275391601f384ff6fe0c4713114f0f0b
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303250001.YzK908so-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pinctrl/pinctrl-mcp23s08.c: In function 'mcp23s08_set_multiple':
+>> drivers/pinctrl/pinctrl-mcp23s08.c:351:13: warning: unused variable 'ret' [-Wunused-variable]
+     351 |         int ret;
+         |             ^~~
+
+
+vim +/ret +351 drivers/pinctrl/pinctrl-mcp23s08.c
+
+   346	
+   347	static void mcp23s08_set_multiple(struct gpio_chip *chip,
+   348					  unsigned long *mask, unsigned long *bits)
+   349	{
+   350		struct mcp23s08	*mcp = gpiochip_get_data(chip);
+ > 351		int ret;
+   352	
+   353		mutex_lock(&mcp->lock);
+   354		mcp_update_bits(mcp, MCP_OLAT, *mask, *bits);
+   355		mutex_unlock(&mcp->lock);
+   356	}
+   357	
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
