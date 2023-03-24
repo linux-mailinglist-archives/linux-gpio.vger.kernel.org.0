@@ -2,107 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72FA86C7A04
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 09:41:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3A4E6C7DB5
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Mar 2023 13:07:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjCXIle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Mar 2023 04:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60258 "EHLO
+        id S231486AbjCXMH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Mar 2023 08:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjCXIld (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 04:41:33 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7307320A35
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:41:31 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id cn12so4905395edb.4
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Mar 2023 01:41:31 -0700 (PDT)
+        with ESMTP id S230061AbjCXMH5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Mar 2023 08:07:57 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF91690;
+        Fri, 24 Mar 2023 05:07:54 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id o82so393064qka.11;
+        Fri, 24 Mar 2023 05:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679647290;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKxYNXZ9eHTtJMVzM82IFy1ZfYeyHo24UX4/jj8J0vg=;
-        b=kk5HtABnn5CNziEd/v+xSZlemVkOLRPoG6I2hvVCXKOXwnkXJPXcUb0Ve7gBTCcfRJ
-         7xrAPksf0pAY1yRhsrtiq589Lf8myv2QtpFWIytfC8j1nmsQsCh9pT4f6PjVs1C547nx
-         GO/tL4XEzbeWHEj1NmtSTPEW13+croi5sgRokLh3/evQnhhD6KbqOH9mM9SJoKHymp0v
-         GhWh6CKtzqT/tQjLDQerKcrznVZzvwQR9XtJPL6H/FyK6GwMKt8imm5MCrrRSZehTwK+
-         MSi/hsYRjiBULZhNJ8rm52md2WJawZPgfEQAG89XJIYRITGj2sGDTbau/tkAwE5Uddj1
-         DFUg==
+        d=gmail.com; s=20210112; t=1679659674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uac8Kh/o+Tug0oTL30CPwJA5sImQaH1bVzzLo3Tmkqw=;
+        b=dncRQqBm+KfBkOB06hQC6ieBgEVchNabJRNmbBUkrSqQR+7UiHq8RIAdH8nvJ/psZY
+         0y6fzrdkEKRTCDAbgupyIc5cmm/RChXJw8vNW5lSSwuYZxo5uSOGPlfSaSWtcFJ0RBba
+         hS80zJrycdrNmYtbZZihTHn9YhjA5ydUqrTWW+SK4fybpMpK4X5s2WJa6B5oJEumOnHb
+         fdUF0TK+WMI4xxjq69D5E5bKaepcDleVDrhztzo3WHWmxh3pUy7+yjhynrRP1JhdAm/w
+         TmnLQWUXw936jIFXeNwW4NqhdpSN/x/EioTKM7AlZhpisddISrEgeM1EhfFsODbBo7vM
+         J03w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679647290;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qKxYNXZ9eHTtJMVzM82IFy1ZfYeyHo24UX4/jj8J0vg=;
-        b=3oig0Uoj3GjuV6Hxfm83fBg9Rs00uIy1uC0ROGCEz9DtQz0dI24WxGMuo5k8Jwaob6
-         hzGKjET/r2gR2lIraOTtgwUbzoEUxwP47MMFp+Jd3IDsCX4vyrY5p8KdeJptpjY6RdCs
-         JMP6H0awkN8eajv6SvMqjzAdHyo0lspMydIMD12GX3cZm/sEnq2aDHzKQiAng6SUythE
-         0slwbFD9g49nAzJj4imwKBus7CYWJj8dhQyZjSbwVbe6Lh17bkZswe8iCaC659vNcy+m
-         qcP1we/KxPoS7bMLz6aTv8w7cfMgd9XmhaB7jW7S07VmkMbsq/ey5onHCz8XTYg2DCsl
-         4AfQ==
-X-Gm-Message-State: AAQBX9fOoLg9BliMP0Ud3TfDwF1PWDXE/eyHtC+Pp0CYQlpVFcJ1+0eY
-        wfJWJvgJKCwc/AQdxoJ5+qm+tw==
-X-Google-Smtp-Source: AKy350ai1hGJUdWv5AuStbzO8s918lkqS+DUjEbLx6cM/VEYzEvuynYhgcBLqUsfPvWFwGGEarki4Q==
-X-Received: by 2002:a17:907:3fa3:b0:93d:425a:b935 with SMTP id hr35-20020a1709073fa300b0093d425ab935mr2493419ejc.25.1679647289984;
-        Fri, 24 Mar 2023 01:41:29 -0700 (PDT)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:ce50:243f:54cc:5373])
-        by smtp.gmail.com with ESMTPSA id o12-20020a170906358c00b0093b6d1db84asm3552002ejb.120.2023.03.24.01.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 01:41:29 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: allow input-enabled and bias-bus-hold
-Date:   Fri, 24 Mar 2023 09:41:27 +0100
-Message-Id: <20230324084127.29362-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20210112; t=1679659674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uac8Kh/o+Tug0oTL30CPwJA5sImQaH1bVzzLo3Tmkqw=;
+        b=lA12WOXHylVasPPNhPba21mGNGCghXEJnCbu/RnibufaK3Xtb9Z4CJkPQWslFmYvxn
+         4wM/MtK7P6Xa9pU2n7lxqWj92mtG8+kJjzHZlGVlqjmKuPj6VJZoBGOdlsCWsfS5jR4G
+         Ri0sySHDGJrxJHQeIPD6S6W/jPUo9AzkdQof4P/wogf0E0I/LeVtMUKnTTTxj7Yh2WOe
+         xqpp8mhoUmer9xWKv4bgwWFT2NxysFDnnvkPGZWrT+WlbWUJ+xJ3Le7KqJeJP6rvF9hi
+         zI3W5XM16v7wtm5NTf00ZjqBqR1FGJ6/ryL55oHoaYKW1XmiV7g1/ChDQyMSPA6K4IAl
+         9tuA==
+X-Gm-Message-State: AO0yUKUv2cwU25XevZltg37koAJ3l3eGFllj/F46FFAqxT/1SOy00Fqe
+        ltp0SeEnfvvAv+9U/XJrRfCPq/nStncS5Gq56f3VEkkHACg=
+X-Google-Smtp-Source: AK7set+hA7Md34qSQbqtlIEkKZTUuWiDtYN+rawC5fnaUMZCORcDxBVLBkigAd6PEhw0f/iEiqUOVqw6jStzk8oUPxI=
+X-Received: by 2002:a05:620a:4154:b0:745:32ab:4d2a with SMTP id
+ k20-20020a05620a415400b0074532ab4d2amr442790qko.14.1679659673937; Fri, 24 Mar
+ 2023 05:07:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230323205733.20763-1-asmaa@nvidia.com>
+In-Reply-To: <20230323205733.20763-1-asmaa@nvidia.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Mar 2023 14:07:18 +0200
+Message-ID: <CAHp75Vd4m79RhG-_KLRNzr0SPzphG07fOiTWwmGCfx8Lz=+6Vg@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: mmio: fix calculation of bgpio_bits
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add missing common pin configuration properties: input-enabled and
-bias-bus-hold.
+On Thu, Mar 23, 2023 at 10:57=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wr=
+ote:
+>
+> If the "ngpios" property is specified, bgpio_bits is calculated
+> as the round up value of ngpio. At the moment, the only requirement
+> specified is that the round up value must be a multiple of 8 but
+> it should also be a power of 2 because we provide accessors based
+> on the bank size in bgpio_setup_accessors().
 
-Fixes: 268e97ccc311 ("dt-bindings: pinctrl: qcom,sm8550-lpass-lpi-pinctrl: add SM8550 LPASS")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
----
+> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+> ---
+>  drivers/gpio/gpio-mmio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+> index b52a3dd511ca..74fdf0d87b2c 100644
+> --- a/drivers/gpio/gpio-mmio.c
+> +++ b/drivers/gpio/gpio-mmio.c
+> @@ -623,7 +623,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *d=
+ev,
+>         if (ret)
+>                 gc->ngpio =3D gc->bgpio_bits;
+>         else
+> -               gc->bgpio_bits =3D round_up(gc->ngpio, 8);
+> +               gc->bgpio_bits =3D roundup_pow_of_two(round_up(gc->ngpio,=
+ 8));
+>
+>         ret =3D bgpio_setup_io(gc, dat, set, clr, flags);
+>         if (ret)
+> --
+> 2.30.1
+>
 
-Linus, please take it directly.
----
- .../bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
-index 691bf60abb8c..ef9743246849 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml
-@@ -96,9 +96,11 @@ $defs:
-           2: Lower Slew rate (slower edges)
-           3: Reserved (No adjustments)
- 
-+      bias-bus-hold: true
-       bias-pull-down: true
-       bias-pull-up: true
-       bias-disable: true
-+      input-enable: true
-       output-high: true
-       output-low: true
- 
--- 
-2.34.1
-
+--=20
+With Best Regards,
+Andy Shevchenko
