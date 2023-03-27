@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93CEE6CA4B4
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 14:53:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B572B6CA4CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 14:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232694AbjC0Mxk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 08:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
+        id S232874AbjC0Mx6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 08:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232484AbjC0Mxa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 08:53:30 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4358119B1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 05:53:29 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id l8-20020a05600c1d0800b003ef6708bbf6so3158019wms.5
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 05:53:29 -0700 (PDT)
+        with ESMTP id S232501AbjC0Mxc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 08:53:32 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E53D1BD8
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 05:53:30 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id l15-20020a05600c4f0f00b003ef6d684102so1997109wmq.3
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 05:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679921609;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1679921610;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9xLbshkx8RN3Dp5pV4JMfPJgexrRDb08ZnEhmNgvIW8=;
-        b=DN5zlzT8lBCRiq18EenA9tEbn5n8IpWw4jH6eQi+f7ZGyZUGT3RNp2lPyQ+nSTPnw8
-         g5cpS5ACzV/j8UyIyCbYakip31FlVZrcSwNhyXHEgqQcEujcGEd/XdN6p6/a+sKk/7SX
-         Bhbjyk9BBl7Vg+fyf9dPeVYNvh1PQMycMKQy+RxOpvEiREEIrWuupNEhYGlVsop2I2DR
-         FaXcT78CGQyQqBmZswzFMc8pEJqcTFcB0lRuOPn7d7IofcIVyrEySTIARP8bsyUjvnS1
-         fpYrFUAT3+IGewuV5yv95R5EIzZGdx6sN8AIcIX/DnrelZ+yKnODEW8w+X+nwuSdpRLs
-         T4AA==
+        bh=oXI6ueezQMjbt8yHZkCuSNA3fjya7kV77Z0XtfmoN4Y=;
+        b=f25hlpW9QN/snZVztVI/GN14nrUhdiFH0ofCY/er+aw7UPmL6nCNC5EjVReu0Ipn3j
+         SpeCTdx8t/xrA8oq0WHSZRnZnPQLUBrA1o2trARs6mbqAc171Myrr1n2p97JWIJQPGdS
+         y4MQPoN3GjII4qUnDD4ufgh4cZpUUD65fp83c0TKQr3VS6jSYqe3ERDDg9H6HDQTcgkb
+         ObYqkOsd9hVTV2+IM9chcAEBIC/2jn5rk0mlzTwKN6eEgl6RPON4cSfAPl2V4wCHoT48
+         5qEtsFrlgCzW/oQ2FPYY3fzQjaI3rRNh/dMil5/TUas0XsJjJe5nFPVl8ZCyaOejLnKi
+         Bvww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679921609;
+        d=1e100.net; s=20210112; t=1679921610;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9xLbshkx8RN3Dp5pV4JMfPJgexrRDb08ZnEhmNgvIW8=;
-        b=IQ0T+UYD7z22mmxZ13kdFrteGrpCbo/Il9vZv4Z6ruuuhutOmXTUPsJ+m+nXjuXUwZ
-         WknMYuOEOSl5zpfPHmMDZ7l6U/mggTi/uqvlziqUAbbWt3JwE7qGqOv/YmXUWdRHyVEY
-         kOhuzYFjivsjqK/oLxM5FYmWwxqYxHLoWf03NCmvsuoLOW2Jalz+KHaovjEFpdDnbYBy
-         w7aRMTzKSrN6CMYx0NounhLu4sP+e9+nP5M+OZhQFFmSgMVE/hnlP1ZCkWvosS7tp9iD
-         PBHm5u52jlE1PnXJMKr1grWXp9cKYk1DE0gQhCj22gqlYfI+4UwHoDiuDhxtrNioco7p
-         2EZQ==
-X-Gm-Message-State: AO0yUKUC+O7QEQV5LyCPy8ftpC+8UTm1+ScA+vN42L9ysUZOo3Wpjb4N
-        UPMacDVllaR+PK0/6xYRnWzrgQ==
-X-Google-Smtp-Source: AK7set9WWTu28DjahOZNwv8/DaGb5PjaAwrlWJycYTjARylTu7X3/sB8BOqBaDO6igjO0Xcish5UiQ==
-X-Received: by 2002:a05:600c:258:b0:3ea:d611:f8 with SMTP id 24-20020a05600c025800b003ead61100f8mr9758392wmj.38.1679921608872;
-        Mon, 27 Mar 2023 05:53:28 -0700 (PDT)
+        bh=oXI6ueezQMjbt8yHZkCuSNA3fjya7kV77Z0XtfmoN4Y=;
+        b=tUi4N2ULoDy44/FYws5XXUhZNlXofWwkaGKFLyH0eS+G10HxDz3rSPioW7W/0h3YC8
+         PtcRXfgJZJ5EhBE4oAkDEssbp9Uz3rQwRB5L8yznIIf1sC4KDmUukP6R2+gGv4rQh+wB
+         rul/Y97IZJZDFXV4NNwPDDvdJ9ZNHTGtQG473mr14FfHbwoOEG+UO9CSidKsCPoZeEhH
+         iy/Q14k6FJN4R0ZlVv1XwSpJyiO2208g5GLfJvxHZg+V8omgelBjaPb++Bs7I3s4cti0
+         Khx9FyooDWZ4RzwyCKUKRXcVtxpMsIkcBsgOtNSkUAL8tCOh+tQySuA5bJ+qj+qJV/S5
+         UgLQ==
+X-Gm-Message-State: AAQBX9dyCjaguRpt24GbkmAP5RcERHtTlUsn/gw1gt2axVxrQI23rrjC
+        4xYoAgVl6Y7M0E2yTsqy6M199A==
+X-Google-Smtp-Source: AKy350YuH3QcIe3lv8XkoMUT6jWczr4hxMm2rs4MVH+WASq4OrJGnTlsRt/K8UNZDsEvLfHifnyz3A==
+X-Received: by 2002:a05:600c:2243:b0:3ef:6e1c:3ffa with SMTP id a3-20020a05600c224300b003ef6e1c3ffamr2887048wmm.28.1679921609742;
+        Mon, 27 Mar 2023 05:53:29 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:313d:a304:2790:a949])
         by smtp.gmail.com with ESMTPSA id q25-20020a1ce919000000b003ee58e8c971sm13572220wmc.14.2023.03.27.05.53.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Mar 2023 05:53:28 -0700 (PDT)
+        Mon, 27 Mar 2023 05:53:29 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -58,9 +58,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v3 10/18] arm64: dts: qcom: sa8775p: pmic: add support for the pmm8654 RESIN input
-Date:   Mon, 27 Mar 2023 14:53:08 +0200
-Message-Id: <20230327125316.210812-11-brgl@bgdev.pl>
+Subject: [PATCH v3 11/18] arm64: dts: qcom: sa8775p: pmic: add thermal zones
+Date:   Mon, 27 Mar 2023 14:53:09 +0200
+Message-Id: <20230327125316.210812-12-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230327125316.210812-1-brgl@bgdev.pl>
 References: <20230327125316.210812-1-brgl@bgdev.pl>
@@ -77,32 +77,164 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add the RESIN input for sa8775p platforms' PMIC.
+Add the thermal zones and associated alarm nodes for the PMICs that have
+them hooked up on sa8775p-ride.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi | 112 ++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
-index f421d4d64c8e..8616ead3daf5 100644
+index 8616ead3daf5..be12997a080c 100644
 --- a/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sa8775p-pmics.dtsi
-@@ -26,6 +26,13 @@ pmm8654au_0_pon_pwrkey: pwrkey {
- 				linux,code = <KEY_POWER>;
- 				debounce = <15625>;
- 			};
+@@ -6,6 +6,90 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/spmi/spmi.h>
+ 
++/ {
++	thermal-zones {
++		pmm8654au_0_thermal: pm8775-0-thermal {
++			polling-delay-passive = <100>;
++			polling-delay = <0>;
++			thermal-sensors = <&pmm8654au_0_temp_alarm>;
 +
-+			pmm8654au_0_pon_resin: resin {
-+				compatible = "qcom,pmk8350-resin";
-+				interrupts-extended = <&spmi_bus 0x0 0x12 0x6 IRQ_TYPE_EDGE_BOTH>;
-+				debounce = <15625>;
-+				status = "disabled";
++			trips {
++				trip0 {
++					temperature = <105000>;
++					hysteresis = <0>;
++					type = "passive";
++				};
++
++				trip1 {
++					temperature = <125000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
 +			};
- 		};
++		};
++
++		pmm8654au_1_thermal: pm8775-1-thermal {
++			polling-delay-passive = <100>;
++			polling-delay = <0>;
++			thermal-sensors = <&pmm8654au_1_temp_alarm>;
++
++			trips {
++				trip0 {
++					temperature = <105000>;
++					hysteresis = <0>;
++					type = "passive";
++				};
++
++				trip1 {
++					temperature = <125000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		pmm8654au_2_thermal: pm8775-2-thermal {
++			polling-delay-passive = <100>;
++			polling-delay = <0>;
++			thermal-sensors = <&pmm8654au_2_temp_alarm>;
++
++			trips {
++				trip0 {
++					temperature = <105000>;
++					hysteresis = <0>;
++					type = "passive";
++				};
++
++				trip1 {
++					temperature = <125000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		pmm8654au_3_thermal: pm8775-3-thermal {
++			polling-delay-passive = <100>;
++			polling-delay = <0>;
++			thermal-sensors = <&pmm8654au_3_temp_alarm>;
++
++			trips {
++				trip0 {
++					temperature = <105000>;
++					hysteresis = <0>;
++					type = "passive";
++				};
++
++				trip1 {
++					temperature = <125000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++	};
++};
++
+ &spmi_bus {
+ 	pmm8654au_0: pmic@0 {
+ 		compatible = "qcom,pmm8654au", "qcom,spmi-pmic";
+@@ -13,6 +97,13 @@ pmm8654au_0: pmic@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		pmm8654au_0_temp_alarm: temp-alarm@a00 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0xa00>;
++			interrupts-extended = <&spmi_bus 0x0 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			#thermal-sensor-cells = <0>;
++		};
++
+ 		pmm8654au_0_pon: pon@1200 {
+ 			compatible = "qcom,pmk8350-pon";
+ 			reg = <0x1200>, <0x800>;
+@@ -41,6 +132,13 @@ pmm8654au_1: pmic@2 {
+ 		reg = <0x2 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmm8654au_1_temp_alarm: temp-alarm@a00 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0xa00>;
++			interrupts-extended = <&spmi_bus 0x2 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			#thermal-sensor-cells = <0>;
++		};
  	};
  
+ 	pmm8654au_2: pmic@4 {
+@@ -48,6 +146,13 @@ pmm8654au_2: pmic@4 {
+ 		reg = <0x4 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmm8654au_2_temp_alarm: temp-alarm@a00 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0xa00>;
++			interrupts-extended = <&spmi_bus 0x4 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			#thermal-sensor-cells = <0>;
++		};
+ 	};
+ 
+ 	pmm8654au_3: pmic@6 {
+@@ -55,5 +160,12 @@ pmm8654au_3: pmic@6 {
+ 		reg = <0x6 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmm8654au_3_temp_alarm: temp-alarm@a00 {
++			compatible = "qcom,spmi-temp-alarm";
++			reg = <0xa00>;
++			interrupts-extended = <&spmi_bus 0x6 0xa 0x0 IRQ_TYPE_EDGE_BOTH>;
++			#thermal-sensor-cells = <0>;
++		};
+ 	};
+ };
 -- 
 2.37.2
 
