@@ -2,276 +2,253 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE246CA7B3
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 16:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 403956CA801
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 16:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232617AbjC0Obk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 10:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58324 "EHLO
+        id S229783AbjC0OpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 10:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231717AbjC0Obh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 10:31:37 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A560D9;
-        Mon, 27 Mar 2023 07:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679927478; x=1711463478;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=V4HdO/wCXnZEq9bGSWy5icmFpkrtnY+w0QxMnsWGDjc=;
-  b=nlbhjlUnfXDsa8/eBf1PWHxDDazy6ylYdhv0Z4UhaGbgSj+8Vs3UVMKV
-   INwBvwwYIZ9XlvyGr79JcSGAOiYK7pQxbTg1yn33QMpLM0I43muyHSDHr
-   gN/conZxCrDYD025VCFt7j8V9mdqXXatqkIyhsIXUXn/b1PgkVKwZruYD
-   HPortibZ+Sj0orNuRYs6T3HTbUDrSZq2AuwsUR4l/bzR0Hzw6SG0TccUD
-   x/sKxZ9bLpSujTK2LGAFra8UrgPStHSX/39uk8dlrkAgggUg6D0UzNbU4
-   vz1RxPJledkstT1mSYnLNwMLGhZwr03W5rcYGrsD6362qi7fdfL5Zr0cW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="342680674"
-X-IronPort-AV: E=Sophos;i="5.98,294,1673942400"; 
-   d="scan'208";a="342680674"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 07:31:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="827051686"
-X-IronPort-AV: E=Sophos;i="5.98,294,1673942400"; 
-   d="scan'208";a="827051686"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Mar 2023 07:31:14 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pgnsQ-000Hlu-03;
-        Mon, 27 Mar 2023 14:31:14 +0000
-Date:   Mon, 27 Mar 2023 22:30:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-gpio@vger.kernel.org, io-uring@vger.kernel.org,
-        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 011eb7443621f49ca1e8cdf9c74c215f25019118
-Message-ID: <6421a899.CYoIodGi0EEt3iOT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231956AbjC0OpQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 10:45:16 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2ED1BE2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 07:45:13 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5445009c26bso174511397b3.8
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 07:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679928313;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=L12ayakUPlP/19pA0REczduySKLGqF0UobwpxbA4vYI=;
+        b=HCMDYbOpcls0l7uJ+OcpKeY9i+39w/6k34p7qzXuauPoRiiQ/iBrgNX6plxv3DaduO
+         LYUg1kmkuYUu1ASohU87q45xXcF5zZwjhZcjxLHNRqunmGVyvdE0ncfAbM4jYGL2a6Hi
+         ZQrZHvwxbn7Qj9gGrEo+lSWNxtJMehoP7+sMxooTClbw9a72tymMpZDtFWW9QK55dq7j
+         tZzKAyZROkTUGYIO6A8fULGQ90NIoJvIq/X31peKCSn6/V/RtSMVwdv2Xr54SK5CP77n
+         J/+otEjjHgbrbE2HS1bwHf02GJDWrMg5vm71JCafQx1tGYW2IJIyWC5MrHLym5gAKPjm
+         rKkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679928313;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L12ayakUPlP/19pA0REczduySKLGqF0UobwpxbA4vYI=;
+        b=W3UfrDpzN4IZMAkaDXeE1hOAxSeAuYFg9EXIivLH0Ekge1tTu7k8zf7kv7pgC7Uqqn
+         fu8uZPHuqgJeZIjwjK531sV83UneQuq5fTRVpnfDVUWaGfT+Vc9f4VbkFI1M+4i1s1H7
+         VGcRJ9S+cohGGVqoc1IVTUgiBw+HsYuw7yr5MfFsyJ69CTMr2I3b/dh4cKGkhG2x/itg
+         PcEDGld0LrpfStwrkvw/R/t8LW2xMpap0JCyEer/nH5QMyk1Li/qnV3wqC5l9QzteOJi
+         MpaI0UyTdqfTNBIFzlDzoBzC+5zwcnwEXQMvD6XgTef8zU7XVVGYYqtikmlCKRXhp0Qx
+         iFyg==
+X-Gm-Message-State: AAQBX9fGIlLyWrvAEQa07yWbQ3wHMUWmTQ0ygGfoBp7510VqgmiGuiDv
+        qG7Jg6atYXFbd7YsgJ73CzHz5dyM9OWz4xI/Kv7UPQ==
+X-Google-Smtp-Source: AKy350ZjBUkCK3zk3r6esLgw2CWtnPJs9phaPxb0j+BPMz06Xywjq1t0XhIWnlijihL/e6IBy3vNDh1mPbmMAfJ9vJ8=
+X-Received: by 2002:a81:b617:0:b0:541:7f69:aa8b with SMTP id
+ u23-20020a81b617000000b005417f69aa8bmr5256500ywh.5.1679928312880; Mon, 27 Mar
+ 2023 07:45:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230327132718.573-1-quic_devipriy@quicinc.com> <20230327132718.573-4-quic_devipriy@quicinc.com>
+In-Reply-To: <20230327132718.573-4-quic_devipriy@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Mon, 27 Mar 2023 17:45:02 +0300
+Message-ID: <CAA8EJprTm1sZ8fnfNee+NJTiaFq17QwWaEnSoJWVYs_GY65xFg@mail.gmail.com>
+Subject: Re: [PATCH V10 3/4] arm64: dts: qcom: Add support for ipq9574 SoC and
+ RDP433 variant
+To:     Devi Priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
+        marcel.ziswiler@toradex.com, nfraprado@collabora.com,
+        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com,
+        quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com,
+        quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com,
+        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 011eb7443621f49ca1e8cdf9c74c215f25019118  Add linux-next specific files for 20230327
+On Mon, 27 Mar 2023 at 16:28, Devi Priya <quic_devipriy@quicinc.com> wrote:
+>
+> Add initial device tree support for Qualcomm IPQ9574 SoC and
+> Reference Design Platform(RDP) 433 which is based on IPQ9574
+> family of SoCs
+>
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> ---
+>  Changes in V10:
+>         - Renamed the Board Device Tree Source to use the RDP numbers
+>         - Updated the Makefile, subject and commit message accordingly
+>
+>  arch/arm64/boot/dts/qcom/Makefile           |   1 +
+>  arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts |  84 ++++++
+>  arch/arm64/boot/dts/qcom/ipq9574.dtsi       | 270 ++++++++++++++++++++
+>  3 files changed, 355 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 1a29403400b7..52f1f92c5195 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_QCOM) += ipq6018-cp01-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk01.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c2.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += ipq9574-rdp433.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += msm8916-acer-a1-724.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += msm8916-alcatel-idol347.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += msm8916-asus-z00l.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+> new file mode 100644
+> index 000000000000..2ce8e09e7565
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +/*
+> + * IPQ9574 RDP433 board device tree source
+> + *
+> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "ipq9574.dtsi"
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. IPQ9574/AP-AL02-C7";
+> +       compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
+> +
+> +       aliases {
+> +               serial0 = &blsp1_uart2;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +};
+> +
+> +&blsp1_uart2 {
+> +       pinctrl-0 = <&uart2_pins>;
+> +       pinctrl-names = "default";
+> +       status = "okay";
+> +};
+> +
+> +&sdhc_1 {
+> +       pinctrl-0 = <&sdc_default_state>;
+> +       pinctrl-names = "default";
+> +       mmc-ddr-1_8v;
+> +       mmc-hs200-1_8v;
+> +       mmc-hs400-1_8v;
+> +       mmc-hs400-enhanced-strobe;
+> +       max-frequency = <384000000>;
+> +       bus-width = <8>;
+> +       status = "okay";
+> +};
+> +
+> +&sleep_clk {
+> +       clock-frequency = <32000>;
+> +};
+> +
+> +&tlmm {
+> +       sdc_default_state: sdc-default-state {
+> +               clk-pins {
+> +                       pins = "gpio5";
+> +                       function = "sdc_clk";
+> +                       drive-strength = <8>;
+> +                       bias-disable;
+> +               };
+> +
+> +               cmd-pins {
+> +                       pins = "gpio4";
+> +                       function = "sdc_cmd";
+> +                       drive-strength = <8>;
+> +                       bias-pull-up;
+> +               };
+> +
+> +               data-pins {
+> +                       pins = "gpio0", "gpio1", "gpio2",
+> +                              "gpio3", "gpio6", "gpio7",
+> +                              "gpio8", "gpio9";
+> +                       function = "sdc_data";
+> +                       drive-strength = <8>;
+> +                       bias-pull-up;
+> +               };
+> +
+> +               rclk-pins {
+> +                       pins = "gpio10";
+> +                       function = "sdc_rclk";
+> +                       drive-strength = <8>;
+> +                       bias-pull-down;
+> +               };
+> +       };
+> +};
+> +
+> +&xo_board_clk {
+> +       clock-frequency = <24000000>;
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> new file mode 100644
+> index 000000000000..3bb7435f5e7f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> @@ -0,0 +1,270 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +/*
+> + * IPQ9574 SoC device tree source
+> + *
+> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,ipq9574-gcc.h>
+> +#include <dt-bindings/reset/qcom,ipq9574-gcc.h>
+> +
+> +/ {
+> +       interrupt-parent = <&intc>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       clocks {
+> +               bias_pll_ubi_nc_clk: bias-pll-ubi-nc-clk {
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <353000000>;
+> +                       #clock-cells = <0>;
+> +               };
 
-Error/Warning reports:
+What is the source for this clock? With it clocking at 353 MHz, I
+doubt that it is an external clock.
 
-https://lore.kernel.org/oe-kbuild-all/202303082135.NjdX1Bij-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202303161521.jbGbaFjJ-lkp@intel.com
+> +
+> +               sleep_clk: sleep-clk {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +               };
+> +
+> +               xo_board_clk: xo-board-clk {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +               };
+> +       };
 
-Error/Warning: (recently discovered and may have been fixed)
-
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:351:13: warning: variable 'bw_needed' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:352:25: warning: variable 'link' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    int
-drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:309:17: sparse:    void
-drivers/net/wireless/legacy/ray_cs.c:628:17: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-kernel/bpf/verifier.c:18485: undefined reference to `find_kallsyms_symbol_value'
-verifier.c:(.text+0x1d110): undefined reference to `find_kallsyms_symbol_value'
-verifier.c:(.text+0x37992): undefined reference to `find_kallsyms_symbol_value'
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/pinctrl/pinctrl-mlxbf3.c:162:20: sparse: sparse: symbol 'mlxbf3_pmx_funcs' was not declared. Should it be static?
-drivers/s390/crypto/ap_bus.c:1596:20: error: initialization of 'ssize_t (*)(const struct bus_type *, char *)' {aka 'long int (*)(const struct bus_type *, char *)'} from incompatible pointer type 'ssize_t (*)(struct bus_type *, char *)' {aka 'long int (*)(struct bus_type *, char *)'} [-Werror=incompatible-pointer-types]
-drivers/soc/fsl/qe/tsa.c:140:26: sparse: sparse: incorrect type in argument 2 (different address spaces)
-drivers/soc/fsl/qe/tsa.c:150:27: sparse: sparse: incorrect type in argument 1 (different address spaces)
-drivers/soc/fsl/qe/tsa.c:189:26: sparse: sparse: dereference of noderef expression
-drivers/soc/fsl/qe/tsa.c:663:22: sparse: sparse: incorrect type in assignment (different address spaces)
-drivers/soc/fsl/qe/tsa.c:673:21: sparse: sparse: incorrect type in assignment (different address spaces)
-drivers/watchdog/imx2_wdt.c:442:22: sparse: sparse: symbol 'imx_wdt' was not declared. Should it be static?
-drivers/watchdog/imx2_wdt.c:446:22: sparse: sparse: symbol 'imx_wdt_legacy' was not declared. Should it be static?
-include/linux/gpio/consumer.h: linux/err.h is included more than once.
-include/linux/gpio/driver.h: asm/bug.h is included more than once.
-io_uring/io_uring.c:432 io_prep_async_work() error: we previously assumed 'req->file' could be null (see line 425)
-io_uring/kbuf.c:221 __io_remove_buffers() warn: variable dereferenced before check 'bl->buf_ring' (see line 219)
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- alpha-randconfig-r001-20230327
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- csky-randconfig-s043-20230326
-|   `-- drivers-pinctrl-pinctrl-mlxbf3.c:sparse:sparse:symbol-mlxbf3_pmx_funcs-was-not-declared.-Should-it-be-static
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- ia64-buildonly-randconfig-r004-20230326
-|   `-- kernel-bpf-verifier.c:undefined-reference-to-find_kallsyms_symbol_value
-|-- ia64-randconfig-r003-20230326
-|   `-- verifier.c:(.text):undefined-reference-to-find_kallsyms_symbol_value
-|-- ia64-randconfig-s031-20230326
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:int
-|   |-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:sparse:incompatible-types-in-conditional-expression-(different-base-types):
-|   `-- drivers-gpu-drm-amd-amdgpu-..-pm-swsmu-smu13-smu_v13_0_6_ppt.c:sparse:void
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-defconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- microblaze-randconfig-s042-20230326
-|   |-- drivers-soc-fsl-qe-tsa.c:sparse:sparse:dereference-of-noderef-expression
-|   |-- drivers-soc-fsl-qe-tsa.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-const-volatile-noderef-__iomem-addr-got-void-noderef-__iomem-addr
-|   |-- drivers-soc-fsl-qe-tsa.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-volatile-noderef-__iomem-addr-got-void-noderef-__iomem-addr
-|   |-- drivers-soc-fsl-qe-tsa.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-void-noderef-si_ram-got-void-noderef-__iomem
-|   |-- drivers-soc-fsl-qe-tsa.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-void-noderef-si_regs-got-void-noderef-__iomem
-
-elapsed time: 721m
-
-configs tested: 110
-configs skipped: 10
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r001-20230327   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r024-20230326   gcc  
-arc                  randconfig-r043-20230326   gcc  
-arc                  randconfig-r043-20230327   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r002-20230327   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r023-20230326   clang
-arm                  randconfig-r034-20230326   gcc  
-arm                  randconfig-r036-20230327   clang
-arm                  randconfig-r046-20230326   clang
-arm                  randconfig-r046-20230327   gcc  
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r002-20230326   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r026-20230326   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r005-20230326   gcc  
-csky                 randconfig-r033-20230326   gcc  
-hexagon              randconfig-r002-20230326   clang
-hexagon              randconfig-r024-20230327   clang
-hexagon              randconfig-r041-20230326   clang
-hexagon              randconfig-r041-20230327   clang
-hexagon              randconfig-r045-20230326   clang
-hexagon              randconfig-r045-20230327   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r006-20230327   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a006-20230327   gcc  
-i386                 randconfig-a016-20230327   clang
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r003-20230326   gcc  
-ia64                 randconfig-r022-20230326   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r005-20230327   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r016-20230327   gcc  
-loongarch            randconfig-r021-20230326   gcc  
-loongarch            randconfig-r023-20230327   gcc  
-m68k                             allmodconfig   gcc  
-m68k         buildonly-randconfig-r003-20230327   gcc  
-m68k         buildonly-randconfig-r004-20230326   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r036-20230326   gcc  
-microblaze   buildonly-randconfig-r004-20230327   gcc  
-microblaze   buildonly-randconfig-r005-20230326   gcc  
-microblaze           randconfig-r005-20230327   gcc  
-microblaze           randconfig-r032-20230327   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r031-20230326   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r012-20230327   gcc  
-nios2                randconfig-r015-20230327   gcc  
-openrisc             randconfig-r001-20230326   gcc  
-openrisc             randconfig-r026-20230327   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      ppc44x_defconfig   clang
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc              randconfig-r006-20230326   clang
-powerpc              randconfig-r025-20230326   gcc  
-powerpc              randconfig-r032-20230326   clang
-powerpc                     tqm8541_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r001-20230326   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r011-20230327   clang
-riscv                randconfig-r033-20230327   gcc  
-riscv                randconfig-r042-20230326   gcc  
-riscv                randconfig-r042-20230327   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230326   gcc  
-s390                 randconfig-r044-20230327   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r006-20230327   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r031-20230327   gcc  
-sparc64              randconfig-r003-20230327   gcc  
-sparc64              randconfig-r004-20230326   gcc  
-sparc64              randconfig-r004-20230327   gcc  
-sparc64              randconfig-r013-20230327   gcc  
-sparc64              randconfig-r035-20230326   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230327   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a006-20230327   gcc  
-x86_64               randconfig-a016-20230327   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r006-20230326   gcc  
-xtensa               randconfig-r021-20230327   gcc  
-xtensa               randconfig-r022-20230327   gcc  
+[skipped the rest]
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+With best wishes
+Dmitry
