@@ -2,65 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 553246CB0A9
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 23:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F17AC6CB0B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 23:29:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232254AbjC0V1l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 17:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
+        id S232301AbjC0V34 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 17:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231978AbjC0V1k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 17:27:40 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FE0173E;
-        Mon, 27 Mar 2023 14:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679952459; x=1711488459;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oY4+vDAxY0246pEy4b081gmn25gIUk5XxHRtZZZXKmo=;
-  b=eWcsHfqNyr3bLC4hC5A5r/QvMxVjuWKa/aYC6yPByURrBaRIdiePYa6v
-   7QZHL2NxgJAIOIydxuFyd6m1O1Ln/u2KqmK9vXjBciIUuVKWYXhAyrXxz
-   AxYp/049jrP/W8LUBd4ZTJDFNbyIBcleViHefoukbPaC5phQiOutE963u
-   DCy4okxMDboR158SjW0yREWaLBEltV7KnhJbI4ymPgkBANVy4WjbTvVKB
-   DFtSZp+MRYr9EAPLG2/ssZk8IAn9iAwbr3bVOYm77RBBGbWRELex15DSD
-   v/riTZo2DqGoFi06fqBqfTQmrRMG7h2IsKLb8vX5OPV8wpgkEiXAt/CTX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="368148896"
-X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="368148896"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:27:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="1013280464"
-X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="1013280464"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Mar 2023 14:27:35 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pguNK-000I1v-2P;
-        Mon, 27 Mar 2023 21:27:34 +0000
-Date:   Tue, 28 Mar 2023 05:27:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: Re: [PATCH v4 1/5] firmware: qcom_scm: provide a read-modify-write
- function
-Message-ID: <202303280535.acb66sQT-lkp@intel.com>
-References: <1679935281-18445-2-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S232241AbjC0V34 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 17:29:56 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB66199C
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:29:54 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id p204so12528836ybc.12
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679952594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6eokYh2mwVh/DTudd2slWImFM/8e0vGGOwJl1TyEBiI=;
+        b=s+fdhFj7nY8IJZfGqI5yPc0aTlu42TpK0Tkfvv9Nxq2chjKmUi40y/NaJcZPOlDwI1
+         MIvIp3i5sx/iKHu2/tTMGo15hbq6FFuvkoRMFU+pqIT9cRnuBj6RKKLoL8HFZYJaHqOw
+         oBUZBHHqByBZEkiCm7zGY0WlhQ1DcuOn8oh7HEniue1TTc2c0N4gsHnJn+d3TkW/pGme
+         auwzjg5qtGj2P5KaXoVRSCruxs6pXRL7Bak4P5XZawS6evZmWZ1h2XhZaqM/t7FJV0kr
+         EhdpRvgN8eCpc2gVYQa2OHHeqTwrb38BYE1E9HtjwZVDtPVw8at4CYDSsOtRW4L1zY4V
+         G1pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679952594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6eokYh2mwVh/DTudd2slWImFM/8e0vGGOwJl1TyEBiI=;
+        b=gdsDSCIoFovaDRBUzPhUrmPvNzOVJU/3uAYCYJFvdzX/09qDmAZLawS5v1TOUqs5HJ
+         zVKlGm8t7LHVXG0pDg9WYo6Y+d26HMCkGaryYeEamimrZX38ZwLnV4v0WwIFk+qje+kc
+         hzBoTzfi+2XeioSnlRQy5NXhdFunOHew9G9KUhkvyutwIcVQjq3EGiBGvxsQbQM/H0DD
+         mEniMdb/GbqMgsnK9Piqskv7hhyAdTY05gdhVlJkzH1UcfQODvtBq2J4/vkX0I+oTAtT
+         986DS0OMrrQUkXjksIGiY481iWIDtBLc7ezMc0ASk1l/exlWsraQ931paRXF/uALhYKF
+         rlGg==
+X-Gm-Message-State: AAQBX9d2LX5ZYnuQ0q8kcPqvzDu584+vt+GiMG3djD5lB5gzm86ZxEEU
+        T1YIW/bBQvpBULNLgHDp09mp33dZY9Vmdfzxu/8WOA==
+X-Google-Smtp-Source: AKy350ZAKVAse0mC10rU5n8wZJQnHt3lpd51pDvlIGvq9OSoCcQ3+AoSryc4gyyFW9osAo5AJdwLqNfhU2xJTPyvKhs=
+X-Received: by 2002:a25:8712:0:b0:b74:3236:2fac with SMTP id
+ a18-20020a258712000000b00b7432362facmr8032860ybl.4.1679952593878; Mon, 27 Mar
+ 2023 14:29:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1679935281-18445-2-git-send-email-quic_mojha@quicinc.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+References: <cover.1679907618.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1679907618.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 27 Mar 2023 23:29:42 +0200
+Message-ID: <CACRpkdbrQYd_hJ3CaQEBpuD0GwfR2eqQFQ2ZFLkLKREP3GFQ+w@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.4
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,65 +66,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mukesh,
+On Mon, Mar 27, 2023 at 11:03=E2=80=AFAM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Thank you for the patch! Perhaps something to improve:
+> The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4c=
+c6:
+>
+>   Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.4-tag1
+>
+> for you to fetch changes up to 9d7558ed8372c51cbed011cb1dc3eb1beee212cf:
+>
+>   pinctrl: renesas: Drop support for Renesas-specific properties (2023-03=
+-16 16:55:27 +0100)
 
-[auto build test WARNING on next-20230327]
-[also build test WARNING on v6.3-rc4]
-[cannot apply to linusw-pinctrl/devel linusw-pinctrl/for-next linus/master v6.3-rc4 v6.3-rc3 v6.3-rc2]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Pulled into my devel branch!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-Ojha/firmware-qcom_scm-provide-a-read-modify-write-function/20230328-004405
-patch link:    https://lore.kernel.org/r/1679935281-18445-2-git-send-email-quic_mojha%40quicinc.com
-patch subject: [PATCH v4 1/5] firmware: qcom_scm: provide a read-modify-write function
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20230328/202303280535.acb66sQT-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/47c3bb52fbb758e2238a7ab29c00e3188afe9754
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Mukesh-Ojha/firmware-qcom_scm-provide-a-read-modify-write-function/20230328-004405
-        git checkout 47c3bb52fbb758e2238a7ab29c00e3188afe9754
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash drivers/firmware/
+Thanks Geert!
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303280535.acb66sQT-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/firmware/qcom_scm.c: In function 'qcom_scm_io_update_field':
->> drivers/firmware/qcom_scm.c:419:49: warning: suggest parentheses around '-' inside '<<' [-Wparentheses]
-     419 |         new = (old & ~mask) | (val << ffs(mask) - 1);
-         |                                       ~~~~~~~~~~^~~
-
-
-vim +419 drivers/firmware/qcom_scm.c
-
-   409	
-   410	int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask, unsigned int val)
-   411	{
-   412		unsigned int old, new;
-   413		int ret;
-   414	
-   415		ret = qcom_scm_io_readl(addr, &old);
-   416		if (ret)
-   417			return ret;
-   418	
- > 419		new = (old & ~mask) | (val << ffs(mask) - 1);
-   420	
-   421		return qcom_scm_io_writel(addr, new);
-   422	}
-   423	EXPORT_SYMBOL(qcom_scm_io_update_field);
-   424	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Yours,
+Linus Walleij
