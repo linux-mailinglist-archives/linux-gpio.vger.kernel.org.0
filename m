@@ -2,120 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7470C6C9BEA
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 09:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE2D96C9EDA
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 11:04:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232192AbjC0HWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 03:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        id S229610AbjC0JEr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 05:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232486AbjC0HWu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 03:22:50 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938F84C02
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 00:22:48 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id ek18so31790236edb.6
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 00:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679901767;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CFNarKRRJksS00saRO6cxhezfG372oWTTPfol9sWbtI=;
-        b=DmU9nnEK7bNf/dHFFm/RQKVsvo497gWyF+EyPJw/LoUyZkSQoD0EfLmkuDq7LvWRQ/
-         SBm3OmC7v+/8mmMRlg8kxatMTs99xVsiIkndFPKNafuVgtFLmKDff3VDbKVywayGPIFL
-         MEdULSg/WAmCXQxPqqeL8iao6Z16Nb5BAHIck7IjxB+F7lvfj0UkzyLR0h+ebLLtYsCP
-         m+GlHsFc5CN6ZfVrbJDhVAwjbd4lzB8WdUMuSba04Qfi2ICqA9YX5oX7L1wD2I3Wcv4N
-         2UJddfIsEOdsHIR9UblfBaXP6T5RjdCiEz8hW0CGpUpauGlkQdXkwUiPTZjP6it/k3Fh
-         IPSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679901767;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CFNarKRRJksS00saRO6cxhezfG372oWTTPfol9sWbtI=;
-        b=qyK7o4y7b5KJ88XY/53Ir3oKmbJjph49NfetzSrWbdp3McChvs7oJZy954AaJJRaNI
-         Bd7h3H3AiYrWeR5Wsv3BP3PUzRW9xMDQ+DAIP7I2VgOGRFhdGmEWXxuxwmDwPfhpPWiW
-         426HYtAZmJcI/b4G6/G7fiMwBaRteUpD2vXvNQ2ojSuqoafDrboJnsS2UMC+qaRHxJVs
-         8ZQizpNfpLg2inhMVIISlVZLXPqy4ghIb/rkebemAfgi1OwnUt6ytsTB/xjQiib8yNUI
-         z7D2ObazIM4xDT07J6iiGJM9Ai5vUlAZ5UWy6h/Mq65wpC+mgX/g/HGWaBN0to8UifAF
-         41RA==
-X-Gm-Message-State: AAQBX9eX6bs54lYQVzKUmgmPwB3xuu+zwULP/qR/yve2bYS3JYNkRogk
-        IK9z3CNlkbWWR8WToqaxBH1LCw==
-X-Google-Smtp-Source: AKy350bmGPQAtSCpEFubJRJcmrx33GQPnEKKpDAJnxWTGClLd6jkcPIc3e0gKQQNdIuvIRS213DbUg==
-X-Received: by 2002:a17:906:f143:b0:933:4c93:69ee with SMTP id gw3-20020a170906f14300b009334c9369eemr11864771ejb.45.1679901767018;
-        Mon, 27 Mar 2023 00:22:47 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:198e:c1a5:309b:d678? ([2a02:810d:15c0:828:198e:c1a5:309b:d678])
-        by smtp.gmail.com with ESMTPSA id g12-20020a170906198c00b00930c7b642d0sm13732976ejd.166.2023.03.27.00.22.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Mar 2023 00:22:46 -0700 (PDT)
-Message-ID: <510cf7ac-3f7f-49e2-b384-424c931b2750@linaro.org>
-Date:   Mon, 27 Mar 2023 09:22:45 +0200
+        with ESMTP id S232457AbjC0JEF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 05:04:05 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074054EC7
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 02:03:09 -0700 (PDT)
+Received: from ramsan.of.borg ([84.195.187.55])
+        by albert.telenet-ops.be with bizsmtp
+        id dM38290061C8whw06M38lL; Mon, 27 Mar 2023 11:03:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pgikC-00ExaS-FJ;
+        Mon, 27 Mar 2023 11:03:08 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pgiku-002sdq-0D;
+        Mon, 27 Mar 2023 11:03:08 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.4
+Date:   Mon, 27 Mar 2023 11:03:07 +0200
+Message-Id: <cover.1679907618.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 07/14] dt-bindings: pinctrl: qcom: Add output-enable
-Content-Language: en-US
-To:     Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20230323173019.3706069-1-dianders@chromium.org>
- <20230323102605.7.I7874c00092115c45377c2a06f7f133356956686e@changeid>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230323102605.7.I7874c00092115c45377c2a06f7f133356956686e@changeid>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.4 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/03/2023 18:30, Douglas Anderson wrote:
-> In the patch ("dt-bindings: pinctrl: qcom: tlmm should use
-> output-disable, not input-enable") we allowed setting "output-disable"
-> for TLMM pinctrl states. Let's also add "output-enable".
-> 
-> At first blush this seems a needless thing to do. Specifically:
-> - In Linux (and presumably any other OSes using the same device trees)
->   the GPIO/pinctrl driver knows to automatically enable the output
->   when a GPIO is changed to an output. Thus in most cases specifying
->   "output-enable" is superfluous and should be avoided.
-> - If we need to set a pin's default state we already have
->   "output-high" and "output-low" and these properties already imply
->   "output-enabled" (at least on the Linux Qualcomm TLMM driver).
-> 
-> However, there is one instance where "output-enable" seems like it
-> could be useful: sleep states. It's not uncommon to want to configure
-> pins as inputs (with appropriate pulls) when the driver controlling
-> them is in a low power state. Then we want the pins back to outputs
-> when the driver wants things running normally. To accomplish this we'd
-> want to be able to use "output-enable". Then the "default" state could
-> have "output-enable" and the "sleep" state could have
-> "output-disable".
-> 
-> NOTE: in all instances I'm aware of, we'd only want to use
-> "output-enable" on pins that are configured as "gpio". The Qualcomm
-> documentation that I have access to says that "output-enable" only
-> does something useful when in GPIO mode.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+	Hi Linus,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6:
 
-Best regards,
-Krzysztof
+  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.4-tag1
+
+for you to fetch changes up to 9d7558ed8372c51cbed011cb1dc3eb1beee212cf:
+
+  pinctrl: renesas: Drop support for Renesas-specific properties (2023-03-16 16:55:27 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.4
+
+  - Add pin groups for audio on R-Car V4H,
+  - Drop support for the obsolete R-Car H3 ES1.* (R8A77950) SoC,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (4):
+      pinctrl: renesas: r8a779g0: Fix Group 4/5 pin functions
+      pinctrl: renesas: r8a779g0: Fix Group 6/7 pin functions
+      pinctrl: renesas: r8a779g0: Fix ERROROUTC function names
+      pinctrl: renesas: Drop support for Renesas-specific properties
+
+Hai Pham (1):
+      pinctrl: renesas: r8a779a0: Remove incorrect AVB[01] pinmux configuration
+
+Linh Phung (2):
+      pinctrl: renesas: r8a779g0: Add Audio Clock pins, groups, and functions
+      pinctrl: renesas: r8a779g0: Add Audio SSI pins, groups, and functions
+
+Phong Hoang (1):
+      pinctrl: renesas: r8a779f0: Fix tsn1_avtp_pps pin group
+
+Wolfram Sang (1):
+      pinctrl: renesas: Remove R-Car H3 ES1.* handling
+
+ drivers/pinctrl/renesas/Kconfig        |    5 -
+ drivers/pinctrl/renesas/Makefile       |    1 -
+ drivers/pinctrl/renesas/core.c         |   41 +-
+ drivers/pinctrl/renesas/pfc-r8a77950.c | 5947 --------------------------------
+ drivers/pinctrl/renesas/pfc-r8a779a0.c |    8 -
+ drivers/pinctrl/renesas/pfc-r8a779f0.c |    2 +-
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 1042 +++---
+ drivers/pinctrl/renesas/pinctrl.c      |   31 +-
+ drivers/pinctrl/renesas/sh_pfc.h       |    1 -
+ 9 files changed, 565 insertions(+), 6513 deletions(-)
+ delete mode 100644 drivers/pinctrl/renesas/pfc-r8a77950.c
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
