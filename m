@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6324C6CB0C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 23:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AD3E6CB0C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 23:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231881AbjC0Vfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 17:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
+        id S232025AbjC0Vge (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 17:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232390AbjC0Vfe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 17:35:34 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8342703
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:35:32 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id k17so12555475ybm.11
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:35:32 -0700 (PDT)
+        with ESMTP id S230516AbjC0Vgc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 17:36:32 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D44C2D46
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:36:13 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id p15so12570488ybl.9
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Mar 2023 14:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679952931;
+        d=linaro.org; s=google; t=1679952972;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IFrjOiyw9NOJrCSELCRF57j8yyvcTUmmRYnuJvEzIrM=;
-        b=UL7ZgfxSqK1ZVr5QxWWxSlIbYG5Zcsz0bLJV+X6mz8FkUneICpW4a+FfqnapXhkZxm
-         kb3DeNSBC4TgbjscjYhPQahw/OZiLfk4SvYOF4RQVodvE7mM1SrgUSouhVfZrQGooIcm
-         +6ZzpGReDSUxyRsB3nJTG+Fd0C0hwiFpg+d/bWENPCrrFgj/mxw0rjKfzO+Y7FAx5cDT
-         TRfe8kzW/9zGnyJdSs8MXsst2L1dgisdSQKk2cxxKq0sV3n4ehKPPcppq1d13cUO0mT4
-         lCdvh+pFClRdmQ62l784Ii1kWulyRhugxuXLsNGVn1b2A6iDdZRTLhG+VBPWjS/NYzea
-         3CcQ==
+        bh=LphU3lCD6hhAgZNE1YP32TpKtjPy8gxgxUz41txnkwI=;
+        b=PdjAr1ulU4+fiPDc8MJJ4bMk1J28GiMPnjlADakawwTEccjS2nDWPV5HhXcdkeMUan
+         ygBBYbORhxLdCvHyH9vNIHVsFCuq36Arq8SVr2uzkkXlXt+4BzO1R6QUGNUx9k6mI/bn
+         s4JUJ2TYy48U0J1zEIg3FAwmZKBhwSSAzivOklk1+YYNiBq8taqYsis/OQU/ZtvYnSTd
+         aE0DdXmdnQClgRx+JPT8AVIZMYKr9ABAV2PzHow8wTbLCUG2yb1kqDtrqat6nECw7N79
+         O+iAnCi/Poj2e/MGNGi+JpuPO/8uIZHp1PfmUyw7Mg8aEHs1N+RUdBS6vCWdTOClu0e0
+         iFxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679952931;
+        d=1e100.net; s=20210112; t=1679952972;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IFrjOiyw9NOJrCSELCRF57j8yyvcTUmmRYnuJvEzIrM=;
-        b=3xAY8j61GWRA1zsA/4F3yU5oObLPyM1ashqxUAwGxRXe1A5OyUbGGAB8PuoN8ciKyd
-         U2VQxqsK4woAncysyx9DcdtJAEa4E5t3Uj/poySIa9iO5xZLxAPV2gkdic1BI+uGtno1
-         3YrsKNedfN7uj3cI/2xf8UbPtnKApiMhAJ+kDo2P4S5ALtxK3uP+NzEt4+rgrJh/YZix
-         pbl+Qw/jLA9mceWyxwvX/6n2GjFifX4CH1UPWNYacuUVfW+Uq9KtaGYvHsNLoLD7k2GY
-         4+X/+bqBEjgpGR8XW5mk0oIxrdqVgcsIqQBJtocycDK6cw9P6KRkwpDhEFKOhM3HMUIu
-         qOkQ==
-X-Gm-Message-State: AAQBX9cS6YUMU53jMS3Y2G+kQ+wMasQ9/AX+Kje2VuH+gSPmeYZANeCS
-        tP55MtbQl9BwVWMGDeOMi+WpPm1OizfvYL1+l8isE+P0BaV8wJph
-X-Google-Smtp-Source: AKy350YwCN7aEsQ4PXJbvf3lkx+vF+xXWizPiHiEaONkOLg4Wr85I8hFqVdUbKX8IEbw3PzQq5FuqpOCUFqGKlbHlbg=
-X-Received: by 2002:a05:6902:1145:b0:b09:6f3d:ea1f with SMTP id
- p5-20020a056902114500b00b096f3dea1fmr8142319ybu.4.1679952931656; Mon, 27 Mar
- 2023 14:35:31 -0700 (PDT)
+        bh=LphU3lCD6hhAgZNE1YP32TpKtjPy8gxgxUz41txnkwI=;
+        b=D7IIrBfIidHdslpBoLUJA3KyaAfx4u5Agz5vHUWkFZEbIKccAzhFuJLWopz/9nWX6G
+         yMzpBWl+L90zPEC+TsKP/QIbVKMpzUJ0+C5311xzfeLoOYPvHVlNAqNkIEcdmenvFSKa
+         S6+g5/mmdS1RPw0ZrthpgDVmjLPzGmF5UvIchNAz8lOm4hRdcpDxoMClYwWD+PhXg3wP
+         9/UxKOvkBAP2/Ql1beX91Q9q1+z5ByqCmGtRGBTaA4K11KMS9N+ewWBlzDAyPe7BD2oY
+         MFy8HjhoSwv+IjlNB41km1HL02TvzV3izPOmQ0yh/vt5ToF866xTLGiAx3ZU0tkANU51
+         jbhw==
+X-Gm-Message-State: AAQBX9cK6WQuw0XhcRayKBIdavqQlGNaTNTmLPbdkOcLVh7H/uCKHOI1
+        J85jJsV9FC7Sc7O0yHvVr6SZ02kt1Q+yIUjNnQ4vsw==
+X-Google-Smtp-Source: AKy350ZLawtXkeaTyp3Az5LBxbSlT3SuLjsuCbLFPiDphCP8jW8r4l+z8SaGLja6yEtOT8nU3N0XGMPJetk8NLLyII8=
+X-Received: by 2002:a25:8712:0:b0:b74:3236:2fac with SMTP id
+ a18-20020a258712000000b00b7432362facmr8044965ybl.4.1679952972432; Mon, 27 Mar
+ 2023 14:36:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230327062754.3326-1-clin@suse.com> <20230327062754.3326-3-clin@suse.com>
-In-Reply-To: <20230327062754.3326-3-clin@suse.com>
+References: <20230327062754.3326-1-clin@suse.com> <20230327062754.3326-4-clin@suse.com>
+In-Reply-To: <20230327062754.3326-4-clin@suse.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Mar 2023 23:35:20 +0200
-Message-ID: <CACRpkdat=069ZyPL=w1_z6cNZ4EbVvG==SLcnT-pmsH6zhqtpQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] pinctrl: s32cc: refactor pin config parsing
+Date:   Mon, 27 Mar 2023 23:36:01 +0200
+Message-ID: <CACRpkdYBm7KjSX2h2Oj1uWX8D2XvevbdczGWZc-9Zsb2SHvt-A@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] pinctrl: s32cc: embed generic struct pingroup
 To:     Chester Lin <clin@suse.com>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         NXP S32 Linux Team <s32@nxp.com>,
@@ -76,10 +76,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Mar 27, 2023 at 8:28=E2=80=AFAM Chester Lin <clin@suse.com> wrote:
 
-> Move common codes into smaller inline functions and remove argument check=
-s
-> that are not actually used by pull up/down bits in the S32 MSCR register.
+> Use generic data structure to describe pin control groups in S32 SoC fami=
+ly
+> and drop duplicated struct members.
 >
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Signed-off-by: Chester Lin <clin@suse.com>
 > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
