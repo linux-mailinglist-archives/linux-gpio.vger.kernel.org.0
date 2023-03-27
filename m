@@ -2,139 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE816CAADD
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 18:43:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E946B6CAAEE
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 18:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232446AbjC0Qmb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 12:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57340 "EHLO
+        id S230218AbjC0Qsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 12:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232618AbjC0QmD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 12:42:03 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF99A3A8C;
-        Mon, 27 Mar 2023 09:41:58 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32RE6Bgf019036;
-        Mon, 27 Mar 2023 16:41:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=rdW3275cbw6qbQR0iizsgq/hJswZIcUGspaRgj6jMLk=;
- b=JaS0orVPRDkP93z0JaL9efVuYSQ6NSU5xqZxMz+mdZQl+EQpdrwukzfQpHAyUvMpQ2yz
- D9ZLhbdFc7wrGazWluHXarB1v3FRij4LI5e96vJqiWd988mS4W6m5Swx1UKokVz2c2oq
- sCnTNiDLR5KZkFH+lYWY4KTEsBgLHdv8agPrSjgv3bzeQxIUqUtt14exky4a5Jy2R66J
- ckRcqjHKDinJrhexU7j4gVgufTIM7Itt5vjhPkZnlEBPWrKoQxv/7N1Fag99HarVud56
- uq/tnPtFT4ZTHQzBjrDltHHL9S8hCOrR8/fY/dqce+U8QJzgVx/+tgDxQJOJoD285VRL /A== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkcm2rg4h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Mar 2023 16:41:54 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32RGfrHX022663
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Mar 2023 16:41:53 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Mon, 27 Mar 2023 09:41:50 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH v4 5/5] firmware: qcom_scm: Add multiple download mode support
-Date:   Mon, 27 Mar 2023 22:11:21 +0530
-Message-ID: <1679935281-18445-6-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1679935281-18445-1-git-send-email-quic_mojha@quicinc.com>
-References: <1679935281-18445-1-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S229804AbjC0Qsx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 12:48:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632602718;
+        Mon, 27 Mar 2023 09:48:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 14D97B817B0;
+        Mon, 27 Mar 2023 16:48:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFDDC433D2;
+        Mon, 27 Mar 2023 16:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679935729;
+        bh=RBHLpix/Xszw9JJ0ucrZ1EJILEOxun33InjcawwuCE4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=NFJzwgrr4eBE9U877Qj9iwNQVN3CSva0WlZVYlhzk5QTBEQ/JnlaUJ/zdEf3Agylr
+         4KonOj+BjRk5SMrCm99RotKuLIVL2L1fx+9iUJeJUsGIUPMt/b0qu25qmrWGUbpWW1
+         wQEKbOStS83AG+Wr94+TSX1Yz6rymnDklS2dgI0v4lceabnviiN2kLFHdCvz1WmWaL
+         ZIqTDy/B2D+Lj6CY4QatRjxsZrp0R6O0mkEOzqRcXR4rXSIL87uEmynQ6sapMekxCz
+         o2aS4pZTTqCfLCrkdoCHaVLP0wtqTJmUeie3CX9FuSQxNxrIzz96ZT54Y+A3up5vcA
+         pxuWLFB7wOTEw==
+Message-ID: <0af15083921c5d3c89392209654f0c9b.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BPRsb3e66BsdNY7tW2-pp1CxjgSMXdre
-X-Proofpoint-GUID: BPRsb3e66BsdNY7tW2-pp1CxjgSMXdre
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-27_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303270134
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230327132718.573-3-quic_devipriy@quicinc.com>
+References: <20230327132718.573-1-quic_devipriy@quicinc.com> <20230327132718.573-3-quic_devipriy@quicinc.com>
+Subject: Re: [PATCH V10 2/4] clk: qcom: Add Global Clock Controller driver for IPQ9574
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, arnd@arndb.de, broonie@kernel.org,
+        catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        dmitry.baryshkov@linaro.org, konrad.dybcio@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel.ziswiler@toradex.com, mturquette@baylibre.com,
+        nfraprado@collabora.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, shawnguo@kernel.org, will@kernel.org
+Date:   Mon, 27 Mar 2023 09:48:47 -0700
+User-Agent: alot/0.10
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently, scm driver only supports full dump when download
-mode is selected. Add support to enable minidump as well both
-dump(full dump + minidump).
+Quoting Devi Priya (2023-03-27 06:27:16)
+> diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq957=
+4.c
+> new file mode 100644
+> index 000000000000..b2a2d618a5ec
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-ipq9574.c
+> @@ -0,0 +1,4248 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +/*
+> + * Copyright (c) 2023 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom_scm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+What is this include for?
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 0c94429..19315d0 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -32,6 +32,8 @@ static u32 download_mode;
- 
- #define QCOM_DOWNLOAD_MODE_MASK 0x30
- #define QCOM_DOWNLOAD_FULLDUMP	0x1
-+#define QCOM_DOWNLOAD_MINIDUMP  0x2
-+#define QCOM_DOWNLOAD_BOTHDUMP	(QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
- #define QCOM_DOWNLOAD_NODUMP	0x0
- 
- struct qcom_scm {
-@@ -1421,13 +1423,16 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--
- static int get_download_mode(char *buffer, const struct kernel_param *kp)
- {
- 	int len = 0;
- 
- 	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
- 		len = sysfs_emit(buffer, "full\n");
-+	else if (download_mode == QCOM_DOWNLOAD_MINIDUMP)
-+		len = sysfs_emit(buffer, "mini\n");
-+	else if (download_mode == QCOM_DOWNLOAD_BOTHDUMP)
-+		len = sysfs_emit(buffer, "both\n");
- 	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
- 		len = sysfs_emit(buffer, "off\n");
- 
-@@ -1440,6 +1445,10 @@ static int set_download_mode(const char *val, const struct kernel_param *kp)
- 
- 	if (!strncmp(val, "full", strlen("full"))) {
- 		download_mode = QCOM_DOWNLOAD_FULLDUMP;
-+	} else if (!strncmp(val, "mini", strlen("mini"))) {
-+		download_mode = QCOM_DOWNLOAD_MINIDUMP;
-+	} else if (!strncmp(val, "both", strlen("both"))) {
-+		download_mode = QCOM_DOWNLOAD_BOTHDUMP;
- 	} else if (!strncmp(val, "off", strlen("off"))) {
- 		download_mode = QCOM_DOWNLOAD_NODUMP;
- 	} else if (kstrtouint(val, 0, &download_mode) ||
-@@ -1462,7 +1471,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
- 
- module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
- MODULE_PARM_DESC(download_mode,
--		 "Download mode: off/full or 0/1 for existing users");
-+		 "download mode: off/full/mini/both(full+mini) or 0/1 for existing users");
- 
- static int qcom_scm_probe(struct platform_device *pdev)
- {
--- 
-2.7.4
+> +#include <linux/regmap.h>
 
+Need to include clk-provider.h
+
+> +
+> +#include <linux/reset-controller.h>
+
+Put a newline here.
+
+> +#include <dt-bindings/clock/qcom,ipq9574-gcc.h>
+> +#include <dt-bindings/reset/qcom,ipq9574-gcc.h>
+> +
+> +#include "clk-rcg.h"
+> +#include "clk-branch.h"
+> +#include "clk-alpha-pll.h"
+> +#include "clk-regmap-divider.h"
+> +#include "clk-regmap-mux.h"
+> +#include "clk-regmap-phy-mux.h"
+> +#include "reset.h"
+> +
+> +/* Need to match the order of clocks in DT binding */
+> +enum {
+> +       DT_XO,
+> +       DT_SLEEP_CLK,
+> +       DT_BIAS_PLL_UBI_NC_CLK,
+> +       DT_PCIE30_PHY0_PIPE_CLK,
+> +       DT_PCIE30_PHY1_PIPE_CLK,
+> +       DT_PCIE30_PHY2_PIPE_CLK,
+> +       DT_PCIE30_PHY3_PIPE_CLK,
+> +       DT_USB3PHY_0_CC_PIPE_CLK,
+> +};
+> +
+> +enum {
+> +       P_XO,
+> +       P_PCIE30_PHY0_PIPE,
+> +       P_PCIE30_PHY1_PIPE,
+> +       P_PCIE30_PHY2_PIPE,
+> +       P_PCIE30_PHY3_PIPE,
+> +       P_USB3PHY_0_PIPE,
+> +       P_GPLL0,
+> +       P_GPLL0_DIV2,
+> +       P_GPLL0_OUT_AUX,
+> +       P_GPLL2,
+> +       P_GPLL4,
+> +       P_PI_SLEEP,
+> +       P_BIAS_PLL_UBI_NC_CLK,
+> +};
+> +
+> +static const struct parent_map gcc_xo_map[] =3D {
+> +       { P_XO, 0 },
+> +};
+> +
+> +static const struct clk_parent_data gcc_xo_data[] =3D {
+> +       { .index =3D DT_XO },
+> +};
+> +
+> +static const struct clk_parent_data gcc_sleep_clk_data[] =3D {
+> +       { .index =3D DT_SLEEP_CLK },
+> +};
+> +
+> +static struct clk_alpha_pll gpll0_main =3D {
+> +       .offset =3D 0x20000,
+> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x0b000,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data) {
+
+All these clk_init_data structs should be const.
+
+> +                       .name =3D "gpll0_main",
+> +                       .parent_data =3D gcc_xo_data,
+> +                       .num_parents =3D ARRAY_SIZE(gcc_xo_data),
+> +                       .ops =3D &clk_alpha_pll_ops,
+> +               },
+> +       },
+> +};
