@@ -2,232 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D8886CA251
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 13:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 498CB6CA2F5
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Mar 2023 13:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbjC0L0n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Mar 2023 07:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38668 "EHLO
+        id S232259AbjC0L73 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Mar 2023 07:59:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjC0L0m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 07:26:42 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB95A423A;
-        Mon, 27 Mar 2023 04:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679916401; x=1711452401;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hC5O2GCfOP2p66Bv6Vdwwm3MQaXMKKcdAvP9wRixTW8=;
-  b=bMIo5+P9DaAlzmi0Deh/UUWQ5cDooDIlBYEhziFyijTub82qIEdQcwFy
-   VD8mc4QLm1hnwMaoPyKTH/R7FaV8xOsohWCLR+MXf5vPX/jJOPyzDhT/U
-   piykB+DdhbmA28CSQlcz6f+3MGXFtA8C8E4R8BAerFVoIKRvG2HghZt+x
-   XAEDJnZh8dm1v0lmYjM/RnEXUe9Fq5Jk9juS09ZW7MSV7MSqpJA42K3JV
-   XwQFwSS0nCF+/d9HCKx7pgUj1npq8pY/WYyyOPcSCD4EIMibizdr32yRZ
-   XqBYDqc0K/xN/R5Nvp+VPe+0HHoaZhZ1yKW7SRjjiX8ifepjLo/ei8WFJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="320639759"
-X-IronPort-AV: E=Sophos;i="5.98,294,1673942400"; 
-   d="scan'208";a="320639759"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 04:26:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="827009535"
-X-IronPort-AV: E=Sophos;i="5.98,294,1673942400"; 
-   d="scan'208";a="827009535"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Mar 2023 04:26:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pgkzl-009Bwz-1c;
-        Mon, 27 Mar 2023 14:26:37 +0300
-Date:   Mon, 27 Mar 2023 14:26:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, techsupport@winsystems.com,
-        Paul Demetrotion <pdemetrotion@winsystems.com>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v5 3/3] gpio: ws16c48: Migrate to the regmap API
-Message-ID: <ZCF9bdyefA/oDmdG@smile.fi.intel.com>
-References: <cover.1679845842.git.william.gray@linaro.org>
- <58531b1b2428e4d5d2ea79e721f7ef6450665280.1679845842.git.william.gray@linaro.org>
+        with ESMTP id S229525AbjC0L72 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Mar 2023 07:59:28 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817781BE2;
+        Mon, 27 Mar 2023 04:59:27 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id h16so1458163qtn.7;
+        Mon, 27 Mar 2023 04:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679918366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5o4yWNszVI2/ZcOwu9eXRrr9iehT4wRAPz3L0LpJT2U=;
+        b=oFICXUAWbVzc3OvexyblJtPT5W93/SPNd3S6ogv6fD+//XE1BgYqNkfyp2j39CFTGN
+         sSnEkIwe8gL9JKYi8yoxTxwtx+TyrVnw11lbfBXBYJJP4a4l+6mYl52JwCR0IjF4rjlb
+         OfbcO6aBnVqXNCk3cN5bFnEZ/r8MoYI+O80chsnaELt17zPOwIxM3dnzDZbtRBu2/7mo
+         jaK3/JZ1iSIsll8avKh3m2j796R+MqYN5JKTPHYn8crXmgui3jjiMYOLQjqmgDKS82L/
+         w54gN6NHEMNfBZiECVHon3SrJeupWudg2DTR/rpth92nfGOAaVcup2eX4EPpsJqLx1Av
+         FMxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679918366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5o4yWNszVI2/ZcOwu9eXRrr9iehT4wRAPz3L0LpJT2U=;
+        b=xKIKzaMveGcTTaW+eDF5K9vJqHXdWEnH/VQ5dh5zZ9a6uF/ZS3pMjp9WJDWdMgT9Au
+         D3o1h9VZb742pE7Fcs74gumhs4TlZDJ4IBlSQ6W0UXEyeqiu4YK7ciie6kxu570kdtcH
+         3z5hh2cvrQ+R+cB8GnFrevzlBpdXwZqA30MALcR2cPDdo2yNmK+fvh7TRj3Bc/OgkVa/
+         4r7xxIcC30+2qk7rFxP7/XYhROLvzB/ShOkMbYogbu1zW7Egtk2WUjURJf5Mwn+Fe+CN
+         Aup4ZHMDxSChs+KIALaa4FFcO9CIy/GdIfeH2CYE5TCO/dSV2XbAzPoaJ1sD5xbW8Vhw
+         bEYA==
+X-Gm-Message-State: AAQBX9dgbS173S1PdgqCyLrk9FRHDXvqHqUNwr8FN66LOubLeaauFRbi
+        rts8idTTs80L3meM3hCS+1vu5Z7Mn6zL0CWoBRL/QL2ZBaM=
+X-Google-Smtp-Source: AKy350bjsRnbwotnIOQ+ZuZJwKardRLmU62FR3daPFFUuCwR2zpNc2Pr3q2CUw9PDgz8zREIuUgCUNkafilxj1bGrgc=
+X-Received: by 2002:a05:622a:199a:b0:3de:d15a:847f with SMTP id
+ u26-20020a05622a199a00b003ded15a847fmr4233934qtc.0.1679918366657; Mon, 27 Mar
+ 2023 04:59:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58531b1b2428e4d5d2ea79e721f7ef6450665280.1679845842.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230327062754.3326-1-clin@suse.com> <20230327062754.3326-6-clin@suse.com>
+In-Reply-To: <20230327062754.3326-6-clin@suse.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Mar 2023 14:58:50 +0300
+Message-ID: <CAHp75Vf_k2ZDoyHUVbD_e4droAwxVqu7HCwNrPd=X_su-c8LjQ@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] pinctrl: s32: separate const device data from
+ struct s32_pinctrl_soc_info
+To:     Chester Lin <clin@suse.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        NXP S32 Linux Team <s32@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 26, 2023 at 12:25:59PM -0400, William Breathitt Gray wrote:
-> The regmap API supports IO port accessors so we can take advantage of
-> regmap abstractions rather than handling access to the device registers
-> directly in the driver.
-> 
-> The WinSystems WS16C48 provides the following registers:
-> 
->     Offset 0x0-0x5: Port 0-5 I/O
->     Offset 0x6: Int_Pending
->     Offset 0x7: Page/Lock
->     Offset 0x8-0xA (Page 1): Pol_0-Pol_2
->     Offset 0x8-0xA (Page 2): Enab_0-Enab_2
->     Offset 0x8-0xA (Page 3): Int_ID0-Int_ID2
-> 
-> Port 0-5 I/O provides access to 48 lines of digital I/O across six
-> registers, each bit position corresponding to the respective line.
-> Writing a 1 to a respective bit position causes that output pin to sink
-> current, while writing a 0 to the same bit position causes that output
-> pin to go to a high-impedance state and allows it to be used an input.
-> Reads on a port report the inverted state (0 = high, 1 = low) of an I/O
-> pin when used in input mode. Interrupts are supported on Port 0-2.
-> 
-> Int_Pending is a read-only register that reports the combined state of
-> the INT_ID0 through INT_ID2 registers; an interrupt pending is indicated
-> when any of the low three bits are set.
-> 
-> The Page/Lock register provides the following bits:
-> 
->     Bit 0-5: Port 0-5 I/O Lock
->     Bit 6-7: Page 0-3 Selection
-> 
-> For Bits 0-5, writing a 1 to a respective bit position locks the output
-> state of the corresponding I/O port. Writing the page number to Bits 6-7
-> selects that respective register page for use.
-> 
-> Pol_0-Pol_2 are accessible when Page 1 is selected. Writing a 1 to a
-> respective bit position selects the rising edge detection interrupts for
-> that input line, while writing a 0 to the same bit position selects the
-> falling edge detection interrupts.
-> 
-> Enab_0-Enab_2 are accessible when Page 2 is selected. Writing a 1 to a
-> respective bit position enables interrupts for that input line, while
-> writing a 0 to that same bit position clears and disables interrupts for
-> that input line.
-> 
-> Int_ID0-Int_ID2 are accessible when Page 3 is selected. A respective bit
-> when read as a 1 indicates that an edge of the polarity set in the
-> corresponding polarity register was detected for the corresponding input
-> line. Writing any value to this register clears all pending interrupts
-> for the register.
+On Mon, Mar 27, 2023 at 9:28=E2=80=AFAM Chester Lin <clin@suse.com> wrote:
+>
+> The .data field in struct of_device_id is used as a const member so it's
+> inappropriate to attach struct s32_pinctrl_soc_info with of_device_id
+> because some members in s32_pinctrl_soc_info need to be filled by
+> pinctrl-s32cc at runtime.
+>
+> For this reason, struct s32_pinctrl_soc_info must be allocated in
+> pinctrl-s32cc and then create a new struct s32_pinctrl_soc_data in order
+> to represent const .data in of_device_id. To combine these two structures=
+,
+> a s32_pinctrl_soc_data pointer is introduced in s32_pinctrl_soc_info.
+>
+> Besides, use of_device_get_match_data() instead of of_match_device() sinc=
+e
+> the driver only needs to retrieve the .data from of_device_id.
 
 ...
 
-> +static const struct regmap_config ws16c48_regmap_config = {
-> +	.reg_bits = 8,
-> +	.reg_stride = 1,
-> +	.val_bits = 8,
-> +	.io_port = true,
-> +	.max_register = 0xA,
-> +	.wr_table = &ws16c48_wr_table,
-> +	.rd_table = &ws16c48_rd_table,
-> +	.volatile_table = &ws16c48_volatile_table,
-> +	.cache_type = REGCACHE_FLAT,
-> +};
+> -static struct s32_pinctrl_soc_info s32_pinctrl_info =3D {
+> +static struct s32_pinctrl_soc_data s32_pinctrl_data =3D {
 
-Do we need regmap lock?
+I'm wondering why it's not const.
+
+But don't resend too quickly, let's wait for Linus to comment on this
+and other stuff. It might be that he can amend this when applying.
 
 ...
 
->  /**
->   * struct ws16c48_gpio - GPIO device private data structure
-> - * @chip:	instance of the gpio_chip
-> - * @io_state:	bit I/O state (whether bit is set to input or output)
-> - * @out_state:	output bits state
-> + * @map:	regmap for the device
->   * @lock:	synchronization lock to prevent I/O race conditions
->   * @irq_mask:	I/O bits affected by interrupts
-> - * @flow_mask:	IRQ flow type mask for the respective I/O bits
-> - * @reg:	I/O address offset for the device registers
->   */
->  struct ws16c48_gpio {
-> -	struct gpio_chip chip;
-> -	unsigned char io_state[6];
-> -	unsigned char out_state[6];
-> +	struct regmap *map;
->  	raw_spinlock_t lock;
-> -	unsigned long irq_mask;
-> -	unsigned long flow_mask;
-> -	struct ws16c48_reg __iomem *reg;
-> +	u8 irq_mask[WS16C48_NUM_IRQS / WS16C48_NGPIO_PER_REG];
+> +       const struct s32_pinctrl_soc_data *soc_data;
+>
+> +       soc_data =3D of_device_get_match_data(&pdev->dev);
 
-Looking at this (and also thinking about the previous patch) perhaps this
-should be declared as
-
-	DECLARE_BITMAP(...);
-
-and corresponding bit ops to be used?
-
->  };
-
-...
-
-> +static int ws16c48_handle_pre_irq(void *const irq_drv_data)
->  {
-> +	struct ws16c48_gpio *const ws16c48gpio = irq_drv_data;
->  
-> +	/* Lock to prevent Page/Lock register change while we handle IRQ */
-> +	raw_spin_lock(&ws16c48gpio->lock);
->  
->  	return 0;
->  }
-
-Hmm... Don't we have irq bus lock and unlock callbacks for this?
-
-...
-
-> +static int ws16c48_handle_post_irq(void *const irq_drv_data)
->  {
-> +	struct ws16c48_gpio *const ws16c48gpio = irq_drv_data;
->  
-> +	raw_spin_unlock(&ws16c48gpio->lock);
->  
->  	return 0;
->  }
-
-Ditto.
-
-Also shouldn't you annotate them for sparse so it won't complain about
-unbalanced locks?
-
-...
-
-> +exit_early:
-
-exit_unlock() ?
-
->  	raw_spin_unlock_irqrestore(&ws16c48gpio->lock, flags);
-
-> +	return ret;
-
-...
-
-> +	err = regmap_write(map, WS16C48_ENAB, 0x00);
-
-				WS16C48_ENAB + 0
-
-(for the sake of symmetry with the below)?
-
-> +	if (err)
-> +		return err;
-> +	err = regmap_write(map, WS16C48_ENAB + 1, 0x00);
-> +	if (err)
-> +		return err;
-> +	err = regmap_write(map, WS16C48_ENAB + 2, 0x00);
-> +	if (err)
-> +		return err;
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
