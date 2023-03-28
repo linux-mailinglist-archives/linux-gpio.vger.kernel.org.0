@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E898C6CC0AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E796CC0C7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232867AbjC1NZY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 09:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
+        id S232318AbjC1N3V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 09:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjC1NZP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:25:15 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBEF1BDC6
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 06:25:08 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-544f7c176easo229047007b3.9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 06:25:08 -0700 (PDT)
+        with ESMTP id S232644AbjC1N3T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:29:19 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C647FA27B
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 06:29:18 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id i7so15057300ybt.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 06:29:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680009907;
+        d=linaro.org; s=google; t=1680010158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZPIvMwQpvOjU0BzBAGW2h0thFK/pO6HC4FGgXVqASMQ=;
-        b=cDQVnzf6NXWmQ+kFhJ/YNhytjxBtvv4Dx4494nooPMxlO4+/8/vueiJ227kXanpWpO
-         zcoY1DOWsahAqtPOYxYFmXVQ+t9TpzYpzsuUIU941AMtP+egIu2QVMXSnql/jEh5jwIu
-         kmBywYjNOqm0WzRBpH0kRRrpHa4eyDu5DctCtwV1FNBC3iQUWEIuPGEjBQNOn+D1JvAt
-         ZX4On00rG2xB/yt/q0o8bciOUFrLoVBErkMmcCxMVes/8uQe5JbYSf8DohHytdjm9LZs
-         9BlftRKvOjpYYcEA8FFWMi7EZP+sYynHZskrecbMVJyullUEKf4aCUTZUMmNqnFH9lTe
-         1YVA==
+        bh=F69SKgebFV84m8b23l8cJMcbeFPsZV429gPHHrsF92w=;
+        b=tHiKJUDXZjWTg2DUFiPoyD0e+7+Bl327jN3xM18gp7431wDhEHFklKY8sHh9iIe5/2
+         rxXEHYjWdTOoOC0DDnEA+Z58Usi64SaYTRagObJVvefExp10qkFepQO82B0FudG83Ba2
+         J44esto2WDHBS9g7JEqSwoRYKZn3EwaXFI7W+z2cQgAccy8zr7R98kqpeuxC8VjAggjy
+         MSHmTP7/SZmGkph6x1CPntk9ZjsVqu0NMRBiZX19sdTRnFA4T71Og0J+rGkf5Zs704lK
+         Frc87G5TItfjkkKXPgkcsH+Mi+/Hnn/llqkoWKxEVHFB5yLd4ofWEuC7w8VzCP28K5Ek
+         HVLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680009907;
+        d=1e100.net; s=20210112; t=1680010158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZPIvMwQpvOjU0BzBAGW2h0thFK/pO6HC4FGgXVqASMQ=;
-        b=6YZMG+ZTjGoefcB7Ccug+/ZP7ROuIgtUmNzkDSlg16sBVb8EwaGh399aiO6sbCOq6V
-         50pQefXja4kNNeqx4lVVUbCovedVlGZrcdfIwsOTMzfC3tOmNLMY5G+JhBlwpoorHH3/
-         aMEmvd9lfzE12iixNQU8WxwEpuKUT0HUyu9q41/WkkIY9tRDXrp+bqPmH3Jo+G8zDq5/
-         CLOrD15HyuLQTnM8wrO2Nd2g9qcrriZfQLJTN51tv+/2LXVGIsY+HsdjHgOq0RA3r5hG
-         jEgSBpzb6up76LrBH5yYqZ1NmZIL4CmHlZDP3t8z0Af5P25A2NZgcSXlxOP5+tk/C7xR
-         Wz4A==
-X-Gm-Message-State: AAQBX9ekiyGpGKCYF+mnco1etH44rNENLOvatO2YlcIeeGB4YEarD2T+
-        Wy5Fn2LuNWeny8MHQ7sNneWFphHilN+qbyyPxx82gQ==
-X-Google-Smtp-Source: AKy350ZgakwSzT0dqfqow65sOYhYdGm7e9tpKXHZr3eLhydwhlJV66Ug1YTOW0hOOhaksKirRdOvhIwCHukpr7tOpYw=
-X-Received: by 2002:a81:d007:0:b0:546:81f:a89e with SMTP id
- v7-20020a81d007000000b00546081fa89emr1631145ywi.9.1680009907719; Tue, 28 Mar
- 2023 06:25:07 -0700 (PDT)
+        bh=F69SKgebFV84m8b23l8cJMcbeFPsZV429gPHHrsF92w=;
+        b=0BEHU1tIsaeY5tmFefZNIfI4ADizgrm/L0gSIMfCzFXV5VQb4UoKIgA/31hIiprVEj
+         Fbv72aa5DjzE0peFL4rMTzFtEHN6EPM7IDBWKShNtBeNl+cgQhicFiP8uu+EjdZgfYRH
+         4c1KuSWhBYUfYOf6SveXEKrFLQkOPjWwyLPvJOjpPnKtnjFJmVHSvIb4+cL308JWyJdN
+         pLtWMDBzfGsxWxduv4zr4VoYT66q33yrTavYagNZk6lxR2zruLhGg4zzukmXqQhWSRVs
+         KdDl8LvUJ5ywaHpTNQkmmwqDOMtvzYv3RVCCIvrZ/r+XEcDVdifmFlelZ7wLxlzJzz0n
+         u6XA==
+X-Gm-Message-State: AAQBX9f4sRxgz0dvOkTjBz643Dpw+xSZ5dZVY2g7k3i5VOFV/FibLY4a
+        6i0f/Vs4be7iEwyTa6DZRsLN37cziBQMaRK26xmMcw==
+X-Google-Smtp-Source: AKy350buCWEIi2PkGNpeTUBOh1IR2rSY7S/IC7sNpB1Y7lELd92laB/CFj3jRTSo8OKdOuNP9Xy1qlYJHOIAM9dKlZs=
+X-Received: by 2002:a05:6902:1006:b0:b78:4b00:775f with SMTP id
+ w6-20020a056902100600b00b784b00775fmr6378684ybt.4.1680010157966; Tue, 28 Mar
+ 2023 06:29:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230327125316.210812-1-brgl@bgdev.pl> <20230327125316.210812-14-brgl@bgdev.pl>
-In-Reply-To: <20230327125316.210812-14-brgl@bgdev.pl>
+References: <20230323122910.991148-1-d-gole@ti.com>
+In-Reply-To: <20230323122910.991148-1-d-gole@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Mar 2023 15:24:56 +0200
-Message-ID: <CACRpkdYUq5qvaWQFjb3NCoS4J5x=NVUKCM_ia4vqFA1HSuHbfw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/18] pinctrl: qcom: spmi-gpio: add support for pmm8654au-gpio
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Tue, 28 Mar 2023 15:29:06 +0200
+Message-ID: <CACRpkdY_rhe69Y4AbEp8iws1fpL0bUkP5iBMN68EB+wxhFyHTw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] gpio: davinci: Do not clear the bank intr enable
+ bit in save_context
+To:     Dhruva Gole <d-gole@ti.com>
+Cc:     Keerthy <j-keerthy@ti.com>, Vibhore Vardhan <vibhore@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh <vigneshr@ti.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Devarsh Thakkar <devarsht@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -73,18 +71,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Thu, Mar 23, 2023 at 1:29=E2=80=AFPM Dhruva Gole <d-gole@ti.com> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> The interrupt enable bits might be set if we want to use the GPIO as
+> wakeup source. Clearing this will mean disabling of interrupts in the GPI=
+O
+> banks that we may want to wakeup from.
+> Thus remove the line that was clearing this bit from the driver's save
+> context function.
 >
-> Add support for the GPIO controller present on the pmm8654au PMIC.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Fixes: 0651a730924b ("gpio: davinci: Add support for system suspend/resum=
+e PM")
+> Cc: Devarsh Thakkar <devarsht@ti.com>
+> Signed-off-by: Dhruva Gole <d-gole@ti.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Looks like the right solution to me.
+I'm a bit surprised given how long we have had this driver.
+I suppose people have used out-of-tree patches for suspend/resume. :(
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
