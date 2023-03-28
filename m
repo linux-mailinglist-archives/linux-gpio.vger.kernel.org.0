@@ -2,99 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E7B06CCBDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 23:06:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AAE86CCCDF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 00:14:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbjC1VG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 17:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
+        id S230050AbjC1WO3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 18:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjC1VG4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 17:06:56 -0400
-Received: from sender3-op-o18.zoho.com (sender3-op-o18.zoho.com [136.143.184.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3EFBE2;
-        Tue, 28 Mar 2023 14:06:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1680037585; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=K3l+6cKlXTkJUHIja2qwDUU7cu+a8Rz+Gdw24HGBpKoIzOJ8vfmxi5gomdSRo3hB+ftJsTbY6mDeK9XzqG3ffCHE/07KCrn+FBaF08SbFGiC62IMJ+cJmBvf8cxCYobLT06itKX22R/XHnDvEa/JfKa6u6ajhSfLx5UjqXIkZZE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1680037585; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=dtkb18ovKMaH43unnBPf7khKxODc/lZ7PabQ5gaNQy4=; 
-        b=S9FSj28Nsi6/etwDQlZ5k9YJE4DWFkN43BNMr4YzGYq7DIBj+qaV9IPabOSM8EIK4Ap3BYCvnzhmfWqpMC3N54quSqk52tK6qQFWCSaCrtcAr1Ty2+k943NrNgcAc2kTnc1hqjgT6lVTklKVNh8dMorDvuUHmcj0LVpvzoIGkEo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1680037585;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-        bh=dtkb18ovKMaH43unnBPf7khKxODc/lZ7PabQ5gaNQy4=;
-        b=PKmlQKkw4hyHAu+5NoHDphTDP0scndRBlGhQYcooVl0W1DLiU524odRu62YuKRAz
-        hqFKtH3egX7y6vaU9CSe0+KQa5gjR2jmDe6d8GRT1q0tElvBczSJoj8QQapFc6XoaaQ
-        UvmqYhmj6Lw55tHg5hFbk6BpIfeuX3133huAvmNM=
-Received: from [10.10.10.3] (149.91.1.15 [149.91.1.15]) by mx.zohomail.com
-        with SMTPS id 1680037584024831.8337484799076; Tue, 28 Mar 2023 14:06:24 -0700 (PDT)
-Message-ID: <c12d50aa-7485-9ee4-3af1-8374de64eb07@arinc9.com>
-Date:   Wed, 29 Mar 2023 00:06:15 +0300
+        with ESMTP id S229976AbjC1WO2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 18:14:28 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B006271D
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 15:14:26 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id bi9so17690429lfb.12
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 15:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680041664;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v/xFtn/jeHDXI1X7hT+Ejmk330S4TFBf9/uncxseBCY=;
+        b=B6JdSXduaU0fyG+ZXz+NR1WfNQ9igw/nPHDCr2pD4WvibPnM6yZ7MWjRGl9/tfYC64
+         T4RYN4Y0PaSfqyLtAx0hoPoHrnDFNkmqwAGwtN2wH5XaAdEHvj2g7BttPMKisolRcP5Q
+         ODz51i2GK2WgvupulWXm5fglEFBxNwnW9i0nUgy3MJm6KTypi5DGro13xbfihh9wUL9f
+         OStFd5mGNsga0QWtpAiFRNmZwksinb1sXppCbfhTR5PUQKXY73X0jDbB3uO4qh8dHSo1
+         zVUCvFrMoiwZJ3dynEuiBZoJ0LV9ki9dR48v47NW3rJcusGF8LucgLeC8Owko3tGIEy1
+         GW+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680041664;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/xFtn/jeHDXI1X7hT+Ejmk330S4TFBf9/uncxseBCY=;
+        b=mSM6ZkYRNkT5jJajUq5eGYp48xW593ViGhTRgEtUcEENXFdT6mCnAPuCoH3i8zyUQb
+         iNXw8nSkyTrJtI+EDwLpph4RaGLzFqRDnHqrqAIqPF0fEnh0Zl01Do1VWc36bKhU3x+x
+         1DA54sxg6D2EB6CTRj35rJ9SO8rQ8y9ObmZSafban9C2pVYLiJ8u7xQF145gO45M0fzy
+         IWDaXQUJuUgXCRCo7qs9P59UN1tgq4dfBOp2L8lgpRaR8D9KBFjDjjCppnvT7nYqYYSm
+         +yiRowNkEle/DJ/lOZuSLX5nE30EBb2HEO3HFe3FptTVgVX5UFz6M14Iu5vlZ+Ss8W5k
+         Gcyg==
+X-Gm-Message-State: AAQBX9dtSN0TP3q5oBLvtoB9PaasxPSkB5YUdSAqJPItNLdQ3rkQnsJH
+        KgCipuFnUokrEIFAZepjRxyhpg==
+X-Google-Smtp-Source: AKy350YudBv3eBOlox2AXR7O/t0Mx7ohGhKQB/gCYHL/MtJPfnQW0s8cAGm6W6ROkwq9D7l7XYjs+Q==
+X-Received: by 2002:ac2:569e:0:b0:4e8:49ff:8df8 with SMTP id 30-20020ac2569e000000b004e849ff8df8mr4945654lfr.61.1680041664385;
+        Tue, 28 Mar 2023 15:14:24 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
+        by smtp.gmail.com with ESMTPSA id 6-20020ac24846000000b004d8540b947asm5226316lfy.56.2023.03.28.15.14.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 15:14:23 -0700 (PDT)
+Message-ID: <2bff9246-dd42-1c21-930f-2da2fed588f2@linaro.org>
+Date:   Wed, 29 Mar 2023 01:14:22 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v3 01/21] pinctrl: ralink: reintroduce
- ralink,rt2880-pinmux compatible string
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        William Dean <williamsukatube@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Del Regno <angelogioacchino.delregno@collabora.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Hui Liu <hui.liu@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG Qingfang <dqfext@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, erkin.bozoglu@xeront.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-References: <20230317213011.13656-1-arinc.unal@arinc9.com>
- <20230317213011.13656-2-arinc.unal@arinc9.com>
- <CAL_JsqLDRHs=TfcLsc0RJzF6rj84eXZooejmhx4hBDnpvCTk5A@mail.gmail.com>
-Content-Language: en-US
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <CAL_JsqLDRHs=TfcLsc0RJzF6rj84eXZooejmhx4hBDnpvCTk5A@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] firmware: qcom_scm: Refactor code to support
+ multiple download mode
+Content-Language: en-GB
+To:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc:     agross@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <1679935281-18445-1-git-send-email-quic_mojha@quicinc.com>
+ <1679935281-18445-5-git-send-email-quic_mojha@quicinc.com>
+ <20230327182324.elrxciz5vqvryp7y@ripper>
+ <e342044c-dcf9-e443-5244-0990dfc59443@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <e342044c-dcf9-e443-5244-0990dfc59443@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/03/2023 23:59, Rob Herring wrote:
-> On Fri, Mar 17, 2023 at 4:30 PM <arinc9.unal@gmail.com> wrote:
->>
->> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> There have been stable releases with the ralink,rt2880-pinmux compatible
->> string included. Having it removed breaks the ABI. Reintroduce it.
+On 28/03/2023 11:18, Mukesh Ojha wrote:
 > 
-> ralink,rt2880-pinmux now shows up as an undocumented compatible string
-> in linux-next. Where's the binding for it?
+> 
+> On 3/27/2023 11:53 PM, Bjorn Andersson wrote:
+>> On Mon, Mar 27, 2023 at 10:11:20PM +0530, Mukesh Ojha wrote:
+>> [..]
+>>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+>>> index 3c6c5e7..0c94429 100644
+>>> --- a/drivers/firmware/qcom_scm.c
+>>> +++ b/drivers/firmware/qcom_scm.c
+>>> @@ -20,11 +20,11 @@
+>>>   #include <linux/clk.h>
+>>>   #include <linux/reset-controller.h>
+>>>   #include <linux/arm-smccc.h>
+>>> +#include <linux/kstrtox.h>
+>>>   #include "qcom_scm.h"
+>>> -static bool download_mode = 
+>>> IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+>>> -module_param(download_mode, bool, 0);
+>>> +static u32 download_mode;
+>>>   #define SCM_HAS_CORE_CLK    BIT(0)
+>>>   #define SCM_HAS_IFACE_CLK    BIT(1)
+>>> @@ -32,6 +32,7 @@ module_param(download_mode, bool, 0);
+>>>   #define QCOM_DOWNLOAD_MODE_MASK 0x30
+>>>   #define QCOM_DOWNLOAD_FULLDUMP    0x1
+>>> +#define QCOM_DOWNLOAD_NODUMP    0x0
+>>>   struct qcom_scm {
+>>>       struct device *dev;
+>>> @@ -440,8 +441,9 @@ static int __qcom_scm_set_dload_mode(struct 
+>>> device *dev, bool enable)
+>>>       return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+>>>   }
+>>> -static void qcom_scm_set_download_mode(bool enable)
+>>> +static void qcom_scm_set_download_mode(u32 download_mode)
+>>>   {
+>>> +    bool enable = !!download_mode;
+>>>       bool avail;
+>>>       int ret = 0;
+>>> @@ -453,7 +455,7 @@ static void qcom_scm_set_download_mode(bool enable)
+>>>       } else if (__scm->dload_mode_addr) {
+>>>           ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
+>>>                   QCOM_DOWNLOAD_MODE_MASK,
+>>> -                enable ? QCOM_DOWNLOAD_FULLDUMP : 0);
+>>> +                enable ? download_mode : 0);
+>>
+>> Afaict, with QCOM_DOWNLOAD_NODUMP as 0, this says:
+>>
+>>    when download_mode is non-zero, write that value, otherwise write 0
+>>
+>> That should be the same as "write download_mode", so you should be able
+>> to drop the enable part.
+>>
+>>>       } else {
+>>>           dev_err(__scm->dev,
+>>>               "No available mechanism for setting download mode\n");
+>>> @@ -1419,6 +1421,49 @@ static irqreturn_t qcom_scm_irq_handler(int 
+>>> irq, void *data)
+>>>       return IRQ_HANDLED;
+>>>   }
+>>> +
+>>> +static int get_download_mode(char *buffer, const struct kernel_param 
+>>> *kp)
+>>> +{
+>>> +    int len = 0;
+>>> +
+>>> +    if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
+>>> +        len = sysfs_emit(buffer, "full\n");
+>>> +    else if (download_mode == QCOM_DOWNLOAD_NODUMP)
+>>> +        len = sysfs_emit(buffer, "off\n");
+>>> +
+>>> +    return len;
+>>> +}
+>>> +
+>>> +static int set_download_mode(const char *val, const struct 
+>>> kernel_param *kp)
+>>> +{
+>>> +    u32 old = download_mode;
+>>> +
+>>> +    if (!strncmp(val, "full", strlen("full"))) {
+>>
+>> strcmp loops over the two string until they differ and/or both are
+>> '\0'.
+>>
+>> As such, the only thing you achieve by using strncmp(.., T, strlen(T))
+>> is that the code has to iterate over T twice - and you make the code
+>> harder to read.
+> 
+> 
+> If we use strcmp, i need to use "full\n" which we would not want to do.
+> I think, we need to take this hit.
 
-This is exactly what I was talking about here:
+There is a special helper for the sysfs files. See sysfs_streq().
 
-https://lore.kernel.org/linux-devicetree/3fdc7db4-0df3-f922-3dbf-9f9250c271aa@arinc9.com/
+> 
+> -- Mukesh
+>>
+>>> +        download_mode = QCOM_DOWNLOAD_FULLDUMP;
+>>> +    } else if (!strncmp(val, "off", strlen("off"))) {
+>>> +        download_mode = QCOM_DOWNLOAD_NODUMP;
+>>> +    } else if (kstrtouint(val, 0, &download_mode) ||
+>>> +           !(download_mode == 0 || download_mode == 1)) {
+>>> +        download_mode = old;
+>>> +        pr_err("unknown download mode\n");
+>>
+>> This will result in a lone "unknown download mode" line somewhere in the
+>> kernel log, without association to any driver or any indication what the
+>> unknown value was.
+>>
+>>    pr_err("qcom_scm: unknown download mode: %s\n", val);
+>>
+>> Would give both context and let the reader know right there what value
+>> the code wasn't able to match.
+>>
+>> Regards,
+>> Bjorn
 
-Arınç
+-- 
+With best wishes
+Dmitry
+
