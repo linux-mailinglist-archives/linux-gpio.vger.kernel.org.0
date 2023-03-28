@@ -2,127 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 928016CC13C
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D38D66CC188
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233130AbjC1Nm6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 09:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
+        id S232762AbjC1N5w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 09:57:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232545AbjC1Nmx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:42:53 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3825FBDDC;
-        Tue, 28 Mar 2023 06:42:49 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        with ESMTP id S232709AbjC1N5v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:57:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6447AA9;
+        Tue, 28 Mar 2023 06:57:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 755956603152;
-        Tue, 28 Mar 2023 14:42:47 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1680010968;
-        bh=qsVPM3z/5gvfqY0OJHUnJjWl2dyu6dw5XnunJEzfZJU=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=gJRtMbN8bhOpMo9aGLczdnRGpiM9202XYqLjcbrrxp9dntyv/7Mn45lQpYNtyHWcM
-         O/sUv4uKMTb9xLveJADK6yFkUcUfnPSsuuKHxpxVAlDUhGPnPMGPra0kfXUjUyoAUS
-         OqqPNamE1+8wujXki+tMjPXUjr2s6R8ww1fq57vWZdKOhD0ybk6GGZ0IQAKEoTSMFp
-         iBci9Gb49fW4be44BOH1eG7IxJNM6Ti8XC2+cxwjo44Esg1mJP63/w8swMgZo0idA5
-         TU1aGsa8KEbTEIU6tznM2zaGj60NZZdf4xka/a8juo22DrNQFVMoGtlw+a3hlNEYKu
-         dxLNdhMvzAmhQ==
-Message-ID: <9a9837ce-f800-f960-a82a-55ef6e71e95d@collabora.com>
-Date:   Tue, 28 Mar 2023 15:42:44 +0200
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 41617617E3;
+        Tue, 28 Mar 2023 13:57:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01BDC4339B;
+        Tue, 28 Mar 2023 13:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680011869;
+        bh=c4euR0Zd/JmQDuRN94iXNF8EoUEzpV1yUc9zAbWxy8o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HoC6h7QU4XWblNdAiVGhRKVv9EmdFymQkbE2FWmAu2SiD0CIjYkyGvvpOGMiA4Ccx
+         RjRSwHjaNhaeDy3y08Hq7vOR2WxCx7o0QaPTg6uqD8bLrVXZVqCA/aWwbFkZPtNpd8
+         hmMyAiMec4EsjjTqkRnut6UhjQ9vDfte3ZjjlJfDLPa74oxO7g4uW6ymYrlaFwYvZw
+         mO9GcFUmi3nWIAMCTRzkvXc6W18kzgQWvMINkVemukvzff0Yc6+ZPq9/42Qo+sUghM
+         CAjkUp1Q4BTITN/W2b1Vff7BitGUaYo6Mtydz6boxAk0bvyiUmbA+3udCC+YlRuG9h
+         lgCGJjHOWVktw==
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5419d4c340aso230970667b3.11;
+        Tue, 28 Mar 2023 06:57:49 -0700 (PDT)
+X-Gm-Message-State: AAQBX9ctDLKIDq7l0UyFEEP/cdw55LiP0YND1XG048eD2uiZ0lRBK10k
+        pdhKvEtKDv4c8UZL4wcMBv5LENolX5zm9kapdA==
+X-Google-Smtp-Source: AKy350bNpz7Bd9Ci5RKAGrw9sEV5urpvR4mBLxm8yWSi0X2LA+KdtSuZf7hKYv3CptV9NNhk2Tgm4cfMKtlSJaP0l5k=
+X-Received: by 2002:a81:4410:0:b0:545:a7d8:f278 with SMTP id
+ r16-20020a814410000000b00545a7d8f278mr6922784ywa.5.1680011868714; Tue, 28 Mar
+ 2023 06:57:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: mediatek: deprecate custom bias
- pull properties for mt8365
-Content-Language: en-US
-To:     Alexandre Mergnat <amergnat@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20230327-cleanup-pinctrl-binding-v1-0-b695e32e4f2e@baylibre.com>
- <20230327-cleanup-pinctrl-binding-v1-2-b695e32e4f2e@baylibre.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230327-cleanup-pinctrl-binding-v1-2-b695e32e4f2e@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
+In-Reply-To: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 28 Mar 2023 08:57:37 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJvOZvw7BKYZRTf3gQwyVOmhva8BFHYF8-rf5uyo_HMUA@mail.gmail.com>
+Message-ID: <CAL_JsqJvOZvw7BKYZRTf3gQwyVOmhva8BFHYF8-rf5uyo_HMUA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: fsl-imx-gpio: update gpio-ranges
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, stefan@agner.ch, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 28/03/23 15:06, Alexandre Mergnat ha scritto:
-> In order to be more generic, "mediatek,pull-up-adv" and
-> "mediatek,pull-down-adv" should be deprecated. Use "bias-pull-up" and
-> "bias-pull-down" instead.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+On Tue, Mar 28, 2023 at 12:24=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> one is not enough for i.MX8, so enlarge it.
+
+But it wasn't 1, it was unbounded. As dtbs_check shows, the new bounds
+aren't right either.
+
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->   .../bindings/pinctrl/mediatek,mt8365-pinctrl.yaml  | 32 +++++++++++++++++++---
->   1 file changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
-> index 347f533776ba..4ebc7f1caf55 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
-> @@ -72,12 +72,32 @@ patternProperties:
->             bias-disable: true
->   
->             bias-pull-up:
-> +            oneOf:
-> +              - type: boolean
-> +              - enum: [0, 1, 2, 3]
-> +                description: Pull up R1/R0 type define value.
->               description: |
-> -              Besides generic pinconfig options, it can be used as the pull up
-> -              settings for 2 pull resistors, R0 and R1. User can configure those
-> -              special pins.
-> +              For pull up type is normal, it don't need add R1/R0 define.
-> +              For pull up type is R1/R0 type, it can add value to set different
-> +              resistance. Valid arguments are described as below:
-> +              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
-> +              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
-> +              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
-> +              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
->   
-> -          bias-pull-down: true
-> +          bias-pull-down:
-> +            oneOf:
-> +              - type: boolean
-> +              - enum: [0, 1, 2, 3]
-> +                description: Pull down R1/R0 type define value.
-> +            description: |
-> +              For pull down type is normal, it don't need add R1/R0 define.
-> +              For pull down type is R1/R0 type, it can add value to set
-> +              different resistance. Valid arguments are described as below:
-> +              0: (R1, R0) = (0, 0) which means R1 disabled and R0 disabled.
-> +              1: (R1, R0) = (0, 1) which means R1 disabled and R0 enabled.
-> +              2: (R1, R0) = (1, 0) which means R1 enabled and R0 disabled.
-> +              3: (R1, R0) = (1, 1) which means R1 enabled and R0 enabled.
->   
->             input-enable: true
->   
-> @@ -123,7 +143,9 @@ patternProperties:
->               enum: [0, 1, 2, 3, 4, 5, 6, 7]
->   
->             mediatek,pull-up-adv:
-> +            deprecated: true
-
-Same for this one, removing it shouldn't be a ABI breakage.... but please wait
-for Krzysztof or Rob to confirm that before pushing a v2.
-
-
+>  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/D=
+ocumentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> index be56c3faec0f..e303455eadce 100644
+> --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> @@ -66,7 +66,10 @@ properties:
+>
+>    gpio-controller: true
+>    gpio-line-names: true
+> -  gpio-ranges: true
+> +
+> +  gpio-ranges:
+> +    minItems: 1
+> +    maxItems: 16
+>
+>    power-domains:
+>      maxItems: 1
+> --
+> 2.37.1
+>
