@@ -2,109 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D5A6CBA6F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 11:24:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF806CBAE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 11:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232349AbjC1JYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 05:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
+        id S232891AbjC1Jap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 05:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232324AbjC1JYS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 05:24:18 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448FB5B9C;
-        Tue, 28 Mar 2023 02:24:13 -0700 (PDT)
-Received: from [192.168.1.155] ([92.225.143.37]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MGi6m-1pc5Lj18Gw-00DswJ; Tue, 28 Mar 2023 11:23:17 +0200
-Message-ID: <716362db-7355-7f10-6b8b-ee59ad22db41@metux.net>
-Date:   Tue, 28 Mar 2023 11:23:10 +0200
+        with ESMTP id S232563AbjC1JaD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 05:30:03 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339316EA9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 02:29:08 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id bi9so14916160lfb.12
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 02:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679995744;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dk18DfrsZuq+WUDLgd3KU7WGbTjCqrV4Y3VCrkv2ukQ=;
+        b=nIDsD/3Uhou4S/AMUshlZp4REkr/B0iWYEkE6L4/jPyZHbFH8Ch8zzK4aJkHXXUrnT
+         /2PQz1XFLXG8rsvASOXccqnRhAN8CSqqo9WhYimiuuWhoRZkfX1r1tRs5Jd0lJJ00Wd7
+         e2LtZarRRPsvnEjVInvK0//wLA0tte8jIWd9f5xKCWaW+Nl/6YDMEJLwW6etgjayPXiG
+         8exy33d9pFfkBFGK6lrxOn05rm6OhrUp+pQEX/YnpVd6O7krqhIatLwbPiUNgv/MVJtf
+         0p47OKaHBOV1RQcaCTaUHC5eXtr0tz4hjKC1q0IjQ53D1LGfAXQr1qKrz5JS2OOiaXUV
+         kqfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679995744;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dk18DfrsZuq+WUDLgd3KU7WGbTjCqrV4Y3VCrkv2ukQ=;
+        b=2b/d6PfeiuPu9Nuyq3k7aYZ21U+ZCDVlOjd0BrY5GgdfZBNLjbQvxE2rNp0H0I6GZU
+         eoFS46HZATsoynFh6JSK9A3tWTLUsnf8MwJcHJbPBR9IMDYVFn6bdujKtHrBrq06/0Xn
+         833cF9RhlfUw2YPcsNxglC8kPebt7khkTH2RciNVYPJmlSrB2BN9yQbaduFU4MQDk2Mv
+         wyvoYcBSaE6U2Ciyn0rMGFnGji17vet18+RIOXlrJt+7L5Lc7CoXyTSxsWE6k7Y/wufW
+         TV1ktSsZYLWswbuV0vl18sqVOIbtsyg0wxUNYJmIiZrmHHkQjB2GSrHZhgMwHsFPlD9C
+         qbgg==
+X-Gm-Message-State: AAQBX9fLYeyaoFUK95qKCaJg3uUhptf7adEEZjefjtdgz7F0x9Du2Rvc
+        Ctg4u0GhelsT1mmcq/HSBWvF59gedb4Vv19Y1e4=
+X-Google-Smtp-Source: AKy350Y28HG8gD7zXHaAV6SDfZ00y0AiPHuQdsm7OVeyfnyXgpemP5e6hR/H2LQr0pjNDeREEXw+WQ==
+X-Received: by 2002:ac2:5a04:0:b0:4e8:487a:7c2e with SMTP id q4-20020ac25a04000000b004e8487a7c2emr4639191lfn.14.1679995743748;
+        Tue, 28 Mar 2023 02:29:03 -0700 (PDT)
+Received: from [192.168.1.101] (abxj225.neoplus.adsl.tpnet.pl. [83.9.3.225])
+        by smtp.gmail.com with ESMTPSA id w18-20020a056512099200b004dab932248fsm4980080lft.180.2023.03.28.02.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 02:29:03 -0700 (PDT)
+Message-ID: <ce24ffc4-3c0c-bf1b-354e-e5ee9db5d5c3@linaro.org>
+Date:   Tue, 28 Mar 2023 11:29:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2] drivers/gpio : Remove redundant
- platform_set_drvdata().
-Content-Language: tl
-To:     Lizhe <sensor1010@163.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, geert+renesas@glider.be, info@metux.net,
-        rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        f.fainelli@gmail.com, sbranden@broadcom.com, shc_work@mail.ru,
-        j-keerthy@ti.com, hoan@os.amperecomputing.com,
-        fancer.lancer@gmail.com, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, kaloz@openwrt.org,
-        khalasa@piap.pl, keguang.zhang@gmail.com, daniel@thingy.jp,
-        romain.perier@gmail.com, matthias.bgg@gmail.com,
-        angelogioacchino.delregno@collabora.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, mani@kernel.org,
-        ludovic.desroches@microchip.com, andy@kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, jonathanh@nvidia.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, michal.simek@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20230319115925.1317654-1-sensor1010@163.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-In-Reply-To: <20230319115925.1317654-1-sensor1010@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ujdla9v/iyjL3L1Cm+XjJDsalTUKxgU24jiOGfnRDDlv+6BxEBk
- 28H46E0XI7p7p9qVjalxDWlIy6xfzIDACEQPVcoEKmfJeBTZUDYzWzsBgiTF5sK7xKSXsMU
- 6Ne5GFLPg3iF8SZpcov4SyijjbvxZuHNNahhvxW/b6vh/XwvP38kR4/h5+o9k+BYKi+yuY4
- IR9s2WsFAuBtirUVyTm1A==
-UI-OutboundReport: notjunk:1;M01:P0:MoGEpRKG1bo=;5T7PdYmcLG5pYfzDf8wQM6gX+1u
- u6+1T7eGv8suLuqhFsVIQetTiIHhQeLdoWrYLOJykRD4kcwK9iIB1R2Ca6YAta5bggT8ITXWp
- kcxl0zTa4ujpJwuro9HKDULm2lmwI2kytGe/Zytpl54o/yMIIfUHys1TRdUugR2GX5JoEVusy
- m7NL6/bKinALAavCcvyl+yWz8iEFkUCGAjBkwRq6GcK+Vfn59Qf7Ix0NssyHKIRXiJfCpVcYl
- 7WLb8jY8RcqzNuiTT5NZi/D4uEktukiHS3sOhJzbf5a+yfLg8nyEdQeUaPxU7XogDjK1cGIM/
- bC0jFNv8FWtQgNYeKhBQsMaLJlgnU4mLgu4ZlCnW0VNCVrkT/t77bdnYZ+KGrOMV1hX+5ytNP
- dsbmjC+D8CuFxyPhuO51HbjyV24/bG7u/ai8V0eGP7FsUxZTQ90poeILm6KZOgK51Kw3FAQBc
- gUDTVLam3E6T6uEH35Ub1whNqJ/lmrSwrzT+Z+ytclVP+A6Y5ePVGynFAYBCpEsZ7qgJECWYH
- 1haSxsR64jHGcikbbyr5rWTWWvJo93rP4HizhuoFUdiHRjpcjDIhHCAMJ/uu+wWQ+3GznrxTb
- PuQWQXNZ9dTYb627WNCdmUGhCKlnju8FIAE5EJGm2qPT8TFuZldhrSZWZ1sdxgKTFRe7VoUBk
- AGpHH9uEKGUANhP09xvX5f9fbGpGuwMmmasM0yXdMA==
-X-Spam-Status: No, score=0.0 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 17/18] regulator: qcom-rpmh: add support for pmm8654au
+ regulators
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+References: <20230327125316.210812-1-brgl@bgdev.pl>
+ <20230327125316.210812-18-brgl@bgdev.pl>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230327125316.210812-18-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19.03.23 12:59, Lizhe wrote:
-
-Hi,
-
-> platform_set_drvdata() is redundant in these functions.
-> the purpose of calling this function is to place data
-> in *driver_data. but the data is not retrieved in these
-> functions
-
-I appreciate your contribution, but I have to NAK for the gpio-amd-fch 
-driver: it would at least create a memleak (driver core can't free the
-driver_data when the driver is unloaded).
-
-In general, patches to drivers should be splitted per driver, unless 
-there's a hard reason to do otherwise. That's important for the
-individual maintainers being able to review patches to their drivers.
-If each maintainer can only ack on pieces of the patch, somebody else
-would need to split out those things that could be picked. Really too
-complicated.
 
 
---mtx
+On 27.03.2023 14:53, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Add the RPMH regulators exposed by the PMM8654au PMIC and its variants.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> ---
+I can't check the validity of the regulator types and ranges, but
+for the overall picture:
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
+>  drivers/regulator/qcom-rpmh-regulator.c | 55 +++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+> index 4826d60e5d95..b0a58c62b1e2 100644
+> --- a/drivers/regulator/qcom-rpmh-regulator.c
+> +++ b/drivers/regulator/qcom-rpmh-regulator.c
+> @@ -694,6 +694,16 @@ static const struct rpmh_vreg_hw_data pmic5_pldo_lv = {
+>  	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>  };
+>  
+> +static const struct rpmh_vreg_hw_data pmic5_pldo515_mv = {
+> +	.regulator_type = VRM,
+> +	.ops = &rpmh_regulator_vrm_drms_ops,
+> +	.voltage_range = REGULATOR_LINEAR_RANGE(1800000, 0, 187, 8000),
+> +	.n_voltages = 188,
+> +	.hpm_min_load_uA = 10000,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
+> +	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+> +};
+> +
+>  static const struct rpmh_vreg_hw_data pmic5_nldo = {
+>  	.regulator_type = VRM,
+>  	.ops = &rpmh_regulator_vrm_drms_ops,
+> @@ -704,6 +714,16 @@ static const struct rpmh_vreg_hw_data pmic5_nldo = {
+>  	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>  };
+>  
+> +static const struct rpmh_vreg_hw_data pmic5_nldo515 = {
+> +	.regulator_type = VRM,
+> +	.ops = &rpmh_regulator_vrm_drms_ops,
+> +	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 210, 8000),
+> +	.n_voltages = 211,
+> +	.hpm_min_load_uA = 30000,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
+> +	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+> +};
+> +
+>  static const struct rpmh_vreg_hw_data pmic5_hfsmps510 = {
+>  	.regulator_type = VRM,
+>  	.ops = &rpmh_regulator_vrm_ops,
+> @@ -749,6 +769,15 @@ static const struct rpmh_vreg_hw_data pmic5_ftsmps525_mv = {
+>  	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
+>  };
+>  
+> +static const struct rpmh_vreg_hw_data pmic5_ftsmps527 = {
+> +	.regulator_type = VRM,
+> +	.ops = &rpmh_regulator_vrm_ops,
+> +	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
+> +	.n_voltages = 215,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_smps,
+> +	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
+> +};
+> +
+>  static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
+>  	.regulator_type = VRM,
+>  	.ops = &rpmh_regulator_vrm_ops,
+> @@ -937,6 +966,28 @@ static const struct rpmh_vreg_init_data pmm8155au_vreg_data[] = {
+>  	{}
+>  };
+>  
+> +static const struct rpmh_vreg_init_data pmm8654au_vreg_data[] = {
+> +	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps527,  "vdd-s1"),
+> +	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps527,  "vdd-s2"),
+> +	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps527,  "vdd-s3"),
+> +	RPMH_VREG("smps4",  "smp%s4",  &pmic5_ftsmps527,  "vdd-s4"),
+> +	RPMH_VREG("smps5",  "smp%s5",  &pmic5_ftsmps527,  "vdd-s5"),
+> +	RPMH_VREG("smps6",  "smp%s6",  &pmic5_ftsmps527,  "vdd-s6"),
+> +	RPMH_VREG("smps7",  "smp%s7",  &pmic5_ftsmps527,  "vdd-s7"),
+> +	RPMH_VREG("smps8",  "smp%s8",  &pmic5_ftsmps527,  "vdd-s8"),
+> +	RPMH_VREG("smps9",  "smp%s9",  &pmic5_ftsmps527,  "vdd-s9"),
+> +	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_nldo515,    "vdd-s9"),
+> +	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_nldo515,    "vdd-l2-l3"),
+> +	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo515,    "vdd-l2-l3"),
+> +	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_nldo515,    "vdd-s9"),
+> +	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_nldo515,    "vdd-s9"),
+> +	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_nldo515,    "vdd-l6-l7"),
+> +	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_nldo515,    "vdd-l6-l7"),
+> +	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo515_mv, "vdd-l8-l9"),
+> +	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,       "vdd-l8-l9"),
+> +	{}
+> +};
+> +
+>  static const struct rpmh_vreg_init_data pm8350_vreg_data[] = {
+>  	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
+>  	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
+> @@ -1431,6 +1482,10 @@ static const struct of_device_id __maybe_unused rpmh_regulator_match_table[] = {
+>  		.compatible = "qcom,pmm8155au-rpmh-regulators",
+>  		.data = pmm8155au_vreg_data,
+>  	},
+> +	{
+> +		.compatible = "qcom,pmm8654au-rpmh-regulators",
+> +		.data = pmm8654au_vreg_data,
+> +	},
+>  	{
+>  		.compatible = "qcom,pmx55-rpmh-regulators",
+>  		.data = pmx55_vreg_data,
