@@ -2,105 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D33256CC10F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:35:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2969E6CC135
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:42:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232842AbjC1NfW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 09:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60960 "EHLO
+        id S232812AbjC1NmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 09:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232867AbjC1NfV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:35:21 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D938CA19;
-        Tue, 28 Mar 2023 06:34:41 -0700 (PDT)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 032DA1BF20A;
-        Tue, 28 Mar 2023 13:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1680010471;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bixo3EguG8ry3BhHfrwgjJLk/bpjG+PfEZUK6cyM/PQ=;
-        b=K0PnbLtSisL5Nl2aFIXgSep1EByLG/r1ECQrxS6lrEkLyiB6b3Bh6OheucZ4dowZy56w9e
-        njCF9/6NJ5Jwd/n95AFBmAjMTCtH3uGy7WJnEucanXEvQQLWQsqOGRm7jMWiPUhOFM1B90
-        QlZ5LKsKaiIuT6KYktriqV7MN9kio4/qVWnbfEOH0eFJ70Nuv9eMCKdPPyCplLINI+6vy3
-        xpi5erUfIjaoRcpYa/qak1mmgDW9CWQRQsQZQT7NUWyUP8l5sxf39akSTuuwVyeImtSG9F
-        Kl4IRLDQkY0/uou7XqMUUS3AbxSeTNJystmt39nr6H9rVIPK/DslL96dTHU4LA==
-Date:   Tue, 28 Mar 2023 15:34:29 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Esteban Blanc <eblanc@baylibre.com>
-Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        a.zummo@towertech.it, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        jpanis@baylibre.com, jneanne@baylibre.com, sterzik@ti.com,
-        u-kumar1@ti.com
-Subject: Re: [PATCH v2 1/3] rtc: tps6594: add driver for TPS6594 PMIC RTC
-Message-ID: <20230328133429ff45c492@mail.local>
-References: <20230328091448.648452-1-eblanc@baylibre.com>
- <20230328091448.648452-2-eblanc@baylibre.com>
- <202303280929448e41808d@mail.local>
- <CRI1AQ7OIF6F.2G26C7VQKL5P0@burritosblues>
+        with ESMTP id S232842AbjC1NmJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:42:09 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CE67A88;
+        Tue, 28 Mar 2023 06:41:53 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 3D5286603152;
+        Tue, 28 Mar 2023 14:41:51 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1680010911;
+        bh=mdZaeHtWUcUws+H6KHaUGd/J+/ss4cO3a1++cudlA0E=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=LZG/eBD8utsG50ZHCgvDv2s5UltJ6GMYEzujJ260sZbFSgxCRB/ndUNYo8UTgpOOL
+         5Cc4T7oYgSQBhbd/KU+xGIwgwNj+ikhxH1KEL/jyD5KGCnGwEjxK/dL/gkCM1YcCiu
+         z0/ido9OaQyUi2aogP5cMgAurotCLPcr4+ay34Pen7CFJViiovacmbEuNv74jRn7Zs
+         OX2nx2h9AG/TjxUkH/3fPUP5eZZ/+lS71Uvmw8cG7Qiyc1TxhAbGXarYODvSfaG8vK
+         /NemcTJ5C6JSYBnZuN76G1gsJd7dWSklXXKPbk5+rRkfI6kLgYDUolu+Xanq10LbL3
+         KizIBlytgiuNg==
+Message-ID: <334089fd-f0e8-bf63-5100-d8632c478ccc@collabora.com>
+Date:   Tue, 28 Mar 2023 15:41:48 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CRI1AQ7OIF6F.2G26C7VQKL5P0@burritosblues>
-X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: mediatek: deprecate custom
+ drive strength property
+Content-Language: en-US
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20230327-cleanup-pinctrl-binding-v1-0-b695e32e4f2e@baylibre.com>
+ <20230327-cleanup-pinctrl-binding-v1-1-b695e32e4f2e@baylibre.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230327-cleanup-pinctrl-binding-v1-1-b695e32e4f2e@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=0.2 required=5.0 tests=DKIM_INVALID,DKIM_SIGNED,
+        NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/03/2023 15:01:05+0200, Esteban Blanc wrote:
-> On Tue Mar 28, 2023 at 11:29 AM CEST, Alexandre Belloni wrote:
-> > Hello,
-> >
-> > On 28/03/2023 11:14:46+0200, Esteban Blanc wrote:
-> > > +	/* Start rtc */
-> > > +	ret = regmap_set_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
-> > > +			      TPS6594_BIT_STOP_RTC);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	mdelay(100);
-> > > +
-> > > +	/*
-> > > +	 * RTC should be running now. Check if this is the case.
-> > > +	 * If not it might be a missing oscillator.
-> > > +	 */
-> > > +	ret = regmap_test_bits(tps->regmap, TPS6594_REG_RTC_STATUS,
-> > > +			       TPS6594_BIT_RUN);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +	if (ret == 0)
-> > > +		return -ENODEV;
-> > > +
-> > > +	/* Stop RTC until first call to `tps6594_rtc_set_time */
-> > > +	ret = regmap_clear_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
-> > > +				TPS6594_BIT_STOP_RTC);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> >
-> > This whole block must not be executed when the RTC is already running,
-> > else, you are stopping a perfectly running RTC.
+Il 28/03/23 15:06, Alexandre Mergnat ha scritto:
+> Deprecate mediatek,drive-strength-adv which shall not exist, that was an
+> unnecessary property that leaked upstream from downstream kernels and
+> there's no reason to use it.
 > 
-> I'm not sure to get your point. You mean that during probe, the driver
-> might encounter an RTC device that is already running with a correct
-> timestamp? How would this be possible? A previous bootstage or the
-> driver was removed then re-inserted again?
+> The generic property drive-strength-microamp should be used instead.
 > 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>   .../devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml      | 8 ++++++--
+>   .../devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml      | 6 +++++-
+>   2 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> index c30cd0d010dd..b82a066b91ec 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
 
-The whole point of having an RTC is that the time tracking survives a
-reboot so yes, I would expect the RTC to have a valid timestamp at probe
-time.
+Thanks for doing MT8183!!!
 
+> @@ -110,8 +110,13 @@ patternProperties:
+>             drive-strength:
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+..snip..
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> index 4b96884a1afc..347f533776ba 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> @@ -91,8 +91,13 @@ patternProperties:
+>   
+>             input-schmitt-disable: true
+>   
+> +          drive-strength-microamp:
+> +            enum: [125, 250, 500, 1000]
+> +
+>             mediatek,drive-strength-adv:
+> +            deprecated: true
+
+In the case of MT8365, since there's *no* devicetree using this property, *at all*,
+I think you can even just entirely remove this block, as that should not be
+considered an ABI breakage in that case.
+
+Krzysztof, can you please confirm?
+
+Cheers!
+Angelo
