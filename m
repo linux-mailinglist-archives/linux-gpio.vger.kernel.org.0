@@ -2,79 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E20E6CB93C
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 10:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C477E6CB9A0
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 10:43:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230497AbjC1IVv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 04:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37780 "EHLO
+        id S230105AbjC1Im7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 04:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbjC1IVq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 04:21:46 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D3E4EE2;
-        Tue, 28 Mar 2023 01:21:16 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32S6XIhE013994;
-        Tue, 28 Mar 2023 08:21:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=kmm9w/HUF5DL0XlfCw9kOGGhBrw7rQ+kN11GBM7+yFg=;
- b=WWL4l/fcTEW3Z0g5HnqHby09RYAmWtpKNU+gUTkU221k0z9H3LPXAhjJ/Lts1kRbFIfG
- bzBYoq8LsWJLgAxek1w3hJs0RuewWIywwiTmwMGc4bchNT/D0Q+jzye536pMdOtZPRXk
- UIasJtV2ALC3E4VHDiCWDGctVdneR5cs2iLGFqYnX09iQUBmcfR489TYrVCtmdsEbJBt
- XzmPB0E9nIxG7TLtSWUzwp/1Yp93IyZfN2ynIEDf9kgAjOq+EKFBxnzswrftqQAQf/QX
- t3qDDlMjy47i9cBXXW4nMNSFsQQi4WlAQUis/KTFkQ+HuqJbXe4/gWo29B39rCxT/Oly RA== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkcm2tc1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 08:21:13 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32S8LCgY019672
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 08:21:12 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 28 Mar
- 2023 01:21:02 -0700
-Message-ID: <4fa90274-9902-dd9a-f566-29c6956d8175@quicinc.com>
-Date:   Tue, 28 Mar 2023 13:50:59 +0530
+        with ESMTP id S230326AbjC1Im5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 04:42:57 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB6D3AA7
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 01:42:54 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id c29so14813925lfv.3
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 01:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679992972;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eXAO2QVztc0wIt4GbZ6rGEc3cgJK8TnMWwwoFL/En1o=;
+        b=K2+jVIubCiT4gJ6wBkkGdON9SRmp178AuQrKMbBcaGesnpoyocjauSMco50YGFHn2c
+         2EOImgAs7VV8pUkg+INg4bNkk8flMPrrVlQTk6BLrK2q5nguJBS4TlHkdaU/Ii9FOSh6
+         NbflJpGC1ApBm8IqpuF1srmnpk2qkYzFj+WA5qLPZ0LBBJUTKXScxUZH+INH8R+UO+xb
+         ++Ux58FkUXhhNBPP83PgMT+jERsB/hj7Ns7rD1rKQfdRM6Sc60AxG17n2IpL+UBfwLhj
+         RzvPzna8mz4Qoxpdqw5Z4CME8zPwawPE3jQ68vALwVzHRRBkhvuJRe6T0XctEwTSUCu3
+         WE4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679992972;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eXAO2QVztc0wIt4GbZ6rGEc3cgJK8TnMWwwoFL/En1o=;
+        b=BJkKtNubYYNXzSUzoZAOhsrJSaJvG4Ka6SGKugMzqTOnc9w8uZB3eZtQha1EONtsFe
+         eejXeHJ1BM4pfEpQrm8QvPKWsRtsTnx4YEeecs18FxlZEHdR6TGNR2tGj6yC7Fv2l9XI
+         HzjEymQUSg6dSH5lS0baKTTU9dL/GelUQjnoX8G8NnLBIdHyq3f0s03gTM8ppNNerL+Y
+         dH3Y5KSxd+Y4zmmN6r7o4/OR9UaQ7R/dhJc98jcGb+pb/Z4QbP+n58LsAhytrBZPp9u8
+         F0tjJrt2R/VN2Wp30XDROtThSO5ZaaWzIz+aJdDuRhn02+X6E1miUOBv94GHQ+QGPRd/
+         x7Yw==
+X-Gm-Message-State: AAQBX9cSU3o1RM9cx+elBOR8pc4SyjCVNyvhz8in69HH9r9wgbzJsi+e
+        4QAQO1OYhLZ0zVzhe0jgP+YCRw==
+X-Google-Smtp-Source: AKy350ZSAWagGBNHA5PmKfaemuAQKtAXuaYDZnKQL0TPA7YYUOdEM3bAwyuwhOZQCrm4lGjdbmFE6A==
+X-Received: by 2002:ac2:59d9:0:b0:4dd:cbf3:e981 with SMTP id x25-20020ac259d9000000b004ddcbf3e981mr4338231lfn.28.1679992972560;
+        Tue, 28 Mar 2023 01:42:52 -0700 (PDT)
+Received: from [192.168.1.101] (abxj225.neoplus.adsl.tpnet.pl. [83.9.3.225])
+        by smtp.gmail.com with ESMTPSA id t18-20020a2e9c52000000b002934b5d6a61sm4939271ljj.121.2023.03.28.01.42.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 01:42:52 -0700 (PDT)
+Message-ID: <cf530ceb-ca4c-5f5e-db61-60f856dafecb@linaro.org>
+Date:   Tue, 28 Mar 2023 10:42:50 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 5/5] firmware: qcom_scm: Add multiple download mode
- support
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH V10 3/4] arm64: dts: qcom: Add support for ipq9574 SoC and
+ RDP433 variant
 Content-Language: en-US
-To:     Bjorn Andersson <andersson@kernel.org>
-CC:     <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <1679935281-18445-1-git-send-email-quic_mojha@quicinc.com>
- <1679935281-18445-6-git-send-email-quic_mojha@quicinc.com>
- <20230327182723.bopz73a5as4ft74g@ripper>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20230327182723.bopz73a5as4ft74g@ripper>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: J4SD-L73fgLzGT_b1TL8NzMqMFMMSe4u
-X-Proofpoint-GUID: J4SD-L73fgLzGT_b1TL8NzMqMFMMSe4u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-27_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303280069
+To:     Devi Priya <quic_devipriy@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
+        nfraprado@collabora.com, broonie@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+References: <20230327132718.573-1-quic_devipriy@quicinc.com>
+ <20230327132718.573-4-quic_devipriy@quicinc.com>
+ <CAA8EJprTm1sZ8fnfNee+NJTiaFq17QwWaEnSoJWVYs_GY65xFg@mail.gmail.com>
+ <a6225636-7abb-3c5c-c78f-8d40c25167b9@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <a6225636-7abb-3c5c-c78f-8d40c25167b9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -83,83 +92,190 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 3/27/2023 11:57 PM, Bjorn Andersson wrote:
-> On Mon, Mar 27, 2023 at 10:11:21PM +0530, Mukesh Ojha wrote:
->> Currently, scm driver only supports full dump when download
->> mode is selected. Add support to enable minidump as well both
->> dump(full dump + minidump).
+On 28.03.2023 09:31, Devi Priya wrote:
+> 
+> 
+> On 3/27/2023 8:15 PM, Dmitry Baryshkov wrote:
+>> On Mon, 27 Mar 2023 at 16:28, Devi Priya <quic_devipriy@quicinc.com> wrote:
+>>>
+>>> Add initial device tree support for Qualcomm IPQ9574 SoC and
+>>> Reference Design Platform(RDP) 433 which is based on IPQ9574
+>>> family of SoCs
+>>>
+>>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+>>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+>>> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>>> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>>> ---
+>>>   Changes in V10:
+>>>          - Renamed the Board Device Tree Source to use the RDP numbers
+>>>          - Updated the Makefile, subject and commit message accordingly
+>>>
+>>>   arch/arm64/boot/dts/qcom/Makefile           |   1 +
+>>>   arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts |  84 ++++++
+>>>   arch/arm64/boot/dts/qcom/ipq9574.dtsi       | 270 ++++++++++++++++++++
+>>>   3 files changed, 355 insertions(+)
+>>>   create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>>   create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>>> index 1a29403400b7..52f1f92c5195 100644
+>>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>>> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_QCOM) += ipq6018-cp01-c1.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk01.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c1.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c2.dtb
+>>> +dtb-$(CONFIG_ARCH_QCOM)        += ipq9574-rdp433.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-acer-a1-724.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-alcatel-idol347.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-asus-z00l.dtb
+>>> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>> new file mode 100644
+>>> index 000000000000..2ce8e09e7565
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>> @@ -0,0 +1,84 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>>> +/*
+>>> + * IPQ9574 RDP433 board device tree source
+>>> + *
+>>> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
+>>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include "ipq9574.dtsi"
+>>> +
+>>> +/ {
+>>> +       model = "Qualcomm Technologies, Inc. IPQ9574/AP-AL02-C7";
+>>> +       compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
+>>> +
+>>> +       aliases {
+>>> +               serial0 = &blsp1_uart2;
+>>> +       };
+>>> +
+>>> +       chosen {
+>>> +               stdout-path = "serial0:115200n8";
+>>> +       };
+>>> +};
+>>> +
+>>> +&blsp1_uart2 {
+>>> +       pinctrl-0 = <&uart2_pins>;
+>>> +       pinctrl-names = "default";
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&sdhc_1 {
+>>> +       pinctrl-0 = <&sdc_default_state>;
+>>> +       pinctrl-names = "default";
+>>> +       mmc-ddr-1_8v;
+>>> +       mmc-hs200-1_8v;
+>>> +       mmc-hs400-1_8v;
+>>> +       mmc-hs400-enhanced-strobe;
+>>> +       max-frequency = <384000000>;
+>>> +       bus-width = <8>;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&sleep_clk {
+>>> +       clock-frequency = <32000>;
+>>> +};
+>>> +
+>>> +&tlmm {
+>>> +       sdc_default_state: sdc-default-state {
+>>> +               clk-pins {
+>>> +                       pins = "gpio5";
+>>> +                       function = "sdc_clk";
+>>> +                       drive-strength = <8>;
+>>> +                       bias-disable;
+>>> +               };
+>>> +
+>>> +               cmd-pins {
+>>> +                       pins = "gpio4";
+>>> +                       function = "sdc_cmd";
+>>> +                       drive-strength = <8>;
+>>> +                       bias-pull-up;
+>>> +               };
+>>> +
+>>> +               data-pins {
+>>> +                       pins = "gpio0", "gpio1", "gpio2",
+>>> +                              "gpio3", "gpio6", "gpio7",
+>>> +                              "gpio8", "gpio9";
+>>> +                       function = "sdc_data";
+>>> +                       drive-strength = <8>;
+>>> +                       bias-pull-up;
+>>> +               };
+>>> +
+>>> +               rclk-pins {
+>>> +                       pins = "gpio10";
+>>> +                       function = "sdc_rclk";
+>>> +                       drive-strength = <8>;
+>>> +                       bias-pull-down;
+>>> +               };
+>>> +       };
+>>> +};
+>>> +
+>>> +&xo_board_clk {
+>>> +       clock-frequency = <24000000>;
+>>> +};
+>>> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+>>> new file mode 100644
+>>> index 000000000000..3bb7435f5e7f
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+>>> @@ -0,0 +1,270 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>>> +/*
+>>> + * IPQ9574 SoC device tree source
+>>> + *
+>>> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
+>>> + * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
+>>> + */
+>>> +
+>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +#include <dt-bindings/clock/qcom,ipq9574-gcc.h>
+>>> +#include <dt-bindings/reset/qcom,ipq9574-gcc.h>
+>>> +
+>>> +/ {
+>>> +       interrupt-parent = <&intc>;
+>>> +       #address-cells = <2>;
+>>> +       #size-cells = <2>;
+>>> +
+>>> +       clocks {
+>>> +               bias_pll_ubi_nc_clk: bias-pll-ubi-nc-clk {
+>>> +                       compatible = "fixed-clock";
+>>> +                       clock-frequency = <353000000>;
+>>> +                       #clock-cells = <0>;
+>>> +               };
 >>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> ---
->>   drivers/firmware/qcom_scm.c | 13 +++++++++++--
->>   1 file changed, 11 insertions(+), 2 deletions(-)
+>> What is the source for this clock? With it clocking at 353 MHz, I
+>> doubt that it is an external clock.
+> bias_pll_ubi_nc_clk (353MHz)is a backup source
+> for Q6_AXIM2_CLK
+Is this not handled internally by MPSS firmware or RPM
+then?
+
+Konrad
+/PCIE2_AXIM_CLK/PCIE3_AXIM_CLK/SNOC-CLK
+> It is from the CMN_PLL, and is the same as that of PPE core clock.
+> Do you suggest to move its clock-frequency to Board DT similar to xo/sleep clock?
 >>
->> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
->> index 0c94429..19315d0 100644
->> --- a/drivers/firmware/qcom_scm.c
->> +++ b/drivers/firmware/qcom_scm.c
->> @@ -32,6 +32,8 @@ static u32 download_mode;
->>   
->>   #define QCOM_DOWNLOAD_MODE_MASK 0x30
->>   #define QCOM_DOWNLOAD_FULLDUMP	0x1
->> +#define QCOM_DOWNLOAD_MINIDUMP  0x2
->> +#define QCOM_DOWNLOAD_BOTHDUMP	(QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
->>   #define QCOM_DOWNLOAD_NODUMP	0x0
->>   
->>   struct qcom_scm {
->> @@ -1421,13 +1423,16 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
->>   	return IRQ_HANDLED;
->>   }
->>   
->> -
->>   static int get_download_mode(char *buffer, const struct kernel_param *kp)
->>   {
->>   	int len = 0;
->>   
->>   	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
->>   		len = sysfs_emit(buffer, "full\n");
->> +	else if (download_mode == QCOM_DOWNLOAD_MINIDUMP)
->> +		len = sysfs_emit(buffer, "mini\n");
->> +	else if (download_mode == QCOM_DOWNLOAD_BOTHDUMP)
->> +		len = sysfs_emit(buffer, "both\n");
->>   	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
->>   		len = sysfs_emit(buffer, "off\n");
->>   
->> @@ -1440,6 +1445,10 @@ static int set_download_mode(const char *val, const struct kernel_param *kp)
->>   
->>   	if (!strncmp(val, "full", strlen("full"))) {
->>   		download_mode = QCOM_DOWNLOAD_FULLDUMP;
->> +	} else if (!strncmp(val, "mini", strlen("mini"))) {
->> +		download_mode = QCOM_DOWNLOAD_MINIDUMP;
->> +	} else if (!strncmp(val, "both", strlen("both"))) {
-> 
-> "both" isn't very future proof...
-> 
-> How about allowing mini,full? You don't need to do string tokenizing
-> etc, just strcmp mini,full (and full,mini if you want to be fancy)...
-> 
-
-Thanks for the suggestion, this looks good.
-I have applied the changes.
-
--- Mukesh
-
+>>> +
+>>> +               sleep_clk: sleep-clk {
+>>> +                       compatible = "fixed-clock";
+>>> +                       #clock-cells = <0>;
+>>> +               };
+>>> +
+>>> +               xo_board_clk: xo-board-clk {
+>>> +                       compatible = "fixed-clock";
+>>> +                       #clock-cells = <0>;
+>>> +               };
+>>> +       };
+>>
+>> [skipped the rest]
+>>
 > Regards,
-> Bjorn
-> 
->> +		download_mode = QCOM_DOWNLOAD_BOTHDUMP;
->>   	} else if (!strncmp(val, "off", strlen("off"))) {
->>   		download_mode = QCOM_DOWNLOAD_NODUMP;
->>   	} else if (kstrtouint(val, 0, &download_mode) ||
->> @@ -1462,7 +1471,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
->>   
->>   module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
->>   MODULE_PARM_DESC(download_mode,
->> -		 "Download mode: off/full or 0/1 for existing users");
->> +		 "download mode: off/full/mini/both(full+mini) or 0/1 for existing users");
->>   
->>   static int qcom_scm_probe(struct platform_device *pdev)
->>   {
->> -- 
->> 2.7.4
->>
+> Devi Priya
