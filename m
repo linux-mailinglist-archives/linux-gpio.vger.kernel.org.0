@@ -2,102 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D38D66CC188
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 15:57:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0758B6CC1A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 16:01:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbjC1N5w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 09:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37280 "EHLO
+        id S232706AbjC1OBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 10:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232709AbjC1N5v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 09:57:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6447AA9;
-        Tue, 28 Mar 2023 06:57:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 41617617E3;
-        Tue, 28 Mar 2023 13:57:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01BDC4339B;
-        Tue, 28 Mar 2023 13:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680011869;
-        bh=c4euR0Zd/JmQDuRN94iXNF8EoUEzpV1yUc9zAbWxy8o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HoC6h7QU4XWblNdAiVGhRKVv9EmdFymQkbE2FWmAu2SiD0CIjYkyGvvpOGMiA4Ccx
-         RjRSwHjaNhaeDy3y08Hq7vOR2WxCx7o0QaPTg6uqD8bLrVXZVqCA/aWwbFkZPtNpd8
-         hmMyAiMec4EsjjTqkRnut6UhjQ9vDfte3ZjjlJfDLPa74oxO7g4uW6ymYrlaFwYvZw
-         mO9GcFUmi3nWIAMCTRzkvXc6W18kzgQWvMINkVemukvzff0Yc6+ZPq9/42Qo+sUghM
-         CAjkUp1Q4BTITN/W2b1Vff7BitGUaYo6Mtydz6boxAk0bvyiUmbA+3udCC+YlRuG9h
-         lgCGJjHOWVktw==
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5419d4c340aso230970667b3.11;
-        Tue, 28 Mar 2023 06:57:49 -0700 (PDT)
-X-Gm-Message-State: AAQBX9ctDLKIDq7l0UyFEEP/cdw55LiP0YND1XG048eD2uiZ0lRBK10k
-        pdhKvEtKDv4c8UZL4wcMBv5LENolX5zm9kapdA==
-X-Google-Smtp-Source: AKy350bNpz7Bd9Ci5RKAGrw9sEV5urpvR4mBLxm8yWSi0X2LA+KdtSuZf7hKYv3CptV9NNhk2Tgm4cfMKtlSJaP0l5k=
-X-Received: by 2002:a81:4410:0:b0:545:a7d8:f278 with SMTP id
- r16-20020a814410000000b00545a7d8f278mr6922784ywa.5.1680011868714; Tue, 28 Mar
- 2023 06:57:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Mar 2023 08:57:37 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJvOZvw7BKYZRTf3gQwyVOmhva8BFHYF8-rf5uyo_HMUA@mail.gmail.com>
-Message-ID: <CAL_JsqJvOZvw7BKYZRTf3gQwyVOmhva8BFHYF8-rf5uyo_HMUA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: fsl-imx-gpio: update gpio-ranges
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, stefan@agner.ch, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S233169AbjC1OBP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 10:01:15 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1088422A
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:00:01 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id e18so12318779wra.9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680012000;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eV//EvN5VWGb8SfUPOB9U4N0xtHSlciNsKaOFZxrxK4=;
+        b=4shH9I4lUneiCAv/WWHI/+aYoULUDi7/DWClIZRJaycfbJLk9rMqYZa9ZLOtaL6dJ7
+         PEUosXnY9H+z9t+CC9p2OGvR8n3dDv7yVBHvDbESROi0o2dENIXTcBVD1KrvLX4AhRIi
+         IxjJYZuevZlpkRXfifw/cIBKOOoff2u1hoepzGcA7SUrqVwTsjsx91NqLA6UjnRLiDCH
+         WelD6HYYW/TTBZztIddivAERSkuOTBq5ST/sCSl2iWyU5PBounh78ljBzKAV+psRtovk
+         k8MJ65+vwyMv1mRK1MUZxvjFeQCLojyV3Il4vVpI3Z5ngAihUrw5pQnSnDGIsVRGWC5N
+         CXmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680012000;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eV//EvN5VWGb8SfUPOB9U4N0xtHSlciNsKaOFZxrxK4=;
+        b=BdYLMiZSv7l+ExCu/rfWhqc316ZX6Gv/2Qll39p8tv57CVPLk/w650oxP6IHOrn3sb
+         EtYJwb70QXkOBU4nWsgdLY9XmqAdwt3G2rEskgFMS6JAK1yuqup817gnjkgobOOAKoux
+         gBlEQlQXY3AsnRx7oca/mLz7tswxpvHAL9oouHrNpUyuaf+RrqOgxfLg8bQ6QNvGSyXJ
+         SPyl1MsAL8cgIVDBO2B8CiUIri2aBZug9x35Eib3aCK1T9j0aLx+cYWLiW9P0j/0HZ6x
+         bNTftqVsmpN5zZRMVSaW9t4nzQBUJs2Dxo0pgWxZRzUJew7BEZDeSdc/0WCRVcLb0fOr
+         2/Lg==
+X-Gm-Message-State: AAQBX9cr7uZhiqrmBLN0495TPCLEQyXrBZzx0tr22M/eR1rPQAADzKco
+        7XufrUSp7mXHW03iCibkbG4JfA==
+X-Google-Smtp-Source: AKy350aEv76ZvmQGS0luC/FyqA5xPY4en5meBrNymKWlHJ12eRvvLXQsj+Eg12yTo7KS8EqE5LK4oA==
+X-Received: by 2002:adf:e8ca:0:b0:2c7:1d0d:7184 with SMTP id k10-20020adfe8ca000000b002c71d0d7184mr14430611wrn.11.1680012000283;
+        Tue, 28 Mar 2023 07:00:00 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:910e:c4d8:1565:354])
+        by smtp.gmail.com with ESMTPSA id g16-20020a5d4890000000b002de99432fc8sm8155245wrq.49.2023.03.28.06.59.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 06:59:59 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 28 Mar 2023 15:59:58 +0200
+Message-Id: <CRI2JTK76CHY.PX9MOKSRGSE5@burritosblues>
+To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <jpanis@baylibre.com>,
+        <jneanne@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v2 1/3] rtc: tps6594: add driver for TPS6594 PMIC RTC
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+X-Mailer: aerc 0.14.0
+References: <20230328091448.648452-1-eblanc@baylibre.com>
+ <20230328091448.648452-2-eblanc@baylibre.com>
+ <202303280929448e41808d@mail.local>
+ <CRI1AQ7OIF6F.2G26C7VQKL5P0@burritosblues>
+ <20230328133429ff45c492@mail.local>
+In-Reply-To: <20230328133429ff45c492@mail.local>
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 28, 2023 at 12:24=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
-om> wrote:
+On Tue Mar 28, 2023 at 3:34 PM CEST, Alexandre Belloni wrote:
+> On 28/03/2023 15:01:05+0200, Esteban Blanc wrote:
+> > On Tue Mar 28, 2023 at 11:29 AM CEST, Alexandre Belloni wrote:
+> > > Hello,
+> > >
+> > > On 28/03/2023 11:14:46+0200, Esteban Blanc wrote:
+> > > > +	/* Start rtc */
+> > > > +	ret =3D regmap_set_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
+> > > > +			      TPS6594_BIT_STOP_RTC);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	mdelay(100);
+> > > > +
+> > > > +	/*
+> > > > +	 * RTC should be running now. Check if this is the case.
+> > > > +	 * If not it might be a missing oscillator.
+> > > > +	 */
+> > > > +	ret =3D regmap_test_bits(tps->regmap, TPS6594_REG_RTC_STATUS,
+> > > > +			       TPS6594_BIT_RUN);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +	if (ret =3D=3D 0)
+> > > > +		return -ENODEV;
+> > > > +
+> > > > +	/* Stop RTC until first call to `tps6594_rtc_set_time */
+> > > > +	ret =3D regmap_clear_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
+> > > > +				TPS6594_BIT_STOP_RTC);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > >
+> > > This whole block must not be executed when the RTC is already running=
+,
+> > > else, you are stopping a perfectly running RTC.
+> >=20
+> > I'm not sure to get your point. You mean that during probe, the driver
+> > might encounter an RTC device that is already running with a correct
+> > timestamp? How would this be possible? A previous bootstage or the
+> > driver was removed then re-inserted again?
+> >=20
 >
-> From: Peng Fan <peng.fan@nxp.com>
->
-> one is not enough for i.MX8, so enlarge it.
+> The whole point of having an RTC is that the time tracking survives a
+> reboot so yes, I would expect the RTC to have a valid timestamp at probe
+> time.
 
-But it wasn't 1, it was unbounded. As dtbs_check shows, the new bounds
-aren't right either.
+Oh. Oh I see. I did not think of that. I will add a check for that.
 
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/D=
-ocumentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> index be56c3faec0f..e303455eadce 100644
-> --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-> @@ -66,7 +66,10 @@ properties:
->
->    gpio-controller: true
->    gpio-line-names: true
-> -  gpio-ranges: true
-> +
-> +  gpio-ranges:
-> +    minItems: 1
-> +    maxItems: 16
->
->    power-domains:
->      maxItems: 1
-> --
-> 2.37.1
->
+Thanks again,
+
+--=20
+Esteban Blanc
+BayLibre
