@@ -2,292 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A1DF6CBEC2
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 14:12:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0EAD6CBF58
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 14:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbjC1MMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 08:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44030 "EHLO
+        id S231251AbjC1MkP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 08:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjC1MMS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 08:12:18 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52B086AF;
-        Tue, 28 Mar 2023 05:12:16 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32S9tKWv019390;
-        Tue, 28 Mar 2023 12:12:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=mPCFJFazSRpUdf6YkTdnDAcGqA+5R0LFtVC9YF7xc+w=;
- b=VNaZTKqkBHSEg2bIvlfyZUOfmo0PfOkglhpOk7+YcitDlZXM0dH3aM0o3lOQjeBvPswR
- Avx66HSTjPaHcigBRXWIzx1TlW1kG3Xdcu/VDM076zMPIyT2l3Dy2KQHorD5M4b7Fm3Y
- GQF3nVkcUZrIpCCPzq+FtHNhKcZEigUAzRgnRMw0YV0NiO2EwJ9kArWFJSuEXUHthCez
- +pIMGV/invJTFmCZ6rQoTspePXcwtgzq9zypzsMm5Zv/HnO2z2zPDaPLtOfhuS497CR4
- 3cSPIPE3FFsSwHtkmMWE+pOe++h6GRjUfexsO4nuDQG/OWAzloWt2CTippvApbSQ9Z35 PA== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkk7b9qu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 12:12:05 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32SCC4np001210
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 12:12:04 GMT
-Received: from [10.239.155.237] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 28 Mar
- 2023 05:12:02 -0700
-Message-ID: <e0c4b49d-b813-90de-f0f4-7cec0f5d04c4@quicinc.com>
-Date:   Tue, 28 Mar 2023 20:11:59 +0800
+        with ESMTP id S232654AbjC1MkM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 08:40:12 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DE79EFA;
+        Tue, 28 Mar 2023 05:39:50 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id t10so48990223edd.12;
+        Tue, 28 Mar 2023 05:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680007189;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nkahNZrJeIv1+bxwFASjNCDYeTxk+0/JVaqPrT+yHUg=;
+        b=SYUCiCwlqlyBtVCcx0V848MOAZ0Y/fSiZYfkrpBaMJpBy9gkKoyKU8qvNk6hJZEPn5
+         /f89JMCzUa/FjVxBXXL9kUp+lTvg3abrPEIiZvp7eBkBhUj5U6wxVD09KqbyDxw9l14e
+         mvtgMaJL/0b+xMZvSsw/7I/V5sxCbEtAA2ce8WegQUR6g/tjMnUkaeHmPgEfHRqVUMXw
+         s7uC6U8EWJzB2McgafDiK0vgo/6WyKG5LRlZ/y7dZC2+rWmv6dtgtvQJJpsJOfMVN371
+         HQ6HnnZc70IGJ7HUsWKxLy9P1Iw0hB0WG78K/IsHsSNvQn4kryWidPBxyiI/ZmGC2wYW
+         51Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680007189;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nkahNZrJeIv1+bxwFASjNCDYeTxk+0/JVaqPrT+yHUg=;
+        b=FGhEAPO6eZMVHSs1IrZEB4R6WDdgZKbUfdVutKscQ2icEppHO9YKcYXxQ/r3Z3ERkn
+         HRW7pib33e1Idgt4eeROfcjmpOSKdmW5A/OSBbQV1N4Pm2xqkDN1IAUPT60MN4Buo4uk
+         TrjOQnMG157lIM3qKqn8WnzoiQJ39aD5lTTognfXlfRxlgPE1uTMj3PogCKQq7i2D0nt
+         mgWV7vPYgGB9buZkuwHP62bk+w68FpSOi57A1y/51h4HsDHeoLzM4gAIIOkna4qPpEX9
+         QS3qGGS49Nr10FeiM+GbeYCAxTmGIc5huZvX0dPgnGbnSw31+NHIl4+t3MPeskiJMzmP
+         MvCQ==
+X-Gm-Message-State: AAQBX9cmGubdP6ZKzx0e8XhUyu/eh78Nj2J65tpYAG7VSXr2mAoXwcvN
+        Ptot9WrFzqY18hIzfYOSLiM=
+X-Google-Smtp-Source: AKy350ZSTnZi0wlK7RVHH79oyTR0QFck1OHqW88Wf+z3AAU1VKWwtN5dvy+O21IsUi2k7O8m4Jm+yA==
+X-Received: by 2002:a17:906:7109:b0:931:6921:bdb7 with SMTP id x9-20020a170906710900b009316921bdb7mr15179096ejj.60.1680007188624;
+        Tue, 28 Mar 2023 05:39:48 -0700 (PDT)
+Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170906925000b009327f9a397csm14678274ejx.145.2023.03.28.05.39.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Mar 2023 05:39:48 -0700 (PDT)
+Date:   Tue, 28 Mar 2023 14:39:46 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Prathamesh Shete <pshete@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Suresh Mangipudi <smangipudi@nvidia.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: tegra234: Add DT binding doc
+Message-ID: <ZCLgEhrQiYHGGZ6S@orome>
+References: <20230207115617.12088-1-pshete@nvidia.com>
+ <a1395eb2-da3a-e080-fa6b-50f20d879655@linaro.org>
+ <Y+OGdMFQkL9Dtaq/@orome>
+ <9e7e1762-1c2e-28cd-c7a7-b0577addf51e@linaro.org>
+ <DM5PR12MB24066CE3175B74150235FE55B7B49@DM5PR12MB2406.namprd12.prod.outlook.com>
+ <3b9d4177-ebd9-e341-294d-41860fa8c5ac@linaro.org>
+ <ZBxeLIXJDbM2ebyt@orome>
+ <e06977ab-8112-1e45-4392-df36e358e772@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH] pinctrl: qcom: Add support to log pin status before
- suspend for TLMM
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@somainline.org>, <linus.walleij@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_satyap@quicinc.com>,
-        <quic_tsoni@quicinc.com>
-References: <1680004791-4216-1-git-send-email-quic_minghao@quicinc.com>
-Content-Language: en-US
-From:   Minghao Zhang <quic_minghao@quicinc.com>
-In-Reply-To: <1680004791-4216-1-git-send-email-quic_minghao@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: yCAoKL8CCMbNyteo2cPMe9c6DsdpqEtz
-X-Proofpoint-GUID: yCAoKL8CCMbNyteo2cPMe9c6DsdpqEtz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-28_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1011 malwarescore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303280098
-X-Spam-Status: No, score=1.6 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XSu3Gsb1PNODp4mo"
+Content-Disposition: inline
+In-Reply-To: <e06977ab-8112-1e45-4392-df36e358e772@linaro.org>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
-X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-add linus.walleij@linaro.org
 
-On 3/28/2023 19:59, Minghao Zhang wrote:
-> This change supports to print pin status before device suspend
-> to debug for TLMM. And expose 2 APIs to enable/disable this
-> functionality.
-> 
-> Signed-off-by: Minghao Zhang <quic_minghao@quicinc.com>
-> ---
->   drivers/pinctrl/qcom/pinctrl-msm.c | 133 +++++++++++++++++++++++++++++--------
->   drivers/pinctrl/qcom/pinctrl-msm.h |   1 +
->   2 files changed, 105 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index daeb79a..872c49f 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -83,6 +83,21 @@ struct msm_pinctrl {
->   	u32 phys_base[MAX_NR_TILES];
->   };
->   
-> +static bool pinctrl_msm_log_mask;
-> +
-> +static const char * const pulls_keeper[] = {
-> +	"no pull",
-> +	"pull down",
-> +	"keeper",
-> +	"pull up"
-> +};
-> +
-> +static const char * const pulls_no_keeper[] = {
-> +	"no pull",
-> +	"pull down",
-> +	"pull up",
-> +};
-> +
->   #define MSM_ACCESSOR(name) \
->   static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
->   			    const struct msm_pingroup *g) \
-> @@ -628,6 +643,29 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
->   	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->   }
->   
-> +static void msm_gpio_pin_status_get(struct msm_pinctrl *pctrl, const struct msm_pingroup *g,
-> +				    unsigned int offset, int *is_out, unsigned int *func,
-> +				    int *drive, int *pull, int *egpio_enable, int *val)
-> +{
-> +	u32 ctl_reg, io_reg;
-> +
-> +	ctl_reg = msm_readl_ctl(pctrl, g);
-> +	io_reg = msm_readl_io(pctrl, g);
-> +
-> +	*is_out = !!(ctl_reg & BIT(g->oe_bit));
-> +	*func = (ctl_reg >> g->mux_bit) & 7;
-> +	*drive = (ctl_reg >> g->drv_bit) & 7;
-> +	*pull = (ctl_reg >> g->pull_bit) & 3;
-> +	*egpio_enable = 0;
-> +	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
-> +		*egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
-> +
-> +	if (*is_out)
-> +		*val = !!(io_reg & BIT(g->out_bit));
-> +	else
-> +		*val = !!(io_reg & BIT(g->in_bit));
-> +}
-> +
->   #ifdef CONFIG_DEBUG_FS
->   
->   static void msm_gpio_dbg_show_one(struct seq_file *s,
-> @@ -644,40 +682,13 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
->   	int pull;
->   	int val;
->   	int egpio_enable;
-> -	u32 ctl_reg, io_reg;
-> -
-> -	static const char * const pulls_keeper[] = {
-> -		"no pull",
-> -		"pull down",
-> -		"keeper",
-> -		"pull up"
-> -	};
-> -
-> -	static const char * const pulls_no_keeper[] = {
-> -		"no pull",
-> -		"pull down",
-> -		"pull up",
-> -	};
->   
->   	if (!gpiochip_line_is_valid(chip, offset))
->   		return;
->   
->   	g = &pctrl->soc->groups[offset];
-> -	ctl_reg = msm_readl_ctl(pctrl, g);
-> -	io_reg = msm_readl_io(pctrl, g);
-> -
-> -	is_out = !!(ctl_reg & BIT(g->oe_bit));
-> -	func = (ctl_reg >> g->mux_bit) & 7;
-> -	drive = (ctl_reg >> g->drv_bit) & 7;
-> -	pull = (ctl_reg >> g->pull_bit) & 3;
-> -	egpio_enable = 0;
-> -	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
-> -		egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
-> -
-> -	if (is_out)
-> -		val = !!(io_reg & BIT(g->out_bit));
-> -	else
-> -		val = !!(io_reg & BIT(g->in_bit));
-> +	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
-> +					&drive, &pull, &egpio_enable, &val);
->   
->   	if (egpio_enable) {
->   		seq_printf(s, " %-8s: egpio\n", g->name);
-> @@ -707,6 +718,39 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->   #define msm_gpio_dbg_show NULL
->   #endif
->   
-> +static void msm_gpio_log_pin_status(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	const struct msm_pingroup *g;
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
-> +	unsigned int func;
-> +	int is_out;
-> +	int drive;
-> +	int pull;
-> +	int val;
-> +	int egpio_enable;
-> +
-> +	if (!gpiochip_line_is_valid(chip, offset))
-> +		return;
-> +
-> +	g = &pctrl->soc->groups[offset];
-> +	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
-> +					&drive, &pull, &egpio_enable, &val);
-> +
-> +	printk_deferred("%s: %s, %s, func%d, %dmA, %s\n",
-> +			g->name, is_out ? "out" : "in",
-> +			val ? "high" : "low", func,
-> +			msm_regval_to_drive(drive),
-> +			pctrl->soc->pull_no_keeper ? pulls_no_keeper[pull] : pulls_keeper[pull]);
-> +}
-> +
-> +static void msm_gpios_status(struct gpio_chip *chip)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < chip->ngpio; i++)
-> +		msm_gpio_log_pin_status(chip, i);
-> +}
-> +
->   static int msm_gpio_init_valid_mask(struct gpio_chip *gc,
->   				    unsigned long *valid_mask,
->   				    unsigned int ngpios)
-> @@ -1450,6 +1494,35 @@ SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops, msm_pinctrl_suspend,
->   
->   EXPORT_SYMBOL(msm_pinctrl_dev_pm_ops);
->   
-> +void debug_pintctrl_msm_enable(void)
-> +{
-> +	pinctrl_msm_log_mask = true;
-> +}
-> +EXPORT_SYMBOL(debug_pintctrl_msm_enable);
-> +
-> +void debug_pintctrl_msm_disable(void)
-> +{
-> +	pinctrl_msm_log_mask = false;
-> +}
-> +EXPORT_SYMBOL(debug_pintctrl_msm_disable);
-> +
-> +static __maybe_unused int noirq_msm_pinctrl_suspend(struct device *dev)
-> +{
-> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
-> +
-> +	if (pinctrl_msm_log_mask) {
-> +		printk_deferred("%s\n", pctrl->chip.label);
-> +		msm_gpios_status(&pctrl->chip);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops = {
-> +	.suspend_noirq = noirq_msm_pinctrl_suspend,
-> +};
-> +EXPORT_SYMBOL(noirq_msm_pinctrl_dev_pm_ops);
-> +
->   int msm_pinctrl_probe(struct platform_device *pdev,
->   		      const struct msm_pinctrl_soc_data *soc_data)
->   {
-> @@ -1512,6 +1585,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->   	if (ret)
->   		return ret;
->   
-> +	pinctrl_msm_log_mask = false;
-> +
->   	platform_set_drvdata(pdev, pctrl);
->   
->   	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 985eced..8ccbb6d 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -155,6 +155,7 @@ struct msm_pinctrl_soc_data {
->   };
->   
->   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> +extern const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops;
->   
->   int msm_pinctrl_probe(struct platform_device *pdev,
->   		      const struct msm_pinctrl_soc_data *soc_data);
+--XSu3Gsb1PNODp4mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Mar 26, 2023 at 02:19:45PM +0200, Krzysztof Kozlowski wrote:
+> On 23/03/2023 15:11, Thierry Reding wrote:
+> > On Wed, Mar 08, 2023 at 01:24:04PM +0100, Krzysztof Kozlowski wrote:
+> >> On 08/03/2023 12:45, Prathamesh Shete wrote:
+> >>>
+> >>>
+> >>>> -----Original Message-----
+> >>>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>>> Sent: Wednesday, February 8, 2023 5:28 PM
+> >>>> To: Thierry Reding <thierry.reding@gmail.com>
+> >>>> Cc: Prathamesh Shete <pshete@nvidia.com>; Jonathan Hunter
+> >>>> <jonathanh@nvidia.com>; linus.walleij@linaro.org; robh+dt@kernel.org;
+> >>>> krzysztof.kozlowski+dt@linaro.org; devicetree@vger.kernel.org; linux-
+> >>>> tegra@vger.kernel.org; linux-gpio@vger.kernel.org; Suresh Mangipudi
+> >>>> <smangipudi@nvidia.com>
+> >>>> Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: tegra234: Add DT bind=
+ing doc
+> >>>>
+> >>>> External email: Use caution opening links or attachments
+> >>>>
+> >>>>
+> >>>> On 08/02/2023 12:24, Thierry Reding wrote:
+> >>>>> On Tue, Feb 07, 2023 at 04:33:08PM +0100, Krzysztof Kozlowski wrote:
+> >>>>
+> >>>>
+> >>>>>>> +          type: object
+> >>>>>>> +          additionalProperties:
+> >>>>>>> +            properties:
+> >>>>>>> +              nvidia,pins:
+> >>>>>>> +                description: An array of strings. Each string co=
+ntains the name
+> >>>>>>> +                  of a pin or group. Valid values for these name=
+s are listed
+> >>>>>>> +                  below.
+> >>>>>>
+> >>>>>> Define properties in top level, which points to the complexity of
+> >>>>>> your if-else, thus probably this should be split into two bindings.
+> >>>>>> Dunno, your other bindings repeat this pattern :(
+> >>>>>
+> >>>>> The property itself is already defined in the common schema found in
+> >>>>> nvidia,tegra-pinmux-common.yaml and we're overriding this here for
+> >>>>> each instance since each has its own set of pins.
+> >>>>>
+> >>>>> This was a compromise to avoid too many bindings. Originally I
+> >>>>> attempted to roll all Tegra pinctrl bindings into a single dt-schem=
+a,
+> >>>>> but that turned out truly horrible =3D) Splitting this into per-SoC
+> >>>>> bindings is already causing a lot of duplication in these files,
+> >>>>
+> >>>> What would be duplicated? Almost eveerything should be coming from
+> >>>> shared binding, so you will have only compatible,
+> >>>> patternProperties(pinmux) and nvidia,pins. And an example. Maybe I m=
+iss
+> >>>> something but I would say this would create many but very easy to re=
+ad
+> >>>> bindings, referencing common pieces.
+> >>>>
+> >>>>> though splitting
+> >>>>> off the common bits into nvidi,tegra-pinmux-common.yaml helps a bit
+> >>>>> with that already. Splitting this into per-instance bindings would
+> >>>>> effectively duplicate everything but the pin array here, so we kind=
+ of
+> >>>>> settled on this compromise for Tegra194.
+> >>>>
+> >>>> OK, but are you sure it is now readable? You have if:then: with
+> >>>> patternProperties: with additionalProperties: with properties: with
+> >>>> nvidia,pins.
+> >>> This is inline with the existing bindings and I think this is the com=
+promise that was reached during review when the bindings were submitted,
+> >>
+> >> So the code might be totally unreadable, but it is inline with existing
+> >> code, thus it should stay unreadable. Great.
+> >=20
+> > I'd say this is very subjective. I personally don't find the current
+> > version hard to read, but that's maybe because I wrote it... =3D)
+> >=20
+> >>> offer to rework if a better alternative can be found, but that only m=
+akes sense if all the other bindings get changed as well, so I think it'd b=
+e good if we can merge in the same format as the existing bindings for now =
+and change all of them later on.
+> >>
+> >> Cleanup should happen before adding new bindings.
+> >=20
+> > I don't recall the exact problems that I ran into last time, but I do
+> > remember that pulling out the common bindings to the very top-level was
+> > the main issue.
+> >=20
+> > If I understand correctly what you're saying, the main problem that
+> > makes this hard to read is the if and else constructs for AON/MAIN
+> > variants on Tegra194/Tegra234. These should be quite easy to pull out
+> > into separate bindings. I'll do that first and then see if there's
+> > anything that could be done to further improve things.
+>=20
+> One problem is allowing characters here which are not allowed. Second
+> problem is reluctance to change it with argument "existing bindings also
+> have this problem". It's explanation like "there is already bug like
+> this, so I am allowed to add similar one".
+
+This is not a bug that we're trying to replicate. We're basing this
+binding on a existing bindings that were already reviewed upstream a
+long time ago. It uses a shared binding that's in use by these other
+bindings, so making any changes to this new binding means either the
+other ones need to be changed as well or we can't reuse the existing
+shared binding.
+
+> Now third is that defining properties in allOf is not the style we want
+> to have, because it does not work with additionalProperties and is
+> difficult to read. Again using argument "existing code also does like
+> this" is a very poor argument.
+
+As far as I can tell, it does work as expected in this case because
+we're not actually adding any *new* properties in the allOf/if branches.
+If we were, then yes, we would need to use unevaluatedProperties and
+that can get complicated. But again, in this case we're merely
+overriding existing properties with more specific values, which means
+that both the standard binding applies and then things are narrowed down
+by the values defined for each compatible.
+
+Thierry
+
+--XSu3Gsb1PNODp4mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQi4BAACgkQ3SOs138+
+s6GRYBAAsUYHCigNtdc8rSsLD1NsjbYlndUAsaupRMDOT3KiJDGC5luJCphp687y
+5YYtrWu9glbcfubIGNr7eBHcelnOQqqHt9u5fgLV1C20tvYNbAdu6MJqB0p4QuVF
+WM1x09wv6BpK39TYEY+psHhFyUCnm4t+PCF+uOiRPjpZMgyp2kZ3gSwa9PArCUzm
+1k+kCfPo7G8zjClLDNV3knOkqW36kS4VNd6UDkCrs+OK2T7zCCpwBTNDVjZaVuUK
+ar14F2j2o38N9uqldtGkbdZk5GtAxleZXiggDa1KLHTVegibJmnBx7NDmEXkkI/P
+WNmwhtd5hSu1y9+sP52gNz/rdd7DcG2Nr4jF2D+z6SlVFVT+2QzsI1uRlh7+yvW3
+091yMAeH5rwHgpPNWvrWZ1QZbA4uTUKPPJMkqFww62rQDdORenWTdhZiYXJyD9qd
+Pn9PZZSJVKxdbDew1k2EeFUk6B5cacRjQEjmSgE9dNsxeC0kZK7tT5I1w/CWQJSL
+2zUrsy+SfUgQN/MKDiF8BB146+Vn3vDqNloUcMnDOYrrlnOnWVNa57pFkJmCchdv
+kOJGq5DVN+TecCQXAKes5qO77pzPFepii6d2P3SZGyrsd6I97skCiPxg2HUJgr3l
+C4tmCM9vOx3gf4oEdkNv9uUFzn4+xaQ/TAvePQKlrxr6u26J0DU=
+=NdYS
+-----END PGP SIGNATURE-----
+
+--XSu3Gsb1PNODp4mo--
