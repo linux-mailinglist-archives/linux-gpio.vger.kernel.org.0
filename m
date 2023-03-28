@@ -2,237 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0C586CBC20
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 12:11:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1D886CBC6A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 12:20:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233008AbjC1KL0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 06:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40678 "EHLO
+        id S229670AbjC1KUT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 06:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232725AbjC1KLU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 06:11:20 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C6EE7D9A;
-        Tue, 28 Mar 2023 03:10:59 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.98,297,1673881200"; 
-   d="scan'208";a="154049039"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Mar 2023 19:10:53 +0900
-Received: from localhost.localdomain (unknown [10.226.92.2])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DB69640071F7;
-        Tue, 28 Mar 2023 19:10:50 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [DO NOT APPLY PATCH v7 10/10] tools/poeg: Add test app for poeg
-Date:   Tue, 28 Mar 2023 11:10:11 +0100
-Message-Id: <20230328101011.185594-11-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230328101011.185594-1-biju.das.jz@bp.renesas.com>
-References: <20230328101011.185594-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229611AbjC1KUT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 06:20:19 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5640D4EE8
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 03:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679998818; x=1711534818;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=992kA1wysFY98d8wCqhL0kdaIiWdhyItsKlFB1M5d6A=;
+  b=Ak/TWSKsKKAynTJlFKPsEm7LF975ggv9uy3toa86pikws1wq7T4D5fYt
+   KaFZSB7RTQWv2Sih8n1KXDyN2oZRLlul/6oMd0/IoTFw8Y1Gm7yroV+u5
+   CBtpZ1lwnwCm5D2RHLFgYwsIxrqBBCohg28bZRM9ROqj0BQUWoM+vV2CR
+   kDG3TroVxigKEKOqKmLql7mXcOr2irkvCnOJIEuAcaTE+sGrX3aMvE5LW
+   4hTWGRF4UMCMWvsgMlPz0tIxTqYhw5qgxSnj8s7JnscylDIlxYvMvllDK
+   0tCEglmuhZ14UJXdo6qapVMtlkuLxxKodvqAvl/MKAcZLlpbBW6KCfJPr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="342936757"
+X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
+   d="scan'208";a="342936757"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 03:20:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="773092815"
+X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
+   d="scan'208";a="773092815"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Mar 2023 03:20:01 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ph6Qq-000ITJ-1U;
+        Tue, 28 Mar 2023 10:20:00 +0000
+Date:   Tue, 28 Mar 2023 18:19:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 5278b8e458f38be91b502530573744ed59c97caa
+Message-ID: <6422bf15.JbfAwArwR5mY7KVf%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add test app for poeg
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 5278b8e458f38be91b502530573744ed59c97caa  Merge branch 'devel' into for-next
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- tools/poeg/Build      |   1 +
- tools/poeg/Makefile   |  53 ++++++++++++++++++++++
- tools/poeg/poeg_app.c | 102 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 156 insertions(+)
- create mode 100644 tools/poeg/Build
- create mode 100644 tools/poeg/Makefile
- create mode 100644 tools/poeg/poeg_app.c
+elapsed time: 720m
 
-diff --git a/tools/poeg/Build b/tools/poeg/Build
-new file mode 100644
-index 000000000000..f960920a4afb
---- /dev/null
-+++ b/tools/poeg/Build
-@@ -0,0 +1 @@
-+poeg_app-y += poeg_app.o
-diff --git a/tools/poeg/Makefile b/tools/poeg/Makefile
-new file mode 100644
-index 000000000000..669c914d9c98
---- /dev/null
-+++ b/tools/poeg/Makefile
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+include ../scripts/Makefile.include
-+
-+bindir ?= /usr/bin
-+
-+ifeq ($(srctree),)
-+srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+endif
-+
-+# Do not use make's built-in rules
-+# (this improves performance and avoids hard-to-debug behaviour);
-+MAKEFLAGS += -r
-+
-+override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
-+
-+ALL_TARGETS := poeg_app
-+ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
-+
-+all: $(ALL_PROGRAMS)
-+
-+export srctree OUTPUT CC LD CFLAGS
-+include $(srctree)/tools/build/Makefile.include
-+
-+#
-+# We need the following to be outside of kernel tree
-+#
-+$(OUTPUT)include/linux/poeg.h: ../../include/linux/pinctrl/rzg2l-poeg.h
-+	mkdir -p $(OUTPUT)include/linux 2>&1 || true
-+	ln -sf $(CURDIR)/../../include/linux/pinctrl/rzg2l-poeg.h $@
-+
-+prepare: $(OUTPUT)include/linux/poeg.h
-+
-+POEG_EXAMPLE := $(OUTPUT)poeg_app.o
-+$(POEG_EXAMPLE): prepare FORCE
-+	$(Q)$(MAKE) $(build)=poeg_app
-+$(OUTPUT)poeg_app: $(POEG_EXAMPLE)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
-+clean:
-+	rm -f $(ALL_PROGRAMS)
-+	rm -rf $(OUTPUT)include/linux/poeg.h
-+	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
-+
-+install: $(ALL_PROGRAMS)
-+	install -d -m 755 $(DESTDIR)$(bindir);		\
-+	for program in $(ALL_PROGRAMS); do		\
-+		install $$program $(DESTDIR)$(bindir);	\
-+	done
-+
-+FORCE:
-+
-+.PHONY: all install clean FORCE prepare
-diff --git a/tools/poeg/poeg_app.c b/tools/poeg/poeg_app.c
-new file mode 100644
-index 000000000000..273ae1813e2f
---- /dev/null
-+++ b/tools/poeg/poeg_app.c
-@@ -0,0 +1,102 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * POEG - example userspace application
-+ * Copyright (C) 2023 Biju Das
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <sys/ioctl.h>
-+#include <linux/ioctl.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <poll.h>
-+
-+#include <linux/poeg.h>
-+
-+#define USER_CTRL	1
-+#define GPT_CTRL	0
-+#define EXT_PIN_CTRL	0
-+
-+int main(int argc, char *arg[])
-+{
-+	struct poeg_cmd cmd;
-+	int ret, fd;
-+#if GPT_CTRL
-+	struct poeg_event event_data;
-+	unsigned int val;
-+	int i;
-+#endif
-+
-+	fd = open("/dev/poeg3", O_RDWR);
-+	if (fd < 0)
-+		perror("open");
-+	else
-+		printf("[POEG]open\n");
-+
-+#if USER_CTRL
-+	cmd.val = RZG2L_POEG_USR_CTRL_ENABLE_CMD;
-+	cmd.channel = 4;
-+	printf("[POEG] user control pin output disable enabled\n");
-+	ret = write(fd, &cmd, sizeof(cmd));
-+	if (ret == -1) {
-+		perror("Failed to write cmd data");
-+		return 1;
-+	}
-+	sleep(3);
-+
-+	printf("[POEG] user control pin output disable disabled\n");
-+	cmd.val = RZG2L_POEG_USR_CTRL_DISABLE_CMD;
-+	cmd.channel = 4;
-+	ret = write(fd, &cmd, sizeof(cmd));
-+	if (ret == -1) {
-+		perror("Failed to write cmd data");
-+		return 1;
-+	}
-+#endif
-+
-+#if GPT_CTRL
-+	printf("[POEG] GPT control configure IRQ\n");
-+	cmd.val = RZG2L_POEG_GPT_CFG_IRQ_CMD;
-+	cmd.channel = 4;
-+	ret = write(fd, &cmd, sizeof(cmd));
-+	if (ret == -1) {
-+		perror("Failed to write cmd data");
-+		return 1;
-+	}
-+
-+	for (;;) {
-+		ret = read(fd, &event_data, sizeof(event_data));
-+		if (ret == -1) {
-+			perror("Failed to read event data");
-+			return 1;
-+		}
-+
-+		val = event_data.gpt_disable_irq_status;
-+		if (val) {
-+			/* emulate fault clearing condition by adding delay */
-+			sleep(2);
-+			for (i = 0; i < 8; i++) {
-+				if (val & 7) {
-+					printf("gpt ch:%u, irq=%x\n", i, val & 7);
-+					cmd.val = RZG2L_POEG_GPT_FAULT_CLR_CMD;
-+					cmd.channel = 4;
-+					ret = write(fd, &cmd, sizeof(cmd));
-+				}
-+				val >>= 3;
-+			}
-+		}
-+	}
-+#endif
-+
-+	if (close(fd) != 0)
-+		perror("close");
-+	else
-+		printf("[POEG]close\n");
-+
-+	return 0;
-+}
+configs tested: 131
+configs skipped: 11
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r004-20230327   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r016-20230327   gcc  
+arc                  randconfig-r031-20230326   gcc  
+arc                  randconfig-r043-20230326   gcc  
+arc                  randconfig-r043-20230327   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r003-20230326   clang
+arm                                 defconfig   gcc  
+arm                  randconfig-r025-20230326   clang
+arm                  randconfig-r046-20230326   clang
+arm                  randconfig-r046-20230327   gcc  
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r005-20230326   clang
+arm64                               defconfig   gcc  
+arm64                randconfig-r012-20230326   gcc  
+arm64                randconfig-r013-20230327   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r003-20230327   gcc  
+hexagon              randconfig-r006-20230326   clang
+hexagon              randconfig-r036-20230326   clang
+hexagon              randconfig-r041-20230326   clang
+hexagon              randconfig-r041-20230327   clang
+hexagon              randconfig-r045-20230326   clang
+hexagon              randconfig-r045-20230327   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230327   gcc  
+i386                 randconfig-a002-20230327   gcc  
+i386                 randconfig-a003-20230327   gcc  
+i386                 randconfig-a004-20230327   gcc  
+i386                 randconfig-a005-20230327   gcc  
+i386                 randconfig-a006-20230327   gcc  
+i386                 randconfig-a011-20230327   clang
+i386                 randconfig-a012-20230327   clang
+i386                 randconfig-a013-20230327   clang
+i386                 randconfig-a014-20230327   clang
+i386                 randconfig-a015-20230327   clang
+i386                 randconfig-a016-20230327   clang
+i386                 randconfig-r022-20230327   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r003-20230326   gcc  
+ia64                 randconfig-r015-20230327   gcc  
+ia64                 randconfig-r016-20230326   gcc  
+ia64                 randconfig-r033-20230326   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r003-20230327   gcc  
+m68k         buildonly-randconfig-r006-20230326   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r005-20230327   gcc  
+m68k                 randconfig-r036-20230327   gcc  
+microblaze           randconfig-r004-20230327   gcc  
+microblaze           randconfig-r034-20230326   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips         buildonly-randconfig-r001-20230326   gcc  
+mips         buildonly-randconfig-r006-20230327   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r006-20230327   gcc  
+nios2                randconfig-r013-20230326   gcc  
+openrisc     buildonly-randconfig-r005-20230327   gcc  
+openrisc             randconfig-r004-20230326   gcc  
+parisc       buildonly-randconfig-r002-20230327   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r001-20230327   gcc  
+parisc               randconfig-r005-20230326   gcc  
+parisc               randconfig-r026-20230326   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r012-20230327   clang
+powerpc              randconfig-r024-20230326   gcc  
+powerpc              randconfig-r031-20230327   gcc  
+powerpc              randconfig-r032-20230327   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r024-20230327   clang
+riscv                randconfig-r042-20230326   gcc  
+riscv                randconfig-r042-20230327   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r014-20230326   gcc  
+s390                 randconfig-r014-20230327   clang
+s390                 randconfig-r022-20230326   gcc  
+s390                 randconfig-r044-20230326   gcc  
+s390                 randconfig-r044-20230327   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r035-20230326   gcc  
+sparc        buildonly-randconfig-r001-20230327   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r021-20230326   gcc  
+sparc                randconfig-r025-20230327   gcc  
+sparc64      buildonly-randconfig-r004-20230326   gcc  
+sparc64              randconfig-r026-20230327   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230327   gcc  
+x86_64               randconfig-a002-20230327   gcc  
+x86_64               randconfig-a003-20230327   gcc  
+x86_64               randconfig-a004-20230327   gcc  
+x86_64               randconfig-a005-20230327   gcc  
+x86_64               randconfig-a006-20230327   gcc  
+x86_64               randconfig-a011-20230327   clang
+x86_64               randconfig-a012-20230327   clang
+x86_64               randconfig-a013-20230327   clang
+x86_64               randconfig-a014-20230327   clang
+x86_64               randconfig-a015-20230327   clang
+x86_64               randconfig-a016-20230327   clang
+x86_64               randconfig-r002-20230327   gcc  
+x86_64               randconfig-r021-20230327   clang
+x86_64               randconfig-r033-20230327   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r011-20230326   gcc  
+xtensa               randconfig-r011-20230327   gcc  
+xtensa               randconfig-r035-20230327   gcc  
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
