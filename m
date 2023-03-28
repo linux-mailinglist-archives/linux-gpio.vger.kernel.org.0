@@ -2,132 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0758B6CC1A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 16:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E5E6CC281
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 16:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232706AbjC1OBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 10:01:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
+        id S233257AbjC1OqB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 10:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233169AbjC1OBP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 10:01:15 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1088422A
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:00:01 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id e18so12318779wra.9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:00:01 -0700 (PDT)
+        with ESMTP id S233245AbjC1Opx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 10:45:53 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80975D51D
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:45:30 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id cn12so50747658edb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 07:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680012000;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eV//EvN5VWGb8SfUPOB9U4N0xtHSlciNsKaOFZxrxK4=;
-        b=4shH9I4lUneiCAv/WWHI/+aYoULUDi7/DWClIZRJaycfbJLk9rMqYZa9ZLOtaL6dJ7
-         PEUosXnY9H+z9t+CC9p2OGvR8n3dDv7yVBHvDbESROi0o2dENIXTcBVD1KrvLX4AhRIi
-         IxjJYZuevZlpkRXfifw/cIBKOOoff2u1hoepzGcA7SUrqVwTsjsx91NqLA6UjnRLiDCH
-         WelD6HYYW/TTBZztIddivAERSkuOTBq5ST/sCSl2iWyU5PBounh78ljBzKAV+psRtovk
-         k8MJ65+vwyMv1mRK1MUZxvjFeQCLojyV3Il4vVpI3Z5ngAihUrw5pQnSnDGIsVRGWC5N
-         CXmQ==
+        d=linaro.org; s=google; t=1680014729;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K+LzNi+WKhxITd4nhakeVgxz/emADyS2pObOAuVfYNE=;
+        b=Q2TCXrLDaw3Qwe8C5aKV3ssSZgAN5t4ee1EiGotaCbWRv0BUCUayay/T2L3ywZafKc
+         KiA9yT3gnJzacs0N/CwQagq+eL6Na6KwsKKUZwrPKGmAX2hrc0RHyldbYLiqGlgmiLKB
+         MK+xAYuUJTyQ6QOhxN0DHSihiBDLlyj1bdRDigpr8cP9LecVYXt+d5vvx0/QpUcwfZdJ
+         kuNXjYV5BAhDmPAeis+KNBV0CKQ6YxIp1g7zXzZ714HTlXookUc8IXp1t4VxxCYZvknB
+         09iho+RQ+l0OTdUoktnWKonj9n6h60+qHaUj0ZsI+2CqERfV/WdZQH7U0SJJ17+Ardf5
+         bYHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680012000;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eV//EvN5VWGb8SfUPOB9U4N0xtHSlciNsKaOFZxrxK4=;
-        b=BdYLMiZSv7l+ExCu/rfWhqc316ZX6Gv/2Qll39p8tv57CVPLk/w650oxP6IHOrn3sb
-         EtYJwb70QXkOBU4nWsgdLY9XmqAdwt3G2rEskgFMS6JAK1yuqup817gnjkgobOOAKoux
-         gBlEQlQXY3AsnRx7oca/mLz7tswxpvHAL9oouHrNpUyuaf+RrqOgxfLg8bQ6QNvGSyXJ
-         SPyl1MsAL8cgIVDBO2B8CiUIri2aBZug9x35Eib3aCK1T9j0aLx+cYWLiW9P0j/0HZ6x
-         bNTftqVsmpN5zZRMVSaW9t4nzQBUJs2Dxo0pgWxZRzUJew7BEZDeSdc/0WCRVcLb0fOr
-         2/Lg==
-X-Gm-Message-State: AAQBX9cr7uZhiqrmBLN0495TPCLEQyXrBZzx0tr22M/eR1rPQAADzKco
-        7XufrUSp7mXHW03iCibkbG4JfA==
-X-Google-Smtp-Source: AKy350aEv76ZvmQGS0luC/FyqA5xPY4en5meBrNymKWlHJ12eRvvLXQsj+Eg12yTo7KS8EqE5LK4oA==
-X-Received: by 2002:adf:e8ca:0:b0:2c7:1d0d:7184 with SMTP id k10-20020adfe8ca000000b002c71d0d7184mr14430611wrn.11.1680012000283;
-        Tue, 28 Mar 2023 07:00:00 -0700 (PDT)
-Received: from localhost ([2a01:e0a:28d:66d0:910e:c4d8:1565:354])
-        by smtp.gmail.com with ESMTPSA id g16-20020a5d4890000000b002de99432fc8sm8155245wrq.49.2023.03.28.06.59.59
+        d=1e100.net; s=20210112; t=1680014729;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+LzNi+WKhxITd4nhakeVgxz/emADyS2pObOAuVfYNE=;
+        b=0wwvsATO2MRSFAIpfKFG6VU65jOjRFQ3FlO++DNVRAiCDVjTtJqq0NfW2RJMk1OGKB
+         IHXOWObRnk2c31vbu+WX5PWsM5t2gqzVLVwx05hRrX344BCifB8rvHiKR1O2zS0KV72N
+         /K1vr4JsicF4pwug+07HUwuX0aLIYm+IRqFYcxHlr48BtlZDM8EDamgkFOIkZ9FloLJt
+         quTbH9h3d9CUyc5CR8BJ+TnZXklhvzNOCt1n6OHZ4TCHIJ14aOB1kQgpJ5U/2i2bKdok
+         z/tOMTWBfx7zLM8zhtRHsnZ0kF5qqji/gyJci69NBO+nRnlAOTMb5ONMdzNlbH/q3nlZ
+         lxNg==
+X-Gm-Message-State: AAQBX9dy7T/FPxkpBh7PkQx7ydX+P5kXEWZzUVEMYnpqsQdnHS1oJyLe
+        UWJcFjSSgnZO9aCbTxJZWfR8Gg==
+X-Google-Smtp-Source: AKy350a77CF0+D7QzfQ5lDGcMfjiA/7skkNmOzdvJIRrcMFod3WgDy+fqB2dX8bfoSZyDWfdRXyhKg==
+X-Received: by 2002:a17:907:20ee:b0:930:6e31:3c11 with SMTP id rh14-20020a17090720ee00b009306e313c11mr17032880ejb.70.1680014729005;
+        Tue, 28 Mar 2023 07:45:29 -0700 (PDT)
+Received: from [10.105.135.205] ([88.128.92.162])
+        by smtp.gmail.com with ESMTPSA id g8-20020a1709061e0800b0093bd173baa6sm8702873ejj.202.2023.03.28.07.45.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Mar 2023 06:59:59 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Tue, 28 Mar 2023 07:45:28 -0700 (PDT)
+Message-ID: <e2c0fdd6-75ab-ee18-787b-bf3461fbe55b@linaro.org>
+Date:   Tue, 28 Mar 2023 16:45:26 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/2] dt-bindings: gpio: vf610: update gpio-ranges
+Content-Language: en-US
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, stefan@agner.ch,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+References: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
+ <20230328052912.1957000-2-peng.fan@oss.nxp.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230328052912.1957000-2-peng.fan@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 28 Mar 2023 15:59:58 +0200
-Message-Id: <CRI2JTK76CHY.PX9MOKSRGSE5@burritosblues>
-To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <jpanis@baylibre.com>,
-        <jneanne@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v2 1/3] rtc: tps6594: add driver for TPS6594 PMIC RTC
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-X-Mailer: aerc 0.14.0
-References: <20230328091448.648452-1-eblanc@baylibre.com>
- <20230328091448.648452-2-eblanc@baylibre.com>
- <202303280929448e41808d@mail.local>
- <CRI1AQ7OIF6F.2G26C7VQKL5P0@burritosblues>
- <20230328133429ff45c492@mail.local>
-In-Reply-To: <20230328133429ff45c492@mail.local>
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue Mar 28, 2023 at 3:34 PM CEST, Alexandre Belloni wrote:
-> On 28/03/2023 15:01:05+0200, Esteban Blanc wrote:
-> > On Tue Mar 28, 2023 at 11:29 AM CEST, Alexandre Belloni wrote:
-> > > Hello,
-> > >
-> > > On 28/03/2023 11:14:46+0200, Esteban Blanc wrote:
-> > > > +	/* Start rtc */
-> > > > +	ret =3D regmap_set_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
-> > > > +			      TPS6594_BIT_STOP_RTC);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	mdelay(100);
-> > > > +
-> > > > +	/*
-> > > > +	 * RTC should be running now. Check if this is the case.
-> > > > +	 * If not it might be a missing oscillator.
-> > > > +	 */
-> > > > +	ret =3D regmap_test_bits(tps->regmap, TPS6594_REG_RTC_STATUS,
-> > > > +			       TPS6594_BIT_RUN);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +	if (ret =3D=3D 0)
-> > > > +		return -ENODEV;
-> > > > +
-> > > > +	/* Stop RTC until first call to `tps6594_rtc_set_time */
-> > > > +	ret =3D regmap_clear_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
-> > > > +				TPS6594_BIT_STOP_RTC);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > >
-> > > This whole block must not be executed when the RTC is already running=
-,
-> > > else, you are stopping a perfectly running RTC.
-> >=20
-> > I'm not sure to get your point. You mean that during probe, the driver
-> > might encounter an RTC device that is already running with a correct
-> > timestamp? How would this be possible? A previous bootstage or the
-> > driver was removed then re-inserted again?
-> >=20
->
-> The whole point of having an RTC is that the time tracking survives a
-> reboot so yes, I would expect the RTC to have a valid timestamp at probe
-> time.
+On 28/03/2023 07:29, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> 1 is not enough for i.MX9, enlarge it.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Oh. Oh I see. I did not think of that. I will add a check for that.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks again,
+Best regards,
+Krzysztof
 
---=20
-Esteban Blanc
-BayLibre
