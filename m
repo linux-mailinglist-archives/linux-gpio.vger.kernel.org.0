@@ -2,143 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFB8E6CC6DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 17:41:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A6FB6CC8AE
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 19:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbjC1Plo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 11:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
+        id S231561AbjC1Q76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 12:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233901AbjC1PlS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 11:41:18 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C9B11E83;
-        Tue, 28 Mar 2023 08:40:21 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32SBFPsC004224;
-        Tue, 28 Mar 2023 15:40:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=H71WGrCAYklp17zVh4ajvpjqsuADx7LOIFaxdrwlAcY=;
- b=AJGk/WcC9ul2rEStiegDS428RGal32SuykKfYpsecG6SZy/Jhwtodj9vFOosHPXa5g7Q
- IJjF+wo/M+gcKBZGUkqxpuLb1umWkx/gI6xgxJle8CUrcdHhoGKedhs9nKy2BG2ZXQX8
- JAFgiQmAlu28mNytQuDL5cZpfRHqbjV7qDYo18m36OEnboy5cF8FQ34v5yZZC0ev+LaQ
- NNI3XSIA6Tk9REFE11nNX1AuNlBaQXLtKELFD4kXXOVYPHA7mDbK2MGs89QVlF92wpfi
- VNVo3z2UvDbm1p0OYiPMMHqV9l2yMecK4AGsPA9ZNR3v1OmxfNv1022RanJw3sDG6FhU SQ== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pky700t4f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 15:40:01 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32SFe0n5007189
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Mar 2023 15:40:00 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Tue, 28 Mar 2023 08:39:58 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH v5 5/5] firmware: qcom_scm: Add multiple download mode support
-Date:   Tue, 28 Mar 2023 21:07:49 +0530
-Message-ID: <1680017869-22421-6-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
-References: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S229632AbjC1Q75 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 12:59:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DCC9ECF;
+        Tue, 28 Mar 2023 09:59:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A129D618C7;
+        Tue, 28 Mar 2023 16:59:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE429C433EF;
+        Tue, 28 Mar 2023 16:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680022796;
+        bh=5JSnUi0WPwXlNlLr2PLygtWZxa1SAMU3aE2taoy2XJ8=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=pG0CxzYc2iEAdKBPDBguoug0WhMNqYnXGWZ0vBpoy+o6qPYkfq/te1U0HzBubmaQY
+         Qc8D+RBVRs1+W1SNXJeXhNKBBI9XldesJIStEjChrgsxA4gbMXGDDthNbKmnJm75t/
+         rbiuw9xpcFMA4l9jMzA9x3O4cQgTvHfYJBzKd5tHBS2YxTcl56WOqzpvinvMcLQ6QR
+         ZZZNr2QWvUVX9A5g2OoAj4eUUfQqtuziuEXpF+e38ZnF2Wj0hWFv1NPx+LQ0f+d+u7
+         6i1mCDUrzUQp9f8kbWzJZ1qdkaw6r3WKLHPJQlx2L24KbYY/2fUPQel4IbrAAIC++G
+         gXkxDvMHR41aw==
+Message-ID: <1cfd584a48e1bb453596948a0187ecf1.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: xixtT1NBlc3owZrXSEZIypWg2um47GbE
-X-Proofpoint-GUID: xixtT1NBlc3owZrXSEZIypWg2um47GbE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-28_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- suspectscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
- phishscore=0 impostorscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2303280121
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2484518b-bcf6-7fb1-6bfb-b96b3682397b@quicinc.com>
+References: <20230327132718.573-1-quic_devipriy@quicinc.com> <20230327132718.573-3-quic_devipriy@quicinc.com> <0af15083921c5d3c89392209654f0c9b.sboyd@kernel.org> <2484518b-bcf6-7fb1-6bfb-b96b3682397b@quicinc.com>
+Subject: Re: [PATCH V10 2/4] clk: qcom: Add Global Clock Controller driver for IPQ9574
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, arnd@arndb.de, broonie@kernel.org,
+        catalin.marinas@arm.com, devicetree@vger.kernel.org,
+        dmitry.baryshkov@linaro.org, konrad.dybcio@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel.ziswiler@toradex.com, mturquette@baylibre.com,
+        nfraprado@collabora.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, shawnguo@kernel.org, will@kernel.org
+Date:   Tue, 28 Mar 2023 09:59:53 -0700
+User-Agent: alot/0.10
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently, scm driver only supports full dump when download
-mode is selected. Add support to enable minidump as well as
-enable it along with fulldump.
+Quoting Devi Priya (2023-03-27 23:15:35)
+>=20
+>=20
+> On 3/27/2023 10:18 PM, Stephen Boyd wrote:
+> > Quoting Devi Priya (2023-03-27 06:27:16)
+> >> diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq=
+9574.c
+> >> new file mode 100644
+> >> index 000000000000..b2a2d618a5ec
+> >> --- /dev/null
+> >> +++ b/drivers/clk/qcom/gcc-ipq9574.c
+> >> @@ -0,0 +1,4248 @@
+> >> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +/*
+> >> + * Copyright (c) 2023 The Linux Foundation. All rights reserved.
+> >> + */
+> >> +
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >=20
+> > What is this include for?
+> This include actually don't seem necessary. But, I see that of.h &=20
+> platform_device.h are being included via of_device.h
+> Would you suggest to drop of_device.h or the other two
+> headers instead?
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom_scm.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 53ee301..2a16431 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -32,6 +32,8 @@ static u32 download_mode;
- 
- #define QCOM_DOWNLOAD_MODE_MASK 0x30
- #define QCOM_DOWNLOAD_FULLDUMP	0x1
-+#define QCOM_DOWNLOAD_MINIDUMP  0x2
-+#define QCOM_DOWNLOAD_BOTHDUMP	(QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
- #define QCOM_DOWNLOAD_NODUMP	0x0
- 
- struct qcom_scm {
-@@ -1420,13 +1422,16 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--
- static int get_download_mode(char *buffer, const struct kernel_param *kp)
- {
- 	int len = 0;
- 
- 	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
- 		len = sysfs_emit(buffer, "full\n");
-+	else if (download_mode == QCOM_DOWNLOAD_MINIDUMP)
-+		len = sysfs_emit(buffer, "mini\n");
-+	else if (download_mode == QCOM_DOWNLOAD_BOTHDUMP)
-+		len = sysfs_emit(buffer, "full,mini\n");
- 	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
- 		len = sysfs_emit(buffer, "off\n");
- 
-@@ -1437,8 +1442,13 @@ static int set_download_mode(const char *val, const struct kernel_param *kp)
- {
- 	u32 old = download_mode;
- 
--	if (!strncmp(val, "full", strlen("full"))) {
-+	if (!strncmp(val, "full,mini", strlen("full,mini")) ||
-+	    !strncmp(val, "mini,full", strlen("mini,full"))) {
-+		download_mode = QCOM_DOWNLOAD_BOTHDUMP;
-+	} else if (!strncmp(val, "full", strlen("full"))) {
- 		download_mode = QCOM_DOWNLOAD_FULLDUMP;
-+	} else if (!strncmp(val, "mini", strlen("mini"))) {
-+		download_mode = QCOM_DOWNLOAD_MINIDUMP;
- 	} else if (!strncmp(val, "off", strlen("off"))) {
- 		download_mode = QCOM_DOWNLOAD_NODUMP;
- 	} else if (kstrtouint(val, 0, &download_mode) ||
-@@ -1461,7 +1471,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
- 
- module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
- MODULE_PARM_DESC(download_mode,
--		 "Download mode: off/full or 0/1 for existing users");
-+		"download mode: off/full/mini/full,mini or mini,full and 0/1 for existing users");
- 
- static int qcom_scm_probe(struct platform_device *pdev)
- {
--- 
-2.7.4
-
+Include headers for things you use. Don't try to omit includes if you
+see that a header includes other headers that you're using.
