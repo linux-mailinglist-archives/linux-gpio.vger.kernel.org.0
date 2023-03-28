@@ -2,295 +2,331 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C5C86CCA0F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 20:35:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 623EB6CCB3A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 22:10:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbjC1SfX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 14:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
+        id S229745AbjC1UK3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 16:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjC1SfW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 14:35:22 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E42F19F;
-        Tue, 28 Mar 2023 11:35:21 -0700 (PDT)
+        with ESMTP id S229468AbjC1UK3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 16:10:29 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BE426AA;
+        Tue, 28 Mar 2023 13:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680028521; x=1711564521;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BeQ/zO5tBpJqenzqiAW7Jszl5ERiiqTZmgr4aBbjDak=;
-  b=cJy576AaUPg6PMzHDIsEV9cdt1nUQ0rW6h8HKA8+hJJE1u9LkPV3GbIj
-   iL/3N8YyUttTNKGvKYLXTVXG1gFXKmOwdkTVUKj8KuuHj6t7QQsoPed17
-   HuF4tpxno6aokp8G0jwFsMpZVpCoBO+3MVgwEhHoASPf3uVp3XFsswvSy
-   YdYAW9uPm/gekDpzrOHsaIaue+T+MAPNqVztBJsR/X3AKh/MUT7ZtvVyU
-   WyHyNPyiZDK4THrP/FNK9fVUperWXmgQqF7KihLQrrjBkxSNyNwTIsSMe
-   2Vy5fafcg7Htrh1R0nNDPAvhyMUVbv/ooopzsfTInuShLcM1NDpTn2BgR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="342247521"
+  t=1680034227; x=1711570227;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bqz2a0tDDrO3Ug0U0rJWmNzaiLxLbO5wioAjP7cmdpo=;
+  b=DSu6v0gdh26DzG+fiiUVojYQ3MbUjTrSU3TnFdTq/77GpQLrn7IDTjbD
+   tAzlXqTpOJrTuYYnLoX0AkqAz4y6TWAJpgGY4U8RZEu90dJ3+Ewa/Z9ao
+   Q3SUoCjeuvMXw/UpcjFh90Mqqzo3azuK/EbCSASJLI2D9HFgQgaHOrhha
+   C6NiTv1GP1sF1XGe1g6C1yx+vzI48mstFlPE3C6EnpgMaGPxv21jbssRi
+   rjNT/0izKC06sQB4jksZ7akRgyY5J0Nk+DlNmenwOWblvgIFZTy96ww4X
+   D4jqbvrA2USTRXkptQGBOZIB8jYLzyMXj2JRHykvWIKAhlzvKNt89/ntR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="403297734"
 X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
-   d="scan'208";a="342247521"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 11:35:20 -0700
+   d="scan'208";a="403297734"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 13:10:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="773246016"
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="858228540"
 X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
-   d="scan'208";a="773246016"
+   d="scan'208";a="858228540"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Mar 2023 11:35:17 -0700
+  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2023 13:10:20 -0700
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1phEA8-000Ior-2G;
-        Tue, 28 Mar 2023 18:35:16 +0000
-Date:   Wed, 29 Mar 2023 02:34:38 +0800
+        id 1phFe7-000Is7-2a;
+        Tue, 28 Mar 2023 20:10:19 +0000
+Date:   Wed, 29 Mar 2023 04:09:36 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-wireless@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        io-uring@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- a6faf7ea9fcb7267d06116d4188947f26e00e57e
-Message-ID: <6423333e.lGUVMQXkx2DT8H2X%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        jpanis@baylibre.com, jneanne@baylibre.com, sterzik@ti.com,
+        u-kumar1@ti.com
+Subject: Re: [PATCH v2 3/3] regulator: tps6594-regulator: Add driver for TI
+ TPS6594 regulators
+Message-ID: <202303290336.bSKllPZi-lkp@intel.com>
+References: <20230328091448.648452-4-eblanc@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20230328091448.648452-4-eblanc@baylibre.com>
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: a6faf7ea9fcb7267d06116d4188947f26e00e57e  Add linux-next specific files for 20230328
+Hi Esteban,
 
-Error/Warning reports:
+Thank you for the patch! Perhaps something to improve:
 
-https://lore.kernel.org/oe-kbuild-all/202303161521.jbGbaFjJ-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202303281539.zzI4vpw1-lkp@intel.com
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next broonie-regulator/for-next abelloni/rtc-next linus/master v6.3-rc4 next-20230328]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Error/Warning: (recently discovered and may have been fixed)
+url:    https://github.com/intel-lab-lkp/linux/commits/Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230328-171612
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230328091448.648452-4-eblanc%40baylibre.com
+patch subject: [PATCH v2 3/3] regulator: tps6594-regulator: Add driver for TI TPS6594 regulators
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230329/202303290336.bSKllPZi-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/842fe9039c5ca8c856ee7433c0dff43ee7f52cfe
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Esteban-Blanc/rtc-tps6594-add-driver-for-TPS6594-PMIC-RTC/20230328-171612
+        git checkout 842fe9039c5ca8c856ee7433c0dff43ee7f52cfe
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:351:13: warning: variable 'bw_needed' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_validation.c:352:25: warning: variable 'link' set but not used [-Wunused-but-set-variable]
-drivers/net/wireless/legacy/ray_cs.c:628:17: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-drivers/perf/arm_pmuv3.c:44:2: error: use of undeclared identifier 'PERF_MAP_ALL_UNSUPPORTED'
-drivers/perf/arm_pmuv3.c:59:2: error: use of undeclared identifier 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
-drivers/perf/arm_pmuv3.c:61:13: error: use of undeclared identifier 'OP_READ'
-drivers/perf/arm_pmuv3.c:61:25: error: use of undeclared identifier 'RESULT_ACCESS'
-drivers/perf/arm_pmuv3.c:61:3: error: call to undeclared function 'C'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-drivers/perf/arm_pmuv3.c:61:5: error: use of undeclared identifier 'L1D'
-drivers/perf/arm_pmuv3.c:62:25: error: use of undeclared identifier 'RESULT_MISS'
-drivers/perf/arm_pmuv3.c:64:5: error: use of undeclared identifier 'L1I'
-drivers/perf/arm_pmuv3.c:67:5: error: use of undeclared identifier 'DTLB'
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303290336.bSKllPZi-lkp@intel.com/
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+All warnings (new ones prefixed by >>):
 
-arch/parisc/kernel/firmware.c:1271 pdc_soft_power_button_panic() error: uninitialized symbol 'flags'.
-include/linux/gpio/consumer.h: linux/err.h is included more than once.
-include/linux/gpio/driver.h: asm/bug.h is included more than once.
-io_uring/io_uring.c:432 io_prep_async_work() error: we previously assumed 'req->file' could be null (see line 425)
-io_uring/kbuf.c:221 __io_remove_buffers() warn: variable dereferenced before check 'bl->buf_ring' (see line 219)
+   drivers/regulator/tps6594-regulator.c: In function 'tps6594_regulator_probe':
+>> drivers/regulator/tps6594-regulator.c:423:31: warning: variable 'rdevldotbl' set but not used [-Wunused-but-set-variable]
+     423 |         struct regulator_dev *rdevldotbl[LDO_NB];
+         |                               ^~~~~~~~~~
+>> drivers/regulator/tps6594-regulator.c:422:31: warning: variable 'rdevmultitbl' set but not used [-Wunused-but-set-variable]
+     422 |         struct regulator_dev *rdevmultitbl[MULTI_PHASE_NB];
+         |                               ^~~~~~~~~~~~
+>> drivers/regulator/tps6594-regulator.c:421:31: warning: variable 'rdevbucktbl' set but not used [-Wunused-but-set-variable]
+     421 |         struct regulator_dev *rdevbucktbl[BUCK_NB];
+         |                               ^~~~~~~~~~~
 
-Error/Warning ids grouped by kconfigs:
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- alpha-randconfig-r012-20230327
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|   `-- drivers-net-wireless-legacy-ray_cs.c:warning:strncpy-specified-bound-equals-destination-size
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-buildonly-randconfig-r001-20230326
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- loongarch-defconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- mips-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- parisc-randconfig-m031-20230326
-|   |-- arch-parisc-kernel-firmware.c-pdc_soft_power_button_panic()-error:uninitialized-symbol-flags-.
-|   |-- io_uring-io_uring.c-io_prep_async_work()-error:we-previously-assumed-req-file-could-be-null-(see-line-)
-|   `-- io_uring-kbuf.c-__io_remove_buffers()-warn:variable-dereferenced-before-check-bl-buf_ring-(see-line-)
-|-- parisc-randconfig-r025-20230326
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-link-set-but-not-used
-|-- powerpc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_validation.c:warning:variable-bw_needed-set-but-not-used
-clang_recent_errors
-`-- arm-randconfig-r024-20230326
-    |-- drivers-perf-arm_pmuv3.c:error:call-to-undeclared-function-C-ISO-C99-and-later-do-not-support-implicit-function-declarations
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-DTLB
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-L1D
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-L1I
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-OP_READ
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-PERF_CACHE_MAP_ALL_UNSUPPORTED
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-PERF_MAP_ALL_UNSUPPORTED
-    |-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-RESULT_ACCESS
-    `-- drivers-perf-arm_pmuv3.c:error:use-of-undeclared-identifier-RESULT_MISS
+vim +/rdevldotbl +423 drivers/regulator/tps6594-regulator.c
 
-elapsed time: 829m
-
-configs tested: 123
-configs skipped: 13
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r003-20230326   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r005-20230326   gcc  
-alpha                randconfig-r012-20230327   gcc  
-alpha                randconfig-r013-20230326   gcc  
-alpha                randconfig-r015-20230327   gcc  
-alpha                randconfig-r016-20230326   gcc  
-arc                              allyesconfig   gcc  
-arc          buildonly-randconfig-r001-20230327   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r002-20230326   gcc  
-arc                  randconfig-r043-20230326   gcc  
-arc                  randconfig-r043-20230327   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230327   clang
-arm                  randconfig-r011-20230326   clang
-arm                  randconfig-r046-20230326   clang
-arm                  randconfig-r046-20230327   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky         buildonly-randconfig-r004-20230327   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r015-20230326   clang
-hexagon              randconfig-r041-20230326   clang
-hexagon              randconfig-r041-20230327   clang
-hexagon              randconfig-r045-20230326   clang
-hexagon              randconfig-r045-20230327   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230327   gcc  
-i386                 randconfig-a002-20230327   gcc  
-i386                 randconfig-a003-20230327   gcc  
-i386                 randconfig-a004-20230327   gcc  
-i386                 randconfig-a005-20230327   gcc  
-i386                 randconfig-a006-20230327   gcc  
-i386                 randconfig-a011-20230327   clang
-i386                 randconfig-a012-20230327   clang
-i386                 randconfig-a013-20230327   clang
-i386                 randconfig-a014-20230327   clang
-i386                 randconfig-a015-20230327   clang
-i386                 randconfig-a016-20230327   clang
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r005-20230327   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r001-20230326   gcc  
-loongarch    buildonly-randconfig-r006-20230326   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r012-20230326   gcc  
-loongarch            randconfig-r024-20230326   gcc  
-loongarch            randconfig-r036-20230328   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r001-20230326   gcc  
-m68k                 randconfig-r016-20230327   gcc  
-microblaze   buildonly-randconfig-r004-20230326   gcc  
-microblaze           randconfig-r026-20230326   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r002-20230326   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r023-20230327   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r004-20230326   gcc  
-parisc               randconfig-r021-20230326   gcc  
-parisc               randconfig-r022-20230327   gcc  
-parisc               randconfig-r025-20230326   gcc  
-parisc               randconfig-r033-20230328   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r006-20230326   clang
-powerpc              randconfig-r031-20230328   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230326   gcc  
-riscv                randconfig-r042-20230327   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r013-20230327   clang
-s390                 randconfig-r024-20230327   clang
-s390                 randconfig-r044-20230326   gcc  
-s390                 randconfig-r044-20230327   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r002-20230327   gcc  
-sh                   randconfig-r006-20230327   gcc  
-sh                   randconfig-r023-20230326   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r001-20230327   gcc  
-sparc                randconfig-r011-20230327   gcc  
-sparc                randconfig-r014-20230326   gcc  
-sparc                randconfig-r021-20230327   gcc  
-sparc                randconfig-r026-20230327   gcc  
-sparc64      buildonly-randconfig-r002-20230327   gcc  
-sparc64      buildonly-randconfig-r005-20230327   gcc  
-sparc64              randconfig-r003-20230326   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230327   gcc  
-x86_64               randconfig-a002-20230327   gcc  
-x86_64               randconfig-a003-20230327   gcc  
-x86_64               randconfig-a004-20230327   gcc  
-x86_64               randconfig-a005-20230327   gcc  
-x86_64               randconfig-a006-20230327   gcc  
-x86_64               randconfig-a011-20230327   clang
-x86_64               randconfig-a012-20230327   clang
-x86_64               randconfig-a013-20230327   clang
-x86_64               randconfig-a014-20230327   clang
-x86_64               randconfig-a015-20230327   clang
-x86_64               randconfig-a016-20230327   clang
-x86_64                               rhel-8.3   gcc  
+   405	
+   406	static int tps6594_regulator_probe(struct platform_device *pdev)
+   407	{
+   408		struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
+   409		struct regulator_dev *rdev;
+   410		struct regulator_config config = {};
+   411		u8 buck_configured[BUCK_NB] = { 0 };
+   412		u8 buck_multi[MULTI_PHASE_NB] = { 0 };
+   413		int i, nranges;
+   414		int irq_idx = 0;
+   415		int buck_idx = 0;
+   416		int error, irq;
+   417		int ext_reg_irq_nb = 2;
+   418		struct tps6594_regulator_irq_data *irq_data;
+   419		struct tps6594_ext_regulator_irq_data *irq_ext_reg_data;
+   420		struct tps6594_regulator_irq_type *irq_type;
+ > 421		struct regulator_dev *rdevbucktbl[BUCK_NB];
+ > 422		struct regulator_dev *rdevmultitbl[MULTI_PHASE_NB];
+ > 423		struct regulator_dev *rdevldotbl[LDO_NB];
+   424		u32 multi_phase_id;
+   425		u32 multi_phase_id_tbl[2];
+   426	
+   427		config.dev = tps->dev;
+   428		config.driver_data = tps;
+   429		config.regmap = tps->regmap;
+   430	
+   431		/*
+   432		 * Switch case defines different possible multi phase config
+   433		 * This is based on dts custom property: multi-phase-id
+   434		 * Using compatible or device rev is a too complex alternative
+   435		 * Default case is no Multiphase buck.
+   436		 * In case of Multiphase configuration, value should be defined for
+   437		 * buck_configured to avoid creating bucks for every buck in multiphase
+   438		 */
+   439	
+   440		if (device_property_present(tps->dev, "ti,multi-phase-id")) {
+   441			nranges = device_property_count_u32(tps->dev, "ti,multi-phase-id");
+   442			if (nranges < 1 || nranges > 2) {
+   443				dev_err(tps->dev, "%s port range: '%s' property\n",
+   444					nranges == -EINVAL ? "Missing" : "Invalid",
+   445					"ti,multi-phase-id");
+   446				return -EINVAL;
+   447			}
+   448			error = device_property_read_u32_array(tps->dev, "ti,multi-phase-id",
+   449							       multi_phase_id_tbl, nranges);
+   450			if (error) {
+   451				dev_err(tps->dev, "failed to parse '%s' property: %d\n",
+   452					"ti,multi-phase-id", error);
+   453				return error;
+   454			}
+   455			multi_phase_id = multi_phase_id_tbl[0];
+   456			/* Only configuration multiphase buck12 & buck34 requires 2 arguments */
+   457			if (nranges > 1 && multi_phase_id != 34)
+   458				multi_phase_id = multi_phase_id_tbl[1];
+   459	
+   460			switch (multi_phase_id) {
+   461			case 12:
+   462				buck_multi[0] = 1;
+   463				buck_configured[0] = 1;
+   464				buck_configured[1] = 1;
+   465				break;
+   466			/* multiphase buck34 is supported only with buck12 */
+   467			case 34:
+   468				buck_multi[0] = 1;
+   469				buck_configured[0] = 1;
+   470				buck_configured[1] = 1;
+   471				buck_multi[1] = 1;
+   472				buck_configured[2] = 1;
+   473				buck_configured[3] = 1;
+   474				break;
+   475			case 123:
+   476				buck_multi[2] = 1;
+   477				buck_configured[0] = 1;
+   478				buck_configured[1] = 1;
+   479				buck_configured[2] = 1;
+   480				break;
+   481			case 1234:
+   482				buck_multi[3] = 1;
+   483				buck_configured[0] = 1;
+   484				buck_configured[1] = 1;
+   485				buck_configured[2] = 1;
+   486				buck_configured[3] = 1;
+   487				break;
+   488			}
+   489		}
+   490	
+   491		if (tps->chip_id == LP8764X)
+   492			/* There is only 4 buck on LP8764X */
+   493			buck_configured[4] = 1;
+   494	
+   495		irq_data = devm_kmalloc(tps->dev,
+   496					ARRAY_SIZE(tps6594_bucks_irq_types) *
+   497					REGS_INT_NB *
+   498					sizeof(struct tps6594_regulator_irq_data) +
+   499					ARRAY_SIZE(tps6594_ldos_irq_types) *
+   500					REGS_INT_NB *
+   501					sizeof(struct tps6594_regulator_irq_data),
+   502					GFP_KERNEL);
+   503		if (!irq_data)
+   504			return -ENOMEM;
+   505	
+   506		for (i = 0; i < MULTI_PHASE_NB; i++) {
+   507			if (buck_multi[i] == 0)
+   508				continue;
+   509	
+   510			rdev = devm_regulator_register(&pdev->dev, &multi_regs[i], &config);
+   511			if (IS_ERR(rdev)) {
+   512				dev_err(tps->dev, "failed to register %s regulator\n",
+   513					pdev->name);
+   514				return PTR_ERR(rdev);
+   515			}
+   516			rdevmultitbl[i] = rdev;
+   517			/* config multiphase buck12+buck34 */
+   518			if (i == 1)
+   519				buck_idx = 2;
+   520			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   521							 tps6594_bucks_irq_types[buck_idx], &irq_idx);
+   522			if (error)
+   523				return error;
+   524			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   525							 tps6594_bucks_irq_types[buck_idx + 1], &irq_idx);
+   526			if (error)
+   527				return error;
+   528	
+   529			if (i == 2 || i == 3) {
+   530				error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   531								 tps6594_bucks_irq_types[buck_idx + 2],
+   532								 &irq_idx);
+   533				if (error)
+   534					return error;
+   535			}
+   536			if (i == 3) {
+   537				error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   538								 tps6594_bucks_irq_types[buck_idx + 3],
+   539								 &irq_idx);
+   540				if (error)
+   541					return error;
+   542			}
+   543		}
+   544	
+   545		for (i = 0; i < BUCK_NB; i++) {
+   546			if (buck_configured[i] == 1)
+   547				continue;
+   548	
+   549			rdev = devm_regulator_register(&pdev->dev, &buck_regs[i], &config);
+   550			if (IS_ERR(rdev)) {
+   551				dev_err(tps->dev, "failed to register %s regulator\n",
+   552					pdev->name);
+   553				return PTR_ERR(rdev);
+   554			}
+   555			rdevbucktbl[i] = rdev;
+   556	
+   557			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   558							 tps6594_bucks_irq_types[i], &irq_idx);
+   559			if (error)
+   560				return error;
+   561		}
+   562	
+   563		/* LP8764X dosen't have LDO */
+   564		if (tps->chip_id != LP8764X) {
+   565			for (i = 0; i < ARRAY_SIZE(ldo_regs); i++) {
+   566				rdev = devm_regulator_register(&pdev->dev, &ldo_regs[i], &config);
+   567				if (IS_ERR(rdev)) {
+   568					dev_err(tps->dev,
+   569						"failed to register %s regulator\n",
+   570						pdev->name);
+   571					return PTR_ERR(rdev);
+   572				}
+   573				rdevldotbl[i] = rdev;
+   574				error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+   575								 tps6594_ldos_irq_types[i],
+   576								 &irq_idx);
+   577				if (error)
+   578					return error;
+   579			}
+   580		}
+   581	
+   582		if (tps->chip_id == LP8764X)
+   583			ext_reg_irq_nb = ARRAY_SIZE(tps6594_ext_regulator_irq_types);
+   584	
+   585		irq_ext_reg_data = devm_kmalloc(tps->dev,
+   586						ext_reg_irq_nb *
+   587						sizeof(struct tps6594_ext_regulator_irq_data),
+   588						GFP_KERNEL);
+   589		if (!irq_ext_reg_data)
+   590			return -ENOMEM;
+   591	
+   592		for (i = 0; i < ext_reg_irq_nb; ++i) {
+   593			irq_type = &tps6594_ext_regulator_irq_types[i];
+   594	
+   595			irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+   596			if (irq < 0)
+   597				return -EINVAL;
+   598	
+   599			irq_ext_reg_data[i].dev = tps->dev;
+   600			irq_ext_reg_data[i].type = irq_type;
+   601	
+   602			error = devm_request_threaded_irq(tps->dev, irq, NULL,
+   603							  tps6594_regulator_irq_handler,
+   604							  IRQF_ONESHOT,
+   605							  irq_type->irq_name,
+   606							  &irq_ext_reg_data[i]);
+   607			if (error) {
+   608				dev_err(tps->dev, "failed to request %s IRQ %d: %d\n",
+   609					irq_type->irq_name, irq, error);
+   610				return error;
+   611			}
+   612		}
+   613		return 0;
+   614	}
+   615	
 
 -- 
 0-DAY CI Kernel Test Service
