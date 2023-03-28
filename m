@@ -2,272 +2,288 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A8A76CBCA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 12:39:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73C5A6CBE4B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Mar 2023 14:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbjC1KjV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Mar 2023 06:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
+        id S231374AbjC1MAV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Mar 2023 08:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjC1KjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 06:39:19 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13370618A
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 03:39:17 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-545cb3c9898so146168087b3.7
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Mar 2023 03:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679999956;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WeJvOmb4UiZDVdrpjbdoZEi88r2fueDviw4j3TobD+s=;
-        b=in30x2eTX3jMdB5lq1/bDRTxEHiNx9CtvD7goZQ6srXY+8gNricGHD/FTz0kAZsX9h
-         ry0Ldo03nV1VdMZBxhOiz0iMe1BRmASe+mD65YEruCVXoY0kbUsM/FgZLzv4q1n6Ll0z
-         GVUioTnM9Eejmtvl5rRwz/3cwRjYeG2w5D9ULfltX9JSeLE9ixzw9M/O45MFf6240+qe
-         d2lTNggLA6nKiLPBrpxqqlEqBXcbUQFTRY3MQ3HPDrzVtvSk+C3SvbaQrtA3Wek29dHU
-         VcwRILvcyIQWn84anR+3PRXriNK7zyc07nGzltmgzqqyHmk3BywN1lNyUfLfgtFs836/
-         lVkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679999956;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WeJvOmb4UiZDVdrpjbdoZEi88r2fueDviw4j3TobD+s=;
-        b=d6IwYogqsWedmDoHPKNxYN5jST9bUpUWPvCTJ8EP/2p9fADObwyZdBDg21mYjDCe7b
-         aokdIkwlO42WPAqPTU0uNanAD6XvaiB+PJ9pNKxbge58fYQ6aXomiIPIglmTSS9d2f6F
-         Tb57rS56bNEDurpkdlLWnZuBID/ggl+ZzmWU8C5WCaGfn1V1LR+ngRMw09KBAw9ZQOMn
-         F/mCyAMMXY897nc5rKkJWw75aZMAfbw8sq4Z0kJ3xoonoBXz2kqsRebr9b/nqGLcs0GN
-         TIVNrG8JjcKDjKLkOiWRIEfDmauvMkNFmeUuK+A7PFmMrg4T1mhNm/AkYCLf0fFR9zdI
-         Kkgw==
-X-Gm-Message-State: AAQBX9fbrPKDGSRneYzvdp/vkhoqjNM/ywrWY5td8kLAdybG2unRoo0V
-        j7RVDApdAOVlFX0YFAvfZQIHCbrovqPxxMTifVgujg==
-X-Google-Smtp-Source: AKy350brQY738lvkF7Rq2rzNE3EKxx6So7gaAZKzG1faUECV9zEl3gL5esGUxz85xxrR5C20f9Chy1kDFvI+CQ0wU18=
-X-Received: by 2002:a81:4410:0:b0:545:a7d8:f278 with SMTP id
- r16-20020a814410000000b00545a7d8f278mr6595880ywa.5.1679999956113; Tue, 28 Mar
- 2023 03:39:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230327132718.573-1-quic_devipriy@quicinc.com>
- <20230327132718.573-4-quic_devipriy@quicinc.com> <CAA8EJprTm1sZ8fnfNee+NJTiaFq17QwWaEnSoJWVYs_GY65xFg@mail.gmail.com>
- <a6225636-7abb-3c5c-c78f-8d40c25167b9@quicinc.com>
-In-Reply-To: <a6225636-7abb-3c5c-c78f-8d40c25167b9@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 28 Mar 2023 13:39:05 +0300
-Message-ID: <CAA8EJprgcMOX-WRXP2i9k850La1A1UKaKuODd-fVi27nOxMbyA@mail.gmail.com>
-Subject: Re: [PATCH V10 3/4] arm64: dts: qcom: Add support for ipq9574 SoC and
- RDP433 variant
-To:     Devi Priya <quic_devipriy@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
-        marcel.ziswiler@toradex.com, nfraprado@collabora.com,
-        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com,
-        quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com,
-        quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com,
-        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S232841AbjC1MAU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Mar 2023 08:00:20 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D1283EC;
+        Tue, 28 Mar 2023 05:00:07 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32SB2Ken007147;
+        Tue, 28 Mar 2023 12:00:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=qllw3QjSzdXhdCLmRWBTk2zYlUIAlefYkCKCwtvtJxg=;
+ b=JQS3EIpdMMVYyzN7y80SmEUBHCHFZmI8EKKRR6j5ibPAfN/JGcAjdvtF4+qc0wkBvTaW
+ H8SF9vdod5F+nWbPNq0LURZYmGG3k7iNjxPnK2qelU/4+suT9Hfr3Jh87PMbRV8hVAdl
+ bmJuegGKQX+6fBwfzT+4Ab4uri92818RIy+X2CdeWkZq0+rRQaSVOEV3MY2Xv8JfSkoo
+ nOiv3wl1zXcA9Wu2/iNGP1yXSMuojt6dIiYuzFBzjkNvmdhTJcYGHiLayUw7JRvUSHna
+ oMgvxOXBh7njpIdfl2qURM6v4x6a9qgkyFdAIhU/kdOlF7vL/qSS4eEv7szREKvpS8oi 5Q== 
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pky0x86r9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Mar 2023 11:59:59 +0000
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+        by APTAIPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 32SBxucu029462;
+        Tue, 28 Mar 2023 11:59:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 3pht1kf50n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 28 Mar 2023 11:59:56 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32SBxuwa029457;
+        Tue, 28 Mar 2023 11:59:56 GMT
+Received: from minghao-gv.ap.qualcomm.com (minghao-gv.qualcomm.com [10.231.253.196])
+        by APTAIPPMTA01.qualcomm.com (PPS) with ESMTP id 32SBxtNR029456;
+        Tue, 28 Mar 2023 11:59:56 +0000
+Received: by minghao-gv.ap.qualcomm.com (Postfix, from userid 2359059)
+        id BF7011F6FE; Tue, 28 Mar 2023 19:59:54 +0800 (CST)
+From:   Minghao Zhang <quic_minghao@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, linus.walleij@linaro.or
+Cc:     Minghao Zhang <quic_minghao@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_satyap@quicinc.com,
+        quic_tsoni@quicinc.com
+Subject: [PATCH] pinctrl: qcom: Add support to log pin status before suspend for TLMM
+Date:   Tue, 28 Mar 2023 19:59:51 +0800
+Message-Id: <1680004791-4216-1-git-send-email-quic_minghao@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zJ79Emvkn7RZoJzBmvKNZrKswhrlLFBO
+X-Proofpoint-ORIG-GUID: zJ79Emvkn7RZoJzBmvKNZrKswhrlLFBO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-24_11,2023-03-28_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=828
+ impostorscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 clxscore=1011
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303280096
+X-Spam-Status: No, score=0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 28 Mar 2023 at 10:31, Devi Priya <quic_devipriy@quicinc.com> wrote:
-> On 3/27/2023 8:15 PM, Dmitry Baryshkov wrote:
-> > On Mon, 27 Mar 2023 at 16:28, Devi Priya <quic_devipriy@quicinc.com> wrote:
-> >>
-> >> Add initial device tree support for Qualcomm IPQ9574 SoC and
-> >> Reference Design Platform(RDP) 433 which is based on IPQ9574
-> >> family of SoCs
-> >>
-> >> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> >> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> >> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
-> >> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
-> >> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> >> ---
-> >>   Changes in V10:
-> >>          - Renamed the Board Device Tree Source to use the RDP numbers
-> >>          - Updated the Makefile, subject and commit message accordingly
-> >>
-> >>   arch/arm64/boot/dts/qcom/Makefile           |   1 +
-> >>   arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts |  84 ++++++
-> >>   arch/arm64/boot/dts/qcom/ipq9574.dtsi       | 270 ++++++++++++++++++++
-> >>   3 files changed, 355 insertions(+)
-> >>   create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-> >>   create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> >> index 1a29403400b7..52f1f92c5195 100644
-> >> --- a/arch/arm64/boot/dts/qcom/Makefile
-> >> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> >> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_QCOM) += ipq6018-cp01-c1.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk01.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c1.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += ipq8074-hk10-c2.dtb
-> >> +dtb-$(CONFIG_ARCH_QCOM)        += ipq9574-rdp433.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-acer-a1-724.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-alcatel-idol347.dtb
-> >>   dtb-$(CONFIG_ARCH_QCOM)        += msm8916-asus-z00l.dtb
-> >> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-> >> new file mode 100644
-> >> index 000000000000..2ce8e09e7565
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
-> >> @@ -0,0 +1,84 @@
-> >> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> >> +/*
-> >> + * IPQ9574 RDP433 board device tree source
-> >> + *
-> >> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
-> >> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> >> + */
-> >> +
-> >> +/dts-v1/;
-> >> +
-> >> +#include "ipq9574.dtsi"
-> >> +
-> >> +/ {
-> >> +       model = "Qualcomm Technologies, Inc. IPQ9574/AP-AL02-C7";
-> >> +       compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
-> >> +
-> >> +       aliases {
-> >> +               serial0 = &blsp1_uart2;
-> >> +       };
-> >> +
-> >> +       chosen {
-> >> +               stdout-path = "serial0:115200n8";
-> >> +       };
-> >> +};
-> >> +
-> >> +&blsp1_uart2 {
-> >> +       pinctrl-0 = <&uart2_pins>;
-> >> +       pinctrl-names = "default";
-> >> +       status = "okay";
-> >> +};
-> >> +
-> >> +&sdhc_1 {
-> >> +       pinctrl-0 = <&sdc_default_state>;
-> >> +       pinctrl-names = "default";
-> >> +       mmc-ddr-1_8v;
-> >> +       mmc-hs200-1_8v;
-> >> +       mmc-hs400-1_8v;
-> >> +       mmc-hs400-enhanced-strobe;
-> >> +       max-frequency = <384000000>;
-> >> +       bus-width = <8>;
-> >> +       status = "okay";
-> >> +};
-> >> +
-> >> +&sleep_clk {
-> >> +       clock-frequency = <32000>;
-> >> +};
-> >> +
-> >> +&tlmm {
-> >> +       sdc_default_state: sdc-default-state {
-> >> +               clk-pins {
-> >> +                       pins = "gpio5";
-> >> +                       function = "sdc_clk";
-> >> +                       drive-strength = <8>;
-> >> +                       bias-disable;
-> >> +               };
-> >> +
-> >> +               cmd-pins {
-> >> +                       pins = "gpio4";
-> >> +                       function = "sdc_cmd";
-> >> +                       drive-strength = <8>;
-> >> +                       bias-pull-up;
-> >> +               };
-> >> +
-> >> +               data-pins {
-> >> +                       pins = "gpio0", "gpio1", "gpio2",
-> >> +                              "gpio3", "gpio6", "gpio7",
-> >> +                              "gpio8", "gpio9";
-> >> +                       function = "sdc_data";
-> >> +                       drive-strength = <8>;
-> >> +                       bias-pull-up;
-> >> +               };
-> >> +
-> >> +               rclk-pins {
-> >> +                       pins = "gpio10";
-> >> +                       function = "sdc_rclk";
-> >> +                       drive-strength = <8>;
-> >> +                       bias-pull-down;
-> >> +               };
-> >> +       };
-> >> +};
-> >> +
-> >> +&xo_board_clk {
-> >> +       clock-frequency = <24000000>;
-> >> +};
-> >> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> >> new file mode 100644
-> >> index 000000000000..3bb7435f5e7f
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> >> @@ -0,0 +1,270 @@
-> >> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> >> +/*
-> >> + * IPQ9574 SoC device tree source
-> >> + *
-> >> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
-> >> + * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
-> >> + */
-> >> +
-> >> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> +#include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-> >> +#include <dt-bindings/reset/qcom,ipq9574-gcc.h>
-> >> +
-> >> +/ {
-> >> +       interrupt-parent = <&intc>;
-> >> +       #address-cells = <2>;
-> >> +       #size-cells = <2>;
-> >> +
-> >> +       clocks {
-> >> +               bias_pll_ubi_nc_clk: bias-pll-ubi-nc-clk {
-> >> +                       compatible = "fixed-clock";
-> >> +                       clock-frequency = <353000000>;
-> >> +                       #clock-cells = <0>;
-> >> +               };
-> >
-> > What is the source for this clock? With it clocking at 353 MHz, I
-> > doubt that it is an external clock.
-> bias_pll_ubi_nc_clk (353MHz)is a backup source
-> for Q6_AXIM2_CLK/PCIE2_AXIM_CLK/PCIE3_AXIM_CLK/SNOC-CLK
-> It is from the CMN_PLL, and is the same as that of PPE core clock.
-> Do you suggest to move its clock-frequency to Board DT similar to
-> xo/sleep clock?
+This change supports to print pin status before device suspend
+to debug for TLMM. And expose 2 APIs to enable/disable this
+functionality.
 
-No, I suggest moving it to the device where it originates. If it comes
-from GCC, it should be provided by the GCC, not by the top-level fixed
-clock.
+Signed-off-by: Minghao Zhang <quic_minghao@quicinc.com>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 133 +++++++++++++++++++++++++++++--------
+ drivers/pinctrl/qcom/pinctrl-msm.h |   1 +
+ 2 files changed, 105 insertions(+), 29 deletions(-)
 
-> >
-> >> +
-> >> +               sleep_clk: sleep-clk {
-> >> +                       compatible = "fixed-clock";
-> >> +                       #clock-cells = <0>;
-> >> +               };
-> >> +
-> >> +               xo_board_clk: xo-board-clk {
-> >> +                       compatible = "fixed-clock";
-> >> +                       #clock-cells = <0>;
-> >> +               };
-> >> +       };
-> >
-> > [skipped the rest]
-> >
-> Regards,
-> Devi Priya
-
-
-
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index daeb79a..872c49f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -83,6 +83,21 @@ struct msm_pinctrl {
+ 	u32 phys_base[MAX_NR_TILES];
+ };
+ 
++static bool pinctrl_msm_log_mask;
++
++static const char * const pulls_keeper[] = {
++	"no pull",
++	"pull down",
++	"keeper",
++	"pull up"
++};
++
++static const char * const pulls_no_keeper[] = {
++	"no pull",
++	"pull down",
++	"pull up",
++};
++
+ #define MSM_ACCESSOR(name) \
+ static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
+ 			    const struct msm_pingroup *g) \
+@@ -628,6 +643,29 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
++static void msm_gpio_pin_status_get(struct msm_pinctrl *pctrl, const struct msm_pingroup *g,
++				    unsigned int offset, int *is_out, unsigned int *func,
++				    int *drive, int *pull, int *egpio_enable, int *val)
++{
++	u32 ctl_reg, io_reg;
++
++	ctl_reg = msm_readl_ctl(pctrl, g);
++	io_reg = msm_readl_io(pctrl, g);
++
++	*is_out = !!(ctl_reg & BIT(g->oe_bit));
++	*func = (ctl_reg >> g->mux_bit) & 7;
++	*drive = (ctl_reg >> g->drv_bit) & 7;
++	*pull = (ctl_reg >> g->pull_bit) & 3;
++	*egpio_enable = 0;
++	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
++		*egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
++
++	if (*is_out)
++		*val = !!(io_reg & BIT(g->out_bit));
++	else
++		*val = !!(io_reg & BIT(g->in_bit));
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ 
+ static void msm_gpio_dbg_show_one(struct seq_file *s,
+@@ -644,40 +682,13 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 	int pull;
+ 	int val;
+ 	int egpio_enable;
+-	u32 ctl_reg, io_reg;
+-
+-	static const char * const pulls_keeper[] = {
+-		"no pull",
+-		"pull down",
+-		"keeper",
+-		"pull up"
+-	};
+-
+-	static const char * const pulls_no_keeper[] = {
+-		"no pull",
+-		"pull down",
+-		"pull up",
+-	};
+ 
+ 	if (!gpiochip_line_is_valid(chip, offset))
+ 		return;
+ 
+ 	g = &pctrl->soc->groups[offset];
+-	ctl_reg = msm_readl_ctl(pctrl, g);
+-	io_reg = msm_readl_io(pctrl, g);
+-
+-	is_out = !!(ctl_reg & BIT(g->oe_bit));
+-	func = (ctl_reg >> g->mux_bit) & 7;
+-	drive = (ctl_reg >> g->drv_bit) & 7;
+-	pull = (ctl_reg >> g->pull_bit) & 3;
+-	egpio_enable = 0;
+-	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
+-		egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
+-
+-	if (is_out)
+-		val = !!(io_reg & BIT(g->out_bit));
+-	else
+-		val = !!(io_reg & BIT(g->in_bit));
++	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
++					&drive, &pull, &egpio_enable, &val);
+ 
+ 	if (egpio_enable) {
+ 		seq_printf(s, " %-8s: egpio\n", g->name);
+@@ -707,6 +718,39 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ #define msm_gpio_dbg_show NULL
+ #endif
+ 
++static void msm_gpio_log_pin_status(struct gpio_chip *chip, unsigned int offset)
++{
++	const struct msm_pingroup *g;
++	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
++	unsigned int func;
++	int is_out;
++	int drive;
++	int pull;
++	int val;
++	int egpio_enable;
++
++	if (!gpiochip_line_is_valid(chip, offset))
++		return;
++
++	g = &pctrl->soc->groups[offset];
++	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
++					&drive, &pull, &egpio_enable, &val);
++
++	printk_deferred("%s: %s, %s, func%d, %dmA, %s\n",
++			g->name, is_out ? "out" : "in",
++			val ? "high" : "low", func,
++			msm_regval_to_drive(drive),
++			pctrl->soc->pull_no_keeper ? pulls_no_keeper[pull] : pulls_keeper[pull]);
++}
++
++static void msm_gpios_status(struct gpio_chip *chip)
++{
++	unsigned int i;
++
++	for (i = 0; i < chip->ngpio; i++)
++		msm_gpio_log_pin_status(chip, i);
++}
++
+ static int msm_gpio_init_valid_mask(struct gpio_chip *gc,
+ 				    unsigned long *valid_mask,
+ 				    unsigned int ngpios)
+@@ -1450,6 +1494,35 @@ SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops, msm_pinctrl_suspend,
+ 
+ EXPORT_SYMBOL(msm_pinctrl_dev_pm_ops);
+ 
++void debug_pintctrl_msm_enable(void)
++{
++	pinctrl_msm_log_mask = true;
++}
++EXPORT_SYMBOL(debug_pintctrl_msm_enable);
++
++void debug_pintctrl_msm_disable(void)
++{
++	pinctrl_msm_log_mask = false;
++}
++EXPORT_SYMBOL(debug_pintctrl_msm_disable);
++
++static __maybe_unused int noirq_msm_pinctrl_suspend(struct device *dev)
++{
++	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
++
++	if (pinctrl_msm_log_mask) {
++		printk_deferred("%s\n", pctrl->chip.label);
++		msm_gpios_status(&pctrl->chip);
++	}
++
++	return 0;
++}
++
++const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops = {
++	.suspend_noirq = noirq_msm_pinctrl_suspend,
++};
++EXPORT_SYMBOL(noirq_msm_pinctrl_dev_pm_ops);
++
+ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data)
+ {
+@@ -1512,6 +1585,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
++	pinctrl_msm_log_mask = false;
++
+ 	platform_set_drvdata(pdev, pctrl);
+ 
+ 	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 985eced..8ccbb6d 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -155,6 +155,7 @@ struct msm_pinctrl_soc_data {
+ };
+ 
+ extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
++extern const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops;
+ 
+ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data);
 -- 
-With best wishes
-Dmitry
+2.7.4
+
