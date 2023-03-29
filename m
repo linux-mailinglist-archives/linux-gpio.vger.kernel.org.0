@@ -2,86 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EE26CDAE7
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8800A6CDB42
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:55:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjC2NcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 09:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        id S229909AbjC2Nzm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 09:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjC2NcC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:32:02 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DD7422C;
-        Wed, 29 Mar 2023 06:32:01 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 9E4626602EDC;
-        Wed, 29 Mar 2023 14:31:59 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1680096720;
-        bh=Pib6qE5F4Lg5qFO9xEESVqnMdlCKI+dvN/qGSBLYOKk=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=kjYvSga7RY2S3by22nBTNlGCuhkRVhlXXJNedHVKkcqpVDD2ymQdEVy6yUIoMZuQ3
-         LkXkrTJPaTEavy37Mnq/RW9Cs8bNRwJiQ6AbvjqWoYg2HfoKxnFcNsDeZi7Nio15s/
-         3lgrrL5XACVWK/93tDg2dvtonoxOORzNUQKf2VMHMyhKFzcaDUHQNL9grjQVKTCekV
-         X+Hy45SK4ISpIbNLejEAAuFFSUgTDpWg9YjjA04+WEnB0xwDl+Uztjv6ZytxnR5adP
-         83/EsfBUKs7oGEjcSRXbkPVQUL/yIL6oQA2Y6NrNBIdhfpxZY8HuA8laD4y2gg561u
-         WscoqlSJ+58/w==
-Message-ID: <8c1f5991-e220-95b7-c605-03d3c3442c21@collabora.com>
-Date:   Wed, 29 Mar 2023 15:31:56 +0200
+        with ESMTP id S229708AbjC2Nzm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:55:42 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63401C2;
+        Wed, 29 Mar 2023 06:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680098141; x=1711634141;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5I9tE2hnLEdY1WTTcTTJ/HOFXe45bbkHF5No/mcsq4c=;
+  b=eUwYjnuRM+UbCwIIpJvUV09VjfWsMptLUbiAJ0QEKKlW0bmQaG7CAyLY
+   Jibjj5V7zpL8JrAgg+r+7/MQaWCG0fS/+hKZIVdM0JOe6m9mNhXSvDaQG
+   hMySUnWgGWdqBjm4M2rVKyC/bq7Qx/AjQfvGjKz9epmjybCw87u9G/2cG
+   UDf/2aHg0yxBTVOa80T8vY/Sosy96FdmzvWOxFo2x61YD0MxEBsSaLSut
+   CLcKVC6bO4Elo8eTsWGqTiTBZa7bCu8LFgr97+GV5quSc4r03+r7mPxro
+   FgZb1/5fcADUp20n6ZPWVMwYFPm/fpi+gaj+0TIRq1tEJJy6iyP4OLCpf
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="405824659"
+X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
+   d="scan'208";a="405824659"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 06:55:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="684271112"
+X-IronPort-AV: E=Sophos;i="5.98,300,1673942400"; 
+   d="scan'208";a="684271112"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 29 Mar 2023 06:55:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1phWGw-00A38s-2P;
+        Wed, 29 Mar 2023 16:55:30 +0300
+Date:   Wed, 29 Mar 2023 16:55:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] gpiolib: Split property name from the warning
+ message
+Message-ID: <ZCRDUp2sniTQWdFU@smile.fi.intel.com>
+References: <20230321135310.73153-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MeBbdHYV-_2utMBVy-31GzGbWM8GUD9RRV8vYQ3OzHWrA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v3 17/17] arm64: dts: mediatek: Add CPU Idle support
-Content-Language: en-US
-To:     amergnat@baylibre.com, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>
-References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-17-0003e80e0095@baylibre.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230203-evk-board-support-v3-17-0003e80e0095@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeBbdHYV-_2utMBVy-31GzGbWM8GUD9RRV8vYQ3OzHWrA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 29/03/23 10:54, amergnat@baylibre.com ha scritto:
-> From: Amjad Ouled-Ameur <aouledameur@baylibre.com>
-> 
-> MT8365 has 3 CPU Idle states:
-> - MCDI_CPU. (Multi-Core-Deep-Idle)
-> - MCDI_CLUSTER.
-> - DPIDLE. (Deep-Idle)
-> 
-> Signed-off-by: Amjad Ouled-Ameur <aouledameur@baylibre.com>
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+On Wed, Mar 29, 2023 at 01:37:16PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Mar 21, 2023 at 2:52 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+...
+
+> > -               dev_warn(dev, "gpio-line-names too short (length %d), cannot map names for the gpiochip at offset %u\n",
+> > -                        count, chip->offset);
+> > +               dev_warn(dev, "%s too short (length %d), cannot map names for the gpiochip at offset %u\n",
+> > +                        "gpio-line-names", count, chip->offset);
+> >                 return 0;
+> >         }
+> 
+> I'd say being able to grep the code easily for messages is more
+> important than saving a couple bytes here?
+
+We still grep by the rest of the message. But anyway, up to you,
+I've no hard feelings to this patch.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
