@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB1C6CDADB
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:29:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49EE26CDAE7
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbjC2N35 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 09:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
+        id S229917AbjC2NcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 09:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbjC2N3x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:29:53 -0400
+        with ESMTP id S229601AbjC2NcC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:32:02 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569AD44AA;
-        Wed, 29 Mar 2023 06:29:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DD7422C;
+        Wed, 29 Mar 2023 06:32:01 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 27F036602173;
-        Wed, 29 Mar 2023 14:29:47 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 9E4626602EDC;
+        Wed, 29 Mar 2023 14:31:59 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1680096588;
-        bh=EOpnX/dcQ/BbXzds0SG3hg5cL//fXhc2G0DAUpgv+q4=;
+        s=mail; t=1680096720;
+        bh=Pib6qE5F4Lg5qFO9xEESVqnMdlCKI+dvN/qGSBLYOKk=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ICmRH+yKTLVAQGmS7JSUDaSjWqxemU8uS0ZXU5qKpq2ec7nQTj9iX7uLN/4JDmeP1
-         RKBQWhLfz3J+0iKmi+7G/Vu7WtCIzsNVKRE1sEuYWUQ3MZpsVqw24vH4LlPtPsI3+i
-         4lWRtkIJjxMFmlxKkHYIl/X7XXHlXK34krkET1Jwp+TK1ugflp7ieaLf4GOzB+fW4d
-         gxHQ6BkVXpRRuhWK14Z9IrPGeScbPuaON9zHD1KM8c+Nm2dku5sXbWvBL6jKfiYRTx
-         xo7uLOQPQI/cYSjm909+Zh5z//qBUXJMNK8LQ3PrNa5iJyJmZWV2Q8gHHkMGjNVY1u
-         Pf5omuY/LfRLw==
-Message-ID: <8e894763-6589-79ef-1e75-67f546013a2f@collabora.com>
-Date:   Wed, 29 Mar 2023 15:29:45 +0200
+        b=kjYvSga7RY2S3by22nBTNlGCuhkRVhlXXJNedHVKkcqpVDD2ymQdEVy6yUIoMZuQ3
+         LkXkrTJPaTEavy37Mnq/RW9Cs8bNRwJiQ6AbvjqWoYg2HfoKxnFcNsDeZi7Nio15s/
+         3lgrrL5XACVWK/93tDg2dvtonoxOORzNUQKf2VMHMyhKFzcaDUHQNL9grjQVKTCekV
+         X+Hy45SK4ISpIbNLejEAAuFFSUgTDpWg9YjjA04+WEnB0xwDl+Uztjv6ZytxnR5adP
+         83/EsfBUKs7oGEjcSRXbkPVQUL/yIL6oQA2Y6NrNBIdhfpxZY8HuA8laD4y2gg561u
+         WscoqlSJ+58/w==
+Message-ID: <8c1f5991-e220-95b7-c605-03d3c3442c21@collabora.com>
+Date:   Wed, 29 Mar 2023 15:31:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v3 16/17] arm64: dts: mediatek: fix systimer properties
+Subject: Re: [PATCH v3 17/17] arm64: dts: mediatek: Add CPU Idle support
 Content-Language: en-US
 To:     amergnat@baylibre.com, Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -57,10 +57,10 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-16-0003e80e0095@baylibre.com>
+ <20230203-evk-board-support-v3-17-0003e80e0095@baylibre.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230203-evk-board-support-v3-16-0003e80e0095@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v3-17-0003e80e0095@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -75,19 +75,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 Il 29/03/23 10:54, amergnat@baylibre.com ha scritto:
 > From: Amjad Ouled-Ameur <aouledameur@baylibre.com>
 > 
-> MT8365 has a SYST timer (System Timer), therefore the compatible node
-> should be "mediatek,mt6765-timer" instead of "mediatek,mt6795-systimer"
-> (which corresponds to ARM/ARM64 System Timer).
-> 
-> Plus, register range should be 0x100 instead of 0x10.
-> 
-> Finally, interrupt polarity of systimer is LEVEL_HIGH.
-> 
-> Fix the above properties accordingly.
+> MT8365 has 3 CPU Idle states:
+> - MCDI_CPU. (Multi-Core-Deep-Idle)
+> - MCDI_CLUSTER.
+> - DPIDLE. (Deep-Idle)
 > 
 > Signed-off-by: Amjad Ouled-Ameur <aouledameur@baylibre.com>
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
 
