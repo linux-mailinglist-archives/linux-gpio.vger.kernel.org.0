@@ -2,79 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA58E6CD3AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 09:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BE806CD3C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 09:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjC2Hvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 03:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
+        id S230150AbjC2Hyp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 03:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjC2HvU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 03:51:20 -0400
+        with ESMTP id S230164AbjC2HyL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 03:54:11 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960A04200;
-        Wed, 29 Mar 2023 00:50:50 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32T3TDan004505;
-        Wed, 29 Mar 2023 07:50:43 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB06040D3;
+        Wed, 29 Mar 2023 00:53:45 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32T5JFCb031953;
+        Wed, 29 Mar 2023 07:53:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=DeavIEJPp0sfdmi/B+fdKHYkBNKqu0TcSUAUs1ORkv0=;
- b=Ro/mg91gCRcHn0l6bjigIcXydkZ3JU0OmCVCyKscHUUGm+d4RKHxNoWiiP3MUw1eR5TJ
- +sW3nP6ckkczR0kMh8N8tEbkDpQ29Hm+r9DObeq3NZ/8gV/eXEadZaozOmzXMcOdDdCy
- sdB+OH9gfzNyXS6UxBosSANNIz4JQu04yfLFKFK10/Sd2xtHksBUkfFn/sXM/hF6i5bK
- uMPFjck6GZ+pCzbn9YedtqddXYMCC0vlhCQ4Ze0V9Egxu1aOWqQmbjiDfQwKRDoTwYpU
- wV2u39TcRtQYCglptWjXcTApT1O35toenYadNEZjwsziwpwAyasKzM8cf2C7jx5hmjdB ig== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkx4tatmv-1
+ bh=CL1TfgIn5mWmZvuQXOw27pSAanwvirATqAb9RcthhBc=;
+ b=jgyBMisg65Xe9mKsVsGa6s9ItaDNB+ciFgiJy5E3YDpASPlre708e+Eje5Jtn/JDra2W
+ +E8KRUObRR7gtkc8tbKtRkCPjoiU/Wg1so83z0La4uf4eUASGQqqQz9HZ/n6H8iFgour
+ Z87usUrs9Pq55xcCof4cczv9zh+iLPdMiW4ojw/7XHjY9PbUCVl1jbMa9A+x/6Wz+wvW
+ pfVc7MZfYdPqtY6JIuU+C7g8HQhmtr/aTaReQfwpd8vEAoeZTevA4qpY6JDJT+CM3WZk
+ f7BSJzYtzxpPypFag5p/bGHVxEi/6pbpYoy+1ZIECGWwezeeVxBb/NiUc4jREomGYQoH /g== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkv45k52h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 07:50:43 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32T7ogVn025511
+        Wed, 29 Mar 2023 07:53:28 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32T7rRsQ005962
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 07:50:42 GMT
-Received: from [10.252.221.243] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 29 Mar 2023 07:53:27 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 29 Mar
- 2023 00:50:38 -0700
-Message-ID: <3f7a901f-4deb-1855-4f8c-9a7c3015d641@quicinc.com>
-Date:   Wed, 29 Mar 2023 13:20:34 +0530
+ 2023 00:53:24 -0700
+Message-ID: <99ffb047-cae0-baf3-1d8e-8be1367bd0d1@quicinc.com>
+Date:   Wed, 29 Mar 2023 13:23:21 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH v3 18/18] arm64: dts: qcom: sa8775p-ride: add PMIC
- regulators
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v5 0/5] Refactor to support multiple download mode
 Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230327125316.210812-1-brgl@bgdev.pl>
- <20230327125316.210812-19-brgl@bgdev.pl>
-From:   Shazad Hussain <quic_shazhuss@quicinc.com>
-In-Reply-To: <20230327125316.210812-19-brgl@bgdev.pl>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: V07c5niNn2cG39Gd4yrIMGunaaXy8cM3
-X-Proofpoint-ORIG-GUID: V07c5niNn2cG39Gd4yrIMGunaaXy8cM3
+X-Proofpoint-GUID: lc0CZfAV8THGoSnm3Vx3OvC6qURHLBvJ
+X-Proofpoint-ORIG-GUID: lc0CZfAV8THGoSnm3Vx3OvC6qURHLBvJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-29_02,2023-03-28_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2303200000 definitions=main-2303290063
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
@@ -85,274 +78,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Please ignore this series as i have sent v6.
 
+https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
 
-On 3/27/2023 6:23 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+-Mukesh
+
+On 3/28/2023 9:07 PM, Mukesh Ojha wrote:
+> Intention of this series to support multiple download mode and
+> only modify the required bits during setting tcsr register.
 > 
-> Add PMIC regulators for sa8775p-ride.
+> Other download modes are minidump, bothdump (full dump + minidump).
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/sa8775p-ride.dts | 233 ++++++++++++++++++++++
->   1 file changed, 233 insertions(+)
+> Latest minidump kernel driver patches has been sent here
+> https://lore.kernel.org/lkml/1679491817-2498-1-git-send-email-quic_mojha@quicinc.com/
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> index a0d2024a69df..fdd229d232d1 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> @@ -5,6 +5,8 @@
+> Also, this series should be applied on
+> https://lore.kernel.org/lkml/1678979666-551-1-git-send-email-quic_mojha@quicinc.com/
+> 
+> Changes in v5:
+>    - Tried to fix the issue reported by kernel test robot
+>      https://lore.kernel.org/lkml/202303280535.acb66sQT-lkp@intel.com/
+> 
+>    - Applied some of the improvement suggested by [Bjorn.andersson]
 >   
->   /dts-v1/;
->   
-> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> +
->   #include "sa8775p.dtsi"
->   #include "sa8775p-pmics.dtsi"
->   
-> @@ -25,6 +27,237 @@ chosen {
->   	};
->   };
->   
-> +&apps_rsc {
-> +	regulators-0 {
-> +		compatible = "qcom,pmm8654au-rpmh-regulators";
-> +		qcom,pmic-id = "a";
-> +
-> +		vreg_s4a: smps4 {
-> +			regulator-name = "vreg_s4a";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1816000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s5a: smps5 {
-> +			regulator-name = "vreg_s5a";
-> +			regulator-min-microvolt = <1850000>;
-> +			regulator-max-microvolt = <1996000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s9a: smps9 {
-> +			regulator-name = "vreg_s9a";
-> +			regulator-min-microvolt = <535000>;
-> +			regulator-max-microvolt = <1120000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l4a: ldo4 {
-> +			regulator-name = "vreg_l4a";
-> +			regulator-min-microvolt = <788000>;
-> +			regulator-max-microvolt = <1050000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l5a: ldo5 {
-> +			regulator-name = "vreg_l5a";
-> +			regulator-min-microvolt = <870000>;
-> +			regulator-max-microvolt = <950000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l6a: ldo6 {
-> +			regulator-name = "vreg_l6a";
-> +			regulator-min-microvolt = <870000>;
-> +			regulator-max-microvolt = <970000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l7a: ldo7 {
-> +			regulator-name = "vreg_l7a";
-> +			regulator-min-microvolt = <720000>;
-> +			regulator-max-microvolt = <950000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l8a: ldo8 {
-> +			regulator-name = "vreg_l8a";
-> +			regulator-min-microvolt = <2400000>;
-
-Hi Bart,
-Internally with PMIC2.0 i.e K2 upgraded board we were seeing target
-crash when kernel votes for 2.4V with fault monitors enabled in K2.
-So let's keep the recommended value <2504000> for ldo8.
-
--Shazad
-
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l9a: ldo9 {
-> +			regulator-name = "vreg_l9a";
-> +			regulator-min-microvolt = <2970000>;
-> +			regulator-max-microvolt = <3544000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +	};
-> +
-> +	regulators-1 {
-> +		compatible = "qcom,pmm8654au-rpmh-regulators";
-> +		qcom,pmic-id = "c";
-> +
-> +		vreg_l1c: ldo1 {
-> +			regulator-name = "vreg_l1c";
-> +			regulator-min-microvolt = <1140000>;
-> +			regulator-max-microvolt = <1260000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l2c: ldo2 {
-> +			regulator-name = "vreg_l2c";
-> +			regulator-min-microvolt = <900000>;
-> +			regulator-max-microvolt = <1100000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l3c: ldo3 {
-> +			regulator-name = "vreg_l3c";
-> +			regulator-min-microvolt = <1100000>;
-> +			regulator-max-microvolt = <1300000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l4c: ldo4 {
-> +			regulator-name = "vreg_l4c";
-> +			regulator-min-microvolt = <1100000>;
-> +			regulator-max-microvolt = <1300000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			/*
-> +			 * FIXME: This should have regulator-allow-set-load but
-> +			 * we're getting the over-current fault from the PMIC
-> +			 * when switching to LPM.
-> +			 */
-> +		};
-> +
-> +		vreg_l5c: ldo5 {
-> +			regulator-name = "vreg_l5c";
-> +			regulator-min-microvolt = <1100000>;
-> +			regulator-max-microvolt = <1300000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l6c: ldo6 {
-> +			regulator-name = "vreg_l6c";
-> +			regulator-min-microvolt = <1620000>;
-> +			regulator-max-microvolt = <1980000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l7c: ldo7 {
-> +			regulator-name = "vreg_l7c";
-> +			regulator-min-microvolt = <1620000>;
-> +			regulator-max-microvolt = <2000000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l8c: ldo8 {
-> +			regulator-name = "vreg_l8c";
-> +			regulator-min-microvolt = <2400000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l9c: ldo9 {
-> +			regulator-name = "vreg_l9c";
-> +			regulator-min-microvolt = <1650000>;
-> +			regulator-max-microvolt = <2700000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +	};
-> +
-> +	regulators-2 {
-> +		compatible = "qcom,pmm8654au-rpmh-regulators";
-> +		qcom,pmic-id = "e";
-> +
-> +		vreg_s4e: smps4 {
-> +			regulator-name = "vreg_s4e";
-> +			regulator-min-microvolt = <970000>;
-> +			regulator-max-microvolt = <1520000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s7e: smps7 {
-> +			regulator-name = "vreg_s7e";
-> +			regulator-min-microvolt = <1010000>;
-> +			regulator-max-microvolt = <1170000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s9e: smps9 {
-> +			regulator-name = "vreg_s9e";
-> +			regulator-min-microvolt = <300000>;
-> +			regulator-max-microvolt = <570000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l6e: ldo6 {
-> +			regulator-name = "vreg_l6e";
-> +			regulator-min-microvolt = <1280000>;
-> +			regulator-max-microvolt = <1450000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_l8e: ldo8 {
-> +			regulator-name = "vreg_l8e";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1950000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +			regulator-allow-set-load;
-> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> +						   RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +	};
-> +};
-> +
->   &i2c18 {
->   	clock-frequency = <400000>;
->   	pinctrl-0 = <&qup_i2c18_default>;
+>      . Dropped 'both' instead support full,mini or mini,full for setting download
+>      mode to collect both minidump and full dump.
+>      
+>      . logging improvement.
+>      
+> 
+> Changes in v4: https://lore.kernel.org/lkml/1679935281-18445-1-git-send-email-quic_mojha@quicinc.com/
+>    - val should be shifted within the function [srinivas.kandagatla]
+>      i.e new = (old & ~mask) | (val << ffs(mask) - 1);
+>    - Added Acked-by [linus.walleij] on pinctrl change.
+> 
+> Changes in v3 : https://lore.kernel.org/lkml/1679070482-8391-1-git-send-email-quic_mojha@quicinc.com/
+>   - Removed [1] from the series and sent as a separate patch[2], although this series
+>     should be applied on top [2].
+>    [1] https://lore.kernel.org/lkml/1677664555-30191-2-git-send-email-quic_mojha@quicinc.com/
+>    [2] https://lore.kernel.org/lkml/1678979666-551-1-git-send-email-quic_mojha@quicinc.com/
+>   - Introduce new exported symbol on suggestion from [srinivas.kandagatla]
+>   - Use the symbol from drivers/pinctrl/qcom/pinctrl-msm.c.
+>   - Addressed comment given by [dmitry.baryshkov]
+>   - Converted non-standard Originally-by to Signed-off-by.
+> 
+> Changes in v2: https://lore.kernel.org/lkml/1677664555-30191-1-git-send-email-quic_mojha@quicinc.com/
+>   - Addressed comment made by [bjorn]
+>   - Added download mask.
+>   - Passed download mode as parameter
+>   - Accept human accepatable download mode string.
+>   - enable = !!dload_mode
+>   - Shifted module param callback to somewhere down in
+>     the file so that it no longer need to know the
+>     prototype of qcom_scm_set_download_mode()
+>   - updated commit text.
+> 
+> Mukesh Ojha (5):
+>    firmware: qcom_scm: provide a read-modify-write function
+>    pinctrl: qcom: Use qcom_scm_io_update_field()
+>    firmware: scm: Modify only the download bits in TCSR register
+>    firmware: qcom_scm: Refactor code to support multiple download mode
+>    firmware: qcom_scm: Add multiple download mode support
+> 
+>   drivers/firmware/Kconfig               | 11 -----
+>   drivers/firmware/qcom_scm.c            | 89 +++++++++++++++++++++++++++++++---
+>   drivers/pinctrl/qcom/pinctrl-msm.c     | 11 ++---
+>   include/linux/firmware/qcom/qcom_scm.h |  2 +
+>   4 files changed, 87 insertions(+), 26 deletions(-)
+> 
