@@ -2,148 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BE806CD3C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 09:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 615056CD3D3
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 09:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbjC2Hyp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 03:54:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
+        id S229481AbjC2H7D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 03:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbjC2HyL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 03:54:11 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB06040D3;
-        Wed, 29 Mar 2023 00:53:45 -0700 (PDT)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32T5JFCb031953;
-        Wed, 29 Mar 2023 07:53:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=CL1TfgIn5mWmZvuQXOw27pSAanwvirATqAb9RcthhBc=;
- b=jgyBMisg65Xe9mKsVsGa6s9ItaDNB+ciFgiJy5E3YDpASPlre708e+Eje5Jtn/JDra2W
- +E8KRUObRR7gtkc8tbKtRkCPjoiU/Wg1so83z0La4uf4eUASGQqqQz9HZ/n6H8iFgour
- Z87usUrs9Pq55xcCof4cczv9zh+iLPdMiW4ojw/7XHjY9PbUCVl1jbMa9A+x/6Wz+wvW
- pfVc7MZfYdPqtY6JIuU+C7g8HQhmtr/aTaReQfwpd8vEAoeZTevA4qpY6JDJT+CM3WZk
- f7BSJzYtzxpPypFag5p/bGHVxEi/6pbpYoy+1ZIECGWwezeeVxBb/NiUc4jREomGYQoH /g== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pkv45k52h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 07:53:28 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32T7rRsQ005962
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Mar 2023 07:53:27 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 29 Mar
- 2023 00:53:24 -0700
-Message-ID: <99ffb047-cae0-baf3-1d8e-8be1367bd0d1@quicinc.com>
-Date:   Wed, 29 Mar 2023 13:23:21 +0530
+        with ESMTP id S229660AbjC2H7C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 03:59:02 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DED02114
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 00:59:00 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id y20so19065906lfj.2
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 00:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680076739;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JhUeJU6e4h9PitXkQe9MfipgTdaNoe9G7C662XIORfM=;
+        b=NlS/k/gyKOpyGz4+n2dMHIv5Jyl5X0BUWman6JDHpG5pL/V9m3XN7KqKkZcQiYffYF
+         pYZwXz//KXBnXxhR+VP2YV4/VGQNt8AoW/Ar+WrbuzXfCS4cx9REG/xdtmcxDtFqpvtI
+         UPcxSLbU/vsMu4bKc8gLObJSZbeA9I+siU4PlXG5JKdKbfwnTdy4k1tK8d5J+sjYH8l0
+         klNL9UxtSg5IQKr6I1C2wu3s+ik9ffYX8NBI/KD2nPyyLAB8Pwi5zqOxLQnpMI6CjuEK
+         VFfBufv+QdE1Ul/x+Qdw2CeP0Rm287S584hTA6bS6ft0+Un03enQEJu29BzO65tKlw8f
+         dwtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680076739;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JhUeJU6e4h9PitXkQe9MfipgTdaNoe9G7C662XIORfM=;
+        b=dYEv8rhiaEPK3Y87p9FqPPPXDhL02S8ZBuLUwMZSRnDa3gXjYmz5b1J6hIGT1KrJV7
+         mu+LWWrPR251K6q8objjFOpM8o7/PVro+hKAhFvuQ0vSsP2GL3mFZgoZaBtDcZcLnwHB
+         RgsLLzyF7feYZEq5dsu403DHHcLuY8IMPEwI3rs4M9Xrh06lHCjTCH+f8Beak+eyUVUt
+         TR0/MsD6kRZ/SUGaYTsCpChLSWhT9YQ7cAJqGVkpBkVL+iWwdRXx+ACRuJFjUpbcfPFL
+         Np2SMMbqf2tfDD4WtOFats9aw6cP7VRILYfk+A5REAHEzhBYtQpS9xHd1RtGEbJNeaCi
+         76FQ==
+X-Gm-Message-State: AAQBX9d6h1k08aDYkdx4Sv74f1RvklvIl+OU7xkRJ2Z6+gdJXhaJ+03Q
+        CKcHEpigIdItNFWUE5KrVjpjZQ==
+X-Google-Smtp-Source: AKy350b+22Kn5HHx0uKk+5FJ3GJSg9tKTqXFD4BKu62/Z2qhoT6gF4mFK69Es0wrx/7N5SnIZDK8DA==
+X-Received: by 2002:ac2:4859:0:b0:4e8:487a:7c34 with SMTP id 25-20020ac24859000000b004e8487a7c34mr5663278lfy.12.1680076738773;
+        Wed, 29 Mar 2023 00:58:58 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id m19-20020a195213000000b004eaf393dc46sm3194558lfb.249.2023.03.29.00.58.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Mar 2023 00:58:58 -0700 (PDT)
+Message-ID: <3fbb78e9-a450-3741-070b-2caedbaa47a5@linaro.org>
+Date:   Wed, 29 Mar 2023 09:58:57 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v5 0/5] Refactor to support multiple download mode
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: mediatek: deprecate custom
+ drive strength property
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20230327-cleanup-pinctrl-binding-v1-0-b695e32e4f2e@baylibre.com>
+ <20230327-cleanup-pinctrl-binding-v1-1-b695e32e4f2e@baylibre.com>
+ <334089fd-f0e8-bf63-5100-d8632c478ccc@collabora.com>
 Content-Language: en-US
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <1680017869-22421-1-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <334089fd-f0e8-bf63-5100-d8632c478ccc@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lc0CZfAV8THGoSnm3Vx3OvC6qURHLBvJ
-X-Proofpoint-ORIG-GUID: lc0CZfAV8THGoSnm3Vx3OvC6qURHLBvJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-29_02,2023-03-28_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303290063
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Please ignore this series as i have sent v6.
+On 28/03/2023 15:41, AngeloGioacchino Del Regno wrote:
+> Il 28/03/23 15:06, Alexandre Mergnat ha scritto:
+>> Deprecate mediatek,drive-strength-adv which shall not exist, that was an
+>> unnecessary property that leaked upstream from downstream kernels and
+>> there's no reason to use it.
+>>
+>> The generic property drive-strength-microamp should be used instead.
+>>
+>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>> ---
+>>   .../devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml      | 8 ++++++--
+>>   .../devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml      | 6 +++++-
+>>   2 files changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+>> index c30cd0d010dd..b82a066b91ec 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> 
+> Thanks for doing MT8183!!!
+> 
+>> @@ -110,8 +110,13 @@ patternProperties:
+>>             drive-strength:
+> 
+> ..snip..
+> 
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> index 4b96884a1afc..347f533776ba 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+>> @@ -91,8 +91,13 @@ patternProperties:
+>>   
+>>             input-schmitt-disable: true
+>>   
+>> +          drive-strength-microamp:
+>> +            enum: [125, 250, 500, 1000]
+>> +
+>>             mediatek,drive-strength-adv:
+>> +            deprecated: true
+> 
+> In the case of MT8365, since there's *no* devicetree using this property, *at all*,
+> I think you can even just entirely remove this block, as that should not be
+> considered an ABI breakage in that case.
+> 
+> Krzysztof, can you please confirm?
 
-https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+If it is defined as ABI in a released kernel, then should be rather
+deprecated.
 
--Mukesh
+Best regards,
+Krzysztof
 
-On 3/28/2023 9:07 PM, Mukesh Ojha wrote:
-> Intention of this series to support multiple download mode and
-> only modify the required bits during setting tcsr register.
-> 
-> Other download modes are minidump, bothdump (full dump + minidump).
-> 
-> Latest minidump kernel driver patches has been sent here
-> https://lore.kernel.org/lkml/1679491817-2498-1-git-send-email-quic_mojha@quicinc.com/
-> 
-> Also, this series should be applied on
-> https://lore.kernel.org/lkml/1678979666-551-1-git-send-email-quic_mojha@quicinc.com/
-> 
-> Changes in v5:
->    - Tried to fix the issue reported by kernel test robot
->      https://lore.kernel.org/lkml/202303280535.acb66sQT-lkp@intel.com/
-> 
->    - Applied some of the improvement suggested by [Bjorn.andersson]
->   
->      . Dropped 'both' instead support full,mini or mini,full for setting download
->      mode to collect both minidump and full dump.
->      
->      . logging improvement.
->      
-> 
-> Changes in v4: https://lore.kernel.org/lkml/1679935281-18445-1-git-send-email-quic_mojha@quicinc.com/
->    - val should be shifted within the function [srinivas.kandagatla]
->      i.e new = (old & ~mask) | (val << ffs(mask) - 1);
->    - Added Acked-by [linus.walleij] on pinctrl change.
-> 
-> Changes in v3 : https://lore.kernel.org/lkml/1679070482-8391-1-git-send-email-quic_mojha@quicinc.com/
->   - Removed [1] from the series and sent as a separate patch[2], although this series
->     should be applied on top [2].
->    [1] https://lore.kernel.org/lkml/1677664555-30191-2-git-send-email-quic_mojha@quicinc.com/
->    [2] https://lore.kernel.org/lkml/1678979666-551-1-git-send-email-quic_mojha@quicinc.com/
->   - Introduce new exported symbol on suggestion from [srinivas.kandagatla]
->   - Use the symbol from drivers/pinctrl/qcom/pinctrl-msm.c.
->   - Addressed comment given by [dmitry.baryshkov]
->   - Converted non-standard Originally-by to Signed-off-by.
-> 
-> Changes in v2: https://lore.kernel.org/lkml/1677664555-30191-1-git-send-email-quic_mojha@quicinc.com/
->   - Addressed comment made by [bjorn]
->   - Added download mask.
->   - Passed download mode as parameter
->   - Accept human accepatable download mode string.
->   - enable = !!dload_mode
->   - Shifted module param callback to somewhere down in
->     the file so that it no longer need to know the
->     prototype of qcom_scm_set_download_mode()
->   - updated commit text.
-> 
-> Mukesh Ojha (5):
->    firmware: qcom_scm: provide a read-modify-write function
->    pinctrl: qcom: Use qcom_scm_io_update_field()
->    firmware: scm: Modify only the download bits in TCSR register
->    firmware: qcom_scm: Refactor code to support multiple download mode
->    firmware: qcom_scm: Add multiple download mode support
-> 
->   drivers/firmware/Kconfig               | 11 -----
->   drivers/firmware/qcom_scm.c            | 89 +++++++++++++++++++++++++++++++---
->   drivers/pinctrl/qcom/pinctrl-msm.c     | 11 ++---
->   include/linux/firmware/qcom/qcom_scm.h |  2 +
->   4 files changed, 87 insertions(+), 26 deletions(-)
-> 
