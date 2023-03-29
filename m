@@ -2,108 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4491B6CD536
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 10:51:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB9B6CD54D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 10:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbjC2IvQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 04:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
+        id S229590AbjC2Iy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 04:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbjC2IvK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 04:51:10 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22465270B
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:50:48 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-545cb3c9898so205575557b3.7
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:50:48 -0700 (PDT)
+        with ESMTP id S229917AbjC2Iy6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 04:54:58 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179691724
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:54:55 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id r29so14816527wra.13
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680079845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/cLIW46SmIRvY4RiouMRQ/RQJOiGzxyqmPyutTg+zA=;
-        b=QhOBzkThcCEEP2ZCg5zliykwCig0tej4mEtO5cAaTlCJE7r/I4bMQ4iBSSpjrhnae0
-         L2LF5rs7cU1RatgupQufqFqIBeFvIlZv+NuT+sHNQjGGOFQ+1hgE49sNPzLCJxCdOSUP
-         3GiHOBNJ4kNxbuv07uuvTShV166HoyO9x4tjK8dsgQhMHDuFGpYKNYzU6v85fOH0nA8N
-         BTRDzTAcMumMh174PCFF3cgm5M/IFBYKvPVZzaqtHkv13p8pYzObR23/QK9kSAbFoS1V
-         agkIoyxZgi5fPU94wcu6PdvvGt682AWB+XwG0s6houGBOcUHyk/TLJjCvaFXua8JDf+Q
-         vvdQ==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680080093;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uzdO+lxAfOJTORFrou5SxAjDVdCRcCpSAaKg+Ly9+Yo=;
+        b=4sW4i7rA5XGJYWXbRj7E9hHI/H8WM4pXoWaXpU/eM7Y6mgfqcI722Nvfi0AtZr654k
+         Pf2WGcgNZXvzbYJ2Jf3ecdD1GMyApi+9xQeRVG993cYY891D1SS+UCHvfaTQauRsEjtG
+         a7/UgoT92z2OdSbT9YrU1bTuD3i5DOZzn9CwY0V3PjMe1nAsGQbvNbDYu5ePqQYCSVtd
+         I/uM2mEn7ZvBLKTQdm0lXx9NOj6W8JpKz6jMqkjljdXmRhh84m28diVuwRoEYGb2igUe
+         OZ8mrFZN0uHCTY5CQaLKZTHgbE2ejaRty8T7OBEe8fG1LKeYLjqXKsMV+slOMPMbkNau
+         aiUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680079845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/cLIW46SmIRvY4RiouMRQ/RQJOiGzxyqmPyutTg+zA=;
-        b=ZqYl6gnEo0GTM92vgYovMyT6t5cPQeXir5h3Mv06JiQ7s8OTzXGa5FJE5XuRUq9JX/
-         CFBjciPlGUMs1Kfz2KTSEstYQAoRj0ao2LbtYsQrYxvbhSHEmtRALmdlNQPYps58b8zK
-         A1tKHuhKoFCA7Wl1lykrCwZN4rdQ9EJdAO5M4JkxifSEYHGOhl77vu8KA8cZDe6Vgor9
-         wciTGlBJFB+th6xFqJmcWXU9kDy3GP3fgnooKzgFWNttNeqLrGkTnmiOQkK2tThveH6C
-         Tw1/MpgGbjAUWHK1huF278E46mwYV8qkXyIahkP2YLrbSy3F503nHHrqXWTPeQ1Fmo1q
-         QhnQ==
-X-Gm-Message-State: AAQBX9cORboNlg2arXptG072v8q2uGHmfWQKoNN8kYLgNllzOt8xXEQR
-        hN2KF56G+hZSFEe9PmL1sa6nSNK8UZ4KrR4aKLL7V39O7XJtZtomC28=
-X-Google-Smtp-Source: AKy350YTOjcMWaqS3odZ4BorOYs3mIxmhScLtgIMGEm9pyUKhYrReflkix3snorSrRrckz5gmqV7SwVJyJWO3XKBcJ8=
-X-Received: by 2002:a81:a709:0:b0:545:4133:fc40 with SMTP id
- e9-20020a81a709000000b005454133fc40mr8817132ywh.9.1680079845742; Wed, 29 Mar
- 2023 01:50:45 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680080093;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uzdO+lxAfOJTORFrou5SxAjDVdCRcCpSAaKg+Ly9+Yo=;
+        b=sTp2SIY7DMQqM8YYvn2yi27RoUo+zQ7ftbg6mJl9kXrPcC1a6nSeknW1Z6NjtOWB/i
+         VRlWEHDIMxYq5/UTpL3EdwcCRf6KYtDAmAG3ARvzlYlmfXbOHaGKjzYDdg2XuRfrDrOs
+         c8ksuw95Q99tN6AVG4u6Dk6MKcNNVXNgt0is3Dqyk3gtMCqOp2Ex7d1kyZwPQHZL0Uw3
+         WGjYSB9KIctL9eucsF2sL20dj27ticiseYgrq6OHGn+yuVOQEu4aNR+5/CaqH3X+36It
+         zludUaT/3PZQgAzUFwx5CMOGalCvV83P1umn7Oi1B6BU1nbdRAZHcJPMsiDJVVNkTfkk
+         SjZQ==
+X-Gm-Message-State: AAQBX9dZj2EE7JOM4mG4/6uzfiqxX+5kzP9fD3xbpQrsBYazokQ+rbil
+        iC58Hm9d12ULV8avdMlfkYeFuQ==
+X-Google-Smtp-Source: AKy350YBJmqeUhUjQyfCAqVgv5XtFtzTflowmykdXvxURkGr/ltJSCccPuaqoPcUxGCCy4NGiuPXBQ==
+X-Received: by 2002:a5d:5229:0:b0:2c7:1c08:121c with SMTP id i9-20020a5d5229000000b002c71c08121cmr15195510wra.61.1680080093551;
+        Wed, 29 Mar 2023 01:54:53 -0700 (PDT)
+Received: from [127.0.1.1] (158.22.5.93.rev.sfr.net. [93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id f9-20020adff989000000b002cea392f000sm29571964wrr.69.2023.03.29.01.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Mar 2023 01:54:53 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH v3 00/17] Improve the MT8365 SoC and EVK board support
+Date:   Wed, 29 Mar 2023 10:54:21 +0200
+Message-Id: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
 MIME-Version: 1.0
-References: <20230323173019.3706069-1-dianders@chromium.org>
- <CACRpkdaGpaiOVjEN6Ftq5=-yuAyD0xb7OcvtEsoqbTzias-xxw@mail.gmail.com> <CAD=FV=W6QKfQxGcSrQdgp4VHYxfk7aYZOkYx4ve7QSpoZ-LM=A@mail.gmail.com>
-In-Reply-To: <CAD=FV=W6QKfQxGcSrQdgp4VHYxfk7aYZOkYx4ve7QSpoZ-LM=A@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Mar 2023 10:50:34 +0200
-Message-ID: <CACRpkdaUZbyEfkcHsNuQ=KhyuiKpunZJgvrnq90kQK8Z2V4jtg@mail.gmail.com>
-Subject: Re: [PATCH 00/14] Control Quad SPI pinctrl better on Qualcomm Chromebooks
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL38I2QC/4XNTQrCMBAF4KuUrI1MEtuoK+8hLvIz2mBNStIGS
+ undHVy60NXwHrxvVlYwByzs3KwsYw0lpEhB7RrmehMfyIOnzCRIBRIUx/rkNpnseZnHMeWJ+9Z
+ qc1Qn9Noy2llTkNtsoutpGedhoLIPZUp5+fypgs71F1kFBw4dKKmhPQjfXqxZhmAz7l16sRuBV
+ f5FJCEdOu28FeDc/QvZtu0N/ksqGv8AAAA=
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rajesh Patil <rajpat@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2566; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=g3X31va/VDwpY2eFLvZJUQe6Yd+D9Pt4ItUQKxlH3oA=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBkI/zbKYL5HQCSxV8z4D6VVyX8VhpZc/3jth3XoWuF
+ qJn1N86JAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZCP82wAKCRArRkmdfjHURScIEA
+ CvYNYx5SNpOC5jRj/ilI2B3OdPkasa3RaWWW303TI7JDD0gGDMXX+bHpcCYqVzFg7FlcnIcGBjRs7E
+ Jr6x1jv3WkPl5+mUAELpby4F5zh7pegFOCfcrJ9HtcHX/cdLEiRJ2umjXGlu5VQVuv3ZmQEOcV3WJh
+ tfPh92mwf0eLS8lfXw7tOkky3kpD387xb1JgnN9gsUCDBsjUIU7MRcJx7HHQcjiuUrrytSt5klBcwP
+ 9RZ71pZfTDDD7VRiM9VxlvU3th766j4bA+UqINLHM2IohbGpCr6NbhVrD7JdqJF5gJ9eOP4LshWjqE
+ 0+vNMsXOpmmcpugJkEQ7zuL247NHfgZU29xmUlpq7KtYjW2YXseIG7G+p5SpKY++45RS4GdgJMDIl7
+ E0wUMxMkzJ5BgIea5tQTfSJ85Ooozh+mLb1d1svXE0aR55EV7xMvr/RdL/c89cCJe+F1btaWHk3rUk
+ 4Qdgrma2LVv/C+4vvTt6csqs2Zl6YN10PeMMsEpPTHlfZV+zcyQ40vAvYMBS+SPPoN5Tc9rk9rRglf
+ Vrx1rY1XqtGk8xcwjoVxdp+k09y3RfKcUJuouOkpVUefkghZJrMM1r5dkDP8irJkJB04SiQB9CkCH7
+ ESqzmMQ6PBazV6JhB2Ilp9LNDGhUWQvC6MYaVdy3ipJxNsnZzVPL/SultYNA==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 11:51=E2=80=AFPM Doug Anderson <dianders@chromium.o=
-rg> wrote:
+This commits are based on the Fabien Parent <fparent@baylibre.com> work.
 
-> 1. Mark could land the SPI patch at any time, assuming he's OK with
-> it. It can land totally independently.
+The purpose of this series is to add the following HWs / IPs support for
+the mt8365-evk board:
+- Watchdog
+- Power Management Integrated Circuit "PMIC" wrapper
+  - MT6357 PMIC
+- MultiMediaCard "MMC" & Secure Digital "SD" controller
+- USB controller
+- Ethernet MAC controller
 
-OK this happened.
+Add CPU Freq & IDLE support for this board.
 
-> Option A:
->
-> 3. You land the pinctrl and binding patches in an immutable branch and
-> merge into pinctrl.
->
-> 4. Bjorn merges the immutable branch into the Qulacomm tree and places
-> the last 3 dts patches atop.
+This series depends to another one which add support for MT8365 SoC and
+EVK board [1].
 
-Looks most appetizing.
+Regards,
+Alex
 
-I have applied patches 6,7,8 to this immutable branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/lo=
-g/?h=3Dib-qcom-quad-spi
+[1]: https://lore.kernel.org/all/20230125143503.1015424-1-bero@baylibre.com/
 
-and I merged that into my "devel" branch for v6.4.
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+Changes in v3:
+- Add trailers and simply resend.
+- Link to v2: https://lore.kernel.org/r/20230203-evk-board-support-v2-0-6ec7cdb10ccf@baylibre.com
 
-Bjorn can grab the branch if he wants it.
+---
+Alexandre Bailon (1):
+      arm64: dts: mediatek: Increase the size BL31 reserved memory
 
-Yours,
-Linus Walleij
+Alexandre Mergnat (12):
+      dt-bindings: watchdog: mediatek,mtk-wdt: add mt8365
+      dt-bindings: pinctrl: mediatek,mt8365-pinctrl: add drive strength property
+      arm64: dts: mediatek: add watchdog support for mt8365 SoC
+      arm64: dts: mediatek: add pwrap support to mt8365 SoC
+      arm64: dts: mediatek: add mt6357 PMIC support for  mt8365-evk
+      arm64: dts: mediatek: add mmc support for mt8365 SoC
+      arm64: dts: mediatek: add mmc support for mt8365-evk
+      arm64: dts: mediatek: add usb controller support for mt8365-evk
+      arm64: dts: mediatek: add ethernet support for mt8365 SoC
+      arm64: dts: mediatek: add ethernet support for mt8365-evk
+      arm64: dts: mediatek: add OPP support for mt8365 SoC
+      arm64: dts: mediatek: add cpufreq support for mt8365-evk
+
+Amjad Ouled-Ameur (2):
+      arm64: dts: mediatek: fix systimer properties
+      arm64: dts: mediatek: Add CPU Idle support
+
+Fabien Parent (2):
+      arm64: dts: mediatek: add mt6357 device-tree
+      arm64: dts: mediatek: set vmc regulator as always on
+
+ .../bindings/pinctrl/mediatek,mt8365-pinctrl.yaml  |   3 +
+ .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
+ arch/arm64/boot/dts/mediatek/mt6357.dtsi           | 282 +++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8365-evk.dts        | 254 ++++++++++++++++++-
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi           | 196 +++++++++++++-
+ 5 files changed, 731 insertions(+), 5 deletions(-)
+---
+base-commit: 555b3a55823ec063129de4403899203febb58788
+change-id: 20230203-evk-board-support-d5b7a839ed7b
+
+Best regards,
+-- 
+Alexandre Mergnat <amergnat@baylibre.com>
+
