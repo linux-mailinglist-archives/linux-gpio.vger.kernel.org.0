@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E356CDA97
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:21:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86CB96CDAB0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:25:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbjC2NVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 09:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
+        id S230312AbjC2NZI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 09:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbjC2NVq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:21:46 -0400
+        with ESMTP id S230044AbjC2NZH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:25:07 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C8455AF;
-        Wed, 29 Mar 2023 06:21:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0220646BF;
+        Wed, 29 Mar 2023 06:24:33 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id DFC3A6603170;
-        Wed, 29 Mar 2023 14:21:11 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 85F5D6603173;
+        Wed, 29 Mar 2023 14:24:30 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1680096072;
-        bh=yO91BroR7iHw7kVLw8m4fi1PudYWDnQ6vk8SsbYSshU=;
+        s=mail; t=1680096271;
+        bh=QC+TVvnacafeIHmbzTyunv64Km/TSjEM1hbjaqYCL0E=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=YoCN+EPxnJ2LoZ3B/sAG8QF+Lakg247Xt3coYx/2+BIt47HWOXApA2Z0N0pOA9q3G
-         ablLIG5ZlD87/gqGYVmmMc/FDgqgmnwV6cSpZ+vJjNiZx83ZoVr+aL6i767zhhKt43
-         oRSy2x09fVLjPjpvE6JbUewtTivlvUeCKv1G7R3fJT0FV2yqAbFcaNaVdCt26bfVnQ
-         glZGjmUbq7wO+nYWV2+Tztgf7DwrvZNissg8r3RlhOOyp4JwpmSDHSJ/WVQ5NqEL4V
-         SzP6nMHusdf33ymqniBrHNBME6oRCfVY39NKZrEG7oEmOiUPi4GPmhIV/ClPaS80PK
-         rdfRxYhcfXurg==
-Message-ID: <c785d80f-e443-cae4-1e17-b79eb2dc385c@collabora.com>
-Date:   Wed, 29 Mar 2023 15:21:09 +0200
+        b=Wq/ZHR3gmA5TcS6nh98MqlxCjA+ciMEgTZAOYfId/MOzbR42VJJGeD9AzSnoAC7hK
+         HKU+plaSGCBXOTMucZfWhLBmsmqcbCnsS6TOV6AeZBJazvS0ENHSO9whtJDnRIPiyn
+         w3bP8f9jcIFpn3ZRO3q3swCiuXkviDRw4+nntIS8HiuOe2puLgiVOf5qiqkXVgj/OR
+         SBh9fig+Qw9uJUh4iyTG+o5NXU43neKkZn9Qa8FRUcpZ4dZRmAkxz3Ut/haLXwwaE3
+         0HORYdmXIHgOMHljij5NqxbpB0UJkmdTxWCxT/X9Q8HbZ9NUYT0AzAe/KK9iUbdcj8
+         HovQFH0OkXDcA==
+Message-ID: <67af041d-cce5-8c3b-e979-7b95a6a7a149@collabora.com>
+Date:   Wed, 29 Mar 2023 15:24:27 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v3 08/17] arm64: dts: mediatek: add mmc support for mt8365
- SoC
+Subject: Re: [PATCH v3 09/17] arm64: dts: mediatek: add mmc support for
+ mt8365-evk
 Content-Language: en-US
 To:     Alexandre Mergnat <amergnat@baylibre.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
@@ -59,10 +59,10 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-8-0003e80e0095@baylibre.com>
+ <20230203-evk-board-support-v3-9-0003e80e0095@baylibre.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230203-evk-board-support-v3-8-0003e80e0095@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v3-9-0003e80e0095@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -75,65 +75,59 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 29/03/23 10:54, Alexandre Mergnat ha scritto:
-> There are three ports of MSDC (MMC and SD Controller), which are:
-> - MSDC0: EMMC5.1
-> - MSDC1: SD3.0/SDIO3.0
-> - MSDC2: SDIO3.0+
+> - Add EMMC support on mmc0 (internal memory)
+> - Add SD-UHS support on mmc1 (external memory)
 > 
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->   arch/arm64/boot/dts/mediatek/mt8365.dtsi | 39 ++++++++++++++++++++++++++++++++
->   1 file changed, 39 insertions(+)
+>   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 138 ++++++++++++++++++++++++++++
+>   1 file changed, 138 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-> index 687011353f69..a67eeca28da5 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-> @@ -399,6 +399,45 @@ usb_host: usb@11200000 {
->   			};
->   		};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> index 2f88562c638a..b5d018686cbe 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> @@ -97,6 +97,42 @@ &i2c0 {
+>   	#size-cells = <0>;
+>   };
 >   
-> +		mmc0: mmc@11230000 {
-> +			compatible = "mediatek,mt8365-mmc", "mediatek,mt8183-mmc";
-> +			reg = <0 0x11230000 0 0x1000>,
-> +			      <0 0x11cd0000 0 0x1000>;
-> +			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>,
-> +				 <&infracfg CLK_IFR_MSDC0_HCLK>,
-> +				 <&infracfg CLK_IFR_MSDC0_SRC>;
-> +			clock-names = "source", "hclk", "source_cg";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc1: mmc@11240000 {
-> +			compatible = "mediatek,mt8365-mmc", "mediatek,mt8183-mmc";
-> +			reg = <0 0x11240000 0 0x1000>,
-> +			      <0 0x11c90000 0 0x1000>;
-> +			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>,
-> +				 <&infracfg CLK_IFR_MSDC1_HCLK>,
-> +				 <&infracfg CLK_IFR_MSDC1_SRC>;
-> +			clock-names = "source", "hclk", "source_cg";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc2: mmc@11250000 {
-> +			compatible = "mediatek,mt8365-mmc", "mediatek,mt8183-mmc";
-> +			reg = <0 0x11250000 0 0x1000>,
-> +			      <0 0x11c60000 0 0x1000>;
-> +			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_MSDC50_2_SEL>,
-> +				 <&infracfg CLK_IFR_MSDC2_HCLK>,
-> +				 <&infracfg CLK_IFR_MSDC2_SRC>,
-> +				 <&infracfg CLK_IFR_MSDC2_BK>,
-> +				 <&infracfg CLK_IFR_AP_MSDC0>;
-> +			clock-names = "source", "hclk", "source_cg",
-> +				      "bus_clk", "sys_cg";
+> +&mmc0 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc0_default_pins>;
+> +	pinctrl-1 = <&mmc0_uhs_pins>;
+> +	bus-width = <8>;
+> +	max-frequency = <200000000>;
+> +	cap-mmc-highspeed;
+> +	mmc-hs200-1_8v;
+> +	mmc-hs400-1_8v;
+> +	cap-mmc-hw-reset;
+> +	no-sdio;
+> +	no-sd;
+> +	hs400-ds-delay = <0x12012>;
+> +	vmmc-supply = <&mt6357_vemc_reg>;
+> +	vqmmc-supply = <&mt6357_vio18_reg>;
+> +	assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
+> +	assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL>;
+> +	non-removable;
 
-clock-names for this do fit in one 90 columns line.
+That's a bit messy :-)
+Can we please reorder this by name?
 
-After compressing it,
+	assigned-clocks....
+	bus-width
+	cap....
+	hs400-ds-delay
+	max...
+	mmc-hs...
+	no...
+	non-rem...
+	pinctrl...
+	vxxxx-supply
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+	status ....
 
+...Actually the same comment also applies to mmc1.
+
+Cheers,
+Angelo
 
