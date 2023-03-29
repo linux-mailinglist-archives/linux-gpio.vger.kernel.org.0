@@ -2,61 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C9DB6CD92F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 14:14:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDD626CDA53
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 15:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbjC2MOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 08:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56112 "EHLO
+        id S230193AbjC2NSA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 09:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbjC2MOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 08:14:39 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89971A8;
-        Wed, 29 Mar 2023 05:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=Oeo+KEvsYm/f49phGT3gU523a4ToNAc4s2HOF/f1q4o=; b=dXTmJ0JN2K9XfNF4w7tqdopwOv
-        FPD9DQkqPGU35fStWtRVSgRSIHqn8PsHWKjS5J5ZIQH2SijIv2uoeNNLRwm5ilnv1WUaAuupLsvgL
-        d24ke+dzDTz3Gyr7Aw9Bc5+7erpRYhTXJsJK32VBvHeOLplWE0El3DvZvNOn/DKLdngI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1phUh4-008kk9-Bi; Wed, 29 Mar 2023 14:14:22 +0200
-Date:   Wed, 29 Mar 2023 14:14:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: gpio: vf610: update gpio-ranges
-Message-ID: <a7e36016-488f-48b2-98d6-107f6e332acf@lunn.ch>
-References: <20230328052912.1957000-1-peng.fan@oss.nxp.com>
- <20230328052912.1957000-2-peng.fan@oss.nxp.com>
- <de82d0ff-3e2f-4822-8430-13e2b1633b3a@lunn.ch>
- <DU0PR04MB9417F31D78A9C998FE3E519888899@DU0PR04MB9417.eurprd04.prod.outlook.com>
+        with ESMTP id S230177AbjC2NR6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 09:17:58 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8403049D5;
+        Wed, 29 Mar 2023 06:17:54 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id DF74D660316F;
+        Wed, 29 Mar 2023 14:17:51 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1680095873;
+        bh=qTmxjyfcP5I5Xj6wCEgR0k1cS22atKBkP1Lgre2sabQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=FaIVp1r52Fx00yV49EnK0WzOWDoXi12jY33WMlwI/oJO0/2cEeqd2vopPu72LiWAC
+         jMkjAOlm68kEYppT0VjI4UnlPSk7HqWlKhHKv/BmZlq7zrEsTlMVaq6xJtxnd8poAo
+         IpI9/u9jQUJrEFUQZEbn4+zQEBLC7RYOhiUBHp216Oj2c6t74RCorpIzJTHojXquSe
+         FaX23FAAajNdpeorVFUOwnEch3x+a/hmFZQkx+Euz7ro6S7kHH5vUK76hIuNwUb+M3
+         xtpHnBzSt8q2e1OMcsI53xdQRd9DzUge0v/suvoiWLvT1ZxeZwQhUxqi8AC0vG1g3f
+         yOHNsJHe8zVFw==
+Message-ID: <dd3a26af-819b-6d79-3e08-a351c404060e@collabora.com>
+Date:   Wed, 29 Mar 2023 15:17:49 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9417F31D78A9C998FE3E519888899@DU0PR04MB9417.eurprd04.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 04/17] arm64: dts: mediatek: add watchdog support for
+ mt8365 SoC
+Content-Language: en-US
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>
+References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
+ <20230203-evk-board-support-v3-4-0003e80e0095@baylibre.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230203-evk-board-support-v3-4-0003e80e0095@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,11 +74,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> i.MX9 reuse the gpio-vf610 driver and yaml dtschema. There are some
-> minor differences from hardware level. The gpio-ranges will also impact
-> vybrid, but this may not matter.
+Il 29/03/23 10:54, Alexandre Mergnat ha scritto:
+> Add watchdog support.
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365.dtsi | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> index 553c7516406a..e018df6844f6 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> @@ -162,6 +162,13 @@ syscfg_pctl: syscfg-pctl@10005000 {
+>   			reg = <0 0x10005000 0 0x1000>;
+>   		};
+>   
+> +		watchdog: watchdog@10007000 {
+> +			compatible = "mediatek,mt8365-wdt",
+> +				     "mediatek,mt6589-wdt";
 
-So maybe use a constraint to limit it to 1 for everything other than
-fsl,imx93-gpio?
+This fits in one line, 83 columns is *definitely* fine.
+Can you please compress that?
 
-	Andrew
+After which:
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+
