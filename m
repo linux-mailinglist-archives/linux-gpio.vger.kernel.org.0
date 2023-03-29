@@ -2,70 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A88A6CD4C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 10:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89FF16CD4E9
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Mar 2023 10:41:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230310AbjC2Ih3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Mar 2023 04:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
+        id S230371AbjC2Il5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Mar 2023 04:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjC2Ih2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 04:37:28 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 783E319AB
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:37:17 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-545ce8e77fcso203194787b3.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:37:17 -0700 (PDT)
+        with ESMTP id S230307AbjC2Ily (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Mar 2023 04:41:54 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8525E12E
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:41:53 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id i7so18410609ybt.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Mar 2023 01:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680079036;
+        d=linaro.org; s=google; t=1680079313;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fEEjt5KTOiMxdxcRezWpGMm6v+AEsQGVPozQ3NTxWGQ=;
-        b=RyxRU52zrMaY1+rCiw2RsrCGt9/viM3/l3sfw4JQCjh/8bpNfF7lm5FztCSqWhgmdf
-         ssDYQ6iDt8NQablYueMCScBaQNhiokwb0JUI/pUrlXqHvMXCupxNmWWheju/N6FIvc/P
-         HTbInlTEaEK9sK04pzgm1v5UnAqcTGRl7sAr45kkgbFRRvwvsqEnzSyb0A6K9b3q6dKr
-         R/EjzL7WFDTFJv47uBKGwjutYgjEQptSHSmDXIeuDeoqdQXPsE1L5NVsYJX1vvf0/qBm
-         hq8CvAowe7oUE6hVym2BqUo35uDTr+VJ99EVE8AoaIE2TYRC/aNHoX/W6jcj/M0Uqm0Y
-         wQlA==
+        bh=we/N4oQDR6XoZiEvq5GnI6M0YFT7oJjEt6185k+IGaY=;
+        b=qFyiav9b1zdKBdgJCfyqcCgfBQBBsA1ndNq+BFIggKyw9cQxX1k9udJayM/p50i3Ov
+         XHgtrpALhf5R3F/4m4bplS/w9Tvv1E9IWQhg33ExSmsRqULE+rAmnl2S48M8xvhdWXW4
+         G4vD2EFmWTLP7+0KSCLYgJ7t8VeDgTjz35ekRb1Rts/9dPllu7Rd2oRy1X2EljuLDaDI
+         9cRQOzYkmNzleaiRqiJpaDqAQgtV11V/IFo10uYG4AKrKOQsnVqFhSW5fShFt+ZAAKIz
+         Vv/ALNRwC+zO+YL6b4j8tE8xMp9X8zOtWRykHa61iPEu9d6RxMwIFKs/hEFt8nYQcKwf
+         IGjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680079036;
+        d=1e100.net; s=20210112; t=1680079313;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fEEjt5KTOiMxdxcRezWpGMm6v+AEsQGVPozQ3NTxWGQ=;
-        b=JfGpGMVXfDkbXU1iI+l5HrjyJbVFs9jzLwq2+/P+X12Z19eZ9hqTHhOIhcn8UqGXvC
-         aJjz8Yijz8BE9g3qY5EbatJjFQ2KZJSV5k43gF70LXqFDuPeNLnYCCUCZAiRDtaSbOME
-         +H/ZNMTol0JjCkC3xna+6/S7N9KUiETIgZDHhBHWs7KWok3ReZjbXbik0InP6jZQVXQR
-         7XilkNxWEJxzc+YLsOJi24x19c75bN9yXah/WycChGefjN8OOtqO4VFUurW0Bf6dz/BS
-         qJosLLZOBfC+YosciA9I/yWjsqqBuFl6BUDjpambARqaumgWh1qlmfZ4Of4srFsaNNgs
-         toSQ==
-X-Gm-Message-State: AAQBX9e9mOWDg6bx7U5N366nD9BJiC+2eYKhXgtQm1vVTVtGNT9dD+Mp
-        nnI6y1578sR6nDp1WmjMnWTQSpe3rpJ2SlUytaQiRg==
-X-Google-Smtp-Source: AKy350bwKhACZ5LjWDNs8HRhrB7fLtOYZiPiILPtu5+aF4SvdFnw0KrxlhqAmKxWV8fUa8xzRfUKXoUyKG2s33koCf8=
-X-Received: by 2002:a81:eb02:0:b0:545:883a:544d with SMTP id
- n2-20020a81eb02000000b00545883a544dmr9195077ywm.9.1680079036640; Wed, 29 Mar
- 2023 01:37:16 -0700 (PDT)
+        bh=we/N4oQDR6XoZiEvq5GnI6M0YFT7oJjEt6185k+IGaY=;
+        b=vIUvmn5wesXit1J/9TJVl0sfm2M0DUPSLBALr0cCcK9WXUKVWC6SIhPpmWZAdCGrb1
+         BNp9uSHGUZLVQV7OonEKDB3aw7Y5QqpOxGt3QRTdh1nrmqBNnsDhYaGePqWTl+Zjp8tO
+         8x61V5cxc1Xp8wbdsqxDsJ+v17Mu3twkfN0bGLg8HU9D1lwdPMqNgdqusCkCR55TLHKI
+         j3LKWu1kw8ubZh8JhcnkTwZAzEvnTVWriNZGFWqd3hf4myKqkeLWwEYBWgf6A/WpiWNx
+         0N7PTwu5yNxz3RVRN/Em9ZPn3eSZK98NiKR1v4aZUr4SeN/di5HaN9SCi4fBNkED8e0Z
+         vWrA==
+X-Gm-Message-State: AAQBX9cn+AgbEPGN9f7N9V/x3zJHiay6W0AYBBp/6yTrPPqbea8mvC9Z
+        8c7imS7+qVtKTD2ebS7bxk1IR9MukZadmAG6741tLw==
+X-Google-Smtp-Source: AKy350aor2tRD3I/kJ+6CWloLqkSEKVo/h//FFtfDDrUGgRIOB5h7pz62ZhQRQC3LuXLMNjQOK3qmDTy7PR0MhwWPvs=
+X-Received: by 2002:a05:6902:1586:b0:b23:4649:7ef3 with SMTP id
+ k6-20020a056902158600b00b2346497ef3mr12388881ybu.4.1680079312776; Wed, 29 Mar
+ 2023 01:41:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230325154711.2419569-1-xiang.ye@intel.com> <20230325154711.2419569-5-xiang.ye@intel.com>
-In-Reply-To: <20230325154711.2419569-5-xiang.ye@intel.com>
+References: <20230324084127.29362-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230324084127.29362-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Mar 2023 10:37:05 +0200
-Message-ID: <CACRpkdbDmPpKFVxmn1ntKJWr5_mraKuafuTgJtgBU+39PxEYgg@mail.gmail.com>
-Subject: Re: [PATCH v7 4/6] gpio: Add support for Intel LJCA USB GPIO driver
-To:     Ye Xiang <xiang.ye@intel.com>, Marc Zyngier <maz@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
+Date:   Wed, 29 Mar 2023 10:41:41 +0200
+Message-ID: <CACRpkdYNPNQRC22KD9gK2BwcEYJKc-2OvKmT9kVzTLDpWkK9-g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: allow
+ input-enabled and bias-bus-hold
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -77,108 +74,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Ye,
+On Fri, Mar 24, 2023 at 9:41=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-thanks for your patch!
-
-On Sat, Mar 25, 2023 at 4:48=E2=80=AFPM Ye Xiang <xiang.ye@intel.com> wrote=
-:
-
-> This patch implements the GPIO function of Intel USB-I2C/GPIO/SPI adapter
-> device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
-> GPIO module with specific protocol through interfaces exported by LJCA US=
-B
-> driver.
+> Add missing common pin configuration properties: input-enabled and
+> bias-bus-hold.
 >
-> Signed-off-by: Ye Xiang <xiang.ye@intel.com>
-
-Lots of improvements! here are some comments:
-
-> @@ -1253,6 +1253,18 @@ config GPIO_KEMPLD
->           This driver can also be built as a module. If so, the module wi=
-ll be
->           called gpio-kempld.
+> Fixes: 268e97ccc311 ("dt-bindings: pinctrl: qcom,sm8550-lpass-lpi-pinctrl=
+: add SM8550 LPASS")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >
-> +config GPIO_LJCA
-> +       tristate "INTEL La Jolla Cove Adapter GPIO support"
-> +       depends on USB_LJCA
-> +       select GPIOLIB_IRQCHIP
-> +       default USB_LJCA
-> +       help
-> +         Select this option to enable GPIO driver for the INTEL
-> +         La Jolla Cove Adapter (LJCA) board.
-> +
-> +         This driver can also be built as a module. If so, the module
-> +         will be called gpio-ljca.
+> ---
+>
+> Linus, please take it directly.
 
-The GPIO Kconfig has a separate submenu for USB expanders, so
-put this Kconfig in that submenu. This makes the choice come in
-a more logical spot and not appear on configs that don't even
-have USB.
-
-(...)
-> +       DECLARE_BITMAP(unmasked_irqs, LJCA_MAX_GPIO_NUM);
-> +       DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
-> +       DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
-> +       u8 *connect_mode;
-> +       /* mutex to protect irq bus */
-> +       struct mutex irq_lock;
-(...)
-
-With IRQ code like this from a USB callback:
-
-> +static void ljca_gpio_event_cb(void *context, u8 cmd, const void *evt_da=
-ta, int len)
-> +{
-> +       const struct gpio_packet *packet =3D evt_data;
-> +       struct ljca_gpio_dev *ljca_gpio =3D context;
-> +       int i;
-> +       int irq;
-> +
-> +       if (cmd !=3D LJCA_GPIO_INT_EVENT)
-> +               return;
-> +
-> +       for (i =3D 0; i < packet->num; i++) {
-> +               irq =3D irq_find_mapping(ljca_gpio->gc.irq.domain, packet=
-->item[i].index);
-> +               if (!irq) {
-> +                       dev_err(ljca_gpio->gc.parent, "gpio_id %u does no=
-t mapped to IRQ yet\n",
-> +                               packet->item[i].index);
-> +                       return;
-> +               }
-> +
-> +               generic_handle_domain_irq(ljca_gpio->gc.irq.domain, irq);
-> +               set_bit(packet->item[i].index, ljca_gpio->reenable_irqs);
-> +       }
-> +
-> +       schedule_work(&ljca_gpio->work);
-> +}
-
-I don't feel comfortable merging this unless Marc Zyngier has looked at the
-code first, so please CC him on this patch next time.
-
-> +static const struct irq_chip ljca_gpio_irqchip =3D {
-> +       .name =3D "ljca-irq",
-> +       .irq_mask =3D ljca_irq_mask,
-> +       .irq_unmask =3D ljca_irq_unmask,
-> +       .irq_set_type =3D ljca_irq_set_type,
-> +       .irq_bus_lock =3D ljca_irq_bus_lock,
-> +       .irq_bus_sync_unlock =3D ljca_irq_bus_unlock,
-> +       .flags =3D IRQCHIP_IMMUTABLE,
-> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> +};
-
-Thanks for fixing the immutable irq chip!
-
-> +       ljca_gpio->auxdev =3D auxdev;
-> +       ljca_gpio->gc.direction_input =3D ljca_gpio_direction_input;
-> +       ljca_gpio->gc.direction_output =3D ljca_gpio_direction_output;
-
-Can you implement .get_direction()?
-
-It's scanned on probe to determine the initial state of each
-line so it is very nice to have.
+Roger that, patch applied!
 
 Yours,
 Linus Walleij
