@@ -2,68 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C1506D0CD3
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 19:31:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FAC6D0CD9
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 19:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232434AbjC3RbG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Mar 2023 13:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
+        id S232223AbjC3Rbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Mar 2023 13:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232418AbjC3RbG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 13:31:06 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B008DBD1;
-        Thu, 30 Mar 2023 10:31:03 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id u11-20020a05600c19cb00b003edcc414997so12300744wmq.3;
-        Thu, 30 Mar 2023 10:31:03 -0700 (PDT)
+        with ESMTP id S232071AbjC3Rbm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 13:31:42 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C594DBF5;
+        Thu, 30 Mar 2023 10:31:41 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id l27so19890507wrb.2;
+        Thu, 30 Mar 2023 10:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680197461;
+        d=gmail.com; s=20210112; t=1680197499;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hVxoqrhc3yrtGubZ0RHjnJ/hxiODwV3KHU0a9jTWrR8=;
-        b=fJbwrNSH8a/qPjoFa8TTfzC4kyyATGF1Sz673IqjXu8HgDpeMUNr+lyW9bY6JAUGLE
-         EId0OhaO/7JG1wZareEy+SxWAjWvLr/cH0w85cZZ698VBJ76M5PYqmuXi+5SZbdFa03h
-         LT4WNwKHNta2j511KzE1u3mQ3mV5jaK29QRJMTCaUdnoA5ocXzZMHzTVsKJg8x3RLnoo
-         F6frH37WQnAJrkPStf7B7pbvejEcWWoMm0ndnhmHnoiZWuuzOQrTZ4j/IqkUEEHyqVYN
-         76/CA0bADuwpIfTDV2DpL20N6EmIRed/h3HMVC/eO4l38NrRpDrslA++UbDKHmzXiixO
-         D68A==
+        bh=M8C7GCDTGTEyH0AOHKmhfixymkIHQz9SRHOuIDmLbko=;
+        b=N7u8QTWTvUqZGEVlZfqEizdpr5VUNBM+pV6CnqB/wrVeToff7amDfenDK3fKrdDtb8
+         j347QbU+VvKBy+6f7x2UgbwXaH1utnycH4NNASNI8cjP3bMeN8vkxeYkyUX5Q736j+bU
+         4MBV7bJpMRlkhUDdK8MDpR8046AaEJl94ZL8TMy2PGb2dGwLvApLMB+XlIE6vOGJYrXN
+         dMf7JtFRMExcWGKRUEXpPWXPMzbNy7yqqBJjnN0kxY3XWNw3JJNe/eF7oAewaVuwemex
+         VRM3cErDyKIynRzqjCV3Vo++AsyoqPQeScMoU1WZ+UgEo8x6Czs4TARY42tCaLznLh+3
+         VIUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680197461;
+        d=1e100.net; s=20210112; t=1680197499;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hVxoqrhc3yrtGubZ0RHjnJ/hxiODwV3KHU0a9jTWrR8=;
-        b=CDcpd4MXGJE3d4qyME073j9N6cgaE4geMOJEuoZpcUwVaheLiNyMxQN8pPy+BeVDKb
-         XCJjrrUEcAiarXEoAMxurJIsANge507GJoGxcWWymkdc8gQMVoikGysZdyuOOv1qgITf
-         kW1J+UOKW7Wl7uCOfxcK//46B0Z5qc18mdzPwfP6fcAvJJgu49GArICKo19nYP6NdGj4
-         FodyE94Hmxj4nElDwY205a27FAhoLvfQMvk+IF5uye7EY0+TPo/SCy0hLhUltl8dH19+
-         1U8mHnlCF5hsZn8083D6ezXcbTFsB/j+Enq5vWSG0eRK6MmCV1EVoFotZGb9J3AjQuBS
-         N4XA==
-X-Gm-Message-State: AAQBX9dvHEn6c39UVquxchAgkPYwGftyvfyTBxJ71a0TfFtGKkSuzNMJ
-        p6gOg0Gz3ryUWE+4YX/jpUk=
-X-Google-Smtp-Source: AKy350ZbVWPX16B0VmtNoa+uELKUsvvda6aqmDybw6P4+CSguTo5raie1R2mhEBS+W4lPD3qEOepew==
-X-Received: by 2002:a1c:7406:0:b0:3da:2ba4:b97 with SMTP id p6-20020a1c7406000000b003da2ba40b97mr4684708wmc.19.1680197461365;
-        Thu, 30 Mar 2023 10:31:01 -0700 (PDT)
+        bh=M8C7GCDTGTEyH0AOHKmhfixymkIHQz9SRHOuIDmLbko=;
+        b=yLWhYdXnMMysKVPm/EguYdVIKLlez9C8ZdIe5UEoYEMZ9b0F7MGddSqePDxZOT2yFp
+         +RmreqDVnf5yPEFjl6XlyhfM8JdbRGrLhbmjROqqW6kAMS2AEP3uKa2EfOoPg2GTfycs
+         oC8W2DFbgUYb9NABMByggxM/uvXLZ2ENW+rF+mGmcCtgpIrV9DAEG4FMKMmYpop8UAGC
+         Zfhh145O/svmAd7pTMIr1pUjkQDAkdQLEGxSTgiVtGvXgxnWKx+0EYrGBfUk37t0GXWg
+         YA+vEX/nBoD6AtSTsXHeJbjIb2kprJUUkJ+6pRcU63K79/QF0b4B52C3qwAoQqY5auWi
+         7PfA==
+X-Gm-Message-State: AAQBX9coALg/M7U+UZPiYMUwDh0IwkatFVcMvombFw16QpTJXRrhilyK
+        xZTg8SudWzOJMrIEUSnnisU=
+X-Google-Smtp-Source: AKy350bTdpoUHIsagb+4BTrzzRfsNOzsybVTgw+GzV1DuXqyaLBQbEtimDuEJgScEaHe1uFKXxi+aQ==
+X-Received: by 2002:a5d:6e90:0:b0:2e4:efd9:987a with SMTP id k16-20020a5d6e90000000b002e4efd9987amr2151856wrz.69.1680197499507;
+        Thu, 30 Mar 2023 10:31:39 -0700 (PDT)
 Received: from [192.168.1.135] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id r16-20020a05600c35d000b003ee9f396dcesm6948932wmq.30.2023.03.30.10.30.59
+        by smtp.gmail.com with ESMTPSA id q1-20020a05600000c100b002e51195a3e2sm1408157wrx.79.2023.03.30.10.31.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Mar 2023 10:31:00 -0700 (PDT)
-Message-ID: <395a1fbf-4d97-930b-5dca-33f14b337837@gmail.com>
-Date:   Thu, 30 Mar 2023 19:30:58 +0200
+        Thu, 30 Mar 2023 10:31:38 -0700 (PDT)
+Message-ID: <fa3d3f99-59f4-7397-7a7b-e342ed39dd00@gmail.com>
+Date:   Thu, 30 Mar 2023 19:31:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v3 11/17] arm64: dts: mediatek: add usb controller support
- for mt8365-evk
+Subject: Re: [PATCH v3 12/17] arm64: dts: mediatek: add ethernet support for
+ mt8365 SoC
 Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Alexandre Mergnat <amergnat@baylibre.com>,
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Wenbin Mei <wenbin.mei@mediatek.com>,
@@ -78,12 +78,11 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-11-0003e80e0095@baylibre.com>
- <5b213d2f-4694-5548-9cce-f01dacda9c84@collabora.com>
+ <20230203-evk-board-support-v3-12-0003e80e0095@baylibre.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <5b213d2f-4694-5548-9cce-f01dacda9c84@collabora.com>
+In-Reply-To: <20230203-evk-board-support-v3-12-0003e80e0095@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -96,45 +95,42 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 29/03/2023 15:26, AngeloGioacchino Del Regno wrote:
-> Il 29/03/23 10:54, Alexandre Mergnat ha scritto:
->> This patch add support for SuperSpeed USB, in OTG mode, on micro connector.
->> It also add support for the Extensible Host Controller Interface USB.
->>
->> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
->> ---
->>   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts 
->> b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
->> index 22ec332fe9c9..868ee0d160e4 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
->> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
->> @@ -319,6 +319,28 @@ &pwm {
->>       status = "okay";
->>   };
->> +&ssusb {
->> +    pinctrl-0 = <&usb_pins>;
->> +    pinctrl-names = "default";
->> +    maximum-speed = "high-speed";
->> +    usb-role-switch;
->> +    dr_mode = "otg";
->> +    vusb33-supply = <&mt6357_vusb33_reg>;
->> +    status = "okay";
+On 29/03/2023 10:54, Alexandre Mergnat wrote:
+> This IP is a 10/100 MAC controller compliant with IEEE 802.3 standards.
+> It supports power management with Energy Efficient Ethernet and Wake-on-LAN
+> specification. Flow control is provided for half-duplex and full-duplex
+> mode. For packet transmission and reception, the controller supports
+> IPv4/UDP/TCP checksum offload and VLAN tag insertion.
 > 
-> Order by name please.
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+
+Applied thanks!
+
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365.dtsi | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
 > 
-> P.S.: status can go at the bottom, even if v < s :-)
-
-You mean v > s ;-)
-
-Yes please reorder keep the status to the bottom that's somehow identical 
-throughout the kernel.
-
-Regards,
-Matthias
-
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> index a67eeca28da5..394a5a61be59 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> @@ -438,6 +438,18 @@ mmc2: mmc@11250000 {
+>   			status = "disabled";
+>   		};
+>   
+> +		ethernet: ethernet@112a0000 {
+> +			compatible = "mediatek,mt8365-eth";
+> +			reg = <0 0x112a0000 0 0x1000>;
+> +			mediatek,pericfg = <&infracfg>;
+> +			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&topckgen CLK_TOP_ETH_SEL>,
+> +				 <&infracfg CLK_IFR_NIC_AXI>,
+> +				 <&infracfg CLK_IFR_NIC_SLV_AXI>;
+> +			clock-names = "core", "reg", "trans";
+> +			status = "disabled";
+> +		};
+> +
+>   		u3phy: t-phy@11cc0000 {
+>   			compatible = "mediatek,mt8365-tphy", "mediatek,generic-tphy-v2";
+>   			#address-cells = <1>;
 > 
-> Thanks,
-> Angelo
