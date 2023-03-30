@@ -2,66 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5231A6D0CA3
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 19:22:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F1CD6D0CAC
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 19:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbjC3RWQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Mar 2023 13:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
+        id S232286AbjC3RXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Mar 2023 13:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231950AbjC3RWP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 13:22:15 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59B7E06A;
-        Thu, 30 Mar 2023 10:22:10 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id t17-20020a05600c451100b003edc906aeeaso3544373wmo.1;
-        Thu, 30 Mar 2023 10:22:10 -0700 (PDT)
+        with ESMTP id S232299AbjC3RW4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 13:22:56 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720E2E05A;
+        Thu, 30 Mar 2023 10:22:52 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id l27so19866530wrb.2;
+        Thu, 30 Mar 2023 10:22:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680196929;
+        d=gmail.com; s=20210112; t=1680196971;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ub/AQVZfAChA/d+KSB5lldfEy26j6LKXVDj7xODNFoM=;
-        b=KLiv+Q7hqzdXpK0fgRBj67KNAUOqJoWJnE1LMeZ8IfLHVgdlV6kLwIuXuxWSDpUWse
-         hMHaXiRocH3o8cU6G6DRwHksPLdzpPhjypTQtwojIQ7pwuCp75wpopMCg106el5i2qp0
-         bkelgS1rvpqBd7PuNgpPc7o8M1Fl8jy4czasiaq1CLsC0oRxgc194CrnXs3miihYZmaR
-         2/7BpBIwHW99VjxF6goFddcsgKc75BjsVAOwYFyGxVE5a3Aj0ytTDFebONzL/Z/FWUb8
-         tFQ0Z92vNGSFNvQMT8Ny/BsLElNOtA85GrZ4XV3rqfA68BUKRmXmVlMK5LTLPVhC7axL
-         ysHA==
+        bh=pPJs63vkmES77vLWP6h36VSVcoJgnvHBO16dXz7aLLA=;
+        b=HXRk0gSjc7UzTeVlVScMI/bFzbgMX6Yx0jQ7+4jjV6DbiTYXpmzqrCfaC6n/XV5O1s
+         GTmmS93u4AXEG/2sSwLT0vXUqxiJ8DO6xBkmyY3kWOQgjtA1yZr/x0LSK9l0j01p0U5U
+         CWV95X1Lbaur4n4ym0ubz4jziweW0xxdp+Xg9jblSMmG9Pu70RpkNGFWxGr1pYMJu55J
+         FC5/CEsyB7kDishxKTQILkUpwj24mwr/qxifNx+6eZcTxEjXTXokLd71O7ffNfjP1z2Y
+         Wy2VW9ADXsVVW/lCjhTPZ2gvKUUhp+ErKtO0jvW+Hj0JLgkUzyiqpyilqKwOYXA0+tzK
+         IlPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680196929;
+        d=1e100.net; s=20210112; t=1680196971;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ub/AQVZfAChA/d+KSB5lldfEy26j6LKXVDj7xODNFoM=;
-        b=HVAGOuZQVy4Jtit1uyAGxidgs0qaVijiiVvsLIbQ52lQe/As4ojoSzCLSEs80PUBw0
-         yMu/ZNhvcmAQTY5NwsiZ20FLGhFDtf3S8/qbj88nVP7y9wGtnpS/e4YGMneRkryHEA4k
-         3/3S2kCtbU9bQvTi5cA0pDLY/1TXO3Oy7YvSsTv0uSjCXMU6PktBjGhuOULKEhXyuKTF
-         Yv6Dp04lDWIHYB1iF8bhEgsRGDl6TRapfGm5YFnB9+FysVJnYdn3MbWgy4wJomtDANSk
-         CopbKP+Pa3Mnex7DuNbqD1pqbL/PQBooNM7p7F90C5qNXRWIBXl3ESTGC4G0l04XcPcf
-         1PQA==
-X-Gm-Message-State: AO0yUKUh+SR2SyGbze/lJSc+TxLtCe/FizQ/AfzAzvYZtjKDCQCvBT0I
-        87JViPbCP9IWvtl0/htwXsQ=
-X-Google-Smtp-Source: AK7set+Z7z1kVsT/1a8sP5GsrmavnXRm3sG7+NJ+W+MACV28utX/L4C5aZ+aBDDLru+8Dt00emmWtA==
-X-Received: by 2002:a7b:c381:0:b0:3ed:4627:ed09 with SMTP id s1-20020a7bc381000000b003ed4627ed09mr18130818wmj.28.1680196929078;
-        Thu, 30 Mar 2023 10:22:09 -0700 (PDT)
+        bh=pPJs63vkmES77vLWP6h36VSVcoJgnvHBO16dXz7aLLA=;
+        b=5awsRaPBltqL1GMGhQLZHB3W5SRcLb8MLhRSWVYUgmdDbfsHgQNvSq4KpBFKrP1RjJ
+         j4sKybb0S+LMl5vNrdKf+Z5wQtotff+tuGI/OGm3KOLHf7sJbwfDBH5ifTNuytp/GgXH
+         mSobbOTYOk5JG8Ucg5ByJ4ppaL1LV0xAGzbSMXwnjSENQZQD/VKW3VQcgNwsKlvRVKCx
+         cedOh4jR9duu5wzEw+hAthHn/rcQwFa4i4UuYyD6qyBb9LeJop7awQ9IISj0jPPwxO3Q
+         ZwV17K2CC0wOyWv3IQSvapm4lASRpBrHHWM9OE5dl4yWHggVUqrGFyXcWflChMQ24pHF
+         0uHA==
+X-Gm-Message-State: AAQBX9cZKBXPpv6SAH8BO2bacOeERfl+BXTRLXxRBY4Y8hWbA7dDquz8
+        xiAevmkbZfEYavrhWuQ3pVw=
+X-Google-Smtp-Source: AKy350beiItDOkhHiEWsPQhED+hZbp9xWyCi7X3rVDzlAVAglOScC+nn76KoyGNSMhG9Vj0f6PhHGA==
+X-Received: by 2002:a5d:66ca:0:b0:2d3:bde8:9ff with SMTP id k10-20020a5d66ca000000b002d3bde809ffmr20716784wrw.34.1680196970778;
+        Thu, 30 Mar 2023 10:22:50 -0700 (PDT)
 Received: from [192.168.1.135] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id p6-20020a05600c358600b003ef6708bc1esm7079233wmq.43.2023.03.30.10.22.06
+        by smtp.gmail.com with ESMTPSA id a18-20020a5d4d52000000b002d1e49cff35sm33258678wru.40.2023.03.30.10.22.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Mar 2023 10:22:07 -0700 (PDT)
-Message-ID: <5291a565-acdd-a4aa-9f33-ec6f254a0ab1@gmail.com>
-Date:   Thu, 30 Mar 2023 19:22:06 +0200
+        Thu, 30 Mar 2023 10:22:49 -0700 (PDT)
+Message-ID: <5e929f59-7565-25c1-51af-ccb346a06036@gmail.com>
+Date:   Thu, 30 Mar 2023 19:22:48 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v3 05/17] arm64: dts: mediatek: add mt6357 device-tree
+Subject: Re: [PATCH v3 06/17] arm64: dts: mediatek: add pwrap support to
+ mt8365 SoC
 Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, amergnat@baylibre.com,
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
         Chaotian Jing <chaotian.jing@mediatek.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Wenbin Mei <wenbin.mei@mediatek.com>,
@@ -76,12 +78,11 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-5-0003e80e0095@baylibre.com>
- <889be563-78d6-7148-f7d2-09ae21383ee4@collabora.com>
+ <20230203-evk-board-support-v3-6-0003e80e0095@baylibre.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <889be563-78d6-7148-f7d2-09ae21383ee4@collabora.com>
+In-Reply-To: <20230203-evk-board-support-v3-6-0003e80e0095@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -94,52 +95,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 29/03/2023 15:17, AngeloGioacchino Del Regno wrote:
-> Il 29/03/23 10:54, amergnat@baylibre.com ha scritto:
->> From: Fabien Parent <fparent@baylibre.com>
->>
->> This new device-tree add the regulators, rtc and keys support
->> for the MT6357 PMIC.
->>
->> Signed-off-by: Fabien Parent <fparent@baylibre.com>
->> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
->> ---
->>   arch/arm64/boot/dts/mediatek/mt6357.dtsi | 282 +++++++++++++++++++++++++++++++
->>   1 file changed, 282 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt6357.dtsi 
->> b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
->> new file mode 100644
->> index 000000000000..3330a03c2f74
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
->> @@ -0,0 +1,282 @@
+On 29/03/2023 10:54, Alexandre Mergnat wrote:
+> In order to use the PMIC, the pwrap support should be added
+> to allow communication between the SoC and the PMIC.
 > 
-> ..snip..
-> 
->> +
->> +        keys {
->> +            compatible = "mediatek,mt6357-keys";
->> +
->> +            key-power {
->> +                linux,keycodes = <KEY_POWER>;
->> +                wakeup-source;
->> +            };
->> +
->> +            key-home {
->> +                linux,keycodes = <KEY_HOME>;
->> +                wakeup-source;
-> 
-> KEY_HOME is a wakeup-source?! are you sure?!
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-I think it could make sense to do that, so I just queued the patch. If that was 
-an oversight, then please send a follow-up patch.
+Applied, thanks.
 
-Regards,
-Matthias
-
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365.dtsi | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
 > 
-> (P.S.: I'm just checking if that was intended)
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> index e018df6844f6..687011353f69 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+> @@ -186,6 +186,18 @@ apmixedsys: syscon@1000c000 {
+>   			#clock-cells = <1>;
+>   		};
+>   
+> +		pwrap: pwrap@1000d000 {
+> +			compatible = "mediatek,mt8365-pwrap";
+> +			reg = <0 0x1000d000 0 0x1000>;
+> +			reg-names = "pwrap";
+> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&infracfg CLK_IFR_PWRAP_SPI>,
+> +				 <&infracfg CLK_IFR_PMIC_AP>,
+> +				 <&infracfg CLK_IFR_PWRAP_SYS>,
+> +				 <&infracfg CLK_IFR_PWRAP_TMR>;
+> +			clock-names = "spi", "wrap", "sys", "tmr";
+> +		};
+> +
+>   		keypad: keypad@10010000 {
+>   			compatible = "mediatek,mt6779-keypad";
+>   			reg = <0 0x10010000 0 0x1000>;
 > 
-> Regards,
-> Angelo
