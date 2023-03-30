@@ -2,127 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C1A6D0654
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 15:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAAA6D0743
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 15:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231953AbjC3NSC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Mar 2023 09:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
+        id S231445AbjC3NuE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Mar 2023 09:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231952AbjC3NSA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 09:18:00 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772DBAD05
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Mar 2023 06:17:52 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id ay14so13742039uab.13
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Mar 2023 06:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1680182271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jOH9bhj9mcqY6znBQ+V+BoH/PdxPEL1zl8pK42vZx/o=;
-        b=6aHbLNbsFZl7EKVIxCmVqZUlq4s3nuRNhHzz8zXcHv0IpE9zwFPzp6yc5lDMYHjrST
-         F8+qifaMVOYcTEjAkYsykSWRvx/D2xWg+vTxc9r+shMOWEP5mKaTG5upTaK2g6CtnOq/
-         ZgV4qnocLvdofIdN3GA9g6UPTxt4hOHsBFQxXL6YtIVp/xJ8EdLYpWdJj8B2CL4e3GdH
-         BXkWJHbOVrrhzpbW+LTZfDD50wekz6tUNXf2/NgD07K9kHXcgRgeUVmTak3au1kjfNVS
-         00PRdjpWupYqIzX4zKpse+Lj+ogPkx2mSTKR0hdXGNFdFaEvx2cXuRXd2JTg4AfUiiM8
-         wLVg==
+        with ESMTP id S232152AbjC3NuD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 09:50:03 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA7A4EDE;
+        Thu, 30 Mar 2023 06:50:02 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id bi31so14167938oib.9;
+        Thu, 30 Mar 2023 06:50:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680182271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jOH9bhj9mcqY6znBQ+V+BoH/PdxPEL1zl8pK42vZx/o=;
-        b=yjQ7PD53JGi+xcNMF/PjmikfaF5cSvVYTDmut51Spm9RLeeGbPjVgQcUtFYiXmruUY
-         AstI4XlNa4YIKIY29F2sRSS62mfzNH3jR8qv7Oc+zc5pItEUt7y+UANzxnylgJULREMd
-         ciVbQKnGQ2LEhPPZqVFUgL6MpFLe9Z32JI8NeI1cOK6mYl6mZxOLA/r5HGzgzFcwnP4O
-         8u6gYRlDlfkWOoncTc97akvqA8Ab9MeY9kh1s1WF7jZ4cGdf/DVQuHxUQT/P149znNkL
-         LcAAhlGDTMnJzo/m09JLLab2kHdqv/anp9EGM4rhalIFjVR8EcEKGLpV8JswTTHbBggH
-         eOrg==
-X-Gm-Message-State: AAQBX9fkbw7viLGOWziLdypmMfZgX+vPklmLc+aH/h6cgYzxF0W74JJH
-        fM446hwJ7JZXrcahssRNSpWain9M1QURh6fevZe1ew==
-X-Google-Smtp-Source: AKy350a1LG/3QeRlb/S4n2XGp4RNbXZM/GLy/7CtvPE0LgrdLfEx1uMKTrMgOUv5hNRdCOlueQ0bkBBgHMMy5MVzRYc=
-X-Received: by 2002:a1f:27d0:0:b0:43a:d64:5aba with SMTP id
- n199-20020a1f27d0000000b0043a0d645abamr12646034vkn.2.1680182271485; Thu, 30
- Mar 2023 06:17:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230327125316.210812-1-brgl@bgdev.pl> <20230327125316.210812-7-brgl@bgdev.pl>
- <20230330131324.GQ434339@google.com>
-In-Reply-To: <20230330131324.GQ434339@google.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 30 Mar 2023 15:17:40 +0200
-Message-ID: <CAMRc=MfNNsiqzgCSF3xcuJf6LND+_cer9_vq3BZq3vvsb_+D-Q@mail.gmail.com>
-Subject: Re: [PATCH v3 06/18] dt-bindings: mfd: qcom,spmi-pmic: add compatible
- for pmm8654au
-To:     Lee Jones <lee@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        d=1e100.net; s=20210112; t=1680184202;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CKdeKXMZKkzRzmYzogTN+akOjOk8EAmTZBQ/2FEAwgg=;
+        b=5I/G/T9bn3WMdtobQ55G4BFKMmSfPDG/EkrI1hpf4mGHdYWa5WH2xejbi+3DS1UGtq
+         +DgpI66YvsmcFxKRBiU6a8EDLkiaqYUkgT++r9014JLJU4Zy6K+9NxdJJa/qE5YY/NXq
+         P8avfxbNxbpdi4QiefemCerHslRBaVUe0n685J9RLCze8Ucgbhg6YmqJ+chha9gFvAUy
+         N0NQ8qlIKyZZvMsrcSthWCpt0jbccZhLlYAiaT4yP1hdZcW4NNOHw3gbbkEaEg6ah30h
+         qHX7KGqiImElMr+3mQIVyDSqx9suYsNxvdptJhev3lRZFjD9No5Z9ief9utMyOiiMUS3
+         1i/Q==
+X-Gm-Message-State: AAQBX9dvDBrRRNM5NQtxrdfSi7DZUFNzyo7pDBXPVqBjcahDfpJwLXIw
+        PKDwsDPcXuonzgYayXudEg==
+X-Google-Smtp-Source: AKy350bFeV3x8EQIVtLXWGoO3fQp/HyP946oOhe7XGW6LnNcoGBq+6UaL8exWCu6W4e++Ed/2NEAcg==
+X-Received: by 2002:aca:280c:0:b0:389:72d5:f16f with SMTP id 12-20020aca280c000000b0038972d5f16fmr1649086oix.28.1680184201780;
+        Thu, 30 Mar 2023 06:50:01 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id o184-20020acabec1000000b0038934c5b400sm4334154oif.25.2023.03.30.06.50.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 06:50:01 -0700 (PDT)
+Received: (nullmailer pid 1903371 invoked by uid 1000);
+        Thu, 30 Mar 2023 13:50:00 -0000
+Date:   Thu, 30 Mar 2023 08:50:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: mediatek: deprecate custom
+ drive strength property
+Message-ID: <20230330135000.GA1898063-robh@kernel.org>
+References: <20230327-cleanup-pinctrl-binding-v1-0-b695e32e4f2e@baylibre.com>
+ <20230327-cleanup-pinctrl-binding-v1-1-b695e32e4f2e@baylibre.com>
+ <334089fd-f0e8-bf63-5100-d8632c478ccc@collabora.com>
+ <3fbb78e9-a450-3741-070b-2caedbaa47a5@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fbb78e9-a450-3741-070b-2caedbaa47a5@linaro.org>
+X-Spam-Status: No, score=0.8 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 3:13=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Mon, 27 Mar 2023, Bartosz Golaszewski wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > PMM8654au is the SPMI PMIC variant used on sa8775p-ride. Add a compatib=
-le
-> > for it.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Cc: Lee Jones <lee@kernel.org>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
->
-> Change-log?
->
-> >  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml =
-b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> > index 975c30aad23c..0f7dd7ac9630 100644
-> > --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
-> > @@ -79,6 +79,7 @@ properties:
-> >            - qcom,pmk8350
-> >            - qcom,pmk8550
-> >            - qcom,pmm8155au
-> > +          - qcom,pmm8654au
-> >            - qcom,pmp8074
-> >            - qcom,pmr735a
-> >            - qcom,pmr735b
->
-> I believe this is already applied, right?
->
-> Not sure why I have 3 copies of seemingly the same patch in my inbox.
->
+On Wed, Mar 29, 2023 at 09:58:57AM +0200, Krzysztof Kozlowski wrote:
+> On 28/03/2023 15:41, AngeloGioacchino Del Regno wrote:
+> > Il 28/03/23 15:06, Alexandre Mergnat ha scritto:
+> >> Deprecate mediatek,drive-strength-adv which shall not exist, that was an
+> >> unnecessary property that leaked upstream from downstream kernels and
+> >> there's no reason to use it.
+> >>
+> >> The generic property drive-strength-microamp should be used instead.
+> >>
+> >> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> >> ---
+> >>   .../devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml      | 8 ++++++--
+> >>   .../devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml      | 6 +++++-
+> >>   2 files changed, 11 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> >> index c30cd0d010dd..b82a066b91ec 100644
+> >> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.yaml
+> > 
+> > Thanks for doing MT8183!!!
+> > 
+> >> @@ -110,8 +110,13 @@ patternProperties:
+> >>             drive-strength:
+> > 
+> > ..snip..
+> > 
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> >> index 4b96884a1afc..347f533776ba 100644
+> >> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+> >> @@ -91,8 +91,13 @@ patternProperties:
+> >>   
+> >>             input-schmitt-disable: true
+> >>   
+> >> +          drive-strength-microamp:
+> >> +            enum: [125, 250, 500, 1000]
+> >> +
+> >>             mediatek,drive-strength-adv:
+> >> +            deprecated: true
+> > 
+> > In the case of MT8365, since there's *no* devicetree using this property, *at all*,
+> > I think you can even just entirely remove this block, as that should not be
+> > considered an ABI breakage in that case.
+> > 
+> > Krzysztof, can you please confirm?
+> 
+> If it is defined as ABI in a released kernel, then should be rather
+> deprecated.
 
-I've sent out three iterations of the series containing it. This one
-didn't change. As the rest of 18 patches don't concern your subsystem,
-I decided to only Cc you on this one. Let me know if you prefer to
-receive the entire series even if only a single patch needs your
-attention. The reaction to such dumps varies from maintainer to
-maintainer so I chose the safe approach. :)
+Yes, but if no one notices it's not an ABI. It's up to the platform 
+maintainers really. I only care that the commits indicate they know what 
+they are doing (usually not).
 
-Bart
-
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Rob
