@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A3C6D1EC3
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 13:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9CDD6D1EE7
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 13:23:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231889AbjCaLJf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 07:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        id S230058AbjCaLXr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 07:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbjCaLJR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 07:09:17 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9EF1D2CB
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 04:08:55 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id b18so26956729ybp.1
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 04:08:55 -0700 (PDT)
+        with ESMTP id S229538AbjCaLXq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 07:23:46 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E601D86C
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 04:23:44 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id f188so8519360ybb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 04:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680260935;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680261823;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DrZ4nuKFRbdrvkseheS7XRYqEh2EC/QvjKLix2jXZFM=;
-        b=p8HE8uYDQXIMNWouHzNhuIPq4ZYpcpiB2tjtZuopwJd/AlYTllfvkZumoyD3e/aM7a
-         Rsituuiso2kH/VdZb40vv8jtPdJNbYku8HkT1NxamcWm15rgUETuxgZWfce3K4OlsyJT
-         8EYq24i6h1AxbQKxcbsErcKtHV0SISL4sLOHWGtxxHXScAUsEopBmv6kXPUb2UP3kamx
-         7ejJ4g3jcDtINsK2lt0tIFmNU5xb6+K0y6cGos/6qAj9HGe3eQ9yrRkXgJxG1CWCQDv4
-         U50TBQ8X7/8T8XMPSnMernOOPbz8JoPb/BIhGLvpV6JYEt/IuIVi75EXyJsAZUXykI0w
-         2u1A==
+        bh=6TmvPpd2YmgmpZIHsxp1gukcZ6IkVkvn2jIN3kBi1i8=;
+        b=sTIfTWSObIn7UMlmphrTSYvN9Y7arYi6CRjrwIvqEAI9HkX9Exwa13txK+uYbpM7v3
+         l6J4vkOqq8a0i3booWaeIUu92m/13ZKH2zw0OnWjp2qz2/hGDwkQeo9u2FnZnTxFWsxE
+         9P7yyDufLYI6/2Q2hVxULgawDVnW3549Q1R+UtZSFfXLvjtNR6wvhVIjY3uC0C87RLam
+         hX+jLrZKivu8A7dWkLaZPlBNwjfq5Cle2ETuJ8QDD5u6ndQPqq2STdtrm9yOoRXgMqZE
+         Pd8H77fN3eDjuTD2iMiOpP6dJDo1FgaiTZm+w2XLGm3TDUzPGtd+RFL/46DdUX/uY+il
+         RK0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680260935;
+        d=1e100.net; s=20210112; t=1680261823;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DrZ4nuKFRbdrvkseheS7XRYqEh2EC/QvjKLix2jXZFM=;
-        b=SCYNDlL2bWgflUuLgYIgwR4LNC1ayGe5a6PEdeku5jL6S7EyTCTGoQgFnOQ0fcPzdm
-         Tf6WIykkTyhRpqcZpalnjszeNe9P5GpgwImqvQ1TVr0iT1nT1tYrhNBzdxDGftuIoGRS
-         NheuXcXXGOaCN8Tg3BnRLugQcOpK4/MiAuzEP01Vt2QVEs/S3jPxBmay9a4UBiqkLOwg
-         TGf4rQxxzZ+bScpAdUnCuSjE1bCpMg5cmBxxM1wpe0Lu87s81otqAquM7OyiRzcsw9O4
-         67EGAoRif0XqXB8pNyiMg6pa76h3SZS4y+ujiZHlJfDHMZTZmnF4rnARlJp3yeuLYtm+
-         zqDA==
-X-Gm-Message-State: AAQBX9cAmrrYZNisc807iGX9U2QPhAdD7JRegAsd24BM6boiEMa50wEz
-        WiJVYTkviEXnHMNG2xLopbD2/f/y/XoXpsAtPJNnZw==
-X-Google-Smtp-Source: AKy350bS9SyNRus3dGUyYtiJgys+HJA9rC8VrYDEuvi3iswc8ROzk0fLQpNKXYrIlL5r6jnukfZX+uNeYtTgRvFeeN4=
-X-Received: by 2002:a05:6902:18d5:b0:b75:3fd4:1b31 with SMTP id
- ck21-20020a05690218d500b00b753fd41b31mr18131967ybb.1.1680260934863; Fri, 31
- Mar 2023 04:08:54 -0700 (PDT)
+        bh=6TmvPpd2YmgmpZIHsxp1gukcZ6IkVkvn2jIN3kBi1i8=;
+        b=jF1U5d4Oohzz0JgsjKYu1fYstUtwbLKR/xV29OzyuqTq3aft4n4dF4gtHaJT2Z6oMB
+         R90vvQgaeE/26qzZoEurQrJlpgJD6aYnWEkjGsKPIVm0cQy/j8vuerOM92usuiSaw8Qn
+         WomkI7SLN2tV0tdaFoSN3N8X/gUDK3+100p/TAFzGrQS26y4/Xz5WOm25g0J12o7JGFC
+         4U31qgctDWRfgT4YROA2XwBX9/EBDvR2RzAAvZATwMsijM+vexq4js3st+rmMHvGEsSZ
+         Bp2Lq78Z3dV/jrWZ9IQl7ZNNElpsPNOFZa5GY5mA3EKMdNbE7BmI6Ofka5NWH6WizV8j
+         F4nw==
+X-Gm-Message-State: AAQBX9f6NZzc5deeFpmb4+2mgn98dWvyvGoNb57DmVVmwYHwGVl90W6w
+        L7VvrAX07Yru5EYmdUhvPsHoJIX93LcrQQu6qKPAow==
+X-Google-Smtp-Source: AKy350Y1O6fb4CGhMXuQEcYQBTT1/oazAxitXaSHy0j76q36BAoNePcj7hYGMpWDOiNCG1ARjEL0yjdg1OiNTqnv+G8=
+X-Received: by 2002:a05:6902:1181:b0:b6c:2224:8a77 with SMTP id
+ m1-20020a056902118100b00b6c22248a77mr17804559ybu.1.1680261823120; Fri, 31 Mar
+ 2023 04:23:43 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-10-0003e80e0095@baylibre.com> <7b6be990-9e90-8e44-7c5e-f8b7a2701ce7@collabora.com>
-In-Reply-To: <7b6be990-9e90-8e44-7c5e-f8b7a2701ce7@collabora.com>
+ <20230203-evk-board-support-v3-10-0003e80e0095@baylibre.com>
+ <7b6be990-9e90-8e44-7c5e-f8b7a2701ce7@collabora.com> <CAFGrd9qMEtHVT+P-mBNxh6g1jOm5ifArSxi1bbGnrKgxCf7zSQ@mail.gmail.com>
+In-Reply-To: <CAFGrd9qMEtHVT+P-mBNxh6g1jOm5ifArSxi1bbGnrKgxCf7zSQ@mail.gmail.com>
 From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Fri, 31 Mar 2023 13:08:43 +0200
-Message-ID: <CAFGrd9qMEtHVT+P-mBNxh6g1jOm5ifArSxi1bbGnrKgxCf7zSQ@mail.gmail.com>
+Date:   Fri, 31 Mar 2023 13:23:32 +0200
+Message-ID: <CAFGrd9oYMXgWVxQHfn6hT0chx6kg+4UhP4Q=v4f+gF_NahhNdA@mail.gmail.com>
 Subject: Re: [PATCH v3 10/17] arm64: dts: mediatek: set vmc regulator as
  always on
 To:     AngeloGioacchino Del Regno 
@@ -86,25 +87,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le mer. 29 mars 2023 =C3=A0 15:25, AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> a =C3=A9crit :
+Le ven. 31 mars 2023 =C3=A0 13:08, Alexandre Mergnat
+<amergnat@baylibre.com> a =C3=A9crit :
 >
-> Il 29/03/23 10:54, amergnat@baylibre.com ha scritto:
-> > From: Fabien Parent <fparent@baylibre.com>
+> Le mer. 29 mars 2023 =C3=A0 15:25, AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> a =C3=A9crit :
 > >
-> > MSDC1 IP block is powered by VMC. Make sure it is always on.
+> > Il 29/03/23 10:54, amergnat@baylibre.com ha scritto:
+> > > From: Fabien Parent <fparent@baylibre.com>
+> > >
+> > > MSDC1 IP block is powered by VMC. Make sure it is always on.
+> >
+> > Why always on?
+> > Can't you just set mt6357_vmc_reg as VIN of mt6357_vmch_reg? :-)
 >
-> Why always on?
-> Can't you just set mt6357_vmc_reg as VIN of mt6357_vmch_reg? :-)
+> I'm not sure to get it. mt6357_vmc_reg & mt6357_vmch_reg come from
+> PMIC and are supposed to be independent.
+> You suggest to link them in the mt8365-evk dts file using something like:
+> &mt6357_vmch_reg {
+>     vin-supply =3D <&mt6357_vmc_reg>;
+> };
 
-I'm not sure to get it. mt6357_vmc_reg & mt6357_vmch_reg come from
-PMIC and are supposed to be independent.
-You suggest to link them in the mt8365-evk dts file using something like:
-&mt6357_vmch_reg {
-    vin-supply =3D <&mt6357_vmc_reg>;
-};
-
-Also, regulator binding probably needs change to support that.
+Additionally, vin-supply is supported by fixed-regulator and
+gpio-regulator, which is not the case here.
+I think it isn't doable.
 
 Regards,
 Alex
