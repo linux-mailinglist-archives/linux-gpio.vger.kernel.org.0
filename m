@@ -2,64 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C9496D1F85
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 13:55:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7B076D1F9E
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 14:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231766AbjCaLzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 07:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
+        id S230331AbjCaMFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 08:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjCaLza (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 07:55:30 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30181A976;
-        Fri, 31 Mar 2023 04:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=NyQSP08kdZEIibjO78bHM9DPbMJs/ttUyH/VRXm9krE=; b=AJOIJtFoowQW3ArNJBBHr89lSG
-        lRiYC0eqVguobMzRquug9ADUvwOy87GnHD3DcFJ5YYW2vFW5RhVX6E5Q0qyIEz1X4sfVwhLY4XMya
-        DkSoD9dFPX5V3J/MVwacGc5ZF/MgwTnvUtRxExVnflZ9K8048zLY9jcBDFpS2KJGBp8Y=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1piDLe-0091Qr-03; Fri, 31 Mar 2023 13:55:14 +0200
-Date:   Fri, 31 Mar 2023 13:55:13 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, stefan@agner.ch, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH V2 2/2] dt-bindings: gpio: vf610: update gpio-ranges
-Message-ID: <960c6591-5c04-4385-aabf-b93fa03d5f4e@lunn.ch>
-References: <20230330100550.2049687-1-peng.fan@oss.nxp.com>
- <20230330100550.2049687-2-peng.fan@oss.nxp.com>
+        with ESMTP id S230112AbjCaMFd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 08:05:33 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA231CBAE
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:05:31 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5445009c26bso410576937b3.8
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680264331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SBertetORVW57D4Qn1kS8HxfnJyMQ3NfyoVt6rJXeWw=;
+        b=jJYKQuohc4q23MSrpDjfNbvItKi4OeXxV/JiVsMH1u69/oc+hhZnHl+qafU/eiH4n6
+         fW+LnLnJ1EbzJrlZrmw27H30jZAlcHuAElxlUoo5p2XHokmFvACqJ/swhGjAQ3WNqWco
+         DumOcwmKSRpfirCl6ztX/cQNURZ8+AB/lp1zGF80Ul/QKpbuTucfgL8kH8y1HF+8j+9+
+         yq8jO/0GALbIjk7DOXxP5cnYW/SuxOZ/j+PBe9ZNyRhAoEyiR6ye1iP69ZbVcGpU3a+3
+         nSQ1Lhe98iMsb8F3ZOh6VIDOIfw5wXQQjHoL6I9b4Rp0OkH3q45tYXLqlUmlP+IGCdL1
+         6oLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680264331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SBertetORVW57D4Qn1kS8HxfnJyMQ3NfyoVt6rJXeWw=;
+        b=0JCUhWf1gBkr86ChudW67dPAvnEsM7z+7UOG1CuEh1OnkviR+RbInlrzyqH+2Tz2Ds
+         NPeqIacsQjUHd0QyZo/uywwysIGqULI4YsZBNcJzxGdIpe8KKlXLpqmdd2bQ7qfOZPV9
+         KALgaRLiAm3E0i2MIZsW5rGykXf9Agiu9xWRRA9FMPjfdlnZ06dYyt2dYWAazadXYGhm
+         4aDJm7GqpTY6+N1BahFK+AsG8oNrg44LOo7I9UJ3IOXNqTVc6Cs3mp0n9Si4dKwv71tc
+         FnFDLTwJo7Vug+iRijYABAh+kcaBAMSzbHw8W9+LA+uJFXVmmD46n8M+ZMuUoDIzTiuF
+         d2JA==
+X-Gm-Message-State: AAQBX9ecyuIzzfBrRM9r0vuBo19TCAeQFJ3+Ne1iKtOPEzxGiMneDUvq
+        r9Ne4Lb+MSzefx0qAOlaU+AZHYufbql1fWTkBhypDQ==
+X-Google-Smtp-Source: AKy350alOUKFv8JHxb8OmChOgvitPrDAx4h8WLR3fhEV2ib1x87O1DkuqB5uGPeBCLNGixpUYQPibS7V5oz35p99nco=
+X-Received: by 2002:a81:ad5d:0:b0:540:e744:13ae with SMTP id
+ l29-20020a81ad5d000000b00540e74413aemr12477767ywk.3.1680264330881; Fri, 31
+ Mar 2023 05:05:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230330100550.2049687-2-peng.fan@oss.nxp.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
+ <20230203-evk-board-support-v3-16-0003e80e0095@baylibre.com> <8c917be2-e15a-921f-aaa9-b8753d2463de@gmail.com>
+In-Reply-To: <8c917be2-e15a-921f-aaa9-b8753d2463de@gmail.com>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Date:   Fri, 31 Mar 2023 14:05:20 +0200
+Message-ID: <CAFGrd9oPKn84yK2VpfJQRd1HbBTwq87Fuc6=Uw3uaeLjm89=8w@mail.gmail.com>
+Subject: Re: [PATCH v3 16/17] arm64: dts: mediatek: fix systimer properties
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 06:05:50PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> And bounds for gpio-ranges to address dtbs_error.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Hi Matthias
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Le jeu. 30 mars 2023 =C3=A0 19:34, Matthias Brugger
+<matthias.bgg@gmail.com> a =C3=A9crit :
+>
+>
+>
+> On 29/03/2023 10:54, amergnat@baylibre.com wrote:
+> > From: Amjad Ouled-Ameur <aouledameur@baylibre.com>
+> >
+> > MT8365 has a SYST timer (System Timer), therefore the compatible node
+> > should be "mediatek,mt6765-timer" instead of "mediatek,mt6795-systimer"
+> > (which corresponds to ARM/ARM64 System Timer).
+> >
+> > Plus, register range should be 0x100 instead of 0x10.
+> >
+> > Finally, interrupt polarity of systimer is LEVEL_HIGH.
+> >
+> > Fix the above properties accordingly.
+> >
+> > Signed-off-by: Amjad Ouled-Ameur <aouledameur@baylibre.com>
+> > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>
+> Patch looks good but does not apply cleanly because of previous patches t=
+hat I
+> didn't take and need rework. Please resend the patches I didn't queue wit=
+h the
+> comments addressed.
 
-    Andrew
+Sorry for that, I forgot to drop this patch since it has been already
+fixed in the Bero's series [1]
+I will drop it for the next version
+
+[1]: https://lore.kernel.org/all/20230309213501.794764-4-bero@baylibre.com/
+
+Regards,
+Alex
