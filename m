@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F0396D29BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 23:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AE876D29C0
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 23:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233042AbjCaVFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 17:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
+        id S232048AbjCaVF5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 17:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232788AbjCaVFv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 17:05:51 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4895A1D2DD
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 14:05:49 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-545e907790fso322470637b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 14:05:49 -0700 (PDT)
+        with ESMTP id S232929AbjCaVFw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 17:05:52 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 276F91D843
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 14:05:50 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5445009c26bso438275287b3.8
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 14:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680296748;
+        d=linaro.org; s=google; t=1680296749;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SP9X9kxgiV5uszeLSB2zIqb4Yvuepj1dFk5ABV7jKn8=;
-        b=hsc2oCIPHD0udLznPtJSzeCHBKgaXfX3+c3B2Fo683tXHlO5JzMk0/WkfQoTSz4vGX
-         lRXI/HXUCK+tA9wCgyzCJ0Df0R3YQXKFTXn3bbG7c8kMoVjutG3y3vYlLO44GAyuAl+o
-         HDO0Qtv4/bZyBUG2PZgRZfGZU1ct3SNvhXT6eyDtK4BpY3ZyeGsdIynL2uW6GE26E/2m
-         JaZXxbTz/eTh3XH630D1jJEcITbWo74xNP1ac2hSQzXzhWIyKkajuZGNi5M/cyqP92HO
-         SnSFS9iOar0odyr1e34jx0U+mth9csqFWxiN4z8Exk6gJg2a6g0AtzUZ3Wbfzko44vfW
-         Nxhw==
+        bh=aHDpWJ8LmFXnhqNV9hvIQWX65CwoKi+B8qVcqGGaFg0=;
+        b=G0+PT7ejGRpajE70IDG+VljDx3e7hktCXEbeutu4Z4pJBD548bMqOWlCZrG8xnwd4r
+         TFXNwlB2wI9Vc/2N9+eev2ReA5CZUsm2K2SXUwJROOy0Jgh/dLIm+srdAbJo8dq4c7Qn
+         lgwojuCpF6qB4raUbuePretyHJAxgHhonIohQ8BaIMVXqWVhniJLQYqLNfO51jgtiPsd
+         rox5wnzCuO5O7JL8TgiyTljQ10t52M1/6YaAPhGOR/rWF/e9oUFu+tPkX3nkk2Da+KEY
+         737F06pFt10ESPCILHraylzZeVDpNDlfL8PR7GTioMzDUfzqcDD497oX4nDrTxtc0rlk
+         X/Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680296748;
+        d=1e100.net; s=20210112; t=1680296749;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SP9X9kxgiV5uszeLSB2zIqb4Yvuepj1dFk5ABV7jKn8=;
-        b=KExJnNVaLh+p0x8Qmahn+CdMOLuNtBYbFT5hBMxm1J/jaZFArICLMHsSbJPnnbRzmd
-         ebIUxO9AmIThT5f0ezVeS4tDcA+9Mh+wOJgkUBWQJR32+gKYTD481TTpEIdn1/YI9aEX
-         7HQJTrisNs//SplnPDedDo3OC86nvV6dOMdp7sx6jbNPxunbs4cNdvDzOJK+h2cnvx2R
-         xHRbm/6F5rSoJwGq7JXJJx3WGvehqGxkHzkjE7OiGoftZEDDiBVWN5wBk2KfFnX4EIFB
-         hZLEHXA3o5nN7Gap/+6U6lkfi2cME26JTiFhWj4Tujub+YjHWmCyfJ+vzVgFpCwymS54
-         9lDA==
-X-Gm-Message-State: AAQBX9c7neraO2wAzYSMBHIfECJB5ZfLyaerI+049EcKPe9SaewfiVrW
-        1CZuQdoLhwFt6y7+Pyfh1sX45Q==
-X-Google-Smtp-Source: AKy350Yd4Z8uxoJe6Eh3HpwXnkojNCwW+6IkzFAWCyyUXfQY5GJtDeaQYDQlonhMJ7+H0Q4+Kipjeg==
-X-Received: by 2002:a0d:ddd1:0:b0:544:f952:2184 with SMTP id g200-20020a0dddd1000000b00544f9522184mr30737729ywe.44.1680296748330;
-        Fri, 31 Mar 2023 14:05:48 -0700 (PDT)
+        bh=aHDpWJ8LmFXnhqNV9hvIQWX65CwoKi+B8qVcqGGaFg0=;
+        b=1saCsaeMYP1wd0LnMtfLopX+1TGKeIqEixtmYoZLayyzimDKsCFiI+TvbrbD4qsmWO
+         EHJqjE+bL/w2eA8vD3b8AGEvBfT0lzlFeu/DYVaU2XuodGazExfgCDt3Ha8q3xeHemQC
+         rcOkIhnw88qUPOku5n2tvbhtSYdFhClIO/xPfFtLyvxYtldZouLOGy1f6YyM/GLPZX8k
+         VbKo4cX6gwCZAaBE7lOcwQsl0y7LMswXJz5BE+nZswEod1V0mm1IovDwLbxVGOw03bpk
+         ZtNB7zSz1aP/XFFv5tIPi2K2tLALSSU2lvWSf3vfpiyn//9U4j1BypfCKGoS5Ad4rmVK
+         Irqw==
+X-Gm-Message-State: AAQBX9f5Xx6BcxmrFd08Dh+U9lE3vx/dXdTxuEjlDYE4Eskg29sSalc1
+        B2oxG8P5l4Cq4c4QMrUoTfXzfg==
+X-Google-Smtp-Source: AKy350ZMxzGAxGBBzwyegUQTjZuCNCvSqOdvEKiR8RakGgyyjTeJgysvwuTu8De3A5lkz/9wj4s9CA==
+X-Received: by 2002:a0d:e28c:0:b0:544:7994:34dc with SMTP id l134-20020a0de28c000000b00544799434dcmr22865405ywe.43.1680296749222;
+        Fri, 31 Mar 2023 14:05:49 -0700 (PDT)
 Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id q70-20020a81b249000000b0054601ee157fsm751990ywh.114.2023.03.31.14.05.47
+        by smtp.gmail.com with ESMTPSA id q70-20020a81b249000000b0054601ee157fsm751990ywh.114.2023.03.31.14.05.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Mar 2023 14:05:47 -0700 (PDT)
+        Fri, 31 Mar 2023 14:05:48 -0700 (PDT)
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH v4 2/4] gpio: 104-idio-16: Migrate to the regmap API
-Date:   Fri, 31 Mar 2023 17:05:24 -0400
-Message-Id: <c92c24cfe8d6ee492d060b33417601991e9884bd.1680296343.git.william.gray@linaro.org>
+Subject: [PATCH v4 3/4] gpio: pci-idio-16: Migrate to the regmap API
+Date:   Fri, 31 Mar 2023 17:05:25 -0400
+Message-Id: <672f7f4ad6afb0d6bf5745118334b27c36594f77.1680296343.git.william.gray@linaro.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1680296343.git.william.gray@linaro.org>
 References: <cover.1680296343.git.william.gray@linaro.org>
@@ -74,7 +74,7 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 The regmap API supports IO port accessors so we can take advantage of
 regmap abstractions rather than handling access to the device registers
-directly in the driver. Migrate the 104-idio-16 module to the new
+directly in the driver. Migrate the pci-idio-16 module to the new
 idio-16 library interface leveraging the gpio-regmap API.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -84,74 +84,65 @@ Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 Changes in v4: none
 
  drivers/gpio/Kconfig            |   2 +-
- drivers/gpio/gpio-104-idio-16.c | 286 +++++++-------------------------
- 2 files changed, 64 insertions(+), 224 deletions(-)
+ drivers/gpio/gpio-pci-idio-16.c | 294 +++++++-------------------------
+ 2 files changed, 62 insertions(+), 234 deletions(-)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 415b86cfd1a9..9f7ec4f3fdbf 100644
+index 9f7ec4f3fdbf..e19b2612e67c 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -860,7 +860,7 @@ config GPIO_104_IDIO_16
- 	tristate "ACCES 104-IDIO-16 GPIO support"
- 	depends on PC104
- 	select ISA_BUS_API
+@@ -1580,7 +1580,7 @@ config GPIO_PCH
+ 
+ config GPIO_PCI_IDIO_16
+ 	tristate "ACCES PCI-IDIO-16 GPIO support"
 -	select GPIOLIB_IRQCHIP
 +	select REGMAP_MMIO
  	select GPIO_IDIO_16
  	help
- 	  Enables GPIO support for the ACCES 104-IDIO-16 family (104-IDIO-16,
-diff --git a/drivers/gpio/gpio-104-idio-16.c b/drivers/gpio/gpio-104-idio-16.c
-index 098fbefdbe22..21035dadee46 100644
---- a/drivers/gpio/gpio-104-idio-16.c
-+++ b/drivers/gpio/gpio-104-idio-16.c
-@@ -6,19 +6,16 @@
-  * This driver supports the following ACCES devices: 104-IDIO-16,
-  * 104-IDIO-16E, 104-IDO-16, 104-IDIO-8, 104-IDIO-8E, and 104-IDO-8.
+ 	  Enables GPIO support for the ACCES PCI-IDIO-16. An interrupt is
+diff --git a/drivers/gpio/gpio-pci-idio-16.c b/drivers/gpio/gpio-pci-idio-16.c
+index 6726c32e31e6..5da67e0c83ff 100644
+--- a/drivers/gpio/gpio-pci-idio-16.c
++++ b/drivers/gpio/gpio-pci-idio-16.c
+@@ -5,214 +5,75 @@
   */
--#include <linux/bitmap.h>
-+#include <linux/bits.h>
+ #include <linux/bits.h>
  #include <linux/device.h>
 -#include <linux/errno.h>
 -#include <linux/gpio/driver.h>
--#include <linux/io.h>
-+#include <linux/err.h>
- #include <linux/ioport.h>
 -#include <linux/interrupt.h>
 -#include <linux/irqdesc.h>
++#include <linux/err.h>
 +#include <linux/irq.h>
- #include <linux/isa.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
- #include <linux/moduleparam.h>
+ #include <linux/pci.h>
 -#include <linux/spinlock.h>
 +#include <linux/regmap.h>
  #include <linux/types.h>
  
  #include "gpio-idio-16.h"
-@@ -36,187 +33,62 @@ static unsigned int num_irq;
- module_param_hw_array(irq, uint, irq, &num_irq, 0);
- MODULE_PARM_DESC(irq, "ACCES 104-IDIO-16 interrupt line numbers");
  
 -/**
 - * struct idio_16_gpio - GPIO device private data structure
 - * @chip:	instance of the gpio_chip
 - * @lock:	synchronization lock to prevent I/O race conditions
-- * @irq_mask:	I/O bits affected by interrupts
-- * @reg:	I/O address offset for the device registers
+- * @reg:	I/O address offset for the GPIO device registers
 - * @state:	ACCES IDIO-16 device state
+- * @irq_mask:	I/O bits affected by interrupts
 - */
 -struct idio_16_gpio {
 -	struct gpio_chip chip;
 -	raw_spinlock_t lock;
--	unsigned long irq_mask;
 -	struct idio_16 __iomem *reg;
 -	struct idio_16_state state;
+-	unsigned long irq_mask;
 +static const struct regmap_range idio_16_wr_ranges[] = {
-+	regmap_reg_range(0x0, 0x2), regmap_reg_range(0x4, 0x4),
++	regmap_reg_range(0x0, 0x2), regmap_reg_range(0x3, 0x4),
  };
 -
 -static int idio_16_gpio_get_direction(struct gpio_chip *chip,
--				      unsigned int offset)
+-	unsigned int offset)
 -{
 -	if (idio_16_get_direction(offset))
 -		return GPIO_LINE_DIRECTION_IN;
@@ -160,7 +151,7 @@ index 098fbefdbe22..21035dadee46 100644
 -}
 -
 -static int idio_16_gpio_direction_input(struct gpio_chip *chip,
--					unsigned int offset)
+-	unsigned int offset)
 -{
 -	return 0;
 -}
@@ -185,12 +176,11 @@ index 098fbefdbe22..21035dadee46 100644
 -	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
 -
 -	idio_16_get_multiple(idio16gpio->reg, &idio16gpio->state, mask, bits);
--
 -	return 0;
 -}
 -
 -static void idio_16_gpio_set(struct gpio_chip *chip, unsigned int offset,
--			     int value)
+-	int value)
 -{
 -	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
 -
@@ -213,11 +203,10 @@ index 098fbefdbe22..21035dadee46 100644
 -{
 -	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
 -	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	const unsigned long offset = irqd_to_hwirq(data);
+-	const unsigned long mask = BIT(irqd_to_hwirq(data));
 -	unsigned long flags;
 -
--	idio16gpio->irq_mask &= ~BIT(offset);
--	gpiochip_disable_irq(chip, offset);
+-	idio16gpio->irq_mask &= ~mask;
 -
 -	if (!idio16gpio->irq_mask) {
 -		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
@@ -226,18 +215,21 @@ index 098fbefdbe22..21035dadee46 100644
 -
 -		raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
 -	}
+-
+-	gpiochip_disable_irq(chip, irqd_to_hwirq(data));
 -}
 -
 -static void idio_16_irq_unmask(struct irq_data *data)
 -{
 -	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
 -	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	const unsigned long offset = irqd_to_hwirq(data);
+-	const unsigned long mask = BIT(irqd_to_hwirq(data));
 -	const unsigned long prev_irq_mask = idio16gpio->irq_mask;
 -	unsigned long flags;
 -
--	gpiochip_enable_irq(chip, offset);
--	idio16gpio->irq_mask |= BIT(offset);
+-	gpiochip_enable_irq(chip, irqd_to_hwirq(data));
+-
+-	idio16gpio->irq_mask |= mask;
 -
 -	if (!prev_irq_mask) {
 -		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
@@ -259,7 +251,7 @@ index 098fbefdbe22..21035dadee46 100644
 -}
 -
 -static const struct irq_chip idio_16_irqchip = {
--	.name = "104-idio-16",
+-	.name = "pci-idio-16",
 -	.irq_ack = idio_16_irq_ack,
 -	.irq_mask = idio_16_irq_mask,
 -	.irq_unmask = idio_16_irq_unmask,
@@ -267,20 +259,32 @@ index 098fbefdbe22..21035dadee46 100644
 -	.flags = IRQCHIP_IMMUTABLE,
 -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 +static const struct regmap_range idio_16_rd_ranges[] = {
-+	regmap_reg_range(0x1, 0x2), regmap_reg_range(0x5, 0x5),
++	regmap_reg_range(0x1, 0x2), regmap_reg_range(0x5, 0x6),
  };
 -
 -static irqreturn_t idio_16_irq_handler(int irq, void *dev_id)
 -{
 -	struct idio_16_gpio *const idio16gpio = dev_id;
+-	unsigned int irq_status;
 -	struct gpio_chip *const chip = &idio16gpio->chip;
 -	int gpio;
+-
+-	raw_spin_lock(&idio16gpio->lock);
+-
+-	irq_status = ioread8(&idio16gpio->reg->irq_status);
+-
+-	raw_spin_unlock(&idio16gpio->lock);
+-
+-	/* Make sure our device generated IRQ */
+-	if (!(irq_status & 0x3) || !(irq_status & 0x4))
+-		return IRQ_NONE;
 -
 -	for_each_set_bit(gpio, &idio16gpio->irq_mask, chip->ngpio)
 -		generic_handle_domain_irq(chip->irq.domain, gpio);
 -
 -	raw_spin_lock(&idio16gpio->lock);
 -
+-	/* Clear interrupt */
 -	iowrite8(0, &idio16gpio->reg->in0_7);
 -
 -	raw_spin_unlock(&idio16gpio->lock);
@@ -314,7 +318,7 @@ index 098fbefdbe22..21035dadee46 100644
 +	.reg_stride = 1,
 +	.val_bits = 8,
 +	.io_port = true,
-+	.max_register = 0x5,
++	.max_register = 0x6,
 +	.wr_table = &idio_16_wr_table,
 +	.rd_table = &idio_16_rd_table,
 +	.volatile_table = &idio_16_rd_table,
@@ -326,13 +330,13 @@ index 098fbefdbe22..21035dadee46 100644
 -{
 -	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(gc);
 -
--	/* Disable IRQ by default */
+-	/* Disable IRQ by default and clear any pending interrupt */
 -	iowrite8(0, &idio16gpio->reg->irq_ctl);
 -	iowrite8(0, &idio16gpio->reg->in0_7);
 +/* Only input lines (GPIO 16-31) support interrupts */
 +#define IDIO_16_REGMAP_IRQ(_id)						\
 +	[16 + _id] = {							\
-+		.mask = BIT(_id),					\
++		.mask = BIT(2),						\
 +		.type = { .types_supported = IRQ_TYPE_EDGE_BOTH },	\
 +	}
  
@@ -347,12 +351,14 @@ index 098fbefdbe22..21035dadee46 100644
 +	IDIO_16_REGMAP_IRQ(15), /* 15 */
 +};
  
- static int idio_16_probe(struct device *dev, unsigned int id)
+ static int idio_16_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  {
+ 	struct device *const dev = &pdev->dev;
 -	struct idio_16_gpio *idio16gpio;
- 	const char *const name = dev_name(dev);
+ 	int err;
+ 	const size_t pci_bar_index = 2;
+ 	const char *const name = pci_name(pdev);
 -	struct gpio_irq_chip *girq;
--	int err;
 -
 -	idio16gpio = devm_kzalloc(dev, sizeof(*idio16gpio), GFP_KERNEL);
 -	if (!idio16gpio)
@@ -361,17 +367,20 @@ index 098fbefdbe22..21035dadee46 100644
 +	void __iomem *regs;
 +	struct regmap *map;
  
- 	if (!devm_request_region(dev, base[id], IDIO_16_EXTENT, name)) {
- 		dev_err(dev, "Unable to lock port addresses (0x%X-0x%X)\n",
-@@ -224,54 +96,22 @@ static int idio_16_probe(struct device *dev, unsigned int id)
- 		return -EBUSY;
+ 	err = pcim_enable_device(pdev);
+ 	if (err) {
+@@ -226,53 +87,20 @@ static int idio_16_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return err;
  	}
  
--	idio16gpio->reg = devm_ioport_map(dev, base[id], IDIO_16_EXTENT);
--	if (!idio16gpio->reg)
-+	regs = devm_ioport_map(dev, base[id], IDIO_16_EXTENT);
-+	if (!regs)
- 		return -ENOMEM;
+-	idio16gpio->reg = pcim_iomap_table(pdev)[pci_bar_index];
++	regs = pcim_iomap_table(pdev)[pci_bar_index];
+ 
+-	/* Deactivate input filters */
+-	iowrite8(0, &idio16gpio->reg->filter_ctl);
++	map = devm_regmap_init_mmio(dev, regs, &idio_16_regmap_config);
++	if (IS_ERR(map))
++		return dev_err_probe(dev, PTR_ERR(map), "Unable to initialize register map\n");
  
 -	idio16gpio->chip.label = name;
 -	idio16gpio->chip.parent = dev;
@@ -388,8 +397,6 @@ index 098fbefdbe22..21035dadee46 100644
 -	idio16gpio->chip.set_multiple = idio_16_gpio_set_multiple;
 -
 -	idio_16_state_init(&idio16gpio->state);
--	/* FET off states are represented by bit values of "1" */
--	bitmap_fill(idio16gpio->state.out_state, IDIO_16_NOUT);
 -
 -	girq = &idio16gpio->chip.irq;
 -	gpio_irq_chip_set_chip(girq, &idio_16_irqchip);
@@ -400,10 +407,7 @@ index 098fbefdbe22..21035dadee46 100644
 -	girq->default_type = IRQ_TYPE_NONE;
 -	girq->handler = handle_edge_irq;
 -	girq->init_hw = idio_16_irq_init_hw;
-+	map = devm_regmap_init_mmio(dev, regs, &idio_16_regmap_config);
-+	if (IS_ERR(map))
-+		return dev_err_probe(dev, PTR_ERR(map), "Unable to initialize register map\n");
- 
+-
 -	raw_spin_lock_init(&idio16gpio->lock);
 -
 -	err = devm_gpiochip_add_data(dev, &idio16gpio->chip, idio16gpio);
@@ -412,8 +416,8 @@ index 098fbefdbe22..21035dadee46 100644
 -		return err;
 -	}
 -
--	err = devm_request_irq(dev, irq[id], idio_16_irq_handler, 0, name,
--		idio16gpio);
+-	err = devm_request_irq(dev, pdev->irq, idio_16_irq_handler, IRQF_SHARED,
+-		name, idio16gpio);
 -	if (err) {
 -		dev_err(dev, "IRQ handler registering failed (%d)\n", err);
 -		return err;
@@ -422,14 +426,14 @@ index 098fbefdbe22..21035dadee46 100644
 +	config.map = map;
 +	config.regmap_irqs = idio_16_regmap_irqs;
 +	config.num_regmap_irqs = ARRAY_SIZE(idio_16_regmap_irqs);
-+	config.irq = irq[id];
-+	config.no_status = true;
++	config.irq = pdev->irq;
++	config.filters = true;
  
 -	return 0;
 +	return devm_idio_16_regmap_register(dev, &config);
  }
  
- static struct isa_driver idio_16_driver = {
+ static const struct pci_device_id idio_16_pci_dev_id[] = {
 -- 
 2.39.2
 
