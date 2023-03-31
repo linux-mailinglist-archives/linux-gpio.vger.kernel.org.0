@@ -2,132 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 263CC6D2086
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 14:40:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0A6B6D2097
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 14:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232358AbjCaMkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 08:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
+        id S232358AbjCaMlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 08:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232478AbjCaMjr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 08:39:47 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F402063F
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:37:33 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-54606036bb3so246729817b3.6
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:37:33 -0700 (PDT)
+        with ESMTP id S232442AbjCaMlZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 08:41:25 -0400
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CEF1EFD6
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:41:01 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-545e907790fso296463057b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 05:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680266252;
+        d=linaro.org; s=google; t=1680266461;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E6lKdgk6THqQzNp4VvxVKewKaHaWOnEhQknxk2acjn0=;
-        b=ZMrC7RQQSpVfgy/SHMpfC+E2QpLMDaY5/yaDkSHUKYAESGTlYtEL7g/qRUeknQy91P
-         zUvgfNL0L6h3FNfh9c8D2HFAFVYOCP9WG625XToYyxYEiXALrCS5KsLDkaIeSbXlXde1
-         eg6UEhsSIBdX6MmhPhtTRLpJ9X4gdd+QI1NZNQSGtPnmNcH0Md5Wv/wDx/8mZJzSNT7K
-         vAZIJkR9VzoIqc5aO0g4o0xB+IpDOheOKDhB6ttu5EMPirHAV26dyaOz/pB9Dw1cQhWl
-         Nw5HjfOlvF3F0OheAjfDdZPbDekSVJ+CefyXJevdAGQrjbRZSi8YsUnd1+evdQw6Mb3h
-         4YIg==
+        bh=MRZsZGRSBUttBDdfhkXu+iVZ6M0OXbmk7WZu3FuQ8Jg=;
+        b=bHKkubKvpHVbMRxx1j06pm8nus5PdJq7l9RkcGq5ExEKZR2/osMq1YWgwQkIL7fmLJ
+         kW26fA9F5tE+XNhM+3jMnlOpQ6srJDId+r356SPXqg8V/i/VdF0o1U1BtiJIqyt1nHYM
+         yOqUFFIl3GrWuDrpMHpLAtnTl1AYwkFAd1roVvIiTVzsbcrj6TDqpvmmeT19fCx4BxSG
+         iXbP5u5VVhqd6lajF32hLW6wgK832F0brgd+B0fgfM5k7Vu2O5DTAJx7QcQ2vS6FeSB2
+         MlJcD2OcrhueOEOgRzI+GbeQmlZ1zMCGdB2SiLD3/9u0iHFfvh/JNniF89XFiqsW8Llz
+         5c3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680266252;
+        d=1e100.net; s=20210112; t=1680266461;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E6lKdgk6THqQzNp4VvxVKewKaHaWOnEhQknxk2acjn0=;
-        b=MbJGkKrufFiBZV1JHg7ZL2g2tytOUe1O8ge3ywCuGQiOoR8VR/PIVhRHDEsX1dcKIS
-         OTCVP9SZNth5/k+odK3rLpLlPLt+fMmxhHueY9AZfjwOqegnJFOcuFuo2KtA46DB+jc8
-         MtCNZuJWO+s54XLXU5CQXOAgDAvZk3Yk9WqpeKpNlHivFUeqrKN0qr4ubM5wMA6ITa7p
-         Ba0vvq/mFr49PTa2+JCkzgPbY7oeH2rHHs+LbnqUfH5n4QhQIi/4Ygl6FdEGb6zc7gXF
-         cCxpkyUj+KkPQNlyWz1ZnR59akwJXKKXFHKxruUgWlvBBvSBlRYE3lLpXyEEiHfuo1r7
-         psXQ==
-X-Gm-Message-State: AAQBX9f/pknp4Q/zLYlroe6OsXliJ7NUcJkYXL0VBfHj3XfbslpCZjR8
-        y3fmFVTEAE1nm0KJX5X6HifBGUCwPMYPIfAHMGFt2Q==
-X-Google-Smtp-Source: AKy350aQG4pTb9063C5UpGPTZlWu/1jB1S9bOfbEf1bci1cyW8YxugalTaCiIXNAm4RWMBbCrWxYKS+tBxFA+9FzOXI=
-X-Received: by 2002:a81:c84a:0:b0:541:753d:32f9 with SMTP id
- k10-20020a81c84a000000b00541753d32f9mr13384037ywl.9.1680266252481; Fri, 31
- Mar 2023 05:37:32 -0700 (PDT)
+        bh=MRZsZGRSBUttBDdfhkXu+iVZ6M0OXbmk7WZu3FuQ8Jg=;
+        b=VtM2aDCDFsDjzpj4DnlHYirN8I01BUcMHyttpzo9MyJTp2kJXF+8QdsE41UpMrU5OU
+         sbJKnJ/UXazpkTUTSSN+DWkuJ2oMjA6SKg5Q4Gax2nguNpyTqp7eNfEISvjuor0pUWmZ
+         4tsDYdafDwvaqaaVLVYI6xtMilCNVpbvGdvXhNMY+yvbR1iIP7P2htxTvwjQ2q6+ePdQ
+         BhCd90gJ/OUV+DHz8j09bCkegeqBALuVceAb4Ig/W84mXuoPic3EIi/yXajPKl6/yDd6
+         wMqDe7Gxo46OUMoFZ8KJ2bjLSazMF8SsZH6LU2rb2IAFbp/2CuaM/CUAbzd2vTCrc0dn
+         K0Dw==
+X-Gm-Message-State: AAQBX9dzbMQJrZlxWMSE9g8r16g1RXdTyZjdBXfBeXm3/0rL8s82QcY9
+        4LdvsVOFN4Ga4Bn7/e7GVR7Yxsxwm7UgbHdPaCd5FcBBY/oyLjnvgcg=
+X-Google-Smtp-Source: AKy350YEjxPDjbwYwsSFrCU0uQJYztKPQjzwuEM1U/PujPKxlNAw3tq/F6qGz4Sr87IntJwwOldydyNsV49f1QjtAPQ=
+X-Received: by 2002:a81:d007:0:b0:546:81f:a89e with SMTP id
+ v7-20020a81d007000000b00546081fa89emr7575796ywi.9.1680266460814; Fri, 31 Mar
+ 2023 05:41:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230330200402.2731992-1-robh@kernel.org>
-In-Reply-To: <20230330200402.2731992-1-robh@kernel.org>
+References: <20230330212225.10214-1-olek2@wp.pl>
+In-Reply-To: <20230330212225.10214-1-olek2@wp.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 31 Mar 2023 14:37:21 +0200
-Message-ID: <CACRpkdYwM5Kw4XB9S5qoqdK-boiYp2iu=LRZ-B-vJb1k9fNnig@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: Drop unneeded quotes
-To:     Rob Herring <robh@kernel.org>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
-        Dvorkin Dmitry <dvorkin@tibbo.com>,
-        Wells Lu <wellslutw@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        =?UTF-8?Q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        - <patches@opensource.cirrus.com>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, asahi@lists.linux.dev,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
+Date:   Fri, 31 Mar 2023 14:40:49 +0200
+Message-ID: <CACRpkdZo4VKixBM9XLsiUVp+wcqQ-irY9DjNCSNeh4CfUYVWwg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: xway: drop the deprecated compatible strings
+To:     Aleksander Jan Bajkowski <olek2@wp.pl>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -139,27 +68,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 10:05=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
-e:
+On Thu, Mar 30, 2023 at 11:22=E2=80=AFPM Aleksander Jan Bajkowski <olek2@wp=
+.pl> wrote:
 
-> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
-> checking for this can be enabled in yamllint.
+> This code are marked as deprecated since kernel 4.5[1]. Downstream OpenWR=
+T
+> and upstream switched to the new string compatible 7 years ago. The old
+> compatible strings can safely be dropped.
 >
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Hector Martin <marcan@marcan.st>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de> #rockchip
-> Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
->  - Rebase on pinctrl tree
+> [1] commit be14811c03cf ("pinctrl/lantiq: introduce new dedicated devicet=
+ree bindings")
+>
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 
-I applied it quickly before something else changes!
+Thanks! Patches applied.
 
-Thanks for respinning, and thanks as always for driving these changes.
+Would you be interested in listing yourself as maintainer for the XWAY
+driver in the MAINTAINERS file?
+
+If you (or someone else) has spare cycles I would be delighted if you could
+look into converting the bindings into YAML.
 
 Yours,
 Linus Walleij
