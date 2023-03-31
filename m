@@ -2,128 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 647606D10DA
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Mar 2023 23:29:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CDA46D19B8
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 10:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbjC3V3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Mar 2023 17:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
+        id S231607AbjCaIZJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 04:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbjC3V3O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Mar 2023 17:29:14 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Mar 2023 14:29:12 PDT
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55A5C17F
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Mar 2023 14:29:12 -0700 (PDT)
-Received: (wp-smtpd smtp.wp.pl 16376 invoked from network); 30 Mar 2023 23:22:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1680211350; bh=g79xrgthvXz8TMVzNGmKJWY+SfQKcMDZEm7G845GCSs=;
-          h=From:To:Cc:Subject;
-          b=tKUuYOJ4uTF3QEtkkjklmSkFfjQAwCbQld0iozVXIgU2AKL4tmcymwbXeATDKnB9j
-           ukKJL+KxZCZwrFT2SGiqPQ/XnV2EZOe6OproNgwQSN1yOQW/D32KpnIB1xiXp5qo1y
-           NJnHRDqnhuxMqKQBkHhNKbR7XOHlZ50kGYB05Eu8=
-Received: from 79.184.247.17.ipv4.supernova.orange.pl (HELO LAPTOP-OLEK.home) (olek2@wp.pl@[79.184.247.17])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linus.walleij@linaro.org>; 30 Mar 2023 23:22:30 +0200
-From:   Aleksander Jan Bajkowski <olek2@wp.pl>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH 2/2] dt-bindings: pinctrl: xway: drop the deprecated compatible strings
-Date:   Thu, 30 Mar 2023 23:22:25 +0200
-Message-Id: <20230330212225.10214-2-olek2@wp.pl>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230330212225.10214-1-olek2@wp.pl>
-References: <20230330212225.10214-1-olek2@wp.pl>
+        with ESMTP id S230432AbjCaIYY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 04:24:24 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A191B7CE
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 01:23:33 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id g17so27908407lfv.4
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 01:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680251012;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SFM/eoJq62VMd0BThJcIsWt0E57OGZL4qf+KcrA3TXM=;
+        b=qjBLAWtwVkcMJKOf/T/zHVv1LHnyI0dYBudnw1wyesrWNPDE/UH+dZ0bG6t4MrjHmm
+         rBBbOTK8Fivj12NbFtEWthmJU/vyNbHTvSbwlJR+rM7ufQWTGDagP2WH+qCt8kmePvov
+         iiiIN4fyAPCHSIIkTxkdd2OOEWlYEZSzirBzt8JJDkqotaDfQcE/c4KTAb2rAj/vMGs1
+         lVAsOZlgc3GgEE3fx6OoAyTQXbVHZSOQM5UrZaMEzlmPY2ZrVz/zbb7qt7TxpxJMniwq
+         b9CdtqGL46fkIm5Wdigo2zj+ersnKnkARaSgqFUbz5TMzvxmRp6Bdke6LF6T2BgEI2JE
+         G5IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680251012;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFM/eoJq62VMd0BThJcIsWt0E57OGZL4qf+KcrA3TXM=;
+        b=dgU6LDLZgVbZPg1gaCsT6MLKLSjS29Y+06K45/FD11+5dgkpS7H5c10qDbVUhQ0hgc
+         hM242K3mvPZ93RMpd/672RdEGAn1t7m4YdCxclTbxsXJk7JXvXL8Xw2PTisLKZs3VSc+
+         acnKjSyMB00tvK8+fVDp5TAXvyhBUYs6sMZXvJenJVoglAh5S2v9AZRqF1EZWGgv4Al6
+         eZd37gYZTu5Dv7R8SGlxzx+ZWgBcNET57GTM1vyixwIh1D7iAWxjl+aDi4RjTDWraxsY
+         bwfADkNaCtVD/X6XwSSqhQIh3EBDNpAgJjuCKSAnLEpYZxe/9d8qkXsfEq2i3XYHktDe
+         esAg==
+X-Gm-Message-State: AAQBX9d4MC0SfnsAT4XTkAdvoMBRP1YAgMW/4Gr3uMXhi6j8C8UXR0T/
+        KQpQo19qU0h1LKvfQlm7VW72hA==
+X-Google-Smtp-Source: AKy350Yx2sdKgu8tI9CRCsLXniSwS6JAiBf3Jf4pjSYqbo9lRR7T1GxMyik5Jl1LaHt+KwpoJ99OCw==
+X-Received: by 2002:a19:7003:0:b0:4dd:af76:d3c with SMTP id h3-20020a197003000000b004ddaf760d3cmr8275543lfc.48.1680251011806;
+        Fri, 31 Mar 2023 01:23:31 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id v11-20020ac2558b000000b004d85316f2d6sm282684lfg.118.2023.03.31.01.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Mar 2023 01:23:31 -0700 (PDT)
+Message-ID: <a4d235ea-8476-23ad-6678-1ecbce93ade6@linaro.org>
+Date:   Fri, 31 Mar 2023 10:23:30 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: 541786faf83a8cda9f91d4ae700c2945
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [gZNE]                               
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: xway: drop the deprecated
+ compatible strings
+Content-Language: en-US
+To:     Aleksander Jan Bajkowski <olek2@wp.pl>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230330212225.10214-1-olek2@wp.pl>
+ <20230330212225.10214-2-olek2@wp.pl>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230330212225.10214-2-olek2@wp.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This code are marked as deprecated since kernel 4.5[1]. Downstream OpenWRT
-and upstream switched to the new string compatible 7 years ago. The old
-compatible strings can safely be dropped.
+On 30/03/2023 23:22, Aleksander Jan Bajkowski wrote:
+> This code are marked as deprecated since kernel 4.5[1]. Downstream OpenWRT
 
-[1] commit be14811c03cf ("pinctrl/lantiq: introduce new dedicated devicetree bindings")
+References to commits do not use [1] bookmarks.
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
- .../bindings/pinctrl/lantiq,pinctrl-xway.txt  | 35 +------------------
- 1 file changed, 1 insertion(+), 34 deletions(-)
+"since commit ....., in v4.5 kernel."
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-index 4658f105fa09..6bd9bc61becb 100644
---- a/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/lantiq,pinctrl-xway.txt
-@@ -1,11 +1,7 @@
- Lantiq XWAY pinmux controller
- 
- Required properties:
--- compatible: "lantiq,pinctrl-xway", (DEPRECATED: Use "lantiq,pinctrl-danube")
--	      "lantiq,pinctrl-xr9", (DEPRECATED: Use "lantiq,xrx100-pinctrl" or
--					"lantiq,xrx200-pinctrl")
--	      "lantiq,pinctrl-ase", (DEPRECATED: Use "lantiq,ase-pinctrl")
--	      "lantiq,<chip>-pinctrl", where <chip> is:
-+- compatible:	"lantiq,<chip>-pinctrl", where <chip> is:
- 		"ase" (XWAY AMAZON Family)
- 		"danube" (XWAY DANUBE Family)
- 		"xrx100" (XWAY xRX100 Family)
-@@ -45,29 +41,6 @@ Required subnode-properties:
- 
- Valid values for group and function names:
- 
--XWAY: (DEPRECATED: Use DANUBE)
--  mux groups:
--    exin0, exin1, exin2, jtag, ebu a23, ebu a24, ebu a25, ebu clk, ebu cs1,
--    ebu wait, nand ale, nand cs1, nand cle, spi, spi_cs1, spi_cs2, spi_cs3,
--    spi_cs4, spi_cs5, spi_cs6, asc0, asc0 cts rts, stp, nmi, gpt1, gpt2,
--    gpt3, clkout0, clkout1, clkout2, clkout3, gnt1, gnt2, gnt3, req1, req2,
--    req3
--
--  functions:
--    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu
--
--XR9: ( DEPRECATED: Use xRX100/xRX200)
--  mux groups:
--    exin0, exin1, exin2, exin3, exin4, jtag, ebu a23, ebu a24, ebu a25,
--    ebu clk, ebu cs1, ebu wait, nand ale, nand cs1, nand cle, nand rdy,
--    nand rd, spi, spi_cs1, spi_cs2, spi_cs3, spi_cs4, spi_cs5, spi_cs6,
--    asc0, asc0 cts rts, stp, nmi, gpt1, gpt2, gpt3, clkout0, clkout1,
--    clkout2, clkout3, gnt1, gnt2, gnt3, gnt4, req1, req2, req3, req4, mdio,
--    gphy0 led0, gphy0 led1, gphy0 led2, gphy1 led0, gphy1 led1, gphy1 led2
--
--  functions:
--    spi, asc, cgu, jtag, exin, stp, gpt, nmi, pci, ebu, mdio, gphy
--
- AMAZON:
-   mux groups:
-     exin0, exin1, exin2, jtag, spi_di, spi_do, spi_clk, spi_cs1, spi_cs2,
-@@ -139,12 +112,6 @@ Optional subnode-properties:
-     0: none, 1: down, 2: up.
- - lantiq,open-drain: Boolean, enables open-drain on the defined pin.
- 
--Valid values for XWAY pin names: (DEPRECATED: Use DANUBE)
--  Pinconf pins can be referenced via the names io0-io31.
--
--Valid values for XR9 pin names: (DEPRECATED: Use xrX100/xRX200)
--  Pinconf pins can be referenced via the names io0-io55.
--
- Valid values for AMAZON pin names:
-   Pinconf pins can be referenced via the names io0-io31.
- 
--- 
-2.30.2
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+Best regards,
+Krzysztof
 
