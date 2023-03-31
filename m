@@ -2,156 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46F4B6D1C79
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 11:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BD2C6D1CB5
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Mar 2023 11:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232253AbjCaJeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 05:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
+        id S232146AbjCaJlv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 05:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232131AbjCaJd5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 05:33:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54D44EC9;
-        Fri, 31 Mar 2023 02:33:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9303CB82DB3;
-        Fri, 31 Mar 2023 09:33:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23B9C433D2;
-        Fri, 31 Mar 2023 09:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1680255204;
-        bh=72mzuO04L3PUk9aLCOXDvsit2zTzKDWhSwQULIrm2dg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Racua//Q7UDpfBF96lbadzS4b0GO6n85LayT00ZPbmGfYsxeO/GNyrTILknk4WWk
-         53tLe2c6OPQiNsQ37NnQAcRDAYXEHrZopBKV8o1MujN+nOybKjqCGaCQ5yq2f+zjVN
-         YDqnPhLO5pkpeEVpm6LyU5gOEpKvosiUVDKwodwo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sebastian Reichel <sre@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-gpio@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 2/7] driver core: create class_is_registered()
-Date:   Fri, 31 Mar 2023 11:33:13 +0200
-Message-Id: <20230331093318.82288-2-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230331093318.82288-1-gregkh@linuxfoundation.org>
-References: <20230331093318.82288-1-gregkh@linuxfoundation.org>
+        with ESMTP id S231792AbjCaJlu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 05:41:50 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DB3975D
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 02:41:48 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id m16so6373431ybk.0
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 02:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680255708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hnaNB1XEFARvtvmMjnyCWM6urGrAoqOyko+dcOeieP4=;
+        b=CNHXi9MB2mEr2AuQ/LvwUlACS4Az3+B0YUHQfIOr//HmiPYsXroiJvw3pgwNkVgFE0
+         wXRRtCk8TRxTYe0wfCYNIFxtdKH+w8zE8RbLvoKhkDoNCGL2CkfEigwt2+q+2NuBJyRz
+         dCcNB6lgTz5vwlDrYJfVyKRPDLZVmmL42SoCJnFhCEsKkRjpsX9lAHfYTLvGgjKGzxQU
+         BrZgcPGmtxg9mwOqx8FSa+ou0oa8VLI87WVpMWh+hOKsWpbO6YVwrHw/IBl7DOHwdYVe
+         xM5ICyc7V9ewynH7CtsaO3LEiNeSEO7eiT11ZJZ7SdsuTTGaKQY5TjAcmyAC6rPLyptR
+         Kozg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680255708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hnaNB1XEFARvtvmMjnyCWM6urGrAoqOyko+dcOeieP4=;
+        b=ygoY9CTJQQFHxhDoILrL4a05TIUTj/PUQJx9QEVANPYsRbl4pikORAW+dcHBdqkg3a
+         GxVbqw1dROR0twtb2l0XylZYguzJr2wgi0p1TAj/+VisBVTXXpLv2uCa4ZR+7BOFaeuP
+         xGXNdpvVrlzwXFOjKWxNnyJAN00/9/6+826Y96M+Z1t/m41xkxXs37DZ+rK29+scFUfn
+         b3wWaehvm7l/27N0vN+ssYrbf6jHNqOtFjMd+YYIFSZSGT1+pGWJIGKq4WXWMgHXFRXX
+         orfd538FCA6UyR1/KZGreAIM6T77e5vMn9oncTqa5xqFMMOdv9t56giKcRu2K2NwyquO
+         faQA==
+X-Gm-Message-State: AAQBX9cVZQJMz27n2hv0fAysJRYII07v+NeoKZQVc9yjIcnCE7U13IYG
+        nt8Jja3M3+4cg9IiHkD+fNkbP/TWo2u9SWV2Zph10XNmT33LAhtpULsBKw==
+X-Google-Smtp-Source: AKy350amcuIyJx1ZU05trxaUHqtJYPGKJJHR/eSVOApb4wFEITF/ZQ6+GZDgwhTCygxuJPp9AYOmneX/QLQ0r4PG1oM=
+X-Received: by 2002:a05:6902:168d:b0:b26:47f3:6cb with SMTP id
+ bx13-20020a056902168d00b00b2647f306cbmr14114282ybb.4.1680255708125; Fri, 31
+ Mar 2023 02:41:48 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3679; i=gregkh@linuxfoundation.org; h=from:subject; bh=72mzuO04L3PUk9aLCOXDvsit2zTzKDWhSwQULIrm2dg=; b=owGbwMvMwCRo6H6F97bub03G02pJDClqK+6c83t86uvFnEWSap/cVvBrx5nnSOgvVeJJ/r860 prZ4cr1jlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZjIy2MM8+N+PvoguP1DQNrn 2SdOX/IRs5vEycQw33f6p/6ZprF2J75UyvNUz91+0GWuJwA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230327130010.8342-1-okan.sahin@analog.com> <20230327130010.8342-3-okan.sahin@analog.com>
+In-Reply-To: <20230327130010.8342-3-okan.sahin@analog.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 31 Mar 2023 11:41:36 +0200
+Message-ID: <CACRpkda5G5b+At5s1WFudpQBQ6LDQxhE3fZj7eBhkZ=thvnQhg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
+To:     Okan Sahin <okan.sahin@analog.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some classes (i.e. gpio), want to know if they have been registered or
-not, and poke around in the class's internal structures to try to figure
-this out.  Because this is not really a good idea, provide a function
-for classes to call to try to figure this out.
+Hi Okan,
 
-Note, this is racy as the state of the class could change at any moment
-in time after the call is made, but as usually a class only wants to
-know if it has been registered yet or not, it should be fairly safe to
-use, and is just as safe as the previous "poke at the class internals"
-check was.
+thanks for your patch!
 
-Move the gpiolib code to use this function as proof that it works
-properly.
+First: why is the word "Regulator" in the subject? I don't quite get it.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/base/class.c         | 25 +++++++++++++++++++++++++
- drivers/gpio/gpiolib-sysfs.c |  4 ++--
- include/linux/device/class.h |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+On Mon, Mar 27, 2023 at 3:01=E2=80=AFPM Okan Sahin <okan.sahin@analog.com> =
+wrote:
+>
+> Gpio I/O expander.
+>
+> Signed-off-by: Okan Sahin <okan.sahin@analog.com>
 
-diff --git a/drivers/base/class.c b/drivers/base/class.c
-index 68a6f9b56d19..a8a1bf976290 100644
---- a/drivers/base/class.c
-+++ b/drivers/base/class.c
-@@ -634,6 +634,31 @@ void class_compat_remove_link(struct class_compat *cls, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(class_compat_remove_link);
- 
-+/**
-+ * class_is_registered - determine if at this moment in time, a class is
-+ *			 registered in the driver core or not.
-+ * @class: the class to check
-+ *
-+ * Returns a boolean to state if the class is registered in the driver core
-+ * or not.  Note that the value could switch right after this call is made,
-+ * so only use this in places where you "know" it is safe to do so (usually
-+ * to determine if the specific class has been registered yet or not).
-+ *
-+ * Be careful in using this.
-+ */
-+bool class_is_registered(const struct class *class)
-+{
-+	struct subsys_private *sp = class_to_subsys(class);
-+	bool is_initialized = false;
-+
-+	if (sp) {
-+		is_initialized = true;
-+		subsys_put(sp);
-+	}
-+	return is_initialized;
-+}
-+EXPORT_SYMBOL_GPL(class_is_registered);
-+
- int __init classes_init(void)
- {
- 	class_kset = kset_create_and_add("class", NULL, NULL);
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index a895915affa5..1a9b21731cc9 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -554,7 +554,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	int			offset;
- 
- 	/* can't export until sysfs is available ... */
--	if (!gpio_class.p) {
-+	if (!class_is_registered(&gpio_class)) {
- 		pr_debug("%s: called too early!\n", __func__);
- 		return -ENOENT;
- 	}
-@@ -728,7 +728,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 	 * register later, in gpiolib_sysfs_init() ... here we just
- 	 * verify that _some_ field of gpio_class got initialized.
- 	 */
--	if (!gpio_class.p)
-+	if (!class_is_registered(&gpio_class))
- 		return 0;
- 
- 	/*
-diff --git a/include/linux/device/class.h b/include/linux/device/class.h
-index b53728ca56fb..9cb5db0588c8 100644
---- a/include/linux/device/class.h
-+++ b/include/linux/device/class.h
-@@ -84,6 +84,7 @@ extern struct kobject *sysfs_dev_block_kobj;
- 
- int __must_check class_register(struct class *class);
- void class_unregister(const struct class *class);
-+bool class_is_registered(const struct class *class);
- 
- struct class_compat;
- struct class_compat *class_compat_register(const char *name);
--- 
-2.40.0
+This commit log is too terse. Write a bit about what this hardware is.
 
+> +config GPIO_DS4520
+> +       tristate "DS4520 I2C GPIO expander"
+> +       select REGMAP_I2C
+> +       help
+> +         GPIO driver for Maxim MAX7300 I2C-based GPIO expander.
+
+Is it MAX7300, I don't get this, it seems super-confused.
+
+> +         Say yes here to enable the GPIO driver for the ADI DS4520 chip.
+> +
+> +         To compile this driver as a module, choose M here: the module w=
+ill
+> +         be called gpio-ds4520.
+
+(...)
+
+The driver is pretty straight-forward, but I think this can use the
+generic GPIO_REGMAP helpers in
+drivers/gpio/gpio-regmap.c
+check other drivers selecting this helper library for inspiration.
+
+Yours,
+Linus Walleij
