@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79E3D6D2C75
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Apr 2023 03:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 666366D2D95
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Apr 2023 04:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233321AbjDABXL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Mar 2023 21:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
+        id S233599AbjDACGL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Mar 2023 22:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232190AbjDABXK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 21:23:10 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4EDF76B
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 18:23:09 -0700 (PDT)
+        with ESMTP id S229909AbjDACGK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Mar 2023 22:06:10 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5606F1710
+        for <linux-gpio@vger.kernel.org>; Fri, 31 Mar 2023 19:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680312189; x=1711848189;
+  t=1680314769; x=1711850769;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=yjWCOHtysLfAJGE8HESlURV/FNOTkBydpkQI4XJJ9YA=;
-  b=Sha9KfO4cqxOrQChJWy1AXd73b92Ns8z0oSS1TIVwpK3Moh1aq70xttm
-   Y7FK241W48UElmZh6SVROl0TPfZUyi27+KDBITTZcyTU0OTbPRgTAyg7e
-   NRVBDdWcwm1djobcRyNJt0UzivkhdES+wfm4pWrsx33zdh2BAxX5GyKMn
-   SiV9oY+Esq/GrPKK20rLI5LUfx8M2l1Jnb3Lh5SSVg7ngMobffvcHggmK
-   IFqTLBCPyENM5AcOjtNMYY8z84/nCkdhlZKFet7jo8QXzPZhlnDq8Sl6V
-   ao7yElDqyMwaNLWu1dz7IRrG3el3yHX3/zINrY2+6WDdROj82MStx5jBe
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="341614603"
+  bh=BLWJ85p03s8ccR+rHtFbi0hmLdvKIBXiUG4tfB6u11c=;
+  b=dm5JlPeySgknixTTcK1MYY5fEZHkxJk67coENYY3VyCpML2/RPVz/ioR
+   qCaYD2VIFBjhKEcTdqH28D4WkvgeZaNHwCRxzrlv9gWGSb1sIuJhgmDtA
+   VUD4cU/jFYtkK/H7RYE2BXmsdLdL21C2M2PnLIeUM02B9OTby9KgVG2PW
+   jh+BzGfa+lc1hjh0YyqFYHO+BU0mdI7bdRlccKDl+xFVS2nXZDg3zCVFp
+   0RlJMDm5YOAObz6ly5H+O4Tb+0rtv7C5myWWU+mj9j4LqhoZhUSZUPyo2
+   1j41xFyLc1GcEZ4w3xhndDM+Ug2vsYqutZMohJfbEVr8eDowRhuSh8WC4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="340324431"
 X-IronPort-AV: E=Sophos;i="5.98,308,1673942400"; 
-   d="scan'208";a="341614603"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 18:23:08 -0700
+   d="scan'208";a="340324431"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 19:06:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="1015036124"
+X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="828927736"
 X-IronPort-AV: E=Sophos;i="5.98,308,1673942400"; 
-   d="scan'208";a="1015036124"
+   d="scan'208";a="828927736"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Mar 2023 18:23:06 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 31 Mar 2023 19:06:07 -0700
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1piPxR-000ML7-2N;
-        Sat, 01 Apr 2023 01:23:05 +0000
-Date:   Sat, 01 Apr 2023 09:22:45 +0800
+        id 1piQd4-000MMb-2Y;
+        Sat, 01 Apr 2023 02:06:06 +0000
+Date:   Sat, 01 Apr 2023 10:06:03 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 53e44a8c3ff962f12af9a16c680682cfa320a9fb
-Message-ID: <64278765.5Ssnbnp5+cWVF9w3%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ c436561687421493fe745c2cc26a8ad0f8dc208b
+Message-ID: <6427918b.kF6n/kvxOj8e+0G+%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,13 +62,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 53e44a8c3ff962f12af9a16c680682cfa320a9fb  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: c436561687421493fe745c2cc26a8ad0f8dc208b  dt-bindings: pinctrl: xway: drop the deprecated compatible strings
 
-elapsed time: 733m
+elapsed time: 777m
 
-configs tested: 182
-configs skipped: 7
+configs tested: 186
+configs skipped: 8
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -87,6 +87,7 @@ alpha                randconfig-r034-20230329   gcc
 arc                              allyesconfig   gcc  
 arc          buildonly-randconfig-r003-20230329   gcc  
 arc                                 defconfig   gcc  
+arc                  randconfig-r004-20230329   gcc  
 arc                  randconfig-r013-20230329   gcc  
 arc                  randconfig-r016-20230329   gcc  
 arc                  randconfig-r025-20230329   gcc  
@@ -102,10 +103,12 @@ arm64                               defconfig   gcc
 arm64                randconfig-r006-20230329   gcc  
 arm64                randconfig-r036-20230329   gcc  
 csky                                defconfig   gcc  
+csky                 randconfig-r003-20230329   gcc  
 csky                 randconfig-r013-20230331   gcc  
 csky                 randconfig-r022-20230329   gcc  
 csky                 randconfig-r033-20230329   gcc  
 csky                 randconfig-r035-20230329   gcc  
+hexagon              randconfig-r023-20230329   clang
 hexagon              randconfig-r041-20230329   clang
 hexagon              randconfig-r041-20230330   clang
 hexagon              randconfig-r045-20230329   clang
@@ -132,6 +135,7 @@ loongarch                        allmodconfig   gcc
 loongarch                         allnoconfig   gcc  
 loongarch    buildonly-randconfig-r006-20230329   gcc  
 loongarch                           defconfig   gcc  
+loongarch            randconfig-r001-20230329   gcc  
 loongarch            randconfig-r002-20230330   gcc  
 loongarch            randconfig-r005-20230330   gcc  
 loongarch            randconfig-r021-20230329   gcc  
