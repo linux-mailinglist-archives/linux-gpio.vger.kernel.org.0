@@ -2,140 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A95AE6D329C
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Apr 2023 18:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1904E6D32B8
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Apr 2023 19:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbjDAQ2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Apr 2023 12:28:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43830 "EHLO
+        id S230025AbjDARG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Apr 2023 13:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjDAQ2d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Apr 2023 12:28:33 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389DA11EBD
-        for <linux-gpio@vger.kernel.org>; Sat,  1 Apr 2023 09:28:32 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-544f7c176easo472768457b3.9
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Apr 2023 09:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680366511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SwTNo3Ki2aER2ZIEedraVm2CwLGI/LI38zPc5dQIans=;
-        b=LX/HcdgqO2RVPx90CkmZvm/8vG74P0Fzg9Pf1f6imquWRijLCYoJFkBywXrtVQLumK
-         vAGV9LyHB+jrWwOf7Fr+tfzOjJeGfJvxVLK6awf8He80dd24q8J7nTJiBhI4zDmVLSU1
-         EUGB9XTuzlSdntsxE1YYdmABDekg0CIGd0OfNxB4wghzTj4Hwyb9o+20XzxYTrTOLuXZ
-         DNoPc2Le82S13zSH8GIgyhFpuUBJlnm/spZZtkCcf7f+X/Z3/xs1gYiJ8rWsw0NMDdQV
-         SLxpIuaQvVDj2iJBYFLQLcZ3vndHxc94wX8FHoWB04ftgwEB2ifuv5qKDSPZhtm9UUKN
-         VIdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680366511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SwTNo3Ki2aER2ZIEedraVm2CwLGI/LI38zPc5dQIans=;
-        b=nel8NbGxIVHs6fbV38axSLGAX93eiT6YCE0ylEkTApUv6ed+KvomamYOsRUBaZm33C
-         ZxcZP9tE3QDU5F4D8Sj9KLLI70c9LohD6z7uv+RW5E81638CN2zqA0mrYdQKbFeF+yXR
-         PiABiVo0w0VWcL765srIQ8JzGXXyxzPZTyG4F3ajaUQltxVrRQrG0dSlMwiI8EqJFVPW
-         o5tw6DjgxewVNvNH9hjXx0QAjUwnomGLMjPfYbpmcECyw8oSXyJMNUYeI9OcR/9DHLgh
-         hJarfRJH1HFswJ5QnIgqvguKqW73VWKDmH4XJZ11UIjvfIHPmi4udXfMQquXvV2yCl/H
-         MeKw==
-X-Gm-Message-State: AAQBX9fWmrpSle2ZW9n33ZuIrYkDc3kysEp9XZznV3+FPAP6NnZQZm/y
-        aj+vuU8zFnmN6bybvsfOXbp/cLYAWQoKTEFdFciDmg==
-X-Google-Smtp-Source: AKy350aSqQLfOEJsp5nxESdUZUTqkKWIrBRSCxN8+xZZ2K9i6N4/UlMjYOmcA9Z+2QBUekzOy+0hA+KgjaxbxX8OCEM=
-X-Received: by 2002:a81:de0d:0:b0:541:a0ab:bd28 with SMTP id
- k13-20020a81de0d000000b00541a0abbd28mr7057595ywj.4.1680366511416; Sat, 01 Apr
- 2023 09:28:31 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 1 Apr 2023 18:28:20 +0200
-Message-ID: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v6.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        with ESMTP id S230019AbjDARG4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Apr 2023 13:06:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372A21A94A;
+        Sat,  1 Apr 2023 10:06:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C489F60C42;
+        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91824C4339B;
+        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680368815;
+        bh=53/87XneiLa2ZTJ2XQcMaw1zEOe3J/B2LfWbaC8+er4=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=pTFdj/Wln5k6SPt6xm0qXNlDjMMhPwWk+4yox2dds1u7KgsA4XDmQMqlft8/SxkFK
+         d/qWaXQyYcqxwPXk0hPkVKHW/FP1ivw/Z3hkfmx+1tzZWwzYhpU1IJqmkL01Ed+0KZ
+         Zf+1NhzGlylOjKCWcDi2f4p0a64B1+niC4yYj/hL7MTxY2A+F3q4dlEXL6Q+mLem81
+         9Wv9m7bdEUkflgAl8Qbjz+fSDVlOXMmWAqgnhIgBimdpcu7TBVegwHx6NJFvzzmKqv
+         aIiJj53u0MrmbuB1+546mWb8VS1q9tTwk26hh/1g9k/QOdMKumMbkKO3zpWEIEhLKT
+         U18NdoIB4VqhA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7E025C43157;
+        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control fixes for v6.3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
+References: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.3-2
+X-PR-Tracked-Commit-Id: e4056e38ec87b4c21eb34bb8e38b1b0ca1221744
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 93e2b01740863cf2f4a58887ac1384e6324b50a2
+Message-Id: <168036881550.2643.15900096815337872183.pr-tracker-bot@kernel.org>
+Date:   Sat, 01 Apr 2023 17:06:55 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Sat, 1 Apr 2023 18:28:20 +0200:
 
-here are some pin control fixes for the v6.3 series.
-The most notable and urgent one is probably the AMD
-fix which affects AMD laptops, found by the Chromium
-people.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.3-2
 
-Please pull it in!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/93e2b01740863cf2f4a58887ac1384e6324b50a2
 
-Yours,
-Linus Walleij
+Thank you!
 
-The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6=
-:
-
-  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.3-2
-
-for you to fetch changes up to e4056e38ec87b4c21eb34bb8e38b1b0ca1221744:
-
-  dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: allow input-enabled and
-bias-bus-hold (2023-03-29 10:41:57 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.3 kernel cycle:
-
-- Fix up the Kconfig options for MediaTek MT7981.
-
-- Fix the irq domain name in the AT91-PIO4 driver.
-
-- Fix some alternative muxing modes in the Ocelot
-  driver.
-
-- Allocate the GPIO numbers dynamically in the STM32
-  driver.
-
-- Disable and mask interrupts on resume in the AMD
-  driver.
-
-- Fix a typo in the Qualcomm SM8550 pin control
-  device tree bindings.
-
-----------------------------------------------------------------
-Ar=C4=B1n=C3=A7 =C3=9CNAL (2):
-      pinctrl: mediatek: add missing options to PINCTRL_MT7981
-      pinctrl: mediatek: fix naming inconsistency
-
-Dario Binacchi (1):
-      pinctrl: stm32: use dynamic allocation of GPIO base
-
-Horatiu Vultur (1):
-      pinctrl: ocelot: Fix alt mode for ocelot
-
-Johan Hovold (1):
-      pinctrl: at91-pio4: fix domain name assignment
-
-Kornel Dul=C4=99ba (1):
-      pinctrl: amd: Disable and mask interrupts on resume
-
-Krzysztof Kozlowski (1):
-      dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: allow input-enabled
-and bias-bus-hold
-
- .../pinctrl/qcom,sm8550-lpass-lpi-pinctrl.yaml     |  2 +
- drivers/pinctrl/mediatek/Kconfig                   | 44 +++++++++++-------=
-----
- drivers/pinctrl/pinctrl-amd.c                      | 36 ++++++++++--------
- drivers/pinctrl/pinctrl-at91-pio4.c                |  1 -
- drivers/pinctrl/pinctrl-ocelot.c                   |  2 +-
- drivers/pinctrl/stm32/pinctrl-stm32.c              |  2 +-
- 6 files changed, 47 insertions(+), 40 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
