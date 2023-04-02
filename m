@@ -2,73 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1904E6D32B8
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Apr 2023 19:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 365FF6D371B
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Apr 2023 12:18:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230025AbjDARG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Apr 2023 13:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
+        id S230434AbjDBKSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Apr 2023 06:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230019AbjDARG4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Apr 2023 13:06:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372A21A94A;
-        Sat,  1 Apr 2023 10:06:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C489F60C42;
-        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 91824C4339B;
-        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680368815;
-        bh=53/87XneiLa2ZTJ2XQcMaw1zEOe3J/B2LfWbaC8+er4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=pTFdj/Wln5k6SPt6xm0qXNlDjMMhPwWk+4yox2dds1u7KgsA4XDmQMqlft8/SxkFK
-         d/qWaXQyYcqxwPXk0hPkVKHW/FP1ivw/Z3hkfmx+1tzZWwzYhpU1IJqmkL01Ed+0KZ
-         Zf+1NhzGlylOjKCWcDi2f4p0a64B1+niC4yYj/hL7MTxY2A+F3q4dlEXL6Q+mLem81
-         9Wv9m7bdEUkflgAl8Qbjz+fSDVlOXMmWAqgnhIgBimdpcu7TBVegwHx6NJFvzzmKqv
-         aIiJj53u0MrmbuB1+546mWb8VS1q9tTwk26hh/1g9k/QOdMKumMbkKO3zpWEIEhLKT
-         U18NdoIB4VqhA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7E025C43157;
-        Sat,  1 Apr 2023 17:06:55 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control fixes for v6.3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
-References: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdZqoUZuLr9ra9JbSEQqqOWZvdh33Lk+R2P7qw8upx3nnA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.3-2
-X-PR-Tracked-Commit-Id: e4056e38ec87b4c21eb34bb8e38b1b0ca1221744
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 93e2b01740863cf2f4a58887ac1384e6324b50a2
-Message-Id: <168036881550.2643.15900096815337872183.pr-tracker-bot@kernel.org>
-Date:   Sat, 01 Apr 2023 17:06:55 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S230347AbjDBKSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Apr 2023 06:18:33 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62BBF83C6
+        for <linux-gpio@vger.kernel.org>; Sun,  2 Apr 2023 03:18:31 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id b20so106438561edd.1
+        for <linux-gpio@vger.kernel.org>; Sun, 02 Apr 2023 03:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680430710;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5vbY+hH9xlDJ5JkvEylzYvLfmOyGSfk8lVRHgqhEHvY=;
+        b=jt9PRfw5VQJUcClBuDD0yW3taPLHmIYTZT+hRzcnTsZeLzqTwOu592kOF52dyvMgmN
+         jWia1f1dvudUnIMCqV/J9ddLPR4fuDVkJM/43X+6sdC0vLh4pkc4zEOBUy0H2h0enKHJ
+         /IbIgWIWbuMI5DZwbCxvTn8TD3CPiLHME9Qjd/Pu15AtH27jrmtxex4QLF0fjsnN+1CZ
+         TKvYD5ccYK1rb3AWi6KkV+vQnvdUd5CI87AS8JYq/dA76yknzmqbx5ErPLNiJgBKps2i
+         0336/3xyzwLIt2xofO6kU6atVVguHVcQwncUdT2PkiUg+34YkOH58yJpOdEaK4T/dIl0
+         pByw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680430710;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5vbY+hH9xlDJ5JkvEylzYvLfmOyGSfk8lVRHgqhEHvY=;
+        b=1zYmwkFqUCIzM4RmDPlPJFoRBWTuFxy8Ov4wfKw/K0mtqDU6QDRkhBofPjxgSoUvNw
+         uBnupGB2WGs/Z8CRV+bD9dO/jAHOpAGCT3C3RZa53OguFh6mlulA1dhAHIISotQ4OAXz
+         f5zpQp89TVt1orve3ax0wUMYDrhmI/inUOKo7SgLICmMnrZpCeUGU/Sx6mkOU7X8qs4U
+         dYIvBZymBIMyP3eDL4W92TcaL0eWmUebfS4iaooi2x6L9hnSfsynbEvbBcQb26mryCXh
+         l4jAICVaPz4hvnSxHSZNgahD4vOS7BHxcl9A2X7oYtGcSe6zPkXqy5Sb2uHmg/D9Xbud
+         ORwA==
+X-Gm-Message-State: AAQBX9e9dIxb5UcerHWxdL8puZEtnprX1fXufADK8kuKSMNxLIFnkznl
+        /RagtfyRlhCkRtoAD7HtYgEqPg==
+X-Google-Smtp-Source: AKy350Z6IQ1DInGgJ1tkTuG1NeZ3Izk22lBovEOzygEIjFvMr1KmPSan8ScnFcJMV6jOJPTmKXwNWw==
+X-Received: by 2002:aa7:c859:0:b0:4fb:78a0:eabe with SMTP id g25-20020aa7c859000000b004fb78a0eabemr32523704edt.14.1680430709888;
+        Sun, 02 Apr 2023 03:18:29 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:7f7f:6a30:7a20:94d5? ([2a02:810d:15c0:828:7f7f:6a30:7a20:94d5])
+        by smtp.gmail.com with ESMTPSA id 9-20020a508e09000000b00501dac14d7asm3129576edw.3.2023.04.02.03.18.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Apr 2023 03:18:29 -0700 (PDT)
+Message-ID: <d79d35af-792d-4f42-03f0-37ff0abce461@linaro.org>
+Date:   Sun, 2 Apr 2023 12:18:27 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH RFC 04/20] dt-bindings: arm: oxnas: remove obsolete
+ bindings
+Content-Language: en-US
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sebastian Reichel <sre@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20230331-topic-oxnas-upstream-remove-v1-0-5bd58fd1dd1f@linaro.org>
+ <20230331-topic-oxnas-upstream-remove-v1-4-5bd58fd1dd1f@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230331-topic-oxnas-upstream-remove-v1-4-5bd58fd1dd1f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat, 1 Apr 2023 18:28:20 +0200:
+On 31/03/2023 10:34, Neil Armstrong wrote:
+> Due to lack of maintainance and stall of development for a few years now,
+> and since no new features will ever be added upstream, remove the
+> OX810 and OX820 SoC and boards bindings.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.3-2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/93e2b01740863cf2f4a58887ac1384e6324b50a2
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thank you!
+Best regards,
+Krzysztof
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
