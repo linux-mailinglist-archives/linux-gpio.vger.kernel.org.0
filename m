@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D696D4F97
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 19:53:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E65B36D4F98
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 19:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbjDCRxs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 13:53:48 -0400
+        id S232153AbjDCRxu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 13:53:50 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbjDCRxr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 13:53:47 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56BEF30E2
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 10:53:28 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5445009c26bso566971937b3.8
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 10:53:28 -0700 (PDT)
+        with ESMTP id S231956AbjDCRxs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 13:53:48 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2E630E3
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 10:53:29 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-54606036bb3so401538537b3.6
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 10:53:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680544407;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pd9Jdz3B1SV91h6NLZvrdVDwNVrNDtan+IBMNGupTQk=;
-        b=Nj/jSV5bFvROgzKaoQxJbRMDMPB/iOtB0mLhe6Fa2/TjnB4hIQEMQtr9s0d/RtJciF
-         nMX2IiNeVWbRtdG3aHvgRso36213IyjwzHVoray3wALsCs2d2KPljjcDxaysgvJ1bXJZ
-         oMssqjXjwLs2jYDTzcphwKc8l0eGsujrnXVjEb4xqLif+8IfkU+fIzSa4tuZv3/oge66
-         ynZcEXjlNA6m2hk7EoBl+Bh2aJj7uD9omuK+onAxS07PdA1v5UOdH2WQ1CGA3Qa0ct+x
-         zyBxAv2bAX182Zx947+M3FwLTjPFcYgK9HO2g3ZOHUHADHe310vEJ1rd+sU8Dq5ESjn9
-         PEsA==
+        d=linaro.org; s=google; t=1680544408;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CUvqcKTV5t7oEc0P58WrmGpTA7ia/Y6+JrGme5iKxeU=;
+        b=wd82Yv5v/ED67HB18yVKB4t6nYbSgiV2G/AV6JsB+oa1osythiFRIb8hOcF7fTGnX9
+         TmluUh6yvn4jucPj4ZBLkRRrXwWDJJcDl5j6l1QMshoZ5zNQ+U40/A9pYmjR+6owJ4PS
+         V4gA7q/jclRLq8xDYeOtcGnClSc0JosyeTFA6b5kw3/uE1e7bUeAHuM2s5gRcT0leUqf
+         8yr17Z97HBpHnWq++5sL0nOw1rCm3I5ralNk04w8cPurCrRF0IrHZbeuYfnA5tYTKkT3
+         lGehGpsMcyagrsx95ohKnaCos9FzxkeTA8/1Wo5TgnASk0+lWPgvejVzWWF90gRrlCmm
+         cBzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680544407;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pd9Jdz3B1SV91h6NLZvrdVDwNVrNDtan+IBMNGupTQk=;
-        b=S5a9qBeIONNPZF4PeMfG/iE33I6cHATyn+vMTPu3+ljiDaknOxkbqlLSY0etN0+7zX
-         x/wyvMOrktp1MMToU2SfeAWYCFlLWXfz4f4VAaFSSO1khYj3ZlET9wnNiTPLtMx6I1Kt
-         GhoDGibDlMaQRFTJ0/05FWif0y533HhWM99p/+Uvrs9PifCj9/ydB29nBk3nMKFaFgDp
-         19Xb0vRQ9385bAaO8M2cESQNqnm63rKiKBN85OY2bbL7T78uoSEMYCBuQVqBG9/Cu16j
-         m3w0l7DnMz0tP4zngK/mp4t/P+Ey5khto0lQXYfNZSsuxdq8ehiO7KFe4UT98kw2dD3y
-         BNnw==
-X-Gm-Message-State: AAQBX9fQejgwSljvCsEj9cf0Cewn4vvXaK7xhB/cifDCI9yIXTvxi5tQ
-        z8Nkgp7UPt0VZkr+dOB8AoQ+LA==
-X-Google-Smtp-Source: AKy350bE6Me58iqO2ykQwLIpoVILHI34G1RRebNmeh8kvxw548+F69sj8/NDQKgV7FupUfIwZ8TjnA==
-X-Received: by 2002:a81:4b91:0:b0:538:47b2:c45c with SMTP id y139-20020a814b91000000b0053847b2c45cmr19235930ywa.8.1680544407337;
-        Mon, 03 Apr 2023 10:53:27 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680544408;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CUvqcKTV5t7oEc0P58WrmGpTA7ia/Y6+JrGme5iKxeU=;
+        b=pkRFAHj8n0mrbc/WoAR0LWz2Yf+2IovJtXaRhuZ0t8hiZWe7b7djqVXEK8GYXh8Imn
+         9vTkGTRm3xSIh832qiYsPGUHnIE6PfZLZhOL6NGTINV9eapGaW2fwyrJGj6lx3wUJ5oN
+         EVLwvzR8SE6O7dl7wuzRN3/itu4ATxj4ET4bcZSClkMrqtqN/zR9aadcrH6EEVoxQAsw
+         A70EqUOGLVHhejHE/IYJNtdjErXsVDhEDVagJtjKCpP4RLFl+dA1IdYL5lCFqIolEi7D
+         eMM69rXJEsgLg6xWjinxynZ2aoHRQpoq8rA9+tgtCW1fOZ0cCDgZ3SR4PuRq9PxSoYMR
+         CSCg==
+X-Gm-Message-State: AAQBX9d15h95J81gPs0C7tW+8eMthv6qlTxuFAqDBOxSGJpoF46BCNOx
+        RKOoqKxOLJAJWVyXB/Zbo0rm6tGpyd00C0QT8YoNjw==
+X-Google-Smtp-Source: AKy350aRVRKmuDufgMcmed/FOHa6dQcOcYp4ftYUzmeaZe8mApB16TJBQezY0ZRvgroq2JZui7WQtg==
+X-Received: by 2002:a81:92d2:0:b0:546:209d:ee81 with SMTP id j201-20020a8192d2000000b00546209dee81mr17819646ywg.2.1680544408198;
+        Mon, 03 Apr 2023 10:53:28 -0700 (PDT)
 Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id z135-20020a814c8d000000b00545a08184adsm2661663ywa.61.2023.04.03.10.53.26
+        by smtp.gmail.com with ESMTPSA id z135-20020a814c8d000000b00545a08184adsm2661663ywa.61.2023.04.03.10.53.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 10:53:26 -0700 (PDT)
+        Mon, 03 Apr 2023 10:53:27 -0700 (PDT)
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 0/2] Fix possible deadlocks for i8255 GPIO drivers
-Date:   Mon,  3 Apr 2023 13:53:12 -0400
-Message-Id: <cover.1680543810.git.william.gray@linaro.org>
+Subject: [PATCH 1/2] gpio: 104-dio-48e: Enable use_raw_spinlock for dio48e_regmap_config
+Date:   Mon,  3 Apr 2023 13:53:13 -0400
+Message-Id: <05a878d340251b781387db4b6490f288e41a651c.1680543810.git.william.gray@linaro.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1680543810.git.william.gray@linaro.org>
+References: <cover.1680543810.git.william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -68,23 +71,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 104-dio-48e and 104-idi-48 drivers leverage regmap-irq to handle
-IRQ. The default regmap locking utilizes spinlocks but this can result
-in deadlocks for IRQ chips when running -rt kernels [0]. Enable
-use_raw_spinlock for the regmap_config of these drivers to prevent such.
+The dio48e regmap can be used in an interrupt context by regmap-irq. To
+prevent a deadlock, enable use_raw_spinlock for dio48e_regmap_config.
 
-[0] https://lore.kernel.org/all/1466065537-82027-1-git-send-email-mika.westerberg@linux.intel.com/
-
-William Breathitt Gray (2):
-  gpio: 104-dio-48e: Enable use_raw_spinlock for dio48e_regmap_config
-  gpio: 104-idi-48: Enable use_raw_spinlock for idi48_regmap_config
-
+Fixes: 2f7e845f512f ("gpio: 104-dio-48e: Migrate to the regmap-irq API")
+Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+---
  drivers/gpio/gpio-104-dio-48e.c | 1 +
- drivers/gpio/gpio-104-idi-48.c  | 1 +
- 2 files changed, 2 insertions(+)
+ 1 file changed, 1 insertion(+)
 
-
-base-commit: d49765b5f4320a402fbc4ed5edfd73d87640f27c
+diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
+index a3846faf3780..11c48130bb8f 100644
+--- a/drivers/gpio/gpio-104-dio-48e.c
++++ b/drivers/gpio/gpio-104-dio-48e.c
+@@ -86,6 +86,7 @@ static const struct regmap_config dio48e_regmap_config = {
+ 	.volatile_table = &dio48e_volatile_table,
+ 	.precious_table = &dio48e_precious_table,
+ 	.cache_type = REGCACHE_FLAT,
++	.use_raw_spinlock = true,
+ };
+ 
+ /* only bit 3 on each respective Port C supports interrupts */
 -- 
 2.39.2
 
