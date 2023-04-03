@@ -2,96 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 920666D4F9A
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 19:53:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA896D4FD6
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 20:01:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232126AbjDCRxw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 13:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
+        id S232997AbjDCSB3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 14:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232145AbjDCRxu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 13:53:50 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001592D7F
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 10:53:29 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5416698e889so567446787b3.2
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 10:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680544409;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CQO/GmpqLMEjtyr2atFB1M1H+ye6V/kPyFsUarcG0ic=;
-        b=MXb6iL/HFXndej/CtEHNUvhgkCghuRYHFdCUjltYevYE9g6PVv/wflCUlYJVtPNw8L
-         Wki2KsSIlx6Q33pfCVPcwZsmVns9GsSC4pjvOABViPyjTOIkjv+A/EeT2j67IHsY7huX
-         8rafwtkUTK2XrwS7MazWNSxnSYbIr9JZ10Y6wjOWGnfrLYdolcytyRXilJKc63uncGzu
-         No15Q4oJeqTJsyKYjah39PjR59XDUlmB9gWpAgEZxlN8GBp50F2/3h7SXDDen7ZnkA7B
-         8t8phSKcJSJUgiTovPg+nrSVQqznek/2FljSjGjaW0TKOo34l6FtVcdWTSRg4a2Rx5zR
-         zMlw==
+        with ESMTP id S232950AbjDCSBY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 14:01:24 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A55F3AAF;
+        Mon,  3 Apr 2023 11:01:12 -0700 (PDT)
+Received: by mail-ot1-f52.google.com with SMTP id r17-20020a05683002f100b006a131458abfso13500844ote.2;
+        Mon, 03 Apr 2023 11:01:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680544409;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CQO/GmpqLMEjtyr2atFB1M1H+ye6V/kPyFsUarcG0ic=;
-        b=WCwkFhqIN05wxWCH0mVTqtHJb16A05O3if3Rg8HOMcsd0CfUc6JzQb3pNy/RfyFkKB
-         8OXA7GrdZn8WTBW9HTqYKqruuUBlM+mp5vec+dP/YOlIF1Rfjc6wP5rIHZwcWIEexzsR
-         7oLpWBayeKvT38CJOYWtnKie/J0qtq7vHOIRrdPmO+DzlloKk8TtzyMdNvxaGsqJymdJ
-         1VM8k2nH8Vk/LKa1VLD13AgWfPc7sO0mRZv6bi3Zxu5MYd1PC/6LlrapO3ScWGjv1XdB
-         qwIJ6ugYJ+c7+0E5VijQC2Z+R7WSsOYvkgyiBf1fzGvgRut4WMWtddWldopi14ulkCCS
-         K8GA==
-X-Gm-Message-State: AAQBX9fCf8CdIwXdt95ahlge8mEApIVYgr6djYCASqMzQA8WgRIH7yXU
-        2a7ZfH+Nk7r0Pr9SBVtdwFuVBQ==
-X-Google-Smtp-Source: AKy350bSFMd7XG8DGXPuPuVKSAbI8PI0Gs4lG8jTUxk69faGT/KbNU5FUpeDrQvn2OJKzeiuRqk5NA==
-X-Received: by 2002:a81:5ad4:0:b0:538:5106:b41b with SMTP id o203-20020a815ad4000000b005385106b41bmr35592135ywb.32.1680544409017;
-        Mon, 03 Apr 2023 10:53:29 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id z135-20020a814c8d000000b00545a08184adsm2661663ywa.61.2023.04.03.10.53.28
+        d=1e100.net; s=20210112; t=1680544871;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n+2HyVBZpgIAk4A8UQ7TPXHjOeuEm1wa0e7V0v5arzY=;
+        b=D+mf2KUY3Qb17H/BgD9gHZYhHxG91N05+An1M6TiE7loZwLVgRwbAMzGi2kftDTkY/
+         0yi+UJ2D4D3sdyPupBNvviknCfiuCDrKMEuMTxWw7aUWAjWbuZaCv2QwIuE3kphjsBtj
+         2/zIc5yUSgLl4QzlhtI/FNlA972TQnZsQPYrYm9rhHXMb3IfDntWygpZBV79QgLVCKJi
+         qzYjDcz4hnXrxoPBbbfLjPeyGxsfD5IL82eioISgLkENqmVMDHQky8edGiybVS4CRTdl
+         5Wjygu+wcQ55wLmbcCrHJwJTlCNY7Xnlw8fx+LVMhfX74/Pe3Gk65/OEiDpqL0w957eJ
+         d8xA==
+X-Gm-Message-State: AAQBX9cN3Iyc5deHrM9QlrX3Fp5boWC+ajKyrvG4STstCUMXXgIEXaEc
+        PuDdizaw9orhQzHXAtrhAA==
+X-Google-Smtp-Source: AKy350YbposOHjUqSKPLp1r0c5pZmS2vrYBOO8PRSBJMRbIsZ8g5xLashYmoygD9IWOODdA8MPrzFQ==
+X-Received: by 2002:a9d:63c5:0:b0:697:a381:a8f8 with SMTP id e5-20020a9d63c5000000b00697a381a8f8mr41722otl.3.1680544871315;
+        Mon, 03 Apr 2023 11:01:11 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id d11-20020a9d5e0b000000b006a3170fe3efsm2707835oti.27.2023.04.03.10.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 10:53:28 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 2/2] gpio: 104-idi-48: Enable use_raw_spinlock for idi48_regmap_config
-Date:   Mon,  3 Apr 2023 13:53:14 -0400
-Message-Id: <005eaf8c2094581025eb5273e2c669a676b12d08.1680543810.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1680543810.git.william.gray@linaro.org>
-References: <cover.1680543810.git.william.gray@linaro.org>
+        Mon, 03 Apr 2023 10:59:56 -0700 (PDT)
+Received: (nullmailer pid 1164679 invoked by uid 1000);
+        Mon, 03 Apr 2023 17:59:39 -0000
+Date:   Mon, 3 Apr 2023 12:59:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sebastian Reichel <sre@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH RFC 06/20] dt-bindings: clk: oxnas: remove obsolete
+ bindings
+Message-ID: <20230403175939.GA1162106-robh@kernel.org>
+References: <20230331-topic-oxnas-upstream-remove-v1-0-5bd58fd1dd1f@linaro.org>
+ <20230331-topic-oxnas-upstream-remove-v1-6-5bd58fd1dd1f@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230331-topic-oxnas-upstream-remove-v1-6-5bd58fd1dd1f@linaro.org>
+X-Spam-Status: No, score=0.8 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The idi48 regmap can be used in an interrupt context by regmap-irq. To
-prevent a deadlock, enable use_raw_spinlock for idi48_regmap_config.
+On Fri, Mar 31, 2023 at 10:34:44AM +0200, Neil Armstrong wrote:
+> Due to lack of maintainance and stall of development for a few years now,
 
-Fixes: e28432a77365 ("gpio: 104-idi-48: Migrate to the regmap-irq API")
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-104-idi-48.c | 1 +
- 1 file changed, 1 insertion(+)
+I can't spell it either, but checkpatch tells me it is: maintenance
 
-diff --git a/drivers/gpio/gpio-104-idi-48.c b/drivers/gpio/gpio-104-idi-48.c
-index ca2175b84e24..ba73ee9c0c29 100644
---- a/drivers/gpio/gpio-104-idi-48.c
-+++ b/drivers/gpio/gpio-104-idi-48.c
-@@ -81,6 +81,7 @@ static const struct regmap_config idi48_regmap_config = {
- 	.wr_table = &idi_48_wr_table,
- 	.rd_table = &idi_48_rd_table,
- 	.precious_table = &idi_48_precious_table,
-+	.use_raw_spinlock = true,
- };
- 
- #define IDI48_NGPIO 48
--- 
-2.39.2
+> and since no new features will ever be added upstream, remove the
+> OX810 and OX820 clock bindings.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/oxnas,stdclk.txt     | 28 ----------------------
+>  1 file changed, 28 deletions(-)
 
+Always great to see fewer bindings. 
+
+Rob
