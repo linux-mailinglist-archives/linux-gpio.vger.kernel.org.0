@@ -2,172 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C6016D4492
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 14:38:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3D56D4866
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 16:28:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232172AbjDCMiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 08:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        id S233364AbjDCO2Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 10:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232049AbjDCMiN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 08:38:13 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8107F3586
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 05:38:11 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id ew6so116670017edb.7
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 05:38:11 -0700 (PDT)
+        with ESMTP id S233365AbjDCO2W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 10:28:22 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A7EE2D7DE
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 07:28:20 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id m8so6326939wmq.5
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 07:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680525490;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qpyLniNan8kXaWmdK0bPB2p3FPHPkCqFQCXNF67g44w=;
-        b=FpBaA6xbw0CpGMMiVJLqnlfsDevhHDaVIP+Bzng9cI/bE40CyZJI+ZxU882eMNS/b8
-         9R/wd+LV9AJsUzDKy228ECHJJ0GT8Gvy7X5kAvttYpYtyad5FVR/EwMf4fJeiD9ZJow4
-         vOP5DGfnfZrIcazDpDH08u//HXiaMU70H5tY+rfqwOCTkVJnXXTjwYugUTNztf4PHi2l
-         85dPDwlyU7us7eYNoFtfogUlFAnlICMQo+e0PGrgHQUb7A8V9ziHgPvK/q+2np+lhJDR
-         BPFRWT5Cb9jlFQ9kkejwJTgttSRbUfOyd9FDgW4/GVyUz9HOCAX28xuyWTUKuK+LSVKy
-         VxSA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1680532098;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c69I40asUiXC1/1NZRt23nN5G7jYoqWcWOA5d1uMQwQ=;
+        b=sXoZEyrPhbM+5mRHFGVcpp9iYdHYSEcchjcr/hh5DKknIWT/01GERM/DEgvm/i20gY
+         2ra4f0uTTcMFVSTpJutXk0hVvVeFE9sn2vTHwTPiOhMTKrAtyRHLi6Uii+ZUQF9HzLv0
+         b8lSUlwTWcFwmMz5M1zcU2p7dMrCtfcX5bKJPc281hmfACBxQ/k0vY3BaNVlyK/m4fPZ
+         lh8prwfci4D2AjfKi8Y+CZTJgOAar3x/eTcsymJWjgOcsNXuClWVtW3VEij/yNEXVCcw
+         BH1y3nVsHBtLhpQFwPX98SrdwF33ZMqFd2vbLpo5vB7HpRY6ZvgK8LDvCDo4r4dsHyHT
+         V1iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680525490;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qpyLniNan8kXaWmdK0bPB2p3FPHPkCqFQCXNF67g44w=;
-        b=XmuCpkwfnINpYbI6nKYco5ftSUQaVG40VJY9UJNTcpAQX0kFS2u46pRE4vUBcKOIjk
-         7q4lCXqUIA+6TCt7Jjna4q15lzKXkmSFasZhHdu68gnHd32IGk+UToc6k0Mh+VIrF+0b
-         z1j++0+hDHCpHOBJ60niXR5DXzY+1tjJaF/Sgs1Tx0hLKfFFVbqqtkImN7IrKMX54i4W
-         JhtlEqnoEM3XEr+1aQ+iwC0cIMProeuNcC46J2SmH3Vg2umXinOxf5SY27n8xqETvnSu
-         BbzUbLB6wmgE46ZZEPnYR5xtms2wo+brc08e3dj1dNTifZOljQ92q1DzaQ2TuMxWLJvc
-         v+JQ==
-X-Gm-Message-State: AAQBX9czR0BrqUk5an8FGnL78ET6RBFyTg6HLAitsMlxR7SOElVDUsEI
-        iD6nG+BTG1AX9GM1xfOUX00JVjbUqbnncvZDXzs=
-X-Google-Smtp-Source: AKy350aPJ9GmzIXqmf5TkKiPoxebAeXc8qJaZQ0yylyUqd1bbN2VZH0uOeImlJ0Sy0ZPjkyWPYBRTg==
-X-Received: by 2002:a17:906:d1cf:b0:8b1:7aaa:4c25 with SMTP id bs15-20020a170906d1cf00b008b17aaa4c25mr37745413ejb.29.1680525489952;
-        Mon, 03 Apr 2023 05:38:09 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:ae90:d80:1069:4805? ([2a02:810d:15c0:828:ae90:d80:1069:4805])
-        by smtp.gmail.com with ESMTPSA id 15-20020a170906328f00b0093e6f40d124sm4487670ejw.139.2023.04.03.05.38.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Apr 2023 05:38:09 -0700 (PDT)
-Message-ID: <2beba334-1c5e-0f68-1d32-57006b4a3321@linaro.org>
-Date:   Mon, 3 Apr 2023 14:38:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: max7317: add spi gpio extender
- documentation
-Content-Language: en-US
-To:     Edmund Berenson <edmund.berenson@emlix.com>
-Cc:     Lukasz Zemla <Lukasz.Zemla@woodward.com>,
+        d=1e100.net; s=20210112; t=1680532098;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c69I40asUiXC1/1NZRt23nN5G7jYoqWcWOA5d1uMQwQ=;
+        b=FuQFUN9IX+jzi7AIQ5IOtEIdiW34p4b9n1YkE0cl/4O+zu4B54CDvVG9X+qgg3+BCz
+         5JU6uYLDltlbmqKZu++lCBl6b703yAhhqGyLvgyRogH9Z+3fMKj4WS0Mw3x22/Or8OKI
+         SQN5b9CzANEBOaY8Z7Ddshuly4MvcSkcR2npFmATUMhca3ORtK9xlMGUsrzMObesJaLZ
+         VlTyLfUecjfYftnhqCfHq9+oWdBlBjAaCCXVu9Y9W09dmHLfRWM83W5oaufXj6mGDBS5
+         GOogDyN3yO+cPD3Tthpy+UASqDxK3uadSWBISd5Kb4R+62GBy9ybXYauVr3ROylRgDmv
+         HUVA==
+X-Gm-Message-State: AO0yUKWxk5se/YR/95B4+fiwtME98KMnaVYkio/EInDvH5AIe9avInN0
+        Vo7uVd7Kj2auCnlgIywmpoLXQ4DZbO5XJCxYpqo=
+X-Google-Smtp-Source: AK7set+1f/bpKNODSoQJju3hqUWXpdzTwxf3nbPEzUDpmRXha0jwfDgZuZzUa44EmaRgkb19TloIJA==
+X-Received: by 2002:a7b:cc83:0:b0:3df:ee64:4814 with SMTP id p3-20020a7bcc83000000b003dfee644814mr24761940wma.20.1680532098518;
+        Mon, 03 Apr 2023 07:28:18 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3f82:f31e:2ae5:627c])
+        by smtp.gmail.com with ESMTPSA id n5-20020a1c7205000000b003f049a42689sm8593805wmc.25.2023.04.03.07.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 07:28:17 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230403114033.8336-1-edmund.berenson@emlix.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230403114033.8336-1-edmund.berenson@emlix.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [libgpiod][PATCH] tools: replace alphasort() with versionsort()
+Date:   Mon,  3 Apr 2023 16:28:15 +0200
+Message-Id: <20230403142815.183891-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/04/2023 13:40, Edmund Berenson wrote:
-> Add driver documentation for the maxim max7317 spi
-> gpio expander.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Subject: drop second/last, redundant "documentation". The "dt-bindings"
-prefix is already stating that these are bindings and documentation.
+With a high enough number of chips, gpiodetect currently sorts them
+like this:
 
-> 
-> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
-> ---
+gpiochip0
+gpiochip1
+gpiochip10
+gpiochip11
+gpiochip12
+gpiochip13
+gpiochip14
+gpiochip15
+gpiochip16
+gpiochip17
+gpiochip18
+gpiochip19
+gpiochip2
+gpiochip20
+gpiochip21
+gpiochip22
+gpiochip23
+gpiochip24
+gpiochip25
+gpiochip26
+gpiochip3
+gpiochip4
+gpiochip5
+gpiochip6
+gpiochip7
+gpiochip8
+gpiochip9
 
-This is v2, so where is the changelog? No cover letter, either.
+Switching to using versionsort() instead of alphasort() makes it look
+better and the order is more logical:
 
->  .../bindings/gpio/gpio-max7317.yaml           | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
+gpiochip0
+gpiochip1
+gpiochip2
+gpiochip3
+gpiochip4
+gpiochip5
+gpiochip6
+gpiochip7
+gpiochip8
+gpiochip9
+gpiochip10
+gpiochip11
+gpiochip12
+gpiochip13
+gpiochip14
+gpiochip15
+gpiochip16
+gpiochip17
+gpiochip18
+gpiochip19
+gpiochip20
+gpiochip21
+gpiochip22
+gpiochip23
+gpiochip24
+gpiochip25
+gpiochip26
 
-Filename must be like compatible. "gpio" is not a vendor prefix.
-maxim,max7317.yaml
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ configure.ac         | 2 +-
+ tools/tools-common.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml b/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
-> new file mode 100644
-> index 000000000000..ad5a796c704e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-max7317.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX7317 SPI-Interfaced I/O Expander
-> +
-> +maintainers:
-> +  - Edmund Berenson <edmund.berenson@emlix.com>
-> +
-> +description:
-> +  Bindings for 10-Port Maxim MAX7317 SPI GPIO expanders.
-
-Describe the hardware, not the "bindings". Drop "Bindings for".
-
-> +
-> +properties:
-> +  compatible:
-> +    const: maxim,max7317
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-
-Use consistent quotes, either ' or ".
-
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +unevaluatedProperties: false
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-
-Fix ordering. allOf goes either before properties or before
-unevaluatedProps. See for example example-schema.
-
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-
-Use 4 spaces for example indentation.
-
-> +
-
-
-Best regards,
-Krzysztof
+diff --git a/configure.ac b/configure.ac
+index 7d72c24..c1005a9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -119,7 +119,7 @@ AS_IF([test "x$with_tools" = xtrue],
+ 	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_TOOLS([daemon])])
+ 	AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_LIB([asprintf])])
+ 	AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_LIB([scandir])])
+-	AC_CHECK_FUNC([alphasort], [], [FUNC_NOT_FOUND_LIB([alphasort])])
++	AC_CHECK_FUNC([versionsort], [], [FUNC_NOT_FOUND_LIB([versionsort])])
+ 	AS_IF([test "x$with_gpioset_interactive" = xtrue],
+ 		[PKG_CHECK_MODULES([LIBEDIT], [libedit >= 3.1])])
+ 	])
+diff --git a/tools/tools-common.c b/tools/tools-common.c
+index e5f6fc1..64592d3 100644
+--- a/tools/tools-common.c
++++ b/tools/tools-common.c
+@@ -469,7 +469,7 @@ int all_chip_paths(char ***paths_ptr)
+ 	struct dirent **entries;
+ 	char **paths;
+ 
+-	num_chips = scandir("/dev/", &entries, chip_dir_filter, alphasort);
++	num_chips = scandir("/dev/", &entries, chip_dir_filter, versionsort);
+ 	if (num_chips < 0)
+ 		die_perror("unable to scan /dev");
+ 
+-- 
+2.37.2
 
