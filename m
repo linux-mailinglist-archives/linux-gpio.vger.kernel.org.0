@@ -2,38 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BBE96D532F
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 23:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 214936D54AD
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 00:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233182AbjDCVMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 17:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55836 "EHLO
+        id S233527AbjDCWVF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 18:21:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbjDCVMv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 17:12:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC1910C4;
-        Mon,  3 Apr 2023 14:12:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5110C62B49;
-        Mon,  3 Apr 2023 21:12:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9CFC433D2;
-        Mon,  3 Apr 2023 21:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680556369;
-        bh=iCh41tCJEiTL5kJB6L+K+Erci9/82HsLmf/I2b6bZlk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ew6PlLhLzlc1ejJQKbYjjKCMriDMCCqkDzZ5sdfXfDTDnssV2w1v2RNR+CpVoHoh5
-         i9m1E9IwmX66TrwNye2oztPt1Hjdo1rC7++4wvuWqN2wLTcK4VkYmhskfv524fuTbx
-         CGmnOzrTos/54LS39YgRwWfworr0nAMKpXq4H5xOlTMM7Wy1Mbr7GOuqb8qvS0k6Na
-         L5zyE7nfe4NMm9VfQDhljVxdBr2raavkezZw6/stdg58VtcHTEr8Fiwc9UquVNKcZS
-         rkGgkG2HWW7Od3+eAaK5cnxpFnOTSU+NinnkKKcfNXRaKyJoOeQTS43gOXmnmsbCKO
-         ZRBebhUlGhA/Q==
-Date:   Mon, 3 Apr 2023 22:12:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     William Breathitt Gray <william.gray@linaro.org>
+        with ESMTP id S233644AbjDCWVE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 18:21:04 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAF94685
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 15:20:59 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-536af432ee5so580670247b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 15:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680560459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4tpYjQoj3oN1IoUY/Iv8IxUfroJ3Fr1IgWFkmKykvfw=;
+        b=HUCtM1lJauriEzHWd+aWCI2BC8Jq48a1ShnRUosbft5UxPct5+OFyOeCZ8yiBaH+dM
+         XvlbZklHGWDBjrSxJb3S7WHBaMeE7TNRCfDDKyxWoJqEGj6SJpfJc2I1Sujgg0xQGq5O
+         TGNMqh7PO8PND6u+4tHPY0CygO35y1/lzCviyFk1f9M4cN8TZZ80Xe9D+gYHrnIlCgdP
+         5Upf6ZvrtLzwyU4djqswhaS5ekk+mzcLx88CsIpW9dsiUuFmiwFlf6Lpvy0kLNJRINcX
+         foDoHo94QrviD0U9ABQnD3TktIYD3+Foq2Mkohi5+T1AQtQONhCyyois8ynFG+61p7Or
+         6zZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680560459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4tpYjQoj3oN1IoUY/Iv8IxUfroJ3Fr1IgWFkmKykvfw=;
+        b=IYO8tvPfNNQwnfGY0OF+ML0sRwCERZ8jIgGYJlMRs+H+02vmJTYJdMOk/4vG7nRB85
+         Ql6/tbNubfSq9F5Se4zpDvJT/svLECxFm6fC1S/bzNF3qq0FRRiePtRiRpQDnZbh9a/h
+         HWRNvEKB6zJFjWJBcBswecUaY5njVU22MgN4xIDz1EzLX7Ntb4HtOHNTRf8jndBBY2ss
+         Ksj2TR1vnm0L7EHpV28D9S3/ExeOp4vCeDK+Kkm84dniHGxd38iJ1zCF7/FTLASkjScI
+         DD3iQsm1tcq9Y1HLWoUhv5/Iw7QpcjT/xxBbhBlYXzR/hRNXopuGaL5WOMmN93tbHFUH
+         5CaA==
+X-Gm-Message-State: AAQBX9fXBfkKn5LggJlGS110Ss7u7rbVwCyPXyv8kh/gSsRIdy7UpAty
+        /tx0+afh8kK+ITs6nenOo8w6uKp04jUVorTUpkh+RQ==
+X-Google-Smtp-Source: AKy350admhROloQrgoeQCgd64bNrsFHuglHZb134fctMGzhDpYAOaPKSIb+hcRc2bKcZcNpF/uRDvA==
+X-Received: by 2002:a81:a00a:0:b0:541:75a3:9bc8 with SMTP id x10-20020a81a00a000000b0054175a39bc8mr434644ywg.44.1680560459064;
+        Mon, 03 Apr 2023 15:20:59 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id cg9-20020a05690c0a0900b00545a08184b8sm2794019ywb.72.2023.04.03.15.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 15:20:58 -0700 (PDT)
+Date:   Mon, 3 Apr 2023 18:20:56 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -42,20 +59,20 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Paul Demetrotion <pdemetrotion@winsystems.com>,
         Michael Walle <michael@walle.cc>
 Subject: Re: [PATCH v5 3/3] gpio: ws16c48: Migrate to the regmap API
-Message-ID: <f4377c61-8745-477d-ab8f-f83de203c4b3@sirena.org.uk>
+Message-ID: <ZCtRSFLL5lkDimeL@fedora>
 References: <cover.1679845842.git.william.gray@linaro.org>
  <58531b1b2428e4d5d2ea79e721f7ef6450665280.1679845842.git.william.gray@linaro.org>
  <ZCF9bdyefA/oDmdG@smile.fi.intel.com>
  <ZCmThuzUBYdp29UR@fedora>
+ <f4377c61-8745-477d-ab8f-f83de203c4b3@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bT3UYpp4c8gGNugV"
+        protocol="application/pgp-signature"; boundary="50JiiM9KWQUDRx4Z"
 Content-Disposition: inline
-In-Reply-To: <ZCmThuzUBYdp29UR@fedora>
-X-Cookie: Membership dues are not refundable.
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <f4377c61-8745-477d-ab8f-f83de203c4b3@sirena.org.uk>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -63,49 +80,57 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---bT3UYpp4c8gGNugV
+--50JiiM9KWQUDRx4Z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 02, 2023 at 10:39:02AM -0400, William Breathitt Gray wrote:
-> On Mon, Mar 27, 2023 at 02:26:37PM +0300, Andy Shevchenko wrote:
-> > On Sun, Mar 26, 2023 at 12:25:59PM -0400, William Breathitt Gray wrote:
+On Mon, Apr 03, 2023 at 10:12:44PM +0100, Mark Brown wrote:
+> On Sun, Apr 02, 2023 at 10:39:02AM -0400, William Breathitt Gray wrote:
+> > On Mon, Mar 27, 2023 at 02:26:37PM +0300, Andy Shevchenko wrote:
+> > > On Sun, Mar 26, 2023 at 12:25:59PM -0400, William Breathitt Gray wrot=
+e:
+>=20
+> > > > +static const struct regmap_config ws16c48_regmap_config =3D {
+> > > > +	.reg_bits =3D 8,
+> > > > +	.reg_stride =3D 1,
+> > > > +	.val_bits =3D 8,
+> > > > +	.io_port =3D true,
+> > > > +	.max_register =3D 0xA,
+> > > > +	.wr_table =3D &ws16c48_wr_table,
+> > > > +	.rd_table =3D &ws16c48_rd_table,
+> > > > +	.volatile_table =3D &ws16c48_volatile_table,
+> > > > +	.cache_type =3D REGCACHE_FLAT,
+> > > > +};
+>=20
+> > > Do we need regmap lock?
+>=20
+> > We make regmap calls within an interrupt context in this driver so I
+> > think we need to disable the default regmap mutex locking behavior; I
+> > believe the current raw_spin_lock locking in this driver is enough to
+> > protect access.
+>=20
+> The above doesn't configure the regmap locking so you'll have a spinlock
+> by default (MMIO being a fast bus).
 
-> > > +static const struct regmap_config ws16c48_regmap_config = {
-> > > +	.reg_bits = 8,
-> > > +	.reg_stride = 1,
-> > > +	.val_bits = 8,
-> > > +	.io_port = true,
-> > > +	.max_register = 0xA,
-> > > +	.wr_table = &ws16c48_wr_table,
-> > > +	.rd_table = &ws16c48_rd_table,
-> > > +	.volatile_table = &ws16c48_volatile_table,
-> > > +	.cache_type = REGCACHE_FLAT,
-> > > +};
+You're right, it'll be a spinlock in this case and not mutex.
+Unfortunately, we'll still need to change that to avoid deadlocks on -rt
+kernels [0].
 
-> > Do we need regmap lock?
+William Breathitt Gray
 
-> We make regmap calls within an interrupt context in this driver so I
-> think we need to disable the default regmap mutex locking behavior; I
-> believe the current raw_spin_lock locking in this driver is enough to
-> protect access.
+[0] https://lore.kernel.org/all/1466065537-82027-1-git-send-email-mika.west=
+erberg@linux.intel.com/
 
-The above doesn't configure the regmap locking so you'll have a spinlock
-by default (MMIO being a fast bus).
-
---bT3UYpp4c8gGNugV
+--50JiiM9KWQUDRx4Z
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQrQUsACgkQJNaLcl1U
-h9CqqAf9FQjwis8MhjhP8nggcH+Uy1nBfbCZAZoBxcGt2KoVGlL02rn1j2xZvRq+
-cDL4HypzWQ0kPMWd7emRcoerwa6YkDrvj3B3bC9zY1Gg+wjYWqe+EcFlMRRxbp6o
-ZKa8ef0vj1Yk3aq54rHzXZf+2t5rxTe8bF84hDV2eq4lTbYQUGxCWh0Vf/yQkrBw
-LAYJ1MoboaBVmerUKDuBmpZZeK6EjOVKPj4NK7XUOnAXtTEKms9w6jdzzi+FPjmm
-ewdoceQ25lFQDwLJqMBvi2rFBlb5PChR1lxbL8JHp6M3TB4F5f8TQH/LY+hi50Ye
-LgmaVHQSyamtrvPgChs/q/n6wZsqvg==
-=zgHq
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZCtRSAAKCRC1SFbKvhIj
+Ky0DAP9IpyENdB034mfM5YZYx5/meDB6ZINnU28U/PqlovWaAAD9Hf4p7mhg2j/v
+Wxu906U2SCA8gH1bxrcyur4P5T0EHgY=
+=fMtc
 -----END PGP SIGNATURE-----
 
---bT3UYpp4c8gGNugV--
+--50JiiM9KWQUDRx4Z--
