@@ -2,218 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A65426D43FF
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 14:02:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C6016D4492
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 14:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231671AbjDCMCp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 08:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
+        id S232172AbjDCMiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 08:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231593AbjDCMCo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 08:02:44 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AACFB45E;
-        Mon,  3 Apr 2023 05:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680523364; x=1712059364;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=o982tW+jHj7V4/Bt5CyFb5tsFY5IHREbXzW8U1BjIE8=;
-  b=TYgxgoltqEIbH+LzKm1LHV1lo9tSau4nbYvI049W2MmbUsw4Tuz9Ib3E
-   3+IDxmokxWKN5TRBnl3goj7Cqpsmc57Rb2BIILx+juwbkhlkW/3XeyqA9
-   Ra4VBFZlrwE7imEMm+0Iwb5ZSDRYVWlK1PBxEFlUSNcDN5HeusIGH95/b
-   Gu2xlgi9KJyROgVoLAuVA4ycwgFSWJglFdzBnyXWBrCXuW+owTcghYmd7
-   XqRoPvrrXkE9VdQWC3oJ0lpz+SLy5RfssSMJaLtdth4MPYmV1UZoyx+O3
-   cbQTjZV3cEYoMkRmSNoXsmJBm1uS8HUDVxK2/KHgx+r8vKI+5nrEg/4xc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="330449281"
-X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
-   d="scan'208";a="330449281"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 05:02:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="775158723"
-X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
-   d="scan'208";a="775158723"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Apr 2023 05:02:40 -0700
-From:   lakshmi.sowjanya.d@intel.com
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        furong.zhou@intel.com, kris.pan@intel.com, pandith.n@intel.com,
-        kenchappa.demakkanavar@intel.com, lakshmi.sowjanya.d@intel.com
-Subject: [PATCH v1 2/2] dt-bindings: pinctrl: Remove bindings for Intel Thunderbay pinctrl driver
-Date:   Mon,  3 Apr 2023 17:32:35 +0530
-Message-Id: <20230403120235.939-2-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230403120235.939-1-lakshmi.sowjanya.d@intel.com>
-References: <20230403120235.939-1-lakshmi.sowjanya.d@intel.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S232049AbjDCMiN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 08:38:13 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8107F3586
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 05:38:11 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id ew6so116670017edb.7
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 05:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680525490;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qpyLniNan8kXaWmdK0bPB2p3FPHPkCqFQCXNF67g44w=;
+        b=FpBaA6xbw0CpGMMiVJLqnlfsDevhHDaVIP+Bzng9cI/bE40CyZJI+ZxU882eMNS/b8
+         9R/wd+LV9AJsUzDKy228ECHJJ0GT8Gvy7X5kAvttYpYtyad5FVR/EwMf4fJeiD9ZJow4
+         vOP5DGfnfZrIcazDpDH08u//HXiaMU70H5tY+rfqwOCTkVJnXXTjwYugUTNztf4PHi2l
+         85dPDwlyU7us7eYNoFtfogUlFAnlICMQo+e0PGrgHQUb7A8V9ziHgPvK/q+2np+lhJDR
+         BPFRWT5Cb9jlFQ9kkejwJTgttSRbUfOyd9FDgW4/GVyUz9HOCAX28xuyWTUKuK+LSVKy
+         VxSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680525490;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qpyLniNan8kXaWmdK0bPB2p3FPHPkCqFQCXNF67g44w=;
+        b=XmuCpkwfnINpYbI6nKYco5ftSUQaVG40VJY9UJNTcpAQX0kFS2u46pRE4vUBcKOIjk
+         7q4lCXqUIA+6TCt7Jjna4q15lzKXkmSFasZhHdu68gnHd32IGk+UToc6k0Mh+VIrF+0b
+         z1j++0+hDHCpHOBJ60niXR5DXzY+1tjJaF/Sgs1Tx0hLKfFFVbqqtkImN7IrKMX54i4W
+         JhtlEqnoEM3XEr+1aQ+iwC0cIMProeuNcC46J2SmH3Vg2umXinOxf5SY27n8xqETvnSu
+         BbzUbLB6wmgE46ZZEPnYR5xtms2wo+brc08e3dj1dNTifZOljQ92q1DzaQ2TuMxWLJvc
+         v+JQ==
+X-Gm-Message-State: AAQBX9czR0BrqUk5an8FGnL78ET6RBFyTg6HLAitsMlxR7SOElVDUsEI
+        iD6nG+BTG1AX9GM1xfOUX00JVjbUqbnncvZDXzs=
+X-Google-Smtp-Source: AKy350aPJ9GmzIXqmf5TkKiPoxebAeXc8qJaZQ0yylyUqd1bbN2VZH0uOeImlJ0Sy0ZPjkyWPYBRTg==
+X-Received: by 2002:a17:906:d1cf:b0:8b1:7aaa:4c25 with SMTP id bs15-20020a170906d1cf00b008b17aaa4c25mr37745413ejb.29.1680525489952;
+        Mon, 03 Apr 2023 05:38:09 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:ae90:d80:1069:4805? ([2a02:810d:15c0:828:ae90:d80:1069:4805])
+        by smtp.gmail.com with ESMTPSA id 15-20020a170906328f00b0093e6f40d124sm4487670ejw.139.2023.04.03.05.38.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Apr 2023 05:38:09 -0700 (PDT)
+Message-ID: <2beba334-1c5e-0f68-1d32-57006b4a3321@linaro.org>
+Date:   Mon, 3 Apr 2023 14:38:08 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: max7317: add spi gpio extender
+ documentation
+Content-Language: en-US
+To:     Edmund Berenson <edmund.berenson@emlix.com>
+Cc:     Lukasz Zemla <Lukasz.Zemla@woodward.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230403114033.8336-1-edmund.berenson@emlix.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230403114033.8336-1-edmund.berenson@emlix.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+On 03/04/2023 13:40, Edmund Berenson wrote:
+> Add driver documentation for the maxim max7317 spi
+> gpio expander.
 
-Remove Thunder Bay specific code as the product got cancelled
-and there are no end customers or users.
+Subject: drop second/last, redundant "documentation". The "dt-bindings"
+prefix is already stating that these are bindings and documentation.
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
----
- .../pinctrl/intel,pinctrl-thunderbay.yaml     | 120 ------------------
- MAINTAINERS                                   |   5 -
- 2 files changed, 125 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/intel,pinctrl-thunderbay.yaml
+> 
+> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,pinctrl-thunderbay.yaml b/Documentation/devicetree/bindings/pinctrl/intel,pinctrl-thunderbay.yaml
-deleted file mode 100644
-index f001add16814..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/intel,pinctrl-thunderbay.yaml
-+++ /dev/null
-@@ -1,120 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
--%YAML 1.2
-----
--$id: http://devicetree.org/schemas/pinctrl/intel,pinctrl-thunderbay.yaml#
--$schema: http://devicetree.org/meta-schemas/core.yaml#
--
--title: Intel Thunder Bay pin controller
--
--maintainers:
--  - Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
--
--description: |
--  Intel Thunder Bay SoC integrates a pin controller which enables control
--  of pin directions, input/output values and configuration
--  for a total of 67 pins.
--
--properties:
--  compatible:
--    const: intel,thunderbay-pinctrl
--
--  reg:
--    maxItems: 1
--
--  gpio-controller: true
--
--  '#gpio-cells':
--    const: 2
--
--  gpio-ranges:
--    maxItems: 1
--
--  interrupts:
--    description:
--      Specifies the interrupt lines to be used by the controller.
--    maxItems: 2
--
--  interrupt-controller: true
--
--  '#interrupt-cells':
--    const: 2
--
--patternProperties:
--  '^gpio@[0-9a-f]*$':
--    type: object
--    additionalProperties: false
--
--    description:
--      Child nodes can be specified to contain pin configuration information,
--      which can then be utilized by pinctrl client devices.
--      The following properties are supported.
--
--    properties:
--      pins:
--        description: |
--          The name(s) of the pins to be configured in the child node.
--          Supported pin names are "GPIO0" up to "GPIO66".
--
--      bias-disable: true
--
--      bias-pull-down: true
--
--      bias-pull-up: true
--
--      drive-strength:
--        description: Drive strength for the pad.
--        enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
--
--      bias-bus-hold:
--        type: boolean
--
--      input-schmitt-enable:
--        type: boolean
--
--      slew-rate:
--        description: GPIO slew rate control.
--                      0 - Slow
--                      1 - Fast
--        enum: [0, 1]
--
--additionalProperties: false
--
--required:
--  - compatible
--  - reg
--  - gpio-controller
--  - '#gpio-cells'
--  - gpio-ranges
--  - interrupts
--  - interrupt-controller
--  - '#interrupt-cells'
--
--examples:
--  - |
--    #include <dt-bindings/interrupt-controller/arm-gic.h>
--    #include <dt-bindings/interrupt-controller/irq.h>
--    // Example 1
--    pinctrl0: gpio@0 {
--        compatible = "intel,thunderbay-pinctrl";
--        reg = <0x600b0000 0x88>;
--        gpio-controller;
--        #gpio-cells = <0x2>;
--        gpio-ranges = <&pinctrl0 0 0 67>;
--        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
--                     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
--        interrupt-controller;
--        #interrupt-cells = <2>;
--    };
--
--    // Example 2
--    pinctrl1: gpio@1 {
--        compatible = "intel,thunderbay-pinctrl";
--        reg = <0x600c0000 0x88>;
--        gpio-controller;
--        #gpio-cells = <0x2>;
--        gpio-ranges = <&pinctrl1 0 0 53>;
--        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
--                     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
--        interrupt-controller;
--        #interrupt-cells = <2>;
--    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 90abe83c02f3..bae5e92d1ff2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16566,11 +16566,6 @@ L:	linux-omap@vger.kernel.org
- S:	Maintained
- F:	drivers/pinctrl/pinctrl-single.c
- 
--PIN CONTROLLER - THUNDERBAY
--M:	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
--S:	Supported
--F:	drivers/pinctrl/pinctrl-thunderbay.c
--
- PIN CONTROLLER - SUNPLUS / TIBBO
- M:	Dvorkin Dmitry <dvorkin@tibbo.com>
- M:	Wells Lu <wellslutw@gmail.com>
--- 
-2.17.1
+This is v2, so where is the changelog? No cover letter, either.
+
+>  .../bindings/gpio/gpio-max7317.yaml           | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
+
+Filename must be like compatible. "gpio" is not a vendor prefix.
+maxim,max7317.yaml
+
+
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml b/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
+> new file mode 100644
+> index 000000000000..ad5a796c704e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-max7317.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim MAX7317 SPI-Interfaced I/O Expander
+> +
+> +maintainers:
+> +  - Edmund Berenson <edmund.berenson@emlix.com>
+> +
+> +description:
+> +  Bindings for 10-Port Maxim MAX7317 SPI GPIO expanders.
+
+Describe the hardware, not the "bindings". Drop "Bindings for".
+
+> +
+> +properties:
+> +  compatible:
+> +    const: maxim,max7317
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+
+Use consistent quotes, either ' or ".
+
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +unevaluatedProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+
+Fix ordering. allOf goes either before properties or before
+unevaluatedProps. See for example example-schema.
+
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+
+Use 4 spaces for example indentation.
+
+> +
+
+
+Best regards,
+Krzysztof
 
