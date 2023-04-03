@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E033D6D4C5D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 17:48:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 953136D4D0F
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 18:03:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231795AbjDCPsF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 11:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
+        id S232011AbjDCQDy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 12:03:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232089AbjDCPsD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 11:48:03 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E763C01
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 08:47:23 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id x17so38698819lfu.5
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 08:47:23 -0700 (PDT)
+        with ESMTP id S233148AbjDCQDx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 12:03:53 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEE02717
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 09:03:46 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id br6so38694832lfb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 09:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1680536832;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1680537824;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ITez9sbff9kfUo1n7CMz/b2i8pN9N0fLSRd2pJVvLHU=;
-        b=fPXT4iv09e0N9D1pCnc6IQ05dI2ykA4f331iFeWKuhebjJGLtpUYhobueq2YhZXhdG
-         PfUc4CDVig0hu7O5T/BT112XShCMgAC9MEeJYYrM5K0e5mQkIBv6Do6NDsjA5NtmLHdb
-         jNDLgR16lBWRJOCYltcvZapIi6TEdK95E+bdN3fyTULW+tkVGrNCFFIdLOuUHzAWzGhL
-         Kkyc8Jkgz1VGc26hknIvBZwrRfkHJ4gDpmzHtPJK9Lod8+pbdLw4jX49qIHZQw7f/x+3
-         7oyuQTT4DXEa7gjcOTbxgOkUCu32yvFsfp5TfIT+atmSTFRd2PSo9H/D1t2AlCnWjK5Z
-         KlnQ==
+        bh=i9G7aUowxIC2TBL5HvvDup5cDrl4CSux698J80MD/8k=;
+        b=uIuUI+rmy1bPu//mD4dW34NHS+3aO0fhNH8DA5pUy3oSxt8KOJulSPjI/PGtr+QaJh
+         kyGSEwYdBMLnwV9nsQGy1lu4O/ov+W0NDHbKEqOZJcMYkbGy1z4h8U+A0nl+ocxKeY0e
+         h3Z1Fu8uDEioFps7Tgp3kh64AQCpTLOEi7/K1rEZUbvJidGgyNDdLq47kZlYo20pAS7R
+         B0T2PIQthYwyhSB7xROyLIq9L4CDyCHqkEf3kCey+LRRkLchmvqk5vilnWwoO0F4Dwmq
+         VRd8lNm0mSau2R2Vc3ZwNDILjqTDyxLg8Ma7OxWEqUwBdEw3Wbrk/rRkkajBRws5Uf/V
+         46jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680536832;
+        d=1e100.net; s=20210112; t=1680537824;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ITez9sbff9kfUo1n7CMz/b2i8pN9N0fLSRd2pJVvLHU=;
-        b=gKjet8agHMp6d9Cr70Pk7fhPjH2Vjq9P6xyRufRYMQ2FItCLibj5WnGioYqVjdrmDv
-         e08WI9alPdRnrufKJtQEqMTOvpPTuYdv990t9vQ5wDQMHOIoncM/42md+gUtbQVTtdYz
-         zlNWBumZF+VvYC2LRMRmiK9dGPo8itRia6YLOpSJtCDcehL0VSsinE0xLAkmkCa+AIXG
-         +0H+E+Es8JQlEy3C8ke/bf7WoVJp/Uwvtn+vneVy1lb4qVt/jqmt/buafY5OXh589r+z
-         22cOcNfubFZG8RslHkDz34eoE4DK1TGlJP5Bh2021Fw4CVK8ldI7YSH0+7Sc3lsuooyO
-         bkJQ==
-X-Gm-Message-State: AAQBX9fWYerrwHLRbciLA3pd+ayp1y5PS7FnmMHsQQ9FB6/GAzcY4/iQ
-        byqiURjOLkhuPcbUAveZkjbupOD6g+WkkcAAEiZT3hbdxXP8MPg+
-X-Google-Smtp-Source: AKy350b7cJd5gdOTqGxYH3+f4FeApi+99Mm00XX7bR+XvStkbPQXAGuqknJPbDVuT+LAV9imjMjLrj1Z+3EjESuuSfk=
-X-Received: by 2002:a05:6512:15b:b0:4ea:fa77:e436 with SMTP id
- m27-20020a056512015b00b004eafa77e436mr10685851lfo.6.1680536832590; Mon, 03
- Apr 2023 08:47:12 -0700 (PDT)
+        bh=i9G7aUowxIC2TBL5HvvDup5cDrl4CSux698J80MD/8k=;
+        b=auYDTkckY1T8UlvZu1xJo8l47IaI6kGtthT9AQBdgvmQmTIZImsYMKQH6qvcyqi/9W
+         DDCrM5DmcOnCQwbHV+M7ZA7mR2jovEbWhVNu0/IT1GTYHaUepj2t+McXQjm90sx3SN3v
+         Hu//33VJtlsXprngHI/AkygxJJd1wjD7okL9og6l4kg76ctBzMC1JxeLbf7NnxHszqNe
+         XSYNRSC5JvD9TbsjSJ5DsdVKMXNgEpkfXpJLVZxp5uityJ4jVK4FhNdQ4d9SyxWP2Aba
+         qtpPK3GvnYLeYBt31oWHjYjE/8XpogJDMxBDhiY1GvjJr4vbWKcAc7bWz1udKCDbXhxz
+         4bxw==
+X-Gm-Message-State: AAQBX9eoJ+9F5kn77irbDrOSmhNVt6xcW9p/IvlsJBDfgpvgC8BwMorj
+        9kCaVJJKkkp0jchHNeoK08JEGirFG36fThiNFRJaqA==
+X-Google-Smtp-Source: AKy350az+bKy+0p6MVj7KoxWXqsKroiMkmUS8blupoO/H+L43R3XSOKiqKnUViXlnuNJA1p+bvFeCUDIUPdet5qQB6Y=
+X-Received: by 2002:a19:ae04:0:b0:4eb:4160:7ca8 with SMTP id
+ f4-20020a19ae04000000b004eb41607ca8mr918972lfc.6.1680537824444; Mon, 03 Apr
+ 2023 09:03:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230321135332.73190-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230321135332.73190-1-andriy.shevchenko@linux.intel.com>
+References: <20230403114033.8336-1-edmund.berenson@emlix.com> <20230403114033.8336-2-edmund.berenson@emlix.com>
+In-Reply-To: <20230403114033.8336-2-edmund.berenson@emlix.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 3 Apr 2023 17:47:01 +0200
-Message-ID: <CAMRc=Mf0ORiDRoWb4pSnopG0Morfe03tNxYhp5Tq8LrZSaN8SA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Move gpiochip_get_data() upper in the code
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 3 Apr 2023 18:03:32 +0200
+Message-ID: <CAMRc=MdMd15pDs6WehbQAGKXXm5-C7E2Or0smmD68izvevy62w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: max7317: Add gpio expander driver
+To:     Edmund Berenson <edmund.berenson@emlix.com>
+Cc:     Lukasz Zemla <Lukasz.Zemla@woodward.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -68,66 +71,261 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 2:52=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Apr 3, 2023 at 1:41=E2=80=AFPM Edmund Berenson
+<edmund.berenson@emlix.com> wrote:
 >
-> Move gpiochip_get_data() upper in the code as a preparation
-> for further refactoring.
+> Add driver for maxim MAX7317 SPI-Interfaced 10 Port
+> GPIO Expander.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> v2: adjust driver to use regmap
+>
+> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
 > ---
->  drivers/gpio/gpiolib.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
+>  drivers/gpio/Kconfig        |  11 +++
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-max7317.c | 161 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 173 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-max7317.c
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 62114d69bcea..2bfc474d99c3 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -681,6 +681,19 @@ static void gpiochip_setup_devs(void)
->         }
->  }
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 13be729710f2..109cf09d8c05 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1615,6 +1615,17 @@ config GPIO_MAX7301
+>         help
+>           GPIO driver for Maxim MAX7301 SPI-based GPIO expander.
 >
-> +/**
-> + * gpiochip_get_data() - get per-subdriver data for the chip
-> + * @gc: GPIO chip
-> + *
-> + * Returns:
-> + * The per-subdriver data for the chip.
-> + */
-> +void *gpiochip_get_data(struct gpio_chip *gc)
-> +{
-> +       return gc->gpiodev->data;
-> +}
-> +EXPORT_SYMBOL_GPL(gpiochip_get_data);
+> +config GPIO_MAX7317
+> +       tristate "Maxim MAX7317 GPIO expander"
+> +       select REGMAP_SPI
+> +       help
+> +         GPIO driver for Maxim MAX7317 SPI-based GPIO expander.
+> +         The MAX7317 is a serial-interfaced gpio extender, with
+> +         10 ports.
 > +
->  int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->                                struct lock_class_key *lock_key,
->                                struct lock_class_key *request_key)
-> @@ -939,19 +952,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc,=
- void *data,
->  }
->  EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
->
-> -/**
-> - * gpiochip_get_data() - get per-subdriver data for the chip
-> - * @gc: GPIO chip
-> - *
-> - * Returns:
-> - * The per-subdriver data for the chip.
-> - */
-> -void *gpiochip_get_data(struct gpio_chip *gc)
-> -{
-> -       return gc->gpiodev->data;
-> -}
-> -EXPORT_SYMBOL_GPL(gpiochip_get_data);
-> -
->  /**
->   * gpiochip_remove() - unregister a gpio_chip
->   * @gc: the chip to unregister
-> --
-> 2.40.0.1.gaa8946217a0b
->
+> +         This driver can also be built as a module. If so, the module wi=
+ll be
+> +         called gpio-max7317.
+> +
+>  config GPIO_MC33880
+>         tristate "Freescale MC33880 high-side/low-side switch"
+>         help
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index c048ba003367..8dce549bb6c5 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -91,6 +91,7 @@ obj-$(CONFIG_GPIO_MAX7300)            +=3D gpio-max7300=
+.o
+>  obj-$(CONFIG_GPIO_MAX7301)             +=3D gpio-max7301.o
+>  obj-$(CONFIG_GPIO_MAX730X)             +=3D gpio-max730x.o
+>  obj-$(CONFIG_GPIO_MAX732X)             +=3D gpio-max732x.o
+> +obj-$(CONFIG_GPIO_MAX7317)             +=3D gpio-max7317.o
+>  obj-$(CONFIG_GPIO_MAX77620)            +=3D gpio-max77620.o
+>  obj-$(CONFIG_GPIO_MAX77650)            +=3D gpio-max77650.o
+>  obj-$(CONFIG_GPIO_MB86S7X)             +=3D gpio-mb86s7x.o
+> diff --git a/drivers/gpio/gpio-max7317.c b/drivers/gpio/gpio-max7317.c
+> new file mode 100644
+> index 000000000000..65824efaad6c
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-max7317.c
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2021, Lukasz Zemla, Woodward Inc.
+> + */
+> +
+> +#include <linux/gpio.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#define MAX7317_PIN_NUMBER 10
+> +#define REG_CODE_READ_PORTS_7_TO_0     ((u8)0x0E)
+> +#define REG_CODE_READ_PORTS_9_TO_8     ((u8)0x0F)
+> +
+> +struct max7317 {
 
-Both applied, thanks!
+Please call it max7317_gpio or something similar.
+
+> +       struct gpio_chip        chip;
+> +       struct regmap           *regmap;
+> +       int                     direction[MAX7317_PIN_NUMBER];
+
+Don't use tabs in structs, it doesn't really add to readability in
+small declarations.
+
+> +};
+> +
+> +struct max7317_platform_data {
+> +       unsigned int    gpio_base;
+> +};
+> +
+> +static const struct regmap_config max7317_regmap_cfg =3D  {
+> +       .reg_bits =3D 8,
+> +       .val_bits =3D 8,
+> +};
+> +
+> +static int max7317_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct max7317 *ts =3D gpiochip_get_data(chip);
+> +       unsigned int val;
+> +       int ret;
+> +       u8 reg =3D (offset < 8) ? REG_CODE_READ_PORTS_7_TO_0 : REG_CODE_R=
+EAD_PORTS_9_TO_8;
+> +
+> +       ret =3D regmap_read(ts->regmap, reg, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return val & BIT(offset % 8);
+> +}
+> +
+> +/*
+> + * After writing the register an additional read is performed in order f=
+or
+> + * changes to take effect.
+> + */
+> +static void max7317_set(struct gpio_chip *chip, unsigned int offset, int=
+ value)
+> +{
+> +       struct max7317 *ts =3D gpiochip_get_data(chip);
+> +
+> +       if (regmap_write(ts->regmap, offset, value ? 1 : 0))
+> +               dev_err(chip->parent, "Failed to set pin: %d\n", offset);
+> +       max7317_get(chip, offset);
+
+Don't you need to protect both the write and read operations from
+concurrent access here?
+
+
+> +}
+> +
+> +static int max7317_direction_input(struct gpio_chip *chip, unsigned int =
+offset)
+> +{
+> +       struct max7317 *ts =3D gpiochip_get_data(chip);
+> +
+> +       max7317_set(chip, offset, 1);
+> +       ts->direction[offset] =3D GPIO_LINE_DIRECTION_IN;
+> +       return 0;
+> +}
+> +
+> +static int max7317_direction_output(struct gpio_chip *chip, unsigned int=
+ offset,
+> +                                   int value)
+> +{
+> +       struct max7317 *ts =3D gpiochip_get_data(chip);
+> +
+> +       ts->direction[offset] =3D GPIO_LINE_DIRECTION_OUT;
+> +       return 0;
+> +}
+> +
+> +static int max7317_get_direction(struct gpio_chip *chip, unsigned int of=
+fset)
+> +{
+> +       struct max7317 *ts =3D gpiochip_get_data(chip);
+> +
+> +       return ts->direction[offset];
+> +}
+> +
+> +static int max7317_probe(struct spi_device *spi)
+> +{
+> +       struct max7317 *ts;
+> +       struct device *dev;
+> +       struct max7317_platform_data *pdata;
+
+Where does this come from?
+
+> +       int i;
+> +
+> +       ts =3D devm_kzalloc(&spi->dev, sizeof(struct max7317), GFP_KERNEL=
+);
+> +       if (!ts)
+> +               return -ENOMEM;
+> +       dev_set_drvdata(&spi->dev, ts);
+> +
+> +       pdata =3D dev_get_platdata(dev);
+> +       if (pdata)
+> +               ts->chip.base =3D pdata->gpio_base;
+
+Don't encourage setting a hard-coded base via platform data. Please
+use -1 unconditionally in new drivers.
+
+> +       else
+> +               ts->chip.base =3D -1;
+> +
+> +       ts->chip.label =3D dev_name(&spi->dev);
+> +       ts->chip.direction_input =3D max7317_direction_input;
+> +       ts->chip.get =3D max7317_get;
+> +       ts->chip.direction_output =3D max7317_direction_output;
+> +       ts->chip.set =3D max7317_set;
+> +       ts->chip.get_direction =3D max7317_get_direction;
+> +
+> +       ts->chip.ngpio =3D MAX7317_PIN_NUMBER;
+> +       ts->chip.can_sleep =3D true;
+> +       ts->chip.parent =3D &spi->dev;
+> +       ts->chip.owner =3D THIS_MODULE;
+> +
+> +       for (i =3D 0; i < MAX7317_PIN_NUMBER; i++)
+> +               ts->direction[i] =3D GPIO_LINE_DIRECTION_IN;
+> +
+> +       ts->regmap =3D devm_regmap_init_spi(spi, &max7317_regmap_cfg);
+> +       if (IS_ERR(ts->regmap))
+> +               return PTR_ERR(ts->regmap);
+> +
+> +       return devm_gpiochip_add_data(&spi->dev, &ts->chip, ts);
+> +}
+> +
+> +static void max7317_remove(struct spi_device *spi)
+> +{
+> +       struct max7317 *ts =3D dev_get_drvdata(&spi->dev);
+> +
+> +       if (!ts)
+> +               return;
+> +
+> +       gpiochip_remove(&ts->chip);
+
+This is clearly wrong - you registered the chip using
+devm_gpiochip_add_data() precisely to avoid having to call
+gpiochip_remove(). And checking for !it makes no sense either - you
+should have set it yourself, which you didn't.
 
 Bart
+
+> +}
+> +
+> +static const struct spi_device_id max7317_id[] =3D {
+> +       { "max7317", 0 },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(spi, max7317_id);
+> +
+> +static const struct of_device_id max7317_dt_ids[] =3D {
+> +       { .compatible =3D "maxim,max7317" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, max7317_dt_ids);
+> +
+> +static struct spi_driver max7317_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "max7317",
+> +               .of_match_table =3D max7317_dt_ids,
+> +       },
+> +       .probe =3D max7317_probe,
+> +       .remove =3D max7317_remove,
+> +       .id_table =3D max7317_id,
+> +};
+> +module_spi_driver(max7317_driver);
+> +
+> +MODULE_AUTHOR("Lukasz Zemla");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("MAX7317 GPIO-Expander");
+> --
+> 2.39.2
+>
