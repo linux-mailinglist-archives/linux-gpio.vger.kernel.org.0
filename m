@@ -2,89 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36B776D3E0C
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 09:25:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1FC6D3F9D
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Apr 2023 11:01:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbjDCHZJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Apr 2023 03:25:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
+        id S231686AbjDCJBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Apr 2023 05:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbjDCHZI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 03:25:08 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73EB67EE8;
-        Mon,  3 Apr 2023 00:25:07 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3337P6bW112641;
-        Mon, 3 Apr 2023 02:25:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1680506706;
-        bh=Hvi6qctb3XXG7WV2dOJUbwRkvmIGGv2xKBvV0X641Dc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WkPLUeWDAkm4NopJ6NosEi7QByFe91/WF9SSdvCsYczJjlAIAZNxf4GNiSs5faItA
-         jmBdHIBXSH7Lr1Q6M1MhuWz/4fDZ6DjCoAVCShN8YY7RHeQ+FAvKReCUvEPQC1UfdM
-         FIeOId/nYXq1NvUUYzfD6U/aq0S0cS0a4AnfDMHE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3337P6ZB067052
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Apr 2023 02:25:06 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Mon, 3
- Apr 2023 02:25:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Mon, 3 Apr 2023 02:25:06 -0500
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3337P5bW031538;
-        Mon, 3 Apr 2023 02:25:05 -0500
-From:   Dhruva Gole <d-gole@ti.com>
-To:     <linux-gpio@vger.kernel.org>
-CC:     Dhruva Gole <d-gole@ti.com>, <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2] gpio: davinci: Add irq chip flag to skip set wake
-Date:   Mon, 3 Apr 2023 12:54:43 +0530
-Message-ID: <20230403072443.83810-3-d-gole@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230403072443.83810-1-d-gole@ti.com>
-References: <20230403072443.83810-1-d-gole@ti.com>
+        with ESMTP id S231680AbjDCJBC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Apr 2023 05:01:02 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B69E5B97
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 02:01:01 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-54606036bb3so373096147b3.6
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 02:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680512460;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vE40mJuVkISt0zg8IVAmmNvtPq9ArtEbvKSLEgCOttk=;
+        b=RRZUrhKe2XBl2Pj8ueAvJh8PV1GMqZ2jivHtbkZZ+nZSzffZbvJmCEe7wQ+cP1hQlf
+         Bp0yTcPS3LY9FYVzqHxe34kux+JqBTnPCIIha8Snb9P33UdQdrxoHUaI9yYBD+u/WqtG
+         B8XgGJvvPC8wxmmVXSyXZ7vMCrSPqSOq8aBd6RLf7DQhsOeGlvv++PNwJpWfRzXRcVq3
+         9/FSpcy/uNWzRR8WNmptLyXjS5XZSbpiS8UphnMpNZ6Ku3R6JBZnNPiY8I+kUmM2YqlY
+         j9jrQVNvrraK+D+V820rukmn9u2AZqJbENC28kNHjsNLbc67BixJf7N/c/Ff4FGh2hV3
+         J6Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680512460;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vE40mJuVkISt0zg8IVAmmNvtPq9ArtEbvKSLEgCOttk=;
+        b=6+mZimlr5j+lNgWDm9aLsm3wF9IUeakrIM2dNywirmlFbnhG1St5TEJdtx/bxBNdBf
+         FI4uhIITt4kwumgMyoY6TlhyRk4mNrEc376jOU2NATgNnMM6GdsARGxo2k3pT4rJPM00
+         IQ+/ZA/9N+1zZxsXcr72LTgCDEWaqKugQs/ibmVsFbEDJrR8hUy9nPjuwvqPDsnKOnYG
+         4hTqfiYl5wtkOBUlDTUyRY+pKLEwJDh/ROi9IpbA1D4VG0Cpl47K8m91rHrNM7q79e4U
+         XpvqWP9q8EHdNtEJKEKnQUxJyD/3APtGGr1z3IL/m5bXlIq9jS48XoC5e0xciDbODHCS
+         o80w==
+X-Gm-Message-State: AAQBX9c+uVDWbCj9eHYtsX95aAh2ryU8jUybEQ+A8AaRdz+I3DNgU8qA
+        /1juVMccj3RZ1/nkQonduLYV0AEm7FzZLLf+1z4=
+X-Google-Smtp-Source: AKy350YqpB3a10ouA3+HpBQ+EOeh893X24XGlck4kdF3ooiTrwlbf3SeYdotw4xbIozQjyArKwr2NvUOfRdoKTVKGho=
+X-Received: by 2002:a81:b50f:0:b0:544:b8d8:339e with SMTP id
+ t15-20020a81b50f000000b00544b8d8339emr17889731ywh.5.1680512458964; Mon, 03
+ Apr 2023 02:00:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Received: by 2002:a05:7108:298d:b0:2f2:4123:1c5 with HTTP; Mon, 3 Apr 2023
+ 02:00:58 -0700 (PDT)
+Reply-To: lassounadage563@gmail.com
+From:   Ms Nadage Lassou <lassounadaga0@gmail.com>
+Date:   Mon, 3 Apr 2023 10:00:58 +0100
+Message-ID: <CAJywv4mwPxqyBR-4WfK5Ea6WbFod+hD9+9FGEkE+7nHgbVzTig@mail.gmail.com>
+Subject: PLEASE REPLY BACK URGENT
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the IRQCHIP_SKIP_SET_WAKE flag since there are no special IRQ Wake
-bits that can be set to enable wakeup IRQ.
+Greetings.
 
-Fixes: 3d9edf09d452 ("[ARM] 4457/2: davinci: GPIO support")
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-davinci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index d7595b39e8c4..aaaf61dc2632 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -322,7 +322,7 @@ static struct irq_chip gpio_irqchip = {
- 	.irq_enable	= gpio_irq_enable,
- 	.irq_disable	= gpio_irq_disable,
- 	.irq_set_type	= gpio_irq_type,
--	.flags		= IRQCHIP_SET_TYPE_MASKED,
-+	.flags		= IRQCHIP_SET_TYPE_MASKED | IRQCHIP_SKIP_SET_WAKE,
- };
- 
- static void gpio_irq_handler(struct irq_desc *desc)
--- 
-2.25.1
-
+I am Ms Nadage Lassou,I have something important to discuss with you.
+i will send you the details once i hear from you.
+Thanks,
+Ms Nadage Lassou
