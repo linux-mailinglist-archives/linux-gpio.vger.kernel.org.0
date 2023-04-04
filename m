@@ -2,62 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E72456D64CA
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 16:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2ED16D6566
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 16:32:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235522AbjDDOJf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 10:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
+        id S235228AbjDDOc5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 10:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235558AbjDDOJb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 10:09:31 -0400
+        with ESMTP id S234699AbjDDOc4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 10:32:56 -0400
 Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69352D79
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 07:09:29 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5456249756bso615635107b3.5
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 07:09:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C851E75
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 07:32:55 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-54184571389so617150857b3.4
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 07:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680617369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZnWzTfCBouLvNFIttgdZiBeapl1jQzHQOa2b0uZW+Yw=;
-        b=KMcOqCDLEz4aCPi34/DOPsImPsfw5ZeY0wTsPwjTfIBU/l8v/gfv0G0ZJWuJFgp33K
-         CnCFkpUWUid4/EqWu0KpzJp+ofxgiC3yfhwMGkRWrKSwHMCo8Sht4RuLq2QKsImi27po
-         bmLfnmR3tU2a8TrgFXHh0jEVeqHtp8jzeFZ8KjQJnFuZGaet0e3zNlqXcLLyGlug3HfB
-         5kXM58LW/rqMa+R3QQrJyvjcdlZe21cOub/Rgop8wFGNfXn5lj83IxKTtH42SwuzKLPk
-         mKljKuqg7i64XLV7v0JJ31P/xzsGAWbjF+KGl3neksq1QdFpll7etMjjVsEXE1Yd44zg
-         gy3A==
+        d=linaro.org; s=google; t=1680618775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5TeZQ266LbK5QH2jgnCEXAl0zq9NQeUvBQJ7yQxwh3E=;
+        b=UbXeQpuUhpG7jUJNy8ONc+3FOc98eRLbYbSMzyfCaoohZiewRQOjpLfLeZ8sagEiRx
+         rCeHtTkjtGo+LuyH1+aSgdQ/BIei5fWlDpwvVflkDjlu94ub8itXOzHFtSkJy9zEvqHZ
+         mafj4TyZnrheCv3TAB7zfbhtgZf3Hrhckv2/aOjRWr/UUd1m1NzzOWB2OFG2l6HP2TPc
+         /5h8YXNKgQcNxiZxPiS81rHQowkL0zSoRlNiOJwwqVhqchbhkG35fEZ0Jv6K8t/PTz/m
+         9lDADd8rq5lQ+y8mG0vf0tcXzX9ZxrsfEqidEb0Hz+HiIC8HKN1NWGdPDB9PvKVAovBo
+         p37A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680617369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnWzTfCBouLvNFIttgdZiBeapl1jQzHQOa2b0uZW+Yw=;
-        b=J0WPXyswA748fiAowqkmpKKIqL67+BmgnDXACPy38GWhfdGS9tkJGuMxKktTdu5G/s
-         aZG46zjvXyAY0K0E5WeTdocjLMX+G57Q+8qUxh6AfENodVyQEwAn+fJmRLTJ/l5NWyX5
-         QuTVKS0BCtE1eQIr+Ue99sJf0nqGluN0WrxbR9l5+TCndQ/7tK1FQJ7rR/9bIS9Pjkwb
-         qH/j4M6kaWvSJqtj2XGPkuy8W3rBPkFYzExqjm+OyXf1zEEGbDxFRnEPGmAwuatiJzGd
-         hQkkVvqNoLqOBAiiCDxMmLfdMD8/xDzuet+D9yY6fNXXSZ0Jx4su2d+WFiKnRJZtkbg6
-         ydqA==
-X-Gm-Message-State: AAQBX9f4lEIJuBvbAhzjOB+/zY3OWQAkkW1tFc3GPdP9Zr+0RHJRrOVa
-        NwTUpKBJfumqAfO2PgTTSNzuvwZ5lFVlIiNUaaVOYg==
-X-Google-Smtp-Source: AKy350bjb0MQOtgKMwAdbyWuoYyDolSgx0NlXbHfkdfgHkYhgyRMawgx1pSPNraaVqhXKvD+86RrDJqLZvi3m6+Ja20=
-X-Received: by 2002:a81:a88a:0:b0:549:17fe:17c5 with SMTP id
- f132-20020a81a88a000000b0054917fe17c5mr1525744ywh.9.1680617368899; Tue, 04
- Apr 2023 07:09:28 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680618775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5TeZQ266LbK5QH2jgnCEXAl0zq9NQeUvBQJ7yQxwh3E=;
+        b=BKa7zCDglAvr/h1nxmd/wbmEUnt4OsHnTzzekpzeUJJ+Dk3+DQen5WRVKU7ZZhyHUh
+         lTI7KvFyo31HVeftEB4ac5HhHxXAm+hlVqaGIYztc6EcMTRJ3NR4q0UA7OOzmFBe72ft
+         G1ozbdLn/y2LNfFhf7bjwvry0zydBTeXo/KJwNfE/GsH6OrLcKnabi8sEE9MO5woNJae
+         wlAcstzE+JoVU3/xguqPSjGLaK02s0naDDZsh19fJF3oBbqI5Ksx9UVyX9My2BLPx1qG
+         pmDW5YX4eGZ4GNo5+o2uwelHC5xX2hC2a1Ubgdss/cMDPeRBnUeELdduzGHXGdFk3lXy
+         DTZA==
+X-Gm-Message-State: AAQBX9crOpJV5cnQyHYc+S5dE2SVFgzxRIlwdb/x4dmbrNOPOBAw0a4V
+        j9YLOoBWFSYGwoRnThwEkQyMfujf2oMQHs+swqWpeg==
+X-Google-Smtp-Source: AKy350bWh+5vjDW9hGWTBBv4oczteiAWOVzKArLgUlLA6mfRVA4cLr/5wyVrkNsz13Q+I8hAzxfSow==
+X-Received: by 2002:a0d:df02:0:b0:541:6b00:f68d with SMTP id i2-20020a0ddf02000000b005416b00f68dmr2876678ywe.16.1680618774816;
+        Tue, 04 Apr 2023 07:32:54 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id p76-20020a81984f000000b00545a0818489sm3234439ywg.25.2023.04.04.07.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 07:32:54 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH v5 0/4] Migrate IDIO-16 GPIO drivers to regmap API
+Date:   Tue,  4 Apr 2023 10:32:44 -0400
+Message-Id: <cover.1680618405.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230404004501.1913144-1-trix@redhat.com>
-In-Reply-To: <20230404004501.1913144-1-trix@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Apr 2023 16:09:17 +0200
-Message-ID: <CACRpkdZh_+TfGZVpj57Y91KXuw=c8xNV1zfONMxYsKuTZKjxVA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mlxbf3: set varaiable mlxbf3_pmx_funcs
- storage-class-specifier to static
-To:     Tom Rix <trix@redhat.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -67,17 +69,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 2:45=E2=80=AFAM Tom Rix <trix@redhat.com> wrote:
+Changes in v5:
+ - Remove regmap_config max_register lines as superfluous
+ - Enable use_raw_spinlock to prevent deadlocks when running -rt kernels
 
-> smatch reports
-> drivers/pinctrl/pinctrl-mlxbf3.c:162:20: warning: symbol
->   'mlxbf3_pmx_funcs' was not declared. Should it be static?
->
-> This variable is only used in one file so it should be static.
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
+The regmap API supports IO port accessors so we can take advantage of
+regmap abstractions rather than handling access to the device registers
+directly in the driver. The 104-idio-16 and pci-idio-16 modules depend
+on the IDIO-16 library and are thus updated accordingly.
 
-Obviously correct so patch applied.
+By leveraging the regmap API, the idio-16 library is reduced to simply a
+devm_idio_16_regmap_register() function and a configuration structure
+struct idio_16_regmap_config.
 
-Yours,
-Linus Walleij
+This patchset depends on the "Drop map from handle_mask_sync()
+parameters" patchset [0].
+
+[0] https://lore.kernel.org/all/cover.1679323449.git.william.gray@linaro.org/
+
+William Breathitt Gray (4):
+  gpio: idio-16: Migrate to the regmap API
+  gpio: 104-idio-16: Migrate to the regmap API
+  gpio: pci-idio-16: Migrate to the regmap API
+  gpio: idio-16: Remove unused legacy interface
+
+ drivers/gpio/Kconfig            |   7 +-
+ drivers/gpio/gpio-104-idio-16.c | 286 +++++++------------------------
+ drivers/gpio/gpio-idio-16.c     | 254 ++++++++++++++-------------
+ drivers/gpio/gpio-idio-16.h     |  79 +++------
+ drivers/gpio/gpio-pci-idio-16.c | 294 +++++++-------------------------
+ 5 files changed, 289 insertions(+), 631 deletions(-)
+
+
+base-commit: 7b59bdbc3965ca8add53e084af394c13a2be22a8
+prerequisite-patch-id: cd19046150b7cff1be4ac7152198777aa960a3df
+prerequisite-patch-id: bd3e3830d9ce4f3876a77483364d7190b7fdffa7
+-- 
+2.39.2
+
