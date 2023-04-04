@@ -2,126 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDA66D5808
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 07:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88DEE6D594E
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 09:19:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231878AbjDDFd4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 01:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58708 "EHLO
+        id S233773AbjDDHTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 03:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232605AbjDDFdz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 01:33:55 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8504D1BD0
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Apr 2023 22:33:52 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id eh3so125798694edb.11
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Apr 2023 22:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680586431;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LSfvMCOrdSCg0KsTlmNTzh+wJyyn32F7jBR5XEIQXfs=;
-        b=SZwSkMwcEttyesUKzaZlZS4UGLFXMY126tr9woNXYKUhFfJvL2DW/VmdxbXEZVKhq4
-         Q8Pq5qlwwDErfIgKXJUIy0niHLAaBewg0qiRIG2Ea3WpDIcEC3HIHc1IACXyEIQcUvyO
-         c2Zr8YwvcOOX6aVTroi7AImN1zOILzZ4YqJrVM/HXHIeJqxbaLqixzQTiaPy3uI4KW8z
-         fWMLNaSOfu++mTiApTEXBctIvp/0ILa/2KaPKUr3ZGCLFKd7tQabv28XBN7YezNEXm6w
-         dx/m0ehD2NIiIW7DwzPLa2F+gqKklDNfN+rcYmZAnyu7BNPoZGwWJLn+fvo1lxCE/umF
-         vHMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680586431;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSfvMCOrdSCg0KsTlmNTzh+wJyyn32F7jBR5XEIQXfs=;
-        b=YnPEIHB6Wm+EFq94/07gI2vehhF084yZujnskU1wsPwLHfNlIsCFILrwoBw9qG9hEd
-         dxwgzKmNvPoALf6jfAOvcOO3gYDQPKhfzGMzRlMm84drLjTNyB1TytP+OhUcdLccebj5
-         JNPL8CfH1zuWcvefTogrDzmy0TWvIPsJUFjAUFeo2A7AtddyDoYi/i8VtRNs9MLazmHk
-         Pq/T+Pr87W0iN3sz1NHvobmIYoGUiZ6j4v09azyctgoQZIqR9jO4fJ/ax0myMyzmRHeb
-         Cq6rmY2SqKNG6oHNE06SozCWf5t9BxsEoH4L2/IiSq0g6t/5UI+m91YgDX0kTQu0adFu
-         QZ3g==
-X-Gm-Message-State: AAQBX9fgxq2RHqyfQVJOXLBdncGoWmubLxCm1lL5D6Hi0ijWqW2A+f4y
-        IxJI+95MI9H0m93zsbi+qTvIQw==
-X-Google-Smtp-Source: AKy350a40YXsaP1RgtMOL5a6WR77TS6ARlPJXWLmm7+/lgqUoQ15z5r6n8YquYLchK+7NxQM/Zfl/Q==
-X-Received: by 2002:aa7:cad9:0:b0:502:4875:721 with SMTP id l25-20020aa7cad9000000b0050248750721mr1233965edt.15.1680586430958;
-        Mon, 03 Apr 2023 22:33:50 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:233a:5c18:b527:381e? ([2a02:810d:15c0:828:233a:5c18:b527:381e])
-        by smtp.gmail.com with ESMTPSA id 28-20020a508e5c000000b004c13fe8fabfsm5387403edx.84.2023.04.03.22.33.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Apr 2023 22:33:50 -0700 (PDT)
-Message-ID: <9c49e4a9-0792-bcae-506f-77b5874d4d19@linaro.org>
-Date:   Tue, 4 Apr 2023 07:33:49 +0200
+        with ESMTP id S233815AbjDDHTD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 03:19:03 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A3610F4
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 00:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680592742; x=1712128742;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LIKnJJ8HkRlu7d5siF0ray4V01NtLcptii41of0ID7k=;
+  b=lW2rsm0msTuJ6T1FbwTOwjOx4O4nu/KItqsajVDZWiGX1gzB13wEYgrK
+   eBqkhvaAiJvkEF4I1eUXhG7B4YzyW8gqTRI37avTy6feb+QIfM2WyFTUR
+   dDNRvWNE6n1IjaeOhXO5caQqX5ijwB14jEo+QB8qttKjd+AC3j5Umvgak
+   llRSzhsMK5PvTc47f5rlyAcnCIEzshDTGjGNuzc/dxk08R0IlAFKt1hgv
+   3707G9B3z5nctGK3Lc2EPk1wGp/7/S07c+1AE/hBdQRZuzSXhuJt71Zck
+   +Bd6N/RFcE8Va43IilhcEsjPeX9JjniCavOaiy+wO4Vhrzwf2oVcP332P
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="322504748"
+X-IronPort-AV: E=Sophos;i="5.98,317,1673942400"; 
+   d="scan'208";a="322504748"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 00:19:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="797408803"
+X-IronPort-AV: E=Sophos;i="5.98,317,1673942400"; 
+   d="scan'208";a="797408803"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Apr 2023 00:19:00 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pjawV-000PLT-2Z;
+        Tue, 04 Apr 2023 07:18:59 +0000
+Date:   Tue, 04 Apr 2023 15:18:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 7b75c4703609a3ebaf67271813521bc0281e1ec1
+Message-ID: <642bcf50.sJ2a3bzsqhKPUiPM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH V4 04/10] dt-bindings: timestamp: Add
- nvidia,gpio-controller
-Content-Language: en-US
-To:     Dipen Patel <dipenp@nvidia.com>, Rob Herring <robh@kernel.org>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
-References: <20230323012929.10815-1-dipenp@nvidia.com>
- <20230323012929.10815-5-dipenp@nvidia.com>
- <20230324171329.GA2062332-robh@kernel.org>
- <7f2dc5cf-78b5-81c6-0012-26b1adce1c86@nvidia.com>
- <19b71fef-614a-d678-2e73-95db8f226e61@linaro.org>
- <df00404e-96a8-bf33-cbc7-25dbb09c89c7@nvidia.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <df00404e-96a8-bf33-cbc7-25dbb09c89c7@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/04/2023 06:24, Dipen Patel wrote:
-> On 3/25/23 4:09 AM, Krzysztof Kozlowski wrote:
->> On 24/03/2023 19:51, Dipen Patel wrote:
->>> On 3/24/23 10:13 AM, Rob Herring wrote:
->>>> On Wed, Mar 22, 2023 at 06:29:23PM -0700, Dipen Patel wrote:
->>>>> Introducing nvidia,gpio-controller property from Tegra234 SoCs onwards.
->>>>> This is done to help below case.
->>>>>
->>>>> Without this property code would look like:
->>>>> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
->>>>> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
->>>>> 				   tegra_get_gpiochip_from_name);
->>>>> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
->>>>> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
->>>>> 				   tegra_get_gpiochip_from_name);
->>>>> else
->>>>> 	return -ENODEV;
->>>>
->>>> Or you just put the name in match data.
->>>
->>> Not sure I have understood this comment, but "name" the first argument is
->>> already there to supply to callback to match data. Also, this if else is
->>> needed to know which "name" to provide.
->>
->> The point is that of_device_is_compatible() do not really scale and make
->> code more difficult to read. Your variant-customization should in
->> general entirely come from match/driver data.
-> 
-> Perhaps I should not have mentioned driver related details here about how
-> this property will help, that detail will go in driver patch. In the next
-> patch series I will remove this commit and just focus on what this property
-> is.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 7b75c4703609a3ebaf67271813521bc0281e1ec1  gpio: davinci: Add irq chip flag to skip set wake
 
-Regardless of this commit, driver match data is the way to go, not
-of_device_is_compatible().
+elapsed time: 725m
 
+configs tested: 55
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
-Krzysztof
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230403   clang
+i386                 randconfig-a002-20230403   clang
+i386                 randconfig-a003-20230403   clang
+i386                 randconfig-a004-20230403   clang
+i386                 randconfig-a005-20230403   clang
+i386                 randconfig-a006-20230403   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a011-20230403   gcc  
+x86_64               randconfig-a012-20230403   gcc  
+x86_64               randconfig-a013-20230403   gcc  
+x86_64               randconfig-a014-20230403   gcc  
+x86_64               randconfig-a015-20230403   gcc  
+x86_64               randconfig-a016-20230403   gcc  
+x86_64                               rhel-8.3   gcc  
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
