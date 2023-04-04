@@ -2,204 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65E296D5D81
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 12:30:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5C356D5E12
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 12:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234176AbjDDKaq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 06:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42346 "EHLO
+        id S234693AbjDDKv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 06:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbjDDKap (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 06:30:45 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065EE1984;
-        Tue,  4 Apr 2023 03:30:42 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id fi11so5073367edb.10;
-        Tue, 04 Apr 2023 03:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680604240;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qPQJYuYVqddrLpsUiSF4JuC6g9/L1+GNYqEeCmgaIpw=;
-        b=Qf9ZiLsHWa67q5d6OwOb196jz2WhK7YOr7O9+et+VWP9XJTg4eS7ZGmo/pp76jWFPt
-         4Kbtvtu5S3zMCsF9eVSA/S/YNXm5ggVhITb/Ngz7+umuz+DRrtYBdfzKTl3UrdN7NzWW
-         O6IY8bxFhED+SxeYizHcRY3SwLERm5ZUtQuHN1aGTwiysQ10WcIUcldVRbRtkYiswHlM
-         nTETOQuueRAEtt0TgKyZgsrozphoT+IYOtKCMD3aGLrr4m8j5PNzK6Je3J+NQ2mth/Tq
-         N2V070Ic0y6tNpVzzPzhp6zx5ZpOQ5fxDFW2cAWXz/Wy2BIlRhwiAXRk4jwemb2Ozkk8
-         aGJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680604240;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qPQJYuYVqddrLpsUiSF4JuC6g9/L1+GNYqEeCmgaIpw=;
-        b=zQ1tRoSg6FxaZU0lOFZ4sUyIPj7ePKC1ZozNdO6A4huKHV0anGYR1SeT2sErIF7IF1
-         zedL6i/mBHOX5YSQ8JofrQNNffD3R71Fu5+NYs6SrB41jOxyBwWPUMQtO0Q4780ZVK1b
-         DPdVdTLpmgkk+fvoOZ1c0Pvdq8g3NyVixZowXB1uFIS2RbhVAIoblgbfckwH2y6qnJN3
-         vY5NoFnERDL8Wu6kyBM3sgJnbChwDVfm41BU+xJgLcUetkV7hA/oOlLRN+TAmabBCrY0
-         6QK4DqJOBc/iqC27tUrss1JQ3ZblDibK3hTftAtNrKGqSpmYBuF7D9SRJ0MJuHBDc5gz
-         dDwg==
-X-Gm-Message-State: AAQBX9cI7GJ26xqSwr5MtvdMs2yiAuOP2gmYb5Hpb81lRy6n31PlSyiO
-        4ImPwaOKtSWworREaIjlBy4=
-X-Google-Smtp-Source: AKy350br99HCbCDIQiZj8fwuuU0BjyJC/AwN7IrayX6NNSgMYELNtziysmKohGWt/IYRz9rEEj8/bQ==
-X-Received: by 2002:a17:907:8b87:b0:8e1:12b6:a8fc with SMTP id tb7-20020a1709078b8700b008e112b6a8fcmr1480812ejc.4.1680604240440;
-        Tue, 04 Apr 2023 03:30:40 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id qp24-20020a170907207800b0093f822321fesm5737690ejb.137.2023.04.04.03.30.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 03:30:40 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 12:30:38 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org,
-        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
-Subject: Re: [PATCH V4 04/10] dt-bindings: timestamp: Add
- nvidia,gpio-controller
-Message-ID: <ZCv8TviVD8n4MrnW@orome>
-References: <20230323012929.10815-1-dipenp@nvidia.com>
- <20230323012929.10815-5-dipenp@nvidia.com>
- <f523c155-7d05-2034-27ea-e2e56881c0bb@linaro.org>
- <a7539193-8374-cda6-f535-360a4a8eab22@nvidia.com>
+        with ESMTP id S234647AbjDDKvh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 06:51:37 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D995C30E6
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 03:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680605475; x=1712141475;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sUPtHJFHSJces4mW0jUUk2aw0j8XboAInix2/Pcs1Vg=;
+  b=bSt+gvAYWf2fz0QrheiTucLzCKoZjuCgkJM2Hij7WbWbaMB6oGsJWWCj
+   xO/eS0VHBjfaG8L8wkeQCiRZl239zt4ziIAyFN3oFobB2RwA44hG3IhXz
+   dwiKdAnJAbX/iSFYtC6E6EYYFlxe8fPZe6s4IRcRT0iKEf6RkmGvfquZu
+   b51hBFrJ7vD61eohsxC3YpWE/+LZLOh+Yq6osa5Vn/3/29drVdwRHVYpi
+   jCr0s0BMq41cdcQ2OwDUIm+9XSBx7rEyQ2M3wtP2+b99LBucHGbsdSxAc
+   kLt+ei+amxzr2V66VczIeJyJbrpW+BHH0NI5Odi3b/fhMqUOoKi35prmW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="330733626"
+X-IronPort-AV: E=Sophos;i="5.98,317,1673942400"; 
+   d="scan'208";a="330733626"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 03:51:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="775597635"
+X-IronPort-AV: E=Sophos;i="5.98,317,1673942400"; 
+   d="scan'208";a="775597635"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Apr 2023 03:51:14 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pjeFt-000PZQ-1I;
+        Tue, 04 Apr 2023 10:51:13 +0000
+Date:   Tue, 04 Apr 2023 18:50:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 7b59bdbc3965ca8add53e084af394c13a2be22a8
+Message-ID: <642c00f5.HkYyu+UDmFF9zZmq%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kKVfNtJEQjXZPd0A"
-Content-Disposition: inline
-In-Reply-To: <a7539193-8374-cda6-f535-360a4a8eab22@nvidia.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 7b59bdbc3965ca8add53e084af394c13a2be22a8  gpiolib: Add gpiochip_set_data() helper
 
---kKVfNtJEQjXZPd0A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 936m
 
-On Mon, Mar 27, 2023 at 09:58:19AM -0700, Dipen Patel wrote:
-> On 3/25/23 4:07 AM, Krzysztof Kozlowski wrote:
-> > On 23/03/2023 02:29, Dipen Patel wrote:
-> >> Introducing nvidia,gpio-controller property from Tegra234 SoCs onwards.
-> >> This is done to help below case.
-> >>
-> >> Without this property code would look like:
-> >> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
-> >> 	hte_dev->c =3D gpiochip_find("tegra194-gpio-aon",
-> >> 				   tegra_get_gpiochip_from_name);
-> >> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-ao=
-n"))
-> >> 	hte_dev->c =3D gpiochip_find("tegra234-gpio-aon",
-> >> 				   tegra_get_gpiochip_from_name);
-> >> else
-> >> 	return -ENODEV;
-> >>
-> >> This means for every future addition of the compatible string, if else
-> >> condition statements have to be expanded.
-> >>
-> >> With the property:
-> >> gpio_ctrl =3D of_parse_phandle(dev->of_node, "nvidia,gpio-controller",=
- 0);
-> >> ....
-> >> hte_dev->c =3D gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_nod=
-e);
-> >>
-> >> This simplifies the code significantly. The introdunction of this
-> >> property/binding does not break existing Tegra194 provider driver.
-> >>
-> >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> >> ---
-> >>  .../timestamp/nvidia,tegra194-hte.yaml        | 31 +++++++++++++++++--
-> >>  1 file changed, 29 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timestamp/nvidia,tegra1=
-94-hte.yaml b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-h=
-te.yaml
-> >> index eafc33e9ae2e..841273a3d8ae 100644
-> >> --- a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.=
-yaml
-> >> +++ b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.=
-yaml
-> >> @@ -51,6 +51,12 @@ properties:
-> >>        LIC instance has 11 slices and Tegra234 LIC has 17 slices.
-> >>      enum: [3, 11, 17]
-> >> =20
-> >> +  nvidia,gpio-controller:
-> >> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >> +    description:
-> >> +      The phandle to AON gpio controller instance. This is required t=
-o handle
-> >> +      namespace conversion between GPIO and GTE.
-> >> +
-> >>    '#timestamp-cells':
-> >>      description:
-> >>        This represents number of line id arguments as specified by the
-> >> @@ -65,22 +71,43 @@ required:
-> >>    - interrupts
-> >>    - "#timestamp-cells"
-> >> =20
-> >> +allOf:
-> >> +  - if:
-> >> +      properties:
-> >> +        compatible:
-> >> +          contains:
-> >> +            enum:
-> >> +              - nvidia,tegra234-gte-aon
-> >> +    then:
-> >> +      required:
-> >> +        - nvidia,gpio-controller
-> >> +
-> >>  additionalProperties: false
-> >> =20
-> >>  examples:
-> >>    - |
-> >>      tegra_hte_aon: timestamp@c1e0000 {
-> >>                compatible =3D "nvidia,tegra194-gte-aon";
-> >> -              reg =3D <0xc1e0000 0x10000>;
-> >> +              reg =3D <0x0 0xc1e0000 0x0 0x10000>;
-> >=20
-> > This is not really explained in commit msg... are you sure you tested i=
-t?
-> I have to revert this part back in next patch as when I upgraded dtsschem=
-a it gave me errors.
+configs tested: 76
+configs skipped: 3
 
-We need the 0x0 in the DTS files because we have #address-cells =3D <2>
-and #size-tells =3D <2>. For the examples, those default to just 1 cell,
-so this can't be an exact copy of what we have in the DTS files.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Please make sure to always validate the bindings and examples.
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r001-20230403   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r001-20230403   gcc  
+arc          buildonly-randconfig-r006-20230403   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230403   clang
+i386                 randconfig-a002-20230403   clang
+i386                 randconfig-a003-20230403   clang
+i386                 randconfig-a004-20230403   clang
+i386                 randconfig-a005-20230403   clang
+i386                 randconfig-a006-20230403   clang
+i386                 randconfig-a011-20230403   gcc  
+i386                 randconfig-a012-20230403   gcc  
+i386                 randconfig-a013-20230403   gcc  
+i386                 randconfig-a014-20230403   gcc  
+i386                 randconfig-a015-20230403   gcc  
+i386                 randconfig-a016-20230403   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r004-20230403   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r005-20230403   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc     buildonly-randconfig-r003-20230403   gcc  
+parisc       buildonly-randconfig-r003-20230403   gcc  
+parisc       buildonly-randconfig-r005-20230403   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r004-20230403   gcc  
+powerpc      buildonly-randconfig-r006-20230403   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64      buildonly-randconfig-r002-20230403   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a011-20230403   gcc  
+x86_64               randconfig-a012-20230403   gcc  
+x86_64               randconfig-a013-20230403   gcc  
+x86_64               randconfig-a014-20230403   gcc  
+x86_64               randconfig-a015-20230403   gcc  
+x86_64               randconfig-a016-20230403   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-kvm   gcc  
+x86_64                           rhel-8.3-syz   gcc  
+x86_64                               rhel-8.3   gcc  
 
-Thierry
-
---kKVfNtJEQjXZPd0A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQr/E4ACgkQ3SOs138+
-s6F7gQ/8CahJlsl2ie2xWVwhWMmBeCbLyErqS+oUnJBDhaLFTHrhUBNeDB0htb3x
-ZAUc3dZf+3ohXsFztk9DfVoH/3PTAxFftgN05tZHBCLXaBBoE/0uVQBVw2Q6VS7C
-q6XkykkbDFUBOzL6sJLZE3ucFdPTjG5HFmMF+UJF8NfmBLUWJrZ60kK8h3MQrjYR
-suT5Gr0EyOHy9nbtjDS3U05WW6Oyp4ppBTFWYuYbRIHgiZybCabVROR8NuCqqO5/
-17kaQheYOsyCfHwmQhNx/yH6qn/byXK0eKI8N05S9f7iBqyvgDO69LF5SVR7wZtD
-6i8DaiGS80EZtslyzEIcggM2WBklv0TO6tyRJWdsBjCoN+sFnRbTMOu/XFYvpqh5
-Fjk+Qedb/KaGYdzD+HjREyKCz8rjRJxBj+NyjiUCo/hIlXm3kBH+XihmLsY/3ZNs
-AjXxR25TIAq+yw42/gDfdx6/PzXwZtNmYq1ogpftsffj0rUTsv1v0Z5ScCWnKU15
-sIqSTXUmGBRmHErHyxV/AcgwAqljPuBVKdidyM+8IceZGD6bd56iv/Ywc28cfhNO
-cruSLxYVhvMJbMk2xX9ma8PWGAaOIkT+CTfQWC7YLMVMA8oMjPa74JQHKUlsrDb+
-GlAEoulplmcv1mbesr5bkm4rMpB6tjsoTElagX7RVgOOS2CALEI=
-=TMqU
------END PGP SIGNATURE-----
-
---kKVfNtJEQjXZPd0A--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
