@@ -2,65 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9856D64BE
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 16:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E72456D64CA
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 16:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235664AbjDDOGd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 10:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51628 "EHLO
+        id S235522AbjDDOJf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 10:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235605AbjDDOGK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 10:06:10 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E41F5245
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 07:05:50 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id k17so38771785ybm.11
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 07:05:50 -0700 (PDT)
+        with ESMTP id S235558AbjDDOJb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 10:09:31 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69352D79
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 07:09:29 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5456249756bso615635107b3.5
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 07:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680617150;
+        d=linaro.org; s=google; t=1680617369;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P/rAq+ST3GBb2vUM4m8DtvtohGPy7+QO7yjCXRomrhI=;
-        b=scZVfz5ryQtum9HOUhBLd6U+SRbeQdOY7ntr1sB1wL39EsWMyp1eZ+TaDyCAFdHS74
-         PT2H8y57Rr7zYQxewXQBb1W3tjx+PPa55CaLQTJOJMhuyG+tkXp9qDw7KpGY5eeiEu9z
-         5eSg2E8PQQ/1Y5bVnrhXuCfex9m0tQmdQ6Nv5KP4/HuIfuEVEBz11HxjQBB8u7sb5LHV
-         98Mx/nGGYptIGjvPTzQWiOfDLUuZ3kn+mNBXQcS0uB2YP3LAR1NHggsVDBrLK6Q/3A0q
-         r/TKMO0hl4dMiJRTnd3s5TuGoiSGwuvIl/XR04mdRPG011jVIQHesVGJVbBlmPBFwRmT
-         StUg==
+        bh=ZnWzTfCBouLvNFIttgdZiBeapl1jQzHQOa2b0uZW+Yw=;
+        b=KMcOqCDLEz4aCPi34/DOPsImPsfw5ZeY0wTsPwjTfIBU/l8v/gfv0G0ZJWuJFgp33K
+         CnCFkpUWUid4/EqWu0KpzJp+ofxgiC3yfhwMGkRWrKSwHMCo8Sht4RuLq2QKsImi27po
+         bmLfnmR3tU2a8TrgFXHh0jEVeqHtp8jzeFZ8KjQJnFuZGaet0e3zNlqXcLLyGlug3HfB
+         5kXM58LW/rqMa+R3QQrJyvjcdlZe21cOub/Rgop8wFGNfXn5lj83IxKTtH42SwuzKLPk
+         mKljKuqg7i64XLV7v0JJ31P/xzsGAWbjF+KGl3neksq1QdFpll7etMjjVsEXE1Yd44zg
+         gy3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680617150;
+        d=1e100.net; s=20210112; t=1680617369;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P/rAq+ST3GBb2vUM4m8DtvtohGPy7+QO7yjCXRomrhI=;
-        b=d/gNcJDL4t5I9VzMFSdKjsSVb/ycN6nOgv9jVM1yLzKUuT+g/N90xHiWFqgOXlETDA
-         zbqLDrbFmoNh6sRwHYHV7p85oJOV+onzoBRO/qXHced3JmZs0EvsiQDUItMiMg8BqbsW
-         bIgfxIh3RzllBciLtb0oQZ+5AFjPip0W3GJn6PIFlEjXa9qhXuBJ3CHFrsnWshsuJT01
-         TH/9DYezhOMSCkZhXettHT954DOQFFduzGUDfuBe+0aFe/xVCD1p+V+zO3p0r0xGeYgm
-         6JhqtB5zMr/3DigLVDplbkg6ctC81+M87lszEia51TkGFKv36ZyA1Q80ZQDK0pujRQc5
-         vY5g==
-X-Gm-Message-State: AAQBX9djCI9uw4msOFpIQ61D0eU433KVWSO/nDL4gEpXg2nzMX2NUsWm
-        FEvLlhaRgSQLV1c9cGXypNgufrN5OEAQO5UYla8BbQ==
-X-Google-Smtp-Source: AKy350axZePoyx4o9rTILxAsbYkfqxgivSY+UY0/KR4iEdDvk1UQSC2TmZR7wYJl6Qpynoa1bHyUBL3hoWmZg2/iTT8=
-X-Received: by 2002:a25:c383:0:b0:b09:6f3d:ea1f with SMTP id
- t125-20020a25c383000000b00b096f3dea1fmr1966432ybf.4.1680617150033; Tue, 04
- Apr 2023 07:05:50 -0700 (PDT)
+        bh=ZnWzTfCBouLvNFIttgdZiBeapl1jQzHQOa2b0uZW+Yw=;
+        b=J0WPXyswA748fiAowqkmpKKIqL67+BmgnDXACPy38GWhfdGS9tkJGuMxKktTdu5G/s
+         aZG46zjvXyAY0K0E5WeTdocjLMX+G57Q+8qUxh6AfENodVyQEwAn+fJmRLTJ/l5NWyX5
+         QuTVKS0BCtE1eQIr+Ue99sJf0nqGluN0WrxbR9l5+TCndQ/7tK1FQJ7rR/9bIS9Pjkwb
+         qH/j4M6kaWvSJqtj2XGPkuy8W3rBPkFYzExqjm+OyXf1zEEGbDxFRnEPGmAwuatiJzGd
+         hQkkVvqNoLqOBAiiCDxMmLfdMD8/xDzuet+D9yY6fNXXSZ0Jx4su2d+WFiKnRJZtkbg6
+         ydqA==
+X-Gm-Message-State: AAQBX9f4lEIJuBvbAhzjOB+/zY3OWQAkkW1tFc3GPdP9Zr+0RHJRrOVa
+        NwTUpKBJfumqAfO2PgTTSNzuvwZ5lFVlIiNUaaVOYg==
+X-Google-Smtp-Source: AKy350bjb0MQOtgKMwAdbyWuoYyDolSgx0NlXbHfkdfgHkYhgyRMawgx1pSPNraaVqhXKvD+86RrDJqLZvi3m6+Ja20=
+X-Received: by 2002:a81:a88a:0:b0:549:17fe:17c5 with SMTP id
+ f132-20020a81a88a000000b0054917fe17c5mr1525744ywh.9.1680617368899; Tue, 04
+ Apr 2023 07:09:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230403114033.8336-1-edmund.berenson@emlix.com> <20230403114033.8336-2-edmund.berenson@emlix.com>
-In-Reply-To: <20230403114033.8336-2-edmund.berenson@emlix.com>
+References: <20230404004501.1913144-1-trix@redhat.com>
+In-Reply-To: <20230404004501.1913144-1-trix@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Apr 2023 16:05:39 +0200
-Message-ID: <CACRpkdbnj-BiA8D0e4nza-za-E8g_AEBNjR4b3gWUZpw70U33g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: max7317: Add gpio expander driver
-To:     Edmund Berenson <edmund.berenson@emlix.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     Lukasz Zemla <Lukasz.Zemla@woodward.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 4 Apr 2023 16:09:17 +0200
+Message-ID: <CACRpkdZh_+TfGZVpj57Y91KXuw=c8xNV1zfONMxYsKuTZKjxVA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mlxbf3: set varaiable mlxbf3_pmx_funcs
+ storage-class-specifier to static
+To:     Tom Rix <trix@redhat.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -72,22 +67,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 3, 2023 at 1:41=E2=80=AFPM Edmund Berenson
-<edmund.berenson@emlix.com> wrote:
+On Tue, Apr 4, 2023 at 2:45=E2=80=AFAM Tom Rix <trix@redhat.com> wrote:
 
-> Add driver for maxim MAX7317 SPI-Interfaced 10 Port
-> GPIO Expander.
+> smatch reports
+> drivers/pinctrl/pinctrl-mlxbf3.c:162:20: warning: symbol
+>   'mlxbf3_pmx_funcs' was not declared. Should it be static?
 >
-> v2: adjust driver to use regmap
+> This variable is only used in one file so it should be static.
 >
-> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Notwithstanding the other comments from Bartosz, this seems like
-a driver that should be using the regmap GPIO helper library.
-git grep GPIO_REGMAP will show you examples of other drivers
-that use this and how it is used.
+Obviously correct so patch applied.
 
 Yours,
 Linus Walleij
