@@ -2,75 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 445626D6DC3
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 22:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE41F6D6E18
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 22:31:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234251AbjDDUOz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 16:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60618 "EHLO
+        id S236168AbjDDUbj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 16:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236168AbjDDUOw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 16:14:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1604930DC;
-        Tue,  4 Apr 2023 13:14:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A380D63971;
-        Tue,  4 Apr 2023 20:14:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96A5C4339B;
-        Tue,  4 Apr 2023 20:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680639289;
-        bh=+NWgaUFOSRZ7sm/txa6jkhFilTgZ4ske6EBNLQgIegQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=jyA5hapwY9ClE2ISVEAAFpLUxCfAKH/ZFHk/H3VamFkuA0+FZ2nlk6dp31IDGDIe1
-         cBEIwZrnIWbtGioT8NSrIdzcKaDB6GmxVB+9jHd6JOcyjzZrZ8/e3z2J/ngFUPE7mJ
-         GIU6tKyK6y5ipMUbajUyg5mVy2nfKHREJUf78VBZURof0+WfBRelzZjA7brsb07XgI
-         wLH+WL44KzU0xX98lpz/luNttfW1f4XQU58s5pdXTpSywJZ7T2xf28AdSXculHOIrc
-         TgCOEtnronsy783dvNEOTGjJOoVQ2V/HV9kYx28zRvJRO5WIdW7tRzj1BTDhjcHW4C
-         +vMR+HE3BZKaQ==
-Message-ID: <34afcf5c824f1738bebfab2529ddce9a.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S236164AbjDDUbh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 16:31:37 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12A74C28
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 13:31:35 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id iw3so32460790plb.6
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 13:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680640295;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOVeDn8sGMiyUFHnj/niym7+yJLePku8ZuvCvpjBjFA=;
+        b=d2PfSMqYfgsZroD2KnzQMRj0RMGsWfZOj8Pbma82DQC/fdoAL7fp4u3QRYiYy0KsxD
+         7J2e/+s31Z1QQnI/qyqshLlDgu+gpXILHPK0Jdtbp3wfz5cn4ytd1IDNsyWG6Zs1qD9b
+         WATap2+gj3/N62oIZ6s5sB34NSYCjItBlYteXFqgR861/Fh/7zmJzj7RjnwFpMvGYD+s
+         TwK/P/yR8kLl7NVvE9VrRC860srGxgFh4X0TVV1Q2pUt3Ikfyq1u1wpY/jIXj2TyS7JN
+         gNzlm+DEd4jK9eCkoSfSMTV0tHcgHYjdqxZik2z7GkUwOBDBEZeyDropDBoOwbivkXiD
+         tIIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680640295;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOVeDn8sGMiyUFHnj/niym7+yJLePku8ZuvCvpjBjFA=;
+        b=NrAYpWbIPdVbPmL4yEv01JX3iIX2/z70EYy2v99DW47hLetspRAqaev1IGlOfR7W58
+         IC1zN+OgoCIgVtQSTwOVFiWPTrGU4TdZM8JLIe1dtGAVkuuFE/bH0nFS4HXP/8CHuYQe
+         Dlxy+5kn0d7Wi2og/7RQnSglOVksD0bBwcEdgLWrwO02UU1EWAm62W+cSpaLbkQa0flh
+         MbrhriRB243DDJghKFwNUVTEJ1yCgA29M6+Q1QZBWPRZBTLkzvHWLSdKoXK720uHDuXt
+         6AGDrPdyY2X+nzVR7hoKlhyDLJEk4ZGlMPx2e4kUeOmAxtYmYT091yd/4UbkswB5zb2T
+         8Vag==
+X-Gm-Message-State: AAQBX9e3azTZE/MvG7CzbTx9PJH9uOZfqRX92u3hMejsfvTHc73KfaWx
+        5ku9WkLatyqJmQRaJsX3OKl+ZQ==
+X-Google-Smtp-Source: AKy350YCpPag6hyvNnZwcBiqsXWIy1NnNsjRyvNEOMoKbr9kgeRuFVAQ98Nq/oUQ25+hXB9CQPoU3Q==
+X-Received: by 2002:a17:90b:3ece:b0:22c:6d7c:c521 with SMTP id rm14-20020a17090b3ece00b0022c6d7cc521mr4045682pjb.45.1680640294866;
+        Tue, 04 Apr 2023 13:31:34 -0700 (PDT)
+Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
+        by smtp.gmail.com with ESMTPSA id jm21-20020a17090304d500b001a1fe42a141sm8706184plb.115.2023.04.04.13.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 13:31:34 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Bernhard =?utf-8?Q?Rosenkr=C3=A4n?= =?utf-8?Q?zer?= 
+        <bero@baylibre.com>, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 00/11] Improve the MT8365 SoC and EVK board support
+In-Reply-To: <CAFGrd9qLzcDJO_Fk_-B6XYuuxQzQoYLXmdp0Qj1Tszr0-sqNgw@mail.gmail.com>
+References: <20230203-evk-board-support-v4-0-5cffe66a38c0@baylibre.com>
+ <7hy1ncydtc.fsf@baylibre.com>
+ <CAFGrd9rKy9a4bUf1dkUtTogtWPFr5eu3jcsdaixi3hs_dWMwrg@mail.gmail.com>
+ <CAFGrd9qLzcDJO_Fk_-B6XYuuxQzQoYLXmdp0Qj1Tszr0-sqNgw@mail.gmail.com>
+Date:   Tue, 04 Apr 2023 13:31:33 -0700
+Message-ID: <7hr0szwfru.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230404101622.5394-3-quic_devipriy@quicinc.com>
-References: <20230404101622.5394-1-quic_devipriy@quicinc.com> <20230404101622.5394-3-quic_devipriy@quicinc.com>
-Subject: Re: [PATCH V11 2/4] clk: qcom: Add Global Clock Controller driver for IPQ9574
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, arnd@arndb.de, broonie@kernel.org,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        dmitry.baryshkov@linaro.org, geert+renesas@glider.be,
-        konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel.ziswiler@toradex.com, mturquette@baylibre.com,
-        nfraprado@collabora.com, p.zabel@pengutronix.de, rafal@milecki.pl,
-        robh+dt@kernel.org, shawnguo@kernel.org, will@kernel.org
-Date:   Tue, 04 Apr 2023 13:14:46 -0700
-User-Agent: alot/0.10
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Devi Priya (2023-04-04 03:16:20)
-> Add Global Clock Controller (GCC) driver for ipq9574 based devices
->=20
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> ---
+Alexandre Mergnat <amergnat@baylibre.com> writes:
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Here a build-able & working branch with dependencies:
+> https://gitlab.baylibre.com/baylibre/mediatek/bsp/linux/-/commits/amergnat/i350-evk-board-support
+
+Thanks for a branch with all the dependencies.
+
+This branch builds & boots, but crashes because in the upstream default
+defconfig, the CPUfreq driver is built-in and the regulator that it
+depends on is not enabled.
+
+Changing CPUfreq to be modular with CONFIG_ARM_MEDIATEK_CPUFREQ=m
+allowed me to boot to a shell on mt8365-evk.
+
+This suggests that this series needs some defconfig patches to enable
+the new features, preferably as modules.
+
+It's probably OK that the defconfig patch(es) come as a separate series,
+but not sure what Matthias' preferences are here.
+
+Kevin
+
