@@ -2,82 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B1E6D696D
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 18:51:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4E316D6A4E
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 19:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233276AbjDDQvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 12:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
+        id S235871AbjDDRVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 13:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235610AbjDDQu7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 12:50:59 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2BD4ED6;
-        Tue,  4 Apr 2023 09:50:40 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 334DUtRG011054;
-        Tue, 4 Apr 2023 16:50:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=l8w1/hgTPworsK3U0QpeR2myc76+4gYZR+4ff0LHt4E=;
- b=Ypq+0VaO12L2B/a/9GQ0cST63QJRaZPKX6uu1XxX8cyNgcrxUc2Hpd0lw3kgkmEdjAVf
- 5/7jJReSwwKjRGJUAqU5WD9OeFqlvbUplUtQdN00QX/gxmmuI93wFm6ETRvr3RJ7cpDt
- J15pVGHv0DUUqkl5Sc/SdfVfXAiXvOUmIhuS3mvrvu+ZSMvydlhh0i39FR2xdaWolroY
- IMc+B2HiWOY1GPZS8Cp1H1KGW3hQw9Xaip/5mfLL/vTOQsjBKYTfJjil8lbejkgAORzq
- eU4ztFHtyPqxO1dsiHr0Kpq45SzeFc+rr09gKwfyNjZNWShc+0+D8K2OkHUIDlQKf/AW WQ== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3prg8wsd6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Apr 2023 16:50:13 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 334GoCcs015908
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 4 Apr 2023 16:50:12 GMT
-Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Tue, 4 Apr 2023 09:50:03 -0700
-From:   Devi Priya <quic_devipriy@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <mani@kernel.org>, <p.zabel@pengutronix.de>,
-        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_ipkumar@quicinc.com>
-Subject: [PATCH V2 9/9] PCI: qcom: Add support for IPQ9574
-Date:   Tue, 4 Apr 2023 22:18:28 +0530
-Message-ID: <20230404164828.8031-10-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230404164828.8031-1-quic_devipriy@quicinc.com>
-References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
+        with ESMTP id S235816AbjDDRVL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 13:21:11 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DA8AF;
+        Tue,  4 Apr 2023 10:21:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F/vCm0f+PR0waeGB0QY9SkC30ZFAIT444DSaSVsxxjL+cowIjqMOpdbyhNWJfxGCsyA+OS4mjymWb1PUcO6QWakZllVE1464aD8nh/H+2krZmYqYiKx8ZT5Likdaf1UJZA50zaey+gMnKTzkeUMMvRaJD95HdVJCILetjh3beZqxAQ49aIG7UeGlV3K8LSv9dMK8O6NQASpCEpGjylmcGvKWYn5o/7tbRbgulugqlpF+Ko5Fr1t/sji/A5JInkK4fITyAhc5wiSL5eMMS52ruzXuCgR9o4xWPyrktDahyAXOofe/osrgB+IT8TKrLuLr3kLGtmH9weh5gNHy7elqgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vb5pGZoqwfiQ6591zAB0Q3c3BH8x0Lp4DAZGH5u78UQ=;
+ b=DYsLlliJuN2ixtP9Pke4SfwysxdPvdjMn1vbEyXybtVwTLCy9ipg/mmyg2kweCqs+KYvjC2oxCnhbCWJH8f59jYI+beBt3DACZg/WfdBB36YEYWO/YsiOxxDGDkBW2pn8DUafBfwg/FfRdbb3aiqQ7NlLCC5zCgdIkAA2uvogBrLGwwvtnvGcS+ScadkZKHx4I2hs1SUmMFaHQMfPOO7Li5nS0DbD+dpUwCWIqPYiM50GmA9wqLFBAs3vxnh8poodJsjvLHTUS2TfEfoMfHWWbhg6ijyqcZg9cLurE/Mb34sjRhNiaDu9uQqLWO+ESkJdaHZqaE8ZTbO5ngAdIAY7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vb5pGZoqwfiQ6591zAB0Q3c3BH8x0Lp4DAZGH5u78UQ=;
+ b=tArZzN9NivofleY+Ww5b59TBvxwG3caC1bAdjw2HnQr4z7HHSP8PEK2oG+BbLk1twnORJnNC2dwvYcYr/Ns5r6HPt6QYkY6oBLGCVzmuXsvYe+DrQY7Igz8zT28AISjiIDqhhX3ghakbyV2kPdlKONrLXX0W/jgWRBhR/BHHcwViZwWAIfrdfUS2E3/8oGdy5OjeidFFGaD+AU8+nX3jX2eSDIz/Y2jR8fnPVRqYxrg8MghqHAM5X0nxjG8gJLKF55GHVaz0Wj8ngwiHp43PwqABhzO0NVv4EaWFDVJKixhna5AahcUqhWuWbBj2AT0lTD89D6a77N7MtSfvd31kSw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA1PR12MB6604.namprd12.prod.outlook.com (2603:10b6:208:3a0::7)
+ by PH7PR12MB6466.namprd12.prod.outlook.com (2603:10b6:510:1f6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.27; Tue, 4 Apr
+ 2023 17:21:04 +0000
+Received: from IA1PR12MB6604.namprd12.prod.outlook.com
+ ([fe80::265:64aa:fb3e:288]) by IA1PR12MB6604.namprd12.prod.outlook.com
+ ([fe80::265:64aa:fb3e:288%4]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
+ 17:21:04 +0000
+Message-ID: <7e617d8f-6c78-3d2f-5f8a-79acae09a8a9@nvidia.com>
+Date:   Tue, 4 Apr 2023 10:20:59 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.1
+Subject: Re: [PATCH V4 04/10] dt-bindings: timestamp: Add
+ nvidia,gpio-controller
+Content-Language: en-US
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
+References: <20230323012929.10815-1-dipenp@nvidia.com>
+ <20230323012929.10815-5-dipenp@nvidia.com>
+ <f523c155-7d05-2034-27ea-e2e56881c0bb@linaro.org>
+ <a7539193-8374-cda6-f535-360a4a8eab22@nvidia.com> <ZCv8TviVD8n4MrnW@orome>
+X-Nvconfidentiality: public
+From:   Dipen Patel <dipenp@nvidia.com>
+In-Reply-To: <ZCv8TviVD8n4MrnW@orome>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0019.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::29) To IA1PR12MB6604.namprd12.prod.outlook.com
+ (2603:10b6:208:3a0::7)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: D_sHUbA0nX3JJkbrHU6AWPoigXkrrOIc
-X-Proofpoint-ORIG-GUID: D_sHUbA0nX3JJkbrHU6AWPoigXkrrOIc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-04_08,2023-04-04_04,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304040156
-X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6604:EE_|PH7PR12MB6466:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7df1da37-9a3b-4fbb-cfd8-08db3530f81e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Aow+7VBEXAGyOBnkIdt91vJp9WOUxBGC3gwRROFQOZIg2OSjNyChOWTRxqrtcVWoEEC+ZgEgLePmHpxz1FyMXQTHBjOC5w1VBtLQGTSqo07RkK0HtbeqpZ8jKSpPPuN8FE2C1St0tDT6eYMXmc28Sox0N4wXrRIwYR/7/rLqferQA//xPOrHGpqRxBgs8j+SMMh82FO0QYQQEXlJH3yK8svqXp37LjI04/tEFhp0pts2EYlbbGx35HKkuX74+qeFjXGVvTnPLA+9xDca/aYFGJtjglz8efy2Ig2+0ugmEai0tPPcJUDBPwmsPei/MDJzSye/AiMNrQMdHdF7El7fe3UpdnAbmWtd/jk0aQzEXn/zgzAsMqarWkCjg7sf+azYZ8GTDLAaB+IpW+nVZ1RTRmtWH6rvzAMyF1D0rOZhPCcGFG/XTccG8PB45t9W5EOpQw2FksY0KgicdSvXE8KYVRRmPuclwOEBqHOnegh/htrxaV9zPFv3KttkaAOritSUZoC92zvTdZXqnrQ+nxQRoRLWXYarV1pltC7EkVy+hhCFc+LKfNeEh8e5iRCI7VLLohLuJyBTkW3u8ilmuZ0rUD9hVD4i5afkx/wa0imKoCCyaEra33svBUaz+Jv33BKrDSyTn3kocNouac5ExT3LXA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6604.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(451199021)(83380400001)(66946007)(8936002)(8676002)(31686004)(2616005)(6666004)(66556008)(186003)(36756003)(5660300002)(53546011)(6512007)(478600001)(2906002)(41300700001)(6486002)(316002)(6916009)(26005)(4326008)(38100700002)(7416002)(6506007)(66476007)(86362001)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d29hKzdWTjluNWV3TUJQclN3b1g4djhqUVZrcFMvb1dtalRXMlA5b2E1TFdM?=
+ =?utf-8?B?YVJOTk1vSmpWbkFUeWp2REtXWkF1VTRwc215bHVTYlpIaHJMMFpTMkF6L1Ay?=
+ =?utf-8?B?QkJoakR5U3hsRXgzU05jeWNMWnZRZ3loQ3FCenlHS2J4MGxxSm43ZXJ4Qzlk?=
+ =?utf-8?B?ZGNVYUlocm04czlBc1k4aStsU3FIcElxR2RsMWE0akRCVmlXSjA2cWl3VGcy?=
+ =?utf-8?B?YThQNExkRTcxZlFueWJIUDBGMkdQcFZycm5QK2FUT2xOeitsdXNyZktJY2pX?=
+ =?utf-8?B?eXFJYTVPUTVkM2JiOWZoYkFLWlpucDh2QVI1K2dUSTRCeUFFOENkZDZjbVVP?=
+ =?utf-8?B?dzUzTDRlemUxZlk1dTMxMlREbHNRQ3YxMmJNUmxRai9vaDFkY3Zsam9rMkdB?=
+ =?utf-8?B?dHprZEQ1WjMwVDNXWEVqajZ0bWR2cFFxWXdyejR0RTJPa1lPR1lzTnUvRXJM?=
+ =?utf-8?B?MUVPdFhVZ3ZWMWNhMlNKK0NhcUFZZTNEVC9MRmwxSmFsRlZ0T0JXWEJrY3dW?=
+ =?utf-8?B?UWxodCthZ0ZwMkI1UjdkUmcrOWJtTXU0OFRYYmtlSi9TeTd5dEhvOGhFQThy?=
+ =?utf-8?B?YklSM3R3NGVZZ0pUTE5uaXAxeHZVbGRvZGxiejJkMit3UlN6UnlGb2QyWnR4?=
+ =?utf-8?B?VUM1UzJhdDY4dGYxbzErRlVIUng5Y0JJaDFJMFhmdUJsTUxrbjNUVW1FdGJL?=
+ =?utf-8?B?NVp4YnBFbGkveXJsT0x3ZDZxa0JjS1dYdExrazRnN1lnSm13SlFTN3p0SUJ1?=
+ =?utf-8?B?Q0kxd3dSb3BGYWY3NkZXaTdwMkkwcFNTZ013eVkvc0VqTVVycGt0RnpOZDQ4?=
+ =?utf-8?B?Q0k2S00yQTRnWE5ZQzl4Wm8ySS9VVmpqY0xEUGR0Y3Z1NGZHallkbHNSVm5O?=
+ =?utf-8?B?VUF2ZGY4ejM3RnFyNHF2dDQxd3RNZ3FrTm5BL0VReHVRNCtYd000bURNQ1RM?=
+ =?utf-8?B?R2dKLzVHLzlGamYrUnc3akdEVHFvREdNelFCWGYySXdKUERFRkRvbjZHakZ4?=
+ =?utf-8?B?ZEdsdWNleE1lYzNhSVZ4USsrL051YllFN2NZbjR4L0Znb3J5NkM2c2tXUHRI?=
+ =?utf-8?B?ajY3M3Qxbnk4Z25LcEZwbHU0Yi9MTVc0REZSNlhRM0g2SFBYV2RIcGxYUGpC?=
+ =?utf-8?B?eDBxM09valZzMnUxcFRKeWwrc0xRTE1lZFIrR200Sk5GNzR6VUQ5a0FwT2FT?=
+ =?utf-8?B?ckNLOGNQRFhSWUlwYmdBMlh2TkpibW94Smw0b2JJcFpNOVFINzkvY3dHb09r?=
+ =?utf-8?B?NmNmTlMrTHV4T3Q2RVpCWTF4LzBXVW02eTVBQTQyWTk1M0pVc0hoL3ZjUHZk?=
+ =?utf-8?B?cnkxczVsZGtPaG5YajV3QUp3bFZ0VWpFb2ZkczB0bnI1Mno4UWM5UkMwL2hP?=
+ =?utf-8?B?TmxvVGtMODV3S0xnWlB6VHFobW1laVd4UjJVVElFbG50NDRRaENUMGwrSjVJ?=
+ =?utf-8?B?bkRoNzNyc2tsaC9jR045YnhaeUhSbGpJNnJreC9oN0xPL25IOHQyMk92U2ZU?=
+ =?utf-8?B?UHRCSXJLYmJnTTB3MUs3NEgyUVAxWjJjSDdtRUdtWWhpSFVnNHJHM1pyNTdt?=
+ =?utf-8?B?OStHWm5zajZwVmU2UkhsclNFVHoxbXgwcnEzWlowa2dLOHV2bnlHY1BpWXJG?=
+ =?utf-8?B?ZVBJa3lJVWRDN2dETksxLzVPL1YweXJ0bzlxOXJRbGJQTFNvRmdjREM5ZHFU?=
+ =?utf-8?B?ejY2NVIvWXRiSnUyK2dCZ0QyckYyZHFHLytyalhPblhkV2diTFdldmZHd2Ix?=
+ =?utf-8?B?dEVVMmlsMVpPU2hEdjV5ZENrcGowUWF3OHR5djFiWUJqeWM5UWJQUWRMK0U4?=
+ =?utf-8?B?djhEZ3ozbWZibFBjVk1VVC9OUmI3ckIxc0s2dDZCSlJMMElCa3N5OVU5VVl0?=
+ =?utf-8?B?K1dMOUlSN3FMc2FVUytTY3BpaFFUN2JhK0VGVFFOcjJrcC95eUVmVmZvdnBp?=
+ =?utf-8?B?dFRSVzNUVThPRlIrTUpZTmQvaGozQW5lM05PWjJFTHZpelUwWTU2S2prdzJw?=
+ =?utf-8?B?U3BVNWdVVnNrYStsYVhqTTN1eVlOQUhYcVpiQU9Bdnp6a0ErZHJlcG5nRE52?=
+ =?utf-8?B?V3JEMzUvQW44enoxOUZKWUk1dmd4STd0dTdSQ2svbWRxRUExR2dUN2Y3Z3Z3?=
+ =?utf-8?Q?PFVDxptxCrfR5M7TDegYdx9mC?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7df1da37-9a3b-4fbb-cfd8-08db3530f81e
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6604.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 17:21:04.2913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y3RRoJZkqnty6MduhNduz2HRyFO1o4nykUYj5iI3jO4qfU9l84BADSmmozVVrX8WBj4TO3fEtu6yjSBZKaIZ3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6466
+X-Spam-Status: No, score=-1.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,178 +134,90 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The IPQ9574 platform has 4 Gen3 PCIe controllers: two single-lane
-and two dual-lane based on SNPS core 5.70a
-The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
-Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-which reuses all the members of 'ops_2_9_0' except for the post_init
-as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
-and 1_27_0.
-Also, modified get_resources of 'ops 2_9_0' to get the clocks
-from the device tree and modelled the post init sequence as
-a common function to avoid code redundancy
+On 4/4/23 3:30 AM, Thierry Reding wrote:
+> On Mon, Mar 27, 2023 at 09:58:19AM -0700, Dipen Patel wrote:
+>> On 3/25/23 4:07 AM, Krzysztof Kozlowski wrote:
+>>> On 23/03/2023 02:29, Dipen Patel wrote:
+>>>> Introducing nvidia,gpio-controller property from Tegra234 SoCs onwards.
+>>>> This is done to help below case.
+>>>>
+>>>> Without this property code would look like:
+>>>> if (of_device_is_compatible(dev->of_node, "nvidia,tegra194-gte-aon"))
+>>>> 	hte_dev->c = gpiochip_find("tegra194-gpio-aon",
+>>>> 				   tegra_get_gpiochip_from_name);
+>>>> else if (of_device_is_compatible(dev->of_node, "nvidia,tegra234-gte-aon"))
+>>>> 	hte_dev->c = gpiochip_find("tegra234-gpio-aon",
+>>>> 				   tegra_get_gpiochip_from_name);
+>>>> else
+>>>> 	return -ENODEV;
+>>>>
+>>>> This means for every future addition of the compatible string, if else
+>>>> condition statements have to be expanded.
+>>>>
+>>>> With the property:
+>>>> gpio_ctrl = of_parse_phandle(dev->of_node, "nvidia,gpio-controller", 0);
+>>>> ....
+>>>> hte_dev->c = gpiochip_find(gpio_ctrl, tegra_get_gpiochip_from_of_node);
+>>>>
+>>>> This simplifies the code significantly. The introdunction of this
+>>>> property/binding does not break existing Tegra194 provider driver.
+>>>>
+>>>> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+>>>> ---
+>>>>  .../timestamp/nvidia,tegra194-hte.yaml        | 31 +++++++++++++++++--
+>>>>  1 file changed, 29 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+>>>> index eafc33e9ae2e..841273a3d8ae 100644
+>>>> --- a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+>>>> +++ b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+>>>> @@ -51,6 +51,12 @@ properties:
+>>>>        LIC instance has 11 slices and Tegra234 LIC has 17 slices.
+>>>>      enum: [3, 11, 17]
+>>>>  
+>>>> +  nvidia,gpio-controller:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>> +    description:
+>>>> +      The phandle to AON gpio controller instance. This is required to handle
+>>>> +      namespace conversion between GPIO and GTE.
+>>>> +
+>>>>    '#timestamp-cells':
+>>>>      description:
+>>>>        This represents number of line id arguments as specified by the
+>>>> @@ -65,22 +71,43 @@ required:
+>>>>    - interrupts
+>>>>    - "#timestamp-cells"
+>>>>  
+>>>> +allOf:
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            enum:
+>>>> +              - nvidia,tegra234-gte-aon
+>>>> +    then:
+>>>> +      required:
+>>>> +        - nvidia,gpio-controller
+>>>> +
+>>>>  additionalProperties: false
+>>>>  
+>>>>  examples:
+>>>>    - |
+>>>>      tegra_hte_aon: timestamp@c1e0000 {
+>>>>                compatible = "nvidia,tegra194-gte-aon";
+>>>> -              reg = <0xc1e0000 0x10000>;
+>>>> +              reg = <0x0 0xc1e0000 0x0 0x10000>;
+>>>
+>>> This is not really explained in commit msg... are you sure you tested it?
+>> I have to revert this part back in next patch as when I upgraded dtsschema it gave me errors.
+> 
+> We need the 0x0 in the DTS files because we have #address-cells = <2>
+> and #size-tells = <2>. For the examples, those default to just 1 cell,
+> so this can't be an exact copy of what we have in the DTS files.
+> 
+> Please make sure to always validate the bindings and examples.
 
-Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
----
- Changes in V2:
-	- Updated the commit message with details on the PCIe controller
-	- Updated ops_2_9_0 to get the clocks from the DT
-	- Added ops 1_27_0 for ipq9574 which reuses the functions of 
-	  existing ops_2_9_0 except for the post init sequence which is 
-	  modelled as a common function to handle the difference in 
-	  SLV_ADDR_SPACE_SIZE configuration
-
- drivers/pci/controller/dwc/pcie-qcom.c | 62 ++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index a232b04af048..b03d182eb283 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -114,6 +114,7 @@
- 
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
-+#define SLV_ADDR_SPACE_SZ_1_27_0		0x08000000
- 
- #define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
- 
-@@ -189,8 +190,9 @@ struct qcom_pcie_resources_2_7_0 {
- };
- 
- struct qcom_pcie_resources_2_9_0 {
--	struct clk_bulk_data clks[5];
-+	struct clk_bulk_data *clks;
- 	struct reset_control *rst;
-+	int num_clks;
- };
- 
- union qcom_pcie_resources {
-@@ -1308,17 +1310,10 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int ret;
- 
--	res->clks[0].id = "iface";
--	res->clks[1].id = "axi_m";
--	res->clks[2].id = "axi_s";
--	res->clks[3].id = "axi_bridge";
--	res->clks[4].id = "rchng";
--
--	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
--	if (ret < 0)
--		return ret;
-+	res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
-+	if (res->clks < 0)
-+		return res->num_clks;
- 
- 	res->rst = devm_reset_control_array_get_exclusive(dev);
- 	if (IS_ERR(res->rst))
-@@ -1331,7 +1326,7 @@ static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 
--	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+	clk_bulk_disable_unprepare(res->num_clks, res->clks);
- }
- 
- static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-@@ -1360,19 +1355,16 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
- 
- 	usleep_range(2000, 2500);
- 
--	return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-+	return clk_bulk_prepare_enable(res->num_clks, res->clks);
- }
- 
--static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+static int qcom_pcie_post_init(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
- 	val &= ~BIT(0);
- 	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-@@ -1401,7 +1393,7 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
- 
- 	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
--			PCI_EXP_DEVCTL2);
-+		PCI_EXP_DEVCTL2);
- 
- 	for (i = 0; i < 256; i++)
- 		writel(0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + (4 * i));
-@@ -1409,6 +1401,26 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ_1_27_0,
-+	       pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	qcom_pcie_post_init(pcie);
-+
-+	return 0;
-+}
-+
-+static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ,
-+	       pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	qcom_pcie_post_init(pcie);
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-@@ -1620,6 +1632,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-+static const struct qcom_pcie_ops ops_1_27_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_9_0,
-+	.init = qcom_pcie_init_2_9_0,
-+	.post_init = qcom_pcie_post_init_1_27_0,
-+	.deinit = qcom_pcie_deinit_2_9_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct qcom_pcie_cfg cfg_1_0_0 = {
- 	.ops = &ops_1_0_0,
- };
-@@ -1652,6 +1673,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
- 	.ops = &ops_2_9_0,
- };
- 
-+static const struct qcom_pcie_cfg cfg_1_27_0 = {
-+	.ops = &ops_1_27_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-@@ -1829,6 +1854,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
--- 
-2.17.1
+Ack...
+> 
+> Thierry
 
