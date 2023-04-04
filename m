@@ -2,130 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 052A46D5E97
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 13:06:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA8E76D5EA8
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 13:08:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234932AbjDDLGP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 07:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36584 "EHLO
+        id S234667AbjDDLIl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 07:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234800AbjDDLF7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 07:05:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3B735A5;
-        Tue,  4 Apr 2023 04:03:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03A6563210;
-        Tue,  4 Apr 2023 11:03:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504B2C433EF;
-        Tue,  4 Apr 2023 11:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680606192;
-        bh=aJ+ukukh1/o+Hvdqjwyk7hNPpvFV5NVh+CzU1Ihgp6M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fEn2D/bNRNRPumV4inV0NckbLrNKhZkGg6gSrCIc5i1J1jpI7vpE+MjAF+UL1+f2w
-         vkAG+ToDGyTXS6K20v/5FqON1ToY881e++SawtsQFjKtE7gecfaTFGuI+1XPgS20wy
-         KskGloRvCRRML+BPTEqMEaoKGBVacttxBnbyXOoPdhgvZCWUScNc6h4bf3fjiRGR/g
-         mNDQ2IN0ZI7Fgad2HUsl+2WUPSs3Bc1Q7bqR5zVL1wbjCpoB39toL61/MLG9UgzBk/
-         G0SSqI8VZTVnJPu/YnOFYl9kty+nC6wfXRhjAqDRMf9GeG7eMeq0S6dNmKjwhWeGM2
-         DVW8VrFiZR+yA==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pjeRR-005atW-MV;
-        Tue, 04 Apr 2023 12:03:09 +0100
-MIME-Version: 1.0
-Date:   Tue, 04 Apr 2023 12:03:09 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Devi Priya <quic_devipriy@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
-        marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org,
-        geert+renesas@glider.be, rafal@milecki.pl, nfraprado@collabora.com,
-        broonie@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com,
-        quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com,
-        quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com,
-        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
-Subject: Re: [PATCH V11 3/4] arm64: dts: qcom: Add support for ipq9574 SoC and
- RDP433 variant
-In-Reply-To: <20230404101622.5394-4-quic_devipriy@quicinc.com>
-References: <20230404101622.5394-1-quic_devipriy@quicinc.com>
- <20230404101622.5394-4-quic_devipriy@quicinc.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <d410c51ee4beeb4dfee80e13d54d598b@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: quic_devipriy@quicinc.com, agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org, geert+renesas@glider.be, rafal@milecki.pl, nfraprado@collabora.com, broonie@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com, quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com, quic_anusha@quicinc.com, quic_poovendh@quicinc.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S234611AbjDDLI0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 07:08:26 -0400
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 094F23A8C;
+        Tue,  4 Apr 2023 04:06:53 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 59BA2581F56;
+        Tue,  4 Apr 2023 07:06:52 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 04 Apr 2023 07:06:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1680606412; x=1680613612; bh=z7
+        EzKZ0L03Vqajs+ogmzIxsIatsg8LuRD8oJ+p9J0SQ=; b=GnAWMe7LYftE+EzS5W
+        WOMzwLNVzjI9xjmYSaYEiCwtAe6jPlylQa2Fd7r1D5jPNZOSUEQqhmxRnPFOgU8W
+        WC8mNfm26+rhBxaI1sYbNO8IbAG39tY2USQliLK5MBMvnth1cB/aVdCJSTL++Q0M
+        jp2GKbTRpfCbLaWyWul7GZrhK9+qLkfi87LntytmpP/XDUfOHmCetOcPa1bWz2qP
+        ryiE694F8xPZ+vshZJEMJE/xHnO7MC2tEyvDSbl6guIotbD5G19VSWoCae7UJKSR
+        lNHHMA+lGjR1WXud18FhlMTjCmNpBKQuEMPOWf1WMzqEA0YM7kb4w94yiB9H2/nl
+        IleA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1680606412; x=1680613612; bh=z7EzKZ0L03Vqa
+        js+ogmzIxsIatsg8LuRD8oJ+p9J0SQ=; b=J2cm9zBGE9SXJJkI9w4MbSdW+Z90K
+        ed6R7RdlRFhcHMea2g0jA+rjsbKmdhQUMALfnfjNFAf0o7OWMabxP4c/Vs0CSJpN
+        /9g0Qw1CvJm/OfZ1ld9BoV3Pt1fpbhftfmLfj+XCgm0KjJEbZfOAoTbtOzGQ/Zug
+        F/0LPJY0zxpyuN4ouYvGSLUz0HQBXfrPVq1vu4grqah9ADA0/oapLfWU0KC+eD0E
+        rlcl90w4cJuc+syN32E4Z9g9J5ICptvO/1XeivZPirxkJjR+Pf1iSsiziToIqU0V
+        BkuucE9ib7K163aCDV9ytieu4JyKOQFnXa6fUmwNHDYjdDbSr/HDw/SLQ==
+X-ME-Sender: <xms:ygQsZEnCgUPZ8JbS-8VP0OAvdijeGFmJD7fQ3AFWHL4BCnLt3_rogA>
+    <xme:ygQsZD1rDwS86pHr9alTivTRygqat2h53eXMMFp0xNNFeIjc1UQDvQctQszXcCob7
+    ls-8q4ZRVfNIRZZc6o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiledgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:ywQsZCrPhU64C5rSp1CXgBls8Hx_6__QDPdtx6NDedRHnxx7ChZFiw>
+    <xmx:ywQsZAldtFKVm1jZCPEu-uIQsatmNC7dbMd5g8ausQ8rijBjWUiJpg>
+    <xmx:ywQsZC138RABmk_OW4ckpB4mYsBiazH8XUmdAnuVd49yxjhj7tnbIg>
+    <xmx:zAQsZF_8VYUsO5M4ZN0lxPtlAquo8dT-hp6azBitrfy9Uhgr6uJ3pw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E507AB60092; Tue,  4 Apr 2023 07:06:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-238-g746678b8b6-fm-20230329.001-g746678b8
+Mime-Version: 1.0
+Message-Id: <2a627c49-e0a3-4a7f-8c0a-37b1d3cb85dd@app.fastmail.com>
+In-Reply-To: <20230404082401.1087835-1-arnd@kernel.org>
+References: <20230404082401.1087835-1-arnd@kernel.org>
+Date:   Tue, 04 Apr 2023 13:06:30 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Arnd Bergmann" <arnd@kernel.org>,
+        "Tony Lindgren" <tony@atomide.com>
+Cc:     soc@kernel.org, "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        "Christian Lamparter" <chunkeey@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Johannes Berg" <johannes@sipsolutions.net>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Rob Herring" <robh+dt@kernel.org>, linux-wireless@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] p54spi devicetree conversion
+Content-Type: text/plain
+X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2023-04-04 11:16, Devi Priya wrote:
-> Add initial device tree support for Qualcomm IPQ9574 SoC and
-> Reference Design Platform(RDP) 433 which is based on IPQ9574
-> family of SoCs
-> 
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
-> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> ---
->  Changes in V11:
-> 	- Dropped the unused backup clock source bias_pll_ubi_nc_clk
-> 
->  arch/arm64/boot/dts/qcom/Makefile           |   1 +
->  arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts |  84 +++++++
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi       | 263 ++++++++++++++++++++
->  3 files changed, 348 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> 
+On Tue, Apr 4, 2023, at 10:23, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> I now revisited the earlier submission, hopefully addressing
+> all of the feedback correctly. This is still untested, but if
+> everyone is happy, it could still make it into v6.4.
+>
+> Patch 3 touches both driver and platform parts, and can't
+> easily be split up without breaking bisectability, so I think
+> it's easiest to merge it through the soc tree, with Christian's
+> Ack.
+>
+> Tony, I see you already sent a set of pull requests, let me know
+> if you want to pick up these patches for a future round (6.4
+> or 6.5), or if I should just apply them on top.
 
-[...]
+I just spotted two mistakes myself, so there will have to be a v3:
+Patch 1 is missing a changelog text, and patch 3 contains a typo
+that only now triggered in my randconfig builds.
 
-> +		intc: interrupt-controller@b000000 {
-> +			compatible = "qcom,msm-qgic2";
-> +			reg = <0x0b000000 0x1000>,  /* GICD */
-> +			      <0x0b002000 0x1000>,  /* GICC */
-
-This is definitely wrong. The GICC region cannot be less than
-8kB, as the GICC_DIR register is in the second 4kB region.
-
-I'm pretty sure the kernel shouts at you when booting at EL2.
-
-> +			      <0x0b001000 0x1000>,  /* GICH */
-> +			      <0x0b004000 0x1000>;  /* GICV */
-
-Same thing here.
-
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-
-Missing target CPU encoding.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+      Arnd
