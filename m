@@ -2,147 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA38E6D5C3E
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 11:44:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299FA6D5CE3
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 12:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233365AbjDDJoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 05:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42868 "EHLO
+        id S234317AbjDDKRd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 06:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234358AbjDDJo3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 05:44:29 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69A03C27
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 02:43:56 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id o32so18609149wms.1
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 02:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680601428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sfzrHqvHyLsWAPDz54joGKpO7tlrlcYlQl14281oUfc=;
-        b=kt6hKh2ZqwsC6EdtCzx3k/PeDcnjRiBhD5XFex3ZkLIMrbbKYK4Nhlec4dI3jW42Fo
-         +tjIFxb/rSXWPxbJmC8Q92QAPNJxFG/D8qzagCYjtRK3Phd6sktRA/2tYIGQ9wbnPb/i
-         cm49Vu7ptAaSIL41+rGvFxkY6VAw/1xVQggZdVKhIJurg1JoY/pzl0eFoya6v56FrJlG
-         0CFJMypiciBcGJ3Yl4e93SSxMNngkfjohOJ21fMipS6fLeyQ0WE/nTyzEoRyAyq+4S4W
-         DuNK20eUuh5gHAinueYKiM6jsJBhXmO9QJoODwBodAzOLXpMl9GI1Pt/XkRH8dIa9rLr
-         ogzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680601428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sfzrHqvHyLsWAPDz54joGKpO7tlrlcYlQl14281oUfc=;
-        b=CJoOAEt0mncTRTnuCK8GMPMN0Ru0/H2dvgX1FGPPsHKkel8QaaSyxcoVc8Q8doaQdo
-         O8YJUhfD2BxlbBx+77WAr3TR6op8m7dK3h/ZvJoPDuTTjtU0/QfCX4JQPEMtB2WOaH4T
-         h1c5o5Ch+5egAiFFSGMrahjE1oWdd9lUaWOngFRZrnAEnBTBtxScrPgpsE3CGwnhpnat
-         LoRVw8dVrg7v9ryghoWj/XjnNVLycmdl+L7dKsT9d2QHjcNHcTwgIIgHHJu8IhndLZ5S
-         2eEzGX+Oq+fTbq6FStV1IfoKxIclkmnPNHfD0KNnqI1uyE3dtB7hNd5bh3Qiac7I/BEX
-         HaVQ==
-X-Gm-Message-State: AAQBX9eJqTuItqqKK6+wq1LlkutsBcxrR2Ig7Q6DZduZhe0AWOeBVDUn
-        wWm0NbsCK55r7MEnwG/Sqos6QBTELZ39Q4306ym25Q==
-X-Google-Smtp-Source: AKy350Z1tJnnTPViJm2Vx27jvJEU/2RWZZbOBSkvq/1whW9j1cgHC1V6qAqRs6vYy5sUFAvkin6P5OpplLMG/vJF7Fk=
-X-Received: by 2002:a05:600c:201:b0:3ed:1f9f:41d5 with SMTP id
- 1-20020a05600c020100b003ed1f9f41d5mr581365wmi.0.1680601427875; Tue, 04 Apr
- 2023 02:43:47 -0700 (PDT)
+        with ESMTP id S234275AbjDDKRc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 06:17:32 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CC28F;
+        Tue,  4 Apr 2023 03:17:31 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 334A9R5P004323;
+        Tue, 4 Apr 2023 10:16:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=y+Enk9ytXsoOaS4RA9WDGye9PNpq6OKRR2me1LIQVw4=;
+ b=Zz7TilLYPdHB695eDJbqOANMYDrq5LiUYmL/tUSHIcS2+W+T1mBMVHltDTEEhzLQVEPr
+ 1CATq1ZvCZhNVzbRVP02ZwMFhfTQqdaZa5Xxm70ZHKB07npSmlbzM9ZpuFKDPT64tL2v
+ JPQo7U5Sl5W68zi3yyVhPZXNUz3KEKQvpOe0A6CorxGEpKqD0jucACAyCaBDLIDHX6Ac
+ ZHKmg/RATANN2V6Z66O9UTh7ajkvD6E9XFVFRAcf9V5Fbz/azGvuhUgT6hVFugjgmWR8
+ Lgv66xOboVM/q37agT+7gbEcLI+Z9NaivAX/MTaoPe+Mb367+pKCYpMzpyef9J4LGDrf tg== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pqusu374m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Apr 2023 10:16:47 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 334AGkmd020977
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 4 Apr 2023 10:16:46 GMT
+Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Tue, 4 Apr 2023 03:16:36 -0700
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <geert+renesas@glider.be>, <rafal@milecki.pl>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_poovendh@quicinc.com>
+Subject: [PATCH V11 0/4] Add minimal boot support for IPQ9574
+Date:   Tue, 4 Apr 2023 15:46:18 +0530
+Message-ID: <20230404101622.5394-1-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <ZAdMB+eGT3TQEo7y@xpf.sh.intel.com> <ZAdVvximUvRXcGZZ@xpf.sh.intel.com>
- <ZCvusEIauvO8BLM5@xpf.sh.intel.com>
-In-Reply-To: <ZCvusEIauvO8BLM5@xpf.sh.intel.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 4 Apr 2023 11:43:36 +0200
-Message-ID: <CANn89iJjqTyev28kzEwBjoNafn_4Ku3ZijJxQ_+Tc93TaG3D=g@mail.gmail.com>
-Subject: Re: [Syzkaller & bisect] There is WARNING: refcount bug in
- sock_map_free in v6.3-rc1
-To:     Pengfei Xu <pengfei.xu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, ast@kernel.org,
-        john.fastabend@gmail.com, heng.su@intel.com, lkp@intel.com,
-        linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        yi1.lai@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: w5j8UAnDRZEjmhupV-CrHj_ekU1Y_FR3
+X-Proofpoint-ORIG-GUID: w5j8UAnDRZEjmhupV-CrHj_ekU1Y_FR3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-04_03,2023-04-03_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 suspectscore=0 spamscore=0 clxscore=1011
+ priorityscore=1501 mlxlogscore=575 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304040094
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 11:31=E2=80=AFAM Pengfei Xu <pengfei.xu@intel.com> w=
-rote:
->
-> ++ GPIO and kself-test mailing list.
->
-> Hi kernel experts,
->
-> It's a soft remind.
->
-> My colleague Lai Yi found that similar "refcount_t: underflow; use-after-=
-free"
-> issue still existed in v6.3-rc5 kernel on x86 platforms.
->
-> We could reproduce issue from kself-test: gpio-mockup.sh easily:
-> kernel/tools/testing/selftests/gpio/gpio-mockup.sh:
->
-> "
-> [ 5781.338917] -----------[ cut here ]-----------
-> [ 5781.344192] refcount_t: underflow; use-after-free.
-> [ 5781.349666] WARNING: CPU: 250 PID: 82496 at lib/refcount.c:25 refcount=
-_warn_saturate+0xbe/0x110
-> [ 5781.359550] Modules linked in: gpio_mockup isst_if_mmio isst_if_mbox_p=
-ci intel_th_sth stm_core intel_th_pti intel_th_pci intel_th_gth pmt_telemet=
-ry pmt_class intel_vsec intel_rapl_msr intel_rapl_common nfsv3 rpcsec_gss_k=
-rb5 auth_rpcgss nfsv4 nfs lockd grace bridge stp llc sunrpc intel_uncore_fr=
-equency intel_uncore_frequency_common i10nm_edac nfit x86_pkg_temp_thermal =
-intel_powerclamp coretemp iTCO_wdt ofpart kvm_intel intel_pmc_bxt iTCO_vend=
-or_support spi_nor mtd intel_sdsi kvm spdm irqbypass dax_hmem joydev asn1_e=
-ncoder snd_pcm mei_me i2c_i801 spi_intel_pci isst_if_common idxd snd_timer =
-intel_th i2c_smbus spi_intel mei i2c_ismt ipmi_ssif cxl_acpi ipmi_si cxl_co=
-re acpi_power_meter crc32c_intel i40e igb dca igc pinctrl_emmitsburg pinctr=
-l_intel pwm_lpss fuse [last unloaded: isst_if_mmio]
-> [ 5781.438080] CPU: 250 PID: 82496 Comm: modprobe Not tainted 6.3.0-rc5 #=
-1
-> [ 5781.449711] Hardware name: Intel Corporation, BIOS IFWI 03/12/2023
-> [ 5781.461615] RIP: 0010:refcount_warn_saturate+0xbe/0x110
-> [ 5781.467585] Code: 01 01 e8 75 56 8e ff 0f 0b c3 cc cc cc cc 80 3d 4c 6=
-7 ac 01 00 75 85 48 c7 c7 b0 31 cd a9 c6 05 3c 67 ac 01 01 e8 52 56 8e ff <=
-0f> 0b c3 cc cc cc cc 80 3d 27 67 ac 01 00 0f 85 5e ff ff ff 48 c7
-> [ 5781.488761] RSP: 0018:ff45a7f44d39feb0 EFLAGS: 00010286
-> [ 5781.494745] RAX: 0000000000000000 RBX: ffffffffc0b36540 RCX: 000000000=
-0000000
-> [ 5781.502871] RDX: 0000000000000002 RSI: ffffffffa9c065c8 RDI: 00000000f=
-fffffff
-> [ 5781.510984] RBP: ff31c1afa78cb800 R08: 0000000000000001 R09: 000000000=
-0000003
-> [ 5781.519100] R10: ff31c1b6fc000000 R11: ff31c1b6fc000000 R12: ff31c1afa=
-78c4f40
-> [ 5781.527215] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
-0000000
-> [ 5781.535337] FS: 00007f9bc705a740(0000) GS:ff31c1b700280000(0000) knlGS=
-:0000000000000000
-> [ 5781.544529] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 5781.551063] CR2: 00007f9bc5e50dc0 CR3: 000000093b36c003 CR4: 000000000=
-0f71ee0
-> [ 5781.559180] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000000000=
-0000000
-> [ 5781.567307] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 000000000=
-0000400
-> [ 5781.575413] PKRU: 55555554
-> [ 5781.578551] Call Trace:
-> [ 5781.581394] <TASK>
-> [ 5781.583868] gpio_mockup_exit+0x33/0x420 [gpio_mockup]
-> [ 5781.589756] __do_sys_delete_module.constprop.0+0x180/0x270
-> [ 5781.596112] ? syscall_trace_enter.constprop.0+0x17f/0x1b0
-> [ 5781.602354] do_syscall_64+0x43/0x90
+The IPQ9574 is Qualcomm's 802.11ax SoC for Routers,
+Gateways and Access Points
 
-I hear you but this trace has nothing to do with the bpf/sockmap commit ?
+This series adds minimal board boot support for ipq9574-rdp433 variant
 
-My change looks correct, so your bisection might simply trigger because
-of a wider window for another bug to surface.
+V10 can be found at:
+https://lore.kernel.org/linux-arm-kernel/20230327132718.573-1-quic_devipriy@quicinc.com/
 
-John, do you have an idea of what is going on here ?
+Changes in V11:
+	- Detailed change log is added to the respective patches
+
+Devi Priya (4):
+  dt-bindings: clock: Add ipq9574 clock and reset definitions
+  clk: qcom: Add Global Clock Controller driver for IPQ9574
+  arm64: dts: qcom: Add support for ipq9574 SoC and RDP433 variant
+  arm64: defconfig: Enable IPQ9574 SoC base configs
+
+ .../bindings/clock/qcom,ipq9574-gcc.yaml      |   60 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts   |   84 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  263 +
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-ipq9574.c                | 4225 +++++++++++++++++
+ include/dt-bindings/clock/qcom,ipq9574-gcc.h  |  213 +
+ include/dt-bindings/reset/qcom,ipq9574-gcc.h  |  164 +
+ 10 files changed, 5021 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq9574.c
+ create mode 100644 include/dt-bindings/clock/qcom,ipq9574-gcc.h
+ create mode 100644 include/dt-bindings/reset/qcom,ipq9574-gcc.h
+
+
+base-commit: 31bd35b66249699343d2416658f57e97314a433a
+-- 
+2.17.1
+
