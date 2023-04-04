@@ -2,86 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9AE46D6677
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 16:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1046D68D8
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Apr 2023 18:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbjDDO7K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Apr 2023 10:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59922 "EHLO
+        id S235271AbjDDQaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Apr 2023 12:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234083AbjDDO6z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 10:58:55 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E456859E1
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 07:58:03 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id o11so31558222ple.1
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 07:58:03 -0700 (PDT)
+        with ESMTP id S232642AbjDDQaL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Apr 2023 12:30:11 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58783468F
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 09:30:08 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id h17so33426834wrt.8
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 09:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680620283;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H9uYwVcXo7cBUUBOTLZ2J2lrgVJ/xfkFZclj3HBehK8=;
-        b=UAETlx+9wQOEYw9NkD5esQ22zJR9CYzlPJFuuru/zG8A7bcoHUo5CXJ9VMeQYHfVj4
-         a6KAda1lEkoabUz13lUVXFC0HOTYZxNrY28ZtkJwknBw2NpS4RPwtznfSXXUrdnZI0T7
-         QmwkjqpQrUKWOZC3HtGUeObmFnSzFFtkmfJSqhp40MV8d2URnW6nb/8H83pnqsLUpNCo
-         9E4Ebl0P7KOXfKbvh46S7fB2ewb8ceCDSz600lMgQ4Jr1IKVVBcoP4jovOaIi2xfINbo
-         ZiZlIOrHGJNGygni7UnfXlF+ipe0cAdJEAT54EvufshEYUUh8gD6sHYaV/jSusLemeot
-         wXHw==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680625807;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L4JapEkf/UT9+KWLrxkEtmxGD1gUOAOOQVFLyzKKIc8=;
+        b=Z+fCacJ8PpEfPD1lGzf+YS9NIJl7aTWfjQfFyHjysRF7Pd2RHn0S2P/zKFwyX+bIIj
+         7TXeu7pbkWsw6JoLT9cuY/IheNiaG7nA+KIjcIzugpmXx4SJ3hHrSvNkbOfv775JT7+u
+         wtNLPw8TiXZtsQ37cBPe4Ef9cqKZvpF7H80UI/qBLZS1Ajmqeg/wfJh5IJEDA03NFelX
+         +RY1bopAsuzkcUMDgOsEPsL8YsAXXLLjBzXLgFa/gGXIP1j+KBCny0z2wvaLFNG9gVCZ
+         jIXQUHt6sVjgEurNhaWE65iBSrlh6ROxMpXo59WfVmUY8cqbRPJsbEiCVJr1RWYWtxnL
+         Au6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680620283;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H9uYwVcXo7cBUUBOTLZ2J2lrgVJ/xfkFZclj3HBehK8=;
-        b=WTUAPhZVssuftt34/9Lb2slFhUo6vXR6LrTKNpnBrG+xiQYZWUXEcPTkph+o64rhqu
-         5WFLwH4GMI2DhmfPLE86EaPn7NESnyIxR/imwp9DDf+9aXTWN4trbYPx0C7ZBhA1YdNY
-         Wip+CFIYYjySD5qWzPrzYXgoz4PUlcwOzrrvm0vnYr0JtB30ooupdHl/UuKjBJ4Rz5KZ
-         VeM+5H5R/c19YjDmwDLwJGh3WjDoAp08YZmqbL/eh1yfa7LWZ16sE9fv6+o6crly5b2C
-         rOB+SAj2cSadi1283erOVTzHhNLoYRflv/EuHIUxi9x2GTBd5Qs1aT6HLyzk1uh3hSuI
-         EBaQ==
-X-Gm-Message-State: AAQBX9fMC+uQw3FmFvsaZ20tJKyIRaIq2a4Au5l9dBNHS54OuvBntP1C
-        Z8AK3Foc5t4fVL2NuG4giz2oQw==
-X-Google-Smtp-Source: AKy350YdY2blg+WDMTITRqonrmBC853Tqawrwror3LCdLvv5uZ3X8E8eImt5a/UgDnCMC9oeW3hnfg==
-X-Received: by 2002:a17:902:ec92:b0:1a2:87a2:c91a with SMTP id x18-20020a170902ec9200b001a287a2c91amr3262702plg.34.1680620283196;
-        Tue, 04 Apr 2023 07:58:03 -0700 (PDT)
-Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
-        by smtp.gmail.com with ESMTPSA id k17-20020a170902761100b0019ef86c2574sm8381272pll.270.2023.04.04.07.58.02
+        d=1e100.net; s=20210112; t=1680625807;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L4JapEkf/UT9+KWLrxkEtmxGD1gUOAOOQVFLyzKKIc8=;
+        b=6Z+KSVQbVCR8GzJR5BXKXlzkchxJMuDXH+oEJAx7HklJXHiaCby+PJZVV35y7B4Pko
+         wb1HCd6of/nfzy5DrUBVoU4lfniwdRRstggdDEhaAD3L/Q58FwaitjhHIxdNbQkL1VCy
+         CWZCJDSPAWlmrvVum89jJjrYptdUno3PHQeymxjMgAX7Y/3j/biiFp0MHoDkxiHnUYzg
+         2+n940YeCTulFYvRGr3WGydFU9Q1TSOtBbEJT1nYowKLT+M2e6aKiiy1Cr5f/ufJlRm9
+         JGZyXKMgb5mb1s4SflNkPkn2g3ddtUiA9d/1wzfM4VjZIrhcdcoa8/OOp/pA5W8cfb6+
+         2VlQ==
+X-Gm-Message-State: AAQBX9cjEsDg4S8fIkFZpqGwwnlOvSTADMzP4xT3VngWgRic0JtJc8mz
+        QSi5UAuynPqHNfXmL/TnhcrJ9A==
+X-Google-Smtp-Source: AKy350ZoiVI7akDEh1OhkqF9VC8rPnE07T8s4AvG4xojXwVhdyFwAyaiaP0bKaAkpCu/gp6xU3CEoQ==
+X-Received: by 2002:a5d:44cd:0:b0:2c7:c9e:2c41 with SMTP id z13-20020a5d44cd000000b002c70c9e2c41mr2170876wrr.57.1680625806717;
+        Tue, 04 Apr 2023 09:30:06 -0700 (PDT)
+Received: from [127.0.1.1] (158.22.5.93.rev.sfr.net. [93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id o7-20020adfe807000000b002e4cd2ec5c7sm12694528wrm.86.2023.04.04.09.30.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 07:58:02 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Tue, 04 Apr 2023 09:30:06 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH v3 0/3] Cleanup Mediatek pinctrl device tree binding
+Date:   Tue, 04 Apr 2023 18:29:48 +0200
+Message-Id: <20230327-cleanup-pinctrl-binding-v3-0-6f56d5c7a8de@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHxQLGQC/42Oy2rDMBBFfyVo3Yn1SFSlq/5H6UKajOIBRxaSI
+ xqC/71yloXSLs+FezgPUakwVfG2e4hCjSvPqYN52QkcfboQ8Lmz0FIbafQr4EQ+3TJkTriUCQK
+ nM6cLOGkP3kUXonWiv4OvBKH4hOP2v+Wh2b2BgmpY5sw4XBdn7HH4xbcpcqHIX8+4j8/OI9dlL
+ vdna1Pb+ndWUyAh2NORjKZD1PQe/H3iUGiP81Vs2qb/qdJdFbWKAdFIZX+q1nX9BgNBjDpPAQA
+ A
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Bernhard =?utf-8?Q?Rosenkr=C3=A4n?= =?utf-8?Q?zer?= 
-        <bero@baylibre.com>, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Alexandre Mergnat <amergnat@baylibre.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 00/11] Improve the MT8365 SoC and EVK board support
-In-Reply-To: <7h1ql0y0j7.fsf@baylibre.com>
-References: <20230203-evk-board-support-v4-0-5cffe66a38c0@baylibre.com>
- <7hy1ncydtc.fsf@baylibre.com>
- <CAFGrd9rKy9a4bUf1dkUtTogtWPFr5eu3jcsdaixi3hs_dWMwrg@mail.gmail.com>
- <CAFGrd9qLzcDJO_Fk_-B6XYuuxQzQoYLXmdp0Qj1Tszr0-sqNgw@mail.gmail.com>
- <7h1ql0y0j7.fsf@baylibre.com>
-Date:   Tue, 04 Apr 2023 07:58:01 -0700
-Message-ID: <7hy1n7wv7q.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2037; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=eKZr5omVCsYju6vcJ05uFu7hEJ9ODIzf7Yvw8lgbKMo=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBkLFCN6bpzQlgZZBk2XVT33Zav25Nt3Wm0eLurukKG
+ 9x1xzgWJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZCxQjQAKCRArRkmdfjHURUIOEA
+ CLpCFGeAVoWK6G6NgVYU3JTNmjXKIiQBBXX+TNNkh2ve+U3vQmk29RUNgra8P7BPoUQ+s/YrxNbrz+
+ yFYMAEoMV3UsWm3NxnYPIMwhTPDISLgpfRIo87oqB4NvdqcwlwfxfP+fcnHmFJYpiu6iEtaNb5ADnr
+ /WkidBWLOH/m5ShcQ8GsL4yp2lcPJ6QcL9N4H/c3n++b1/hO0v9oKccmj08gbu1KRVdpMXS026s5FP
+ aQNhSAAbG/DY10+w0N50P+4Knw4w8DBOAxPwLt7FCXRBpWTX/QFjKqrQW4UEER5MdMVI9A2hdIL5lM
+ jeag5+t1a11qvM1lb207hyT0SrY7xQ6+gvLn+aL/eQUQ7ZnjBkeVg/XCRVcbm3Ay+dsBwazUEbktPM
+ sQWdDgJ/yhWA+VSTNlLj2EtVGu+RN+muXOPmyoBE0qQmdLL7SOePRpOWvvD1e6kr2kDsNuSC9qEv4V
+ 1jFEv2f9h77Za6TRKVH/DowBhO2ah1jifDYyw9Ich2QsjnHSyOUR1tBLcrGlr+OjUkBTluH6DnZ1yO
+ TRsRg8Eu6ic/yZYMTc+MtWOWooIbqfsvVJByZYsTJ+qscyC2Edc3Zi4xbqGMaQhP/tHBk26auyZCEx
+ wfKQNYLisYQNiCSvnj/Li0Tdsf0a/tbTgdo7U31omZ4IpSucoOSP/d8WnB1A==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
@@ -91,17 +98,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+Deprecate properties which shall not exist, leaked upstream from downstream
+kernels, there's no reason to use them. Here the deprecated properties and
+the generic properties which will replace them:
 
-> Alexandre Mergnat <amergnat@baylibre.com> writes:
->
->> Here a build-able & working branch with dependencies:
->> https://gitlab.baylibre.com/baylibre/mediatek/bsp/linux/-/commits/amergnat/i350-evk-board-support
->
-> This branch doesn't compile.
+- mediatek,drive-strength-adv => drive-strength-microamp
+- mediatek,pull-up-adv        => bias-pull-up
+- mediatek,pull-down-adv      => bias-pull-down
 
-I'm wrong, it compiles fine.  I was on the wrong branch.
+Another commit has been added in v3 to make it easier to merge. [2]
 
-Sorry for the noise,
+Thanks AngeloGioacchino Del Regno to reported it. [1]
 
-Kevin
+[1]: https://lore.kernel.org/all/6e08d78f-ef4c-b228-f7d2-d63767ea87b8@collabora.com/
+[2]: https://lore.kernel.org/all/20230203-evk-board-support-v4-2-5cffe66a38c0@baylibre.com/
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
+
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+Changes in v3:
+- Port another commit which modify the pinctrl from this serie [2].
+- Rebased to linusw/linux-pinctrl as requested by the maintainer [3].
+- Link to v2: https://lore.kernel.org/r/20230327-cleanup-pinctrl-binding-v2-0-f21fbcc3016e@baylibre.com
+
+Changes in v2:
+- Change the bias-pull enum values to match with other Mediatek SoC.
+  That allows to use MTK generic define and be compliant with the MTK
+  common pinctrl driver.
+- Link to v1: https://lore.kernel.org/r/20230327-cleanup-pinctrl-binding-v1-0-b695e32e4f2e@baylibre.com
+
+---
+Alexandre Mergnat (3):
+      dt-bindings: pinctrl: mediatek: deprecate custom drive strength property
+      dt-bindings: pinctrl: mediatek: deprecate custom bias pull properties for mt8365
+      dt-bindings: pinctrl: mediatek,mt8365-pinctrl: add drive strength property
+
+ .../bindings/pinctrl/mediatek,mt8183-pinctrl.yaml  |  8 +++-
+ .../bindings/pinctrl/mediatek,mt8365-pinctrl.yaml  | 43 +++++++++++++++++++---
+ 2 files changed, 43 insertions(+), 8 deletions(-)
+---
+base-commit: 743d3336029ffe2bb38e982a3b572ced243c6d43
+change-id: 20230327-cleanup-pinctrl-binding-8064a8f8bf68
+
+Best regards,
+-- 
+Alexandre Mergnat <amergnat@baylibre.com>
+
