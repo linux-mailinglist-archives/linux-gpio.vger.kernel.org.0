@@ -2,124 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB8A6D8922
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 22:57:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FDC66D89A9
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 23:37:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjDEU5k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Apr 2023 16:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48786 "EHLO
+        id S233825AbjDEVhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Apr 2023 17:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjDEU5j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 16:57:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42A930F9;
-        Wed,  5 Apr 2023 13:57:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F89C628B5;
-        Wed,  5 Apr 2023 20:57:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47581C433EF;
-        Wed,  5 Apr 2023 20:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680728257;
-        bh=wf6YWrJlfwzYT6H2M5qNGDN0nezwrbGZ7P9NANYYYCE=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=G17btjVVanPqfd6bTQ7BauH5VSiiLmvLFE+WZFjU8VZxBc0eTFbKydiD4emIN7Yky
-         +B2oc+t+efgTNPhS+WCQUXOgEx3Tym6TROT+L1InX+mKAuLH3tfxs6p1d4lOO+6BJV
-         qoOt22QmfeteKsOOmSFyMCJZfXUA0SizzC4FA3Vva8712mDfWIHlwe+jFHKQ/MdCmm
-         JlX5RXwfO6f62TNmiPg77nVPCjMsECPlAqD8nMc5nsf78pBw+Hv4K25aQiECP7VVZk
-         bBJS4f2Rl9bi6budwy9sUSj5X+Zl9EhfJ+8a6keeXXlpY61LiauDO+EFH/dIPMCgCK
-         IOVH2fht3zO5w==
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        William Breathitt Gray <william.gray@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        techsupport@winsystems.com, pdemetrotion@winsystems.com,
-        quarium@gmail.com, jhentges@accesio.com, jay.dolan@accesio.com
-In-Reply-To: <cover.1680708357.git.william.gray@linaro.org>
-References: <cover.1680708357.git.william.gray@linaro.org>
-Subject: Re: (subset) [PATCH v6 0/3] Migrate the PCIe-IDIO-24 and WS16C48
- GPIO drivers to the regmap API
-Message-Id: <168072825499.2180850.13929278411634961607.b4-ty@kernel.org>
-Date:   Wed, 05 Apr 2023 21:57:34 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S233659AbjDEVhN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 17:37:13 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD507D85;
+        Wed,  5 Apr 2023 14:37:09 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id o6-20020a17090a9f8600b0023f32869993so40890247pjp.1;
+        Wed, 05 Apr 2023 14:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680730628;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PoNclKH1nYsZGnrvEAOJxEvKBpD/uYy7MIKqll7pqEs=;
+        b=gDqF7IkCuJavXVzDvwHcguNzLMX1UBBORNklBqrzDKocxQKGZlQJaIo6V1xD8vnDeX
+         SNTs/GHY/U7bFLupLXXsYLaKLK8tlWW+YXfBmZqgu/gvSl8tG1TQ26dPt7k/jika7wxP
+         nBk9yTqGr0jC6UQsNv6xH80AC84UYHZUplXFibb4xFxTf1YMfyF5BKzSW07Z272xm9z5
+         bQ2pkY9DoQ6iHBt/RVbmSqvFNLYlAryn9CvT7ksnc3aAvOSvmaqFPYtg9jOSQ016J7T3
+         RCUtSov7M8lKqIs05PnKOtxLMtPJZXPn8iyzbTFqK6LoZG2kMG6uZLO6W6ez6yc4QvrD
+         ADpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680730628;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PoNclKH1nYsZGnrvEAOJxEvKBpD/uYy7MIKqll7pqEs=;
+        b=ats/hz6MOZ4yi1+9lNfggIZfWt0HkXsB6izlqv5Iq7fTPnV9KeJbb+36UhOfGy0NR4
+         I+cT/BqD0KV3q9Z1lNG0ZhkA4LtrnUy8vos8enpsSIRKWYrAkOT/fhVeYryWG3EplTue
+         N6+/yCCwLlZkulmnmMiTE/EKYvUCMzG92DzCzKODH2XJBvd60IjA4BOuknBYG6IPzz8K
+         nZoRaEtTG9AA8GPJtSneinSazYEUYH+wkgazt2ZPCOmyKGyc7C9NPYxP1xR/hSlA1bay
+         4idf59FDWyW+lO0kG+VJOJJ6ocmnVPS6ZWeyFcgerx5ldCMCHiCRT0k2ZRLPV0+zcXSh
+         t+AQ==
+X-Gm-Message-State: AAQBX9evFfdCRP2CJ2D3zBRW/pS4QGKB8KScpnbcsz2EdRnA+KzS4HWA
+        vxujcbJNjZZv77qX7Zqvo0E=
+X-Google-Smtp-Source: AKy350Z1cfCQ2vnYROM1uwE30kubHcOoBXb5poeK9Z/8J9nClMuo3LxP94CR/wX8AwPfZaG000Oidg==
+X-Received: by 2002:a05:6a20:3824:b0:cb:77f0:9a42 with SMTP id p36-20020a056a20382400b000cb77f09a42mr552717pzf.33.1680730628299;
+        Wed, 05 Apr 2023 14:37:08 -0700 (PDT)
+Received: from localhost ([2605:59c8:4c5:7110:5120:4bff:95ea:9ce0])
+        by smtp.gmail.com with ESMTPSA id d26-20020a630e1a000000b0050bcf117643sm9404073pgl.17.2023.04.05.14.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 14:37:07 -0700 (PDT)
+Date:   Wed, 05 Apr 2023 14:37:06 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Pengfei Xu <pengfei.xu@intel.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     linux-kernel@vger.kernel.org, ast@kernel.org,
+        john.fastabend@gmail.com, heng.su@intel.com, lkp@intel.com,
+        linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        yi1.lai@intel.com
+Message-ID: <642dea024554c_1ab91208f4@john.notmuch>
+In-Reply-To: <ZCwujl7qJPvMsHKv@xpf.sh.intel.com>
+References: <ZAdMB+eGT3TQEo7y@xpf.sh.intel.com>
+ <ZAdVvximUvRXcGZZ@xpf.sh.intel.com>
+ <ZCvusEIauvO8BLM5@xpf.sh.intel.com>
+ <CANn89iJjqTyev28kzEwBjoNafn_4Ku3ZijJxQ_+Tc93TaG3D=g@mail.gmail.com>
+ <ZCwujl7qJPvMsHKv@xpf.sh.intel.com>
+Subject: Re: [Syzkaller & bisect] There is WARNING: refcount bug in
+ sock_map_free in v6.3-rc1
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 05 Apr 2023 11:45:41 -0400, William Breathitt Gray wrote:
-> Changes in v6:
->  - Wrap lines to 80 characters rather than 100 for set_type_config()
->  - Remove regmap_config max_register lines as superfluous
->  - Enable use_raw_spinlock to prevent deadlocks when running -rt kernels
->  - Check regmap_update_bit() ret value before goto exit_unlock
->  - Rename exit_early label to the more descriptive exit_unlock
->  - Add sparse annotations for lock acquire/release in
->    ws16c48_handle_pre_irq() and ws16c48_handle_post_irq()
->  - Explicitly add 0 to WS16C48_ENAB in ws16c48_irq_init_hw() for sake of
->    symmetry to match the other WS16C48_ENAB operations
-> Changes in v5:
->  - Refactor for map parameter removal from handle_mask_sync()
->  - Cleanups and line wrappings to 100 characters rather than 80
->  - Adjust to change mutex/spinlock_t type locks to raw_spin_lock_t type
->  - Remove pex8311_intcsr table configurations as superfluous
->  - Adjust to set pex8311_intcsr_regmap_config reg_base to
->    PLX_PEX8311_PCI_LCS_INTCSR
->  - Rename PAGE_FIELD_PAGE_* defines to POL_PAGE, ENAB_PAGE, and
->    INT_ID_PAGE
-> Changes in v4:
->  - Allocate idio24gpio before using it in idio_24_probe()
-> Changes in v3:
->  - Drop map from set_type_config() parameter list; regmap can be passed
->    by irq_drv_data instead
->  - Adjust idio_24_set_type_config() for parameter list
->  - Add mutex to prevent clobbering the COS_ENABLE register when masking
->    IRQ and setting their type configuration
-> Changes in v2:
->  - Simplify PCIe-IDIO-24 register offset defines to remove superfluous
->    arithmetic
->  - Check for NULL pointer after chip->irq_drv_data allocation
->  - Set gpio_regmap drvdata and use gpio_regmap_get_drvdata() to get the
->    regmap in idio_24_reg_map_xlate()
-> 
-> [...]
+Pengfei Xu wrote:
+> On 2023-04-04 at 11:43:36 +0200, Eric Dumazet wrote:
+> > On Tue, Apr 4, 2023 at 11:31=E2=80=AFAM Pengfei Xu <pengfei.xu@intel.=
+com> wrote:
+> > >
+> > > ++ GPIO and kself-test mailing list.
+> > >
+> > > Hi kernel experts,
+> > >
+> > > It's a soft remind.
+> > >
+> > > My colleague Lai Yi found that similar "refcount_t: underflow; use-=
+after-free"
+> > > issue still existed in v6.3-rc5 kernel on x86 platforms.
+> > >
+> > > We could reproduce issue from kself-test: gpio-mockup.sh easily:
+> > > kernel/tools/testing/selftests/gpio/gpio-mockup.sh:
+> > >
+> > > "
+> > > [ 5781.338917] -----------[ cut here ]-----------
+> > > [ 5781.344192] refcount_t: underflow; use-after-free.
+> > > [ 5781.349666] WARNING: CPU: 250 PID: 82496 at lib/refcount.c:25 re=
+fcount_warn_saturate+0xbe/0x110
+> > > [ 5781.359550] Modules linked in: gpio_mockup isst_if_mmio isst_if_=
+mbox_pci intel_th_sth stm_core intel_th_pti intel_th_pci intel_th_gth pmt=
+_telemetry pmt_class intel_vsec intel_rapl_msr intel_rapl_common nfsv3 rp=
+csec_gss_krb5 auth_rpcgss nfsv4 nfs lockd grace bridge stp llc sunrpc int=
+el_uncore_frequency intel_uncore_frequency_common i10nm_edac nfit x86_pkg=
+_temp_thermal intel_powerclamp coretemp iTCO_wdt ofpart kvm_intel intel_p=
+mc_bxt iTCO_vendor_support spi_nor mtd intel_sdsi kvm spdm irqbypass dax_=
+hmem joydev asn1_encoder snd_pcm mei_me i2c_i801 spi_intel_pci isst_if_co=
+mmon idxd snd_timer intel_th i2c_smbus spi_intel mei i2c_ismt ipmi_ssif c=
+xl_acpi ipmi_si cxl_core acpi_power_meter crc32c_intel i40e igb dca igc p=
+inctrl_emmitsburg pinctrl_intel pwm_lpss fuse [last unloaded: isst_if_mmi=
+o]
+> > > [ 5781.438080] CPU: 250 PID: 82496 Comm: modprobe Not tainted 6.3.0=
+-rc5 #1
+> > > [ 5781.449711] Hardware name: Intel Corporation, BIOS IFWI 03/12/20=
+23
+> > > [ 5781.461615] RIP: 0010:refcount_warn_saturate+0xbe/0x110
+> > > [ 5781.467585] Code: 01 01 e8 75 56 8e ff 0f 0b c3 cc cc cc cc 80 3=
+d 4c 67 ac 01 00 75 85 48 c7 c7 b0 31 cd a9 c6 05 3c 67 ac 01 01 e8 52 56=
+ 8e ff <0f> 0b c3 cc cc cc cc 80 3d 27 67 ac 01 00 0f 85 5e ff ff ff 48 c=
+7
+> > > [ 5781.488761] RSP: 0018:ff45a7f44d39feb0 EFLAGS: 00010286
+> > > [ 5781.494745] RAX: 0000000000000000 RBX: ffffffffc0b36540 RCX: 000=
+0000000000000
+> > > [ 5781.502871] RDX: 0000000000000002 RSI: ffffffffa9c065c8 RDI: 000=
+00000ffffffff
+> > > [ 5781.510984] RBP: ff31c1afa78cb800 R08: 0000000000000001 R09: 000=
+0000000000003
+> > > [ 5781.519100] R10: ff31c1b6fc000000 R11: ff31c1b6fc000000 R12: ff3=
+1c1afa78c4f40
+> > > [ 5781.527215] R13: 0000000000000000 R14: 0000000000000000 R15: 000=
+0000000000000
+> > > [ 5781.535337] FS: 00007f9bc705a740(0000) GS:ff31c1b700280000(0000)=
+ knlGS:0000000000000000
+> > > [ 5781.544529] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [ 5781.551063] CR2: 00007f9bc5e50dc0 CR3: 000000093b36c003 CR4: 000=
+0000000f71ee0
+> > > [ 5781.559180] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+> > > [ 5781.567307] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 000=
+0000000000400
+> > > [ 5781.575413] PKRU: 55555554
+> > > [ 5781.578551] Call Trace:
+> > > [ 5781.581394] <TASK>
+> > > [ 5781.583868] gpio_mockup_exit+0x33/0x420 [gpio_mockup]
+> > > [ 5781.589756] __do_sys_delete_module.constprop.0+0x180/0x270
+> > > [ 5781.596112] ? syscall_trace_enter.constprop.0+0x17f/0x1b0
+> > > [ 5781.602354] do_syscall_64+0x43/0x90
+> > =
 
-Applied to
+> > I hear you but this trace has nothing to do with the bpf/sockmap comm=
+it ?
+> > =
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+>    I just saw the same WARNING from kself-test: gpio-mockup.sh, maybe
+>    it's different issue, sorry.
+> "
+> refcount_t: underflow; use-after-free.
+> [ 5781.349666] WARNING: CPU: 250 PID: 82496 at lib/refcount.c:25
+> "
 
-Thanks!
+The  ./gpio-mockup.sh thing doesn't use sockmap at all right? I can't see=
 
-[1/3] regmap: Pass irq_drv_data as a parameter for set_type_config()
-      commit: 7697c64b9e4908196f0ae68aa6d423dd40607973
+why the bisec to that patch would happen off-hand.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> =
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>   Thanks!
+>   BR.
+>   -Pengfei
+> =
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > My change looks correct, so your bisection might simply trigger becau=
+se
+> > of a wider window for another bug to surface.
+> > =
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> > John, do you have an idea of what is going on here ?
 
-Thanks,
-Mark
-
+No idea here.
