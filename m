@@ -2,83 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC1786D74DB
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 08:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F30006D75B4
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 09:40:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237047AbjDEG7C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Apr 2023 02:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
+        id S237131AbjDEHkC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Apr 2023 03:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237044AbjDEG7C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 02:59:02 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96B84687
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 23:58:59 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9341434fe3cso23767366b.1
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 23:58:59 -0700 (PDT)
+        with ESMTP id S237137AbjDEHjy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 03:39:54 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEF812D
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Apr 2023 00:39:53 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id g19so32340433lfr.9
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Apr 2023 00:39:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680677938;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ge5tZ9KDzAcz+JwWlyHU3EWycDUOLBemzfQQA19mRWg=;
-        b=YMIQo8YkmwBb6P+OGjuYO1WXzdBweIi2Y9+BX+C+/kXe5iH+V896NMvfco3//uos7u
-         C0/JpSV7XK5y4nPJ+JxPoukF9kEzF3vdSOimcaYrQp7mUnAqVGq/mt8QK9ThSQ2Ek/3r
-         7PRU3fe4tjLaf3TDqObZ7PIAzNhvyMSaRh12rCGkQVecARcZLyhrDF6lrXUEtVYJZ41f
-         zW+qqYnRd6hC059vdRuhFmClVxvyynzjeOXzagE4JByU8Vn3wG3DP4tsQAlySbTZGKCC
-         TsbSk7neQooFmn/m39OR9NoohtRFaeBPP9uQ19SfNJo5jCwvkUuO13BUDO//8/9wqjkM
-         FPbA==
+        d=gmail.com; s=20210112; t=1680680391;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=trKLWSkkrTcQyTH6aAw3mKjWVdPgZ5R0yKwVxH0UJsU=;
+        b=SzILj73QuCtvfPX2EcruUcCbJqYXOBtU8q3ydpUQX0ELIbc3dZU3j2n3B2cSOOFC0J
+         hwn89DAawJJCP1xnNJV0+O+sN4lKYaql9Y0UVzN6yn2Vwhy4SgjIdGjOvvTF8G+I0WTA
+         RyDfD2hrZ5QpO9FCuUt7Zt+s6m2QZs+Z0oTy+3n517PemKUmIWDYRPX3mAjDpnUV6CgQ
+         F2817p/s2h4sNgkVZb/b6uPSYa6q1ppU3kB0f+DEyErr4ReZtcm9wX58jgOVDMF2/VDg
+         3f50Bbd+Zt0AuX/icWRfVwEp55YaM9y0BUOTP5tM9MzGz74TguCSqLz91UVCAwVeE3uD
+         /rCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680677938;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ge5tZ9KDzAcz+JwWlyHU3EWycDUOLBemzfQQA19mRWg=;
-        b=hJV+09fGx3ZXR761aB86TYK6zOP1RCvHc9yBl3ZvAuwMm2SmJMm9wdzetvqo77S9vL
-         QupS6pP1UO/ELjMOhqjD2xTQ5LYMGrKVGX7QzzEgxW4ebdzIaOhjNSCUbmqg4xYwxfQj
-         c5NxCDjCwYlMLRYcAXBnYp5ncYsyYyEyinuPhataj2CCg5HxHGWQIP1rpN2itoeLgH+Y
-         FtFkARMPMxnkQz1eokKE5YUrepTPGNsCPYcow5uj6V+MxpmbD9q5T5azHrNyOeXmw1h8
-         n+J1U17d69GjUMoVZH3ND2SkZ6nCe5cz40EN5mwCx+rekHwd/LaOmY7pgKNW0DKv7Y+d
-         oxXQ==
-X-Gm-Message-State: AAQBX9cJmUKKa3Ck1xEnvxxzvP9VSRCpuLfH9WxDZRWUgTsSlngn4Jox
-        DypE2senyL6SwtHLSyAn1igfCGlIakPh7aUWeWg=
-X-Google-Smtp-Source: AKy350Z/ugZFHsOXP6wXHv4FffyN3fDhJJCINwRAzsn82Xp0UViumtoK44fbCd5Nln9hyNPOjd0iUg==
-X-Received: by 2002:aa7:de07:0:b0:4fd:2675:3785 with SMTP id h7-20020aa7de07000000b004fd26753785mr962704edv.22.1680677938487;
-        Tue, 04 Apr 2023 23:58:58 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:3f:6b2:54cd:498e? ([2a02:810d:15c0:828:3f:6b2:54cd:498e])
-        by smtp.gmail.com with ESMTPSA id kd24-20020a17090798d800b00933d64cd447sm6913431ejc.121.2023.04.04.23.58.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 23:58:58 -0700 (PDT)
-Message-ID: <445ed49a-9ea6-0851-b0c5-bdd1d420689e@linaro.org>
-Date:   Wed, 5 Apr 2023 08:58:56 +0200
+        d=1e100.net; s=20210112; t=1680680391;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=trKLWSkkrTcQyTH6aAw3mKjWVdPgZ5R0yKwVxH0UJsU=;
+        b=u2PCzZSRS9C71e3v6xyMpExD8HARkpy8X5C9JBL+8dCO3q/SH1xHyveu9gUuiPaC88
+         OCbp0LMbi21TfW42vQ9kEjpEovnfAp/GkkdRFHYL1qyi0yPK6K5A7rRk7Pcrn9i7DpQy
+         uq9QinrOhgERVWEqtO6hpj217wCdffucpV0Amqw+rJYEFXsEaDwMMm6Va+h8scPI282i
+         ZqoS4O/yqWtpyNaLDRRyl6r42ORXAKYqi/9bemLi+pHy6pGtPWe1Yblex0WkpvyM+qtG
+         RJhEEz7S+jnuzbko3J4DPXZgecOK5XA26uLa/uo/koDCgu9q1uo+bWe/YvOutmYAtcDV
+         kElw==
+X-Gm-Message-State: AAQBX9d1QJBOOJQa4nh/huc3hD7HfFS3/qWO5SE/RsTbkHgGgL0cNsV+
+        /m1rYudGUnZRdsHrsc+COq6SUKbNFau6FDEJRsDmVtbZ8vYWhXvB
+X-Google-Smtp-Source: AKy350bDx2BLB2H9e64wiZmv4r3+DyND3F90zq9mnydGnf7JqPDXx1EbDXxIXXndSTmsWS5IxSdUcIKpk1fNuhCJEqk=
+X-Received: by 2002:a19:c206:0:b0:4eb:5232:53ad with SMTP id
+ l6-20020a19c206000000b004eb523253admr540899lfc.3.1680680391189; Wed, 05 Apr
+ 2023 00:39:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH V2 6/9] dt-bindings: pinctrl: qcom: Add few missing
- functions
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, mani@kernel.org, p.zabel@pengutronix.de,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_ipkumar@quicinc.com
-References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
- <20230404164828.8031-7-quic_devipriy@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230404164828.8031-7-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+From:   Vincas Dargis <vindrg@gmail.com>
+Date:   Wed, 5 Apr 2023 10:39:40 +0300
+Message-ID: <CAPNCXk2OLwVCQmS66Wudj+tfi_6gHb3sxF-U_ecmfRcQ_8M+sA@mail.gmail.com>
+Subject: About accessing Intel GPIO pins
+To:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -87,21 +61,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/04/2023 18:48, Devi Priya wrote:
-> Added the missing functions cri_trng2, gpio and removed the
-> duplicate entry qdss_tracedata_b
-> 
-> Fixes: 5b63ccb69ee8 ("dt-bindings: pinctrl: qcom: Add support for IPQ9574")
+Hi list,
 
-Fixes are either separate patches or sent as first in the series. This
-is not really related to PCI, so it should be separate patchset.
+Chinese manufacturers produce so-called "fanless", "industrial" PCs,
+and they advertise that they have GPIO pins available to be used as
+digital inputs, for example.
 
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> ---
->  Changes in V2:
+In reality it seems that reading these pins is rather.. low level and
+complicated, in sort of "hidden" way. They connect external GPIO
+panels directly to CPU.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+One manufacturer managed to get for us some sort of examples, and with
+their help we could read Skylake GPIO pins, by:
 
-Best regards,
-Krzysztof
+1. mmap()'ing 0xfdae0000
 
+2. adding offset 0x100
+
+3. calculating individual offsets for each pin with some basic multiplication.
+
+Then, I could write some specific values into final pin address to
+enable input mode, and then later read (poll) actual value.
+
+Now we got different machines, Kabylake not Skylake, and had to
+"fight" to get some examples too... It seems it's same 0xfdae0000 but
+with different constant offset, different port offests used, etc...
+
+I wonder, aren't there some sort of more generic way for accessing
+Intel GPIO (should I call it PCH GPIO?) pins?
+
+I don't see Skylake/Kabylake gpio driver in [1], but I see some sort
+of "pinctrl" Intel drivers in [2].
+
+I have rebuilt Debian 11's kernel with additional configs:
+
+```
+CONFIG_GPIOLIB=y
+CONFIG_GPIO_F7188X=y
+CONFIG_GPIO_IT87=y
+CONFIG_GPIO_PCH=y
+CONFIG_GPIO_ICH=y
+CONFIG_PINCTRL_INTEL=y
+```
+Though still don't see how to access Intel GPIO. gpiodetect does not list them.
+
+We indeed can use gpiod to read the pins if we get device with F7188X
+or IT87 family chips, and it works fine, but is there a way to somehow
+make Intel pins available via gpiod too?
+
+Thanks!
+
+[1] https://github.com/torvalds/linux/tree/master/drivers/gpio
+[2] https://github.com/torvalds/linux/tree/master/drivers/pinctrl/intel
