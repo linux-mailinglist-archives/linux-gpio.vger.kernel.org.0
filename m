@@ -2,61 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B236D7E2D
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 15:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F3C96D7FF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 16:47:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238087AbjDEN5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Apr 2023 09:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
+        id S238586AbjDEOr3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Apr 2023 10:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238136AbjDEN5N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 09:57:13 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3745FC8;
-        Wed,  5 Apr 2023 06:57:09 -0700 (PDT)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 3FC54254;
-        Wed,  5 Apr 2023 15:57:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1680703025;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RWMKgUasvY7/ukIcrTxVdr1TVXErPO1KhzaokcDzqyI=;
-        b=onzov+H2UG9qQV1AhON4idtUM1DOyzv/FPa85whMlfX6g8Wt+5vmEWJgbBNK2hWyJHTk/T
-        KT6uRUFKG+E4ud1aqCGrqxWDB8mVRzl4q6OuykS+Ir6+qdAt7H1j/SShzB0zwqOIZ8yKet
-        JlnR/A4YLPU7ruUMWVngb4Y0qlrpaYqMhWr9uR+Wo8BxMnqJkg7np5XcQBVXvQtGx+VMGi
-        7qNjigCtoZhQWGih/2iup13KEo49bOstWYQ9lUP51Hgk7L1DhVR2IXSDahlvMmMf4lx9qr
-        SHqTktCcs3BuTkVHyA2Gql/eklTYomiM/k2G0jeuE/1J6f9OYM6PlvJ+2YQ0cw==
+        with ESMTP id S238554AbjDEOr2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 10:47:28 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09FE55A2
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Apr 2023 07:47:23 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id bm2so26832012oib.4
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Apr 2023 07:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680706043;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A6AwQvzuA6Qp8K0j8ecwWgIY3AigiwirmRRkxPYgXRI=;
+        b=RwjDEPijLGXCa1yTOksX+85ZtjH6zfq61HX8UxK9ONjNwvz5+3sTVyY6zdxn/O8ZQW
+         l2wLQgwsDcZ1H3Cw9ngGUgIg1UHiwPnJ//M54fTZIQeSsBWJzehpbJvrFadPsnBq22NP
+         tqYe6ny+qcKLwMMQh4U17j31RckwaIxyXZhN9EKWi3mAEQzKGLz4U4EXjh6tNgbga1X7
+         EGLqAhwue3spWFeO3tvpNyx0ZbyTo6bi3A0kE9AuDjBXSLiZx8FXGp2TAEeD0lZaDVI8
+         yB8EwGU091BlaxK1hOEGWb7MfPbB+b41+4ct74xuZUs3mmPj6jGhEDHY7NosYMspjEBa
+         H7DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680706043;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A6AwQvzuA6Qp8K0j8ecwWgIY3AigiwirmRRkxPYgXRI=;
+        b=H8Pg2cNg1Gl67+ulTgJjJEwgJ13XPVpzWgoCqHsmntX3Lu/NbxyT2uHAzBM2nHAJtK
+         P1vT6n60VuIPprCw+PnVId0+gly1Za9DzDYWKC0Z9+hX4rzRPLSXE0JbIwP/82OT1KFe
+         rmvV867JKXKf3iMF7Va0FrSkQMKjka0SV8c85at2IgGm6t8ovvD/PSlsNqEWXhu1QvNb
+         oVMJW9dU7KT/QwHNoojEjWfC1oO4WchKuEfoHTt5WMHH/1QVTuYdecIvrDtZ8B7UzN89
+         fVJw5liyuCfs0QNXfjwMhBsXpdMBcFy0TSIssTZjIZYiKvkAO51OmyDmN+DI7rO5Zzj/
+         QbTw==
+X-Gm-Message-State: AAQBX9eKeYLKeuYv15d8Sy7mujzLi+oV/DJC9+S0SV4ZaGQelHKz2RkT
+        0k/jIR0IiQwu8WUfo4yzpGHPVw==
+X-Google-Smtp-Source: AKy350a5zlZ0NfDm0JP3xKXWSvEkhSEMQGkFGmxLlt4aAPR4WIqNsg4iqgBh8TMPciCp6UzlpqjtVQ==
+X-Received: by 2002:a05:6808:1804:b0:386:fb78:a4cb with SMTP id bh4-20020a056808180400b00386fb78a4cbmr3960056oib.43.1680706042500;
+        Wed, 05 Apr 2023 07:47:22 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id o184-20020acabec1000000b003646062e83bsm6406041oif.29.2023.04.05.07.47.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 07:47:21 -0700 (PDT)
+Date:   Wed, 5 Apr 2023 10:47:18 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, techsupport@winsystems.com,
+        stable@vger.kernel.org,
+        Paul Demetrotion <pdemetrotion@winsystems.com>
+Subject: Re: [RESEND] gpio: ws16c48: Fix off-by-one error in WS16C48 resource
+ region extent
+Message-ID: <ZC2J9ru1VN5fmeXZ@fedora>
+References: <20230228081724.94786-1-william.gray@linaro.org>
+ <CAMRc=MfD3=ifo9EJf=5_HZKLXnbASi=ehYm=Zs4WQA+YxfffQw@mail.gmail.com>
+ <ZAXfZbywWOo2pg4L@fedora>
 MIME-Version: 1.0
-Date:   Wed, 05 Apr 2023 15:57:05 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "Sahin, Okan" <Okan.Sahin@analog.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
-In-Reply-To: <CACRpkdZJA0DyzgLxm9HFeHO03rqNUff=avuV=VrGuJkkOg6wNQ@mail.gmail.com>
-References: <20230327130010.8342-1-okan.sahin@analog.com>
- <20230327130010.8342-3-okan.sahin@analog.com>
- <CACRpkda5G5b+At5s1WFudpQBQ6LDQxhE3fZj7eBhkZ=thvnQhg@mail.gmail.com>
- <MN2PR03MB51682210CADA6E33FB99052CE7939@MN2PR03MB5168.namprd03.prod.outlook.com>
- <CACRpkdZJA0DyzgLxm9HFeHO03rqNUff=avuV=VrGuJkkOg6wNQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <25e1fda4b6df2d10444d7eca3cd0e387@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7yTnGSIEnzs98TqB"
+Content-Disposition: inline
+In-Reply-To: <ZAXfZbywWOo2pg4L@fedora>
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,44 +75,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2023-04-05 15:20, schrieb Linus Walleij:
-> On Tue, Apr 4, 2023 at 4:36 PM Sahin, Okan <Okan.Sahin@analog.com> 
-> wrote:
-> 
->> >The driver is pretty straight-forward, but I think this can use the generic
->> >GPIO_REGMAP helpers in drivers/gpio/gpio-regmap.c check other drivers selecting
->> >this helper library for inspiration.
-> (..)
->> Thank you for your contribution. Should I add select GPIO_REGMAP into 
->> Kconfig?
-> 
-> Yes but that is not all, you also need to make use of the library 
-> helpers
-> provided in include/linux/gpio/regmap.h.
-> 
-> Find examples of other drivers doing this by e.g.:
-> git grep gpio_regmap_register
-> 
-> drivers/gpio/gpio-sl28cpld.c:   return
-> PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
-> drivers/gpio/gpio-tn48m.c:      return
-> PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
-> drivers/pinctrl/bcm/pinctrl-bcm63xx.c:  return
-> PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &grc));
-> 
-> ^Look what these are doing
 
-This driver is doing two register writes/reads for setting the
-direction, that's something which isn't supported in GPIO_REGMAP.
-OTOH I'm not sure the driver is doing it correctly, because it also
-seems to switch the pullup resisters together with the direction.
-I'm not sure that is correct. So there might be just one register
-involved after all and the GPIO_REGMAP should work again.
+--7yTnGSIEnzs98TqB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, according to the datasheet this has some nv memory (to set the
-initial state of the GPIOs [?]). So it should really be a multi-function
-device. I'm not sure if this has to be considered right from the
-beginning or if the device support can start with GPIO only and later
-be transitioned to a full featured MFD (probably with nvmem support).
+On Mon, Mar 06, 2023 at 07:41:09AM -0500, William Breathitt Gray wrote:
+> On Mon, Mar 06, 2023 at 10:23:30AM +0100, Bartosz Golaszewski wrote:
+> > On Thu, Mar 2, 2023 at 11:30=E2=80=AFPM William Breathitt Gray
+> > <william.gray@linaro.org> wrote:
+> > >
+> > > The WinSystems WS16C48 I/O address region spans offsets 0x0 through 0=
+xA,
+> > > which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
+> > > correct value of 11 so that access to necessary device registers is
+> > > properly requested in the ws16c48_probe() callback by the
+> > > devm_request_region() function call.
+> > >
+> > > Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize register s=
+tructures")
+> > > Cc: stable@vger.kernel.org
+> > > Cc: Paul Demetrotion <pdemetrotion@winsystems.com>
+> > > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> > > ---
+> >=20
+> > Why did you need to resend this? Anything changed?
+> >=20
+> > Bart
+>=20
+> No changes in code, just added the stable@ver.kernel.org Cc tag.
+>=20
+> William Breathitt Gray
 
--michael
+Hi Bart,
+
+Would you take this fix through the gpio tree?
+
+William Breathitt Gray
+
+--7yTnGSIEnzs98TqB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZC2J9gAKCRC1SFbKvhIj
+K9tzAQDQyEfw93RTfPmQ34tV0L79xQlQXgHqg+joxkMTlU+8gQD/UIaBvRjVTxwA
+rRFt8lGY+iFzGtHkUsRGaIbrQGP+WQ0=
+=bqhB
+-----END PGP SIGNATURE-----
+
+--7yTnGSIEnzs98TqB--
