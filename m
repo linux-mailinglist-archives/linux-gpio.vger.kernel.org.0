@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DD7F6D748C
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 08:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0236D7493
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Apr 2023 08:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236986AbjDEGo0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Apr 2023 02:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
+        id S237034AbjDEGq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Apr 2023 02:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236798AbjDEGoY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 02:44:24 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860184224
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 23:44:22 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-948a1aec279so17938866b.2
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 23:44:22 -0700 (PDT)
+        with ESMTP id S231191AbjDEGq4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Apr 2023 02:46:56 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C865340F7
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Apr 2023 23:46:54 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id cn12so138595361edb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Apr 2023 23:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680677061;
+        d=linaro.org; s=google; t=1680677213;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PzMtt/+vqlhPhKEy36o5CActC8iYX52jJaVN8GSnXcQ=;
-        b=LfovZoCG2SVqRXzMoF1BOW6WOu641pUE4VOtpxBuEznEagbZ24i0TdaKpsn5OhzW95
-         8JqUDJPHnp4MFU4N79WFdH2qGjFH3+bj2EgkDosnGb+hC+NVENzgGI7cE4RzkaWW0UmQ
-         1BvKC8+MTTiCDXrRpaF2XuaZqhkfcgRjUirRI0Ps9o9lj2J/9L1GNNUzSn6ufafNJCj8
-         +0BRjxSq1yNNaPflfYv9CXvXI9vOT2XDZ1eA/i/WwAB3LQ0Nb1yrYI3kHQTtehA+VA+C
-         OsUHrc0/CRyrFn818/QPhCuUsfuPRR0TiAsk/SjhMjeod/gJJGynLlT43WFmUpCt9jCz
-         0hVg==
+        bh=aFIIRnrBNKokC228F+QRUypbBbxmHo1ru9OG9LqymOk=;
+        b=bZw9ufpJnzBKuImrMGDvlIZcYpkuP7trTFI1zth/LoLk5RKEEHsKUn89UYPbQy8Zql
+         cQpyE5JyNsaDMEkuJE+U2waLytyUnd/msaYyNbbClT/oQBgfd2ZlqDTTh9NuawqcWu/X
+         QwWKCa2jZz5ICvPgguUoxvw0fyALbAOBDNJn3G0TY9S/005blsFtzTi84wRLOnnwza6B
+         5mzxEo+962RX8+UZ+mJ6VdGQ4Rx1jL1VyaTkLc+hgwYFdFGNu220LHvXr3VhWA3uer5U
+         +DWgrZh2vZlZS8KER1PbZXpfamjeJ3zg/ug2OB8leUM7ULl+fbJKISnEb17Is4QkwxBP
+         gSxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680677061;
+        d=1e100.net; s=20210112; t=1680677213;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzMtt/+vqlhPhKEy36o5CActC8iYX52jJaVN8GSnXcQ=;
-        b=u9udWfZ0kGnsHiRTwtIkUE7bqemRLYJtfeakIvSt579bPRNDfVyRmt/5oRMW8mh/MM
-         4X8DYx7Yog4ntW+GxkVZX8VjNb2F4JPfuZd7VaNu0QrNk75Vo6WR9mHghHiP9HFuamsV
-         6oUaeO8FZ9/UtCjPNaaT0h7K6Nu2YAxB8baMjlkH0qef/ZOH5TaZQMYEDngigEac8U0p
-         N561I/WlJ2Yt+VMPPou7lwIv/nzyB+dSEx0a6gUUIwOu60lpKVbVzIismG63woFVByy8
-         JH391wRDH9c4d7hSWEvkfRhnF+pe/YVtF3sfatU3nGI21ODO9DNbyCFTqI9kVZXC7aIQ
-         CTDQ==
-X-Gm-Message-State: AAQBX9fpbDvSYnpjaOc513xClKPcnRMAb0DHqO1o3UiG4vt21tNYe4fY
-        OUavST02p063FYzABjzPz49Veg==
-X-Google-Smtp-Source: AKy350byi1qoH8xnW36dqj5Cus1D3+6KM4I460DlQJAFckUuaVBla6hgAtyHzqnYArOvUhdOQBgFKQ==
-X-Received: by 2002:a05:6402:10c3:b0:4ac:bde4:ff14 with SMTP id p3-20020a05640210c300b004acbde4ff14mr870989edu.42.1680677061020;
-        Tue, 04 Apr 2023 23:44:21 -0700 (PDT)
+        bh=aFIIRnrBNKokC228F+QRUypbBbxmHo1ru9OG9LqymOk=;
+        b=M5StStJ3WwbLamXIXQxgp3fmnPGqQ8bQXGxVJm72dFmx1dyrPLlemYxSNW+CMbcJUm
+         KP/vx2GhB1JddGIzaGzcIZCj4jbc2xyMPuLINxuZgk5ChE2nI9X+mOHu5W8UOny9MQqd
+         wAOVEUrbg11nkx125LqHIXuBEqtYzPU70UdFVklFpgF8hyrYCvrkZznLsllBeKgTaHgN
+         qMfbtGI7TpzGq32ze0Sc8B/+a5Fyc1P4cF5GEAbumUqYggI3rIDCLPt4JUsxzC0OE3hQ
+         Fuzsb0g/c2higXNSJ9Dil6VB16AmYUs1LQdROp5h7afMoYuaFWvpZDe4KdMCCwBS5LzV
+         Vvzw==
+X-Gm-Message-State: AAQBX9ebPGY8rCF2a1lSndwLF4Z6DPboChLPFgVZzVoiq8VeWx8d5W0W
+        7GWRsi0/goxnpyt0MKca6G2D/A==
+X-Google-Smtp-Source: AKy350aA1HLQgP9Fc8eNFl7f3RG7nlo1DaAaMg6OdwCzdNf2oo2Fy3A+7OlkjujnS9dUZa9CiI0hdw==
+X-Received: by 2002:a17:906:8244:b0:93d:e141:e958 with SMTP id f4-20020a170906824400b0093de141e958mr1872119ejx.15.1680677213323;
+        Tue, 04 Apr 2023 23:46:53 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:3f:6b2:54cd:498e? ([2a02:810d:15c0:828:3f:6b2:54cd:498e])
-        by smtp.gmail.com with ESMTPSA id z95-20020a509e68000000b004c10b4f9ebesm6829736ede.15.2023.04.04.23.44.19
+        by smtp.gmail.com with ESMTPSA id by20-20020a170906a2d400b0093120a11a5dsm6963824ejb.92.2023.04.04.23.46.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 23:44:20 -0700 (PDT)
-Message-ID: <c674def6-f4b7-c6bc-6688-9f8c65c441b3@linaro.org>
-Date:   Wed, 5 Apr 2023 08:44:19 +0200
+        Tue, 04 Apr 2023 23:46:52 -0700 (PDT)
+Message-ID: <26194da1-95ad-ad04-ae14-319d3e309c1c@linaro.org>
+Date:   Wed, 5 Apr 2023 08:46:51 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH V2 1/9] dt-bindings: clock: Add PCIe pipe clock
- definitions
+Subject: Re: [PATCH V2 3/9] dt-bindings: phy: qcom,qmp-pcie: Add ipq9574
+ bindings
 Content-Language: en-US
 To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, konrad.dybcio@linaro.org,
@@ -72,9 +72,9 @@ Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
         quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
         quic_ipkumar@quicinc.com
 References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
- <20230404164828.8031-2-quic_devipriy@quicinc.com>
+ <20230404164828.8031-4-quic_devipriy@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230404164828.8031-2-quic_devipriy@quicinc.com>
+In-Reply-To: <20230404164828.8031-4-quic_devipriy@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -88,16 +88,17 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 04/04/2023 18:48, Devi Priya wrote:
-> Add PCIe pipe clock definitions for IPQ9574 SoC
+> Add bindings for the PCIe QMP PHYs found on IPQ9574
 > 
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
 > Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 > ---
 >  Changes in V2:
+> 	- Added the ipq9574 bindings here as the phy nodes in the DT
+> 	  are modified to follow the latest style (without child node)
+> 
 
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The amount of changes and optionality of few properties suggests this
+should be new binding.
 
 Best regards,
 Krzysztof
