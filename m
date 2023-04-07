@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D6C6DAD1F
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 15:08:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1E526DAD26
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 15:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjDGNIk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Apr 2023 09:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
+        id S230135AbjDGNKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Apr 2023 09:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbjDGNIj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 09:08:39 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDE97692
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 06:08:36 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id d3so21050862ybu.1
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 06:08:36 -0700 (PDT)
+        with ESMTP id S231216AbjDGNKT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 09:10:19 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBF77ED8
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 06:10:12 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-54c17fa9ae8so74643657b3.5
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 06:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680872916; x=1683464916;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680873012; x=1683465012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XLLVgeqbEDeqTFPI4P39tQQxxRUKPGk2hxPwWtx7KaE=;
-        b=XN9SbYQd3XpeqF2Z0PQ7esBc1Gl7JYH957ZcK4vzDgrc5a9oooVC9gq29yPtGtcCfa
-         4jF9UDhJVY30Lg+Lu67gkWQgQkbbDE5W6XM+v1atHBlSadRPW93TQuaf2Ee2fkTw9Txx
-         3dyUKpRyCDZc5beDgMniaBTbFrEioazA8YZZiYMeLDN60BOe7ShNR7fSCNsrT9n5KqA1
-         TMbUwhS7u9yqeMRGxRb8MzJtg7qFAMw1ctou6vCxO/jNZ8UFwr0ScM0YN/qQ7uV5beja
-         GFr0U/dHBQ5JtaLVPsMHyOoQYdID/sBLTIhDcGGkXYWbYkfm2jnCvWlgbu2+NLsO171K
-         a+oQ==
+        bh=4B39VyebJYnuGTjHcWDPxYe6oPc5V8Fl1158lshWAUY=;
+        b=f53//PACP7kgOmszXV77uUvDMPT9Y61TmpZjdAW++41qj3A7aw+ir36/BtlIPyO3Kn
+         i2ORUv2zWrELKrrquOBN3xLuhxSv0ET3weEr+ssjZADJk3DWzO02PeSVHsWd1uHeqvjn
+         XBvA73Byqt3wilVvJtGKMV8oxjG8HG1lDrsg2plH/mTAk9d6SrTw4W37bpp14Nmsc/Ty
+         AY0uqFeUWbq2xuTSjphtvf0QwZteTHm8qD46xt2SCYdyoIrVYj3anLDvYSLjj1wC8oTJ
+         54yNVjhD+S7vU0IFIEsc8/G/dJM5otHT285DoNf/nX2R9WkcIyOLxYu4pN+wBsaQ2/Gz
+         sEOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680872916; x=1683464916;
+        d=1e100.net; s=20210112; t=1680873012; x=1683465012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XLLVgeqbEDeqTFPI4P39tQQxxRUKPGk2hxPwWtx7KaE=;
-        b=e4o+nU0qivr6gPWuag0ktAYAGvW1orwN1m1N7/eUnkhjGU+MBPN5YqtsMOkC5Og+/u
-         TcxlwCOmogJoDC4IiHLKa+2cxPR1gW9pAMRkv6IP78xW6MR9lBjrMvjAmHxrloG2rkYg
-         a9fZeNG2w9Pfelg4qEB4r7xgNiRaY6J+pc3DXM2c/13m3q+6gM0GJaDmKpvboXPbDnkA
-         Jp0Ib0fZab3WoU+IUkfU6SpmSK0MiZDi85m9nHNMEwdXbKdfV+a1yFG8JYM/D/2Qyle/
-         KdEsgbPa6LV1WP7Zk4/tUeyMAmERl/EaQQZJUel5ip6Bh3do11VNrY8jiV61re8gXySK
-         VWig==
-X-Gm-Message-State: AAQBX9eeJALyM23hVEhOwRor1i2Fr71EqlNGFMbjVoClSKGaK90+LtF+
-        xOfwAVb4js4cY+kXtQ1qcJDDE2wx2TM0JMha8YTrSw==
-X-Google-Smtp-Source: AKy350YLZihMhzB+mdd71bZKDJZvF/AIGIyRY1E58MdNGmy1VpnHnj4VC2+IDSkQ7AmfGY7ZYm4clBM+wIUjda9dog0=
-X-Received: by 2002:a25:d958:0:b0:b75:3fd4:1b31 with SMTP id
- q85-20020a25d958000000b00b753fd41b31mr1807164ybg.1.1680872915732; Fri, 07 Apr
- 2023 06:08:35 -0700 (PDT)
+        bh=4B39VyebJYnuGTjHcWDPxYe6oPc5V8Fl1158lshWAUY=;
+        b=6toCzYwZECWOGHlUbD+ExCz47PAchPACkZvUzAx9JqBi15elWkkjVzhw5djMf6sQZx
+         CPBW4IHpwLSTARl96ALcbH8+jdJndx4lmhe+Yyb5S8imPdqT290uMoB7wupxdkVYNB2B
+         av35RoyV1D0Y6V/yzHAvf8xhIYxJ/kU8wRp6ghknW/zX4MosaaeGAhDZhoF3MZ3gl2k9
+         YkyJS2p5PVcVb1a+y2dbnCQEYesnMzrRbs6VYBLbq9GXts6wGID8s2mdrK0DNJxsCJfb
+         VKH9opxY82x1caWGd1a7YmttXrzKjH6VooiMcNBeLdD1m01WmTnPgzRhaQhPtAZkzNk0
+         zk/Q==
+X-Gm-Message-State: AAQBX9ebxuDL/dk/FsWEsmjzXKMOWt88xmcdoxYNUrDlBDsDvYFCNnL/
+        0XjPgMC5/XKYq4wEH0iC2H/NM8vTgOzi3I6zXTe+UQ==
+X-Google-Smtp-Source: AKy350bJk0AACnynN0kqCLCkF/5dozOA90cXc4Q98GGea0b+hZw74doxVa3aZnouULl/xJ46a66T+ja5Kmji9UF77dY=
+X-Received: by 2002:a81:441e:0:b0:540:e744:13ae with SMTP id
+ r30-20020a81441e000000b00540e74413aemr1092692ywa.3.1680873011652; Fri, 07 Apr
+ 2023 06:10:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
-In-Reply-To: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
+References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com> <20230203-evk-board-support-v5-1-1883c1b405ad@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v5-1-1883c1b405ad@baylibre.com>
 From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Fri, 7 Apr 2023 15:08:24 +0200
-Message-ID: <CAFGrd9pV8Zk-4M3gPRYBSqqG7dTA6bri4LV2ZcfKyTZN6STsmA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] Improve the MT8365 SoC and EVK board support
+Date:   Fri, 7 Apr 2023 15:10:00 +0200
+Message-ID: <CAFGrd9p8gR+poX48ubMm9n6Rg1RaGqZR1BG22fJQYcjBzX0wOg@mail.gmail.com>
+Subject: Re: [PATCH v5 01/12] arm64: defconfig: enable MT6357 regulator
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,15 +66,14 @@ To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Zhiyong Tao <zhiyong.tao@mediatek.com>,
         =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
-        catalin.marinas@arm.com, Will Deacon <will@kernel.org>
+        Will Deacon <will@kernel.org>, catalin.marinas@arm.com
 Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
         linux-gpio@vger.kernel.org,
         Alexandre Bailon <abailon@baylibre.com>,
         Fabien Parent <fparent@baylibre.com>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -97,111 +96,24 @@ Alexandre
 Le ven. 7 avr. 2023 =C3=A0 14:59, Alexandre Mergnat <amergnat@baylibre.com>=
  a =C3=A9crit :
 >
-> This commits are based on the Fabien Parent <fparent@baylibre.com> work.
->
-> The purpose of this series is to add the following HWs / IPs support for
-> the mt8365-evk board:
-> - Watchdog
-> - Power Management Integrated Circuit "PMIC" wrapper
-> - MT6357 PMIC
-> - MultiMediaCard "MMC" & Secure Digital "SD" controller
-> - USB controller
-> - Ethernet MAC controller
->
-> Add CPU Freq & IDLE support for this board.
->
-> This series depends to anothers which add support for MT8365 EVK board
-> [1], add the MT8365 I2C support [2] (both are currently applied) and
-> finally the pinctrl binding cleanup [3].
->
-> =3D=3D=3D Build:
->
-> To test this serie, cherry-pick patches from the dependent series ([1],[2=
-],[3])
-> and the applied patches from this serie (documented in the "Changes" belo=
-w).
-> Be carefull, the pinctrl serie [3] is rebased to linusw/linux-pinctrl,
-> cherry-pick will not be straightforward.
-> Finally, cherry-pick this serie.
->
-> You can also take my branch [4] which have all the needed patches
-> retrieved from the instructions above.
->
-> Use the arm64 defconfig to make the build.
->
-> Regards,
-> Alex
->
-> [1]: https://lore.kernel.org/all/20230309213501.794764-1-bero@baylibre.co=
-m/
-> [2]: https://lore.kernel.org/all/20221122-mt8365-i2c-support-v6-0-e1009c8=
-afd53@baylibre.com/
-> [3]: https://lore.kernel.org/all/20230327-cleanup-pinctrl-binding-v3-0-6f=
-56d5c7a8de@baylibre.com/
-> [4]: https://gitlab.baylibre.com/baylibre/mediatek/bsp/linux/-/commits/am=
-ergnat/i350-evk-board-support
->
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
-> Changes in v5:
-> - Add patches to build the MT6357 regulator driver and MTK PMIC keys by d=
-efault
-> - Remove "dt-bindings: pinctrl: mediatek,mt8365-pinctrl: add drive streng=
-th property"
->   patch from this serie and add it to the pinctrl serie [3]
-> - Link to v4: https://lore.kernel.org/r/20230203-evk-board-support-v4-0-5=
-cffe66a38c0@baylibre.com
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Changes in v4:
-> - Remove v3 applied patch from the serie:
->   - arm64: dts: mediatek: add ethernet support for mt8365 SoC
->   - arm64: dts: mediatek: add mmc support for mt8365 SoC
->   - arm64: dts: mediatek: add mt6357 device-tree
->   - arm64: dts: mediatek: add pwrap support to mt8365 SoC
->   - arm64: dts: mediatek: Increase the size BL31 reserved memory
-> - Drop "arm64: dts: mediatek: fix systimer properties" which is done [1]
-> - Fix style, typo and re-order properties.
-> - Use interrupts-extended for the PMIC node.
-> - Link to v3: https://lore.kernel.org/r/20230203-evk-board-support-v3-0-0=
-003e80e0095@baylibre.com
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 7790ee42c68a..e4cb65889ae6 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -685,6 +685,7 @@ CONFIG_REGULATOR_MAX77620=3Dy
+>  CONFIG_REGULATOR_MAX8973=3Dy
+>  CONFIG_REGULATOR_MP8859=3Dy
+>  CONFIG_REGULATOR_MT6315=3Dm
+> +CONFIG_REGULATOR_MT6357=3Dy
+>  CONFIG_REGULATOR_MT6358=3Dy
+>  CONFIG_REGULATOR_MT6359=3Dy
+>  CONFIG_REGULATOR_MT6360=3Dy
 >
-> Changes in v3:
-> - Remove v2 applied patch from the serie:
->   - dt-bindings: mmc: mediatek,mtk-sd: add mt8365
-> - Add trailers and simply resend.
-> - Link to v2: https://lore.kernel.org/r/20230203-evk-board-support-v2-0-6=
-ec7cdb10ccf@baylibre.com
->
-> ---
-> Alexandre Mergnat (10):
->       arm64: defconfig: enable MT6357 regulator
->       arm64: defconfig: enable Mediatek PMIC key
->       dt-bindings: watchdog: mediatek,mtk-wdt: add mt8365
->       arm64: dts: mediatek: add watchdog support for mt8365 SoC
->       arm64: dts: mediatek: add mt6357 PMIC support for  mt8365-evk
->       arm64: dts: mediatek: add mmc support for mt8365-evk
->       arm64: dts: mediatek: add usb controller support for mt8365-evk
->       arm64: dts: mediatek: add ethernet support for mt8365-evk
->       arm64: dts: mediatek: add OPP support for mt8365 SoC
->       arm64: dts: mediatek: add cpufreq support for mt8365-evk
->
-> Amjad Ouled-Ameur (1):
->       arm64: dts: mediatek: Add CPU Idle support
->
-> Fabien Parent (1):
->       arm64: dts: mediatek: set vmc regulator as always on
->
->  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
->  arch/arm64/boot/dts/mediatek/mt8365-evk.dts        | 249 +++++++++++++++=
-++++++
->  arch/arm64/boot/dts/mediatek/mt8365.dtsi           | 142 ++++++++++++
->  arch/arm64/configs/defconfig                       |   3 +
->  4 files changed, 395 insertions(+)
-> ---
-> base-commit: 4f2a499a344b36ebb325e610265452ea88541116
-> change-id: 20230203-evk-board-support-d5b7a839ed7b
->
-> Best regards,
 > --
-> Alexandre Mergnat <amergnat@baylibre.com>
+> 2.25.1
 >
