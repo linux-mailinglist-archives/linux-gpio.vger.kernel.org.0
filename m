@@ -2,85 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE5E6DB1DC
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 19:39:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C3286DB20E
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 19:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbjDGRjN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Apr 2023 13:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
+        id S230321AbjDGRut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Apr 2023 13:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbjDGRjA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 13:39:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F0DC178;
-        Fri,  7 Apr 2023 10:38:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B8BA65330;
-        Fri,  7 Apr 2023 17:38:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F34E0C4339C;
-        Fri,  7 Apr 2023 17:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680889120;
-        bh=i289+hl/QqcGgL1+leVcwWwADguaW9LS68DYAjdH9Mo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWLeHXHmokaY2r3rykciN0xUhAeEamO9zMzY4WWx/3SkbcE9EcKR2dSIK/j+iZQ//
-         OvHAPTbx51/BnOxM6YBN0K3t6FzE6S92HmeiRRCtDYU3yNQIJ2d+GOLrgIQIGEEQoy
-         jDdU9P205AqyxhOj15IIIwDbH2hIkjO0V3r8wRk6KFPk4HJQTzffRQmN4UkGRXMGFn
-         f2i2xTzEv7gkPrzhjkpC06Kg7vPh5Lmhf5wLIgQKSlg76JohKSkZFWl00IQ8Zx7U5e
-         lWFk6lmBSJObibkqbm3zj0O/5U86f0D2JmnBZ5S4RtqNij8WPJtBmTBrQWDVfJY222
-         57jr7wThylOpw==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     mturquette@baylibre.com, robh+dt@kernel.org,
-        p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, will@kernel.org,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        shawnguo@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        linux-clk@vger.kernel.org, agross@kernel.org,
-        linus.walleij@linaro.org, dmitry.baryshkov@linaro.org,
-        nfraprado@collabora.com, linux-kernel@vger.kernel.org,
-        konrad.dybcio@linaro.org, Devi Priya <quic_devipriy@quicinc.com>,
-        broonie@kernel.org, sboyd@kernel.org, marcel.ziswiler@toradex.com,
-        linux-arm-msm@vger.kernel.org
-Cc:     quic_poovendh@quicinc.com, quic_kathirav@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_srichara@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_gokulsri@quicinc.com
-Subject: Re: (subset) [PATCH V9 0/6] Add minimal boot support for IPQ9574
-Date:   Fri,  7 Apr 2023 10:41:16 -0700
-Message-Id: <168088927579.2561591.423595679057929869.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230316072940.29137-1-quic_devipriy@quicinc.com>
-References: <20230316072940.29137-1-quic_devipriy@quicinc.com>
+        with ESMTP id S229577AbjDGRur (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 13:50:47 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AF7BB8E
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 10:50:43 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1a1f9f54e3eso1829375ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 10:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680889843;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJzkrQgSJLoh68CvGvp1JznAA6lKkLejE1Wur3zdskg=;
+        b=XH0UjXnkmfvcZqjTewbnJtcDWSFSJA41wC6V9r5Jriy4njsRmD3H27O3QYYV4AMbUm
+         tXDMOylFQmjGVHAvVJDVThyrSJpCbK15BdyXAw/RTy3qqsHIR6h5GbuWp0D0RbsJJMyQ
+         tYigUWAUK0wuJZ9Ln/RC6nNHR0Xc5/0j6baPRmmPBKLWI8mS58J1JBnQoFDh2fV6gAVB
+         aCWwMbSzJaVd3dqKFSysqW62WCaXVoVFyPNeXhO/N8IkyefOB7epKgE0KjIbL9lO4E2A
+         nOD8OiTN+7/mE4Ln7W/1Og55k8VV9viFgsgqrLPhDjnLlEirWNgizYb/4I63kiVYkSRp
+         /wmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680889843;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJzkrQgSJLoh68CvGvp1JznAA6lKkLejE1Wur3zdskg=;
+        b=z3+L9phkGztGkxwWRukRbOq+45xZgFabXmCBIfIQApy+CWEsi7LDdX0hh9bmgcL5v7
+         68L5vWvmD00hfvtrh9H2RgvfZLJluEuPWgs8MrNvk3xDzGtxw2RXloimrnUBXpCotDQj
+         KX7xhhtCPlK/SpffT4L660RTbIVMullMVaoHayMVY9WoD4zhFTHvwZmyfpAkzWigt1BS
+         1fny/5OAaj09dHnOV2tkQJ+DN0arh5MOq0qbsLSJmvFGIkcxP9N9r11mqjxSIsi4H33O
+         +YX+nPCJwrux6l54HxvvH0qSbxwTEOxzXduX9bXnWhN5s0IiEcbi6HXXY7IVd9TA6Emp
+         KceQ==
+X-Gm-Message-State: AAQBX9cXL5keQ/RPQ9stSwb1ijXj/PPVJM7CC/y+Ggz+O1PwXohcREg1
+        iFNlwBCno0r165ROxjrW26Rtiw==
+X-Google-Smtp-Source: AKy350aspk9YnMVy5hked+xx58M1c9hroC6snupKIoerfp0YWnXGXrL18Plz3ceLDw7pQ7fY4UQTgQ==
+X-Received: by 2002:aa7:9ec4:0:b0:626:7c43:7cb8 with SMTP id r4-20020aa79ec4000000b006267c437cb8mr3003966pfq.20.1680889842767;
+        Fri, 07 Apr 2023 10:50:42 -0700 (PDT)
+Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
+        by smtp.gmail.com with ESMTPSA id e18-20020aa78c52000000b0062a474cd46asm3298198pfd.137.2023.04.07.10.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 10:50:42 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Alexandre Mergnat <amergnat@baylibre.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Bernhard =?utf-8?Q?Rosenkr=C3=A4n?= =?utf-8?Q?zer?= 
+        <bero@baylibre.com>
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 00/12] Improve the MT8365 SoC and EVK board support
+In-Reply-To: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
+References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
+Date:   Fri, 07 Apr 2023 10:50:41 -0700
+Message-ID: <7h355b1szy.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 16 Mar 2023 12:59:34 +0530, Devi Priya wrote:
-> The IPQ9574 is Qualcomm's 802.11ax SoC for Routers,
-> Gateways and Access Points
-> 
-> This series adds minimal board boot support for ipq9574-al02-c7 board
-> 
-> V8 can be found at:
-> https://lore.kernel.org/linux-arm-kernel/20230214163116.9924-1-quic_devipriy@quicinc.com/
-> 
-> [...]
+Alexandre Mergnat <amergnat@baylibre.com> writes:
 
-Applied, thanks!
+> This commits are based on the Fabien Parent <fparent@baylibre.com> work.
+>
+> The purpose of this series is to add the following HWs / IPs support for
+> the mt8365-evk board:
+> - Watchdog
+> - Power Management Integrated Circuit "PMIC" wrapper
+> - MT6357 PMIC
+> - MultiMediaCard "MMC" & Secure Digital "SD" controller
+> - USB controller
+> - Ethernet MAC controller
+>
+> Add CPU Freq & IDLE support for this board.
 
-[6/6] arm64: defconfig: Enable IPQ9574 SoC base configs
-      commit: 34d1a90bdb8a2759b9646c8596eea495b4cb02ac
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Thanks for providing the branch with the dependencies.  With that, I
+tested basic build & boot on mt8365-evk, and things are working as
+expected.
+
+I also enabled `CONFIG_USB_ETH=y` to test with USB ethernet gadget, and
+was able use NFSroot, so that's working well also.
+
+Kevin
