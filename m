@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D336DAD40
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 15:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 880F06DAD43
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 15:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239906AbjDGNM5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Apr 2023 09:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54136 "EHLO
+        id S240534AbjDGNNX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Apr 2023 09:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238991AbjDGNM4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 09:12:56 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B6AAF1E
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 06:12:51 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id p203so48918019ybb.13
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 06:12:51 -0700 (PDT)
+        with ESMTP id S240643AbjDGNNR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 09:13:17 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D64F7ED8
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 06:13:12 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id cf7so48979710ybb.5
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 06:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680873170; x=1683465170;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680873191; x=1683465191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jogom33BA4lYsCGNiQEHTElBE5htrobQ35E378fTju4=;
-        b=Vk87nKeUU93sXRg8q9QQK0+RQ3A/rPafNC/njQ08yjVQuFKrd9hO5LXxQO4nbpizhc
-         gF+UwGjQ0ChEpZOaD/MFaPne/fvbQCAhqrhCypfbkj5e4M6rM/LxZeIO8TSalXyGFy9n
-         JDMncKaj/92OlOmH8hnk6EFHS+iRHSxTMM5K50Nq7OUACibecdAa4ndc21CgWQ5OgnHj
-         mWkBUyRf6EgIOtugHyBlpNJf27+hQjFEbNnb6T67bmg1bXRvSdu/H4yD+uT/O3Qyby9k
-         +4Y6iDYGVfkcgpAxS5eV3gEEQJdc/nO9hcHpQ4I1XmBK9Up0RC20KHU28Y/Wmio8rm86
-         Ey0A==
+        bh=MvL4FM6K7sFiatPoW9lB13zR0/OGaSTbkxaFtIhuADo=;
+        b=ukJ76x9GiFfA5bEM7OvmkeAGsaMYAsJaXFxWNRyp2t0bW6KfuLZcxoXAUsp7FVyKZZ
+         D4iBeU0jqNAV+EnZ+7LnoS+/TSlWoUVEFwZQf/l0y60k1/fvTf77U+ZHgFdefKIEvK3M
+         89onXFwEIffZ63yNNQcLSILEcYbnBRZIQYv5uJS686o9uCL/za2Tl0itkXWt8Z/F8FLc
+         23ke2JENVLlGxQ2Q538u2enguzOmet1kXFEp9FBMHKhnqjagebk/V39dBGFCl/4J/D23
+         q8ydzwvox3k3IdgUTuaiFJfj+QAX5hnvF/DeyqeJn4Ts6Eb2fICWY1EPQXrVwDEZPc0X
+         +etw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680873170; x=1683465170;
+        d=1e100.net; s=20210112; t=1680873191; x=1683465191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jogom33BA4lYsCGNiQEHTElBE5htrobQ35E378fTju4=;
-        b=rTmEcJdTFUUziTYgxfui+ZLNDbKPa+W+os5KQxhtrqEs6DzPcCetB/5WJVIsPelgVd
-         JJWl9VAE7tZxviPT5nS0WpQch1fp2rZjhdlEkpn7LSabKqPCFRkdmysGMgC3Mriqkkmj
-         RPivbFbV2QjC2SXBwXLDdg367rksoJA/1hv9djSpq6XxNC2CzUPC0e9gKrGguFKS5mv/
-         1Rw6GbUdEqXGnGsDWBna5D8JS6elIPYiS701Q1R1b5uA1+C37cY3NGRmeLEZ/GDOyQSJ
-         Vn9g2wMd3iTPer9cFx/ZdCq9TS+oCHH8taFXuq29n3A+EM/y55DYspuMZIteq3z2gygZ
-         OJNA==
-X-Gm-Message-State: AAQBX9fYnuxazcXTiufBtoPInOgsBMjOXlQGkAsHHE/vsM8I0DYVEyUF
-        essE4ALdO2z5PtqNnpW/mgt4crXb7aofqZqER0uIzw==
-X-Google-Smtp-Source: AKy350bijn8o3rBblLPfBL1Ss/jCgPrDSmPFvUI5sV3I/0v7aurVKvDdC/NxVZYxnThR0jOq7wtEZe83KaKwIJbGCcI=
-X-Received: by 2002:a25:d114:0:b0:b68:7b14:186b with SMTP id
- i20-20020a25d114000000b00b687b14186bmr1502101ybg.1.1680873170538; Fri, 07 Apr
- 2023 06:12:50 -0700 (PDT)
+        bh=MvL4FM6K7sFiatPoW9lB13zR0/OGaSTbkxaFtIhuADo=;
+        b=EHO6UewatmahDvf3Ws9T5OIWbv0QavzgyPj7WY9TTYJmFg8x84lb9Sj6CUYaw9I2eH
+         FGl29J9JoSUdT1NOB8tsWnxmr+0yvDanRVJsHgcT+a6OIdteyMcZd/ZFBAZoQ7pcB0TX
+         6hJEXwzm/y8IeBOSB26U7t6YbIhGbnadp8YH9AoNLQiRRvsI9J3Gl1wFLiKiUq4gpRIa
+         xxXyPqlh5vqKB2jkE30F8Yw/LNWxFy87YT/X0ibsLdEohVqbJC3fnHr/H0sjjRqdU3JV
+         KyERVDwdiV6nzdTo+iwzLcUdcXHcZKWCRIywx/1pof5D/EKN0BsZCgNqk35GUsPMBab3
+         p1sA==
+X-Gm-Message-State: AAQBX9ekwk1gmTnIgA3ueEzuTBouHzblbuDfXmFhBPc1UT6LzXtpnXHG
+        hjGDkcaVFBK9DA1O+hiZqBUaOOuhCH3s4avVzCPrJQ==
+X-Google-Smtp-Source: AKy350aCRZnuELD2k32jpyfqMWnAcFkkXBqQEV+LvaQFGGo1MZu+6ebnj20/GbABh6hYrIQtMyIogGEdSSEzQbd8Nf4=
+X-Received: by 2002:a25:d994:0:b0:b33:531b:3dd4 with SMTP id
+ q142-20020a25d994000000b00b33531b3dd4mr1373350ybg.1.1680873191647; Fri, 07
+ Apr 2023 06:13:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com> <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
-In-Reply-To: <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
+References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com> <20230203-evk-board-support-v5-7-1883c1b405ad@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v5-7-1883c1b405ad@baylibre.com>
 From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Fri, 7 Apr 2023 15:12:39 +0200
-Message-ID: <CAFGrd9q8sPGAhHWoxo_a2uVK35MA0=4hOFtJKesHUTZJMn1m=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 06/12] arm64: dts: mediatek: add mmc support for mt8365-evk
+Date:   Fri, 7 Apr 2023 15:13:00 +0200
+Message-ID: <CAFGrd9oRoqsE=eNDbT4o+j5s_3zwOLi_RsFnVPEW=0MXCMZjFg@mail.gmail.com>
+Subject: Re: [PATCH v5 07/12] arm64: dts: mediatek: set vmc regulator as
+ always on
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -93,210 +94,35 @@ Sorry for the noise.
 Regards,
 Alexandre
 
-Le ven. 7 avr. 2023 =C3=A0 14:59, Alexandre Mergnat <amergnat@baylibre.com>=
- a =C3=A9crit :
+Le ven. 7 avr. 2023 =C3=A0 14:59, <amergnat@baylibre.com> a =C3=A9crit :
 >
-> - Add EMMC support on mmc0 (internal memory)
-> - Add SD-UHS support on mmc1 (external memory)
+> From: Fabien Parent <fparent@baylibre.com>
 >
+> MSDC1 IP block is powered by VMC. Make sure it is always on.
+>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 138 ++++++++++++++++++++++=
-++++++
->  1 file changed, 138 insertions(+)
+>  arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
 > diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boo=
 t/dts/mediatek/mt8365-evk.dts
-> index a238bd0092d2..cd920d09c3fe 100644
+> index cd920d09c3fe..1c36d8f19525 100644
 > --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
 > +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> @@ -95,6 +95,42 @@ &i2c0 {
->         status =3D "okay";
+> @@ -137,6 +137,11 @@ &mt6357_pmic {
+>         #interrupt-cells =3D <2>;
 >  };
 >
-> +&mmc0 {
-> +       assigned-clock-parents =3D <&topckgen CLK_TOP_MSDCPLL>;
-> +       assigned-clocks =3D <&topckgen CLK_TOP_MSDC50_0_SEL>;
-> +       bus-width =3D <8>;
-> +       cap-mmc-highspeed;
-> +       cap-mmc-hw-reset;
-> +       hs400-ds-delay =3D <0x12012>;
-> +       max-frequency =3D <200000000>;
-> +       mmc-hs200-1_8v;
-> +       mmc-hs400-1_8v;
-> +       no-sd;
-> +       no-sdio;
-> +       non-removable;
-> +       pinctrl-0 =3D <&mmc0_default_pins>;
-> +       pinctrl-1 =3D <&mmc0_uhs_pins>;
-> +       pinctrl-names =3D "default", "state_uhs";
-> +       vmmc-supply =3D <&mt6357_vemc_reg>;
-> +       vqmmc-supply =3D <&mt6357_vio18_reg>;
-> +       status =3D "okay";
+> +/* Needed by MSDC1 */
+> +&mt6357_vmc_reg {
+> +       regulator-always-on;
 > +};
 > +
-> +&mmc1 {
-> +       bus-width =3D <4>;
-> +       cap-sd-highspeed;
-> +       cd-gpios =3D <&pio 76 GPIO_ACTIVE_LOW>;
-> +       max-frequency =3D <200000000>;
-> +       pinctrl-0 =3D <&mmc1_default_pins>;
-> +       pinctrl-1 =3D <&mmc1_uhs_pins>;
-> +       pinctrl-names =3D "default", "state_uhs";
-> +       sd-uhs-sdr104;
-> +       sd-uhs-sdr50;
-> +       vmmc-supply =3D <&mt6357_vmch_reg>;
-> +       vqmmc-supply =3D <&mt6357_vio18_reg>;
-> +       status =3D "okay";
-> +};
-> +
->  &mt6357_pmic {
->         interrupts-extended =3D <&pio 145 IRQ_TYPE_LEVEL_HIGH>;
->         interrupt-controller;
-> @@ -118,6 +154,108 @@ pins {
->                 };
->         };
->
-> +       mmc0_default_pins: mmc0-default-pins {
-> +               clk-pins {
-> +                       pinmux =3D <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_C=
-LK>;
-> +                       bias-pull-down;
-> +               };
-> +
-> +               cmd-dat-pins {
-> +                       pinmux =3D <MT8365_PIN_103_MSDC0_DAT0__FUNC_MSDC0=
-_DAT0>,
-> +                                <MT8365_PIN_102_MSDC0_DAT1__FUNC_MSDC0_D=
-AT1>,
-> +                                <MT8365_PIN_101_MSDC0_DAT2__FUNC_MSDC0_D=
-AT2>,
-> +                                <MT8365_PIN_100_MSDC0_DAT3__FUNC_MSDC0_D=
-AT3>,
-> +                                <MT8365_PIN_96_MSDC0_DAT4__FUNC_MSDC0_DA=
-T4>,
-> +                                <MT8365_PIN_95_MSDC0_DAT5__FUNC_MSDC0_DA=
-T5>,
-> +                                <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DA=
-T6>,
-> +                                <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DA=
-T7>,
-> +                                <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD=
->;
-> +                       input-enable;
-> +                       bias-pull-up;
-> +               };
-> +
-> +               rst-pins {
-> +                       pinmux =3D <MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_=
-RSTB>;
-> +                       bias-pull-up;
-> +               };
-> +       };
-> +
-> +       mmc0_uhs_pins: mmc0-uhs-pins {
-> +               clk-pins {
-> +                       pinmux =3D <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_C=
-LK>;
-> +                       drive-strength =3D <MTK_DRIVE_10mA>;
-> +                       bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
-> +               };
-> +
-> +               cmd-dat-pins {
-> +                       pinmux =3D <MT8365_PIN_103_MSDC0_DAT0__FUNC_MSDC0=
-_DAT0>,
-> +                                <MT8365_PIN_102_MSDC0_DAT1__FUNC_MSDC0_D=
-AT1>,
-> +                                <MT8365_PIN_101_MSDC0_DAT2__FUNC_MSDC0_D=
-AT2>,
-> +                                <MT8365_PIN_100_MSDC0_DAT3__FUNC_MSDC0_D=
-AT3>,
-> +                                <MT8365_PIN_96_MSDC0_DAT4__FUNC_MSDC0_DA=
-T4>,
-> +                                <MT8365_PIN_95_MSDC0_DAT5__FUNC_MSDC0_DA=
-T5>,
-> +                                <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DA=
-T6>,
-> +                                <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DA=
-T7>,
-> +                                <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD=
->;
-> +                       input-enable;
-> +                       drive-strength =3D <MTK_DRIVE_10mA>;
-> +                       bias-pull-up =3D <MTK_PUPD_SET_R1R0_01>;
-> +               };
-> +
-> +               ds-pins {
-> +                       pinmux =3D <MT8365_PIN_104_MSDC0_DSL__FUNC_MSDC0_=
-DSL>;
-> +                       drive-strength =3D <MTK_DRIVE_10mA>;
-> +                       bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
-> +               };
-> +
-> +               rst-pins {
-> +                       pinmux =3D <MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_=
-RSTB>;
-> +                       drive-strength =3D <MTK_DRIVE_10mA>;
-> +                       bias-pull-up;
-> +               };
-> +       };
-> +
-> +       mmc1_default_pins: mmc1-default-pins {
-> +               cd-pins {
-> +                       pinmux =3D <MT8365_PIN_76_CMDAT8__FUNC_GPIO76>;
-> +                       bias-pull-up;
-> +               };
-> +
-> +               clk-pins {
-> +                       pinmux =3D <MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_C=
-LK>;
-> +                       bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
-> +               };
-> +
-> +               cmd-dat-pins {
-> +                       pinmux =3D <MT8365_PIN_89_MSDC1_DAT0__FUNC_MSDC1_=
-DAT0>,
-> +                                <MT8365_PIN_90_MSDC1_DAT1__FUNC_MSDC1_DA=
-T1>,
-> +                                <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DA=
-T2>,
-> +                                <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DA=
-T3>,
-> +                                <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD=
->;
-> +                       input-enable;
-> +                       bias-pull-up =3D <MTK_PUPD_SET_R1R0_01>;
-> +               };
-> +       };
-> +
-> +       mmc1_uhs_pins: mmc1-uhs-pins {
-> +               clk-pins {
-> +                       pinmux =3D <MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_C=
-LK>;
-> +                       drive-strength =3D <MTK_DRIVE_8mA>;
-> +                       bias-pull-down =3D <MTK_PUPD_SET_R1R0_10>;
-> +               };
-> +
-> +               cmd-dat-pins {
-> +                       pinmux =3D <MT8365_PIN_89_MSDC1_DAT0__FUNC_MSDC1_=
-DAT0>,
-> +                                <MT8365_PIN_90_MSDC1_DAT1__FUNC_MSDC1_DA=
-T1>,
-> +                                <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DA=
-T2>,
-> +                                <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DA=
-T3>,
-> +                                <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD=
->;
-> +                       input-enable;
-> +                       drive-strength =3D <MTK_DRIVE_6mA>;
-> +                       bias-pull-up =3D <MTK_PUPD_SET_R1R0_01>;
-> +               };
-> +       };
-> +
->         uart0_pins: uart0-pins {
+>  &pio {
+>         gpio_keys: gpio-keys-pins {
 >                 pins {
->                         pinmux =3D <MT8365_PIN_35_URXD0__FUNC_URXD0>,
 >
 > --
 > 2.25.1
