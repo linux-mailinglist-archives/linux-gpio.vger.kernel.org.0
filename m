@@ -2,114 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C3286DB20E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 19:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C236DB215
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Apr 2023 19:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbjDGRut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Apr 2023 13:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
+        id S229677AbjDGRwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Apr 2023 13:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjDGRur (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 13:50:47 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AF7BB8E
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 10:50:43 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1a1f9f54e3eso1829375ad.1
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Apr 2023 10:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1680889843;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJzkrQgSJLoh68CvGvp1JznAA6lKkLejE1Wur3zdskg=;
-        b=XH0UjXnkmfvcZqjTewbnJtcDWSFSJA41wC6V9r5Jriy4njsRmD3H27O3QYYV4AMbUm
-         tXDMOylFQmjGVHAvVJDVThyrSJpCbK15BdyXAw/RTy3qqsHIR6h5GbuWp0D0RbsJJMyQ
-         tYigUWAUK0wuJZ9Ln/RC6nNHR0Xc5/0j6baPRmmPBKLWI8mS58J1JBnQoFDh2fV6gAVB
-         aCWwMbSzJaVd3dqKFSysqW62WCaXVoVFyPNeXhO/N8IkyefOB7epKgE0KjIbL9lO4E2A
-         nOD8OiTN+7/mE4Ln7W/1Og55k8VV9viFgsgqrLPhDjnLlEirWNgizYb/4I63kiVYkSRp
-         /wmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680889843;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJzkrQgSJLoh68CvGvp1JznAA6lKkLejE1Wur3zdskg=;
-        b=z3+L9phkGztGkxwWRukRbOq+45xZgFabXmCBIfIQApy+CWEsi7LDdX0hh9bmgcL5v7
-         68L5vWvmD00hfvtrh9H2RgvfZLJluEuPWgs8MrNvk3xDzGtxw2RXloimrnUBXpCotDQj
-         KX7xhhtCPlK/SpffT4L660RTbIVMullMVaoHayMVY9WoD4zhFTHvwZmyfpAkzWigt1BS
-         1fny/5OAaj09dHnOV2tkQJ+DN0arh5MOq0qbsLSJmvFGIkcxP9N9r11mqjxSIsi4H33O
-         +YX+nPCJwrux6l54HxvvH0qSbxwTEOxzXduX9bXnWhN5s0IiEcbi6HXXY7IVd9TA6Emp
-         KceQ==
-X-Gm-Message-State: AAQBX9cXL5keQ/RPQ9stSwb1ijXj/PPVJM7CC/y+Ggz+O1PwXohcREg1
-        iFNlwBCno0r165ROxjrW26Rtiw==
-X-Google-Smtp-Source: AKy350aspk9YnMVy5hked+xx58M1c9hroC6snupKIoerfp0YWnXGXrL18Plz3ceLDw7pQ7fY4UQTgQ==
-X-Received: by 2002:aa7:9ec4:0:b0:626:7c43:7cb8 with SMTP id r4-20020aa79ec4000000b006267c437cb8mr3003966pfq.20.1680889842767;
-        Fri, 07 Apr 2023 10:50:42 -0700 (PDT)
-Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
-        by smtp.gmail.com with ESMTPSA id e18-20020aa78c52000000b0062a474cd46asm3298198pfd.137.2023.04.07.10.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 10:50:42 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Alexandre Mergnat <amergnat@baylibre.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        with ESMTP id S229589AbjDGRwd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 13:52:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF7E11D;
+        Fri,  7 Apr 2023 10:52:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44DB464F8D;
+        Fri,  7 Apr 2023 17:52:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727BAC433EF;
+        Fri,  7 Apr 2023 17:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680889951;
+        bh=MhhhjQ4pSBGhisBxx2pTmj4G3V0rJ5AYrElhbkgEyTg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TIWEXxa5qaYy98D7lMCS2Nguhnjc1UBLgmdsAkbLOs0dNwa/zlTnzMi6HCxONFS+T
+         iDR1UK4RO4azx9yp7GgD5tQPDGJkfkYRx0aBQy8W46gAXHH7pZ1R/TDh7oCq2OSGKg
+         DcPODIeofjHMkf0+6e22VZEwhuWvYNSXACBuHpT5uNYBDIUsxekig4oW+FSiLVm8Fx
+         gX+NdQ2ZNgHxO9IlX3y28S1LCJyeGTyxaiFBvqSEOxt2cAXv1kg9Lxl2Mz7/uJC7D2
+         B7SRouokA2wlLGVlbinDj8sAfSY866TJ6qSgn1Y0kAvnmLYnZy7tvs4M73S1R2TOlA
+         3m2KAoyQjCYxQ==
+Date:   Fri, 7 Apr 2023 10:55:20 -0700
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Bernhard =?utf-8?Q?Rosenkr=C3=A4n?= =?utf-8?Q?zer?= 
-        <bero@baylibre.com>
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        Alexandre Mergnat <amergnat@baylibre.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 00/12] Improve the MT8365 SoC and EVK board support
-In-Reply-To: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
-References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
-Date:   Fri, 07 Apr 2023 10:50:41 -0700
-Message-ID: <7h355b1szy.fsf@baylibre.com>
+        Mark Brown <broonie@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Rajesh Patil <rajpat@codeaurora.org>,
+        Roja Rani Yarubandi <rojay@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] Control Quad SPI pinctrl better on Qualcomm
+ Chromebooks
+Message-ID: <20230407175520.75f5z4hhzeq6qnnr@ripper>
+References: <20230323173019.3706069-1-dianders@chromium.org>
+ <CACRpkdaGpaiOVjEN6Ftq5=-yuAyD0xb7OcvtEsoqbTzias-xxw@mail.gmail.com>
+ <CAD=FV=W6QKfQxGcSrQdgp4VHYxfk7aYZOkYx4ve7QSpoZ-LM=A@mail.gmail.com>
+ <CACRpkdaUZbyEfkcHsNuQ=KhyuiKpunZJgvrnq90kQK8Z2V4jtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaUZbyEfkcHsNuQ=KhyuiKpunZJgvrnq90kQK8Z2V4jtg@mail.gmail.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Alexandre Mergnat <amergnat@baylibre.com> writes:
+On Wed, Mar 29, 2023 at 10:50:34AM +0200, Linus Walleij wrote:
+> On Mon, Mar 27, 2023 at 11:51 PM Doug Anderson <dianders@chromium.org> wrote:
+> 
+> > 1. Mark could land the SPI patch at any time, assuming he's OK with
+> > it. It can land totally independently.
+> 
+> OK this happened.
+> 
+> > Option A:
+> >
+> > 3. You land the pinctrl and binding patches in an immutable branch and
+> > merge into pinctrl.
+> >
+> > 4. Bjorn merges the immutable branch into the Qulacomm tree and places
+> > the last 3 dts patches atop.
+> 
+> Looks most appetizing.
+> 
+> I have applied patches 6,7,8 to this immutable branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-qcom-quad-spi
+> 
+> and I merged that into my "devel" branch for v6.4.
+> 
+> Bjorn can grab the branch if he wants it.
+> 
 
-> This commits are based on the Fabien Parent <fparent@baylibre.com> work.
->
-> The purpose of this series is to add the following HWs / IPs support for
-> the mt8365-evk board:
-> - Watchdog
-> - Power Management Integrated Circuit "PMIC" wrapper
-> - MT6357 PMIC
-> - MultiMediaCard "MMC" & Secure Digital "SD" controller
-> - USB controller
-> - Ethernet MAC controller
->
-> Add CPU Freq & IDLE support for this board.
+Thank you,
+Bjorn
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-Thanks for providing the branch with the dependencies.  With that, I
-tested basic build & boot on mt8365-evk, and things are working as
-expected.
-
-I also enabled `CONFIG_USB_ETH=y` to test with USB ethernet gadget, and
-was able use NFSroot, so that's working well also.
-
-Kevin
+> Yours,
+> Linus Walleij
