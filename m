@@ -2,212 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 452086DB847
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Apr 2023 04:49:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16ED6DBA47
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Apr 2023 12:55:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbjDHCt3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Apr 2023 22:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
+        id S230356AbjDHKzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Apr 2023 06:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDHCt2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Apr 2023 22:49:28 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A47C176
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Apr 2023 19:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680922165; x=1712458165;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=IV9jM6K0W7FT2T/XjDNALrD8eXGHQIgLcR7mAEJpCz4=;
-  b=TycO1GwbXXx5a5sk2Br8YiDUFXhLa+F4VaxCutTLd7ZBtDgTLucZYW91
-   dRXtbWslvcI2lWfvQPK3vbMatHfTTHiJBFSu9YmeKk6d+i6V5/RpJYTMt
-   n+7rY4k5SUN0VQEg9wOPj884DF1nTdwJKjzX196f8YMuK+gji+aSJ7wdy
-   EOwb32z4GD0MMDAtcfnymDgpwrSqxAGyXJsrozb00L3xdX3LronVYpRe5
-   vi0SkA0Vh7UgKWZU8eTEDOx7jkrxzs9qKHhAXIqiaJyw02UR8ghbU9jeo
-   XAtoIG4UILd8kxy6B9QXz/gMLQHlD8Np6sDKl+4W0Z88TjrB41fieFwBT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="370938463"
-X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
-   d="scan'208";a="370938463"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 19:49:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="752201412"
-X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
-   d="scan'208";a="752201412"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Apr 2023 19:49:23 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pkydn-000TDa-0f;
-        Sat, 08 Apr 2023 02:49:23 +0000
-Date:   Sat, 08 Apr 2023 10:49:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- f09673770e767f862bd992b612f14018d0ab3857
-Message-ID: <6430d620.KtMno3ni4zoV75+S%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231185AbjDHKyz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Apr 2023 06:54:55 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56BFFF0E
+        for <linux-gpio@vger.kernel.org>; Sat,  8 Apr 2023 03:53:29 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id ud9so1943893ejc.7
+        for <linux-gpio@vger.kernel.org>; Sat, 08 Apr 2023 03:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680951144;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xzlcPDdhLXiZUIT0eAmMiOCXXvUXvy1/5/KTBOdWAJA=;
+        b=X5IMUAXYOYOQUvk4BIOf4N93LRNKbzaBZ2CCaJlIorV7qKi1LeZi04eJHS5Y3tWRI9
+         T1rvvMAeehVALKOuMV6OQEPhffODCKMrenoUs52NodUA1kM/l0kCte3CQlnNtZlMyvpt
+         R7bH9G53BVQzSYzTH3ZYx+wGWGaIb+7nT+CwrTXecydJqyoI0QeVm90bLpCVumFP551C
+         mXJdQ8QLGFmKlQ++S7Uo0YSHpVnN2c1pAgF6dXtgA54YFCUO3pNQLmyAoLBYnGaqdCMn
+         FELx3+JtWHumMo7a+70dX8wNMpcSZnOjh1fPf/AcWA8ACtrT4o5JA4tZNTdmQ2QS3s8r
+         fPjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680951144;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xzlcPDdhLXiZUIT0eAmMiOCXXvUXvy1/5/KTBOdWAJA=;
+        b=g/Ih4CgtFRF6Tyb4Pae6RSjuYx3AkQ51pjo/IjanzxarZAy1zxTb/rGp8QCazrDgvu
+         bA8o1bpHgPqbLq+9sedD8cofQ//Kl80BLw+3AN/D/pw4KHUOE8uOHU6IyPGRb5RNpx8w
+         YTwOqkdGHLge8Is7zsnCdhR3V003qFnRPP972v8Ih52A2AXP2bKoxflovCauSfmaTPd/
+         nIR7kYwUoEkC5QVhi2jaVmL5eTMq0kU2G/ds4ceJCLFMXovcYGxFuDSFUQSJxI/sw/6y
+         m/W0aZHbnmY7wgnJHwFSXIdEvYRseGLD0tRLtbkc+Kj0mZIXMZ+1LT3ltWjcDomPs5dr
+         TXyQ==
+X-Gm-Message-State: AAQBX9egfi+RhwE/boTq9erD6e4x1KG0Curfcq2gzE3nDHhRKpqCpe85
+        UTdcjDmwx1AlXOzE3qZpaCpP+Q==
+X-Google-Smtp-Source: AKy350anWXnwjZ5u8PEeIytE4Zu/+haX07IcVOOwbe2BuzCnQbj9FO4aSCg0Qqbw/RWcoxWvWSjjqQ==
+X-Received: by 2002:a17:906:c085:b0:949:7c05:71b6 with SMTP id f5-20020a170906c08500b009497c0571b6mr2242272ejz.44.1680951144449;
+        Sat, 08 Apr 2023 03:52:24 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:4c06:aac9:100f:9d7f? ([2a02:810d:15c0:828:4c06:aac9:100f:9d7f])
+        by smtp.gmail.com with ESMTPSA id i19-20020a170906091300b00923f05b2931sm3023452ejd.118.2023.04.08.03.52.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Apr 2023 03:52:24 -0700 (PDT)
+Message-ID: <6127f21a-9101-9739-f798-0a181d8a5fcb@linaro.org>
+Date:   Sat, 8 Apr 2023 12:52:22 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 12/14] arm64: dts: qcom: sc7180: Fix trogdor qspi pin
+ config
+Content-Language: en-US
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20230323173019.3706069-1-dianders@chromium.org>
+ <20230323102605.12.I6f03f86546e6ce9abb1d24fd9ece663c3a5b950c@changeid>
+ <43b74b3f-e607-ba55-a5fa-326fb4b5519d@linaro.org>
+ <CAD=FV=VvgbPKQsOirMa-k0PE-KAvjWy+iMWd0TCbysYirwEH7w@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAD=FV=VvgbPKQsOirMa-k0PE-KAvjWy+iMWd0TCbysYirwEH7w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: f09673770e767f862bd992b612f14018d0ab3857  Merge tag 'intel-gpio-v6.4-2' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+On 07/04/2023 21:53, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Apr 7, 2023 at 11:11 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 23/03/2023 18:30, Douglas Anderson wrote:
+>>> In commit 7ec3e67307f8 ("arm64: dts: qcom: sc7180-trogdor: add initial
+>>> trogdor and lazor dt") we specified the pull settings on the boot SPI
+>>> (the qspi) data lines as pullups to "park" the lines. This seemed like
+>>> the right thing to do, but I never really probed the lines to confirm.
+>>>
+>>
+>>
+>>>  &qup_i2c2_default {
+>>> @@ -1336,6 +1340,22 @@ p_sensor_int_l: p-sensor-int-l-state {
+>>>               bias-disable;
+>>>       };
+>>>
+>>> +     qspi_sleep: qspi-sleep-state {
+>>> +             pins = "gpio63", "gpio64", "gpio65", "gpio68";
+>>> +
+>>> +             /*
+>>> +              * When we're not actively transferring we want pins as GPIOs
+>>> +              * with output disabled so that the quad SPI IP block stops
+>>> +              * driving them. We rely on the normal pulls configured in
+>>> +              * the active state and don't redefine them here. Also note
+>>> +              * that we don't need the reverse (output-enable) in the
+>>> +              * normal mode since the "output-enable" only matters for
+>>> +              * GPIO function.
+>>> +              */
+>>> +             function = "gpio";
+>>> +             output-disable;
+>>
+>> Doug,
+>>
+>> I acked some of your patches, but I assumed you tested all this. It
+>> turns out you never run dtbs_check on the patches you sent.
+> 
+> I'm fairly certain that I ran dtbs_check and confirmed that no new
+> errors were introduced on the device tree files that this patch series
+> cleaned up. Did I miss one?
 
-elapsed time: 727m
+You missed everything.
+Before the patchset almost all pinctrl bindings were passing on arm64
+DTS. Just one or two things to fix.
 
-configs tested: 132
-configs skipped: 12
+After the patchset: many new warnings.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>  I did not try to go through and fix all
+> examples of people using "input-enable" across all Qualcomm device
+> trees, though. 
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r002-20230403   gcc  
-alpha                randconfig-r005-20230403   gcc  
-alpha                randconfig-r021-20230403   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r001-20230405   gcc  
-arc                  randconfig-r002-20230403   gcc  
-arc                  randconfig-r016-20230403   gcc  
-arc                  randconfig-r025-20230407   gcc  
-arc                  randconfig-r043-20230403   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r005-20230405   gcc  
-arm                  randconfig-r025-20230403   clang
-arm                  randconfig-r031-20230403   gcc  
-arm                  randconfig-r046-20230403   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r015-20230403   gcc  
-arm64                randconfig-r015-20230406   clang
-arm64                randconfig-r016-20230406   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r014-20230406   gcc  
-csky                 randconfig-r023-20230407   gcc  
-hexagon      buildonly-randconfig-r006-20230403   clang
-hexagon              randconfig-r004-20230403   clang
-hexagon              randconfig-r012-20230403   clang
-hexagon              randconfig-r024-20230408   clang
-hexagon              randconfig-r041-20230403   clang
-hexagon              randconfig-r045-20230403   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230403   clang
-i386                 randconfig-a002-20230403   clang
-i386                 randconfig-a003-20230403   clang
-i386                 randconfig-a004-20230403   clang
-i386                 randconfig-a005-20230403   clang
-i386                 randconfig-a006-20230403   clang
-i386                 randconfig-a011-20230403   gcc  
-i386                 randconfig-a012-20230403   gcc  
-i386                 randconfig-a013-20230403   gcc  
-i386                 randconfig-a014-20230403   gcc  
-i386                 randconfig-a015-20230403   gcc  
-i386                 randconfig-a016-20230403   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r001-20230405   gcc  
-ia64         buildonly-randconfig-r002-20230403   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r013-20230406   gcc  
-ia64                 randconfig-r024-20230403   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r006-20230403   gcc  
-loongarch            randconfig-r013-20230403   gcc  
-loongarch            randconfig-r026-20230403   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r001-20230403   gcc  
-m68k                 randconfig-r012-20230403   gcc  
-m68k                 randconfig-r035-20230403   gcc  
-microblaze           randconfig-r005-20230403   gcc  
-microblaze           randconfig-r024-20230407   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r004-20230403   gcc  
-mips                 randconfig-r002-20230405   gcc  
-mips                 randconfig-r023-20230403   clang
-mips                 randconfig-r033-20230403   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r014-20230403   gcc  
-openrisc             randconfig-r011-20230403   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r003-20230405   gcc  
-parisc               randconfig-r011-20230403   gcc  
-parisc               randconfig-r013-20230403   gcc  
-parisc               randconfig-r015-20230403   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r013-20230403   gcc  
-powerpc              randconfig-r021-20230407   gcc  
-powerpc              randconfig-r026-20230407   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r002-20230405   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r012-20230406   clang
-riscv                randconfig-r042-20230403   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r001-20230403   gcc  
-s390         buildonly-randconfig-r003-20230403   gcc  
-s390         buildonly-randconfig-r005-20230403   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r003-20230403   clang
-s390                 randconfig-r016-20230403   gcc  
-s390                 randconfig-r022-20230407   gcc  
-s390                 randconfig-r044-20230403   gcc  
-sh                               allmodconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r034-20230403   gcc  
-sparc64              randconfig-r014-20230403   gcc  
-sparc64              randconfig-r022-20230403   gcc  
-sparc64              randconfig-r036-20230403   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230403   clang
-x86_64               randconfig-a002-20230403   clang
-x86_64               randconfig-a003-20230403   clang
-x86_64               randconfig-a004-20230403   clang
-x86_64               randconfig-a005-20230403   clang
-x86_64               randconfig-a006-20230403   clang
-x86_64               randconfig-a011-20230403   gcc  
-x86_64               randconfig-a012-20230403   gcc  
-x86_64               randconfig-a013-20230403   gcc  
-x86_64               randconfig-a014-20230403   gcc  
-x86_64               randconfig-a015-20230403   gcc  
-x86_64               randconfig-a016-20230403   gcc  
-x86_64               randconfig-k001-20230403   gcc  
-x86_64               randconfig-r032-20230403   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r001-20230403   gcc  
+You introduced new warnings, so it is expected to do.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> Those old device trees still work even if they're using
+> the now-deprecated bindings. When deprecating something my
+> understanding is that it's not required to go back and immediately
+> transition all old device tree files.
+
+You did not deprecate anything. You disallowed property causing many new
+warnings to pop up.
+
+> 
+> If having the "input-enable: false" in the bindings is causing huge
+> problems we could do a blank search-and-replace to rename it to
+> "output-disable", at least for places under "tlmm". Even if there are
+> cases where it's superfluous it would at least make the bindings
+> validate.
+
+There are different ways to fix it, the point is that none of the ways
+were used.
+
+I fixed it up:
+https://lore.kernel.org/linux-arm-msm/574d3aa5-21f4-014a-8cc7-7549df59ff3c@linaro.org/
+
+https://lore.kernel.org/linux-arm-msm/20230407180655.128771-1-krzysztof.kozlowski@linaro.org/
+
+https://lore.kernel.org/linux-arm-msm/20230407180045.126952-1-krzysztof.kozlowski@linaro.org/
+
+https://lore.kernel.org/linux-arm-msm/20230407175807.124394-1-krzysztof.kozlowski@linaro.org/
+
+
+Best regards,
+Krzysztof
+
