@@ -2,174 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F16ED6DBA47
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Apr 2023 12:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A182A6DBFE5
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Apr 2023 14:49:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230356AbjDHKzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Apr 2023 06:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        id S229531AbjDIMtQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Apr 2023 08:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231185AbjDHKyz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Apr 2023 06:54:55 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56BFFF0E
-        for <linux-gpio@vger.kernel.org>; Sat,  8 Apr 2023 03:53:29 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id ud9so1943893ejc.7
-        for <linux-gpio@vger.kernel.org>; Sat, 08 Apr 2023 03:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680951144;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xzlcPDdhLXiZUIT0eAmMiOCXXvUXvy1/5/KTBOdWAJA=;
-        b=X5IMUAXYOYOQUvk4BIOf4N93LRNKbzaBZ2CCaJlIorV7qKi1LeZi04eJHS5Y3tWRI9
-         T1rvvMAeehVALKOuMV6OQEPhffODCKMrenoUs52NodUA1kM/l0kCte3CQlnNtZlMyvpt
-         R7bH9G53BVQzSYzTH3ZYx+wGWGaIb+7nT+CwrTXecydJqyoI0QeVm90bLpCVumFP551C
-         mXJdQ8QLGFmKlQ++S7Uo0YSHpVnN2c1pAgF6dXtgA54YFCUO3pNQLmyAoLBYnGaqdCMn
-         FELx3+JtWHumMo7a+70dX8wNMpcSZnOjh1fPf/AcWA8ACtrT4o5JA4tZNTdmQ2QS3s8r
-         fPjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680951144;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xzlcPDdhLXiZUIT0eAmMiOCXXvUXvy1/5/KTBOdWAJA=;
-        b=g/Ih4CgtFRF6Tyb4Pae6RSjuYx3AkQ51pjo/IjanzxarZAy1zxTb/rGp8QCazrDgvu
-         bA8o1bpHgPqbLq+9sedD8cofQ//Kl80BLw+3AN/D/pw4KHUOE8uOHU6IyPGRb5RNpx8w
-         YTwOqkdGHLge8Is7zsnCdhR3V003qFnRPP972v8Ih52A2AXP2bKoxflovCauSfmaTPd/
-         nIR7kYwUoEkC5QVhi2jaVmL5eTMq0kU2G/ds4ceJCLFMXovcYGxFuDSFUQSJxI/sw/6y
-         m/W0aZHbnmY7wgnJHwFSXIdEvYRseGLD0tRLtbkc+Kj0mZIXMZ+1LT3ltWjcDomPs5dr
-         TXyQ==
-X-Gm-Message-State: AAQBX9egfi+RhwE/boTq9erD6e4x1KG0Curfcq2gzE3nDHhRKpqCpe85
-        UTdcjDmwx1AlXOzE3qZpaCpP+Q==
-X-Google-Smtp-Source: AKy350anWXnwjZ5u8PEeIytE4Zu/+haX07IcVOOwbe2BuzCnQbj9FO4aSCg0Qqbw/RWcoxWvWSjjqQ==
-X-Received: by 2002:a17:906:c085:b0:949:7c05:71b6 with SMTP id f5-20020a170906c08500b009497c0571b6mr2242272ejz.44.1680951144449;
-        Sat, 08 Apr 2023 03:52:24 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:4c06:aac9:100f:9d7f? ([2a02:810d:15c0:828:4c06:aac9:100f:9d7f])
-        by smtp.gmail.com with ESMTPSA id i19-20020a170906091300b00923f05b2931sm3023452ejd.118.2023.04.08.03.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Apr 2023 03:52:24 -0700 (PDT)
-Message-ID: <6127f21a-9101-9739-f798-0a181d8a5fcb@linaro.org>
-Date:   Sat, 8 Apr 2023 12:52:22 +0200
+        with ESMTP id S229478AbjDIMtP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Apr 2023 08:49:15 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.215])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8040040CA;
+        Sun,  9 Apr 2023 05:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Mhjvh
+        SjVLfAU4UiAkgI/PW9/PMmXYNymW2/ysFGQTpo=; b=POvRWspsvdXHf9ZZxP6sL
+        vQMPPqgjgC2hwTlYavzS4by3jzR2mkqvw36xdW5pLWeyy4IP3QSLjLHkYsxxqhAF
+        D2GHbgdR08gWc9aEMfCWuiGO5B7NFkqG6obBpw9YjIp6e4OQM9Q3y30VJwvKgMa/
+        G+1HZ+DTW4NFvaGn7Oowb8=
+Received: from ubuntu.localdomain (unknown [115.156.140.143])
+        by zwqz-smtp-mta-g4-1 (Coremail) with SMTP id _____wDXaJQVtDJkoV3tAw--.6869S4;
+        Sun, 09 Apr 2023 20:48:22 +0800 (CST)
+From:   Xinyi Hou <Y_Ashley@163.com>
+To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Xinyi Hou <Y_Ashley@163.com>, Dongliang Mu <dzm91@hust.edu.cn>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] misc: mchp_pci1xxxx: mchp_pci1xxxx_gp: add unwind goto
+Date:   Sun,  9 Apr 2023 20:48:15 +0800
+Message-Id: <20230409124816.36137-1-Y_Ashley@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 12/14] arm64: dts: qcom: sc7180: Fix trogdor qspi pin
- config
-Content-Language: en-US
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-gpio@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20230323173019.3706069-1-dianders@chromium.org>
- <20230323102605.12.I6f03f86546e6ce9abb1d24fd9ece663c3a5b950c@changeid>
- <43b74b3f-e607-ba55-a5fa-326fb4b5519d@linaro.org>
- <CAD=FV=VvgbPKQsOirMa-k0PE-KAvjWy+iMWd0TCbysYirwEH7w@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAD=FV=VvgbPKQsOirMa-k0PE-KAvjWy+iMWd0TCbysYirwEH7w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-CM-TRANSID: _____wDXaJQVtDJkoV3tAw--.6869S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KrWfAF1kWr1rKr4DKFWUtwb_yoW8XF1kpF
+        9ayFy7ZrW8twnrKw4xZ3WUtF4fCw40k34YgrZFv39I93ZxJF17Kry0grn0vw1DWFWUt3W3
+        tr1jyFWrCa1UZw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piqg4fUUUUU=
+X-Originating-IP: [115.156.140.143]
+X-CM-SenderInfo: p1bd2xxoh1qiywtou0bp/1tbiShhMxGI0XssOZwAAsw
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/04/2023 21:53, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Apr 7, 2023 at 11:11 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 23/03/2023 18:30, Douglas Anderson wrote:
->>> In commit 7ec3e67307f8 ("arm64: dts: qcom: sc7180-trogdor: add initial
->>> trogdor and lazor dt") we specified the pull settings on the boot SPI
->>> (the qspi) data lines as pullups to "park" the lines. This seemed like
->>> the right thing to do, but I never really probed the lines to confirm.
->>>
->>
->>
->>>  &qup_i2c2_default {
->>> @@ -1336,6 +1340,22 @@ p_sensor_int_l: p-sensor-int-l-state {
->>>               bias-disable;
->>>       };
->>>
->>> +     qspi_sleep: qspi-sleep-state {
->>> +             pins = "gpio63", "gpio64", "gpio65", "gpio68";
->>> +
->>> +             /*
->>> +              * When we're not actively transferring we want pins as GPIOs
->>> +              * with output disabled so that the quad SPI IP block stops
->>> +              * driving them. We rely on the normal pulls configured in
->>> +              * the active state and don't redefine them here. Also note
->>> +              * that we don't need the reverse (output-enable) in the
->>> +              * normal mode since the "output-enable" only matters for
->>> +              * GPIO function.
->>> +              */
->>> +             function = "gpio";
->>> +             output-disable;
->>
->> Doug,
->>
->> I acked some of your patches, but I assumed you tested all this. It
->> turns out you never run dtbs_check on the patches you sent.
-> 
-> I'm fairly certain that I ran dtbs_check and confirmed that no new
-> errors were introduced on the device tree files that this patch series
-> cleaned up. Did I miss one?
+Smatch reported:
 
-You missed everything.
-Before the patchset almost all pinctrl bindings were passing on arm64
-DTS. Just one or two things to fix.
+drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c:73 gp_aux_bus_probe() warn:
+missing unwind goto?
 
-After the patchset: many new warnings.
+In gp_aux_bus_probe(), when the allocation of
+aux_bus->aux_device_wrapper[1] fails, it needs to clean up the allocated
+resources.
 
->  I did not try to go through and fix all
-> examples of people using "input-enable" across all Qualcomm device
-> trees, though. 
+Fix this by revising the return statement to a goto statement.
 
-You introduced new warnings, so it is expected to do.
+Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
+Signed-off-by: Xinyi Hou <Y_Ashley@163.com>
+Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+---
+The issue is found by static analysis, and the patch remains untest.
+---
 
-> Those old device trees still work even if they're using
-> the now-deprecated bindings. When deprecating something my
-> understanding is that it's not required to go back and immediately
-> transition all old device tree files.
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-You did not deprecate anything. You disallowed property causing many new
-warnings to pop up.
-
-> 
-> If having the "input-enable: false" in the bindings is causing huge
-> problems we could do a blank search-and-replace to rename it to
-> "output-disable", at least for places under "tlmm". Even if there are
-> cases where it's superfluous it would at least make the bindings
-> validate.
-
-There are different ways to fix it, the point is that none of the ways
-were used.
-
-I fixed it up:
-https://lore.kernel.org/linux-arm-msm/574d3aa5-21f4-014a-8cc7-7549df59ff3c@linaro.org/
-
-https://lore.kernel.org/linux-arm-msm/20230407180655.128771-1-krzysztof.kozlowski@linaro.org/
-
-https://lore.kernel.org/linux-arm-msm/20230407180045.126952-1-krzysztof.kozlowski@linaro.org/
-
-https://lore.kernel.org/linux-arm-msm/20230407175807.124394-1-krzysztof.kozlowski@linaro.org/
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+index 32af2b14ff34..2c64b6b3cd9c 100644
+--- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
++++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
+@@ -69,8 +69,10 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 
+ 	aux_bus->aux_device_wrapper[1] = kzalloc(sizeof(*aux_bus->aux_device_wrapper[1]),
+ 						 GFP_KERNEL);
+-	if (!aux_bus->aux_device_wrapper[1])
+-		return -ENOMEM;
++	if (!aux_bus->aux_device_wrapper[1]) {
++		retval = -ENOMEM;
++		goto err_aux_dev_add_0;
++	}
+ 
+ 	retval = ida_alloc(&gp_client_ida, GFP_KERNEL);
+ 	if (retval < 0)
+-- 
+2.25.1
 
