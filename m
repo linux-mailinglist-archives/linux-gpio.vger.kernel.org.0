@@ -2,65 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A61C26DCD4E
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 00:13:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299106DCD63
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 00:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbjDJWNf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Apr 2023 18:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51058 "EHLO
+        id S229733AbjDJWU4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Apr 2023 18:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjDJWNe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 18:13:34 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F541BCF
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 15:13:32 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id f188so37924533ybb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 15:13:32 -0700 (PDT)
+        with ESMTP id S229745AbjDJWU4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 18:20:56 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670E210DB
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 15:20:54 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id ch3so7238591ybb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 15:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681164811;
+        d=linaro.org; s=google; t=1681165253;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=emJXX1tWaFzEtlDfswfF2P0R3+dXu3v3TR+PG0ckaR4=;
-        b=irEsiTCQL1z/ZrlkuvbYltSjPuSv0cEn9s/tlAidxlxHKhdtR4MI3gJMHThyvFiMzZ
-         10J23MWpxEiOaeFUhoXhBBTFGWdlHjJnHCoEhTsCzvsFo9jQY4VtNQjXTCgJLZJHsiEa
-         Mc/J9E5ww8HLWCPZRlfpgHg/Xx62Bu2pf95vsQ/L71ia60anP+xdO3SpHoD1tPDp8xoy
-         Vz4nxNFLGMeaQkaasO4wgQS1qtJcb5bm+fs5/fzMAvArvD6EGPA4vA2LU9p0AfsJbPC0
-         QlLg7NOkcXfDPq7LZFHMLhcN4PE9gz72uTrOiM+hKd4RL1JHEXonVmmR7y6g5Pf4i3MT
-         1geA==
+        bh=GY3XURVYWCIcemLAr8O9Wiej+aFCql/3yCAZTzhHcSs=;
+        b=VNcMwyYOH9xebcPuWV3dFdUJ5t+c0vlfeyFbDGAu53qPX29fh9SVStP0ZvJlPO9b0N
+         HGUPWUOezP7UdaQQly+jeaBFl4E8qA23Xz7uxqiFVJjVk06p7HvPKC4HpaDgA8hjHlBi
+         xJBgoAeN9xkOU2PpC0BwJVbfKvDVoS4lkBYBu7KCqS9MyWvrgGRFOUMaHfjuNdMcBmlB
+         t5whbFRg6wPG6/IAA0+edaA3s7DXYbZij5R1ZQaaXIj+Tt3Udi0gJGEY7J1uyw+DDF44
+         bqlj3OBWyJdp9QC/BJ6N+JzIVYy9nIQ6qdWDa2V8vJT4WNdbz4w5/eAIynxyAnLll+gS
+         mBUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681164811;
+        d=1e100.net; s=20210112; t=1681165253;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=emJXX1tWaFzEtlDfswfF2P0R3+dXu3v3TR+PG0ckaR4=;
-        b=tT5GoseJKQJNECbePlz1ppt0cdiLZPggC+QwBe1+jIz7JWR58Ps3eQcsYjwqozOt6X
-         O1gS9dkLJcq/QCsaCvvKwO75PiqDwwDkSKiwDIt+VTPd1BDr9XSFGX3rc6nETCd7aXp3
-         y29GzfVSLoogGgqvTOrPC1Leju1p25/Ty+xhjf75kfsdIdxJHoEoUmOdW19SJvXaRUPI
-         N6N5yvqeiVTzVUXSzi14zT97n/17xvcZgUz1O5H3XGjhWsaViEbQRQCR8fsEdriwixLm
-         /tXhJgWxiRI/kjAsztao6b7l1MuT3o1xsDlIW/7KgXvwf4FZqTZQ8VGCcg4e3aIlhPOL
-         FxIQ==
-X-Gm-Message-State: AAQBX9dqnHTXaUHlJzEHKliV33iqyOGXsPf6AWBKq195SiytrdxEjKiJ
-        utF+Kw45snaU5R51JShrhLkdt+M5dJoVOPmTECpC4w==
-X-Google-Smtp-Source: AKy350adMvcP5fh7YH7iAuPRCjpj2UN11sndlgPZfxBGcCytrueCQltV4rvwNVQ3w6r9LjMg4xdfJQOwja237vL9p2Q=
-X-Received: by 2002:a25:cac5:0:b0:b8e:d126:c64 with SMTP id
- a188-20020a25cac5000000b00b8ed1260c64mr187298ybg.4.1681164811332; Mon, 10 Apr
- 2023 15:13:31 -0700 (PDT)
+        bh=GY3XURVYWCIcemLAr8O9Wiej+aFCql/3yCAZTzhHcSs=;
+        b=NAKZU9XR8iU+qgp9x3Z30lvw8NRaboJaoMb1rEI+CKkyMhr3GqjvacZCfQhbq1OjuL
+         x3k5xNBAYDU7FCNyNf+tpMO+KzBBHCpRPbq/aNxIQwUBe8dBubKTRUtkPQJgPWfmBteX
+         VXTF0GM6F36uS0rJ3aHrIaZJ9zel7aA+i8A3tohqn7FOfo5JIJdxa+ufw8amIWAFCFkz
+         fXKKQgu3DQD4FyrJQ9DsCKaGuhamAxRu4/bzxUCszUyNDQk8dsnJS+Oet4cLNqflgtQw
+         B7ZnCumbTZaqjmp6wzauMZ2RcQTnl3+IKHnYTscQHaMnX6/4d+9YhsQiJ1yYClxE8TTr
+         Nt7Q==
+X-Gm-Message-State: AAQBX9f79CbVf45NPAxYWvFGhvfERx6/7Hr3CPNBNmgbnKFs6pHY3cRV
+        SE1v9BwAZBSBlJooI5NyySSs6BxGHDK7i9ZA6qJhPg==
+X-Google-Smtp-Source: AKy350bXiLysNcV+Q+/hru2MCd67dq41AQdoznEw88BUw2uC8Wa1FCc0rGVz3dTyK37BVHXOUEC94ofML1oMScjzdTk=
+X-Received: by 2002:a25:d994:0:b0:b8e:fbcb:d6ef with SMTP id
+ q142-20020a25d994000000b00b8efbcbd6efmr2648692ybg.4.1681165253591; Mon, 10
+ Apr 2023 15:20:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1680708357.git.william.gray@linaro.org>
-In-Reply-To: <cover.1680708357.git.william.gray@linaro.org>
+References: <20230327-cleanup-pinctrl-binding-v3-0-6f56d5c7a8de@baylibre.com>
+In-Reply-To: <20230327-cleanup-pinctrl-binding-v3-0-6f56d5c7a8de@baylibre.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 11 Apr 2023 00:13:20 +0200
-Message-ID: <CACRpkdZA7BUv0EeGjjEQ=Xk=WiDUSeTm4pgpxknN9qzNgc+19w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] Migrate the PCIe-IDIO-24 and WS16C48 GPIO drivers
- to the regmap API
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, techsupport@winsystems.com,
-        pdemetrotion@winsystems.com, quarium@gmail.com,
-        jhentges@accesio.com, jay.dolan@accesio.com
+Date:   Tue, 11 Apr 2023 00:20:42 +0200
+Message-ID: <CACRpkdbXvMsa=suwEZ64b1Jn9Tp2mD8CqhmwLhSHdtdAOBzN-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Cleanup Mediatek pinctrl device tree binding
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -72,13 +76,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 5, 2023 at 5:45=E2=80=AFPM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Tue, Apr 4, 2023 at 6:30=E2=80=AFPM Alexandre Mergnat <amergnat@baylibre=
+.com> wrote:
 
-> Changes in v6:
+> Deprecate properties which shall not exist, leaked upstream from downstre=
+am
+> kernels, there's no reason to use them. Here the deprecated properties an=
+d
+> the generic properties which will replace them:
+>
+> - mediatek,drive-strength-adv =3D> drive-strength-microamp
+> - mediatek,pull-up-adv        =3D> bias-pull-up
+> - mediatek,pull-down-adv      =3D> bias-pull-down
+>
+> Another commit has been added in v3 to make it easier to merge. [2]
+>
+> Thanks AngeloGioacchino Del Regno to reported it. [1]
+>
+> [1]: https://lore.kernel.org/all/6e08d78f-ef4c-b228-f7d2-d63767ea87b8@col=
+labora.com/
+> [2]: https://lore.kernel.org/all/20230203-evk-board-support-v4-2-5cffe66a=
+38c0@baylibre.com/
+> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl=
+.git/log/?h=3Ddevel
+>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Excellent and persevere work,
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patches applied!
+
+Thanks for you excellent attention to detail!
 
 Yours,
 Linus Walleij
