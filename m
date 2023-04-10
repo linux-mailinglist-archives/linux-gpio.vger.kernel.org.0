@@ -2,73 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4805B6DC4F2
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Apr 2023 11:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC8C6DC506
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Apr 2023 11:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbjDJJQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Apr 2023 05:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42988 "EHLO
+        id S229618AbjDJJWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Apr 2023 05:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbjDJJQ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 05:16:56 -0400
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76E02107
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 02:16:54 -0700 (PDT)
-Received: by mail-ua1-x92b.google.com with SMTP id p91so16257161uap.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 02:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681118213;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V0N2613pKQCAL9iN6z4rVK3cSRr5vURUZo3s2wt46N0=;
-        b=tA3Ep3a9rR3yyVebRfsMovHLrPAK9u2+vpAAk+hkocRWd2QSGN8327+jchQXINtRKQ
-         PQf9doLpbbJYCeEz9DkSLbrgF30UcULPcRmUFd2rh1C20Gg8/y8bI6U0+7dA4+3Io3eo
-         ZwI/UkqTzXwSc8oFVD0OFzlYfZsR5sxiEqEH+wsA8GByx/56ugja2fvdFpDcT30WPY99
-         im0JWODQSSJgMc5PKKdjandlE4fFQHCZHEaX0BIhuYryqXlw1w6p6u2PvMQoCAuUFsbE
-         yI6kOhMf817Eyw8lfNUQyVrdxDqDhsxe0s8IceUqJ7EqFAiq2EuuDVWo969434/Yt6bN
-         AJGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681118213;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V0N2613pKQCAL9iN6z4rVK3cSRr5vURUZo3s2wt46N0=;
-        b=btvc/KkeTOuqRzznJ5TZtWrkEJC53x0gJgpHyJjdvAUwnzBOxkp3xLh6e4UYFMSOzw
-         uZsptmrcMoGwhjfFBieOtsnU9xkFxLN+tOWYFZVRbpsDeAjUhKlolPYS6qx6ew0Hmwy3
-         Ulawj61CbkeJZ1/ReujJ+L2nTvbQpUMbBpb1x4k0BMKqOv1d6HglBq/RMrxPU2SH/GZy
-         5YXM+/yYCOB0Ow74LkcbD9b1WEaYAH6rl89nvvDqbxk5Bqqodd1Q4sFxKWGFhrpp0SUU
-         Zqt5T5ZrZtVLdUsJBv2ReB2YSsdiZJa/UOk3y1R3BZMfqafZerMEZWZjCUWZ3Wn+rjw9
-         GLsg==
-X-Gm-Message-State: AAQBX9eXXRRQA9JKVkoZ+RN4+KxNCUNQHbgO86/yR8N4A0jDqz+q7PCK
-        AM3OWMQBjC5Bk78u217vxyxnBDbyc9VdDHL4BqgxLIvNzDbpSQ9Ibww=
-X-Google-Smtp-Source: AKy350bKBcnWH4Hp69Mt7Cjb50/39FiDV0xEAscrOKWyxOWbHlaJoMMkrFK8FZZLH2HsFkOnC0rWcfFdqMA2zez+xjA=
-X-Received: by 2002:a1f:270e:0:b0:43b:e059:987f with SMTP id
- n14-20020a1f270e000000b0043be059987fmr5467809vkn.0.1681118213114; Mon, 10 Apr
- 2023 02:16:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
- <ZAocZRZh4FQRH3lc@smile.fi.intel.com>
-In-Reply-To: <ZAocZRZh4FQRH3lc@smile.fi.intel.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 10 Apr 2023 14:46:42 +0530
-Message-ID: <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
-Subject: Re: selftests: gpio: crash on arm64
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        with ESMTP id S229485AbjDJJWq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 05:22:46 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590D83A85;
+        Mon, 10 Apr 2023 02:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681118565; x=1712654565;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=vixb6IPmiIMsYkwf0NoabEj/JLj68xiEa0sfF8yIvb0=;
+  b=aoBAXSRXqDKWK2ke2CXWw4rdFVhOOexEbVKLoHBqHk9iRa2B0FcISQ5n
+   iQdo9ax8Z42EsB05yVWVzFWIND47SoNikG8Gj+RimAXHYAjHH+x1stQ1y
+   QuCRb2czqtCR6OHfJDMO4HdPkcVrN4HbZv8bDF9zuqAgtqHU1uAmTJ8Gi
+   xGZ8DOXIA8MrBN/jrbQnbP2vw6pX4JJG/vr0Q/qjgIzm8hdUr3HdJN7lL
+   Bae/Bm3cJZ+uRLbSkwnC9Ps6WwlFo60rMoVTBNnKh9QcJd03ve3BjXXX/
+   0B9g6jnswwLNvtQXN5aKwoRcTw4tDNFy+dy0r+7tlE2Qt6EECAjCDMJrp
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="327414176"
+X-IronPort-AV: E=Sophos;i="5.98,333,1673942400"; 
+   d="scan'208";a="327414176"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2023 02:22:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="934289970"
+X-IronPort-AV: E=Sophos;i="5.98,333,1673942400"; 
+   d="scan'208";a="934289970"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2023 02:22:43 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 10 Apr 2023 02:22:43 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Mon, 10 Apr 2023 02:22:43 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Mon, 10 Apr 2023 02:22:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NO2vjVwdFBjV53jxDXDGo6GYENUDU1oXi8H77LiwpJLAjkrA9Kuo83ose4mSS/zSZ4+jYfW3sYTDU1Yg4D8kGuHr68Gilu+HIBPHKAQ7dzE8aWGj6zR15h/i2QnvXsFIB5eisIDmVF0yqmZH8cG2j5I4QPnLUalYjASK6nvjH/tU8+lbsuL4hIXk2Kr53faVPDZjNSngPHzVrF9vF6E8Y8Yg+Flx4qFTkQJ1g2jWlOZSmp/paF8v/0Ni9CpwSVBe1qCL3gFWOY+ZzILU0Ga72fpYWwDv7pPHj7pru0iup/5K2zZFkxb+UXGSPDcus3Vp7PYxLlpMYpTZAJdfELpsyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Caa5G72Rs9z+8lRTegtBzTFxTOjgQVU8s/eEIohIrGk=;
+ b=IJN0v3ylndCcOSu3e8RY752s0jqLUCdeHdhCm4uOnDxsSA0zKv8taI8GcLXkY6k4QIZWdHgtdaqpmDuxoYxjq7IDf5LiUT+KEqXQUYlwSrEgZSw5dkfMc/q1H6D54tzChbPlLXbBTPOIXDnwGM/7woQQJEo7WRGHKlVTCXlBzsPoGB121r7e/Ee0ejYEJm7sYxBa3R3bkAM9sXvenzKD9aGfG5cZiaqg6k3zgKOigaCfJeDJA+PN4KIK1gHtpOaLdki33MkrWUja0YN7eaCQ3+IJWTGrArfounlutiFJkPHLxaKbHQedxtz2ov2tS98ryE9W4Gsg1p2j7UqagLdMsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM5PR11MB1418.namprd11.prod.outlook.com (2603:10b6:3:8::9) by
+ SJ0PR11MB5008.namprd11.prod.outlook.com (2603:10b6:a03:2d5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Mon, 10 Apr
+ 2023 09:22:41 +0000
+Received: from DM5PR11MB1418.namprd11.prod.outlook.com
+ ([fe80::3d44:4cb0:ccca:2afd]) by DM5PR11MB1418.namprd11.prod.outlook.com
+ ([fe80::3d44:4cb0:ccca:2afd%7]) with mapi id 15.20.6277.038; Mon, 10 Apr 2023
+ 09:22:40 +0000
+Date:   Mon, 10 Apr 2023 17:22:40 +0800
+From:   "Ye, Xiang" <xiang.ye@intel.com>
+To:     Andi Shyti <andi.shyti@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        <linux-usb@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <srinivas.pandruvada@intel.com>,
+        <heikki.krogerus@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <sakari.ailus@linux.intel.com>, <zhifeng.wang@intel.com>,
+        <wentong.wu@intel.com>, <lixu.zhang@intel.com>
+Subject: Re: [PATCH v6 5/6] i2c: Add support for Intel LJCA USB I2C driver
+Message-ID: <ZDPVYEHSI3ud27rN@ye-NUC7i7DNHE>
+References: <20230323172113.1231050-1-xiang.ye@intel.com>
+ <20230323172113.1231050-6-xiang.ye@intel.com>
+ <20230326153846.zo77mbgti2injnxl@intel.intel>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230326153846.zo77mbgti2injnxl@intel.intel>
+X-ClientProxiedBy: SG2PR06CA0191.apcprd06.prod.outlook.com (2603:1096:4:1::23)
+ To DM5PR11MB1418.namprd11.prod.outlook.com (2603:10b6:3:8::9)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR11MB1418:EE_|SJ0PR11MB5008:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec62e962-233f-4501-b2ac-08db39a52144
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tJxiiXk8iOTuQjbBTtrWcfxqx0y8KBO23Vf1rBxq4RDHBUIQtGoEsrc0krsB6c5ptK2vEUiUCKphUoullsQcyyPwW6HE7Bncg/wgtnWrYfVHufEeXLBkfQZX9A0AwUue8a6SCCig3M2QGtYaJYHGz9DT/oXcvTWd0H9zm3kUcxIdFJgNfGZIlvw9Hn2SewQCBIMh+4mOE6FkGEZDd0ntfWmLBALsi3ECV3yw126rp2FhqRrBOFJWHz+uHUbvNB+fsoc+uWZiqXaQXLXlYLlTHtNXlNaPhbiegfAUW1+aO4zO2jL1WWXuSNuOJd7h+KyPawHSqvqmCW/23IlINPn8Zd+rz67cf7phRe/GrFIoeYZOpXTsFz4n21oKnntLa7C+EF+vpne/5cNaNol2QcCc5YPtU4sKsGkyGCzaS96SYL6aA1MTg8J1zf6nLIF8N3Ja/QAMNPsfYvg8ab/zm1jbVv3URneRTBzq3LmgqbwdE8wuaLz0DNNvIbMcQmfMQKz2cKHBAl3I6p4/R2HhQI53Ke1/Xv3fb+tADi9cbmX8nwGknMl2JMOmV0okI4Awa5NigoV5yZ2446I31COZil5iP3Asv25fFD7C3h5+WMHWXxWNr5pLK4w0/KE+B0P5zerM
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(346002)(396003)(136003)(366004)(39860400002)(451199021)(8936002)(7416002)(6486002)(5660300002)(86362001)(66556008)(66476007)(66946007)(8676002)(6916009)(4326008)(33716001)(478600001)(38100700002)(316002)(82960400001)(54906003)(2906002)(6512007)(6506007)(9686003)(26005)(186003)(41300700001)(309714004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?F0VJLG1G3595V0EskCzH/UCajt3cSR/M6Gc3axV/ScdnJDJijt+Sfg7OBKX6?=
+ =?us-ascii?Q?yvcW1DMxNPJEVSX7M97auvH8xZ60qFub+DiSU39FAEjts7lh/VHgme8WzT9s?=
+ =?us-ascii?Q?5pOMctyTEAWNfGIqSvAq9F7iHeXteoeo+uDKEhB25lQK5tXdFuj+yLeBUcIW?=
+ =?us-ascii?Q?NwHj67Yi8OPEkrQ99ls5RbHQoRpLkGbtcVYdKh5o1hSvBnyUfxq5bbvV3bcl?=
+ =?us-ascii?Q?zwj10elW+pQVCJ6JqqtaKjOsiiVHQYHTfC8TsZJFiDd5A2gIRJnBe1yf/Y7e?=
+ =?us-ascii?Q?Vp2JhzZ96rQjEH1+cVFVKPm9m111F/tkfCV2uOWoGaUSXhFn/rSrcvczh/Dv?=
+ =?us-ascii?Q?359yYeecWilwx9IhiLzULUGxdkU3lu+HQV9jE1Y8q7T1XUNg4DX9vXrDE1eN?=
+ =?us-ascii?Q?LWqz7f/eWC1LrnIo+ASdhbw8e4KJkgRVjLJjUZ2+2Ma/RKulD89eY0FJRX5R?=
+ =?us-ascii?Q?YLVajyaizTUB6MtMZUx3Wh5kaOgw8xFOypWy6Kri5mIRtPt/fH5gM3jjFjq8?=
+ =?us-ascii?Q?8HdZ++K2pRfezGcg5uQi3kChFArIRz7fIKdJhN++WwvVSrxhzgIDYvBXwL7R?=
+ =?us-ascii?Q?4Oz/xEi8iZM/Yya16z2wvQ3pH2yS2qrnU8F5aYyS5gkibRUvnaIiaT+60Vp8?=
+ =?us-ascii?Q?Qx1VYHeVFfM23HZDsuk0VEq3+JRQdP1FBBRpEBJDC2SI2QvOMPjOga8oOSVB?=
+ =?us-ascii?Q?NERaRKZSr9XhGcLVWlu1Kdz+cmxcC9w6ptkNVdUecW9omZOYOO+0WSj4+S7j?=
+ =?us-ascii?Q?EHUYX3uNlp3F3YbzzFH5g7YTuhJeOlrZ+BO4aHiIqxYSk9cBN+Cl4UVndiCc?=
+ =?us-ascii?Q?JcZ7GtsOYiK633a6Gvfsg3B3Y9zZCsWMADKsGYaLHm0l9UDydRvg0waitQKX?=
+ =?us-ascii?Q?gzZIQqBXb6dH2antarNbyEe0l6jDxopAUo+fx2Q+l+W9fuYaHcbC8X4l3XNE?=
+ =?us-ascii?Q?H08S9689PRVyJkmNulsqwnkKLwYictfPPtybg0Np34gl5wWqoS2/enKUYBo8?=
+ =?us-ascii?Q?i5NLvdBOHE8au9Qap0eXeHZRFuMoBlqYnaR3La8+T7oydNV5YxLQz2aFelJP?=
+ =?us-ascii?Q?ygz9ZRaMGYae8lga5cHASC/oJbCyNuJAdJd9lHQvsVJT/hsuFQjP+Q+kVRfh?=
+ =?us-ascii?Q?ymi1zGeiw+XB/DkZE1IqXIpe+1hjJQSLh9Qec+Pn7vm5VlWiyc/Ce1qKgzfy?=
+ =?us-ascii?Q?Th0nH5fR7zV4JwzlwLYxHHMhqfe9JtgrBANy1QMNloAh84d85S2jg5yEMiam?=
+ =?us-ascii?Q?7hH78U+pyzivUi24IzQbkX3nwLsXAx9wbvPNc4+V+aHroFx8+orwCgyNh7pS?=
+ =?us-ascii?Q?bW6nMRcbVJl8qZUQe28F1RFBB8k1ecxahRMADuRBhEeuPP9Jla7T0xR9xCcb?=
+ =?us-ascii?Q?MzzG6M1gi0WlV4tHx6Q02KOUzpgIVGpjx1x+LDNqDZWY8+ANib1IWYeqtQSq?=
+ =?us-ascii?Q?IaO9+VrpFQJMsWUXqoN5Tl47iOc3lDb2Y0mLLutwWK/+0a6l8f707YesAfCq?=
+ =?us-ascii?Q?b1xYMvwDgcOk+lpCAEDJdDrFU6fxt2HLZvODQ4NuNvy+POCujsj7IF7w+c85?=
+ =?us-ascii?Q?wjgkQ6ZdmKMMcBBdb9n0cWfUrT5K3VVjSy0vxrNj?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec62e962-233f-4501-b2ac-08db39a52144
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1418.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2023 09:22:40.1659
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G7PFw4erLojNh1VX17aAk7qinjgOtuf4bN8KsL5Yi/qJiJzX3FgEadh4UkYAwqhmzz8ioZtmia2ZLIGRYUpLJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5008
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,136 +156,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 9 Mar 2023 at 23:20, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Mar 09, 2023 at 09:33:29PM +0530, Naresh Kamboju wrote:
-> > Following kernel warnings and crash notices on arm64 Rpi4 device while
-> > running selftests: gpio on Linux mainline 6.3.0-rc1 kernel and Linux next.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> ...
->
-> > [   61.177432]  *** DEADLOCK ***
-> > [   61.177432]
-> > [   61.177434] 3 locks held by modprobe/510:
-> > [   61.177436] #0: ffff000040000698 (&n->list_lock){-.-.}-{2:2}, at:
-> > get_partial_node.part.0 (mm/slub.c:2271)
-> > [   61.177448] #1: ffff80000b227f18 (console_lock){+.+.}-{0:0}, at:
-> > vprintk_emit (kernel/printk/printk.c:1936 kernel/printk/printk.c:2315)
-> > [   61.177460] #2: ffff80000b228388 (console_srcu){....}-{0:0}, at:
-> > console_flush_all (include/linux/srcu.h:200 kernel/printk/printk.c:290
-> > kernel/printk/printk.c:2934)
->
-> How is it related to the GPIO?
-> Can you bisect if it's a regression somewhere?
+Hi Andi,
 
-The following crash on Linux mainline and next was noticed while running
-selftest gpio on arm64. And this is a kselftest-merge config build.
-Which means it has a large set of test configs enabled.
-
-Anders performed bisection on this problem.
-The bisection have been poing to this commit log,
-  first bad commit: [24c94060fc9b4e0f19e6e018869db46db21d6bc7]
-    gpiolib: ensure that fwnode is properly set
-
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-
-Crash log:
-# 2.  Module load error tests
-# 2.1 gpio overflow
-[   88.796755] =============================================================================
-[   88.806704] BUG kmalloc-512 (Not tainted): Poison overwritten
-[   88.812482] -----------------------------------------------------------------------------
-[   88.812482]
-[   88.822170] 0xe38-0xe47 @offset=28216. First byte 0x6a instead of 0x6b
-[   88.830994] Allocated in swnode_register+0x40/0x218 age=828 cpu=2 pid=565
-[   88.837830]  __kmem_cache_alloc_node+0x11c/0x320
-[   88.842480]  kmalloc_trace+0x54/0xa8
-[   88.846083]  swnode_register+0x40/0x218
-[   88.849947]  fwnode_create_software_node+0xcc/0x1a0
-[   88.854856]  0xffff8000018c71cc
-[   88.858029]  0xffff8000018c73b0
-[   88.861197]  do_one_initcall+0x80/0x320
-[   88.865062]  do_init_module+0x50/0x210
-[   88.868843]  load_module+0x201c/0x2260
-[   88.872622]  __do_sys_finit_module+0xb0/0x138
-[   88.877010]  __arm64_sys_finit_module+0x2c/0x48
-[   88.881572]  invoke_syscall+0x8c/0x120
-[   88.885352]  el0_svc_common.constprop.0+0x104/0x130
-[   88.890263]  do_el0_svc+0x44/0xb8
-[   88.893606]  el0_svc+0x48/0xb8
-[   88.896686]  el0t_64_sync_handler+0xbc/0x138
-[   88.900984] Freed in software_node_release+0xdc/0x108 age=34 cpu=1 pid=683
-[   88.907899]  __kmem_cache_free+0x2a4/0x2e0
-[   88.912024]  kfree+0xc0/0x1a0
-[   88.915015]  software_node_release+0xdc/0x108
-[   88.919402]  kobject_put+0xb0/0x220
-[   88.922919]  software_node_notify_remove+0x98/0xe8
-[   88.927741]  device_del+0x184/0x380
-[   88.931259]  platform_device_del.part.0+0x24/0xa8
-[   88.935995]  platform_device_unregister+0x30/0x50
-[   88.940730]  0xffff8000018a1dd4
-[   88.943898]  __arm64_sys_delete_module+0x184/0x328
-[   88.948722]  invoke_syscall+0x8c/0x120
-[   88.952502]  el0_svc_common.constprop.0+0x104/0x130
-[   88.957413]  do_el0_svc+0x44/0xb8
-[   88.960757]  el0_svc+0x48/0xb8
-[   88.963834]  el0t_64_sync_handler+0xbc/0x138
-[   88.968132]  el0t_64_sync+0x190/0x198
-[   88.971820] Slab 0xfffffc00209d0800 objects=21 used=7
-fp=0xffff000827423200
-flags=0xbfffc0000010200(slab|head|node=0|zone=2|lastcpupid=0xffff)
-[   88.984653] Object 0xe00 @offset=28160 fp=0xffff000827423200
-[   88.984653]
-[   88.992953] Redzone   <Trim>
-[   89.002470] Redzone   <Trim>
-[   89.011986] Redzone   <Trim>
+Thanks for the review.
+On Sun, Mar 26, 2023 at 05:38:46PM +0200, Andi Shyti wrote:
+> Hi Ye,
+> 
+> looks good, just a few questions:
+> 
+> On Fri, Mar 24, 2023 at 01:21:12AM +0800, Ye Xiang wrote:
+> > This patch implements the I2C function of Intel USB-I2C/GPIO/SPI adapter
+> 
+> also here, please keep using the imperative form.
+Got it.
+> 
+> > device named "La Jolla Cove Adapter" (LJCA). It communicate with LJCA
+> > I2c module with specific protocol through interfaces exported by LJCA USB
+> > driver.
 ...
-[   89.278435] Redzone   <Trim>
-[   89.287951] Redzone   <Trim>
-[   89.297468] Object    <Trim>
-[   89.306984] Object    <Trim>
-[   89.316500] Object    <Trim>
-...
-[   89.592465] Object
-[   89.601981] Redzone
-[   89.610801] Padding
-[   89.620317] Padding
-
-
-Details test and crash log:
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc6/testrun/16155019/suite/log-parser-test/test/check-kernel-exception/log
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc6/testrun/16155019/suite/log-parser-test/tests/
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc6/testrun/16155157/suite/log-parser-test/tests/
-
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: 09a9639e56c01c7a00d6c0ca63f4c7c41abe075d
-  git_describe: v6.3-rc6
-  kernel_version: 6.3.0-rc6
-  kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2OCXLSEmqxrg13KKFGzypngoE3K/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/832195018
-  artifact-location:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2OCXLSEmqxrg13KKFGzypngoE3K/
-  toolchain: gcc-11
-  email-notification: ''
-  build_name: gcc-11-lkftconfig-kselftest
-
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
-
+> > +static u8 ljca_i2c_format_slave_addr(u8 slave_addr, u8 type)
+> > +{
+> > +	return (slave_addr << 1) | (type == LJCA_I2C_READ_XFER_TYPE) ?
+> > +		       LJCA_I2C_SLAVE_TRANSFER_READ :
+> > +		       LJCA_I2C_SLAVE_TRANSFER_WRITE;
+> > +}
+> 
+> How about:
+> 
+> 	return (slave_addr << 1) | !!type;
+> 
+> BTW, am I reading correctly that the address here is composed as:
+> 
+>    7     6     5     5     3     2     1    0
+>  ADDR7 ADDR6 ADDR5 ADDR4 ADDR3 ADDR2 ADDR1 R/W
+> 
+> [...]
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+You are correct. Will adopt this solution on next version. 
+> > +static u32 ljca_i2c_func(struct i2c_adapter *adap)
+> > +{
+> > +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> 
+> how is the smbus supported here?
+The i2c-sub module of LJCA device is SMBUS compatible.
+It's supported by LJCA device hardware itself.
+
+Thanks
+Ye Xiang
+
+
