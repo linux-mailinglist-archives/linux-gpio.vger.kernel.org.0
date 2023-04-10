@@ -2,118 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5886DC38F
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Apr 2023 08:35:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2B2F6DC425
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Apr 2023 10:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjDJGe4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Apr 2023 02:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
+        id S229699AbjDJIBl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Apr 2023 04:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjDJGez (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 02:34:55 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF11840E0;
-        Sun,  9 Apr 2023 23:34:54 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33A5tI9C012895;
-        Mon, 10 Apr 2023 06:34:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=Hclue6ug/7B1tehPsDnrLRVAC5+IwS28gpXRNRQ59eY=;
- b=L4SWaNAtgyzPMgy2W/nju2PEwQdLPkIgDEu3gTr0/13wEdHpZVcMzwQ1jTLcf2zxIPeN
- Couofl3KKCcL0nPUSjLk0Bqpt+AGEafqm+T2M48ZZECHO5zrqMwVrGSoGpaXNJrFcPdh
- m8AVrAjwGjzJg+7mO+WA3/9fwIRYNRxHlcEcTZhDvaKcVNaVN/olRlWlFZtHKStHiHKS
- NNNTtukVDwR8huJB7SZ4z/F4KDtE7q+fsDklIj+8aAfCfxaXL23AC4lT5abHDM5jv0IP
- brbWcxh/lnaAyyPepe7VijPf8f7DT32E1yagKT6jSfT+E2E5xP6kE9ITX6+alExOgJmV HQ== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pu0c32bhp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Apr 2023 06:34:37 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33A6YaVq022406
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Apr 2023 06:34:36 GMT
-Received: from [10.216.3.168] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sun, 9 Apr 2023
- 23:34:26 -0700
-Message-ID: <858e8459-75bb-c507-5cbb-146d56e1ad27@quicinc.com>
-Date:   Mon, 10 Apr 2023 12:04:17 +0530
+        with ESMTP id S229684AbjDJIBk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Apr 2023 04:01:40 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2DC359A
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Apr 2023 01:01:38 -0700 (PDT)
+Received: from ramsan.of.borg ([84.195.187.55])
+        by laurent.telenet-ops.be with bizsmtp
+        id iw1e290061C8whw01w1ezM; Mon, 10 Apr 2023 10:01:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1plmSF-00GRud-FM;
+        Mon, 10 Apr 2023 10:01:38 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1plmT4-0092Re-1k;
+        Mon, 10 Apr 2023 10:01:38 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.4 (take two)
+Date:   Mon, 10 Apr 2023 10:01:36 +0200
+Message-Id: <cover.1681113471.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH V2 6/9] dt-bindings: pinctrl: qcom: Add few missing
- functions
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <mani@kernel.org>, <p.zabel@pengutronix.de>,
-        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_ipkumar@quicinc.com>
-References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
- <20230404164828.8031-7-quic_devipriy@quicinc.com>
- <445ed49a-9ea6-0851-b0c5-bdd1d420689e@linaro.org>
-Content-Language: en-US
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <445ed49a-9ea6-0851-b0c5-bdd1d420689e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DaHnYsZOODC7SRrBMg0JxUu9a5NB5J05
-X-Proofpoint-ORIG-GUID: DaHnYsZOODC7SRrBMg0JxUu9a5NB5J05
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-10_03,2023-04-06_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 spamscore=0 malwarescore=0 adultscore=0
- mlxlogscore=580 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304100055
-X-Spam-Status: No, score=-3.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.4 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+	Hi Linus,
 
+The following changes since commit 9d7558ed8372c51cbed011cb1dc3eb1beee212cf:
 
-On 4/5/2023 12:28 PM, Krzysztof Kozlowski wrote:
-> On 04/04/2023 18:48, Devi Priya wrote:
->> Added the missing functions cri_trng2, gpio and removed the
->> duplicate entry qdss_tracedata_b
->>
->> Fixes: 5b63ccb69ee8 ("dt-bindings: pinctrl: qcom: Add support for IPQ9574")
-> 
-> Fixes are either separate patches or sent as first in the series. This
-> is not really related to PCI, so it should be separate patchset.
-Got it, will post it as a separate patch
-> 
->> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->> ---
->>   Changes in V2:
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Thanks!
-> 
-> Best regards,
-> Krzysztof
-> 
-Best Regards,
-Devi Priya
+  pinctrl: renesas: Drop support for Renesas-specific properties (2023-03-16 16:55:27 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.4-tag2
+
+for you to fetch changes up to 45e6cc8ef1cd8576707506a4eeffef858e4a1a83:
+
+  pinctrl: renesas: core: Drop unneeded #ifdef CONFIG_OF (2023-03-30 15:41:14 +0200)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.4 (take two)
+
+  - Retain POCCTRL0 register across s2ram on R-Car D3,
+  - Add support for Ethernet power-sources on R-Car V3M, V3H, E3, D3,
+    and V4H,
+  - Annotate sentinels in tables,
+  - Add bias pinconf support and PWM pin groups on R-Car H1,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (12):
+      pinctrl: renesas: r8a77995: Retain POCCTRL0 register across suspend/resume
+      pinctrl: renesas: rcar: Phase out old SH_PFC_PIN_CFG_IO_VOLTAGE flag
+      pinctrl: renesas: Add support for 1.8V/2.5V I/O voltage levels
+      pinctrl: renesas: r8a77970: Add support for AVB power-source
+      pinctrl: renesas: r8a77980: Add support for AVB/GE power-sources
+      pinctrl: renesas: r8a77990: Add support for AVB power-source
+      pinctrl: renesas: r8a77995: Add support for AVB power-source
+      pinctrl: renesas: r8a779g0: Add support for AVB/TSN power-sources
+      pinctrl: renesas: Annotate sentinels in tables
+      pinctrl: renesas: r8a7779: Add bias pinconf support
+      pinctrl: renesas: r8a7779: Add PWM pins, groups, and functions
+      pinctrl: renesas: core: Drop unneeded #ifdef CONFIG_OF
+
+ drivers/pinctrl/renesas/core.c         |  10 +-
+ drivers/pinctrl/renesas/pfc-emev2.c    |   2 +-
+ drivers/pinctrl/renesas/pfc-r8a73a4.c  |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a7740.c  |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a77470.c |  46 ++--
+ drivers/pinctrl/renesas/pfc-r8a7778.c  |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a7779.c  | 446 ++++++++++++++++++++++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7790.c  |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a7791.c  |   6 +-
+ drivers/pinctrl/renesas/pfc-r8a7792.c  |   2 +-
+ drivers/pinctrl/renesas/pfc-r8a7794.c  |  50 ++--
+ drivers/pinctrl/renesas/pfc-r8a77951.c |  12 +-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  |  12 +-
+ drivers/pinctrl/renesas/pfc-r8a77965.c |  12 +-
+ drivers/pinctrl/renesas/pfc-r8a77970.c |  38 ++-
+ drivers/pinctrl/renesas/pfc-r8a77980.c |  49 ++--
+ drivers/pinctrl/renesas/pfc-r8a77990.c |  41 +--
+ drivers/pinctrl/renesas/pfc-r8a77995.c |  46 ++--
+ drivers/pinctrl/renesas/pfc-r8a779a0.c |   8 +-
+ drivers/pinctrl/renesas/pfc-r8a779f0.c |   8 +-
+ drivers/pinctrl/renesas/pfc-r8a779g0.c |  53 +++-
+ drivers/pinctrl/renesas/pfc-sh7203.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7264.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7269.c   |   6 +-
+ drivers/pinctrl/renesas/pfc-sh73a0.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7720.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7722.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7723.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7724.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7734.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7757.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7785.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-sh7786.c   |   4 +-
+ drivers/pinctrl/renesas/pfc-shx3.c     |   4 +-
+ drivers/pinctrl/renesas/pinctrl-rza1.c |   2 +-
+ drivers/pinctrl/renesas/pinctrl-rzn1.c |   2 +-
+ drivers/pinctrl/renesas/pinctrl.c      |  22 +-
+ drivers/pinctrl/renesas/sh_pfc.h       |  13 +-
+ 38 files changed, 725 insertions(+), 225 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
