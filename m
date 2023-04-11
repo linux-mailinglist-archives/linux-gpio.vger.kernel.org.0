@@ -2,219 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C15FA6DDBC0
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 15:10:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C8336DDBC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 15:11:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbjDKNKL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 09:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
+        id S229700AbjDKNLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 09:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbjDKNKL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 09:10:11 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D843F30F6
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 06:10:08 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id z4so4895661qkz.12
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 06:10:08 -0700 (PDT)
+        with ESMTP id S229955AbjDKNLt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 09:11:49 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFFA10FF
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 06:11:48 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id a9so7711577vsh.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 06:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1681218608;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1681218707;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zf73QU/vp2FR2MAJTQ+Ali/CjjJipWz08ZhCoQgQ1ms=;
-        b=PHsTIwBY3MYsQ9dnFd+Ps0AgLQyXKa/g7dqspz1ZYbVa8+wrNGnkqtn8TZHNMkMUSr
-         og3xCWJDxpwBegBEV/xShi4Lz6ogAqCiCKiRCkkbY8CLqcaJrwHKCXeAD74+t/ZVR++Q
-         +bUahcSevbUmAy716SNvl6UHXnPAuHRYyAErI=
+        bh=GonC8IX0js+OVi94Wk4G2xkTnBOQ98tF+JQsSsp/P+Q=;
+        b=xcJRS2UHnJF4qMLv4zXTiL1wmsA2j57YKkXofoZoG/nncFZ9Dc1hTwLN9PxOK66kSn
+         mz5KoPN9Le33iDewCg+LcdfbSvEsXPwZX+o6OB81EpOzNNkDtFiXuemIctsk56gBvpCC
+         wDInekSq7XXxuRAZSFDN+SVTjC0FN04Oh7DdCusqwKQ8b4Fga6xT4XzMEc0v9bldQ9Ez
+         dAgN26c61YqIQFVmFY94LfFbXWjGBpZmtDSFpAPxfM5ShpqBMCeOaneCk3slWVYcWVcA
+         pTI/4tv2eM4KsYmeCwLjBPhsy9AF78MmkekST/L15qszuiH85CAGdjRrRpkonzJhc9h+
+         hwXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681218608;
+        d=1e100.net; s=20210112; t=1681218707;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zf73QU/vp2FR2MAJTQ+Ali/CjjJipWz08ZhCoQgQ1ms=;
-        b=3AvUaWV2/bB9CyIjcDD3W7TpJOlTVLVgRYaXfnElPFNAaDZy/ci/Ro5aVGJZxTMN7P
-         4xzyM1GdsGdp7DaQaDwrj489NI5VInTvSpsmmJvH5wkQIXNMPCXeADa2jsOgmmASOT0x
-         2nRfUEsuwqbzezbxQwfqOk/ndJgeYW6aZaqZLMSC8jp5uCIgbFP8nagUdugtmzYZ/Ve/
-         X9bqUBBkZ9AvvdwLx0KlEshhmBawJMRPIFcnRag8wirZw5jLre02vao/o0ZA+ZA00x59
-         6I3BzKAAqXEvpeOuQkTTf6F0nuLA0EYRkvoDGVAV74jNRspYUoZOAteRkRFqeT7Zd2/M
-         KwKQ==
-X-Gm-Message-State: AAQBX9fFgYnx8tkC8SWT6MXNmFfnIGEWvd7sEYYQM/IfN3urf8IQts8z
-        fnZBIw33letnhdQotgoAIFOyE9VazeszJeXKaZe88w==
-X-Google-Smtp-Source: AKy350aytpXAmt2I4/HuOkFhNjWfbiyryLtfZciMpH4rg8ps+0TEo4wgOX9w5A+Nz5hz/IFjHMD3zaA2/sonr1A8iRs=
-X-Received: by 2002:a05:620a:28c4:b0:745:a35f:ad71 with SMTP id
- l4-20020a05620a28c400b00745a35fad71mr4712462qkp.13.1681218607964; Tue, 11 Apr
- 2023 06:10:07 -0700 (PDT)
+        bh=GonC8IX0js+OVi94Wk4G2xkTnBOQ98tF+JQsSsp/P+Q=;
+        b=B6kOhYjwRbbeLn2x6/pTtIHWq0KLHcQyypws8J/0kjfqvcCGbBTSSZRAI6L5KeMVqZ
+         b0wHzkoQs1SqYNmvRJ3oOTzA6b89ZWivkMZdJd5E47egNazTIGnHJG+PXkC9ZsNxxbvK
+         TC2yP2wLS60ElrXs0nnOaQEY4/4zlfxO0IaqrH7cTvvvbEtgRr9IYD74ZjyXHq8MdOnQ
+         4DXRFT2GKnTo1XaPXyc9xqpVAcevYLDNF/AJ8jqT4r6un+qweW0hMahpocb0n7RcEjmp
+         RF5JNusC7HIuKWFLpN6kvqLmJXmXRV3b9f+yDdSKKyc0VDPdoFAodXdQX579xOgAZVCB
+         PeIQ==
+X-Gm-Message-State: AAQBX9fdbfmip2ae9fuY6TqTAKOIPejj9PLjvSKRfKZMVQMkRO5j5GIK
+        VDxB+XU8p/Z2mJg1KfFcdmlC7rRWLNpyxMGiFreztklxkc51lS7/
+X-Google-Smtp-Source: AKy350YbgCCHeeQll+PtCuIJBiGVDqYrDGK7d5MCr7dW/WF0/1JpvIxP/7GIUb8Prhz1Fy5k/YBRj+Zy3NIQvBwzyTk=
+X-Received: by 2002:a67:ca81:0:b0:426:7730:1b89 with SMTP id
+ a1-20020a67ca81000000b0042677301b89mr1904738vsl.0.1681218707036; Tue, 11 Apr
+ 2023 06:11:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230320093259.845178-1-korneld@chromium.org> <d1d39179-33a0-d35b-7593-e0a02aa3b10a@amd.com>
- <ed840be8-b27b-191e-4122-72f62d8f1b7b@amd.com> <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
-In-Reply-To: <37178398-497c-900b-361a-34b1b77517aa@leemhuis.info>
-From:   =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
-Date:   Tue, 11 Apr 2023 15:09:56 +0200
-Message-ID: <CAD=NsqzFiQBxtVDmCiJ24HD0YZiwZ4PQkojHHic775EKfeuiaQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Disable and mask interrupts on resume
-To:     Linux regressions mailing list <regressions@lists.linux.dev>
-Cc:     gregkh@linuxfoundation.org,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        "Gong, Richard" <richard.gong@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
+ <ZAocZRZh4FQRH3lc@smile.fi.intel.com> <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
+ <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com>
+In-Reply-To: <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 11 Apr 2023 15:11:36 +0200
+Message-ID: <CAMRc=MeivPz2nOjgFwYscZQpbuXnt=z5JAVMB4uzahQJgKjdKg@mail.gmail.com>
+Subject: Re: selftests: gpio: crash on arm64
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 2:50=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
+On Tue, Apr 11, 2023 at 10:57=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
 >
+> On Mon, Apr 10, 2023 at 11:16=E2=80=AFAM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> (...)
+> > Anders performed bisection on this problem.
+> > The bisection have been poing to this commit log,
+> >   first bad commit: [24c94060fc9b4e0f19e6e018869db46db21d6bc7]
+> >     gpiolib: ensure that fwnode is properly set
 >
+> I don't think this is the real issue.
 >
-> On 10.04.23 17:29, Gong, Richard wrote:
-> > On 4/10/2023 12:03 AM, Mario Limonciello wrote:
-> >> On 3/20/23 04:32, Kornel Dul=C4=99ba wrote:
-> >>
-> >>> This fixes a similar problem to the one observed in:
-> >>> commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on
-> >>> probe").
-> >>>
-> >>> On some systems, during suspend/resume cycle firmware leaves
-> >>> an interrupt enabled on a pin that is not used by the kernel.
-> >>> This confuses the AMD pinctrl driver and causes spurious interrupts.
-> >>>
-> >>> The driver already has logic to detect if a pin is used by the kernel=
-.
-> >>> Leverage it to re-initialize interrupt fields of a pin only if it's n=
-ot
-> >>> used by us.
-> >>>
-> >>> Signed-off-by: Kornel Dul=C4=99ba <korneld@chromium.org>
-> >>> ---
-> >>>   drivers/pinctrl/pinctrl-amd.c | 36 +++++++++++++++++++-------------=
----
-> >>>   1 file changed, 20 insertions(+), 16 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pinctrl/pinctrl-amd.c
-> >>> b/drivers/pinctrl/pinctrl-amd.c
-> >>> index 9236a132c7ba..609821b756c2 100644
-> >>> --- a/drivers/pinctrl/pinctrl-amd.c
-> >>> +++ b/drivers/pinctrl/pinctrl-amd.c
-> >>> @@ -872,32 +872,34 @@ static const struct pinconf_ops amd_pinconf_ops
-> >>> =3D {
-> >>>       .pin_config_group_set =3D amd_pinconf_group_set,
-> >>>   };
-> >>>   -static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
-> >>> +static void amd_gpio_irq_init_pin(struct amd_gpio *gpio_dev, int pin=
-)
-> >>>   {
-> >>> -    struct pinctrl_desc *desc =3D gpio_dev->pctrl->desc;
-> >>> +    const struct pin_desc *pd;
-> >>>       unsigned long flags;
-> >>>       u32 pin_reg, mask;
-> >>> -    int i;
-> >>>         mask =3D BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
-> >>>           BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF) |
-> >>>           BIT(WAKE_CNTRL_OFF_S4);
-> >>>   -    for (i =3D 0; i < desc->npins; i++) {
-> >>> -        int pin =3D desc->pins[i].number;
-> >>> -        const struct pin_desc *pd =3D pin_desc_get(gpio_dev->pctrl, =
-pin);
-> >>> -
-> >>> -        if (!pd)
-> >>> -            continue;
-> >>> +    pd =3D pin_desc_get(gpio_dev->pctrl, pin);
-> >>> +    if (!pd)
-> >>> +        return;
-> >>>   -        raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> >>> +    raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> >>> +    pin_reg =3D readl(gpio_dev->base + pin * 4);
-> >>> +    pin_reg &=3D ~mask;
-> >>> +    writel(pin_reg, gpio_dev->base + pin * 4);
-> >>> +    raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-> >>> +}
-> >>>   -        pin_reg =3D readl(gpio_dev->base + i * 4);
-> >>> -        pin_reg &=3D ~mask;
-> >>> -        writel(pin_reg, gpio_dev->base + i * 4);
-> >>> +static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
-> >>> +{
-> >>> +    struct pinctrl_desc *desc =3D gpio_dev->pctrl->desc;
-> >>> +    int i;
-> >>>   -        raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-> >>> -    }
-> >>> +    for (i =3D 0; i < desc->npins; i++)
-> >>> +        amd_gpio_irq_init_pin(gpio_dev, i);
-> >>>   }
-> >>>     #ifdef CONFIG_PM_SLEEP
-> >>> @@ -950,8 +952,10 @@ static int amd_gpio_resume(struct device *dev)
-> >>>       for (i =3D 0; i < desc->npins; i++) {
-> >>>           int pin =3D desc->pins[i].number;
-> >>>   -        if (!amd_gpio_should_save(gpio_dev, pin))
-> >>> +        if (!amd_gpio_should_save(gpio_dev, pin)) {
-> >>> +            amd_gpio_irq_init_pin(gpio_dev, pin);
-> >>>               continue;
-> >>> +        }
-> >>>             raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> >>>           gpio_dev->saved_regs[i] |=3D readl(gpio_dev->base + pin * 4=
-)
-> >>> & PIN_IRQ_PENDING;
-> >>
-> >> Hello Kornel,
-> >>
-> >> I've found that this commit which was included in 6.3-rc5 is causing a
-> >> regression waking up from lid on a Lenovo Z13.
-> > observed "unable to wake from power button" on AMD based Dell platform.
+> (...)
+> > # 2.  Module load error tests
+> > # 2.1 gpio overflow
+> (...)
+> > [   88.900984] Freed in software_node_release+0xdc/0x108 age=3D34 cpu=
+=3D1 pid=3D683
+> > [   88.907899]  __kmem_cache_free+0x2a4/0x2e0
+> > [   88.912024]  kfree+0xc0/0x1a0
+> > [   88.915015]  software_node_release+0xdc/0x108
+> > [   88.919402]  kobject_put+0xb0/0x220
+> > [   88.922919]  software_node_notify_remove+0x98/0xe8
+> > [   88.927741]  device_del+0x184/0x380
+> > [   88.931259]  platform_device_del.part.0+0x24/0xa8
+> > [   88.935995]  platform_device_unregister+0x30/0x50
 >
-> This sounds like something that we want to fix quickly.
+> I think the refcount is wrong on the fwnode.
 >
-> > Reverting "pinctrl: amd: Disable and mask interrupts on resume" on the
-> > top of 6.3-rc6 does fix the issue.
-> >>
-> >> Reverting it on top of 6.3-rc6 resolves the problem.
-> >>
-> >> I've collected what I can into this bug report:
-> >>
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=3D217315
-> >>
-> >> Linus Walleij,
-> >>
-> >> It looks like this was CC to stable.  If we can't get a quick solution
-> >> we might want to pull this from stable.
-> >
-> > this commit landed into 6.1.23 as well
-> >
-> >         d9c63daa576b2 pinctrl: amd: Disable and mask interrupts on resu=
-me
+> The chip is allocated with devm_gpiochip_add_data() which will not call
+> gpiochip_remove() until all references are removed by calling
+> devm_gpio_chip_release().
 >
-> It made it back up to 5.10.y afaics.
+> Add a pr_info() devm_gpio_chip_release() in drivers/gpio/gpiolib-devres.c
+> and see if the callback is even called. I think this could be the
+> problem: if that isn't cleaned up, there will be dangling references.
 >
-> The culprit has no fixes tag, which makes me wonder: should we quickly
-> (e.g. today) revert this in mainline to get back to the previous state,
-> so that Greg can pick up the revert for the next stable releases he
-> apparently currently prepares?
+> diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.=
+c
+> index fe9ce6b19f15..30a0622210d7 100644
+> --- a/drivers/gpio/gpiolib-devres.c
+> +++ b/drivers/gpio/gpiolib-devres.c
+> @@ -394,6 +394,7 @@ static void devm_gpio_chip_release(void *data)
+>  {
+>         struct gpio_chip *gc =3D data;
 >
-> Greg, is there another way to make you quickly fix this in the stable
-> trees? One option obviously would be "revert this now in stable, reapply
-> it later together with a fix ". But I'm under the impression that this
-> is too much of a hassle and thus something you only do in dire situations=
-?
+> +       pr_info("GPIOCHIP %s WAS REMOVED BY DEVRES\n", gc->label);
+>         gpiochip_remove(gc);
+>  }
 >
-> I'm asking because I over time noticed that quite a few regressions are
-> in a similar situation -- and quite a few of them take quite some time
-> to get fixed even when a developer provided a fix, because reviewing and
-> mainlining the fix takes a week or two (sometimes more). And that is a
-> situation that is more and more hitting a nerve here. :-/
+> If this isn't working we need to figure out what is holding a reference t=
+o
+> the gpiochip.
+>
+> I don't know how the references to the gpiochip fwnode is supposed to
+> drop to zero though? I didn't work with mockup much ...
+>
+> What I could think of is that maybe the mockup driver need a .shutdown()
+> callback to forcibly call gpiochip_remove(), and in that case it should
+> be wrapped in a non-existining devm_gpiochip_remove() since devres
+> is used to register it.
+>
+> Bartosz will know better though! I am pretty sure he has this working
+> flawlessly so the tests must be doing something weird which is leaving
+> references around.
+>
+> Yours,
+> Linus Walleij
 
-I've looked into this and at this moment I can't really find a quick fix.
-See https://bugzilla.kernel.org/show_bug.cgi?id=3D217315#c3.
-It seems that reverting this might be the best solution for now.
+Interestingly I'm not seeing this neither with gpio-sim selftests nor
+with any of the libgpiod tests which suggests it's the gpio-mockup
+module that's doing something wrong (or very right in which case it
+uncovers some otherwise hidden bug). Anyway, I'll try to spend some
+time on it and figure it out, although I'd like to be done with
+gpio-mockup altogether already.
 
-Regards
-Kornel
+Bart
