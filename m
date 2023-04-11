@@ -2,167 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 528726DDD1F
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 16:01:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4018F6DDD59
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 16:11:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbjDKOBk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 10:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
+        id S229490AbjDKOLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 10:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231246AbjDKOBf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 10:01:35 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732D53C26;
-        Tue, 11 Apr 2023 07:01:22 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33BDREG7000410;
-        Tue, 11 Apr 2023 14:00:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=i4JXZ/+C19m2J5iqS6POWClSCNVPg9jd/RyGMq+Bk6Y=;
- b=UD9pjPxeXir2p/IXG0Hn+4Ij9yyTcgvXdK/7RLwSHldFk+900CZt0EvF1H8HVg9Hu43/
- f1vuyKdiKJb83W57c/mT3Zv7lowMsUIvnjLhGu8Xu5JVXFxMv0fdAuw+xmAduA1Pwibt
- vjwQWq8+JsTv/ncvkLbacHviS19fpSeSNbFdlhaOU4vX8kOuk/l85vYCzCfpF5CanFDd
- wxfo/LxumMsBrk/lriNdO7+fXsUxUbXHkrJZm+Y+6qjjr3tcBnhs+UWW0n9C+ddxLOSw
- CxzgnG+PXr6L/IraAhSuv9rMyLo6pr8oa0Ycgee0dwB3vColi5ruwRE8kIzXsZTs6fDj uw== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pvvux1j00-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Apr 2023 14:00:55 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33BE0Tt7025460
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 Apr 2023 14:00:29 GMT
-Received: from [10.216.4.20] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 11 Apr
- 2023 07:00:19 -0700
-Message-ID: <9fd81c81-7d54-80ef-3054-9dc3b0c379e1@quicinc.com>
-Date:   Tue, 11 Apr 2023 19:30:15 +0530
+        with ESMTP id S229503AbjDKOLx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 10:11:53 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC41A359D;
+        Tue, 11 Apr 2023 07:11:52 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id cg4so146649qtb.11;
+        Tue, 11 Apr 2023 07:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1681222312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vp5TeUo87Ef5LRFqAMptSkS+XyNmpn4jmV0jNCTXKOw=;
+        b=Hf8ptq0WvJuev7sP/M2XDvm9UtgR/kCdTdNUNvr/4g/NGv3+CFcqK5Gd8wENKSbu48
+         XwfVZY5aI8uJqXi174yCs1+/y+t+eHUXQI7Lc4NB207+G/ifkUF/+8QY8upbjGSMDj05
+         S/rpjE9Hzok/DC0+98Wk3giPiPUj6p5nEm1RWRm50zJ1MCbGAMExaDv27ahEtJvBxce1
+         5G9NM/S2uktq8/CHSTz1s50ek6B6BZYYpAJoCeed3m1mbOvN9Iv3QrzGRkAUlZ5fCK6A
+         HzgxSUS1xL3/Z2RIOG5+AzNhUOyxjSEQfvAoVNB7tk3zhTzXcbZFpoeizvY8+nQHQ9Ib
+         hsSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681222312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vp5TeUo87Ef5LRFqAMptSkS+XyNmpn4jmV0jNCTXKOw=;
+        b=iXNuFcFFxdW6FaMVYzvxMhFo7CKHQM1UmLqWi/sKvbeN+UbjYrMEgG8g9KtU7VGXG5
+         rq2WGG1nEs9fJINJ5VIUDSWomizVZqlY6uQQMveG57hKhRH5AFJZX++l6kNIrJ/YiTjN
+         o48ghDnUPcSXRgRKKSfP8etW6OtdMXDc3Fz5yFR9Pszy24T+6GbyxUq+lYTCoVSJR6oe
+         p9Ptye3eDxBT+ZKsf7/c7xWFykggZbhzwWOZNaERO9dNr3QHH0rfHYXAHvwGc3XEDog7
+         2Usja4EmjKgJor3w2uGAiHFmmEjwQ5svH7Wgiwsr4DQg4lZPFzepJd+AeaLCt61xk0WR
+         WDiA==
+X-Gm-Message-State: AAQBX9fHF88MQ6h79Np7kOe4EJLAnBddH9OZyWHuMsb+Dc7Mbg8cAAVb
+        drfQ/aEHxTwGwRkvYi1vkJPi8luC+eMeXPFnBjE=
+X-Google-Smtp-Source: AKy350YPwoaaW9Y8GXCOfWW6C/PStwmdAlayzlDcVd0em0WPfCC44MrpTTN0GoQVUdzJvz++rNYsW1CfUJjO8M7TGcA=
+X-Received: by 2002:a05:622a:1b92:b0:3e6:720f:baed with SMTP id
+ bp18-20020a05622a1b9200b003e6720fbaedmr3708734qtb.0.1681222311675; Tue, 11
+ Apr 2023 07:11:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH V2 5/9] dt-bindings: PCI: qcom: Add IPQ9574
-Content-Language: en-US
-To:     Manivannan Sadhasivam <mani@kernel.org>
-CC:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <p.zabel@pengutronix.de>, <linus.walleij@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <quic_srichara@quicinc.com>,
-        <quic_gokulsri@quicinc.com>, <quic_sjaganat@quicinc.com>,
-        <quic_kathirav@quicinc.com>, <quic_arajkuma@quicinc.com>,
-        <quic_anusha@quicinc.com>, <quic_ipkumar@quicinc.com>
-References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
- <20230404164828.8031-6-quic_devipriy@quicinc.com>
- <79ddaff0-00a9-36db-2bc0-4c844ffd9528@linaro.org>
- <999dfe1c-3b0d-1cc1-7407-e0917fc62d77@quicinc.com>
- <20230411115201.GM5333@thinkpad>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <20230411115201.GM5333@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vHMpBYB7vrtU41ZLYNZaDoGP4xpUEXGe
-X-Proofpoint-ORIG-GUID: vHMpBYB7vrtU41ZLYNZaDoGP4xpUEXGe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-11_09,2023-04-11_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304110130
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230327130010.8342-1-okan.sahin@analog.com> <20230327130010.8342-3-okan.sahin@analog.com>
+ <CACRpkda5G5b+At5s1WFudpQBQ6LDQxhE3fZj7eBhkZ=thvnQhg@mail.gmail.com>
+ <MN2PR03MB51682210CADA6E33FB99052CE7939@MN2PR03MB5168.namprd03.prod.outlook.com>
+ <CACRpkdZJA0DyzgLxm9HFeHO03rqNUff=avuV=VrGuJkkOg6wNQ@mail.gmail.com>
+ <25e1fda4b6df2d10444d7eca3cd0e387@walle.cc> <CACRpkdYKEid8-0-7sBECNgSyW3kMRCsv3DeBVUzxo4z6p+Grnw@mail.gmail.com>
+ <ZDBivYlwJ6zgaFTg@surfacebook> <MN2PR03MB516879DCD6600827AEE2BDC9E7949@MN2PR03MB5168.namprd03.prod.outlook.com>
+In-Reply-To: <MN2PR03MB516879DCD6600827AEE2BDC9E7949@MN2PR03MB5168.namprd03.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Apr 2023 17:11:15 +0300
+Message-ID: <CAHp75VcxscqmLFRKJ8apLsY3Dsih=FMQn65cRGTUSeCZ-qLy9Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
+To:     "Sahin, Okan" <Okan.Sahin@analog.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Apr 9, 2023 at 5:25=E2=80=AFPM Sahin, Okan <Okan.Sahin@analog.com> =
+wrote:
+> >Fri, Apr 07, 2023 at 03:48:25PM +0200, Linus Walleij kirjoitti:
+> >> On Wed, Apr 5, 2023 at 3:57=E2=80=AFPM Michael Walle <michael@walle.cc=
+> wrote:
 
+...
 
-On 4/11/2023 5:22 PM, Manivannan Sadhasivam wrote:
-> On Tue, Apr 11, 2023 at 04:27:23PM +0530, Devi Priya wrote:
->>
->>
->> On 4/5/2023 12:28 PM, Krzysztof Kozlowski wrote:
->>> On 04/04/2023 18:48, Devi Priya wrote:
->>>> Add bindings for PCIe hosts on IPQ9574 platform and allow
->>>> msi-parent property
->>>
->>> Missing full stop. Also in your other patches.
->> Okay
->>>
->>>>
->>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->>>> ---
->>>>    Changes in V2:
->>>> 	- Updated the commit message and dropped the aggr_noc entries
->>>> 	  as it will be handled via interconnect driver
->>>>
->>>>    .../devicetree/bindings/pci/qcom,pcie.yaml    | 48 +++++++++++++++++++
->>>>    1 file changed, 48 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> index fb32c43dd12d..8657ab65008c 100644
->>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> @@ -26,6 +26,7 @@ properties:
->>>>              - qcom,pcie-ipq8064-v2
->>>>              - qcom,pcie-ipq8074
->>>>              - qcom,pcie-ipq8074-gen3
->>>> +          - qcom,pcie-ipq9574
->>>>              - qcom,pcie-msm8996
->>>>              - qcom,pcie-qcs404
->>>>              - qcom,pcie-sa8540p
->>>> @@ -105,6 +106,8 @@ properties:
->>>>        items:
->>>>          - const: pciephy
->>>> +  msi-parent: true
->>>
->>
->> Yes right, will rebase it on Mani's series.
->> But, as you have pointed out don't see the binding changes
->> in linux-next/master
->> Mani, could you please provide the tree details onto which the
->> binding change is merged?
->>
-> 
-> Looks like the initial msi-map binding's patch [1] never got merged even though
-> the dts patch went in.
-> 
-> I'll squash the later fix to this, post v4 and CC you.
+> >> If the chip is *only* doing GPIO and nvram it can be a GPIO-only
+> >> device I think.
 
-Thanks for that..I could see V4 posted!
-> 
-> - Mani
-> 
-> [1] https://lore.kernel.org/all/20230102105821.28243-3-manivannan.sadhasivam@linaro.org/
-> 
->>> Isn't this conflicting with Mani's series:
->>> https://lore.kernel.org/all/20230108203340.GA229573-robh@kernel.org/
->>> https://lore.kernel.org/all/20230111123004.21048-1-manivannan.sadhasivam@linaro.org/#t
->>>
->>> Although for some reason Mani's patch references non-existing commit and
->>> hunk...
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> Best Regards,
->> Devi Priya
-> 
+I have read a datasheet, it has the pre-boot settings, but it doesn't
+matter from the Linux point of view. The only thing which we need to
+take care of is to have the EEPROM disabled during GPIO interaction.
+However, there is a question as to how this device should actually
+commit into EEPROM the state to survive the cold/warm power cycle.
+What is the persistent flag for, btw, I haven't been familiar with it?
+
+> >> The precedent is a ton of ethernet drivers with nvram for storing e.g.
+> >> the MAC address. We don't make all of those into MFDs, as the nvram is
+> >> closely tied to the one and only function of the block.
+> >
+> >I agree with Linus. This should be part of the actual (main) driver for =
+the chip as many
+> >do (like USB to serial adapters that have GPIO capability).
+> >Also this code lacks of proper locking and has style issues.
+
+...
+
+> Could you give more detail related to locking and style issues?
+
+You use a few IO accessors in a row without locking, which means at
+any point of this flow some other CPUs may access the chip using the
+same or other APIs of this driver.
+
+--=20
+With Best Regards,
+Andy Shevchenko
