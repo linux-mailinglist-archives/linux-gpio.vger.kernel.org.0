@@ -2,89 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2A116DE5F5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 22:46:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A1B66DE640
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 23:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjDKUqn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 16:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52156 "EHLO
+        id S229481AbjDKVQD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 17:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjDKUqm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 16:46:42 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E982D10E
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 13:46:41 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id y186so9677374yby.13
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 13:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681246001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Po1MCvCf5OQxV9nwlMwg/r9Glz6To+YmkbTBIFPIgs0=;
-        b=sKxLGyKycdzz5MFSp3E9IS9EFd871Flxvh5NgsRmglRJUNfboQvxQXEAgRXu72Yvhy
-         fFNhYQjMTTRhOE9gg1nsJW7Wt/e2tOQjxD/3Q/mVJ0sI4oFzHI99QI0G1hBhVD85NKJW
-         EUwdO/DJC4ma7K9HNSstSQ5jBNqRgo+QfF82z1c3+T9xDLmEiFMQJYobLaaF4SonVWex
-         2psED3f9soFbJHgsHhhnJqs19HWpTqJfSsqioJ4+Lz4MXgv46dClH1hmQerMR3QQeIoH
-         wVhuYb23x0s8GBSPj14Ehx1/mMuoscqJ1MwKLd2FkdIB4uL9WQ/jtM35/6FkEe+Gj0Mc
-         5+HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681246001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Po1MCvCf5OQxV9nwlMwg/r9Glz6To+YmkbTBIFPIgs0=;
-        b=UzRPITfUQ6HYQfiGCT8zDCS9QmCUGii5vz8J0OgxnCF4MN8uADV2KzkSBHoHYUNIWV
-         DNqvt+YptAr5CBKydFUK46kdQJJrBQi4Vj6bxo+jB/YGWQ30Vwog8HzOmKAT8G86kaq2
-         s7r41OtJpzDvZIlo7QhFLL2Xf7lxYv/TZP8zLD52nDUTMlwEAPft6u4uUPdiF4g+FTHg
-         bBygErGQKynHiOXsrw8Emb7EYRNb7vwxcTgRB4e3XKEE7efRpU9PY34uKwwVWgnmtde0
-         kRLRbgBFezBJAeIRtGUzDQdTnvvMF9tfermPMgdQ7ZPO4/82RRzjUTDdpoU1OA2GYAaH
-         vQKg==
-X-Gm-Message-State: AAQBX9edMGceeW7j8aiyc/gYu6sox3eS1ZX+vKPxaasVt1wTw+N7W06V
-        S9Ow6GiZp6qMI+axkAwjym9LJNAwWQoXB24qpMPl8Q==
-X-Google-Smtp-Source: AKy350YMuCQT9UcSmIL1nhQvQq2Ll1FqF/WxgWvjJpN6Rile4v8m1nTnvcOubzCK97qgvWJYmwW7yO33QW3BU/M4WOQ=
-X-Received: by 2002:a25:df4a:0:b0:b8b:eda6:27c7 with SMTP id
- w71-20020a25df4a000000b00b8beda627c7mr7883592ybg.4.1681246001137; Tue, 11 Apr
- 2023 13:46:41 -0700 (PDT)
+        with ESMTP id S229693AbjDKVQC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 17:16:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7809F4EE9;
+        Tue, 11 Apr 2023 14:16:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A7CC662370;
+        Tue, 11 Apr 2023 21:15:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD1FC433D2;
+        Tue, 11 Apr 2023 21:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681247759;
+        bh=btGIKByFxuAAInZLQu3HiFyqS5ZX8qUjbH/pGEhh3N8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s2sIxHKXYc5OoLiIJiiGn4NsBX94sBcwDRB7JzYAwnq1Gu70U/y0C4TURLaQl87+N
+         /0RN8XSSYBLF+5/XLORV67T/ehwWMSKhQ1qdTBxzaMgUlRP7m87hOHOvnGuMEbwc8h
+         AAEiEKvV1KnwfMwmqeADpZJ6u38HZCFb+qWGcpYd2Yk34SF04Z5R4RJosEHX4yCPby
+         BA4Hl7AD4s1qByPd30B6ZGtKzIYqoQplHND5EJVX7whL99zDBxIy30wmIgetVxy5Lu
+         XQwumQ6KP33yYiRNiQMJZr1hD7Gd6ISRKCXyBnTBFGv1mJ5Ll+7lrLJI1DfQQhRs0m
+         zhpnFebhV0M7g==
+Date:   Tue, 11 Apr 2023 22:15:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 1/2] gpio: 104-dio-48e: Implement struct dio48e_gpio
+Message-ID: <db1edaaa-ea56-4f21-bc69-43f648e79c5b@sirena.org.uk>
+References: <cover.1679323449.git.william.gray@linaro.org>
+ <ca710d14a710fee44f7911f2a84b6a55570561ee.1679323449.git.william.gray@linaro.org>
+ <571b4df1-91ea-481c-9797-842974dfa922@sirena.org.uk>
+ <ZDWopwozNjFg/9NX@fedora>
 MIME-Version: 1.0
-References: <20230411134932.292287-1-korneld@chromium.org>
-In-Reply-To: <20230411134932.292287-1-korneld@chromium.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 11 Apr 2023 22:46:30 +0200
-Message-ID: <CACRpkdbJxU_Z=Zyc+y1mYW+D6gnqBrzMYph1DMiZKsBsGtBGJQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "pinctrl: amd: Disable and mask interrupts on resume"
-To:     =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        upstream@semihalf.com, rad@semihalf.com, mattedavis@google.com,
-        Gong Richard <richard.gong@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sNpvF8yaJXR5s+zH"
+Content-Disposition: inline
+In-Reply-To: <ZDWopwozNjFg/9NX@fedora>
+X-Cookie: I demand IMPUNITY!
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 3:49=E2=80=AFPM Kornel Dul=C4=99ba <korneld@chromiu=
-m.org> wrote:
 
-> This reverts commit b26cd9325be4c1fcd331b77f10acb627c560d4d7.
->
-> This patch introduces a regression on Lenovo Z13, which can't wake
-> from the lid with it applied; and some unspecified AMD based Dell
-> platforms are unable to wake from hitting the power button
->
-> Signed-off-by: Kornel Dul=C4=99ba <korneld@chromium.org>
+--sNpvF8yaJXR5s+zH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Patch applied for fixes, pushing for linux-next and will then relay
-this to Torvalds.
+On Tue, Apr 11, 2023 at 02:36:23PM -0400, William Breathitt Gray wrote:
+> On Tue, Apr 11, 2023 at 09:23:55PM +0100, Mark Brown wrote:
+> > On Mon, Mar 20, 2023 at 10:50:15AM -0400, William Breathitt Gray wrote:
+> > > A private data structure struct dio48e_gpio is introduced to facilitate
+> > > passage of the regmap and IRQ mask state for the device to the callback
+> > > dio48e_handle_mask_sync(). This is in preparation for the removal of the
+> > > handle_mask_sync() map parameter in a subsequent patch.
 
-Yours,
-Linus Walleij
+> > What's the story with this patch?
+
+> Currently dio48e_handle_mask_sync() uses the map argument in its
+> implementation. Once the map parameter is removed, the current
+> implementation of dio48e_handle_mask_sync() will no longer build, so we
+> must adjust the implementation to no longer depend on map.
+
+I mean what's the story with getting this patch applied?  It doesn't
+seem to have been reviewed...
+
+--sNpvF8yaJXR5s+zH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQ1zgkACgkQJNaLcl1U
+h9D+Sgf+Izhkz9XDgD7m+WF2bcdMC0Wa0wzbLVdlupuU+Z44aAnyk8B5aCio9o5R
+1jraSVhUABdSEipqFlyfkuBlRwPRvs0u3xJlvaQa10I24pgoxE5veg4rqFax+BWD
+QK6GowyMW3Lo+BK3N+8Ph0001s/D0ITKBLGTKL1Txo4MyjixNxsCXW0l51y0AQIk
+txVttXiDekDBK55Y5bFTUXgU1leVJrhWwnTenv/lM+jvsdelxQZ//dPotyF/m8gb
+NQ13hLo7PBbJKVpm8Jf5nrSzLKs/f/Sy8kFnQaxzfuYCMbknvQvee7GeOO2FmwyR
+VYc2nEOma8I3H2tyZGLefk44ykElUw==
+=vNxP
+-----END PGP SIGNATURE-----
+
+--sNpvF8yaJXR5s+zH--
