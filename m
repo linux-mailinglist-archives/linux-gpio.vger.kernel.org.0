@@ -2,63 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A71796DD570
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:28:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E4C86DD60B
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbjDKI2x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 04:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39398 "EHLO
+        id S229960AbjDKI5t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 04:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230241AbjDKI2l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:28:41 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53554ECE
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 01:28:12 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id r27so9410988lfe.0
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 01:28:12 -0700 (PDT)
+        with ESMTP id S230193AbjDKI5o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:57:44 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269883588
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 01:57:40 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 72so7386779ybe.6
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 01:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681201690;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=btviQq9ygUEFqpALem4Z2cwJbW3Kg3t1tEitJ1PzaP4=;
-        b=ZwNnUUdQAdGNtg3ekN/L8FAdohiQb1x+xdD9pYvOce2N3yK8rOUGyJrD6wWvayaABe
-         us0rePFaXKIXUI8XXje3y2/6SQRtivPnsZI4g3uKfNkVuA3qPEdWn0ug6uOIUa/IaTIC
-         TzlffGNndjDtBjKevo7v+titOZIFOSTkK1oZSxvoA0xClhkXfwssuPszlVMhziswbYFS
-         Rsg2u5CmGWvHYVCa+ROuTvZ05QZjXRkZpuwYcuPtmF+3wQlT24hzzqhHrg93wzJ62l3S
-         D26LAgxEmenIAuGg7FnpY43YDVzCTsa9M8BL/GNL8rttb9Gfmw2BJHTVnK1KGZ+5UKbf
-         tY7w==
+        d=linaro.org; s=google; t=1681203459;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdATQ6SYcVmJmouCDRYiMfiaYGt9VMr4r2+RGYSpQ50=;
+        b=n1QnfhAOkaZh2YeSwChYZ4fgRwj0FtyFVzAQ9K++nCnadYqTsZxGlIBN2fO9yh2//s
+         dyQgz2YGmkzsryKnloXXWyqsH10ez2tBx2ORDmOWjA0FsNDUVJnbeiq0kTF0DIJUWL6M
+         B/vDrUEIUINtwrk70qD39awc/Icn6I4fy/ihmKUSpC6GEM4hiZn7uQlykcxTpiY3Zg0a
+         bdW14Z+ZT7mxeFjW2egx94p1sdawydoo3MiDabD7pULgaJ3THKyrlPF3+QVxl55HqRyX
+         83slDYC2Z4psXhdPPiy2SY4dFyo+ld/TjkUYtOa6HkUVuQvVsKXnrDiqB5+ag/YVqSZr
+         HjAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681201690;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=btviQq9ygUEFqpALem4Z2cwJbW3Kg3t1tEitJ1PzaP4=;
-        b=cESam/zrQDVq1ZD/WAuMcsBixMvbhWX6gHNBpTlX0h6tsot7kAN7UCyyWruRqLsos6
-         h2LWmGJ3lSGcoGMPmGAIJhTcmkTwikUAlOEPNnLqsQ0tMBU4lNjUqOKJFGIEBuENYvb7
-         5wDLoQsrgFcoAz6+BG4Ygc9SPB/Km4UGZhufqUzjSRc+2l8ILUU0AvHIMcWc/03d5VXs
-         BDw6XY7LLQx+ydDQVAKCUB4ohm4ZySBlAcTGN5pr985ywPWCGht5hlhsnJ2HaNBg1LxG
-         vHm6RMjfygfCFO7RoydriTvBYutXVxEa/w0Q5qs0sVPNmHt8pqsYIYHT8f/xL2NJLJKe
-         MO8Q==
-X-Gm-Message-State: AAQBX9dvstgxS8zcnkLfVnmdm6x30h4EVjW58JwZhb2XaPeKvKZM4Z6m
-        67XkT/SCDWu0z8SksIWG/C6YZMl1k/+OvmVlxms=
-X-Google-Smtp-Source: AKy350Z6QP9bbORL6E7Ve9MDIH1guFI1/h95yTwuF0gB1BhIq7pOVM8MHo/q4lq3Jkc81vPImpAhVA==
-X-Received: by 2002:a19:761a:0:b0:4dd:a019:d845 with SMTP id c26-20020a19761a000000b004dda019d845mr4884211lff.18.1681201689991;
-        Tue, 11 Apr 2023 01:28:09 -0700 (PDT)
-Received: from Linus-Dell.lan ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id c10-20020ac2530a000000b004e84a924a14sm2456585lfh.18.2023.04.11.01.28.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 01:28:09 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] gpio: gpiolib: Simplify gpiochip_add_data_with_key() fwnode
-Date:   Tue, 11 Apr 2023 10:28:06 +0200
-Message-Id: <20230411082806.41361-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20210112; t=1681203459;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gdATQ6SYcVmJmouCDRYiMfiaYGt9VMr4r2+RGYSpQ50=;
+        b=m6rcabn5T/9axcItxZKOCIpVATRGQ67yPNndbyOOzzbJ3E/l2LhQmn2jd+NA3pg36r
+         ekyO9u7FtFOQiAJ3E3nOpZZN1d4e7+MAH6n6DSm0BTIlL85RFCjeIWwAgvg81jlsOAt7
+         6ItvhYMElFcQdk9JNYseSaiDQUY07SvizA0wC5KWyzbo04sD/7Ar2+/BLGSu0PAulaDU
+         eamfEcCNy43XbLL1OzwUU1K8/Bnpo7+zjsrsQ4sw1bBuc4eJKJoLcpTwz7bHQHP8PjYt
+         eTzwbOdYM/FzexIQCLR5LMel7QmZUqFIGs4ENBIjpRhx4nkh/oF7a/RryMf4aVNKgRHW
+         Vh5Q==
+X-Gm-Message-State: AAQBX9f88KmA/pHgocr8H7dOc0ZjnreMys5ZxSO73hLFNBgzZ178Rdmj
+        JASql3iS3ymUER9nunDJLbddz1rWMbuhKjuDcM0J8A==
+X-Google-Smtp-Source: AKy350a++3JYl4b5orvykBwgXzpw0u/ViD6Mgu9dnHLpQlskcqGZij1u89TLnLtzeuqNxul39K8znLHp3kO5Fmw4ZlU=
+X-Received: by 2002:a25:7612:0:b0:b8e:ec30:853e with SMTP id
+ r18-20020a257612000000b00b8eec30853emr3267991ybc.4.1681203459288; Tue, 11 Apr
+ 2023 01:57:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
+ <ZAocZRZh4FQRH3lc@smile.fi.intel.com> <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
+In-Reply-To: <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 11 Apr 2023 10:57:28 +0200
+Message-ID: <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com>
+Subject: Re: selftests: gpio: crash on arm64
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -68,52 +79,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The code defaulting to the parents fwnode if no fwnode was assigned
-is unnecessarily convoluted, probably due to refactoring. Simplify
-it and make it more human-readable.
+On Mon, Apr 10, 2023 at 11:16=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+(...)
+> Anders performed bisection on this problem.
+> The bisection have been poing to this commit log,
+>   first bad commit: [24c94060fc9b4e0f19e6e018869db46db21d6bc7]
+>     gpiolib: ensure that fwnode is properly set
 
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Anders: you can test this but I don't think it fixes the
-regression you have pointing to commit
-24c94060fc9b4e0f19e6e018869db46db21d6bc7
----
- drivers/gpio/gpiolib.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+I don't think this is the real issue.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 19bd23044b01..5801d682c12b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -667,7 +667,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			       struct lock_class_key *lock_key,
- 			       struct lock_class_key *request_key)
+(...)
+> # 2.  Module load error tests
+> # 2.1 gpio overflow
+(...)
+> [   88.900984] Freed in software_node_release+0xdc/0x108 age=3D34 cpu=3D1=
+ pid=3D683
+> [   88.907899]  __kmem_cache_free+0x2a4/0x2e0
+> [   88.912024]  kfree+0xc0/0x1a0
+> [   88.915015]  software_node_release+0xdc/0x108
+> [   88.919402]  kobject_put+0xb0/0x220
+> [   88.922919]  software_node_notify_remove+0x98/0xe8
+> [   88.927741]  device_del+0x184/0x380
+> [   88.931259]  platform_device_del.part.0+0x24/0xa8
+> [   88.935995]  platform_device_unregister+0x30/0x50
+
+I think the refcount is wrong on the fwnode.
+
+The chip is allocated with devm_gpiochip_add_data() which will not call
+gpiochip_remove() until all references are removed by calling
+devm_gpio_chip_release().
+
+Add a pr_info() devm_gpio_chip_release() in drivers/gpio/gpiolib-devres.c
+and see if the callback is even called. I think this could be the
+problem: if that isn't cleaned up, there will be dangling references.
+
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index fe9ce6b19f15..30a0622210d7 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -394,6 +394,7 @@ static void devm_gpio_chip_release(void *data)
  {
--	struct fwnode_handle *fwnode = NULL;
- 	struct gpio_device *gdev;
- 	unsigned long flags;
- 	unsigned int i;
-@@ -675,12 +674,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	int base = 0;
- 	int ret = 0;
- 
--	/* If the calling driver did not initialize firmware node, do it here */
--	if (gc->fwnode)
--		fwnode = gc->fwnode;
--	else if (gc->parent)
--		fwnode = dev_fwnode(gc->parent);
--	gc->fwnode = fwnode;
-+	/*
-+	 * If the calling driver did not initialize firmware node, do it here
-+	 * using the parent device, if any.
-+	 */
-+	if (!gc->fwnode && gc->parent)
-+		gc->fwnode = dev_fwnode(gc->parent);
- 
- 	/*
- 	 * First: allocate and populate the internal stat container, and
--- 
-2.39.2
+        struct gpio_chip *gc =3D data;
 
++       pr_info("GPIOCHIP %s WAS REMOVED BY DEVRES\n", gc->label);
+        gpiochip_remove(gc);
+ }
+
+If this isn't working we need to figure out what is holding a reference to
+the gpiochip.
+
+I don't know how the references to the gpiochip fwnode is supposed to
+drop to zero though? I didn't work with mockup much ...
+
+What I could think of is that maybe the mockup driver need a .shutdown()
+callback to forcibly call gpiochip_remove(), and in that case it should
+be wrapped in a non-existining devm_gpiochip_remove() since devres
+is used to register it.
+
+Bartosz will know better though! I am pretty sure he has this working
+flawlessly so the tests must be doing something weird which is leaving
+references around.
+
+Yours,
+Linus Walleij
