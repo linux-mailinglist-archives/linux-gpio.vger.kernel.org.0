@@ -2,120 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D1466DDC4A
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 15:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CC46DDC5D
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 15:40:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjDKNhw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 09:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
+        id S230233AbjDKNkr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 09:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbjDKNhv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 09:37:51 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5694135B5;
-        Tue, 11 Apr 2023 06:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681220254; x=1712756254;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lPs4hL2dArfIqO5UhCss13DB9x7JVqdkB3GyJ1laCgQ=;
-  b=ZhWTpUXnZSELPRAxq6P2gAn+/EXBjbEwI+nUeQKXrP5vRHX3pLj4ZaXg
-   ASSv/FQUCuk1FHAqVBGwJe4gCTm1/NOVAFiC78Ta04oBeFNSvPtxZDTSP
-   kTfozzEsa1BEAMnxkvO/N6Rmpu1UdajLW6iSxcSuheTIvFtysC5RhbP/r
-   NrpWtXeU24lbWNAnLP4sW1+TGbuP2Q07yzENgtZ/Q/U4MmnVqFmVMluuD
-   awwGAFk3JM3HcSR9bHtNGlCm6uGZuqnXbyWBdQlk9FkJzxG4QQNprCfcK
-   OEyjVV4ZT59iXcjV3yPtUAATh8NdRFqQYCIaQLupKpMg6zEziR1DoaPsw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="371465716"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="371465716"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:37:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="862862819"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="862862819"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 11 Apr 2023 06:37:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1pmEBf-00FHXC-0e;
-        Tue, 11 Apr 2023 16:37:31 +0300
-Date:   Tue, 11 Apr 2023 16:37:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: selftests/gpio: gpio-sim.sh: BUG: test FAILED due to recent
- change in sh source
-Message-ID: <ZDVimnlgMYmeOj5L@smile.fi.intel.com>
-References: <fe030b8e-0573-93de-88ae-38ee48d6c89f@alu.unizg.hr>
+        with ESMTP id S230153AbjDKNkn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 09:40:43 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6A344B8;
+        Tue, 11 Apr 2023 06:40:34 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id cp25-20020a056830661900b00693ce5a2f3eso3861069otb.8;
+        Tue, 11 Apr 2023 06:40:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681220433; x=1683812433;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kgFPvyHrHPtWE9sKCzX6mH86Owceqhrm+Hat2sO8n/A=;
+        b=MrjRJQAHsKT5D9MRrrI7jRj4QO9oi0vDxaEsUC0BuvQh5GooLZhjISuaGDmmXpl/9N
+         3PUTMqcZcqgDKcMNgowbdXo+3zoqIBSVFdhfa7VVst7s2I6FgKZ2BisOS2U/47H4wgm1
+         a9nBdxQLutH6BbTJuKKFIwC8OWZv8y87LG1DVmiXM5saS9WvSWxLc1WW5YUjY73xXScC
+         Om/9dpdJWqrkJeMn5MkB+Y4+IUtDx58Dp0/we7b7yGMbMrbcn2yDYcwrFr3fXbp5R+6c
+         nm+Z78myxWOgQJn0MVHyhb+zJn6OaL/rGBxff5ykliF5NVr/ptBZJGaPyiDbD0gyCtqE
+         8tAQ==
+X-Gm-Message-State: AAQBX9fcrPqbtV39JmEhUT9WGLnB+6uoQkomcX9glvKoxULBO0i/c5mh
+        KODN5kKnjpayEz//Vmfauw==
+X-Google-Smtp-Source: AKy350YG5U9QNvXG9urYlKAKQZf2PCcV3KsTjbecvU+8kIfA5d1v5KG8LereLUse+pLSeMjkUuqZwQ==
+X-Received: by 2002:a9d:6659:0:b0:6a3:c70d:bb94 with SMTP id q25-20020a9d6659000000b006a3c70dbb94mr5785020otm.17.1681220433511;
+        Tue, 11 Apr 2023 06:40:33 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g25-20020a9d6c59000000b0069f95707335sm5338427otq.69.2023.04.11.06.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 06:40:33 -0700 (PDT)
+Received: (nullmailer pid 2941891 invoked by uid 1000);
+        Tue, 11 Apr 2023 13:40:31 -0000
+Date:   Tue, 11 Apr 2023 08:40:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
+        catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 03/12] dt-bindings: watchdog: mediatek,mtk-wdt: add
+ mt8365
+Message-ID: <20230411134031.GA2934043-robh@kernel.org>
+References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
+ <20230203-evk-board-support-v5-3-1883c1b405ad@baylibre.com>
+ <CAFGrd9oi0AT3L8DVs7OYq-RjzBTqD+CB5mjKOwEbgNJDdyj2=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <fe030b8e-0573-93de-88ae-38ee48d6c89f@alu.unizg.hr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFGrd9oi0AT3L8DVs7OYq-RjzBTqD+CB5mjKOwEbgNJDdyj2=g@mail.gmail.com>
+X-Spam-Status: No, score=0.8 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 06:51:09PM +0100, Mirsad Todorovac wrote:
-> Hi,
-> 
-> The gpio-sim.sh test appears to FAIL in a wrong way due to missing initialisation
-> of shell variables:
-> 
-> $ sudo gpio-sim.sh
-> .
-> .
-> .
-> 4. Simulated GPIO chips are functional
-> 4.1. Values can be read from sysfs
-> 4.2. Bias settings work correctly
-> cat: /sys/devices/platform/gpio-sim.0/gpiochip18/sim_gpio0/value: No such file or directory
-> ./gpio-sim.sh: line 393: test: =: unary operator expected
-> bias setting does not work
-> GPIO gpio-sim test FAIL
-> $
-> 
-> This patch fixed the issue:
-> 
-> diff --git a/tools/testing/selftests/gpio/gpio-sim.sh b/tools/testing/selftests/gpio/gpio-sim.sh
-> index 9f539d454ee4..fa2ce2b9dd5f 100755
-> --- a/tools/testing/selftests/gpio/gpio-sim.sh
-> +++ b/tools/testing/selftests/gpio/gpio-sim.sh
-> @@ -389,6 +389,9 @@ create_chip chip
->  create_bank chip bank
->  set_num_lines chip bank 8
->  enable_chip chip
-> +DEVNAME=`configfs_dev_name chip`
-> +CHIPNAME=`configfs_chip_name chip bank`
-> +SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/value"
->  $BASE_DIR/gpio-mockup-cdev -b pull-up /dev/`configfs_chip_name chip bank` 0
->  test `cat $SYSFS_PATH` = "1" || fail "bias setting does not work"
->  remove_chip chip
-> 
-> ... after which the test passed:
-> 
-> 4. Simulated GPIO chips are functional
-> 4.1. Values can be read from sysfs
-> 4.2. Bias settings work correctly
-> GPIO gpio-sim test PASS
-> 
-> Which I believe proves that the bug was in the script and not in the gpio-sim driver.
+On Fri, Apr 07, 2023 at 03:11:18PM +0200, Alexandre Mergnat wrote:
+> + To: Catalin Marinas <catalin.marinas@arm.com>
+> + To: Will Deacon <will@kernel.org>
 
-I agree with the analysis. Bart, seems to me that it might be the case, but
-I want to amend the fix a bit.
+Why? They don't take bindings or dts files. Those go thru the subsystem 
+(watchdog (for bindings) or Mediatek sub-arch tree.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Second, if they did pick this up, they likely need the original mail 
+sent to them, not a reply.
 
+Rob
 
+> 
+> Sorry for the noise.
+> 
+> Regards,
+> Alexandre
+> 
+> Le ven. 7 avr. 2023 à 14:59, Alexandre Mergnat <amergnat@baylibre.com> a écrit :
+> >
+> > Add binding description for mediatek,mt8365-wdt
+> >
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> > index 55b34461df1b..66cacea8e47f 100644
+> > --- a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> > +++ b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> > @@ -38,6 +38,7 @@ properties:
+> >                - mediatek,mt7623-wdt
+> >                - mediatek,mt7629-wdt
+> >                - mediatek,mt8173-wdt
+> > +              - mediatek,mt8365-wdt
+> >                - mediatek,mt8516-wdt
+> >            - const: mediatek,mt6589-wdt
+> >
+> >
+> > --
+> > 2.25.1
+> >
