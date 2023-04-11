@@ -2,45 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E0B36DD548
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:24:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E926DD552
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbjDKIYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 04:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        id S230329AbjDKIZR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 04:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230215AbjDKIYJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:24:09 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97C44EEA;
-        Tue, 11 Apr 2023 01:22:52 -0700 (PDT)
+        with ESMTP id S230331AbjDKIYz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:24:55 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7657D421C;
+        Tue, 11 Apr 2023 01:23:48 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id EDF8F66031EA;
-        Tue, 11 Apr 2023 09:22:49 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 34C7A66031E7;
+        Tue, 11 Apr 2023 09:23:46 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1681201371;
-        bh=mSraRqNCRsRIu+Sv57cDTx39LddUyhJwzD1kQi9nHco=;
+        s=mail; t=1681201427;
+        bh=ADMedLVs+5KiqFHy8L8bjUE/ArcSYR2VhiaJnz4uVYU=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=GSZZEqmnSMny9xXdCIyRSmbJS8CSx7Thye0qxqcKp79J3GjIUaw1AmE4HwNKwcpj9
-         OuL8/iZzDLDfbIKA4P7UQ8TBkSChbSZoAkP0Brvj9XOc8LqhBov4F54xdm2z4OE5vc
-         3gyHahZ44pmL4RUWxFkTPtQoqUXvinVYlHw1ZzBO6hnRX8bZq/h6ALlikfaVbIUsLZ
-         S8VlDba9uk2OrZwkW82y+UwR60eGg0aL+ed+3/KIZ/IE/0Zt9bRUy81NZW7/p8wWzE
-         fIQj4ivgwkhnq222B+mp7kh8XMs4+Ucg5+G3s2IwSYZoYR6udhwRnOe/5dG13e9n3l
-         IhkXQWTr5bagw==
-Message-ID: <5322edfc-2df7-b56b-bb5e-db4c55dff3d0@collabora.com>
-Date:   Tue, 11 Apr 2023 10:22:47 +0200
+        b=Ex0QZOkYYonI2GaXDXmpvLjO1kGk4e9pV9pMaq1azU0MkJ+Q+PdGIs3tW+wE/nSHW
+         InXeUbo7lf4DVMWGJhOtljvh6QJnLnOBu0fJ609FlfYDv2ThMVHW7MlZp6GOkuefuZ
+         Vly30hfbDTsOZebvEGp082LmdoRb6eW5+Qpw9R8UECSGUv8XG/nW5Udi/8X+kg7vNf
+         0fkI8rIHfDoaR67AC3ryK3bgSFSbkCA0KsmrQJyB/ub1RfTPZ80a04n91qDGrBmQSz
+         xLoNmyOI7CjxBRumsu/mtvAs0RcmQdGdJindPGVMM+Goe+xJU10EpQwmpf7kHU//f/
+         d39jvrHFMQE4A==
+Message-ID: <ce6a9e78-efae-c430-c990-ceafdfc7be41@collabora.com>
+Date:   Tue, 11 Apr 2023 10:23:43 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v5 06/12] arm64: dts: mediatek: add mmc support for
- mt8365-evk
+Subject: Re: [PATCH v5 07/12] arm64: dts: mediatek: set vmc regulator as
+ always on
 Content-Language: en-US
-To:     Alexandre Mergnat <amergnat@baylibre.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+To:     amergnat@baylibre.com, Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -59,10 +58,10 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
- <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
+ <20230203-evk-board-support-v5-7-1883c1b405ad@baylibre.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v5-7-1883c1b405ad@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -74,12 +73,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 07/04/23 14:59, Alexandre Mergnat ha scritto:
-> - Add EMMC support on mmc0 (internal memory)
-> - Add SD-UHS support on mmc1 (external memory)
+Il 07/04/23 14:59, amergnat@baylibre.com ha scritto:
+> From: Fabien Parent <fparent@baylibre.com>
 > 
+> MSDC1 IP block is powered by VMC. Make sure it is always on.
+> 
+
+Can't we set vmc as parent of vemc?
+
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> index cd920d09c3fe..1c36d8f19525 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> @@ -137,6 +137,11 @@ &mt6357_pmic {
+>   	#interrupt-cells = <2>;
+>   };
+>   
+> +/* Needed by MSDC1 */
+> +&mt6357_vmc_reg {
+> +	regulator-always-on;
+> +};
+> +
+>   &pio {
+>   	gpio_keys: gpio-keys-pins {
+>   		pins {
+> 
 
