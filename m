@@ -2,129 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3970B6DD66B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 11:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0E26DD69F
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 11:29:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjDKJRn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 05:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41146 "EHLO
+        id S229679AbjDKJ2t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 05:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjDKJRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 05:17:43 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC602D5B
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 02:17:40 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id j8so5785908pjy.4
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 02:17:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681204660; x=1683796660;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F0nTRaXrf2V0tg1NVg+KAGRcl4O4IbYc2SCoiGBsCJQ=;
-        b=nD2AnxaLnJeRjg2wjAJ7oxLZPed0L2/RxCfrhkTYqHAZ5Imy/aOwDLKoHWfmH6yfOH
-         1U4nzgCsg0gQl3sCyiCXu1CSD2bo0+WoCdcYuel4Tnp8uOU7DB8OMLCWnh/xc4UvFR9n
-         azFN7TEkI7Cq5cWJrevW/qDCrMvp3hPXvyGgeyyIRGV33K8jlHAvGIgdAv2hrEdG1sY4
-         WPIu7BZr9feN7fxOSJm3RIKSepbJ+3xWQrGm4OzLHBvmbHtHpQxAbRRCYwSLBHEHObNJ
-         nWExdlOyv4fFyluzdsSr9oXFa6rJ/wCywx/CKpLdfDaDCLGPxeYj/pA8lHWTZqswtoB0
-         Gs2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681204660; x=1683796660;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F0nTRaXrf2V0tg1NVg+KAGRcl4O4IbYc2SCoiGBsCJQ=;
-        b=zfAffb0VJZCit+5On9jK27JDCuQ1V7YIKMMmM71NvWrdyKkEPamlyi+dtwcdeXFt8p
-         mlMnLz6+k7wNp/qnzSTLkTfkiVGduOb6L6fl9VqETvHouQ4HbdliZP6kKmtTVXdSJzxR
-         WhN8IgYshyPmD/Zu1S5nn/8YBlfv02nE5JN0LumjNlZGXglf2DIB/WS402ZLGy1G4O3r
-         3dgw8K/c8SomDXicy7aFuhZ3GT2SJ19WIAJi0okFTraA7UKvzkhznZfRgUzl49SH+RyN
-         yGl4p8iXYXlUWF11WK3MuRmm8Y5FBJnTy2tvsA0MGBGkfPfIosSqJIRxQ1TVYD/ZCF/f
-         OVyQ==
-X-Gm-Message-State: AAQBX9dR3vWusQ8mz/nuVeHOClZUgcyXwrPPY7b7OW6Yzd/3REAiHVWL
-        T3CKBSQLtnn37goXyq3S4oJ+j7rZr9Y8RIccYyq+zTOu5zCZR3O04lg=
-X-Google-Smtp-Source: AKy350ZxAMFThKSNfQdoA4WKwScfFHoSgc87FL59q9tJS0BpfDuZ5c5ec59qFq6eNXBLMr+N4TZpI+s29AVEBVWjCQw=
-X-Received: by 2002:a17:902:ec91:b0:1a2:87a2:c932 with SMTP id
- x17-20020a170902ec9100b001a287a2c932mr3359664plg.10.1681204660335; Tue, 11
- Apr 2023 02:17:40 -0700 (PDT)
+        with ESMTP id S229482AbjDKJ2T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 05:28:19 -0400
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E6FC3;
+        Tue, 11 Apr 2023 02:28:16 -0700 (PDT)
+X-QQ-mid: bizesmtp91t1681205292txy17sc8
+Received: from wxdbg.localdomain.com ( [183.129.236.74])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Tue, 11 Apr 2023 17:28:03 +0800 (CST)
+X-QQ-SSF: 01400000000000H0Z000000A0000000
+X-QQ-FEAT: jXjag1m6xl5p/4UuOm9gjOZlz1oGxrg02oepOJqXg/7lpWHvsZpyeXenMTnAj
+        5uDBcoFBjYtO6NOFM3D9FiukSmIwUp3bfnqSbm+TMT1vlQr3vV/+I6ejTe+muZJL7QlkeiZ
+        q5Sw3kJhw6j8yv15QG/uBU9zSdEZ6JtEnsXELpIo0jRbW7HqG8mDWuIlui6Q37InHoxNbj+
+        AdOGV/XKi/FQnP7KabOAeSTnpqblx38PDZEpYIrc3VrhKS3Iev7/omguP+wFmQKX+y2d0/7
+        T0rssqgoWvO/YZhfLyO8SMWCG8uDhVOWEQBCWfvqHIDnux7CHK2dMPwyBL0GP21ZrgyWVwA
+        Ny9BLw4Hdhc9AtlMJqp3s4rAtF7vnMUl4dCg7a4rpg6zW4WfXg=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 11647374356623900767
+From:   Jiawen Wu <jiawenwu@trustnetic.com>
+To:     netdev@vger.kernel.org, linux@armlinux.org.uk
+Cc:     linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com, Jiawen Wu <jiawenwu@trustnetic.com>
+Subject: [PATCH net-next v2 0/6] TXGBE PHYLINK support
+Date:   Tue, 11 Apr 2023 17:27:19 +0800
+Message-Id: <20230411092725.104992-1-jiawenwu@trustnetic.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20230411082806.41361-1-linus.walleij@linaro.org>
-In-Reply-To: <20230411082806.41361-1-linus.walleij@linaro.org>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Tue, 11 Apr 2023 11:17:29 +0200
-Message-ID: <CADYN=9K1yAvT7qBSE6T_D3R2G-JPvXzEW1cQz66-ozk28CAdJQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpiolib: Simplify gpiochip_add_data_with_key() fwnode
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:trustnetic.com:qybglogicsvr:qybglogicsvr5
+X-Spam-Status: No, score=-0.0 required=5.0 tests=RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Apr 2023 at 10:28, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> The code defaulting to the parents fwnode if no fwnode was assigned
-> is unnecessarily convoluted, probably due to refactoring. Simplify
-> it and make it more human-readable.
->
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Implement I2C, SFP, GPIO and PHYLINK to setup TXGBE link and switch link
+rate based on optical module information.
 
-Reviewed-by: Anders Roxell <anders.roxell@linaro.org>
+v1 -> v2:
+- add comments to indicate GPIO lines
+- add I2C write operation support
+- modify GPIO direction functions
+- rename functions related to PHY interface
+- add condition on interface changing to re-config PCS
+- add to set advertise and fix to get status for 1000BASE-X mode
+- other redundant codes remove
 
-> ---
-> Anders: you can test this but I don't think it fixes the
-> regression you have pointing to commit
-> 24c94060fc9b4e0f19e6e018869db46db21d6bc7
+Jiawen Wu (6):
+  net: txgbe: Add software nodes to support phylink
+  net: txgbe: Implement I2C bus master driver
+  net: txgbe: Add SFP module identify
+  net: txgbe: Support GPIO to SFP socket
+  net: txgbe: Implement phylink pcs
+  net: txgbe: Support phylink MAC layer
 
-Did not fix the issue though.
+ drivers/net/ethernet/wangxun/Kconfig          |   5 +
+ drivers/net/ethernet/wangxun/libwx/wx_lib.c   |   3 +-
+ drivers/net/ethernet/wangxun/libwx/wx_type.h  |   3 +
+ drivers/net/ethernet/wangxun/txgbe/Makefile   |   1 +
+ .../ethernet/wangxun/txgbe/txgbe_ethtool.c    |  34 +
+ .../net/ethernet/wangxun/txgbe/txgbe_main.c   |  58 +-
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 980 ++++++++++++++++++
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.h    |  10 +
+ .../net/ethernet/wangxun/txgbe/txgbe_type.h   | 157 +++
+ 9 files changed, 1219 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
 
+-- 
+2.27.0
 
-Cheers,
-Anders
-
-
-
-> ---
->  drivers/gpio/gpiolib.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 19bd23044b01..5801d682c12b 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -667,7 +667,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->                                struct lock_class_key *lock_key,
->                                struct lock_class_key *request_key)
->  {
-> -       struct fwnode_handle *fwnode = NULL;
->         struct gpio_device *gdev;
->         unsigned long flags;
->         unsigned int i;
-> @@ -675,12 +674,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->         int base = 0;
->         int ret = 0;
->
-> -       /* If the calling driver did not initialize firmware node, do it here */
-> -       if (gc->fwnode)
-> -               fwnode = gc->fwnode;
-> -       else if (gc->parent)
-> -               fwnode = dev_fwnode(gc->parent);
-> -       gc->fwnode = fwnode;
-> +       /*
-> +        * If the calling driver did not initialize firmware node, do it here
-> +        * using the parent device, if any.
-> +        */
-> +       if (!gc->fwnode && gc->parent)
-> +               gc->fwnode = dev_fwnode(gc->parent);
->
->         /*
->          * First: allocate and populate the internal stat container, and
-> --
-> 2.39.2
->
