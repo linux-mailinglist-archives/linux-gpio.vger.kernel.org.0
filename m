@@ -2,93 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A8DD6DE232
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 19:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 736536DE2A9
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 19:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjDKRPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 13:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
+        id S229798AbjDKRf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 13:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjDKRPi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 13:15:38 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A5C5FFB;
-        Tue, 11 Apr 2023 10:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681233331; x=1712769331;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hkjCkl5c+7zSxcTy7EubOaO/P5T/a3MNoi17HIee2x8=;
-  b=nHml3D/orgRA4H0jDsYVLB/YRZkiiA4BQo+w/OBhISLDOQfQDz0cI7XV
-   rVh6KTkaxWnVG3hls975Js6s9lWnpVlMNv2BagCAeElKY131LSVTobUra
-   lmX+Cq6eyTGaF7PBDUVm8NpndZ4Qw5BYhGsjkbfWtux+v6c9bA5HtBqFS
-   zOE0o4HgBIfd2cq2PJDBmMRUlv2AOjzeOTxDjNj2rALMnBosOPdmxIJxV
-   qqKA8GIdqVpqSrokvZx+e9SlZVI8SNTNOk59wzew97vwFNa5eAssPACrw
-   ms15PueDPpVRRMAbUXH3l+5CK2iTQ/sspb5K2p2bcD8P2mVX6+V9wWNZk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="341172119"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="341172119"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 10:15:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="862951139"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="862951139"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 11 Apr 2023 10:15:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7D0E669A; Tue, 11 Apr 2023 20:15:31 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
+        with ESMTP id S229478AbjDKRf4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 13:35:56 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D844C1D;
+        Tue, 11 Apr 2023 10:35:54 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-1842e278605so10666540fac.6;
+        Tue, 11 Apr 2023 10:35:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681234554; x=1683826554;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lxRBAACOQmsDZVgDcPTJclqhGazIBd8TxXM9U+CJTBI=;
+        b=idMEK7tZ09SPnGFugX7F8nrxWzDaIGCsFSEqFTxpZGyD9vkvfwbFjE3JHsOjc9M5wr
+         ayRH7J5VMz9b9s91bbsh3ypE9oUpMtF2F8BrA2CJ60DCIQsrBs7lJpWLX3NGFZFjz0Nt
+         2ttVlUw4qrKLloBa80jI/8VYzSHDoG9Um8WXiq7xCt3HSUoNG9utY6g9ddIWMZeB6lcr
+         9FTl2bS0Uc+OJEAsGapnzK3yxnTsUZmC7kQTpokDaUGvHmhLP8k3saV8v47qGXji2uRO
+         MXfsfYTvWP49r+si1xHSAKmf3StXSTjZuWJkO9v3Y4So9ZkoH//stdu9w7MBE+Xs/T8X
+         yUSA==
+X-Gm-Message-State: AAQBX9f65OdIYWT+mT+9U3+9LSiHzaXCzXSFAsLLnYHLeDhHyFDSMVV1
+        sfLCafge2046A8STdidoiA==
+X-Google-Smtp-Source: AKy350aev31o0vgGv6uWzPdOHgbdJoRi/zmhZhoVmHDysdeBlPq+SlCNvhSStCjGd9NLZUXNevO6rw==
+X-Received: by 2002:a05:6870:8912:b0:179:95f2:56e8 with SMTP id i18-20020a056870891200b0017995f256e8mr9160035oao.3.1681234552427;
+        Tue, 11 Apr 2023 10:35:52 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t21-20020a9d5915000000b006a13dd5c8a2sm5582333oth.5.2023.04.11.10.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 10:35:52 -0700 (PDT)
+Received: (nullmailer pid 3418439 invoked by uid 1000);
+        Tue, 11 Apr 2023 17:35:50 -0000
+Date:   Tue, 11 Apr 2023 12:35:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] selftests: gpio: gpio-sim: Use same variable name for sysfs pathname
-Date:   Tue, 11 Apr 2023 20:15:21 +0300
-Message-Id: <20230411171521.29678-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20230411171521.29678-1-andriy.shevchenko@linux.intel.com>
-References: <20230411171521.29678-1-andriy.shevchenko@linux.intel.com>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Richard Acayan <mailingradian@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Iskren Chernev <me@iskren.info>,
+        Martin Botka <martin.botka@somainline.org>,
+        Danila Tikhonov <danila@jiaxyga.com>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/40] dt-bindings: pinctrl: qcom,ipq5332-tlmm: simplify
+ with unevaluatedProperties
+Message-ID: <20230411173550.GA3408186-robh@kernel.org>
+References: <20230407184546.161168-1-krzysztof.kozlowski@linaro.org>
+ <574d3aa5-21f4-014a-8cc7-7549df59ff3c@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <574d3aa5-21f4-014a-8cc7-7549df59ff3c@linaro.org>
+X-Spam-Status: No, score=0.8 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SYSFS_PATH can be used locally and globally, especially that has
-the same content.
+On Fri, Apr 07, 2023 at 08:54:43PM +0200, Krzysztof Kozlowski wrote:
+> On 07/04/2023 20:45, Krzysztof Kozlowski wrote:
+> > All Qualcomm SoC Top Level Mode Multiplexer pin controllers have similar
+> > capabilities regarding pin properties, thus we can just accept entire
+> > set provided by qcom,tlmm-common.yaml schema.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > ---
+> 
+> Linus,
+> 
+> If you prefer I can send all these to you in a pull after getting some acks.
+> 
+> 
+> Rob,
+> 
+> Feel free to ack once for all of them.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- tools/testing/selftests/gpio/gpio-sim.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There's no cover letter to ack them all (and b4 to pick up), but I guess 
+that's your own problem in this case. For the series:
 
-diff --git a/tools/testing/selftests/gpio/gpio-sim.sh b/tools/testing/selftests/gpio/gpio-sim.sh
-index fa2ce2b9dd5f..6fb66a687f17 100755
---- a/tools/testing/selftests/gpio/gpio-sim.sh
-+++ b/tools/testing/selftests/gpio/gpio-sim.sh
-@@ -152,9 +152,9 @@ sysfs_set_pull() {
- 	local PULL=$4
- 	local DEVNAME=`configfs_dev_name $DEV`
- 	local CHIPNAME=`configfs_chip_name $DEV $BANK`
--	local SYSFSPATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/pull"
-+	local SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/pull"
- 
--	echo $PULL > $SYSFSPATH || fail "Unable to set line pull in sysfs"
-+	echo $PULL > $SYSFS_PATH || fail "Unable to set line pull in sysfs"
- }
- 
- # Load the gpio-sim module. This will pull in configfs if needed too.
--- 
-2.40.0.1.gaa8946217a0b
+Acked-by: Rob Herring <robh@kernel.org>
 
+IMO, this should just be 1 patch. It's 1 change for 1 platform family 
+for 1 subsystem. There's just no point when it's all the same people 
+that will review it and apply it.
+
+Rob
