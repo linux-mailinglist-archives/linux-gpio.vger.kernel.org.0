@@ -2,43 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 834706DD6D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 11:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 420126DD6FB
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 11:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbjDKJdg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 05:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        id S230173AbjDKJgB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 05:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjDKJd0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 05:33:26 -0400
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56ED31984;
-        Tue, 11 Apr 2023 02:32:58 -0700 (PDT)
-X-QQ-mid: Yeas48t1681205558t422t54790
-Received: from 7082A6556EBF4E69829842272A565F7C (jiawenwu@trustnetic.com [183.129.236.74])
-X-QQ-SSF: 00400000000000F0FL9000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 4726894801635449641
-To:     <netdev@vger.kernel.org>, <linux@armlinux.org.uk>
-Cc:     <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>, <jarkko.nikula@linux.intel.com>
-References: <20230411092725.104992-1-jiawenwu@trustnetic.com> <20230411092725.104992-3-jiawenwu@trustnetic.com>
-In-Reply-To: <20230411092725.104992-3-jiawenwu@trustnetic.com>
-Subject: RE: [PATCH net-next v2 2/6] net: txgbe: Implement I2C bus master driver
-Date:   Tue, 11 Apr 2023 17:32:36 +0800
-Message-ID: <00cf01d96c58$8d3e9130$a7bbb390$@trustnetic.com>
+        with ESMTP id S229945AbjDKJfg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 05:35:36 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF07449CB;
+        Tue, 11 Apr 2023 02:34:53 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id b15so2755930qkj.0;
+        Tue, 11 Apr 2023 02:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1681205692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p1nO+Cpgpb/TzGbvoOZXWjSbOjtnB5mkQYr/7rdByO0=;
+        b=KhjZm3BrvPkpDHCOJfSuNUC/eJXL0i2UmUI2trMxgQihk6wGAq5eukbk+7sjjjxMay
+         FuuKa39M39Xtn1QEDOe88VGIgado8Ua+FMZg/bEVNHnhJPSiRE3AMrDnQa7Ay1gX6i1t
+         aA9OpAWWvanhx9LuSapYuHgcAz94GH1KrB6xIcu4wpuRz5dujhBZ0ZJ44qQST3IHLGyr
+         oHJD29h2f5uYr5zqa1DA8dJyDOdSIyLqUhNQYu5Mrcq6fkyR5Gxiw1xHz3vyoO/uKiS8
+         Wcir+VDIPSsfOdHH7BILVKmiiUDUhTY24b/gAStq50wFiVPUDLHNYK6jLBpZUELzV5KN
+         zUBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681205692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p1nO+Cpgpb/TzGbvoOZXWjSbOjtnB5mkQYr/7rdByO0=;
+        b=ecpBf6HCUpR1U+J5qBY4tJtfitT5qayRb5Um7fnIf7tioFj5scRuExP6Aq+hFGmdmF
+         i9+dX82mTrhaf+H3Lgvi2rxgrLHBqrbnDh3Mk5H2SQ/VRNxq8YrzuK12OSXyYsYzjr3I
+         kXCxZXb2btJfqjQnPcHJ8SGeeLP4e1dL1cxdooFzk4z2zCK3suuiU6t7Og0fHyadY3qo
+         ex1xN8HVp09u5FbKlEpTnb7UeQIBTysDy9p0lTZLQyqzrY9NYzhLubKFPtE0bDKHRmjc
+         kdRnPbVWa6MEKurI7afMdsMbHdmYT/uhW/slGH5UsayHvue9iuBRfcsn0elVqEY0/DfU
+         np7A==
+X-Gm-Message-State: AAQBX9enJnmPsfelhHOIOzUGJKCu0oWCyjRCksFKL6yRWvbk7G4BknVK
+        ei/vbcNuVk7QIRcRH/ciozh1t+s2vQ8F8BdKAm4=
+X-Google-Smtp-Source: AKy350Yi7o7NxrVNJ1sgjEuPPNgFp1lYeet38OY5N2fnMdfU5j4Ves7rO3R76tP0fEqty4gWGGvXOnCr86f6tILvgGg=
+X-Received: by 2002:a05:620a:c46:b0:743:6092:91b4 with SMTP id
+ u6-20020a05620a0c4600b00743609291b4mr4334915qki.14.1681205692111; Tue, 11 Apr
+ 2023 02:34:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQJXy8bYFbRwx/PFgpvJPX7PgyT97wJCMZrbrhcHRuA=
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvr:qybglogicsvr5
-X-Spam-Status: No, score=-0.0 required=5.0 tests=FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+References: <20230406093344.917259-1-alexander.stein@ew.tq-group.com>
+ <ZDBnnKy7QF0KZuZd@surfacebook> <3231223.aeNJFYEL58@steina-w>
+In-Reply-To: <3231223.aeNJFYEL58@steina-w>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Apr 2023 12:34:16 +0300
+Message-ID: <CAHp75VeR5R_CqWNT=Fpbyp-YSeo+3QXBnR62C=K_tyr-qQ2MVw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] gpio: Add gpio-delay support
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,291 +74,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+On Tue, Apr 11, 2023 at 10:19=E2=80=AFAM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+> Am Freitag, 7. April 2023, 20:57:32 CEST schrieb andy.shevchenko@gmail.co=
+m:
+> > Thu, Apr 06, 2023 at 11:33:41AM +0200, Alexander Stein kirjoitti:
 
-> -----Original Message-----
-> From: Jiawen Wu <jiawenwu@trustnetic.com>
-> Sent: Tuesday, April 11, 2023 5:27 PM
-> To: netdev@vger.kernel.org; linux@armlinux.org.uk
-> Cc: linux-i2c@vger.kernel.org; linux-gpio@vger.kernel.org;
-> mengyuanlou@net-swift.com; Jiawen Wu <jiawenwu@trustnetic.com>
-> Subject: [PATCH net-next v2 2/6] net: txgbe: Implement I2C bus master
-> driver
-> 
-> Implement I2C bus driver to send and receive I2C messages.
-> 
-> This I2C license the IP of Synopsys Designware, but without interrupt
-> support on the hardware design. It seems that polling mode needs to be
-> added in Synopsys Designware I2C driver. But currently it can only be
-> driven by this I2C bus master driver.
-> 
-> Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
-> ---
->  drivers/net/ethernet/wangxun/Kconfig          |   1 +
->  .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 153
-> ++++++++++++++++++
->  .../net/ethernet/wangxun/txgbe/txgbe_type.h   |  23 +++
->  3 files changed, 177 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/wangxun/Kconfig
-> b/drivers/net/ethernet/wangxun/Kconfig
-> index c9d88673d306..8cbf0dd48a2c 100644
-> --- a/drivers/net/ethernet/wangxun/Kconfig
-> +++ b/drivers/net/ethernet/wangxun/Kconfig
-> @@ -41,6 +41,7 @@ config TXGBE
->  	tristate "Wangxun(R) 10GbE PCI Express adapters support"
->  	depends on PCI
->  	select LIBWX
-> +	select I2C
->  	help
->  	  This driver supports Wangxun(R) 10GbE PCI Express family of
->  	  adapters.
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> index 86d5e0647d5e..2721da1625e0 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> @@ -2,9 +2,12 @@
->  /* Copyright (c) 2015 - 2023 Beijing WangXun Technology Co., Ltd. */
-> 
->  #include <linux/gpio/property.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/i2c.h>
->  #include <linux/pci.h>
-> 
->  #include "../libwx/wx_type.h"
-> +#include "../libwx/wx_hw.h"
->  #include "txgbe_type.h"
->  #include "txgbe_phy.h"
-> 
-> @@ -67,6 +70,142 @@ static int txgbe_swnodes_register(struct txgbe
-> *txgbe)
->  	return software_node_register_node_group(nodes->group);
->  }
-> 
-> +static void txgbe_i2c_start(struct wx *wx, u16 dev_addr)
-> +{
-> +	wr32(wx, TXGBE_I2C_ENABLE, 0);
-> +
-> +	wr32(wx, TXGBE_I2C_CON,
-> +	     (TXGBE_I2C_CON_MASTER_MODE |
-> +	      TXGBE_I2C_CON_SPEED(1) |
-> +	      TXGBE_I2C_CON_RESTART_EN |
-> +	      TXGBE_I2C_CON_SLAVE_DISABLE));
-> +	wr32(wx, TXGBE_I2C_TAR, dev_addr);
-> +	wr32(wx, TXGBE_I2C_SS_SCL_HCNT, 600);
-> +	wr32(wx, TXGBE_I2C_SS_SCL_LCNT, 600);
-> +	wr32(wx, TXGBE_I2C_RX_TL, 0); /* 1byte for rx full signal */
-> +	wr32(wx, TXGBE_I2C_TX_TL, 4);
-> +	wr32(wx, TXGBE_I2C_SCL_STUCK_TIMEOUT, 0xFFFFFF);
-> +	wr32(wx, TXGBE_I2C_SDA_STUCK_TIMEOUT, 0xFFFFFF);
-> +
-> +	wr32(wx, TXGBE_I2C_INTR_MASK, 0);
-> +	wr32(wx, TXGBE_I2C_ENABLE, 1);
-> +}
-> +
-> +static int txgbe_i2c_poll_intr(struct wx *wx, u16 intr)
-> +{
-> +	u16 val;
-> +
-> +	return read_poll_timeout(rd32, val, (val & intr) == intr,
-> +				 100, 1000, false, wx,
-> +				 TXGBE_I2C_RAW_INTR_STAT);
-> +}
-> +
-> +static int txgbe_read_i2c_bytes(struct wx *wx, u8 dev_addr, struct
-> i2c_msg *msg)
-> +{
-> +	int err, i;
-> +
-> +	txgbe_i2c_start(wx, msg->addr);
-> +
-> +	for (i = 0; i < msg->len; i++) {
-> +		/* wait tx empty */
-> +		err = txgbe_i2c_poll_intr(wx, TXGBE_I2C_INTR_STAT_TEMP);
-> +		if (err)
-> +			return err;
-> +
-> +		/* read data */
-> +		wr32(wx, TXGBE_I2C_DATA_CMD,
-> +		     (dev_addr + i) | TXGBE_I2C_DATA_CMD_STOP);
-> +		wr32(wx, TXGBE_I2C_DATA_CMD,
-> +		     TXGBE_I2C_DATA_CMD_READ |
-> TXGBE_I2C_DATA_CMD_STOP);
-> +
-> +		/* wait for read complete */
-> +		err = txgbe_i2c_poll_intr(wx, TXGBE_I2C_INTR_STAT_RFUL);
-> +		if (err)
-> +			return err;
-> +
-> +		msg->buf[i] = 0xFF & rd32(wx, TXGBE_I2C_DATA_CMD);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int txgbe_write_i2c_bytes(struct wx *wx, struct i2c_msg *msg)
-> +{
-> +	int err, i;
-> +
-> +	txgbe_i2c_start(wx, msg->addr);
-> +
-> +	for (i = 0; i < msg->len; i++) {
-> +		/* wait tx empty */
-> +		err = txgbe_i2c_poll_intr(wx, TXGBE_I2C_INTR_STAT_TEMP);
-> +		if (err)
-> +			return err;
-> +
-> +		/* write data */
-> +		wr32(wx, TXGBE_I2C_DATA_CMD, msg->buf[i]);
-> +		if (i == (msg->len - 1))
-> +			wr32(wx, TXGBE_I2C_DATA_CMD,
-> TXGBE_I2C_DATA_CMD_STOP);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int txgbe_i2c_xfer(struct i2c_adapter *i2c_adap,
-> +			  struct i2c_msg *msg, int num_msgs)
-> +{
-> +	struct wx *wx = i2c_get_adapdata(i2c_adap);
-> +	u8 dev_addr = msg[0].buf[0];
-> +	int i, ret;
-> +
-> +	for (i = 0; i < num_msgs; i++) {
-> +		if (msg[i].flags & I2C_M_RD)
-> +			ret = txgbe_read_i2c_bytes(wx, dev_addr,
-&msg[i]);
-> +		else
-> +			ret = txgbe_write_i2c_bytes(wx, &msg[i]);
-> +
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return num_msgs;
-> +}
-> +
-> +static u32 txgbe_i2c_func(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C;
-> +}
-> +
-> +static const struct i2c_algorithm txgbe_i2c_algo = {
-> +	.master_xfer = txgbe_i2c_xfer,
-> +	.functionality = txgbe_i2c_func,
-> +};
-> +
-> +static int txgbe_i2c_adapter_add(struct txgbe *txgbe)
-> +{
-> +	struct pci_dev *pdev = txgbe->wx->pdev;
-> +	struct i2c_adapter *i2c_adap;
-> +	int ret;
-> +
-> +	i2c_adap = devm_kzalloc(&pdev->dev, sizeof(*i2c_adap),
-> GFP_KERNEL);
-> +	if (!i2c_adap)
-> +		return -ENOMEM;
-> +
-> +	i2c_adap->owner = THIS_MODULE;
-> +	i2c_adap->algo = &txgbe_i2c_algo;
-> +	i2c_adap->dev.parent = &pdev->dev;
-> +	i2c_adap->dev.fwnode =
-> software_node_fwnode(txgbe->nodes.group[SWNODE_I2C]);
-> +	strscpy(i2c_adap->name, "txgbe_i2c", sizeof(i2c_adap->name));
-> +
-> +	i2c_set_adapdata(i2c_adap, txgbe->wx);
-> +	ret = i2c_add_adapter(i2c_adap);
-> +	if (ret)
-> +		return ret;
-> +
-> +	txgbe->i2c_adap = i2c_adap;
-> +
-> +	return 0;
-> +}
-> +
->  int txgbe_init_phy(struct txgbe *txgbe)
->  {
->  	int ret;
-> @@ -77,10 +216,24 @@ int txgbe_init_phy(struct txgbe *txgbe)
->  		return ret;
->  	}
-> 
-> +	ret = txgbe_i2c_adapter_add(txgbe);
-> +	if (ret) {
-> +		wx_err(txgbe->wx, "failed to init i2c interface: %d\n",
-ret);
-> +		goto err;
-> +	}
-> +
->  	return 0;
-> +
-> +err:
-> +	txgbe_remove_phy(txgbe);
-> +
-> +	return ret;
->  }
-> 
->  void txgbe_remove_phy(struct txgbe *txgbe)
->  {
-> +	if (txgbe->i2c_adap)
-> +		i2c_del_adapter(txgbe->i2c_adap);
-> +
->  	software_node_unregister_node_group(txgbe->nodes.group);
->  }
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> index d30684378f4e..6c02af196157 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> @@ -55,6 +55,28 @@
->  #define TXGBE_TS_CTL                            0x10300
->  #define TXGBE_TS_CTL_EVAL_MD                    BIT(31)
-> 
-> +/* I2C registers */
-> +#define TXGBE_I2C_CON                           0x14900 /* I2C
-> Control */
-> +#define TXGBE_I2C_CON_SLAVE_DISABLE             BIT(6)
-> +#define TXGBE_I2C_CON_RESTART_EN                BIT(5)
-> +#define TXGBE_I2C_CON_SPEED(_v)
-> FIELD_PREP(GENMASK(2, 1), _v)
-> +#define TXGBE_I2C_CON_MASTER_MODE               BIT(0)
-> +#define TXGBE_I2C_TAR                           0x14904 /* I2C
-> Target Address */
-> +#define TXGBE_I2C_DATA_CMD                      0x14910 /*
-> I2C Rx/Tx Data Buf and Cmd */
-> +#define TXGBE_I2C_DATA_CMD_STOP                 BIT(9)
-> +#define TXGBE_I2C_DATA_CMD_READ                 BIT(8)
-> +#define TXGBE_I2C_SS_SCL_HCNT                   0x14914
-> +#define TXGBE_I2C_SS_SCL_LCNT                   0x14918
-> +#define TXGBE_I2C_INTR_MASK                     0x14930 /* I2C
-> Interrupt Mask */
-> +#define TXGBE_I2C_RAW_INTR_STAT                 0x14934 /*
-> I2C Raw Interrupt Status */
-> +#define TXGBE_I2C_INTR_STAT_RFUL                BIT(2)
-> +#define TXGBE_I2C_INTR_STAT_TEMP                BIT(4)
-> +#define TXGBE_I2C_RX_TL                         0x14938 /* I2C
-> Receive FIFO Threshold */
-> +#define TXGBE_I2C_TX_TL                         0x1493C /* I2C
-> TX FIFO Threshold */
-> +#define TXGBE_I2C_ENABLE                        0x1496C /* I2C
-> Enable */
-> +#define TXGBE_I2C_SCL_STUCK_TIMEOUT             0x149AC
-> +#define TXGBE_I2C_SDA_STUCK_TIMEOUT             0x149B0
-> +
->  /* Part Number String Length */
->  #define TXGBE_PBANUM_LENGTH                     32
-> 
-> @@ -139,6 +161,7 @@ struct txgbe_nodes {
->  struct txgbe {
->  	struct wx *wx;
->  	struct txgbe_nodes nodes;
-> +	struct i2c_adapter *i2c_adap;
->  };
-> 
->  #endif /* _TXGBE_TYPE_H_ */
-> --
-> 2.27.0
-> 
+...
 
+> > > thanks for the feedback I've received. This is the first non-RFC seri=
+es
+> > > for
+> > > adressing a platform specific ramp-up/ramp-down delay on GPIO outputs=
+.
+> > >
+> > > Changes compared to RFC v2 are mentioned in each patch.
+> >
+> > Reading the (poor?) documentation does not clarify the use case.
+> > Looking at them I think that this can be implemented as debounce.
+>
+> Debounce for GPIOs? There is nothing like that yet.
+
+At least that what we have already done in the code, you can just
+provide a similar feature to the output pins, no?
+
+> > Also I have no clue why it's so important that we _need_ to have a
+> > driver for this. We have plenty of consumer drivers that implement
+> > delays on ramping up or down or whatever if they need.
+>
+> But this delay I am dealing with is actually not consumer dependent, e.g.=
+ a
+> power-on delay specified in a datasheet. Instead this driver deals with a
+> platform-specific curiosity, e.g. RC-circuit on an open-drain output. So =
+this
+> is something which sits inbetween ICs.
+> In the RFC we came to the conclusion to not adjust (each) consumer to dea=
+l
+> with this, given this will be rarely used. Instead provide a generic way =
+for
+> specifying this delay.
+
+So, taking the above into consideration, why is it GPIO property to
+begin with? This is PCB property of the certain platform design that
+needs to be driven by a specific driver, correct?
+At the very least this is pin configuration (but external to the SoC),
+so has to be a _separate_ pin control in my opinion.
+
+> > Which part(s) did I got wrong?
+>
+> Maybe there needs to be an explicit example in the bindings document what=
+'s
+> the actual issue to deal with.
+> Right now if a GPIO is set, it is expected the signal on the receiver sid=
+e has
+> changed as well within a negligible time as well. But due to external rea=
+sons
+> (see RC_curcuit above) the change on the receiver side can occur much lat=
+er,
+> >100ms in my case.
+
+I still don't understand why it is a problem. If each signal is
+delayed then the caller should be aware of the delay, no?
+
+
+--
+With Best Regards,
+Andy Shevchenko
