@@ -2,118 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4018F6DDD59
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 16:11:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21216DE231
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 19:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbjDKOLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 10:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
+        id S229619AbjDKRPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 13:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjDKOLx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 10:11:53 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC41A359D;
-        Tue, 11 Apr 2023 07:11:52 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id cg4so146649qtb.11;
-        Tue, 11 Apr 2023 07:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681222312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vp5TeUo87Ef5LRFqAMptSkS+XyNmpn4jmV0jNCTXKOw=;
-        b=Hf8ptq0WvJuev7sP/M2XDvm9UtgR/kCdTdNUNvr/4g/NGv3+CFcqK5Gd8wENKSbu48
-         XwfVZY5aI8uJqXi174yCs1+/y+t+eHUXQI7Lc4NB207+G/ifkUF/+8QY8upbjGSMDj05
-         S/rpjE9Hzok/DC0+98Wk3giPiPUj6p5nEm1RWRm50zJ1MCbGAMExaDv27ahEtJvBxce1
-         5G9NM/S2uktq8/CHSTz1s50ek6B6BZYYpAJoCeed3m1mbOvN9Iv3QrzGRkAUlZ5fCK6A
-         HzgxSUS1xL3/Z2RIOG5+AzNhUOyxjSEQfvAoVNB7tk3zhTzXcbZFpoeizvY8+nQHQ9Ib
-         hsSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681222312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vp5TeUo87Ef5LRFqAMptSkS+XyNmpn4jmV0jNCTXKOw=;
-        b=iXNuFcFFxdW6FaMVYzvxMhFo7CKHQM1UmLqWi/sKvbeN+UbjYrMEgG8g9KtU7VGXG5
-         rq2WGG1nEs9fJINJ5VIUDSWomizVZqlY6uQQMveG57hKhRH5AFJZX++l6kNIrJ/YiTjN
-         o48ghDnUPcSXRgRKKSfP8etW6OtdMXDc3Fz5yFR9Pszy24T+6GbyxUq+lYTCoVSJR6oe
-         p9Ptye3eDxBT+ZKsf7/c7xWFykggZbhzwWOZNaERO9dNr3QHH0rfHYXAHvwGc3XEDog7
-         2Usja4EmjKgJor3w2uGAiHFmmEjwQ5svH7Wgiwsr4DQg4lZPFzepJd+AeaLCt61xk0WR
-         WDiA==
-X-Gm-Message-State: AAQBX9fHF88MQ6h79Np7kOe4EJLAnBddH9OZyWHuMsb+Dc7Mbg8cAAVb
-        drfQ/aEHxTwGwRkvYi1vkJPi8luC+eMeXPFnBjE=
-X-Google-Smtp-Source: AKy350YPwoaaW9Y8GXCOfWW6C/PStwmdAlayzlDcVd0em0WPfCC44MrpTTN0GoQVUdzJvz++rNYsW1CfUJjO8M7TGcA=
-X-Received: by 2002:a05:622a:1b92:b0:3e6:720f:baed with SMTP id
- bp18-20020a05622a1b9200b003e6720fbaedmr3708734qtb.0.1681222311675; Tue, 11
- Apr 2023 07:11:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230327130010.8342-1-okan.sahin@analog.com> <20230327130010.8342-3-okan.sahin@analog.com>
- <CACRpkda5G5b+At5s1WFudpQBQ6LDQxhE3fZj7eBhkZ=thvnQhg@mail.gmail.com>
- <MN2PR03MB51682210CADA6E33FB99052CE7939@MN2PR03MB5168.namprd03.prod.outlook.com>
- <CACRpkdZJA0DyzgLxm9HFeHO03rqNUff=avuV=VrGuJkkOg6wNQ@mail.gmail.com>
- <25e1fda4b6df2d10444d7eca3cd0e387@walle.cc> <CACRpkdYKEid8-0-7sBECNgSyW3kMRCsv3DeBVUzxo4z6p+Grnw@mail.gmail.com>
- <ZDBivYlwJ6zgaFTg@surfacebook> <MN2PR03MB516879DCD6600827AEE2BDC9E7949@MN2PR03MB5168.namprd03.prod.outlook.com>
-In-Reply-To: <MN2PR03MB516879DCD6600827AEE2BDC9E7949@MN2PR03MB5168.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 11 Apr 2023 17:11:15 +0300
-Message-ID: <CAHp75VcxscqmLFRKJ8apLsY3Dsih=FMQn65cRGTUSeCZ-qLy9Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
-To:     "Sahin, Okan" <Okan.Sahin@analog.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
+        with ESMTP id S229549AbjDKRPi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 13:15:38 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F4B5BA0;
+        Tue, 11 Apr 2023 10:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681233330; x=1712769330;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=l77rwRkmmaeKf8oCWhGD/yj1q+/ZZYlFQ+ZgKZ60owc=;
+  b=YiTihbpZc/YfJWIudoEx6Ib8fCRULyyjKJ4Rt8bIUhEcu/IpB4gPij6a
+   mSNnIUC6MV+LkfMOXKqBOJaRW8MU6pcxDX8gIXXeu4xHFeKpYepJC3Tg4
+   gpAiG3B9wSBUcvf2sVCK0G1f3Kle2uUVJg1FI0sRoWYHY2gG56oyFOpVH
+   1708YHElLb2x8WJkB/R5eR92Q9mS59gq18mj4/h5cTotcHVA1Gqun6ywZ
+   KArNoOcq4oeSAXu38w+tdyc03m1hdcbVDGk4mMJ9hzpQD+FxPsCGp2yZR
+   hlQgfsXi9oEV2/vw34zStgYIwDw88q8m2EIOseWowRVluKNU4t4LhXIr7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="346354122"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="346354122"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 10:15:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="638904505"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="638904505"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 11 Apr 2023 10:15:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B7195438; Tue, 11 Apr 2023 20:15:29 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] selftests: gpio: gpio-sim: Fix BUG: test FAILED due to recent change
+Date:   Tue, 11 Apr 2023 20:15:20 +0300
+Message-Id: <20230411171521.29678-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 9, 2023 at 5:25=E2=80=AFPM Sahin, Okan <Okan.Sahin@analog.com> =
-wrote:
-> >Fri, Apr 07, 2023 at 03:48:25PM +0200, Linus Walleij kirjoitti:
-> >> On Wed, Apr 5, 2023 at 3:57=E2=80=AFPM Michael Walle <michael@walle.cc=
-> wrote:
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
 
-...
+According to Mirsad the gpio-sim.sh test appears to FAIL in a wrong way
+due to missing initialisation of shell variables:
 
-> >> If the chip is *only* doing GPIO and nvram it can be a GPIO-only
-> >> device I think.
+ 4.2. Bias settings work correctly
+ cat: /sys/devices/platform/gpio-sim.0/gpiochip18/sim_gpio0/value: No such file or directory
+ ./gpio-sim.sh: line 393: test: =: unary operator expected
+ bias setting does not work
+ GPIO gpio-sim test FAIL
 
-I have read a datasheet, it has the pre-boot settings, but it doesn't
-matter from the Linux point of view. The only thing which we need to
-take care of is to have the EEPROM disabled during GPIO interaction.
-However, there is a question as to how this device should actually
-commit into EEPROM the state to survive the cold/warm power cycle.
-What is the persistent flag for, btw, I haven't been familiar with it?
+After this change the test passed:
 
-> >> The precedent is a ton of ethernet drivers with nvram for storing e.g.
-> >> the MAC address. We don't make all of those into MFDs, as the nvram is
-> >> closely tied to the one and only function of the block.
-> >
-> >I agree with Linus. This should be part of the actual (main) driver for =
-the chip as many
-> >do (like USB to serial adapters that have GPIO capability).
-> >Also this code lacks of proper locking and has style issues.
+ 4.2. Bias settings work correctly
+ GPIO gpio-sim test PASS
 
-...
+His testing environment is AlmaLinux 8.7 on Lenovo desktop box with
+the latest Linux kernel based on v6.2:
 
-> Could you give more detail related to locking and style issues?
+  Linux 6.2.0-mglru-kmlk-andy-09238-gd2980d8d8265 x86_64
 
-You use a few IO accessors in a row without locking, which means at
-any point of this flow some other CPUs may access the chip using the
-same or other APIs of this driver.
+Suggested-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ tools/testing/selftests/gpio/gpio-sim.sh | 3 +++
+ 1 file changed, 3 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/tools/testing/selftests/gpio/gpio-sim.sh b/tools/testing/selftests/gpio/gpio-sim.sh
+index 9f539d454ee4..fa2ce2b9dd5f 100755
+--- a/tools/testing/selftests/gpio/gpio-sim.sh
++++ b/tools/testing/selftests/gpio/gpio-sim.sh
+@@ -389,6 +389,9 @@ create_chip chip
+ create_bank chip bank
+ set_num_lines chip bank 8
+ enable_chip chip
++DEVNAME=`configfs_dev_name chip`
++CHIPNAME=`configfs_chip_name chip bank`
++SYSFS_PATH="/sys/devices/platform/$DEVNAME/$CHIPNAME/sim_gpio0/value"
+ $BASE_DIR/gpio-mockup-cdev -b pull-up /dev/`configfs_chip_name chip bank` 0
+ test `cat $SYSFS_PATH` = "1" || fail "bias setting does not work"
+ remove_chip chip
+-- 
+2.40.0.1.gaa8946217a0b
+
