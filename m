@@ -2,74 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C50B26DE689
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 23:35:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEEC6DE838
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 01:44:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjDKVfX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 17:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
+        id S229506AbjDKXoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 19:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbjDKVfT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 17:35:19 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193545245
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 14:35:14 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id y186so9801136yby.13
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 14:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681248913; x=1683840913;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pLFX6ad4QGodETcTebKk90wi9LId4RBUIMWZKtUXWgs=;
-        b=H1jjBhJlCRiwvmJgfzDzJtiLeCpBky/cuZNIhbbXEJlUS8VsV7V07b9c/rDpW4PZOz
-         aOQkZ/NUkADy8AXoHP5Wn0siXfOG497CWEsug5aC3d7m5P0jdNMsRLgokaRcTc9kkgu/
-         l1o08zASPpBHXGvGmaC7mu7PE9vxT4slcMYGOtxmMiOkdksClNH3sfMDoHKZhjKKNOJ3
-         Pa7cis4rOLf+06CUeBDS1wiZXkkAuiMwLBb8dGNjHvBq44g8hwAtikJLzPOuRG8u3NHB
-         a2KqkT+fN/mIBzhDshRWgGOQTrehT4wZvEP2VP/jWLQyhFmMECY0LbjT3e/xIN97Hcfc
-         +/6A==
+        with ESMTP id S229485AbjDKXox (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 19:44:53 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429C4D8;
+        Tue, 11 Apr 2023 16:44:52 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id l13-20020a0568302b0d00b006a416ec44ccso609247otv.2;
+        Tue, 11 Apr 2023 16:44:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681248913; x=1683840913;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pLFX6ad4QGodETcTebKk90wi9LId4RBUIMWZKtUXWgs=;
-        b=CoOxEP4Ap3dYDD/BOvfAmsVdAKABG8KAKQ4Ptf10NLV0VSl0r6/Thvx8fYZeb7d4Yv
-         BsKNntySSgwmfd8Gx0MMMMe+cSICywLhaepyDndfsW1ZZua4sGv90wENHNj070QuLLaP
-         bxXxE1A/O0tm7SC1DrxH+I+bl4MkoXp+IuAZkTUP0sSdITk/vab5J9zj8PTYuhcKIrRn
-         9F7tyIYRIBZyD+7qOVIuxjdrCXw5G5CZ5fHVDxPk7fIW8zq66aSjeiGiqLgUpsBI1yso
-         rlJTQgiACkMFiAMdHoRIbpawgsZjVvP2qaWcACGYybcx/WVBBHos9b0G1UoMOmBHuCiH
-         rYUQ==
-X-Gm-Message-State: AAQBX9c0jh48hSG6MNGPsZKjt4RtBRzuVT26Nnq9QE4kH804A1fir+NF
-        Fd79fs0hkAVByRaiX9yjmGb5ug==
-X-Google-Smtp-Source: AKy350b9kOBVpIqWF0DXrV+eKfcz0GLC4Hdl/0P4dk0vGd4xc0O64N3qVKyw/nRxN4IuA+BGE1/pHg==
-X-Received: by 2002:a25:a187:0:b0:b8e:fc1f:acff with SMTP id a7-20020a25a187000000b00b8efc1facffmr2849082ybi.23.1681248913304;
-        Tue, 11 Apr 2023 14:35:13 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id k6-20020a25bec6000000b00b8bfb4c4f1esm3518999ybm.62.2023.04.11.14.35.12
+        d=1e100.net; s=20210112; t=1681256691; x=1683848691;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bhO8R9GioOCOagQ6Y9fLjNmhaghaaAAsdr3nkk8G91Q=;
+        b=pffI9SjDBnzLY/ZEl7AYtbcNLcAGOeW2FqebwEUsP07kEREEoqEFU6EFTauSG8QyNH
+         7v99HQ2Ma43QycLUixCTBTjxnxp5mju7zkArPkM/dNK3BZhJ7NicLJkaV3tZS5aHnIMD
+         cTT0igm1i8Uw5lUULhz8lfmAOiseFq3fEenlBUjwzyMJQ7mGdtDG2lFu2Mn8KIqz28bW
+         woMTVOTaLDgKw9WBpvX22H0p8wGrTp1IuNcndPX9oB35xv1NXeZ1ed0fh94Vy26No8f3
+         P8th/jitUdKLaUM2pDYXj6+RRQPjByGrlD7MBMbSQW+bgWJAi6LqcwCP7kYAcSybtRhN
+         zl4Q==
+X-Gm-Message-State: AAQBX9fMzHVeMk1XfyAq/meKV/NIxINTJnT7qyP8iXbESC2YRM4MlFjW
+        qj8X01o5gm8IJZL1398ExFS3FXj5fQ==
+X-Google-Smtp-Source: AKy350Y4GC3JdkRk79jMyBG3SpXIy4yOATtALC36XtJb/GoPcjog7NeXxd7pXFccoDWD6Pn4a81+Jg==
+X-Received: by 2002:a9d:7e98:0:b0:6a4:1980:2a93 with SMTP id m24-20020a9d7e98000000b006a419802a93mr294955otp.29.1681256691465;
+        Tue, 11 Apr 2023 16:44:51 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id m13-20020a0568301e6d00b0069faa14e99fsm5897068otr.10.2023.04.11.16.44.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 14:35:12 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 17:35:10 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 1/2] gpio: 104-dio-48e: Implement struct dio48e_gpio
-Message-ID: <ZDXSjsjryXn0pHCz@fedora>
-References: <cover.1679323449.git.william.gray@linaro.org>
- <ca710d14a710fee44f7911f2a84b6a55570561ee.1679323449.git.william.gray@linaro.org>
- <571b4df1-91ea-481c-9797-842974dfa922@sirena.org.uk>
- <ZDWopwozNjFg/9NX@fedora>
- <db1edaaa-ea56-4f21-bc69-43f648e79c5b@sirena.org.uk>
+        Tue, 11 Apr 2023 16:44:50 -0700 (PDT)
+Received: (nullmailer pid 60808 invoked by uid 1000);
+        Tue, 11 Apr 2023 23:44:49 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="48Noe0+nb7AHw+BE"
-Content-Disposition: inline
-In-Reply-To: <db1edaaa-ea56-4f21-bc69-43f648e79c5b@sirena.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Kishon Vijay Abraham I <kishon@kernel.org>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        =?utf-8?q?Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <20230411184313.3679145-4-sean.anderson@seco.com>
+References: <20230411184313.3679145-1-sean.anderson@seco.com>
+ <20230411184313.3679145-4-sean.anderson@seco.com>
+Message-Id: <168125645190.55087.12770846806127473997.robh@kernel.org>
+Subject: Re: [PATCH v13 03/15] dt-bindings: Convert gpio-mmio to yaml
+Date:   Tue, 11 Apr 2023 18:44:49 -0500
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -77,51 +78,95 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---48Noe0+nb7AHw+BE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 11 Apr 2023 14:43:00 -0400, Sean Anderson wrote:
+> This is a generic binding for simple MMIO GPIO controllers. Although we
+> have a single driver for these controllers, they were previously spread
+> over several files. Consolidate them. The register descriptions are
+> adapted from the comments in the source. There is no set order for the
+> registers, and some registers may be omitted. Because of this, reg-names
+> is mandatory, and no order is specified.
+> 
+> Rename brcm,bcm6345-gpio to brcm,bcm63xx-gpio to reflect that bcm6345
+> has moved.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Linus or Bartosz, feel free to pick this up as the rest of this series
+> may not be merged any time soon.
+> 
+> Changes in v13:
+> - Fix references to brcm,bcm63xx-gpio.yaml (neé brcm,bcm6345-gpio)
+> 
+> Changes in v12:
+> - Put compatible first
+> - Keep gpio-controller to one line
+> - Add little-endian property
+> - Alphabetize compatibles
+> - Remove some comments
+> - Remove some examples with insufficient novelty
+> 
+> Changes in v11:
+> - Keep empty (or almost-empty) properties on a single line
+> - Don't use | unnecessarily
+> - Use gpio as the node name for examples
+> - Rename brcm,bcm6345-gpio.yaml to brcm,bcm63xx-gpio.yaml
+> 
+> Changes in v10:
+> - New
+> 
+>  ...m6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} |  16 +--
+>  .../devicetree/bindings/gpio/gpio-mmio.yaml   | 117 ++++++++++++++++++
+>  .../bindings/gpio/ni,169445-nand-gpio.txt     |  38 ------
+>  .../devicetree/bindings/gpio/wd,mbl-gpio.txt  |  38 ------
+>  .../mfd/brcm,bcm6318-gpio-sysctl.yaml         |   4 +-
+>  .../mfd/brcm,bcm63268-gpio-sysctl.yaml        |   4 +-
+>  .../mfd/brcm,bcm6328-gpio-sysctl.yaml         |   4 +-
+>  .../mfd/brcm,bcm6358-gpio-sysctl.yaml         |   4 +-
+>  .../mfd/brcm,bcm6362-gpio-sysctl.yaml         |   4 +-
+>  .../mfd/brcm,bcm6368-gpio-sysctl.yaml         |   4 +-
+>  10 files changed, 130 insertions(+), 103 deletions(-)
+>  rename Documentation/devicetree/bindings/gpio/{brcm,bcm6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} (78%)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+> 
 
-On Tue, Apr 11, 2023 at 10:15:54PM +0100, Mark Brown wrote:
-> On Tue, Apr 11, 2023 at 02:36:23PM -0400, William Breathitt Gray wrote:
-> > On Tue, Apr 11, 2023 at 09:23:55PM +0100, Mark Brown wrote:
-> > > On Mon, Mar 20, 2023 at 10:50:15AM -0400, William Breathitt Gray wrot=
-e:
-> > > > A private data structure struct dio48e_gpio is introduced to facili=
-tate
-> > > > passage of the regmap and IRQ mask state for the device to the call=
-back
-> > > > dio48e_handle_mask_sync(). This is in preparation for the removal o=
-f the
-> > > > handle_mask_sync() map parameter in a subsequent patch.
->=20
-> > > What's the story with this patch?
->=20
-> > Currently dio48e_handle_mask_sync() uses the map argument in its
-> > implementation. Once the map parameter is removed, the current
-> > implementation of dio48e_handle_mask_sync() will no longer build, so we
-> > must adjust the implementation to no longer depend on map.
->=20
-> I mean what's the story with getting this patch applied?  It doesn't
-> seem to have been reviewed...
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-I'm sorry, I forgot to add Linus' tag from v2 [0]. Linus, would you
-confirm you're still okay with this patch?
+yamllint warnings/errors:
 
-William Breathitt Gray
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/gpio/brcm,bcm63xx-gpio.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/gpio/brcm,bcm63xx-gpio.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6318-gpio-sysctl.example.dtb: syscon@10000080: gpio@0: False schema does not allow {'compatible': ['brcm,bcm6318-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 50]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6318-gpio-sysctl.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm63268-gpio-sysctl.example.dtb: syscon@100000c0: gpio@0: False schema does not allow {'compatible': ['brcm,bcm63268-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 52]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm63268-gpio-sysctl.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6362-gpio-sysctl.example.dtb: syscon@10000080: gpio@0: False schema does not allow {'compatible': ['brcm,bcm6362-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 48]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6362-gpio-sysctl.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6328-gpio-sysctl.example.dtb: syscon@10000080: gpio@0: False schema does not allow {'compatible': ['brcm,bcm6328-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 32]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6328-gpio-sysctl.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6358-gpio-sysctl.example.dtb: syscon@fffe0080: gpio@0: False schema does not allow {'compatible': ['brcm,bcm6358-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 40]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6358-gpio-sysctl.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6368-gpio-sysctl.example.dtb: syscon@10000080: gpio@0: False schema does not allow {'compatible': ['brcm,bcm6368-gpio'], 'reg-names': ['dirout', 'dat'], 'reg': [[0, 8], [8, 8]], 'gpio-controller': True, 'gpio-ranges': [[1, 0, 0, 38]], '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/brcm,bcm6368-gpio-sysctl.yaml
 
-[0] https://lore.kernel.org/all/CACRpkdYFSu3DAY4+EeoRk4cTkypgWg1C=3DUgforDO=
-7mT96f0GDQ@mail.gmail.com/
+doc reference errors (make refcheckdocs):
 
---48Noe0+nb7AHw+BE
-Content-Type: application/pgp-signature; name="signature.asc"
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230411184313.3679145-4-sean.anderson@seco.com
 
------BEGIN PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZDXSjgAKCRC1SFbKvhIj
-KwrCAP9VYpmQaYtooKnX1jtXhKeFvVEc7Z9Ji8JwIxbhtXtN9wD8CaSYLVG1F8fT
-MkfffK9DI7xn64NaLkukyDhgCASR6g0=
-=NyAF
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
---48Noe0+nb7AHw+BE--
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
