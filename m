@@ -2,241 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 479286DD834
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 12:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C676DD870
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 12:58:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbjDKKpZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 06:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        id S229719AbjDKK6U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 06:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbjDKKpF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 06:45:05 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8F144BF;
-        Tue, 11 Apr 2023 03:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ImctafnwqPsPi7ix8f1fEqK/59TTEsSB6UiwQdAadWY=; b=JQRaw21VTog7foN8U46Ot+c17c
-        jlriJnoIwChH5GwUrhg9Uhii8PYsk/S/yL25zz5MnMOkYyySpkETD/wZt0R1VTpMe80AVXzzHaq+f
-        op27Vb+1xK3VqqZD5953nvHLHrHl0taf3g+BU+nJ70Aoca+occyKt/Ttic/tHQf0pU5cf82lTX4Er
-        BxlC7CqTeDMwW2p/6Msg3KEYgRBBGaAHUb+lM1gsXiWa7mcCRmHh8CxERoO73fXVFu57Bc5HsNknt
-        AN5bxFdz7HkF2D+NcXThofuS0LaMpGDf1ST8l4bXrOj6O7MSK+VKIb3WDnEy2IUbzlW6Eh7cWvk+m
-        w3BPFOLw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46152)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1pmBUJ-0005nY-Cs; Tue, 11 Apr 2023 11:44:35 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1pmBUI-00042k-OV; Tue, 11 Apr 2023 11:44:34 +0100
-Date:   Tue, 11 Apr 2023 11:44:34 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v2 6/6] net: txgbe: Support phylink MAC layer
-Message-ID: <ZDU6EtWVL5JqqerL@shell.armlinux.org.uk>
-References: <20230411092725.104992-1-jiawenwu@trustnetic.com>
- <20230411092725.104992-7-jiawenwu@trustnetic.com>
+        with ESMTP id S229758AbjDKK6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 06:58:11 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FBB03AAA;
+        Tue, 11 Apr 2023 03:58:10 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33BAljGr018908;
+        Tue, 11 Apr 2023 10:57:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=14mScYbVQyWzJ/LrV2BGO+8sFIwuc83cAGGYkYjZpjA=;
+ b=d5mqj90HrxHyVDaA0URCPX12v6GueiJTRsIbIFutDDFiWXRdQYbMtP1uHktFqE7FHQO1
+ b1GpzmIjvizl5Tnpmiw3zw33fTzaCTA0J/XxdqEXi5BwH2G9oJJZK2i+N2JN2iFW28I7
+ trmjmSy70Prdl6JPbVBo90aXYFuBXmVZysMO/WtD8ByPnDm08AppNJeO21Ds1CUzkG7l
+ R5TiyaCId7hftJB35aN0RJC38N6Jw3Fro001ZZCd3azHf3IUByWL86DbqyAHEc0qouDT
+ D/UUgtJ5Dk3uh55/m6tdd/dzri/Abc15EQfLyOnSA+iSHw4i/Yhkt2vL5TmqEkCeeD56 fQ== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pvggntqxs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Apr 2023 10:57:48 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33BAvlMN004561
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Apr 2023 10:57:47 GMT
+Received: from [10.216.4.20] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 11 Apr
+ 2023 03:57:37 -0700
+Message-ID: <999dfe1c-3b0d-1cc1-7407-e0917fc62d77@quicinc.com>
+Date:   Tue, 11 Apr 2023 16:27:23 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230411092725.104992-7-jiawenwu@trustnetic.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH V2 5/9] dt-bindings: PCI: qcom: Add IPQ9574
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <mani@kernel.org>, <p.zabel@pengutronix.de>,
+        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_ipkumar@quicinc.com>
+References: <20230404164828.8031-1-quic_devipriy@quicinc.com>
+ <20230404164828.8031-6-quic_devipriy@quicinc.com>
+ <79ddaff0-00a9-36db-2bc0-4c844ffd9528@linaro.org>
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <79ddaff0-00a9-36db-2bc0-4c844ffd9528@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: FO9cNzbKgPi3ECrYyo59DBGcwno5Oyfe
+X-Proofpoint-ORIG-GUID: FO9cNzbKgPi3ECrYyo59DBGcwno5Oyfe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-11_06,2023-04-11_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=878
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304110103
+X-Spam-Status: No, score=-3.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 05:27:25PM +0800, Jiawen Wu wrote:
-> Add phylink support to Wangxun 10Gb Ethernet controller, for the 10GBASE-R
-> and 1000BASE-X interfaces.
+
+
+On 4/5/2023 12:28 PM, Krzysztof Kozlowski wrote:
+> On 04/04/2023 18:48, Devi Priya wrote:
+>> Add bindings for PCIe hosts on IPQ9574 platform and allow
+>> msi-parent property
 > 
-> Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
-> ---
->  .../ethernet/wangxun/txgbe/txgbe_ethtool.c    |  34 ++++++
->  .../net/ethernet/wangxun/txgbe/txgbe_main.c   |  19 ++-
->  .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 111 +++++++++++++++++-
->  .../net/ethernet/wangxun/txgbe/txgbe_type.h   |   5 +
->  4 files changed, 156 insertions(+), 13 deletions(-)
+> Missing full stop. Also in your other patches.
+Okay
 > 
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-> index d914e9a05404..43ca84c90637 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-> @@ -6,11 +6,45 @@
->  #include <linux/netdevice.h>
->  
->  #include "../libwx/wx_ethtool.h"
-> +#include "../libwx/wx_type.h"
-> +#include "txgbe_type.h"
->  #include "txgbe_ethtool.h"
+>>
+>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>> ---
+>>   Changes in V2:
+>> 	- Updated the commit message and dropped the aggr_noc entries
+>> 	  as it will be handled via interconnect driver
+>>
+>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 48 +++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> index fb32c43dd12d..8657ab65008c 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> @@ -26,6 +26,7 @@ properties:
+>>             - qcom,pcie-ipq8064-v2
+>>             - qcom,pcie-ipq8074
+>>             - qcom,pcie-ipq8074-gen3
+>> +          - qcom,pcie-ipq9574
+>>             - qcom,pcie-msm8996
+>>             - qcom,pcie-qcs404
+>>             - qcom,pcie-sa8540p
+>> @@ -105,6 +106,8 @@ properties:
+>>       items:
+>>         - const: pciephy
+>>   
+>> +  msi-parent: true
+>
 
-I wonder if a small helper would be useful in txgbe_type.h:
+Yes right, will rebase it on Mani's series.
+But, as you have pointed out don't see the binding changes
+in linux-next/master
+Mani, could you please provide the tree details onto which the
+binding change is merged?
 
-static inline struct txgbe *netdev_to_txgbe(struct net_device *netdev)
-{
-	struct wx *wx = netdev_priv(netdev);
-
-	return wx->priv;
-}
-
-> +static int txgbe_nway_reset(struct net_device *netdev)
-> +{
-> +	struct wx *wx = netdev_priv(netdev);
-> +	struct txgbe *txgbe;
-> +
-> +	txgbe = (struct txgbe *)wx->priv;
-
-Then all of these can be simply:
-
-	struct txgbe *txgbe = netdev_to_txgbe(netdev);
-
-> +	return phylink_ethtool_nway_reset(txgbe->phylink);
-> +}
-> +
-> +static int txgbe_get_link_ksettings(struct net_device *netdev,
-> +				    struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct wx *wx = netdev_priv(netdev);
-> +	struct txgbe *txgbe;
-> +
-> +	txgbe = (struct txgbe *)wx->priv;
-> +	return phylink_ethtool_ksettings_get(txgbe->phylink, cmd);
-> +}
-> +
-> +static int txgbe_set_link_ksettings(struct net_device *netdev,
-> +				    const struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct wx *wx = netdev_priv(netdev);
-> +	struct txgbe *txgbe;
-> +
-> +	txgbe = (struct txgbe *)wx->priv;
-> +	return phylink_ethtool_ksettings_set(txgbe->phylink, cmd);
-> +}
-> +
->  static const struct ethtool_ops txgbe_ethtool_ops = {
->  	.get_drvinfo		= wx_get_drvinfo,
-> +	.nway_reset		= txgbe_nway_reset,
->  	.get_link		= ethtool_op_get_link,
-> +	.get_link_ksettings	= txgbe_get_link_ksettings,
-> +	.set_link_ksettings	= txgbe_set_link_ksettings,
->  };
->  
->  void txgbe_set_ethtool_ops(struct net_device *netdev)
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> index d8108ab30818..f640ff1a084e 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> @@ -7,6 +7,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/string.h>
->  #include <linux/etherdevice.h>
-> +#include <linux/phylink.h>
->  #include <net/ip.h>
->  #include <linux/if_vlan.h>
->  
-> @@ -204,7 +205,7 @@ static int txgbe_request_irq(struct wx *wx)
->  
->  static void txgbe_up_complete(struct wx *wx)
->  {
-> -	u32 reg;
-> +	struct txgbe *txgbe = (struct txgbe *)wx->priv;
-
-Personal choice I guess, but normally we tend to rely on compilers
-accepting the implicit cast from void * to whatever struct pointer
-in the kernel.
-
->  
->  	wx_control_hw(wx, true);
->  	wx_configure_vectors(wx);
-> @@ -213,24 +214,16 @@ static void txgbe_up_complete(struct wx *wx)
->  	smp_mb__before_atomic();
->  	wx_napi_enable_all(wx);
->  
-> +	phylink_start(txgbe->phylink);
-> +
->  	/* clear any pending interrupts, may auto mask */
->  	rd32(wx, WX_PX_IC(0));
->  	rd32(wx, WX_PX_IC(1));
->  	rd32(wx, WX_PX_MISC_IC);
->  	txgbe_irq_enable(wx, true);
->  
-> -	/* Configure MAC Rx and Tx when link is up */
-> -	reg = rd32(wx, WX_MAC_RX_CFG);
-> -	wr32(wx, WX_MAC_RX_CFG, reg);
-> -	wr32(wx, WX_MAC_PKT_FLT, WX_MAC_PKT_FLT_PR);
-> -	reg = rd32(wx, WX_MAC_WDG_TIMEOUT);
-> -	wr32(wx, WX_MAC_WDG_TIMEOUT, reg);
-> -	reg = rd32(wx, WX_MAC_TX_CFG);
-> -	wr32(wx, WX_MAC_TX_CFG, (reg & ~WX_MAC_TX_CFG_SPEED_MASK) | WX_MAC_TX_CFG_SPEED_10G);
-> -
->  	/* enable transmits */
->  	netif_tx_start_all_queues(wx->netdev);
-> -	netif_carrier_on(wx->netdev);
->  }
->  
->  static void txgbe_reset(struct wx *wx)
-> @@ -264,7 +257,6 @@ static void txgbe_disable_device(struct wx *wx)
->  		wx_disable_rx_queue(wx, wx->rx_ring[i]);
->  
->  	netif_tx_stop_all_queues(netdev);
-> -	netif_carrier_off(netdev);
->  	netif_tx_disable(netdev);
->  
->  	wx_irq_disable(wx);
-> @@ -295,8 +287,11 @@ static void txgbe_disable_device(struct wx *wx)
->  
->  static void txgbe_down(struct wx *wx)
->  {
-> +	struct txgbe *txgbe = (struct txgbe *)wx->priv;
-> +
->  	txgbe_disable_device(wx);
->  	txgbe_reset(wx);
-> +	phylink_stop(txgbe->phylink);
->  
->  	wx_clean_all_tx_rings(wx);
->  	wx_clean_all_rx_rings(wx);
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> index 123fa7ed9039..84dc3e850036 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> @@ -13,6 +13,7 @@
->  #include <linux/pci.h>
->  
->  #include "../libwx/wx_type.h"
-> +#include "../libwx/wx_lib.h"
->  #include "../libwx/wx_hw.h"
->  #include "txgbe_type.h"
->  #include "txgbe_phy.h"
-> @@ -445,6 +446,98 @@ static int txgbe_mdio_pcs_init(struct txgbe *txgbe)
->  	return 0;
->  }
->  
-> +static struct phylink_pcs *txgbe_phylink_mac_select(struct phylink_config *config,
-> +						    phy_interface_t interface)
-> +{
-> +	struct wx *wx = netdev_priv(to_net_dev(config->dev));
-> +	struct txgbe *txgbe = (struct txgbe *)wx->priv;
-
-	struct txgbr *txgbe = netdev_to_txgbe(to_net_dev(config->dev));
-
-> +
-> +	return &txgbe->pcs;
-> +}
-> +
-
-Thanks!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> Isn't this conflicting with Mani's series:
+> https://lore.kernel.org/all/20230108203340.GA229573-robh@kernel.org/
+> https://lore.kernel.org/all/20230111123004.21048-1-manivannan.sadhasivam@linaro.org/#t
+> 
+> Although for some reason Mani's patch references non-existing commit and
+> hunk...
+> 
+> Best regards,
+> Krzysztof
+> 
+Best Regards,
+Devi Priya
