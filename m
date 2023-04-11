@@ -2,54 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BEEF6DD808
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 12:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F12FE6DD80C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 12:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjDKKgP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 06:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58704 "EHLO
+        id S229548AbjDKKhJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 06:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjDKKgO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 06:36:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25211E54;
-        Tue, 11 Apr 2023 03:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fds3zanNbJi2ddOhpzEhs3eUw9m+0uIWPzFNMVcijHA=; b=TGUwRQySA2i6e4wh1+0ANby90j
-        MMUOaPRheareiXlOtjYpNFZTT82wfvfDPys5EntoqXHgnDiFmgHIPOoOYncdcEx+ucHvf8hIcIH4N
-        nUBBnwKbKyr+2VZ9XliHqHKTV9MhaMszOdZa+NiDu1tPtIBgZzGyoezzVeYxh10Zn+kedhm6q0bYd
-        AML9lfhvXskYgUyUXIzsHGZ9cRy43C0rrVghyvM24CPcYtruw+nTVZ6OLi8uOkUBpR8NBYTz7HW2I
-        OkOFvxkQIHKRKSM5mi/MgUCqVcD9GngR5G/6LdFM1w90sRi+1FaOKtt2i2zFg67CwkpUcDVo6/tkO
-        Ld3tNL7Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35792)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1pmBM7-0005nD-Oz; Tue, 11 Apr 2023 11:36:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1pmBM5-00041g-QI; Tue, 11 Apr 2023 11:36:05 +0100
-Date:   Tue, 11 Apr 2023 11:36:05 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v2 5/6] net: txgbe: Implement phylink pcs
-Message-ID: <ZDU4Fe6XVw+I0iGx@shell.armlinux.org.uk>
-References: <20230411092725.104992-1-jiawenwu@trustnetic.com>
- <20230411092725.104992-6-jiawenwu@trustnetic.com>
+        with ESMTP id S229451AbjDKKhI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 06:37:08 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA63AE61
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 03:37:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681209427; x=1712745427;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AthE1W3jbEX2GMHC0Q1cNh+XL7Ac8ngPodjvx66Rty4=;
+  b=CxOsu7w6G8eezwk5t0MmYaa9rQJtF03S9TFK8RclyOVOvmbpxNsb7XO4
+   1fpvPWY2deIOhEg5ptIn8RSsICZKBzv+VO9UrkrmaPshaQNOITmMmBzC8
+   QHU1GHi7vw2ByRAAHiPV7mkN7dNhB7jCnlUJw/M7GecH+9vAHu3kQg/96
+   71iwHfGf32i83I4bAUZKHVfuIhabyWCh3f9HzPHJa/gwymaZj7LlkMdRR
+   lIBlU4/OjGjqIftp6lG8PYe3cuBUPqmgYGBgWoR2huklfyGIB8bI3bVBd
+   /JPzUFQRKwupArSUbdaZusl25QkW/Kv8cvQq4EdqYM8PKrb3Ry8G7a3cG
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="345369226"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="345369226"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 03:37:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="1018320963"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="1018320963"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Apr 2023 03:37:05 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pmBN3-000WDD-0Z;
+        Tue, 11 Apr 2023 10:37:05 +0000
+Date:   Tue, 11 Apr 2023 18:36:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 3478ce851cbb3e1d8cc1495ada570a365dd48e8a
+Message-ID: <64353848.MPpIP8hDj7yrS8bo%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230411092725.104992-6-jiawenwu@trustnetic.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,139 +63,232 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 05:27:24PM +0800, Jiawen Wu wrote:
-> +static void txgbe_set_an37_ability(struct txgbe *txgbe)
-> +{
-> +     u16 val;
-> +
-> +     pcs_write(txgbe, MDIO_MMD_PCS, TXGBE_PCS_DIG_CTRL1,
-> +               TXGBE_PCS_DIG_CTRL1_EN_VSMMD1 |
-> +               TXGBE_PCS_DIG_CTRL1_CLS7_BP |
-> +               TXGBE_PCS_DIG_CTRL1_BYP_PWRUP);
-> +     pcs_write(txgbe, MDIO_MMD_VEND2, TXGBE_MII_AN_CTRL,
-> +               TXGBE_MII_AN_CTRL_MII |
-> +               TXGBE_MII_AN_CTRL_TXCFG |
-> +               TXGBE_MII_AN_CTRL_PCS_MODE(0) |
-> +               TXGBE_MII_AN_CTRL_INTR_EN);
-> +     pcs_write(txgbe, MDIO_MMD_VEND2, TXGBE_MII_DIG_CTRL1,
-> +               TXGBE_MII_DIG_CTRL1_MAC_AUTOSW);
-> +     val = pcs_read(txgbe, MDIO_MMD_VEND2, MDIO_CTRL1);
-> +     val |= BMCR_ANRESTART | BMCR_ANENABLE;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 3478ce851cbb3e1d8cc1495ada570a365dd48e8a  Merge branch 'devel' into for-next
 
-	val |= BMCR_ANENABLE;
+elapsed time: 720m
 
-> +     pcs_write(txgbe, MDIO_MMD_VEND2, MDIO_CTRL1, val);
-> +}
+configs tested: 213
+configs skipped: 16
 
-> +static void txgbe_setup_adv(struct txgbe *txgbe, phy_interface_t interface,
-> +			    const unsigned long *advertising)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Please return an int.
-
-> +{
-> +	int adv;
-> +
-> +	adv = phylink_mii_c22_pcs_encode_advertisement(interface,
-> +						       advertising);
-
-	if (adv < 0)
-		return adv;
-
-> +	if (adv > 0)
-> +		mdiodev_c45_modify(txgbe->mdiodev, MDIO_MMD_VEND2, MII_ADVERTISE,
-> +				   0xffff, adv);
-
-	return mdiodev_c45_modify_changed(txgbe->mdiodev, MDIO_MMD_VEND2,
-					  MII_ADVERTISE, 0xffff, adv);
-
-> +}
-> +
-> +static int txgbe_pcs_config(struct phylink_pcs *pcs, unsigned int mode,
-> +			    phy_interface_t interface,
-> +			    const unsigned long *advertising,
-> +			    bool permit_pause_to_mac)
-> +{
-> +	struct txgbe *txgbe = container_of(pcs, struct txgbe, pcs);
-> +	struct wx *wx = txgbe->wx;
-> +	int ret, val;
-> +
-> +	if (interface == txgbe->interface)
-> +		goto out;
-> +
-> +	/* Wait xpcs power-up good */
-> +	ret = read_poll_timeout(pcs_read, val,
-> +				(val & TXGBE_PCS_DIG_STS_PSEQ_ST) ==
-> +				TXGBE_PCS_DIG_STS_PSEQ_ST_GOOD,
-> +				10000, 1000000, false,
-> +				txgbe, MDIO_MMD_PCS, TXGBE_PCS_DIG_STS);
-> +	if (ret < 0) {
-> +		wx_err(wx, "xpcs power-up timeout.\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Disable xpcs AN-73 */
-> +	pcs_write(txgbe, MDIO_MMD_AN, MDIO_CTRL1, 0);
-> +
-> +	/* Disable PHY MPLLA for eth mode change(after ECO) */
-> +	txgbe_ephy_write(txgbe, TXGBE_SUP_DIG_MPLLA_OVRD_IN_0, 0x243A);
-> +	WX_WRITE_FLUSH(wx);
-> +	usleep_range(1000, 2000);
-> +
-> +	/* Set the eth change_mode bit first in mis_rst register
-> +	 * for corresponding LAN port
-> +	 */
-> +	wr32(wx, TXGBE_MIS_RST, TXGBE_MIS_RST_LAN_ETH_MODE(wx->bus.func));
-> +
-> +	switch (interface) {
-> +	case PHY_INTERFACE_MODE_10GBASER:
-> +		txgbe_pma_config_10gbaser(txgbe);
-> +		break;
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		txgbe_pma_config_1000basex(txgbe);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	pcs_write(txgbe, MDIO_MMD_PCS, TXGBE_PCS_DIG_CTRL1,
-> +		  TXGBE_PCS_DIG_CTRL1_VR_RST | TXGBE_PCS_DIG_CTRL1_EN_VSMMD1);
-> +	/* wait phy initialization done */
-> +	ret = read_poll_timeout(pcs_read, val,
-> +				!(val & TXGBE_PCS_DIG_CTRL1_VR_RST),
-> +				100000, 10000000, false,
-> +				txgbe, MDIO_MMD_PCS, TXGBE_PCS_DIG_CTRL1);
-> +	if (ret < 0)
-> +		wx_err(wx, "PHY initialization timeout.\n");
-> +
-> +	txgbe->interface = interface;
-> +
-> +out:
-> +	if (interface == PHY_INTERFACE_MODE_1000BASEX) {
-> +		txgbe_setup_adv(txgbe, interface, advertising);
-
-		ret = txgbe_setup_adv(txgbe, interface, advertising);
-		if (ret < 0)
-			return ret;
-
-> +		txgbe_set_an37_ability(txgbe);
-> +	}
-> +
-> +	return ret;
-
-... and then this will propagate whether the advertisement has changed,
-which will then cause...
-
-> +static void txgbe_pcs_an_restart(struct phylink_pcs *pcs)
-> +{
-> +	struct txgbe *txgbe = container_of(pcs, struct txgbe, pcs);
-> +
-> +	mdiodev_c45_modify(txgbe->mdiodev, MDIO_MMD_VEND2, MDIO_CTRL1,
-> +			   BMCR_ANRESTART, BMCR_ANRESTART);
-> +}
-
-to be called whenever the advertisement changes (which is why you
-then don't need to do it in txgbe_set_an37_ability().)
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r006-20230409   gcc  
+alpha        buildonly-randconfig-r006-20230410   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r011-20230410   gcc  
+alpha                randconfig-r013-20230409   gcc  
+alpha                randconfig-r013-20230410   gcc  
+alpha                randconfig-r016-20230409   gcc  
+alpha                randconfig-r031-20230410   gcc  
+alpha                randconfig-r034-20230409   gcc  
+alpha                randconfig-r035-20230410   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r003-20230409   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r014-20230409   gcc  
+arc                  randconfig-r022-20230409   gcc  
+arc                  randconfig-r043-20230409   gcc  
+arc                  randconfig-r043-20230410   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r002-20230409   clang
+arm          buildonly-randconfig-r005-20230409   clang
+arm                                 defconfig   gcc  
+arm                       imx_v6_v7_defconfig   gcc  
+arm                          pxa3xx_defconfig   gcc  
+arm                  randconfig-r032-20230410   gcc  
+arm                  randconfig-r033-20230410   gcc  
+arm                  randconfig-r046-20230409   clang
+arm                  randconfig-r046-20230410   clang
+arm                        shmobile_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230410   clang
+arm64                randconfig-r012-20230410   gcc  
+arm64                randconfig-r016-20230410   gcc  
+arm64                randconfig-r021-20230411   clang
+arm64                randconfig-r032-20230410   clang
+csky         buildonly-randconfig-r003-20230409   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r002-20230410   gcc  
+csky                 randconfig-r003-20230411   gcc  
+csky                 randconfig-r015-20230409   gcc  
+csky                 randconfig-r034-20230410   gcc  
+hexagon              randconfig-r005-20230410   clang
+hexagon              randconfig-r013-20230410   clang
+hexagon              randconfig-r016-20230409   clang
+hexagon              randconfig-r025-20230409   clang
+hexagon              randconfig-r031-20230409   clang
+hexagon              randconfig-r041-20230409   clang
+hexagon              randconfig-r041-20230410   clang
+hexagon              randconfig-r045-20230409   clang
+hexagon              randconfig-r045-20230410   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230410   clang
+i386                 randconfig-a002-20230410   clang
+i386                 randconfig-a003-20230410   clang
+i386                 randconfig-a004-20230410   clang
+i386                 randconfig-a005-20230410   clang
+i386                 randconfig-a006-20230410   clang
+i386                 randconfig-a011-20230410   gcc  
+i386                 randconfig-a012-20230410   gcc  
+i386                          randconfig-a012   gcc  
+i386                 randconfig-a013-20230410   gcc  
+i386                 randconfig-a014-20230410   gcc  
+i386                          randconfig-a014   gcc  
+i386                 randconfig-a015-20230410   gcc  
+i386                 randconfig-a016-20230410   gcc  
+i386                          randconfig-a016   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r002-20230410   gcc  
+ia64         buildonly-randconfig-r006-20230409   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r004-20230409   gcc  
+ia64                 randconfig-r005-20230411   gcc  
+ia64                 randconfig-r013-20230410   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r005-20230410   gcc  
+loongarch    buildonly-randconfig-r006-20230409   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r002-20230409   gcc  
+loongarch            randconfig-r006-20230411   gcc  
+loongarch            randconfig-r011-20230410   gcc  
+loongarch            randconfig-r012-20230409   gcc  
+loongarch            randconfig-r015-20230410   gcc  
+loongarch            randconfig-r021-20230409   gcc  
+loongarch            randconfig-r024-20230409   gcc  
+loongarch            randconfig-r035-20230409   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r002-20230409   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r006-20230409   gcc  
+m68k                 randconfig-r013-20230409   gcc  
+m68k                 randconfig-r014-20230409   gcc  
+m68k                 randconfig-r015-20230409   gcc  
+m68k                 randconfig-r016-20230410   gcc  
+microblaze   buildonly-randconfig-r002-20230410   gcc  
+microblaze           randconfig-r015-20230410   gcc  
+microblaze           randconfig-r016-20230409   gcc  
+microblaze           randconfig-r021-20230410   gcc  
+microblaze           randconfig-r032-20230409   gcc  
+microblaze           randconfig-r035-20230409   gcc  
+microblaze           randconfig-r036-20230409   gcc  
+microblaze           randconfig-r036-20230410   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath25_defconfig   clang
+mips                 randconfig-r006-20230410   gcc  
+mips                 randconfig-r016-20230410   clang
+mips                 randconfig-r031-20230410   gcc  
+nios2        buildonly-randconfig-r001-20230409   gcc  
+nios2        buildonly-randconfig-r004-20230409   gcc  
+nios2        buildonly-randconfig-r006-20230410   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r002-20230411   gcc  
+nios2                randconfig-r015-20230409   gcc  
+nios2                randconfig-r024-20230410   gcc  
+nios2                randconfig-r026-20230409   gcc  
+openrisc     buildonly-randconfig-r001-20230410   gcc  
+openrisc             randconfig-r003-20230409   gcc  
+openrisc             randconfig-r014-20230410   gcc  
+openrisc             randconfig-r022-20230410   gcc  
+openrisc             randconfig-r023-20230409   gcc  
+openrisc             randconfig-r026-20230410   gcc  
+parisc       buildonly-randconfig-r001-20230410   gcc  
+parisc       buildonly-randconfig-r003-20230410   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r001-20230410   gcc  
+parisc               randconfig-r011-20230409   gcc  
+parisc               randconfig-r014-20230410   gcc  
+parisc               randconfig-r023-20230409   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                       ppc64_defconfig   gcc  
+powerpc              randconfig-r006-20230409   clang
+powerpc              randconfig-r012-20230409   gcc  
+powerpc              randconfig-r015-20230410   gcc  
+powerpc              randconfig-r025-20230410   gcc  
+powerpc              randconfig-r035-20230410   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r002-20230410   gcc  
+riscv        buildonly-randconfig-r004-20230410   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r001-20230409   clang
+riscv                randconfig-r003-20230410   clang
+riscv                randconfig-r004-20230409   clang
+riscv                randconfig-r012-20230410   gcc  
+riscv                randconfig-r036-20230409   clang
+riscv                randconfig-r042-20230409   gcc  
+riscv                randconfig-r042-20230410   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r014-20230410   gcc  
+s390                 randconfig-r022-20230409   gcc  
+s390                 randconfig-r044-20230409   gcc  
+s390                 randconfig-r044-20230410   gcc  
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r001-20230410   gcc  
+sh                   randconfig-r013-20230409   gcc  
+sh                   randconfig-r026-20230409   gcc  
+sh                          sdk7780_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sparc        buildonly-randconfig-r001-20230409   gcc  
+sparc        buildonly-randconfig-r004-20230410   gcc  
+sparc        buildonly-randconfig-r005-20230410   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r021-20230409   gcc  
+sparc                randconfig-r026-20230410   gcc  
+sparc                randconfig-r032-20230409   gcc  
+sparc                randconfig-r033-20230409   gcc  
+sparc                randconfig-r033-20230410   gcc  
+sparc64      buildonly-randconfig-r003-20230410   gcc  
+sparc64              randconfig-r001-20230409   gcc  
+sparc64              randconfig-r004-20230410   gcc  
+sparc64              randconfig-r011-20230409   gcc  
+sparc64              randconfig-r021-20230410   gcc  
+sparc64              randconfig-r025-20230410   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230410   clang
+x86_64               randconfig-a002-20230410   clang
+x86_64               randconfig-a003-20230410   clang
+x86_64               randconfig-a004-20230410   clang
+x86_64               randconfig-a005-20230410   clang
+x86_64               randconfig-a006-20230410   clang
+x86_64               randconfig-a011-20230410   gcc  
+x86_64               randconfig-a012-20230410   gcc  
+x86_64               randconfig-a013-20230410   gcc  
+x86_64               randconfig-a014-20230410   gcc  
+x86_64               randconfig-a015-20230410   gcc  
+x86_64               randconfig-a016-20230410   gcc  
+x86_64                        randconfig-k001   clang
+x86_64               randconfig-r006-20230410   clang
+x86_64               randconfig-r022-20230410   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r003-20230409   gcc  
+xtensa       buildonly-randconfig-r004-20230409   gcc  
+xtensa               randconfig-r004-20230411   gcc  
+xtensa               randconfig-r005-20230410   gcc  
+xtensa               randconfig-r034-20230410   gcc  
+xtensa                         virt_defconfig   gcc  
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
