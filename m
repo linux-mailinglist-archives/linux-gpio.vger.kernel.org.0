@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDAFA6DD536
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E0B36DD548
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 10:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbjDKIXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 04:23:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
+        id S230373AbjDKIYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 04:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbjDKIXg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:23:36 -0400
+        with ESMTP id S230215AbjDKIYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 04:24:09 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4A330D6;
-        Tue, 11 Apr 2023 01:22:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97C44EEA;
+        Tue, 11 Apr 2023 01:22:52 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id C97A466031E9;
-        Tue, 11 Apr 2023 09:22:17 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id EDF8F66031EA;
+        Tue, 11 Apr 2023 09:22:49 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1681201339;
-        bh=hvRLTruikuzHoGIAziMiEYGR8Or1q+1dehgCP7XVjVQ=;
+        s=mail; t=1681201371;
+        bh=mSraRqNCRsRIu+Sv57cDTx39LddUyhJwzD1kQi9nHco=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=is+TzxSxRy6Qy2649H3i4F1Dihqygvu9Lwy1R/C5+F1F4ZjBj/+wVssxtH3tWUhxe
-         fxoIbU6RU15oDJDVXSB0m897UTWeXAUBgWGcY6CnexyR1bgmikJWmCgJlM82s5MSGX
-         j6S7VSciCZ06l13HuIfBmewhwj0VzGfSoAIY8RMS8F7NblZUwpFx7I9erZBAqMcoqc
-         sOSFBGO/L3lmSfDUOXiF47u4MKfgmIgJMkIzFqc+hbKBup7f9QbCUAEVBxuzxxTMl5
-         5JqkETcWEuLmCjQy2jIp15oOvbeFJAntf/O8fyzdasJs6h6zkyxNE1WqmV+sEzOh4b
-         DrWwHOckVZUPw==
-Message-ID: <b968a3f6-1aba-fc72-a2fc-1b0d7944b07c@collabora.com>
-Date:   Tue, 11 Apr 2023 10:22:14 +0200
+        b=GSZZEqmnSMny9xXdCIyRSmbJS8CSx7Thye0qxqcKp79J3GjIUaw1AmE4HwNKwcpj9
+         OuL8/iZzDLDfbIKA4P7UQ8TBkSChbSZoAkP0Brvj9XOc8LqhBov4F54xdm2z4OE5vc
+         3gyHahZ44pmL4RUWxFkTPtQoqUXvinVYlHw1ZzBO6hnRX8bZq/h6ALlikfaVbIUsLZ
+         S8VlDba9uk2OrZwkW82y+UwR60eGg0aL+ed+3/KIZ/IE/0Zt9bRUy81NZW7/p8wWzE
+         fIQj4ivgwkhnq222B+mp7kh8XMs4+Ucg5+G3s2IwSYZoYR6udhwRnOe/5dG13e9n3l
+         IhkXQWTr5bagw==
+Message-ID: <5322edfc-2df7-b56b-bb5e-db4c55dff3d0@collabora.com>
+Date:   Tue, 11 Apr 2023 10:22:47 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v5 05/12] arm64: dts: mediatek: add mt6357 PMIC support
- for mt8365-evk
+Subject: Re: [PATCH v5 06/12] arm64: dts: mediatek: add mmc support for
+ mt8365-evk
 Content-Language: en-US
 To:     Alexandre Mergnat <amergnat@baylibre.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
@@ -59,10 +59,10 @@ Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
         Fabien Parent <fparent@baylibre.com>,
         Amjad Ouled-Ameur <aouledameur@baylibre.com>
 References: <20230203-evk-board-support-v5-0-1883c1b405ad@baylibre.com>
- <20230203-evk-board-support-v5-5-1883c1b405ad@baylibre.com>
+ <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20230203-evk-board-support-v5-5-1883c1b405ad@baylibre.com>
+In-Reply-To: <20230203-evk-board-support-v5-6-1883c1b405ad@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -75,8 +75,8 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 07/04/23 14:59, Alexandre Mergnat ha scritto:
-> This power management system chip integration helps to manage regulators
-> and keys.
+> - Add EMMC support on mmc0 (internal memory)
+> - Add SD-UHS support on mmc1 (external memory)
 > 
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
