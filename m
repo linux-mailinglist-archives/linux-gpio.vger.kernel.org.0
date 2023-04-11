@@ -2,84 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 871446DE486
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 21:14:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4636B6DE5B4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Apr 2023 22:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbjDKTOl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Apr 2023 15:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55270 "EHLO
+        id S229488AbjDKUYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Apr 2023 16:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjDKTOk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 15:14:40 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5771746B2
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 12:14:29 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id z13so8496550vss.1
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Apr 2023 12:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1681240468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qy4Lw0DpqdADptiKiVlpvNWhF+erzENS7ARLFgE+lm0=;
-        b=lXUT9qQPzkSsX8PSNKdNYwOpDKbIGhKhaNloBW9lEuSHUSEtVaUavTVkBwFGBD+yE0
-         yZzyVKKlaGxoRA3fUdy/cmJm4eEppP3v5yto/3V3GJEExrzjDsySdb7jTcZF0fuKiM3b
-         1RoLW/vpeI57yzhRMIt6sl7yuB4KYH4LuxtbnM9i5Uv+Ty2QjJTsS1o+3K25J8AxTANv
-         sxrS4ahcLF066aV9/0ioLGcEDTx6zZuxZkVVReoJh7pFGQbo03i8X0t3rNh4BcXS9QRv
-         5kG8rY++Ms72svRL2yZMwA/u9dBiDhry1FgTXqysFW4yW4ivOTx5DfFsuYyFeqsWDl43
-         nioQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681240468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qy4Lw0DpqdADptiKiVlpvNWhF+erzENS7ARLFgE+lm0=;
-        b=598Wq3BdAV6Nx/4wM46IkBwTQlpX3rCqo2CTzJZTMV28Zb/QShbrpPnycqhVDFvrAr
-         YnstEMUdxhQjOYGQl28/Yt8MP4BADKJOlouJHELBFjzYJfhT2LjOJ87J8F7jj31VFeUx
-         2hPxe6imxeStTJ6pfRCEfptlH1noTxOV+4jCCErktpleu+G9hTdDa6dFIVBnEhYK1DL/
-         D3+uPPi8rZMII2YYeAeijHfFJ7qGwf4JQc7KUbSaIgrauG0d5OSeXKmyBKx/KwusNKyw
-         uBQzkoxt3a6X5p37wngs0DSSoQmGymqPkYpx2lA+3zG+osZax1WHFu9ddMOVIAjlu0zi
-         s+ZQ==
-X-Gm-Message-State: AAQBX9emekbHjYStO+76XU8RjQvCLLick+cp+2PyHJvKYq0LsVElrz+F
-        AClSbo5vUhEOyZxeD5DsQ/9RG/9yeN7lIEht6BWIaURZHAUy4bXD
-X-Google-Smtp-Source: AKy350b+fp1ZEzNnM9ThVI5u5q6F/mw/UGsLXForQVCj7Fbu1ZZk7RMU1v5yLNQbGgIBW2Q7bCOblP/yPu0Ab0IcPSU=
-X-Received: by 2002:a67:d904:0:b0:42c:54d4:1a1b with SMTP id
- t4-20020a67d904000000b0042c54d41a1bmr5926950vsj.0.1681240468476; Tue, 11 Apr
- 2023 12:14:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230411082806.41361-1-linus.walleij@linaro.org>
-In-Reply-To: <20230411082806.41361-1-linus.walleij@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 11 Apr 2023 21:14:17 +0200
-Message-ID: <CAMRc=Mes9pYVhu2T3mOU8iZpMmvw_PC-tcTCxXxA+J2LXXLkNg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpiolib: Simplify gpiochip_add_data_with_key() fwnode
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>,
+        with ESMTP id S229481AbjDKUYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Apr 2023 16:24:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE93E359F;
+        Tue, 11 Apr 2023 13:24:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4AA0C62867;
+        Tue, 11 Apr 2023 20:24:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C98C4339B;
+        Tue, 11 Apr 2023 20:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681244640;
+        bh=xPsY5dfTyjl/Ph3+X6+TNrIslcb3LVfftfhr5ZNow5E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R6/tbFetZuowtge2bXgNZhkWI6w0/O7evrnU/Oc/rE3CmHgdyFrgMeiQYyGqPYG16
+         bHGg0hASwSEPg8lkbPlSrm3INNvVi8MuGWWw1JfvaKf1wRWXck65k3JGRON0DNc7d9
+         wvNTZ5GLnBb05+HZVoBB0S6rfkT6Vb2FNzVafEeewpqX4ExY0pKB5WTbkvHNYAHJrc
+         RB2E9aJwuXPgJKc0EoD8R/ROtBEw6aEO3zTFGCGS4hiVvLYNJURK6dLpwHedN0N4QX
+         b2xdOoYDnr/1Ac9aRgewiJS//qBqub35aEszyF+toErk5jDJTbi1rR223iLuiqKUBg
+         RnHs6cbgIdD8w==
+Date:   Tue, 11 Apr 2023 21:23:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 1/2] gpio: 104-dio-48e: Implement struct dio48e_gpio
+Message-ID: <571b4df1-91ea-481c-9797-842974dfa922@sirena.org.uk>
+References: <cover.1679323449.git.william.gray@linaro.org>
+ <ca710d14a710fee44f7911f2a84b6a55570561ee.1679323449.git.william.gray@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="POxhOpVcNhhh+QMh"
+Content-Disposition: inline
+In-Reply-To: <ca710d14a710fee44f7911f2a84b6a55570561ee.1679323449.git.william.gray@linaro.org>
+X-Cookie: I demand IMPUNITY!
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 10:28=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> The code defaulting to the parents fwnode if no fwnode was assigned
-> is unnecessarily convoluted, probably due to refactoring. Simplify
-> it and make it more human-readable.
->
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
 
-Applied, thanks!
+--POxhOpVcNhhh+QMh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bart
+On Mon, Mar 20, 2023 at 10:50:15AM -0400, William Breathitt Gray wrote:
+> A private data structure struct dio48e_gpio is introduced to facilitate
+> passage of the regmap and IRQ mask state for the device to the callback
+> dio48e_handle_mask_sync(). This is in preparation for the removal of the
+> handle_mask_sync() map parameter in a subsequent patch.
+
+What's the story with this patch?
+
+--POxhOpVcNhhh+QMh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQ1wdsACgkQJNaLcl1U
+h9DaAQf+OGSSIefSDt1Dhu1zbTxoz4HFHfQgYeMDFq+MqqQmJZXk0HtI2dAxFhMM
+lqI1hcOyOFAKcKWnj8lKhNclZWRTp0TQx50FAnIEtm3DvZQUnkNXNbYuKzkISGw4
+Kd0nZKOdgjJdW/amn+W1FvnzSlVnQYf2Ro8YuWnSatEIsgt81lQaNgWq4q4aAe6+
+3Mx4JNM/9yztYsNsgURYNRqMpL5HnsNk0dq3+2FsER8Ubo/wtoQ4vtyhdddyJjQR
+erJazML5WlcavNPmyMOoRZOAbEsgNenmUVgSljazogU8tocf9y17N0c1lhBgMPfL
+ApACbynlb6DkbADxVMjz6HoMZYpe7w==
+=yeuj
+-----END PGP SIGNATURE-----
+
+--POxhOpVcNhhh+QMh--
