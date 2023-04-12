@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C30EF6DEE40
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 10:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E4C6DEF21
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 10:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbjDLIlM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 04:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46514 "EHLO
+        id S231246AbjDLIsM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 04:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbjDLIks (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 04:40:48 -0400
+        with ESMTP id S230353AbjDLIsK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 04:48:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9E67A9F;
-        Wed, 12 Apr 2023 01:40:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE59693F4;
+        Wed, 12 Apr 2023 01:47:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE17762FE6;
-        Wed, 12 Apr 2023 08:39:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5375C433EF;
-        Wed, 12 Apr 2023 08:39:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E04C163120;
+        Wed, 12 Apr 2023 08:47:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3677C433D2;
+        Wed, 12 Apr 2023 08:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1681288792;
-        bh=GOQ4SJGANziwFVc6eK4kPwU3j/EPTeqkoheRg7IUP18=;
+        s=korg; t=1681289245;
+        bh=TmVgtrcayJOHHCETtAj2Z1Xq+rIbApmhoK92MLxWiEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pE3RRDGmuluvV4V6j1Q0HzwNFZ5qW78Av7vU8ojedpE+MH93HveadZ7MCYrqvVyrN
-         u9BrhkySpWTJOsqGF0M5lyprm1SYi76SxYLWjso/7ByWTXUvxJeVQsdYdayLysccrP
-         VpLQbLdtdyqZLSSJSh5FOFvtb08rrBgHq95qX8rA=
+        b=ShsuQgbUJhkcRUmUTr+iB9VWQlECM8M7v+T76XMkakv8Rw4/1L1zzh8Iqmue9Qxxg
+         fUyib+sZAcBiZ78UK8dXbVudTOd1/5AWfAbo5ho6vK1azhMYhlc6SqAuCSe9OBimn2
+         G86Or/ckjutUieSjCpJojQ0CFqY8gvNM3mH7oDXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -38,12 +38,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 009/164] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
-Date:   Wed, 12 Apr 2023 10:32:11 +0200
-Message-Id: <20230412082837.204048169@linuxfoundation.org>
+Subject: [PATCH 6.2 007/173] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
+Date:   Wed, 12 Apr 2023 10:32:13 +0200
+Message-Id: <20230412082838.427252919@linuxfoundation.org>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230412082836.695875037@linuxfoundation.org>
-References: <20230412082836.695875037@linuxfoundation.org>
+In-Reply-To: <20230412082838.125271466@linuxfoundation.org>
+References: <20230412082838.125271466@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -85,7 +85,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a01af11806164..e3af86f06c630 100644
+index e9917a45b005a..42e5042d01495 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
 @@ -100,7 +100,7 @@ config GPIO_GENERIC
