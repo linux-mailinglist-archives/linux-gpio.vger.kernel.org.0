@@ -2,96 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E16176DFDF4
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 20:51:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 082096DFE47
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 21:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbjDLSvI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 14:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
+        id S229532AbjDLTCj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 15:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229830AbjDLSvI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 14:51:08 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4613461B6;
-        Wed, 12 Apr 2023 11:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
-        t=1681325454; i=j.neuschaefer@gmx.net;
-        bh=GFR6pPBbyB1rO8q+jVeF1EaBvVI0oCUvnQvGxUKX0l0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=nnLio+lxptky58a/nb6w3pIFCfNPtD2JZ3ma8935KmFDjmGRpsva9jsmK47+3qM+w
-         eGZPcf418TQ2VHEYK7u8/xTteu/WxiutCP21qDukLLFgq7xjWgIebUsG0w4P2G+2JB
-         k4X6vmqz/qs2+Q5+LGOR7M73gNj1JbWVhQEJheXWw53U5DesHYewDyKRX4na/RDvjt
-         9vDUOC7P2WWEic3pwoRlMDYNGs+h3G6sBKROVA0C3+pOr01NQlsOp1t7SQ4nDd8qvL
-         I0CmOh3ZmruB5q3hO7C/YvN+inM2bvn56uwB4QI9JZJHOTaixCD97BoSvnkqdviOip
-         1aPbfKjHGpJjw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from probook ([185.66.193.41]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmGP-1q6fHL3CLR-00K9qe; Wed, 12
- Apr 2023 20:50:54 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     openbmc@lists.ozlabs.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: wpcm450: select MFD_SYSCON
-Date:   Wed, 12 Apr 2023 20:50:49 +0200
-Message-Id: <20230412185049.3782842-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S230322AbjDLTCf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 15:02:35 -0400
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558DDDB;
+        Wed, 12 Apr 2023 12:02:33 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id 3ACF7604FC;
+        Wed, 12 Apr 2023 21:02:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1681326150; bh=MZrLrA0qphSQiqVNIwMPkkaJza5Q/YB9iEUPTytNJwo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=m93S4u+0ur1U5e8B+NMv6Q+cNvJ1RLhTNKyiXPY5DU6T1Uqek9xwPQrzVaewiAuXm
+         XC5PUW6lWKqKuQLfcY+I3kcFTSYA6xqTyuSXPol/NsfC8440b3bXupA7KYobqvJ8NY
+         Aga9XH6KJCYNGUsGae56fwNBFgOrrkTGLMAzjNhcliI7Kk5NL4TfVq4oiy+JdbOxMg
+         sfwSIMvcjW/y2T46I3wL98fNk2/BeIKhgfqCH2MkSK6gKdvB4X25hX0Vk5I7eJ3SdN
+         f3MbYsCYNGkYJiUbMM1D4Nuwp4ut7ss3twW+9xaq8NbINmqxmuBQHqKD7/RwAW6nnz
+         VZYQ2kbK1Dj1A==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id X7cJsdD_NngQ; Wed, 12 Apr 2023 21:02:27 +0200 (CEST)
+Received: from [192.168.1.4] (unknown [94.250.188.177])
+        by domac.alu.hr (Postfix) with ESMTPSA id 24195604FB;
+        Wed, 12 Apr 2023 21:02:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1681326147; bh=MZrLrA0qphSQiqVNIwMPkkaJza5Q/YB9iEUPTytNJwo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=BK2E8c8QoF+0uLjs8cD9T8y/HToYn44onk2U12Jt6G3n+P/QlEDsV4/m+ga9yIraA
+         M6A7H8QQu6rdAfmbfpgtqkhFpPSK/otg4RBRaFAMPx/cYiwpis4+C1MhyvH6Afogbp
+         dFSaPTyL+MHrUXMVUgyEwMDOuI8nsSow/i8m9ZrbJAsgxzsAxE2eqPsbZvc00eld06
+         nuQ6eguYPlWmGnm8gtLX/TjiPGUc20vW/+AVxAblXNLsOW0psiJwYE0se2Z2Tp99gs
+         sEQjMyhrMxNi6j5Dn8XPv5EwM+uiyahAWwLZOFbYwASx8iMDxEYoUJanzjiGro2rt8
+         SzwcfUnYZ8/2Q==
+Message-ID: <835f81b3-1810-1d1f-a5b4-a040cd7ec9a9@alu.unizg.hr>
+Date:   Wed, 12 Apr 2023 21:02:25 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 1/2] selftests: gpio: gpio-sim: Fix BUG: test FAILED
+ due to recent change
+Content-Language: en-US, hr
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20230411171521.29678-1-andriy.shevchenko@linux.intel.com>
+ <ZDWdRQmKryGjJcFD@smile.fi.intel.com>
+From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <ZDWdRQmKryGjJcFD@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aggW3W45FTuN4BbpiHiKJOpl8E/pH2Nw2pHRIXGEteiRP2qyb4o
- ZyhMoPLfz7PlK1kuOzlS3YuDMQ+NajrA4m6jPt45xzmisUE684k9bQWawNXarn1ErNtVyuU
- 1uqpo/u4CwbMb/Oq+9IlHadwNImVLUU6nmiJh8nIbQ6J16J+cSfskJSanUO++BvTPT7WlRe
- FdsiRSVS1rdtQNWjnz6Og==
-UI-OutboundReport: notjunk:1;M01:P0:Bj0zO1cdLHQ=;CH5ZIGfiCO+AYHjYxM/PoShCwdT
- zG8A7k7SlLID4z1Gi6swYevzoe2cdJn4svjhdFaB1bFpltT6ZmuV4hbCphS1zN1XqJ9JolBW+
- qOvTvs6U8oWkCH/XxunZEcsPaDyyCs+lQsx5mvoJvnWoOpvCBR/2TIlrqxokfjzveUbgSPxSF
- yN0EeGBmocmyGrVbLp1uRKkSd0ZW1AVM9Ngug7JuC9Mr/jWWsHyqsEdcV7+skPMLysRyzd6Ap
- lYQODI2dqCih9clTwxkyLDT2wDvdfEoZmSl/SCG+vZO7CjmMeQBLSlw9Rn7QBOvp3VN/QQ3ks
- AiwdTHI0feETdO/HlAnNTEIbxVXgPp/yvgfHQzg8jl1GXx3DFdJ8MsypA2niM0qNEq3tveWg4
- ck3SjiATUwzJ22hpLcZ3BIsTB5X0gS/+XHbY+R7x83qMbfJpyO/33RWFMGjkUI2Pa2I/uFey8
- UN5QZV/lorl7iFHXUQLDfB/VCaU13SH74/fgHURdx/gEuMi1yZ9FPZ1j4A1sYQrNjlxt4p+XO
- ZVQBlFpOtkwggWUVePhwKHL3JIREIP6slrPCSPqbAMMFq9gJB0xVM2Iw1/LyujUIc6mSBjG2B
- Do7faSegLTqXkt1egs4Ia853Sg9yUAh6f+/wKi4bPFWKoPSrK2kIyl84g7SlH0bcC3Ay6klsv
- aao6qrbrnQEy3KwhVolFKjWsZLfrAOnawCRBhjll8PLtLaVULcd92FWcOll4JRhjT76q7wTOS
- 8TnwpXKEIM67s5fMUcjjD9ArtIhbujLt1CefzQFeMlSzU177uaZt2d6tsdV+nR52fPLX2TYn6
- XsyJLu/hA18AxOrnLh4jp17V1Rctcrjpli6UHO1RwwRz3QOI/Bv5idkYAB3Qt/L4vspYH2b1D
- rik8J3IU0p5QAsfuQhW0rY0fOLW4ldPsF8rN0rjS/NwotSZxyYj1WzS2G9MzApVulgcTDem9N
- M0b9Ug==
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pinctrl-wpcm450 driver relies on MFD_SYSCON functionality in order
-to find some of its MMIO registers. Select MFD_SYSCON from
-PINCTRL_WPCM450 to ensure that it's enabled.
+On 11. 04. 2023. 19:47, Andy Shevchenko wrote:
+> On Tue, Apr 11, 2023 at 08:15:20PM +0300, Andy Shevchenko wrote:
+>> From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+> 
+> Ah, Mirsad, I need your SoB, if you are okay with the change.
+> Otherwise I have to drop your authorship
+Hi, Andy,
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/pinctrl/nuvoton/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Sorry I needed to vent my beer before doing this test:
 
-diff --git a/drivers/pinctrl/nuvoton/Kconfig b/drivers/pinctrl/nuvoton/Kco=
-nfig
-index 852b0d0eb08e0..8fe61b3481818 100644
-=2D-- a/drivers/pinctrl/nuvoton/Kconfig
-+++ b/drivers/pinctrl/nuvoton/Kconfig
-@@ -11,6 +11,7 @@ config PINCTRL_WPCM450
- 	select GPIOLIB
- 	select GPIO_GENERIC
- 	select GPIOLIB_IRQCHIP
-+	select MFD_SYSCON
- 	help
- 	  Say Y or M here to enable pin controller and GPIO support for
- 	  the Nuvoton WPCM450 SoC. This is strongly recommended when
-=2D-
-2.39.2
+[root@pc-mtodorov linux_torvalds]# uname -rms
+Linux 6.2.0-mglru-kmlk-andy-09238-gd2980d8d8265 x86_64
+[root@pc-mtodorov linux_torvalds]# tools/testing/selftests/gpio/gpio-sim.sh
+1. chip_name and dev_name attributes
+1.1. Chip name is communicated to user
+1.2. chip_name returns 'none' if the chip is still pending
+1.3. Device name is communicated to user
+2. Creating and configuring simulated chips
+2.1. Default number of lines is 1
+2.2. Number of lines can be specified
+2.3. Label can be set
+2.4. Label can be left empty
+2.5. Line names can be configured
+2.6. Line config can remain unused if offset is greater than number of lines
+2.7. Line configfs directory names are sanitized
+2.8. Multiple chips can be created
+2.9. Can't modify settings when chip is live
+2.10. Can't create line items when chip is live
+2.11. Probe errors are propagated to user-space
+2.12. Cannot enable a chip without any GPIO banks
+2.13. Duplicate chip labels are not allowed
+2.14. Lines can be hogged
+3. Controlling simulated chips
+3.1. Pull can be set over sysfs
+3.2. Pull can be read from sysfs
+3.3. Incorrect input in sysfs is rejected
+3.4. Can't write to value
+4. Simulated GPIO chips are functional
+4.1. Values can be read from sysfs
+4.2. Bias settings work correctly
+cat: /sys/devices/platform/gpio-sim.0/gpiochip18/sim_gpio0/value: No such file or directory
+tools/testing/selftests/gpio/gpio-sim.sh: line 393: test: =: unary operator expected
+bias setting does not work
+GPIO gpio-sim test FAIL
+[root@pc-mtodorov linux_torvalds]# git apply ../gpio-sim-andy2.patch
+[root@pc-mtodorov linux_torvalds]# tools/testing/selftests/gpio/gpio-sim.sh
+1. chip_name and dev_name attributes
+1.1. Chip name is communicated to user
+1.2. chip_name returns 'none' if the chip is still pending
+1.3. Device name is communicated to user
+2. Creating and configuring simulated chips
+2.1. Default number of lines is 1
+2.2. Number of lines can be specified
+2.3. Label can be set
+2.4. Label can be left empty
+2.5. Line names can be configured
+2.6. Line config can remain unused if offset is greater than number of lines
+2.7. Line configfs directory names are sanitized
+2.8. Multiple chips can be created
+2.9. Can't modify settings when chip is live
+2.10. Can't create line items when chip is live
+2.11. Probe errors are propagated to user-space
+2.12. Cannot enable a chip without any GPIO banks
+2.13. Duplicate chip labels are not allowed
+2.14. Lines can be hogged
+3. Controlling simulated chips
+3.1. Pull can be set over sysfs
+3.2. Pull can be read from sysfs
+3.3. Incorrect input in sysfs is rejected
+3.4. Can't write to value
+4. Simulated GPIO chips are functional
+4.1. Values can be read from sysfs
+4.2. Bias settings work correctly
+GPIO gpio-sim test PASS
+[root@pc-mtodorov linux_torvalds]# 
+
+So the issue was reproduced again on the above mentioned kernel, and the patch fixes it.
+I will never trust an unexecuted line again, so help me the Lord Above.
+
+Yes, you have both:
+
+Tested-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Signed-off-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+
+Thank you for considering my bug report. It is great to assist your professional team.
+
+This issue wasn't triggered by the 6.1.15 mglru kernel, and I am wondering what could
+be the difference? (With the same gpio-sim.sh and patch.)
+
+Best regards,
+Mirsad
+
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+ 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+
+"I see something approaching fast ... Will it be friends with me?"
 
