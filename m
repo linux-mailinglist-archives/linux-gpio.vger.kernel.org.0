@@ -2,96 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DCD6DF4FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 14:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12F666DF85C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 16:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjDLMWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 08:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59220 "EHLO
+        id S231571AbjDLOZB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 10:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjDLMWF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 08:22:05 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A5C30F5
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Apr 2023 05:22:04 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-54c0c86a436so335144847b3.6
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Apr 2023 05:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681302123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qRwIU1nvje0w0MPNeCJ53SnkupaFca63q36KxA4RSoo=;
-        b=AZRCj/Aw/LiaTxBZwUURrDKlq+avl5jdMbzccd3YtlPN/Mv6wcsUubJwKxCFHZ2FeE
-         R5PXL/FaXg8KlNrhYFoKhCZMSSl1ckSx8R+hNygCwEEtgRhJ2jszCneSWj/UhPcjmx5Z
-         UNkhGi+mLk4WpyFZHo76agmFnnQBs5XVfdvXQ+PWtmrLPBfDt6CGMvZ8+2Az7xWYlJoC
-         bobG8xH6OXEeY5ecWXRbOVNH4igoKkFQ90Q0cvF6Mms3Cj2lcGHdE/YL9zDeFp62MW+s
-         Jr3eOckFetgp2wGEgCCvVldmkEGwzri1+EtsZNLQDhDAo2JNkIOfp68kG2sR74PxdZ9y
-         819A==
+        with ESMTP id S230341AbjDLOZA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 10:25:00 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABA394206;
+        Wed, 12 Apr 2023 07:24:59 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id bh10so7865481oib.1;
+        Wed, 12 Apr 2023 07:24:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681302123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qRwIU1nvje0w0MPNeCJ53SnkupaFca63q36KxA4RSoo=;
-        b=xGjMFnTSSDp+td6GIQ0dIteFPp4SFi8HTRmTfLCodFqofNMMcXtFkRehb4FgPld+BA
-         +dpP0CgN1A4UcLdH4XdeWerwO1k/g2LdFi0Zi0uhEutSRtsNE18p7kMsWdv85IdJbOVB
-         VsCSaLaG7QTVNxnu45FRIhaVKFfL+Iak8ItvCeeZxNCvaer03NA5Wdy6VxRYqSWU27H3
-         r+7EnW5Rs14Q3Bq4xbn2Y+H7+5zBUQbN18+uwmR2i6jqZZE8PTqIvjnX9uWkrzPe159n
-         Y5lFBMHEMfqodfK71cpyzeNirbKFSfszTkMElNESge2TMZssVr/kFwLHYAI6gv7umTdF
-         HfdQ==
-X-Gm-Message-State: AAQBX9cV86Qo2unUxBQ0oRZOzGQapoHlEg5VYR2rWGHpnpyKb/jvgerT
-        piodakLAzOfBxuPpcm2xdqKkdc/BI+QBK0n2GI2tLw==
-X-Google-Smtp-Source: AKy350bO605bF7CmPj2jht5i/1RKefj2ZH1kk06s8caYQ2xMlwzktcBIiIVTXSBlPqu1bzWAe40DL6TQvkae11EoClo=
-X-Received: by 2002:a05:690c:730:b0:54f:899f:890f with SMTP id
- bt16-20020a05690c073000b0054f899f890fmr1890721ywb.9.1681302123341; Wed, 12
- Apr 2023 05:22:03 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1681309499; x=1683901499;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zL+50zPLrjuLA8fqBLOEQM7c2a2HckTPPr7Ny3uRBP0=;
+        b=G9EyqYSznBb+w1tqCZsahndgaduGxNDH8dXO/Ef91LcPiXKdiQHGeUDJ/bAxXTbtgg
+         Cg6BYt9Y0+LDX/eQsXitHCRPFqU+gA2qvHZXZ/Yh4KzZaQaE2PfhhqntjuSKcKBkmr4N
+         BwIpfKWP6akfWulm7Bf26Dmo50VBHq5ITVnuxHZ9cONNIZXasJfxFVmM5A0Z1j+0lwyB
+         I0icvzPWglq0X6baty3bCedM9JV8o+GcFMyPFllMVdEaSPYJXZ+OARo9SCgqxaq0oFtt
+         zkDx052G/DDkvWTn79lPpGKx1/BqLt66c9G/A8ianshD8lJ/ISl8syo4FhFBEwXj3bH3
+         /b5A==
+X-Gm-Message-State: AAQBX9f+YLaHSG8pZ682ryJ5BfXNEgoiiw9k4HuXBZJeZ+LmfK/o1lf/
+        QhvG8uM4TVvWE51/84aZ+rASWXfjCA==
+X-Google-Smtp-Source: AKy350ZRWCnOuzOVFhOnHWoQ1lacuWyjXo0ay+clioHA9u4vMZliLv5kBRkMbBNTgscun57W5oShRQ==
+X-Received: by 2002:a05:6808:88:b0:386:ea33:755b with SMTP id s8-20020a056808008800b00386ea33755bmr1083158oic.19.1681309498919;
+        Wed, 12 Apr 2023 07:24:58 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id b124-20020aca3482000000b0038bc0cb5d52sm3498572oia.9.2023.04.12.07.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 07:24:58 -0700 (PDT)
+Received: (nullmailer pid 2312911 invoked by uid 1000);
+        Wed, 12 Apr 2023 14:24:57 -0000
+Date:   Wed, 12 Apr 2023 09:24:57 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     linus.walleij@linaro.org, jonathanh@nvidia.com,
+        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        linux-gpio@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-tegra@vger.kernel.org, thierry.reding@gmail.com,
+        linux-doc@vger.kernel.org
+Subject: Re: [V5 03/10] dt-bindings: timestamp: Deprecate nvidia,slices
+ property
+Message-ID: <168130949723.2312853.9364535944152473595.robh@kernel.org>
+References: <20230406171837.11206-1-dipenp@nvidia.com>
+ <20230406171837.11206-4-dipenp@nvidia.com>
 MIME-Version: 1.0
-References: <20230412114828.64043-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230412114828.64043-1-krzysztof.kozlowski@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Apr 2023 14:21:52 +0200
-Message-ID: <CACRpkdY_ueo57PteZcOznhD7jN+hg+_Qk_9jruG8D5Z4goo=uQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: dt-bindings: qcom: unevaluatedProperties
- cleanup for v6.4
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230406171837.11206-4-dipenp@nvidia.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 1:48=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
 
-> The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4c=
-c6:
->
->   Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/=
-qcom-pinctrl-6.4
->
-> for you to fetch changes up to 152674ab2e98bfd8677117314a77d223a2a1bedf:
->
->   dt-bindings: pinctrl: qcom,sm8550-tlmm: simplify with unevaluatedProper=
-ties (2023-04-12 10:59:11 +0200)
+On Thu, 06 Apr 2023 10:18:30 -0700, Dipen Patel wrote:
+> The property is not necessary as it is a constant value and can be
+> hardcoded in the driver code.
+> 
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../bindings/timestamp/nvidia,tegra194-hte.yaml           | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
-Pulled into the pinctrl devel branch for v6.4!
+Acked-by: Rob Herring <robh@kernel.org>
 
-Great work as always, thanks!
-Linus Walleij
