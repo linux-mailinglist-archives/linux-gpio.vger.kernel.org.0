@@ -2,60 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE21E6DFE5E
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 21:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 091176E0018
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 22:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjDLTI2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 15:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49610 "EHLO
+        id S229596AbjDLUqg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 16:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjDLTI2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 15:08:28 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBA84EF2
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Apr 2023 12:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681326506; x=1712862506;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=G/spJQF+88+7ZKv8Id2cZkIAdIdfhJwM4ii+7gp0bGk=;
-  b=YrE3c8p/t3Q+jMmjw/0pTb11WXFrlnS2LIdpMG1XGsoh0354Hbys1ucl
-   31bBEIGp9twhgPIv2V4BSeMqCfGwJnSr0Z6mXCQWD8ZyZKn0jTJjcgScj
-   wRe1CTwuvc9jktMhSF8qnOXaX8SlC8gKRijwK1twMq1foh8CE4EjkvmDm
-   UFmkAVBc5k+Z8CKI7nm+qQ/b6/brs3cgWmHTirLJEd7nldkQ7RZDgtR0C
-   z4fprwS7/7ERbQVazU85j63yDXCjcsc4W/irpk+iDrblkLDGWfmbll8S0
-   MMDCREtdM6yU4eWiVJafMKv/av7LhiIuEX7sissFnseOu/bcGDHdihHhl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="409137571"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="409137571"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 12:08:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="1018843573"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="1018843573"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Apr 2023 12:08:21 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pmfpN-000Y0F-1X;
-        Wed, 12 Apr 2023 19:08:21 +0000
-Date:   Thu, 13 Apr 2023 03:07:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 534e465845ebfb4a97eb5459d3931a0b35e3b9a5
-Message-ID: <6437017e.76lm4rsVkp+VoOSx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229907AbjDLUqf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 16:46:35 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40BA55AB
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Apr 2023 13:46:32 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id t14so16223921lft.7
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Apr 2023 13:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681332391; x=1683924391;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a6Emo09CCLf/plGwNFLqZjmgSdrNmUy8E7AyaPJFF70=;
+        b=pAQ0VwoClK2BLTfd4hXRFYopE2ziTbzRSGF0W06LrIYuVEbVs4nnW76sRnvPLtlloX
+         8Q93A9dY8IOLEugXaklEpY3Dp0EEXuk0u67mCFyvkdE1+HyU/deQ1p1btrl4KOu7fgGq
+         7ePFNcmR961dhsa8dkIUbDb0jewTFV7DKS5BX07gfV9XxTSxshbuR/7CK4RUsqwVTA0x
+         GpNrSYf+U6wDTS1pifYfdHXrnyF7H3uvk+jxyTu1LedYGFSzE+D+5L+RTHqihgG9dAlh
+         1szJyPdkFpEyBXqVvy8/aKRU0WbrMBPMgpPPdJlVA3nRnKFfOk77+x4lVpyWSB2v3nl0
+         eDlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681332391; x=1683924391;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a6Emo09CCLf/plGwNFLqZjmgSdrNmUy8E7AyaPJFF70=;
+        b=khFL4uTVAx7YvWCpbxdk3vXoPPwwOEE4zn7yfx2MgZL0htZU8T5chyhMUhZm8i3LPn
+         e0J0+hTkKJKndpMKVxGmhRIGNFb1xpsbR7v4TbCF2+SUgJGvmsFcyHPn1YTrGHnIrsYL
+         uvSyWUjd+A/yLTyAG0UZhCl/KSwLC1jaGELKtqQoFbk1724lwmVj80G0cupPFcDGREZ/
+         rVG/khJgIa/5Fkf+BmDfKj4KIevFrtffDj1zuv736AqeuN+WCVOQ65ANxc6mr0Hxs3R1
+         ZeIF1JYuH2DTOSQMOcQb/Qoqg7xHfc+2lmfCer8nNrkdEflpPjlBPQk2jZ32mwVZsX0B
+         nLKA==
+X-Gm-Message-State: AAQBX9dpPdGrDDWAogZ5+BQt1l9jQ3uHtxZzbIiOuhTww5l7xfvGkcAp
+        +3egzCH++mpNj+n/fZqYxxIMkg==
+X-Google-Smtp-Source: AKy350a5RBGKlHJXw3i/gSzdU4PAsc78wrlKrPLZuM3LPt2X7QO34SvkbYChUN+VghVnBLGqOhBBHA==
+X-Received: by 2002:ac2:429a:0:b0:4eb:4552:61aa with SMTP id m26-20020ac2429a000000b004eb455261aamr40493lfh.12.1681332390865;
+        Wed, 12 Apr 2023 13:46:30 -0700 (PDT)
+Received: from [192.168.1.101] (abxj23.neoplus.adsl.tpnet.pl. [83.9.3.23])
+        by smtp.gmail.com with ESMTPSA id b7-20020a056512024700b004eca8b92936sm87784lfo.61.2023.04.12.13.46.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Apr 2023 13:46:30 -0700 (PDT)
+Message-ID: <a599d157-002f-26ef-5f31-a3fb0925dfba@linaro.org>
+Date:   Wed, 12 Apr 2023 22:46:27 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH V12 3/4] arm64: dts: qcom: Add support for ipq9574 SoC and
+ RDP433 variant
+Content-Language: en-US
+To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
+        dmitry.baryshkov@linaro.org, geert+renesas@glider.be,
+        rafal@milecki.pl, nfraprado@collabora.com, broonie@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+References: <20230410135948.11970-1-quic_devipriy@quicinc.com>
+ <20230410135948.11970-4-quic_devipriy@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230410135948.11970-4-quic_devipriy@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,118 +88,193 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 534e465845ebfb4a97eb5459d3931a0b35e3b9a5  Revert "pinctrl: amd: Disable and mask interrupts on resume"
 
-elapsed time: 1272m
 
-configs tested: 99
-configs skipped: 8
+On 10.04.2023 15:59, Devi Priya wrote:
+> Add initial device tree support for Qualcomm IPQ9574 SoC and
+> Reference Design Platform(RDP) 433 which is based on IPQ9574
+> family of SoCs
+> 
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> ---
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +	soc: soc@0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+this is equal to:
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r001-20230409   gcc  
-alpha        buildonly-randconfig-r006-20230410   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r001-20230410   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r035-20230409   clang
-csky                                defconfig   gcc  
-hexagon              randconfig-r033-20230409   clang
-i386                             allyesconfig   gcc  
-i386                         debian-10.3-func   gcc  
-i386                   debian-10.3-kselftests   gcc  
-i386                        debian-10.3-kunit   gcc  
-i386                          debian-10.3-kvm   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230410   clang
-i386                 randconfig-a002-20230410   clang
-i386                 randconfig-a003-20230410   clang
-i386                 randconfig-a004-20230410   clang
-i386                 randconfig-a005-20230410   clang
-i386                 randconfig-a006-20230410   clang
-i386                 randconfig-a011-20230410   gcc  
-i386                 randconfig-a012-20230410   gcc  
-i386                 randconfig-a013-20230410   gcc  
-i386                 randconfig-a014-20230410   gcc  
-i386                 randconfig-a015-20230410   gcc  
-i386                 randconfig-a016-20230410   gcc  
-i386                 randconfig-r036-20230410   clang
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r001-20230409   gcc  
-ia64                 randconfig-r024-20230410   gcc  
-ia64                 randconfig-r025-20230409   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r004-20230409   gcc  
-loongarch            randconfig-r021-20230410   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r002-20230409   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r002-20230410   gcc  
-mips                 randconfig-r005-20230410   gcc  
-nios2                               defconfig   gcc  
-parisc       buildonly-randconfig-r003-20230409   gcc  
-parisc       buildonly-randconfig-r004-20230409   gcc  
-parisc       buildonly-randconfig-r004-20230410   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r006-20230410   gcc  
-parisc               randconfig-r022-20230409   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc      buildonly-randconfig-r003-20230410   gcc  
-powerpc              randconfig-r034-20230409   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r002-20230409   gcc  
-riscv        buildonly-randconfig-r005-20230410   gcc  
-riscv        buildonly-randconfig-r006-20230409   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r023-20230409   gcc  
-s390                 randconfig-r033-20230410   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r005-20230409   gcc  
-sh                   randconfig-r023-20230410   gcc  
-sh                   randconfig-r026-20230409   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r003-20230409   gcc  
-sparc64              randconfig-r021-20230409   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230410   clang
-x86_64               randconfig-a002-20230410   clang
-x86_64               randconfig-a003-20230410   clang
-x86_64               randconfig-a004-20230410   clang
-x86_64               randconfig-a005-20230410   clang
-x86_64               randconfig-a006-20230410   clang
-x86_64                        randconfig-k001   clang
-x86_64               randconfig-r025-20230410   gcc  
-x86_64               randconfig-r034-20230410   clang
-x86_64                               rhel-8.3   gcc  
+ranges;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Could you fix that up when applying, Bjorn, should there be
+no other issues?
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
+
+> +
+> +		tlmm: pinctrl@1000000 {
+> +			compatible = "qcom,ipq9574-tlmm";
+> +			reg = <0x01000000 0x300000>;
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&tlmm 0 0 65>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			uart2_pins: uart2-state {
+> +				pins = "gpio34", "gpio35";
+> +				function = "blsp2_uart";
+> +				drive-strength = <8>;
+> +				bias-disable;
+> +			};
+> +		};
+> +
+> +		gcc: clock-controller@1800000 {
+> +			compatible = "qcom,ipq9574-gcc";
+> +			reg = <0x01800000 0x80000>;
+> +			clocks = <&xo_board_clk>,
+> +				 <&sleep_clk>,
+> +				 <0>,
+> +				 <0>,
+> +				 <0>,
+> +				 <0>,
+> +				 <0>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +		};
+> +
+> +		sdhc_1: mmc@7804000 {
+> +			compatible = "qcom,ipq9574-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0x07804000 0x1000>, <0x07805000 0x1000>;
+> +			reg-names = "hc", "cqhci";
+> +
+> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&gcc GCC_SDCC1_AHB_CLK>,
+> +				 <&gcc GCC_SDCC1_APPS_CLK>,
+> +				 <&xo_board_clk>;
+> +			clock-names = "iface", "core", "xo";
+> +			non-removable;
+> +			status = "disabled";
+> +		};
+> +
+> +		blsp1_uart2: serial@78b1000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0x078b1000 0x200>;
+> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+> +				 <&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "disabled";
+> +		};
+> +
+> +		intc: interrupt-controller@b000000 {
+> +			compatible = "qcom,msm-qgic2";
+> +			reg = <0x0b000000 0x1000>,  /* GICD */
+> +			      <0x0b002000 0x2000>,  /* GICC */
+> +			      <0x0b001000 0x1000>,  /* GICH */
+> +			      <0x0b004000 0x2000>;  /* GICV */
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +			ranges = <0 0x0b00c000 0x3000>;
+> +
+> +			v2m0: v2m@0 {
+> +				compatible = "arm,gic-v2m-frame";
+> +				reg = <0x00000000 0xffd>;
+> +				msi-controller;
+> +			};
+> +
+> +			v2m1: v2m@1000 {
+> +				compatible = "arm,gic-v2m-frame";
+> +				reg = <0x00001000 0xffd>;
+> +				msi-controller;
+> +			};
+> +
+> +			v2m2: v2m@2000 {
+> +				compatible = "arm,gic-v2m-frame";
+> +				reg = <0x00002000 0xffd>;
+> +				msi-controller;
+> +			};
+> +		};
+> +
+> +		timer@b120000 {
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x0b120000 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			frame@b120000 {
+> +				reg = <0x0b121000 0x1000>,
+> +				      <0x0b122000 0x1000>;
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			frame@b123000 {
+> +				reg = <0x0b123000 0x1000>;
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b124000 {
+> +				reg = <0x0b124000 0x1000>;
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b125000 {
+> +				reg = <0x0b125000 0x1000>;
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b126000 {
+> +				reg = <0x0b126000 0x1000>;
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b127000 {
+> +				reg = <0x0b127000 0x1000>;
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@b128000 {
+> +				reg = <0x0b128000 0x1000>;
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +};
