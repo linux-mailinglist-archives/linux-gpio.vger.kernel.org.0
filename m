@@ -2,126 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F38B6DFCF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 19:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 280496DFDD6
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 20:45:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjDLRvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 13:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50642 "EHLO
+        id S229642AbjDLSpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 14:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbjDLRvf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 13:51:35 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933749E;
-        Wed, 12 Apr 2023 10:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1681321894; x=1712857894;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gmb/rlmitwhnf0NxNDqppMtOJV914w5lfvnM7EmTvKM=;
-  b=Q2RAGvsJnIsGjDEKtk9ZLmKTsMjZ/C0VOiGxKuNjrbA+Z9VzVZzSPJVh
-   D/pocVK7J6s+6R2cP5FztBvDL+MMm2lAJFskBUVJlmEPfFCw7NbVXq1Ml
-   YWR/J09D83Z8ToIzEmN46HvyZkbm1bs8vsIcHdTyEBmwBeODCXcyT8UrC
-   FdmiYml4/2A1X0DCGH4cGn6XlLTSI2H3tcVHD65EAs02ZFcWYcZo+TNyO
-   U5PNPC5v4d1zCGFCxDN1OT3RDWGhPA5hjQ+K5FXNhuIy1svxmjqcM4Sgh
-   Sx+4ChBXXlJAaSlnio7NX8EkCMo5n01UQvvAidZTJucSkOIFCF8aHWFBA
-   w==;
-X-IronPort-AV: E=Sophos;i="5.98,339,1673938800"; 
-   d="scan'208";a="208825837"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Apr 2023 10:51:34 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 12 Apr 2023 10:51:33 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.21 via Frontend Transport; Wed, 12 Apr 2023 10:51:33 -0700
-From:   <Ryan.Wanner@microchip.com>
-To:     <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <claudiu.beznea@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [linux][PATCH] pinctrl: at91-pio4: Add push-pull drive configuration
-Date:   Wed, 12 Apr 2023 10:51:46 -0700
-Message-ID: <20230412175146.886684-1-Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S229598AbjDLSpE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 14:45:04 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A08E3C21;
+        Wed, 12 Apr 2023 11:45:02 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 126C5D75;
+        Wed, 12 Apr 2023 11:45:47 -0700 (PDT)
+Received: from e120937-lin (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 155CC3F6C4;
+        Wed, 12 Apr 2023 11:45:00 -0700 (PDT)
+Date:   Wed, 12 Apr 2023 19:44:54 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        michal.simek@amd.com, vincent.guittot@linaro.org,
+        souvik.chakravarty@arm.com
+Subject: Re: [RFC v1 0/2] Introducing generic SCMI pinctrl driver
+ implementation
+Message-ID: <ZDb8JvQd3Sv3xfRn@e120937-lin>
+References: <cover.1680793130.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1680793130.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On Fri, Apr 07, 2023 at 10:18:26AM +0000, Oleksii Moisieiev wrote:
+> This RFC patch series is intended to introduce the potential generic driver for
+> pin controls over SCMI protocol, provided in the latest beta version of DEN0056 [0].
+> 
 
-The PIO4 does support push-pull configuration as this is the default
-state of the open-drain register. Adapt the driver for this.
+Hi Oleksii,
 
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
-This patch also fixes the warning of unsupported
-configuration param 8.
+a few general remarks here down below and more specific comments will
+come inline in the remaining patches of the series.
 
-This was tested on both sama5d2-som1-ek and sama7g5ek. I used dbg_show
-fucntion to test if the configuration was correct when adding
-drive-open-drain or drive-push-pull to the dts file.
+CC'ing also a few more people possibly interested in your series.
 
- drivers/pinctrl/pinctrl-at91-pio4.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+> On ARM-based systems, a separate Cortex-M based System Control Processor (SCP)
+> provides control on pins, as well as with power, clocks, reset controllers. In this case,
+> kernel should use one of the possible transports, described in [0] to access SCP and
+> control clocks/power-domains etc. This driver is using SMC transport to communicate with SCP via
+> SCMI protocol and access to the Pin Control Subsystem.
+> 
+> The provided driver consists of 2 parts:
+>  - firmware/arm_scmi/pinctrl.c - the SCMI pinctrl protocol inmplementation
+>    responsible for the communication with SCP firmware.
+> 
+>  - drivers/pinctrl/pinctrl-scmi.c - pinctrl driver, which is using pinctrl
+>   protocol implementation to access all necessary data.
+> 
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index a30c6f7c9016..9a0cddfeaf92 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -776,6 +776,11 @@ static int atmel_conf_pin_config_group_get(struct pinctrl_dev *pctldev,
- 			return -EINVAL;
- 		arg = 1;
- 		break;
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		if ((res & ATMEL_PIO_OPD_MASK))
-+			return -EINVAL;
-+		arg = 1;
-+		break;
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 		if (!(res & ATMEL_PIO_SCHMITT_MASK))
- 			return -EINVAL;
-@@ -839,10 +844,10 @@ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
- 			conf &= (~ATMEL_PIO_PUEN_MASK);
- 			break;
- 		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--			if (arg == 0)
--				conf &= (~ATMEL_PIO_OPD_MASK);
--			else
--				conf |= ATMEL_PIO_OPD_MASK;
-+			conf |= ATMEL_PIO_OPD_MASK;
-+			break;
-+		case PIN_CONFIG_DRIVE_PUSH_PULL:
-+			conf &= (~ATMEL_PIO_OPD_MASK);
- 			break;
- 		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 			if (arg == 0)
-@@ -937,8 +942,10 @@ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
- 		seq_printf(s, "%s ", "pull-down");
- 	if (conf & ATMEL_PIO_IFEN_MASK)
- 		seq_printf(s, "%s ", "debounce");
--	if (conf & ATMEL_PIO_OPD_MASK)
-+	if ((conf & ATMEL_PIO_OPD_MASK) > 0)
- 		seq_printf(s, "%s ", "open-drain");
-+	if ((conf & ATMEL_PIO_OPD_MASK) == 0)
-+		seq_printf(s, "%s ", "push-pull");
- 	if (conf & ATMEL_PIO_SCHMITT_MASK)
- 		seq_printf(s, "%s ", "schmitt");
- 	if (atmel_pioctrl->slew_rate_support && (conf & ATMEL_PIO_SR_MASK))
--- 
-2.37.2
+As discussed offline, the patches you posted to add support for the new
+SCMI pinctrl protocol and the related SCMI pinctrl driver are using the
+old SCMI API (include/linux/scmi_protocol.h) that changed significantly
+since v5.13, so at first they need to be ported to current mainline API.
 
+You can look on the latest v6.3-rc  at:
+
+	drivers/firmware/arm_scmi/power.c
+ 	drivers/firmware/arm_scmi/scmi_pm_domain.c
+
+for a simple example of a core protocol and related driver using the new API.
+
+On the protocol side you can ignore really the part related to "scmi_protocol_events"
+that you find there since it is related to notifications and there are no notifs in
+SCMI Pinctrl as of now.
+
+In a nutshell the protocol layer now receives a protocol handle (instead
+of the instance handle) during protocol_init and uses that to build/send
+messages; it has to be used also to store any protocol private data
+with ph->set/get_priv() (no more direct access to handle->privs)
+
+That same protocol handle is then used by the SCMI driver users during
+tehir probes, so, in your pinctrl SCMI driver probe, you should do something like
+this early on:
+
+	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL, &ph);
+
+store the 'ph' somewhere and and then use it all over:
+
+	pinctrl_ops->set_mux(ph, selector, group);
+
+Beside the API a few helpers has been added too (ph->hops) that can be
+re-used by protocol code to implement straight away some common SCMI machinery
+like the extended_name_get and the handling of multi-part replies
+(like in PINCTRL_LIST_ASSOCIATIONS)...I think you can ignore these ph->hops and
+just keep your original code, I'll take care to port these functionalities to
+the common helpers later on top of your series if it is fine for you...
+(also because I think at least a small modification in the core helpers will be
+needed to support PINCTRL usage since it deviates a bit from existent protos...:P)
+
+> Configuration:
+> The scmi-pinctrl driver can be configured using DT bindings.
+> For example:
+> / {
+> 	cpu_scp_shm: scp-shmem@0x53FF0000 {
+> 		compatible = "arm,scmi-shmem";
+> 		reg = <0x0 0x53FF0000 0x0 0x1000>;
+> 	};
+> 
+> 	firmware {
+> 		scmi {
+> 			compatible = "arm,scmi-smc";
+> 			arm,smc-id = <0x82000002>;
+> 			shmem = <&cpu_scp_shm>;
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			scmi_pinctrl: protocol@19 {
+> 				reg = <0x18>;
+> 				#pinctrl-cells = <0>;
+> 
+> 				i2c2_pins: i2c2 {
+> 					groups = "i2c2_a";
+> 					function = "i2c2";
+> 				};
+> 			};
+> 		};
+> 	};
+> };
+> 
+
+These will need a proper formal explanation in DT bindings at:
+
+	Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+
+to highlight the usage of "#pinctrl-cells" and whatever else is needed
+to be documented with related links to existing reused bindings is any.
+(and CC that patch to the proper DT maintainers and MLs... IOW look at
+what get_maintanel.pl says)
+
+> &pfc {
+> 	/delete-node/i2c2;
+> };
+> 
+> So basically, it's enough to move pfc subnode, which configures pin group that should work through
+> SCMI protocol to scmi_pinctrl node. The current driver implementation is using generic pinctrl dt_node
+> format.
+> 
+> I've tested this driver on the Renesas H3ULCB Kingfisher board with pinctrl driver ported to the
+> Arm-trusted-firmware. Unfortunately, not all hardware was possible to test because the Renesas
+> pinctrl driver has gaps in pins and groups numeration, when Spec [0] requires pins, groups and
+> functions numerations to be 0..n without gaps.
+> 
+> This implementation still reqires some features, such as gpio support, but I've posted it as RFC to
+> start the discussion regarding the driver format.
+> 
+> [0] https://developer.arm.com/documentation/den0056/latest
+> 
+
+Thanks for this,
+Cristian
