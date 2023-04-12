@@ -2,177 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 280496DFDD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 20:45:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16176DFDF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Apr 2023 20:51:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbjDLSpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Apr 2023 14:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55088 "EHLO
+        id S229840AbjDLSvI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Apr 2023 14:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjDLSpE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 14:45:04 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A08E3C21;
-        Wed, 12 Apr 2023 11:45:02 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 126C5D75;
-        Wed, 12 Apr 2023 11:45:47 -0700 (PDT)
-Received: from e120937-lin (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 155CC3F6C4;
-        Wed, 12 Apr 2023 11:45:00 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 19:44:54 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        with ESMTP id S229830AbjDLSvI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Apr 2023 14:51:08 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4613461B6;
+        Wed, 12 Apr 2023 11:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
+        t=1681325454; i=j.neuschaefer@gmx.net;
+        bh=GFR6pPBbyB1rO8q+jVeF1EaBvVI0oCUvnQvGxUKX0l0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=nnLio+lxptky58a/nb6w3pIFCfNPtD2JZ3ma8935KmFDjmGRpsva9jsmK47+3qM+w
+         eGZPcf418TQ2VHEYK7u8/xTteu/WxiutCP21qDukLLFgq7xjWgIebUsG0w4P2G+2JB
+         k4X6vmqz/qs2+Q5+LGOR7M73gNj1JbWVhQEJheXWw53U5DesHYewDyKRX4na/RDvjt
+         9vDUOC7P2WWEic3pwoRlMDYNGs+h3G6sBKROVA0C3+pOr01NQlsOp1t7SQ4nDd8qvL
+         I0CmOh3ZmruB5q3hO7C/YvN+inM2bvn56uwB4QI9JZJHOTaixCD97BoSvnkqdviOip
+         1aPbfKjHGpJjw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([185.66.193.41]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmGP-1q6fHL3CLR-00K9qe; Wed, 12
+ Apr 2023 20:50:54 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     openbmc@lists.ozlabs.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        michal.simek@amd.com, vincent.guittot@linaro.org,
-        souvik.chakravarty@arm.com
-Subject: Re: [RFC v1 0/2] Introducing generic SCMI pinctrl driver
- implementation
-Message-ID: <ZDb8JvQd3Sv3xfRn@e120937-lin>
-References: <cover.1680793130.git.oleksii_moisieiev@epam.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: wpcm450: select MFD_SYSCON
+Date:   Wed, 12 Apr 2023 20:50:49 +0200
+Message-Id: <20230412185049.3782842-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1680793130.git.oleksii_moisieiev@epam.com>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aggW3W45FTuN4BbpiHiKJOpl8E/pH2Nw2pHRIXGEteiRP2qyb4o
+ ZyhMoPLfz7PlK1kuOzlS3YuDMQ+NajrA4m6jPt45xzmisUE684k9bQWawNXarn1ErNtVyuU
+ 1uqpo/u4CwbMb/Oq+9IlHadwNImVLUU6nmiJh8nIbQ6J16J+cSfskJSanUO++BvTPT7WlRe
+ FdsiRSVS1rdtQNWjnz6Og==
+UI-OutboundReport: notjunk:1;M01:P0:Bj0zO1cdLHQ=;CH5ZIGfiCO+AYHjYxM/PoShCwdT
+ zG8A7k7SlLID4z1Gi6swYevzoe2cdJn4svjhdFaB1bFpltT6ZmuV4hbCphS1zN1XqJ9JolBW+
+ qOvTvs6U8oWkCH/XxunZEcsPaDyyCs+lQsx5mvoJvnWoOpvCBR/2TIlrqxokfjzveUbgSPxSF
+ yN0EeGBmocmyGrVbLp1uRKkSd0ZW1AVM9Ngug7JuC9Mr/jWWsHyqsEdcV7+skPMLysRyzd6Ap
+ lYQODI2dqCih9clTwxkyLDT2wDvdfEoZmSl/SCG+vZO7CjmMeQBLSlw9Rn7QBOvp3VN/QQ3ks
+ AiwdTHI0feETdO/HlAnNTEIbxVXgPp/yvgfHQzg8jl1GXx3DFdJ8MsypA2niM0qNEq3tveWg4
+ ck3SjiATUwzJ22hpLcZ3BIsTB5X0gS/+XHbY+R7x83qMbfJpyO/33RWFMGjkUI2Pa2I/uFey8
+ UN5QZV/lorl7iFHXUQLDfB/VCaU13SH74/fgHURdx/gEuMi1yZ9FPZ1j4A1sYQrNjlxt4p+XO
+ ZVQBlFpOtkwggWUVePhwKHL3JIREIP6slrPCSPqbAMMFq9gJB0xVM2Iw1/LyujUIc6mSBjG2B
+ Do7faSegLTqXkt1egs4Ia853Sg9yUAh6f+/wKi4bPFWKoPSrK2kIyl84g7SlH0bcC3Ay6klsv
+ aao6qrbrnQEy3KwhVolFKjWsZLfrAOnawCRBhjll8PLtLaVULcd92FWcOll4JRhjT76q7wTOS
+ 8TnwpXKEIM67s5fMUcjjD9ArtIhbujLt1CefzQFeMlSzU177uaZt2d6tsdV+nR52fPLX2TYn6
+ XsyJLu/hA18AxOrnLh4jp17V1Rctcrjpli6UHO1RwwRz3QOI/Bv5idkYAB3Qt/L4vspYH2b1D
+ rik8J3IU0p5QAsfuQhW0rY0fOLW4ldPsF8rN0rjS/NwotSZxyYj1WzS2G9MzApVulgcTDem9N
+ M0b9Ug==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 07, 2023 at 10:18:26AM +0000, Oleksii Moisieiev wrote:
-> This RFC patch series is intended to introduce the potential generic driver for
-> pin controls over SCMI protocol, provided in the latest beta version of DEN0056 [0].
-> 
+The pinctrl-wpcm450 driver relies on MFD_SYSCON functionality in order
+to find some of its MMIO registers. Select MFD_SYSCON from
+PINCTRL_WPCM450 to ensure that it's enabled.
 
-Hi Oleksii,
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ drivers/pinctrl/nuvoton/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-a few general remarks here down below and more specific comments will
-come inline in the remaining patches of the series.
+diff --git a/drivers/pinctrl/nuvoton/Kconfig b/drivers/pinctrl/nuvoton/Kco=
+nfig
+index 852b0d0eb08e0..8fe61b3481818 100644
+=2D-- a/drivers/pinctrl/nuvoton/Kconfig
++++ b/drivers/pinctrl/nuvoton/Kconfig
+@@ -11,6 +11,7 @@ config PINCTRL_WPCM450
+ 	select GPIOLIB
+ 	select GPIO_GENERIC
+ 	select GPIOLIB_IRQCHIP
++	select MFD_SYSCON
+ 	help
+ 	  Say Y or M here to enable pin controller and GPIO support for
+ 	  the Nuvoton WPCM450 SoC. This is strongly recommended when
+=2D-
+2.39.2
 
-CC'ing also a few more people possibly interested in your series.
-
-> On ARM-based systems, a separate Cortex-M based System Control Processor (SCP)
-> provides control on pins, as well as with power, clocks, reset controllers. In this case,
-> kernel should use one of the possible transports, described in [0] to access SCP and
-> control clocks/power-domains etc. This driver is using SMC transport to communicate with SCP via
-> SCMI protocol and access to the Pin Control Subsystem.
-> 
-> The provided driver consists of 2 parts:
->  - firmware/arm_scmi/pinctrl.c - the SCMI pinctrl protocol inmplementation
->    responsible for the communication with SCP firmware.
-> 
->  - drivers/pinctrl/pinctrl-scmi.c - pinctrl driver, which is using pinctrl
->   protocol implementation to access all necessary data.
-> 
-
-As discussed offline, the patches you posted to add support for the new
-SCMI pinctrl protocol and the related SCMI pinctrl driver are using the
-old SCMI API (include/linux/scmi_protocol.h) that changed significantly
-since v5.13, so at first they need to be ported to current mainline API.
-
-You can look on the latest v6.3-rc  at:
-
-	drivers/firmware/arm_scmi/power.c
- 	drivers/firmware/arm_scmi/scmi_pm_domain.c
-
-for a simple example of a core protocol and related driver using the new API.
-
-On the protocol side you can ignore really the part related to "scmi_protocol_events"
-that you find there since it is related to notifications and there are no notifs in
-SCMI Pinctrl as of now.
-
-In a nutshell the protocol layer now receives a protocol handle (instead
-of the instance handle) during protocol_init and uses that to build/send
-messages; it has to be used also to store any protocol private data
-with ph->set/get_priv() (no more direct access to handle->privs)
-
-That same protocol handle is then used by the SCMI driver users during
-tehir probes, so, in your pinctrl SCMI driver probe, you should do something like
-this early on:
-
-	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL, &ph);
-
-store the 'ph' somewhere and and then use it all over:
-
-	pinctrl_ops->set_mux(ph, selector, group);
-
-Beside the API a few helpers has been added too (ph->hops) that can be
-re-used by protocol code to implement straight away some common SCMI machinery
-like the extended_name_get and the handling of multi-part replies
-(like in PINCTRL_LIST_ASSOCIATIONS)...I think you can ignore these ph->hops and
-just keep your original code, I'll take care to port these functionalities to
-the common helpers later on top of your series if it is fine for you...
-(also because I think at least a small modification in the core helpers will be
-needed to support PINCTRL usage since it deviates a bit from existent protos...:P)
-
-> Configuration:
-> The scmi-pinctrl driver can be configured using DT bindings.
-> For example:
-> / {
-> 	cpu_scp_shm: scp-shmem@0x53FF0000 {
-> 		compatible = "arm,scmi-shmem";
-> 		reg = <0x0 0x53FF0000 0x0 0x1000>;
-> 	};
-> 
-> 	firmware {
-> 		scmi {
-> 			compatible = "arm,scmi-smc";
-> 			arm,smc-id = <0x82000002>;
-> 			shmem = <&cpu_scp_shm>;
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 
-> 			scmi_pinctrl: protocol@19 {
-> 				reg = <0x18>;
-> 				#pinctrl-cells = <0>;
-> 
-> 				i2c2_pins: i2c2 {
-> 					groups = "i2c2_a";
-> 					function = "i2c2";
-> 				};
-> 			};
-> 		};
-> 	};
-> };
-> 
-
-These will need a proper formal explanation in DT bindings at:
-
-	Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-
-to highlight the usage of "#pinctrl-cells" and whatever else is needed
-to be documented with related links to existing reused bindings is any.
-(and CC that patch to the proper DT maintainers and MLs... IOW look at
-what get_maintanel.pl says)
-
-> &pfc {
-> 	/delete-node/i2c2;
-> };
-> 
-> So basically, it's enough to move pfc subnode, which configures pin group that should work through
-> SCMI protocol to scmi_pinctrl node. The current driver implementation is using generic pinctrl dt_node
-> format.
-> 
-> I've tested this driver on the Renesas H3ULCB Kingfisher board with pinctrl driver ported to the
-> Arm-trusted-firmware. Unfortunately, not all hardware was possible to test because the Renesas
-> pinctrl driver has gaps in pins and groups numeration, when Spec [0] requires pins, groups and
-> functions numerations to be 0..n without gaps.
-> 
-> This implementation still reqires some features, such as gpio support, but I've posted it as RFC to
-> start the discussion regarding the driver format.
-> 
-> [0] https://developer.arm.com/documentation/den0056/latest
-> 
-
-Thanks for this,
-Cristian
