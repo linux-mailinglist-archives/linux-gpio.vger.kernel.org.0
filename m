@@ -2,99 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D5666E0B03
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 12:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DE6D6E1196
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 18:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjDMKHA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Apr 2023 06:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55426 "EHLO
+        id S229749AbjDMQA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Apr 2023 12:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjDMKG6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 06:06:58 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3131C7285;
-        Thu, 13 Apr 2023 03:06:54 -0700 (PDT)
-Received: (Authenticated sender: kamel.bouhara@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 2955EE000B;
-        Thu, 13 Apr 2023 10:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1681380413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=st4qOHiye8rh9wqwQDVyg+uFBmH5X7ITDgsye87N3g4=;
-        b=Qb00LY/g3Bucveqz/5gM1XOjLEV9wlcJTs/BegrboLcmNrmf+/QW5X+4ugFFt/cQjkGowt
-        wHxIZiFqH9CDYX/Cm3/Oqz4Vqhb4aZWAC60b18nKtAo8W4EX+sbSsRMfa6CWkWnGEYR8a2
-        Oe1/iwkudW/uIQPRdaIJrnX97MTXTPJUQ/8JjvM0+sn9dQP50tPLhr3uHz0aDytteV8su1
-        mOHOVoNXyKfjPgx52zmz8W9aKk0tSbHKYBApGORN8br3zrK3S3Y4BqtJFTGnDa/ilIskIP
-        ZD+HQXZQL+8GH84PuX2ouC3lPjxaSN4/8GL3wv2snqBy3uo8PhHMNaakK/wJEQ==
-Date:   Thu, 13 Apr 2023 12:06:50 +0200
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        metux IT consult <lkml@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH] gpio: aggregator: Add interrupt support
-Message-ID: <20230413100650.GC16381@kb-xps>
-References: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
- <58f91e983ac95b7f252606ecac12f016@bootlin.com>
- <CAMuHMdVqyY=tg6iU4feRwQhPt9c7ZZK9ifBCYf5AAgkxWjYOBA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        with ESMTP id S230003AbjDMQAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 12:00:52 -0400
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01hn2241.outbound.protection.outlook.com [52.100.7.241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 320598A53;
+        Thu, 13 Apr 2023 09:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1o6eO9AyHpg8fLI7uLH1x0GDM3hiqBLmkTNaR9raDnY=;
+ b=JOgnrEGGKhVDIccDedewCr/k/hKI28UjeJR/g0PPcLgrMLaQMrOiLrD/ahxdt80s6NVJT8SGnYtY8eoNuK9621VfVgfSHsthTQuiooyChZUpm0uY9SG2d7ONio13GKxWLrUNv9D4fMx9hHV/JM+cZULUZ5dZBmjH8/7RxoB3rGPZreWuHSJwdoE4gwwfhvT+QxFWGKejykmxf0XK6i8T9UPhRA/eGfjW+aH83o+RRqLihQX9HlLlbBV5/WJqmLR7FCYsQlrPPXo3GevwgyS8GnWSRgJqyfx58Pqfgd7G1DtlzBnxffBbE5ly2EG4PlyIDis5pctTwYCnKPDW3jRtZA==
+Received: from DB8PR09CA0001.eurprd09.prod.outlook.com (2603:10a6:10:a0::14)
+ by DB9PR03MB7690.eurprd03.prod.outlook.com (2603:10a6:10:2c6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Thu, 13 Apr
+ 2023 16:00:42 +0000
+Received: from DB8EUR05FT067.eop-eur05.prod.protection.outlook.com
+ (2603:10a6:10:a0:cafe::8d) by DB8PR09CA0001.outlook.office365.com
+ (2603:10a6:10:a0::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.32 via Frontend
+ Transport; Thu, 13 Apr 2023 16:00:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.80)
+ smtp.mailfrom=seco.com; dkim=pass (signature was verified)
+ header.d=seco.com;dmarc=pass action=none header.from=seco.com;
+Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
+ 20.160.56.80 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.160.56.80; helo=inpost-eu.tmcas.trendmicro.com; pr=C
+Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.80) by
+ DB8EUR05FT067.mail.protection.outlook.com (10.233.238.176) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6298.32 via Frontend Transport; Thu, 13 Apr 2023 16:00:41 +0000
+Received: from outmta (unknown [192.168.82.135])
+        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id AA0B02008026F;
+        Thu, 13 Apr 2023 16:00:41 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (unknown [104.47.17.176])
+        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 594EC2008006F;
+        Thu, 13 Apr 2023 16:01:44 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OIHNbHpovov/YUWy/0nNmWupseieanfZDRA4pvQVckhfE1YrXgMWTysRwGG627EREYgGJLgNiOq55jK2zl2e0ENA30AD6VkNI54EDqkbySxPo1wAV74HjLP32t9RdifdqoctHLa51CzIlxoGpk1gMvU+izQszsXA0VuW0Z3uYrh3Axy7wQsFXxeO8pyt3QPrpI+VtZaWKDK1H+EaCYe2KretxtCMvwNo9Zam+b48OwNoHEEBRrroYYIydnW73ZxcqojhP5pHcJE3IWJP2vFrWcWquRx16+QiHcce61jliBcmTaSnGOivlXwnuSLqfHESubsVR0pe3iXNHGUiPUba1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1o6eO9AyHpg8fLI7uLH1x0GDM3hiqBLmkTNaR9raDnY=;
+ b=crbWJOH4R8VfO1KWrcEGsgB+869ZKgvQBc5XPgMlvyCBME6Q/KECn+jbkgm++e3xtraOtxdG5wYDlxETwysaQ89tGGrEa3Oy9HHzOPeFrComvZOUDSPHl8AAs6RVizDTmvUF5KbGtnV6Y+cWX/dFA2BopUyUM67rf8sAo7PFpvhFYseC6C2i8HFpEg8OTO2WAP3Un/21vLWOct70vUZHADwQbxZ7sXCVnNLeo7PaR469amSH2aRtcEHYRdr01Yl+GIx31wE6ZwepwGCj1jekpQbOM1KuFVZ/i27mVgrAWp86qD/x0rmRNzhUTr+k17O9RmnYAjhhNhSJGZPZFpT0hQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1o6eO9AyHpg8fLI7uLH1x0GDM3hiqBLmkTNaR9raDnY=;
+ b=JOgnrEGGKhVDIccDedewCr/k/hKI28UjeJR/g0PPcLgrMLaQMrOiLrD/ahxdt80s6NVJT8SGnYtY8eoNuK9621VfVgfSHsthTQuiooyChZUpm0uY9SG2d7ONio13GKxWLrUNv9D4fMx9hHV/JM+cZULUZ5dZBmjH8/7RxoB3rGPZreWuHSJwdoE4gwwfhvT+QxFWGKejykmxf0XK6i8T9UPhRA/eGfjW+aH83o+RRqLihQX9HlLlbBV5/WJqmLR7FCYsQlrPPXo3GevwgyS8GnWSRgJqyfx58Pqfgd7G1DtlzBnxffBbE5ly2EG4PlyIDis5pctTwYCnKPDW3jRtZA==
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
+ by AS8PR03MB9557.eurprd03.prod.outlook.com (2603:10a6:20b:5a5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.28; Thu, 13 Apr
+ 2023 16:00:34 +0000
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::2226:eb03:a8c:a7e5]) by DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::2226:eb03:a8c:a7e5%2]) with mapi id 15.20.6298.030; Thu, 13 Apr 2023
+ 16:00:34 +0000
+Message-ID: <ca621582-a0c8-ac43-3260-9ebd5178019e@seco.com>
+Date:   Thu, 13 Apr 2023 12:00:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v13 03/15] dt-bindings: Convert gpio-mmio to yaml
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org
+Cc:     Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?Q?Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        linux-gpio@vger.kernel.org
+References: <20230411184313.3679145-1-sean.anderson@seco.com>
+ <20230411184313.3679145-4-sean.anderson@seco.com>
+ <848f5e3e-44ca-3648-2d6b-7e06ce7b5cda@linaro.org>
+From:   Sean Anderson <sean.anderson@seco.com>
+In-Reply-To: <848f5e3e-44ca-3648-2d6b-7e06ce7b5cda@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVqyY=tg6iU4feRwQhPt9c7ZZK9ifBCYf5AAgkxWjYOBA@mail.gmail.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: BL0PR0102CA0057.prod.exchangelabs.com
+ (2603:10b6:208:25::34) To DB9PR03MB8847.eurprd03.prod.outlook.com
+ (2603:10a6:10:3dd::13)
+MIME-Version: 1.0
+X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AS8PR03MB9557:EE_|DB8EUR05FT067:EE_|DB9PR03MB7690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 941c2db7-dc38-41b1-c9cc-08db3c383baf
+X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Wn2mHHyAZjf4pQ3FgrzibXODc61lYLNPWDB8IuAUGMc1PyMccYAal2/xdhnZVsXLk4GjnMsPlDqfJfx6xJ8ozlhU2vvnK985ahHjcNuulqAMQEdKxq9I+0n3yyezjHXk3wmgR2kkuzfPibyflFbdEVJQywbr5Q9a3WbQcoHhrbkSFMlW7B/gJ1G4zHZUXUzsNbI6Iz96foCcRumbJTielQ0nU68Tah7JEMGL8vWgFiM+zkPaUpgF0zqno6L8LlKe9cjDhVK/kwqHnwJbJ71tIlAGAcU+MQKXDvrMhTbE67KvKgc3l/R7zEcf3qgyNgHtpMagW4bITkLlr/t7j/ZcBTh/ojuTLONpZDNeF+c8li/EMm/5fMcG4yt0u5d0Hcxc0Yu3PG6Pg3dj5Nj+16cAilk5bFxITr0I9ewi64UumJc88w+H36/Cd/PVGYzyWBmD3/5U4Ld6CccRVHtM8ToymcthQalcrIKGubyKb+Bh2i1ZrkucSO1Ff468VPewzL7+nyxLX82jnrsGJVMHFJrV0Nlyx2Jt148EbIZ3GO4CEfmiwVKH4wUrZ0HUaYBWad4t9uJrKWIse6zcHfJ8/NonyHOQgxrdpBzA0uElZd+65ZLxO38as0nmXVi6gvDfg2h6A77Im4/VM/e33O1tUrpd04RjD0FvdNszy7UQ/6GCf9yhCHfh95WAnlzF5bt980B7
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(39850400004)(376002)(346002)(366004)(451199021)(54906003)(110136005)(316002)(6512007)(6666004)(6506007)(26005)(53546011)(478600001)(31686004)(41300700001)(83380400001)(2616005)(6486002)(186003)(66946007)(52116002)(66476007)(66556008)(4326008)(5660300002)(44832011)(7416002)(8936002)(38350700002)(8676002)(38100700002)(2906002)(86362001)(31696002)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB9557
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB8EUR05FT067.eop-eur05.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1a7325ab-637e-4191-8030-08db3c3836ca
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0OF+U3ETzGITsUJgQG1Htw2ktz/GMPCK7OzqJejkOTUsSxbPOpZmxCZc04Xs0s1+n9JtXXIltZT660hubn1kp4E9wh5cBtsGSTFtP0QP0RPGIIeGk9IMysPQ+5CDG3LH14IDfOt3A2Tg0fIrBPiTnRYBWKsvLvkSWLONg9C//k/32WwbRo8XUdwr89v1UtkfoRYFzpbS8B9Ar7Cm2vGdM0Cr6fp01hxCHjRSwSugDtDgilHLmWSLIKyXUWk4NEDq2p1afaXIhddL1tqES3jn8ufS32PA91jpMi1LzhYwZ/CcWzB+YTrxEjw02ZhCj0x5MhFzE8b7kbxI/Gx1fVk+xygoZmN0su+JcxQl9QrzeVl1KTYQf3+6cmbvmeWUCJJ2Ie2hohDSs2vgnoODloTaK6TPEkXzuVb/C1qDvI0sHfd4Pwu9jevLK2ln8rCTDrWMn3veJH+1MAzD5dmsEQ+mxHNSzRTBUI8VGQRnSIJTgJmomZGW36inlOyGjHDpsGuRxxg/sOowJqWaADQtI07RqI3W2AlZWUr6zXSRkp3chronsP8QGC3Tqj8MQE4aM1e9ULEvAY9MmUNHSSdc9x1D/dJ/noowFP+Y33lrfiRRCxVxNHHkuQZRRVxeoWvxlOriccRntuQNNUM3T+Vy8hBejPeBr33qAn+ZImVk82rQ4yKTTonMLuYAI9bLOkXj0yC1fU8JOQDCjAwmsihUiLhCqpW5JhMVEhjUwRSdvbNJzmNxd+o/Ky333LVnvLV7jLevo+hcIIpVc+Py0PbDACxxV7wj812LWBau2EemocjB3t4=
+X-Forefront-Antispam-Report: CIP:20.160.56.80;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230028)(376002)(136003)(39850400004)(346002)(396003)(5400799015)(451199021)(46966006)(36840700001)(40470700004)(86362001)(54906003)(44832011)(110136005)(7416002)(40460700003)(34070700002)(7596003)(478600001)(7636003)(356005)(316002)(41300700001)(82740400003)(8676002)(8936002)(5660300002)(70206006)(40480700001)(70586007)(31696002)(53546011)(6512007)(6506007)(36756003)(26005)(336012)(31686004)(186003)(36860700001)(4326008)(6666004)(83380400001)(2906002)(2616005)(6486002)(82310400005)(47076005)(43740500002)(12100799027);DIR:OUT;SFP:1501;
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2023 16:00:41.9331
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 941c2db7-dc38-41b1-c9cc-08db3c383baf
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.80];Helo=[inpost-eu.tmcas.trendmicro.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB8EUR05FT067.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR03MB7690
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le Thu, Apr 13, 2023 at 10:54:34AM +0200, Geert Uytterhoeven a écrit :
-> Hi Kamel,
->
+On 4/12/23 04:04, Krzysztof Kozlowski wrote:
+> On 11/04/2023 20:43, Sean Anderson wrote:
+>> This is a generic binding for simple MMIO GPIO controllers. Although we
+>> have a single driver for these controllers, they were previously spread
+>> over several files. Consolidate them. The register descriptions are
+>> adapted from the comments in the source. There is no set order for the
+>> registers, and some registers may be omitted. Because of this, reg-names
+>> is mandatory, and no order is specified.
+>> 
+>> Rename brcm,bcm6345-gpio to brcm,bcm63xx-gpio to reflect that bcm6345
+>> has moved.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@seco.com>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> Linus or Bartosz, feel free to pick this up as the rest of this series
+>> may not be merged any time soon.
+>> 
+>> Changes in v13:
+>> - Fix references to brcm,bcm63xx-gpio.yaml (neé brcm,bcm6345-gpio)
+> 
+> You got some of the same errors as last time.
 
-Hello Geert,
+These are different errors.
 
-> On Thu, Apr 13, 2023 at 9:48 AM <kamel.bouhara@bootlin.com> wrote:
-> > Le 2021-10-04 14:44, Geert Uytterhoeven a écrit :
-> > What is the status for this patch, is there any remaining
-> > changes to be made ?
->
-> You mean commit a00128dfc8fc0cc8 ("gpio: aggregator: Add interrupt
-> support") in v5.17?
->
+> Test your patches before sending.
 
-Sorry, I was checking on a v5.15 :) and based on the thread, I tough it
-was still not applied !
+I typically run dt_bindings_check with DT_SCHEMA_FILES=... because
+running the whole thing takes longer than compiling a kernel from
+scratch. It seems I neglected to run it on the affected schemas.
 
-Thanks.
-
-Cheers,
-
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+--Sean
