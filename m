@@ -2,64 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67C996E15A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 22:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58B216E173D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 00:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbjDMUKN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Apr 2023 16:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        id S229749AbjDMWUY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Apr 2023 18:20:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbjDMUKM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 16:10:12 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA2408A7A
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 13:10:10 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id n203so4957583ybg.6
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 13:10:10 -0700 (PDT)
+        with ESMTP id S229612AbjDMWUX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 18:20:23 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B3065BC
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 15:20:21 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id j17so31419267ejs.5
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 15:20:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681416610; x=1684008610;
+        d=linux-foundation.org; s=google; t=1681424419; x=1684016419;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EkC2Mphr7WSKoRI817+8hoMUL0XXQwcfaALAhlpY5E0=;
-        b=y79qfZ7OAUGX+b2vNSwSgw4yfmShhsMLB471IQMXZkC/nWb2Dmu+TmE263zS/WnBX9
-         o4iO1S1+theTZzFh/oeiXtTBKo2V+bx/Y8R6fxOOjyySOrBEQ3CCWtkBB4w+D7rJ0fgw
-         +6WPLJSFobc/KKzUTJYiEhSOJFQKf8acTCm4vPDNjaoWYq5RIsVLLOw4q+2FImLGPJFv
-         8RzShu8n6Vmg4PZpBzQkLN6PBZqgc/cGAM+KBeumdMFft+C8VCjMI7dCJYbcUceY/hoS
-         +XeLYJS7iNCmWOmPE3kC3v8Ez8DUyy+QRMvMTe8FiBPrvRfMQu5pm98+qI6/eKFfpRmS
-         0csA==
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QXzUcxPP626cgc8CdfapvJZ46tgsC0UFbGeqvzuoYnU=;
+        b=L+kmTBG6Ktzt2fMXak5DKnXkUk4b/fuoUwKatOd0CGhdkI5rJMYFQkItVv+QO7WD3/
+         lIEZLMXxIr8qcpf7usgaN9uXi7R5VJW2qW1ZDwt2xIv0aEClUscfrb/WbpQZC2v90EPI
+         AE4UOhJb7UHfgjWEkxDP02QcthcuI/rNwgRCw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681416610; x=1684008610;
+        d=1e100.net; s=20221208; t=1681424419; x=1684016419;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EkC2Mphr7WSKoRI817+8hoMUL0XXQwcfaALAhlpY5E0=;
-        b=DFjf5oK8QRQLAIfkBt7tLwVK676f0lvc42HkqSB883z/+yklQHZNvHYO2Zlr5DxtmV
-         jUAE6vYFr+xYHcVEP0nsBKpCo6vA6gqVr4I0SAioxZ6VYiINq6E5CUgh5l+ImcK7Gu2G
-         45wQwtFVr+7SuDTAQSqYN6tKdTfk2XDEvtNqENKhLgrwmFiO7Bbl0qzYrUbjeArh/+DT
-         r0IAjf2J0nZOP7rdAzW6f9ipFavA/uRpNwysOXSTH+qyc0CIhvsRliMmdw8dp1oD7Adg
-         p6kt0gGG8+/wD35kUsCVt6Orb5zVyKI+KUwjERlS8qAhDqf93FHIo/9ERYlkdXs867h1
-         wzHg==
-X-Gm-Message-State: AAQBX9dCt0pPOICsQI4cFUC5J7LZGymlFqeMMzH+QVxE+nd6n+zSlpJr
-        jJhdtVbHo84AHQg60ymNQZl9yjBBGDKgY+BWFort3g==
-X-Google-Smtp-Source: AKy350b25b/Uqh3DLW/iycwdW+5m41ABVoTqYSS/5BDpv+5p1Yz9XfE9Itgw6Wjl/nG2dU2Xz+hUZDlsDykUJ6X1FgE=
-X-Received: by 2002:a25:76c4:0:b0:b75:8ac3:d5d2 with SMTP id
- r187-20020a2576c4000000b00b758ac3d5d2mr2324207ybc.4.1681416610066; Thu, 13
- Apr 2023 13:10:10 -0700 (PDT)
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QXzUcxPP626cgc8CdfapvJZ46tgsC0UFbGeqvzuoYnU=;
+        b=PtWFjPzK1K0uMg96I9rRfvk2iBGDd6GOoIWdrrXKsFrjTqeQ2yp1gmkBImDmCkNjf4
+         zNvuIo37UVb4oZAsLODVLs8Ay1urKI4sXjTkSpPssKy24IdqKfwwXNmnuUvIGghjj9Ic
+         jLHCZJGuDzzpijTAAiwnWQVyuMxsaeW9RaRdtAII+lKJ2ocAeACQgJNNERMhnrddkmAo
+         V/JBAePq9SXDx/9ujLzqMkplsb14WPZ0aoexB0+yFov6w/m9cJzoKfeCzYd8uwE5cNBt
+         ClF2by74iCyXdG/ab8EfVb+bkDPHoM2Y6bgvw6Shwgw1LyF97NAcTuBkgqz5fjAx8Be3
+         1RHA==
+X-Gm-Message-State: AAQBX9cPikxDo+6fh5s9cFkQqAobsMeBKFFEKZr9mXRv6Lizqsg1knqn
+        uBxw2s0UVuU83WdF8HMn6nCqUCN1uEmv/XTf+VmE3g==
+X-Google-Smtp-Source: AKy350ahBuL6uay/TjqqaH7pAQj5TLeeMhQEYkczSTbIpiBY0H+UcTHO+kRkvTEzb2KwNtd2lj/Kng==
+X-Received: by 2002:a17:906:a1d8:b0:92f:33ca:c9a3 with SMTP id bx24-20020a170906a1d800b0092f33cac9a3mr4323133ejb.71.1681424419687;
+        Thu, 13 Apr 2023 15:20:19 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id b11-20020a17090636cb00b00930aa50372csm1550621ejc.43.2023.04.13.15.20.17
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Apr 2023 15:20:17 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5027e589e20so6828855a12.3
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 15:20:17 -0700 (PDT)
+X-Received: by 2002:a50:9e85:0:b0:505:50a:a4d0 with SMTP id
+ a5-20020a509e85000000b00505050aa4d0mr2029706edf.2.1681424417227; Thu, 13 Apr
+ 2023 15:20:17 -0700 (PDT)
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 13 Apr 2023 22:09:58 +0200
-Message-ID: <CACRpkdZsoGihp-cVVKTMPFBPBj_7_ScaYJZFU6jZNugucyx3qg@mail.gmail.com>
-Subject: [GIT PULL] Pin control fix for AMD laptops
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+References: <CACRpkdZsoGihp-cVVKTMPFBPBj_7_ScaYJZFU6jZNugucyx3qg@mail.gmail.com>
+In-Reply-To: <CACRpkdZsoGihp-cVVKTMPFBPBj_7_ScaYJZFU6jZNugucyx3qg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 13 Apr 2023 15:20:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wioXgXLB1XcxU_f_kmVwfDd+EoOX7KLtJh7fnPMZx4RBA@mail.gmail.com>
+Message-ID: <CAHk-=wioXgXLB1XcxU_f_kmVwfDd+EoOX7KLtJh7fnPMZx4RBA@mail.gmail.com>
+Subject: Re: [GIT PULL] Pin control fix for AMD laptops
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,36 +77,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Apr 13, 2023 at 1:10=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> This is just a revert of the AMD fix, because the fix fixed
+> broken some laptops. We are working on a proper solution.
 
-please pull the following single fix which is a revert of a previous
-fix that has issues.
+ENOPARSE. "the fix fixed broken"
 
-Yours,
-Linus Walleij
+I tried to fix fixed broken it up.
 
-The following changes since commit 7e364e56293bb98cae1b55fd835f5991c4e96e7d=
-:
-
-  Linux 6.3-rc5 (2023-04-02 14:29:29 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.3-3
-
-for you to fetch changes up to 534e465845ebfb4a97eb5459d3931a0b35e3b9a5:
-
-  Revert "pinctrl: amd: Disable and mask interrupts on resume"
-(2023-04-11 22:45:42 +0200)
-
-----------------------------------------------------------------
-This is just a revert of the AMD fix, because the fix fixed
-broken some laptops. We are working on a proper solution.
-
-----------------------------------------------------------------
-Kornel Dul=C4=99ba (1):
-      Revert "pinctrl: amd: Disable and mask interrupts on resume"
-
- drivers/pinctrl/pinctrl-amd.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
+             Linus
