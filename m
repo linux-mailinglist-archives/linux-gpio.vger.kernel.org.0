@@ -2,114 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF1106E1244
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 18:28:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C996E15A7
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 22:10:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbjDMQ2j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Apr 2023 12:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
+        id S229493AbjDMUKN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Apr 2023 16:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbjDMQ2j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 12:28:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963A193CA;
-        Thu, 13 Apr 2023 09:28:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 32446611B8;
-        Thu, 13 Apr 2023 16:28:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2110DC433EF;
-        Thu, 13 Apr 2023 16:28:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681403316;
-        bh=vA2rZqb3GSus8sF2oE1urSUYmfiV7TnsgeUY7yqFW1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wvo4TB313FF7e/8W9ivt2fumQnT2x5NF+qMIQntPpWpmukDIFJGOlPX7N/aY/KgQF
-         UzwHti7beKLjmE33QFZdCBtrgLA9nW4Npb58P/zYHH7vikfkMC6J4pE8aDEWYbs7kO
-         3tFNf9T19QepQlVLZ+QT7RD4N1lBsQGzsSC6Pe06aTBfO/4JAg8brX52A0vDBe++u1
-         2JuFr9YuVOCBO5FzNyhVd4VR05g73ajDn/66y9YyC0qCOQK/sho5GZvsSqbTtp20Gc
-         C0eXDbfHnutTyOMSUgwp1TZ7ABfTiM6E7+vdPgrVALgfhdrGTdUZwsDBgk/tCeTZyP
-         xMRy/tJlpYZMw==
-Date:   Thu, 13 Apr 2023 18:28:31 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v2 2/6] net: txgbe: Implement I2C bus master
- driver
-Message-ID: <ZDgtryRooJdVHCzH@sai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-References: <20230411092725.104992-1-jiawenwu@trustnetic.com>
- <20230411092725.104992-3-jiawenwu@trustnetic.com>
- <00cf01d96c58$8d3e9130$a7bbb390$@trustnetic.com>
- <09dc3146-a1c6-e1a3-c8bd-e9fe547f9b99@linux.intel.com>
+        with ESMTP id S229667AbjDMUKM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 16:10:12 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA2408A7A
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 13:10:10 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id n203so4957583ybg.6
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Apr 2023 13:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681416610; x=1684008610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EkC2Mphr7WSKoRI817+8hoMUL0XXQwcfaALAhlpY5E0=;
+        b=y79qfZ7OAUGX+b2vNSwSgw4yfmShhsMLB471IQMXZkC/nWb2Dmu+TmE263zS/WnBX9
+         o4iO1S1+theTZzFh/oeiXtTBKo2V+bx/Y8R6fxOOjyySOrBEQ3CCWtkBB4w+D7rJ0fgw
+         +6WPLJSFobc/KKzUTJYiEhSOJFQKf8acTCm4vPDNjaoWYq5RIsVLLOw4q+2FImLGPJFv
+         8RzShu8n6Vmg4PZpBzQkLN6PBZqgc/cGAM+KBeumdMFft+C8VCjMI7dCJYbcUceY/hoS
+         +XeLYJS7iNCmWOmPE3kC3v8Ez8DUyy+QRMvMTe8FiBPrvRfMQu5pm98+qI6/eKFfpRmS
+         0csA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681416610; x=1684008610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EkC2Mphr7WSKoRI817+8hoMUL0XXQwcfaALAhlpY5E0=;
+        b=DFjf5oK8QRQLAIfkBt7tLwVK676f0lvc42HkqSB883z/+yklQHZNvHYO2Zlr5DxtmV
+         jUAE6vYFr+xYHcVEP0nsBKpCo6vA6gqVr4I0SAioxZ6VYiINq6E5CUgh5l+ImcK7Gu2G
+         45wQwtFVr+7SuDTAQSqYN6tKdTfk2XDEvtNqENKhLgrwmFiO7Bbl0qzYrUbjeArh/+DT
+         r0IAjf2J0nZOP7rdAzW6f9ipFavA/uRpNwysOXSTH+qyc0CIhvsRliMmdw8dp1oD7Adg
+         p6kt0gGG8+/wD35kUsCVt6Orb5zVyKI+KUwjERlS8qAhDqf93FHIo/9ERYlkdXs867h1
+         wzHg==
+X-Gm-Message-State: AAQBX9dCt0pPOICsQI4cFUC5J7LZGymlFqeMMzH+QVxE+nd6n+zSlpJr
+        jJhdtVbHo84AHQg60ymNQZl9yjBBGDKgY+BWFort3g==
+X-Google-Smtp-Source: AKy350b25b/Uqh3DLW/iycwdW+5m41ABVoTqYSS/5BDpv+5p1Yz9XfE9Itgw6Wjl/nG2dU2Xz+hUZDlsDykUJ6X1FgE=
+X-Received: by 2002:a25:76c4:0:b0:b75:8ac3:d5d2 with SMTP id
+ r187-20020a2576c4000000b00b758ac3d5d2mr2324207ybc.4.1681416610066; Thu, 13
+ Apr 2023 13:10:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gJ62P6exb1TR2UkD"
-Content-Disposition: inline
-In-Reply-To: <09dc3146-a1c6-e1a3-c8bd-e9fe547f9b99@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 13 Apr 2023 22:09:58 +0200
+Message-ID: <CACRpkdZsoGihp-cVVKTMPFBPBj_7_ScaYJZFU6jZNugucyx3qg@mail.gmail.com>
+Subject: [GIT PULL] Pin control fix for AMD laptops
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus,
 
---gJ62P6exb1TR2UkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+please pull the following single fix which is a revert of a previous
+fix that has issues.
 
+Yours,
+Linus Walleij
 
-> > > Implement I2C bus driver to send and receive I2C messages.
-> > >=20
-> > > This I2C license the IP of Synopsys Designware, but without interrupt
-> > > support on the hardware design. It seems that polling mode needs to be
-> > > added in Synopsys Designware I2C driver. But currently it can only be
-> > > driven by this I2C bus master driver.
-> > >=20
-> > > Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
-> > > ---
-> > >   drivers/net/ethernet/wangxun/Kconfig          |   1 +
-> > >   .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 153
-> > > ++++++++++++++++++
-> > >   .../net/ethernet/wangxun/txgbe/txgbe_type.h   |  23 +++
-> > >   3 files changed, 177 insertions(+)
-> > >=20
-> Looks like your use case has similarities with the commit 17631e8ca2d3
-> ("i2c: designware: Add driver support for AMD NAVI GPU").
+The following changes since commit 7e364e56293bb98cae1b55fd835f5991c4e96e7d=
+:
 
-Yes, can you please check if you can't use the current i2c designware
-driver?
+  Linux 6.3-rc5 (2023-04-02 14:29:29 -0700)
 
+are available in the Git repository at:
 
---gJ62P6exb1TR2UkD
-Content-Type: application/pgp-signature; name="signature.asc"
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.3-3
 
------BEGIN PGP SIGNATURE-----
+for you to fetch changes up to 534e465845ebfb4a97eb5459d3931a0b35e3b9a5:
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmQ4LawACgkQFA3kzBSg
-Kbb13A//YPHiYvwN8Wo09sYS3KY1NiB4EUW3xYRdhDI3BAfuGUyTgzYeNnEOqGGM
-rmbe/TydPie+579ihWsiNO151jzFbYkRX2rjqXmp5PZCCo4hzUyT0qSLtxzLIl2e
-9tsSx4mg90DO5Zz3AkEt4uYmTLE2ClICPaZgbjCRDoKtuz2SqWhbu2X859AX4YAJ
-POt2Yft7Gt0SedIUexnfsLvbdlbAbk0YxQwq3ybAwiljKPZxuzoLTFc+1x6jFpnk
-EqdmzoGklm1omUYL1PLz36dFLMBcWIhYVfJIS9WAfKwVbsBTJP7YNKE5PJ6+MGMu
-r4Vi8s2Cj/CcNW/HaoDbeojBI54By8W/bSO20udNx89CvpOvsxt79me/J3E/4Hq4
-iWAcxCsAcN+kcd5OS1kE3fNSQIah4wQuttV7gay+wWU+7wKKaw6pj1Xs+nKlpJZG
-fUhoQJNsH7zrX9IPxhGQJQwxHFo6JMdDyQ9jolfvyD1KCOo1L88TO24uiDOROBpS
-qcuKKpndLR9XPAO249gUN2k63nlKx8AKwspJ3UuSI3KwY2g6t9/ppgMx2qNgD853
-w0FiMKVpRmCDlEY49aOANceF60nLX/MbeL9t5lnpm6nhb8h0+jiOfUxT0xCBvpV1
-ik+5o431LxgousoN7ssylXZz/QwPm7TRLjo6M4VgBqWlve1u7jU=
-=iVCY
------END PGP SIGNATURE-----
+  Revert "pinctrl: amd: Disable and mask interrupts on resume"
+(2023-04-11 22:45:42 +0200)
 
---gJ62P6exb1TR2UkD--
+----------------------------------------------------------------
+This is just a revert of the AMD fix, because the fix fixed
+broken some laptops. We are working on a proper solution.
+
+----------------------------------------------------------------
+Kornel Dul=C4=99ba (1):
+      Revert "pinctrl: amd: Disable and mask interrupts on resume"
+
+ drivers/pinctrl/pinctrl-amd.c | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
