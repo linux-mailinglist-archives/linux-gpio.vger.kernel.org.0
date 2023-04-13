@@ -2,37 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 942086E082E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 09:49:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 578A36E097A
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Apr 2023 10:57:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbjDMHtR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Apr 2023 03:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60964 "EHLO
+        id S230286AbjDMI5M convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 13 Apr 2023 04:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbjDMHtG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 03:49:06 -0400
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DE78681;
-        Thu, 13 Apr 2023 00:48:43 -0700 (PDT)
-Received: (Authenticated sender: kamel.bouhara@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id AE60524000B;
-        Thu, 13 Apr 2023 07:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1681372108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LG1yvbZ/8Ykm65T3A7p+0iJ7bw5PRw9QVbZEYZc/EXQ=;
-        b=Kogai0N/yCTSPArbOnvsxufaMcuZAOB27I9JvCpiq1PkCkzAE5EtEL5fdkxvevopLbAMg6
-        PqcI3u/1VgRh+cWCJDUzMcHJT+1IJkDDWTI9bEv1dDVlxnNKGWmbYpZcI9+EIFjRngAMs/
-        VbbzGMSc34QXaAdazdNWbE8ogQKpS7PHiZ/Up2ie3RuCtftO13bCrXABp9WMdqIMjmQlyx
-        PnvIhevU3Dc1QCZVTOENGT6SfjGLSFcAgYaPRkotdvC568nWmcCDvcCqu+goW7w1waU6JE
-        36jTEN3Djk9L2Q4bCevsziT6q+Kc0UUnP7POHvqihv7fIp0HGGdWP+C3O3QP9A==
+        with ESMTP id S230032AbjDMI4k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Apr 2023 04:56:40 -0400
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5882BAD32;
+        Thu, 13 Apr 2023 01:55:11 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-54fb615ac3dso56381957b3.2;
+        Thu, 13 Apr 2023 01:55:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681376089; x=1683968089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P/2r5n3qVynI/hX8mONBVdeZonUO/+YUa7xUJZQBOn8=;
+        b=Eciy9S2H2pgGN47zJLfNfpFr61Mz7oVpOsd3/sGadhBrRIZfWaVWLH6RMK3CwCAxxm
+         xHjcyS0Yql4htyfw+GT3YBzY3U3UfzlEQg5wfrrVcihC6VsMEFSbtmiXWWZn4mcpCWPo
+         wzRdivTGGho9wpVKFXggwarbKfyOBNiLnSHxcBlulEYB8k+tKqDbadMa35PrI6/zHwbn
+         bqt2t1U7Y/shL4fkF6JQOkAz6YvlZR4GyktV2ixyMnoqcB4dPQkhiSiJHypzfLQUxyCG
+         cZtKs+djrXZaDPYJywbPZMamWAnbGFf36R0MSPUL28VmeFEFI/z7nsT9dR6N1UILqpa0
+         vrlw==
+X-Gm-Message-State: AAQBX9dz6Dc5vs0pze5rNv2rsZEkGL8+KkCsUFg19wlLkhPwZ/e7+z80
+        9hyevCtlnmGHD9slsigLTiG/Hq5cYAJC8hzK
+X-Google-Smtp-Source: AKy350ZcNqUumZkXFoyFiTc4zOBGrDgH7ifCk2ByIsB57ZcdO6Os/NZaTfFej6Sr5XtE+wc63XTvlA==
+X-Received: by 2002:a81:5ac1:0:b0:54f:d816:8963 with SMTP id o184-20020a815ac1000000b0054fd8168963mr78192ywb.19.1681376089225;
+        Thu, 13 Apr 2023 01:54:49 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id 10-20020a81010a000000b0054662f7b42dsm315253ywb.63.2023.04.13.01.54.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Apr 2023 01:54:47 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id j10so4379312ybj.1;
+        Thu, 13 Apr 2023 01:54:47 -0700 (PDT)
+X-Received: by 2002:a25:d057:0:b0:b8f:5c64:cc2e with SMTP id
+ h84-20020a25d057000000b00b8f5c64cc2emr459363ybg.12.1681376087527; Thu, 13 Apr
+ 2023 01:54:47 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Thu, 13 Apr 2023 09:48:26 +0200
-From:   kamel.bouhara@bootlin.com
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+References: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
+ <58f91e983ac95b7f252606ecac12f016@bootlin.com>
+In-Reply-To: <58f91e983ac95b7f252606ecac12f016@bootlin.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Apr 2023 10:54:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVqyY=tg6iU4feRwQhPt9c7ZZK9ifBCYf5AAgkxWjYOBA@mail.gmail.com>
+Message-ID: <CAMuHMdVqyY=tg6iU4feRwQhPt9c7ZZK9ifBCYf5AAgkxWjYOBA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aggregator: Add interrupt support
+To:     kamel.bouhara@bootlin.com
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
@@ -42,17 +61,11 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         virtualization@lists.linux-foundation.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH] gpio: aggregator: Add interrupt support
-In-Reply-To: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
-References: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
-Message-ID: <58f91e983ac95b7f252606ecac12f016@bootlin.com>
-X-Sender: kamel.bouhara@bootlin.com
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,108 +73,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le 2021-10-04 14:44, Geert Uytterhoeven a écrit :
+Hi Kamel,
 
-Hello,
+On Thu, Apr 13, 2023 at 9:48 AM <kamel.bouhara@bootlin.com> wrote:
+> Le 2021-10-04 14:44, Geert Uytterhoeven a écrit :
+> What is the status for this patch, is there any remaining
+> changes to be made ?
 
-What is the status for this patch, is there any remaining
-changes to be made ?
+You mean commit a00128dfc8fc0cc8 ("gpio: aggregator: Add interrupt
+support") in v5.17?
 
-Kind regards,
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Gr{oetje,eeting}s,
 
-> Currently the GPIO Aggregator does not support interrupts.  This means
-> that kernel drivers going from a GPIO to an IRQ using gpiod_to_irq(),
-> and userspace applications using line events do not work.
-> 
-> Add interrupt support by providing a gpio_chip.to_irq() callback, which
-> just calls into the parent GPIO controller.
-> 
-> Note that this does not implement full interrupt controller (irq_chip)
-> support, so using e.g. gpio-keys with "interrupts" instead of "gpios"
-> still does not work.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> I would prefer to avoid implementing irq_chip support, until there is a
-> real use case for this.
-> 
-> This has been tested with gpio-keys and gpiomon on the Koelsch
-> development board:
-> 
->   - gpio-keys, using a DT overlay[1]:
-> 
-> 	$ overlay add r8a7791-koelsch-keyboard-controlled-led
-> 	$ echo gpio-aggregator > 
-> /sys/devices/platform/frobnicator/driver_override
-> 	$ echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-> 
-> 	$ gpioinfo frobnicator
-> 	gpiochip12 - 3 lines:
-> 		line   0:      "light"      "light"  output  active-high [used]
-> 		line   1:         "on"         "On"   input   active-low [used]
-> 		line   2:        "off"        "Off"   input   active-low [used]
-> 
-> 	$ echo 255 > /sys/class/leds/light/brightness
-> 	$ echo 0 > /sys/class/leds/light/brightness
-> 
-> 	$ evtest /dev/input/event0
-> 
->   - gpiomon, using the GPIO sysfs API:
-> 
-> 	$ echo keyboard > /sys/bus/platform/drivers/gpio-keys/unbind
-> 	$ echo e6055800.gpio 2,6 > 
-> /sys/bus/platform/drivers/gpio-aggregator/new_device
-> 	$ gpiomon gpiochip12 0 1
-> 
-> [1] "ARM: dts: koelsch: Add overlay for keyboard-controlled LED"
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/renesas-overlays&id=c78d817869e63a3485bb4ab98aeea6ce368a396e
-> ---
->  drivers/gpio/gpio-aggregator.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-aggregator.c 
-> b/drivers/gpio/gpio-aggregator.c
-> index 34e35b64dcdc0581..2ff867d2a3630d3b 100644
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -374,6 +374,13 @@ static int gpio_fwd_set_config(struct gpio_chip
-> *chip, unsigned int offset,
->  	return gpiod_set_config(fwd->descs[offset], config);
->  }
-> 
-> +static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int 
-> offset)
-> +{
-> +	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +
-> +	return gpiod_to_irq(fwd->descs[offset]);
-> +}
-> +
->  /**
->   * gpiochip_fwd_create() - Create a new GPIO forwarder
->   * @dev: Parent device pointer
-> @@ -414,7 +421,8 @@ static struct gpiochip_fwd
-> *gpiochip_fwd_create(struct device *dev,
->  	for (i = 0; i < ngpios; i++) {
->  		struct gpio_chip *parent = gpiod_to_chip(descs[i]);
-> 
-> -		dev_dbg(dev, "%u => gpio-%d\n", i, desc_to_gpio(descs[i]));
-> +		dev_dbg(dev, "%u => gpio %d irq %d\n", i,
-> +			desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
-> 
->  		if (gpiod_cansleep(descs[i]))
->  			chip->can_sleep = true;
-> @@ -432,6 +440,7 @@ static struct gpiochip_fwd
-> *gpiochip_fwd_create(struct device *dev,
->  	chip->get_multiple = gpio_fwd_get_multiple_locked;
->  	chip->set = gpio_fwd_set;
->  	chip->set_multiple = gpio_fwd_set_multiple_locked;
-> +	chip->to_irq = gpio_fwd_to_irq;
->  	chip->base = -1;
->  	chip->ngpio = ngpios;
->  	fwd->descs = descs;
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
