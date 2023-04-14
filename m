@@ -2,66 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD4F6E1DCD
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 10:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84E2C6E1F0A
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 11:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbjDNIHr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Apr 2023 04:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
+        id S229962AbjDNJJ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Apr 2023 05:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229958AbjDNIHq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 04:07:46 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACCC6A65
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 01:07:45 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id n203so6246107ybg.6
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 01:07:45 -0700 (PDT)
+        with ESMTP id S229782AbjDNJJZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 05:09:25 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA74559FF
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:09:24 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id g10so1299035ybu.8
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681459664; x=1684051664;
+        d=linaro.org; s=google; t=1681463364; x=1684055364;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JZnp/yCsMHc5KR2mJVi72YvBKCTqmijPKq0ipLNZZMk=;
-        b=ktm6FG/JzVzuHbCMOSVDcY+/2bQ60RCnnINpZrzuNcm4lQmOn92FFmwyOqKzCQA4bs
-         /h4dhVG9MEuhoKUl8IUJVBUrmhpVPumHcWbY6DYJnZUTgtr8dc3QVPJi+Re3IHYiuJAm
-         7a8FlwRPl/iaDrwhxcVHIqaOXUAFuFGFKNgfjXA1S5g7M7STk5oxUX6P5/A18yHERe5T
-         a2GFT1v0GwucfnlaI8YtZlhVHnnKo66bBLVsrM5mpEBlxjxrbLWV9CmLDKBuf84K8ojg
-         Rd3ogWHf+9ybyFbYEEM3B8PnzHTNztX4LMgcwAhL74oj6FUjehodr9sB90nhrETzrCpS
-         ekNg==
+        bh=F81GLoXLZtL8vSYDorqAiL9CnEzuuMOCcLiXsP3TrCA=;
+        b=pfnBK13xoj6MOIemvnh+e0VZmwkcUJ+TfhPfedGgirQgO5YLUTQmosJzSNe/gHWo/1
+         ubKpJ+UjeNxA0eSLk5uTboLOoZ9CVbVps5jQPOuhddVcfEKIRj36V9F6j/Uvfkh+TPpH
+         TbQifVNV4ANZnCz2cCmhsbu7MeK1YAI1WPcIgpMyBNuUbh+3rF6x2e5kF/6sSyEanncz
+         84fruTtD5nT1/ka61tFRLkbHsJzoaWR7jznJ/7MVP0nShZDKy6/Vq8Fpf9Vled7Z2UhU
+         anNFj2syL0/CaF4FpMeFmRw6ZmyAYU8Rq1jnzZZISGDvS81vlH7jZVdZy3oZB7lF9Jbn
+         xrsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681459664; x=1684051664;
+        d=1e100.net; s=20221208; t=1681463364; x=1684055364;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JZnp/yCsMHc5KR2mJVi72YvBKCTqmijPKq0ipLNZZMk=;
-        b=a7TFb4OIw17isiBngOnLJ+4p3uf3z4F1ePKs1ZHDCBVGxQNNczr17xDS7zAThEocuV
-         jVc3W0Y+7cB5SWVGkztmTlgPMjNZQRZsZUVoli/+Y8mczZMQyh6YFsPLgn503nLmjmfB
-         ZQIKLYlUzvG75+Q5ra1dk1G4GHb+1SyKi/g2t2b1GzDOa4s1ka8Vovbxec/X2EWQdZxG
-         l+OzR7P8sOA4w+uF6Q9eBq5gJxBR8apSDYXuXKIwWf3tz2/vOixqd90EaWPF+NBl5MZX
-         mI+WDBDYDKXkhszgTIaJhjVPlw7/o6NZIU4XZppMHM73cy907wqYxYhoM0UWmL9xE+O8
-         398A==
-X-Gm-Message-State: AAQBX9d2iz+nLNqtwFm2RbtMJYhZ23KlPWOcHBkLuBiC7Zd5nnngOy8K
-        9aBMv1Tvlch3/Kkb7/4MCTPg8knp1zwINft5bQLB3w==
-X-Google-Smtp-Source: AKy350bLx13Jl5gFGHxjyqfCjFjz/GjXNeiJM8AOkmoHfSPx1qRKImtUe2heqX7bIsSjqpOeFvV5LWB0XQSFe2trTjQ=
-X-Received: by 2002:a25:d496:0:b0:b8f:66e3:b8f9 with SMTP id
- m144-20020a25d496000000b00b8f66e3b8f9mr1726675ybf.4.1681459664714; Fri, 14
- Apr 2023 01:07:44 -0700 (PDT)
+        bh=F81GLoXLZtL8vSYDorqAiL9CnEzuuMOCcLiXsP3TrCA=;
+        b=cHHjE1MnXJCBbVNlgCcUW/xSbhWgIURQUzct1t/9t3RyJpSrCbkBOc33woYD6+Yga8
+         drbyKjlstv8Y49wwhLGXIYLoYgvH78blUSnk2lPaWC0TfkntMzXQ11NG184VAlrhdDdO
+         qa06I0w1uZ4eev4kW835KxUPq4ScvBCAo8XKRNM4ttBpmRRo3vgMtwGMIsIpHIC5oShh
+         mIUfKXWKfck3KjjFBXxxm8VtWaCfURBH7JCkg7IOwAA+UtxYXSCRup7AulqjG4DlPrYv
+         PgZ3fHdRyHCxK2qtYkAokr4pGJRjw7WOygeAwoV/YeS44Hn7LA9PjIiSPbFhlzzskc+l
+         p2JA==
+X-Gm-Message-State: AAQBX9dylm3x3qJk5vExFMn7tlmmF+fZbIqw4zBphA7V6ULB6D55fR4D
+        7iWSJRDIsuaiFAm4DkuY3zZnslDzOHYvh7GNQ7Ekuw==
+X-Google-Smtp-Source: AKy350bIQo/9mA1ytvcDNUEaapfEg+kfYekEH3BIQxSuBh0eEJRichKnj01FOdNlxlgxYYScjklm2+r1l0zhYAyvmps=
+X-Received: by 2002:a25:d40a:0:b0:b8f:32c4:5cc4 with SMTP id
+ m10-20020a25d40a000000b00b8f32c45cc4mr3383651ybf.4.1681463364094; Fri, 14 Apr
+ 2023 02:09:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230414004455.19275-1-dipenp@nvidia.com> <373eacb8-be3f-6b95-3e08-f0ff36f79891@linaro.org>
-In-Reply-To: <373eacb8-be3f-6b95-3e08-f0ff36f79891@linaro.org>
+References: <20230403-immutable-irqchips-v1-0-503788a7f6e6@linaro.org>
+In-Reply-To: <20230403-immutable-irqchips-v1-0-503788a7f6e6@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Apr 2023 10:07:33 +0200
-Message-ID: <CACRpkdY6R9WvwOr3mVgrJcf9dVB4s13eu8juZkBt0Q+=gg2G2w@mail.gmail.com>
-Subject: Re: [V6 0/9] Add Tegra234 HTE support
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, timestamp@lists.linux.dev,
-        krzysztof.kozlowski+dt@linaro.org, brgl@bgdev.pl, corbet@lwn.net,
-        gregkh@linuxfoundation.org,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Date:   Fri, 14 Apr 2023 11:09:12 +0200
+Message-ID: <CACRpkda8Lp2j_-RWfDb2AppRvkSQ0fdyS56RXS9_OsmeEXqxKg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Convert low hanging pinctrl irqchips to be immutable
+To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -74,48 +84,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 9:36=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> On 14/04/2023 02:44, Dipen Patel wrote:
-> > This patch series mainly adds support for the Tegra234 HTE provider. In
-> > addition, it addresses dt binding comments which prompted code
-> > changes in the existing HTE provider driver without breaking the
-> > Tegra194 provider. The comments raised concern how existing code
-> > retrieves gpio controller node
-> > (the node is used to help namespace conversion between HTE and GPIOLIB)=
-.
-> > To help simplify that process, new DT property is suggested which adds
-> > gpio controller node in the HTE provider binding as phandle property. T=
-o
-> > conlude this patch series:
-> > - adds Tegra234 HTE provider
-> > - modifies existing provider code to address new dt binding for Tegra23=
-4
-> > without breaking it for the Tegra194 chip.
-> >
-> > The V1 patch series:
-> > - Adds tegra Tegra234 HTE(timestamp) provider supports.
-> > - Updates MAINTAINERS file for git tree, mail list fields.
-> > - Updates devicetree and API documentations.
-> > - Enables HTE subsystem, Tegra194 and Tegra234 HTE providers
-> > by default in arm64 defconfig and dts files.
+On Tue, Apr 4, 2023 at 11:43=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+
+> This repeats the two-fold exercise in the GPIO subsystem
+> by doing the same for pin control: let's switch over all
+> easily identifiable irqchips to be immutable.
 >
-> All your emails miss PATCH prefix. Use `git format-patch` to generate
-> proper versioned patch. Stripping important part messes up with our
-> filters. We have quite a lot of emails, so proper filtering is important.
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Linus Walleij (9):
+>       pinctrl: iproc: Convert to immutable irq_chip
+>       pinctrl: nsp: Convert to immutable irq_chip
+>       pinctrl: armada-37xx: Convert to immutable irq_chip
+>       pinctrl: npcm7xx: Convert to immutable irq_chip
+>       pinctrl: equilibrium: Convert to immutable irq_chip
+>       pinctrl: mcp23s08: Convert to immutable irq_chip
+>       pinctrl: st: Convert to immutable irq_chip
+>       pinctrl: stmfx: Convert to immutable irq_chip
+>       pinctrl: sx150x: Convert to immutable irq_chip
 
-At this point I would even recommend kernel maintainers to get b4
-into the workflow:
-https://people.kernel.org/monsieuricon/sending-a-kernel-patch-with-b4-part-=
-1
-
-This tool will also implement other desired behaviours and version
-the patch set for you.
-
-I am gradually adopting it for my own work, using it all the time when
-applying patches but also getting better at using it for submitting
-them. It has a small overhead (like learning and memorizing the
-subcommands) but once you get used to it, it is really helpful.
+No reaction to these patches, so I just merged them.
 
 Yours,
 Linus Walleij
