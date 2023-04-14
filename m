@@ -2,109 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E2C6E1F0A
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 11:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 568E36E1F56
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 11:34:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbjDNJJ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Apr 2023 05:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
+        id S229747AbjDNJd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Apr 2023 05:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbjDNJJZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 05:09:25 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA74559FF
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:09:24 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id g10so1299035ybu.8
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:09:24 -0700 (PDT)
+        with ESMTP id S229840AbjDNJd4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 05:33:56 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 261CD8698
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:33:36 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id v18so1305775uak.8
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 02:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681463364; x=1684055364;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1681464808; x=1684056808;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F81GLoXLZtL8vSYDorqAiL9CnEzuuMOCcLiXsP3TrCA=;
-        b=pfnBK13xoj6MOIemvnh+e0VZmwkcUJ+TfhPfedGgirQgO5YLUTQmosJzSNe/gHWo/1
-         ubKpJ+UjeNxA0eSLk5uTboLOoZ9CVbVps5jQPOuhddVcfEKIRj36V9F6j/Uvfkh+TPpH
-         TbQifVNV4ANZnCz2cCmhsbu7MeK1YAI1WPcIgpMyBNuUbh+3rF6x2e5kF/6sSyEanncz
-         84fruTtD5nT1/ka61tFRLkbHsJzoaWR7jznJ/7MVP0nShZDKy6/Vq8Fpf9Vled7Z2UhU
-         anNFj2syL0/CaF4FpMeFmRw6ZmyAYU8Rq1jnzZZISGDvS81vlH7jZVdZy3oZB7lF9Jbn
-         xrsQ==
+        bh=hmnkUWMaBh/dQ2evri0SLi/J8TMxwOaXw9HZAIykNPQ=;
+        b=AxSpE3IaPuxvlb/rnjlmHt5HDSPQ9PAIoq686N9ZUofrsSWuHTTqftC68x1PR/P2WJ
+         rWJCgFovzJyEhPa8gnJJ5ljEdxPo0q4omf5c3rGqcpl9nayNsOA5TwlrSMJXHr9KVJY3
+         N8yvbUELy+2DRXenNJ0B6WUcBchkv6tGAtZTh39DHRYcw6Q5K7hcDmzienQ9lnuJBUjD
+         KZIls+bpIW8hxQ3uCksqzT4Msmq0pI7LTS1BR00cDjzxANZx0jgA26YQoeg+8XYX9Yor
+         QhtYg5oZkK2GbDq5oksH7iHHQuiT31mmPV1nFqpmYSMXOSMa8PbvT7vfEJWrZi3NVYT3
+         Mahw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681463364; x=1684055364;
+        d=1e100.net; s=20221208; t=1681464808; x=1684056808;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F81GLoXLZtL8vSYDorqAiL9CnEzuuMOCcLiXsP3TrCA=;
-        b=cHHjE1MnXJCBbVNlgCcUW/xSbhWgIURQUzct1t/9t3RyJpSrCbkBOc33woYD6+Yga8
-         drbyKjlstv8Y49wwhLGXIYLoYgvH78blUSnk2lPaWC0TfkntMzXQ11NG184VAlrhdDdO
-         qa06I0w1uZ4eev4kW835KxUPq4ScvBCAo8XKRNM4ttBpmRRo3vgMtwGMIsIpHIC5oShh
-         mIUfKXWKfck3KjjFBXxxm8VtWaCfURBH7JCkg7IOwAA+UtxYXSCRup7AulqjG4DlPrYv
-         PgZ3fHdRyHCxK2qtYkAokr4pGJRjw7WOygeAwoV/YeS44Hn7LA9PjIiSPbFhlzzskc+l
-         p2JA==
-X-Gm-Message-State: AAQBX9dylm3x3qJk5vExFMn7tlmmF+fZbIqw4zBphA7V6ULB6D55fR4D
-        7iWSJRDIsuaiFAm4DkuY3zZnslDzOHYvh7GNQ7Ekuw==
-X-Google-Smtp-Source: AKy350bIQo/9mA1ytvcDNUEaapfEg+kfYekEH3BIQxSuBh0eEJRichKnj01FOdNlxlgxYYScjklm2+r1l0zhYAyvmps=
-X-Received: by 2002:a25:d40a:0:b0:b8f:32c4:5cc4 with SMTP id
- m10-20020a25d40a000000b00b8f32c45cc4mr3383651ybf.4.1681463364094; Fri, 14 Apr
- 2023 02:09:24 -0700 (PDT)
+        bh=hmnkUWMaBh/dQ2evri0SLi/J8TMxwOaXw9HZAIykNPQ=;
+        b=IRiRgEh1Kr4Zobjw6JRxmwV8kGgC/l7dPH9nhuHYyLYpl6ToJU6wgvUiRgGUt+CJ/A
+         gev16N/eC7YE4BwdcjSaRPRitsiCeEbhC2Z3tM4XKnSSB2f+CE+5xavnB2sOM/H3hIj6
+         SSRpch/EsI/NPUndXRb9yox53sg2voUotI3TRNtgATRD+wrdq4PdrLFuli5ni3qil4yz
+         z08m8gd4c7pwhkc9UAN+Dym2/6CT7fTsK9SN6a7JbDG6oqyxbFduSXT+FAujFC4/Lg2b
+         sz0vCVxcutfb7skyivF0nB7asf2sdTHvudbMdt7NR8PbSRNilZn/EWsczFnxllcvmdpi
+         3qJQ==
+X-Gm-Message-State: AAQBX9c23Koc4MZrnLtbyJUqlN5WiBTs1OCP6JoH3RqjfGHCJPGY4URI
+        tAQzJ9R+h0mUc2/I/R25dJ73vwoTTvPLmE8JbL3+SQ==
+X-Google-Smtp-Source: AKy350bfsTtcHUxo29RImIJqDEHQ7T/MfcbWBd1biJy46lDDvJh6lED1lqs9QUqdbdlXBY7vDWk0nEhrfV1vzEezIQQ=
+X-Received: by 2002:a1f:3857:0:b0:43a:d64:5aba with SMTP id
+ f84-20020a1f3857000000b0043a0d645abamr2575462vka.2.1681464807793; Fri, 14 Apr
+ 2023 02:33:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230403-immutable-irqchips-v1-0-503788a7f6e6@linaro.org>
-In-Reply-To: <20230403-immutable-irqchips-v1-0-503788a7f6e6@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Apr 2023 11:09:12 +0200
-Message-ID: <CACRpkda8Lp2j_-RWfDb2AppRvkSQ0fdyS56RXS9_OsmeEXqxKg@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Convert low hanging pinctrl irqchips to be immutable
-To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+References: <20230327125316.210812-1-brgl@bgdev.pl> <20230327125316.210812-4-brgl@bgdev.pl>
+ <CAMRc=Mfe6gCM=Mz6Can6xsSsrjX-9T_aR2Yev+b57koky_az-A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mfe6gCM=Mz6Can6xsSsrjX-9T_aR2Yev+b57koky_az-A@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 14 Apr 2023 11:33:16 +0200
+Message-ID: <CAMRc=Mfw+4Co8JPz51_E+DSawijO8EB6rMmFXEmM0e5F3Fg_8A@mail.gmail.com>
+Subject: Re: [PATCH v3 03/18] dt-bindings: interrupt-controller: qcom-pdc: add
+ compatible for sa8775p
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 11:43=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-
-> This repeats the two-fold exercise in the GPIO subsystem
-> by doing the same for pin control: let's switch over all
-> easily identifiable irqchips to be immutable.
+On Thu, Apr 6, 2023 at 4:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Linus Walleij (9):
->       pinctrl: iproc: Convert to immutable irq_chip
->       pinctrl: nsp: Convert to immutable irq_chip
->       pinctrl: armada-37xx: Convert to immutable irq_chip
->       pinctrl: npcm7xx: Convert to immutable irq_chip
->       pinctrl: equilibrium: Convert to immutable irq_chip
->       pinctrl: mcp23s08: Convert to immutable irq_chip
->       pinctrl: st: Convert to immutable irq_chip
->       pinctrl: stmfx: Convert to immutable irq_chip
->       pinctrl: sx150x: Convert to immutable irq_chip
+> On Mon, Mar 27, 2023 at 2:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add a compatible for the Power Domain Controller on SA8775p platforms.
+> > Increase the number of PDC pin mappings.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  .../devicetree/bindings/interrupt-controller/qcom,pdc.yaml     | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/qco=
+m,pdc.yaml b/Documentation/devicetree/bindings/interrupt-controller/qcom,pd=
+c.yaml
+> > index 94791e261c42..641ff32e4a6c 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.y=
+aml
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.y=
+aml
+> > @@ -26,6 +26,7 @@ properties:
+> >    compatible:
+> >      items:
+> >        - enum:
+> > +          - qcom,sa8775p-pdc
+> >            - qcom,sc7180-pdc
+> >            - qcom,sc7280-pdc
+> >            - qcom,sc8280xp-pdc
+> > @@ -53,7 +54,7 @@ properties:
+> >    qcom,pdc-ranges:
+> >      $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> >      minItems: 1
+> > -    maxItems: 32 # no hard limit
+> > +    maxItems: 38 # no hard limit
+> >      items:
+> >        items:
+> >          - description: starting PDC port
+> > --
+> > 2.37.2
+> >
+>
+> Bjorn,
+>
+> Will you pick up the dt-bindings patches from this series as well or
+> should they go through Rob's tree?
+>
+> Bart
 
-No reaction to these patches, so I just merged them.
+Gentle ping as this one's still not in next.
 
-Yours,
-Linus Walleij
+Bart
