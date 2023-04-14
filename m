@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 592A86E2536
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 16:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11E886E253B
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 16:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbjDNOHM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Apr 2023 10:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57856 "EHLO
+        id S230365AbjDNOHO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Apr 2023 10:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbjDNOHJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 10:07:09 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F104C22
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 07:06:42 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id bi41so5415598lfb.7
+        with ESMTP id S230352AbjDNOHK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 10:07:10 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB8BA5E6
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 07:06:43 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id i6so11799243lfp.1
         for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 07:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681481183; x=1684073183;
+        d=linaro.org; s=google; t=1681481184; x=1684073184;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ypGX6B4su1o68R7FNx6eRYtltMnpOZkLcf7JaVu5ncA=;
-        b=SPrYVWnK1EQd7VQe/CpLHqnW7L67MPK8fjhM1oXAYcwtdCSId52Zvn4tnES0lpcYO3
-         Z5eUVaFSDJObnVQBX29XaCX+f3dJsjTzcdOnwdjo5JWT1ISg3Xn6dMTEbgIyWUFklBYj
-         E8XV/8PTxFirdCK+1VRKGd7aDtD72vietCjMdAc5bg/ioMxP8df6yYtAx2ehd3PrPkWr
-         Ku9N/RFBZ2ImYmCOTZj0LjdO9/uNu618m1/dn4ifwVTQbSm1cMJTgmdP2m6Pi4LTpjEI
-         +X3L5S4+DBiigRVZdOh76xlTRv4M1G1GiCmlLWGx7Y/vihohbWh92KSBIWAUoIAj75I6
-         B1EA==
+        bh=HANrBatD66XHrbynSUb+/d3zU2tkPBuvtN1APBMREqs=;
+        b=vmS8y1HoE3osnmSlFtEzioX6TV5Um9jP0ExIdP3zFRLiSZW6+sRf5ERlXDRKWWEBx/
+         fTivZmIt9xt9gE01HBFaWbuMcAq158o4uWc4udD6AFn5gRS4dwlCQhKN4o4kISiFQGXL
+         LqCuczJt6lpfI1bWxF/ub8BSg+qk8PI4FoJ2z+475a+y2LiBYM9ncWzV1juQmh44WhpO
+         CJQvVbz6ZORpvmZhPvl88e2t6M3tSRGKeCdbRNKvuE8n2QK32R57LvkIJxrjqGCQSAbL
+         BH590BAv8/RfVSA5wo595UDxqGt/cdrTFVNmwNCR0aqfmyXl3cTpOHGluf/rR9y8pDbh
+         I+oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681481183; x=1684073183;
+        d=1e100.net; s=20221208; t=1681481184; x=1684073184;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ypGX6B4su1o68R7FNx6eRYtltMnpOZkLcf7JaVu5ncA=;
-        b=Wf6LVXsfO7aKX/w722aLUpbMeauxLguxC1Npf317BrEGnuEiKLixuhVYE7sZU20dH7
-         n+0alPkMDk2znsp4ijOiD+ssCVm2Ll2bTkZcUBVNHoMKGimtT0HUWDradpAy+6mRdVcU
-         RPrruSglaZ3eKB83op2kFXmaNCgmJWrBqKqnVCI6OO8pXeiHGBZd7/V0g0CM60ntt3c9
-         goazLM50F5DwdMTKq3mcNpUHQa1gmm1oU7mDAVEa0E4rHyuaslgKuAalGjk2eDqIjsKl
-         ehSCoI101KTH5Ot1u9GQi1dQXOmX7mP1azPt/yGFz6TcSUa63H1UxPUQENxXweqcqSfF
-         /shg==
-X-Gm-Message-State: AAQBX9f8XyQANeOVYuFRhpN6pD7pEuyXpq4Pwymt10SWhfKNgHuIqjyg
-        pkVnwECtgV8dMCcM8u2fnbD9sA==
-X-Google-Smtp-Source: AKy350bVkyAIVMqSKC3NijpxaxINkVg9ewI8ds0MaqdAUOR8xG+zrd832wEpaVgjxKJFSwie2XNiuw==
-X-Received: by 2002:ac2:5a1c:0:b0:4ea:f632:4738 with SMTP id q28-20020ac25a1c000000b004eaf6324738mr1670009lfn.6.1681481183240;
-        Fri, 14 Apr 2023 07:06:23 -0700 (PDT)
+        bh=HANrBatD66XHrbynSUb+/d3zU2tkPBuvtN1APBMREqs=;
+        b=i8N4COIwXKjg6CqwAlYc9gotrRGRQMBw8u6D6FlVKjFELtAZD/njTkKgtxpdC91Bw1
+         bVTBBRTIX9AATxaP5Tp8mBujkLfJAqv24CWi18xtSis5W5SV6ybHl5ssVAl59jjQB1N1
+         SdhI5Q6MCQNGGtgX4EateilAie1jQ9pAofTHI3ArAUr3fAi1Y86t142GdJNlkoVOtyF9
+         kOZULQ+mkvW3EJYvkA/A39g+3F+G86xX8eVaOLTlcpAPaiE8g3achtdpCBLj64UTaLkJ
+         LoSIUaPsxX8Bxof1P1niL+e67EdJmlD7ZT+3ok4+w2oI7LDzKpggF1rZgV7/XvPy9hUE
+         wOoQ==
+X-Gm-Message-State: AAQBX9faZWcwLg1nS1EO6wVuAT2M2O0jsabLO3BLRjG3prTHxus0UriK
+        qxdPfcueHpy4Dkd0lotDBKgy9A==
+X-Google-Smtp-Source: AKy350ZXNx9gUpKotPMlL4TZIccFfIfntAQ6+DMyC3z1S7xiZNKxTlSI+yACE1Foc5Bc8CHs7KMgZg==
+X-Received: by 2002:a19:5208:0:b0:4e8:16e8:88b with SMTP id m8-20020a195208000000b004e816e8088bmr1761984lfb.29.1681481184186;
+        Fri, 14 Apr 2023 07:06:24 -0700 (PDT)
 Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id b10-20020ac25e8a000000b004d856fe5121sm808794lfq.194.2023.04.14.07.06.22
+        by smtp.gmail.com with ESMTPSA id b10-20020ac25e8a000000b004d856fe5121sm808794lfq.194.2023.04.14.07.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 07:06:22 -0700 (PDT)
+        Fri, 14 Apr 2023 07:06:23 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Apr 2023 16:06:17 +0200
-Subject: [PATCH 1/6] pinctrl: pic32: Convert to immutable irq_chip
+Date:   Fri, 14 Apr 2023 16:06:18 +0200
+Subject: [PATCH 2/6] pinctrl: pistachio: Convert to immutable irq_chip
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230414-immutable-irqchips-2-v1-1-6b59a5186b00@linaro.org>
+Message-Id: <20230414-immutable-irqchips-2-v1-2-6b59a5186b00@linaro.org>
 References: <20230414-immutable-irqchips-2-v1-0-6b59a5186b00@linaro.org>
 In-Reply-To: <20230414-immutable-irqchips-2-v1-0-6b59a5186b00@linaro.org>
 To:     Marc Zyngier <maz@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
@@ -79,110 +79,110 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Convert the driver to immutable irq-chip with a bit of
-intuition. Switch some call to use irqd_to_hwirq() in the
-process.
+intuition.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/pinctrl-pic32.c | 36 +++++++++++++++++++++++++-----------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ drivers/pinctrl/pinctrl-pistachio.c | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-pic32.c b/drivers/pinctrl/pinctrl-pic32.c
-index 37acfdfc2cae..dad05294fa72 100644
---- a/drivers/pinctrl/pinctrl-pic32.c
-+++ b/drivers/pinctrl/pinctrl-pic32.c
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 7ca4ecb6eb8d..53408344927a 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
 @@ -17,6 +17,7 @@
- #include <linux/pinctrl/pinctrl.h>
  #include <linux/pinctrl/pinmux.h>
  #include <linux/platform_device.h>
+ #include <linux/property.h>
 +#include <linux/seq_file.h>
  #include <linux/slab.h>
  #include <linux/spinlock.h>
  
-@@ -60,8 +61,8 @@ struct pic32_desc_function {
- 
- struct pic32_gpio_bank {
- 	void __iomem *reg_base;
+@@ -93,10 +94,10 @@ struct pistachio_pin_group {
+ struct pistachio_gpio_bank {
+ 	struct pistachio_pinctrl *pctl;
+ 	void __iomem *base;
 +	int instance;
+ 	unsigned int pin_base;
+ 	unsigned int npins;
  	struct gpio_chip gpio_chip;
 -	struct irq_chip irq_chip;
- 	struct clk *clk;
  };
  
-@@ -2008,12 +2009,14 @@ static void pic32_gpio_irq_mask(struct irq_data *data)
- 	struct pic32_gpio_bank *bank = irqd_to_bank(data);
+ struct pistachio_pinctrl {
+@@ -1228,12 +1229,14 @@ static void pistachio_gpio_irq_mask(struct irq_data *data)
+ 	struct pistachio_gpio_bank *bank = irqd_to_bank(data);
  
- 	writel(BIT(PIC32_CNCON_ON), bank->reg_base + PIC32_CLR(CNCON_REG));
+ 	gpio_mask_writel(bank, GPIO_INTERRUPT_EN, data->hwirq, 0);
 +	gpiochip_disable_irq(&bank->gpio_chip, irqd_to_hwirq(data));
  }
  
- static void pic32_gpio_irq_unmask(struct irq_data *data)
+ static void pistachio_gpio_irq_unmask(struct irq_data *data)
  {
- 	struct pic32_gpio_bank *bank = irqd_to_bank(data);
+ 	struct pistachio_gpio_bank *bank = irqd_to_bank(data);
  
 +	gpiochip_enable_irq(&bank->gpio_chip, irqd_to_hwirq(data));
- 	writel(BIT(PIC32_CNCON_ON), bank->reg_base + PIC32_SET(CNCON_REG));
+ 	gpio_mask_writel(bank, GPIO_INTERRUPT_EN, data->hwirq, 1);
  }
  
-@@ -2030,7 +2033,7 @@ static unsigned int pic32_gpio_irq_startup(struct irq_data *data)
- static int pic32_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- {
- 	struct pic32_gpio_bank *bank = irqd_to_bank(data);
--	u32 mask = BIT(data->hwirq);
-+	u32 mask = irqd_to_hwirq(data);
+@@ -1312,6 +1315,7 @@ static void pistachio_gpio_irq_handler(struct irq_desc *desc)
  
- 	switch (type & IRQ_TYPE_SENSE_MASK) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -2122,14 +2125,7 @@ static void pic32_gpio_irq_handler(struct irq_desc *desc)
- 			.owner = THIS_MODULE,				\
- 			.can_sleep = 0,					\
+ #define GPIO_BANK(_bank, _pin_base, _npins)				\
+ 	{								\
++		.instance = (_bank),					\
+ 		.pin_base = _pin_base,					\
+ 		.npins = _npins,					\
+ 		.gpio_chip = {						\
+@@ -1326,14 +1330,6 @@ static void pistachio_gpio_irq_handler(struct irq_desc *desc)
+ 			.base = _pin_base,				\
+ 			.ngpio = _npins,				\
  		},							\
 -		.irq_chip = {						\
 -			.name = "GPIO" #_bank,				\
--			.irq_startup = pic32_gpio_irq_startup,	\
--			.irq_ack = pic32_gpio_irq_ack,		\
--			.irq_mask = pic32_gpio_irq_mask,		\
--			.irq_unmask = pic32_gpio_irq_unmask,		\
--			.irq_set_type = pic32_gpio_irq_set_type,	\
+-			.irq_startup = pistachio_gpio_irq_startup,	\
+-			.irq_ack = pistachio_gpio_irq_ack,		\
+-			.irq_mask = pistachio_gpio_irq_mask,		\
+-			.irq_unmask = pistachio_gpio_irq_unmask,	\
+-			.irq_set_type = pistachio_gpio_irq_set_type,	\
 -		},							\
-+		.instance = (_bank),					\
  	}
  
- static struct pic32_gpio_bank pic32_gpio_banks[] = {
-@@ -2145,6 +2141,24 @@ static struct pic32_gpio_bank pic32_gpio_banks[] = {
- 	GPIO_BANK(9, PINS_PER_BANK),
+ static struct pistachio_gpio_bank pistachio_gpio_banks[] = {
+@@ -1345,6 +1341,25 @@ static struct pistachio_gpio_bank pistachio_gpio_banks[] = {
+ 	GPIO_BANK(5, PISTACHIO_PIN_MFIO(80), 10),
  };
  
-+static void pic32_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
++static void pistachio_gpio_irq_print_chip(struct irq_data *data,
++					  struct seq_file *p)
 +{
-+	struct pic32_gpio_bank *bank = irqd_to_bank(data);
++	struct pistachio_gpio_bank *bank = irqd_to_bank(data);
 +
 +	seq_printf(p, "GPIO%d", bank->instance);
 +}
 +
-+static const struct irq_chip pic32_gpio_irq_chip = {
-+	.irq_startup = pic32_gpio_irq_startup,
-+	.irq_ack = pic32_gpio_irq_ack,
-+	.irq_mask = pic32_gpio_irq_mask,
-+	.irq_unmask = pic32_gpio_irq_unmask,
-+	.irq_set_type = pic32_gpio_irq_set_type,
-+	.irq_print_chip = pic32_gpio_irq_print_chip,
++static const struct irq_chip pistachio_gpio_irq_chip = {
++	.irq_startup = pistachio_gpio_irq_startup,
++	.irq_ack = pistachio_gpio_irq_ack,
++	.irq_mask = pistachio_gpio_irq_mask,
++	.irq_unmask = pistachio_gpio_irq_unmask,
++	.irq_set_type = pistachio_gpio_irq_set_type,
++	.irq_print_chip = pistachio_gpio_irq_print_chip,
 +	.flags = IRQCHIP_IMMUTABLE,
 +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 +};
 +
- static int pic32_pinctrl_probe(struct platform_device *pdev)
+ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
  {
- 	struct pic32_pinctrl *pctl;
-@@ -2243,7 +2257,7 @@ static int pic32_gpio_probe(struct platform_device *pdev)
- 	bank->gpio_chip.parent = &pdev->dev;
+ 	struct pistachio_gpio_bank *bank;
+@@ -1394,7 +1409,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		bank->gpio_chip.fwnode = child;
  
- 	girq = &bank->gpio_chip.irq;
--	girq->chip = &bank->irq_chip;
-+	gpio_irq_chip_set_chip(girq, &pic32_gpio_irq_chip);
- 	girq->parent_handler = pic32_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
+ 		girq = &bank->gpio_chip.irq;
+-		girq->chip = &bank->irq_chip;
++		gpio_irq_chip_set_chip(girq, &pistachio_gpio_irq_chip);
+ 		girq->parent_handler = pistachio_gpio_irq_handler;
+ 		girq->num_parents = 1;
+ 		girq->parents = devm_kcalloc(pctl->dev, 1,
 
 -- 
 2.34.1
