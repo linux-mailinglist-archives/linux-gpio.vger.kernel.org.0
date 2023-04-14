@@ -2,112 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3EC96E2106
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 12:36:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B84586E212D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 12:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjDNKgr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Apr 2023 06:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
+        id S230142AbjDNKnw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Apr 2023 06:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjDNKgq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 06:36:46 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C4EA5DC;
-        Fri, 14 Apr 2023 03:36:09 -0700 (PDT)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33E6o8EO030159;
-        Fri, 14 Apr 2023 10:35:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=2OsiV7InPcs/s0E7YyO/DQTV9uVls5Br3g8+gRn4d7I=;
- b=ZJ83CDgxCy5ZZZ0BThBK/q2Mm9jqOm5SviLRbXiIY5vJ9dzvcI2nURHh4auK3mi762yY
- l08ocov+cRcx/UqqaA09Dk2jlM3czSBlRgNxA0QsLUpJWiVC/9FUR7kcmrh9d96hd245
- GhH+1HtSGmfIdCKY4szzEgeXK9qxNOjXbtz2LFfcK1VbYZNsu3ru8RHylDW2G/vJw7yC
- iTpCR8zpNoK44YfY42jnEzXcKfFA0ZF+oSjI8hEJdwA/GD6PGbyhVQjF20GVivzcdrnh
- ysPE1J4ztGXd+HDcSG/uwWxshON6i5+YgAMSDPVMy5nPVU7sdA1re6vsQbZjUHvM/8m0 cg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3py1wpgfm8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Apr 2023 10:35:30 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33EAZTIg008233
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Apr 2023 10:35:29 GMT
-Received: from srichara-linux.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Fri, 14 Apr 2023 03:35:23 -0700
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_srichara@quicinc.com>
-Subject: [PATCH V3 9/9] arm64: defconfig: Enable IPQ5018 SoC base configs
-Date:   Fri, 14 Apr 2023 15:59:27 +0530
-Message-ID: <1681468167-11689-10-git-send-email-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com>
-References: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com>
+        with ESMTP id S229938AbjDNKnv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 06:43:51 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 118034EDD;
+        Fri, 14 Apr 2023 03:43:44 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id v6so17017357wrv.8;
+        Fri, 14 Apr 2023 03:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681469022; x=1684061022;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gNgu8/gxif8nw/9Y5K0MGzuFATQ+lD23DX1qBxOYNkg=;
+        b=ntAbmdAOB87jM3sQ1csEnjg8Ag2twQ61Xl4Zun8ptqhKrtHZW0l/Ym/JRVy/wivAxG
+         0iCwa+T0dMBud5YuzRit4k36il2soQGcLf8+/lK+bAayzf6YbqTpFHjUzh6Pc8CdHOz0
+         WaDKsMNbgOaUnSfDKFLcPlvEcLb6kEvQCZyrXH4MFDxPrddhS4olJZScbQFnISQmZB6f
+         omhoUqu8q9HF84Z17yIRcStxAYWiyOPDHkj1IPBOf1pMpcjVsHrtKEDRPSmUl4zC/nIU
+         g5VHTYWrGX8fl4wNdWzKP+NmClpjAcONTGZa0Mm+7qA35L7WkTGYe3InJ+adt4e2hXjc
+         O7uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681469022; x=1684061022;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNgu8/gxif8nw/9Y5K0MGzuFATQ+lD23DX1qBxOYNkg=;
+        b=b8z43wj6i8F9zqIols2IF8VjF0sDEnNa69coHL5zGSdRPyGxkAxu5hjeiDGwsAHqhr
+         YuegnhxB5ygTG9ogFDSnFR3LHywJUED3+JDdCEd5Yz6ukX/s+Iv8VnI7nA4KbivOBdh3
+         1tKY+pOAFeGyk85QHMRHVTZHiLFMSzbK/2kzUrvNKOcDv6SF1FZTXwglRBv8ssiu/UWs
+         QTI67JlMP4ogdK7VkOBxw+zORvqfPaMMRioCYSjkeCFGMRHigjxTOXtpWuE82ctceKmP
+         kqB+vEUWto4be2NAc98oFNB1WLyCxZ7tWDJX4oZx+AELuuqvcVdE18Psbxn/9TF0JQQJ
+         1kHQ==
+X-Gm-Message-State: AAQBX9dp2UGDySHowuQ8VvrHaBsLUjgCkIeQmGe9DJ/WUpY8Kap0Vnv9
+        +rD+tuqUftr8DRY/AbMZF+BdaZjmVwKU/i2GeNo=
+X-Google-Smtp-Source: AKy350a9U4k0Iy7pNu4JvvfTjZIpwao5lJtg7D3YdN7kFR3yOSYuAwqTS/atSnBgWjuR+uOrNsHldqse3GCOgZDpLYk=
+X-Received: by 2002:a5d:4248:0:b0:2ce:ac97:6f51 with SMTP id
+ s8-20020a5d4248000000b002ceac976f51mr927213wrr.13.1681469022498; Fri, 14 Apr
+ 2023 03:43:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: St-KEszM6iXcfzaIIFwAw70wpQYgnlUL
-X-Proofpoint-ORIG-GUID: St-KEszM6iXcfzaIIFwAw70wpQYgnlUL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-14_04,2023-04-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
- mlxlogscore=840 malwarescore=0 lowpriorityscore=0 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304140095
+References: <20230414004455.19275-1-dipenp@nvidia.com> <373eacb8-be3f-6b95-3e08-f0ff36f79891@linaro.org>
+In-Reply-To: <373eacb8-be3f-6b95-3e08-f0ff36f79891@linaro.org>
+From:   Thierry Reding <thierry.reding@gmail.com>
+Date:   Fri, 14 Apr 2023 12:43:31 +0200
+Message-ID: <CA+PwDYeTkWp9vXMec99H2OKOGhx0mOrnthT08=JkMkEsi4NDPw@mail.gmail.com>
+Subject: Re: [V6 0/9] Add Tegra234 HTE support
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Dipen Patel <dipenp@nvidia.com>, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, timestamp@lists.linux.dev,
+        krzysztof.kozlowski+dt@linaro.org, brgl@bgdev.pl, corbet@lwn.net,
+        gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enables clk & pinctrl related configs
+On Fri, Apr 14, 2023 at 09:36:15AM +0200, Krzysztof Kozlowski wrote:
+> On 14/04/2023 02:44, Dipen Patel wrote:
+> > This patch series mainly adds support for the Tegra234 HTE provider. In
+> > addition, it addresses dt binding comments which prompted code
+> > changes in the existing HTE provider driver without breaking the
+> > Tegra194 provider. The comments raised concern how existing code
+> > retrieves gpio controller node
+> > (the node is used to help namespace conversion between HTE and GPIOLIB).
+> > To help simplify that process, new DT property is suggested which adds
+> > gpio controller node in the HTE provider binding as phandle property. To
+> > conlude this patch series:
+> > - adds Tegra234 HTE provider
+> > - modifies existing provider code to address new dt binding for Tegra234
+> > without breaking it for the Tegra194 chip.
+> >
+> > The V1 patch series:
+> > - Adds tegra Tegra234 HTE(timestamp) provider supports.
+> > - Updates MAINTAINERS file for git tree, mail list fields.
+> > - Updates devicetree and API documentations.
+> > - Enables HTE subsystem, Tegra194 and Tegra234 HTE providers
+> > by default in arm64 defconfig and dts files.
+>
+> All your emails miss PATCH prefix. Use `git format-patch` to generate
+> proper versioned patch. Stripping important part messes up with our
+> filters. We have quite a lot of emails, so proper filtering is important.
 
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+I used to get this wrong as well because I didn't know (or perhaps it
+didn't exist yet at the time) --reroll-count|-v and used to manually
+override --subject-prefix.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index b6342b4..fef176a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -553,6 +553,7 @@ CONFIG_PINCTRL_IMX8ULP=y
- CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
-+CONFIG_PINCTRL_IPQ5018=y
- CONFIG_PINCTRL_IPQ5332=y
- CONFIG_PINCTRL_IPQ6018=y
- CONFIG_PINCTRL_IPQ9574=y
-@@ -1151,6 +1152,7 @@ CONFIG_QCOM_CLK_APCS_MSM8916=y
- CONFIG_QCOM_CLK_APCC_MSM8996=y
- CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
-+CONFIG_IPQ_GCC_5018=y
- CONFIG_IPQ_GCC_5332=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
--- 
-2.7.4
-
+Thierry
