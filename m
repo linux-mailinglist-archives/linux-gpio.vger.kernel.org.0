@@ -2,137 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E296E2541
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 16:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C92316E275E
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Apr 2023 17:49:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230358AbjDNOHR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Apr 2023 10:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
+        id S230175AbjDNPtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Apr 2023 11:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjDNOHK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 10:07:10 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328DEB44C
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 07:06:44 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id i26so23879673lfc.6
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Apr 2023 07:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681481188; x=1684073188;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YTAL+X79fFSg7Vdy2Php9Hw3wS0uqtZxqCJF6Zi/jeI=;
-        b=YGQPsnba86DaMk0Jax3OQOs/A6b3ow03oOFnX+XJJDcL2QNnkKNIcWGwcnrJ7sn45H
-         f3444NABSrf4kpRKA1kK95qZ2g63dJ8gsSsdVEmOQp9FkFTwqa1Gn3HNZ4HUndI/ilFs
-         OhP89nob15jC8f9ro3WGj2ryAwI4n+KkfOfRfSVSjCDxRWrPpltvIyMeXuBHq0APUy4I
-         /vKKpt//M0l65r2WFQupuwfBQCrEc4F08tgMhTrz8ylsAJ/5TiDhI47VXsKhjvvXB9ZU
-         V1JaPb1PHPcFUtaZiZiPc3Jzvsp/Wq7AiAReEpKMY4mX/mJzIjLz5876C2MO3MCq+Fez
-         hfbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681481188; x=1684073188;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YTAL+X79fFSg7Vdy2Php9Hw3wS0uqtZxqCJF6Zi/jeI=;
-        b=RtP+Dwiki2DfWH87EvduKyDRIUjg1EXa4mclu1oLiglciTjjK5TJApCwZbYM8JznH6
-         iVZH1ev3uxaMwi6H2BvzM+/ycNBvSQp+fZQ3eT9kd8+HtvR+ThyiHPe91F6/19jV5VyL
-         NqHhc4bpcUlw2UyxwvcdeIlBQgx5zSahv0WrrFQool2TnpIoghFig58vTDLzUw5ZGRIS
-         Dhx60Uym+lU0VFXgGvLIFBVTLmJUewnFnJPrNnukdxTM2rrXgq3Db54U/buHLPbvlUqO
-         fAh/swCICBzR1Qs46/xEV8jVJPqdJIsaD0rR92DRSdlC741iw2BYPj+n8XBoRzSIP9ac
-         GOqg==
-X-Gm-Message-State: AAQBX9dRs+TPgP/3KXxwHJjAPeu/npnCXbLJzbnpOM4aXGjXD06hTRIi
-        erx0XFMO/xdPssVEAr2rRepnSg==
-X-Google-Smtp-Source: AKy350YW1tq7RlVAbMysRMGGwpO123vxwnoXAyGTOLxIgY81ErunoKL5Dlr4nWwny/5PkWJnupMGuQ==
-X-Received: by 2002:a05:6512:b83:b0:4dc:8049:6f36 with SMTP id b3-20020a0565120b8300b004dc80496f36mr2567531lfv.1.1681481188014;
-        Fri, 14 Apr 2023 07:06:28 -0700 (PDT)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id b10-20020ac25e8a000000b004d856fe5121sm808794lfq.194.2023.04.14.07.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 07:06:27 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Apr 2023 16:06:22 +0200
-Subject: [PATCH 6/6] pinctrl: qcom ssbi-gpio: Convert to immutable irq_chip
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230414-immutable-irqchips-2-v1-6-6b59a5186b00@linaro.org>
-References: <20230414-immutable-irqchips-2-v1-0-6b59a5186b00@linaro.org>
-In-Reply-To: <20230414-immutable-irqchips-2-v1-0-6b59a5186b00@linaro.org>
-To:     Marc Zyngier <maz@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
-        Bjorn Andersson <andersson@kernel.org>,
+        with ESMTP id S230231AbjDNPtq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Apr 2023 11:49:46 -0400
+Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16361C647;
+        Fri, 14 Apr 2023 08:49:26 -0700 (PDT)
+Received: from g550jk.localnet (unknown [62.108.10.64])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 79924D0C6C;
+        Fri, 14 Apr 2023 15:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1681487313; bh=gQLrJ2GzF9BgXS74O5aTTZWutfpFFW5QLaGMKa3LvgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=codrCFgkS0x3sCmSAS9eviU+MbyGLf1fSUsWFRoHm+QBoySpnDl4IioL+hwZykxDA
+         n8/jkieiDtOPxk5cGJf4wDtMrc157ytPcWYAK2DKuMtkshMpgG8pDVz8YM3LDKfllv
+         tVqU+uSkhU1PIdX+00LCRQLiCJcXyYkwha0378eg=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.1
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lee Jones <lee@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: sdm632-fairphone-fp3: Add notification LED
+Date:   Fri, 14 Apr 2023 17:48:32 +0200
+Message-ID: <6048598.DvuYhMxLoT@z3ntu.xyz>
+In-Reply-To: <ZDlF5ixavPw+J2fR@duo.ucw.cz>
+References: <20230414-pmi632-v1-0-fe94dc414832@z3ntu.xyz>
+ <20230414-pmi632-v1-8-fe94dc414832@z3ntu.xyz> <ZDlF5ixavPw+J2fR@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the driver to immutable irq-chip with a bit of
-intuition.
+On Freitag, 14. April 2023 14:24:06 CEST Pavel Machek wrote:
+> On Fri 2023-04-14 01:17:52, Luca Weiss wrote:
+> > The phone features a notification LED connected to the pmi632. Configure
+> > the RGB led found on it.
+> 
+> Could you document the usage in Documentation/leds/well-known-leds.txt
+> so that all phones share the same name for the RGB notification LED?
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+This dts results in /sys/class/leds/rgb:status like (presumably) all of these 
+existing in-tree users:
+* qcom-msm8974-lge-nexus5-hammerhead.dts
+* qcom-msm8974-sony-xperia-rhine.dtsi
+* qcom-msm8974pro-fairphone-fp2.dts
+* qcom-msm8974pro-sony-xperia-shinano-castor.dts
+* freescale/imx8mq-librem5.dtsi
+* qcom/msm8996-xiaomi-common.dtsi
+* qcom/sdm630-sony-xperia-nile.dtsi
+* qcom/sdm845-shift-axolotl.dts
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index e973001e5c88..dec1ffc49ffd 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -652,12 +652,30 @@ static int pm8xxx_pin_populate(struct pm8xxx_gpio *pctrl,
- 	return 0;
- }
- 
--static struct irq_chip pm8xxx_irq_chip = {
-+static void pm8xxx_irq_disable(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+}
-+
-+static void pm8xxx_irq_enable(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
-+}
-+
-+static const struct irq_chip pm8xxx_irq_chip = {
- 	.name = "ssbi-gpio",
- 	.irq_mask_ack = irq_chip_mask_ack_parent,
- 	.irq_unmask = irq_chip_unmask_parent,
-+	.irq_disable = pm8xxx_irq_disable,
-+	.irq_enable = pm8xxx_irq_enable,
- 	.irq_set_type = irq_chip_set_type_parent,
--	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
-+	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE |
-+		IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int pm8xxx_domain_translate(struct irq_domain *domain,
-@@ -788,7 +806,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 
- 	girq = &pctrl->chip.irq;
--	girq->chip = &pm8xxx_irq_chip;
-+	gpio_irq_chip_set_chip(girq, &pm8xxx_irq_chip);
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 	girq->fwnode = dev_fwnode(pctrl->dev);
+However I can send a patch adding it to this txt doc since it doesn't seem to 
+be there yet.
 
--- 
-2.34.1
+Regards
+Luca
+
+> 
+> Thanks,
+> 								
+Pavel
+
+
+
 
