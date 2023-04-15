@@ -2,74 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DF576E320B
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Apr 2023 17:11:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9388E6E325E
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Apr 2023 18:20:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjDOPLV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Apr 2023 11:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
+        id S229468AbjDOQUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Apr 2023 12:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjDOPLU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Apr 2023 11:11:20 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A004040E3;
-        Sat, 15 Apr 2023 08:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=mUMMz3rp8IEVQrSOEiMiWpUL7z/Jd7A2vWVf0hs3jCo=; b=fofooCe7PUUw7wkQbYe2RAlV4j
-        f//ZgC4sG6CrnXOq6eEsH8xQrQONX4e551ZcuwEURniC4B/WAufNpJ4Gml/yzzzPquiohxtR+D/Wu
-        ArZClq7n8WP4acV13nlchZaOgtr2zk6NcgDmWRI1afvXBmq+NIHdjXaEr//F6I+AnuCE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1pnhYO-00AN4Z-FP; Sat, 15 Apr 2023 17:11:04 +0200
-Date:   Sat, 15 Apr 2023 17:11:04 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     'Wolfram Sang' <wsa@kernel.org>,
-        'Jarkko Nikula' <jarkko.nikula@linux.intel.com>,
-        netdev@vger.kernel.org, linux@armlinux.org.uk,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v2 2/6] net: txgbe: Implement I2C bus master
- driver
-Message-ID: <438840fa-6e8b-44c5-8b90-be521c72b77a@lunn.ch>
-References: <20230411092725.104992-1-jiawenwu@trustnetic.com>
- <20230411092725.104992-3-jiawenwu@trustnetic.com>
- <00cf01d96c58$8d3e9130$a7bbb390$@trustnetic.com>
- <09dc3146-a1c6-e1a3-c8bd-e9fe547f9b99@linux.intel.com>
- <ZDgtryRooJdVHCzH@sai>
- <01ec01d96ec0$f2e10670$d8a31350$@trustnetic.com>
+        with ESMTP id S229869AbjDOQUQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Apr 2023 12:20:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC3204230;
+        Sat, 15 Apr 2023 09:20:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57CF3612ED;
+        Sat, 15 Apr 2023 16:20:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A8FCC433EF;
+        Sat, 15 Apr 2023 16:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681575610;
+        bh=DTWP6xThhLREOoWWAUdntoavtxBw4x/BgKGr7En2G+I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GmUNzIsw/k9u6mHIPjmMJSdolY4BlTCHrz6o7gYdxbGZ4PeqtrXozfp7Q0xrDnbiC
+         N6ekHJxPfDEloG4V6MmfkCTixSIWH1HgBN+y1e31mC07b0+LhDW0C7uMoCN/A/BhTi
+         jUvvq4lR3/PsJM4LKq8P622ks4HUD+ow7FgYUcGyuPPF338khCSriVkmAo8+iMuIcL
+         HpcSRkBGLZcccS36Cc+ZDyy8vRsL7XDfWkoY+X6I3k3wFeExu1KK/hteM8F+nK+guS
+         ib5saxEInFemsZ9wUM71gB7w4pIgdeqdZvHr5xOpxOy1pq+gMq4Er0BxK1bjFZYFSl
+         njkcndZEX5djw==
+Date:   Sat, 15 Apr 2023 17:20:09 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 5/8] dt-bindings: iio: adc: qcom,spmi-vadc: Allow 1/16
+ for pre-scaling
+Message-ID: <20230415172009.529d91c5@jic23-huawei>
+In-Reply-To: <577ecd98-94eb-3795-4859-ffad03192f89@linaro.org>
+References: <20230414-pmi632-v1-0-fe94dc414832@z3ntu.xyz>
+        <20230414-pmi632-v1-5-fe94dc414832@z3ntu.xyz>
+        <577ecd98-94eb-3795-4859-ffad03192f89@linaro.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01ec01d96ec0$f2e10670$d8a31350$@trustnetic.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> I don't quite understand how to get the clock rate. I tried to add a software
-> node of clock with property ("clock-frequency", 100000) and referenced by
-> I2C node. But it didn't work.
+On Fri, 14 Apr 2023 09:56:07 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-I've not spent the time to fully understand the code, so i could be
-very wrong....
+> On 14/04/2023 01:17, Luca Weiss wrote:
+> > The channel ADC5_USB_IN_V_16 is using 1/16 pre-scaling on at least
+> > pm7250b and pmi632. Allow that in the schema.
+> > 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >   
+> 
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Best regards,
+> Krzysztof
+> 
 
-From what you said above, you clock is fixed? So maybe you can do
-something like:
+Applied this patch to the IIO togreg branch initially pushed out as testing
+for 0-day to poke at it.
 
-mfld_get_clk_rate_khz()
+I'm doubtful this one will make the upcoming merge window but seems unlikely
+the rest will all make it either so that shouldn't be a problem.
 
-https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-designware-pcidrv.c#L97
-
-How are you instantiating the driver? Can you add to
-i2_designware_pci_ids[]?
-
-    Andrew
+Jonathan
