@@ -2,113 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 255B36E3685
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 11:16:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 664246E36A5
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 11:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230350AbjDPJQH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Apr 2023 05:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41336 "EHLO
+        id S230063AbjDPJgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Apr 2023 05:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbjDPJQG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 05:16:06 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA32211C
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 02:16:03 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-50489b16e6aso5092351a12.1
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 02:16:03 -0700 (PDT)
+        with ESMTP id S229677AbjDPJgq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 05:36:46 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035D2198C;
+        Sun, 16 Apr 2023 02:36:45 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id gb12so20363192qtb.6;
+        Sun, 16 Apr 2023 02:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681636562; x=1684228562;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IQXACcFQhYMTTapf4fYrBnZy/KtxmeAb2/9BYxrU0Bg=;
-        b=zNVG1f9czlGFT2SrHPjlDHaK/IzZU5sRnN6vfXw910do/0PVh3Q63Xz4Tu0c4YGdCJ
-         xsb25VuOJ0vbBbKzz9pRkJihJBP0lHOXMOfxMo5I5RR+FCqSza26PAd/GEQolLGI3Pq3
-         soeylxBcHmUU3jBz97j4mlyv/KOg6CuzWCdRt/nvE8SD+5CIzkpBKkCIEvDlxB3GOwg9
-         kVFY0cZeF53ZSvuuXGvNkD3lTxC5opgjEckn5pjmj5Hatr3Msvj1agnlnpI3ZDFBSJ/o
-         gzEyR56X7nXkIaD/tp1V/0xbFO7icJt+nGd8kqH9P1jqlnKAuaWeear9z+EcEaF32MhV
-         9BJw==
+        d=gmail.com; s=20221208; t=1681637804; x=1684229804;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NbfDrzJRkM8K1un7ocCqgCwd0PjSNRKebf06x0UdXOA=;
+        b=H/7P139nIYVSxF/EpLa1Xv3kV+DoUb0IlN71+7IZCz/3VDSWiTvTX6xLBENTqAcOQz
+         o3TFGOzdNoJYVxue71033eL3VKXngXafmf2no8MmxYt5lLJmK4dsNwiD2CMCDNDM0Y9P
+         RKreiwYsnlPrxbCFMDlUThkXGwrMK7Kzebk4Fe1u7DfFF2fzh+iaHp317cO5W9tg4o0K
+         pMsz4hM9TkTkofWFhBROXEw92AzhjNgRXORecgcck/Xv8qDQkS5wMiqUtaJLP+Ua9u8W
+         T0yJ9GRgMAtGCjQJBip0m5LC9aKoA6Yaa820cCTEdrDM9XxvYVHebeEE5hG20wVq0X2N
+         pz7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681636562; x=1684228562;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQXACcFQhYMTTapf4fYrBnZy/KtxmeAb2/9BYxrU0Bg=;
-        b=JxbO7XPBaupLL8b8SjI2JPjrpkdlICfPH5PhNsStXJWjyhkbJl9q16U89svEgTPGZl
-         gr4CsNwc15HKTnWEhPlI1auEGiOZZ1fPnJw5ekEV0T5OURjuPhz5FV0kQXo5O05TWOFx
-         o4Vcnn1+8EGIDeE/hMwD8yQ2AfAH4IMDeU/aDtADnmt205AsxNvOdtL5E8psavUe8Q4d
-         zNnLFozudF+0EjOHzMwaqlATepZyjqpRrPpKzYJoMkBWcFsjntT7uwhSinx6kVXPD4YB
-         ePtqkji/qxLsvPQnXcNdH6bj/cgoErKm5IEgeR5/ovmQm9s0y1MubTQSdoWrQqjrYITf
-         7biA==
-X-Gm-Message-State: AAQBX9ecQ09p4YAnlj1JpeKr9AwTaJmfXG8a4WcX8poibzOzEhXvPdGu
-        dwwP90d7NO9WwsdWVRIjDMJT5Q==
-X-Google-Smtp-Source: AKy350b8zNnrbYNWqzu2ymag2e1aIn96EHCycoVEwyxSuWpG9Q+Xeq/H1EjdtDt+sJ6qVBeCc9rslw==
-X-Received: by 2002:a05:6402:10d2:b0:4fd:20e5:4142 with SMTP id p18-20020a05640210d200b004fd20e54142mr10405208edu.21.1681636562398;
-        Sun, 16 Apr 2023 02:16:02 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:29dd:ded4:3ccc:83db? ([2a02:810d:15c0:828:29dd:ded4:3ccc:83db])
-        by smtp.gmail.com with ESMTPSA id ay18-20020a056402203200b0050504648fc4sm4319723edb.80.2023.04.16.02.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Apr 2023 02:16:02 -0700 (PDT)
-Message-ID: <2df035b4-edf6-b5c3-55a4-17fca6ea7f85@linaro.org>
-Date:   Sun, 16 Apr 2023 11:15:59 +0200
+        d=1e100.net; s=20221208; t=1681637804; x=1684229804;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NbfDrzJRkM8K1un7ocCqgCwd0PjSNRKebf06x0UdXOA=;
+        b=lOHvCvt2SG+9w9GtJqwKq5nxhBNgZSU8HZz3er4ibGsalKbR2I8HIafoQkhMGyuIOD
+         7198Deoa2MazFqSTZTFVpEZ1alGpSAbxd1ASzjda24bbc34IlAE8w+gNBp2FPvSwZdAk
+         52sU50weOMuAKHwPx4MGm3BpHfYcm5OpjbgSjUzs7+s/WK7NbR/Ekt1Q4xKE80ARjaUE
+         iN5zUeA9MsQwh7Zeq2xStXhbhciI84dj8aZzZrVuDO2sN7kddYtVgaSQn9T7YgCb+AHH
+         pTQdekRW4Wd9OMwUC90kT8zad8dmZ82EA/aDZqFJEDL7jSnUH8y+PS1r3CoMhfnDSo8D
+         sNEg==
+X-Gm-Message-State: AAQBX9e/7OD9vzc+0UfRP6Fy4+COCcoygfifu451GF9hCpjtWoSkUiRX
+        1GB6v3ROjA18EoU1lV/uXvKjV4Almn/VzsWVSjI=
+X-Google-Smtp-Source: AKy350b1WWgf6dXmG9GT6/je3w7PCfM64pRzyWHgf1y0BhNIlgTXpdb59g0fXuC1a0BBki+W8u+ffUUFlHDQaYZfH80=
+X-Received: by 2002:a05:622a:1a9a:b0:3e9:9419:b153 with SMTP id
+ s26-20020a05622a1a9a00b003e99419b153mr3386803qtc.0.1681637804028; Sun, 16 Apr
+ 2023 02:36:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 8/9] arm64: dts: Add ipq5018 SoC and rdp432-c2 board
- support
-Content-Language: en-US
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Varadarajan Narayanan <quic_varada@quicinc.com>,
-        Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-References: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com>
- <1681468167-11689-9-git-send-email-quic_srichara@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1681468167-11689-9-git-send-email-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230406093344.917259-1-alexander.stein@ew.tq-group.com>
+ <3231223.aeNJFYEL58@steina-w> <CAHp75VeR5R_CqWNT=Fpbyp-YSeo+3QXBnR62C=K_tyr-qQ2MVw@mail.gmail.com>
+ <4800953.GXAFRqVoOG@steina-w> <CAHp75VeTFDkaYRfX+9hE7LYE4Z-NpNfP=xfsGt27nm_DrTC_cw@mail.gmail.com>
+ <a79134a3-be9d-7297-15e1-1de4eb4054d0@linaro.org>
+In-Reply-To: <a79134a3-be9d-7297-15e1-1de4eb4054d0@linaro.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 16 Apr 2023 12:36:07 +0300
+Message-ID: <CAHp75VdRjCvcwjVO8GZfrVhFqJmO+WaqmJ63A2vVK4iELx=OXg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] gpio: Add gpio-delay support
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/04/2023 12:29, Sricharan Ramabadhran wrote:
-> Add initial device tree support for the Qualcomm IPQ5018 SoC and
-> rdp432-c2 board.
-> 
-> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
->  [v3] Fixed all review comments and DTS schema warnings
-> 
->  arch/arm64/boot/dts/qcom/Makefile              |   1 +
+On Sun, Apr 16, 2023 at 10:42=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 15/04/2023 17:06, Andy Shevchenko wrote:
+> > On Fri, Apr 14, 2023 at 9:37=E2=80=AFAM Alexander Stein
+> > <alexander.stein@ew.tq-group.com> wrote:
+> >> Am Dienstag, 11. April 2023, 11:34:16 CEST schrieb Andy Shevchenko:
+> >>> On Tue, Apr 11, 2023 at 10:19=E2=80=AFAM Alexander Stein
+> >>> <alexander.stein@ew.tq-group.com> wrote:
 
-You have some failures to fix. Difficult to say how much because your
-patchset breaks other bindings, so validation aborted. For sure your
-cache misses properties:
+...
 
-ipq5018-rdp432-c2.dtb: l2-cache: 'cache-unified' is a required property
+> >>> So, taking the above into consideration, why is it GPIO property to
+> >>> begin with? This is PCB property of the certain platform design that
+> >>> needs to be driven by a specific driver, correct?
+> >>
+> >> True this is induced by the PCB, but this property applies to the GPIO=
+,
+> >> neither the GPIO controller output, nor the GPIO consumer is aware of.
+> >> So it has to be added in between. The original idea to add a property =
+for the
+> >> consumer driver is also rejected, because this kind of behavior is not=
+ limited
+> >> to this specific driver.
+> >> That's why the delay is inserted in between the GPIO output and GPIO c=
+onsumer.
+> >>
+> >>> At the very least this is pin configuration (but external to the SoC)=
+,
+> >>> so has to be a _separate_ pin control in my opinion.
+> >>
+> >> Sorry, I don't get what you mean by _separate_ pin control.
+> >
+> > As you mentioned above this can be applied theoretically to any pin of
+> > the SoC, That pin may or may not be a GPIO or a pin that can be
+> > switched to the GPIO mode. Hence this entire idea shouldn't be part of
+> > the existing _in-SoC_ pin control driver if any. This is a purely
+> > separate entity, but at the same time it adds a property to a pin,
+> > hence pin control.
+> > At the same time, it's not an SoC related one, it's a PCB. Hence _separ=
+ate_.
+>
+> I don't think that anything here is related to pin control. Pin control
+> is specific function of some device which allows different properties or
+> different functions of a pin.
 
-Be sure that your DTS is clean and comes with no new warnings. If you
-need help with them, get in touch. If your DTS is correct, but errors
-come from other schema, try my pending branch:
-https://github.com/krzk/linux/commits/pending/dt-bindings-qcom-new-and-fixes-for-warnings-linux-next
+Sorry, but from a hardware perspective I have to disagree with you.
+It's a property of the _pin_ and not of a GPIO. Any pin might have the
+same property. That's why it's definitely _not_ a property of GPIO,
+but wider than that.
 
-Best regards,
-Krzysztof
+> This has nothing to do with different
+> properties/configuration/functions, thus it is not pin control. The pin
+> control maintainer also acked the patches.
 
+This series is about GPIO, so the pin control maintainer acked that,
+and not reviewed it, so let's take this into account. The GPIO
+maintainer has yet to comment on my reply, if he has anything to say.
+
+> The choice was discussed before, so I am surprised why you jump late in
+> discussions.
+
+Why? I was not in the initial submission and I jumped as quickly as I
+noticed this.
+
+--=20
+With Best Regards,
+Andy Shevchenko
