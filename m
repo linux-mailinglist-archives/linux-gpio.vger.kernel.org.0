@@ -2,120 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 139D46E39FD
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 17:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0C36E3AA7
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 19:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbjDPPwq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Apr 2023 11:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48508 "EHLO
+        id S229649AbjDPRhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Apr 2023 13:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjDPPwp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 11:52:45 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973D52D73;
-        Sun, 16 Apr 2023 08:52:44 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id ca18e2360f4ac-760ec550833so30328039f.3;
-        Sun, 16 Apr 2023 08:52:44 -0700 (PDT)
+        with ESMTP id S229446AbjDPRhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 13:37:14 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133321993
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 10:37:13 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id ca22-20020a056830611600b006a3c1e2b6d2so13603693otb.13
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 10:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681660364; x=1684252364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d4x2UJbvA5jImCs/m0TE0mCVt0AeoRniWoSCs1UrDqo=;
-        b=ScGUjRJTU56vQ6XAjspmGfU+EZ2wfDnMHBldx/bQuYz1s7xiP1bp1v93edwVkoa60U
-         cg+zNaSACeqDSzKBiQNMOTsBhYR7ZCHWZEIdY93KbDg5wo2iihTXLErzrhP/T+Lk+eH7
-         AmUjc4a/tj/Ljju0pNP+QklD32B2XC+2U1rn8AB4WH7bMGRDIBZpzcBr4U3c6YY3d/jE
-         S0s6rJPf563CL7O417OkJXkrgLgtmSkC5KCfB+uYbtxZz7OO1+CYjd5D8DZqWOSbLfpD
-         /VqPF/FNyTTMU5SXRVYvL42ZRy5leAXJsNUedhihIEmbcdH0sXJ/jIpQ8maDNPAVyTEg
-         UdnA==
+        d=linaro.org; s=google; t=1681666632; x=1684258632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p3MXe62Qv7CtzPpmu8rvoy3GoIPPlkCTC8+8F1j3AqY=;
+        b=R3Du7y6BhPUpvvixwE3OW/ohBtepqNDlfE90M9shQrOx76Z/fhM7fXKhouOtlYIE+p
+         id5Tfj4F61nLw8I3nS+kX3+YJJhXbqmYdBf9V391Rcb4Rtz4UFx8IHcJ9J6aJHMi1v9e
+         w58oe5JFw0hM2C9pzJ1Q40RXdP4sNyB4tHYjlAC9lORFWOSQnV8B3SRjp1+v9JYqiSbI
+         KbzanzvSmArETFunvri6vSJtEzACxV8Qsok5T8PYxPh8bHzbw1KPQG4o8nCaAE4vTe43
+         btGEJYfGhQeAIzjgyhuPa0phpUCdHgrf4k/jZUIGWNc02s/vf/i7fio1kejjjRG7StE0
+         mpew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681660364; x=1684252364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d4x2UJbvA5jImCs/m0TE0mCVt0AeoRniWoSCs1UrDqo=;
-        b=gZSfR5ABy2qXXJKrX0RjDu5Yw6gOxKoXAghY6elltHgmB1rTBAoX4A5xB2lnb3aodp
-         9+JdIV0g82XMKcIvYi+UUFQxqH7ncl42kbxZXl3rmjDfQo4s5IBEtQuyUXGGfru545b+
-         U1diS4tlswydaW2brAmxXaRDd38W5Z41UL/oYUSJxPWjtP5xglFEGrh6zrjiS/+rKl86
-         VsvHt6uuLZ6vbY25n7fSqMSfo2otmvgnZW/KT88cG+KqtGNKgJYP5/U4qiyLMgg2CtoK
-         T16Y30MSDV+75UFichOav+NoO4T8lTOTXEQSkJDGO4JouhVOJ5riCSoSWSL7ivlqc155
-         PXOw==
-X-Gm-Message-State: AAQBX9dx/HU1+LurPHnKv1cbg3s07EVtxaxo8ztFbSQrQXO0c4fy9muE
-        qiMtz0sVWsnK7SUtQXVz/cg=
-X-Google-Smtp-Source: AKy350a2fmmqdnZl4mg3g2vqLIdSX8pwTBimS6MtogYV0JnSjs8ic62o+L+RAxzAJTi2ddB3s/jTyw==
-X-Received: by 2002:a92:d48f:0:b0:318:d56e:9efa with SMTP id p15-20020a92d48f000000b00318d56e9efamr7990945ilg.24.1681660363979;
-        Sun, 16 Apr 2023 08:52:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l13-20020a02664d000000b0040bbcee6b57sm2543288jaf.133.2023.04.16.08.52.43
+        d=1e100.net; s=20221208; t=1681666632; x=1684258632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p3MXe62Qv7CtzPpmu8rvoy3GoIPPlkCTC8+8F1j3AqY=;
+        b=ln1s/cIWCQuwOiQxmuRjEBZixk+XonKFjfshyxClLhSgOVNrt9DeqQ5Zc40bWgbgQy
+         vAI20BwJVCBpnZ0+ZelxOk9nelKNdftxMQYk7xyvf7YyqsKHJIty3kAZxr2CCXAPpQZQ
+         QqM6c7t2h3wK4aXTcCy8wjEVs6M2nzRNwjXB04XVod8bH2SCwDvz1rvDyuKo0kkqCQ84
+         d/aPXsCYDQln7ByTQRJV/Bw2mt/+ARNWhGEtwGuMvC/tD3P4Up4CbO6Tl6Gwo5oZGT3K
+         cfAPPDIDKWN/v0Ajq24tFq1Wo+0RbKfRrpJ1daSKomEosaF7Py6dbDy6CBCCmLs7sKxW
+         9lvg==
+X-Gm-Message-State: AAQBX9cbFXIt6TRS9sUmNk6Bj4E7dhqbqV5QqqYnNLP4SllYkr/gYG7A
+        v8wWEOpSAvchrzwrcsVWYbRTVA==
+X-Google-Smtp-Source: AKy350bXVC/EzCQENYaq2Vy3eSjms9K00QDVO1VZxCNm3FLEvQ9qdIhKHUxU7ogt5zyfoN193fznHw==
+X-Received: by 2002:a05:6830:10c9:b0:6a5:e8da:a216 with SMTP id z9-20020a05683010c900b006a5e8daa216mr513558oto.27.1681666632369;
+        Sun, 16 Apr 2023 10:37:12 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id v16-20020a05683011d000b0069457b86060sm3771038otq.47.2023.04.16.10.37.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Apr 2023 08:52:43 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sun, 16 Apr 2023 08:52:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v3 01/17] dt-bindings: watchdog: mediatek,mtk-wdt: add
- mt8365
-Message-ID: <50a598a4-016b-4f2a-9d7e-19707d612238@roeck-us.net>
-References: <20230203-evk-board-support-v3-0-0003e80e0095@baylibre.com>
- <20230203-evk-board-support-v3-1-0003e80e0095@baylibre.com>
+        Sun, 16 Apr 2023 10:37:11 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH 0/3] Add Intel 8254 Counter support
+Date:   Sun, 16 Apr 2023 13:36:52 -0400
+Message-Id: <cover.1681665189.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230203-evk-board-support-v3-1-0003e80e0095@baylibre.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 10:54:22AM +0200, Alexandre Mergnat wrote:
-> Add binding description for mediatek,mt8365-wdt
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+The Intel 8254 PIT first appeared in the early 1980s and was used
+initially in IBM PC compatibles. The popularity of the original Intel
+825x family of chips led to many subsequent variants and clones of the
+interface in various chips and integrated circuits. Although still
+popular, interfaces compatible with the Intel 8254 PIT are nowdays
+typically found embedded in larger VLSI processing chips and FPGA
+components rather than as discrete ICs.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This patch series introduces a library to provide support for interfaces
+compatible with the venerable Intel 8254 Programmable Interval Timer
+(PIT). Modules wanting access to the i8254 library should select the
+newly introduced CONFIG_I8254 Kconfig option, and import the I8254
+symbol namespace.
 
-> ---
->  Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-> index 55b34461df1b..66cacea8e47f 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
-> @@ -38,6 +38,7 @@ properties:
->                - mediatek,mt7623-wdt
->                - mediatek,mt7629-wdt
->                - mediatek,mt8173-wdt
-> +              - mediatek,mt8365-wdt
->                - mediatek,mt8516-wdt
->            - const: mediatek,mt6589-wdt
->  
+Support for the i8254 is added in respective follow-up patches for the
+104-dio-48e driver and stx104 driver whose devices feature i8254
+compatible interfaces. Several additional dependencies are necessary for
+the 104-dio-48e [0][1][2] and stx104 [3][4].
+
+Due to the dependency requirements, I can take the i8254 introduction
+patch through the Counter tree and provide an immutable branch that can
+be merged to the GPIO and IIO trees; the 104-dio-48e patch and stx104
+patch could then be picked up separately by the respective subsystem
+maintainers.
+
+[0] https://lore.kernel.org/all/05a878d340251b781387db4b6490f288e41a651c.1680543810.git.william.gray@linaro.org/
+[1] https://lore.kernel.org/all/20230208105542.9459-1-william.gray@linaro.org/
+[2] https://lore.kernel.org/all/cover.1679323449.git.william.gray@linaro.org/
+[3] https://lore.kernel.org/all/20230318185503.341914-1-william.gray@linaro.org/
+[4] https://lore.kernel.org/all/cover.1680790580.git.william.gray@linaro.org/
+
+William Breathitt Gray (3):
+  counter: i8254: Introduce the Intel 8254 interface library module
+  gpio: 104-dio-48e: Add Counter/Timer support
+  iio: addac: stx104: Add 8254 Counter/Timer support
+
+ Documentation/ABI/testing/sysfs-bus-counter |  54 +++
+ MAINTAINERS                                 |   7 +
+ drivers/counter/Kconfig                     |  15 +
+ drivers/counter/Makefile                    |   1 +
+ drivers/counter/counter-sysfs.c             |   8 +-
+ drivers/counter/i8254.c                     | 447 ++++++++++++++++++++
+ drivers/gpio/Kconfig                        |   1 +
+ drivers/gpio/gpio-104-dio-48e.c             | 127 +++++-
+ drivers/iio/addac/Kconfig                   |   1 +
+ drivers/iio/addac/stx104.c                  |  61 ++-
+ include/linux/i8254.h                       |  21 +
+ include/uapi/linux/counter.h                |   6 +
+ 12 files changed, 730 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/counter/i8254.c
+ create mode 100644 include/linux/i8254.h
+
+
+base-commit: 09a9639e56c01c7a00d6c0ca63f4c7c41abe075d
+prerequisite-patch-id: 934c63dd47cb47e19739af076b95d3d55f5604f1
+prerequisite-patch-id: 02aafdd535091da6a4ed6abbb20fb661f74af9fb
+prerequisite-patch-id: cd19046150b7cff1be4ac7152198777aa960a3df
+prerequisite-patch-id: bd3e3830d9ce4f3876a77483364d7190b7fdffa7
+prerequisite-patch-id: 1e091c1f8f945a56cac59070221c4284306ba087
+prerequisite-patch-id: c6f681fcbf7495c5ed6a596872dc4f762f22d977
+prerequisite-patch-id: 239b016817624d56a4a2bddea1fda95282cb3d81
+prerequisite-patch-id: 5fbfe7df44dcf5a629cd82ba8383480cb05b52d1
+prerequisite-patch-id: 25a89f7312f225aaca11ef192e8d1f903a8b20e8
+prerequisite-patch-id: 899b556161f417e20db8e957c5099b92c3dcb673
+prerequisite-patch-id: eb09641cfb9e7caf7641ae6cb8e84e33cbb665a6
+-- 
+2.39.2
+
