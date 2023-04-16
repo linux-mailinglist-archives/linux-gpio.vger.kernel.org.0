@@ -2,71 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 174A96E3AAF
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 19:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F2DB6E3B50
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 20:47:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbjDPRh1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Apr 2023 13:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48970 "EHLO
+        id S229832AbjDPSrX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Apr 2023 14:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjDPRhS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 13:37:18 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E268199E
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 10:37:16 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id ds7-20020a0568306c0700b006a5cea70c02so1511150otb.8
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 10:37:16 -0700 (PDT)
+        with ESMTP id S229932AbjDPSrW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 14:47:22 -0400
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA8C1701;
+        Sun, 16 Apr 2023 11:47:20 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id me15so2994375qvb.4;
+        Sun, 16 Apr 2023 11:47:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681666635; x=1684258635;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1681670839; x=1684262839;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FYx0k5ihhJlPtRpOo4XGHOU5FikMHitAj1rgNIt8olI=;
-        b=iJhar42nZCrIRo6hBBOzAXGE/XF9O0Jp6LT+eXOaVDiIO5i/yATOcjPIAHJtvdJ2Rc
-         0flialZCD7rELafUN208dVRAsB48TeALBtAcqVlpfZD0mcM7AUWtzDqm5vchixm355ry
-         SZN7c0zOA9AqLgOk+Ag6hoQXvv9UhJgnl5MAhUgaezn3tNDTOK+KBRrTdYb+Riu5c4uF
-         09T3u/xfKj1C4WfTmIrkICPhIKXRHe+UQHz58sVBsX1Oo9kySjWkZ/32KewjyROxZT1I
-         oEvtgOlBtdCoKQrJt8ruiAPAKg1agDb8JXaTiTLZ4/rpdGZtYBeaeqkD8G5QSlpxdPG9
-         4MIA==
+        bh=AJvMNdbxF5XOII47Xfjnzs7nVVAPVvhFaQVsW7lIS/c=;
+        b=kQcxZY2YLw9qC3hQOSKH1NdFc6WVEQppjyMc4ibee4uBlFoFiUR34W1jhZFDXQ5X+1
+         hY6vB7upVxvALgiaqShu9Xug7dERrnwEUIaw45nk+TrYiMNDubZZ8zwCUO2EXGXf8c53
+         u5cRuO5xI5W7TTCiwdbh3Eo+B/3zxqejmX7z/UkZsfraeASs2RbyEb12xcZkbvQl1Yql
+         TFzQchGXX6NkNTIIq4ecWCOkYg9ucUPUpcvyJvohgPyaqXLsLlXk1em6UIryNf3ZSOaY
+         3RoaLHiiQLE5i5frgqyFcbeYd9O1LMQYlHWm6hJZjFHzK7oBfUx+HQLQLU4o7C4YXDm2
+         3GLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681666635; x=1684258635;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1681670839; x=1684262839;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FYx0k5ihhJlPtRpOo4XGHOU5FikMHitAj1rgNIt8olI=;
-        b=QgmWUuqdrDiV1XYQApDfWri7uFX/XNH7mTZMnXgcKCzSnJWWWId+qafsGncjfefemB
-         fFE/ErNiwzBR42ot0DF3C4W+C6zsd1bx1CVhGgUpXTkX56p6eXCL0J7q1Te/F+sEqhDP
-         eRiesEe59oqMIyETXthVYAE63yJwI9Whi1AH/lI4U1Ck8H7PCE1QhBxUiHdo+qOXTaPO
-         fsKaYmhXB9o0kLtiq9Vs2gh+rb3kQoNRpJJzNVK0CNCD8JOw3JZR+nYVIDt2tYcBhggM
-         HxeaA/WrxpMYjFkM3v0RrdbpWmtIXzkDW+GK+kYmDPan+upmsrSeej3otiu/UuCcDuKi
-         Kvzg==
-X-Gm-Message-State: AAQBX9fQPmfgFV1ROLcS3TaNAvqb1lr4ggwK4mSbelJK7PpfhbhmL2cY
-        kMtQuu5JcJ07zI3jbJlDeEHpFA==
-X-Google-Smtp-Source: AKy350a7UU1lbYnc9sEjdYX046H6Scr3HtpydUxLMudV1BMQbviJTEylyNcUf9a9pGCGVi4RdY1beQ==
-X-Received: by 2002:a05:6830:1614:b0:6a4:25d5:83f8 with SMTP id g20-20020a056830161400b006a425d583f8mr5467237otr.20.1681666635775;
-        Sun, 16 Apr 2023 10:37:15 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id v16-20020a05683011d000b0069457b86060sm3771038otq.47.2023.04.16.10.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Apr 2023 10:37:15 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 3/3] iio: addac: stx104: Add 8254 Counter/Timer support
-Date:   Sun, 16 Apr 2023 13:36:55 -0400
-Message-Id: <45d35b6f6e8d51df788b2bc85c456bfd45476b1a.1681665189.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1681665189.git.william.gray@linaro.org>
-References: <cover.1681665189.git.william.gray@linaro.org>
+        bh=AJvMNdbxF5XOII47Xfjnzs7nVVAPVvhFaQVsW7lIS/c=;
+        b=dnL8YnXnsg02UlEs1GchyuGCVZbl5QGMjhWfHtg9WBos7os6BHAuobLjVs6Pp3rIu+
+         FGiG1DgusGPPkJwQHKbCvLR+TnKXHCP0uPOeDUhFVVjz8bO9VEBoOPIfoZ7FeRB9twv3
+         3sm9G0g1+s1usm2hXdnV/1dm9hzCKR8IBeRcx2xDHlGrwDp1LCyqu3biCXzIOtqflWq7
+         6nbfQrHiG9ly1hkTIeZzGMIKEFc31GZe4qdyAHAtHjfxIE7whYNNWB0GqqCzeO+ncNOc
+         mOgME9Co+QO3vyURi1y7fBFu+KmtWni0Cu264Ny9GteiVWf8wEEwGW6bwdtRhTFMEjrC
+         yeNA==
+X-Gm-Message-State: AAQBX9ff/HBPfSfnTS8YAwWIRZfDdF5wp/9mAyoa2HjVsiwguURKjDVu
+        Hll2T/lwSpVKznjy4p+rp+gUlXm3N9orM03dyRn1FI0mqZY=
+X-Google-Smtp-Source: AKy350aSoWqDWWUwxtyHLrbMNipEHi+sv2d9tKp86w6bE9QfGfBdatlNc/+/RRIlFuvJfmKzTAmz9iRv93EdRSKFZ/0=
+X-Received: by 2002:ad4:5505:0:b0:5ef:474f:eb84 with SMTP id
+ pz5-20020ad45505000000b005ef474feb84mr1463627qvb.10.1681670839367; Sun, 16
+ Apr 2023 11:47:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230406093344.917259-1-alexander.stein@ew.tq-group.com>
+ <3231223.aeNJFYEL58@steina-w> <CAHp75VeR5R_CqWNT=Fpbyp-YSeo+3QXBnR62C=K_tyr-qQ2MVw@mail.gmail.com>
+ <4800953.GXAFRqVoOG@steina-w> <CAHp75VeTFDkaYRfX+9hE7LYE4Z-NpNfP=xfsGt27nm_DrTC_cw@mail.gmail.com>
+ <a79134a3-be9d-7297-15e1-1de4eb4054d0@linaro.org> <CAHp75VdRjCvcwjVO8GZfrVhFqJmO+WaqmJ63A2vVK4iELx=OXg@mail.gmail.com>
+ <ee53f7cf-b94a-ba0f-1e28-5ffa2c0f5e78@linaro.org> <CAHp75Vc31cQLT0TNS7UZddA+M=215qy_xZMpzTeRj0LV7t69tA@mail.gmail.com>
+ <ca984bb6-18b9-8e65-edb1-007a0fae4fb7@linaro.org> <CAHp75VfCm-80LuDmTNuOX-DP=xWnVibrpzu_wFAa5Wg0QY+yWQ@mail.gmail.com>
+ <a926837c-8773-1809-0bb3-34d449c5d7a5@linaro.org>
+In-Reply-To: <a926837c-8773-1809-0bb3-34d449c5d7a5@linaro.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 16 Apr 2023 21:46:43 +0300
+Message-ID: <CAHp75VcJMwoG07-d86obSLuPNGRQuRo_oW2JJA50ps--3s0kJA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] gpio: Add gpio-delay support
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,164 +80,122 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The STX104 features an 8254 Counter/Timer chip providing three
-counter/timers which can be used for frequency measurement, frequency
-output, pulse width modulation, pulse width measurement, event count,
-etc. The STX104 provides a register bank selection to bank select
-between the 8254 Bank and the Indexed Register Array Bank; the Indexed
-Register Array is not utilized by this driver, so the 8254 Bank is
-selected unconditionally.
+On Sun, Apr 16, 2023 at 2:42=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 16/04/2023 13:33, Andy Shevchenko wrote:
+> > On Sun, Apr 16, 2023 at 2:21=E2=80=AFPM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >> On 16/04/2023 13:14, Andy Shevchenko wrote:
+> >>> On Sun, Apr 16, 2023 at 2:04=E2=80=AFPM Krzysztof Kozlowski
+> >>> <krzysztof.kozlowski@linaro.org> wrote:
+> >>>> On 16/04/2023 11:36, Andy Shevchenko wrote:
+> >>>>> On Sun, Apr 16, 2023 at 10:42=E2=80=AFAM Krzysztof Kozlowski
+> >>>>> <krzysztof.kozlowski@linaro.org> wrote:
+> >>>>>> On 15/04/2023 17:06, Andy Shevchenko wrote:
+> >>>>>>> On Fri, Apr 14, 2023 at 9:37=E2=80=AFAM Alexander Stein
+> >>>>>>> <alexander.stein@ew.tq-group.com> wrote:
+> >>>>>>>> Am Dienstag, 11. April 2023, 11:34:16 CEST schrieb Andy Shevchen=
+ko:
+> >>>>>>>>> On Tue, Apr 11, 2023 at 10:19=E2=80=AFAM Alexander Stein
+> >>>>>>>>> <alexander.stein@ew.tq-group.com> wrote:
+> >>>>>
+> >>>>> ...
+> >>>>>
+> >>>>>>>>> So, taking the above into consideration, why is it GPIO propert=
+y to
+> >>>>>>>>> begin with? This is PCB property of the certain platform design=
+ that
+> >>>>>>>>> needs to be driven by a specific driver, correct?
+> >>>>>>>>
+> >>>>>>>> True this is induced by the PCB, but this property applies to th=
+e GPIO,
+> >>>>>>>> neither the GPIO controller output, nor the GPIO consumer is awa=
+re of.
+> >>>>>>>> So it has to be added in between. The original idea to add a pro=
+perty for the
+> >>>>>>>> consumer driver is also rejected, because this kind of behavior =
+is not limited
+> >>>>>>>> to this specific driver.
+> >>>>>>>> That's why the delay is inserted in between the GPIO output and =
+GPIO consumer.
+> >>>>>>>>
+> >>>>>>>>> At the very least this is pin configuration (but external to th=
+e SoC),
+> >>>>>>>>> so has to be a _separate_ pin control in my opinion.
+> >>>>>>>>
+> >>>>>>>> Sorry, I don't get what you mean by _separate_ pin control.
+> >>>>>>>
+> >>>>>>> As you mentioned above this can be applied theoretically to any p=
+in of
+> >>>>>>> the SoC, That pin may or may not be a GPIO or a pin that can be
+> >>>>>>> switched to the GPIO mode. Hence this entire idea shouldn't be pa=
+rt of
+> >>>>>>> the existing _in-SoC_ pin control driver if any. This is a purely
+> >>>>>>> separate entity, but at the same time it adds a property to a pin=
+,
+> >>>>>>> hence pin control.
+> >>>>>>> At the same time, it's not an SoC related one, it's a PCB. Hence =
+_separate_.
+> >>>>>>
+> >>>>>> I don't think that anything here is related to pin control. Pin co=
+ntrol
+> >>>>>> is specific function of some device which allows different propert=
+ies or
+> >>>>>> different functions of a pin.
+> >>>>>
+> >>>>> Sorry, but from a hardware perspective I have to disagree with you.
+> >>>>> It's a property of the _pin_ and not of a GPIO. Any pin might have =
+the
+> >>>>> same property. That's why it's definitely _not_ a property of GPIO,
+> >>>>> but wider than that.
+> >>>>
+> >>>> I did not say this is a property of GPIO. I said this is nothing to =
+do
+> >>>> with pin control, configuration and pinctrl as is.
+> >>>
+> >>> Ah, I see. But still is a property of the pin on the PCB level.
+> >>
+> >> No, it is property of a circuit, so property of two pins and a wire
+> >> between them. Not a property of one pin.
+> >
+> > Electrically speaking -- yes, software speaking, no, this is the
+> > property of the one end (platfrom abstraction in the software) and as
+> > you said, consumer which may be SoC, or the device connected to the
+> > SoC (depending on the signal direction), or both (like pull-up for
+> > I2C).
+> >
+> >>> That's
+> >>> why I said that it should be like a "proxy" driver that has to be a
+> >>> consumer of the pins on one side and provide the pins with this
+> >>> property on the other.
+> >>
+> >> Not sure, why do you need it for anything else than GPIOs? What is the
+> >> real world use case for proxy driver of non-GPIO lines?
+> >
+> > I2C is an example where we have something in between, which both of
+>
+> Are you sure you have RC (not just resistor) in I2C?
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/iio/addac/Kconfig  |  1 +
- drivers/iio/addac/stx104.c | 61 ++++++++++++++++++++++++++++++++++++--
- 2 files changed, 60 insertions(+), 2 deletions(-)
+I'm talking about an analogue. In principle the pull-up is part of PCB
+and not of the SoC.
 
-diff --git a/drivers/iio/addac/Kconfig b/drivers/iio/addac/Kconfig
-index 877f9124803c..b2623881f0ec 100644
---- a/drivers/iio/addac/Kconfig
-+++ b/drivers/iio/addac/Kconfig
-@@ -38,6 +38,7 @@ config STX104
- 	select REGMAP_MMIO
- 	select GPIOLIB
- 	select GPIO_REGMAP
-+	select I8254
- 	help
- 	  Say yes here to build support for the Apex Embedded Systems STX104
- 	  integrated analog PC/104 card.
-diff --git a/drivers/iio/addac/stx104.c b/drivers/iio/addac/stx104.c
-index d1f7ce033b46..6946a65512ca 100644
---- a/drivers/iio/addac/stx104.c
-+++ b/drivers/iio/addac/stx104.c
-@@ -8,6 +8,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/gpio/regmap.h>
-+#include <linux/i8254.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/types.h>
- #include <linux/isa.h>
-@@ -55,6 +56,7 @@ MODULE_PARM_DESC(base, "Apex Embedded Systems STX104 base addresses");
- #define STX104_ADC_STATUS (STX104_AIO_BASE + 0x8)
- #define STX104_ADC_CONTROL (STX104_AIO_BASE + 0x9)
- #define STX104_ADC_CONFIGURATION (STX104_AIO_BASE + 0x11)
-+#define STX104_I8254_BASE (STX104_AIO_BASE + 0x12)
- 
- #define STX104_AIO_DATA_STRIDE 2
- #define STX104_DAC_OFFSET(_channel) (STX104_DAC_BASE + STX104_AIO_DATA_STRIDE * (_channel))
-@@ -77,6 +79,7 @@ MODULE_PARM_DESC(base, "Apex Embedded Systems STX104 base addresses");
- /* ADC Configuration */
- #define STX104_GAIN GENMASK(1, 0)
- #define STX104_ADBU BIT(2)
-+#define STX104_RBK GENMASK(7, 4)
- #define STX104_BIPOLAR 0
- #define STX104_GAIN_X1 0
- #define STX104_GAIN_X2 1
-@@ -168,6 +171,32 @@ static const struct regmap_config dio_regmap_config = {
- 	.io_port = true,
- };
- 
-+static const struct regmap_range pit_wr_ranges[] = {
-+	regmap_reg_range(0x0, 0x3),
-+};
-+static const struct regmap_range pit_rd_ranges[] = {
-+	regmap_reg_range(0x0, 0x2),
-+};
-+static const struct regmap_access_table pit_wr_table = {
-+	.yes_ranges = pit_wr_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(pit_wr_ranges),
-+};
-+static const struct regmap_access_table pit_rd_table = {
-+	.yes_ranges = pit_rd_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(pit_rd_ranges),
-+};
-+
-+static const struct regmap_config pit_regmap_config = {
-+	.name = "i8254",
-+	.reg_bits = 8,
-+	.reg_stride = 1,
-+	.reg_base = STX104_I8254_BASE,
-+	.val_bits = 8,
-+	.io_port = true,
-+	.wr_table = &pit_wr_table,
-+	.rd_table = &pit_rd_table,
-+};
-+
- static int stx104_read_raw(struct iio_dev *indio_dev,
- 	struct iio_chan_spec const *chan, int *val, int *val2, long mask)
- {
-@@ -339,6 +368,21 @@ static const char *stx104_names[STX104_NGPIO] = {
- 	"DIN0", "DIN1", "DIN2", "DIN3", "DOUT0", "DOUT1", "DOUT2", "DOUT3"
- };
- 
-+static int bank_select_i8254(struct regmap *map)
-+{
-+	const u8 select_i8254[] = { 0x3, 0xB, 0xA };
-+	size_t i;
-+	int err;
-+
-+	for (i = 0; i < ARRAY_SIZE(select_i8254); i++) {
-+		err = regmap_write_bits(map, STX104_ADC_CONFIGURATION, STX104_RBK, select_i8254[i]);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- static int stx104_init_hw(struct stx104_iio *const priv)
- {
- 	int err;
-@@ -361,7 +405,7 @@ static int stx104_init_hw(struct stx104_iio *const priv)
- 	if (err)
- 		return err;
- 
--	return 0;
-+	return bank_select_i8254(priv->aio_ctl_map);
- }
- 
- static int stx104_probe(struct device *dev, unsigned int id)
-@@ -369,6 +413,7 @@ static int stx104_probe(struct device *dev, unsigned int id)
- 	struct iio_dev *indio_dev;
- 	struct stx104_iio *priv;
- 	struct gpio_regmap_config gpio_config;
-+	struct i8254_regmap_config pit_config;
- 	void __iomem *stx104_base;
- 	struct regmap *aio_ctl_map;
- 	struct regmap *aio_data_map;
-@@ -406,6 +451,11 @@ static int stx104_probe(struct device *dev, unsigned int id)
- 		return dev_err_probe(dev, PTR_ERR(dio_map),
- 				     "Unable to initialize dio register map\n");
- 
-+	pit_config.map = devm_regmap_init_mmio(dev, stx104_base, &pit_regmap_config);
-+	if (IS_ERR(pit_config.map))
-+		return dev_err_probe(dev, PTR_ERR(pit_config.map),
-+				     "Unable to initialize i8254 register map\n");
-+
- 	priv = iio_priv(indio_dev);
- 	priv->aio_ctl_map = aio_ctl_map;
- 	priv->aio_data_map = aio_data_map;
-@@ -449,7 +499,13 @@ static int stx104_probe(struct device *dev, unsigned int id)
- 		.drvdata = dio_map,
- 	};
- 
--	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-+	err = PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-+	if (err)
-+		return err;
-+
-+	pit_config.parent = dev;
-+
-+	return devm_i8254_regmap_register(dev, &pit_config);
- }
- 
- static struct isa_driver stx104_driver = {
-@@ -464,3 +520,4 @@ module_isa_driver(stx104_driver, num_stx104);
- MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
- MODULE_DESCRIPTION("Apex Embedded Systems STX104 IIO driver");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(I8254);
--- 
-2.39.2
+> > the ends are using and this is the property of PCB, but luckily we
+> > don't need anything special in the software for that, right? But from
+> > the electrical point of view it's exactly a non-GPIO property. That's
+> > why "proxy".
+>
+> Still I do not see any reason to call it anything else than GPIO. If you
+> think that there is any other usage, please bring it as an real,
+> non-theoretical example.
 
+The first, which one I found, is time-stretched ADC. The idea is that
+the portion of the signal is split to the phases and each phase is
+passed via time stretcher for the low-speed ADC to be digitized. So,
+if we have an SoC with 4+ ADCs, on the PCB one can add an externally
+clocked mux and then 4+ time stretching lines and on the SoC side it
+will be ADC (note, not a GPIO!).
+
+--=20
+With Best Regards,
+Andy Shevchenko
