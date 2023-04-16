@@ -2,133 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DA1F6E35D1
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 09:42:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D826E365C
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 11:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230358AbjDPHmX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Apr 2023 03:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41590 "EHLO
+        id S229849AbjDPJCG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Apr 2023 05:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjDPHmV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 03:42:21 -0400
+        with ESMTP id S230316AbjDPJCF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 05:02:05 -0400
 Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5305010F4
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 00:42:19 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-94a34a0baf9so520893566b.1
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 00:42:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93E019BB
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 02:02:02 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id kt6so18408168ejb.0
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 02:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681630938; x=1684222938;
+        d=linaro.org; s=google; t=1681635721; x=1684227721;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6dLa1M1X92V/rEfxWxLWOXbfYqz+Tfo7l/6rlFRMEeU=;
-        b=D+/5BrFrsRWl6tmSf2Cb4v4fCRJJDBC750uoFultAdnh/rxD6JdYZkt+JAuTlghQ+P
-         iX3CEovNCrbVXLxOaOBCDzYGniAX8u3E33EOK4BffQx0+K0A3vZS15PLxJfq3BVIjxog
-         iXdJs8zeHVu47n1/p2lRWMqTnsIHgk7V7fduxtCEw9iduO6tvXKJyqokQPlaPBfHevqr
-         GVEgV6kzZvtM7Ynkg+iDrymAwPR9KF8H3UUzZC/SdpSrkxRvJyakxqBLaXy3DTBNoblD
-         HPDoeQL7LJ2KioJ3amShv7J9fCH0muNs3lnnv66fqHVS46OnwNV2CDOLuvk1p5M2P3nv
-         F3sg==
+        bh=NBUHTWlHcrro+mx7/9lOvPlUuF3ExDqDmTNUFbhNBPY=;
+        b=YUvb7THHiqURbCOmoNw/dZBLEj2xPq54a3eWupj7vxzIVUhLlCpA+ST8u+1uzK5Rl9
+         tkGBo9xl85Nozhw80ElwQpe3CsQc0wdf+lVxd0Mkcw8lcfEC5Tp3xrl2Ur2iVgHFmULw
+         1oLC07TDOaTUx86bTpgAlVEWgNl7EklCo3Jdr00YHLe0OwOsuDriON4/LXS0LhxJrO4b
+         5TtBDbeNkvgr0nGB763WOPqXE3ORTRMD1BgQXY7LlRSvs5bSIGfFNbjVNQcqsXN0pP29
+         kEhdoeToT77U9g+62VJIHQKV4EuwA7XZRkPYrexxoMDWl4qeErvybkzRZS2EEwXtg1iR
+         DOoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681630938; x=1684222938;
+        d=1e100.net; s=20221208; t=1681635721; x=1684227721;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6dLa1M1X92V/rEfxWxLWOXbfYqz+Tfo7l/6rlFRMEeU=;
-        b=QgG6Wq5F+AwcwKSVQbGrFVzhI9Qj3ccdLkYHIJZ1cCE1ihrKaXAf9PJDu87tOKF6c7
-         N7HL3JABQMuemFR8EiqtHS4OiwRjMapAvug1/PrxgBzY5W/MKASIx2hISoJruS4sIcx0
-         IJYEYNfKB9HlKoyd6TE2LtzRFb9yzWZgZmCGlCOPFzOyZX57dGWFPH+2FOI7crVdq700
-         HGkHB7vq/lfK+l2V5T5SKGYLmhZB9QD6euIAsiMDuGVkFYOEUIVRwT5bCLIK5oHMeRZR
-         7nz0lcQMKMoqOEhcLdeRw4QHnbpzpgi3Jrf8UpE3S/3J1MnvdFvRiNBuGYs89qwkbuYw
-         T3dw==
-X-Gm-Message-State: AAQBX9d0tVN4zMDZH97Xifw+IM4VC8cL2yIaxg8bD+31s96lNOru5Z3d
-        CkWyxokCUR6n/Q+ZnOk+0xhmOQ==
-X-Google-Smtp-Source: AKy350YdEbzwwBXwD5KRCKHU96tJ9nWZ+m0qP+3oUQ7ORuqXSsAD1aF7PwhCPfQ53cXPp14fSnGkvw==
-X-Received: by 2002:a05:6402:68f:b0:506:98e8:7e58 with SMTP id f15-20020a056402068f00b0050698e87e58mr1775432edy.34.1681630937823;
-        Sun, 16 Apr 2023 00:42:17 -0700 (PDT)
+        bh=NBUHTWlHcrro+mx7/9lOvPlUuF3ExDqDmTNUFbhNBPY=;
+        b=Diluabeun62b76/q4lVb18qzdE8ejRT0RcSyEmakBgOEFnpahfRCbKyx5JpuDv7sVN
+         4VY4wXNTQvIy7xdi3ew9STWZFfzrGnMGdpRlMB+Nip4VwLAZ2gMIcq3poWo2GbZr62jl
+         4UZyJAPFkiX/UeOfZYQKeopV9jT/HaWVI0Giw0/0eC4mieGDr2JKpk+ry4PfR41CbB1m
+         ayQHtI7wCKQGZeP3rqW9hJT9ikfRlaEV8K8KlOxLAkrM49Mj1e/a7DNUdhOE4LgiOU2k
+         o8U/f/j9lpcOqRClVgEIWbuztAvmc84QEMcBivMUc5JG3mOha5hCfS7M5GM2h9cP2qwX
+         VEBw==
+X-Gm-Message-State: AAQBX9d96cpWx0Bk/OyuzuO780b9/GoecYylSNopvvzWIp8ryIcOR6ko
+        zVDSnFzhtTcEFP6kRDdI50QjqQ==
+X-Google-Smtp-Source: AKy350aCD3Nl1B/AkFfCuM+/+M8YwGdIR+7xVCq69z7r0rmzBt4t2g8IpQdlLgZTDLt3vijT1P2g0g==
+X-Received: by 2002:a17:907:838d:b0:947:4828:4399 with SMTP id mv13-20020a170907838d00b0094748284399mr3225966ejc.12.1681635721315;
+        Sun, 16 Apr 2023 02:02:01 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:29dd:ded4:3ccc:83db? ([2a02:810d:15c0:828:29dd:ded4:3ccc:83db])
-        by smtp.gmail.com with ESMTPSA id bl8-20020a170906c24800b00949691d3183sm4738461ejb.36.2023.04.16.00.42.16
+        by smtp.gmail.com with ESMTPSA id nd39-20020a17090762a700b0094e477eb441sm4776829ejc.110.2023.04.16.02.02.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Apr 2023 00:42:17 -0700 (PDT)
-Message-ID: <a79134a3-be9d-7297-15e1-1de4eb4054d0@linaro.org>
-Date:   Sun, 16 Apr 2023 09:42:16 +0200
+        Sun, 16 Apr 2023 02:02:00 -0700 (PDT)
+Message-ID: <5f33cdc9-cc14-e122-0590-ad59a0f44b2b@linaro.org>
+Date:   Sun, 16 Apr 2023 11:01:59 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v1 0/3] gpio: Add gpio-delay support
+Subject: Re: [PATCH V3 1/9] dt-bindings: arm64: Add IPQ5018 clock and reset
 Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20230406093344.917259-1-alexander.stein@ew.tq-group.com>
- <3231223.aeNJFYEL58@steina-w>
- <CAHp75VeR5R_CqWNT=Fpbyp-YSeo+3QXBnR62C=K_tyr-qQ2MVw@mail.gmail.com>
- <4800953.GXAFRqVoOG@steina-w>
- <CAHp75VeTFDkaYRfX+9hE7LYE4Z-NpNfP=xfsGt27nm_DrTC_cw@mail.gmail.com>
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Varadarajan Narayanan <quic_varada@quicinc.com>
+References: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com>
+ <1681468167-11689-2-git-send-email-quic_srichara@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAHp75VeTFDkaYRfX+9hE7LYE4Z-NpNfP=xfsGt27nm_DrTC_cw@mail.gmail.com>
+In-Reply-To: <1681468167-11689-2-git-send-email-quic_srichara@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/04/2023 17:06, Andy Shevchenko wrote:
-> On Fri, Apr 14, 2023 at 9:37 AM Alexander Stein
-> <alexander.stein@ew.tq-group.com> wrote:
->> Am Dienstag, 11. April 2023, 11:34:16 CEST schrieb Andy Shevchenko:
->>> On Tue, Apr 11, 2023 at 10:19 AM Alexander Stein
->>> <alexander.stein@ew.tq-group.com> wrote:
-> ...
+On 14/04/2023 12:29, Sricharan Ramabadhran wrote:
+> This patch adds support for the global clock controller found on
+> the IPQ5018 based devices.
 > 
->>> So, taking the above into consideration, why is it GPIO property to
->>> begin with? This is PCB property of the certain platform design that
->>> needs to be driven by a specific driver, correct?
->>
->> True this is induced by the PCB, but this property applies to the GPIO,
->> neither the GPIO controller output, nor the GPIO consumer is aware of.
->> So it has to be added in between. The original idea to add a property for the
->> consumer driver is also rejected, because this kind of behavior is not limited
->> to this specific driver.
->> That's why the delay is inserted in between the GPIO output and GPIO consumer.
->>
->>> At the very least this is pin configuration (but external to the SoC),
->>> so has to be a _separate_ pin control in my opinion.
->>
->> Sorry, I don't get what you mean by _separate_ pin control.
+> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+>  [v3] Fixed review comments and dts schema warnings
 > 
-> As you mentioned above this can be applied theoretically to any pin of
-> the SoC, That pin may or may not be a GPIO or a pin that can be
-> switched to the GPIO mode. Hence this entire idea shouldn't be part of
-> the existing _in-SoC_ pin control driver if any. This is a purely
-> separate entity, but at the same time it adds a property to a pin,
-> hence pin control.
-> At the same time, it's not an SoC related one, it's a PCB. Hence _separate_.
+>  .../bindings/clock/qcom,ipq5018-gcc.yaml           |  63 +++++++
+>  include/dt-bindings/clock/qcom,gcc-ipq5018.h       | 183 +++++++++++++++++++++
+>  include/dt-bindings/reset/qcom,gcc-ipq5018.h       | 122 ++++++++++++++
+>  3 files changed, 368 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq5018.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq5018.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml
+> new file mode 100644
+> index 0000000..f94a699
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,ipq5018-gcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Global Clock & Reset Controller on IPQ5018
+> +
+> +maintainers:
+> +  - Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> +
+> +description: |
+> +  Qualcomm global clock control module provides the clocks, resets and power
+> +  domains on IPQ5018
+> +
+> +  See also::
+> +    include/dt-bindings/clock/qcom,ipq5018-gcc.h
+> +    include/dt-bindings/reset/qcom,ipq5018-gcc.h
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq5018-gcc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
+> +      - description: Sleep clock source
+> +      - description: PCIE20 PHY0 pipe clock source
+> +      - description: PCIE20 PHY1 pipe clock source
+> +      - description: USB3 PHY pipe clock source
+> +      - description: GEPHY RX clock source
+> +      - description: GEPHY TX clock source
+> +      - description: UNIPHY RX clock source
+> +      - description: UNIPHY TX clk source
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +
+> +allOf:
+> +  - $ref: qcom,gcc.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    clock-controller@1800000 {
+> +      compatible = "qcom,ipq5018-gcc";
+> +      reg = <0x01800000 0x80000>;
+> +      clocks = <&xo_board_clk>,
+> +               <&sleep_clk>,
+> +               <&pcie20_phy0_pipe_clk>,
+> +               <&pcie20_phy1_pipe_clk>,
+> +               <&usb3_phy0_pipe_clk>,
+> +               <&gephy_rx_clk>,
+> +               <&gephy_tx_clk>,
+> +               <&uniphy_rx_clk>,
+> +               <&uniphy_tx_clk>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq5018.h b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
+> new file mode 100644
+> index 0000000..f3de2fd
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,gcc-ipq5018.h
+> @@ -0,0 +1,183 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (c) 2023, The Linux Foundation. All rights reserved.
 
-I don't think that anything here is related to pin control. Pin control
-is specific function of some device which allows different properties or
-different functions of a pin.
+Are you sure about the copyrights that they are attributed to Linux
+Foundation? CodeAurora is long gone, so this is a bit surprising.
 
-This has nothing to do with different
-properties/configuration/functions, thus it is not pin control. The pin
-control maintainer also acked the patches.
+Anyway, fine with me:
 
-The choice was discussed before, so I am surprised why you jump late in
-discussions.
-
-Although different problem is calling it v1. This is not v1, but v3 or
-v4. Keep proper versioning. After v2 goes v3. RFC does not mean "v-2".
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
