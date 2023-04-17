@@ -2,94 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C65C6E3C31
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Apr 2023 23:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D54526E3D39
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 03:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbjDPVnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Apr 2023 17:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59348 "EHLO
+        id S229547AbjDQBrA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Apr 2023 21:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjDPVnw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 17:43:52 -0400
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF18210A
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 14:43:50 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id oA9wpixEOfW5ioA9wp7C2p; Sun, 16 Apr 2023 23:43:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-        s=t20230301; t=1681681428;
-        bh=vF9mRhCUpfiJDniHjN1U8oMAgEUODJM62IemQiobv8s=;
-        h=From:To:Cc:Subject:Date;
-        b=gK7vGpkIcnWsmBbMq6CGRAW+XbhDDYYOymGG1wfwAs7vVyxn91J1Mx95f0U3Os9eQ
-         guPsDh2gbxJS46QjmL+WgUsqXiTDztzb6vWYFLQVbYVvBl7hKfdaFiiUB3R90oS+hn
-         1MCgcTADMkGMV83yWe2LvmQy8BRClnOHr2I2PyXiLLp0N5aTlZLTgb6MxjlTyQ27yC
-         HyZhaGWX8phlPd9ARerhSwAwdFc620NA2qqSnEXXMQQiQBIdMKISxQ6GrJ3Ac3Keer
-         mDquEVicZfPMpY3TFz+AzAbBVVy1bfu5s2hCn15QgA6rhxbDzpeTt5i0CHg5GKdmEt
-         tX1e9sy1RpSQQ==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 16 Apr 2023 23:43:48 +0200
-X-ME-IP: 86.243.2.178
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: bcm2835: Handle gpiochip_add_pin_range() errors
-Date:   Sun, 16 Apr 2023 23:43:41 +0200
-Message-Id: <98c3b5890bb72415145c9fe4e1d974711edae376.1681681402.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229461AbjDQBq7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Apr 2023 21:46:59 -0400
+Received: from smtpbg153.qq.com (smtpbg153.qq.com [13.245.218.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B41211D;
+        Sun, 16 Apr 2023 18:46:49 -0700 (PDT)
+X-QQ-mid: Yeas43t1681695972t617t22105
+Received: from 7082A6556EBF4E69829842272A565F7C (jiawenwu@trustnetic.com [183.129.236.74])
+X-QQ-SSF: 00400000000000F0FL9000000000000
+From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 6726329158921540316
+To:     "'Andrew Lunn'" <andrew@lunn.ch>
+Cc:     "'Wolfram Sang'" <wsa@kernel.org>,
+        "'Jarkko Nikula'" <jarkko.nikula@linux.intel.com>,
+        <netdev@vger.kernel.org>, <linux@armlinux.org.uk>,
+        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <mengyuanlou@net-swift.com>
+References: <20230411092725.104992-1-jiawenwu@trustnetic.com> <20230411092725.104992-3-jiawenwu@trustnetic.com> <00cf01d96c58$8d3e9130$a7bbb390$@trustnetic.com> <09dc3146-a1c6-e1a3-c8bd-e9fe547f9b99@linux.intel.com> <ZDgtryRooJdVHCzH@sai> <01ec01d96ec0$f2e10670$d8a31350$@trustnetic.com> <438840fa-6e8b-44c5-8b90-be521c72b77a@lunn.ch>
+In-Reply-To: <438840fa-6e8b-44c5-8b90-be521c72b77a@lunn.ch>
+Subject: RE: [PATCH net-next v2 2/6] net: txgbe: Implement I2C bus master driver
+Date:   Mon, 17 Apr 2023 09:46:09 +0800
+Message-ID: <024001d970ce$62482750$26d875f0$@trustnetic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: zh-cn
+Thread-Index: AQJXy8bYFbRwx/PFgpvJPX7PgyT97wJCMZrbAk6D9c4BtpNb5AI7nLSFAlh8gEMBnL3xP63OQy8g
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvr:qybglogicsvr5
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpiochip_add_pin_range() can fail, so better return its error code than
-a hard coded '0'.
+On Saturday, April 15, 2023 11:11 PM, Andrew Lunn wrote:
+> > I don't quite understand how to get the clock rate. I tried to add a software
+> > node of clock with property ("clock-frequency", 100000) and referenced by
+> > I2C node. But it didn't work.
+> 
+> I've not spent the time to fully understand the code, so i could be
+> very wrong....
+> 
+> From what you said above, you clock is fixed? So maybe you can do
+> something like:
+> 
+> mfld_get_clk_rate_khz()
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/i2c/busses/i2c-designware-pcidrv.c#L97
+> 
+> How are you instantiating the driver? Can you add to
+> i2_designware_pci_ids[]?
+> 
+>     Andrew
+> 
 
-Fixes: d2b67744fd99 ("pinctrl: bcm2835: implement hook for missing gpio-ranges")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This patch is speculative and compile tested only.
-
-If it is wrong, maybe a comment explaining why 0 should be returned would
-be welcomed.
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 8e2551a08c37..cb298fad354a 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -366,10 +366,8 @@ static int bcm2835_add_pin_ranges_fallback(struct gpio_chip *gc)
- 	if (!pctldev)
- 		return 0;
- 
--	gpiochip_add_pin_range(gc, pinctrl_dev_get_devname(pctldev), 0, 0,
--			       gc->ngpio);
--
--	return 0;
-+	return gpiochip_add_pin_range(gc, pinctrl_dev_get_devname(pctldev), 0, 0,
-+				      gc->ngpio);
- }
- 
- static const struct gpio_chip bcm2835_gpio_chip = {
--- 
-2.34.1
+There is no PCI ID for our I2C device, so I register the platform I2C device.
 
