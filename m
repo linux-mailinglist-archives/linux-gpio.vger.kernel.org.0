@@ -2,83 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AEB56E3FA7
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 08:22:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80D206E4091
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 09:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjDQGW1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Apr 2023 02:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        id S229945AbjDQHTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Apr 2023 03:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230032AbjDQGW0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Apr 2023 02:22:26 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2693A35A6
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 23:22:24 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id xd13so27317225ejb.4
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Apr 2023 23:22:24 -0700 (PDT)
+        with ESMTP id S230192AbjDQHTq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Apr 2023 03:19:46 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 234762D69
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 00:19:44 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id n193so2238394ybf.12
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 00:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681712542; x=1684304542;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k4Yco67CZ5Wiqh6xlkC+dk0EOaH8oJH2a8u5ODA10rk=;
-        b=m7XhJaTu913AC9IRLUZQvKowNigNYtCgKjL8oKu8LXsNadzdKuwz7yPMhIsar8uYRU
-         wP2pfdVXjtO6IVi3DOvx7ziMB6yR7gM+XAwhUvWzYpdGtrX+/IbWRUqkeoj4WspxbFZi
-         7t1DL0zMX13uLi/wxkXntZAGyFZyW3lyqQr8v3RmLmS+DkMclQ8A7DlgsR+x1qcZDYgo
-         /IF+Hyy7Wzu08mc1VbDPI5y5HMxfVz2IOZQoRc8aVmrAJBw//wFMMFQ9NWW905ZeRLp6
-         myjZQay3qMzpbopuUZM9ZteXb8rcXbz/vwMVWHqR4phhNuOnuf5n67c1U8LdsxulslAC
-         iIoA==
+        d=linaro.org; s=google; t=1681715982; x=1684307982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LezI5N06gUfL5VofBpxCgnhm0O11oB3isx+9Mg+GBQQ=;
+        b=CPMdF9/el+rtkzp7YpCWqGDoSW1U2oiym3NrO9uV4H6JnBztqIWxyh7oVJhat6ENmW
+         Hq74if1BquvMgI/1dWEq364oXps/TdQI6yEso5aURXjTuTb+P2Nvf5mUBw66p2MoVYsL
+         +lUYFUC9HER7ZU3Up6UVWViCqvc4nIxg4Mtyjwm6LR1h24KJjyB2WTIrTX0A/n+FJ5Pp
+         yYNRnhiWLXuM6qVtfsPH7GaWlq237fNVtiTPm1QE8wZ012RcqEywRvs2mFT4Y611xpRi
+         NLf8d8mDaBMRVKqSRsBlCXedCHkp1ol+t9suH/yZo0RwK8oUsELnEhREinTpK6OgtEIp
+         n5pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681712542; x=1684304542;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4Yco67CZ5Wiqh6xlkC+dk0EOaH8oJH2a8u5ODA10rk=;
-        b=T9FNCylYbCDgwQmbRo7rPab1FP+BPlDX81rTLQWWAhbJ+peKW8zXbVbMaaXFibdGf1
-         xpPS+1S7d7/XL3NOU21N+k9huPxbUMaGSf6sWtucd22GKVbmyLL+Jzmur6ndc4M9pbfp
-         7/jYqyLdlfCf4lonn3T6BM7EnVMrs5Wqn0sR0DfeJi1OQOUnAPWKlo//eZZoj1b0cl8o
-         KrfKBxNKIJG2bxP+gExwTUfGo3oyRRZxY6R81neOss3dzp9NflEWB7zG2+yM2ruoSqHE
-         CVWZVH9QFbyTteHvPLLBQqLUBf0Ubmo6r3AyipPJrfij3iI0x+GVkpNuqAMJj/OqGGwh
-         13Sg==
-X-Gm-Message-State: AAQBX9fSjBVcfxPhRzqBWySICrG/wjWzBfPAp7u4rCexVteg4eJKh7aG
-        SwgCWSqlNg7HIdnsM8aQe933IA==
-X-Google-Smtp-Source: AKy350Yr+G7OTiYUxQowTuWQvBnT6MkVGR0h+w9EiaAjTU+EhgXnVhXOHwb7DZ31iU18wbhuaVvHmA==
-X-Received: by 2002:a17:907:7b07:b0:94f:21e0:7e5a with SMTP id mn7-20020a1709077b0700b0094f21e07e5amr5384920ejc.8.1681712542665;
-        Sun, 16 Apr 2023 23:22:22 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:b0ac:4d3b:966c:b33d? ([2a02:810d:15c0:828:b0ac:4d3b:966c:b33d])
-        by smtp.gmail.com with ESMTPSA id wj7-20020a170907050700b0094f3d700868sm2295464ejb.80.2023.04.16.23.22.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Apr 2023 23:22:22 -0700 (PDT)
-Message-ID: <5d4d02ec-f8e7-c931-aebe-6255209fbde0@linaro.org>
-Date:   Mon, 17 Apr 2023 08:22:20 +0200
+        d=1e100.net; s=20221208; t=1681715982; x=1684307982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LezI5N06gUfL5VofBpxCgnhm0O11oB3isx+9Mg+GBQQ=;
+        b=TfRHJmfbjWfLRoDSn2xw5noXrNv7Oy7SWPB8KGu96KaX1EcgE2X/Q7XH3P4ONmIBJb
+         UMCKDLW3aok3lN65mo7OAyr7qBb/g3vvYTtoCM1iGDSh7fU4q30wrjmr+1GcFYcFVk2c
+         Yc2hUmSQmsGn/5RPRcRX+eYVYMUbcsD7WIkFlYuxQbW1QW3dCKQT02XCOHCBO5qkeIw4
+         RKwoxFWlWeX33vSHtlDlHXzJFVNPECFYnW6r1T5NC41WfzRp+sRtpvEOfZdPTipbEN9Z
+         qOL32tG/twLPtCFVOrhBNmyYhZ3DLAGPlPWpKMnesmmkShdJPFRT9lFBGo7wCFloJUAM
+         N/wA==
+X-Gm-Message-State: AAQBX9ccVq5CG37tRhpBpVMxd+By9JhfiIS5vn5GNUoYUCKpJeiroKMb
+        T1D74ZOuQqtgztTLEAvH6efPGKuKhXhLkv1mOPFORQ==
+X-Google-Smtp-Source: AKy350ZSDXiRkRB0XzZ06b+WZU9a+1WWRR7+3OqW6fz9YLhF4pt4K0gJDZ5/Pn7FrsHRllwne80GePfA2ZD3X950KkM=
+X-Received: by 2002:a25:d057:0:b0:b8f:5c64:cc2e with SMTP id
+ h84-20020a25d057000000b00b8f5c64cc2emr6750036ybg.12.1681715982402; Mon, 17
+ Apr 2023 00:19:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 3/9] dt-bindings: pinctrl: qcom: Add support for
- ipq5018
-Content-Language: en-US
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Nitheesh Sekar <quic_nsekar@quicinc.com>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>
-References: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com>
- <1681468167-11689-4-git-send-email-quic_srichara@quicinc.com>
- <536ed00f-e252-c8d3-e3ae-9bb9bb79babe@linaro.org>
- <9e977da8-902a-74d2-7cce-74669b127c30@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <9e977da8-902a-74d2-7cce-74669b127c30@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+References: <CABrMOxZY6Q3wiYsJUaXZiSET_gjMJ3GWaMrDCXwXC6nf7AX2_g@mail.gmail.com>
+In-Reply-To: <CABrMOxZY6Q3wiYsJUaXZiSET_gjMJ3GWaMrDCXwXC6nf7AX2_g@mail.gmail.com>
+From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Mon, 17 Apr 2023 09:19:31 +0200
+Message-ID: <CACMJSevuPg=bWkE5fTdechJMrTUWiaM9nn1f8G1tTDdphcPWFQ@mail.gmail.com>
+Subject: Re: [libgpiod] Question regarding locks / race conditions
+To:     Sameh Mohamed <sameh4@gmx.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,30 +67,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/04/2023 08:13, Sricharan Ramabadhran wrote:
->>> +    tlmm: pinctrl@1000000 {
->>> +        compatible = "qcom,ipq5018-tlmm";
->>> +        reg = <0x01000000 0x300000>;
->>> +        gpio-controller;
->>> +        #gpio-cells = <2>;
->>> +        gpio-ranges = <&tlmm 0 0 47>;
->>> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
->>> +        interrupt-controller;
->>> +        #interrupt-cells = <2>;
->>> +
->>> +        uart2-state {
->>> +            pins = "gpio34", "gpio35";
->>> +            function = "blsp2_uart";
->>
->> Does not look like you tested the bindings. Please run `make
->> dt_binding_check` (see
->> Documentation/devicetree/bindings/writing-schema.rst for instructions).
-> 
->    I ran it against the TOT, will run it this time on nxt and post V4.
+On Sun, 16 Apr 2023 at 18:20, Sameh Mohamed <sameh4@gmx.com> wrote:
+>
+> Hello,
+>
+> Many thanks for your excellent work and contributions.  I've been learnin=
+g about libgpiod in the last few days.
+>
+> Studying the cxx bindings examples, particularly around line request, I l=
+ooked up the C code for gpiod_line_request_get_values_subset  and saw that =
+it does not deal with any potential locks.
+>
+> I searched a bit on stackoverflow regarding Linux device drivers, and saw=
+ that it's basically up to the application to manage locks.
+>
+> As an inexperienced programmer in the Linux user-space; I have worked pri=
+marily in python and C++ client applications at a higher level, I wanted to=
+ confirm my understanding.  If I am writing some library to run the Raspber=
+ryPi that will make use of libgpiod-2.0.1, it will be up to me to avoid loc=
+ks when making line requests, etc.
+>
+> Thanks,
+> Sameh
 
-I don't know what is TOT, but this would fail in every case on every tree.
+Yes! It's a design approach low-level C libraries usually take and
+libgpiod is no exception.
 
-
-Best regards,
-Krzysztof
-
+Bart
