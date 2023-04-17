@@ -2,147 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3E566E42AB
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 10:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 732DF6E47AF
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 14:29:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230527AbjDQIfY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Apr 2023 04:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47384 "EHLO
+        id S229955AbjDQM3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Apr 2023 08:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbjDQIfW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Apr 2023 04:35:22 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28351525E
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 01:35:18 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id kt6so23847489ejb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 01:35:18 -0700 (PDT)
+        with ESMTP id S229812AbjDQM3J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Apr 2023 08:29:09 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E337610FA
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 05:29:07 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-63b5465fc13so861003b3a.3
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 05:29:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681720516; x=1684312516;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jOi5tK+OGPHQm6htXDR5U68ZReexAHOUaRN7I2oGD8k=;
-        b=E0Kx67cEiCPHehDco2mDIZiGpabs3Max5Ma2CbbdHaWB96ceYQ1K/8mgvvo/7kcHAo
-         SSsrNC5jnbLrZmpLWHwkNAfhTvLXXvzpxNeq96arEQdhR+eD60oiCFLJwSdXn/2IWgeC
-         dBWUt4VvJykpacVnAGF2I/XVGDdMRYiSiVEN8esTohYaDuZsDoFQWFVGvmiClr9EW0hR
-         UAloZtt0Zo011j9XU+db0bGxji3glFLyK/sn3shpOHMP4GkqvmntN92zixnqxgTxiHtm
-         WZvzp3oo+blot76VZLHKcVGGRz9XTkLKIYK74jWioPtqPrua4y1+ZP6ep+NwiUj3hLh9
-         Hp8Q==
+        d=gmail.com; s=20221208; t=1681734547; x=1684326547;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VikSPEaucE42BRa4WJpfiZ2fpXB3+koXvtJAh7ajBA=;
+        b=NbkYL6dRZ+hEvFzcR+kAFqgCT3EgSJ+LPnat/pgOd/M7ma6kucIeg8aUpkwGg4Pnse
+         z1wDxNlPEDUV1tLc72h/V9+Yq9zuOmU8s5t/5lIPqldDryd8YL7lc5ZC3PDTEHk9mb2B
+         nW6RGBdB+jHR1qblKGbWQVcWsvY3Yvm5Znm3c1IpSEuqxq/vKpJIpNsvr/WPAL/UeBy6
+         3zFvOkPSWRwZKJZfbeoJBFFyrtbtmQdJCGWZM1WyD5tWn27lLaSuu5XVuZorwu7A6sGg
+         kAMxq/sxqaXdHU9BQBv7NVP1h1Oyzxo/Qv4QNm3+eep0Hk1EMzBHmpxQ086t23zRdZqW
+         LO8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681720516; x=1684312516;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jOi5tK+OGPHQm6htXDR5U68ZReexAHOUaRN7I2oGD8k=;
-        b=akzDkUUv2rdU0KBM8IFV1Hu+n9y8jYSs/ecYsOwnpzEjwY/0NTh7RMhguUD8cU8kpg
-         8Y/StKSoQ6J3xJ/DYpXpCtMLWEWdJXWP6JlgeAAGHTsE/HOYyPribKzAt3pgzG8fHxpv
-         0If20aLQ0UyWcHloXtFEzeS4ogoy60N3D81bBqwB9UYWOIQDJqlb8omIrqV+A0QuNlPj
-         EdabxwacluUZNe6rgO3JrBlWSoEIc6vPTOeGJ86R2sNDHqPwXzo2Shtk0hPsc9k+MNms
-         xWPTroBjkZ8QThIrFkelHJPGW7zv+pRCUH0niCeHeJ7qMNzbBRCKPgxAiDm8oGlGUdFE
-         5+CQ==
-X-Gm-Message-State: AAQBX9c7MjexWwLNoQJApJIAkIpDwWioi3fFCMKmYHrR6g3sORH3/UlL
-        xTrdFYkG2Pp58DEMQ0VqRyZbSA==
-X-Google-Smtp-Source: AKy350YoaaDUDxlz8DqeHMiEL4jmIMDW5roQccOUuiMRDsiw6Rk8TxI/S7fcJSHDG0KUlsI2rAIyJw==
-X-Received: by 2002:a17:906:8604:b0:94e:f176:43cc with SMTP id o4-20020a170906860400b0094ef17643ccmr6987784ejx.39.1681720516598;
-        Mon, 17 Apr 2023 01:35:16 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:b0ac:4d3b:966c:b33d? ([2a02:810d:15c0:828:b0ac:4d3b:966c:b33d])
-        by smtp.gmail.com with ESMTPSA id y15-20020a170906524f00b0094e1026bc66sm6393487ejm.140.2023.04.17.01.35.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Apr 2023 01:35:16 -0700 (PDT)
-Message-ID: <1632bd15-c9b6-4bb8-13b2-d0c4b068315c@linaro.org>
-Date:   Mon, 17 Apr 2023 10:35:15 +0200
+        d=1e100.net; s=20221208; t=1681734547; x=1684326547;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6VikSPEaucE42BRa4WJpfiZ2fpXB3+koXvtJAh7ajBA=;
+        b=bAlE15GZg3poqOKgaovcJ3vekr4i6Bfsh0V4llHGCOtlb5p4/uTNAm568skk5jLLs9
+         MWw4HRo3G+z2rwkQh4lg6tGmdJKbHk8dadaYHr3CNEY44ZVXkIby0PbUuWMUyNFCI8N2
+         rttgzgt5RS09Mu2sF6vUvEjGTdsEveCUNptMrw945CgBJoh2FV/uOz4/cjcJfj43aufu
+         WLR8hPgXCNDpEEu6xESNcch3s1fONGtWgojU2Iv64+XmrGSKyWwt8xOo7Uw/asCiMpcD
+         dxNpmJ0L9tNQwwYZPVGqJsDiEermjXIbw+mjGV9P/CHcZ2otOsjCX489QYt7tqSCs98g
+         a/Mg==
+X-Gm-Message-State: AAQBX9eYB4uG0jx1i7S8n/uycXdZViFnoVqK2DmKcZKkRlpmphTygyiy
+        qOXxMo4Erx5SyTsqFFGZ/74=
+X-Google-Smtp-Source: AKy350YpZCBby+6e8EwHvccwy2XUCdSD7DaWdCczYnXlDx7RLNIkDsMCXwcuNqmqyT5w1N+iHKoYoA==
+X-Received: by 2002:a05:6a00:1822:b0:63b:68bf:f764 with SMTP id y34-20020a056a00182200b0063b68bff764mr15872752pfa.7.1681734547262;
+        Mon, 17 Apr 2023 05:29:07 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id n17-20020aa78a51000000b0062dcf5c01f9sm7533311pfa.36.2023.04.17.05.29.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 05:29:06 -0700 (PDT)
+Date:   Mon, 17 Apr 2023 20:29:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Sameh Mohamed <sameh4@gmx.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] Question regarding locks / race conditions
+Message-ID: <ZD07jv32RzLXKGfE@sol>
+References: <CABrMOxZY6Q3wiYsJUaXZiSET_gjMJ3GWaMrDCXwXC6nf7AX2_g@mail.gmail.com>
+ <CACMJSevuPg=bWkE5fTdechJMrTUWiaM9nn1f8G1tTDdphcPWFQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 03/18] dt-bindings: interrupt-controller: qcom-pdc: add
- compatible for sa8775p
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-References: <20230327125316.210812-1-brgl@bgdev.pl>
- <20230327125316.210812-4-brgl@bgdev.pl>
- <CAMRc=Mfe6gCM=Mz6Can6xsSsrjX-9T_aR2Yev+b57koky_az-A@mail.gmail.com>
- <CAMRc=Mfw+4Co8JPz51_E+DSawijO8EB6rMmFXEmM0e5F3Fg_8A@mail.gmail.com>
- <3877cb9e-9647-0acf-f705-d34fe2c731ff@linaro.org>
- <CAMRc=MeT4VLiLu5DJSXHqDdZv2gEoC-B7aPvoXVpc3SokQcrFg@mail.gmail.com>
- <b46028dc-b539-384c-78aa-2f5e6f6516f2@linaro.org>
-In-Reply-To: <b46028dc-b539-384c-78aa-2f5e6f6516f2@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMJSevuPg=bWkE5fTdechJMrTUWiaM9nn1f8G1tTDdphcPWFQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/04/2023 09:55, Krzysztof Kozlowski wrote:
-> On 17/04/2023 09:27, Bartosz Golaszewski wrote:
->> On Sun, Apr 16, 2023 at 5:04 PM Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 14/04/2023 11:33, Bartosz Golaszewski wrote:
->>>> On Thu, Apr 6, 2023 at 4:10 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>>
->>>>> On Mon, Mar 27, 2023 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>>>
->>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>>
->>>>>> Add a compatible for the Power Domain Controller on SA8775p platforms.
->>>>>> Increase the number of PDC pin mappings.
->>>>>>
->>>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>>>> Cc: Marc Zyngier <maz@kernel.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/interrupt-controller/qcom,pdc.yaml     | 3 ++-
->>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
->>>>>> index 94791e261c42..641ff32e4a6c 100644
->>>>>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.yaml
->>>>>> @@ -26,6 +26,7 @@ properties:
->>>>>>    compatible:
->>>>>>      items:
->>>>>>        - enum:
->>>>>> +          - qcom,sa8775p-pdc
->>>>>>            - qcom,sc7180-pdc
->>>>>>            - qcom,sc7280-pdc
->>>>>>            - qcom,sc8280xp-pdc
->>>>>> @@ -53,7 +54,7 @@ properties:
->>>>>>    qcom,pdc-ranges:
->>>>>>      $ref: /schemas/types.yaml#/definitions/uint32-matrix
->>>>>>      minItems: 1
->>>>>> -    maxItems: 32 # no hard limit
->>>>>> +    maxItems: 38 # no hard limit
->>>
->>> I don't think the limit is correct. I still see warnings with this
->>> patch. We already have 57 elements, so limit should be I guess 128 or
->>> something.
->>>
->>
->> You mean for other platforms? This limit applies to sa8775p as the
+On Mon, Apr 17, 2023 at 09:19:31AM +0200, Bartosz Golaszewski wrote:
+> On Sun, 16 Apr 2023 at 18:20, Sameh Mohamed <sameh4@gmx.com> wrote:
+> >
+> > Hello,
+> >
+> > Many thanks for your excellent work and contributions.  I've been learning about libgpiod in the last few days.
+> >
+> > Studying the cxx bindings examples, particularly around line request, I looked up the C code for gpiod_line_request_get_values_subset  and saw that it does not deal with any potential locks.
+> >
+> > I searched a bit on stackoverflow regarding Linux device drivers, and saw that it's basically up to the application to manage locks.
+> >
+> > As an inexperienced programmer in the Linux user-space; I have worked primarily in python and C++ client applications at a higher level, I wanted to confirm my understanding.  If I am writing some library to run the RaspberryPi that will make use of libgpiod-2.0.1, it will be up to me to avoid locks when making line requests, etc.
+> >
+> > Thanks,
+> > Sameh
 > 
-> I see errors on sa8775p.
+> Yes! It's a design approach low-level C libraries usually take and
+> libgpiod is no exception.
+> 
 
-OK, so as you pointed out it's about other platform - sa8540p-ride.
-Anyway you update now this line to bump the limit, so bump it to
-something high instead of changing it in two patches.
+Just to add my 2c...
 
-Best regards,
-Krzysztof
+It isn't clear to me where you expect that locks need to be applied.
 
+Single threaded apps, such as the examples, do not require any locks.
+Similarly apps that restrict a given line request to a single thread.
+Any shared resources within the kernel, including the relevant device
+drivers, are handled by the kernel.
+
+The GPIO uAPI provided by the kernel, and that libgpiod wraps, is MT-safe
+(though I can't think of a use case where making calls on a given line request
+concurrently from multiple threads is a good idea).
+
+However, data structures returned by libgpiod are in userspace and are not
+MT-safe.  So if you want to share those structures between threads then
+you need to add locking to prevent potential race conditions.
+As Bart alluded to above, the best way to do that is dependent on the
+application, so low-level libraries like libgpiod usually leave it to the
+app.
+
+And again, you probably don't want to share a line request between
+threads anyway - even if you think you do.
+
+Cheers,
+Kent.
