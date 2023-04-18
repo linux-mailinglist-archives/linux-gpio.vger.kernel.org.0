@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 135BA6E6ADE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 19:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B04C86E6AEA
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 19:27:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232511AbjDRR0A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 13:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33836 "EHLO
+        id S231547AbjDRR1h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 13:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232493AbjDRRZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 13:25:59 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AECB451
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:25:54 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id q23so65684424ejz.3
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:25:54 -0700 (PDT)
+        with ESMTP id S232070AbjDRR1f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 13:27:35 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C720083FE
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:27:08 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id ud9so74968176ejc.7
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:27:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681838753; x=1684430753;
+        d=linaro.org; s=google; t=1681838827; x=1684430827;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=N70iPkFfQBuCbKSQnb1e+odyhME0b2/FgC8OXpv+szQ=;
-        b=i476fzVyEwIX6Ci+akB0mlt+b7taBzslw9udc9jmvJyaJxm7Tfw7+v6doKYjE/zzWV
-         CeJNpAZ2m5izilZkISlLL+eiAVl2/FRCxRwuPyGDf8n5Ck2uJdVRgAJrGPRaDRKOjQBR
-         qQXBfPHjJ3d2u2AVhq8Smjq5ESSAwOULZuLB24DKfOQ0f48IG5bopxZkAaclOXALQE1x
-         VhStMKUIJzN1lAYuiafdTnRTo6bWdYq7jnYp/6eSM2kJ2W5oTf7VCJmDGFZ//AYVVIi8
-         V2anRPtGw160kaMwu4r87Arpxjy1dtpdu+V4zDnmJSHUq8dI1Xx0uEVYuJsn3N+4Tat/
-         n7JQ==
+        bh=QYEHg2sosnOY0pAhC25Z66tH7y5mKmQfmFvbWvEdvY8=;
+        b=jUWAYBzciOdxMLyBKAteFPWMBnIQ907UER8Br2Vyks/pQVV58YB/3Ls5C7XX2LI4U2
+         jfNZziZrx0CA7NJJ38GSlS9SOx5z0Lyc+XfLua95FgQP+Jd1xUpnpxsz1MuqPw2AuZpz
+         ouVZ4wjxyv80Be9cT5epF09Ijk/TyAbTP0U4+54XlyMp/D5R11CQmJYXI4EOneLwBagn
+         PWwQ49zREJ+rtsUSQLihNcpEbLbhcvP5C9a44bagUbOn6BwCfBDmECMzIiKzk53D0LS2
+         juTtN5FQ4ke7m49HEyIaAGsTHuqeC/x05yrMil1fHl4mm8Rmg9ft5Hq6a6dGm1voGx43
+         VhSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681838753; x=1684430753;
+        d=1e100.net; s=20221208; t=1681838827; x=1684430827;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N70iPkFfQBuCbKSQnb1e+odyhME0b2/FgC8OXpv+szQ=;
-        b=kqs/RbWzwEnFr+gkqCA+zQ7TaZOWFhYIiop/KWuC3I95N7GmmomKfzKcrifzkvG//J
-         cfuVoPFEX1sc6BP/DJk3NNuGifRXyr3vrEQZ/IjjUdeB6q/XwIXt5oB0Z1fOxCgTH09r
-         O47856bqa0EnPMroOAQT3+qy/Mtt4PLdQ5hdpkxtNWnMDoD8FUhWQL0l/owiVRz2q2pA
-         oOY3E13Y2oKXkp5hp6D31GLFeX5OLKHMYhOpstyxWo72v2jOAIanjMmjNuMmuwxxk2/b
-         KCEiGp6w4lsPoB3xj3XjBqXG7uocNesC31r0YH3K/vuIrACEvXRhjmJOYDLlvqqKiZ8+
-         8qvA==
-X-Gm-Message-State: AAQBX9eJLVgdxuDuQenduFfajLjvPoCyuu2g4LiTG331TeHQYj8npat4
-        egOJCjGJ5XUHk/pi3SX6Psuyuw==
-X-Google-Smtp-Source: AKy350b1STZS120ECcyrpawasLZ72en4UZfoXPSns9UtzoU801B+SY6qIfPyQiAVgySXpuQd/+myMQ==
-X-Received: by 2002:a17:906:4ac7:b0:94e:ed5d:8777 with SMTP id u7-20020a1709064ac700b0094eed5d8777mr11844548ejt.25.1681838753310;
-        Tue, 18 Apr 2023 10:25:53 -0700 (PDT)
+        bh=QYEHg2sosnOY0pAhC25Z66tH7y5mKmQfmFvbWvEdvY8=;
+        b=V13EtERKQRlCl16IslgLa5NEcAD7HG1OzoupY+3ALYs0CsslysuyhHF+OBPx1Vc0nZ
+         tR7pH+CtYLKGTYU0UqacLQcXfXhuZuyxLFq0Ze2+J66nmdeN9QtzYokrMatz2Nft6VRl
+         vI5vmcDCh4TmFm35zQXj9HbXjEAGbnb/MwwyiQ1mZ+v/SiZ+AUbf3xLH/Xl8FVGz7i7z
+         1avkrK8+zybTXWtu82SI9OVHJySxZyA5PEmq2HmvsdTCqQBJ/egFdVN1sMoWX3tUJu/z
+         xMwTS4xk01s24zZIRPj2UaDkbBkT+ffVXRu2yxkd9kDccqseA7lYdiaGy7h7vuRnY7j8
+         0CEw==
+X-Gm-Message-State: AAQBX9drH7kR7yErZBggf7XP7w045zp2wlTrZff3rVI0EVKUKJ9BiEE4
+        3kd0t68GkaB51W1SXFFEGaYTng==
+X-Google-Smtp-Source: AKy350ah1qKGBvGjkmYLETOZpHpiL7PCK1pVCgTZyqcOkD9XXhiJaftKDw0p33OVAjltW7b8DVz1pg==
+X-Received: by 2002:a17:906:3e90:b0:94f:6316:ce8d with SMTP id a16-20020a1709063e9000b0094f6316ce8dmr6593515ejj.34.1681838827296;
+        Tue, 18 Apr 2023 10:27:07 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:a276:7d35:5226:1c77? ([2a02:810d:15c0:828:a276:7d35:5226:1c77])
-        by smtp.gmail.com with ESMTPSA id xd3-20020a170907078300b0094f1b8901e1sm5348653ejb.68.2023.04.18.10.25.52
+        by smtp.gmail.com with ESMTPSA id j25-20020a1709062a1900b0094f614e43d0sm3829592eje.8.2023.04.18.10.27.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 10:25:52 -0700 (PDT)
-Message-ID: <7ec079fb-3ead-258b-2cf7-2d613808dd4e@linaro.org>
-Date:   Tue, 18 Apr 2023 19:25:51 +0200
+        Tue, 18 Apr 2023 10:27:06 -0700 (PDT)
+Message-ID: <79416f48-1c3d-6139-7c5f-de1907383a85@linaro.org>
+Date:   Tue, 18 Apr 2023 19:27:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v1 7/9] ARM: dts: gxp: add psu, i2c, gpio
+Subject: Re: [PATCH v1 9/9] MAINTAINERS: hpe: Add GPIO, PSU
 Content-Language: en-US
 To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
         brgl@bgdev.pl, robh+dt@kernel.org,
@@ -64,15 +64,15 @@ To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20230418152824.110823-1-nick.hawkins@hpe.com>
- <20230418152824.110823-8-nick.hawkins@hpe.com>
+ <20230418152824.110823-10-nick.hawkins@hpe.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230418152824.110823-8-nick.hawkins@hpe.com>
+In-Reply-To: <20230418152824.110823-10-nick.hawkins@hpe.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -82,375 +82,30 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 18/04/2023 17:28, nick.hawkins@hpe.com wrote:
 > From: Nick Hawkins <nick.hawkins@hpe.com>
 > 
-> Add support for the GXP I2C, PSU, and GPIO
-> drivers. As well as adjust register ranges to be
-> correct.
-
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v5.18-rc4/source/Documentation/process/submitting-patches.rst#L586
-
+> List the files added for GPIO and PSU support.
 > 
 > Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
 > ---
->  arch/arm/boot/dts/hpe-bmc-dl360gen10.dts | 161 ++++++++++++++++++
->  arch/arm/boot/dts/hpe-gxp.dtsi           | 197 ++++++++++++++++++++---
->  2 files changed, 338 insertions(+), 20 deletions(-)
+>  MAINTAINERS | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts b/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
-> index 3a7382ce40ef..487b6485a832 100644
-> --- a/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
-> +++ b/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
-> @@ -23,4 +23,165 @@
->  		device_type = "memory";
->  		reg = <0x40000000 0x20000000>;
->  	};
-> +
-> +	i2cmux@4 {
-> +		compatible = "i2c-mux-reg";
-> +		i2c-parent = <&i2c4>;
-> +		reg = <0xd1000374 0x1>;
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a3b14ec33830..6df959ebf523 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2239,7 +2239,9 @@ M:	Nick Hawkins <nick.hawkins@hpe.com>
+>  S:	Maintained
+>  F:	Documentation/hwmon/gxp-fan-ctrl.rst
+>  F:	Documentation/devicetree/bindings/arm/hpe,gxp.yaml
+> +F:	Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
 
-Keep reg as second property. Run dtbs_check W=1, doesn't it scream about
-mistake in unit address?
+Since the drivers are going through subsystems, your patchset is not
+bisectable.
 
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@4 {
-> +			reg = <4>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +
-> +	i2cmux@6 {
-> +		compatible = "i2c-mux-reg";
-> +		i2c-parent = <&i2c6>;
-> +		reg = <0xd1000376 0x1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@4 {
-> +			reg = <4>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@5 {
-> +			reg = <5>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	status = "okay";
-> +	eeprom@50 {
-> +		compatible = "atmel,24c02";
-> +		pagesize = <8>;
-> +		reg = <0x50>;
+Squash respective changes with respective patches.
 
-Keep reg as second property. In other places you have it correctly.
-
-
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c5 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c6 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c7 {
-> +	status = "okay";
-> +	psu@58 {
-> +		compatible = "hpe,gxp-psu";
-> +		reg = <0x58>;
-> +		hpe,sysreg = <&sysreg_system_controller2>;
-> +	};
-> +
-> +	psu@59 {
-> +		compatible = "hpe,gxp-psu";
-> +		reg = <0x59>;
-> +		hpe,sysreg = <&sysreg_system_controller2>;
-> +	};
-> +};
-> +
-> +&i2c8 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c9 {
-> +	status = "okay";
-> +};
-> +
-> +&gpio {
-> +	gpio-line-names =
-> +	"", "", "", "", "", "", "", "", "", "", /*0 - 9*/
-
-That's very odd indentation. Usually it is one of:
-
-gpio-line-names = "foo", "bar"
-                  "baz", "zab";
-
-
-gpio-line-names =
-	"foo", "bar"
-	"baz", "zab";
-
-Where first one is preferred.
-
-
-> +	"", "", "", "", "", "", "", "", "", "", /*10 - 19*/
-> +	"", "", "", "", "", "", "", "", "", "", /*20 - 29*/
-> +	"", "", "", "", "", "", "", "", "", "", /*30 - 39*/
-> +	"", "", "", "", "", "", "", "", "", "", /*40 - 49*/
-> +	"", "", "", "", "", "", "", "", "", "", /*50 - 59*/
-> +	"", "", "", "", "", "", "", "", "", "", /*60 - 69*/
-> +	"", "", "", "", "", "", "", "", "", "", /*70 - 79*/
-> +	"", "", "", "", "", "", "", "", "", "", /*80 - 89*/
-> +	"", "", "", "", "", "", "", "", "", "", /*90 - 99*/
-> +	"", "", "", "", "", "", "", "", "", "", /*100 - 109*/
-> +	"", "", "", "", "", "", "", "", "", "", /*110 - 119*/
-> +	"", "", "", "", "", "", "", "", "", "", /*120 - 129*/
-> +	"", "", "", "", "", "", "", "", "", "", /*130 - 139*/
-> +	"", "", "", "", "", "", "", "", "", "", /*140 - 149*/
-> +	"", "", "", "", "", "", "", "", "", "", /*150 - 159*/
-> +	"", "", "", "", "", "", "", "", "", "", /*160 - 169*/
-> +	"", "", "", "", "", "", "", "", "", "", /*170 - 179*/
-> +	"", "", "", "", "", "", "", "", "", "", /*180 - 189*/
-> +	"", "", "RESET_OUT", "NMI_OUT", "", "", "", "", "", "", /*190 - 199*//*GPIO*/
-> +	"", "", "", "", "", "", "", "", "", "", /*Vuhc 200-209*/
-> +	"POWER_OUT", "PS_PWROK", "PCIERST", "POST_COMPLETE", "", "", "", "", "", ""; /*210 - 219*/
-> +};
-> +
-> +&gpio1 {
-> +	gpio-line-names =
-> +	"IOP_LED1", "IOP_LED2", "IOP_LED3", "IOP_LED4", "IOP_LED5", "IOP_LED6", "IOP_LED7",
-> +	"IOP_LED8", "FAN1_INST", "FAN2_INST", "FAN3_INST", "FAN4_INST", "FAN5_INST", "FAN6_INST",
-> +	"FAN7_INST", "FAN8_INST", "FAN1_FAIL", "FAN2_FAIL", "FAN3_FAIL", "FAN4_FAIL", "FAN5_FAIL",
-> +	"FAN6_FAIL", "FAN7_FAIL", "FAN8_FAIL", "FAN1_ID", "FAN2_ID", "FAN3_ID", "FAN4_ID",
-> +	"FAN5_ID", "FAN6_ID", "FAN7_ID", "FAN8_ID", "IDENTIFY", "HEALTH_RED", "HEALTH_AMBER",
-> +	"POWER_BUTTON", "UID_PRESS", "SLP", "NMI_BUTTON", "RESET_BUTTON", "SIO_S5",
-> +	"SO_ON_CONTROL", "PSU1_INST", "PSU2_INST", "PSU3_INST", "PSU4_INST", "PSU5_INST",
-> +	"PSU6_INST", "PSU7_INST", "PSU8_INST", "PSU1_AC", "PSU2_AC", "PSU3_AC", "PSU4_AC",
-> +	"PSU5_AC", "PSU6_AC", "PSU7_AC", "PSU8_AC", "PSU1_DC", "PSU2_DC", "PSU3_DC", "PSU4_DC",
-> +	"PSU5_DC", "PSU6_DC", "PSU7_DC", "PSU8_DC", "", "", "", "",
-> +	"", "", "", "", "", "", "", "", "", "";
->  };
-> diff --git a/arch/arm/boot/dts/hpe-gxp.dtsi b/arch/arm/boot/dts/hpe-gxp.dtsi
-> index cf735b3c4f35..8a8faf7fbd60 100644
-> --- a/arch/arm/boot/dts/hpe-gxp.dtsi
-> +++ b/arch/arm/boot/dts/hpe-gxp.dtsi
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Device Tree file for HPE GXP
-> + * Device Tree for HPE GXP
-
-Not really related to this change,
-
->   */
->  
->  /dts-v1/;
-> @@ -52,76 +52,233 @@
->  			cache-level = <2>;
->  		};
->  
-> -		ahb@c0000000 {
-> +		ahb@80000000 {
->  			compatible = "simple-bus";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
-> -			ranges = <0x0 0xc0000000 0x30000000>;
-> -			dma-ranges;
-> +			ranges = <0x0 0x80000000 0x20000000>,
-> +			<0x40000000 0xc0000000 0x3fff0000>;
-
-Wrong indentation.
-
->  
-> -			vic0: interrupt-controller@eff0000 {
-> +			vic0: interrupt-controller@4eff0000 {
-
-You need to better organize your changes and split some refactorings
-from new devices. I don't understand why eff0000 becomes 4eff0000 -
-whether this is a bug being fixed, incorrect design etc. Commit msg just
-says "to be correct", so this is was a bug. Bugfixes cannot mixed with
-new features/code/refactorings. Anyway this is very vague. Explain what
-is not correct, why it has to be fixed.
-
->  				compatible = "arm,pl192-vic";
-> -				reg = <0xeff0000 0x1000>;
-> +				reg = <0x4eff0000 0x1000>;
->  				interrupt-controller;
->  				#interrupt-cells = <1>;
->  			};
->  
-> -			vic1: interrupt-controller@80f00000 {
-> +			vic1: interrupt-controller@f00000 {
->  				compatible = "arm,pl192-vic";
-> -				reg = <0x80f00000 0x1000>;
-> +				reg = <0xf00000 0x1000>;
->  				interrupt-controller;
->  				#interrupt-cells = <1>;
->  			};
->  
-> -			uarta: serial@e0 {
-> +			uarta: serial@400000e0 {
->  				compatible = "ns16550a";
-> -				reg = <0xe0 0x8>;
-> +				reg = <0x400000e0 0x8>;
->  				interrupts = <17>;
->  				interrupt-parent = <&vic0>;
->  				clock-frequency = <1846153>;
->  				reg-shift = <0>;
->  			};
->  
-> -			uartb: serial@e8 {
-> +			uartb: serial@400000e8 {
->  				compatible = "ns16550a";
-> -				reg = <0xe8 0x8>;
-> +				reg = <0x400000e8 0x8>;
->  				interrupts = <18>;
->  				interrupt-parent = <&vic0>;
->  				clock-frequency = <1846153>;
->  				reg-shift = <0>;
->  			};
->  
-> -			uartc: serial@f0 {
-> +			uartc: serial@400000f0 {
->  				compatible = "ns16550a";
-> -				reg = <0xf0 0x8>;
-> +				reg = <0x400000f0 0x8>;
->  				interrupts = <19>;
->  				interrupt-parent = <&vic0>;
->  				clock-frequency = <1846153>;
->  				reg-shift = <0>;
->  			};
->  
-> -			usb0: usb@efe0000 {
-> +			usb0: usb@4efe0000 {
->  				compatible = "hpe,gxp-ehci", "generic-ehci";
-> -				reg = <0xefe0000 0x100>;
-> +				reg = <0x4efe0000 0x100>;
->  				interrupts = <7>;
->  				interrupt-parent = <&vic0>;
->  			};
->  
-> -			st: timer@80 {
-> +			st: timer@40000080 {
->  				compatible = "hpe,gxp-timer";
-> -				reg = <0x80 0x16>;
-> +				reg = <0x40000080 0x16>;
->  				interrupts = <0>;
->  				interrupt-parent = <&vic0>;
->  				clocks = <&iopclk>;
->  				clock-names = "iop";
->  			};
->  
-> -			usb1: usb@efe0100 {
-> +			usb1: usb@4efe0100 {
->  				compatible = "hpe,gxp-ohci", "generic-ohci";
-> -				reg = <0xefe0100 0x110>;
-> +				reg = <0x4efe0100 0x110>;
->  				interrupts = <6>;
->  				interrupt-parent = <&vic0>;
->  			};
-> +
-> +			sysreg_system_controller: syscon@400000f8 {
-> +				compatible = "hpe,gxp-sysreg", "syscon";
-> +				reg = <0x400000f8 0x8>;
-> +			};
-> +
-> +			sysreg_system_controller2: syscon@51000319 {
-> +				compatible = "hpe,gxp-sysreg", "syscon";
-> +				reg = <0x51000319 0x4>;
-> +			};
-> +
-> +			i2c0: i2c@40002000 {
-> +				compatible = "hpe,gxp-i2c";
-> +				reg = <0x40002000 0x70>;
-> +				interrupts = <9>;
-> +				interrupt-parent = <&vic0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				status = "disabled";
-
-Status is last property.
-
-> +				hpe,sysreg = <&sysreg_system_controller>;
-> +				clock-frequency = <100000>;
-> +			};
-
-
-(...)
-> +
-> +			fan-controller@40000c10 { /* 0xc0000c10 */
-> +				compatible = "hpe,gxp-fan-ctrl";
-> +				reg = <0x40000c10 0x8>, <0x51000327 0x06>;
-> +				reg-names = "base", "pl";
-> +			};
-> +
-> +			gpio: gpio@0 {
-> +				compatible = "hpe,gxp-gpio";
-> +				reg = <0x0 0x400>, <0x200046 0x1>, <0x200070 0x08>,
-> +				<0x400064 0x80>, <0x5100030f 0x1>;
-
-This looks randomly indented...
-
-
+I also suggest do not mix three different subsystems - GPIO, hwmon and
+ARM SoC - in one patchset.
 
 Best regards,
 Krzysztof
