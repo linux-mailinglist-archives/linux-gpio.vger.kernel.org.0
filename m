@@ -2,100 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB2FE6E69D9
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 18:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D8C6E6A44
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 18:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232571AbjDRQnu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 12:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
+        id S229781AbjDRQ4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 12:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232568AbjDRQnt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 12:43:49 -0400
-Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C414740EE;
-        Tue, 18 Apr 2023 09:43:46 -0700 (PDT)
-Received: from [192.168.178.23] (unknown [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id F202ECB3CB;
-        Tue, 18 Apr 2023 16:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1681836225; bh=vIuKvsLduKbdJuLqS3gE6yL7XCUiBq1e88KkTbfWTJA=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc;
-        b=ItGVjgWcNdo/Uswib8zZNt18Zfz4kbVzUdCqBxQ5VGD5vchb9bo68cvDKGviLBb3u
-         H2BX/Z6zBC524zyumfeDRa9e7Roqht+9iRXI8zfkmXi9FCBI0QYf4E83Usn0G6hO/d
-         zu5FkfnhmbS+6mjGkAG92V1oCjiqJWI/4CjASH/s=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Date:   Tue, 18 Apr 2023 18:43:24 +0200
-Subject: [PATCH v2 8/8] Documentation: leds: Add "rgb:status" path
+        with ESMTP id S230138AbjDRQ4P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 12:56:15 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315D310F2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 09:56:12 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id xi5so74901096ejb.13
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 09:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681836970; x=1684428970;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E9r6vhrkko4zPYKv6JRFQGVQ2+t+vuWkDBddrUXbkwM=;
+        b=bRjrSxqIkvgEmtgigbiL9yBNKslSQECi3N6Uep879t1YooBRUvYPCO9juJiO8aCMfW
+         K/Mw2ReqyXBmN7ptsnNFmxhXh2YNlVfi0Fu82BPZwhABVY1kl3tu/AgzrMV7xa5c3uzL
+         BoSZL54V5/mBc9C/ADcwH66C5BRLYXWQrBAj7LE7bLzO+eVW5Gon94QMdF/9HJ2gw2JI
+         6/vjftyuShxpxF2B4McOMAmqWq0bs4eWBrX+UkqWXigd/hbMHCexXZOMFP15A2IVCOb+
+         Gl2vLZ4+MvriFcEs0/cCpju3vE/U5Kp207NFLzfMEpfaGqfEiJRGvlT9oJRU32/37APp
+         FhkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681836970; x=1684428970;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E9r6vhrkko4zPYKv6JRFQGVQ2+t+vuWkDBddrUXbkwM=;
+        b=RJ6gnMAsxAUMBXhzUkBfg7PeMjcFkWkUNrFbEQMtnaAZlvAS+hHcYzIgIMQ3K7uQeW
+         OLfc04azODqxdLtD4ZjXoD0n3LR1Kp++S3okFa56tJ5na/UDaWeZQLNUVaJrBJiOqjwi
+         lbRB7ohN9pFfEK4LUGQs7n1Y7stESV82Bo3COHdsVVQYZBR147YClwi1VJcH54PlSN9e
+         IUvrTqszFsfLLsgnrdBkds9xVHYZSgcEI0FvgCxbBMGwnxZs8geqhZ1R36rHxjQLpYf/
+         91KtGoc/mCRIu3Jd8vrY+lPHhzB8FJRxtxD3k+MijhOboNzTouPa2IB//fKTjlISmahu
+         hW7A==
+X-Gm-Message-State: AAQBX9dlGZ80EMMxRGcUeTP7I91UFnEVwCXf9Lg6QhPZSwnjLW2+ap6B
+        SAgpXLj7CsPO71zdhaItsoqYwQ==
+X-Google-Smtp-Source: AKy350bPoEMLpe5oSBrQOv/9HkbetIXsMdKgm2IFpkfjExHHMqyOhIiyDer8ofhdyFWf3ShL9TrHjw==
+X-Received: by 2002:a17:906:3456:b0:94f:1a11:e07d with SMTP id d22-20020a170906345600b0094f1a11e07dmr10473537ejb.32.1681836970620;
+        Tue, 18 Apr 2023 09:56:10 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:a276:7d35:5226:1c77? ([2a02:810d:15c0:828:a276:7d35:5226:1c77])
+        by smtp.gmail.com with ESMTPSA id z18-20020a1709060ad200b0094f7b713e40sm3041286ejf.126.2023.04.18.09.56.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Apr 2023 09:56:10 -0700 (PDT)
+Message-ID: <39307e05-adf7-3f6c-9b73-821bb55e2cda@linaro.org>
+Date:   Tue, 18 Apr 2023 18:56:09 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
-References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
-In-Reply-To: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
-To:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sm8150: Drop duplicate
+ function value "atest_usb2"
+To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-doc@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=728; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=vIuKvsLduKbdJuLqS3gE6yL7XCUiBq1e88KkTbfWTJA=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBkPsi9m5afxit5T1vzibsBn+zy17heWoOlFzh0L
- dsKpRleV7eJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZD7IvQAKCRBy2EO4nU3X
- Vr2qD/9mYq9OTIzbUKwzqEA/BbJJX5bd0Oe7VKDxIfeNJ40qCYV//lXBjQIJamulELHCBuS0HtO
- jHDFmjksMA3gg1I+A7QmpTLn9TQY5AdnR5Oo+1XRd5O6135LfzAe/AGUaNdTOnzFK/opBAjyXH8
- EY3tBL3M9Rb1nHaa/i4AGL0Md1iEaUs58Z5euTzf1Rp4XNy/VcOtoNRkSKOvDz+JGKn4RSVT/rh
- 2PkgVswxeQVsp5jLe/hha1BdKdsuzn13RwkRt8i8IjIFCVdtNODlo2dVc+KqafCIWBBf1QsW0dP
- gPtDlMVAdUX9KFUy8HbIkFxqwMHspc+fRtbg5G1Oxlo1cx/qCjiraYXLw2E8NSznd41ICyglBYa
- S8rRRLIQyys/1IgsF8o8qNtB/5BcZV4TVCNo5DjMkXSuDNZ/QfyDIcI5W8Lh5HMSn3wrBDPsfAE
- 1dz3tS8V5pgXgXiq0t0x7ZFMAqZUKXWLqZt/uGAnORnSDRzhzciiCm6QYqLq+AbKy7bxVhagyBu
- /Mt4FH78hED1WjSTe2tbCQRSeQ5fUqJB2pWhbC6uenH6PaI6XMMib/ev5cLVaR+cZPskqYBQRc8
- e5wpPamgx7kwA3bP+NJ6Uw82+dC00rCSXhMB0nGzCSeNgc4FNKE3Us4DFdMdQjErFr6C8zj9+WD
- tn5NejdQLbgjE1w==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230418150613.1528233-1-robh@kernel.org>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230418150613.1528233-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The path /sys/class/leds/rgb:status is already widely used with the
-qcom-lpg driver and others. Document it.
+On 18/04/2023 17:06, Rob Herring wrote:
+> The enum value "atest_usb2" appears twice. Remove the duplicate. The
+> meta-schema normally catches these, but schemas under "$defs" was not
+> getting checked. A fix for that is pending.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- Documentation/leds/well-known-leds.txt | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/Documentation/leds/well-known-leds.txt b/Documentation/leds/well-known-leds.txt
-index 2160382c86be..439d4dac4472 100644
---- a/Documentation/leds/well-known-leds.txt
-+++ b/Documentation/leds/well-known-leds.txt
-@@ -58,6 +58,7 @@ LEDs on notebook body, indicating that sound input / output is muted.
- 
- * System notification
- 
-+Good: "rgb:status"
- Legacy: "status-led:{red,green,blue}" (Motorola Droid 4)
- Legacy: "lp5523:{r,g,b}" (Nokia N900)
- 
-
--- 
-2.40.0
+Best regards,
+Krzysztof
 
