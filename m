@@ -2,92 +2,254 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D8C6E6A44
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 18:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 051CF6E6A65
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 19:02:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229781AbjDRQ4Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 12:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
+        id S232001AbjDRRC2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 13:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbjDRQ4P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 12:56:15 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315D310F2
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 09:56:12 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id xi5so74901096ejb.13
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 09:56:12 -0700 (PDT)
+        with ESMTP id S231348AbjDRRC1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 13:02:27 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FF4619B
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:02:26 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id u3so22988104ejj.12
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681836970; x=1684428970;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1681837344; x=1684429344;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=E9r6vhrkko4zPYKv6JRFQGVQ2+t+vuWkDBddrUXbkwM=;
-        b=bRjrSxqIkvgEmtgigbiL9yBNKslSQECi3N6Uep879t1YooBRUvYPCO9juJiO8aCMfW
-         K/Mw2ReqyXBmN7ptsnNFmxhXh2YNlVfi0Fu82BPZwhABVY1kl3tu/AgzrMV7xa5c3uzL
-         BoSZL54V5/mBc9C/ADcwH66C5BRLYXWQrBAj7LE7bLzO+eVW5Gon94QMdF/9HJ2gw2JI
-         6/vjftyuShxpxF2B4McOMAmqWq0bs4eWBrX+UkqWXigd/hbMHCexXZOMFP15A2IVCOb+
-         Gl2vLZ4+MvriFcEs0/cCpju3vE/U5Kp207NFLzfMEpfaGqfEiJRGvlT9oJRU32/37APp
-         FhkA==
+        bh=+5TFm8G1q6eckW0t79BRMGwZlMLiJfFRdZkFunxVru8=;
+        b=rdGnL0DWhUo73XXGLtsCT7BmZDNRn9a/kJTIoYryn5EmJbzIB93+CwLBY0kk2wHEkx
+         aqdGBNZ6pHRu0CLTwmXfEy/aWi8hwUc/cU/Kj68zW3b8nFqpq6K64PM3pjDaZFVHHecy
+         UgcD3DKVx3ncyhBzsEtsKr2XMTUFNE5TSVQJcsKIcagcFG8n65qVR28CCdgW5CTg48h6
+         CJrXTzZeHyQQRXzog9IOWDwbw6bYptuKJD/ysiIzdpYOxEJqoVZFrWadTS6tj7GBPoRS
+         xS96BHbCfnZLXu+d2iBR3VhytThfw1wj90qNUQ7cUgNkUEhqHu4M83maJkN5KCO4Lbko
+         UGeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681836970; x=1684428970;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1681837344; x=1684429344;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E9r6vhrkko4zPYKv6JRFQGVQ2+t+vuWkDBddrUXbkwM=;
-        b=RJ6gnMAsxAUMBXhzUkBfg7PeMjcFkWkUNrFbEQMtnaAZlvAS+hHcYzIgIMQ3K7uQeW
-         OLfc04azODqxdLtD4ZjXoD0n3LR1Kp++S3okFa56tJ5na/UDaWeZQLNUVaJrBJiOqjwi
-         lbRB7ohN9pFfEK4LUGQs7n1Y7stESV82Bo3COHdsVVQYZBR147YClwi1VJcH54PlSN9e
-         IUvrTqszFsfLLsgnrdBkds9xVHYZSgcEI0FvgCxbBMGwnxZs8geqhZ1R36rHxjQLpYf/
-         91KtGoc/mCRIu3Jd8vrY+lPHhzB8FJRxtxD3k+MijhOboNzTouPa2IB//fKTjlISmahu
-         hW7A==
-X-Gm-Message-State: AAQBX9dlGZ80EMMxRGcUeTP7I91UFnEVwCXf9Lg6QhPZSwnjLW2+ap6B
-        SAgpXLj7CsPO71zdhaItsoqYwQ==
-X-Google-Smtp-Source: AKy350bPoEMLpe5oSBrQOv/9HkbetIXsMdKgm2IFpkfjExHHMqyOhIiyDer8ofhdyFWf3ShL9TrHjw==
-X-Received: by 2002:a17:906:3456:b0:94f:1a11:e07d with SMTP id d22-20020a170906345600b0094f1a11e07dmr10473537ejb.32.1681836970620;
-        Tue, 18 Apr 2023 09:56:10 -0700 (PDT)
+        bh=+5TFm8G1q6eckW0t79BRMGwZlMLiJfFRdZkFunxVru8=;
+        b=abbldi4iRoEwGzQPlj9jhv/1yJjtxng/ExApQX/V0qwYOrKMt9zVQkuC3kS8ob7QA7
+         EZnsnSuqTQdLahCbZafVKAcbn1C6LeRnRnOfBaXdMhnm3JIloZlcDAtVFQOfg2Q2+kcR
+         pbKxOcR6dKY2SIq4lB2m9we3rnU0hcL4WG9tR4lES67fhwMvfFLdZyvlvh9NFUMcVbSm
+         yi4QVtCpHz4k80nY4YWJw+5nqt3d7GjavPzyF6NBlhZjJIJfp3Fo+rDekQRy70mCRkLM
+         +dWv/2RzmuWDhmYj4Z7nTZtdpVWcllodM9eBnWZQnEbB0ajFy6dohZhaYyzjRrWdpwFW
+         krSQ==
+X-Gm-Message-State: AAQBX9clOJa7Mkp6S1Gl+8z2LW6k2oPW7ibK293SgwIHhvKtrEVQuQ8Y
+        EcKVomuQqt3KX/mLFptrR6X4Gw==
+X-Google-Smtp-Source: AKy350alE0C6cFYBJL7Qdo8B11tUxsTNi5e5v1cDFh4R+8QtplXo+RlFiksXYi/z3F5NwG6HFCjWAw==
+X-Received: by 2002:a17:906:6959:b0:94f:356d:cd0 with SMTP id c25-20020a170906695900b0094f356d0cd0mr10951845ejs.33.1681837344589;
+        Tue, 18 Apr 2023 10:02:24 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:a276:7d35:5226:1c77? ([2a02:810d:15c0:828:a276:7d35:5226:1c77])
-        by smtp.gmail.com with ESMTPSA id z18-20020a1709060ad200b0094f7b713e40sm3041286ejf.126.2023.04.18.09.56.09
+        by smtp.gmail.com with ESMTPSA id v14-20020a170906380e00b0094a46e2f12bsm8277102ejc.93.2023.04.18.10.02.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 09:56:10 -0700 (PDT)
-Message-ID: <39307e05-adf7-3f6c-9b73-821bb55e2cda@linaro.org>
-Date:   Tue, 18 Apr 2023 18:56:09 +0200
+        Tue, 18 Apr 2023 10:02:24 -0700 (PDT)
+Message-ID: <e28a7788-e4b5-d777-4775-d57a00b0fbcc@linaro.org>
+Date:   Tue, 18 Apr 2023 19:02:23 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sm8150: Drop duplicate
- function value "atest_usb2"
-To:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230418150613.1528233-1-robh@kernel.org>
+Subject: Re: [PATCH v1 1/9] gpio: gxp: Add HPE GXP GPIO
 Content-Language: en-US
+To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
+        linux@roeck-us.net, linux@armlinux.org.uk,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20230418152824.110823-1-nick.hawkins@hpe.com>
+ <20230418152824.110823-2-nick.hawkins@hpe.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230418150613.1528233-1-robh@kernel.org>
+In-Reply-To: <20230418152824.110823-2-nick.hawkins@hpe.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18/04/2023 17:06, Rob Herring wrote:
-> The enum value "atest_usb2" appears twice. Remove the duplicate. The
-> meta-schema normally catches these, but schemas under "$defs" was not
-> getting checked. A fix for that is pending.
+On 18/04/2023 17:28, nick.hawkins@hpe.com wrote:
+> From: Nick Hawkins <nick.hawkins@hpe.com>
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> The GXP SoC supports GPIO on multiple interfaces: Host, CPLD and Soc
+> pins. The interface from CPLD and Host are interruptable from vic0
+> and vic1. This driver allows support for both of these interfaces
+> through the use of different compatible bindings.
+> 
+> Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
 > ---
+>  drivers/gpio/Kconfig    |    9 +
+>  drivers/gpio/Makefile   |    1 +
+>  drivers/gpio/gpio-gxp.c | 1056 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1066 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-gxp.c
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 13be729710f2..47435307698c 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1235,6 +1235,15 @@ config HTC_EGPIO
+>  	  several HTC phones.  It provides basic support for input
+>  	  pins, output pins, and IRQs.
+>  
+> +config GPIO_GXP
+> +        tristate "GXP GPIO support"
+> +        depends on ARCH_HPE_GXP
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+|| COMPILE_TEST
+
+(...)
+
+> +
+> +	drvdata->chip.parent = &pdev->dev;
+> +	ret = devm_gpiochip_add_data(&pdev->dev, &drvdata->chip, NULL);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev,
+> +			"Could not register gpiochip for fn2, %d\n", ret);
+> +	dev_info(&pdev->dev, "HPE GXP FN2 driver loaded.\n");
+
+Drop non-informative probe successes. They are not needed.
+
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int gxp_gpio_pl_init(struct platform_device *pdev)
+> +{
+> +	struct gxp_gpio_drvdata *drvdata = dev_get_drvdata(&pdev->dev);
+> +	struct gpio_irq_chip *girq;
+> +	int ret;
+> +	unsigned int val;
+> +
+> +	drvdata->pl_led = gxp_gpio_init_regmap(pdev, "pl-led", 8);
+> +	if (IS_ERR(drvdata->pl_led))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(drvdata->pl_int),
+> +				     "failed to map pl_led\n");
+> +
+> +	drvdata->pl_health = gxp_gpio_init_regmap(pdev, "pl-health", 8);
+> +	if (IS_ERR(drvdata->pl_health))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(drvdata->pl_int),
+> +				     "failed to map pl_health\n");
+> +
+> +	drvdata->pl_int = gxp_gpio_init_regmap(pdev, "pl-int", 8);
+> +	if (IS_ERR(drvdata->pl_int))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(drvdata->pl_int),
+> +				     "failed to map pl_int\n");
+> +
+> +	drvdata->chip = plreg_chip;
+> +	drvdata->chip.ngpio = 100;
+> +	drvdata->chip.parent = &pdev->dev;
+> +
+> +	girq = &drvdata->chip.irq;
+> +	girq->chip = &gxp_plreg_irqchip;
+> +	girq->parent_handler = NULL;
+> +	girq->num_parents = 0;
+> +	girq->parents = NULL;
+> +	girq->default_type = IRQ_TYPE_NONE;
+> +	girq->handler = handle_edge_irq;
+> +
+> +	girq->init_hw = gxp_gpio_irq_init_hw;
+> +
+> +	ret = devm_gpiochip_add_data(&pdev->dev, &drvdata->chip, drvdata);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "Could not register gpiochip for plreg, %d\n",
+> +			ret);
+> +
+> +	regmap_update_bits(drvdata->pl_int, PLREG_INT_HI_PRI_EN,
+> +			   BIT(4) | BIT(5), BIT(4) | BIT(5));
+> +	regmap_update_bits(drvdata->pl_int, PLREG_INT_GRP_STAT_MASK,
+> +			   BIT(4) | BIT(5), 0x00);
+> +	regmap_read(drvdata->pl_int, PLREG_INT_HI_PRI_EN, &val);
+> +	regmap_read(drvdata->pl_int, PLREG_INT_GRP_STAT_MASK, &val);
+> +
+> +	ret = platform_get_irq(pdev, 0);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Get irq from platform fail - %d\n", ret);
+> +		return ret;
+
+return dev_err_probe
+
+> +	}
+> +
+> +	drvdata->irq = ret;
+> +
+> +	ret = devm_request_irq(&pdev->dev, drvdata->irq, gxp_gpio_pl_irq_handle,
+> +			       IRQF_SHARED, "gxp-pl", drvdata);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "IRQ handler failed - %d\n", ret);
+
+return dev_err_probe
+Actually other applicable places as well...
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id gxp_gpio_of_match[] = {
+> +	{ .compatible = "hpe,gxp-gpio"},
+> +	{ .compatible = "hpe,gxp-gpio-pl"},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, gxp_gpio_of_match);
+> +
+> +static int gxp_gpio_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct gxp_gpio_drvdata *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +	struct device *parent;
+> +	const struct of_device_id *match = of_match_device(gxp_gpio_of_match, dev);
+> +
+> +	if (!match) {
+> +		dev_err(dev, "device is not compatible");
+
+It is not possible.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	parent = dev->parent;
+> +	if (!parent) {
+> +		dev_err(dev, "no parent\n");
+
+Why do you need this check?
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct gxp_gpio_drvdata),
+
+sizeof(*)
+
+> +			       GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	if (strcmp(match->compatible, "hpe,gxp-gpio-pl") == 0)
+
+No, use match data. Anyway this is open-coding of OF functions...
+
+> +		ret = gxp_gpio_pl_init(pdev);
+> +	else
+> +		ret = gxp_gpio_init(pdev);
+> +
+> +	return ret;
 
 Best regards,
 Krzysztof
