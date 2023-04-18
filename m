@@ -2,53 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 618EB6E5D30
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 11:18:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 184766E626A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 14:32:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbjDRJSg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 05:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
+        id S231466AbjDRMcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 08:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231167AbjDRJSe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 05:18:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289A44ED0;
-        Tue, 18 Apr 2023 02:18:23 -0700 (PDT)
+        with ESMTP id S230327AbjDRMcb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 08:32:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA10D31E;
+        Tue, 18 Apr 2023 05:32:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BAD02623EA;
-        Tue, 18 Apr 2023 09:18:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9E5C433EF;
-        Tue, 18 Apr 2023 09:18:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B067663218;
+        Tue, 18 Apr 2023 12:32:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46C8C433D2;
+        Tue, 18 Apr 2023 12:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1681809502;
-        bh=21GaLtq11RA+qsTtJLEfA6pcxGxP9rB+BSO0oKeaE90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ql7DNEQjyGtJ7hlrXC5JPkAFTc6KYKvg213Jf1M5u82abnDjXDMTf2ohQjKY+0D/i
-         XFIS87svl+ekXS7pYLf7wH80GSaR3Run/ghC+Kzke2BQQQDSitYp60xwvTNzNrPsj7
-         7Z56EF9yJ6baFyECrd0NRmvOIUJlRVqTczCz1HVg=
-Date:   Tue, 18 Apr 2023 11:18:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     VaibhaavRam.TL@microchip.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v9 char-misc-next 1/2] misc: microchip: pci1xxxx: Add
- support to read and write into PCI1XXXX OTP via NVMEM sysfs
-Message-ID: <2023041825-reviving-property-3e3a@gregkh>
-References: <20230413105318.6070-1-vaibhaavram.tl@microchip.com>
- <20230413105318.6070-2-vaibhaavram.tl@microchip.com>
- <51847629489852d493af928580c5a2de@walle.cc>
- <49405ea2bb0bee16a41ce88b7d679ff714823585.camel@microchip.com>
- <8b7b98e60fd871cc7aafda6f9b4e146a@walle.cc>
+        s=korg; t=1681821127;
+        bh=IzaJUIUqzXqbTVID6vwBQYJ5wb34FkLDJb8emqLyKAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=064JZMCtlXMiF7sgOFqRkWvAxafghqwLM/+dXoRA1RefYw7etCj2FP1Q3mEumLbaQ
+         5Y3G+7hGVCA1icYq5so7gG4gG8gFtrAnv/yYndMdvijroiC4wxrjJvQiZUrP/YTtmG
+         vLK5+uiDZYVDzUWPv71CvgIMaywneWEKuPXi737Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
+        Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 001/124] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
+Date:   Tue, 18 Apr 2023 14:20:20 +0200
+Message-Id: <20230418120309.597772360@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230418120309.539243408@linuxfoundation.org>
+References: <20230418120309.539243408@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b7b98e60fd871cc7aafda6f9b4e146a@walle.cc>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,44 +60,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 11:00:18AM +0200, Michael Walle wrote:
-> Am 2023-04-17 14:47, schrieb VaibhaavRam.TL@microchip.com:
-> > > > +#include <linux/auxiliary_bus.h>
-> > > > +#include <linux/bio.h>
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/iopoll.h>
-> > > > +#include <linux/kthread.h>
-> > > 
-> > > Is this needed? I don't see any threads. Also bio.h. Please double
-> > > check
-> > > your includes.
-> > Ok, Will remove in next version of patch
-> > > > +     if (priv != NULL)
-> > > > +             rb = priv->reg_base;
-> > > > +     else
-> > > > +             return -ENODEV;
-> > > 
-> > > Unneeded check, priv cannot be NULL, right?
-> > Ok, I think this can be removed
-> > > > +
-> > > > +             data = readl(rb +
-> > > > MMAP_OTP_OFFSET(OTP_PASS_FAIL_OFFSET));
-> > > > +             if (ret < 0 || data & OTP_FAIL_BIT)
-> > > > +                     break;
-> > > 
-> > > No error handling?
-> > We have implemented short read which returns count of successful bytes
-> > read and therefore userspace will recognise the situation when the
-> > requested count is not obtained.
-> 
-> I'll leave that up to Greg, but I'd prefer a proper error to userspace.
-> I'm not sure if you'd need to differentiate between a short read/write
-> and an error.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-A short read isn't an error, it's just returning the amount of data
-present which might be less than the buffer passed in, which is totally
-normal.  If there is an error, return an error.
+[ Upstream commit d49765b5f4320a402fbc4ed5edfd73d87640f27c ]
 
-thanks,
+REGMAP is a hidden (not user visible) symbol. Users cannot set it
+directly thru "make *config", so drivers should select it instead of
+depending on it if they need it.
 
-greg k-h
+Consistently using "select" or "depends on" can also help reduce
+Kconfig circular dependency issues.
+
+Therefore, change the use of "depends on REGMAP" to "select REGMAP".
+
+Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Michael Walle <michael@walle.cc>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org
+Acked-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index d1300fc003ed7..39f3e13664099 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -99,7 +99,7 @@ config GPIO_GENERIC
+ 	tristate
+ 
+ config GPIO_REGMAP
+-	depends on REGMAP
++	select REGMAP
+ 	tristate
+ 
+ # put drivers in the right section, in alphabetical order
+-- 
+2.39.2
+
+
+
