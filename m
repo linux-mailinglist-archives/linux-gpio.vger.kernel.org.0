@@ -2,105 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 184766E626A
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 14:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 149E06E67BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 17:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231466AbjDRMcc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 08:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
+        id S232077AbjDRPGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 11:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230327AbjDRMcb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 08:32:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA10D31E;
-        Tue, 18 Apr 2023 05:32:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B067663218;
-        Tue, 18 Apr 2023 12:32:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46C8C433D2;
-        Tue, 18 Apr 2023 12:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1681821127;
-        bh=IzaJUIUqzXqbTVID6vwBQYJ5wb34FkLDJb8emqLyKAU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=064JZMCtlXMiF7sgOFqRkWvAxafghqwLM/+dXoRA1RefYw7etCj2FP1Q3mEumLbaQ
-         5Y3G+7hGVCA1icYq5so7gG4gG8gFtrAnv/yYndMdvijroiC4wxrjJvQiZUrP/YTtmG
-         vLK5+uiDZYVDzUWPv71CvgIMaywneWEKuPXi737Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
-        Michael Walle <michael@walle.cc>,
+        with ESMTP id S230389AbjDRPGi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 11:06:38 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A142997;
+        Tue, 18 Apr 2023 08:06:37 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-38c35975545so447616b6e.1;
+        Tue, 18 Apr 2023 08:06:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681830397; x=1684422397;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=grZMSKokWBxTMT6BuCDaQ21smq7KTeNGJhRCrqdfwnY=;
+        b=V06SPmeFVDIDD9NQ2XpVIE87cRIMXpzRhEAjqmYRj9+NkOv5iRomRQU30VYU+k1vI/
+         QaM4b0fxItAjT0VyoPgbbt+z4x9raFfaWfjAWcvAMhoYx8MfPojBfPY2A4j8QY9pV/h5
+         cv4RHfGONWpR6dFe77V6m2lO1AFVt7HcMI8PsOf8E3FXT0xY5fMXY4UGiV7NIX/We5ay
+         bT73VHe+u4FJkgLSQ8Z80j8TFmDIIaYLLnCv3c2f3EDwTwWVSl4wzgAQtm9qI7CUzq2X
+         2gnDhd7MhKuCsX8RDj1DkD2wRziWDYQVJ7R/XaKYBnGgt/L30uAfT8UuTVeoJwYW90qu
+         chqg==
+X-Gm-Message-State: AAQBX9dBKhBBmNEbALYn/TStmr9vRI7daWM571uXSE4FJ/tfdf/dzjnT
+        0i5ao0QNyVHEY4HcZJs07Q==
+X-Google-Smtp-Source: AKy350YZEHvbP5PVh2rbBKiQ4nne5bUninf44qFbBPUMLt8mF9m0hikYSD3j5eUGCPTt4Uh9jPBCzg==
+X-Received: by 2002:a54:4719:0:b0:38b:c1ae:cb1a with SMTP id k25-20020a544719000000b0038bc1aecb1amr1147526oik.22.1681830396798;
+        Tue, 18 Apr 2023 08:06:36 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z64-20020aca3343000000b0038e1564951fsm1809406oiz.55.2023.04.18.08.06.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 08:06:11 -0700 (PDT)
+Received: (nullmailer pid 1528206 invoked by uid 1000);
+        Tue, 18 Apr 2023 15:06:10 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 001/124] gpio: GPIO_REGMAP: select REGMAP instead of depending on it
-Date:   Tue, 18 Apr 2023 14:20:20 +0200
-Message-Id: <20230418120309.597772360@linuxfoundation.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230418120309.539243408@linuxfoundation.org>
-References: <20230418120309.539243408@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: Fix schema for "qcom,paired"
+Date:   Tue, 18 Apr 2023 10:06:06 -0500
+Message-Id: <20230418150606.1528107-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+The "qcom,paired" schema is all wrong. First, it's a list rather than an
+object(dictionary). Second, it is missing a required type. The meta-schema
+normally catches this, but schemas under "$defs" was not getting checked.
+A fix for that is pending.
 
-[ Upstream commit d49765b5f4320a402fbc4ed5edfd73d87640f27c ]
-
-REGMAP is a hidden (not user visible) symbol. Users cannot set it
-directly thru "make *config", so drivers should select it instead of
-depending on it if they need it.
-
-Consistently using "select" or "depends on" can also help reduce
-Kconfig circular dependency issues.
-
-Therefore, change the use of "depends on REGMAP" to "select REGMAP".
-
-Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Michael Walle <michael@walle.cc>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Acked-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d1300fc003ed7..39f3e13664099 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -99,7 +99,7 @@ config GPIO_GENERIC
- 	tristate
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+index 9412b9362328..4c3e9ff82105 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+@@ -144,8 +144,9 @@ $defs:
+         enum: [0, 1, 2, 3, 4, 5, 6, 7]
  
- config GPIO_REGMAP
--	depends on REGMAP
-+	select REGMAP
- 	tristate
+       qcom,paired:
+-        - description:
+-            Indicates that the pin should be operating in paired mode.
++        type: boolean
++        description:
++          Indicates that the pin should be operating in paired mode.
  
- # put drivers in the right section, in alphabetical order
+     required:
+       - pins
 -- 
 2.39.2
-
-
 
