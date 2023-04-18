@@ -2,110 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E156E6E6835
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 17:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8DC16E69CF
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 18:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232329AbjDRPcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 11:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
+        id S231964AbjDRQnq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 12:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232313AbjDRPcK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 11:32:10 -0400
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2C3125B1;
-        Tue, 18 Apr 2023 08:32:08 -0700 (PDT)
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33IBHK90013970;
-        Tue, 18 Apr 2023 15:31:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=pps0720;
- bh=dAIIzQaU+Kiqn9GnVIQkPXlXHdyWvMYyRuSKEZVxqpw=;
- b=eV8QatR6OZ46jcsfGDjYtnEm3WWs6/ECPhsgN9abctszN66wrieQLuMwybL+uqlUhguS
- sgZaT1R6YFi0+pb1kEYFt4TNZWSgh0fVHQxNK8tBUviIBksoX9caiS4xgyAsi6WOD12W
- nztcq9y8egggARHhODm9vj/CWxHMUNtZNw5imSiiEhE837mQXiy0r5Rdv/PyFRPne4Js
- JE1oBGUCz/ATP8qmEuv//LMevgTB9FHjgZ8UIWbOdWc04o6JxWw138m6MuDIZZukJdVI
- OJ8MIlMRiXFREPeGimH3gFmDCgdSbuXl7SDRwBu3kz9BSnW3ywAa02XtR7vt0hklzVxr zQ== 
-Received: from p1lg14879.it.hpe.com (p1lg14879.it.hpe.com [16.230.97.200])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3q1t6pj428-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Apr 2023 15:31:42 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 8726913059;
-        Tue, 18 Apr 2023 15:31:41 +0000 (UTC)
-Received: from hpe.com (unknown [16.231.227.36])
-        by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 8AD4B81532D;
-        Tue, 18 Apr 2023 15:31:40 +0000 (UTC)
-From:   nick.hawkins@hpe.com
-To:     verdun@hpe.com, nick.hawkins@hpe.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, linux@armlinux.org.uk,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v1 9/9] MAINTAINERS: hpe: Add GPIO, PSU
-Date:   Tue, 18 Apr 2023 10:28:24 -0500
-Message-Id: <20230418152824.110823-10-nick.hawkins@hpe.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230418152824.110823-1-nick.hawkins@hpe.com>
-References: <20230418152824.110823-1-nick.hawkins@hpe.com>
-X-Proofpoint-GUID: D-5jxxe18OTKk68YzM-A06-LVUnk68gS
-X-Proofpoint-ORIG-GUID: D-5jxxe18OTKk68YzM-A06-LVUnk68gS
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-18_11,2023-04-18_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304180132
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231216AbjDRQnp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 12:43:45 -0400
+Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C94640EE;
+        Tue, 18 Apr 2023 09:43:43 -0700 (PDT)
+Received: from [192.168.178.23] (unknown [62.108.10.64])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id E7F4ACA652;
+        Tue, 18 Apr 2023 16:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1681836222; bh=2UwFEQR9YUGIfjE/n8onj7mJvDxDUG5Ek3v7bTXp0no=;
+        h=From:Subject:Date:To:Cc;
+        b=r0bHpRD+q1PFthuWhiscU1JL73yULzMpG4zI1sS7R4oAM/hZFNPvLBkNm08b8rX5e
+         XM9mHutCt9kGBwC1kUqFHhBegJsoNjFP5n1stmoe+3XqLnR+5/Hoa0HdRxqJZ/B+m8
+         fX1Cf/RfWP8aGcdNp/y/q0cyRYgXaFtXYG5V8q5Y=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v2 0/8] Add PMI632 PMIC and RGB LED on sdm632-fairphone-fp3
+Date:   Tue, 18 Apr 2023 18:43:16 +0200
+Message-Id: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKXIPmQC/2WNOQ6DMBAAv4K2jonxGnJU+UdEYWAJW2AsmyAO8
+ fcY2pQzGmk2COSZAjyTDTxNHHiwEdQlgboz9kOCm8igpEKpMy1czwUqoQ1JVCo3dMshxpUJJCp
+ vbN0deZFiKq+9YStah0fgPLU8n6d3GbnjMA5+OcdTdti/x5QJKVp66KaO9o7qtaIdv+m8rFDu+
+ /4Dt1Wxr70AAAA=
+To:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-doc@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1636; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=2UwFEQR9YUGIfjE/n8onj7mJvDxDUG5Ek3v7bTXp0no=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBkPsimcD5fs/hvGjjmsbAyffi51L2P6kJdx59kd
+ yevesSNnpeJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZD7IpgAKCRBy2EO4nU3X
+ VovRD/4yR9KpjV1+UxRWtdx7eQiGHpx/+XxXskQpFSV7f1S9ozY9mJV+quZccnWrPtdkbZw1yby
+ isVjoHMDspHf/l2y717u+00aRZFaGzyQWbR17NRqENPGPKyG75jlqxROALWZaqWPOdOHre9o1a/
+ CzkREbJaaG9zqqCSq8vLkK4sm/7NwHO2fBdWxZmi7I7yEJk+mECljp0AQqh6qyaTf3LBh143C8e
+ s1kAYoHebugZYVp1P/mFy/kzAxDG/AzrYX6LwFsq1dU0N9W/pWHzPNuK5tnxIy5sFSqfOyY65zG
+ witwS0Y8AZZq9KDQsv5Gf4g5ByCJQc0C6x6ZjVxmpR2z4klur0JXpLLM77Ds9aeHzKJQT4TF4C4
+ 1hBvu1Phj5m6kPH3jFTZLdDUKymxMGLp6HhKpgNVhOIkRktZ4bC8t6uFfJYApFkUXG97ggwQWsA
+ 9T0iO7+A2ApgPMD3vEaFQv6+ENqM4ZD9+b/KkcGoPZRcvihGEGL7UGbQmJlZD4zFyIVRKP4Xfbz
+ 13xMGT26Ymc1vI5+kta5iB5hbXjuRrRlW0Q+m3ADcCUvhTac8DshWBP8+uxT38dugFt4+kxSOfX
+ g8Q0x4F3KSHbWXVcPj7Lhf8hD9Mvo6vTQC+CKvHZGp5y0V++8S4B8DcUlo2n7pCAVvwh7uaW5Of
+ TKjULKs09fXh2hg==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nick Hawkins <nick.hawkins@hpe.com>
+Add support for the PMI632 PMIC in the spmi-gpio & qcom-lpg driver, add
+the dtsi for the PMIC and enable the notification LED on fairphone-fp3.
 
-List the files added for GPIO and PSU support.
-
-Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes in v2:
+- Add qcom,pmi632-gpio to all the needed places in yaml
+- Add patch documenting led path
+- Pick up tags
+- Drop vadc pre-scaling patch since it was applied
+- Link to v1: https://lore.kernel.org/r/20230414-pmi632-v1-0-fe94dc414832@z3ntu.xyz
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a3b14ec33830..6df959ebf523 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2239,7 +2239,9 @@ M:	Nick Hawkins <nick.hawkins@hpe.com>
- S:	Maintained
- F:	Documentation/hwmon/gxp-fan-ctrl.rst
- F:	Documentation/devicetree/bindings/arm/hpe,gxp.yaml
-+F:	Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
- F:	Documentation/devicetree/bindings/hwmon/hpe,gxp-fan-ctrl.yaml
-+F:	Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
- F:	Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.yaml
- F:	Documentation/devicetree/bindings/spi/hpe,gxp-spifi.yaml
- F:	Documentation/devicetree/bindings/timer/hpe,gxp-timer.yaml
-@@ -2247,7 +2249,9 @@ F:	arch/arm/boot/dts/hpe-bmc*
- F:	arch/arm/boot/dts/hpe-gxp*
- F:	arch/arm/mach-hpe/
- F:	drivers/clocksource/timer-gxp.c
-+F:	drivers/gpio/gpio-gxp.c
- F:	drivers/hwmon/gxp-fan-ctrl.c
-+F:	drivers/hwmon/gxp-psu.c
- F:	drivers/i2c/busses/i2c-gxp.c
- F:	drivers/spi/spi-gxp.c
- F:	drivers/watchdog/gxp-wdt.c
+---
+Luca Weiss (8):
+      dt-bindings: pinctrl: qcom,pmic-gpio: add PMI632
+      pinctrl: qcom: spmi-gpio: Add PMI632 support
+      dt-bindings: leds: qcom-lpg: Add compatible for PMI632 LPG block
+      leds: qcom-lpg: Add support for PMI632 LPG
+      dt-bindings: mfd: qcom-spmi-pmic: Add PMI632 compatible
+      arm64: dts: qcom: Add PMI632 PMIC
+      arm64: dts: qcom: sdm632-fairphone-fp3: Add notification LED
+      Documentation: leds: Add "rgb:status" path
+
+ .../devicetree/bindings/leds/leds-qcom-lpg.yaml    |   1 +
+ .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    |   1 +
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |   3 +
+ Documentation/leds/well-known-leds.txt             |   1 +
+ arch/arm64/boot/dts/qcom/pmi632.dtsi               | 165 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts  |  29 ++++
+ drivers/leds/rgb/leds-qcom-lpg.c                   |  15 ++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |   1 +
+ 8 files changed, 216 insertions(+)
+---
+base-commit: 3f49aa65798675341eb9d4f947c40558564b2e6d
+change-id: 20230414-pmi632-4ae03225ae75
+
+Best regards,
 -- 
-2.17.1
+Luca Weiss <luca@z3ntu.xyz>
 
