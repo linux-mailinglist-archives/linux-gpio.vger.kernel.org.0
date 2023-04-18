@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F7426E6A96
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 19:09:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 421636E6A9C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 19:11:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232297AbjDRRI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Apr 2023 13:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
+        id S231352AbjDRRKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 13:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232445AbjDRRIl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 13:08:41 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D07130F5
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:08:39 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id ud9so74829641ejc.7
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:08:39 -0700 (PDT)
+        with ESMTP id S231897AbjDRRKN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 13:10:13 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6A82125
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:10:11 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id q23so65564906ejz.3
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Apr 2023 10:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681837718; x=1684429718;
+        d=linaro.org; s=google; t=1681837810; x=1684429810;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pa0596FLGoKuck4TwQ+3+R91cz83Mb/ak2URkKOAZDw=;
-        b=xt2O5Y+tVv532NiCjYg/SDb4kiK90IX1EQWKX/pEx85YjHjZMrutu0YGHeosz4HQ1p
-         Rj1JNoDV1JVR6oWP/dpKZ6IIY8CDRyiXvzCN5h7FDF445QYpTfYYTeiOWmvIlBkVrBdm
-         LoefvfHw0MfbWp4OUTBf7gbNrbiRy5fC1/Kx0QSPxpE/HnBWufwwinfzVguyDg19UaZ3
-         +Sk7fDC2K6LMrUKrZAeYksQkNqTeGaRdrtgiXdfTb87S54LTYjzLc6oygjNK/kH/Am7W
-         7KMgPo1VQzvAB27G0oGrB93j/o0c01VjJyWlKTxQaZ1eKLDzkwxMooS/BonyeOoNq07I
-         wiNA==
+        bh=+WHlqIBM+MCUF6hZ83TONgjkCjEOxfdRoRjzJHTAirE=;
+        b=IiitgDIk9VE8JzLsktssHGI0FW2etCrF6Wg7u2A2flpDQCDbDQyzY8jZGt3Zp3asGC
+         O6/94VNsfP9I1oUzxU4STP2R+/WnlEErhhpbJpvt9MqQf/4wq2F9swlKk2R84FmVBbhg
+         DCtFjngcc8O4/vht+yYOSceeC0YZBGAHVTq8pm2pqwlxEdOMoPdKIpgTwmz9EC1hw27/
+         +0hcCRfeb3XW+sz+aon1fjKDaTsUvNZYrXhkJElu4Rt8NMvLPtfNI3EldH5XJ0lzfC19
+         P4wwd5uyZrxa8qJ9TfiqdRuy6vsDmf+U4Ju6OwzKwJXdGAdeND1My9Qg/A0dCpklbUB/
+         oalQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681837718; x=1684429718;
+        d=1e100.net; s=20221208; t=1681837810; x=1684429810;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pa0596FLGoKuck4TwQ+3+R91cz83Mb/ak2URkKOAZDw=;
-        b=T/G+LBpLsXBuzJpBQ0ZRGrU9e8BcgGmija/8mktT2fdFypVQtbAbpKcBtq2X28mUsL
-         3aXn/M9Px9xIAPS4z7jY6Ne3aRSuQAuBjOO6D/uHqfnXOMPLhBu28ee84o0NVb6GGbVF
-         yG8YoS21uDNMhzfiS2/EiMFYoBpT1zGvg85TMqyCGgLD78o/Hx7xRXWyFNeD+eeGG0rB
-         CX94kmXP7W8ZM5g7KphWqkFuIje1bWhEvWBNRs/v3+MBnzhAUJusyQXbTOAnn3T1YodC
-         tOT98KKBQLbCMdRtGylgwxLhCEMa211bTLjHUVEPaGLUYY64zEe+GQP4sATjsWh9UV7G
-         uzww==
-X-Gm-Message-State: AAQBX9d5ccpOmehpIHqX/3q3ImrWcj2VB9GmfdXXyHn83mkdccTnH3eI
-        F5ny58iBYQN/zXavavjCP2IQpg==
-X-Google-Smtp-Source: AKy350bPHMJPXFQ656yxTVuavRDq9+h8S5I8N9qcl8CcAPHYqdb8NUtjU1vzSDCDHSbTX2gwwW40+A==
-X-Received: by 2002:a17:906:b242:b0:931:cd1b:3c0 with SMTP id ce2-20020a170906b24200b00931cd1b03c0mr9594973ejb.3.1681837718100;
-        Tue, 18 Apr 2023 10:08:38 -0700 (PDT)
+        bh=+WHlqIBM+MCUF6hZ83TONgjkCjEOxfdRoRjzJHTAirE=;
+        b=dMYglHoqCm0DARbvm2qLz9gdZYwuyUpuvYkOgCM7acbFPoiR4XKOZ8IoNsWY8rhPes
+         X2qV5spwOm7/Tgz1u1pqU1EUqISW9PPGrb+LBfDZGGqZPcSUtTooCHvC2Inlx7ykWUh3
+         1uoiftKbO9Ouje6d3BU4CD076y2x/brraP6x+0dltq6C6OPPv6kjfToRhmqeNuPCpeh7
+         b4QIRveBEX0ljxpS7kI+fyCpMt7hAwqXlsG7/Oyr7TN6cyX4YGIrrLYV50k/S+bk1UUB
+         hyPdrO2E9xH+Nbj37G+kCExIQCs2eW8O3PG5s4W4Ql9yVkPRLWjrpcolp8bZgqlhN/3R
+         Na5Q==
+X-Gm-Message-State: AAQBX9dofAoeUme23AIVI5Lol0WQxFYw7mnZ9qK2dwOJG1FCLjbMksqt
+        TcKm4SIPCNaFB2rxpA9ppcX+pg==
+X-Google-Smtp-Source: AKy350Z+V33GqZk1LMN4KjbXN+KpaCPlxtuNlAz3iwywFv/cQjcLqJa8BsHzHSvDzhIEVubog9OKjw==
+X-Received: by 2002:a17:906:80d4:b0:94f:247d:44d2 with SMTP id a20-20020a17090680d400b0094f247d44d2mr10380121ejx.5.1681837809689;
+        Tue, 18 Apr 2023 10:10:09 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:a276:7d35:5226:1c77? ([2a02:810d:15c0:828:a276:7d35:5226:1c77])
-        by smtp.gmail.com with ESMTPSA id j25-20020a1709062a1900b0094f614e43d0sm3812770eje.8.2023.04.18.10.08.37
+        by smtp.gmail.com with ESMTPSA id fy1-20020a170906b7c100b0094e4b8816e0sm8207409ejb.217.2023.04.18.10.10.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 10:08:37 -0700 (PDT)
-Message-ID: <a00202fc-434b-0350-de02-39870fd96da9@linaro.org>
-Date:   Tue, 18 Apr 2023 19:08:36 +0200
+        Tue, 18 Apr 2023 10:10:09 -0700 (PDT)
+Message-ID: <b1594fda-1fe4-5609-8db3-3f2edf3380d6@linaro.org>
+Date:   Tue, 18 Apr 2023 19:10:08 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v1 5/9] dt-bindings: gpio: Add HPE GXP GPIO
+Subject: Re: [PATCH v1 6/9] dt-bindings: hwmon: Add HPE GXP PSU Support
 Content-Language: en-US
 To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
         brgl@bgdev.pl, robh+dt@kernel.org,
@@ -64,9 +64,9 @@ To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20230418152824.110823-1-nick.hawkins@hpe.com>
- <20230418152824.110823-6-nick.hawkins@hpe.com>
+ <20230418152824.110823-7-nick.hawkins@hpe.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230418152824.110823-6-nick.hawkins@hpe.com>
+In-Reply-To: <20230418152824.110823-7-nick.hawkins@hpe.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,170 +82,76 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 18/04/2023 17:28, nick.hawkins@hpe.com wrote:
 > From: Nick Hawkins <nick.hawkins@hpe.com>
 > 
-> Provide access to the registers and interrupts for GPIO. The GPIO
-> will have two driver instances: One for host, the other for CPLD.
-
-Are these different devices? What does it mean here "instance"? What are
-the differences?
-
+> Provide i2c register information and CPLD register information to the
+> driver.
 > 
 > Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
 > ---
->  .../bindings/gpio/hpe,gxp-gpio.yaml           | 137 ++++++++++++++++++
->  1 file changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
+>  .../bindings/hwmon/hpe,gxp-psu.yaml           | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml b/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
+> diff --git a/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml b/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
 > new file mode 100644
-> index 000000000000..1cf4cff26d5f
+> index 000000000000..60ca0f6ace46
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
-> @@ -0,0 +1,137 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/gpio/hpe,gxp-gpio.yaml#
+> +$id: http://devicetree.org/schemas/hwmon/hpe,gxp-psu.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: HPE GXP gpio controllers
-
-s/gpio/GPIO/
-
+> +title: HPE GXP psu controller
 > +
 > +maintainers:
-> +  - Nick Hawkins <nick.hawkins@hpe.com>
-> +
-> +description:
-> +  Interruptable GPIO drivers for the HPE GXP that covers multiple interfaces.
+> +  - Nicholas Hawkins <nick.hawkins@hpe.com>
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
+> +    const: hpe,gxp-psu
 
-Drop oneOf.
+Missing blank line.
 
-> +      - items:
-
-And items. You do not have here multiple choices and items.
-
-> +          - enum:
-> +              - hpe,gxp-gpio
-> +              - hpe,gxp-gpio-pl
-> +
-> +  reg:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  reg-names:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  gpio-line-names:
-> +    minItems: 1
-> +    maxItems: 300
-
-Hm, shouldn't line-names match all GPIOs? If someone provides just one
-name, how do you know for which GPIO is it?
-
-> +
 > +  interrupts:
 > +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+
+All your bindings are written with different style... reg is second in
+your previous patchset, so what order did you choose here?
+
+
+> +
+> +  hpe,sysreg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the global status registers shared between each psu
+> +      controller instance.
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - reg-names
-> +  - gpio-controller
-> +  - "#gpio-cells"
-
-Use consistent quotes. Either ' or "
-
 > +
 > +additionalProperties: false
-
-Put it after allOf: block.
-
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - hpe,gxp-gpio
-> +    then:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: CSM
-> +            - description: fn2 virtual button
-> +            - description: fn2 system status
-> +            - description: vuhc status
-> +            - description: external virtual button
-
-I have doubts you describe actual one GPIO controller...
-
-> +        reg-names:
-> +          items:
-> +            - const: csm
-> +            - const: fn2-vbtn
-> +            - const: fn2-stat
-> +            - const: vuhc
-> +            - const: vbtn
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - hpe,gxp-gpio-pl
-> +    then:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: Programmable logic led
-> +            - description: Programmable logic health led
-> +            - description: Programmable logic interrupt interface
-> +        reg-names:
-> +          items:
-> +            - const: pl-led
-> +            - const: pl-health
-> +            - const: pl-int
 > +
 > +examples:
 > +  - |
-> +        gpio@0 {
-
-Weird indentation. Use 4 spaces for example indentation.
-
-> +          compatible = "hpe,gxp-gpio";
-> +          reg = <0x0 0x400>, <0x200046 0x1>, <0x200070 0x08>, <0x400064 0x80>, <0x5100030f 0x1>;
-> +          reg-names = "csm", "fn2-vbtn", "fn2-stat", "vuhc", "vbtn";
-> +          gpio-controller;
-> +          #gpio-cells = <2>;
-> +          interrupt-parent = <&vic0>;
-> +          interrupts = <10>;
-> +          gpio-line-names =
-> +          "IOP_LED1", "IOP_LED2", "IOP_LED3", "IOP_LED4", "IOP_LED5", "IOP_LED6", "IOP_LED7", "IOP_LED8",
-
-Broken indentation and unnecessary line break before.
-
-> +          "FAN1_INST", "FAN2_INST", "FAN3_INST", "FAN4_INST", "FAN5_INST", "FAN6_INST", "FAN7_INST",
-> +          "FAN8_INST", "FAN1_FAIL", "FAN2_FAIL", "FAN3_FAIL", "FAN4_FAIL", "FAN5_FAIL", "FAN6_FAIL",
-> +          "FAN7_FAIL", "FAN8_FAIL", "FAN1_ID", "FAN2_ID", "FAN3_ID", "FAN4_ID", "FAN5_ID", "FAN6_ID",
-> +          "FAN7_ID", "FAN8_ID", "IDENTIFY", "HEALTH_RED", "HEALTH_AMBER", "POWER_BUTTON", "UID_PRESS",
-> +          "SLP", "NMI_BUTTON", "RESET_BUTTON", "SIO_S5", "SO_ON_CONTROL", "PSU1_INST", "PSU2_INST",
-> +          "PSU3_INST", "PSU4_INST", "PSU5_INST", "PSU6_INST", "PSU7_INST", "PSU8_INST", "PSU1_AC",
-> +          "PSU2_AC", "PSU3_AC", "PSU4_AC", "PSU5_AC", "PSU6_AC", "PSU7_AC", "PSU8_AC", "PSU1_DC",
-> +          "PSU2_DC", "PSU3_DC", "PSU4_DC", "PSU5_DC", "PSU6_DC", "PSU7_DC", "PSU8_DC", "", "", "", "",
-> +          "", "", "", "", "", "", "", "", "", "";
-> +        };
 > +
 
+Drop blank line.
+
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        psu@48 {
+> +            compatible = "hpe,gxp-psu";
+> +            reg = <0x48>;
+
+Add also interrupts.
 
 Best regards,
 Krzysztof
