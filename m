@@ -2,105 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D7E6E4C06
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Apr 2023 16:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB93D6E5CB6
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Apr 2023 11:00:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbjDQOzg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Apr 2023 10:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47132 "EHLO
+        id S230093AbjDRJAX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Apr 2023 05:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbjDQOza (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Apr 2023 10:55:30 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0192C144
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 07:55:15 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-54fb615ac3dso207344767b3.2
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Apr 2023 07:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681743315; x=1684335315;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tQHJ4q3CdmAKlAlClHQ4EAPzOxZr151/BPputI4xT6o=;
-        b=U3qVHE/9hnPcjaycLBiiZS7lx1jl07foVfwFfIjdxI7c1drlSx4zvJHPWnZDs4obLl
-         ExHFRQjEa+teZG7x1ZiwhMw9B2ex1ef/Zj7fM3rB/IqvG1gq/VApC/csR0naGXUk+mpD
-         tX0kPWjRRZ/WWodYD4mPLM5ZoOuvuTGBTUO+X5B2ODvUYEbWic7+zX7C/0ZQj3Y9L4SR
-         Gyc/CUBr1zgCznWM81aBgFkldNBtHfcDn2BxqxBeEjguy5wJ2EM5zncTYQp8Q/xacP/H
-         yc7d1jUTmxQzGjWPeSvuWYhXoMsWgKVsa0Sqb6mXE79jyDVmUIayzuCMCEj9U3mj4EIJ
-         yY2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681743315; x=1684335315;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tQHJ4q3CdmAKlAlClHQ4EAPzOxZr151/BPputI4xT6o=;
-        b=DsUyMqzYunVlHUUfH635PxmfOYiu62GiFS9bvvi/hCWMBfzbVel5St/nWBSjxFQkII
-         sW8hnKLuLA6x18FUNDHDkgLxkdEmNOLKmotwAhl7/O71168STUTK5b3DmAIaFqIEW7GX
-         vHZ8ttUTVisiKVxuTOKiRav/frSfvcRb7BqnM0OVgT0x1gxiME199SMyufD3myrkKU0u
-         tX2eqqG2VyxMY/XMaWBXVg7KO2jpWvFZkdqmMb8I863h42wjJcluL/IlH1TAFTSW12Cj
-         NDKpWrv0XZ7gGuSx5GyGbFQtSxKLPKT+XHyCd2WDQvbguzUuUbX3J7tw7dbZVxJdliPu
-         Z+IQ==
-X-Gm-Message-State: AAQBX9eyAA1wy8hPjdnqkemOYmXYV5hgm7tbshQscK8qpRefle7ER1Q5
-        TDUfwgzZy8Y8rUgoKcUw5/U8iYPDjs16TIcxIY0Z+w==
-X-Google-Smtp-Source: AKy350aMpQBedsbEVhsZzWk+zqIzObSk80KvK1Jwyz9aUfhHiBvphF8ZVmhjn1eJPXi8h5bpF1rVNodI9soVoRMjRLc=
-X-Received: by 2002:a81:af0c:0:b0:54c:2889:7105 with SMTP id
- n12-20020a81af0c000000b0054c28897105mr9727485ywh.0.1681743315611; Mon, 17 Apr
- 2023 07:55:15 -0700 (PDT)
+        with ESMTP id S229734AbjDRJAX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Apr 2023 05:00:23 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C5E40D2;
+        Tue, 18 Apr 2023 02:00:22 -0700 (PDT)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 2784487;
+        Tue, 18 Apr 2023 11:00:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1681808418;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xvvRB86AQVxOlD3RtO02pISStAPqaDuG7j7JHADtm5o=;
+        b=gmlX31n9YMYDUtWphYdGkIco9r5NaX9mwotHkGiTKllOEnDIuuubO4vMFqRzAYyRx6YeH7
+        jopwzCirZzYaxIGYzoQjwxvk4G8lGflMjUO5SZSUtQTEC7j7H6yDDKHQ7CyddjA+6g7iGv
+        w/VOAI1XI1dT4jEjkcYWclaOGtEI3ygQ4yHBv/Dq+g9cfoCKpVx0GZ7qhr2ts+YQzKRkoU
+        3V3TMCafUHuILI94K5WG4+WV8X6dq4y+VQd2cbNBgpc+302rVfuEVxhLEW4tR1yMEIHoGW
+        L1Fa30aCsKkadDewKh1uaLZKOtdUpCqMCrbhnYdAqQX6SrR2zOaGemCBnDbIgQ==
 MIME-Version: 1.0
-References: <1681468167-11689-1-git-send-email-quic_srichara@quicinc.com> <1681468167-11689-8-git-send-email-quic_srichara@quicinc.com>
-In-Reply-To: <1681468167-11689-8-git-send-email-quic_srichara@quicinc.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Apr 2023 16:54:39 +0200
-Message-ID: <CAPDyKFr=EFT-QroB=FixcTVA4b3ghiAah8uadmJ07bui7myhUw@mail.gmail.com>
-Subject: Re: [PATCH V3 7/9] dt-bindings: mmc: sdhci-msm: Document the IPQ5018 compatible
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 18 Apr 2023 11:00:18 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     VaibhaavRam.TL@microchip.com
+Cc:     gregkh@linuxfoundation.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v9 char-misc-next 1/2] misc: microchip: pci1xxxx: Add
+ support to read and write into PCI1XXXX OTP via NVMEM sysfs
+In-Reply-To: <49405ea2bb0bee16a41ce88b7d679ff714823585.camel@microchip.com>
+References: <20230413105318.6070-1-vaibhaavram.tl@microchip.com>
+ <20230413105318.6070-2-vaibhaavram.tl@microchip.com>
+ <51847629489852d493af928580c5a2de@walle.cc>
+ <49405ea2bb0bee16a41ce88b7d679ff714823585.camel@microchip.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <8b7b98e60fd871cc7aafda6f9b4e146a@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 14 Apr 2023 at 12:35, Sricharan Ramabadhran
-<quic_srichara@quicinc.com> wrote:
->
-> Document the compatible for SDHCI on IPQ5018.
->
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Am 2023-04-17 14:47, schrieb VaibhaavRam.TL@microchip.com:
+>> > +#include <linux/auxiliary_bus.h>
+>> > +#include <linux/bio.h>
+>> > +#include <linux/device.h>
+>> > +#include <linux/iopoll.h>
+>> > +#include <linux/kthread.h>
+>> 
+>> Is this needed? I don't see any threads. Also bio.h. Please double
+>> check
+>> your includes.
+> Ok, Will remove in next version of patch
+>> > +     if (priv != NULL)
+>> > +             rb = priv->reg_base;
+>> > +     else
+>> > +             return -ENODEV;
+>> 
+>> Unneeded check, priv cannot be NULL, right?
+> Ok, I think this can be removed
+>> > +
+>> > +             data = readl(rb +
+>> > MMAP_OTP_OFFSET(OTP_PASS_FAIL_OFFSET));
+>> > +             if (ret < 0 || data & OTP_FAIL_BIT)
+>> > +                     break;
+>> 
+>> No error handling?
+> We have implemented short read which returns count of successful bytes
+> read and therefore userspace will recognise the situation when the
+> requested count is not obtained.
 
-Applied for next, thanks!
+I'll leave that up to Greg, but I'd prefer a proper error to userspace.
+I'm not sure if you'd need to differentiate between a short read/write
+and an error.
 
-Kind regards
-Uffe
+Maybe a short read or write is a valid situation where an access which
+leads to the OTP_FAIL_BIT is for sure an error situation.
 
-
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index 7d4c5ca..4f2d9e8 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -34,6 +34,7 @@ properties:
->            - const: qcom,sdhci-msm-v4 # for sdcc versions less than 5.0
->        - items:
->            - enum:
-> +              - qcom,ipq5018-sdhci
->                - qcom,ipq5332-sdhci
->                - qcom,ipq9574-sdhci
->                - qcom,qcm2290-sdhci
-> --
-> 2.7.4
->
+-michael
