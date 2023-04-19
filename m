@@ -2,153 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F18F6E7764
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Apr 2023 12:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4816E7A78
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Apr 2023 15:19:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232724AbjDSK2r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Apr 2023 06:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40810 "EHLO
+        id S233406AbjDSNTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Apr 2023 09:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232327AbjDSK2p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Apr 2023 06:28:45 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B68F59FB
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Apr 2023 03:28:42 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4eed6ddcae1so151509e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Apr 2023 03:28:42 -0700 (PDT)
+        with ESMTP id S232553AbjDSNTo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Apr 2023 09:19:44 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAFE146E5;
+        Wed, 19 Apr 2023 06:19:42 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id fy21so38616433ejb.9;
+        Wed, 19 Apr 2023 06:19:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681900120; x=1684492120;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/VybvqKxQBBjDVUhiroFfMYUdC6zzghkLtNDu/WEbXQ=;
-        b=F1g1LfaupkHvYGX4hXRemCRjRdU9QpJizHsTb6EnZ7xTEl05oERKa1+MylQD+Ud17I
-         3s609V08kX1xd6CeIueDdxQwHlujSJIKLLCmtbycbPoMyhi7imo87c07ekSD7YDpihwv
-         gNbPYVGLXRGd008MdDx7rkJFBD7ojIgbzqt7NCAMmqtlqnyUFQrsbWXNnlk7/B6e9IN/
-         PyQQ2WBqMAB1fC07FGM+vvnjRhmhuEINNqbZILQJZvCYgiWS/skaT+N7v2O4WJR4/yXU
-         1Or1Om0Gg4u4fh88HKcZAUdeMTusLaV6fKMnpXghFi2yA378BoyAedaxKo3/HsqcAvid
-         obKg==
+        d=gmail.com; s=20221208; t=1681910381; x=1684502381;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yagTkb97tOSUXUO/i6exQTb0DLsglQm8kN/R51CoLeM=;
+        b=DbTAYMvEn3V6b4ELhVhXKtZpsyLJCQqOzTlkzgZZ5CKABJ9YHPEQyWnXLNDjrNZA8F
+         OrMeCHM57zL6i9PqJ2EJWMOZXz4C66rRh7RXmfrmD2smi7cef2luVIxsUf8IAViZZMND
+         o+uJ3Yu9eEDiNYsSx+V/B2hEbJqR5cPXKstjgTtNdpO2ggsEod9ulXUc6MPN8ZybCjMx
+         QyPqxjeLFFVI9it6H5Ji/8TOIlvH83VnM48ZJBK3G+t3w4J4oKYUgH9QJVadzQpnQdC0
+         OTXFbDEFvD4hM17FYHU2Tz1Dt0uBMae7u2hom3TcdDCWj7ir44M75U1nYCkkjkTJmZA7
+         3ixQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681900120; x=1684492120;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/VybvqKxQBBjDVUhiroFfMYUdC6zzghkLtNDu/WEbXQ=;
-        b=JH65Yp55JhWwDXA9HVRY+4lAljdl63WPqE5n/XELBvjx+oaEQ25G3rB25q+GwtIRFG
-         zyhHvQ6udo+t0oU40hJ6HsdzvDXLDGoSiQ7me66RAVee+2uQKsSnLmn/1RssveDYlPs2
-         LFur2kxlzlU5E2yAYfsH3SyLfE6R7QkbLCc9hZXznholfEHW5hoYaOyKGRHQrhxjnPUT
-         VORjK99lr3dgvcesO6yC/OrRgshecjrY1h7WFGq0yN6FguS6g1oxGrkP+1pK4Cy1uOin
-         eEZ6xi1/25Uw6QsObJkagAZERZaaU6tRPfTddl2G1y8UG+Pw4wRyvy73g6Spaky/3gAu
-         2ToA==
-X-Gm-Message-State: AAQBX9eHzbqBQ8DzzHS4YC5dImF8G412heUnjY3iKNPEqWAlTZvRBa3p
-        gNvJNEpYZqFsCoW+IrvZ7OQedw==
-X-Google-Smtp-Source: AKy350bR2i4Ob8duVzV3tJMTy/E3Eui8ihwuBJFLOmUXsND88vLrHCUaWPcS+3HzXFhjrd13jx5MGg==
-X-Received: by 2002:ac2:55b2:0:b0:4ec:7973:1ac with SMTP id y18-20020ac255b2000000b004ec797301acmr777061lfg.22.1681900120711;
-        Wed, 19 Apr 2023 03:28:40 -0700 (PDT)
-Received: from [192.168.1.101] (abyj144.neoplus.adsl.tpnet.pl. [83.9.29.144])
-        by smtp.gmail.com with ESMTPSA id p11-20020ac246cb000000b004edd84f4646sm194670lfo.91.2023.04.19.03.28.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Apr 2023 03:28:40 -0700 (PDT)
-Message-ID: <4b9e8dba-aeb7-092b-ebec-6c1fd7bbaa12@linaro.org>
-Date:   Wed, 19 Apr 2023 12:28:38 +0200
+        d=1e100.net; s=20221208; t=1681910381; x=1684502381;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yagTkb97tOSUXUO/i6exQTb0DLsglQm8kN/R51CoLeM=;
+        b=Fjk1i6dATGdaWhwYLX3YedGrQI/iIz7GwJhS2CqD3DWeXuNVzgMu2WUGThNY33Ne8c
+         TcMv7/Wm1qF5T+H0qxRPvGeemNcZCQDsFzax7RdR5qCAN6aQGHrvEZDNncTtHuJQ3xlJ
+         l9WQwpcqRsUKPQxkCujCz+rMkjZ87EjiGjAgZ+jF4RDOo7oAgboDuth8PHRPZOFqRbXZ
+         xgimZtLteRB1wffEoLlx+cWjeExrX5KGEGpFuRyuusf57Q4OQlBGhRHk8+NgHPJrDxwW
+         CytkWvDLcsQ1nf8ZLI5/Af3YlnAfY8M3NfB0C2tlmKH9entSOU/OkC9fhNADffjGrK9y
+         LzJw==
+X-Gm-Message-State: AAQBX9cSa2YVA5HUkiROydU68s9tr2w3FCI8kU5Nc+Smk/WcXvLqd95n
+        l1/dzFVbhqjFu9GrY1N6Jik=
+X-Google-Smtp-Source: AKy350Z1uvhTYg3923FLT4wTcoOrjylzfF1/2Ek+wyeLeIKqIC+Ry3JHCxOUkJEOK6fuEP3wCzbMoA==
+X-Received: by 2002:a17:907:a2cc:b0:953:603e:e939 with SMTP id re12-20020a170907a2cc00b00953603ee939mr1724194ejc.69.1681910381040;
+        Wed, 19 Apr 2023 06:19:41 -0700 (PDT)
+Received: from skbuf ([188.27.184.189])
+        by smtp.gmail.com with ESMTPSA id j25-20020a1709062a1900b0094f614e43d0sm4911174eje.8.2023.04.19.06.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 06:19:40 -0700 (PDT)
+Date:   Wed, 19 Apr 2023 16:19:38 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, linux@armlinux.org.uk,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com, Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH net-next v3 6/8] net: pcs: Add 10GBASE-R mode for
+ Synopsys Designware XPCS
+Message-ID: <20230419131938.3k4kuqucvuuhxcrc@skbuf>
+References: <20230419082739.295180-1-jiawenwu@trustnetic.com>
+ <20230419082739.295180-1-jiawenwu@trustnetic.com>
+ <20230419082739.295180-7-jiawenwu@trustnetic.com>
+ <20230419082739.295180-7-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: sdm632-fairphone-fp3: Add
- notification LED
-Content-Language: en-US
-To:     Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
-        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
- <20230414-pmi632-v2-7-98bafa909c36@z3ntu.xyz>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230414-pmi632-v2-7-98bafa909c36@z3ntu.xyz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230419082739.295180-7-jiawenwu@trustnetic.com>
+ <20230419082739.295180-7-jiawenwu@trustnetic.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Apr 19, 2023 at 04:27:37PM +0800, Jiawen Wu wrote:
+> Add basic support for XPCS using 10GBASE-R interface. This mode will
+> be extended to use interrupt, so set pcs.poll false. And avoid soft
+> reset so that the device using this mode is in the default configuration.
 
+I'm not clear why the xpcs_soft_reset() call is avoided. Isn't the
+out-of-reset configuration the "default" one?
 
-On 18.04.2023 18:43, Luca Weiss wrote:
-> The phone features a notification LED connected to the pmi632. Configure
-> the RGB led found on it.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> +static int xpcs_get_state_10gbaser(struct dw_xpcs *xpcs,
+> +				   struct phylink_link_state *state)
+> +{
+> +	int ret;
+> +
+> +	state->link = false;
+> +
+> +	ret = xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (ret & MDIO_STAT1_LSTATUS)
+> +		state->link = true;
+> +
+> +	if (state->link) {
 
-Konrad
->  arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 29 +++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-> index 70e683b7e4fc..301eca9a4f31 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-> @@ -4,8 +4,10 @@
->   */
->  /dts-v1/;
->  
-> +#include <dt-bindings/leds/common.h>
->  #include "sdm632.dtsi"
->  #include "pm8953.dtsi"
-> +#include "pmi632.dtsi"
->  
->  / {
->  	model = "Fairphone 3";
-> @@ -83,6 +85,33 @@ &pm8953_resin {
->  	linux,code = <KEY_VOLUMEDOWN>;
->  };
->  
-> +&pmi632_lpg {
-> +	status = "okay";
+It seems pointless to open a new "if" statement when this would have
+sufficed:
+
+	if (ret & MDIO_STAT1_LSTATUS) {
+		state->link = true;
+		state->pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
+		...
+	}
+
+> +		state->pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
+> +		state->duplex = DUPLEX_FULL;
+> +		state->speed = SPEED_10000;
+> +	}
 > +
-> +	multi-led {
-> +		color = <LED_COLOR_ID_RGB>;
-> +		function = LED_FUNCTION_STATUS;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		led@1 {
-> +			reg = <1>;
-> +			color = <LED_COLOR_ID_RED>;
-> +		};
-> +
-> +		led@2 {
-> +			reg = <2>;
-> +			color = <LED_COLOR_ID_GREEN>;
-> +		};
-> +
-> +		led@3 {
-> +			reg = <3>;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +		};
-> +	};
-> +};
-> +
->  &sdhc_1 {
->  	status = "okay";
->  	vmmc-supply = <&pm8953_l8>;
-> 
+> +	return 0;
+> +}
