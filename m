@@ -2,99 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8600F6E95BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 15:23:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D66836E9921
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 18:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjDTNXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 09:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
+        id S234119AbjDTQGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 12:06:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbjDTNXC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 09:23:02 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945F444A5;
-        Thu, 20 Apr 2023 06:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=gkhEaE/aNZgpUhGPC4PT/KQVDtc4Y5mYe1VfRfC4FeY=; b=rUpH3kHcTP39AdAOGkVcof9uN9
-        evAfZtKYl3k00DZRI96sx7ibhBf+Dsegq//qaodKdEqyOHb86ngDnyHwGw6uHnTNsxUPT8Xbdrcl7
-        svKhNw57zYPRIYv0tZlqQhCWcLvb435zIFF8HQsgghAb3tqD+dFusg9Kc6wBihOH72Lo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ppUFP-00AnIq-Qd; Thu, 20 Apr 2023 15:22:51 +0200
-Date:   Thu, 20 Apr 2023 15:22:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, linux@armlinux.org.uk,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        olteanv@gmail.com, mengyuanlou@net-swift.com,
-        'Jarkko Nikula' <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH net-next v3 2/8] i2c: designware: Add driver support for
- Wangxun 10Gb NIC
-Message-ID: <72703dc2-0ee1-41b2-9618-2a3185869cbf@lunn.ch>
-References: <20230419082739.295180-1-jiawenwu@trustnetic.com>
- <20230419082739.295180-3-jiawenwu@trustnetic.com>
- <ec095b8a-00af-4fb7-be11-f643ea75e924@lunn.ch>
- <03ef01d97372$f2ee26a0$d8ca73e0$@trustnetic.com>
+        with ESMTP id S234321AbjDTQGk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 12:06:40 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3666A48;
+        Thu, 20 Apr 2023 09:05:58 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id z6so7561096ejc.5;
+        Thu, 20 Apr 2023 09:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682006757; x=1684598757;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EIrWFxNQFlhme+9qVbuyjFRPmgNp9vvWt4N75xCa6m4=;
+        b=a9rxcvGAOssBpy4B7PyIEPBItlmSNahxnycgB4kVPzpIz6OZ9CMc7H97kEQ8rirzr1
+         g4e//k/2hJlZY2UcTf/ZV7W78D0oif+QDSD8y/Rjn3IS8zvtuB+EizeU3l7A1BdTG049
+         /TJWVOz7m+8Q0LcUIHXBV6oCE8u8hCi8ncoqi1GYe/MbKP6mPGOlXoG+YVsOwtANwTGX
+         hE03Mn2G4krPSPrc1K/FPi1bTYIyLwIqQRteyPxens4/5ubijN1xjmZtZ6xEWcBqVc0o
+         933H5jxC2QivNsdcAo30+PfZbexvs7vECbotqh6MI5YhKteAcECf5k46gh7EosS7RUg7
+         bZUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682006757; x=1684598757;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EIrWFxNQFlhme+9qVbuyjFRPmgNp9vvWt4N75xCa6m4=;
+        b=Q1r7eBXFNHjTW2+pUwrJeWi0bJ3D9gLvh5fg/Jev8A5MQrfokmifJJhILMlhXsx0YH
+         lOe4jgrKZRXwhxPahpRLNhDuynbOt3scPKnKTyON5OtiVa5q9EnuOx6+rjiVtn+BRsZb
+         8hWkDQWvC/yD9uEPOFbHTtQUTVUxlzuyhWfsur6VCv2pCOgzwnEibtTZmTiTvkoLgE36
+         Qz1cotI9fza55L6H5mfoqRY51Q7gBhg4AFs0MbReppJSC1P8aoMVW1+7RSRTWuNDuQSQ
+         n23lr4Pf0IIdfc/xCYTIqR/kSrbuvAzTY5jVkLXVnTPl03tCvFF8YSWsflUZCnaUjeS+
+         s3ng==
+X-Gm-Message-State: AAQBX9el0LyXMRI/tSd+cbc227SckVB90EGVRB/0lGaUUDipgLVsYySo
+        UbdIS5KLnwKElMSF/me1XLE=
+X-Google-Smtp-Source: AKy350YlLeT7OF1W7F6jluIK5b7JRjgtxjCjjoHaFXqLQ9oKKT4V6FsG5KV+u9+otG5Z3zZDBE9Jrg==
+X-Received: by 2002:a17:906:1c06:b0:94b:d57e:9d4b with SMTP id k6-20020a1709061c0600b0094bd57e9d4bmr2070785ejg.2.1682006756729;
+        Thu, 20 Apr 2023 09:05:56 -0700 (PDT)
+Received: from orome (p200300e41f053a00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f05:3a00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id l22-20020a170906795600b0094f25ae0821sm887732ejo.31.2023.04.20.09.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 09:05:56 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 18:05:54 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, robh+dt@kernel.org,
+        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
+Subject: Re: [V6 4/9] arm64: tegra: Add Tegra234 GTE nodes
+Message-ID: <ZEFi4vKVtstiAno3@orome>
+References: <20230414004455.19275-1-dipenp@nvidia.com>
+ <20230414004455.19275-5-dipenp@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NPoYIIrP4+2LC65A"
 Content-Disposition: inline
-In-Reply-To: <03ef01d97372$f2ee26a0$d8ca73e0$@trustnetic.com>
+In-Reply-To: <20230414004455.19275-5-dipenp@nvidia.com>
+User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 20, 2023 at 06:29:11PM +0800, Jiawen Wu wrote:
-> On Thursday, April 20, 2023 4:58 AM, Andrew Lunn wrote:
-> > On Wed, Apr 19, 2023 at 04:27:33PM +0800, Jiawen Wu wrote:
-> > > Wangxun 10Gb ethernet chip is connected to Designware I2C, to communicate
-> > > with SFP.
-> > >
-> > > Add platform data to pass IOMEM base address, board flag and other
-> > > parameters, since resource address was mapped on ethernet driver.
-> > >
-> > > The exists IP limitations are dealt as workarounds:
-> > > - IP does not support interrupt mode, it works on polling mode.
-> > > - I2C cannot read continuously, only one byte can at a time.
-> > 
-> > Are you really sure about that?
-> > 
-> > It is a major limitation for SFP devices. It means you cannot access
-> > the diagnostics, since you need to perform an atomic 2 byte read.
-> > 
-> > Or maybe i'm understanding you wrong.
-> > 
-> >    Andrew
-> > 
-> 
-> Maybe I'm a little confused about this. Every time I read a byte info, I have to
-> write a 'read command'. It can normally get the information for SFP devices.
-> But I'm not sure if this is regular I2C behavior.
- 
-I don't know this hardware, so i cannot say what a 'read command'
-actually does. Can you put a bus pirate or similar sort of device on
-the bus and look at the actual I2C signals. Is it performing one I2C
-transaction per byte? If so, that is not good.
 
-The diagnostic values, things like temperature sensor, voltage sensor,
-received signal power are all 16 bits. You cannot read them using two
-time one byte reads. Say the first read sees a 16bit value of 0x00FF,
-but only reads the first byte. The second read sees a 16bit value of
-0x0100 but only reads the second byte. You end up with 0x0000. When
-you do a multi byte read, the SFP should do an atomic read of the
-sensor, so you would see either 0x00FF, or 0x0100.
+--NPoYIIrP4+2LC65A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If your hardware can only do single byte reads, please make sure the
-I2C framework knows this. The SFP driver should then refuse to access
-the diagnostic parts of the SFP, because your I2C bus master hardware
-is too broken. The rest of the SFP should still work.
+On Thu, Apr 13, 2023 at 05:44:50PM -0700, Dipen Patel wrote:
+> Add GTE LIC and AON GPIO nodes for the tegra234 SoC.
+>=20
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 
-	Andrew.
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--NPoYIIrP4+2LC65A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmRBYuIACgkQ3SOs138+
+s6EhoQ/+NM3QPHuY/4aEUx5uEy94QwELsFH6cn5FTtmq3kevgv+fjstZ1Ojxy3Nf
+tx34APCxIWm85Bs6qI+xs7o0ikd+WrttTV6CxQhpOiptO88eDr3vT2aN6bSqTBR7
+LR5HvaOnn06pRkYHbMGM6OTRLCAEU5J7Cz3C+n1oG6mE6405ImpAAImYZMyPH7Be
+ITbUFGF+ZH6cucAlxvoi5GnBn8zoN9hYgLphhQs7qOqSqV+bVxVBvFJq2ZXBhQPp
+CKHvoKdN6aWcynnLiPDZsZ1uvVfjV/iOUMwgb/lyl5SW/nrXQqipBPN6l5ONvG2F
+xUt/auV2Ipsn3x8vlEKts2qrzVwl9ojiy6Is/hUp95L/srpJUeix0zPGU38thBSp
+aVbsNXy6T2yQCpjFE9kVO3uuIvJGsOqSp6tt4CYrrEryt93ktU9dEjREbkaLRDRa
+5oSnzNVDKmzith3Zi7uPUL7eKvtQflnMbCOhn2HvAyVcjijyWxaQvqYuDC9tZhs/
+31R8aSgpVF8in6IkQnztLgEdXehAi4yuq9TWOeKRgVJUYAXBfmg+kfXchmRVlxVl
+d5UNYfEqmPjjxRbJPL7491G8JXtV6V53RrSuEuZizMdUgT3Qp2ut4J+DaTXMHiSc
+NBfvENpdOfv8MBtwt7Rs/kyZZJC5D9RT5jKMomseLewcNM+X6ho=
+=vZgG
+-----END PGP SIGNATURE-----
+
+--NPoYIIrP4+2LC65A--
