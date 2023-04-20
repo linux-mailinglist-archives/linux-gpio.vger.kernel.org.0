@@ -2,62 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428A46E926B
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 13:26:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D27F6E93A1
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 14:04:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233948AbjDTL0F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 07:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53554 "EHLO
+        id S231827AbjDTMEw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 08:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234162AbjDTLZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 07:25:49 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 634FD93E1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 04:24:53 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-2f917585b26so504343f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 04:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681989891; x=1684581891;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3FuoX729rDdl3nw02UCfodQKJLmZU6xSJTMIz+3yGVs=;
-        b=HJiA6uR7S/tVU/VgjhCsZacuUfDbF7mZjX15IEZm7XPb0cSdU6Vvv8tmNQu0hNleD+
-         y3QyWZPC3xEnMMJFcQ/1JFePsNs4UuqaLOSrR2jvcanYtB7JRHUkG6MoS307Zpc+N9Cv
-         MxwPVwm5wLFOvCpg5Hlb0syRBzit2NDsu7B1HBjG2CFKYx5gS0guDXBfFlKYr+Mz24DO
-         G8gWDZ0nq6NObdUZ3e9E/FISpT8WzKRk/3ZFVo8du0QV3FpRI9+8EvesyP10j2mJe+Zs
-         U606z/dAoXq8zdmfUOy9CLiA8YCD4DhYGKaF18AXQlyvjX1vrm55joBNpjAPjGGM8L18
-         MMRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681989891; x=1684581891;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FuoX729rDdl3nw02UCfodQKJLmZU6xSJTMIz+3yGVs=;
-        b=RfKcnwymmO8cZwVkZ0FWwwaARpz08ZVn77f8vKeMbmhXajlSxgNlJ+jNycA0NEYjq8
-         MU5veO/08NZ1ALadhvHgS7vWA9quObl5fP7tWBTPgTt+l48AI4zYT7S2B1t1lgmH6hLf
-         0u8Rqq3KumN6L6BZRKIIJObRvhyTsuVo5AYs80MRWAKsxUwJoPZQJR1Sh1AXVhQ9AlbY
-         4hlWAMynzmusIcGDZfLDatuCylfNj6VkmPeI/9Npnws2wVf6k5PC2E99YLUtdDo+AtTU
-         VeoJgMrWZVyhfNkVopIt3SVcUn0gKttQ1l+t9Ml6L5gvjKoJz8hkIdQCwaxJGsQt5OrA
-         wfUQ==
-X-Gm-Message-State: AAQBX9c+P5ShliVHQbFzFK7SbsdDEookfxqV1P20bWkbDotBWAFDakrn
-        YuoElY4fA7W/jdlLruwUZmHS9Q==
-X-Google-Smtp-Source: AKy350b4BoRvjTWMo86AsVoLB8HUI3UU2/+kaHQKDmVwnky9AZ2YXR757tg/flZ1qhMGdrObFiVcUw==
-X-Received: by 2002:a05:6000:1a53:b0:2cf:2dcc:3421 with SMTP id t19-20020a0560001a5300b002cf2dcc3421mr1101199wry.5.1681989891711;
-        Thu, 20 Apr 2023 04:24:51 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id g3-20020a5d5543000000b002fe254f6c33sm1694530wrw.92.2023.04.20.04.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 04:24:51 -0700 (PDT)
-Date:   Thu, 20 Apr 2023 14:24:48 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     lakshmi.sai.krishna.potthuri@xilinx.com
-Cc:     linux-gpio@vger.kernel.org
-Subject: [bug report] pinctrl: Add Xilinx ZynqMP pinctrl driver support
-Message-ID: <9e0761f0-ffbc-41ea-aaaf-81d3306f34f6@kili.mountain>
+        with ESMTP id S229520AbjDTMEu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 08:04:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A92F530DF;
+        Thu, 20 Apr 2023 05:04:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 42DEA64776;
+        Thu, 20 Apr 2023 12:04:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55188C433EF;
+        Thu, 20 Apr 2023 12:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1681992288;
+        bh=Eq90CI4WN6vboOUFC74i6leDtzHtPyCNTordr31Nh5o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fiKlQOsw4F4vu42KLc/ZfMNSl8Od8i4py8ZDfpWqtAq8dnzttU1JaITIf7m5ITzfe
+         lT7Q4v8RPIwR/85AVtgoN4sXH2sUp/jU2sfl0IOXn3uEobrOvDZmesPYzKJ5EthERu
+         NaHgYdv4TtS/llPUZdhNaYpmHvxzqaR2CCFVcTrA=
+Date:   Thu, 20 Apr 2023 14:04:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kumaravel.Thiagarajan@microchip.com
+Cc:     Y_Ashley@163.com, arnd@arndb.de, dzm91@hust.edu.cn,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: mchp_pci1xxxx: mchp_pci1xxxx_gp: add unwind goto
+Message-ID: <ZEEqXqu2JoPlR8ig@kroah.com>
+References: <20230409124816.36137-1-Y_Ashley@163.com>
+ <BN8PR11MB3668BB25DB6028404F423086E9989@BN8PR11MB3668.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <BN8PR11MB3668BB25DB6028404F423086E9989@BN8PR11MB3668.namprd11.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,47 +51,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Sai Krishna Potthuri,
+On Thu, Apr 13, 2023 at 04:43:10AM +0000, Kumaravel.Thiagarajan@microchip.com wrote:
+> > -----Original Message-----
+> > From: Xinyi Hou <Y_Ashley@163.com>
+> > Sent: Sunday, April 9, 2023 6:18 PM
+> > To: Kumaravel Thiagarajan - I21417
+> > <Kumaravel.Thiagarajan@microchip.com>; Arnd Bergmann
+> > <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > 
+> > Smatch reported:
+> > 
+> > drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c:73 gp_aux_bus_probe()
+> > warn:
+> > missing unwind goto?
+> > 
+> > In gp_aux_bus_probe(), when the allocation of aux_bus-
+> > >aux_device_wrapper[1] fails, it needs to clean up the allocated resources.
+> > 
+> > Fix this by revising the return statement to a goto statement.
+> > 
+> > Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for
+> > the PIO function in the multi-function endpoint of pci1xxxx device.")
+> > Signed-off-by: Xinyi Hou <Y_Ashley@163.com>
+> > Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+> Reviewed-by: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
+> > ---
+> > The issue is found by static analysis, and the patch remains untest.
 
-The patch 8b242ca700f8: "pinctrl: Add Xilinx ZynqMP pinctrl driver
-support" from Apr 22, 2021, leads to the following Smatch static
-checker warning:
+Despite all the reviewers, this patch is incorrect :(
 
-	drivers/pinctrl/pinctrl-zynqmp.c:681 zynqmp_pinctrl_create_pin_groups()
-	warn: missing error code? 'ret'
+Please test patches, or better yet, restructure the code to not need to
+bail out in such a "deep" call path so that errors like this are not an
+issue.
 
-drivers/pinctrl/pinctrl-zynqmp.c
-    667 static int zynqmp_pinctrl_create_pin_groups(struct device *dev,
-    668                                             struct zynqmp_pctrl_group *groups,
-    669                                             unsigned int pin)
-    670 {
-    671         u16 resp[NUM_GROUPS_PER_RESP] = {0};
-    672         int ret, i, index = 0;
-    673 
-    674         do {
-    675                 ret = zynqmp_pinctrl_get_pin_groups(pin, index, resp);
-    676                 if (ret)
-    677                         return ret;
-    678 
-    679                 for (i = 0; i < NUM_GROUPS_PER_RESP; i++) {
-    680                         if (resp[i] == NA_GROUP)
---> 681                                 return ret;
+thanks,
 
-"ret" is zero at this point.  This looks intentional?  We loop until
-we find a NA_GROUP then return zero?  Better to "return 0;" explicitly,
-though.
-
-    682 
-    683                         if (resp[i] == RESERVED_GROUP)
-    684                                 continue;
-    685 
-    686                         zynqmp_pinctrl_group_add_pin(&groups[resp[i]], pin);
-    687                 }
-    688                 index += NUM_GROUPS_PER_RESP;
-    689         } while (index <= MAX_PIN_GROUPS);
-    690 
-    691         return 0;
-    692 }
-
-regards,
-dan carpenter
+greg k-h
