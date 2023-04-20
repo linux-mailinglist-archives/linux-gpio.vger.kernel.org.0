@@ -2,45 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63BDA6E8E1E
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 11:32:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9216E8FCA
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 12:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234103AbjDTJcu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 05:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
+        id S234735AbjDTKOo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 06:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234039AbjDTJct (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 05:32:49 -0400
-Received: from smtpbg153.qq.com (smtpbg153.qq.com [13.245.218.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC531702;
-        Thu, 20 Apr 2023 02:32:43 -0700 (PDT)
-X-QQ-mid: Yeas47t1681983130t003t38627
-Received: from 7082A6556EBF4E69829842272A565F7C (jiawenwu@trustnetic.com [183.129.236.74])
-X-QQ-SSF: 00400000000000F0FL9000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 2844241341821674648
-To:     "'Vladimir Oltean'" <olteanv@gmail.com>
-Cc:     <netdev@vger.kernel.org>, <linux@armlinux.org.uk>,
-        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>
-References: <20230420080312.6ai6yrm6gikljeto@skbuf> <20230419082739.295180-1-jiawenwu@trustnetic.com> <20230419082739.295180-1-jiawenwu@trustnetic.com> <20230419082739.295180-7-jiawenwu@trustnetic.com> <20230419082739.295180-7-jiawenwu@trustnetic.com> <20230419131938.3k4kuqucvuuhxcrc@skbuf> <037501d9732b$518048d0$f480da70$@trustnetic.com> <20230420080312.6ai6yrm6gikljeto@skbuf> <03d301d97363$874123d0$95c36b70$@trustnetic.com> <03d301d97363$874123d0$95c36b70$@trustnetic.com> <20230420085211.6kt2oj3k5k54mtuf@skbuf>
-In-Reply-To: <20230420085211.6kt2oj3k5k54mtuf@skbuf>
-Subject: RE: [PATCH net-next v3 6/8] net: pcs: Add 10GBASE-R mode for Synopsys Designware XPCS
-Date:   Thu, 20 Apr 2023 17:32:05 +0800
-Message-ID: <03d401d9736a$f880d2a0$e98277e0$@trustnetic.com>
+        with ESMTP id S234502AbjDTKOJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 06:14:09 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E6E1FC6
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 03:12:11 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4ec81245ae1so458261e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 03:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681985529; x=1684577529;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B1gg5qH9FVKEIvZx9IgwaMQ/p/pcxPmbM2nNSvflA+Y=;
+        b=oGF+NGmUcuKNfYKptKRvcA/mqBwJP3vVKuFesYiVXRdyTFgOoercusxcIZm6AB4RE8
+         /wRmO/0CDcuj9QTn+vHkn6mrx/DuytmBsRSzskfwvb0UDt3Gf6H0c3kE9rOL763teqFl
+         IeHCZIap55eiRWQFwdNU9nDGVj5cWc/nVmvjIM7tqxBkrRWdCoSm3HSMHPCo3tLuyUB+
+         zNZLX5K8573+XXXjDBREn7WlXbSCjv2O153I2thYxjoJ1PFi5xTmzksQv0SF2vk28b0+
+         u0gJwnTPdUCAKmZgt637xMuWdIqW6AgN2R4HzYxUXecvTMz9WyYgRVksLixG7kmkYWnJ
+         RiJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681985529; x=1684577529;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1gg5qH9FVKEIvZx9IgwaMQ/p/pcxPmbM2nNSvflA+Y=;
+        b=dt+726sfdP8G65zoziVFFvdsO4nMv+KUIBL7yaYuI8fgC3mB4rQYLh8MibLuq+O6Vq
+         GoeaSAe6Wy0omMbIEe4tNctJC7GhSD5RyLoSeJqiWTIlWiw6QqowBKo8coLRfbh58rrT
+         cACRunZCZWkGDCfnE7yLKmafT6Vr1eZ/APs8k8xs52eL6VS9g/JWaTxfMasK4ZF5+N6X
+         2/OHG0GK0ABPTSwifHidjMOwvS3LczGpyyvBMnPeLWYOKOtVMUNaACg1PcXYtsM39YX7
+         8J9f5dS1Oy1595voPnu8dBUOewkQDXeznhyQODsrJlZ8MVkul6ilTN2rJn9XkcNgrFnR
+         rIAA==
+X-Gm-Message-State: AAQBX9fW4MLZ/2quASrynNH6pt089gLL/V3hu0JrlmkFyv16CEnhf6gA
+        OOZJEMayb5YCP+sWNYqD8yQ8Fg==
+X-Google-Smtp-Source: AKy350ZLeDAg/Z65XdnFNNxyJxECDLyd0G1w1LAFz9U3aeC7C/mcAJ4Bbx0in4YxGwlg5oYVk58TSQ==
+X-Received: by 2002:a05:6512:204:b0:4ed:befc:9b4e with SMTP id a4-20020a056512020400b004edbefc9b4emr363243lfo.3.1681985529604;
+        Thu, 20 Apr 2023 03:12:09 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
+        by smtp.gmail.com with ESMTPSA id f21-20020ac251b5000000b004cb45148027sm166060lfk.203.2023.04.20.03.12.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 03:12:09 -0700 (PDT)
+Message-ID: <d757326e-9dd1-36ea-9340-2a95c3cce70c@linaro.org>
+Date:   Thu, 20 Apr 2023 13:12:08 +0300
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 2/8] pinctrl: qcom: spmi-gpio: Add PMI632 support
+Content-Language: en-GB
+To:     Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
+ <20230414-pmi632-v2-2-98bafa909c36@z3ntu.xyz>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20230414-pmi632-v2-2-98bafa909c36@z3ntu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQILddcEM2VPF5H4GSvZ5UzGHBCY+AILBR3gAgsFHeABOmDyhAE6YPKEAhXaDNgCJUa00wILddcEAbTRLbkBtNEtuQIFposhrj3eybA=
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvr:qybglogicsvr5
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,51 +88,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thursday, April 20, 2023 4:52 PM, Vladimir Oltean wrote:
-> On Thu, Apr 20, 2023 at 04:38:48PM +0800, Jiawen Wu wrote:
-> > It needs to implement compat->pma_config, and add a flag in struct dw_xpcs
-> > to indicate board with specific pma configuration. For 10GBASE-R interface, it
-> > relatively simple, but a bit more complicate for 1000BASE-X since there are
-> > logic conflicts in xpcs_do_config(), I haven't resolved yet.
-> >
-> > In addition, reconfiguring XPCS will cause some known issues that I need to
-> > workaround in the ethernet driver. So I'd like to add configuration when I
-> > implement rate switching.
-> >
-> > There is a piece codes for my test:
+On 18/04/2023 19:43, Luca Weiss wrote:
+> Add support for the 8 GPIOs found on PMI632.
 > 
-> The PMA initialization procedure looks pretty clean to me (although I'm
-> not clear why it depends upon xpcs->flags & DW_MODEL_WANGXUN_SP when the
-> registers seem to be present in the common databook), and having it in
-> the XPCS driver seems much preferable to depending on an unknown previous
-> initialization stage.
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+>   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
+>   1 file changed, 1 insertion(+)
 
-The values configured in PMA depend on the board signal quality, Synopsys once
-provided the values based on our board information, but we don't know the details
-of the computation. So I don't think it's universal.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> 
-> Could you detail a bit the known issues and the 1000BASE-X conflicts in
-> xpcs_do_config()?
-> 
-
-Known issue is that traffic must be totally stopped while the PMA is being configured.
-And XPCS should add a judgment that PMA only need to be reconfigured when
-interface is changed.
-
-In 1000BASE-X interface, for my current testing, PMA configuration should precede
-AN configuration, and need to set PCS_DIG_CTRL1 reg? My test code for AN config:
-
-+static int xpcs_config_aneg_c37_1000basex_wx(struct dw_xpcs *xpcs, unsigned int mode,
-+					     const unsigned long *advertising)
-+{
-+
-+	xpcs_write(xpcs, MDIO_MMD_PCS, DW_VR_MII_DIG_CTRL1, 0x3002);
-+	xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_AN_CTRL, 0x0109);
-+	xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_DIG_CTRL1, 0x0200);
-+	ret = xpcs_read(xpcs, MDIO_MMD_VEND2, MDIO_CTRL1);
-+	ret |= BMCR_ANENABLE;
-+	xpcs_write(xpcs, MDIO_MMD_VEND2, MDIO_CTRL1, ret);
-+}
-
+-- 
+With best wishes
+Dmitry
 
