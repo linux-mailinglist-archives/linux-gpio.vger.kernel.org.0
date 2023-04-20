@@ -2,74 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD056E9474
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 14:33:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A32006E94FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 14:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234971AbjDTMdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 08:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
+        id S234046AbjDTMqh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 08:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233000AbjDTMdO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 08:33:14 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267831FD2;
-        Thu, 20 Apr 2023 05:32:57 -0700 (PDT)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6a5febde157so325814a34.3;
-        Thu, 20 Apr 2023 05:32:56 -0700 (PDT)
+        with ESMTP id S232217AbjDTMqg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 08:46:36 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5134C1E
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 05:46:29 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-50674656309so790617a12.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Apr 2023 05:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681994787; x=1684586787;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/Pk+Qd6CawbTTrnrThoEZ+rKcvpmzyvfeT2caixMXgc=;
+        b=pt4CgUgmnJh+NSe0Sg6CpH3AFJLD0T88/IDOQu6XkDZn8bZKvj3uIUrLI3Gx7MycDA
+         vilWwLsIcaDA+6fFiongQoGezPla2uUsq2zaxaBo5b1j2yrm2/ZmpDhgRyJZuIkgtsap
+         4Izh8cAANyyV1C8syere6nbtHrDZOTXifwjApfWSH3a5Oxo2saAm6UAK8s7E4wFrJPN9
+         qC0MlWSKL4UcNn8XbTWUq4n6Ir+HF///NpF1GDtCYM7kytocFqpzV8qd8e6YBFTcYMHI
+         jTBew8BcO6bZuqK6DCTUzToa0NJP/OeTgPiHsoN/nH1oiiMl5fc12m6k0g6eqlRunPE+
+         sOZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681993976; x=1684585976;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tMwSPKQCjaI+s6rgmrEgsLCZjsqIZCT4Ezs2S+deB98=;
-        b=AVzFbTxfXT6m+ICvWBNmzeWRlDjEKmeRAFm2huww9Dz8bJXs2ZTNqcaxKTMHxGlTdY
-         CSUW4d7hVwQs41pZGQKVqY/nS3GZiCryK7WhpIkOACBw93fCqxjeHYG2wasbMrgNxgJS
-         +CBPkRQd6hq/eUEK+88/G+jv4gfsLsTkP45YoYzKtpK0awqCglfA+ubvtqCjAwQQhZn5
-         0ESdpeAMl17MqKZkQ4aTG+wsACDd1qj/DLIQvII9vq8I3xpeBRWMWQME0LOEsApjOI/m
-         iBb2+N0e7dckCYVUCEKpaO/7v9jUWVBSEGQO56td0IPxRwpAP7P6I7deGtWSSZcwy1iz
-         BeZw==
-X-Gm-Message-State: AAQBX9cKD4L9FLI1dnyMBDE5r7pU+/VQSBRGVW/A195oevZIOczGkiqM
-        XXNPcur2iWhLj46GxsKrVQ==
-X-Google-Smtp-Source: AKy350YSGHZoEpx8/m/b2yMMUz7U5VCKfW6SofU/pYibL7OdS2HPNJjWi1oKmkk22+MMy/jv5K3amw==
-X-Received: by 2002:a9d:65d0:0:b0:69c:8354:c5de with SMTP id z16-20020a9d65d0000000b0069c8354c5demr652098oth.2.1681993976169;
-        Thu, 20 Apr 2023 05:32:56 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id z13-20020a9d62cd000000b006a2cc609ddasm681829otk.2.2023.04.20.05.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 05:32:55 -0700 (PDT)
-Received: (nullmailer pid 2632250 invoked by uid 1000);
-        Thu, 20 Apr 2023 12:32:54 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        d=1e100.net; s=20221208; t=1681994787; x=1684586787;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Pk+Qd6CawbTTrnrThoEZ+rKcvpmzyvfeT2caixMXgc=;
+        b=MbWvosyJfdTTH+zr01x6NZxcBVwhx5gmCK03faVv49U8YOsmnzRH9o7QIyfPN/AkEf
+         TJK1ajGNROlfsBX8DDWtp3Mnfg0zvH2GtB1Z+SYV4yDrurzo8zEHiBsfI/bdcQExGR8I
+         GXMW3cbczx0f2dOFMk0kb25H3HQqR8f5X08pcqXZghpzGK/wOofQ2Ra0u6jk7B2hexGq
+         8lMcZa6lnCHEYfhdUR4AG9YTrDu/tbi2tWn35lTri3ncGSp8oCMeiEYf9t2mL0a1JcZw
+         W/TLV3SCLn2wDqywmOKhauxNKIybvdziCJQCWjL2WF5k31/7f5Xgfy6cEoMp0jQaG5P/
+         f+eQ==
+X-Gm-Message-State: AAQBX9eAArp6VYWisseTKyWTro1pE5/bupI9CrQ7h6Xf4TSp/gQDGRNY
+        Ot3uzTlQktXTdhdPbjxac1EolA==
+X-Google-Smtp-Source: AKy350aCSVYHSTuRUbzqbqVKTM/wg1iw4BBaWxYl6hWz5ML/lQxQgFTB3JDFFaFTSk/LwI9FSxHkEA==
+X-Received: by 2002:a05:6402:1807:b0:504:8173:ec8c with SMTP id g7-20020a056402180700b005048173ec8cmr1853289edy.13.1681994787577;
+        Thu, 20 Apr 2023 05:46:27 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:bcb8:77e6:8f45:4771? ([2a02:810d:15c0:828:bcb8:77e6:8f45:4771])
+        by smtp.gmail.com with ESMTPSA id r22-20020aa7cb96000000b0050696c2d2f6sm706788edt.88.2023.04.20.05.46.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 05:46:27 -0700 (PDT)
+Message-ID: <73644f38-8165-f041-f9d7-a2f2bdd69f17@linaro.org>
+Date:   Thu, 20 Apr 2023 14:46:25 +0200
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
-Cc:     linux-gpio@vger.kernel.org, richardcochran@gmail.com,
-        manivannan.sadhasivam@linaro.org, andersson@kernel.org,
-        linux-arm-msm@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, agross@kernel.org, netdev@vger.kernel.org
-In-Reply-To: <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
-References: <1681966915-15720-1-git-send-email-quic_rohiagar@quicinc.com>
- <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
-Message-Id: <168199391964.2630980.4927574228536419171.robh@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SDX75 pinctrl
  devicetree compatible
-Date:   Thu, 20 Apr 2023 07:32:54 -0500
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Language: en-US
+To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <1681966915-15720-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Thu, 20 Apr 2023 10:31:54 +0530, Rohit Agarwal wrote:
+On 20/04/2023 07:01, Rohit Agarwal wrote:
 > Add device tree binding Documentation details for Qualcomm SDX75
 > pinctrl driver.
 > 
@@ -79,40 +91,30 @@ On Thu, 20 Apr 2023 10:31:54 +0530, Rohit Agarwal wrote:
 >  1 file changed, 195 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+> new file mode 100644
+> index 0000000..1d03f13
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+> @@ -0,0 +1,195 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/pinctrl/qcom,sdx75-tlmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SDX75 TLMM block
+> +
+> +maintainers:
+> +  - Rohit Agarwal <quic_rohiagar@quicinc.com>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block and found in
+> +  SDX75 platform.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Please start from some existing bindings to avoid all the issues we
+fixed. This binding does not look like current ones.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml:50:13: [error] empty value in block mapping (empty-values)
-./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml:84:52: [warning] too few spaces after comma (commas)
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: 'patternPropetries' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'dependentRequired', 'dependentSchemas', 'patternProperties', 'properties', 'not', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/bindings/pinctrl/qcom,sdx75-tlmm.yaml
-./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/pinctrl/qcom,sdx75-tlmm.yaml#
-Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.example.dts:32.13-36: ERROR (duplicate_property_names): /example-0/pinctrl@03000000:#interrupt-cells: Duplicate property name
-ERROR: Input tree has errors, aborting (use -f to force output)
-make[1]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.example.dtb] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1512: dt_binding_check] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Best regards,
+Krzysztof
 
