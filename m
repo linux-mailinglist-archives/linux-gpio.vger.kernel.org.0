@@ -2,126 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3982B6E9428
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 14:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FD056E9474
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 14:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234872AbjDTMWW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 08:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
+        id S234971AbjDTMdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 08:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234329AbjDTMWV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 08:22:21 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7364A1BF4;
-        Thu, 20 Apr 2023 05:22:20 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id D55065C01A9;
-        Thu, 20 Apr 2023 08:22:19 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 20 Apr 2023 08:22:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1681993339; x=1682079739; bh=sZ
-        ONUP6h+SJJnBCxfgbuzzXtSUZFZ3CJUwyCTkmq7Xg=; b=UXWrJ2EEvSiy24KMbi
-        fOpjxO35+cBmgDE7F6QvpjvJAcc23bJlf2c6pqZRu5zeqK/HhqTkzQ+AbklUI5r1
-        vV4RktufQbcODh2x1HBkLgxMMrQGKIKQAw8/PMXttqcziirs1IJenx5RmmTFrAMl
-        /8Y45X2c1rk1vHeLI0bgaxK/bHqFaL6fTf6EA6BNC1vlPOcyrNaRpdCfYl4AUcLb
-        uXhKGvOFaUZyhA57UzjmEoBCxxyncuaERsVmjWAbCYJjm6hDOaWQjNb2cK3Nnk6a
-        pZIAguRdayXwLnrrMIf8uZasj/QpiZ0pMq2GgHa8ap55jaPF4G0DAXX1tX/z7wO2
-        QKXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1681993339; x=1682079739; bh=sZONUP6h+SJJn
-        BCxfgbuzzXtSUZFZ3CJUwyCTkmq7Xg=; b=Hf7YZCJ1hzUf+3hn6Y3OxxyMZgL8i
-        PN/hgEMQ5V0XaWicdiNtSvmHWbgNanzjnZ+YZ5arE5hBWFFYPyGfSVFckEA3wa0U
-        y7U6nsAR5/qkpd6sZFRm1CIy1ubMvDFjqQWsbA3AJVbBpB8Y0EFIrTJtH1UAhhMB
-        kOMfeDIlbqXzEzGjZxVd8/xuJ9X13FEjEHB8dj84RQ6GL+IY5Zfd6O1oRgAnNYRX
-        uSA/bjY0JIjxLpWqg4Pk13mLPaK5OX0NXk3YfsaGKetfAhBTeEY8fTxgQucu17rt
-        xejm00Egbcf/Ymh/+Jj1/ngFyhUpbyU0E9FoLcz3HBDBbJPRmWWaiyYHQ==
-X-ME-Sender: <xms:ey5BZI7NI8R3UM7swGYU65cfll0oLLl7jJkR3kQPgqZSjCKfqgDT4g>
-    <xme:ey5BZJ41ypjuCPWmB-_ULfXWacdRdJfku9BgPPhlIC7U76U5Lu0Cu77YjPm9YEh4E
-    dd-9LrkRSzT6-bHDqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedtvddghedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:ey5BZHcgTSP7afLL2Ly7HJa4kgBCh5FOot5NhfcpWOpNEaavFDFsJA>
-    <xmx:ey5BZNIombeMEXIsHXza8yedFKUPJgDUrLZp30tcja3zOvsg158BXA>
-    <xmx:ey5BZMLRvsDvBxiF3PAoHk_uIaZscCP7T6FX8JZoVJ5JqBzfN2LA0g>
-    <xmx:ey5BZKwd9vOyIog2uaUSb4za4BGatTv8tQEB_Re3wJ6lH5JCurK72g>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 06C07B60086; Thu, 20 Apr 2023 08:22:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-372-g43825cb665-fm-20230411.003-g43825cb6
-Mime-Version: 1.0
-Message-Id: <747af785-963b-45e5-9d7b-d361951ea3fc@app.fastmail.com>
-In-Reply-To: <CA+G9fYsdMioe4+DEgeh38aTeaY3YaN_s_c0GFjPHhuPWfxyetA@mail.gmail.com>
-References: <CA+G9fYsdMioe4+DEgeh38aTeaY3YaN_s_c0GFjPHhuPWfxyetA@mail.gmail.com>
-Date:   Thu, 20 Apr 2023 14:21:58 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Naresh Kamboju" <naresh.kamboju@linaro.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-next <linux-next@vger.kernel.org>,
-        "open list" <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Cc:     "Rob Herring" <robh@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Nicholas Piggin" <npiggin@gmail.com>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Andrew Donnellan" <ajd@linux.ibm.com>,
-        "Anders Roxell" <anders.roxell@linaro.org>
-Subject: Re: next: powerpc: gpio_mdio.c:(.text+0x13c): undefined reference to
- `__of_mdiobus_register'
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S233000AbjDTMdO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 08:33:14 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267831FD2;
+        Thu, 20 Apr 2023 05:32:57 -0700 (PDT)
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6a5febde157so325814a34.3;
+        Thu, 20 Apr 2023 05:32:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681993976; x=1684585976;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tMwSPKQCjaI+s6rgmrEgsLCZjsqIZCT4Ezs2S+deB98=;
+        b=AVzFbTxfXT6m+ICvWBNmzeWRlDjEKmeRAFm2huww9Dz8bJXs2ZTNqcaxKTMHxGlTdY
+         CSUW4d7hVwQs41pZGQKVqY/nS3GZiCryK7WhpIkOACBw93fCqxjeHYG2wasbMrgNxgJS
+         +CBPkRQd6hq/eUEK+88/G+jv4gfsLsTkP45YoYzKtpK0awqCglfA+ubvtqCjAwQQhZn5
+         0ESdpeAMl17MqKZkQ4aTG+wsACDd1qj/DLIQvII9vq8I3xpeBRWMWQME0LOEsApjOI/m
+         iBb2+N0e7dckCYVUCEKpaO/7v9jUWVBSEGQO56td0IPxRwpAP7P6I7deGtWSSZcwy1iz
+         BeZw==
+X-Gm-Message-State: AAQBX9cKD4L9FLI1dnyMBDE5r7pU+/VQSBRGVW/A195oevZIOczGkiqM
+        XXNPcur2iWhLj46GxsKrVQ==
+X-Google-Smtp-Source: AKy350YSGHZoEpx8/m/b2yMMUz7U5VCKfW6SofU/pYibL7OdS2HPNJjWi1oKmkk22+MMy/jv5K3amw==
+X-Received: by 2002:a9d:65d0:0:b0:69c:8354:c5de with SMTP id z16-20020a9d65d0000000b0069c8354c5demr652098oth.2.1681993976169;
+        Thu, 20 Apr 2023 05:32:56 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z13-20020a9d62cd000000b006a2cc609ddasm681829otk.2.2023.04.20.05.32.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 05:32:55 -0700 (PDT)
+Received: (nullmailer pid 2632250 invoked by uid 1000);
+        Thu, 20 Apr 2023 12:32:54 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
+Cc:     linux-gpio@vger.kernel.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org, andersson@kernel.org,
+        linux-arm-msm@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, agross@kernel.org, netdev@vger.kernel.org
+In-Reply-To: <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
+References: <1681966915-15720-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com>
+Message-Id: <168199391964.2630980.4927574228536419171.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SDX75 pinctrl
+ devicetree compatible
+Date:   Thu, 20 Apr 2023 07:32:54 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 20, 2023, at 12:57, Naresh Kamboju wrote:
-> Following build failures noticed on Linux next-20230419 for powerpc.
->
-> Regressions found on powerpc:
->  - build/gcc-8-defconfig
->  - build/clang-16-defconfig
->  - build/gcc-12-defconfig
->  - build/clang-nightly-defconfig
->
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log:
-> --------
-> powerpc64le-linux-gnu-ld: arch/powerpc/platforms/pasemi/gpio_mdio.o:
-> in function `gpio_mdio_probe':
-> gpio_mdio.c:(.text+0x13c): undefined reference to `__of_mdiobus_register'
-> powerpc64le-linux-gnu-ld: drivers/net/phy/phy_device.o: in function `phy_probe':
-> phy_device.c:(.text+0x56ac): undefined reference to
-> `devm_led_classdev_register_ext'
-> powerpc64le-linux-gnu-ld: drivers/net/ethernet/pasemi/pasemi_mac.o: in
-> function `pasemi_mac_open':
-> pasemi_mac.c:(.text+0x19ac): undefined reference to `of_phy_connect'
-> make[2]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
 
-Same bug as the other one:
+On Thu, 20 Apr 2023 10:31:54 +0530, Rohit Agarwal wrote:
+> Add device tree binding Documentation details for Qualcomm SDX75
+> pinctrl driver.
+> 
+> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+> ---
+>  .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          | 195 +++++++++++++++++++++
+>  1 file changed, 195 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+> 
 
-https://lore.kernel.org/all/20230420084624.3005701-1-arnd@kernel.org/
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-      Arnd
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml:50:13: [error] empty value in block mapping (empty-values)
+./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml:84:52: [warning] too few spaces after comma (commas)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: 'patternPropetries' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'dependentRequired', 'dependentSchemas', 'patternProperties', 'properties', 'not', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select', '$ref']
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+./Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/pinctrl/qcom,sdx75-tlmm.yaml#
+Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.example.dts:32.13-36: ERROR (duplicate_property_names): /example-0/pinctrl@03000000:#interrupt-cells: Duplicate property name
+ERROR: Input tree has errors, aborting (use -f to force output)
+make[1]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.example.dtb] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1512: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1681966915-15720-2-git-send-email-quic_rohiagar@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
