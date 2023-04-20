@@ -2,116 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D66836E9921
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 18:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B303F6E9A43
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 19:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234119AbjDTQGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Apr 2023 12:06:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
+        id S230502AbjDTRFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 13:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234321AbjDTQGk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 12:06:40 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3666A48;
-        Thu, 20 Apr 2023 09:05:58 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id z6so7561096ejc.5;
-        Thu, 20 Apr 2023 09:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682006757; x=1684598757;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EIrWFxNQFlhme+9qVbuyjFRPmgNp9vvWt4N75xCa6m4=;
-        b=a9rxcvGAOssBpy4B7PyIEPBItlmSNahxnycgB4kVPzpIz6OZ9CMc7H97kEQ8rirzr1
-         g4e//k/2hJlZY2UcTf/ZV7W78D0oif+QDSD8y/Rjn3IS8zvtuB+EizeU3l7A1BdTG049
-         /TJWVOz7m+8Q0LcUIHXBV6oCE8u8hCi8ncoqi1GYe/MbKP6mPGOlXoG+YVsOwtANwTGX
-         hE03Mn2G4krPSPrc1K/FPi1bTYIyLwIqQRteyPxens4/5ubijN1xjmZtZ6xEWcBqVc0o
-         933H5jxC2QivNsdcAo30+PfZbexvs7vECbotqh6MI5YhKteAcECf5k46gh7EosS7RUg7
-         bZUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682006757; x=1684598757;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EIrWFxNQFlhme+9qVbuyjFRPmgNp9vvWt4N75xCa6m4=;
-        b=Q1r7eBXFNHjTW2+pUwrJeWi0bJ3D9gLvh5fg/Jev8A5MQrfokmifJJhILMlhXsx0YH
-         lOe4jgrKZRXwhxPahpRLNhDuynbOt3scPKnKTyON5OtiVa5q9EnuOx6+rjiVtn+BRsZb
-         8hWkDQWvC/yD9uEPOFbHTtQUTVUxlzuyhWfsur6VCv2pCOgzwnEibtTZmTiTvkoLgE36
-         Qz1cotI9fza55L6H5mfoqRY51Q7gBhg4AFs0MbReppJSC1P8aoMVW1+7RSRTWuNDuQSQ
-         n23lr4Pf0IIdfc/xCYTIqR/kSrbuvAzTY5jVkLXVnTPl03tCvFF8YSWsflUZCnaUjeS+
-         s3ng==
-X-Gm-Message-State: AAQBX9el0LyXMRI/tSd+cbc227SckVB90EGVRB/0lGaUUDipgLVsYySo
-        UbdIS5KLnwKElMSF/me1XLE=
-X-Google-Smtp-Source: AKy350YlLeT7OF1W7F6jluIK5b7JRjgtxjCjjoHaFXqLQ9oKKT4V6FsG5KV+u9+otG5Z3zZDBE9Jrg==
-X-Received: by 2002:a17:906:1c06:b0:94b:d57e:9d4b with SMTP id k6-20020a1709061c0600b0094bd57e9d4bmr2070785ejg.2.1682006756729;
-        Thu, 20 Apr 2023 09:05:56 -0700 (PDT)
-Received: from orome (p200300e41f053a00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f05:3a00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id l22-20020a170906795600b0094f25ae0821sm887732ejo.31.2023.04.20.09.05.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:05:56 -0700 (PDT)
-Date:   Thu, 20 Apr 2023 18:05:54 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org,
-        timestamp@lists.linux.dev, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, corbet@lwn.net, gregkh@linuxfoundation.org
-Subject: Re: [V6 4/9] arm64: tegra: Add Tegra234 GTE nodes
-Message-ID: <ZEFi4vKVtstiAno3@orome>
-References: <20230414004455.19275-1-dipenp@nvidia.com>
- <20230414004455.19275-5-dipenp@nvidia.com>
+        with ESMTP id S231169AbjDTRFd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 13:05:33 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE5AB44BE;
+        Thu, 20 Apr 2023 10:05:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4829B1480;
+        Thu, 20 Apr 2023 10:06:08 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 425133F6C4;
+        Thu, 20 Apr 2023 10:05:23 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 18:05:21 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        michal.simek@amd.com, vincent.guittot@linaro.org,
+        souvik.chakravarty@arm.com
+Subject: Re: [RFC v1 1/2] scmi: Introduce pinctrl SCMI protocol driver
+Message-ID: <ZEFw0TYs3TEHuM1D@pluto>
+References: <cover.1680793130.git.oleksii_moisieiev@epam.com>
+ <54119b2cb43e29f69c5858a5320d3a58f23fed21.1680793130.git.oleksii_moisieiev@epam.com>
+ <ZDcqx9JVMvqr2WYu@e120937-lin>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NPoYIIrP4+2LC65A"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230414004455.19275-5-dipenp@nvidia.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZDcqx9JVMvqr2WYu@e120937-lin>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Apr 12, 2023 at 11:04:05PM +0100, Cristian Marussi wrote:
+> On Fri, Apr 07, 2023 at 10:18:27AM +0000, Oleksii Moisieiev wrote:
+> > Implementation of the SCMI client driver, which implements
+> > PINCTRL_PROTOCOL. This protocol has ID 19 and is described
+> > in the latest DEN0056 document.
+> 
+> Hi,
+> 
 
---NPoYIIrP4+2LC65A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Oleksii,
 
-On Thu, Apr 13, 2023 at 05:44:50PM -0700, Dipen Patel wrote:
-> Add GTE LIC and AON GPIO nodes for the tegra234 SoC.
->=20
-> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+one more thing that I missed in my previous review down below.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> > This protocol is part of the feature that was designed to
+> > separate the pinctrl subsystem from the SCP firmware.
+> > The idea is to separate communication of the pin control
+> > subsystem with the hardware to SCP firmware
+> > (or a similar system, such as ATF), which provides an interface
+> > to give the OS ability to control the hardware through SCMI protocol.
+> > This is a generic driver that implements SCMI protocol,
+> > independent of the platform type.
+> > 
+> > DEN0056 document:
+> > https://developer.arm.com/documentation/den0056/latest
+> > 
+> 
 
---NPoYIIrP4+2LC65A
-Content-Type: application/pgp-signature; name="signature.asc"
+[snip]
 
------BEGIN PGP SIGNATURE-----
+> > +static int scmi_pinctrl_request_config(const struct scmi_handle *handle,
+> > +				       u32 selector,
+> > +				       enum scmi_pinctrl_selector_type type,
+> > +				       u32 *config)
+> > +{
+> > +	struct scmi_xfer *t;
+> > +	struct scmi_conf_tx *tx;
+> > +	__le32 *packed_config;
+> > +	u32 attributes = 0;
+> > +	int ret;
+> > +
+> > +	if (!handle || !config || type == FUNCTION_TYPE)
+> > +		return -EINVAL;
+> > +
+> > +	ret = scmi_pinctrl_validate_id(handle, selector, type);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = scmi_xfer_get_init(handle, PINCTRL_CONFIG_GET,
+> > +				 SCMI_PROTOCOL_PINCTRL,
+> > +				 sizeof(*tx), sizeof(*packed_config), &t);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	tx = t->tx.buf;
+> > +	packed_config = t->rx.buf;
+> > +	tx->identifier = cpu_to_le32(selector);
+> > +	attributes = SET_TYPE_BITS(attributes, type);
+> > +	attributes = SET_CONFIG(attributes, *config);
+> > +
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmRBYuIACgkQ3SOs138+
-s6EhoQ/+NM3QPHuY/4aEUx5uEy94QwELsFH6cn5FTtmq3kevgv+fjstZ1Ojxy3Nf
-tx34APCxIWm85Bs6qI+xs7o0ikd+WrttTV6CxQhpOiptO88eDr3vT2aN6bSqTBR7
-LR5HvaOnn06pRkYHbMGM6OTRLCAEU5J7Cz3C+n1oG6mE6405ImpAAImYZMyPH7Be
-ITbUFGF+ZH6cucAlxvoi5GnBn8zoN9hYgLphhQs7qOqSqV+bVxVBvFJq2ZXBhQPp
-CKHvoKdN6aWcynnLiPDZsZ1uvVfjV/iOUMwgb/lyl5SW/nrXQqipBPN6l5ONvG2F
-xUt/auV2Ipsn3x8vlEKts2qrzVwl9ojiy6Is/hUp95L/srpJUeix0zPGU38thBSp
-aVbsNXy6T2yQCpjFE9kVO3uuIvJGsOqSp6tt4CYrrEryt93ktU9dEjREbkaLRDRa
-5oSnzNVDKmzith3Zi7uPUL7eKvtQflnMbCOhn2HvAyVcjijyWxaQvqYuDC9tZhs/
-31R8aSgpVF8in6IkQnztLgEdXehAi4yuq9TWOeKRgVJUYAXBfmg+kfXchmRVlxVl
-d5UNYfEqmPjjxRbJPL7491G8JXtV6V53RrSuEuZizMdUgT3Qp2ut4J+DaTXMHiSc
-NBfvENpdOfv8MBtwt7Rs/kyZZJC5D9RT5jKMomseLewcNM+X6ho=
-=vZgG
------END PGP SIGNATURE-----
+Looking at scmi_conf_tx and these pinctrl get/set functions, you do not
+seem to consider the ConfigType field in the SCMI related messages, so
+basically using always the Default 0 Type, and as a consequence you dont
+either expose any way to choose a Different type in the related SCMI
+protocol ops; I imagine this is because the pinctrl driver currently using
+this protocol, at the end, does not need any of the other available types
+(as in Table 23 of the spec).
 
---NPoYIIrP4+2LC65A--
+This is fine for pinctrl driver as it is now, BUT the SCMI pinctrl
+protocol implementation in the core SCMI stack and its related
+protocol_operations as exposed in scmi_protocol.h should be generic
+enough to serve any possible user of the SCMI pinctrl protocol (and there
+is already a request to extend/amend the spec somehow to send multiple pin
+setup of different types in one go as you may have seen), so I'd say it's
+better if you add also a ConfigType param to the get/set_config scmi_pinctrl_ops
+and expose the whole ConfigType enums (Table23) in scmi_protocol.h (like we do for
+sensor classes on scmi_protocol.h) to address this; the pinctrl driver
+can then anyway call such new protocol_ops with a Default type, but at
+least the SCMI protocol_ops interface will remain generic and could be
+reused iin other scenarios.
+
+This is equally true for all the other protocol messages (should I have
+miss something else for now...I'll review again you next V2 anyway).
+
+Thanks,
+Cristian
+
