@@ -2,98 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B3C6E87B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 03:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A1276E895B
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Apr 2023 07:02:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229927AbjDTB5A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Apr 2023 21:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
+        id S231186AbjDTFCK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Apr 2023 01:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjDTB47 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Apr 2023 21:56:59 -0400
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90C91BF0;
-        Wed, 19 Apr 2023 18:56:53 -0700 (PDT)
-X-QQ-mid: Yeas49t1681955791t631t34113
-Received: from 7082A6556EBF4E69829842272A565F7C (jiawenwu@trustnetic.com [183.129.236.74])
-X-QQ-SSF: 00400000000000F0FL9000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 3731747530147530030
-To:     "'Vladimir Oltean'" <olteanv@gmail.com>
-Cc:     <netdev@vger.kernel.org>, <linux@armlinux.org.uk>,
-        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>
-References: <20230419082739.295180-1-jiawenwu@trustnetic.com> <20230419082739.295180-1-jiawenwu@trustnetic.com> <20230419082739.295180-7-jiawenwu@trustnetic.com> <20230419082739.295180-7-jiawenwu@trustnetic.com> <20230419131938.3k4kuqucvuuhxcrc@skbuf>
-In-Reply-To: <20230419131938.3k4kuqucvuuhxcrc@skbuf>
-Subject: RE: [PATCH net-next v3 6/8] net: pcs: Add 10GBASE-R mode for Synopsys Designware XPCS
-Date:   Thu, 20 Apr 2023 09:56:26 +0800
-Message-ID: <037501d9732b$518048d0$f480da70$@trustnetic.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQILBR3gZkFBC9g1wrfKT5ke1rRywwILBR3gATpg8oQBOmDyhAIV2gzYrpudPAA=
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvr:qybglogicsvr5
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230102AbjDTFCJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Apr 2023 01:02:09 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DC346AA;
+        Wed, 19 Apr 2023 22:02:07 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33K4IMP3008259;
+        Thu, 20 Apr 2023 05:02:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=OUKcqgLLRZu+mRglayh8RrtSYtaRSrSs1j7C5KOCgaw=;
+ b=DvwTKl8ojhAk8xSjVseSfbBM94R9aiMlZl+kSVCEwOEmxKjT4Pa64PmsSWFaBqFqqg5k
+ L3IDdvZumQfl26eWsw1uTCQ/t9U8GbIkwWqPacLDR+k2z7krAJNuXt0B7p87ZJFDlGsF
+ tAjQakzn8m6p55HETNrcfBQZhyb49C3YJcbpM3HRkVZchF4r0rqK3jKear0mjMszYEwc
+ avGVgWflpq3DycWukLYlb6oWEF20w7c8HA6mDTHLyrKYYFTXwDJqURRpvyZnP9wtsivo
+ Ik3stAWYdldIxpfBrIqLyv5zQ4O0YHoMYTfAeY0UnhHlvT10CF6TMmuWu/g5AMqOLc18 Nw== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q2dy7tccy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Apr 2023 05:02:03 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 33K51xXO014274;
+        Thu, 20 Apr 2023 05:01:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3pyn0kj5tw-1;
+        Thu, 20 Apr 2023 05:01:59 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33K51xGP014261;
+        Thu, 20 Apr 2023 05:01:59 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 33K51wZ2014258;
+        Thu, 20 Apr 2023 05:01:59 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 12FDB509B; Thu, 20 Apr 2023 10:31:58 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH 0/2] Add pinctrl support for SDX75
+Date:   Thu, 20 Apr 2023 10:31:53 +0530
+Message-Id: <1681966915-15720-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: MojemxC3dIIWsLN7hYr4hXN2hz6vBTag
+X-Proofpoint-GUID: MojemxC3dIIWsLN7hYr4hXN2hz6vBTag
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-20_02,2023-04-18_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=635 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304200039
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wednesday, April 19, 2023 9:20 PM, Vladimir Oltean wrote:
-> On Wed, Apr 19, 2023 at 04:27:37PM +0800, Jiawen Wu wrote:
-> > Add basic support for XPCS using 10GBASE-R interface. This mode will
-> > be extended to use interrupt, so set pcs.poll false. And avoid soft
-> > reset so that the device using this mode is in the default configuration.
-> 
-> I'm not clear why the xpcs_soft_reset() call is avoided. Isn't the
-> out-of-reset configuration the "default" one?
-> 
+Hi,
 
-Theoretically so, I need to configure 10GBASE-R mode after reset. But this
-configuration involves board info to configure PMA, etc., I'd like to implement
-it in the next patch. Now the "default" configuration refers to the mode in
-which the firmware is configured.
+This patch series adds pinctrl bindings and tlmm support for SDX75.
 
-> > +static int xpcs_get_state_10gbaser(struct dw_xpcs *xpcs,
-> > +				   struct phylink_link_state *state)
-> > +{
-> > +	int ret;
-> > +
-> > +	state->link = false;
-> > +
-> > +	ret = xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT1);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (ret & MDIO_STAT1_LSTATUS)
-> > +		state->link = true;
-> > +
-> > +	if (state->link) {
-> 
-> It seems pointless to open a new "if" statement when this would have
-> sufficed:
-> 
-> 	if (ret & MDIO_STAT1_LSTATUS) {
-> 		state->link = true;
-> 		state->pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
-> 		...
-> 	}
-> 
-> > +		state->pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
-> > +		state->duplex = DUPLEX_FULL;
-> > +		state->speed = SPEED_10000;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
+Thanks,
+Rohit.
+
+
+Rohit Agarwal (2):
+  dt-bindings: pinctrl: qcom: Add SDX75 pinctrl devicetree compatible
+  pinctrl: qcom: Add SDX75 pincontrol driver
+
+ .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          |  195 +++
+ drivers/pinctrl/qcom/Kconfig                       |   30 +-
+ drivers/pinctrl/qcom/Makefile                      |    3 +-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c               | 1536 ++++++++++++++++++++
+ 4 files changed, 1753 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx75.c
+
+-- 
+2.7.4
 
