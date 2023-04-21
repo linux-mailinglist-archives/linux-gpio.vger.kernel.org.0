@@ -2,108 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 758F26EAA1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 14:15:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2B96EAA40
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 14:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbjDUMPx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 08:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
+        id S231956AbjDUMXI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 08:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231434AbjDUMPw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 08:15:52 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8917D9E;
-        Fri, 21 Apr 2023 05:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=/+HAMTLY1slOoSg5bxA5tskDuARnfGnh1XOqXBWDAu8=; b=Bdvzmpp3kCAYe3vDQWS00VV3zL
-        6xhsBF7qYaPEy+/bVU/AN+i5/yTJsgbHiv0OEReCYnOXsneZ98CYKfmld7ZPc6H66MMuAoOcg74ls
-        WplG7BrIvLhuEc41g2jU440hsniU8+lW6PPQE4pF1uMh7J+PgU43qCuQpfaQWNAr5FSQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1pppfz-00AsiX-TT; Fri, 21 Apr 2023 14:15:43 +0200
-Date:   Fri, 21 Apr 2023 14:15:43 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, linux@armlinux.org.uk,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        olteanv@gmail.com, mengyuanlou@net-swift.com,
-        'Jarkko Nikula' <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH net-next v3 2/8] i2c: designware: Add driver support for
- Wangxun 10Gb NIC
-Message-ID: <4600d755-3bbf-4906-9f23-4e91cfc01c12@lunn.ch>
-References: <20230419082739.295180-1-jiawenwu@trustnetic.com>
- <20230419082739.295180-3-jiawenwu@trustnetic.com>
- <ec095b8a-00af-4fb7-be11-f643ea75e924@lunn.ch>
- <03ef01d97372$f2ee26a0$d8ca73e0$@trustnetic.com>
- <72703dc2-0ee1-41b2-9618-2a3185869cbf@lunn.ch>
- <03f501d973f7$d0c889a0$72599ce0$@trustnetic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03f501d973f7$d0c889a0$72599ce0$@trustnetic.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229709AbjDUMXH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 08:23:07 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CB38A7A;
+        Fri, 21 Apr 2023 05:23:04 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33LBXb1p026943;
+        Fri, 21 Apr 2023 12:23:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=YLmpEWurGjZjj/kpB/p58mgJcImg4YxjC2quxPWDXNw=;
+ b=bAgcE6XbByL0mNSR3b/tazxUNceC3S4QGH1nGTrIO0oVbEkP12o7wwceRcPkIl63YxQ5
+ 7IhY1FuUBz3xZzX6BkHXoJRHQDJEiTSgrREzF+tR1RsxEK28rHCtyfLz6RmRqTQNEa0I
+ w2M2fK/tpCBF3Ms0mKqOXWyLH8+H+rmZXvWmQpiCdLJqv3yB1hW5n2qvW9IxezZqgtNN
+ uTIBTFbJuGEdLmX1BdJvRMp+oJbxlXdrX1q5UwYH0/52SwqtqU5C2abS2Bs0XOwcG66E
+ s1W/M6oh/BVNRjtokRSSCknoh/22+6B9SRreJdQ4sADePGRxB6264UuzFxtNA+iZjTF4 Ow== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q3dcv1ht5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Apr 2023 12:23:00 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 33LCMu3Y007411;
+        Fri, 21 Apr 2023 12:22:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3pyn0kq4vx-1;
+        Fri, 21 Apr 2023 12:22:56 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33LCMtm0007399;
+        Fri, 21 Apr 2023 12:22:56 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 33LCMt9e007396;
+        Fri, 21 Apr 2023 12:22:55 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id F22B850AC; Fri, 21 Apr 2023 17:52:54 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v3 0/2] Add pinctrl support for SDX75
+Date:   Fri, 21 Apr 2023 17:52:48 +0530
+Message-Id: <1682079770-27656-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IIxOGfIo6TLr4b5P_3X6QMDkeTqCrZ-w
+X-Proofpoint-ORIG-GUID: IIxOGfIo6TLr4b5P_3X6QMDkeTqCrZ-w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-21_05,2023-04-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=632 adultscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304210107
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 10:20:17AM +0800, Jiawen Wu wrote:
-> On Thursday, April 20, 2023 9:23 PM, Andrew Lunn wrote:
-> > On Thu, Apr 20, 2023 at 06:29:11PM +0800, Jiawen Wu wrote:
-> > > On Thursday, April 20, 2023 4:58 AM, Andrew Lunn wrote:
-> > > > On Wed, Apr 19, 2023 at 04:27:33PM +0800, Jiawen Wu wrote:
-> > > > > Wangxun 10Gb ethernet chip is connected to Designware I2C, to communicate
-> > > > > with SFP.
-> > > > >
-> > > > > Add platform data to pass IOMEM base address, board flag and other
-> > > > > parameters, since resource address was mapped on ethernet driver.
-> > > > >
-> > > > > The exists IP limitations are dealt as workarounds:
-> > > > > - IP does not support interrupt mode, it works on polling mode.
-> > > > > - I2C cannot read continuously, only one byte can at a time.
-> > > >
-> > > > Are you really sure about that?
-> > > >
-> > > > It is a major limitation for SFP devices. It means you cannot access
-> > > > the diagnostics, since you need to perform an atomic 2 byte read.
-> > > >
-> > > > Or maybe i'm understanding you wrong.
-> > > >
-> > > >    Andrew
-> > > >
-> > >
-> > > Maybe I'm a little confused about this. Every time I read a byte info, I have to
-> > > write a 'read command'. It can normally get the information for SFP devices.
-> > > But I'm not sure if this is regular I2C behavior.
-> > 
-> > I don't know this hardware, so i cannot say what a 'read command'
-> > actually does. Can you put a bus pirate or similar sort of device on
-> > the bus and look at the actual I2C signals. Is it performing one I2C
-> > transaction per byte? If so, that is not good.
+Hi,
 
-....
+Changes in v3:
+ - Rebased the bindings on linux-next as suggested by Krzysztof.
 
-> You may have misunderstood. If you want to read a 16-bit message, the
-> size of 'i2c_msg.len' is set to 2 in the array that 'flags = I2C_M_RD'.
+Changes in v2:
+ - Updated the bindings to clear the bindings check.
 
-The SFP driver uses a mixture of message lengths, due to SFP bugs. But
-in general it will do 16 byte block reads, except for when it needs
-smaller quantity of bytes.
+This patch series adds pinctrl bindings and tlmm support for SDX75.
 
-However, your wording was:
+Thanks,
+Rohit.
 
-> > > Every time I read a byte info, I have to write a 'read command'.
+Rohit Agarwal (2):
+  dt-bindings: pinctrl: qcom: Add SDX75 pinctrl devicetree compatible
+  pinctrl: qcom: Add SDX75 pincontrol driver
 
-This suggests you are reading one byte at a time with each read
-command. I just want to make sure that is not one I2C transaction per
-byte.
+ .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          |  168 ++
+ drivers/pinctrl/qcom/Kconfig                       |   30 +-
+ drivers/pinctrl/qcom/Makefile                      |    3 +-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c               | 1603 ++++++++++++++++++++
+ 4 files changed, 1793 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx75.c
 
-     Andrew.
+-- 
+2.7.4
+
