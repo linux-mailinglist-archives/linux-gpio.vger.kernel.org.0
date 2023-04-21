@@ -2,248 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EEE06EA7DB
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 12:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F71D6EA859
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 12:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbjDUKIU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 06:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42108 "EHLO
+        id S229821AbjDUKcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 06:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbjDUKIS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 06:08:18 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12FFB755
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:08:14 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-94f4b911570so194291966b.0
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:08:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682071693; x=1684663693;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hM5SLNSVGKeXl0IJbmJw2IfxPy1SIuLOexv/qUGdJdU=;
-        b=SGhUooxNWZKsB6kn4+/KSXf5KGgGykFlJxTC3x7ukpdih0NXb8r5hKThBhtuGfs6zI
-         y784veuBmivSGi0Ckjs+PrUGIB+HZf4QF2Uf+OUMI+KZ6EUc26YRxNch61yX9bH4/+Y1
-         r9Mi/E4UwtqU47X8kq9pkKcBFFCHqQ2NoNTLxDGzGo12Ho5oubkJb81viTHgKtmfjCna
-         azYbMKnSE5hP4rB1EeNuKOLOWcaSfzqs7UWJXVQWHEObV8EKUtQ0iTSs/Ir6ZIO3+F9V
-         yeKchtx9AN+3U9xKB679tomzcbxNKxaALZWl7Fks75fhnIPtFuk4LwXXBr97i8FwtqBz
-         /zwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682071693; x=1684663693;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hM5SLNSVGKeXl0IJbmJw2IfxPy1SIuLOexv/qUGdJdU=;
-        b=TmbPbXrKPZnSTfJ6jM5EinyE0kt9/WQVdocPA5o/yAGxSRZA/koH/2JkeCwOqxuD6f
-         uZxZoaPNC0EkHctGdufkNkIuBLNdPcluHcXwozi06wzI7vFMq7gFL86pz2TZRCILmY3U
-         4AqtwNmT7lQyt7xIUeNtk4nJvWDD0LHwpdO7+TdFp6KbYW7qdBp61BFJ4qE2jHp8wjWI
-         RfKIg3GHYYlqYSyBe+J+1lcqeznAKRVResZfcc9KU9FCpd4Z6IvqqvsGlssmySrK7H9L
-         WI8jWRZEqRtCW8h8XIrm1toYNWCjEsgWB2jv9NqFSeMYK5S0IIwmkelBnZPhr6oHL0KJ
-         QX2g==
-X-Gm-Message-State: AAQBX9fVQnuURK9LYYU9ZxoLJSaJ7CCtP53myGGxZFw8ik8iWpp7QECh
-        bMDOspob7m1yxxFbiFAGTnxSVQ==
-X-Google-Smtp-Source: AKy350aeucgau/22GFXtw4PeQRuxC9tdMuwBIPqmJpCcUqiPVKp5SlTDFKZSWyO2cijLTxtjdXP/JQ==
-X-Received: by 2002:a17:906:850a:b0:947:92c9:6aa4 with SMTP id i10-20020a170906850a00b0094792c96aa4mr1728486ejx.4.1682071693139;
-        Fri, 21 Apr 2023 03:08:13 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:668b:1e57:3caa:4d06? ([2a02:810d:15c0:828:668b:1e57:3caa:4d06])
-        by smtp.gmail.com with ESMTPSA id ox6-20020a170907100600b008f89953b761sm1884267ejb.3.2023.04.21.03.08.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Apr 2023 03:08:12 -0700 (PDT)
-Message-ID: <a68e1bc8-df55-684e-300c-678565ae1dd6@linaro.org>
-Date:   Fri, 21 Apr 2023 12:08:11 +0200
+        with ESMTP id S229520AbjDUKcQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 06:32:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC0E729F
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:32:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 70B9561968
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 10:32:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CA899C433D2;
+        Fri, 21 Apr 2023 10:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682073133;
+        bh=tJNrKZeTjzIwWSqC6HSIgGMg0xI9wQInmCYJTlR10Zs=;
+        h=From:To:In-Reply-To:References:Subject:Date:From;
+        b=IJ7uSw1T+j7ogztaP2txd4UBdS/Zd0x5C74VsQJbgfDLg0ODLz5a6cI2becMJd7OW
+         GRGyuP7CEyWIRcnc5mS/X821aFmByHfIP0T/D0EBVGmVEiV2LmhDOz9uQtDqnDWax0
+         /gWfwAzFpOwY+/d0pFrEYShHlKXUdsPwtG5IZ+bdjxD7WmTj0iJhcgwuVJkuAih2mY
+         lNvXYzEpKgsSVgZYexvbXwn4qHdkEL0zgYLyo017voidk2hVPoFyAA1seA0VxzZYyq
+         dry7y4hTQFlLAjUbd1beg/I2+DIUICw62PsvjAU/3OguxUB+lgzURv75vaGzQvZbZg
+         UtcUtkzkWS+rQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A9365C395EA;
+        Fri, 21 Apr 2023 10:32:13 +0000 (UTC)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SDX75 pinctrl
- devicetree compatible
-Content-Language: en-US
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <1682070196-980-1-git-send-email-quic_rohiagar@quicinc.com>
- <1682070196-980-2-git-send-email-quic_rohiagar@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1682070196-980-2-git-send-email-quic_rohiagar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+From:   "Kernel.org Bugbot" <bugbot@kernel.org>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        bugs@lists.linux.dev
+Message-ID: <20230421-b217334c2-00d7f9d564c1@bugzilla.kernel.org>
+In-Reply-To: <20230419-b217334c0-3101f9f4b426@bugzilla.kernel.org>
+References: <20230419-b217334c0-3101f9f4b426@bugzilla.kernel.org>
+Subject: Re: rockchip rk3328 pinctrl unable to change gpio function of pins
+ defined in rk3328_mux_recalced_data
+X-Bugzilla-Product: Linux
+X-Bugzilla-Component: Kernel
+X-Mailer: peebz 0.1
+Date:   Fri, 21 Apr 2023 10:32:13 +0000 (UTC)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/04/2023 11:43, Rohit Agarwal wrote:
-> Add device tree binding Documentation details for Qualcomm SDX75
-> pinctrl driver.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+antwain.schneider added an attachment on Kernel.org Bugzilla:
 
-Thank you for your patch. There is something to discuss/improve.
+Created attachment 304169
+the other half
 
-> +properties:
-> +  compatible:
-> +    const: qcom,sdx75-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  "#interrupt-cells": true
-> +  gpio-controller: true
-> +
-> +  gpio-reserved-ranges:
-> +    minItems: 1
-> +    maxItems: 105
-> +
-> +  gpio-line-names:
-> +    maxItems: 133
+missed from the 2019 patch is the recalculations for the gpio3b, e.g.
 
-If you have 210 GPIOs, then this should be 210.
+/* GRF_GPIO3BL_IOMUX 3'bxxx */
+/* 3b0 */	"tsp_d4", "cif_data4", "spi_csn0m2", "i2s2_lrcktxm1", "usb3phy_debug8", "i2s2_lrckrxm1", NULL,
+/* GRF_GPIO3BH_IOMUX 2'bxx */
+/* 3b1 */	"tsp_d5m0", "cif_data5m", NULL,
+/* 3b2 */	"tsp_d6m0", "cif_data6m", NULL,
+/* 3b3 */	"tsp_d7m0", "cif_data7m", NULL,
+/* 3b4 */	"card_clkm0", NULL, NULL,
+/* 3b5 */	"card_rstm0", NULL, NULL,
+/* 3b6 */	"card_detm0", NULL, NULL,
+/* 3b7 */	"card_iom0", NULL, NULL,
 
-> +
-> +  "#gpio-cells": true
-> +  gpio-ranges: true
-> +  wakeup-parent: true
-> +
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sdx75-tlmm-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sdx75-tlmm-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  qcom-sdx75-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+so attached is the missing half of the initial correct recalculations in the modern format
 
-unevaluatedProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-9])$"
+File: rockchip-rk3328-pinctrl-gpio3b-recalc.diff (text/plain)
+Size: 743.00 B
+Link: https://bugzilla.kernel.org/attachment.cgi?id=304169
+---
+the other half
 
-This says you have 210 GPIOs.
-
-> +            - enum: [ ufs_reset, sdc2_clk, sdc2_cmd, sdc2_data ]
-
-Keep these four enum values sorted alphabetically.
-
-> +        minItems: 1
-> +        maxItems: 36
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +        enum: [ gpio, eth0_mdc, eth0_mdio, eth1_mdc, eth1_mdio,
-> +                qlink0_wmss_reset, qlink1_wmss_reset, rgmii_rxc, rgmii_rxd0,
-> +                rgmii_rxd1, rgmii_rxd2, rgmii_rxd3,rgmii_rx_ctl, rgmii_txc,
-> +                rgmii_txd0, rgmii_txd1, rgmii_txd2, rgmii_txd3, rgmii_tx_ctl,
-> +                adsp_ext_vfr, atest_char_start, atest_char_status0,
-> +                atest_char_status1, atest_char_status2, atest_char_status3,
-> +                audio_ref_clk, bimc_dte_test0, bimc_dte_test1,
-> +                char_exec_pending, char_exec_release, coex_uart2_rx,
-> +                coex_uart2_tx, coex_uart_rx, coex_uart_tx, cri_trng_rosc,
-> +                cri_trng_rosc0, cri_trng_rosc1, dbg_out_clk, ddr_bist_complete,
-> +                ddr_bist_fail, ddr_bist_start, ddr_bist_stop, ddr_pxi0_test,
-> +                ebi0_wrcdc_dq2, ebi0_wrcdc_dq3, ebi2_a_d, ebi2_lcd_cs,
-> +                ebi2_lcd_reset, ebi2_lcd_te, emac0_mcg_pst0, emac0_mcg_pst1,
-> +                emac0_mcg_pst2, emac0_mcg_pst3, emac0_ptp_aux, emac0_ptp_pps,
-> +                emac1_mcg_pst0, emac1_mcg_pst1, emac1_mcg_pst2, emac1_mcg_pst3,
-> +                emac1_ptp_aux0, emac1_ptp_aux1, emac1_ptp_aux2, emac1_ptp_aux3,
-> +                emac1_ptp_pps0, emac1_ptp_pps1, emac1_ptp_pps2, emac1_ptp_pps3,
-> +                emac_cdc_dtest0, emac_cdc_dtest1, emac_pps_in, ext_dbg_uart,
-> +                gcc_125_clk, gcc_gp1_clk, gcc_gp2_clk, gcc_gp3_clk,
-> +                gcc_plltest_bypassnl, gcc_plltest_resetn, i2s_mclk,
-> +                jitter_bist_ref, ldo_en, ldo_update, m_voc_ext, mgpi_clk_req,
-> +                native0, native1, native2, native3, native_char_start,
-> +                native_tsens_osc, native_tsense_pwm1, nav_dr_sync, nav_gpio_0,
-> +                nav_gpio_1, nav_gpio_2, nav_gpio_3, pa_indicator_1, pci_e_rst,
-> +                pcie0_clkreq_n, pcie1_clkreq_n, pcie2_clkreq_n, pll_bist_sync,
-> +                pll_clk_aux, pll_ref_clk, pri_mi2s_data0, pri_mi2s_data1,
-> +                pri_mi2s_sck, pri_mi2s_ws, prng_rosc_test0, prng_rosc_test1,
-> +                prng_rosc_test2, prng_rosc_test3, qdss_cti_trig0,
-> +                qdss_cti_trig1, qdss_gpio_traceclk, qdss_gpio_tracectl,
-> +                qdss_gpio_tracedata0, qdss_gpio_tracedata1,
-> +                qdss_gpio_tracedata10, qdss_gpio_tracedata11,
-> +                qdss_gpio_tracedata12, qdss_gpio_tracedata13,
-> +                qdss_gpio_tracedata14, qdss_gpio_tracedata15,
-> +                qdss_gpio_tracedata2, qdss_gpio_tracedata3,
-> +                qdss_gpio_tracedata4, qdss_gpio_tracedata5,
-> +                qdss_gpio_tracedata6, qdss_gpio_tracedata7,
-> +                qdss_gpio_tracedata8, qdss_gpio_tracedata9, qlink0_b_en,
-> +                qlink0_b_req, qlink0_l_en, qlink0_l_req, qlink1_l_en,
-> +                qlink1_l_req, qup_se0_l0, qup_se0_l1, qup_se0_l2, qup_se0_l3,
-> +                qup_se1_l2, qup_se1_l3, qup_se2_l0, qup_se2_l1, qup_se2_l2,
-> +                qup_se2_l3, qup_se3_l0, qup_se3_l1, qup_se3_l2, qup_se3_l3,
-> +                qup_se4_l2, qup_se4_l3, qup_se5_l0, qup_se5_l1, qup_se6_l0,
-> +                qup_se6_l1, qup_se6_l2, qup_se6_l3, qup_se7_l0, qup_se7_l1,
-> +                qup_se7_l2, qup_se7_l3, qup_se8_l2, qup_se8_l3, sdc1_tb_trig,
-> +                sdc2_tb_trig, sec_mi2s_data0, sec_mi2s_data1, sec_mi2s_sck,
-> +                sec_mi2s_ws, sgmii_phy_intr0, sgmii_phy_intr1, spmi_coex_clk,
-> +                spmi_coex_data, spmi_vgi_hwevent, tgu_ch0_trigout,
-> +                tri_mi2s_data0, tri_mi2s_data1, tri_mi2s_sck, tri_mi2s_ws,
-> +                uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk,
-> +                uim2_data, uim2_present, uim2_reset, usb2phy_ac_en,
-> +                vsense_trigger_mirnat]
-> +
-> +      bias-disable: true
-> +      bias-pull-down: true
-> +      bias-pull-up: true
-> +      drive-strength: true
-> +      input-enable: true
-
-This is not allowed. Please rebase on pinctrl maintainer tree or next.
-
-> +      output-high: true
-> +      output-low: true
-> +
-> +    required:
-> +      - pins
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    tlmm: pinctrl@f100000 {
-> +        compatible = "qcom,sdx75-tlmm";
-> +        reg = <0x0f100000 0x300000>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&tlmm 0 0 134>;
-
-Wrong number of pins. You have 210, right? This should be number of
-GPIOs + optionally UFS reset.
-
-
-Best regards,
-Krzysztof
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (peebz 0.1)
 
