@@ -2,154 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A3E6EA6F5
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 11:30:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0937F6EA756
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 11:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231148AbjDUJaW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 05:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40724 "EHLO
+        id S229801AbjDUJnk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 05:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231865AbjDUJaU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 05:30:20 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E94CC9ED9;
-        Fri, 21 Apr 2023 02:30:18 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 889A31480;
-        Fri, 21 Apr 2023 02:31:02 -0700 (PDT)
-Received: from e120937-lin (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D65B3F5A1;
-        Fri, 21 Apr 2023 02:30:17 -0700 (PDT)
-Date:   Fri, 21 Apr 2023 10:30:12 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-Cc:     Peng Fan <peng.fan@oss.nxp.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "michal.simek@amd.com" <michal.simek@amd.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "souvik.chakravarty@arm.com" <souvik.chakravarty@arm.com>
-Subject: Re: [RFC v1 1/2] scmi: Introduce pinctrl SCMI protocol driver
-Message-ID: <ZEJXpCdf9pWgoXL6@e120937-lin>
-References: <cover.1680793130.git.oleksii_moisieiev@epam.com>
- <54119b2cb43e29f69c5858a5320d3a58f23fed21.1680793130.git.oleksii_moisieiev@epam.com>
- <ZDcqx9JVMvqr2WYu@e120937-lin>
- <6dc456ff-7fc6-3b73-3727-dd048e9a9629@oss.nxp.com>
- <f73f39e2-81dd-4204-a3be-c5e7f5e54c1b@epam.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f73f39e2-81dd-4204-a3be-c5e7f5e54c1b@epam.com>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231396AbjDUJnh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 05:43:37 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1C4AF00;
+        Fri, 21 Apr 2023 02:43:31 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33L9YXQW011214;
+        Fri, 21 Apr 2023 09:43:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=4jr5yrLucktb45hL8zakgFj6AedY561gZkDUZHmfI6E=;
+ b=bw99ggVLtgxlWk+jaTZZc0SeRyNTbEiGk84VD787XRZUUyeqngOypxCRrEPEobzIsJAr
+ uYJxoW+J0kiNKy3sTsg9m89OHhx9KWPAl+DQwyQfgeGidsPnRF9GSG1o4CbAE1GE7qDb
+ 7HNgVyz8+ae0h09U7g9s5echwukFE3KjFKixmdSk8snBi+vIaMmsq5S7Lt4a4wXHiOjI
+ DIHm6MmdMUZ5lRSftmNpLRF3Py8RTmrcOSMmAnPpke7EEUfg765/wNvjDlnwu0cnFQ0y
+ 1d3XX0VshY9/bVY8PdWAy3lgrwXeurVa3Nf7errzoJOcG6Yn3hhYkQjjId5lXPC6NfNK FQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q3f3ts3ch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Apr 2023 09:43:27 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 33L9hNIE025453;
+        Fri, 21 Apr 2023 09:43:23 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3pyn0kpscm-1;
+        Fri, 21 Apr 2023 09:43:23 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33L9hNsc025426;
+        Fri, 21 Apr 2023 09:43:23 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 33L9hMjc025417;
+        Fri, 21 Apr 2023 09:43:23 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 46F975072; Fri, 21 Apr 2023 15:13:22 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v2 0/2] Add pinctrl support for SDX75
+Date:   Fri, 21 Apr 2023 15:13:14 +0530
+Message-Id: <1682070196-980-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: stsxsMkoo7uHUySPXY8hLI1yQCoFjnfP
+X-Proofpoint-ORIG-GUID: stsxsMkoo7uHUySPXY8hLI1yQCoFjnfP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-21_03,2023-04-20_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 bulkscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 mlxlogscore=614
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304210083
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 08:40:47AM +0000, Oleksii Moisieiev wrote:
-> Hi Peng Fan,
-> 
-> On 17.04.23 05:55, Peng Fan wrote:
-> >
-> >
-> > On 4/13/2023 6:04 AM, Cristian Marussi wrote:
-> >> On Fri, Apr 07, 2023 at 10:18:27AM +0000, Oleksii Moisieiev wrote:
-> >>> Implementation of the SCMI client driver, which implements
-> >>> PINCTRL_PROTOCOL. This protocol has ID 19 and is described
-> >>> in the latest DEN0056 document.
-> >>
-> >> Hi,
-> >>
-> >>> This protocol is part of the feature that was designed to
-> >>> separate the pinctrl subsystem from the SCP firmware.
-> >>> The idea is to separate communication of the pin control
-> >>> subsystem with the hardware to SCP firmware
-> >>> (or a similar system, such as ATF), which provides an interface
-> >>> to give the OS ability to control the hardware through SCMI protocol.
-> >>> This is a generic driver that implements SCMI protocol,
-> >>> independent of the platform type.
-> >>>
-> >>> DEN0056 document:
-> >>> https://urldefense.com/v3/__https://developer.arm.com/documentation/den0056/latest__;!!GF_29dbcQIUBPA!y2hR3PEGGxiPjVeXBcgGyV03DPDhzgUKR0uHvsTpiafKgBar8Egc6oOOs-IkFIquhSf-qBzltqEMyzRZHq8eC4g$ 
-> >>> [developer[.]arm[.]com]
-> >>>
-> >>
-> >> No need to specify all of this in the commit message, just a note that
-> >> you are adding a new SCMIv3.2 Pincontrol protocol, highlighting anything
-> >> that has been left out in this patch (if any) will be enough.
-> >
-> > Is it possible to extend the spec to support multilple uint32_t for PIN
-> > CONFIG SET?
-> >
-> > With only one uint32_t could not satisfy i.MX requirement.
-> >
-> > Thanks,
-> > Peng.
-> >
-> IIUC you are expecting to have an ability to set some kind of array of 
-> uint32_t config values to some specific ConfigType?
-> 
-> I'm not sure if it's supported by pintctrl subsystem right now. I was 
-> unable to find an example in the existing device-tree pinctrl bindings. 
-> This makes me think that this kind of binding is OEM specific.
-> 
-> Maybe it can be implemented by adding new IDs to OEM specific range 
-> (192-255) which is reserved for OEM specific units (See Table 23 of 
-> DEN0056E).
-> 
+Hi,
 
-If I understood correctly the aim of Peng multi-valued request, I think
-that even if Linux does not support using this kind of multiple valued
-requests (as of now), if it is useful or required by some of the possibly
-supported hardware, it should be described and allowed by the specification
-and supported by the core SCMI protocol support at least, while the pinctrl
-SCMI driver can ignore this and keep using a one-sized array protocol_ops
-call internally (since it cannot do any different anyway as of now)
+Changes in v2:
+ - Updated the bindings to clear the bindings check.
 
-IOW I dont think we should model too strictly the SCMI spec against only
-what the Linux pinctrl subsystem support today, since Linux it is just
-really only one of the possible SCMI agents and Linux implementation itself
-can possibly change: it is better to model the spec on the HW requirements
-or the possible usage patterns across all the possibly participating agents.
-
-As an example, for similar reasons, when the SCMI Voltage protocol was added
-to the spec, at the very last minute, a change was made to the spec to allow
-for negative voltages, even though the Linux regulator subsystem was not
-and still is not supporting at all negative voltages as of now; so basically
-the SCMI voltage protocol API now exposes a per-domain flag (negative_volts_allowed),
-that allows any kind of voltage domain to be enumerated and handled at the SCMI
-spec and core layer but that also allows any SCMI driver user, like the SCMI
-Regulator driver, to decide on his own if negative voltages domains can be
-supported: indeed the scmi-regulator driver just skips the initialization of
-any voltage domain that is found to be describing negative voltages.
-
-Here is a bit different, it is more of an optimization in the call path
-than an HW difference, but I would follow the same approach: with the
-SCMI spec and the core SCMI stack (the protocol) that supports a multi-uint32
-call as a general case, if useful for some scenarios, and instead the SCMI
-pinctrl driver that just ignores this possibility and keep using a single-value
-array anyway....then, it will be up to the guys leveraging this multi-valued
-call to come up with a way to use it on their systems, possibly maybe contributing
-back to upstream any needed modification if general enough
-(not sure about the details of how this multi-vals operation should be...we'll have
-to discuss that about the spec all together I think.)
-
-In any case, I would definitely NOT relegate such possibility to vendor space,
-since it is something generic and, especially being just (as it seems to me) an
-optimization on the call path at the end, it will just lead to uneeded duplication
-of functionalities in the vendor implementation of stuff that it is already
-very slightly differently supported by the standard.
-
-...just my opinion anyway, I'll happily let other guys in this thread discuss and
-decide about this :P
+This patch series adds pinctrl bindings and tlmm support for SDX75.
 
 Thanks,
-Cristian
+Rohit.
+
+Rohit Agarwal (2):
+  dt-bindings: pinctrl: qcom: Add SDX75 pinctrl devicetree compatible
+  pinctrl: qcom: Add SDX75 pincontrol driver
+
+ .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          |  177 +++
+ drivers/pinctrl/qcom/Kconfig                       |   30 +-
+ drivers/pinctrl/qcom/Makefile                      |    3 +-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c               | 1536 ++++++++++++++++++++
+ 4 files changed, 1735 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx75.c
+
+-- 
+2.7.4
 
