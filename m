@@ -2,65 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DBA06EA675
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 11:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49F516EA6EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 11:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231859AbjDUJCa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 05:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
+        id S231866AbjDUJ3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 05:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231639AbjDUJBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 05:01:51 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAACFAD03
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 02:01:50 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-552a6357d02so16079197b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 02:01:50 -0700 (PDT)
+        with ESMTP id S231923AbjDUJ26 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 05:28:58 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9334A5F4
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 02:28:50 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-b980e16b27bso610222276.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 02:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682067710; x=1684659710;
+        d=linaro.org; s=google; t=1682069330; x=1684661330;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ToiPBpdAxjCAxJF43AfJp/Rj688Pj2Ypepz4NjUUUyA=;
-        b=kTXBCu2GE4qEhmJpnKtdAEx1qmHXBKyAnZ61GYEm/IWOs4DWlkAixPBwuPZ5rbt3wE
-         JG/pGKL4+oldgpFcDvxS/TM9JSQz7BrzzalblEv9i2F0bsQRKYM525neJQO99ZFG5b0G
-         ilQq6xyo1s25/g43zUvxSxaXQcgqnFWjeHrQbKO5xEmAFm1ru2iraErCeLRIu6Rgcgil
-         PA6SVPKFjY6Ea4IOEK1JQOdPapfkCKNjsQw9a0dgf5YhX7bcjAzM3CRGSZlGWtCRotAj
-         axtuC7KsfD7qnTFvpKStU3Eu9eAeARlbtlqpMVzC9CkV6/WqtJSMHVq2OaIR3YSFJkeg
-         PTKA==
+        bh=tgquQtEsm7oPhv4OReUHXv8OWD1659AcrG/NzTNtbsQ=;
+        b=pAiPYjBa/2MdVVT73kR/2XhxZzCkr5+GGphiOvJYqWwwegWt4BcHQjF1K8EFgJniCZ
+         DO0syhgdNcXhigdPwSy9aBFpy9vtNcg5JvBMKYEox3q53aC8nI70TrhA9wpVOzqZT3jt
+         vcFmDrCV52CW1uCEY82kWNjquV9UARPJcyK+p+vYRvcHVm2O1GKsbfEqRRTHdYNtTdG8
+         ZvwWGscdi2bSxUgGFzsNd+ZMsugm7clG4YjUE8Fc5clq/VdiAqcsqlvoc4y144pFpYDn
+         oho0pa2wMOjDzVOfwNmE4WpBnrODIqc500XWAqkSHlo2z530XuG/XbkHFNqxz5DKZOkk
+         EmQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682067710; x=1684659710;
+        d=1e100.net; s=20221208; t=1682069330; x=1684661330;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ToiPBpdAxjCAxJF43AfJp/Rj688Pj2Ypepz4NjUUUyA=;
-        b=UdWg/F8RuCo6nxrNp3ucrpoHPMyxQdSgXdvOnKIeh18zvYIlCEeTjmk5HqrIzLSLjA
-         dOi8cloDqh+C3hlQl16+rNgsbGvdJscH85JBx+bryUsXatyN2oDpmNdkk1K1INDOkSPh
-         2JpCsfBxuAqbKZtNzTa6XHpbtWX/lE+XBV2vYFNxCEiu5jsj7I+916wzLRCQ2agaUCUQ
-         boEjzkP/Ww/79KSWlLrKO7LIEXf1Tp0XMx1mlmdc54bGLkOe1h8xfO8uO9giBpZdQ7gV
-         O9Q6psF8+HWu9Q4fzKyX4bLdRlH2yE8T3sjiMJKOMiuKAL/vGoRp8XFGE48CYnoUksfJ
-         72uQ==
-X-Gm-Message-State: AAQBX9d6VyU2BCtfjTbcz/d/N/QOATj23DyKE0DoTWvPibVqMtx2C/NC
-        Jfbomd8HmPLWFIPpzPOXVDJXyO3oveT1w/b6UGCang==
-X-Google-Smtp-Source: AKy350a8QRB/T8UI+klrD0gYXZ1RkUVOHetcDghs325st8nf7xoBuLJAj3nzqydGEOqKTeFIcs85oNWJHo2bkkUjbc4=
-X-Received: by 2002:a0d:d98f:0:b0:541:7193:e136 with SMTP id
- b137-20020a0dd98f000000b005417193e136mr1321292ywe.23.1682067710104; Fri, 21
- Apr 2023 02:01:50 -0700 (PDT)
+        bh=tgquQtEsm7oPhv4OReUHXv8OWD1659AcrG/NzTNtbsQ=;
+        b=iTpldcHSAO7lBEnUJj4VUj0NVlS10fgWN0nP+O/Yhga5KhpKEdSOdhorjvOBNjomj0
+         h6owjEEhvp/9hLFr+cv/m2TGHjLv4SMsHVoFGWRnP3DCbf6YVSk7NUI2xc1Rji/L2FUf
+         KptWmDjxPA2Id0I5pNamQDa/lMqHzdH8sLvsdGtlLdWUHbDwZtJFVTctPwOzedh0dPZU
+         anrZF6UJYWckB7/dH+8pFqWCBB2FozsFQ0B5vO1btNPLVRgQXwIJPBuGkDLSqTa9k6yr
+         tcn25eyTlLNHizsQz7yX9cQ0PVg43+eyc/UHZ1qh3eRxSlhvxdvg3Zh0FHKnOK5MaPsQ
+         4gdw==
+X-Gm-Message-State: AAQBX9dKT/c2Zr/LjI+bzzrESxaDLCqYP7ML67WAbll+OSqctDJ8B39T
+        1wHzx3oyGGTKaoBTWQOcqkfYLWrnfbsAPGq8uZkzgw==
+X-Google-Smtp-Source: AKy350ZDou5IkqF07YuuyMhcPw5wqADmGYKIbAe2hYMZHvb+99PW2PnccQxbwAlLQM7OjFrQQyinf2OcGI1uxt2tZM8=
+X-Received: by 2002:a81:8a42:0:b0:54f:cfbf:22fa with SMTP id
+ a63-20020a818a42000000b0054fcfbf22famr1424597ywg.25.1682069330159; Fri, 21
+ Apr 2023 02:28:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <4302b66b-ca20-0f19-d2aa-ee8661118863@xs4all.nl>
-In-Reply-To: <4302b66b-ca20-0f19-d2aa-ee8661118863@xs4all.nl>
+References: <cover.1680793130.git.oleksii_moisieiev@epam.com>
+ <54119b2cb43e29f69c5858a5320d3a58f23fed21.1680793130.git.oleksii_moisieiev@epam.com>
+ <ZDcqx9JVMvqr2WYu@e120937-lin> <6dc456ff-7fc6-3b73-3727-dd048e9a9629@oss.nxp.com>
+ <f73f39e2-81dd-4204-a3be-c5e7f5e54c1b@epam.com>
+In-Reply-To: <f73f39e2-81dd-4204-a3be-c5e7f5e54c1b@epam.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Apr 2023 11:01:39 +0200
-Message-ID: <CACRpkdaorkV73hAEcnXHLV2WpGfPmnqnHy6mdo7=9wVGtH4zXA@mail.gmail.com>
-Subject: Re: [PATCHv2] pinctrl-bcm2835.c: fix race condition when setting gpio dir
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>
+Date:   Fri, 21 Apr 2023 11:28:38 +0200
+Message-ID: <CACRpkdY1eSdWX6+azn43MO77urVf_t25wgZtuyTwKHw4v+QYNg@mail.gmail.com>
+Subject: Re: [RFC v1 1/2] scmi: Introduce pinctrl SCMI protocol driver
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     Peng Fan <peng.fan@oss.nxp.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "michal.simek@amd.com" <michal.simek@amd.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "souvik.chakravarty@arm.com" <souvik.chakravarty@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -73,25 +79,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 20, 2023 at 2:47=E2=80=AFPM Hans Verkuil <hverkuil-cisco@xs4all=
-.nl> wrote:
+On Fri, Apr 21, 2023 at 10:40=E2=80=AFAM Oleksii Moisieiev
+<Oleksii_Moisieiev@epam.com> wrote:
+> On 17.04.23 05:55, Peng Fan wrote:
+> > On 4/13/2023 6:04 AM, Cristian Marussi wrote:
 
-> In the past setting the pin direction called pinctrl_gpio_direction()
-> which uses a mutex to serialize this. That was changed to set the
-> direction directly in the pin controller driver, but that lost the
-> serialization mechanism. Since the direction of multiple pins are in
-> the same register you can have a race condition, something that was
-> in fact observed with the cec-gpio driver.
+> > Is it possible to extend the spec to support multilple uint32_t for PIN
+> > CONFIG SET?
+> >
+> > With only one uint32_t could not satisfy i.MX requirement.
+> >
+> > Thanks,
+> > Peng.
+> >
+> IIUC you are expecting to have an ability to set some kind of array of
+> uint32_t config values to some specific ConfigType?
 >
-> Add a new spinlock to serialize writing to the FSEL registers.
+> I'm not sure if it's supported by pintctrl subsystem right now. I was
+> unable to find an example in the existing device-tree pinctrl bindings.
+> This makes me think that this kind of binding is OEM specific.
 >
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> Fixes: 1a4541b68e25 ("pinctrl-bcm2835: don't call pinctrl_gpio_direction(=
-)")
+> Maybe it can be implemented by adding new IDs to OEM specific range
+> (192-255) which is reserved for OEM specific units (See Table 23 of
+> DEN0056E).
 
-I just applied this patch now so it can go in with the rest of the patches
-for the merge window. I don't especially fancy having to immediately
-start a fixes branch before I've even sent the bulk of patches to Torvalds.
+From a pinctrl point of view I do not understand this requirement.
+
+The pinctrl subsystem in the Linux kernel certainly does not support
+an array of u32 for the pin config, we only support passing a single
+u32 value along with the enumerator (config type), or well it is
+actually 24 bits in Linux, the uppermost 8 bits is for the config type:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/inc=
+lude/linux/pinctrl/pinconf-generic.h
+
+/*
+ * Helpful configuration macro to be used in tables etc.
+ */
+#define PIN_CONF_PACKED(p, a) ((a << 8) | ((unsigned long) p & 0xffUL))
+
+p =3D parameter (PIN_CONFIG_DRIVE_STRENGTH etc)
+a =3D argument (value such as in mA)
 
 Yours,
 Linus Walleij
