@@ -2,99 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 828D76EA9F7
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 14:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 758F26EAA1D
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 14:15:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231742AbjDUMGw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 08:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50152 "EHLO
+        id S231890AbjDUMPx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 08:15:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbjDUMGr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 08:06:47 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2058.outbound.protection.outlook.com [40.107.95.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73A183EC;
-        Fri, 21 Apr 2023 05:06:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R8KNBqqJOHkDo/ugKooH/UZotkRhH1ntbluaT5rrNkfd7YPw4b1quelq6iWm6TZQtkWJ5anX/Rk2P7oYFupdjpHcg9UWRsrny9+IDZo1XtTAtbCWdQMNG79sBU5meyEaDwq4XyVgrci4sOQLKsPpTXdVTwVjE8V8xCvbZCDF+7wUXzHI4VfbHJcUVZ2TuOgb/GhSe/u9u2n+vWMRbk5XuOiwin/9SxBDo03o6UeTmk/bv+A9qlvkg7LNs0H3VyvoE54sv982GuK1eqV04hXswnzqb6cuvR4fonWeZH8d+39qcHEEdhMIOVp2jYVh4nF+FowqJZn/ec6nVcoY7gH4KQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=twaIqLuxaA+WZsbIdEdp6pcVaaqm+Te+/f2DZHkQQB0=;
- b=a//gmDjEKchfpB1rJ74Id72XVUUZq0a2K7+WyUtevapREgqDYTqusyo1wTSSTTriB+mVJiefIckK5/bzcRqOAyZOQexRx3FurfoMV22rA7cPoO1Cgii7k6eubBU54mUXWtzb7gLWSmHwDpXa7ZJL6ae5NDPka49OAC6DmDiNLae18S3Uqimk5C2pANCpjqkw0hjmpiiKmo3Z0r3dKgV9zf6xHQz4tGEgJKD79mpqx5VRhaBAid1/tIXDEX6FVvXZv1vkjvJehdjoTL9jQolW3b4zPBJHA8yO8oIfw4TK8Up4opCmBXAtlBe5gN+0dv8KEaFcE0sp8U6MmLDrF5d2dA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=twaIqLuxaA+WZsbIdEdp6pcVaaqm+Te+/f2DZHkQQB0=;
- b=qspE/HgbTKE44/+t5D0orDCd+YQ3BI4zV3sWQffatNARH0pThjPQys5ggu67SdXJxliynUPKOoA1D7pm30lv/2UIKUK1AxZnbnE06M6fx/fy13n68AGO439SSFY4ygYQWF0fT78QhaZVASHS50XqrkiaS/Uc8ikfuLH+k96hVUQ=
-Received: from MW4PR03CA0072.namprd03.prod.outlook.com (2603:10b6:303:b6::17)
- by DM6PR12MB4251.namprd12.prod.outlook.com (2603:10b6:5:21e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.22; Fri, 21 Apr
- 2023 12:06:43 +0000
-Received: from CO1NAM11FT093.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b6:cafe::89) by MW4PR03CA0072.outlook.office365.com
- (2603:10b6:303:b6::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.22 via Frontend
- Transport; Fri, 21 Apr 2023 12:06:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT093.mail.protection.outlook.com (10.13.175.59) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6319.25 via Frontend Transport; Fri, 21 Apr 2023 12:06:43 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 21 Apr
- 2023 07:06:42 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <linus.walleij@linaro.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-CC:     <nakato@nakato.io>, <korneld@chromium.org>, <richard.gong@amd.com>,
-        "Mario Limonciello" <mario.limonciello@amd.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/4] pinctrl: amd: Revert "pinctrl: amd: disable and mask interrupts on probe"
-Date:   Fri, 21 Apr 2023 07:06:24 -0500
-Message-ID: <20230421120625.3366-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230421120625.3366-1-mario.limonciello@amd.com>
-References: <20230421120625.3366-1-mario.limonciello@amd.com>
+        with ESMTP id S231434AbjDUMPw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 08:15:52 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8917D9E;
+        Fri, 21 Apr 2023 05:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=/+HAMTLY1slOoSg5bxA5tskDuARnfGnh1XOqXBWDAu8=; b=Bdvzmpp3kCAYe3vDQWS00VV3zL
+        6xhsBF7qYaPEy+/bVU/AN+i5/yTJsgbHiv0OEReCYnOXsneZ98CYKfmld7ZPc6H66MMuAoOcg74ls
+        WplG7BrIvLhuEc41g2jU440hsniU8+lW6PPQE4pF1uMh7J+PgU43qCuQpfaQWNAr5FSQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1pppfz-00AsiX-TT; Fri, 21 Apr 2023 14:15:43 +0200
+Date:   Fri, 21 Apr 2023 14:15:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, linux@armlinux.org.uk,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        olteanv@gmail.com, mengyuanlou@net-swift.com,
+        'Jarkko Nikula' <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH net-next v3 2/8] i2c: designware: Add driver support for
+ Wangxun 10Gb NIC
+Message-ID: <4600d755-3bbf-4906-9f23-4e91cfc01c12@lunn.ch>
+References: <20230419082739.295180-1-jiawenwu@trustnetic.com>
+ <20230419082739.295180-3-jiawenwu@trustnetic.com>
+ <ec095b8a-00af-4fb7-be11-f643ea75e924@lunn.ch>
+ <03ef01d97372$f2ee26a0$d8ca73e0$@trustnetic.com>
+ <72703dc2-0ee1-41b2-9618-2a3185869cbf@lunn.ch>
+ <03f501d973f7$d0c889a0$72599ce0$@trustnetic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT093:EE_|DM6PR12MB4251:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7859163e-46d0-4a31-9ac7-08db4260df3c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fNfwxN/sS6FcV3Y2/VZ+s9o+IUe6GMxV8hxmotHmBLN1vdXzhEDmkYf7/THM5NDMrUKtjdVFbw2F+7Lw5VlW7Kyxy8jsLkO4aLR9FDXcHQCGGlPhYEZGubbdOhDOuXNh4ZyLsEHUiHtSCeOjih571fIb/uYQN5Gf22ExeT649AM0+7bB1XzHi460TwZA215jEyS5h8u7gil472jw7Ss56wLTode32TftsWbJRSaZy7fThL6vzNRg3b23eqQuycOqP8Y7yCtzS9scy+uZMo7Sj+OI5xK2kUaZHInES15BIAumIAKLb/nZQ6Lc0rtjuohNCd4izexztgjqgiVPqrB5llwIvefr5LwYD3IALkYmrdIKZ8y/ul+Fryh+hQXthTetwbytZHNGOAEWH8m5CRc5soSYleZwqiAQHqF9/l2bss6AZT74ikJOu88Ne0bv8ZIKTyBIGt7QNT1ofphK5LWHIZqQy0HPHoYCb+A4yG5x560QDAJ/vK8DbNBxKUcH83a4pN603GGQb/G14nL4LebUsdTaEIzzqbLIC1x8+ZB8YKrU2rin2Cr5BXRTHHL7wupueuq7rUcSYXpBx8hIbW2P+13vIGkaP0JQnTAjHdf/iOflKFAhY5LAzB8rizVG7TSsYumZ69d3+CYVZY0gyPOgvWZefRrq6cbatqG3xHRgQc82E+P4cWwmPcE2iKfNfix3fddGqGTNJXGM4N4omVp9NxLUxMgYICQPmQLMBvFDGho=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(136003)(376002)(39860400002)(451199021)(36840700001)(40470700004)(46966006)(36756003)(6636002)(54906003)(83380400001)(478600001)(2616005)(36860700001)(47076005)(7696005)(40480700001)(1076003)(26005)(6666004)(316002)(110136005)(4326008)(186003)(336012)(426003)(70206006)(82740400003)(70586007)(16526019)(44832011)(5660300002)(8936002)(2906002)(8676002)(356005)(40460700003)(81166007)(41300700001)(86362001)(82310400005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2023 12:06:43.1079
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7859163e-46d0-4a31-9ac7-08db4260df3c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT093.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4251
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03f501d973f7$d0c889a0$72599ce0$@trustnetic.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -102,75 +55,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on probe")
-was well intentioned to mask a firmware issue on a surface laptop, but it
-has a few problems:
-1. It had a bug in the loop handling for iteration 63 that lead to other
-   problems with GPIO0 handling.
-2. It disables interrupts that are used internally by the SOC but masked
-   by default.
-3. It masked a real firmware problem in some chromebooks that should have
-   been caught during development but wasn't.
+On Fri, Apr 21, 2023 at 10:20:17AM +0800, Jiawen Wu wrote:
+> On Thursday, April 20, 2023 9:23 PM, Andrew Lunn wrote:
+> > On Thu, Apr 20, 2023 at 06:29:11PM +0800, Jiawen Wu wrote:
+> > > On Thursday, April 20, 2023 4:58 AM, Andrew Lunn wrote:
+> > > > On Wed, Apr 19, 2023 at 04:27:33PM +0800, Jiawen Wu wrote:
+> > > > > Wangxun 10Gb ethernet chip is connected to Designware I2C, to communicate
+> > > > > with SFP.
+> > > > >
+> > > > > Add platform data to pass IOMEM base address, board flag and other
+> > > > > parameters, since resource address was mapped on ethernet driver.
+> > > > >
+> > > > > The exists IP limitations are dealt as workarounds:
+> > > > > - IP does not support interrupt mode, it works on polling mode.
+> > > > > - I2C cannot read continuously, only one byte can at a time.
+> > > >
+> > > > Are you really sure about that?
+> > > >
+> > > > It is a major limitation for SFP devices. It means you cannot access
+> > > > the diagnostics, since you need to perform an atomic 2 byte read.
+> > > >
+> > > > Or maybe i'm understanding you wrong.
+> > > >
+> > > >    Andrew
+> > > >
+> > >
+> > > Maybe I'm a little confused about this. Every time I read a byte info, I have to
+> > > write a 'read command'. It can normally get the information for SFP devices.
+> > > But I'm not sure if this is regular I2C behavior.
+> > 
+> > I don't know this hardware, so i cannot say what a 'read command'
+> > actually does. Can you put a bus pirate or similar sort of device on
+> > the bus and look at the actual I2C signals. Is it performing one I2C
+> > transaction per byte? If so, that is not good.
 
-There has been a lot of other development around s2idle; particularly
-around handling of the spurious wakeups.  If there is still a problem on
-the original reported surface laptop it should be avoided by adding a quirk
-to gpiolib-acpi for that system instead.
+....
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
+> You may have misunderstood. If you want to read a 16-bit message, the
+> size of 'i2c_msg.len' is set to 2 in the array that 'flags = I2C_M_RD'.
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 675c9826b78a..e9fef2391b38 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -877,34 +877,6 @@ static const struct pinconf_ops amd_pinconf_ops = {
- 	.pin_config_group_set = amd_pinconf_group_set,
- };
- 
--static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
--{
--	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
--	unsigned long flags;
--	u32 pin_reg, mask;
--	int i;
--
--	mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
--		BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF) |
--		BIT(WAKE_CNTRL_OFF_S4);
--
--	for (i = 0; i < desc->npins; i++) {
--		int pin = desc->pins[i].number;
--		const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
--
--		if (!pd)
--			continue;
--
--		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
--
--		pin_reg = readl(gpio_dev->base + pin * 4);
--		pin_reg &= ~mask;
--		writel(pin_reg, gpio_dev->base + pin * 4);
--
--		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
--	}
--}
--
- #ifdef CONFIG_PM_SLEEP
- static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
- {
-@@ -1142,9 +1114,6 @@ static int amd_gpio_probe(struct platform_device *pdev)
- 		return PTR_ERR(gpio_dev->pctrl);
- 	}
- 
--	/* Disable and mask interrupts */
--	amd_gpio_irq_init(gpio_dev);
--
- 	girq = &gpio_dev->gc.irq;
- 	gpio_irq_chip_set_chip(girq, &amd_gpio_irqchip);
- 	/* This will let us handle the parent IRQ in the driver */
--- 
-2.34.1
+The SFP driver uses a mixture of message lengths, due to SFP bugs. But
+in general it will do 16 byte block reads, except for when it needs
+smaller quantity of bytes.
 
+However, your wording was:
+
+> > > Every time I read a byte info, I have to write a 'read command'.
+
+This suggests you are reading one byte at a time with each read
+command. I just want to make sure that is not one I2C transaction per
+byte.
+
+     Andrew.
