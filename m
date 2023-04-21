@@ -2,137 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C296EB16C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 20:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C26DD6EB27B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 21:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjDUSNj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 14:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
+        id S233588AbjDUTtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 15:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjDUSNj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 14:13:39 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DD22127;
-        Fri, 21 Apr 2023 11:13:36 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-18807659eddso944783fac.1;
-        Fri, 21 Apr 2023 11:13:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682100816; x=1684692816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yprpevMgRlcrrjm7dPQGh38wh58NtQ2HlVgFYleLdi4=;
-        b=PUHTtV88jiqMCmYpj6WtZmUuNo+LgsrOE1vdOC0mcImWvqVKVMgKcWXZSRHUwv0uXZ
-         BE/59XPHmH5GaczeVM/u86TdY4KhrWY/vFIWlZAdNyKtHwN7xGkvFqB+8RgPU+yeKtDR
-         fom1h/JhAXuSpeHobsMANzrsXWlsuR6+2/P4jyaMTBrLSzYXrmnK1z/v8v6Yu4FSF0jR
-         rMbObK08QlG4j12PIbzLd1iFBAiergHJJAg4RURUvB8iSpZUqu9tJ3yXuqwYhkz3PPqd
-         tU5+6C11geEKwkVJDbSkEGRfyxuCVNmb+4KdLDNTx4OShf5BJ6VJ7755RUirV9uo6wJ7
-         hQ+Q==
-X-Gm-Message-State: AAQBX9dQpdwbNFsjDrV8aTKkWNl4VuwBhV7dp3vIsujStIEhXpJFRVA+
-        FOwkpM8xj1cl3Z3i9HxzpQxiR4Ls5A==
-X-Google-Smtp-Source: AKy350YaU8xpOOPU/yxP0F9qjORS+VPOjmwHhQCM7IA5C3ctz8tVdJXdhE/EB2lb5UUe8IFRobvFYg==
-X-Received: by 2002:a05:6870:9611:b0:17e:be6c:d338 with SMTP id d17-20020a056870961100b0017ebe6cd338mr3932607oaq.5.1682100815874;
-        Fri, 21 Apr 2023 11:13:35 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id b24-20020a056808011800b0038c0cf168afsm1864907oie.7.2023.04.21.11.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Apr 2023 11:13:35 -0700 (PDT)
-Received: (nullmailer pid 1567839 invoked by uid 1000);
-        Fri, 21 Apr 2023 18:13:34 -0000
-Date:   Fri, 21 Apr 2023 13:13:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     nick.hawkins@hpe.com
-Cc:     verdun@hpe.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, linux@armlinux.org.uk,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 6/9] dt-bindings: hwmon: Add HPE GXP PSU Support
-Message-ID: <20230421181334.GA1566295-robh@kernel.org>
-References: <20230418152824.110823-1-nick.hawkins@hpe.com>
- <20230418152824.110823-7-nick.hawkins@hpe.com>
+        with ESMTP id S233659AbjDUTsw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 15:48:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB4E2719;
+        Fri, 21 Apr 2023 12:48:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 197D46528E;
+        Fri, 21 Apr 2023 19:48:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B092C4339B;
+        Fri, 21 Apr 2023 19:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682106503;
+        bh=afKwtupox0lmyEy2Q4gdOb5TNtE8aabXgXrDrNzqgjQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mdShRbtnkd/NaU6+i82tMehIvpm1rVTs3gyCvTnZwKWAzBQO1Mdg9IhK2dMTlGr99
+         Sr84VNiUE+nowtLw3xsskiisShEYl+3hUtFymkKi54c1AijWx5ZBidEFzr4znzPEoJ
+         KwHYIyA9AXh9hig99chq6vnql+dz/rgrHFTnwteeLMU1fauiWySB8gUgm2SCzcStZa
+         esGsaO8Nas7PpjHBcUxkxUXGBbmj7jMSbkEIP7XN0zXY/V+mJtjT5sLDaikO0rP3ul
+         ZCacfQ+ROZUliQZm3NzaeEUWtisSD0CUzMDxEKfkQve68qw9Ue+HT1lTbaEIE0+8cx
+         AVEs4kPnfifhg==
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-b992ed878ebso3921738276.0;
+        Fri, 21 Apr 2023 12:48:23 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fK935b0YH9ndOqVnIqpJ12OWi2u7P2xzeVeNsg6QxQEHhbY1iI
+        Kviv7m0OGZda0ORpbVhuZkmA8qehGgsTIsrklA==
+X-Google-Smtp-Source: AKy350YsYIfzI0RqjqJqRB+28l3TKuZ1sA2+QHyWG7L8jHA86q5CcPNymknn2wyoh/hlD3nM3IPV82X+5dRu/2FsZsM=
+X-Received: by 2002:a81:8415:0:b0:54f:64d8:9c9 with SMTP id
+ u21-20020a818415000000b0054f64d809c9mr2826788ywf.21.1682106502454; Fri, 21
+ Apr 2023 12:48:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230418152824.110823-7-nick.hawkins@hpe.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+References: <20230418150606.1528107-1-robh@kernel.org> <9543f619-88fa-8e54-6e9a-4334750e51b4@linaro.org>
+In-Reply-To: <9543f619-88fa-8e54-6e9a-4334750e51b4@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 21 Apr 2023 14:48:11 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+ZVAZc1nYJVLPQt=KM1qOZrZCrRC4q_o8XQjDdo_NuKA@mail.gmail.com>
+Message-ID: <CAL_Jsq+ZVAZc1nYJVLPQt=KM1qOZrZCrRC4q_o8XQjDdo_NuKA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: Fix schema for "qcom,paired"
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 10:28:21AM -0500, nick.hawkins@hpe.com wrote:
-> From: Nick Hawkins <nick.hawkins@hpe.com>
-> 
-> Provide i2c register information and CPLD register information to the
-> driver.
-> 
-> Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
-> ---
->  .../bindings/hwmon/hpe,gxp-psu.yaml           | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml b/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
-> new file mode 100644
-> index 000000000000..60ca0f6ace46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/hpe,gxp-psu.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/hpe,gxp-psu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HPE GXP psu controller
-> +
-> +maintainers:
-> +  - Nicholas Hawkins <nick.hawkins@hpe.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: hpe,gxp-psu
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  hpe,sysreg:
+On Wed, Apr 19, 2023 at 2:56=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 18/04/2023 17:06, Rob Herring wrote:
+> > The "qcom,paired" schema is all wrong. First, it's a list rather than a=
+n
+> > object(dictionary). Second, it is missing a required type. The meta-sch=
+ema
+> > normally catches this, but schemas under "$defs" was not getting checke=
+d.
+> > A fix for that is pending.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.ya=
+ml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> > index 9412b9362328..4c3e9ff82105 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+> > @@ -144,8 +144,9 @@ $defs:
+> >          enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> >
+> >        qcom,paired:
+> > -        - description:
+> > -            Indicates that the pin should be operating in paired mode.
+> > +        type: boolean
+> > +        description:
+> > +          Indicates that the pin should be operating in paired mode.
+>
+> Current Linux implementation uses it as a generic pinconf param
+> pinconf_generic_params which is parsed by:
+>
+> pinconf_generic_parse_dt_config() -> parse_dt_cfg() ->
+> of_property_read_u32()
+>
+>
+> The pinctrl-spmi-mpp.c driver, using this schema, treat it as a bool,
+> but I still wonder how the code will parse bool with
+> of_property_read_u32(). Maybe it should be uint32 with value of 0 and 1?
 
-Why is this optional?
+That should be an error because the length is too short so it should
+go with some default from the code.
 
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Phandle to the global status registers shared between each psu
-> +      controller instance.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        psu@48 {
-> +            compatible = "hpe,gxp-psu";
-> +            reg = <0x48>;
-> +            hpe,sysreg = <&sysreg_system_controller2>;
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+Looks like there is no user, though no property could mean keep the
+default/bootloader setting. Can you sort out which type is really
+desired here and hopefully we can get rid of the other type. It's not
+the first case of pinctrl properties with multiple types, but we don't
+really need more.
+
+Rob
