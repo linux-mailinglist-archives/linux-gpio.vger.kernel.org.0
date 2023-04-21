@@ -2,107 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17A916EA5B7
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 10:21:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B54BC6EA5BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 10:22:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbjDUIVb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 04:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48622 "EHLO
+        id S230033AbjDUIWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 04:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229724AbjDUIVb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 04:21:31 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B08DA243
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 01:21:02 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-54f8d59a8a9so16525807b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 01:21:02 -0700 (PDT)
+        with ESMTP id S231612AbjDUIWf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 04:22:35 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13589524B
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 01:22:20 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-54fae5e9ec7so15404037b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 01:22:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682065261; x=1684657261;
+        d=linaro.org; s=google; t=1682065339; x=1684657339;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3ZDTPQTdwBS3U/dvkRKu73nFR4uvTQ4Wzf/xDMYpWos=;
-        b=rI+gJJnfRbX+uFzw6pehHiCO/klXUS4TSNSZ2odzrwHTtLjiIRZCWevflRFuOxZCyM
-         Y+3/uQLwB1zN64Xtvd2SOCkQA1DBr7xMUd8HciXxABDezXZGb6tw+GNfsN9/O6t7WSGO
-         0k8g65EzQunhbFcDEOqkJygK/qv/C/c+ycxt+xz8CyjIU5B2JDL+O0V7Jz97W2pg3rSM
-         C243SN7EO/32vWlM3tqwjhaLhBW4trZqBZ2CeXd+20PSjEODITc1SLo5wOA93tFaCFrY
-         nMDzGiBORhoVrrVQpFsESW+egSdWT1+4IfF2qYsCDKAyCOlE021a8ezSkp9ZnKLTxass
-         IuXA==
+        bh=JjIeZlv8joDcavXmMJA/iStM74uHyiEJmIh+dhbFJlc=;
+        b=e1lxKiomhiq6OgUkdsTDqyimhA+XbZC7icXSpwyRCCujy9ScACnc+JtJ3FRqMrin5Q
+         CY3kKtJ4ZfDp0aBXVUk9jk0YpAL2YW+x4ibY8fl0obD8XYbrhVwRheuOVqpTk7wZUC3d
+         Q8jrdvcZFb3UXICR19ZTYLZ1jS7FAzgQxV+hz1gELQ6YaR3tuv3qlasFctHU5JI0RiRQ
+         WuvubI4zNX+2aQZ9HzRdhnzY0Y1BZBbsBQ68BqkuZe8JOYKG0IV/NkMrafJZYEUvTGT3
+         1u7XH8JyNjyrELYMaYX2vZKtaJbPmJzqEieA4UBsl/Fx+bCDeaf/xiOWKqmAjwX8gv2P
+         CSJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682065261; x=1684657261;
+        d=1e100.net; s=20221208; t=1682065339; x=1684657339;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3ZDTPQTdwBS3U/dvkRKu73nFR4uvTQ4Wzf/xDMYpWos=;
-        b=BucfZBGA37j7BAjQ/Hkxz/m9UJq9b030JaZdei/S1/yM8e4jdafA5pLEzA/GwX0VZY
-         2/aqdrfzxk8kmj13pIw+Fbve0PHoDF5k0OOs4QgyXIFBQK4jn9lTfn4KWQP4KWEZgAR0
-         5XGtk5gSZFLtNX8pAlIUeDcWK3jEklS8/b8Z2b32UeX/wrZRuGaWt2QJNmv9XoECvaN7
-         ydWhNTKE+6VXpwCt40g260+h1aZ9zfIsHeBnzbVGgGmKpHr8uWCs3ACXT/6TFf3uR+wX
-         bfFH9kRa8r52w0gK9u+545w4zefaQKvwdefeKsrf4hYCKGu4ewgQlLRVh606pGFiTtHE
-         z1lQ==
-X-Gm-Message-State: AAQBX9cPeu3ydTVhqSSW6QduM4hjM8mL3eGH2gNmwy64ClLoqkTa5zGM
-        KF6NnuVB2svp0KyQ1tYz2RNOIJZxbCrnFV6PQ/HjFm2IxeRNrrCK
-X-Google-Smtp-Source: AKy350a4MO0JBLZ0LOA+3NaPSDNF/zF4mo2l/XL4rEhsPsSpvGzrJRqavB5CeItyHcI3LuVIMA/A/2QS4DyEKI2YktQ=
-X-Received: by 2002:a81:8341:0:b0:54e:f59f:5153 with SMTP id
- t62-20020a818341000000b0054ef59f5153mr1182455ywf.17.1682065261694; Fri, 21
- Apr 2023 01:21:01 -0700 (PDT)
+        bh=JjIeZlv8joDcavXmMJA/iStM74uHyiEJmIh+dhbFJlc=;
+        b=MDFgzvPQGH3eHXhbbgtzKcC9Dqq3ZTnFYlQJrGXbHxi8RuDKRffnDNQPHWryeqDP1p
+         9Tg8Pq92VcAbe5mESL6ZNvtIp2xRvM01QIC+73707rjs87RAOL590S+LFXvGvwZqSN5u
+         IuB+MzObJ8XxYY11vD7PTgfDKkfCH58tQFKii2l2Ou16tRVqkBqRE8dB2KUibxr6CtrM
+         jIDmVhByEDWKt6DOLcal2ReSwUaHnzNXQB8NerMtz8LRu6Ewc6uPVo5pwJTS9zcSkW3R
+         OBK5gUvK+948oZBb5YZZtdrGk6l7+xHSdJtx21VsMOD4age9B4vFfgt0EAdQD148x37i
+         yCiA==
+X-Gm-Message-State: AAQBX9fUROUZPQyKjLo6iYcW5sHIN2Z4CM/R7gSSdwRdzd9ibQfSrasC
+        vY6FAOeZdN1AajKFjPkTK/WMmFe0lRQj0ocBFRnssA==
+X-Google-Smtp-Source: AKy350ZKyNH8DHkFCPe+gfcXAXquLBtjdaQT/IE6wEIIMckQ9JzCDAhZi4XyD1IAPSWM97Zw9juf2VS2SyEvKkSClxE=
+X-Received: by 2002:a81:bf49:0:b0:54f:c2ee:54a8 with SMTP id
+ s9-20020a81bf49000000b0054fc2ee54a8mr1134764ywk.41.1682065338953; Fri, 21 Apr
+ 2023 01:22:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1679323449.git.william.gray@linaro.org> <ca710d14a710fee44f7911f2a84b6a55570561ee.1679323449.git.william.gray@linaro.org>
- <571b4df1-91ea-481c-9797-842974dfa922@sirena.org.uk> <ZDWopwozNjFg/9NX@fedora>
- <db1edaaa-ea56-4f21-bc69-43f648e79c5b@sirena.org.uk> <ZDXSjsjryXn0pHCz@fedora>
-In-Reply-To: <ZDXSjsjryXn0pHCz@fedora>
+References: <20230412185049.3782842-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20230412185049.3782842-1-j.neuschaefer@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Apr 2023 10:20:50 +0200
-Message-ID: <CACRpkdYNjoc=AHM_AWyyh3DbtfVd17WdmtO68GXrep87WRx5HQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: 104-dio-48e: Implement struct dio48e_gpio
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Fri, 21 Apr 2023 10:22:07 +0200
+Message-ID: <CACRpkdZTYW9ze5VbCZodYUgcsTW4FiZMyxSKBhf3fg3s7DYm3w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: wpcm450: select MFD_SYSCON
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 11:35=E2=80=AFPM William Breathitt Gray
-<william.gray@linaro.org> wrote:
-> On Tue, Apr 11, 2023 at 10:15:54PM +0100, Mark Brown wrote:
-> > On Tue, Apr 11, 2023 at 02:36:23PM -0400, William Breathitt Gray wrote:
-> > > On Tue, Apr 11, 2023 at 09:23:55PM +0100, Mark Brown wrote:
-> > > > On Mon, Mar 20, 2023 at 10:50:15AM -0400, William Breathitt Gray wr=
-ote:
-> > > > > A private data structure struct dio48e_gpio is introduced to faci=
-litate
-> > > > > passage of the regmap and IRQ mask state for the device to the ca=
-llback
-> > > > > dio48e_handle_mask_sync(). This is in preparation for the removal=
- of the
-> > > > > handle_mask_sync() map parameter in a subsequent patch.
-> >
-> > > > What's the story with this patch?
-> >
-> > > Currently dio48e_handle_mask_sync() uses the map argument in its
-> > > implementation. Once the map parameter is removed, the current
-> > > implementation of dio48e_handle_mask_sync() will no longer build, so =
-we
-> > > must adjust the implementation to no longer depend on map.
-> >
-> > I mean what's the story with getting this patch applied?  It doesn't
-> > seem to have been reviewed...
->
-> I'm sorry, I forgot to add Linus' tag from v2 [0]. Linus, would you
-> confirm you're still okay with this patch?
+On Wed, Apr 12, 2023 at 8:50=E2=80=AFPM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-Oh of course.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> The pinctrl-wpcm450 driver relies on MFD_SYSCON functionality in order
+> to find some of its MMIO registers. Select MFD_SYSCON from
+> PINCTRL_WPCM450 to ensure that it's enabled.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+
+Patch applied!
 
 Yours,
 Linus Walleij
