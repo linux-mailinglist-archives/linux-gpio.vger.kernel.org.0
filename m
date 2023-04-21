@@ -2,106 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93A176EA7D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 12:07:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EEE06EA7DB
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Apr 2023 12:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231130AbjDUKHV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Apr 2023 06:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41252 "EHLO
+        id S231387AbjDUKIU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Apr 2023 06:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbjDUKHT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 06:07:19 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380539EF4
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:07:18 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-2f27a9c7970so1427566f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:07:18 -0700 (PDT)
+        with ESMTP id S231594AbjDUKIS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Apr 2023 06:08:18 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12FFB755
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:08:14 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-94f4b911570so194291966b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Apr 2023 03:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1682071636; x=1684663636;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=38kDXtPapHIwOdWmZqY2hajsS5hH99I81TUWs2K/Ge4=;
-        b=rrdoYkof7cTLE+N2yYeEEE9rYTLyqdRQtvZZaHys2RSUbMHOevJvZ+Ejj9AU+oWC/K
-         8CkxBGzz7CCF8B7RsqcFJcSpzXTo7JVg0lsBrfKGynjcDEoUfRnyfxQoKKhJIdwCGLQ3
-         MaohXZlnQyWobNThIcaC0Vt/Egd70IcY8eWV0HVhEaR1xPh6cqtpjVbQ1C23n1lRjNBe
-         f+Pb+EpILZsKl0G0tBYsKLhUmvqnqmWqcvs5QKd4CIC13/+OMRaqNRMuHBm7szRXn6S1
-         NYcwr936mbYBJ3xK7ZGfKBkpJ8S95SfDmxitBa6TPSR8vqp5kRDQoTYMvzi9oyJIHvIi
-         YWEA==
+        d=linaro.org; s=google; t=1682071693; x=1684663693;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hM5SLNSVGKeXl0IJbmJw2IfxPy1SIuLOexv/qUGdJdU=;
+        b=SGhUooxNWZKsB6kn4+/KSXf5KGgGykFlJxTC3x7ukpdih0NXb8r5hKThBhtuGfs6zI
+         y784veuBmivSGi0Ckjs+PrUGIB+HZf4QF2Uf+OUMI+KZ6EUc26YRxNch61yX9bH4/+Y1
+         r9Mi/E4UwtqU47X8kq9pkKcBFFCHqQ2NoNTLxDGzGo12Ho5oubkJb81viTHgKtmfjCna
+         azYbMKnSE5hP4rB1EeNuKOLOWcaSfzqs7UWJXVQWHEObV8EKUtQ0iTSs/Ir6ZIO3+F9V
+         yeKchtx9AN+3U9xKB679tomzcbxNKxaALZWl7Fks75fhnIPtFuk4LwXXBr97i8FwtqBz
+         /zwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682071636; x=1684663636;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=38kDXtPapHIwOdWmZqY2hajsS5hH99I81TUWs2K/Ge4=;
-        b=Pm4AMfvNyzylgjdaV8y681YhrOO1289oTg0/IYMCpwAY9e4UFiyj4A4YfjAVIc1idV
-         FrvnE8FdSGi/jf6UE1VR64EsOgxbsvC82EO7W+h/5Y6ZZaKDvo7CoQxGxBaRUCifm2rN
-         5c10Y0NHg5y19mm0bz4OCVu0p4qKn/ndin1AvwYebnqpR9r/4Yw1Sa4NSKfoDSZKoet/
-         X4OOJJcjhUWtdgf28siJ0DTtr5lfX3HZz0iE1voCck4UizwgWWOt+dOuPjViXb6kuP3o
-         vKgLCjK4PmgEnVBwaCDziPsERnxWT1AdcvtkFQGzhcpKdSjPdC3TXYg3HV4PtII+TFbM
-         xNOw==
-X-Gm-Message-State: AAQBX9e0a1WHvJH/958rmiCv6UXmg0KCfmhZ74CGUq/O177035DdOX1y
-        AyrJFWsC9RFDkL3IpxzJ1M8KxjDMXUinDsRMQPY=
-X-Google-Smtp-Source: AKy350YLh6w5Shjc8huwcoE96gwJYw4jhtiYzybPQVBN5nlIrsOVQwVUiYJF2aU3P+ibqwVitbPzoA==
-X-Received: by 2002:a05:6000:1084:b0:2ff:613c:af5f with SMTP id y4-20020a056000108400b002ff613caf5fmr3307546wrw.30.1682071636654;
-        Fri, 21 Apr 2023 03:07:16 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8b94:8cac:c190:b98e])
-        by smtp.gmail.com with ESMTPSA id u6-20020adff886000000b002f28de9f73bsm4057377wrp.55.2023.04.21.03.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Apr 2023 03:07:16 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.3
-Date:   Fri, 21 Apr 2023 12:07:13 +0200
-Message-Id: <20230421100713.39702-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        d=1e100.net; s=20221208; t=1682071693; x=1684663693;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hM5SLNSVGKeXl0IJbmJw2IfxPy1SIuLOexv/qUGdJdU=;
+        b=TmbPbXrKPZnSTfJ6jM5EinyE0kt9/WQVdocPA5o/yAGxSRZA/koH/2JkeCwOqxuD6f
+         uZxZoaPNC0EkHctGdufkNkIuBLNdPcluHcXwozi06wzI7vFMq7gFL86pz2TZRCILmY3U
+         4AqtwNmT7lQyt7xIUeNtk4nJvWDD0LHwpdO7+TdFp6KbYW7qdBp61BFJ4qE2jHp8wjWI
+         RfKIg3GHYYlqYSyBe+J+1lcqeznAKRVResZfcc9KU9FCpd4Z6IvqqvsGlssmySrK7H9L
+         WI8jWRZEqRtCW8h8XIrm1toYNWCjEsgWB2jv9NqFSeMYK5S0IIwmkelBnZPhr6oHL0KJ
+         QX2g==
+X-Gm-Message-State: AAQBX9fVQnuURK9LYYU9ZxoLJSaJ7CCtP53myGGxZFw8ik8iWpp7QECh
+        bMDOspob7m1yxxFbiFAGTnxSVQ==
+X-Google-Smtp-Source: AKy350aeucgau/22GFXtw4PeQRuxC9tdMuwBIPqmJpCcUqiPVKp5SlTDFKZSWyO2cijLTxtjdXP/JQ==
+X-Received: by 2002:a17:906:850a:b0:947:92c9:6aa4 with SMTP id i10-20020a170906850a00b0094792c96aa4mr1728486ejx.4.1682071693139;
+        Fri, 21 Apr 2023 03:08:13 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:668b:1e57:3caa:4d06? ([2a02:810d:15c0:828:668b:1e57:3caa:4d06])
+        by smtp.gmail.com with ESMTPSA id ox6-20020a170907100600b008f89953b761sm1884267ejb.3.2023.04.21.03.08.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Apr 2023 03:08:12 -0700 (PDT)
+Message-ID: <a68e1bc8-df55-684e-300c-678565ae1dd6@linaro.org>
+Date:   Fri, 21 Apr 2023 12:08:11 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SDX75 pinctrl
+ devicetree compatible
+Content-Language: en-US
+To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <1682070196-980-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1682070196-980-2-git-send-email-quic_rohiagar@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1682070196-980-2-git-send-email-quic_rohiagar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 21/04/2023 11:43, Rohit Agarwal wrote:
+> Add device tree binding Documentation details for Qualcomm SDX75
+> pinctrl driver.
+> 
+> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
 
-Linus,
+Thank you for your patch. There is something to discuss/improve.
 
-Please pull last two minor fixes from the GPIO subsystem for the upcoming
-release. These are two fixes for potential deadlocks in GPIO drivers.
+> +properties:
+> +  compatible:
+> +    const: qcom,sdx75-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  "#interrupt-cells": true
+> +  gpio-controller: true
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 105
+> +
+> +  gpio-line-names:
+> +    maxItems: 133
 
-Bart
+If you have 210 GPIOs, then this should be 210.
 
-The following changes since commit 09a9639e56c01c7a00d6c0ca63f4c7c41abe075d:
+> +
+> +  "#gpio-cells": true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +patternProperties:
+> +  "-state$":
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-sdx75-tlmm-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-sdx75-tlmm-state"
+> +        additionalProperties: false
+> +
+> +$defs:
+> +  qcom-sdx75-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
 
-  Linux 6.3-rc6 (2023-04-09 11:15:57 -0700)
+unevaluatedProperties: false
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-9])$"
 
-are available in the Git repository at:
+This says you have 210 GPIOs.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.3
+> +            - enum: [ ufs_reset, sdc2_clk, sdc2_cmd, sdc2_data ]
 
-for you to fetch changes up to 2ce987d7eeb168b749494694ae3666de87fc356e:
+Keep these four enum values sorted alphabetically.
 
-  gpio: 104-idi-48: Enable use_raw_spinlock for idi48_regmap_config (2023-04-11 21:08:31 +0200)
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        enum: [ gpio, eth0_mdc, eth0_mdio, eth1_mdc, eth1_mdio,
+> +                qlink0_wmss_reset, qlink1_wmss_reset, rgmii_rxc, rgmii_rxd0,
+> +                rgmii_rxd1, rgmii_rxd2, rgmii_rxd3,rgmii_rx_ctl, rgmii_txc,
+> +                rgmii_txd0, rgmii_txd1, rgmii_txd2, rgmii_txd3, rgmii_tx_ctl,
+> +                adsp_ext_vfr, atest_char_start, atest_char_status0,
+> +                atest_char_status1, atest_char_status2, atest_char_status3,
+> +                audio_ref_clk, bimc_dte_test0, bimc_dte_test1,
+> +                char_exec_pending, char_exec_release, coex_uart2_rx,
+> +                coex_uart2_tx, coex_uart_rx, coex_uart_tx, cri_trng_rosc,
+> +                cri_trng_rosc0, cri_trng_rosc1, dbg_out_clk, ddr_bist_complete,
+> +                ddr_bist_fail, ddr_bist_start, ddr_bist_stop, ddr_pxi0_test,
+> +                ebi0_wrcdc_dq2, ebi0_wrcdc_dq3, ebi2_a_d, ebi2_lcd_cs,
+> +                ebi2_lcd_reset, ebi2_lcd_te, emac0_mcg_pst0, emac0_mcg_pst1,
+> +                emac0_mcg_pst2, emac0_mcg_pst3, emac0_ptp_aux, emac0_ptp_pps,
+> +                emac1_mcg_pst0, emac1_mcg_pst1, emac1_mcg_pst2, emac1_mcg_pst3,
+> +                emac1_ptp_aux0, emac1_ptp_aux1, emac1_ptp_aux2, emac1_ptp_aux3,
+> +                emac1_ptp_pps0, emac1_ptp_pps1, emac1_ptp_pps2, emac1_ptp_pps3,
+> +                emac_cdc_dtest0, emac_cdc_dtest1, emac_pps_in, ext_dbg_uart,
+> +                gcc_125_clk, gcc_gp1_clk, gcc_gp2_clk, gcc_gp3_clk,
+> +                gcc_plltest_bypassnl, gcc_plltest_resetn, i2s_mclk,
+> +                jitter_bist_ref, ldo_en, ldo_update, m_voc_ext, mgpi_clk_req,
+> +                native0, native1, native2, native3, native_char_start,
+> +                native_tsens_osc, native_tsense_pwm1, nav_dr_sync, nav_gpio_0,
+> +                nav_gpio_1, nav_gpio_2, nav_gpio_3, pa_indicator_1, pci_e_rst,
+> +                pcie0_clkreq_n, pcie1_clkreq_n, pcie2_clkreq_n, pll_bist_sync,
+> +                pll_clk_aux, pll_ref_clk, pri_mi2s_data0, pri_mi2s_data1,
+> +                pri_mi2s_sck, pri_mi2s_ws, prng_rosc_test0, prng_rosc_test1,
+> +                prng_rosc_test2, prng_rosc_test3, qdss_cti_trig0,
+> +                qdss_cti_trig1, qdss_gpio_traceclk, qdss_gpio_tracectl,
+> +                qdss_gpio_tracedata0, qdss_gpio_tracedata1,
+> +                qdss_gpio_tracedata10, qdss_gpio_tracedata11,
+> +                qdss_gpio_tracedata12, qdss_gpio_tracedata13,
+> +                qdss_gpio_tracedata14, qdss_gpio_tracedata15,
+> +                qdss_gpio_tracedata2, qdss_gpio_tracedata3,
+> +                qdss_gpio_tracedata4, qdss_gpio_tracedata5,
+> +                qdss_gpio_tracedata6, qdss_gpio_tracedata7,
+> +                qdss_gpio_tracedata8, qdss_gpio_tracedata9, qlink0_b_en,
+> +                qlink0_b_req, qlink0_l_en, qlink0_l_req, qlink1_l_en,
+> +                qlink1_l_req, qup_se0_l0, qup_se0_l1, qup_se0_l2, qup_se0_l3,
+> +                qup_se1_l2, qup_se1_l3, qup_se2_l0, qup_se2_l1, qup_se2_l2,
+> +                qup_se2_l3, qup_se3_l0, qup_se3_l1, qup_se3_l2, qup_se3_l3,
+> +                qup_se4_l2, qup_se4_l3, qup_se5_l0, qup_se5_l1, qup_se6_l0,
+> +                qup_se6_l1, qup_se6_l2, qup_se6_l3, qup_se7_l0, qup_se7_l1,
+> +                qup_se7_l2, qup_se7_l3, qup_se8_l2, qup_se8_l3, sdc1_tb_trig,
+> +                sdc2_tb_trig, sec_mi2s_data0, sec_mi2s_data1, sec_mi2s_sck,
+> +                sec_mi2s_ws, sgmii_phy_intr0, sgmii_phy_intr1, spmi_coex_clk,
+> +                spmi_coex_data, spmi_vgi_hwevent, tgu_ch0_trigout,
+> +                tri_mi2s_data0, tri_mi2s_data1, tri_mi2s_sck, tri_mi2s_ws,
+> +                uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk,
+> +                uim2_data, uim2_present, uim2_reset, usb2phy_ac_en,
+> +                vsense_trigger_mirnat]
+> +
+> +      bias-disable: true
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      drive-strength: true
+> +      input-enable: true
 
-----------------------------------------------------------------
-gpio fixes for v6.3
+This is not allowed. Please rebase on pinctrl maintainer tree or next.
 
-- use raw_spinlocks in regmaps that are used in interrupt context in
-  gpio-104-idi-48 and gpio-104-dio-48e
+> +      output-high: true
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    tlmm: pinctrl@f100000 {
+> +        compatible = "qcom,sdx75-tlmm";
+> +        reg = <0x0f100000 0x300000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&tlmm 0 0 134>;
 
-----------------------------------------------------------------
-William Breathitt Gray (2):
-      gpio: 104-dio-48e: Enable use_raw_spinlock for dio48e_regmap_config
-      gpio: 104-idi-48: Enable use_raw_spinlock for idi48_regmap_config
+Wrong number of pins. You have 210, right? This should be number of
+GPIOs + optionally UFS reset.
 
- drivers/gpio/gpio-104-dio-48e.c | 1 +
- drivers/gpio/gpio-104-idi-48.c  | 1 +
- 2 files changed, 2 insertions(+)
+
+Best regards,
+Krzysztof
+
