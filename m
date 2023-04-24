@@ -2,117 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 226AF6ECE08
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 15:28:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E22876ECE8E
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 15:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232273AbjDXN2u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Apr 2023 09:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
+        id S232304AbjDXNde (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Apr 2023 09:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232300AbjDXN2o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 09:28:44 -0400
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1490F659A;
-        Mon, 24 Apr 2023 06:28:30 -0700 (PDT)
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-18785f07525so1508396fac.3;
-        Mon, 24 Apr 2023 06:28:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682342896; x=1684934896;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BUbITa7M0mz2iZpaowuhtMLwPUGEDWVdrXFE3/RAlpI=;
-        b=PXDy66cH57ZaX/aYpA5kF3FMEXjhIiUJqIIKQoLj1/YAOmrBO2nRORt+EdI4RKCKO5
-         Lm3xIipcfJiCfZ9ViGlBy1Ep0kS4dfZTTOZPzXrWU+XFNwBzGR4DTfo1Ru9oIcoOmW3d
-         oRJEQc0aFrfvpay1+3dGLoSuWpColMfLlipOJlfLh5Vb5gFE+HGx5lO2FjGuyy2nS6QU
-         5Bj11Fq7fqGmIpSQvxER8/kLLs9f6egsuILTJBa8UnxlSkRBJLxRkWu+DE3s3yWVr4Q2
-         RrLNEKUaxpJ868qiPn0pskIxrn/CdoeRPTdmol447JAGKanQtrSuS60GKQK+4A7lGUDT
-         Z1bw==
-X-Gm-Message-State: AAQBX9ehnFNkZ9DPCm4ovteHBTAy+qUgr/5bHDpisCbp1i1WYZJ9RmTB
-        s5NLgceHZmCfIXIDJ2OHrw==
-X-Google-Smtp-Source: AKy350ZNRKoPdi8PRsXdyeVXpHGjJIWBlX1BLCc1hqcgXnHJQReVhG2v85dieRZAzC9x+ey504B+vQ==
-X-Received: by 2002:a05:6870:5249:b0:184:579c:4f07 with SMTP id o9-20020a056870524900b00184579c4f07mr8688765oai.48.1682342896471;
-        Mon, 24 Apr 2023 06:28:16 -0700 (PDT)
-Received: from robh_at_kernel.org ([2605:ef80:80e7:4387:ec9f:155:c2d2:6e82])
-        by smtp.gmail.com with ESMTPSA id h9-20020a056830164900b006a61bef7968sm4551935otr.53.2023.04.24.06.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 06:28:15 -0700 (PDT)
-Received: (nullmailer pid 2494970 invoked by uid 1000);
-        Mon, 24 Apr 2023 13:28:08 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S232429AbjDXNdW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 09:33:22 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968C883C5;
+        Mon, 24 Apr 2023 06:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682343180; x=1713879180;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wc9Cm7TyT7ueaYYlMnAYMYWhzj+Qq3M8FGuFj9g27Nc=;
+  b=miBVIvWjLflJzF1WL54sB/iGy3CbFAAZGjVXqxwtEmEyoGrVOA9AkHhh
+   DYfmLf0ua/a4eh9qgezPI6YcAmkPCITzpWnf8Ws+5H/p/FdHi4LhZfspw
+   I+DdG+QQr5Bf0CbU/cQuOQ8e1dsuURtgWo/VjIAv4OfxCduqkswEVwQ4V
+   9mfb1e1JnEK6WCDk19qgKUfC/sUDIa8t0QPl54eoPdoOqhgO2zchT933j
+   GZX6ZtThPi4J7fx+miPnm0DUbZr01VkyAXaGHrADQo8+lwvTzAsWsgt56
+   FpKfXYhvxakEummxcZQ9ICMqrcy4TWbYrF+JdjYsIeEVW1pafJBCZD8rh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="326060756"
+X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
+   d="scan'208";a="326060756"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 06:31:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="725696135"
+X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
+   d="scan'208";a="725696135"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 24 Apr 2023 06:31:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pqwI7-004XBP-2P;
+        Mon, 24 Apr 2023 16:31:39 +0300
+Date:   Mon, 24 Apr 2023 16:31:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yan Wang <rk.code@outlook.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] gpio: mmio: restroe get multiple gpio mask
+Message-ID: <ZEaEu7Yxd+E53sth@smile.fi.intel.com>
+References: <KL1PR01MB544800D7E51C9209A9BD998BE6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20230424123522.18302-4-nikita.shubin@maquefel.me>
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
- <20230424123522.18302-4-nikita.shubin@maquefel.me>
-Message-Id: <168234254711.2487840.819622568941840833.robh@kernel.org>
-Subject: Re: [PATCH 03/43] dt-bindings: pinctrl: Add DT bindings ep93xx
- pinctrl
-Date:   Mon, 24 Apr 2023 08:28:08 -0500
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <KL1PR01MB544800D7E51C9209A9BD998BE6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Apr 23, 2023 at 05:06:48PM +0800, Yan Wang wrote:
+> Simplify the code,should not modify its logic.
 
-On Mon, 24 Apr 2023 15:34:19 +0300, Nikita Shubin wrote:
-> Add YAML bindings ep93xx SoC.
-> 
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> 
-> Notes:
->     rfc->v0:
->     - dropped separate bindings description, left only one with all groups,
->       functions and etc...
->     - added Alexander Sverdlin to maintainers
->     - added Linus Reviwed-by tags, through i shoudn't =) too many changes
->     - fixed warning and added seq_file header
-> 
->  .../pinctrl/cirrus,ep93xx-pinctrl.yaml        | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,ep93xx-pinctrl.yaml
-> 
+> Fixes: 761b5c30c206 ("gpio: mmio: replace open-coded for_each_set_bit()")
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+What does it fix?
 
-yamllint warnings/errors:
+...
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/cirrus,ep93xx-pinctrl.example.dtb: /example-0/syscon@80930000: failed to match any schema with compatible: ['cirrus,ep9301-syscon', 'syscon', 'simple-mfd']
+>  	for_each_set_bit(i, mask, gc->bgpio_bits) {
+> -		if (test_bit(i, bits))
+> -			*set_mask |= bgpio_line2mask(gc, i);
+> -		else
+> -			*clear_mask |= bgpio_line2mask(gc, i);
+> +		if (*mask == 0)
+> +			break;
 
-doc reference errors (make refcheckdocs):
+Huh?!
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230424123522.18302-4-nikita.shubin@maquefel.me
+We never enter here if mask is 0. So, do not add a dead code, please.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Moreover, in principle mask can be longer than 1 long, this code simply wrong.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+NAK
 
-pip3 install dtschema --upgrade
+> +		if (__test_and_clear_bit(i, mask)) {
+> +			if (test_bit(i, bits))
+> +				*set_mask |= bgpio_line2mask(gc, i);
+> +			else
+> +				*clear_mask |= bgpio_line2mask(gc, i);
+> +		}
+>  	}
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
