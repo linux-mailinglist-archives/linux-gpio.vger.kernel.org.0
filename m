@@ -2,106 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C54DD6ECDF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 15:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 226AF6ECE08
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 15:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbjDXN2m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Apr 2023 09:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55898 "EHLO
+        id S232273AbjDXN2u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Apr 2023 09:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232283AbjDXN2k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 09:28:40 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 825266581;
-        Mon, 24 Apr 2023 06:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682342904; x=1713878904;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eu+Sc69LokNp8v1mXzo9rhtStDP7QgA7iPHkwOtsBFs=;
-  b=RHrHEJJM3qTGN/v/fSVRncb+hBF/kGag4f6NFxtz9h1Q1qk9M5w2XD7a
-   e2kkjXKsGOzfxXzKTUpIdwGzdNoLf4phzQjI4EGQuDrv26XaFRQfqTdF9
-   cHDOgD8TFD1aWYbN1A7YH7MDzl9YmyvqxX5w17cWgj/gogP1YSeh7Gmpx
-   1zF1KEaBa3vm95mQ5iGHG0M/1MdyKO/r40PhwXcdrs4BlH+X7unAEjMea
-   rOKHCQ8j0jHousV1oTThyidkWxQWZTwmG4awQpUeAJyD4PwouzqNjYxh7
-   PqTnu9zIpBPyVEGKcwpwJddvBqeygrRlbWRq9t9ttZo5EwqhdteKrgaTG
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="326059795"
-X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
-   d="scan'208";a="326059795"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 06:28:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="757700335"
-X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
-   d="scan'208";a="757700335"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Apr 2023 06:28:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pqwEb-004X6c-37;
-        Mon, 24 Apr 2023 16:28:01 +0300
-Date:   Mon, 24 Apr 2023 16:28:01 +0300
-From:   'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, linux@armlinux.org.uk,
-        jarkko.nikula@linux.intel.com, olteanv@gmail.com,
-        hkallweit1@gmail.com, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v4 2/8] i2c: designware: Add driver support for
- Wangxun 10Gb NIC
-Message-ID: <ZEaD4ZTfiEALEaSV@smile.fi.intel.com>
-References: <20230422045621.360918-1-jiawenwu@trustnetic.com>
- <20230422045621.360918-3-jiawenwu@trustnetic.com>
- <ZEQKlSIIZi9941Bh@smile.fi.intel.com>
- <000201d9758b$aa3193a0$fe94bae0$@trustnetic.com>
+        with ESMTP id S232300AbjDXN2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 09:28:44 -0400
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1490F659A;
+        Mon, 24 Apr 2023 06:28:30 -0700 (PDT)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-18785f07525so1508396fac.3;
+        Mon, 24 Apr 2023 06:28:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682342896; x=1684934896;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BUbITa7M0mz2iZpaowuhtMLwPUGEDWVdrXFE3/RAlpI=;
+        b=PXDy66cH57ZaX/aYpA5kF3FMEXjhIiUJqIIKQoLj1/YAOmrBO2nRORt+EdI4RKCKO5
+         Lm3xIipcfJiCfZ9ViGlBy1Ep0kS4dfZTTOZPzXrWU+XFNwBzGR4DTfo1Ru9oIcoOmW3d
+         oRJEQc0aFrfvpay1+3dGLoSuWpColMfLlipOJlfLh5Vb5gFE+HGx5lO2FjGuyy2nS6QU
+         5Bj11Fq7fqGmIpSQvxER8/kLLs9f6egsuILTJBa8UnxlSkRBJLxRkWu+DE3s3yWVr4Q2
+         RrLNEKUaxpJ868qiPn0pskIxrn/CdoeRPTdmol447JAGKanQtrSuS60GKQK+4A7lGUDT
+         Z1bw==
+X-Gm-Message-State: AAQBX9ehnFNkZ9DPCm4ovteHBTAy+qUgr/5bHDpisCbp1i1WYZJ9RmTB
+        s5NLgceHZmCfIXIDJ2OHrw==
+X-Google-Smtp-Source: AKy350ZNRKoPdi8PRsXdyeVXpHGjJIWBlX1BLCc1hqcgXnHJQReVhG2v85dieRZAzC9x+ey504B+vQ==
+X-Received: by 2002:a05:6870:5249:b0:184:579c:4f07 with SMTP id o9-20020a056870524900b00184579c4f07mr8688765oai.48.1682342896471;
+        Mon, 24 Apr 2023 06:28:16 -0700 (PDT)
+Received: from robh_at_kernel.org ([2605:ef80:80e7:4387:ec9f:155:c2d2:6e82])
+        by smtp.gmail.com with ESMTPSA id h9-20020a056830164900b006a61bef7968sm4551935otr.53.2023.04.24.06.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 06:28:15 -0700 (PDT)
+Received: (nullmailer pid 2494970 invoked by uid 1000);
+        Mon, 24 Apr 2023 13:28:08 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000201d9758b$aa3193a0$fe94bae0$@trustnetic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20230424123522.18302-4-nikita.shubin@maquefel.me>
+References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+ <20230424123522.18302-4-nikita.shubin@maquefel.me>
+Message-Id: <168234254711.2487840.819622568941840833.robh@kernel.org>
+Subject: Re: [PATCH 03/43] dt-bindings: pinctrl: Add DT bindings ep93xx
+ pinctrl
+Date:   Mon, 24 Apr 2023 08:28:08 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 10:31:09AM +0800, Jiawen Wu wrote:
-> > > +++ b/include/linux/platform_data/i2c-dw.h
-> > 
-> > No way we need this in a new code.
+
+On Mon, 24 Apr 2023 15:34:19 +0300, Nikita Shubin wrote:
+> Add YAML bindings ep93xx SoC.
 > 
-> Do I have to rely on OF or ACPI if I need these parameters?
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 > 
-> > 
-> > > +struct dw_i2c_platform_data {
-> > > +	void __iomem *base;
-> > 
-> > You should use regmap.
+> Notes:
+>     rfc->v0:
+>     - dropped separate bindings description, left only one with all groups,
+>       functions and etc...
+>     - added Alexander Sverdlin to maintainers
+>     - added Linus Reviwed-by tags, through i shoudn't =) too many changes
+>     - fixed warning and added seq_file header
 > 
-> The resource was mapped on the ethernet driver. How do I map it again
-> with I2C offset?
+>  .../pinctrl/cirrus,ep93xx-pinctrl.yaml        | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,ep93xx-pinctrl.yaml
+> 
 
-Create a regmap MMIO and pass the pointer to the child driver via existing
-private members. See how MFD drivers do that, e.g. intel_soc_pmic_*.c.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> > > +	unsigned int flags;
-> > > +	unsigned int ss_hcnt;
-> > > +	unsigned int ss_lcnt;
-> > > +	unsigned int fs_hcnt;
-> > > +	unsigned int fs_lcnt;
-> > 
-> > No, use device properties.
-> > 
-> > > +};
+yamllint warnings/errors:
 
--- 
-With Best Regards,
-Andy Shevchenko
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/cirrus,ep93xx-pinctrl.example.dtb: /example-0/syscon@80930000: failed to match any schema with compatible: ['cirrus,ep9301-syscon', 'syscon', 'simple-mfd']
 
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230424123522.18302-4-nikita.shubin@maquefel.me
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
