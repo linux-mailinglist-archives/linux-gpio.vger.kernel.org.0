@@ -2,105 +2,406 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E22876ECE8E
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 15:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5421B6ED01B
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Apr 2023 16:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232304AbjDXNde (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Apr 2023 09:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
+        id S231446AbjDXOOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Apr 2023 10:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232429AbjDXNdW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 09:33:22 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968C883C5;
-        Mon, 24 Apr 2023 06:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682343180; x=1713879180;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wc9Cm7TyT7ueaYYlMnAYMYWhzj+Qq3M8FGuFj9g27Nc=;
-  b=miBVIvWjLflJzF1WL54sB/iGy3CbFAAZGjVXqxwtEmEyoGrVOA9AkHhh
-   DYfmLf0ua/a4eh9qgezPI6YcAmkPCITzpWnf8Ws+5H/p/FdHi4LhZfspw
-   I+DdG+QQr5Bf0CbU/cQuOQ8e1dsuURtgWo/VjIAv4OfxCduqkswEVwQ4V
-   9mfb1e1JnEK6WCDk19qgKUfC/sUDIa8t0QPl54eoPdoOqhgO2zchT933j
-   GZX6ZtThPi4J7fx+miPnm0DUbZr01VkyAXaGHrADQo8+lwvTzAsWsgt56
-   FpKfXYhvxakEummxcZQ9ICMqrcy4TWbYrF+JdjYsIeEVW1pafJBCZD8rh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="326060756"
-X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
-   d="scan'208";a="326060756"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 06:31:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="725696135"
-X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
-   d="scan'208";a="725696135"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 24 Apr 2023 06:31:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pqwI7-004XBP-2P;
-        Mon, 24 Apr 2023 16:31:39 +0300
-Date:   Mon, 24 Apr 2023 16:31:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yan Wang <rk.code@outlook.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] gpio: mmio: restroe get multiple gpio mask
-Message-ID: <ZEaEu7Yxd+E53sth@smile.fi.intel.com>
-References: <KL1PR01MB544800D7E51C9209A9BD998BE6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
+        with ESMTP id S231214AbjDXOOD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Apr 2023 10:14:03 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9616183
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Apr 2023 07:14:00 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-2f7a7f9667bso2712949f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Apr 2023 07:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1682345639; x=1684937639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cIrOvNnDK3YOPprEDWvUP7TH6l3ojujdYbZDLboXHeQ=;
+        b=C5/BaNrVHKzKCv8bmvgsFkCjXVOVAkiYvvB/XpF1MJJ7J2h2p9mqJ/pPOfrpuYcTou
+         EkZiMb9FW2tFZYnaNMN93UVNTra6XQkvA6XNdP2IucNvMEPiEPmPRgbad/cnjYVOzb69
+         9djjCAyKsAj6w181zL/TczEMMH0PSOhkpBe7KHt5Dst1cvEy9A6kC+IQcZZffrZVDdWV
+         6zGs6feDCoZ6mUrOKkdbOINehPk0PoCbKyu1O/3o4d2mRW6CGZDBpuBJc5xpw8Jss+er
+         RDC0XVG8YjNfxP+h+oF7mOj2ZhxqalxWXsbkMsDYM0oQwPQkw6ZU6kHyAbQ4wnCTIMTj
+         CdiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682345639; x=1684937639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cIrOvNnDK3YOPprEDWvUP7TH6l3ojujdYbZDLboXHeQ=;
+        b=Tx/Zg9kol3H6EUiFl5w1J9Zg0SI72r8lmRlqMSUP01buf6MpoCzFNHDavOd3mV46ps
+         hPY7kyeDq2xmSt/vzKZ8hnFW+a3vcXw2FVXDIn7yjxqcOIOJZ4GFKWzZkvuFiXLTWbfB
+         Oa+8A8bRJHHq9IyCGxV9gQWkLzhXIAel8rgcbUGqUoi0UcEGZo+p/kA1VkmsgUJUsF5S
+         ScQhQO6w9tVdWVeinyN9rla8+qOuLFbbyUifGRlX4Co3HnHDCpgUK6p8Yyw2Bmx38I0Q
+         pNrI4hXpLEcDf8GtSSafjetQ7+fS3er0BJ7hlXV+A88du+Gj2JQCn0FL1Y3sM3egcChk
+         LV0w==
+X-Gm-Message-State: AAQBX9cGQicrvJqjEP0Pi+tDpmT9SWjt44vH8wuQLQlm7VopgpncglG3
+        Yi4dqTryKlnvi30t5c6BEa//Zw==
+X-Google-Smtp-Source: AKy350Y4T4ghVMKPBUr+c2Hr6CiBXhCbSw31hyyVujD8ZchcuP1MHmLR+HvQCSsmpyowr4FjxHTvWg==
+X-Received: by 2002:a05:6000:14d:b0:2f9:46dd:d6fa with SMTP id r13-20020a056000014d00b002f946ddd6famr9425129wrx.37.1682345639176;
+        Mon, 24 Apr 2023 07:13:59 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:c9b3:7cb4:1e81:ba4])
+        by smtp.gmail.com with ESMTPSA id l11-20020a5d674b000000b0030276f42f08sm9586765wrw.88.2023.04.24.07.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 07:13:58 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: updates for v6.4
+Date:   Mon, 24 Apr 2023 16:13:54 +0200
+Message-Id: <20230424141354.7168-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <KL1PR01MB544800D7E51C9209A9BD998BE6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 05:06:48PM +0800, Yan Wang wrote:
-> Simplify the code,should not modify its logic.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Fixes: 761b5c30c206 ("gpio: mmio: replace open-coded for_each_set_bit()")
+Linus,
 
-What does it fix?
+This is the main pull-request for this merge window from the GPIO subsystem.
+We have some new drivers, significant refactoring of existing intel platforms,
+lots of improvements all around, mass conversion to using immutable irqchips by
+drivers that had not been converted individually yet and some changes in the
+core library code.
 
-...
+Nothing is really controversial and everything has been in next for at least
+two weeks.
 
->  	for_each_set_bit(i, mask, gc->bgpio_bits) {
-> -		if (test_bit(i, bits))
-> -			*set_mask |= bgpio_line2mask(gc, i);
-> -		else
-> -			*clear_mask |= bgpio_line2mask(gc, i);
-> +		if (*mask == 0)
-> +			break;
+There are usual merges from Andy for intel platforms and one merge from the
+regmap subsystem pulling in changes required by GPIO commits.
 
-Huh?!
+Please pull,
+Bartosz
 
-We never enter here if mask is 0. So, do not add a dead code, please.
+The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6:
 
-Moreover, in principle mask can be longer than 1 long, this code simply wrong.
+  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
 
-NAK
+are available in the Git repository at:
 
-> +		if (__test_and_clear_bit(i, mask)) {
-> +			if (test_bit(i, bits))
-> +				*set_mask |= bgpio_line2mask(gc, i);
-> +			else
-> +				*clear_mask |= bgpio_line2mask(gc, i);
-> +		}
->  	}
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.4
 
--- 
-With Best Regards,
-Andy Shevchenko
+for you to fetch changes up to 8a4adcf67a39b3f308bb8cf686e41c0e26aa12e8:
 
+  gpio: gpiolib: Simplify gpiochip_add_data_with_key() fwnode (2023-04-11 21:13:34 +0200)
 
+----------------------------------------------------------------
+gpio updates for v6.4-rc1
+
+New drivers:
+- add a driver for the Loongson GPIO controller
+- add a driver for the fxl6408 I2C GPIO expander
+- add a GPIO module containing code common for Intel Elkhart Lake and
+  Merrifield platforms
+- add a driver for the Intel Elkhart Lake platform reusing the code from
+  the intel tangier library
+
+GPIOLIB core:
+- GPIO ACPI improvements
+- simplify gpiochip_add_data_with_keys() fwnode handling
+- cleanup header inclusions (remove unneeded ones, order the rest
+  alphabetically)
+- remove duplicate code (reuse krealloc() instead of open-coding it, drop
+  a duplicated check in gpiod_find_and_request())
+- reshuffle the code to remove unnecessary forward declarations
+- coding style cleanups and improvements
+- add a helper for accessing device fwnodes
+- small updates in docs
+
+Driver improvements:
+- convert all remaining GPIO irqchip drivers to using immutable irqchips
+- drop unnecessary of_match_ptr() macro expansions
+- shrink the code in gpio-merrifield significantly by reusing the code from
+  gpio-tangier + minor tweaks to the driver code
+- remove MODULE_LICENSE() from drivers that can only be built-in
+- add device-tree support to gpio-loongson1
+- use new regmap features in gpio-104-dio-48e and gpio-pcie-idio-24
+- minor tweaks and fixes to gpio-xra1403, gpio-sim, gpio-tegra194, gpio-omap,
+  gpio-aspeed, gpio-raspberrypi-exp
+- shrink code in gpio-ich and gpio-pxa
+- Kconfig tweak for gpio-pmic-eic-sprd
+
+----------------------------------------------------------------
+Andrew Davis (1):
+      gpio: ich: Use devm_gpiochip_add_data() to simplify remove path
+
+Andy Shevchenko (24):
+      gpio: aggregator: Add missing header(s)
+      gpio: reg: Add missing header(s)
+      gpio: regmap: Add missing header(s)
+      gpiolib: Drop unused forward declaration from driver.h
+      gpiolib: Deduplicate forward declarations in consumer.h
+      gpiolib: Group forward declarations in consumer.h
+      gpiolib: Clean up headers
+      gpio: merrifield: Use dev_err_probe()
+      gpio: merrifield: Utilise temporary variable for struct device
+      gpiolib: Access device's fwnode via dev_fwnode()
+      gpiolib: Get rid of gpio_bus_match() forward declaration
+      gpio: sim: Deactivate device in reversed order
+      gpiolib: Get rid of devprop prefix in one function
+      gpiolib: Move gpiodevice_*() to gpiodev namespace
+      gpiolib: Remove duplicative check in gpiod_find_and_request()
+      gpiolib: Use IRQ hardware number getter instead of direct access
+      Documentation: gpio: Input mode is not true Hi-Z
+      powerpc/40x: Add missing select OF_GPIO_MM_GPIOCHIP
+      gpio: mm-lantiq: Fix typo in the newly added header filename
+      gpiolib: acpi: Move ACPI device NULL check to acpi_get_driver_gpio_data()
+      gpiolib: Replace open coded krealloc()
+      gpiolib: Check array_info for NULL only once in gpiod_get_array()
+      gpiolib: Move gpiochip_get_data() higher in the code
+      gpiolib: Add gpiochip_set_data() helper
+
+Arnd Bergmann (8):
+      gpiolib: remove empty asm/gpio.h files
+      gpiolib: coldfire: remove custom asm/gpio.h
+      gpiolib: remove asm-generic/gpio.h
+      gpiolib: remove gpio_set_debounce()
+      gpiolib: remove legacy gpio_export()
+      gpiolib: split linux/gpio/driver.h out of linux/gpio.h
+      gpiolib: split of_mm_gpio_chip out of linux/of_gpio.h
+      mips: ar7: include linux/gpio/driver.h
+
+Bartosz Golaszewski (3):
+      Merge tag 'intel-gpio-v6.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+      Merge tag 'regmap-no-status' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap into gpio/for-next
+      Merge tag 'intel-gpio-v6.4-2' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+
+Benjamin Tissoires (1):
+      gpiolib: acpi: use the fwnode in acpi_gpiochip_find()
+
+Emanuele Ghidoli (2):
+      dt-bindings: gpio: add fcs,fxl6408
+      gpio: fxl6408: add I2C GPIO expander driver
+
+Geert Uytterhoeven (1):
+      sh: mach-x3proto: Add missing #include <linux/gpio/driver.h>
+
+Jiapeng Chong (1):
+      gpio: loongson: Remove unnecessary .owner
+
+Joel Stanley (1):
+      gpio: aspeed: Always register the irqchip
+
+Keguang Zhang (4):
+      gpio: loongson1: Convert to SPDX identifier
+      gpio: loongson1: Introduce ls1x_gpio_chip struct
+      dt-bindings: gpio: Add Loongson-1 GPIO
+      gpio: loongson1: Add DT support
+
+Krzysztof Kozlowski (9):
+      MAINTAINERS: gpio: xra1403: drop Semi Malinen
+      gpio: ftgpio010: drop of_match_ptr for ID table
+      gpio: altera: drop of_match_ptr for ID table
+      gpio: rcar: drop of_match_ptr for ID table
+      gpio: visconti: drop of_match_ptr for ID table
+      gpio: sifive: drop of_match_ptr for ID table
+      gpio: sama5d2-piobu: drop of_match_ptr for ID table
+      gpio: xra1403: mark OF related data as maybe unused
+      gpio: raspberrypi-exp: mark OF related data as maybe unused
+
+Linus Walleij (31):
+      gpio: pmic-eic-sprd: Move Kconfig to MFD expanders
+      ARM: orion/gpio: Use the right include
+      ARM: s3c64xx: Use the right include
+      hte: tegra-194: Use proper includes
+      gpiolib: Make the legacy <linux/gpio.h> consumer-only
+      gpio: altera: Convert to immutable irq_chip
+      gpio: adnp: Convert to immutable irq_chip
+      gpio: aspeed: Convert to immutable irq_chip
+      gpio: aspeed-sgpio: Convert to immutable irq_chip
+      gpio: ath79: Convert to immutable irq_chip
+      gpio: cadence: Convert to immutable irq_chip
+      gpio: hisi: Convert to immutable irq_chip
+      gpio: hlwd: Convert to immutable irq_chip
+      gpio: idt3243x: Convert to immutable irq_chip
+      gpio: msc313: Convert to immutable irq_chip
+      gpio: mlxbf2: Convert to immutable irq_chip
+      gpio: max732x: Convert to immutable irq_chip
+      gpio: omap: Drop irq_base
+      gpio: omap: Convert to immutable irq_chip
+      gpio: pci-idio-16: Convert to immutable irq_chip
+      gpio: pcie-idio-24: Convert to immutable irq_chip
+      gpio: rda: Convert to immutable irq_chip
+      gpio: siox: Convert to immutable irq_chip
+      gpio: stmpe: Convert to immutable irq_chip
+      gpio: thunderx: Convert to immutable irq_chip
+      gpio: tqmx86: Convert to immutable irq_chip
+      gpio: visconti: Convert to immutable irq_chip
+      gpio: xgs-iproc: Convert to immutable irq_chip
+      gpio: xilinx: Convert to immutable irq_chip
+      gpio: xlp: Convert to immutable irq_chip
+      gpio: gpiolib: Simplify gpiochip_add_data_with_key() fwnode
+
+Nick Alcock (3):
+      gpio: remove MODULE_LICENSE in non-modules
+      kbuild, gpio: remove MODULE_LICENSE in non-modules
+      kbuild, gpio: gpio-aspeed-sgpio: remove MODULE_LICENSE in non-modules
+
+Pandith N (3):
+      gpio: tangier: Introduce Intel Tangier GPIO driver
+      gpio: merrifield: Adapt to Intel Tangier GPIO driver
+      gpio: elkhartlake: Introduce Intel Elkhart Lake PSE GPIO
+
+Rob Herring (1):
+      gpio: Use of_property_read_bool() for boolean properties
+
+Tom Rix (1):
+      gpio: pxa: remove unused gpio_is_pxa_type function
+
+Trevor Woerner (1):
+      dt-bindings: gpio.txt: expand gpio-line-names recommendations
+
+Werner Sembach (1):
+      gpiolib: acpi: Add a ignore wakeup quirk for Clevo NL5xNU
+
+William Breathitt Gray (4):
+      regmap-irq: Add no_status support
+      gpio: 104-dio-48e: Utilize mask_buf_def in handle_mask_sync() callback
+      gpio: pcie-idio-24: Prune superfluous license boilerplate
+      gpio: 104-dio-48e: Utilize no_status regmap-irq flag
+
+Yinbo Zhu (3):
+      dt-bindings: gpio: add loongson gpio
+      gpio: loongson: add gpio driver support
+      gpio: loongson: fixup the warning about OF_GPIO direct dependencies
+
+ Documentation/admin-guide/gpio/sysfs.rst           |   2 +-
+ .../devicetree/bindings/gpio/fcs,fxl6408.yaml      |  58 +++
+ Documentation/devicetree/bindings/gpio/gpio.txt    |  41 +-
+ .../devicetree/bindings/gpio/loongson,ls-gpio.yaml | 126 +++++
+ .../bindings/gpio/loongson,ls1x-gpio.yaml          |  49 ++
+ Documentation/driver-api/gpio/driver.rst           |   8 +-
+ Documentation/driver-api/gpio/legacy.rst           |  23 -
+ .../translations/zh_CN/driver-api/gpio/legacy.rst  |  20 -
+ Documentation/translations/zh_TW/gpio.txt          |  19 -
+ MAINTAINERS                                        |  11 +-
+ arch/arm/Kconfig                                   |   1 -
+ arch/arm/include/asm/gpio.h                        |  21 -
+ arch/arm/mach-omap1/irq.c                          |   1 +
+ arch/arm/mach-omap2/pdata-quirks.c                 |   9 +-
+ arch/arm/mach-orion5x/board-rd88f5182.c            |   1 +
+ arch/arm/mach-s3c/s3c64xx.c                        |   2 +-
+ arch/arm/mach-sa1100/assabet.c                     |   1 +
+ arch/arm/plat-orion/gpio.c                         |   5 +-
+ arch/m68k/Kconfig.cpu                              |   1 -
+ arch/m68k/include/asm/gpio.h                       |  95 ----
+ arch/m68k/include/asm/mcfgpio.h                    |   2 +-
+ arch/mips/ar7/gpio.c                               |   2 +-
+ arch/powerpc/platforms/40x/Kconfig                 |   1 +
+ arch/powerpc/platforms/44x/Kconfig                 |   1 +
+ arch/powerpc/platforms/4xx/gpio.c                  |   2 +-
+ arch/powerpc/platforms/8xx/Kconfig                 |   1 +
+ arch/powerpc/platforms/8xx/cpm1.c                  |   2 +-
+ arch/powerpc/platforms/Kconfig                     |   2 +
+ arch/powerpc/sysdev/cpm_common.c                   |   2 +-
+ arch/sh/Kconfig                                    |   1 -
+ arch/sh/boards/board-magicpanelr2.c                |   1 +
+ arch/sh/boards/mach-ap325rxa/setup.c               |   7 +-
+ arch/sh/boards/mach-x3proto/setup.c                |   2 +-
+ arch/sh/include/asm/gpio.h                         |  45 --
+ drivers/base/regmap/regmap-irq.c                   |  22 +-
+ drivers/gpio/Kconfig                               |  81 +++-
+ drivers/gpio/Makefile                              |   4 +
+ drivers/gpio/TODO                                  |  15 +-
+ drivers/gpio/gpio-104-dio-48e.c                    |  11 +-
+ drivers/gpio/gpio-adnp.c                           |   9 +-
+ drivers/gpio/gpio-aggregator.c                     |   9 +-
+ drivers/gpio/gpio-altera.c                         |  29 +-
+ drivers/gpio/gpio-aspeed-sgpio.c                   |  45 +-
+ drivers/gpio/gpio-aspeed.c                         |  82 ++--
+ drivers/gpio/gpio-ath79.c                          |   8 +-
+ drivers/gpio/gpio-cadence.c                        |  10 +-
+ drivers/gpio/gpio-davinci.c                        |   2 -
+ drivers/gpio/gpio-elkhartlake.c                    |  90 ++++
+ drivers/gpio/gpio-ftgpio010.c                      |   2 +-
+ drivers/gpio/gpio-fxl6408.c                        | 158 ++++++
+ drivers/gpio/gpio-hisi.c                           |  25 +-
+ drivers/gpio/gpio-hlwd.c                           |  33 +-
+ drivers/gpio/gpio-ich.c                            |  10 +-
+ drivers/gpio/gpio-idt3243x.c                       |  11 +-
+ drivers/gpio/gpio-imx-scu.c                        |   1 -
+ drivers/gpio/gpio-loongson-64bit.c                 | 238 +++++++++
+ drivers/gpio/gpio-loongson1.c                      |  71 +--
+ drivers/gpio/gpio-max732x.c                        |   8 +-
+ drivers/gpio/gpio-merrifield.c                     | 453 ++---------------
+ drivers/gpio/gpio-mlxbf2.c                         |  32 +-
+ drivers/gpio/gpio-mm-lantiq.c                      |   2 +-
+ drivers/gpio/gpio-mpc5200.c                        |   2 +-
+ drivers/gpio/gpio-msc313.c                         |  26 +-
+ drivers/gpio/gpio-mxs.c                            |   1 -
+ drivers/gpio/gpio-omap.c                           |  83 ++--
+ drivers/gpio/gpio-pci-idio-16.c                    |  12 +-
+ drivers/gpio/gpio-pcie-idio-24.c                   |  21 +-
+ drivers/gpio/gpio-pxa.c                            |   5 -
+ drivers/gpio/gpio-raspberrypi-exp.c                |   2 +-
+ drivers/gpio/gpio-rcar.c                           |   2 +-
+ drivers/gpio/gpio-rda.c                            |  23 +-
+ drivers/gpio/gpio-reg.c                            |  12 +-
+ drivers/gpio/gpio-regmap.c                         |  12 +-
+ drivers/gpio/gpio-sama5d2-piobu.c                  |   2 +-
+ drivers/gpio/gpio-sifive.c                         |   2 +-
+ drivers/gpio/gpio-sim.c                            |   2 +-
+ drivers/gpio/gpio-siox.c                           |  75 +--
+ drivers/gpio/gpio-stmpe.c                          |   8 +-
+ drivers/gpio/gpio-stp-xway.c                       |   2 +-
+ drivers/gpio/gpio-tangier.c                        | 536 +++++++++++++++++++++
+ drivers/gpio/gpio-tangier.h                        | 117 +++++
+ drivers/gpio/gpio-tb10x.c                          |   2 +-
+ drivers/gpio/gpio-thunderx.c                       |  26 +-
+ drivers/gpio/gpio-tqmx86.c                         |  28 +-
+ drivers/gpio/gpio-visconti.c                       |  52 +-
+ drivers/gpio/gpio-xgs-iproc.c                      |  32 +-
+ drivers/gpio/gpio-xilinx.c                         |  23 +-
+ drivers/gpio/gpio-xlp.c                            |  14 +-
+ drivers/gpio/gpio-xra1403.c                        |   2 +-
+ drivers/gpio/gpiolib-acpi.c                        |  36 +-
+ drivers/gpio/gpiolib-acpi.h                        |   1 -
+ drivers/gpio/gpiolib-of.c                          |   9 +-
+ drivers/gpio/gpiolib-of.h                          |   1 -
+ drivers/gpio/gpiolib-swnode.c                      |   5 +-
+ drivers/gpio/gpiolib-sysfs.c                       |  25 +-
+ drivers/gpio/gpiolib.c                             | 173 ++++---
+ drivers/hte/hte-tegra194-test.c                    |  10 +-
+ drivers/input/touchscreen/ads7846.c                |   5 +-
+ drivers/media/pci/sta2x11/sta2x11_vip.c            |  10 +-
+ drivers/net/ieee802154/ca8210.c                    |   3 +-
+ .../net/wireless/broadcom/brcm80211/brcmsmac/led.c |   1 +
+ drivers/pinctrl/core.c                             |   1 -
+ drivers/soc/fsl/qe/gpio.c                          |   2 +-
+ include/asm-generic/gpio.h                         | 147 ------
+ include/linux/gpio.h                               | 104 ++--
+ include/linux/gpio/consumer.h                      |  24 +-
+ include/linux/gpio/driver.h                        |  31 +-
+ include/linux/gpio/legacy-of-mm-gpiochip.h         |  36 ++
+ include/linux/mfd/ucb1x00.h                        |   1 +
+ include/linux/of_gpio.h                            |  21 -
+ include/linux/regmap.h                             |   2 +
+ 111 files changed, 2428 insertions(+), 1370 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/fcs,fxl6408.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls1x-gpio.yaml
+ delete mode 100644 arch/arm/include/asm/gpio.h
+ delete mode 100644 arch/m68k/include/asm/gpio.h
+ delete mode 100644 arch/sh/include/asm/gpio.h
+ create mode 100644 drivers/gpio/gpio-elkhartlake.c
+ create mode 100644 drivers/gpio/gpio-fxl6408.c
+ create mode 100644 drivers/gpio/gpio-loongson-64bit.c
+ create mode 100644 drivers/gpio/gpio-tangier.c
+ create mode 100644 drivers/gpio/gpio-tangier.h
+ delete mode 100644 include/asm-generic/gpio.h
+ create mode 100644 include/linux/gpio/legacy-of-mm-gpiochip.h
