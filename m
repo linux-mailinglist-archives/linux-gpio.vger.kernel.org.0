@@ -2,104 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C78DC6EE855
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Apr 2023 21:37:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 037616EE899
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Apr 2023 21:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236092AbjDYThC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Apr 2023 15:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52508 "EHLO
+        id S236176AbjDYTuM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Apr 2023 15:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235995AbjDYTgq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Apr 2023 15:36:46 -0400
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [IPv6:2a0b:5c81:1c1::37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19E56A4C;
-        Tue, 25 Apr 2023 12:36:42 -0700 (PDT)
-Received: from darkstar.musicnaut.iki.fi (85-76-14-243-nat.elisa-mobile.fi [85.76.14.243])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: aaro.koskinen)
-        by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4Q5XLZ64GVz49Q1p;
-        Tue, 25 Apr 2023 22:36:38 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-        t=1682451399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gGy2QBjXXOXxgYHJIAtsdMoypJDn9P67QK6JeYyevLI=;
-        b=F9tf2aSCiHq9IZpX0fZUuDOFv1tNBtbTgPEEntHE/PgD+mH/KwzSOBgeGwf5KwOhQJ4rtq
-        8wWs1NqOp4sfpc5V3EuGcv49RvFrtk+bCYajyOG4xRUfTZ5Kcdia+PCtdMV6dg1Lj2HwGF
-        UsLcEAMvevuRGTzaBJqalE1ZroFQ4SH2ObX6po8p2lfNfUltskBuwLbaV5hrsgnziIcuED
-        i9Lpi99B9PCDO/g7TAfiaZY9obdqIa0Adh+UIL7Kz6E9dCc2PNuSfOEStlKL8kKZMA9Fjg
-        7M9Gha2tcN6o8ysJNPBL5PbGfmye48GsTVilTFTr3GWhfEHAJJnAL5l5ZtO6Eg==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1682451399; a=rsa-sha256;
-        cv=none;
-        b=LSz8fWN9PhZxSDYtsfGpLjV83nnEgNPLbrJ4Fx6qLLAKAGdP2RLDYNKY0SSXBHqsDwuftl
-        G4AQLVDYzTLlCUYdoAFisMZYBlD3Sqw+rm9IL+LkzDkS6enCnj2W76YRye63aV77FjQAIs
-        Qn/ENZ96sNSe6vKpIkeoTwWuZZXiM/fKjficpjnNPuCz3nJFXGLfQmXkj5a7NQBGvDgfYm
-        w/hEuzUnidFRcyshfGLg2MIPIO0g0VSl3aATGBprxd2ELBWpksABxxC4eKh1mBjm3LYIeF
-        HMCyNn7ymnqINfd/sM/uC1tNEYM4/3vkAvde/G74hMK8QO+us9Na0D6Wepiivg==
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=aaro.koskinen smtp.mailfrom=aaro.koskinen@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-        s=lahtoruutu; t=1682451399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gGy2QBjXXOXxgYHJIAtsdMoypJDn9P67QK6JeYyevLI=;
-        b=jx+US4jthAMMpQ27/SJR2GYjsEj7E0f6T3ROzA15te5AYw9tAIcun7uNvCi75DhwdFnbce
-        Z0NujQtTFSU2rTyNKTXSnF6QvUQqY/KtAznVRZktYKEETamr31z5c/ar74cLkQ74AWhVHN
-        tN4duwz+t/KZenfqa8e0ujRmMBDG80ynbrxk097a8jFZw3csDEkBw7oFZOWhrfyaLLZAXG
-        Cu6iBgauGXvg5dm46OXRBPrVYLWRac9vxzHijS8EFm9+6x1GIYrQ/y6ZXN7hd2b2WiEAnl
-        8fI977MwYydvCE0op5TydcCCzoQuCWgN0q1wezsaGsWFquTfOqD3GzF7jHeB5w==
-Date:   Tue, 25 Apr 2023 22:36:37 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org
-Subject: Re: [BISECTED REGRESSION] OMAP1 GPIO breakage
-Message-ID: <20230425193637.GH444508@darkstar.musicnaut.iki.fi>
-References: <20230425173241.GF444508@darkstar.musicnaut.iki.fi>
- <20230425201117.457f224c@aktux>
- <20230425183857.GG444508@darkstar.musicnaut.iki.fi>
- <20230425212040.5a4d5b09@aktux>
-MIME-Version: 1.0
+        with ESMTP id S234754AbjDYTuL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Apr 2023 15:50:11 -0400
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2088.outbound.protection.outlook.com [40.107.15.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B9A30EB;
+        Tue, 25 Apr 2023 12:50:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O6VPW9W20IGEHF3jZ0eHMH5zA5a9XP2oJWSoC/cXSXCfVXtOywqAfUgVVSJ4hzSss2N1r++OAPPVOdfe97GY6RQttefX3y7nXeeF3hJRQQppU2jJQEedOoW3hJojbL82T5Aw0yWMcTEziuXTsUsi0TgwH7+vGS6mzxiiMrZB9EFwvtbpiPSNIkXR5w2Xpw5KzeWOFw0tY9F9RWDJW+qsnTPCrIlMjDlRiLib8srmuAc4J++7MFtlRPH70Oh1WsdgMDQ3x3hWzBZk+pAAavHGHa2sOXKK1qH3UWbXYraQ8VgDTITbiMsLdJeKbe7aajaDhFNUcf8l2Zz7CPBeqs9xnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xPUSvF7LN1rVFVxFdogdQ2h+NrHGM3qeAPXi8cgk6bY=;
+ b=nwG8WZapTJyOykVmzvZrEqhC4KAEZZ2m0fbmH4S8uSWZ11FpG15FEyO4ojDuHHyKimyl/Ym9NgfrE9XA4IQwOnEZDVtXhwh2Z4B5Aggj0rP5juzBPzXb2y4s7lS8GS9JCzbYecLUX5MiZA30p4QPkWsaeWREqKfMOy+43VKDir58X7pBRF+lnylbDjbS8uFGXrtr1K2q++QHv/BlXheIXm8E+FFRSh5WfGW+xqDXYS2BCawuf9ZwoGxf2IR+RDMiSO9HRDrpDRWc7DPgb+xflPrFWmJSV+T+sNTdmuLLel4cFwaiZFKAZBc+O95TlRlIsvL49qyds8JY75ZluK7NKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xPUSvF7LN1rVFVxFdogdQ2h+NrHGM3qeAPXi8cgk6bY=;
+ b=gu2x2vMOrkc/tXkm/xP+3QbdGfzdlCMyW3KLM8D5dl0DbSf5f41RE6Oeb4ZeOYNQ+raV2L+sg6aJv+V7PF8g6FidA7WwVv7WsmPI4HPIV5XSK9gw5sp4QPwTXUDpEAs4lr5dvxTIPJkgO82D4kDg+FO8MlaJCw81HoVpcdR1GVE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
+ by PA4PR04MB7663.eurprd04.prod.outlook.com (2603:10a6:102:e9::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Tue, 25 Apr
+ 2023 19:50:07 +0000
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::245a:9272:b30a:a21c]) by AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::245a:9272:b30a:a21c%3]) with mapi id 15.20.6319.033; Tue, 25 Apr 2023
+ 19:50:06 +0000
+Date:   Tue, 25 Apr 2023 22:50:02 +0300
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?utf-8?Q?Fern=C3=A1ndez?= Rojas <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
+Message-ID: <20230425195002.fls5cmwolyrslpad@skbuf>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230425212040.5a4d5b09@aktux>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230413160607.4128315-1-sean.anderson@seco.com>
+X-ClientProxiedBy: AM0PR06CA0141.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::46) To AM0PR04MB6452.eurprd04.prod.outlook.com
+ (2603:10a6:208:16d::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|PA4PR04MB7663:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f959091-4d7c-4a30-3640-08db45c644e6
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xooMwcBQ0eonaiXtYvJPguQzI61gN3Vhekhw5v6JVsWgyWj+3ZwCdak1WIwn3Cl/7bj9UlBFqBvWPXo/POwExlb9dmUgI8UDzic5aOj60hkee4allPlfD/a2M64/rE8140jfRcmWyH1E4BLsK5JNP6Jk/ZSD9mkrIikAl65Sqt9akuX3J0qPcE+KoI2s5GWbkeelYRcXNIwGTuWVIQ5X3tM5VkGSHXDwqkwtif1G2QaUuTvtzbCxRJLfeYV8jR4gWdW5QU2Rt8Kl8z/tJUmpIvb8TvTbDRe36aPFx7gZH1B+HPKwB562t5E+qbwAXQpX7pYN8jKjoOdNU7zQ5nLYJ0rF202DpelRDoMTfAouliVjI3HHPjRmluZj5ithj56lFZ/OdIoYSU6auNdaUeBZ5XR7+S+5PG1cmQFB8Q5dB3mdGto1Dfihrs4lnZ5F7etcXipaSPnWtncAQN8PlShAXYasCfr0RvLmJOx8AxgCqbYpDWi83jXnTFl3yPKQoFsttRLEvNbb7vVd+gMJcBTraiGKJ45AUklPOR0hGGRZTZgcpv0LDhbDcHdT/1kIZIqE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(376002)(136003)(39860400002)(346002)(366004)(396003)(451199021)(38100700002)(66899021)(83380400001)(33716001)(44832011)(478600001)(186003)(7416002)(54906003)(2906002)(6666004)(6486002)(26005)(9686003)(6506007)(1076003)(6512007)(8936002)(41300700001)(316002)(5660300002)(4326008)(66556008)(66476007)(66946007)(6916009)(8676002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B7+8Y6IO8WS/ulvfXdLmfVNgnB3muD82SLwVgv4XTuthjwWdcmtM3DWoO4jK?=
+ =?us-ascii?Q?+z6nOmf2ZJJvTbw8iQPJ1nq1Ztqo+vIvrgBJ42nUlXWnCPxmdIWb8HA1C3EE?=
+ =?us-ascii?Q?ch2aHMQTgJ61Hyfoe9ejaqReUvQXek/7ff3lG8QzNpukWLBaFwoxg38zTru6?=
+ =?us-ascii?Q?AdL5WHJ+f9hH2wvbI18RdTMv4eIvovl44SaUls2NL4z/pusB6gPNcGLWSG9f?=
+ =?us-ascii?Q?NvK8nbP2Lyo4WUIOfi1SNqzlBwShpQEbZJetzUGOUy8q0G3FLgrZINQ3Mblm?=
+ =?us-ascii?Q?4GzaSK9nevtaE/8GX6k9oVv7ewYudtOCIsLYKXBiYf0P280XbR/enhqU6Cia?=
+ =?us-ascii?Q?udgp+Trv61g6GVICTC/YYFGREZLjorRfYLYp/tuhuoyrkCMpr10sboaCgrdU?=
+ =?us-ascii?Q?03m9a24YaGrs8p+Pza4k+xSa/n9sR0OCsacKPzQPuyuX/NO1fOfLn80xeF9t?=
+ =?us-ascii?Q?CYK5IV75u0a04V+Jp5NGPd5R83kYwzMGt1F2rrNMuaeFNsoUk7nvqj4DMt8y?=
+ =?us-ascii?Q?1fM7cnRVeYg7mvAmXjr1fLpwTgh7tmGOlqt9YjSEaNaVB0F+k/otiPtrX/Uu?=
+ =?us-ascii?Q?fmEyxG5J3q9tUHHqjH94J1kNfMGeNw2PM1Iy2E7CmzQRUaS3KWc88AeDjKRF?=
+ =?us-ascii?Q?o53IK4fnoFQ9qvZCMuiN5wDctcgwsAndyMlj6a355O1x2VIMwvyZXx8XTouK?=
+ =?us-ascii?Q?5nKMwrqgbduFvXvNYnL8euD5lS160vBQQjAcfvW8l/BvGajSSaY5PLRkWNbY?=
+ =?us-ascii?Q?CeF9f5SESzWrIv8ltux70cD+YtsEjlg2iRZWgXVvw+KhbK27gtJIUmxXybY2?=
+ =?us-ascii?Q?0CrtbtA6bp0gjj0Kd5/DiAC43lHSq0gE3v3zzUfeuO4L9IKISzzMkvrQR9Dl?=
+ =?us-ascii?Q?mxaFUcEZPcc/3TmENKX7X7aW9CWKSwlbUrgcUrkSRrE0NgKHGliNRqUGIta6?=
+ =?us-ascii?Q?cAo0LkhKOcwJzEt9U9oNeQKujp4EvBmoRJ0LATbWQfvpO/2YD7Y/CT+iOP2e?=
+ =?us-ascii?Q?5Ez7V+LCFm6ipPx9pvEqlrzwCaichW3iVwoQlbM3gUImlcWowOj/4v+QEvMr?=
+ =?us-ascii?Q?bhg19rWKhdwnRnhz2mxo0eBf6lS+9xlVOK35F1eHbdU10G8ze9at4WGRqPG0?=
+ =?us-ascii?Q?vHVZ+jbIQanCidWbi5Cp1+W9hkU7aPkw16t/pL42IsTlxcg2LTdF7QkgYik0?=
+ =?us-ascii?Q?lk/i+jRbeCZwEphPgyCxcb8UZ3G4C0ek+pwFXY3LLqpCvyNSslveMHFraCRA?=
+ =?us-ascii?Q?RvV894WmE2bVtzuW1UY1nYLXSIzraDoqPMY3PCMDOu22ojAyrsTElQpb8tRE?=
+ =?us-ascii?Q?ZcgzmCX26dRiqnm0IuEAoTTW6B2VMRqnf/STz4Cr1/ozFrDSYKS38qe4+V/a?=
+ =?us-ascii?Q?u+LCJeC1w3IiANyHS8suhXS13kEct58XbMuf9SFE6O/RogWlA/m0PQgQGuJu?=
+ =?us-ascii?Q?xbmtZVVS4gcboAO38DznCTOXTN/pjpEm7jD46aDIIZODu23R6XrLQN4lFmCu?=
+ =?us-ascii?Q?fdEH9RT7pn+xPZEuAr8DbBRs0vfAQNz8bYWKnamsA4wj+D3LirYt50I1vSXo?=
+ =?us-ascii?Q?xuCNMTszig+W6neBpY3Zs7+JQxmUjkHlzGr1MJTY86Bdu2lSVHDC0B2pEUIw?=
+ =?us-ascii?Q?xQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f959091-4d7c-4a30-3640-08db45c644e6
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2023 19:50:06.7432
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: swUwIdu9MFW3wNDDG0JS1oWSz4QPBZAsK1sHz79U/OQp91CL1K/E/B6LMRanoGJ++/Z0APfUKPGrDVryOU9PVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7663
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 09:20:40PM +0200, Andreas Kemnade wrote:
-> Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
-> > Which commit introduced that regression? Also, the changelog mentions
-> > it happens only with "unusual" probe order. Now, all the ordinary cases
-> > for OMAP1 are broken.
-> > 
-> did not bisect that to an exact commit.
-> Unusual probe order: on the device where I tested it,
-> I did not see a completely successful probe.
+Hello,
 
-If you cannot point out a working past commit, there was no regression. If
-you fix something that hasn't worked before or has been long time broken,
-it must not cause breakage to other current users.
+On Thu, 13 Apr 2023 12:05:52 -0400, Sean Anderson wrote:
+> This series is ready for review by the phy maintainers. I have addressed
+> all known feedback and there are no outstanding issues.
+> 
+> Major reconfiguration of baud rate (e.g. 1G->10G) does not work.
+> 
+> There are several stand-alone commits in this series. Please feel free
+> to pick them as appropriate. In particular, commits 1, 3, 4, 12, 13, and
+> 14 are all good candidates for picking.
+> 
+> - Although this is untested, it should support 2.5G SGMII as well as
+>   1000BASE-KX. The latter needs MAC and PCS support, but the former
+>   should work out of the box.
+> - It allows for clock configurations not supported by the RCW. This is
+>   very useful if you want to use e.g. SRDS_PRTCL_S1=0x3333 and =0x1133
+>   on the same board. This is because the former setting will use PLL1
+>   as the 1G reference, but the latter will use PLL1 as the 10G
+>   reference. Because we can reconfigure the PLLs, it is possible to
+>   always use PLL1 as the 1G reference.
 
-> > And it's not just that tps65010 thing. E.g. 770 fails to boot as well
-> > and it doesn't use it; and reverting 92bf78b33b0b fixes that one as
-> > well. AFAIK it's because all the gpio_request()s in OMAP1 board files
-> > stopped now working.
-> > 
-> so we break every non-devicetree user of omap-gpio? 
+I am an engineer working for NXP and I have access to the majority of
+hardware that includes the Lynx 10G SERDES, as well as to block guides
+that are not visible to customers, and to people from the hardware
+design and validation teams.
 
-It seems so.
+I have an interest in adding a driver for this SERDES to support dynamic
+Ethernet protocol reconfiguration, and perhaps the internal PHY for
+copper backplane modes (1000Base-KX, 10GBase-KR) and its link training
+procedure - although the latter will need more work.
 
-A.
+I would like to thank you for starting the effort, but please, stop
+submitting code for modes that are untested, and do not submit features
+that do not work. If you do not have the time to fix up the loose ends
+for this patch submission now, you won't have the time to debug
+regressions on boards you might not even have access to, which worked
+fine previously due to the static RCW/PBL configuration.
+
+I have downloaded your patches, and although I have objections to some
+of them already, I will be in the process of evaluating, testing,
+changing them, for the coming weeks, perhaps even more. Please consider
+this a NACK for the current patch set due to the SERDES related material,
+although the unrelated patches (like "dt-bindings: Convert gpio-mmio to
+yaml") can and should have been submitted separately, so they can be
+analyzed by their respective maintainers based on their own merit and
+not as part of an overall problematic set.
