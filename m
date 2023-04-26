@@ -2,81 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 215E96EF355
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Apr 2023 13:21:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 086596EF36C
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Apr 2023 13:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240626AbjDZLVt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Apr 2023 07:21:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60874 "EHLO
+        id S240439AbjDZL20 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Apr 2023 07:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240413AbjDZLVr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Apr 2023 07:21:47 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3585253
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Apr 2023 04:21:44 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2a8b3ecf59fso69005051fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Apr 2023 04:21:44 -0700 (PDT)
+        with ESMTP id S240422AbjDZL2Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Apr 2023 07:28:25 -0400
+Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D324C30CA;
+        Wed, 26 Apr 2023 04:28:23 -0700 (PDT)
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QAV9cO016858;
+        Wed, 26 Apr 2023 07:28:12 -0400
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
+        by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3q4c797ad2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Apr 2023 07:28:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=REwChcl8wHfzVNks7P+AH3VktD3g9cVxvHlfoscl95AsbTCXOMYj/HTskuNkJMIhMBszZeF4Gez6eiFdu7RMR5Mr2pwaFmwXNn7OLNRNotjq7dNTTXQbO3tfDaCRd1lALKytg8kFPV/BZyboXCIZowpscTL/q8FGJeiiAQSt9lGIhWLKtO7sD5qUXqJHtzI1oxLZYOT4CcTwEktoHxXKcmHuSBClfNBYJpE9sVGkmktVIUAYxo0/pTXDhFMeWkAHk0a1PfqYSqo7Z1mFOLETWcDwfNs9b7uTORdwHPgi8yyEGl7o3FrynIrxietUfBMYi2x/mtQRijrUYXrVVjbNHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9hAHc09qvwenCCreVxUXDz0KJEO1bOMMXbWkKkUD37k=;
+ b=keZMuzhcTfuiIkKk/6VFDRiPd5saAvjenYGGELvXMT2bluEEZkTniVvuUQnap6f1Z1sswozNIuM1VhKxQYV6ao15lRC3VuNMgB/Lo6S+qWxB7RfQQWsDvpu5fdwIFeu9yZWa7dUOLzMVu1icAEzcUlBDPXwCdF5My6JS2TMUognQZVKd6h/HiwaP0m8eCgrTRE61eyMIn88BTRpVVA1ROEoRkp6ARjz++FRkR6Qp+FXM0g+k/1CKbFOh3sV5qrx1t1mGt3OSFSWJRVlqqzzINHtzYpiWQTDy+gQKH1oGSkBOMoLGEt+tGAgxuhZSX6Doax946jrsPZsFNIJIT3+WXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682508103; x=1685100103;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ifpAFOqSKqYvRcYeiq40O8NH7hnbVXJ0UqEiMQCHhKQ=;
-        b=ixMuPru0fUdeRM+GAPy1sMyO6dnLIiT9KjJpg9UZwSJLi8NmT0C81GjxcZDpsKkTAV
-         yWVSShtYGQ+Bwka/dZnPeZiuCspJnhLtshld57ifTOXCbkUQ8BYNu/d9SZv+5ENnnVqQ
-         OIF5Vf+Wq5jHfWmofIHFXGrJ91lzX681wq31ksFX1IebSsjXQGxnSifY0UPL4eKXDLQ4
-         2Dv6aayzhJd8bG0WBLzndl7sTshVSA+y3gEe34becMqgycx/c6x30W2/IzrZfLigi+nm
-         baMSBE/8YTfMdqzFBl2BZJb7xn4QzMQR2rTKNQBO3YqveYNMWy1a9Wsh1tJ/DYQdFujk
-         lXfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682508103; x=1685100103;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ifpAFOqSKqYvRcYeiq40O8NH7hnbVXJ0UqEiMQCHhKQ=;
-        b=KqRthG/R9NvQu+1DbdU1Ne+52iRtD3ghQU64TfxoNpvyVAJI8+IlJFjKmKxtO8Jgu3
-         H2LYyLBtNpDO4RwbVJyGSpo0c+VNIT58swSOGdDgPzQnqIlvE/Z1aS/XSFTxDdOKfsQc
-         I+J0J2W9xKKiGifzd2YMHeP8D1wrAPwQ6jfpW5NYOls6yWAzPaP4JlGoGpUFg9Apw5To
-         W2NQjaS23vctuUmot3wGoKyikDmD49hu5sBckwvK10+vVRRx2u4lwWkJwNHFvX2vbVax
-         k5bRJ8gXtfKZU2tEIAc6hpkHoUk+JOon9917iXOMz6kNeIZVYlMdMRjMYwvVwICc9slX
-         l1DQ==
-X-Gm-Message-State: AAQBX9fHYECrcaDfsjMyLfHetyG5wT50aU46+Xzo2Ar6rmOwyGC0E2fm
-        jnLvug30Y/eKJZVrOE2Yxc0+MQ==
-X-Google-Smtp-Source: AKy350bEkWVPreDi1G/BTk6hSkeL6z02X4Sw8m7SGidgmWoiKw/rulMIp+OPLqH5JyQRNOVLx3y2CQ==
-X-Received: by 2002:ac2:522d:0:b0:4ef:ef9f:f255 with SMTP id i13-20020ac2522d000000b004efef9ff255mr2825218lfl.48.1682508102855;
-        Wed, 26 Apr 2023 04:21:42 -0700 (PDT)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id u28-20020a056512041c00b004ec84d24818sm2453237lfk.282.2023.04.26.04.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Apr 2023 04:21:42 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Apr 2023 13:21:39 +0200
-Subject: [PATCH v2 2/2] dt-bindings: MFD: Convert STMPE to YAML schema
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230426-stmpe-dt-bindings-v2-2-2f85a1fffcda@linaro.org>
-References: <20230426-stmpe-dt-bindings-v2-0-2f85a1fffcda@linaro.org>
-In-Reply-To: <20230426-stmpe-dt-bindings-v2-0-2f85a1fffcda@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9hAHc09qvwenCCreVxUXDz0KJEO1bOMMXbWkKkUD37k=;
+ b=AoSaEiFg9Hv7GPU9SrDp9PSZcjXV5tDn8f6gKss8uqRyWvtSJTiicI0Jr87VBR2mbmEkC9qQqt4wscniBNnueOhLNlCG4XhO2XA0Jg4sbXFTPKwWCYbUF8zWS63M3XepJguMMU3GsSnZldn55Z1V3MH7bE4J9LKg5sHYal6b93w=
+Received: from MN2PR03MB5168.namprd03.prod.outlook.com (2603:10b6:208:1ec::19)
+ by SA2PR03MB5834.namprd03.prod.outlook.com (2603:10b6:806:f8::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Wed, 26 Apr
+ 2023 11:28:10 +0000
+Received: from MN2PR03MB5168.namprd03.prod.outlook.com
+ ([fe80::8f99:7745:fa5d:3dea]) by MN2PR03MB5168.namprd03.prod.outlook.com
+ ([fe80::8f99:7745:fa5d:3dea%4]) with mapi id 15.20.6340.021; Wed, 26 Apr 2023
+ 11:28:10 +0000
+From:   "Sahin, Okan" <Okan.Sahin@analog.com>
+To:     Michael Walle <michael@walle.cc>
+CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
+Thread-Topic: [PATCH v1 2/2] gpio: ds4520: Add ADI DS4520 Regulator Support
+Thread-Index: AQHZYKxFzu/viFi84UyZMktWpJEoz68UqJ8AgAaZoUCAAX9AgIAACimAgAMiPoCAAFCPgIACysWAgAMsY4CAFH9pMIABEksAgAHWFgA=
+Date:   Wed, 26 Apr 2023 11:28:10 +0000
+Message-ID: <MN2PR03MB5168689A20C8D6C67F119BB7E7659@MN2PR03MB5168.namprd03.prod.outlook.com>
+References: <20230327130010.8342-1-okan.sahin@analog.com>
+ <20230327130010.8342-3-okan.sahin@analog.com>
+ <CACRpkda5G5b+At5s1WFudpQBQ6LDQxhE3fZj7eBhkZ=thvnQhg@mail.gmail.com>
+ <MN2PR03MB51682210CADA6E33FB99052CE7939@MN2PR03MB5168.namprd03.prod.outlook.com>
+ <CACRpkdZJA0DyzgLxm9HFeHO03rqNUff=avuV=VrGuJkkOg6wNQ@mail.gmail.com>
+ <25e1fda4b6df2d10444d7eca3cd0e387@walle.cc>
+ <CACRpkdYKEid8-0-7sBECNgSyW3kMRCsv3DeBVUzxo4z6p+Grnw@mail.gmail.com>
+ <ZDBivYlwJ6zgaFTg@surfacebook>
+ <MN2PR03MB516879DCD6600827AEE2BDC9E7949@MN2PR03MB5168.namprd03.prod.outlook.com>
+ <a3ca3e705b5b8668cd511fc15681c75f@walle.cc>
+ <MN2PR03MB5168D7940E322DFC0A1A3148E7679@MN2PR03MB5168.namprd03.prod.outlook.com>
+ <1ff70a97dfbcaddd69029001ce99bb69@walle.cc>
+In-Reply-To: <1ff70a97dfbcaddd69029001ce99bb69@walle.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jYjJ0aGJpNXpZV2hwYmx4aGNIQmtZWFJoWEhKdllXMXBibWRjTURsa09E?=
+ =?utf-8?B?UTVZall0TXpKa015MDBZVFF3TFRnMVpXVXRObUk0TkdKaE1qbGxNelZpWEcx?=
+ =?utf-8?B?elozTmNiWE5uTFRaaE9HRTJOamxsTFdVME1qVXRNVEZsWkMxaVpXTmtMVFU0?=
+ =?utf-8?B?Tm1NeU5XUXpZek5sTkZ4aGJXVXRkR1Z6ZEZ3MllUaGhOalpoTUMxbE5ESTFM?=
+ =?utf-8?B?VEV4WldRdFltVmpaQzAxT0Raak1qVmtNMk16WlRSaWIyUjVMblI0ZENJZ2Mz?=
+ =?utf-8?B?bzlJamcxTkRJaUlIUTlJakV6TXpJMk9UZ3lNRGc0TURrM01UYzJOU0lnYUQw?=
+ =?utf-8?B?aU0wOXBXQzkxVmtoS2FXeGlhekpaVlhsMU9URmtXR2xhUlVaQlBTSWdhV1E5?=
+ =?utf-8?B?SWlJZ1ltdzlJakFpSUdKdlBTSXhJaUJqYVQwaVkwRkJRVUZGVWtoVk1WSlRV?=
+ =?utf-8?B?bFZHVGtOblZVRkJSVzlEUVVGRU1UVXJUWE5OYm1wYVFWUnpjU3R1U1VJemMy?=
+ =?utf-8?B?eElUM2x5Tm1OblNHVjVWV05FUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVWhCUVVGQlJHRkJVVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVkZCUWtGQlFVRlRha1ZZZUhkQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZLTkVGQlFVSm9RVWRSUVdGUlFtWkJTRTFCV2xGQ2FrRklWVUZqWjBKc1FV?=
+ =?utf-8?B?WTRRV05CUW5sQlJ6aEJZV2RDYkVGSFRVRmtRVUo2UVVZNFFWcG5RbWhCUjNk?=
+ =?utf-8?B?QlkzZENiRUZHT0VGYVowSjJRVWhOUVdGUlFqQkJSMnRCWkdkQ2JFRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlJVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRm5RVUZCUVVGQmJtZEJRVUZIUlVGYVFVSndRVVk0UVdOM1FteEJSMDFC?=
+ =?utf-8?B?WkZGQ2VVRkhWVUZZZDBKM1FVaEpRV0ozUW5GQlIxVkJXWGRDTUVGSVRVRllk?=
+ =?utf-8?B?MEl3UVVkclFWcFJRbmxCUkVWQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVGQldWRkNhMEZIYTBGWWQw?=
+ =?utf-8?B?SjZRVWRWUVZsM1FqRkJTRWxCV2xGQ1prRklRVUZqWjBKMlFVZHZRVnBSUW1w?=
+ =?utf-8?B?QlNGRkJZM2RDWmtGSVVVRmhVVUpzUVVoSlFVMW5RVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJRVUZCUVVFOVBTSXZQand2?=
+ =?utf-8?Q?bWV0YT4=3D?=
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR03MB5168:EE_|SA2PR03MB5834:EE_
+x-ms-office365-filtering-correlation-id: 3263858d-9bd4-43ee-ba60-08db464950a6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 90e6R7o5lKVoIxC72d4yuBR+bODtHQbYajDksFGG5cZUOq0i/T3IZ6NM33SJcbRaFVup2QTcEV8VYBjxOGwHlisGtXVNWtktHTeyfiJcftdTocARt6+d/qiW5yIjLSFykw8q82JUe5WOvZsH6tPRMI6zaxEuGMqo0KSw6BJVgjv+f8Hxt4wmy5W48qFWK3chZH3bQG3Qf9RArBY8swX0vis9khYTUlEWPdzRYUtwvFBshY6evFGGNynLcdMxjzrSIZzkiIcp2dMAT19sHWdmUwqRMBWb1ydvxwuIxAVJJVUcwgIKaPfmcIHSbCfS8OFKe8Dmi4+eTsvS41ps2FkJYusDE3Ht/rp5c+JeDq+9kbtZYLKSTGIHdjOpTeDf7vGedZsI4NmWyIS0cE098DBmDlvcXOZK1sahH1xCEVZndFDRjkBfqimelAMqkccoDibmA2RsO3WyMy5BMYUchNWxyUHL4HTRpMYy3j4EMD2fQ3mlt/O6fI8NgUQvPcMHaqbIxAhIL6kqHVy6eS8/YjO6fUNhkhSs9hGXc8a2mKLZrbtb9UKGXQRLqndM+mJRAlgAiobWl+Uaz/A4BF3L02NNY05MBFg+7MBaCY7VIwm6iVE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR03MB5168.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(396003)(366004)(376002)(136003)(451199021)(33656002)(86362001)(55016003)(54906003)(478600001)(7696005)(71200400001)(966005)(8936002)(38100700002)(122000001)(8676002)(41300700001)(66476007)(64756008)(66946007)(76116006)(66556008)(66446008)(6916009)(316002)(4326008)(83380400001)(186003)(53546011)(26005)(6506007)(9686003)(2906002)(38070700005)(52536014)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WTcvV3hTM1NFZnFrNHFxaXhOTUxrNEkrOWFHK2UzMGV3dVNLelROb2habzRz?=
+ =?utf-8?B?SUwyNFlUMnB4VGhEdjFoT1k4dllUaDVxNUJ1cW1iRHk5aGxtc0dVaERLRTBk?=
+ =?utf-8?B?NGhjVC9OS2psblJpZU5KcHE2NGZTMUx4WmJGSVpWSUYxYmovTy9FUTJYK2Zk?=
+ =?utf-8?B?MzV5YUcxVjIvdUtNY3hWTFdLWSsybFFJdDRoOXdFT3RlVlRRK0tFU2RMNFBm?=
+ =?utf-8?B?bjk2ajB5cW5vY1I5NEJzVjFYQytmS0hrbjFLRVk0eG1jNXY2bGFvZ0k0MUxY?=
+ =?utf-8?B?b1hZRmlRU0M5ZzlwRERoeFFjNDFHR3JxQjJzcDBOd01ibEJVbHVxSUFvOTJG?=
+ =?utf-8?B?dVlMYk40Y1U5elBrR3M1SUIwaDRyTlk1OTJUaE5WaUJSemN5ZVpOdnVzNXZW?=
+ =?utf-8?B?MUtWeElOQlF1OEtmdGpxbm1nQmtERWFKYnNZbWlHMGJxME1HMzN0cU5wZm9o?=
+ =?utf-8?B?WFBrRW9DTTZ4WHU0Z2V4bWhMRWhjaThLbDQ4VEFYQlpITTFML3lrTWdQK3FN?=
+ =?utf-8?B?Y3JIZmJPdXl1SUFRbHhOaFl5VFlnOXlDU3FDcGtZTlpDMmxaSHV2bWs4a1hM?=
+ =?utf-8?B?WXhOU0VpODQzK1h3Z1VNZUJYVFFCeXBTSmx4ZE5iNVlVQUp4SWVoS0lWRE1z?=
+ =?utf-8?B?NHZQbHEzSjRQMlpzWEcrVFdVRmdjRHpRejJGRjZ6VTZHcEkxVzhrMVVDWjY4?=
+ =?utf-8?B?eU1DWCtJc3d3RGxKTFExVkVYeklUcHJyRjhycUNsZUlnYzV6WWtEd0Z6cGNn?=
+ =?utf-8?B?TGxjWkg1ekZFL01GUXl0UzJxU2RNNVRXMjBONDRubndyWXJkY1hSY0VLaUtu?=
+ =?utf-8?B?UHVld3U0bmJxZFNCT0xuQ3ZWUHNBaGhTZHZBYjFnNnJMbncrbWhHanRZaUxs?=
+ =?utf-8?B?QTAyYWtLS3IwSkhYeTdHZTIrQUltOGludXRic20wY2huZGVnOTdtTVVubnNT?=
+ =?utf-8?B?ZHlLM0J5bmZXaVpZcFZHelBGZnpxS25HdFdCanlUNnN2Z0xzaFgrSC9xZ01m?=
+ =?utf-8?B?VHdsQ2QyNHNndmpvNHBzdEZMU21ZTkxZNWtMN3RTNXhmUWJYMVlDWUszL3VR?=
+ =?utf-8?B?MkY1Sis1eWJiTnJyWk9xdkJCVE51NkhBaFp2VE5EMUtHem5GVVpyUHhMNjdQ?=
+ =?utf-8?B?VnNHQXZKeE96aExrdGtHVyt4Q0t3VUtTUUdvdk1GcUVWQXlnWGJWcEdHcld2?=
+ =?utf-8?B?MGZnZnZMdVZTZCtqU21LR2tGMzk0dEk4Rlp1bnNESXpoRExRMkUzaUl3Vkcv?=
+ =?utf-8?B?UlJoTEdVZ0hubjdwa1EwQnJ1anMvWnlCMEJSc2hyZlpyOWtYK1pOYXRhMG0w?=
+ =?utf-8?B?OW9QY3NnZFBuWHpZNDlhZHZTN3M5UHBjWUpyREczenZZNmxJeTR2eXRzVGho?=
+ =?utf-8?B?a1BKNi9ZQ1Z4NVdmKzg3SVFCdW5uME1DdVluU3FvTVhQc3lLUVJJWENUODVG?=
+ =?utf-8?B?TTZyRThTaDNVNVM4YmlXcFkzdkJUL3U5eEU4ei9sTURBc2pURHQ0M3JLQ3ln?=
+ =?utf-8?B?OHRtcHpsUHVFT1NYaUQzQzVIcFpKdzRxUXRHeWJPb0ZzSE82VWZFcXo0cmc3?=
+ =?utf-8?B?aTJ2UUEwOW9xeDNyWWFTaUVrekpPZTUxTUhqZXQzRkdzWnozb2NPdkdwLzgx?=
+ =?utf-8?B?b1NYT0tSdGdFN2RiUWlxMG9NSHp2SDJiNkpBYmQvZXU3eTdadk1FeUxoaW45?=
+ =?utf-8?B?aFVkcUc5UnlDNC9KVlpGcHFDdndFUnpUV0UySG9VbjBFSjcvdDB3d2NSa3lH?=
+ =?utf-8?B?REpIN2RiN2YvVTE2MGQ3Z1FqRHRNaTBjTEpQU0kveXo2L1YveXRKTk5YUkQ3?=
+ =?utf-8?B?c3FTL0NKSTdCVkhuLzB4Rjk5eFpraU84NWF1cTMvSUhOZlpnSFVHcU5UeGFx?=
+ =?utf-8?B?QStFc1Q5S0VaLzRtSy9OWEdORUdWVnZvQ3h4KzBLcEFBMU9ncjV4M0tWcSsx?=
+ =?utf-8?B?cjdyakZ1Q2E5VDk3REFGK29Hd28xVWVteWtpbXB3a1FVMlBJVnAyemordmNi?=
+ =?utf-8?B?UktTZVpqd2k0ZnQxSitORjF4MzFZSXU5QTdlT3JCMlVUSjlSN09IbHc0NWZY?=
+ =?utf-8?B?VTc1aGVNcFpJYmxEUjUrVkl4NDE0RFNqSmlzaGNzSXF2N1VFdFhCQWRWbktt?=
+ =?utf-8?Q?tQyoaShT01n51NtZaZGJ0DJNs?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR03MB5168.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3263858d-9bd4-43ee-ba60-08db464950a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2023 11:28:10.2485
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RI6oI3q2g3zwxJ3krTgnRsR53etI2aF9n04SLARXc6Lc1WPHOzK43wiF6ZAjFI23yAbBSchSxEEJyU4g5u4XEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR03MB5834
+X-Proofpoint-ORIG-GUID: udRtNVPhRmHgVZSP4PZoaJGEu6XyTXkm
+X-Proofpoint-GUID: udRtNVPhRmHgVZSP4PZoaJGEu6XyTXkm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-26_04,2023-04-26_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ phishscore=0 impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2303200000 definitions=main-2304260102
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,554 +189,77 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This converts the STMPE MFD device tree bindings to the YAML
-schema.
-
-Reference the existing schema for the ADC, just define the
-other subnode schemas directly in the MFD schema.
-
-Add two examples so we have examples covering both the simple
-GPIO expander and the more complex with ADC and touchscreen.
-
-Some in-tree users do not follow the naming conventions for nodes
-so these DTS files need to be augmented to use proper node names
-like "adc", "pwm", "gpio", "keyboard-controller" etc before the
-bindings take effect on them.
-
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Split off the GPIO bindings to their own schema, as the old
-  bindings didn't even have any GPIO bindings. Put the GPIO
-  schema before this schema so we can use GPIO in the examples.
-- Drop nodename and pattern as STMPE is not a generic name.
-- Add maxItems to the resets.
-- Make wakeup-source just :true, as it is a generic property.
-- Move unevaluatedProperties for subnodes right before properties
-  as requested.
-- Name devices "port-expander" in the examples.
-- Use lowercase hex in line init.
----
- .../devicetree/bindings/input/stmpe-keypad.txt     |  41 ---
- .../bindings/input/touchscreen/stmpe.txt           | 108 --------
- .../devicetree/bindings/mfd/st,stmpe.yaml          | 298 +++++++++++++++++++++
- Documentation/devicetree/bindings/mfd/stmpe.txt    |  42 ---
- 4 files changed, 298 insertions(+), 191 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/stmpe-keypad.txt b/Documentation/devicetree/bindings/input/stmpe-keypad.txt
-deleted file mode 100644
-index 12bb771d66d4..000000000000
---- a/Documentation/devicetree/bindings/input/stmpe-keypad.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--* STMPE Keypad
--
--Required properties:
-- - compatible               : "st,stmpe-keypad"
-- - linux,keymap             : See ./matrix-keymap.txt
--
--Optional properties:
-- - debounce-interval        : Debouncing interval time in milliseconds
-- - st,scan-count            : Scanning cycles elapsed before key data is updated
-- - st,no-autorepeat         : If specified device will not autorepeat
-- - keypad,num-rows          : See ./matrix-keymap.txt
-- - keypad,num-columns       : See ./matrix-keymap.txt
--
--Example:
--
--	stmpe_keypad {
--		compatible = "st,stmpe-keypad";
--
--		debounce-interval = <64>;
--		st,scan-count = <8>;
--		st,no-autorepeat;
--
--		linux,keymap = <0x205006b
--				0x4010074
--				0x3050072
--				0x1030004
--				0x502006a
--				0x500000a
--				0x5008b
--				0x706001c
--				0x405000b
--				0x6070003
--				0x3040067
--				0x303006c
--				0x60400e7
--				0x602009e
--				0x4020073
--				0x5050002
--				0x4030069
--				0x3020008>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-deleted file mode 100644
-index 238b51555c04..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-+++ /dev/null
-@@ -1,108 +0,0 @@
--STMPE Touchscreen
------------------
--
--Required properties:
-- - compatible: "st,stmpe-ts"
--
--Optional properties:
--- st,ave-ctrl		: Sample average control
--				0 -> 1 sample
--				1 -> 2 samples
--				2 -> 4 samples
--				3 -> 8 samples
--- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
--				0 -> 10 us
--				1 -> 50 us
--				2 -> 100 us
--				3 -> 500 us
--				4 -> 1 ms
--				5 -> 5 ms
--				6 -> 10 ms
--				7 -> 50 ms
--- st,settling		: Panel driver settling time (recommended is 2)
--				0 -> 10 us
--				1 -> 100 us
--				2 -> 500 us
--				3 -> 1 ms
--				4 -> 5 ms
--				5 -> 10 ms
--				6 -> 50 ms
--				7 -> 100 ms
--- st,fraction-z		: Length of the fractional part in z (recommended is 7)
--			  (fraction-z ([0..7]) = Count of the fractional part)
--- st,i-drive		: current limit value of the touchscreen drivers
--				0 -> 20 mA (typical 35mA max)
--				1 -> 50 mA (typical 80 mA max)
--
--Optional properties common with MFD (deprecated):
-- - st,sample-time	: ADC conversion time in number of clock.
--				0 -> 36 clocks
--				1 -> 44 clocks
--				2 -> 56 clocks
--				3 -> 64 clocks
--				4 -> 80 clocks (recommended)
--				5 -> 96 clocks
--				6 -> 124 clocks
-- - st,mod-12b		: ADC Bit mode
--				0 -> 10bit ADC
--				1 -> 12bit ADC
-- - st,ref-sel		: ADC reference source
--				0 -> internal
--				1 -> external
-- - st,adc-freq		: ADC Clock speed
--				0 -> 1.625 MHz
--				1 -> 3.25 MHz
--				2 || 3 -> 6.5 MHz
--
--Node should be child node of stmpe node to which it belongs.
--
--Note that common ADC settings of stmpe_touchscreen (child) will take precedence
--over the settings done in MFD.
--
--Example:
--
--stmpe811@41 {
--	compatible = "st,stmpe811";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_touch_int>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--	reg = <0x41>;
--	interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
--	interrupt-parent = <&gpio4>;
--	interrupt-controller;
--	id = <0>;
--	blocks = <0x5>;
--	irq-trigger = <0x1>;
--	/* Common ADC settings */
--	/* 3.25 MHz ADC clock speed */
--	st,adc-freq = <1>;
--	/* 12-bit ADC */
--	st,mod-12b = <1>;
--	/* internal ADC reference */
--	st,ref-sel = <0>;
--	/* ADC converstion time: 80 clocks */
--	st,sample-time = <4>;
--
--	stmpe_touchscreen {
--		compatible = "st,stmpe-ts";
--		reg = <0>;
--		/* 8 sample average control */
--		st,ave-ctrl = <3>;
--		/* 5 ms touch detect interrupt delay */
--		st,touch-det-delay = <5>;
--		/* 1 ms panel driver settling time */
--		st,settling = <3>;
--		/* 7 length fractional part in z */
--		st,fraction-z = <7>;
--		/*
--		 * 50 mA typical 80 mA max touchscreen drivers
--		 * current limit value
--		 */
--		st,i-drive = <1>;
--	};
--	stmpe_adc {
--		compatible = "st,stmpe-adc";
--		st,norequest-mask = <0x0F>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mfd/st,stmpe.yaml b/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
-new file mode 100644
-index 000000000000..dd24ae2d5fb4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
-@@ -0,0 +1,298 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/st,stmpe.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectonics Port Expander (STMPE)
-+
-+description: STMicroelectronics Port Expander (STMPE) is a series of slow
-+  bus controllers for various expanded peripherals such as GPIO, keypad,
-+  touchscreen, ADC, PWM or rotator. It can contain one or several different
-+  peripherals connected to SPI or I2C.
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stmpe601
-+      - st,stmpe801
-+      - st,stmpe811
-+      - st,stmpe1600
-+      - st,stmpe1601
-+      - st,stmpe2401
-+      - st,stmpe2403
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcc-supply: true
-+
-+  vio-supply: true
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  wakeup-source: true
-+
-+  st,autosleep-timeout:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 4, 16, 32, 64, 128, 256, 512, 1024 ]
-+    description: Time idle before going to automatic sleep to save power
-+
-+  st,sample-time:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 0, 1, 2, 3, 4, 5, 6 ]
-+    description: |
-+      Sample time per iteration
-+      0 = 36 clock ticks
-+      1 = 44 clock ticks
-+      2 = 56 clock ticks
-+      3 = 64 clock ticks
-+      4 = 80 clock ticks - recommended
-+      5 = 96 clock ticks
-+      6 = 124 clock ticks
-+
-+  st,mod-12b:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 0, 1 ]
-+    description: ADC bit mode 0 = 10bit ADC, 1 = 12bit ADC
-+
-+  st,ref-sel:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 0, 1 ]
-+    description: ADC reference source 0 = internal, 1 = external
-+
-+  st,adc-freq:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 0, 1, 2, 3 ]
-+    description: |
-+      ADC clock speed
-+      0 = 1.625 MHz
-+      1 = 3.25 MHz
-+      2, 3 = 6.5 MHz
-+
-+  adc:
-+    type: object
-+    $ref: /schemas/iio/adc/st,stmpe-adc.yaml#
-+
-+  gpio:
-+    type: object
-+    $ref: /schemas/gpio/st,stmpe-gpio.yaml#
-+
-+  keyboard-controller:
-+    type: object
-+    $ref: /schemas/input/matrix-keymap.yaml#
-+
-+    unevaluatedProperties: false
-+
-+    properties:
-+      compatible:
-+        const: st,stmpe-keypad
-+
-+      debounce-interval:
-+        description: Debouncing interval in milliseconds
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+      st,no-autorepeat:
-+        description: If present, the keys will not autorepeat when pressed
-+        $ref: /schemas/types.yaml#/definitions/flag
-+
-+      st,scan-count:
-+        description: Scanning cycles elapsed before key data is updated
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+
-+    required:
-+      - compatible
-+      - linux,keymap
-+
-+  pwm:
-+    type: object
-+    $ref: /schemas/pwm/pwm.yaml#
-+
-+    unevaluatedProperties: false
-+
-+    properties:
-+      compatible:
-+        const: st,stmpe-pwm
-+
-+    required:
-+      - compatible
-+      - "#pwm-cells"
-+
-+  touchscreen:
-+    type: object
-+    $ref: /schemas/input/touchscreen/touchscreen.yaml#
-+
-+    unevaluatedProperties: false
-+
-+    properties:
-+      compatible:
-+        const: st,stmpe-ts
-+
-+      st,ave-ctrl:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1, 2, 3 ]
-+        description: |
-+          Sample average control
-+          0 = 1 sample
-+          1 = 2 samples
-+          2 = 4 samples
-+          3 = 8 samples
-+
-+      st,touch-det-delay:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
-+        description: |
-+          Touch detection delay
-+          0 = 10 us
-+          1 = 50 us
-+          2 = 100 us
-+          3 = 500 us - recommended
-+          4 = 1 ms
-+          5 = 5 ms
-+          6 = 10 ms
-+          7 = 50 ms
-+
-+      st,settling:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
-+        description: |
-+          Panel driver settling time
-+          0 = 10 us
-+          1 = 100 us
-+          2 = 500 us - recommended
-+          3 = 1 ms
-+          4 = 5 ms
-+          5 = 10 ms
-+          6 = 50 ms
-+          7 = 100 ms
-+
-+      st,fraction-z:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
-+        description: Length of the fractional part in z, recommended is 7
-+          (fraction-z ([0..7]) = Count of the fractional part)
-+
-+      st,i-drive:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 0, 1 ]
-+        description: |
-+          current limit value of the touchscreen drivers
-+          0 = 20 mA (typical 35 mA max)
-+          1 = 50 mA (typical 80 mA max)
-+
-+    required:
-+      - compatible
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/input/input.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      port-expander@43 {
-+        compatible = "st,stmpe2401";
-+        reg = <0x43>;
-+        reset-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
-+        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-+        interrupt-parent = <&gpio>;
-+        vcc-supply = <&db8500_vsmps2_reg>;
-+        vio-supply = <&db8500_vsmps2_reg>;
-+        wakeup-source;
-+        st,autosleep-timeout = <1024>;
-+
-+        gpio {
-+          compatible = "st,stmpe-gpio";
-+          gpio-controller;
-+          #gpio-cells = <2>;
-+          interrupt-controller;
-+          #interrupt-cells = <2>;
-+          st,norequest-mask = <0xf0f002>;
-+        };
-+
-+        keyboard-controller {
-+          compatible = "st,stmpe-keypad";
-+          debounce-interval = <64>;
-+          st,scan-count = <8>;
-+          st,no-autorepeat;
-+          keypad,num-rows = <8>;
-+          keypad,num-columns = <8>;
-+          linux,keymap = <
-+              MATRIX_KEY(0x00, 0x00, KEY_1)
-+              MATRIX_KEY(0x00, 0x01, KEY_2)
-+              MATRIX_KEY(0x00, 0x02, KEY_3)
-+              MATRIX_KEY(0x00, 0x03, KEY_4)
-+              MATRIX_KEY(0x00, 0x04, KEY_5)
-+              MATRIX_KEY(0x00, 0x05, KEY_6)
-+              MATRIX_KEY(0x00, 0x06, KEY_7)
-+              MATRIX_KEY(0x00, 0x07, KEY_8)
-+              MATRIX_KEY(0x00, 0x08, KEY_9)
-+              MATRIX_KEY(0x00, 0x09, KEY_0)
-+          >;
-+        };
-+
-+        pwm {
-+          compatible = "st,stmpe-pwm";
-+          #pwm-cells = <2>;
-+        };
-+      };
-+
-+      port-expander@41 {
-+        compatible = "st,stmpe811";
-+        reg = <0x41>;
-+        interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+        interrupt-parent = <&gpio>;
-+        st,adc-freq = <1>;
-+        st,mod-12b = <1>;
-+        st,ref-sel = <0>;
-+        st,sample-time = <4>;
-+
-+        adc {
-+          compatible = "st,stmpe-adc";
-+          st,norequest-mask = <0x0f>;
-+          #io-channel-cells = <1>;
-+        };
-+
-+        gpio {
-+          compatible = "st,stmpe-gpio";
-+          gpio-controller;
-+          #gpio-cells = <2>;
-+          interrupt-controller;
-+          #interrupt-cells = <2>;
-+        };
-+
-+        pwm {
-+          compatible = "st,stmpe-pwm";
-+          #pwm-cells = <2>;
-+        };
-+
-+        touchscreen {
-+          compatible = "st,stmpe-ts";
-+          st,ave-ctrl = <3>;
-+          st,touch-det-delay = <5>;
-+          st,settling = <3>;
-+          st,fraction-z = <7>;
-+          st,i-drive = <1>;
-+        };
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-deleted file mode 100644
-index d4408a417193..000000000000
---- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--* ST Microelectronics STMPE Multi-Functional Device
--
--STMPE is an MFD device which may expose the following inbuilt devices: gpio,
--keypad, touchscreen, adc, pwm, rotator.
--
--Required properties:
-- - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
-- - reg				: I2C/SPI address of the device
--
--Optional properties:
-- - interrupts			: The interrupt outputs from the controller
-- - interrupt-controller		: Marks the device node as an interrupt controller
-- - wakeup-source		: Marks the input device as wakable
-- - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
-- - irq-gpio			: If present, which GPIO to use for event IRQ
--
--Optional properties for devices with touch and ADC (STMPE811|STMPE610):
-- - st,sample-time		: ADC conversion time in number of clock.
--					0 -> 36 clocks		4 -> 80 clocks (recommended)
--					1 -> 44 clocks		5 -> 96 clocks
--					2 -> 56 clocks		6 -> 124 clocks
--					3 -> 64 clocks
-- - st,mod-12b			: ADC Bit mode
--					0 -> 10bit ADC		1 -> 12bit ADC
-- - st,ref-sel			: ADC reference source
--					0 -> internal		1 -> external
-- - st,adc-freq			: ADC Clock speed
--					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
--					1 -> 3.25 MHz
--
--Example:
--
--	stmpe1601: stmpe1601@40 {
--		compatible = "st,stmpe1601";
--		reg = <0x40>;
--		interrupts = <26 0x4>;
--		interrupt-parent = <&gpio6>;
--		interrupt-controller;
--
--		wakeup-source;
--		st,autosleep-timeout = <1024>;
--	};
-
--- 
-2.34.1
-
+PkFtIDIwMjMtMDQtMjQgMTc6MzksIHNjaHJpZWIgU2FoaW4sIE9rYW46DQo+Pj4gQW0gMjAyMy0w
+NC0wOSAxNjoyNSwgc2NocmllYiBTYWhpbiwgT2thbjoNCj4+Pj4+IEZyaSwgQXByIDA3LCAyMDIz
+IGF0IDAzOjQ4OjI1UE0gKzAyMDAsIExpbnVzIFdhbGxlaWoga2lyam9pdHRpOg0KPj4+Pj4+IE9u
+IFdlZCwgQXByIDUsIDIwMjMgYXQgMzo1N+KAr1BNIE1pY2hhZWwgV2FsbGUgPG1pY2hhZWxAd2Fs
+bGUuY2M+DQo+Pj4+Pj4gd3JvdGU6DQo+Pj4+Pj4NCj4+Pj4+PiA+IE9UT0ggSSdtIG5vdCBzdXJl
+IHRoZSBkcml2ZXIgaXMgZG9pbmcgaXQgY29ycmVjdGx5LCBiZWNhdXNlIGl0IGFsc28NCj4+Pj4+
+PiA+IHNlZW1zIHRvIHN3aXRjaCB0aGUgcHVsbHVwIHJlc2lzdGVycyB0b2dldGhlciB3aXRoIHRo
+ZSBkaXJlY3Rpb24uDQo+Pj4+Pj4gPiBJJ20gbm90IHN1cmUgdGhhdCBpcyBjb3JyZWN0LiBTbyB0
+aGVyZSBtaWdodCBiZSBqdXN0IG9uZSByZWdpc3Rlcg0KPj4+Pj4+ID4gaW52b2x2ZWQgYWZ0ZXIg
+YWxsIGFuZCB0aGUgR1BJT19SRUdNQVAgc2hvdWxkIHdvcmsgYWdhaW4uDQo+Pj4+Pj4NCj4+Pj4+
+PiBJJ20gcHJldHR5IHN1cmUgdGhhdCBzaG91bGQgYmUgaW4gdGhlIC5zZXRfY29uZmlnKCkgY2Fs
+bGJhY2suDQo+Pj4+Pj4NCj4+Pj4+PiA+IEFsc28sIGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0
+IHRoaXMgaGFzIHNvbWUgbnYgbWVtb3J5ICh0byBzZXQgdGhlDQo+Pj4+Pj4gPiBpbml0aWFsIHN0
+YXRlIG9mIHRoZSBHUElPcyBbP10pLiBTbyBpdCBzaG91bGQgcmVhbGx5IGJlIGENCj4+Pj4+PiA+
+IG11bHRpLWZ1bmN0aW9uIGRldmljZS4gSSdtIG5vdCBzdXJlIGlmIHRoaXMgaGFzIHRvIGJlIGNv
+bnNpZGVyZWQNCj4+Pj4+PiA+IHJpZ2h0IGZyb20gdGhlIGJlZ2lubmluZyBvciBpZiB0aGUgZGV2
+aWNlIHN1cHBvcnQgY2FuIHN0YXJ0IHdpdGgNCj4+Pj4+PiA+IEdQSU8gb25seSBhbmQgbGF0ZXIg
+YmUgdHJhbnNpdGlvbmVkIHRvIGEgZnVsbCBmZWF0dXJlZCBNRkQgKHByb2JhYmx5IHdpdGgNCj4+
+PiBudm1lbQ0KPj4+Pj4gc3VwcG9ydCkuDQo+Pj4+Pj4NCj4+Pj4+PiBUaGF0J3MgYSBiaXQgb2Yg
+YSBzb2Z0IGRlZmluaXRpb24uDQo+Pj4+Pj4NCj4+Pj4+PiBJZiB0aGUgY2hpcCBpcyAqb25seSog
+ZG9pbmcgR1BJTyBhbmQgbnZyYW0gaXQgY2FuIGJlIGEgR1BJTy1vbmx5DQo+Pj4+Pj4gZGV2aWNl
+IEkgdGhpbmsuDQo+Pj4+Pj4NCj4+Pj4+PiBUaGUgcHJlY2VkZW50IGlzIGEgdG9uIG9mIGV0aGVy
+bmV0IGRyaXZlcnMgd2l0aCBudnJhbSBmb3Igc3RvcmluZw0KPj4+Pj4+IGUuZy4NCj4+Pj4+PiB0
+aGUgTUFDIGFkZHJlc3MuIFdlIGRvbid0IG1ha2UgYWxsIG9mIHRob3NlIGludG8gTUZEcywgYXMg
+dGhlIG52cmFtDQo+Pj4+Pj4gaXMNCj4+Pj4+PiBjbG9zZWx5IHRpZWQgdG8gdGhlIG9uZSBhbmQg
+b25seSBmdW5jdGlvbiBvZiB0aGUgYmxvY2suDQo+Pj4+Pg0KPj4+Pj4gSSBhZ3JlZSB3aXRoIExp
+bnVzLiBUaGlzIHNob3VsZCBiZSBwYXJ0IG9mIHRoZSBhY3R1YWwgKG1haW4pIGRyaXZlcg0KPj4+
+Pj4gZm9yIHRoZSBjaGlwIGFzIG1hbnkNCj4+Pj4+IGRvIChsaWtlIFVTQiB0byBzZXJpYWwgYWRh
+cHRlcnMgdGhhdCBoYXZlIEdQSU8gY2FwYWJpbGl0eSkuDQo+Pj4NCj4+PiBZb3UgbWVhbiB0aGUg
+Z3BpbyBkcml2ZXIgaXMgY2FsbGluZyBudm1lbV9yZWdpc3RlcigpPyBZZWFoIEkgYWdyZWUsDQo+
+Pj4gdGhhdA0KPj4+IHNob3VsZCB3b3JrLg0KPj4+DQo+Pj4+IEkgdGhpbmsgZ3Bpb19yZWdtYXAg
+aXMgbm90IHN1aXRhYmxlIGZvciB0aGlzIGRyaXZlciBhcyBNaWNoYWVsDQo+Pj4+IHN0YXRlZC4N
+Cj4+Pj4gaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9tZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRh
+dGlvbi9kYXRhLQ0KPj4+IHNoZWV0cy9kczQ1MjAucGRmDQo+Pj4+IFBsZWFzZSBjaGVjayBibG9j
+ayBkaWFncmFtLiBUaGVyZSBhcmUgdHdvIGlucHV0IHJlZ2lzdGVycyB0aGF0DQo+Pj4+IGNvbnRy
+b2wNCj4+Pj4gZ3BpbyBzdGF0ZQ0KPj4+PiBzbyBncGlvX3JlZ21hcCBkb2VzIG5vdCBsb29rIG9r
+IGZvciB0aGlzLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5nPw0KPj4+DQo+Pj4gWW91IG1lYW4gRjgv
+Rjk/IFRoYXQgd2lsbCB3b3JrIGFzIHRoZXkgYXJlIGZvciBkaWZmZXJlbnQgR1BJT3MuIFdoYXQN
+Cj4+PiBkb2Vzbid0IHdvcmsgd2l0aCBncGlvLXJlZ21hcCBpcyB3aGVuIHlvdSBuZWVkIHRvIG1v
+ZGlmeSB0d28gZGlmZmVyZW50DQo+Pj4gcmVnaXN0ZXJzIGZvciBvbmUgR1BJTy4gSGF2ZSBhIGxv
+b2sgYXQgZ3Bpb19yZWdtYXBfZ2V0KCkgYW5kDQo+Pj4gZ3Bpb19yZWdtYXBfc2V0KCkuIElmIHRo
+ZSBkZWZhdWx0IGdwaW9fcmVnbWFwX3NpbXBsZV94bGF0ZSgpIGRvZXNuJ3QNCj4+PiB3b3JrDQo+
+Pj4geW91IGNhbiB1c2UgeW91ciBvd24gLnhsYXRlKCkgb3AuDQo+Pj4NCj4+DQo+PiBBY3R1YWxs
+eSwgSSBjaGVja2VkIHRoZSBmdW5jdGlvbnMgdGhhdCB5b3Ugc3VnZ2VzdGVkLCBidXQgYXMgZmFy
+IGFzIEkNCj4+IHVuZGVyc3RhbmQNCj4+IHRoZXkgbWlnaHQgd29yayBpZiB0aGVyZSB3b3VsZCBi
+ZSBvbmUgYml0IHRvIHNldCBkaXJlY3Rpb24gb3IgdmFsdWUuDQo+PiBIb3dldmVyLA0KPj4gdGhp
+cyBpcyBub3QgdGhlIGNhc2UgZm9yIGRzNDUyMC4gSW4gb3RoZXIgd29yZHMsIGlmIEkgd2FudCB0
+byBzZXQgdGhlDQo+PiBncGlvIGRpcmVjdGlvbg0KPj4gYXMgb3V0cHV0LCBJIG5lZWQgdG8gc2V0
+IGEgY29ycmVzcG9uZGluZyBiaXQgZm9yIGJvdGggRjAgYW5kIEYxDQo+PiByZWdpc3RlcnMuDQo+
+DQo+SSBjYW4ndCBmb2xsb3cuIEYwL0YxIGlzIGZvciB0aGUgcHVsbC11cC4gVGhhdCB3YXMgYWN0
+dWFsbHkgbXkgaW5pdGlhbA0KPnF1ZXN0aW9uIGFuZCBMaW51cyBzYWlkLCB0aGF0IHNob3VsZCBw
+cm9iYWJseSBiZSBkb25lIGluIGEgc2VwZXJhdGUNCj4uc2V0X2NvbmZpZyBvcGVyYXRpb24gbm90
+IHRvZ2V0aGVyIHdpdGggYSBkaXJlY3Rpb24gY2hhbmdlLg0KDQpJIHRoaW5rIEkgdW5kZXJzdGFu
+ZCB3aGF0IHlvdSBhcmUgdHJ5aW5nIHRvIHNheSBzbyBmYXIuIEkgZGlkIG5vdCBoYXZlIHRvbyBt
+dWNoDQpleHBlcmllbmNlIHJlbGF0ZWQgdG8gZ3Bpby4gSSB3aWxsIHNldCBwdWxsX3VwIHJlZ2lz
+dGVyIGluIC5zZXRfY29uZmlnDQpIb3dldmVyLCBJIGRpZCBub3QgdW5kZXJzdGFuZCB3aGVyZSBp
+dHMgcGFyYW1ldGVycyBjb21lIGZyb20uDQpzZXRfY29uZmlnKHN0cnVjdCBncGlvX2NoaXAgKmNo
+aXAsIHVuc2lnbmVkIGludCBvZmZzZXQsDQoJICAgICAgdW5zaWduZWQgbG9uZyBjb25maWcpDQpJ
+dCBtaWdodCBiZSB0cml2aWFsIHF1ZXN0aW9uLCBidXQgV2hlcmUgZG9lcyBjb25maWcgY29tZSBm
+cm9tPw0KDQpBdCB0aGUgZW5kLCBJIHNob3VsZCByZXdyaXRlIHRoZSBjb2RlIHVzaW5nIHJlZ21h
+cF9ncGlvLCByaWdodD8gU28gaWYgSSByZXdyaXRlIA0KY29kZSB1c2luZyByZWdtYXBfZ3Bpbywg
+aG93IGNhbiBJIHJlcGxhY2Ugc2V0X2NvbmZpZyguLi4pPw0KDQo+DQo+PiBJbiB0aGUgZG9jdW1l
+bnQsIHlvdSBjYW4gc2VlIGJsb2NrIGRpYWdyYW0uIEkgZG8gbm90IGtub3cgd2h5LCBidXQNCj4+
+IGRlc2lnbiBpcw0KPj4gbm90IHN0YW5kYXJkIHRoYXTigJlzIHdoeSBJIHRoaW5rIEkgY2FuIG5v
+dCB1c2UgZ3Bpby1yZWdtYXAuDQo+Pg0KPj4+PiBBbHNvLCBhdCB0aGlzIHBvaW50IEkgYW0gbm90
+IHBsYW5uaW5nIHRvIGFkZCBudm1lbSBzdXBwb3J0Lg0KPj4+DQo+Pj4gVGhhdCBpcyBhIHBpdHks
+IGJlY2F1c2UgdGhhdCBpcyB0aGUgd2hvbGUgdXNlIGNhc2UgZm9yIHRoaXMgZ3Bpbw0KPj4+IGV4
+cGFuZGVyLA0KPj4+IG5vPyAiUHJvZ3JhbW1hYmxlIFJlcGxhY2VtZW50IGZvciBNZWNoYW5pY2Fs
+IEp1bXBlcnMgYW5kIFN3aXRjaGVzIg0KPj4NCj4+IEkgY2FuIHNldCAiU0VFIiBiaXQgYXMgIjAi
+IGluIHRoZSBDb25maWd1cmF0aW9uIFJlZ2lzdGVyIHRvIHdyaXRlDQo+PiBFRVBST00gc28gaXQg
+bWlnaHQgc29sdmUNCj4+IGlzc3VlLg0KPg0KPklmIHlvdSBkbyB0aGF0IHVuY29uZGl0aW9uYWxs
+eSwgdGhhdCBtaWdodCB3ZWFyIG91dCB0aGUgRUVQUk9NLA0KPnRob3VnaC4NCj4NCj4tbWljaGFl
+bA0KDQpIaSBNaWNoYWVsLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgc3VwcG9ydC4NCg0KUmVnYXJk
+cywNCk9rYW4gU2FoaW4NCg==
