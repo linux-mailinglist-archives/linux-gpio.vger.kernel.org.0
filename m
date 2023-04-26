@@ -2,102 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 925D86EF893
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Apr 2023 18:42:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FB676EFA0F
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Apr 2023 20:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbjDZQmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Apr 2023 12:42:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47358 "EHLO
+        id S234557AbjDZS30 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Apr 2023 14:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbjDZQmv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Apr 2023 12:42:51 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CB66181;
-        Wed, 26 Apr 2023 09:42:50 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-5ef4eba2598so33161656d6.3;
-        Wed, 26 Apr 2023 09:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682527369; x=1685119369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ggpp339csvMck1qaojB4l0EJxGca4R1Yz1EgNOKYVtM=;
-        b=sT64F7TcldJzjpkimocfIbwdtkCOo+TcMFPZP12s8jidVl0aDSjJ9gRjV5sAQqxZGA
-         hQ78cQAqGL5i53r8U+LXsyeCeZM4a/e3KHPmb9a5O0E51j/SmLlGBMk40NweB+GHVGB7
-         ARZHZoYiGIjsSMQqbkVj3DJG4OCZ5LQl7eOTb9WHN7zeDrp+2E0ZUXvHZtcyqJsnGaE7
-         KTJemL7q1FRyWuupQZDXsfPCVn3tosiFtI5f6bLCaeeDEENDYY/fcKvfUWxLPqU9noT/
-         CWHIEjBBKJAZfH8ONLDNDffetNKmqmYbXjQXpMWloSS9jTpfUaTZSFilmIxN8EG6UZXt
-         nOCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682527369; x=1685119369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ggpp339csvMck1qaojB4l0EJxGca4R1Yz1EgNOKYVtM=;
-        b=S6w/yDN/g/SJ86dP2hxuKd8pJfqNOlv96FK7igVZVCoU05EoXJMMBWIAmVtTisGNA2
-         eFiLmVIsSb8tRPBOTTiA83ZpqPl46uaXOjNmkyK6Idid38+ExluVGn17pd+uyqEaMoe0
-         PnkbXo0/mLlp2d1hJDpycDSfdVr/j+Aczp4wkqUVn9fCOEyBkDc3WpKoWd6I5XrQJ7su
-         5zEn93cICCjDMSGSzqy42dJbgZlDpLauciuni7MIAIs6SQk2BwOlAvcSDgmFAviwvkC8
-         Qst07b9VBOvXc7TvMh5QRhlGKE0mqS/4Ki81628dDdUKBVY5NnBmhAcACvRhRmOltCWY
-         Ojlw==
-X-Gm-Message-State: AAQBX9dYItEnATi2lD4rtVqDc1zTsavuyX1MtTfEgzpEKjNzr97DLD2E
-        eyezQrIedCR+xNlyXf1fbBE9e41Wn94dfQqBaO4=
-X-Google-Smtp-Source: AKy350Y2jqYhQeTdBxdIqzYV84xZ6UGCodZ9YFavgvUcXld9txQu168Q3f9vqRKA7yt1auTUXb2Sa0H+29LvlRVMdF0=
-X-Received: by 2002:a05:6214:20c1:b0:5ea:654e:4d3f with SMTP id
- 1-20020a05621420c100b005ea654e4d3fmr33485133qve.5.1682527369654; Wed, 26 Apr
- 2023 09:42:49 -0700 (PDT)
+        with ESMTP id S230491AbjDZS3Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Apr 2023 14:29:25 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CDA74495;
+        Wed, 26 Apr 2023 11:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kFhUT9deVkPno3Q0meiZoeVjv8fm14gpU8+QGcR0u6U=; b=sI7ZBvMPEapatwzcxQora07MzP
+        n+zAT4y8oJMUT9gn56vrTOpOidYi+RTEtb3RQNJfhQkoe8lhLSjvE4Vaphsz/C5wnXcHxSGfFHVkJ
+        6QE+CNg/2FR27Cx+ZJdVIgVCBKQcGGLKG9DOjet7p3S9KpPevzMJPPVEX+Gr9e+QDmzQ3is8zxToe
+        R3FrdrA3zxL0X424lRT+RRY2NehdBE+lbluJDjjkyHWt32sNt4+TQdb7m1YcL+F1G2gZiJv1mwG5J
+        cFvrXGJZMHhaYARcEXUAteW83ekIc0UPQvsXdhfxON8isvtLVDUI0Pw9xbOzWQm3aAK5fPDzgtsic
+        Ol38XKuQ==;
+Received: from p200300ccff09c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff09:c200:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1prjt8-0007og-2C; Wed, 26 Apr 2023 20:29:10 +0200
+Date:   Wed, 26 Apr 2023 20:29:08 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     andy.shevchenko@gmail.com
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [BISECTED REGRESSION] OMAP1 GPIO breakage
+Message-ID: <20230426202908.17b55974@aktux>
+In-Reply-To: <ZEkCg-WqwBHVZwHC@surfacebook>
+References: <20230425173241.GF444508@darkstar.musicnaut.iki.fi>
+        <20230425201117.457f224c@aktux>
+        <20230425183857.GG444508@darkstar.musicnaut.iki.fi>
+        <20230425212040.5a4d5b09@aktux>
+        <20230425193637.GH444508@darkstar.musicnaut.iki.fi>
+        <20230425215848.247a936a@aktux>
+        <20230426071910.GE14287@atomide.com>
+        <20230426093920.3e9b5c61@aktux>
+        <ZEkCg-WqwBHVZwHC@surfacebook>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.24; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1682327030-25535-1-git-send-email-quic_rohiagar@quicinc.com>
- <1682327030-25535-3-git-send-email-quic_rohiagar@quicinc.com>
- <ZEk9lySMZcrRZYwX@surfacebook> <66158251-6934-a07f-4b82-4deaa76fa482@quicinc.com>
-In-Reply-To: <66158251-6934-a07f-4b82-4deaa76fa482@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Apr 2023 19:42:13 +0300
-Message-ID: <CAHp75VcCAOD3utLjjXeQ97nGcUTm7pic5F52+e7cJDxpDXwttA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] pinctrl: qcom: Add SDX75 pincontrol driver
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
-        manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0 (-)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 6:18=E2=80=AFPM Rohit Agarwal <quic_rohiagar@quicin=
-c.com> wrote:
-> On 4/26/2023 8:34 PM, andy.shevchenko@gmail.com wrote:
-> > Mon, Apr 24, 2023 at 02:33:50PM +0530, Rohit Agarwal kirjoitti:
+On Wed, 26 Apr 2023 13:52:51 +0300
+andy.shevchenko@gmail.com wrote:
 
-...
+> Wed, Apr 26, 2023 at 09:39:20AM +0200, Andreas Kemnade kirjoitti:
+> > On Wed, 26 Apr 2023 10:19:10 +0300
+> > Tony Lindgren <tony@atomide.com> wrote:  
+> > > * Andreas Kemnade <andreas@kemnade.info> [230425 19:58]:  
+> > > > On Tue, 25 Apr 2023 22:36:37 +0300
+> > > > Aaro Koskinen <aaro.koskinen@iki.fi> wrote:  
+> > > > > On Tue, Apr 25, 2023 at 09:20:40PM +0200, Andreas Kemnade wrote:    
+> > > > > > Aaro Koskinen <aaro.koskinen@iki.fi> wrote:      
+> 
+> ...
+[...]
+> > I think the reason for the patch (besides of cleaning up warnings) is that
+> > dynamic allocation seems to start at 512, static at zero.
+> > If both are there, like registering twl_gpio between omap gpiochip 4 and 5,
+> > dynamic allocation seems just to start after the last static number,
+> > calling for trouble.
+> > 
+> > If dynamic alloc would just start at 512 in that case too, no problem would appear.
+> > As said I have not bisected it to an exact commit yet.
+> > So if we need to move backward, we should IMHO first fix that allocation thing.  
+> 
+> I agree.
+> 
+> As PoC can the reported add the following lines
+> 
+> 	if (gdev->base < GPIO_DYNAMIC_BASE)
+> 		continue;
+>  
+> after https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L190
+> and test your idea?
+> 
+> 
+yes,
+looking at git blame
+7b61212f2a07a ("gpiolib: Get rid of ARCH_NR_GPIOS")
 
-> >> +#define FUNCTION(fname)                                              =
-       \
-> >> +    [msm_mux_##fname] =3D {                                          =
- \
-> >> +            .name =3D #fname,                                        =
- \
-> >> +            .groups =3D fname##_groups,                              =
- \
-> >> +    .ngroups =3D ARRAY_SIZE(fname##_groups),                         =
- \
-> >> +    }
-> > PINCTRL_PINFUNCTION() ?
-> Ok, Will update this. Shall I also update "PINGROUP" to "PINCTRL_PINGROUP=
-"?
+would probably have been the correct Fixes-tag for for that patch (and
+will be for the new approach to fix it) and its intention was exactly
+what we are talking about.
 
-Yes, please.
+I will test.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Regards,
+Andreas
