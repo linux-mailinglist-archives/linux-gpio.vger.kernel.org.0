@@ -2,66 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32E6A6F0903
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 18:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8218F6F090F
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 18:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243703AbjD0QDW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 12:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45828 "EHLO
+        id S243773AbjD0QGJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 12:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243734AbjD0QDT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 12:03:19 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD0E3585;
-        Thu, 27 Apr 2023 09:03:13 -0700 (PDT)
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-38be107e467so2935078b6e.2;
-        Thu, 27 Apr 2023 09:03:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682611393; x=1685203393;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PpUDR78eVgfoaENlXo4BrweBkLjcgbvwpsdEBZODQfU=;
-        b=UDGYcrX9b2Sd5UzmPHBcOE5ZpG97/HV160me2bz4YDNRn4uwlePW7TTP5GJlhtFRG/
-         jZPcFAJ5NOfwVbJbSH9nt6YdCPsyv7AaAQ74HYJfgVDj3/f39gYG1U8MpRz8yk87zf3f
-         2rkQ0lajPsFyydbsthGbHobdMBspHGSp6UjCMUtasv1ij/7o5Rs+IPPpBhX/WZEBUQY1
-         XFmF6/tlGEZ57Pc9Gt3ET/5InJb2D5KfFzY/shqkkyq589QdG6POcqUMP0tEZYWxm+23
-         hhQZVIgKj0cHezC4od8O5v6exobSSM2j2P6FHSsgaFNM+pgg7CJrjDunB9bqbfEiTJ/l
-         SGng==
-X-Gm-Message-State: AC+VfDzWzIkntI5+eRG2vdcv6YD++mSc7QVc/xb0wQD/eEbMc6fB0eQ6
-        DOY1rhw22Q1LQpO6Vek2ig==
-X-Google-Smtp-Source: ACHHUZ7uXMKR7Wlwe7Q/gwyCErihpXXjybpweDLlaHz6Jnvmdt9R+Qb1/zEjBssZhiYR2/3YlNZkfw==
-X-Received: by 2002:a05:6808:2a87:b0:38e:4c7:571d with SMTP id fc7-20020a0568082a8700b0038e04c7571dmr881164oib.50.1682611392688;
-        Thu, 27 Apr 2023 09:03:12 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id s185-20020acadbc2000000b00389898f4c4fsm7861059oig.45.2023.04.27.09.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 09:03:12 -0700 (PDT)
-Received: (nullmailer pid 3103243 invoked by uid 1000);
-        Thu, 27 Apr 2023 16:03:11 -0000
-Date:   Thu, 27 Apr 2023 11:03:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Paterson <chris.paterson2@renesas.com>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S243215AbjD0QGI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 12:06:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A612D72;
+        Thu, 27 Apr 2023 09:06:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2FCF463E1E;
+        Thu, 27 Apr 2023 16:06:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D48C433D2;
+        Thu, 27 Apr 2023 16:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682611566;
+        bh=yAGznPCZ1f2WazjLpiWbzBNsj4vdYifi0lN+d8TNCtU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E/3sEjGTsOwO5uk3d4zMUrh86nUJwkupb7f5EPLaMQVyPJSTGa1y6pdHXr9N/ncdw
+         3mMaEmPYOHF0UypoXp6I18DLEk3U91bVOy7mdxCgPNL7gUCKKU5huxVbGPdDUSN0Kt
+         pM+T9OWxhF/BhdnUuecjo+P7I53EMin0HlzUcMYSQzNsR/e85cuNE1tckjYeldSeNO
+         DbD15RCUQE3w2rlu2KkzdYxJwpvGVPUuudrOxQ5oArtC6tLrHPX1aIDcvJEo0mhSaG
+         OrEM0sRh6sIB80F5mji/rWA7k3se54UwIuJAy8NEoDTbwh5hsrBKhxxwuhusLZy2Mr
+         vLvTmz14BukJA==
+Date:   Thu, 27 Apr 2023 17:05:59 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzv2m: Change maintainer
- to Fabrizio Castro
-Message-ID: <168261138977.3103147.17710100927203706954.robh@kernel.org>
-References: <20230426100832.11945-1-chris.paterson2@renesas.com>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] Documentation: leds: Add "rgb:status" path
+Message-ID: <20230427160559.GC50521@google.com>
+References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
+ <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230426100832.11945-1-chris.paterson2@renesas.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,15 +69,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, 18 Apr 2023, Luca Weiss wrote:
 
-On Wed, 26 Apr 2023 11:08:32 +0100, Chris Paterson wrote:
-> Phil no longer works for Renesas.
-> 
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> The path /sys/class/leds/rgb:status is already widely used with the
+> qcom-lpg driver and others. Document it.
+
+Where is this used?
+
+$ grep status drivers/leds/rgb/leds-qcom-lpg.c
+<no results>
+
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
->  .../devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/leds/well-known-leds.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/leds/well-known-leds.txt b/Documentation/leds/well-known-leds.txt
+> index 2160382c86be..439d4dac4472 100644
+> --- a/Documentation/leds/well-known-leds.txt
+> +++ b/Documentation/leds/well-known-leds.txt
+> @@ -58,6 +58,7 @@ LEDs on notebook body, indicating that sound input / output is muted.
+>  
+>  * System notification
+>  
+> +Good: "rgb:status"
+>  Legacy: "status-led:{red,green,blue}" (Motorola Droid 4)
+>  Legacy: "lp5523:{r,g,b}" (Nokia N900)
+>  
+> 
+> -- 
+> 2.40.0
 > 
 
-Applied, thanks!
-
+-- 
+Lee Jones [李琼斯]
