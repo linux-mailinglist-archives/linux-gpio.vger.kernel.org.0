@@ -2,67 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F92D6F0453
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 12:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE2B6F046B
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 12:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243509AbjD0KnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 06:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37988 "EHLO
+        id S243627AbjD0Kq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 06:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243094AbjD0KnG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 06:43:06 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414382103;
-        Thu, 27 Apr 2023 03:43:05 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-75131c2997bso176884185a.1;
-        Thu, 27 Apr 2023 03:43:05 -0700 (PDT)
+        with ESMTP id S243555AbjD0Kqv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 06:46:51 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED65F59C7;
+        Thu, 27 Apr 2023 03:46:37 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-3ef38864360so83636741cf.2;
+        Thu, 27 Apr 2023 03:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682592184; x=1685184184;
+        d=gmail.com; s=20221208; t=1682592397; x=1685184397;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aYgnRNwbIYIIzSu83L1pRc4OTtSlLOx+WGzeWTwcNyo=;
-        b=qvISANOZFvBtug/xnJeaLEqFhYyurlT6jR0Y33ITAX9YnoP1ctWjOCxb0dSlwz3NRe
-         R0zg8hVag7xnH7SygsgiHR69Q6/x/9EcJCDEmtzffPNnZXCVWPp1RKipibiXT2TLSZRR
-         SAE8UYaK9sPX4QTTHLYZm2U86r39LNeNlTeczZn/qF6SK7BjzfmjqVOsgz/qKL9UDQNV
-         8JRJOMGFwoceOnXBERYmQCy4LzPxKCAIH70WYyrSR1BFWgqxrgnGWjW48fXnlGg2XHym
-         oLMNGB0iTwp661b/SoHWkBxwnCSibP0rpTreNcFGEsn/0yygh74+crsocVG+8rzpdiVh
-         n2Iw==
+        bh=khfGPRS85Vq7Ff4Ms3My2tPal19zyIsJYVi7TPES5OQ=;
+        b=H2NKfjmXqSaDFIGx/KzMyc1lGGu3fyWaR1zODyZKQJdwm96farKgAAlwvZw932bpae
+         hXd84u17NhNTJXPGsXQHaaG2fSugonCuCRXwlaEixkbosuVujgVPeJu5yqxnLHN4iMbS
+         6oXZyYZw5gd1YqjV6UfvP2PVq2duNUF9t1eoRAKC/GS9FEl5ThLnulmkn/XCC9HvMLIy
+         g3IvoLer835JT0JcVh3XHUZcWPyDZxcC7ghI0G8ZxCVT22A983LIf1PLCLkODM6KabTP
+         RAUY7y+MhY3Pd1Skby6JkqLrATQKTPO+8De7ehIEDI3nkp3cYw+SAm1AF33/0rC5ijQr
+         Vvmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682592184; x=1685184184;
+        d=1e100.net; s=20221208; t=1682592397; x=1685184397;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aYgnRNwbIYIIzSu83L1pRc4OTtSlLOx+WGzeWTwcNyo=;
-        b=exXrbSgCPqGBm1fi37pe+Z4xuOs5fH0Ra/3qzAGCNQGTYypZ46hhBZkTDI/MGA6tej
-         r7f0lzgitPAdJAehbgT6m72jVw4g9/S/B1lNIjQOd9Kbozu2PWoIbISUZhd3KQFmhWE8
-         pAcuY2LNbCaKn3P8m6g+N/HMvDBb+IlKa7PRa3cqCNJ4xiRsa88xnOR89sR0REKTJCoA
-         cntGwztJAcacxGvDY17zCSHmykIE+GQ9/I546M3aKKCD2jENrsE1UAVy5gQEfwiGBQy8
-         Q8wOxb6djfieRoDNis/HAnolAhmKi9dGFI83R5xrQo9OMGA5ooGX0SbrNtCo3TOv5lYc
-         xBBQ==
-X-Gm-Message-State: AC+VfDzfddHWtwXj7t59oDoa0V0LlY+DRB1KPy4IjGvwX3GGmqpfYKED
-        UluvuMKqdw0Hcns0SiehevTXZugCFZP3cN72KaM=
-X-Google-Smtp-Source: ACHHUZ7vGjKCD9G5DWKeLljtV40o1yNxj5Obnb0tMJP/f2xNqd15EQpL103oJM2ZcZQxM/JiXR0mMfnVJYEW1o5SnHc=
-X-Received: by 2002:a05:622a:1355:b0:3e6:6c6d:94dc with SMTP id
- w21-20020a05622a135500b003e66c6d94dcmr7790620qtk.26.1682592184290; Thu, 27
- Apr 2023 03:43:04 -0700 (PDT)
+        bh=khfGPRS85Vq7Ff4Ms3My2tPal19zyIsJYVi7TPES5OQ=;
+        b=ODlfb1apqH0FZmDu/kdI1eZhW/KDWsrHR6bWvH4IF8XrajoxzJrhP7Z54O8LQCT5lQ
+         T3S1mTbCPyvzBCWIveedeD6eAn6EGmlCApMaLrRoOEg7TQ0v4MKVb+fi3GYcHlgRiBvQ
+         or20P3TjJ1eg5BuzmauomZIO4pqoMmJ9tyl6CCVj6zcn9p836vXek13dfPu09mxSdHVC
+         vl//9OwWOx91zpvXTYDW1HjdDllBiflvplkweIMsRafbWzdXx9aCfkgbLbIqvT7MqbNL
+         pHSxsl6gFRiqNqCmQ67uDStq+coHrblcebF1W/A9GO7rg14woIOed0iMTWCp3XNtVfqR
+         QhQA==
+X-Gm-Message-State: AC+VfDzqsX+H7Ekla3QFCEF6xA525ag+Xsd5KwXDowLJvk3xFgY83nv2
+        v3Wgyv9FMPOd3/roqH/XyGPmsTISucmeL8maGInten9bneYP8w==
+X-Google-Smtp-Source: ACHHUZ7CIgc/BsbmBHGKvw4r/T6e89y95R+ziXfEr9TH7hLMSFLN3HmWN3TSeWApq9MSwf1PMWcnrfuV+lIAaNWYBfI=
+X-Received: by 2002:a05:622a:1755:b0:3ef:4c4b:7e1e with SMTP id
+ l21-20020a05622a175500b003ef4c4b7e1emr1617566qtk.29.1682592397024; Thu, 27
+ Apr 2023 03:46:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230426071434.452717-1-jiawenwu@trustnetic.com>
- <20230426071434.452717-3-jiawenwu@trustnetic.com> <ZElCHGho-szyySGC@surfacebook>
- <013a01d978ae$182104c0$48630e40$@trustnetic.com> <CAHp75Vdnm1bykoX5Dh9nen7jB5bGfLELw0PvXBcqs1PXTf31rA@mail.gmail.com>
- <015301d978d5$5e74f270$1b5ed750$@trustnetic.com>
-In-Reply-To: <015301d978d5$5e74f270$1b5ed750$@trustnetic.com>
+References: <20230426220338.430638-1-andreas@kemnade.info> <f6b261ad-3267-db70-c173-154a12c42bea@csgroup.eu>
+ <CAHp75Vep8VSirY7mvGGCubNi-O4jS_inTALS3Ei9mQu98RV+7Q@mail.gmail.com>
+ <52453352-74bd-979f-03b6-322489800538@csgroup.eu> <20230427123733.15ad4aa3@aktux>
+In-Reply-To: <20230427123733.15ad4aa3@aktux>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Apr 2023 13:42:28 +0300
-Message-ID: <CAHp75Vf54dkq9t9qt0KFjkUyj6sYrYxa8n70NxYiQX_XFJpx-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v5 2/9] i2c: designware: Add driver support
- for Wangxun 10Gb NIC
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        jsd@semihalf.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Date:   Thu, 27 Apr 2023 13:46:01 +0300
+Message-ID: <CAHp75VezDMZkRTRHRACtJZCW2S_1NoZL5GDK7tmA2vzjrAhOKg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix allocation of mixed dynamic/static GPIOs
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ": Tony Lindgren" <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,86 +76,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 9:58=E2=80=AFAM Jiawen Wu <jiawenwu@trustnetic.com>=
- wrote:
-> On Thursday, April 27, 2023 1:57 PM, Andy Shevchenko wrote:
-> > On Thu, Apr 27, 2023 at 5:15=E2=80=AFAM Jiawen Wu <jiawenwu@trustnetic.=
-com> wrote:
-> > > On Wednesday, April 26, 2023 11:45 PM, andy.shevchenko@gmail.com wrot=
-e:
-> > > > Wed, Apr 26, 2023 at 03:14:27PM +0800, Jiawen Wu kirjoitti:
-
-...
-
-> > > > > +static int txgbe_i2c_request_regs(struct dw_i2c_dev *dev)
-> > > > > +{
-> > > > > +   struct platform_device *pdev =3D to_platform_device(dev->dev)=
-;
-> > > > > +   struct resource *r;
-> > > > > +
-> > > > > +   r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > > > +   if (!r)
-> > > > > +           return -ENODEV;
-> > > > > +
-> > > > > +   dev->base =3D devm_ioremap(&pdev->dev, r->start, resource_siz=
-e(r));
-> > > > > +
-> > > > > +   return PTR_ERR_OR_ZERO(dev->base);
-> > > > > +}
-> > > >
-> > > > Redundant. See below.
-
-...
-
-> > > > >     case MODEL_BAIKAL_BT1:
-> > > > >             ret =3D bt1_i2c_request_regs(dev);
-> > > > >             break;
-> > > > > +   case MODEL_WANGXUN_SP:
-> > > > > +           ret =3D txgbe_i2c_request_regs(dev);
-> > > >
-> > > > How is it different to...
-> > > >
-> > > > > +           break;
-> > > > >     default:
-> > > > >             dev->base =3D devm_platform_ioremap_resource(pdev, 0)=
-;
-> > > >
-> > > > ...this one?
-> > >
-> > > devm_platform_ioremap_resource() has one more devm_request_mem_region=
-()
-> > > operation than devm_ioremap(). By my test, this memory cannot be re-r=
-equested,
-> > > only re-mapped.
-> >
-> > Yeah, which makes a point that the mother driver requests a region
-> > that doesn't belong to it. You need to split that properly in the
-> > mother driver and avoid requesting it there. Is it feasible? If not,
-> > why?
+On Thu, Apr 27, 2023 at 1:37=E2=80=AFPM Andreas Kemnade <andreas@kemnade.in=
+fo> wrote:
 >
-> The I2C region belongs to the middle part of the total region. It was not=
- considered to
-> split because the mother driver implement I2C bus master driver itself in=
- the previous
-> patch. But is it suitable for splitting? After splitting, I get two virtu=
-al address, and each
-> time I read/write to a register, I have to determine which region it belo=
-ngs to...Right?
+> On Thu, 27 Apr 2023 06:20:34 +0000
+> Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+>
+> > Le 27/04/2023 =C3=A0 08:00, Andy Shevchenko a =C3=A9crit :
+> > > On Thu, Apr 27, 2023 at 8:40=E2=80=AFAM Christophe Leroy
+> > > <christophe.leroy@csgroup.eu> wrote:
+> > >>
+> > >>
+> > >>
+> > >> Le 27/04/2023 =C3=A0 00:03, Andreas Kemnade a =C3=A9crit :
+> > >>> [Vous ne recevez pas souvent de courriers de andreas@kemnade.info. =
+D=C3=A9couvrez pourquoi ceci est important =C3=A0 https://aka.ms/LearnAbout=
+SenderIdentification ]
+> > >>>
+> > >>> If static allocation and dynamic allocation GPIOs are present,
+> > >>> dynamic allocation pollutes the numberspace for static allocation,
+> > >>> causing static allocation to fail.
+> > >>> Enfore dynamic allocation above GPIO_DYNAMIC_BASE.
+> > >>
+> > >> Hum ....
+> > >>
+> > >> Commit 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS") was suppos=
+ed
+> > >> to enforce dynamic allocation above GPIO_DYNAMIC_BASE already.
+> > >>
+> > >> Can you describe what is going wrong exactly with the above commit ?
+> > >
+> > > Above commit only works to the first dynamic allocation, if you need
+> > > more than one with static ones present it mistakenly will give you a
+> > > base _below_ DYNAMIC_BASE.
+> >
+> > Ah right, that needs to be fixed.
+> >
+> > >
+> > > However, this change is just PoC I proposed, the conditional and
+> > > action should be slightly different to cover a corner case, when
+> > > statically allocated chip overlaps the DYNAMIC_BASE, i.e. gdev->base =
+<
+> > > DYNAMIC_BASE, while gdev->base + gdev->ngpio >=3D DYNAMIC_BASE.
+> > >
+> >
+> > Yes you are right, that's gdev->base + gdev->ngpio that should be check=
+ed.
+> >
+> and that not with simple continue or base might simply stay at DYNAMIC_BA=
+SE.
+>
+> I will send a v2 of this patch with refined logic.
 
-If it's in the middle there are two (maybe more, but I can't right now
-come up with) possible solutions:
-1/ mother driver can provide a regmap, then in the children drivers
-the dev_get_regmap(pdev->dev.parent) will return it (see
-intel_soc_pmic_*.c set of drivers, IIRC they work with this schema in
-mind)
-2/ in the mother driver you need to open code remapping resource in a
-way that it does ioremap and request regions separately.
-
-The problem with your current approach is that you request a region in
-the driver which does not handle that part of IO space and belongs to
-another one. It's a clear layering violation. (Note, we already have
-one big driver that does something like this and we have to learn from
-it not to be trapped by making the same mistake).
+Actually it would be nice to integrate a warning (if we don't have it
+yet) when adding a GPIO chip with a static allocation and which will
+overlap the dynamic base. Can you add that into your v2?
 
 
 --=20
