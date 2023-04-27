@@ -2,66 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8218F6F090F
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 18:06:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB48A6F0938
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 18:10:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243773AbjD0QGJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 12:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
+        id S229554AbjD0QKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 12:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243215AbjD0QGI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 12:06:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A612D72;
-        Thu, 27 Apr 2023 09:06:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2FCF463E1E;
-        Thu, 27 Apr 2023 16:06:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D48C433D2;
-        Thu, 27 Apr 2023 16:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682611566;
-        bh=yAGznPCZ1f2WazjLpiWbzBNsj4vdYifi0lN+d8TNCtU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E/3sEjGTsOwO5uk3d4zMUrh86nUJwkupb7f5EPLaMQVyPJSTGa1y6pdHXr9N/ncdw
-         3mMaEmPYOHF0UypoXp6I18DLEk3U91bVOy7mdxCgPNL7gUCKKU5huxVbGPdDUSN0Kt
-         pM+T9OWxhF/BhdnUuecjo+P7I53EMin0HlzUcMYSQzNsR/e85cuNE1tckjYeldSeNO
-         DbD15RCUQE3w2rlu2KkzdYxJwpvGVPUuudrOxQ5oArtC6tLrHPX1aIDcvJEo0mhSaG
-         OrEM0sRh6sIB80F5mji/rWA7k3se54UwIuJAy8NEoDTbwh5hsrBKhxxwuhusLZy2Mr
-         vLvTmz14BukJA==
-Date:   Thu, 27 Apr 2023 17:05:59 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S243023AbjD0QKw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 12:10:52 -0400
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E09F35BB;
+        Thu, 27 Apr 2023 09:10:51 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-18f16a2c329so5328206fac.0;
+        Thu, 27 Apr 2023 09:10:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682611850; x=1685203850;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2zb4UIqURY+BWTS3e9vX+YTZaBHbEmn0Eg9W3zLRlAs=;
+        b=TVTe8fmkiSObNpKmCb48LRQ9XR6DmHlGNVO4hqQMq3XJZ7mWKBt2P0fKIrwa9oSFzw
+         cySYBtWNR5Ijg90pOuguNvuALh4mHVfCApFzPcz+9wETK5L6fxoBzUVSFVquGNtEQIYU
+         mFEz39VyB/Ur08g++kXD6J0C6bSyKgaNf4aHXmaAeP48zr2aHehtLUKHXxJgXBqXaW/N
+         KqkSOiE76Im9RFVY5CUZZoy29C7OJp4Lpp0cl8ti3DscbQcUH/RV7ImaZvnvVWK1RtvE
+         iUgVJ68WGA5F0/SgsR6ZJSXFyfIdxPhMW16SjxdDV/WTEZxmKfRcUU6A6Q4soo272Xk0
+         ifyA==
+X-Gm-Message-State: AC+VfDwiGBoWL6aWm+Vq06D3ByvVkCGjEJk/qZ9Zr6FKeN36N7mzoDvZ
+        kvRFJlNV83voEH57XHTfHA==
+X-Google-Smtp-Source: ACHHUZ69Sq4w3EraVz3yG/3YjM+ceN2r9AONaP5KgtunTytLs//j63DXjClPMLRDUmHDfuI/a8cy3w==
+X-Received: by 2002:a05:6830:201a:b0:6a7:bced:411e with SMTP id e26-20020a056830201a00b006a7bced411emr1138804otp.3.1682611850271;
+        Thu, 27 Apr 2023 09:10:50 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i15-20020a9d624f000000b0069fb8bfb4f3sm8056756otk.77.2023.04.27.09.10.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Apr 2023 09:10:49 -0700 (PDT)
+Received: (nullmailer pid 3112114 invoked by uid 1000);
+        Thu, 27 Apr 2023 16:10:49 -0000
+Date:   Thu, 27 Apr 2023 11:10:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] Documentation: leds: Add "rgb:status" path
-Message-ID: <20230427160559.GC50521@google.com>
-References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
- <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee@kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add STMPE YAML DT schema
+Message-ID: <20230427161049.GA3107476-robh@kernel.org>
+References: <20230426-stmpe-dt-bindings-v2-0-2f85a1fffcda@linaro.org>
+ <20230426-stmpe-dt-bindings-v2-1-2f85a1fffcda@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20230426-stmpe-dt-bindings-v2-1-2f85a1fffcda@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,37 +74,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 18 Apr 2023, Luca Weiss wrote:
-
-> The path /sys/class/leds/rgb:status is already widely used with the
-> qcom-lpg driver and others. Document it.
-
-Where is this used?
-
-$ grep status drivers/leds/rgb/leds-qcom-lpg.c
-<no results>
-
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+On Wed, Apr 26, 2023 at 01:21:38PM +0200, Linus Walleij wrote:
+> This adds a schema for the STMPE GPIO that while it is used a
+> lot in the kernel tree is anyway missing its bindings.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/leds/well-known-leds.txt | 1 +
->  1 file changed, 1 insertion(+)
+> ChangeLog v1->v2:
+> - New patch split off from the MFD patch.
+> ---
+>  .../devicetree/bindings/gpio/st,stmpe-gpio.yaml    | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
 > 
-> diff --git a/Documentation/leds/well-known-leds.txt b/Documentation/leds/well-known-leds.txt
-> index 2160382c86be..439d4dac4472 100644
-> --- a/Documentation/leds/well-known-leds.txt
-> +++ b/Documentation/leds/well-known-leds.txt
-> @@ -58,6 +58,7 @@ LEDs on notebook body, indicating that sound input / output is muted.
->  
->  * System notification
->  
-> +Good: "rgb:status"
->  Legacy: "status-led:{red,green,blue}" (Motorola Droid 4)
->  Legacy: "lp5523:{r,g,b}" (Nokia N900)
->  
-> 
-> -- 
-> 2.40.0
-> 
+> diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+> new file mode 100644
+> index 000000000000..6e991ebbdf77
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/st,stmpe-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectonics Port Expander (STMPE) GPIO Block
+> +
+> +description: STMicroelectronics Port Expander (STMPE) is a series of slow
+> +  bus controllers for various expanded peripherals such as GPIO, keypad,
+> +  touchscreen, ADC, PWM or rotator. It can contain one or several different
+> +  peripherals connected to SPI or I2C. These bindings pertain to the
+> +  GPIO portions of these expanders.
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stmpe-gpio
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  interrupt-controller: true
+> +
+> +  st,norequest-mask:
+> +    description: A bitmask of GPIO lines that cannot be requested because for
+> +      for example not being connected to anything on the system
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +patternProperties:
+> +  "^.+-hog(-[0-9]+)?$":
+> +    type: object
+> +
+> +    properties:
+> +      gpio-hog: true
+> +      gpios: true
+> +      input: true
+> +      output-high: true
+> +      output-low: true
+> +      line-name: true
+> +
+> +    required:
+> +      - gpio-hog
+> +      - gpios
 
--- 
-Lee Jones [李琼斯]
+All you need for hog nodes is:
+
+"^.+-hog(-[0-9]+)?$":
+  type: object
+  required:
+    - gpio-hog
+
+The presence of 'gpio-hog' causes the hog schema to be applied.
+
+Rob
