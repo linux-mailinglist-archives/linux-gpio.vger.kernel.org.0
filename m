@@ -2,93 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B89A86F0A93
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 19:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 443706F0B6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 19:51:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244348AbjD0RPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 13:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
+        id S244409AbjD0RvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 13:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243894AbjD0RPv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 13:15:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD31B1993;
-        Thu, 27 Apr 2023 10:15:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B33963BB9;
-        Thu, 27 Apr 2023 17:15:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5ABC4339E;
-        Thu, 27 Apr 2023 17:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682615749;
-        bh=6lphV+9yp+4j33QChmFrKQxUY8ArwGcehoykxFMj7QU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T1pfzL4mwgyxQN6l2n2mNG8FVUxAqYlre5o1+veoWSGdtDsrOuCSCKnXwI2486SKW
-         BzkN3jVHdx81+gNh9VWnGcZkr788fptNJXiG5h2+YNf4PXeXNC/m8WjSmQBoUDSQRR
-         60fEt/SOURAFBZRNIaFXqZCheH6XEU77uX+HfuaWursAcb3sIaIcYjXbFstLgoqGox
-         Tsa1aUEQl6Y4y2/LbM9BQe4caqngSMZOi3SGam/ud9/CYtNLKBwd5wx4ldJsZB4BR7
-         ZwI8ngMpIN4thRLHYlRnpt0vPCt2CbHjhCg76KVPVLUAibhNFEpcl8DAONcmKwIwPT
-         tKP6nNaC7Jjjg==
-Date:   Thu, 27 Apr 2023 18:15:44 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     "larry.lai" <larry.lai@yunjingtech.com>
-Cc:     andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
-        pavel@ucw.cz, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-leds@vger.kernel.org,
-        GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
-        jack.chang@yunjingtech.com, noah.hung@yunjingtech.com,
-        michael.wang@yunjingtech.com
-Subject: Re: [RFC RESEND 3/3] leds: Add support for UP board CPLD onboard LEDS
-Message-ID: <20230427171544.GF620451@google.com>
-References: <20230425152135.30745-1-larry.lai@yunjingtech.com>
- <20230425152135.30745-4-larry.lai@yunjingtech.com>
+        with ESMTP id S243982AbjD0RvW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 13:51:22 -0400
+Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFC210D;
+        Thu, 27 Apr 2023 10:51:21 -0700 (PDT)
+Received: from g550jk.localnet (unknown [62.108.10.64])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id DD897CCBE1;
+        Thu, 27 Apr 2023 17:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1682617849; bh=NIY1N6khezq9+ZTcdf4CI2PZJx2zYchLwM1fp6lZo0A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=aXEMnvun3ENv8iPHd1MiLBtsE5FXHEqngQMklwv+OslGFTyAdx9vqOnq8xShhCEg8
+         +0cqiUeamn2INSEdAz7NDlFZU70J9NNbqnAuwo/H2kbdGg2ph3hEco01xg0Qs4Wtnr
+         2WXv4VZNp1i33nchNq6wUl9EyUd3WxUh4R8YyEEk=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Lee Jones <lee@kernel.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] Documentation: leds: Add "rgb:status" path
+Date:   Thu, 27 Apr 2023 19:50:47 +0200
+Message-ID: <5823752.MhkbZ0Pkbq@z3ntu.xyz>
+In-Reply-To: <20230427160559.GC50521@google.com>
+References: <20230414-pmi632-v2-0-98bafa909c36@z3ntu.xyz>
+ <20230414-pmi632-v2-8-98bafa909c36@z3ntu.xyz>
+ <20230427160559.GC50521@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230425152135.30745-4-larry.lai@yunjingtech.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 25 Apr 2023, larry.lai wrote:
-
-> The UP boards come with a few FPGA-controlled onboard LEDs:
-> * UP Board: yellow, green, red
-> * UP Squared: blue, yellow, green, red
+On Donnerstag, 27. April 2023 18:05:59 CEST Lee Jones wrote:
+> On Tue, 18 Apr 2023, Luca Weiss wrote:
+> > The path /sys/class/leds/rgb:status is already widely used with the
+> > qcom-lpg driver and others. Document it.
 > 
-> This patch depends on patch "mfd: Add support for UP board CPLD/FPGA".
+> Where is this used?
 > 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Lee Jones <lee@kernel.org>
+> $ grep status drivers/leds/rgb/leds-qcom-lpg.c
+> <no results>
 
-Definitely not.  Please try again after reading:
+This is set in devicetree, e.g. from qcom-msm8974pro-fairphone-fp2.dts[0]:
 
-  Documentation/process/submitting-patches.rst
+    color = <LED_COLOR_ID_RGB>;
+    function = LED_FUNCTION_STATUS;
 
-> Signed-off-by: larry.lai <larry.lai@yunjingtech.com>
-> ---
-> RFC 2022/11/23 --> RFC 2023/04/25: Refer 2022/12/08 Lee Jones review,
-> cleaned up coding style.
-> PATCH V3 -> RFC 2022/11/23: Update the changes Copyright.
-> PATCH V1 -> V3: There is no change.
-> PATCH --> PATCH V1: Refer 2022/10/03 Andy Shevchenko review, cleaned up
-> coding style.
-> ---
-> ---
->  drivers/leds/Kconfig        | 10 +++++
->  drivers/leds/Makefile       |  1 +
->  drivers/leds/leds-upboard.c | 79 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 90 insertions(+)
->  create mode 100644 drivers/leds/leds-upboard.c
+And then something in the LED core sets the name based on that, I'd have
+to dig to find where exactly.
 
--- 
-Lee Jones [李琼斯]
+Regards
+Luca
+
+[0] https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/qcom-msm8974pro-fairphone-fp2.dts#L105-L106
+
+> 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> > 
+> >  Documentation/leds/well-known-leds.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/leds/well-known-leds.txt
+> > b/Documentation/leds/well-known-leds.txt index 2160382c86be..439d4dac4472
+> > 100644
+> > --- a/Documentation/leds/well-known-leds.txt
+> > +++ b/Documentation/leds/well-known-leds.txt
+> > @@ -58,6 +58,7 @@ LEDs on notebook body, indicating that sound input /
+> > output is muted.> 
+> >  * System notification
+> > 
+> > +Good: "rgb:status"
+> > 
+> >  Legacy: "status-led:{red,green,blue}" (Motorola Droid 4)
+> >  Legacy: "lp5523:{r,g,b}" (Nokia N900)
+
+
+
+
