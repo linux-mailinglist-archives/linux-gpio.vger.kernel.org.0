@@ -2,66 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7046F0091
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 07:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755DF6F009B
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 08:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242895AbjD0F5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 01:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56256 "EHLO
+        id S242920AbjD0GB1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 02:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242897AbjD0F5m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 01:57:42 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE951FE7;
-        Wed, 26 Apr 2023 22:57:41 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3ef4daaf906so37753231cf.1;
-        Wed, 26 Apr 2023 22:57:41 -0700 (PDT)
+        with ESMTP id S242818AbjD0GBZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 02:01:25 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3602A2D41;
+        Wed, 26 Apr 2023 23:01:24 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-751319e0dbfso126107185a.0;
+        Wed, 26 Apr 2023 23:01:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682575060; x=1685167060;
+        d=gmail.com; s=20221208; t=1682575283; x=1685167283;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UbgJvTv0yakRZ7pNU5qipSnootB9dMKqXoVGSrBCgEk=;
-        b=LQFoSinlPAaUKSIFJtfcUcqZ3dkvMuX4ygiWFzuCdd0DphT21hueAh3S4Na+QZEBUp
-         +ZGOytAL+ZOZm2+z1qGOAs+jzMp5FP0n0ZaEN0in8Dr+pzf0EBnS/Xg42O4u+2h6/tOu
-         fPclUYovx5kATGdKcBoiPnRprkhLLFlJjdo52kGiMdESFFkNPKcz15fmPhSvF1ORjupH
-         o5gBYfsuN/g44wzzmWFWfTl29jxVfNYFNt1rE0mJ+YF99k0YhjDwBmi/n2KTZjiDZDZ7
-         6UzLnDekN8pEoTU7CFddPgKtdAAaPpfC0/joimK0iQCfFmKwCyqhrh2jgY5nulDO2CbG
-         DYGw==
+        bh=4X5dFumnuHTw1olZC5sCQAZYfvwwEiFQPwRXUqoQ6Jc=;
+        b=piONlzZPG/OEbmOBUlucGOmODP2uxxVnXCyKxE1qKvmZY1KZ4yvotlI+7FypmkCoLZ
+         YrOjl80i0yuGDocKNxNpwijfljTgF5kGOC54g2AlkzvICzpbBcqm90jqGhAR7N2S853Z
+         pFUw/hVchW1LNng4cg4VaJSOfx2hVwT0PgnW8XOY+EyBJkzL1gq/ZafNeHGCgw1+0m0i
+         GdWC3zESCG9BUXx8jCruUGanpNrWkLvFXdrsRbDM1FUaCh85GjgAyMy/Y98iN12tBZYi
+         6AHs6EdrEtGxxGh4xzXGCpaXihQKaRnpVQMjlPdNBRA0kJRerLyYv4Q+ZHAns2vCqTVa
+         vSAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682575060; x=1685167060;
+        d=1e100.net; s=20221208; t=1682575283; x=1685167283;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UbgJvTv0yakRZ7pNU5qipSnootB9dMKqXoVGSrBCgEk=;
-        b=hZRr7DoXpma2IKDvGithj2G4ilyw8mrLRwUHdul2hNpXCzded3So4p+lVtJwz13ORL
-         xpydtBOmhDdz6ODM6+yQuparf+9A7UbJd4E8FhMAXDHEqCbC8XmH5AjG78Rud3OQffhZ
-         URpdXcY4wDbj3qHQ/JS4OHKTPEq+v/YJks8JnCPIEVqpixzmzZAfJmlQUIqbR5flUjcf
-         cLt7VocHYtQnFxM4BaJdVxD1c/9tpmksMf1k0Q69PFjW1+42UjD5EA1Lu339t8o7gpWm
-         1VQit26rXRNM1KmHLVaBGFeI+6GH6lWnNZGk671BNoDb114wCj8n+e0lTKhK4aKnstsg
-         BzYA==
-X-Gm-Message-State: AC+VfDyWsB+oVlHwMMUeme0TJN2cZcgvEdEQwrlpO2Nt38A70jP5To12
-        wbbNH2PHNaaqclPZ5wDSb84bda0xmE16/mI2CDVX5G/sjBcNaA==
-X-Google-Smtp-Source: ACHHUZ4SwTUlaZN7rkwrqmE2/3VFRuukBkRGg0zeLpC3A1mPER/WYxh9qF14K9aIrYdivlQirwoTKTSYkVHHtz3WuEI=
-X-Received: by 2002:ac8:5709:0:b0:3ef:ed2:3e60 with SMTP id
- 9-20020ac85709000000b003ef0ed23e60mr529331qtw.43.1682575060548; Wed, 26 Apr
- 2023 22:57:40 -0700 (PDT)
+        bh=4X5dFumnuHTw1olZC5sCQAZYfvwwEiFQPwRXUqoQ6Jc=;
+        b=aSB6Z145zYU4jh6yH73qzOOuXe/oS1pjBVfNeXiMzB0yy08D78J0Id5w9W+a+wWlLo
+         Q19IFpXNuqU5BuAbhdN4qsXhf1esPRdDUDBxNJoUrEYG/elP41PXaPircOFHZOeOKyWu
+         c8QOv1DW+EB57DABfGp60dUi1Qw5CvU1vCmdWoEMgqyp0W9bSySVEeh3zIUgCnrn0//0
+         74jd5tPxzdjJdIrfzWVHSICF9WQn00b2CcKuDo06dNnAopGpBONdAhtcWyuuthlkdXyv
+         s/PI4v2EBzY61B/1tfrUWgDycGXZY6LRLpKQjuebMurMLjL44T2RlcL+XB6uGk7Q6XAa
+         1Zkg==
+X-Gm-Message-State: AC+VfDw2kIvL50f306CMoV2SNY8rkCRX4PQIBpUz7jDzvyQ/42n/WR5b
+        YtZZoWZzwxX8cNSrnNddjqzGF4Dz45LnPtruC9o2Anal66mXOA==
+X-Google-Smtp-Source: ACHHUZ4LBBYzZ9sg2uZXCO/J7jDVIlGlO57X5E45GfPQk/3xk2EwGACGktK3GZz506pw6+mBSAFg6dxi+Yy/UcVdoJU=
+X-Received: by 2002:a05:6214:300a:b0:5e5:c0c2:c64e with SMTP id
+ ke10-20020a056214300a00b005e5c0c2c64emr7831928qvb.3.1682575283232; Wed, 26
+ Apr 2023 23:01:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230426071434.452717-1-jiawenwu@trustnetic.com>
- <20230426071434.452717-3-jiawenwu@trustnetic.com> <ZElCHGho-szyySGC@surfacebook>
- <013a01d978ae$182104c0$48630e40$@trustnetic.com>
-In-Reply-To: <013a01d978ae$182104c0$48630e40$@trustnetic.com>
+References: <20230426220338.430638-1-andreas@kemnade.info> <f6b261ad-3267-db70-c173-154a12c42bea@csgroup.eu>
+In-Reply-To: <f6b261ad-3267-db70-c173-154a12c42bea@csgroup.eu>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Apr 2023 08:57:04 +0300
-Message-ID: <CAHp75Vdnm1bykoX5Dh9nen7jB5bGfLELw0PvXBcqs1PXTf31rA@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v5 2/9] i2c: designware: Add driver support
- for Wangxun 10Gb NIC
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        jsd@semihalf.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Date:   Thu, 27 Apr 2023 09:00:47 +0300
+Message-ID: <CAHp75Vep8VSirY7mvGGCubNi-O4jS_inTALS3Ei9mQu98RV+7Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix allocation of mixed dynamic/static GPIOs
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ": Tony Lindgren" <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -74,92 +74,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 5:15=E2=80=AFAM Jiawen Wu <jiawenwu@trustnetic.com>=
- wrote:
-> On Wednesday, April 26, 2023 11:45 PM, andy.shevchenko@gmail.com wrote:
-> > Wed, Apr 26, 2023 at 03:14:27PM +0800, Jiawen Wu kirjoitti:
-
-...
-
-> > > +static int txgbe_i2c_request_regs(struct dw_i2c_dev *dev)
-> > > +{
-> > > +   struct platform_device *pdev =3D to_platform_device(dev->dev);
-> > > +   struct resource *r;
-> > > +
-> > > +   r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +   if (!r)
-> > > +           return -ENODEV;
-> > > +
-> > > +   dev->base =3D devm_ioremap(&pdev->dev, r->start, resource_size(r)=
-);
-> > > +
-> > > +   return PTR_ERR_OR_ZERO(dev->base);
-> > > +}
-> >
-> > Redundant. See below.
-
-...
-
-> > >     case MODEL_BAIKAL_BT1:
-> > >             ret =3D bt1_i2c_request_regs(dev);
-> > >             break;
-> > > +   case MODEL_WANGXUN_SP:
-> > > +           ret =3D txgbe_i2c_request_regs(dev);
-> >
-> > How is it different to...
-> >
-> > > +           break;
-> > >     default:
-> > >             dev->base =3D devm_platform_ioremap_resource(pdev, 0);
-> >
-> > ...this one?
+On Thu, Apr 27, 2023 at 8:40=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
 >
-> devm_platform_ioremap_resource() has one more devm_request_mem_region()
-> operation than devm_ioremap(). By my test, this memory cannot be re-reque=
-sted,
-> only re-mapped.
-
-Yeah, which makes a point that the mother driver requests a region
-that doesn't belong to it. You need to split that properly in the
-mother driver and avoid requesting it there. Is it feasible? If not,
-why?
-
-...
-
-> > >     dev->flags =3D (uintptr_t)device_get_match_data(&pdev->dev);
-> >
-> > > +   if (!dev->flags)
-> >
-> > No need to check this. Just define priorities (I would go with above to=
- be
-> > higher priority).
-> >
-> > > +           device_property_read_u32(&pdev->dev, "i2c-dw-flags", &dev=
-->flags);
-> >
-> > Needs to be added to the Device Tree bindings I believe.
-> >
-> > But wait, don't we have other ways to detect your hardware at probe tim=
-e and
-> > initialize flags respectively?
 >
-> I2C is connected to our NIC chip with no PCI ID, so I register a platform=
- device for it.
-> Please see the 4/9 patch. Software nodes are used to pass the device stru=
-cture but
-> no DT and ACPI. I haven't found another way to initialize flags yet, othe=
-r than the
-> platform data used in the previous patch (it seems to be an obsolete way)=
-.
+>
+> Le 27/04/2023 =C3=A0 00:03, Andreas Kemnade a =C3=A9crit :
+> > [Vous ne recevez pas souvent de courriers de andreas@kemnade.info. D=C3=
+=A9couvrez pourquoi ceci est important =C3=A0 https://aka.ms/LearnAboutSend=
+erIdentification ]
+> >
+> > If static allocation and dynamic allocation GPIOs are present,
+> > dynamic allocation pollutes the numberspace for static allocation,
+> > causing static allocation to fail.
+> > Enfore dynamic allocation above GPIO_DYNAMIC_BASE.
+>
+> Hum ....
+>
+> Commit 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS") was supposed
+> to enforce dynamic allocation above GPIO_DYNAMIC_BASE already.
+>
+> Can you describe what is going wrong exactly with the above commit ?
 
-You can share a common data structure between the mother driver and
-her children. In that case you may access it via
-`dev_get_drvdata(pdev.dev->parent)` call.
+Above commit only works to the first dynamic allocation, if you need
+more than one with static ones present it mistakenly will give you a
+base _below_ DYNAMIC_BASE.
 
-OTOH, the property, if only Linux (kernel) specific for internal
-usage, should be named accordingly, or be prepared to have one in
-Device Tree / ACPI / etc. Examples: USB dwc3 driver (see "linux,"
-ones), or intel-lpss-pci.c/intel-lpss-acpi.c (see the SPI type).
+However, this change is just PoC I proposed, the conditional and
+action should be slightly different to cover a corner case, when
+statically allocated chip overlaps the DYNAMIC_BASE, i.e. gdev->base <
+DYNAMIC_BASE, while gdev->base + gdev->ngpio >=3D DYNAMIC_BASE.
+
 
 --=20
 With Best Regards,
