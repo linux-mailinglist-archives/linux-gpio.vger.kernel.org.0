@@ -2,105 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB096F04A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 13:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B06E6F04B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Apr 2023 13:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243624AbjD0LCB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Apr 2023 07:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
+        id S243434AbjD0LHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Apr 2023 07:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243531AbjD0LCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 07:02:00 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9354C04;
-        Thu, 27 Apr 2023 04:01:58 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3eef63eff7eso39567481cf.3;
-        Thu, 27 Apr 2023 04:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682593317; x=1685185317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7nBxwpnNO03GZyJpSYtHfr/pjNmOjj8lIN2yS6Xjf24=;
-        b=I+WaLJX3uhBEFdIn/emBmqExYzyV8Vv50VMH5hEPm2jr8MOIkbXyZtgQEjddZ1tej6
-         0n/eunjHB9eSG4Q5yevvxUjAvUqxzk4q1+i13XjoGyhtHpifufdOuNPGGZktU22apVVo
-         OS5L/BtF8uQ4PLbGzJca2XrsbUE3eKuk5TsQe2zCCFE3WOTexzPF6HE5tN0Lcg8zs35i
-         aFbY4VxaTGcq64HlSJ39V/NyZXMO2xEcqPRJUTVest3afWihhuetT9REJjLesWAZfllB
-         JELJbWAaUsmjjGseAB9amDFSXCfSEcwak3HJBsrDWrp/YGHUR6irsFBR15VPkAnxCuBL
-         9ebA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682593317; x=1685185317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7nBxwpnNO03GZyJpSYtHfr/pjNmOjj8lIN2yS6Xjf24=;
-        b=gdzwprZDxQaETgPIc2prFWVw7GuL7ibftyaJkAvO3mUJoPvJIWaxikMrdghFO8et/R
-         pJcnDjqwfaiX6GkFQJdAN4Ml+vOxOjJu8ZnN1qcZ8iw9r0y4hutRaDXJBxc7DUcH6GEh
-         fb+UNiovfUitQEQkNEZD+MrRroK1WjOsKAq+tWZnDkj2Hse5+qS4il+FKh4DBx1wdrlO
-         KHzEAn2A4elUGc7+yd28zeB8dFmvXGMTUchDah/e/qQHUnjBb1LuWlAnh5jVCxeXhAj8
-         AZdTu+oOLx4veurYSwATx1dwgOu6yW5ZNaJwj28u778iX0VUlOzz28NLhCw+lRxWb4z8
-         uMGQ==
-X-Gm-Message-State: AC+VfDyyKUjo/jsK9VU341q/FNMXH6sGsU3uZqe4iEpa4EopiFufRCUa
-        m4vYSCbgg1i3ItFaepZRWYMm3XLZx3+BRQ20XM8=
-X-Google-Smtp-Source: ACHHUZ51PQ/KNlXFOdCWuJgGXK2lpoizYRaYlT2+p6/Zncx2gH0BxqXMXVu37ubbw25C+y0XtzOAHwGd6i9o3fwv//A=
-X-Received: by 2002:a05:622a:289:b0:3ef:4a9b:5dca with SMTP id
- z9-20020a05622a028900b003ef4a9b5dcamr1594011qtw.29.1682593317422; Thu, 27 Apr
- 2023 04:01:57 -0700 (PDT)
+        with ESMTP id S243264AbjD0LHb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Apr 2023 07:07:31 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B53449CF;
+        Thu, 27 Apr 2023 04:07:30 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33R9efxd032126;
+        Thu, 27 Apr 2023 11:07:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=vtzHUvX2ZJ0nAzBI6v6t5HuaHprgpY1tbVRgTEtl9ak=;
+ b=iT/t6tPtRJ8q1x+9i3C1LY4AwY/rm+BKF9muSnkqdVpxEOEgBR9XbCGf3PfbWw6Jeaqs
+ aina92xSVAmcW9yoV7oOzVuwwnDl8M0yP1oXTGhz60gzpgaeU2Yb95agdf30uXlryRpz
+ sZfI1d4jmjATrleUE8ZM7XY4NR0upzLxZ0U34wvw764wBCwrNSyygt+4D6OlfLv+gf9d
+ h/numVUAf0ObKQGzv70CdPN/TDwOohSDUp3y2FUIesA8A/6JRtH1Yd/1l+S7bZaiDnkp
+ Em+Xihi7+fMU8jaT9fp5DzU4FmLabpEdkrnqTtCdGdc1U7Gbfoi6xAM7gQGx8rQ5yY4F vQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q7kux8k57-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Apr 2023 11:07:20 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33RB7Ifa016377
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Apr 2023 11:07:18 GMT
+Received: from [10.214.66.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 27 Apr
+ 2023 04:07:14 -0700
+Message-ID: <ca738971-036b-f180-88f7-cefe0ed5a412@quicinc.com>
+Date:   Thu, 27 Apr 2023 16:37:11 +0530
 MIME-Version: 1.0
-References: <20230426220338.430638-1-andreas@kemnade.info> <f6b261ad-3267-db70-c173-154a12c42bea@csgroup.eu>
- <CAHp75Vep8VSirY7mvGGCubNi-O4jS_inTALS3Ei9mQu98RV+7Q@mail.gmail.com>
- <52453352-74bd-979f-03b6-322489800538@csgroup.eu> <20230427123733.15ad4aa3@aktux>
- <CAHp75VezDMZkRTRHRACtJZCW2S_1NoZL5GDK7tmA2vzjrAhOKg@mail.gmail.com> <d585bdd8-978a-8172-bd55-4494d25299e1@csgroup.eu>
-In-Reply-To: <d585bdd8-978a-8172-bd55-4494d25299e1@csgroup.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Apr 2023 14:01:21 +0300
-Message-ID: <CAHp75Vexy1p8E5VYj=kX9VPxAghzVwbh3ANvLVP4yrxkHZ+H7A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix allocation of mixed dynamic/static GPIOs
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ": Tony Lindgren" <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v4 2/2] pinctrl: qcom: Add SDX75 pincontrol driver
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <richardcochran@gmail.com>, <manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+References: <1682327030-25535-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1682327030-25535-3-git-send-email-quic_rohiagar@quicinc.com>
+ <ZEk9lySMZcrRZYwX@surfacebook>
+ <66158251-6934-a07f-4b82-4deaa76fa482@quicinc.com>
+ <CAHp75VcCAOD3utLjjXeQ97nGcUTm7pic5F52+e7cJDxpDXwttA@mail.gmail.com>
+ <1ed28be7-7bb5-acc5-c955-f4cf238ffc49@quicinc.com>
+ <CAHp75VcDBFyG9+RaOUma4y+Q0em2-Nvuk_71vDkenGk+2HJqEQ@mail.gmail.com>
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+In-Reply-To: <CAHp75VcDBFyG9+RaOUma4y+Q0em2-Nvuk_71vDkenGk+2HJqEQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4tgDf_h0YZG3yRazudrZ1kAx0iJi_ZJs
+X-Proofpoint-GUID: 4tgDf_h0YZG3yRazudrZ1kAx0iJi_ZJs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-27_07,2023-04-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 priorityscore=1501 spamscore=0
+ impostorscore=0 mlxlogscore=509 phishscore=0 mlxscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304270097
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 1:55=E2=80=AFPM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
-> Le 27/04/2023 =C3=A0 12:46, Andy Shevchenko a =C3=A9crit :
-> > On Thu, Apr 27, 2023 at 1:37=E2=80=AFPM Andreas Kemnade <andreas@kemnad=
-e.info> wrote:
-> >> On Thu, 27 Apr 2023 06:20:34 +0000
-> >> Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-...
-
-> >> I will send a v2 of this patch with refined logic.
-> >
-> > Actually it would be nice to integrate a warning (if we don't have it
-> > yet) when adding a GPIO chip with a static allocation and which will
-> > overlap the dynamic base. Can you add that into your v2?
-> >
+On 4/27/2023 4:24 PM, Andy Shevchenko wrote:
+> On Thu, Apr 27, 2023 at 11:53 AM Rohit Agarwal
+> <quic_rohiagar@quicinc.com> wrote:
+>> On 4/26/2023 10:12 PM, Andy Shevchenko wrote:
+>>> On Wed, Apr 26, 2023 at 6:18 PM Rohit Agarwal <quic_rohiagar@quicinc.com> wrote:
+>>>> On 4/26/2023 8:34 PM, andy.shevchenko@gmail.com wrote:
+> ...
 >
-> At the time being we have a warning for all static allocations,
-> allthough their has been some discussion about reverting it, see commit
-> 502df79b8605 ("gpiolib: Warn on drivers still using static gpiobase
-> allocation")
-
-Ah, even better! Then no need to have a specific one, thanks!
-
---=20
-With Best Regards,
-Andy Shevchenko
+>>>> Ok, Will update this. Shall I also update "PINGROUP" to "PINCTRL_PINGROUP"?
+>>> Yes, please.
+>> PINCTRL_PINGROUP cannot be used as it is, since msm_pigroup has multiple
+>> other fields that needs to be set
+>> for each pingroup defined.
+>> Would rename this to SDX75_PINGROUP, as seen on some other platforms.
+>> Would that be ok?
+> For this patch, yes. But can you create a separate followup that
+> replaces three members of struct msm_pingroup by embedding struct
+> pingroup into it? There are examples of such changes in the kernel
+> already. https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/drivers/pinctrl?id=39b707fa7aba7cbfd7d53be50b6098e620f7a6d4
+>
+Sure, create a separate followup patch referring it. Will use 
+SDX75_PINGROUP for now.
+Thanks,
+Rohit.
