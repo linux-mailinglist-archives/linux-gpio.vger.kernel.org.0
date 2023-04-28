@@ -2,94 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD0F6F16F5
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Apr 2023 13:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 830DF6F1D93
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Apr 2023 19:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345760AbjD1Lo0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Apr 2023 07:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        id S1346475AbjD1RnF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Apr 2023 13:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230145AbjD1LoZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Apr 2023 07:44:25 -0400
-Received: from forward502a.mail.yandex.net (forward502a.mail.yandex.net [178.154.239.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BD055A3;
-        Fri, 28 Apr 2023 04:44:23 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:26a7:0:640:a2d5:0])
-        by forward502a.mail.yandex.net (Yandex) with ESMTP id 7926E5EB96;
-        Fri, 28 Apr 2023 14:44:21 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id KiHVIE1Ba8c0-kLMgT63n;
-        Fri, 28 Apr 2023 14:44:21 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1682682261;
-        bh=P5dAEFXCyQi6+rdwlxT4TYQBkm3BseljpBsRS20Ci8M=;
-        h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-        b=GOJgSUi30rxJXVvgNEnAr96wjzGSIXWH0TV+ZOfFqq17/ayGyrdh/jHhwg7442ixu
-         bYUDrbIcdC7sBc+aeLcre2Cl1uQzgM88pmN3dYEs5zokzhQEQ0zt91rp1FubbCtv3O
-         DNL/PvTtQWYXxbU4lmFTcdczNuQPrwAgEWEYq+80=
-Authentication-Results: mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <db1013a28b517a7d37a052290173d4f12b6325b9.camel@maquefel.me>
-Subject: Re: [PATCH 32/43] dt-bindings: gpio: Add DT bindings ep93xx gpio
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Apr 2023 17:44:22 +0300
-In-Reply-To: <CACRpkdY_1-4QPzuQs0aqX4M=RDzT3y9m7FTA_Dq71vEn22A8qw@mail.gmail.com>
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-         <20230424123522.18302-33-nikita.shubin@maquefel.me>
-         <20230424163203.GK2701399-robh@kernel.org>
-         <CACRpkdY_1-4QPzuQs0aqX4M=RDzT3y9m7FTA_Dq71vEn22A8qw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
+        with ESMTP id S1346465AbjD1Rmw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Apr 2023 13:42:52 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8674212;
+        Fri, 28 Apr 2023 10:42:51 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-74fbf99adc2so3118185a.3;
+        Fri, 28 Apr 2023 10:42:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682703770; x=1685295770;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TIp0PfLYwbyf4Zc/oKnBGo6p7i0B4STZURLC1RcDcMg=;
+        b=lbUslbnhnDoU8yHLKndgdczTSBHW6Zv1abaAwJegPSH4G0eI1l+8IRP10G9r9XqpLc
+         7eb5tLmiRn/7AtKL5rrk39CHKUN3IHIt+Bree7u7CzvHiBodSjoCy6jjFVYGUTjyA3St
+         v8F6y/NdmatQp8jAgZpwYx44GxB9knxUC04BTjCKjIJ+X4ro0sRzQSB0iWYKayjbvq7H
+         tPo9j2LbzGTp6WiVMgtO0kg7sbIt//3SzRVon7GDYf/lVcJIuAX4hYQ+pcOywz7vmD6F
+         dFP5cea3hp4dOamDwiDlRT0G82ghat1e/WFdd3/w30p2hDxINiQ23DQ+6vzBf0Nosh5o
+         OQgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682703770; x=1685295770;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TIp0PfLYwbyf4Zc/oKnBGo6p7i0B4STZURLC1RcDcMg=;
+        b=S3C/55MrWBSgHoWWxdfGjoeKMe9bBFM9kzS94MoM307tm0Ylb49cdsx4I59b8FYX1y
+         zn1fIhWsgtHTTMpx69l5OoaFiL1Cj3RWgcNRtAeXxFQa2SBW9G/c6VfGsPRTNiHijVB6
+         oHz6nrZ8g0EUwSRRlTTVioObxz/wz81nYpj6uZmShsMvQzrIasL/wOmlaPQlbq8fUgrP
+         mOpYEGcy44AKJZeMPJhJo7VSGjGy0OkVpPqCfZuacxgCkOFVSE3XY/hA5S241hfvtfy7
+         dmFt7qUDx9fIYtj/YSqgQs/9LsMKIJAT9UdHp+UQAczCKHo1Jq/Yr9XqKvJd0zHdphua
+         Aq+w==
+X-Gm-Message-State: AC+VfDz00Eegg3pS1cW56kO+kO4lmUzSoy/GW8GKJ7FgjpW2uVXh8O/K
+        aCCMMO/KQUVLDSsYIPXuvog=
+X-Google-Smtp-Source: ACHHUZ5d2qF1BGFPnOTR5Y+3K4+zazXVQL0g0Ke6qHkBcOBB5jpv1S1RhUNmDBF0RLcXZPeA+Ab7kQ==
+X-Received: by 2002:a05:6214:5089:b0:5ee:f961:4b74 with SMTP id kk9-20020a056214508900b005eef9614b74mr9243396qvb.9.1682703770707;
+        Fri, 28 Apr 2023 10:42:50 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id eb11-20020a05620a480b00b0074411b03972sm6857470qkb.51.2023.04.28.10.42.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Apr 2023 10:42:50 -0700 (PDT)
+Message-ID: <31bf7156-36b7-0c4d-585c-fd149963d6ef@gmail.com>
+Date:   Fri, 28 Apr 2023 10:42:45 -0700
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH -next] gpio: brcmstb: Use
+ devm_platform_get_and_ioremap_resource()
+Content-Language: en-US
+To:     Yang Li <yang.lee@linux.alibaba.com>, linus.walleij@linaro.org
+Cc:     brgl@bgdev.pl, opendmb@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230428061109.102343-1-yang.lee@linux.alibaba.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20230428061109.102343-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus!
+On 4/27/23 23:11, Yang Li wrote:
+> Convert platform_get_resource(), devm_ioremap_resource() to a single
+> call to devm_platform_get_and_ioremap_resource(), as this is exactly
+> what this function does.
+> 
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-On Wed, 2023-04-26 at 22:48 +0200, Linus Walleij wrote:
-> On Mon, Apr 24, 2023 at 6:32=E2=80=AFPM Rob Herring <robh@kernel.org> wro=
-te:
-> > On Mon, Apr 24, 2023 at 03:34:48PM +0300, Nikita Shubin wrote:
->=20
-> > > Add YAML bindings for ep93xx SoC.
-> > >=20
-> > > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> (...)
-> > > +=C2=A0 chip-label:
-> > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
-> > > +=C2=A0=C2=A0=C2=A0 description: human readable name.
-> >=20
-> > Why do you need this? It's not standard and I don't see other GPIO
-> > controllers needing it.
->=20
-> Caught my eye too, Nikita can you live without this and just use
-> dev_name()
-> or something to name the chip in Linux?
->=20
-> If it is to conform to EP93xx documentation naming I guess it should
-> be
-> cirrus,ep93xx-gpio-chip-name =3D "..."; ?
-
-Nah, i should drop it, it was a reverence to people which are sad about
-gpio index reordering.
-
-Through i like the idea of "cirrus,ep93xx-gpio-chip-name".
-
->=20
-> Yours,
-> Linus Walleij
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
 
