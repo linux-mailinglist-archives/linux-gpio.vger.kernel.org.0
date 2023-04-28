@@ -2,30 +2,31 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9A016F119C
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Apr 2023 08:09:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B62DE6F11A2
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Apr 2023 08:11:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345335AbjD1GJq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Apr 2023 02:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        id S229445AbjD1GLR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Apr 2023 02:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjD1GJp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Apr 2023 02:09:45 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5732D2737;
-        Thu, 27 Apr 2023 23:09:43 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VhAHMxk_1682662179;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0VhAHMxk_1682662179)
+        with ESMTP id S229794AbjD1GLR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Apr 2023 02:11:17 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEF02737;
+        Thu, 27 Apr 2023 23:11:15 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VhA6GQp_1682662269;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0VhA6GQp_1682662269)
           by smtp.aliyun-inc.com;
-          Fri, 28 Apr 2023 14:09:40 +0800
+          Fri, 28 Apr 2023 14:11:10 +0800
 From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     linusw@kernel.org
-Cc:     kaloz@openwrt.org, khalasa@piap.pl, brgl@bgdev.pl,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yang Li <yang.lee@linux.alibaba.com>
-Subject: [PATCH -next] gpio: ixp4xx: Use devm_platform_ioremap_resource()
-Date:   Fri, 28 Apr 2023 14:09:38 +0800
-Message-Id: <20230428060938.98198-1-yang.lee@linux.alibaba.com>
+To:     linus.walleij@linaro.org
+Cc:     brgl@bgdev.pl, opendmb@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH -next] gpio: brcmstb: Use devm_platform_get_and_ioremap_resource()
+Date:   Fri, 28 Apr 2023 14:11:09 +0800
+Message-Id: <20230428061109.102343-1-yang.lee@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -39,36 +40,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert platform_get_resource(),devm_ioremap_resource() to a single
-call to devm_platform_ioremap_resource(), as this is exactly what this
-function does.
+Convert platform_get_resource(), devm_ioremap_resource() to a single
+call to devm_platform_get_and_ioremap_resource(), as this is exactly
+what this function does.
 
 Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 ---
- drivers/gpio/gpio-ixp4xx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpio/gpio-brcmstb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
-index 56656fb519f8..1e29de1671d4 100644
---- a/drivers/gpio/gpio-ixp4xx.c
-+++ b/drivers/gpio/gpio-ixp4xx.c
-@@ -199,7 +199,6 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct irq_domain *parent;
--	struct resource *res;
- 	struct ixp4xx_gpio *g;
- 	struct gpio_irq_chip *girq;
- 	struct device_node *irq_parent;
-@@ -210,8 +209,7 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	g->dev = dev;
+diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+index c55b35da61a0..6566517fe0d8 100644
+--- a/drivers/gpio/gpio-brcmstb.c
++++ b/drivers/gpio/gpio-brcmstb.c
+@@ -609,8 +609,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, priv);
+ 	INIT_LIST_HEAD(&priv->bank_list);
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	g->base = devm_ioremap_resource(dev, res);
-+	g->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(g->base))
- 		return PTR_ERR(g->base);
+-	reg_base = devm_ioremap_resource(dev, res);
++	reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(reg_base))
+ 		return PTR_ERR(reg_base);
  
 -- 
 2.20.1.7.g153144c
