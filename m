@@ -2,50 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B2686F291C
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Apr 2023 16:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6B76F2A70
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Apr 2023 21:18:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbjD3OCn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Apr 2023 10:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39748 "EHLO
+        id S230319AbjD3TSz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Apr 2023 15:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjD3OCm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Apr 2023 10:02:42 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 93D68199B;
-        Sun, 30 Apr 2023 07:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=vdfSe
-        6AsEohOXu+zr/OQxFcuRoEL1V+oA5NLjf5c/Og=; b=nUEQXrBc0Znqa3Fp4IG6P
-        EaUip6IbY3kQM0LHke99z3dCx2viPpPJZa/qm/IWx8T4Jkt8Se5S/VrwLem6oRp4
-        RMsY//zGBzvj+K2xQdBEdvUrsuXSeTs/Z1+UhZFLIz0+jNxmAgh+xAJZLgqomChE
-        2zNvfeHjq/fpa/uVtMyquk=
-Received: from lizhe.. (unknown [120.245.132.239])
-        by zwqz-smtp-mta-g4-2 (Coremail) with SMTP id _____wB3r1+6dE5kijFUAg--.48793S4;
-        Sun, 30 Apr 2023 22:01:59 +0800 (CST)
-From:   Lizhe <sensor1010@163.com>
-To:     linus.walleij@linaro.org, orsonzhai@gmail.com,
+        with ESMTP id S230163AbjD3TSq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Apr 2023 15:18:46 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0B8170A
+        for <linux-gpio@vger.kernel.org>; Sun, 30 Apr 2023 12:18:45 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id d184eeb3-e78b-11ed-b3cf-005056bd6ce9;
+        Sun, 30 Apr 2023 22:18:42 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Sun, 30 Apr 2023 22:18:41 +0300
+To:     Lizhe <sensor1010@163.com>
+Cc:     linus.walleij@linaro.org, orsonzhai@gmail.com,
         baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lizhe <sensor1010@163.com>
-Subject: [PATCH] pinctrl:sprd: Check if the pinctrl_dev still exists
-Date:   Sun, 30 Apr 2023 22:01:29 +0800
-Message-Id: <20230430140129.112081-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.34.1
+        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl:sprd: Check if the pinctrl_dev still exists
+Message-ID: <ZE6_EeLLmXOepHJH@surfacebook>
+References: <20230430140129.112081-1-sensor1010@163.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wB3r1+6dE5kijFUAg--.48793S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKF13GFW7tw4DCr1rCryrtFb_yoWfGrc_GF
-        yrJrWxJw4UGw4Y9w1jkry7ZFWIyF43Xr1SvFnFqFy3C347Xw4UtrykCFs8G34xGwnrAry7
-        Gry2q3s3Zr17AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKGYLJUUUUU==
-X-Originating-IP: [120.245.132.239]
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBohhhq1aEIFHrrwAAsX
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230430140129.112081-1-sensor1010@163.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,30 +42,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-to check if the pinctrl_dev still exists before calling
-pinctrl_unregister().
+Sun, Apr 30, 2023 at 10:01:29PM +0800, Lizhe kirjoitti:
+> to check if the pinctrl_dev still exists before calling
+> pinctrl_unregister().
 
-Signed-off-by: Lizhe <sensor1010@163.com>
----
- drivers/pinctrl/sprd/pinctrl-sprd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Sending a duplicate won't give anything new here, the patch itself is bogus.
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index ca9659f4e4b1..52089e34435c 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -1114,8 +1114,10 @@ EXPORT_SYMBOL_GPL(sprd_pinctrl_core_probe);
- int sprd_pinctrl_remove(struct platform_device *pdev)
- {
- 	struct sprd_pinctrl *sprd_pctl = platform_get_drvdata(pdev);
-+	
-+	if (sprd_pctl->pctl)
-+		pinctrl_unregister(sprd_pctl->pctl);
- 
--	pinctrl_unregister(sprd_pctl->pctl);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(sprd_pinctrl_remove);
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
