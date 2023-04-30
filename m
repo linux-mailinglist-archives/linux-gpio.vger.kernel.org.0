@@ -2,188 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21DFB6F2570
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Apr 2023 19:24:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B77E06F279D
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Apr 2023 06:23:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjD2RYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Apr 2023 13:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
+        id S229774AbjD3EX5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Apr 2023 00:23:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjD2RYe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Apr 2023 13:24:34 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2048.outbound.protection.outlook.com [40.107.7.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9D119A1;
-        Sat, 29 Apr 2023 10:24:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n7rUas3oF7n9+Umxtkq91ZN6v2iWnfShTbhTwe1jh9Bc045GhtWMjFZ2ZONiEFwimFaFGyH9OBAR6Ob+WE3sswYPTe3xzVIy3eOXdh2ramGEMUPcB94YDx/AwjXB5vd3BcRrINhDVuVS8iJCMCFtosWneAcab9hP5vzXYCQstjdrwynsC3zAW+wPzLMsuzY9ayc6gWnf8zyPEUWJokmWlNoAtlgx1cesw1KKPIjVC2QeFHHBjVJaKNS92unQ3VJ8XJA4pgRqZspcV/w7WzkJhQ4GFx6PLgHtu1Gp9mYN8BB3i6cmU5Zk3eU6EwkETc4Til4q37YvHglfwDKAnKVvWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ndSbYzNodTYkKaX4YSKtyI5CMPNCIJNwjVnYTMb0wkw=;
- b=D8Pom4mE3KhlDEGCFMFM5RHGXZugokJAUUSMvVWW+XHS1e1G+HqGyqEm7zOfwn/Jgf02zklB0hDtgGmODzvzQIpWhHb2dZpQGCFmZw+dYZ+ovmFcb3rLFfIS8Eb68qE6OnQzMj8aXIJfvI07pQ0ACBZSaAvPB85STgDvI8lZpYjL4y4N1zPI8lYqMqd83IIdjSuf7+sCd7SjPMhxFjr09utSpHw/zESGqFMCUhobAxpn+Hzkjb3VPQX+d30bUHq/XEPlx/SQeMT1svt/doJHEK2nzuL7s8kxePB49C8GjTv+1Hre0VdAkT3zjG38Wxfl9rCqCJ5j3dpIZxJ6FNOGgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ndSbYzNodTYkKaX4YSKtyI5CMPNCIJNwjVnYTMb0wkw=;
- b=Bkg3Qs+ux88YQFe0tCD7C/IcV99RTd4z5ivHUucf9rdzQ9t4ySkcp4+t0QumF/YLGkHBDV2paN+ixDufF6v9izYEKKG4Tws3jbiVFBSO4ftq/Z82o3wEvAxiUko5z16YO3gi3htWck+x232xtDF+qOBiFvWuDMkaq1AHPnYJTbY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by VI1PR04MB7184.eurprd04.prod.outlook.com (2603:10a6:800:125::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.27; Sat, 29 Apr
- 2023 17:24:27 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::245a:9272:b30a:a21c]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::245a:9272:b30a:a21c%3]) with mapi id 15.20.6340.025; Sat, 29 Apr 2023
- 17:24:26 +0000
-Date:   Sat, 29 Apr 2023 20:24:22 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?utf-8?B?RmVybuKUnMOtbmRleg==?= Rojas <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
-Message-ID: <20230429172422.vc35tnwkekfieoru@skbuf>
-References: <20230425195002.fls5cmwolyrslpad@skbuf>
- <b7779674-c3ac-e0ab-3ca8-db1ec5953a97@seco.com>
- <20230426105140.t4yqv6irtjcwptm5@skbuf>
- <20230425195002.fls5cmwolyrslpad@skbuf>
- <b7779674-c3ac-e0ab-3ca8-db1ec5953a97@seco.com>
- <20230426105140.t4yqv6irtjcwptm5@skbuf>
- <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
- <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
- <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
-X-ClientProxiedBy: VE1PR03CA0015.eurprd03.prod.outlook.com
- (2603:10a6:802:a0::27) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
+        with ESMTP id S229452AbjD3EX4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Apr 2023 00:23:56 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E737312F;
+        Sat, 29 Apr 2023 21:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qS63V
+        bA9VLHyDMasvm7Ft009tQW4scOgwMZkX8i1AEE=; b=AVdCFteFfFT5oKkJBpaax
+        UvV2HF97t/OntLR67emuqmehv09sCuP6h2Ng1hc5F4GQ76LOdGzqhtoQrjARyOJQ
+        OAAIhQa/WL1TWTAZdrf5g/njT63KuQAgfZYH6wW22okeXUg0LZz8xmn0Uy9pomfx
+        muEC2TnlKwTK3rqavav/I4=
+Received: from lizhe.. (unknown [120.245.132.239])
+        by zwqz-smtp-mta-g3-1 (Coremail) with SMTP id _____wCnVFYi7U1kk68oAg--.9220S4;
+        Sun, 30 Apr 2023 12:23:33 +0800 (CST)
+From:   Lizhe <sensor1010@163.com>
+To:     linus.walleij@linaro.org, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+        andriy.shevchenko@linux.intel.com, sensor1010@163.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl:sprd: Check if the pinctrl_dev still exists
+Date:   Sun, 30 Apr 2023 12:22:54 +0800
+Message-Id: <20230430042254.7543-1-sensor1010@163.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|VI1PR04MB7184:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94f0f769-9fb5-47da-8e9c-08db48d69501
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E5aZWncaXsgygy356pERVhy6wTS39jGzuH06AFsCuT5s28dFT8DNOEPN0qz4XdaaAl639yy2zSJloCdd04me1FKSdU36MZkAyx0zNS+qyJGPCsW6G2joWOVs8/gqfN6O0YkJoTyOF3pP5ewLeH95wFtbGzTe9LNOVAYC23Kmt+vBQdv5SRV+Gjgwo00JY59LN1Ad8upJw3mYeUcWDi8S9gb29P3NveL3CwqPcF15az6LZRfuc4ri8m7puYnwsTDRrTMLVkTcruuuzqJ++9719Ax8ZP1rM6tKLj3bf5UUgA0dLJOGIZQVlGvdo0IM0DZf3znIFvLo+IM36yYEDbYllMnNBoYxr78qXnyYfHztXCCdtB/rwB4+SWrr85LGNilhSgxTiLMmFFnVZnRldcNxDTcTp8eeDIJmzu2u6oDff0MhQ16C8kYqfJ1eLmkXDfm3djkuzhefozID6KsAGmFcm0/21FQt8n+BP2QD1za+N8G2zAIwfD4k6ie5ZsAHzGszPc+wi/hYb8h2LAhEtUjHWkKhrwT7oBfNXaYHlhkvS7XveHxvHJ1pQ0VuN0LXBwv2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(376002)(39850400004)(396003)(366004)(136003)(346002)(451199021)(33716001)(316002)(4326008)(9686003)(6512007)(6506007)(186003)(1076003)(41300700001)(83380400001)(26005)(478600001)(66946007)(54906003)(6916009)(6486002)(6666004)(66476007)(66556008)(38100700002)(2906002)(86362001)(8936002)(8676002)(7416002)(44832011)(5660300002)(66899021);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VKfvHVUrBADhmr5uEXY9a+0ELdviCvG4bWkZqPNPfKhEixN96qv3ve2tFMXx?=
- =?us-ascii?Q?GhYl1GyqaR1QWL+e02+ZLxOe69VaLwYbg/mkjGj3duKCBEiPBFPwfayVRS8J?=
- =?us-ascii?Q?nLDkt2bJc9eMnOrmEldb2AF4XpbVbqG/xG1rZEfQ786tpQHtja4kKJHMKunP?=
- =?us-ascii?Q?RrNbiKDbVbKBJXoEmatQMEs9GmviQKFHQb17htuH6Dio17ba/9zgf/LVLIpD?=
- =?us-ascii?Q?To7oz+b8hHJNqKG2X+bqXuGixupm+Ek5BzHhz4v5U+KIjhwj3J5U8xeT3U5K?=
- =?us-ascii?Q?TLusdP2hcmNX9Y4fZgOKG5srb8904Fklcwn+TvBvgK/UneZPhtpXzOYZsOm7?=
- =?us-ascii?Q?PIp1cApySA5+Y+I6UDs3M3+9XFryLDzGxUwbMjA+qGlQTk7HZZ7MZIeqLS+k?=
- =?us-ascii?Q?7aGUyrMkOMxFGdNpo3G1BbRMrIXiyHMhJA9gOBPRdiR+ULhNDnMj6xDDLoC+?=
- =?us-ascii?Q?VkCPtUNlGQQLhorkmS3/5zGW4YftkxXjjBfd64P/sqccjJKryoD5Xk/hJcf2?=
- =?us-ascii?Q?GTDNWYOQtcOJRAvijrlJEGe2Lv7iLNPscV7SNjxpwsSBXGtW5e6qMXip1we4?=
- =?us-ascii?Q?e0mm39YEeU0HR3Xy2FAe2/nZ+/JeyCfsREyKVXnMtC2hPapv3G5FosTljTDJ?=
- =?us-ascii?Q?UIPHXoiKErjIlX1XXJsJ+0na+jYi6q3xg79cGRIAAmpjIgpWwdF08boqLU9F?=
- =?us-ascii?Q?M7rZRl9R++UvKbPMiZsxtrYLrjhqCEHCVt8/ZRhzA35jRwyaWF84iC9/NkM7?=
- =?us-ascii?Q?qBESYAdz6LY88V83pqOtGWp5rHwiakQiLffr9LSo5yaSKsmznfnKzPYQi7TR?=
- =?us-ascii?Q?yjgVBu3DSLvapuRI/TyESjP4vTk/wiFKNPSAEMLwvv5sb0LqWuHsdHt+EUf4?=
- =?us-ascii?Q?MJeNpqZI/jBljMbeldrl5xWiTsxd7gU9eojvlIpwQgU4ehxWRscv5MYSvIU6?=
- =?us-ascii?Q?DHboRK8WJ8k92QkfRe07Hy6O+k/rKd1EoikKy7lZVQNO5KhZPlrzDx2Q6QA8?=
- =?us-ascii?Q?U+ptlgIaTOd0Pqe07R4G8p2EZVntghxszAiSew6SbFWEuMartWEu0KcfWpcN?=
- =?us-ascii?Q?FTzfPUmBEjS653hTKW9+2Zoyks4i/yO79jRSACGIBo2qapPzvQ8ZQDG+7X0a?=
- =?us-ascii?Q?Ch7yejRwyMK31E9xLN2242K/TvgARUC1A8gzTY4+nrTSr7UoFS5D+rcwnLGt?=
- =?us-ascii?Q?EdaoN6Zwr54m7Phd4oZJG2JVYlk3uIrBlyeQfe1tZUfbldWKXCRLT2Jhzr5Y?=
- =?us-ascii?Q?wfziGanYLJHMpYo/GCtomqwFrchIQcCMCjhGzaPciePIWUhSQNJEOne+70/I?=
- =?us-ascii?Q?2CRq8KzPHCejV9m8hJ/wC26OO7dOXn2XqYdDenWx8wltbDOZxutt/GI6/+Ap?=
- =?us-ascii?Q?UxLP5tgPoP8EqexhuzW5Tvkq3EaLMIx5ZxnWVv8/hjpnLVwEbqK3I2kHsre5?=
- =?us-ascii?Q?0H3rVrPBgjQxvZGebPfhh/FmK/+1V0AU+nJ1/daKFI8AF0ht2OYfLnXVmGZS?=
- =?us-ascii?Q?s9/t2791j8OnjhYfr5q/cgVn1TecoMx3SNqmjhSK03aG5UuE2o8TWjcv+6vz?=
- =?us-ascii?Q?hrt9yIcAnM0QEspnUa5SDiF7xwphvJhKe7yFuv7OyaiyS0RddOToxtpDrh39?=
- =?us-ascii?Q?xQ=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94f0f769-9fb5-47da-8e9c-08db48d69501
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2023 17:24:26.6041
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 38ASD5X7MPyUL4krgQNgZ03/VM1G7YUyWTXoX/8LxfYcsyY5EO4I9le/Ekx8Q/wDW2O4ir+i5OS8lplyQqkxLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7184
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wCnVFYi7U1kk68oAg--.9220S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKF13GFW7tw4DCr1rCryrtFb_yoW3ZFg_WF
+        yrGrWxJ3yUGw4Y9w1jkry3ZFW0yF43Xr1SvFnFqFy3C347Xw4UtrykCF45G34xG3s7CryU
+        Gryjq393Ar13AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKpBTDUUUUU==
+X-Originating-IP: [120.245.132.239]
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiKAhhq17WMwX-sAAAsb
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 10:50:17AM -0400, Sean Anderson wrote:
-> > I need to catch up with 14 rounds of patches from you and with the
-> > discussions that took place on each version, and understand how you
-> > responded to feedback like "don't remove PHY interrupts without finding
-> > out why they don't work"
-> 
-> All I can say is that
-> 
-> - It doesn't work on my board
-> - The traces are on the bottom of the PCB
-> - The signal goes through an FPGA which (unlike the LS1046ARDB) is closed-source
+to check if the pinctrl_dev still exists before calling
+pinctrl_unregister().
 
-I don't understand the distinction you are making here. Are the sources
-for QIXIS bit streams public for any Layerscape board?
+Signed-off-by: Lizhe <sensor1010@163.com>
+---
+ drivers/pinctrl/sprd/pinctrl-sprd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> - The alternative is polling once a second (not terribly intensive)
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index ca9659f4e4b1..6f3369130e8a 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -1115,7 +1115,9 @@ int sprd_pinctrl_remove(struct platform_device *pdev)
+ {
+ 	struct sprd_pinctrl *sprd_pctl = platform_get_drvdata(pdev);
+ 
+-	pinctrl_unregister(sprd_pctl->pctl);
++	if (sprd_pctl->dev)
++		pinctrl_unregister(sprd_pctl->pctl);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(sprd_pinctrl_remove);
+-- 
+2.34.1
 
-It makes a difference to performance (forwarded packets per second), believe it or not.
-
-> 
-> I think it's very reasonable to make this change. Anyway, it's in a separate
-> patch so that it can be applied independently.
-
-Perhaps better phrased: "discussed separately"...
-
-> > Even if the SERDES and PLL drivers "work for you" in the current form,
-> > I doubt the usefulness of a PLL driver if you have to disconnect the
-> > SoC's reset request signal on the board to not be stuck in a reboot loop.
-> 
-> I would like to emphasize that this has *nothing to do with this driver*.
-> This behavior is part of the boot ROM (or something like it) and occurs before
-> any user code has ever executed. The problem of course is that certain RCWs
-> expect the reference clocks to be in certain (incompatible) configurations,
-> and will fail the boot without a lock. I think this is rather silly (since
-> you only need PLL lock when you actually want to use the serdes), but that's
-> how it is. And of course, this is only necessary because I was unable to get
-> major reconfiguration to work. In an ideal world, you could always boot with
-> the same RCW (with PLL config matching the board) and choose the major protocol
-> at runtime.
-
-Could you please tell me what are the reference clock frequencies that
-your board provides at boot time to the 2 PLLs, and which SERDES
-protocol out of those 2 (1133 and 3333) boots correctly (no RESET_REQ
-hacks necessary) with those refclks? I will try to get a LS1046A-QDS
-where I boot from the same refclk + SERDES protocol configuration as
-you, and use PBI commands in the RCW to reconfigure the lanes (PLL
-selection and protocol registers) for the other mode, while keeping the
-FRATE_SEL of the PLLs unmodified.
