@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE9506F2FB9
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 May 2023 11:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8200B6F2FBC
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 May 2023 11:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232384AbjEAJFn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 May 2023 05:05:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33484 "EHLO
+        id S232261AbjEAJFp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 May 2023 05:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjEAJFl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 May 2023 05:05:41 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F45410D4
-        for <linux-gpio@vger.kernel.org>; Mon,  1 May 2023 02:05:27 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4eed764a10cso2852524e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 01 May 2023 02:05:27 -0700 (PDT)
+        with ESMTP id S232315AbjEAJFm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 May 2023 05:05:42 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57C9172C
+        for <linux-gpio@vger.kernel.org>; Mon,  1 May 2023 02:05:28 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4efe8b3f3f7so2677073e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 May 2023 02:05:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682931925; x=1685523925;
+        d=linaro.org; s=google; t=1682931927; x=1685523927;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SWK3/AsROodb0RDVek27Kktb6s+ppm3PtIa2ZoQnl4g=;
-        b=sV3g+73NYEh5B8/4DU+3wHTeYlQQ+/KGc4ORCezfBE7nh04hw3uwPKmmZ7CI1tbn+A
-         lHm2Ozi21CLsn35z0O+ich/iX6afRbz3J2EkHt3Rfvul2uSsdkA1uLKZEeXmgduIcfjk
-         yuSVIVaWh0qzDjrrtvbBv4GODOj2j38NqAIhkMoKaIaDCQhFn7kHKb8Tm0+7+i22ECsf
-         340LpvqDEE5mwTdweJmqmf1yHFcO9pKq8keeWu4AWUSsSFnv7ZanuLx+XTqQsHg6Q/nr
-         H+kTfNUSkSFDm/D6m6762I8mDLLom7BFS+Ma+Vm898ilR9JgYkq7mnA2SKpd8+9IWY0A
-         wAdw==
+        bh=HQcL6JXC95b5fH8+n8D4snP5Hhmk4OL2MW3VW+pKJ0E=;
+        b=ryOVLyaXPO1JeeCNBToS55jlkVdWfQga1fn6f6J5KLa3q00WDmdYYzsPTn9DQ6kmNG
+         AVLtk/TRhd3Z5K/d80x/Zy+QOUvnhh+LnMwePTkmwtdOzOWwZqxPVMYFxTo0u0cHj+pG
+         ZQKzUIeBbUQQNL7L7M3s1OcyOuQM+lcKKvkc9fA5I8f4yTtf+KSVKvE8EB2JdaqaM9wf
+         sy52vRUHo6d6/HRomTLnJ5TCWBpnqJqwSE8s+pHozwCOwTpSyjX2gR5VfBtV+nOK05xC
+         JysLfxToT2GTYX1aOVewx89219wGbviaT/wvMyUw0L/DhXWZcjnJO6rjO4CF6Vmje1Rg
+         BNOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682931925; x=1685523925;
+        d=1e100.net; s=20221208; t=1682931927; x=1685523927;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SWK3/AsROodb0RDVek27Kktb6s+ppm3PtIa2ZoQnl4g=;
-        b=GYhVT231Qj0/oa00xc9ob+D4+ipbOxS4rQVflbg3/e/dzhK8T6Y+XXENZ9Te66j4ka
-         riuUIHN2Zpnj5zlnJNalFVboazvPVQrF24RJWo5mJCqQns6YGGbHtKFlI8pNfMa7JtOb
-         eZA71X60Fcij7T34yJAlw0aIxO5zj2jTnhnTJ8a5YsI35rvNbltntcNqczNjjiAphFAx
-         Lqrwz1i0v6ceBq/p2cdahXq38Fqzba4tVJbzZvaczmqqEGZe02XNvjdc+ncIwPp1JriM
-         6mJnjfYpSe697upKpsMlcCni7gCjk4LBpe23BEk14zL+me7AmQEo8VvufMXupMatPrSt
-         bViw==
-X-Gm-Message-State: AC+VfDzmI2sG1rDcKco7EBzgohZSdiXZ9TCiB00aQX51SL+wa5dQkqG7
-        Y7AwAMOazxI/ok52nS6vNtnFtQ==
-X-Google-Smtp-Source: ACHHUZ7Rj4aid8nlRPd+LYmCruDpqgvT0sk/kIQEeiehBTPEfQr67tNgGYb0f37LOnTRBJdTPpKQhg==
-X-Received: by 2002:ac2:48ad:0:b0:4e8:5e39:6238 with SMTP id u13-20020ac248ad000000b004e85e396238mr3710163lfg.42.1682931925716;
-        Mon, 01 May 2023 02:05:25 -0700 (PDT)
+        bh=HQcL6JXC95b5fH8+n8D4snP5Hhmk4OL2MW3VW+pKJ0E=;
+        b=YIuZENP2yZYAGB1JsAFadVZuvEgcI4/7b/gk0rVCfqofc2NhDl2lUj5GMOCyQ4WPAK
+         NrXweHVeXnTGXBBqLmACGpFMi4K2j2JhTUVl346oK8HjwjX8+50CFZXSIS9Rc9DrrNGS
+         3JawUujlgQvDNv9voGG9tiUiaZElEI0RNsCOXKAZ4BR3lRl2yrXTVUqCS9x2ylF/O72f
+         DcsEznuT+Z2Rv2jV19leS6ioUwU84pBy8vzFPQU5Vrho6EH7Am/SKjj/g0fAz+jqH5ab
+         UaYOmSx9w7GokpBSnzLNGefVqdUJU3JbnzAxxrYPKtyI1dELfrE3IE1/ZriJq6L6KLQE
+         oE8A==
+X-Gm-Message-State: AC+VfDz2s1GFGkYqrz2J6fvUJq0LjmLouaiOeq1EcuXSn6v/qrumCpSz
+        zAkAreag8WUv0rSZXOrp+dBf+Q==
+X-Google-Smtp-Source: ACHHUZ7OZhSvekKdINvRtJUNz3diHP6SmdEY/biR7EfrLtF0h36Io3UWjJnpkBypV21YJPARIGuo2w==
+X-Received: by 2002:ac2:5490:0:b0:4ed:d1d6:c595 with SMTP id t16-20020ac25490000000b004edd1d6c595mr3958731lfk.55.1682931926864;
+        Mon, 01 May 2023 02:05:26 -0700 (PDT)
 Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id f21-20020ac251b5000000b004eb554a1711sm4601208lfk.51.2023.05.01.02.05.24
+        by smtp.gmail.com with ESMTPSA id f21-20020ac251b5000000b004eb554a1711sm4601208lfk.51.2023.05.01.02.05.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 02:05:24 -0700 (PDT)
+        Mon, 01 May 2023 02:05:26 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 01 May 2023 11:05:22 +0200
-Subject: [PATCH 2/3] ARM: omap2: Get USB hub reset GPIO from descriptor
+Date:   Mon, 01 May 2023 11:05:23 +0200
+Subject: [PATCH 3/3] ARM: omap2: Rewrite WLAN quirk to use GPIO descriptors
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230430-omap2-pdata-quirks-v1-2-e015f3a3ea46@linaro.org>
+Message-Id: <20230430-omap2-pdata-quirks-v1-3-e015f3a3ea46@linaro.org>
 References: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
 In-Reply-To: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
 To:     Tony Lindgren <tony@atomide.com>,
@@ -70,7 +70,7 @@ Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 X-Mailer: b4 0.12.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,103 +78,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This switches the USB hub GPIO reset line handling in the
-OMAP2 pdata quirks over to using GPIO descriptors to avoid using
-the global GPIO numberspace.
+The OMAP2 platform data quirk is using the global GPIO numberspace
+to obtain two WLAN GPIOs to drive power and xcvr reset GPIO
+lines during start-up.
 
-Since the GPIOs are exported and assumedly used by some kind
-of userspace we cannot simply use hogs in the device tree.
+Rewrite the quirk to use a GPIO descriptor table so we avoid using
+global GPIO numbers.
+
+This gets rid of the final dependency on the legacy <linux/gpio.h>
+header from the OMAP2/3 platforms.
 
 Fixes: 92bf78b33b0b ("gpio: omap: use dynamic allocation of base")
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 50 ++++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 13 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 41 ++++++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
 diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index c363ad8d6a06..3264c4e77a8a 100644
+index 3264c4e77a8a..c1c0121f478d 100644
 --- a/arch/arm/mach-omap2/pdata-quirks.c
 +++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -98,31 +98,43 @@ static struct iommu_platform_data omap3_iommu_isp_pdata = {
- };
- #endif
+@@ -8,7 +8,6 @@
+ #include <linux/davinci_emac.h>
+ #include <linux/gpio/machine.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/of_platform.h>
+@@ -178,25 +177,41 @@ static void __init am35xx_emac_reset(void)
+ 	omap_ctrl_readl(AM35XX_CONTROL_IP_SW_RESET); /* OCP barrier */
+ }
  
--static void __init omap3_sbc_t3x_usb_hub_init(int gpio, char *hub_name)
-+static void __init omap3_sbc_t3x_usb_hub_init(char *hub_name, int idx)
+-static struct gpio cm_t3517_wlan_gpios[] __initdata = {
+-	{ 56,	GPIOF_OUT_INIT_HIGH,	"wlan pwr" },
+-	{ 4,	GPIOF_OUT_INIT_HIGH,	"xcvr noe" },
++static struct gpiod_lookup_table cm_t3517_wlan_gpio_table = {
++	.dev_id = NULL,
++	.table = {
++		GPIO_LOOKUP("gpio-48-53", 8, "power",
++			    GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("gpio-0-15", 4, "noe",
++			    GPIO_ACTIVE_HIGH),
++		{ }
++	},
+ };
+ 
+ static void __init omap3_sbc_t3517_wifi_init(void)
  {
--	int err = gpio_request_one(gpio, GPIOF_OUT_INIT_LOW, hub_name);
+-	int err = gpio_request_array(cm_t3517_wlan_gpios,
+-				ARRAY_SIZE(cm_t3517_wlan_gpios));
+-	if (err) {
+-		pr_err("SBC-T3517: wl12xx gpios request failed: %d\n", err);
+-		return;
+-	}
 +	struct gpio_desc *d;
  
--	if (err) {
--		pr_err("SBC-T3x: %s reset gpio request failed: %d\n",
--			hub_name, err);
+-	gpiod_export(gpio_to_desc(cm_t3517_wlan_gpios[0].gpio), 0);
+-	gpiod_export(gpio_to_desc(cm_t3517_wlan_gpios[1].gpio), 0);
++	gpiod_add_lookup_table(&cm_t3517_wlan_gpio_table);
+ 
 +	/* This asserts the RESET line (reverse polarity) */
-+	d = gpiod_get_index(NULL, "reset", idx, GPIOD_OUT_HIGH);
++	d = gpiod_get(NULL, "power", GPIOD_OUT_HIGH);
 +	if (IS_ERR(d)) {
-+		pr_err("Unable to get T3x USB reset GPIO descriptor\n");
- 		return;
- 	}
--
--	gpiod_export(gpio_to_desc(gpio), 0);
--
-+	gpiod_set_consumer_name(d, hub_name);
-+	gpiod_export(d, 0);
- 	udelay(10);
--	gpio_set_value(gpio, 1);
-+	/* De-assert RESET */
++		pr_err("Unable to get CM T3517 WLAN power GPIO descriptor\n");
++	} else {
++		gpiod_set_consumer_name(d, "wlan pwr");
++		gpiod_export(d, 0);
++	}
++
++	d = gpiod_get(NULL, "noe", GPIOD_OUT_HIGH);
++	if (IS_ERR(d)) {
++		pr_err("Unable to get CM T3517 WLAN XCVR NOE GPIO descriptor\n");
++	} else {
++		gpiod_set_consumer_name(d, "xcvr noe");
++		gpiod_export(d, 0);
++	}
+ 	msleep(100);
+-	gpio_set_value(cm_t3517_wlan_gpios[1].gpio, 0);
 +	gpiod_set_value(d, 0);
- 	msleep(1);
  }
  
-+static struct gpiod_lookup_table omap3_sbc_t3x_usb_gpio_table = {
-+	.dev_id = NULL,
-+	.table = {
-+		GPIO_LOOKUP_IDX("gpio-160-175", 7, "reset", 0,
-+				GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
- static void __init omap3_sbc_t3730_legacy_init(void)
- {
--	omap3_sbc_t3x_usb_hub_init(167, "sb-t35 usb hub");
-+	gpiod_add_lookup_table(&omap3_sbc_t3x_usb_gpio_table);
-+	omap3_sbc_t3x_usb_hub_init("sb-t35 usb hub", 0);
- }
- 
- static void __init omap3_sbc_t3530_legacy_init(void)
- {
--	omap3_sbc_t3x_usb_hub_init(167, "sb-t35 usb hub");
-+	gpiod_add_lookup_table(&omap3_sbc_t3x_usb_gpio_table);
-+	omap3_sbc_t3x_usb_hub_init("sb-t35 usb hub", 0);
- }
- 
- static void __init omap3_evm_legacy_init(void)
-@@ -187,10 +199,22 @@ static void __init omap3_sbc_t3517_wifi_init(void)
- 	gpio_set_value(cm_t3517_wlan_gpios[1].gpio, 0);
- }
- 
-+static struct gpiod_lookup_table omap3_sbc_t3517_usb_gpio_table = {
-+	.dev_id = NULL,
-+	.table = {
-+		GPIO_LOOKUP_IDX("gpio-144-159", 8, "reset", 0,
-+				GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("gpio-96-111", 2, "reset", 1,
-+				GPIO_ACTIVE_LOW),
-+		{ }
-+	},
-+};
-+
- static void __init omap3_sbc_t3517_legacy_init(void)
- {
--	omap3_sbc_t3x_usb_hub_init(152, "cm-t3517 usb hub");
--	omap3_sbc_t3x_usb_hub_init(98, "sb-t35 usb hub");
-+	gpiod_add_lookup_table(&omap3_sbc_t3517_usb_gpio_table);
-+	omap3_sbc_t3x_usb_hub_init("cm-t3517 usb hub", 0);
-+	omap3_sbc_t3x_usb_hub_init("sb-t35 usb hub", 1);
- 	am35xx_emac_reset();
- 	hsmmc2_internal_input_clk();
- 	omap3_sbc_t3517_wifi_init();
+ static struct gpiod_lookup_table omap3_sbc_t3517_usb_gpio_table = {
 
 -- 
 2.34.1
