@@ -2,54 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE6B76F2A70
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Apr 2023 21:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 049646F2FB4
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 May 2023 11:05:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbjD3TSz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Apr 2023 15:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47244 "EHLO
+        id S231779AbjEAJFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 May 2023 05:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbjD3TSq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Apr 2023 15:18:46 -0400
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0B8170A
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Apr 2023 12:18:45 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id d184eeb3-e78b-11ed-b3cf-005056bd6ce9;
-        Sun, 30 Apr 2023 22:18:42 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Sun, 30 Apr 2023 22:18:41 +0300
-To:     Lizhe <sensor1010@163.com>
-Cc:     linus.walleij@linaro.org, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl:sprd: Check if the pinctrl_dev still exists
-Message-ID: <ZE6_EeLLmXOepHJH@surfacebook>
-References: <20230430140129.112081-1-sensor1010@163.com>
+        with ESMTP id S229921AbjEAJFd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 May 2023 05:05:33 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF2F10C4
+        for <linux-gpio@vger.kernel.org>; Mon,  1 May 2023 02:05:24 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4efe8991bafso3187906e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 01 May 2023 02:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1682931923; x=1685523923;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2j6rgQc/r/2Js3D3gLwomy+VWPn4uUg8B3ip4IjpuBc=;
+        b=KAn3ODbIiRg4j4Zzg/nLhWKpOxSDpVsU9Zn/tajMDmj3ofpezi3MroE8tiPr5jqEVC
+         5CedcIh3ba7clPnvywrYtUakcAxswbyLn9MAqR8+Lw8carcSiAPQsdgySQYkzDFg+sgD
+         1lREin9W5NrFUxSkJIdhKRbzIJ0uyCOMEIMEOoCW4GKXanq4TjiqaL2Iq4PpvM/Gwb4E
+         j07uZIaqNQLIgaMXxbPJGFwOpBSSpQ9z9imHnu1tfy46NWQDIE//E5Dm3B0GR9McWB5h
+         naZHQvxkKWg4Uur0vxC+iV8mvfB62GMogmKFRuJvh8q48UphgDgwhHY3C2BnaGiRpTKC
+         shdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682931923; x=1685523923;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2j6rgQc/r/2Js3D3gLwomy+VWPn4uUg8B3ip4IjpuBc=;
+        b=H2XQJsNXUUg8fhBliRwp4hvbKX3a3kT7ZGr2cXvIgi6f43DOAisTDW1zcXEyzc5Dpi
+         qvfqA1ZT5Y15pXz3GPYxQM1i7vGRv1G56Ikv3Jv6+vp0Q6tW1aCjJaus4WRUGjjT7xoC
+         eDM2GksTzn0bmNM7arNRCkppWxHYG7rCC85I0G8wNdvCeCTR0Cadkd39SXB3XYku1mfj
+         GwrK/0IzsaIY2gUJSASrYkjHhiKlqjirOpPkEBTbHPrKpnrhEJVQ0/z7vW0EHh+2gBSM
+         xvg7yoyW31CGAG043+QzRtzJrthnmFkqzI6+cnwwN07jKbiRqnZUzLuNC9/LkrruCMrY
+         dXGw==
+X-Gm-Message-State: AC+VfDxET2ecXnmdYuNJfI2aU78czmQ/xaFnE7DmzgXPubmtn4pXYrOj
+        WDq8nI6kkIU1naJmVVmjL9RTUw==
+X-Google-Smtp-Source: ACHHUZ4PKSBtvj/xLG1BW7/z1Xw6Jj+Ff/oBpQPTIV8KfzrvUyBivXgM1hxakXhkALJvhWCKUxV6Tg==
+X-Received: by 2002:ac2:43bc:0:b0:4ea:5902:5af1 with SMTP id t28-20020ac243bc000000b004ea59025af1mr3668268lfl.52.1682931922845;
+        Mon, 01 May 2023 02:05:22 -0700 (PDT)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id f21-20020ac251b5000000b004eb554a1711sm4601208lfk.51.2023.05.01.02.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 May 2023 02:05:22 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/3] Get rid of OMAP2 GPIO pdata quirks
+Date:   Mon, 01 May 2023 11:05:20 +0200
+Message-Id: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230430140129.112081-1-sensor1010@163.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANCAT2QC/x2NwQqDQAwFf0VybmB1vbS/UnqI+qyhuG4TLQXx3
+ 7v2OAzD7OQwhdOt2snwUdclFagvFfWTpCdYh8LUhCaGNgZeZskN50FW4fem9nKO4VpcDbQjqIS
+ dOLgzSf10prP4CjtFNoz6/d/uj+P4ARDKqrt9AAAA
+To:     Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Lee Jones <lee@kernel.org>,
+        Andreas Kemnade <andreas@kemnade.info>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.12.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Sun, Apr 30, 2023 at 10:01:29PM +0800, Lizhe kirjoitti:
-> to check if the pinctrl_dev still exists before calling
-> pinctrl_unregister().
+The OMAP2/3 has a few platform data quirks using the legacy
+<linux/gpio.h> API and the associated global GPIO numberspace.
 
-Sending a duplicate won't give anything new here, the patch itself is bogus.
+Since we started to use dynamic assignment of the OMAP GPIO
+base this will not work, let's just rewrite and decomission
+these bad habits.
 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Linus Walleij (3):
+      ARM/gpio: Push OMAP2 quirk down into TWL4030 driver
+      ARM: omap2: Get USB hub reset GPIO from descriptor
+      ARM: omap2: Rewrite WLAN quirk to use GPIO descriptors
+
+ arch/arm/mach-omap2/omap_device.c  |   1 -
+ arch/arm/mach-omap2/pdata-quirks.c | 132 ++++++++++++++++++-------------------
+ drivers/gpio/gpio-twl4030.c        |  52 ++++++++++-----
+ include/linux/mfd/twl.h            |   3 -
+ 4 files changed, 102 insertions(+), 86 deletions(-)
+---
+base-commit: 825a0714d2b3883d4f8ff64f6933fb73ee3f1834
+change-id: 20230430-omap2-pdata-quirks-3093041ee4fe
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Linus Walleij <linus.walleij@linaro.org>
 
