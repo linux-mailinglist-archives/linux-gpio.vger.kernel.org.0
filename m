@@ -2,72 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8200B6F2FBC
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 May 2023 11:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5CF56F30E0
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 May 2023 14:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232261AbjEAJFp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 May 2023 05:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33526 "EHLO
+        id S232499AbjEAM34 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 May 2023 08:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232315AbjEAJFm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 May 2023 05:05:42 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57C9172C
-        for <linux-gpio@vger.kernel.org>; Mon,  1 May 2023 02:05:28 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4efe8b3f3f7so2677073e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 01 May 2023 02:05:28 -0700 (PDT)
+        with ESMTP id S232463AbjEAM3z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 May 2023 08:29:55 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946961704
+        for <linux-gpio@vger.kernel.org>; Mon,  1 May 2023 05:29:46 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-54f8af6dfa9so43478857b3.2
+        for <linux-gpio@vger.kernel.org>; Mon, 01 May 2023 05:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682931927; x=1685523927;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HQcL6JXC95b5fH8+n8D4snP5Hhmk4OL2MW3VW+pKJ0E=;
-        b=ryOVLyaXPO1JeeCNBToS55jlkVdWfQga1fn6f6J5KLa3q00WDmdYYzsPTn9DQ6kmNG
-         AVLtk/TRhd3Z5K/d80x/Zy+QOUvnhh+LnMwePTkmwtdOzOWwZqxPVMYFxTo0u0cHj+pG
-         ZQKzUIeBbUQQNL7L7M3s1OcyOuQM+lcKKvkc9fA5I8f4yTtf+KSVKvE8EB2JdaqaM9wf
-         sy52vRUHo6d6/HRomTLnJ5TCWBpnqJqwSE8s+pHozwCOwTpSyjX2gR5VfBtV+nOK05xC
-         JysLfxToT2GTYX1aOVewx89219wGbviaT/wvMyUw0L/DhXWZcjnJO6rjO4CF6Vmje1Rg
-         BNOQ==
+        d=linaro.org; s=google; t=1682944186; x=1685536186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uNAU33N+roe5U6IAkPOOSvsUX5CPin1Iei73lUukdn0=;
+        b=OzBoO667tpOKcKnteYCoqmBbhm3gsae5un7Arjuq0FT8CtDy6n4eHaq+WXiCfIbSW+
+         FVWi9j20O0r26vOZO2Cn3rWa4EQ+x6vS5FhJ/+7A6UhypygTqsFYcHKsNOr6a9CMHp2Q
+         j7OT9/gIQyl5cOjkpML8zmr/ElU2wN89jyDlKGVt46+37XE+L+iE/o3zylA1r3M0MiU2
+         TzwHUSTLPQqvfH6hZ0LWB+rWxH2TEFo9CoXuUZ3xgavsUc4Wn/r/KEDzbJRtj31ggbEh
+         kFly4b6xcJ/xK5xaf53PxN95uglRMwFnHRYgTr17ZGAs8bUNpwFSJ11h9onaodAzzPuA
+         i3sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682931927; x=1685523927;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1682944186; x=1685536186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HQcL6JXC95b5fH8+n8D4snP5Hhmk4OL2MW3VW+pKJ0E=;
-        b=YIuZENP2yZYAGB1JsAFadVZuvEgcI4/7b/gk0rVCfqofc2NhDl2lUj5GMOCyQ4WPAK
-         NrXweHVeXnTGXBBqLmACGpFMi4K2j2JhTUVl346oK8HjwjX8+50CFZXSIS9Rc9DrrNGS
-         3JawUujlgQvDNv9voGG9tiUiaZElEI0RNsCOXKAZ4BR3lRl2yrXTVUqCS9x2ylF/O72f
-         DcsEznuT+Z2Rv2jV19leS6ioUwU84pBy8vzFPQU5Vrho6EH7Am/SKjj/g0fAz+jqH5ab
-         UaYOmSx9w7GokpBSnzLNGefVqdUJU3JbnzAxxrYPKtyI1dELfrE3IE1/ZriJq6L6KLQE
-         oE8A==
-X-Gm-Message-State: AC+VfDz2s1GFGkYqrz2J6fvUJq0LjmLouaiOeq1EcuXSn6v/qrumCpSz
-        zAkAreag8WUv0rSZXOrp+dBf+Q==
-X-Google-Smtp-Source: ACHHUZ7OZhSvekKdINvRtJUNz3diHP6SmdEY/biR7EfrLtF0h36Io3UWjJnpkBypV21YJPARIGuo2w==
-X-Received: by 2002:ac2:5490:0:b0:4ed:d1d6:c595 with SMTP id t16-20020ac25490000000b004edd1d6c595mr3958731lfk.55.1682931926864;
-        Mon, 01 May 2023 02:05:26 -0700 (PDT)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id f21-20020ac251b5000000b004eb554a1711sm4601208lfk.51.2023.05.01.02.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 02:05:26 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 01 May 2023 11:05:23 +0200
-Subject: [PATCH 3/3] ARM: omap2: Rewrite WLAN quirk to use GPIO descriptors
+        bh=uNAU33N+roe5U6IAkPOOSvsUX5CPin1Iei73lUukdn0=;
+        b=K3NeXVV8hIr7Hp5exuoGxgWbk1OuvG3Co9uLc7Ee0cdjGcv5viBv3R8nys63VpK7PX
+         n4UVP7949b7GOyNBXdqL3l4QtaUw56goJp7FbfiiWJbtLBBZr0Xr+WDkLFjDU/RiVkHS
+         lyOESNQoYDUdzzkfOnVIynmN5MEs/xI8kKROGZeWAaUY+XxgJxaTPJDzmu4TCp9sPHnt
+         DY2Sy26tYc+tLFmtT1SzdTsDOEO4zKXbSvNuMCTTjTkhBFpGbptoALgTRjCAvo+ivJBR
+         JKgY4iobZIqOz0TeWsxol6+8K5LDAPzdvbHHgwPjRO/e0+boFAhpqkYSiU99zSm4nJV6
+         gGOQ==
+X-Gm-Message-State: AC+VfDzgsdtI0022V90+QJS4ojt8B4cQujHxt2jHp0wcdDZSLGiFvVni
+        OtpUpZ03+JvvpzvcOL7ksJ5km08qplwPDSBpW3whCA==
+X-Google-Smtp-Source: ACHHUZ4JWzJBoFVmVjKOt5uk/TX2V9yqXi7q2ye0IdtVGgzFFHtPnptZV32IyVAGJuUn9bkoviCUycIwRkhXHwfDQ5g=
+X-Received: by 2002:a81:dd08:0:b0:54f:8f16:c8b5 with SMTP id
+ e8-20020a81dd08000000b0054f8f16c8b5mr11598419ywn.34.1682944185780; Mon, 01
+ May 2023 05:29:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230430-omap2-pdata-quirks-v1-3-e015f3a3ea46@linaro.org>
-References: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
-In-Reply-To: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
-To:     Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Lee Jones <lee@kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.1
+References: <20230314121216.413434-1-schnelle@linux.ibm.com>
+ <20230314121216.413434-10-schnelle@linux.ibm.com> <CACRpkdbS1U8_qakdWV0YZq3bhr1NvFuL0Umv3QsXD0wYu7Hd9A@mail.gmail.com>
+ <9a0feb128bc3b26ca444367ce4ee44e80aa9f469.camel@linux.ibm.com>
+In-Reply-To: <9a0feb128bc3b26ca444367ce4ee44e80aa9f469.camel@linux.ibm.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 1 May 2023 14:29:34 +0200
+Message-ID: <CACRpkdYGWZSk+wSW7waFsY0wSS+CasEqm4N0CU6u6UKxe9WA6A@mail.gmail.com>
+Subject: Re: [PATCH v3 09/38] gpio: add HAS_IOPORT dependencies
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -78,89 +83,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The OMAP2 platform data quirk is using the global GPIO numberspace
-to obtain two WLAN GPIOs to drive power and xcvr reset GPIO
-lines during start-up.
+On Fri, Apr 28, 2023 at 4:45=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
+.com> wrote:
 
-Rewrite the quirk to use a GPIO descriptor table so we avoid using
-global GPIO numbers.
+> Makes sense I changed it to the above approach for v4. One thing this
+> makes me wonder is if then one should change the X86 dependency to at
+> least X86 || COMPILE_TEST or even remove it and rely on HAS_IOPORT.
 
-This gets rid of the final dependency on the legacy <linux/gpio.h>
-header from the OMAP2/3 platforms.
+Hm it makes sense I think. I don't know if there may be other
+X86 deps in these drivers but we don't know until we tried.
 
-Fixes: 92bf78b33b0b ("gpio: omap: use dynamic allocation of base")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/mach-omap2/pdata-quirks.c | 41 ++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 3264c4e77a8a..c1c0121f478d 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -8,7 +8,6 @@
- #include <linux/davinci_emac.h>
- #include <linux/gpio/machine.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/of_platform.h>
-@@ -178,25 +177,41 @@ static void __init am35xx_emac_reset(void)
- 	omap_ctrl_readl(AM35XX_CONTROL_IP_SW_RESET); /* OCP barrier */
- }
- 
--static struct gpio cm_t3517_wlan_gpios[] __initdata = {
--	{ 56,	GPIOF_OUT_INIT_HIGH,	"wlan pwr" },
--	{ 4,	GPIOF_OUT_INIT_HIGH,	"xcvr noe" },
-+static struct gpiod_lookup_table cm_t3517_wlan_gpio_table = {
-+	.dev_id = NULL,
-+	.table = {
-+		GPIO_LOOKUP("gpio-48-53", 8, "power",
-+			    GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("gpio-0-15", 4, "noe",
-+			    GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
- };
- 
- static void __init omap3_sbc_t3517_wifi_init(void)
- {
--	int err = gpio_request_array(cm_t3517_wlan_gpios,
--				ARRAY_SIZE(cm_t3517_wlan_gpios));
--	if (err) {
--		pr_err("SBC-T3517: wl12xx gpios request failed: %d\n", err);
--		return;
--	}
-+	struct gpio_desc *d;
- 
--	gpiod_export(gpio_to_desc(cm_t3517_wlan_gpios[0].gpio), 0);
--	gpiod_export(gpio_to_desc(cm_t3517_wlan_gpios[1].gpio), 0);
-+	gpiod_add_lookup_table(&cm_t3517_wlan_gpio_table);
- 
-+	/* This asserts the RESET line (reverse polarity) */
-+	d = gpiod_get(NULL, "power", GPIOD_OUT_HIGH);
-+	if (IS_ERR(d)) {
-+		pr_err("Unable to get CM T3517 WLAN power GPIO descriptor\n");
-+	} else {
-+		gpiod_set_consumer_name(d, "wlan pwr");
-+		gpiod_export(d, 0);
-+	}
-+
-+	d = gpiod_get(NULL, "noe", GPIOD_OUT_HIGH);
-+	if (IS_ERR(d)) {
-+		pr_err("Unable to get CM T3517 WLAN XCVR NOE GPIO descriptor\n");
-+	} else {
-+		gpiod_set_consumer_name(d, "xcvr noe");
-+		gpiod_export(d, 0);
-+	}
- 	msleep(100);
--	gpio_set_value(cm_t3517_wlan_gpios[1].gpio, 0);
-+	gpiod_set_value(d, 0);
- }
- 
- static struct gpiod_lookup_table omap3_sbc_t3517_usb_gpio_table = {
-
--- 
-2.34.1
-
+Yours,
+Linus Walleij
