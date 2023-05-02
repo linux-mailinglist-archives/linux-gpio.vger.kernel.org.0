@@ -2,75 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B35406F3EB6
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 May 2023 10:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F2E06F3F65
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 May 2023 10:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233726AbjEBIDX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 May 2023 04:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        id S233642AbjEBIoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 May 2023 04:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbjEBIDW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 May 2023 04:03:22 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA43D44B0;
-        Tue,  2 May 2023 01:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PvpjRPhnK8nvzZQ6lrmMZD/nxdd63g2YCF5iNnbiTyE=; b=bNXlKQOh0aIxzB4XxO0oFE2dBP
-        CPI3KhKaWpJRpBZ4Gm0xkCRtd2W3Rb3BQ/L7gn4a5SrYoeHakn6Nk0rQKkAl6Fyg0+6pc9WxxRoiP
-        Iad+vz5yPsCNK6j3nmotArDTxE838d3aG/vS1ymXH/heNnDTz/VAqg6znD+/RSa8K3jfkev0XQTJL
-        qgzR99+1FVINxPX45cVds7ZzYH+sjT0ipcvuZK48SQAVU617/qdck5+3iJIlkq1zzDoI7Luy6pTy9
-        ALE0rI/qDgJTTrrkZXHprXNNwJwHPwqpp/anEPPI6WszZh36+DdEbJoh8O8Y3L8HSNCBSSJGq8NiR
-        8QfsfNhw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34144)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ptkyj-0001vW-Q6; Tue, 02 May 2023 09:03:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ptkyi-0000WR-0o; Tue, 02 May 2023 09:03:16 +0100
-Date:   Tue, 2 May 2023 09:03:15 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        jsd@semihalf.com, ose.Abreu@synopsys.com, andrew@lunn.ch,
-        hkallweit1@gmail.com, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [RFC PATCH net-next v5 7/9] net: pcs: Add 10GBASE-R mode for
- Synopsys Designware XPCS
-Message-ID: <ZFDDw1tFkEuTldQs@shell.armlinux.org.uk>
-References: <20230426071434.452717-1-jiawenwu@trustnetic.com>
- <20230426071434.452717-8-jiawenwu@trustnetic.com>
+        with ESMTP id S231964AbjEBIoR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 May 2023 04:44:17 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745264486;
+        Tue,  2 May 2023 01:44:15 -0700 (PDT)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 3BF0ED25;
+        Tue,  2 May 2023 10:44:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1683017053;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VaEv1wD3UWoz0LdA32gdXEvV6OHqxDk7aEeS7MPNyZI=;
+        b=Se9EaTU9dO7IEOs/1En7eSlJSeFCteWDtgc3rftUul2kXQl7MaNST0LIGP3x4lmbfqlUCF
+        6KzcwFlJi0/j8RuYkw2hr0XlWzJUq7HYHxXorzLHkwMBqYhtyI1igPYLlPtCDKxRNhW6ae
+        +x+bb9e3JnPKtnXmjxvSdmY227VaPH3iXaJYgwHui+yvgoqy2lQpBoGjZMI5y66Q+tGodT
+        rQTXC7N+owoPruL8zBOOHNm8OHYU+gRjNX8AKyOaiqPyj85zfQ0jxQQxfXd1/Y+Javp1OJ
+        v0sb4LkphGA4jS4KVcsmrQ45oZ79davQz4MJ+HDFMe2qfuLZewyPrfYONGVrcQ==
+From:   Michael Walle <michael@walle.cc>
+To:     okan.sahin@analog.com
+Cc:     brgl@bgdev.pl, devicetree@vger.kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 2/2] gpio: ds4520: Add ADI DS4520 GPIO Expander Support
+Date:   Tue,  2 May 2023 10:44:06 +0200
+Message-Id: <20230502084406.3529645-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230501230517.4491-3-okan.sahin@analog.com>
+References: <20230501230517.4491-3-okan.sahin@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230426071434.452717-8-jiawenwu@trustnetic.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 03:14:32PM +0800, Jiawen Wu wrote:
-> Add basic support for XPCS using 10GBASE-R interface. This mode will
-> be extended to use interrupt, so set pcs.poll false. And avoid soft
-> reset so that the device using this mode is in the default configuration.
-> 
-> Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
+[Please include any former reviewers in new versions.]
 
-See my comments on v4.
+> The DS4520 is a 9-bit nonvolatile (NV) I/O expander.
+> It offers users a digitally programmable alternative
+> to hardware jumpers and mechanical switches that are
+> being used to control digital logic node.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Ok, what I just noticed is that this is an open-drain output buffer
+with an optional pull-up, that should really go into the commit
+message.
+
+Also the commit message is misleading "it offers users a digitally
+programmable alternative to hardware jumpers". While the hardware is
+capable of that, this driver doesn't make use of it.
+
+> +	config.reg_dat_base = base + IO_STATUS0;
+> +	config.reg_set_base = base + PULLUP0;
+> +	config.reg_dir_out_base = base + IO_CONTROL0;
+
+Given the above, I don't think this is correct. You pull the line low if
+the line is in input mode (?). The line will be pulled low if the
+corresponding bit in IO_CONTROL is zero. A one means, the pin is
+floating. With open-drain buffers there are usually an external pull-ups,
+so I'd treat the internal pull-up as optional and it is not necessary to
+switch the actual line state.
+
+In that case the following should be sufficient:
+	config.reg_dat_base = base + IO_STATUS0;
+	config.reg_set_base = base + IO_CONTROL0;
+
+I'm not sure about the direction though. Technically speaking there is
+no direction register. I'm not familiar with how open drain output are
+modeled in linux. I'd expect the above is enough. Bartosz/Linus/Andy?
+
+To enable the optional pull-up, you should refer to .set_config.
+(You don't need to disable the pull-up if you pull the line low).
+
+Regarding the SEE bit and wear out: The SEE bit seem to be shadowed by the
+EEPROM, so if someone is setting the SEE bit it will be persisent. Changing
+direction or output value will result in an EEPROM write and might wear out
+the EEPROM. I'd like to hear others opinion on that. The worst case write
+cycles are 50000. Fail the probe if the SEE bit is set seems not ideal.
+Just ignoring that problem for now (or at least warn the user)?
+
+-michael
