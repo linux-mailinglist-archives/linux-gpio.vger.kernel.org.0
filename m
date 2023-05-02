@@ -2,102 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F2E06F3F65
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 May 2023 10:44:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 080DA6F406F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 May 2023 11:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233642AbjEBIoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 May 2023 04:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        id S233644AbjEBJxA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 2 May 2023 05:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231964AbjEBIoR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 May 2023 04:44:17 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745264486;
-        Tue,  2 May 2023 01:44:15 -0700 (PDT)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 3BF0ED25;
-        Tue,  2 May 2023 10:44:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1683017053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VaEv1wD3UWoz0LdA32gdXEvV6OHqxDk7aEeS7MPNyZI=;
-        b=Se9EaTU9dO7IEOs/1En7eSlJSeFCteWDtgc3rftUul2kXQl7MaNST0LIGP3x4lmbfqlUCF
-        6KzcwFlJi0/j8RuYkw2hr0XlWzJUq7HYHxXorzLHkwMBqYhtyI1igPYLlPtCDKxRNhW6ae
-        +x+bb9e3JnPKtnXmjxvSdmY227VaPH3iXaJYgwHui+yvgoqy2lQpBoGjZMI5y66Q+tGodT
-        rQTXC7N+owoPruL8zBOOHNm8OHYU+gRjNX8AKyOaiqPyj85zfQ0jxQQxfXd1/Y+Javp1OJ
-        v0sb4LkphGA4jS4KVcsmrQ45oZ79davQz4MJ+HDFMe2qfuLZewyPrfYONGVrcQ==
-From:   Michael Walle <michael@walle.cc>
-To:     okan.sahin@analog.com
-Cc:     brgl@bgdev.pl, devicetree@vger.kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 2/2] gpio: ds4520: Add ADI DS4520 GPIO Expander Support
-Date:   Tue,  2 May 2023 10:44:06 +0200
-Message-Id: <20230502084406.3529645-1-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230501230517.4491-3-okan.sahin@analog.com>
-References: <20230501230517.4491-3-okan.sahin@analog.com>
+        with ESMTP id S233373AbjEBJw7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 May 2023 05:52:59 -0400
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFD030F6
+        for <linux-gpio@vger.kernel.org>; Tue,  2 May 2023 02:52:57 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-763da06581dso214248839f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 May 2023 02:52:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683021177; x=1685613177;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1vikVBvsLI5HDIVu840mMsYLutm2GK4CYpSss0kBN2A=;
+        b=DgZd7vymfh3xdiY4buW+M7UuWU6PKjiKxYcSwTPVFTpCiYBaR3tH3KmdwslL8HwRmD
+         ui9ApIgiXg+14uridC7eE0KE1rw2tDLTrGoAd17uAy0t9wK/wqsjf4aoc2R3HXUwxsM9
+         KrzSEXboxB1fX6+YYKF2YSq8FFzvFZGpQRDZmaplyXqASQd7oMDjJmekIwVkOvZ647bT
+         lTqPl76tGHH/qhNVN1WdwHZa5B0MK5R/n7tNgxL1gWOC0wnYq7vsk6zyW20NRnmv7Vjt
+         iDOx0EixYR2+gKP0JHd0okHFJmiIO4BdJgoD6bc4yqEM+qD9v55Ehv2STXFMuMdrxhvD
+         hn5g==
+X-Gm-Message-State: AC+VfDyCxsTvHB9LrABEVYBcHSkBzwrbHc3E7dc+Ai74ZjhyLrjsNfuT
+        nW3WZOuXrfrpRvLG/LwP4H0ji9yoGU/HexRDWf3wb27efxZ+
+X-Google-Smtp-Source: ACHHUZ4k7ywFNbb5MbG4BhQg/EXw7m5QnIt7dRIRm6+gUMZjpe4m6NU4v8uF3THDQ/NrKrUvrMl/Mn8Tx9vh/osGI0b7lRUQRWrc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Received: by 2002:a02:8668:0:b0:40f:cf8b:7c74 with SMTP id
+ e95-20020a028668000000b0040fcf8b7c74mr7557544jai.0.1683021176852; Tue, 02 May
+ 2023 02:52:56 -0700 (PDT)
+Date:   Tue, 02 May 2023 02:52:56 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000065594605fab2e72c@google.com>
+Subject: [syzbot] upstream boot error: BUG: unable to handle kernel paging
+ request in gpiod_set_value
+From:   syzbot <syzbot+5e3c3df60302959ef641@syzkaller.appspotmail.com>
+To:     brgl@bgdev.pl, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[Please include any former reviewers in new versions.]
+Hello,
 
-> The DS4520 is a 9-bit nonvolatile (NV) I/O expander.
-> It offers users a digitally programmable alternative
-> to hardware jumpers and mechanical switches that are
-> being used to control digital logic node.
+syzbot found the following issue on:
 
-Ok, what I just noticed is that this is an open-drain output buffer
-with an optional pull-up, that should really go into the commit
-message.
+HEAD commit:    865fdb08197e Merge tag 'input-for-v6.4-rc0' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16481bf8280000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d43eae746231feb3
+dashboard link: https://syzkaller.appspot.com/bug?extid=5e3c3df60302959ef641
+compiler:       arm-linux-gnueabi-gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+userspace arch: arm
 
-Also the commit message is misleading "it offers users a digitally
-programmable alternative to hardware jumpers". While the hardware is
-capable of that, this driver doesn't make use of it.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5e3c3df60302959ef641@syzkaller.appspotmail.com
 
-> +	config.reg_dat_base = base + IO_STATUS0;
-> +	config.reg_set_base = base + PULLUP0;
-> +	config.reg_dir_out_base = base + IO_CONTROL0;
+Movable zone start for each node
+Early memory node ranges
+  node   0: [mem 0x0000000080000000-0x00000000ffffffff]
+Initmem setup node 0 [mem 0x0000000080000000-0x00000000ffffffff]
+percpu: Embedded 19 pages/cpu s47048 r8192 d22584 u77824
+Kernel command line: root=/dev/vda console=ttyAMA0  earlyprintk=serial net.ifnames=0 sysctl.kernel.hung_task_all_cpu_backtrace=1 ima_policy=tcb nf-conntrack-ftp.ports=20000 nf-conntrack-tftp.ports=20000 nf-conntrack-sip.ports=20000 nf-conntrack-irc.ports=20000 nf-conntrack-sane.ports=20000 binder.debug_mask=0 rcupdate.rcu_expedited=1 rcupdate.rcu_cpu_stall_cputime=1 no_hash_pointers page_owner=on sysctl.vm.nr_hugepages=4 sysctl.vm.nr_overcommit_hugepages=4 secretmem.enable=1 sysctl.max_rcu_stall_to_panic=1 msr.allow_writes=off coredump_filter=0xffff root=/dev/vda console=ttyAMA0 vmalloc=512M smp.csd_lock_timeout=300000 watchdog_thresh=165 workqueue.watchdog_thresh=420 sysctl.net.core.netdev_unregister_timeout_secs=420 dummy_hcd.num=2 panic_on_warn=1
+Unknown kernel command line parameters "earlyprintk=serial page_owner=on", will be passed to user space.
+Dentry cache hash table entries: 262144 (order: 8, 1048576 bytes, linear)
+Inode-cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+Built 1 zonelists, mobility grouping on.  Total pages: 520868
+allocated 2097152 bytes of page_ext
+mem auto-init: stack:off, heap alloc:on, heap free:off
+software IO TLB: area num 2.
+software IO TLB: mapped [mem 0x00000000d9a47000-0x00000000dda47000] (64MB)
+Memory: 1952316K/2097152K available (24576K kernel code, 2364K rwdata, 8404K rodata, 2048K init, 868K bss, 128452K reserved, 16384K cma-reserved, 524288K highmem)
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+trace event string verifier disabled
+rcu: Preemptible hierarchical RCU implementation.
+rcu: 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=2.
+rcu: 	RCU callback double-/use-after-free debug is enabled.
+	All grace periods are expedited (rcu_expedited).
+	Trampoline variant of Tasks RCU enabled.
+	Tracing variant of Tasks RCU enabled.
+rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+GIC physical location is 0x2c001000
+rcu: srcu_init: Setting srcu_struct sizes based on contention.
+sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 89478484971ns
+clocksource: arm,sp804: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns
+arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+clocksource: arch_sys_counter: mask: 0x1ffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+sched_clock: 57 bits at 63MHz, resolution 16ns, wraps every 4398046511096ns
+Switching to timer-based delay loop, resolution 16ns
+Console: colour dummy device 80x30
+Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=625000)
+pid_max: default: 32768 minimum: 301
+LSM: initializing lsm=lockdown,capability,landlock,yama,safesetid,tomoyo,selinux,bpf,integrity
+landlock: Up and running.
+Yama: becoming mindful.
+TOMOYO Linux initialized
+SELinux:  Initializing.
+LSM support for eBPF active
+stackdepot: allocating hash table of 131072 entries via kvcalloc
+Mount-cache hash table entries: 4096 (order: 2, 16384 bytes, linear)
+Mountpoint-cache hash table entries: 4096 (order: 2, 16384 bytes, linear)
+CPU: Testing write buffer coherency: ok
+CPU0: Spectre BHB: enabling loop workaround for all CPUs
+CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+8<--- cut here ---
+Unable to handle kernel paging request at virtual address 000c01f3 when read
+[000c01f3] *pgd=80000080004003, *pmd=00000000
+Internal error: Oops: 206 [#1] PREEMPT SMP ARM
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.3.0-syzkaller #0
+Hardware name: ARM-Versatile Express
+PC is at gpiod_set_value+0x38/0xc0 drivers/gpio/gpiolib.c:3222
+LR is at gpio_led_set+0x5c/0x60 drivers/leds/leds-gpio.c:54
+pc : [<80891a24>]    lr : [<8107f408>]    psr: 20000113
+sp : 82601e90  ip : 82601ea8  fp : 82601ea4
+r10: 00000000  r9 : 827e16e6  r8 : 00000001
+r7 : dddd1798  r6 : 000000ff  r5 : 00000001  r4 : 835c27a8
+r3 : 000c0193  r2 : 8107f3ac  r1 : 00000001  r0 : 83194800
+Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 30c5387d  Table: 80003000  DAC: fffffffd
+Register r0 information: slab kmalloc-1k start 83194800 pointer offset 0 size 1024
+Register r1 information: non-paged memory
+Register r2 information: non-slab/vmalloc memory
+Register r3 information: non-paged memory
+Register r4 information: slab kmalloc-192 start 835c2780 pointer offset 40 size 192
+Register r5 information: non-paged memory
+Register r6 information: non-paged memory
+Register r7 information:
+8<--- cut here ---
+Unable to handle kernel paging request at virtual address df943ff8 when read
+[df943ff8] *pgd=80000080007003, *pmd=83093003, *pte=802160e880216664
+Internal error: Oops: 207 [#2] PREEMPT SMP ARM
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.3.0-syzkaller #0
+Hardware name: ARM-Versatile Express
+PC is at __find_vmap_area mm/vmalloc.c:841 [inline]
+PC is at find_vmap_area mm/vmalloc.c:1862 [inline]
+PC is at find_vm_area mm/vmalloc.c:2623 [inline]
+PC is at vmalloc_dump_obj+0x38/0xb4 mm/vmalloc.c:4221
+LR is at __raw_spin_lock include/linux/spinlock_api_smp.h:132 [inline]
+LR is at _raw_spin_lock+0x18/0x58 kernel/locking/spinlock.c:154
+pc : [<8047a1f0>]    lr : [<818016fc>]    psr: a0000193
+sp : 82601cf8  ip : 82601ce0  fp : 82601d0c
+r10: 8261ae40  r9 : 8261c9a4  r8 : 8285041c
+r7 : 60000113  r6 : 00000008  r5 : dddd2000  r4 : df944000
+r3 : 00000000  r2 : 0000215b  r1 : 00000000  r0 : 00000001
+Flags: NzCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 30c5387d  Table: 80003000  DAC: fffffffd
 
-Given the above, I don't think this is correct. You pull the line low if
-the line is in input mode (?). The line will be pulled low if the
-corresponding bit in IO_CONTROL is zero. A one means, the pin is
-floating. With open-drain buffers there are usually an external pull-ups,
-so I'd treat the internal pull-up as optional and it is not necessary to
-switch the actual line state.
 
-In that case the following should be sufficient:
-	config.reg_dat_base = base + IO_STATUS0;
-	config.reg_set_base = base + IO_CONTROL0;
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I'm not sure about the direction though. Technically speaking there is
-no direction register. I'm not familiar with how open drain output are
-modeled in linux. I'd expect the above is enough. Bartosz/Linus/Andy?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-To enable the optional pull-up, you should refer to .set_config.
-(You don't need to disable the pull-up if you pull the line low).
+If the bug is already fixed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Regarding the SEE bit and wear out: The SEE bit seem to be shadowed by the
-EEPROM, so if someone is setting the SEE bit it will be persisent. Changing
-direction or output value will result in an EEPROM write and might wear out
-the EEPROM. I'd like to hear others opinion on that. The worst case write
-cycles are 50000. Fail the probe if the SEE bit is set seems not ideal.
-Just ignoring that problem for now (or at least warn the user)?
+If you want to change bug's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
--michael
+If the bug is a duplicate of another bug, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
