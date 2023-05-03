@@ -2,104 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80F4C6F552F
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 11:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D04B36F55AC
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 12:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjECJte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 May 2023 05:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
+        id S229610AbjECKN1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 May 2023 06:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjECJtA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 05:49:00 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAB35B92;
-        Wed,  3 May 2023 02:48:14 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-74db3642400so448558985a.2;
-        Wed, 03 May 2023 02:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683107293; x=1685699293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tLkQD32F3IyzI9nuizEgzw57kW3UmWyAr9AlLHhtw/w=;
-        b=EzxTxtGSL3zdYaLaEhs72pGdeB0Zra/NxBtuqx7f8JwACc+XbqYDu37vlb6u8y2ohO
-         qFcW7MytFMXf+78FAiD9S0g4DGsNZy72i4FbVuz35UOrbuwStgOCmqwrj4VcNyr5DKWD
-         GdYS3KBu1ib4z11kTk8ZXXSNDyejh6T0UTLt2HsiKQf3xBZdYVJGS5GPCR7aTbCXS6AL
-         rfW8XO2hv5VC4eItvnc2zXcZIZtMlIxCt/7kKRh7pGOr71A6bBmnfp854IRTfyIWs1La
-         dKT3bN4+F73RsM1MnR5CFo/fpM7zEk9ALtzvcZJDKxfYq/oQKvW0iC5wq++VrhEdy0fs
-         gDvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683107293; x=1685699293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tLkQD32F3IyzI9nuizEgzw57kW3UmWyAr9AlLHhtw/w=;
-        b=OaUOjUHzaDjm5oAK+CTaeE0MXMYZ/KCQil9Z7HWdqC7Lt4/IW7sycwz0XQRBY/8Dne
-         8y5KMFOZbrWFDb+u2JmSl/vV6YX84vYGkF2U7zniPHLSX6wz3hQcLdT10v31GNiyEZCh
-         EPPxrwb/s3QfaeLR4YEHDRSU4blc3zM72s3zAUKcx3rwON5LpvoPu4wedDYAUev9hH6O
-         t7wMzj5TFehb3GphonZaAurWehmfgRTxkpIVV4rQ9/2v2AALLNB2xkkrKkcGge2qNElj
-         CM2XPeSE63d+h8kSus4s/I4JJr/07hI5qrw/KNYnvTGzrL2AIcGz2I4xk1NzMD0i3HwA
-         gksg==
-X-Gm-Message-State: AC+VfDzJsYsd4Hok4KC7stH7zNF9SMnVrzSg8QjtkamTz0vidZ5LWlkf
-        IO66+J+a9KtrxwB+czvPmfpkp8uBu9L7A8gsYUo=
-X-Google-Smtp-Source: ACHHUZ4Q5WQUaumtaNYI49nhQWXJyCnvaZUIKU+GwPX9rXu7Tuv0i4XSm6dxaPFhw0f4LYxtCet8Vcp57kX3RfIVqac=
-X-Received: by 2002:a05:6214:5012:b0:5ef:45a7:a3c0 with SMTP id
- jo18-20020a056214501200b005ef45a7a3c0mr10842556qvb.27.1683107293366; Wed, 03
- May 2023 02:48:13 -0700 (PDT)
+        with ESMTP id S229558AbjECKN0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 06:13:26 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3D8CE;
+        Wed,  3 May 2023 03:13:24 -0700 (PDT)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 92F233EF;
+        Wed,  3 May 2023 12:13:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1683108801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TPDO4Om9yjcPWH9ANN/EN8sQlVWPtQhVOQp30fzdMYU=;
+        b=p3mhAlx624E1Mtm8WvgkKyTUyjuOahHgpQXF5nZZyo+SHTN5KqDgeMixTXiorRE8qQAB30
+        wYQp/nM3+XwSugMK6j0O9lJKtchxZEhV4lqjF5Bvfq7ITplzXRwg6iVUcRse6K2NPfSDHC
+        fOhkuL+95YK70nmOdQq5zdbVuZFiYvEgrUEAAV0egGJFiB+kBhuRIqWwbYIU5F6vl15A4H
+        c44MijOSQazd49AD0kCVQp/eX7lIEeco9dXPCYVF3dj6idZxnto1wrOLFzxhnevYLyPZSB
+        FsDSYFGCPEMIV3V3LHDiqstlPN3m9WC9akKH8AbFweM8YK1FeaEUFTwEutl4ZA==
 MIME-Version: 1.0
-References: <1683092380-29551-1-git-send-email-quic_rohiagar@quicinc.com> <1683092380-29551-4-git-send-email-quic_rohiagar@quicinc.com>
-In-Reply-To: <1683092380-29551-4-git-send-email-quic_rohiagar@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 3 May 2023 12:47:37 +0300
-Message-ID: <CAHp75Ve0FqX7=x3B5eaCfj0AE5m1qMXGrYzLoHzqbLY7gdOSOg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] pinctrl: qcom: Add SDX75 pincontrol driver
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
-        manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+Date:   Wed, 03 May 2023 12:13:21 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Edmund Berenson <edmund.berenson@emlix.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Lukasz Zemla <Lukasz.Zemla@woodward.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] gpio: max7317: Add gpio expander driver
+In-Reply-To: <bb2bce8b-4d99-1a15-3a34-055ee7637fe2@emlix.com>
+References: <20230403114033.8336-1-edmund.berenson@emlix.com>
+ <20230403114033.8336-2-edmund.berenson@emlix.com>
+ <CACRpkdbnj-BiA8D0e4nza-za-E8g_AEBNjR4b3gWUZpw70U33g@mail.gmail.com>
+ <bb2bce8b-4d99-1a15-3a34-055ee7637fe2@emlix.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <14574305d829de5befd39828b0b29cfe@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 3, 2023 at 8:39=E2=80=AFAM Rohit Agarwal <quic_rohiagar@quicinc=
-.com> wrote:
->
-> Add initial Qualcomm SDX75 pinctrl driver to support pin configuration
-> with pinctrl framework for SDX75 SoC.
-> While at it, reordering the SDX65 entry.
+Am 2023-05-03 10:37, schrieb Edmund Berenson:
+> On 4/4/23 16:05, Linus Walleij wrote:
+>> On Mon, Apr 3, 2023 at 1:41 PM Edmund Berenson
+>> <edmund.berenson@emlix.com> wrote:
+>> 
+>>> Add driver for maxim MAX7317 SPI-Interfaced 10 Port
+>>> GPIO Expander.
+>>> 
+>>> v2: adjust driver to use regmap
+>>> 
+>>> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+>>> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
+>>> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
+>> 
+>> Notwithstanding the other comments from Bartosz, this seems like
+>> a driver that should be using the regmap GPIO helper library.
+>> git grep GPIO_REGMAP will show you examples of other drivers
+>> that use this and how it is used.
+>> 
+>> Yours,
+>> Linus Walleij
+> 
+> Hi,
+> 
+> thanks for the review and suggestion. I tried following your suggestion 
+> and use
+> GPIO_REGMAP to implement the driver.
+> 
+> Unfortunately I ran into two issues
+> 1. reg_set_base == 0: for the devcie reg_set base is 0x0. In 
+> gpio-regmap there
+> are several tests for !reg_set_base. There doesn't seem a way to 
+> distinguish
+> between is set to 0 and is not set. :)
 
-...
+That's what GPIO_REGMAP_ADDR(addr) is for :)
 
-> +#define FUNCTION(n)                                                    \
-> +       [msm_mux_##n] =3D {                                              =
- \
-> +                       .func =3D PINCTRL_PINFUNCTION(#n,                =
- \
-> +                                       n##_groups,                     \
-> +                                       ARRAY_SIZE(n##_groups))         \
-> +                       }
+> 2. input/output direction: to set a gpio pin to input one has to write 
+> 0x1 to
+> the corresponding output register. The issue starts when I configure a 
+> port to
+> be an output, set output to 0x1, check the direction of the pin, doing 
+> so trough
+> sysfs the system will now assume the pin is an input and I can't set 
+> its values
+> anymore. Avoiding this I would like to track the direction of the pin 
+> separately
+> from the device register, which is atm done in the corresponding 
+> bespoke in/out
+> functions.
 
-Or even define
+I can't follow you here exactly. But I've briefly looked at the 
+datasheet
+and the output is an open drain one. Just like the one we are currently
+discussing in [1]. Here too, there seems to be no direction register,
+although it is mentioned in the datasheet. But Table 1. Register Address 
+Map
+is super confusing, so please correct me if I'm wrong.
 
-  #define MSM_PIN_FUNCTION(fname) \
-      [msm_mux_##fname] =3D PINCTRL_PINFUNCTION(...)
+Since we now have already two different chips with this OD output and 
+always
+active input buffer, it makes sense to add support to gpio-regmap for 
+these
+kind of devices. To me it is still unclear wether we need the direction 
+at
+all. Linus answered my question yesterday, but I haven't found time to 
+dig
+into that topic myself. Please go ahead and make some suggestions :)
 
-in the header for all MSM related controllers.
+> I could probably solve both of these issues trough the reg_mask_xlate 
+> function
+> but I believe this would introduce unneeded obscurity in the driver.
+> 
+> I do not believe there are any other easy obvious/better fixes for 
+> this. (or
+> maybe you prove me wrong :))
+> Would you be okay for this driver to stick with direct regmap usage? 
+> (obviously
+> fixing the review suggestions)
 
-All the same for the rest groups (if any), otherwise use redefinition
-of FUNCTION inside each file.
+-michael
 
---=20
-With Best Regards,
-Andy Shevchenko
+[1] https://lore.kernel.org/r/20230502084406.3529645-1-michael@walle.cc/
