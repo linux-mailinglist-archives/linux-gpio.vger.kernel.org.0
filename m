@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FA456F54FB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 11:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80F4C6F552F
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 11:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjECJmj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 May 2023 05:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40972 "EHLO
+        id S229524AbjECJte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 May 2023 05:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjECJmg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 05:42:36 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A6E4ED3;
-        Wed,  3 May 2023 02:42:34 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-75131c2997bso144244485a.1;
-        Wed, 03 May 2023 02:42:34 -0700 (PDT)
+        with ESMTP id S229796AbjECJtA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 05:49:00 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAB35B92;
+        Wed,  3 May 2023 02:48:14 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-74db3642400so448558985a.2;
+        Wed, 03 May 2023 02:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683106953; x=1685698953;
+        d=gmail.com; s=20221208; t=1683107293; x=1685699293;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UswhBddqVaXIV7KahhOAL0L+vAcJJ2NqdC/L7ARqHLI=;
-        b=bBkeJTcutU1gEMmYbPqloKEmhZKGZR3vpAPR7Ly0UkZvZDSfS7SqZtHaoocQe4Xkua
-         ruNsGSw4EPvXfAczKkPscYyr7DOnesMtTPrEsZwtu/v8VA0C2oPy8KAiyqUYmd4ST1Mt
-         F4a3P3xeHlxoRjr5qfxHgTvKW5G2kHD979Wo+p2GYDISigYAmzacBXZdDX2UkDVJbLAH
-         K2v1SDwptNS+y+cBH86OVLtfuf3Hdu4FcHBkXnoXoAD6u7Q3fOEHAn51J3tzAGuQsvKG
-         Wsge8r7s9YnWEYWFCkvC2AAVGeD6+Kb/zJq0qmgLAME0Ci2Bt1iJtx0ORC3WEsRfb2uV
-         9b/w==
+        bh=tLkQD32F3IyzI9nuizEgzw57kW3UmWyAr9AlLHhtw/w=;
+        b=EzxTxtGSL3zdYaLaEhs72pGdeB0Zra/NxBtuqx7f8JwACc+XbqYDu37vlb6u8y2ohO
+         qFcW7MytFMXf+78FAiD9S0g4DGsNZy72i4FbVuz35UOrbuwStgOCmqwrj4VcNyr5DKWD
+         GdYS3KBu1ib4z11kTk8ZXXSNDyejh6T0UTLt2HsiKQf3xBZdYVJGS5GPCR7aTbCXS6AL
+         rfW8XO2hv5VC4eItvnc2zXcZIZtMlIxCt/7kKRh7pGOr71A6bBmnfp854IRTfyIWs1La
+         dKT3bN4+F73RsM1MnR5CFo/fpM7zEk9ALtzvcZJDKxfYq/oQKvW0iC5wq++VrhEdy0fs
+         gDvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683106953; x=1685698953;
+        d=1e100.net; s=20221208; t=1683107293; x=1685699293;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UswhBddqVaXIV7KahhOAL0L+vAcJJ2NqdC/L7ARqHLI=;
-        b=U39WTqd3NMwtFhujE19T71JNvVgRVzaD+WtGaBNJHhoZQ6b70O4zAdilUuaoxcL15A
-         WSfbouWYDkmgR3oOFcADg9rf9VUYGTuU2LuA5vTtZcaZDMFU2AdYY+geLGxHvBM7YL8w
-         eqV64Y3mMdyQB7TC+s0zBFlk4jtnOcLWIPNKNfI4+t+8BYDjJ6AX6eOvLPBkP0I6y3CA
-         34NEYFB3tX/09i6tDPvUrM9xirBpsgM52UgzghR9FE22MIaUPm2q8yEMOydpJi+Khf7s
-         XlB5HVkztC7TFQVsGGVYlY42PD5FZkqJ8T7q2WzBHHGAV/0B19Vy8RFUZRdUf96o6sMV
-         wEWQ==
-X-Gm-Message-State: AC+VfDwJdsLUXhkIEKJiaMtj3Owk4CzhIIWxuUso1ZY08IQUqmWixlOB
-        caO/UaOKRdcqEW+rF3F3t0IIypJ5CoWTP6oA1/s=
-X-Google-Smtp-Source: ACHHUZ6FApUZmpoYv7ei9QTTm9Bil42o9GopYVbQ7LWiRSSlgewFbtRxNZlhfGGbv7z1d3UtbL2jGNKCTm/YkX9t5jM=
-X-Received: by 2002:a05:6214:d64:b0:5ef:653e:169b with SMTP id
- 4-20020a0562140d6400b005ef653e169bmr2275095qvs.8.1683106953183; Wed, 03 May
- 2023 02:42:33 -0700 (PDT)
+        bh=tLkQD32F3IyzI9nuizEgzw57kW3UmWyAr9AlLHhtw/w=;
+        b=OaUOjUHzaDjm5oAK+CTaeE0MXMYZ/KCQil9Z7HWdqC7Lt4/IW7sycwz0XQRBY/8Dne
+         8y5KMFOZbrWFDb+u2JmSl/vV6YX84vYGkF2U7zniPHLSX6wz3hQcLdT10v31GNiyEZCh
+         EPPxrwb/s3QfaeLR4YEHDRSU4blc3zM72s3zAUKcx3rwON5LpvoPu4wedDYAUev9hH6O
+         t7wMzj5TFehb3GphonZaAurWehmfgRTxkpIVV4rQ9/2v2AALLNB2xkkrKkcGge2qNElj
+         CM2XPeSE63d+h8kSus4s/I4JJr/07hI5qrw/KNYnvTGzrL2AIcGz2I4xk1NzMD0i3HwA
+         gksg==
+X-Gm-Message-State: AC+VfDzJsYsd4Hok4KC7stH7zNF9SMnVrzSg8QjtkamTz0vidZ5LWlkf
+        IO66+J+a9KtrxwB+czvPmfpkp8uBu9L7A8gsYUo=
+X-Google-Smtp-Source: ACHHUZ4Q5WQUaumtaNYI49nhQWXJyCnvaZUIKU+GwPX9rXu7Tuv0i4XSm6dxaPFhw0f4LYxtCet8Vcp57kX3RfIVqac=
+X-Received: by 2002:a05:6214:5012:b0:5ef:45a7:a3c0 with SMTP id
+ jo18-20020a056214501200b005ef45a7a3c0mr10842556qvb.27.1683107293366; Wed, 03
+ May 2023 02:48:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1683092380-29551-1-git-send-email-quic_rohiagar@quicinc.com> <1683092380-29551-3-git-send-email-quic_rohiagar@quicinc.com>
-In-Reply-To: <1683092380-29551-3-git-send-email-quic_rohiagar@quicinc.com>
+References: <1683092380-29551-1-git-send-email-quic_rohiagar@quicinc.com> <1683092380-29551-4-git-send-email-quic_rohiagar@quicinc.com>
+In-Reply-To: <1683092380-29551-4-git-send-email-quic_rohiagar@quicinc.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 3 May 2023 12:41:56 +0300
-Message-ID: <CAHp75VegxMgAamS3ORiJ2=D4MH7asD9PiWrM+3JAm-QOuEgcrg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] pinctrl: qcom: Refactor target specific pinctrl driver
+Date:   Wed, 3 May 2023 12:47:37 +0300
+Message-ID: <CAHp75Ve0FqX7=x3B5eaCfj0AE5m1qMXGrYzLoHzqbLY7gdOSOg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] pinctrl: qcom: Add SDX75 pincontrol driver
 To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
 Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         linus.walleij@linaro.org, robh+dt@kernel.org,
@@ -75,102 +75,30 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, May 3, 2023 at 8:39=E2=80=AFAM Rohit Agarwal <quic_rohiagar@quicinc=
 .com> wrote:
 >
-> Update the msm_function and msm_pingroup structure to reuse the generic
-
-structures
-
-> pinfunction and pingroup structures. Also refactor pinctrl drivers to adj=
-ust
-> the new macro and updated structure defined in pinctrl.h and pinctrl_msm.=
-h
-> respectively.
-
-Thanks for this, my comments below.
+> Add initial Qualcomm SDX75 pinctrl driver to support pin configuration
+> with pinctrl framework for SDX75 SoC.
+> While at it, reordering the SDX65 entry.
 
 ...
 
->  #define FUNCTION(fname)                                        \
->         [APQ_MUX_##fname] =3D {                           \
-> -               .name =3D #fname,                         \
-> -               .groups =3D fname##_groups,               \
-> -               .ngroups =3D ARRAY_SIZE(fname##_groups),  \
-> -       }
-> +               .func =3D PINCTRL_PINFUNCTION(#fname,                    =
+> +#define FUNCTION(n)                                                    \
+> +       [msm_mux_##n] =3D {                                              =
  \
-> +                                       fname##_groups,                 \
-> +                                       ARRAY_SIZE(fname##_groups))      =
-       \
+> +                       .func =3D PINCTRL_PINFUNCTION(#n,                =
+ \
+> +                                       n##_groups,                     \
+> +                                       ARRAY_SIZE(n##_groups))         \
 > +                       }
 
-Does it really make sense to keep an additional wrapper data type that
-does not add any value? Can't we simply have
+Or even define
 
-  #define FUNCTION(fname)      [...fname] =3D PINCTRL_PINFUNCTION(...)
+  #define MSM_PIN_FUNCTION(fname) \
+      [msm_mux_##fname] =3D PINCTRL_PINFUNCTION(...)
 
-?
+in the header for all MSM related controllers.
 
-...
-
-> +               .grp =3D PINCTRL_PINGROUP("gpio"#id, gpio##id##_pins,    =
- \
-> +                       (unsigned int)ARRAY_SIZE(gpio##id##_pins)),     \
-
-Why do you need this casting? Same Q to all the rest of the similar cases.
-
-...
-
-> +#include <linux/pinctrl/pinctrl.h>
-
-Keep it separate, and below the generic ones...
-
->  #include <linux/pm.h>
->  #include <linux/types.h>
->
-
-...like here (note also a blank line).
-
-...
-
->  /**
->   * struct msm_function - a pinmux function
-> - * @name:    Name of the pinmux function.
-> - * @groups:  List of pingroups for this function.
-> - * @ngroups: Number of entries in @groups.
-> + * @func: Generic data of the pin function (name and groups of pins)
->   */
->  struct msm_function {
-> -       const char *name;
-> -       const char * const *groups;
-> -       unsigned ngroups;
-> +       struct pinfunction func;
->  };
-
-But why? Just kill the entire structure.
-
-...
-
->  #define FUNCTION(fname)                                        \
-
-This definition appears in many files, instead you can make a generic
-to this drivers one and use it here
-
-#define QCOM_FUNCTION(_prefix_, _fname_)
-  [_prefix_##_fname_] =3D PINCTRL_PINFUNCTION(...)
-
-#define FUNCTION(fname) QCOM_FUNCTION(msm_mux, fname)
-
-(this just a pseudocode, might not even be compilable)
-
->         [msm_mux_##fname] =3D {                           \
-> -               .name =3D #fname,                         \
-> -               .groups =3D fname##_groups,               \
-> -               .ngroups =3D ARRAY_SIZE(fname##_groups),  \
-> +               .func =3D PINCTRL_PINFUNCTION(#fname,                    =
- \
-> +                                       fname##_groups,                 \
-> +                                       ARRAY_SIZE(fname##_groups))      =
-       \
->         }
+All the same for the rest groups (if any), otherwise use redefinition
+of FUNCTION inside each file.
 
 --=20
 With Best Regards,
