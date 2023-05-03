@@ -2,81 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC5846F5CEF
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 19:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 202426F5EFB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 May 2023 21:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbjECRVa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 May 2023 13:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56728 "EHLO
+        id S229736AbjECTOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 May 2023 15:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbjECRV3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 13:21:29 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05452D69;
-        Wed,  3 May 2023 10:21:27 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 343F8jFY029276;
-        Wed, 3 May 2023 17:04:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=qbH7MY6GGBgS0pDOVGPhqlpYiVtd0OBI+s2aNgE53Hg=;
- b=ZsLgDONGInc7bLVlS4UT6DtybDKv1nq2gwI2A7Vxdqwwl7X3noaGIh2Nj4zsmbx6jdPS
- xGp4MDFmP277tytp0wXKtKuOJTvhvEJesSiT+lYnm38S2PuPWNMuh6syzQdSaaUrh8eQ
- zytEQdd23I1GxRCcSpw+EqDNUMFBUj4imkbNz4yQ/aj0Ppsjkz13Rvb+G8X5sfmsqjUz
- ceMtEjrG9jcO2eKuuG5WlJRL+3IYxRi99vL0x/CDR5wAS042V8Z2Uuv478c8U+dS0A86
- f8M0DgAlvJl+PqLGUmp0KVpb0l+8S4DUwGMKaSGwSVLBTmBcD6Dm8S3YMwnFhAecpMgg jQ== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qbmy48xym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 May 2023 17:04:42 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 343H4fEb005094
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 3 May 2023 17:04:41 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Wed, 3 May 2023 10:04:35 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, "Mukesh Ojha" <quic_mojha@quicinc.com>
-Subject: [PATCH v3 18/18] firmware: qcom_scm: Add multiple download mode support
-Date:   Wed, 3 May 2023 22:32:32 +0530
-Message-ID: <1683133352-10046-19-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S229719AbjECTOG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 May 2023 15:14:06 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F7C7AB8
+        for <linux-gpio@vger.kernel.org>; Wed,  3 May 2023 12:14:04 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id a912b3f3-e9e6-11ed-b972-005056bdfda7;
+        Wed, 03 May 2023 22:14:01 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Wed, 3 May 2023 22:14:00 +0300
+To:     Xiaolei Wang <xiaolei.wang@windriver.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        ping.bai@nxp.com, kernel@pengutronix.de, linus.walleij@linaro.org,
+        shenwei.wang@nxp.com, bartosz.golaszewski@linaro.org,
+        peng.fan@nxp.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2][PATCH] pinctrl: freescale: Fix a memory out of bounds when
+ num_configs is 1
+Message-ID: <ZFKyeFQOuCaDOh1n@surfacebook>
+References: <20230503012127.4157304-1-xiaolei.wang@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VbcRgKWOMRSE0qF1RQWPhjN5R6oFkcI2
-X-Proofpoint-GUID: VbcRgKWOMRSE0qF1RQWPhjN5R6oFkcI2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-03_12,2023-05-03_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- impostorscore=0 adultscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- clxscore=1015 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305030145
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230503012127.4157304-1-xiaolei.wang@windriver.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,69 +44,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently, scm driver only supports full dump when download
-mode is selected. Add support to enable minidump as well as
-enable it along with fulldump.
+Wed, May 03, 2023 at 09:21:27AM +0800, Xiaolei Wang kirjoitti:
+> The config passed in by pad wakeup is 1, When num_configs is 1,
+> configs[1] should not be obtained, which will generate the
+> following memory out-of-bounds situation:
+> 
+> BUG: KASAN: stack out of bounds in imx_pinconf_set_scu+0x9c/0x160
+>   Read size 8 at address ffff8000104c7558 by task sh/664
+>   CPU: 3 PID: 664 Communication: sh Tainted: G WC 6.1.20 #1
+>      Hardware name: Freescale i.MX8QM MEK (DT)
+>   Call trace:
+>     dump_backtrace.part.0+0xe0/0xf0
+>     show stack+0x18/0x30
+>     dump_stack_lvl+0x64/0x80
+>     print report +0x154/0x458
+>     kasan_report+0xb8/0x100
+>     __asan_load8+0x80/0xac
+>     imx_pinconf_set_scu+0x9c/0x160
+>     imx_pinconf_set+0x6c/0x214
+>     pinconf_set_config+0x68/0x90
+>     pinctrl_gpio_set_config+0x138/0x170
+>     gpiochip_generic_config+0x44/0x60
+>     mxc_gpio_set_pad_wakeup+0x100/0x140
+>     mxc_gpio_noirq_suspend+0x50/0x74
+>     pm_generic_suspend_noirq+0x4c/0x70
+>     genpd_finish_suspend+0x174/0x260
+>     genpd_suspend_noirq+0x14/0x20
+>     dpm_run_callback.constprop.0+0x48/0xec
+>     __device_suspend_noirq+0x1a8/0x370
+>     dpm_noirq_suspend_devices+0x1cc/0x320
+>     dpm_suspend_noirq+0x7c/0x11c
+>     suspend_devices_and_enter+0x27c/0x760
+>     pm_suspend+0x36c/0x3e0
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom_scm.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+I have already pointed out to the documentation in which you may find what to
+do to make above better. 
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 4e8fd4e..be7adc6 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -32,6 +32,8 @@ static u32 download_mode;
- 
- #define QCOM_DOWNLOAD_MODE_MASK 0x30
- #define QCOM_DOWNLOAD_FULLDUMP	0x1
-+#define QCOM_DOWNLOAD_MINIDUMP  0x2
-+#define QCOM_DOWNLOAD_BOTHDUMP	(QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
- #define QCOM_DOWNLOAD_NODUMP	0x0
- 
- struct qcom_scm {
-@@ -1422,13 +1424,16 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--
- static int get_download_mode(char *buffer, const struct kernel_param *kp)
- {
- 	int len = 0;
- 
- 	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
- 		len = sysfs_emit(buffer, "full\n");
-+	else if (download_mode == QCOM_DOWNLOAD_MINIDUMP)
-+		len = sysfs_emit(buffer, "mini\n");
-+	else if (download_mode == QCOM_DOWNLOAD_BOTHDUMP)
-+		len = sysfs_emit(buffer, "full,mini\n");
- 	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
- 		len = sysfs_emit(buffer, "off\n");
- 
-@@ -1439,8 +1444,12 @@ static int set_download_mode(const char *val, const struct kernel_param *kp)
- {
- 	u32 old = download_mode;
- 
--	if (sysfs_streq(val, "full")) {
-+	if (sysfs_streq(val, "full,mini") || sysfs_streq(val, "mini,full")) {
-+		download_mode = QCOM_DOWNLOAD_BOTHDUMP;
-+	} else if (sysfs_streq(val, "full")) {
- 		download_mode = QCOM_DOWNLOAD_FULLDUMP;
-+	} else if (sysfs_streq(val, "mini")) {
-+		download_mode = QCOM_DOWNLOAD_MINIDUMP;
- 	} else if (sysfs_streq(val, "off")) {
- 		download_mode = QCOM_DOWNLOAD_NODUMP;
- 	} else if (kstrtouint(val, 0, &download_mode) ||
-@@ -1463,7 +1472,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
- 
- module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
- MODULE_PARM_DESC(download_mode,
--		 "Download mode: off/full or 0/1 for existing users");
-+		"download mode: off/full/mini/full,mini or mini,full and 0/1 for existing users");
- 
- static int qcom_scm_probe(struct platform_device *pdev)
- {
+> Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x platforms")
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+> ---
+
+Where is the changelog?
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 
