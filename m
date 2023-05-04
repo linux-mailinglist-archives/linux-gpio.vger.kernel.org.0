@@ -2,158 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89AA76F6DE9
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 16:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D6E26F6E87
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 17:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbjEDOoY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 10:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
+        id S230443AbjEDPDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 11:03:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230430AbjEDOoX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 10:44:23 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13DC1212D;
-        Thu,  4 May 2023 07:44:22 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3444xV5g003734;
-        Thu, 4 May 2023 14:43:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=o4esY378CGg1puYP89nqAn0HOXZL3EM2geQTdW+QLbo=;
- b=UPjpZb1qGSrKjQlftJhEQMMfNElvZE5HXMYbduhMmh+I8D8HTIJ4osVqWHSyJJbHPlI0
- q2fXy1DD3CjMY5psdeBH2epFAVaeMdgvWObQ0OlL8r8Hx4ms1Ij/UjZTn4Oeo7xPJNY9
- 749ItGS5Y8UN9orbYR3FoF0/+/FKRmrvfOSlT6jjBl+Ju6dv3dVBuo54ODSDtuUDHGBR
- z+5d1BDldYXKOork3mbqfURg/uZIIsz5vu7iIennM3UnIIX6gXbEekL4/ANGY97TAroR
- HX9q8mOdrY318alLjohhZXF6Q24QIvo2ytNpfNnq+PXqvuba6F54QMPNLKuI/YZSVTgF Dg== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qc652h9yt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 May 2023 14:43:45 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 344EhiWo016505
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 4 May 2023 14:43:44 GMT
-Received: from [10.216.46.158] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 4 May 2023
- 07:43:37 -0700
-Message-ID: <2fb1658a-3a38-7eb4-0e6e-d8c61981bdab@quicinc.com>
-Date:   Thu, 4 May 2023 20:13:34 +0530
+        with ESMTP id S231337AbjEDPDG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 11:03:06 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACE3420B
+        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 08:02:50 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id baf915f5-ea8c-11ed-b3cf-005056bd6ce9;
+        Thu, 04 May 2023 18:02:47 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Thu, 4 May 2023 18:02:47 +0300
+To:     Xiaolei Wang <xiaolei.wang@windriver.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        ping.bai@nxp.com, kernel@pengutronix.de, linus.walleij@linaro.org,
+        shenwei.wang@nxp.com, peng.fan@nxp.com,
+        bartosz.golaszewski@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] pinctrl: freescale: Fix a memory out of bounds
+ when num_configs is 1
+Message-ID: <ZFPJFwYLHtR6C5nf@surfacebook>
+References: <20230504003330.1075531-1-xiaolei.wang@windriver.com>
+ <20230504003330.1075531-2-xiaolei.wang@windriver.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 07/18] arm64: defconfig: Enable Qualcomm minidump
- driver
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-8-git-send-email-quic_mojha@quicinc.com>
- <ad9915b2-56ff-3f95-7c92-fae597d6ed43@linaro.org>
- <4325c2e7-8ca1-7e45-db14-5ba8bc83f5d7@quicinc.com>
- <a4118697-d575-6499-ed8e-656e51ca0da3@linaro.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <a4118697-d575-6499-ed8e-656e51ca0da3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VXrFV397fZXsjxuO3pxir-3bNZM62dOx
-X-Proofpoint-ORIG-GUID: VXrFV397fZXsjxuO3pxir-3bNZM62dOx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-04_10,2023-05-04_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=945 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
- impostorscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305040120
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230504003330.1075531-2-xiaolei.wang@windriver.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Thu, May 04, 2023 at 08:33:30AM +0800, Xiaolei Wang kirjoitti:
+
+...
+
+The link to the documentation I have added into reply to your v1 was about
+backtraces in the commit messages. For a single patch there is no need to have
+a cover letter.
+
+> BUG: KASAN: stack out of bounds in imx_pinconf_set_scu+0x9c/0x160
+>   Read size 8 at address ffff8000104c7558 by task sh/664
+>   CPU: 3 PID: 664 Communication: sh Tainted: G WC 6.1.20 #1
+>      Hardware name: Freescale i.MX8QM MEK (DT)
+>   Call trace:
+>     dump_backtrace.part.0+0xe0/0xf0
+>     show stack+0x18/0x30
+>     dump_stack_lvl+0x64/0x80
+>     print report +0x154/0x458
+>     kasan_report+0xb8/0x100
+>     __asan_load8+0x80/0xac
+>     imx_pinconf_set_scu+0x9c/0x160
+>     imx_pinconf_set+0x6c/0x214
+>     pinconf_set_config+0x68/0x90
+>     pinctrl_gpio_set_config+0x138/0x170
+>     gpiochip_generic_config+0x44/0x60
+>     mxc_gpio_set_pad_wakeup+0x100/0x140
+
+This is too long backtrace. The documentation tells you to shrink it to the
+important lines only, which in this case something like less than 10 and not
+17. Hence, remove _at least_ 8 lines from the backtrace.
+
+Codewise the proposed change is good, though.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 5/4/2023 6:02 PM, Krzysztof Kozlowski wrote:
-> On 04/05/2023 13:45, Mukesh Ojha wrote:
->>
->>
->> On 5/4/2023 4:53 PM, Krzysztof Kozlowski wrote:
->>> On 03/05/2023 19:02, Mukesh Ojha wrote:
->>>> Previous patches add the Qualcomm minidump driver support, so
->>>> lets enable minidump config so that it can be used by kernel
->>>> clients.
->>>>
->>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->>>
->>> This patchset is split too much. Defconfig change is one change. Not two
->>> or three.
->>>
->>>> ---
->>>>    arch/arm64/configs/defconfig | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->>>> index a24609e..831c942 100644
->>>> --- a/arch/arm64/configs/defconfig
->>>> +++ b/arch/arm64/configs/defconfig
->>>> @@ -1250,6 +1250,7 @@ CONFIG_QCOM_STATS=m
->>>>    CONFIG_QCOM_WCNSS_CTRL=m
->>>>    CONFIG_QCOM_APR=m
->>>>    CONFIG_QCOM_ICC_BWMON=m
->>>> +CONFIG_QCOM_MINIDUMP=y
->>>
->>> This must be a module.
->>
->> Why do you think this should be a module ?
->>
->> Is it because, it is lying here among others '=m' ?
-> 
-> Because we want and insist on everything being a module. That's the
-> generic rule. There are exceptions, so if this justifies being an
-> exception, please bring appropriate arguments.
-> 
->>
->> Or you have some other reasoning ? like it is for qcom specific
->> soc and can not be used outside ? but that is not true for
->> all configs mentioned here.
->>
->> The reason behind making it as '=y' was, to collect information from
->> core kernel data structure as well as the information like percpu data,
->> run queue, irq stat kind of information on kernel crash on a target
->> running some perf configuration(android phone).
-> 
-> I don't understand why =m stops you from all that.
-
-How do i get kernel symbol address from a modules
-can we use kallsyms_lookup_name from modules ?
-
---Mukesh
-
-  What's more, I don't
-> understand why do you refer to the Android here. This is a development
-> and debugging Linux defconfig, not Android reference config for vendors...
-> 
-> Best regards,
-> Krzysztof
-> 
