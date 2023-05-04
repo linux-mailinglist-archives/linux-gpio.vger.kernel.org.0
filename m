@@ -2,44 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E08B6F648A
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 07:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59A836F64A0
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 08:04:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjEDFwC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 01:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55150 "EHLO
+        id S229598AbjEDGEw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 02:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbjEDFwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 01:52:01 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 828701731;
-        Wed,  3 May 2023 22:51:58 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CE41680C1;
-        Thu,  4 May 2023 05:51:57 +0000 (UTC)
-Date:   Thu, 4 May 2023 08:51:56 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [BISECTED REGRESSION] OMAP1 GPIO breakage
-Message-ID: <20230504055156.GO14287@atomide.com>
-References: <20230425173241.GF444508@darkstar.musicnaut.iki.fi>
- <20230425201117.457f224c@aktux>
- <20230425183857.GG444508@darkstar.musicnaut.iki.fi>
- <20230425212040.5a4d5b09@aktux>
- <20230425193637.GH444508@darkstar.musicnaut.iki.fi>
- <20230425215848.247a936a@aktux>
- <20230426071910.GE14287@atomide.com>
+        with ESMTP id S229692AbjEDGEu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 02:04:50 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59941FFB;
+        Wed,  3 May 2023 23:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=yJ77h21arVzofepbkIoYut2Go9+A93qkebZbDt34MiQ=; b=hALYOdPlt6C4E/QeA2BWscfwow
+        OCdj2wlfQOSvVckJRoL+1OsIzTT8PYs9+9nFe7ZjyVLUU9dmXNhB3T68QS9GJjdYIA2MLuEHfUI3b
+        WWQ8XSs2T+orWlezSk8ND+qIkaEukm4UE6tHvwiDw8vVHIm4VfGxRfNgAIAQCX2aAlR3BLnhQyzs8
+        XtLkzhN8ekZCY4WcR57PGqjdAKstrTKVsOWRg7VSWJ3nKvZOf3dTi3SYFILFE/0hC46QHLc59ZAQW
+        Youo5E7ixgsq1+S4Hlk1vNXY6OUC1DWSWtQ88sEBfiXyohxKRJRkUWGusTaj6SZcaA145SOQolzD4
+        y+QCzWIg==;
+Received: from p200300ccff0d59001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:5900:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1puS4v-0008W0-Fm; Thu, 04 May 2023 08:04:33 +0200
+Received: from andi by aktux with local (Exim 4.96)
+        (envelope-from <andreas@kemnade.info>)
+        id 1puS4v-003NCf-09;
+        Thu, 04 May 2023 08:04:33 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        christophe.leroy@csgroup.eu, andy.shevchenko@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3] gpiolib: fix allocation of mixed dynamic/static GPIOs
+Date:   Thu,  4 May 2023 08:04:21 +0200
+Message-Id: <20230504060421.804168-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230426071910.GE14287@atomide.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.0 (-)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,17 +60,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [230426 07:20]:
-> Seems that we should just revert this patch for now and try again after
-> the issues have been fixed.
+If static allocation and dynamic allocation GPIOs are present,
+dynamic allocation pollutes the numberspace for static allocation,
+causing static allocation to fail.
+Enforce dynamic allocation above GPIO_DYNAMIC_BASE.
 
-Looking at the proposed fixes being posted seems like they are quite
-intrusive.. How about we partially revert this patch so omap1 still
-uses static assigment of gpios?
+Seen on a GTA04 when omap-gpio (static) and twl-gpio (dynamic)
+raced:
+[some successful registrations of omap_gpio instances]
+[    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 161..178
+[    2.561401] gpiochip_find_base: found new base at 160
+[    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
+[    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
+[...]
+[    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
+[    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
+[    2.703643] gpiochip_find_base: found new base at 178
+[    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
+[    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
+[...]
+[    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap, cannot add chip
+[    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) failed to register, -16
+[    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register gpio chip
 
-This way the later SoCs can avoid the warnings and the legacy board
-file and driver changes can get merged during the next merge window.
+On that device it is fixed invasively by
+commit 92bf78b33b0b4 ("gpio: omap: use dynamic allocation of base")
+but let's also fix that for devices where there is still
+a mixture of static and dynamic allocation.
 
-Regards,
+Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Reviewed-by: <christophe.leroy@csgroup.eu>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+Changes in V3:
+   typos
 
-Tony
+Changes in V2:
+   handle also the case of overlapping static allocation
+   across DYNAMIC_BASE
+
+ drivers/gpio/gpiolib.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 19bd23044b017..4472214fcd43a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -193,6 +193,8 @@ static int gpiochip_find_base(int ngpio)
+ 			break;
+ 		/* nope, check the space right after the chip */
+ 		base = gdev->base + gdev->ngpio;
++		if (base < GPIO_DYNAMIC_BASE)
++			base = GPIO_DYNAMIC_BASE;
+ 	}
+ 
+ 	if (gpio_is_valid(base)) {
+-- 
+2.39.2
+
