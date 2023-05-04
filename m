@@ -2,121 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A836F64A0
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 08:04:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD12E6F64C8
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 08:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbjEDGEw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 02:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58618 "EHLO
+        id S229804AbjEDGN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 02:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjEDGEu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 02:04:50 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59941FFB;
-        Wed,  3 May 2023 23:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yJ77h21arVzofepbkIoYut2Go9+A93qkebZbDt34MiQ=; b=hALYOdPlt6C4E/QeA2BWscfwow
-        OCdj2wlfQOSvVckJRoL+1OsIzTT8PYs9+9nFe7ZjyVLUU9dmXNhB3T68QS9GJjdYIA2MLuEHfUI3b
-        WWQ8XSs2T+orWlezSk8ND+qIkaEukm4UE6tHvwiDw8vVHIm4VfGxRfNgAIAQCX2aAlR3BLnhQyzs8
-        XtLkzhN8ekZCY4WcR57PGqjdAKstrTKVsOWRg7VSWJ3nKvZOf3dTi3SYFILFE/0hC46QHLc59ZAQW
-        Youo5E7ixgsq1+S4Hlk1vNXY6OUC1DWSWtQ88sEBfiXyohxKRJRkUWGusTaj6SZcaA145SOQolzD4
-        y+QCzWIg==;
-Received: from p200300ccff0d59001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:5900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1puS4v-0008W0-Fm; Thu, 04 May 2023 08:04:33 +0200
-Received: from andi by aktux with local (Exim 4.96)
-        (envelope-from <andreas@kemnade.info>)
-        id 1puS4v-003NCf-09;
-        Thu, 04 May 2023 08:04:33 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        christophe.leroy@csgroup.eu, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3] gpiolib: fix allocation of mixed dynamic/static GPIOs
-Date:   Thu,  4 May 2023 08:04:21 +0200
-Message-Id: <20230504060421.804168-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229598AbjEDGNz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 02:13:55 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92892697
+        for <linux-gpio@vger.kernel.org>; Wed,  3 May 2023 23:13:53 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-64115e652eeso10155281b3a.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 May 2023 23:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683180833; x=1685772833;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNK+GFYQNFfrXlO2P4DY/jJ+PwhqpeLTvSaR5hnoRsc=;
+        b=E0dz5RM20FDVKsd/SLY2cOQbd3fTdeP1pdzub0HhYBvvtSldLPCiBwFqKeZ4YegaP/
+         TaoiAQHOCW7re+Apzok1TJOvc6SAHSey1bO99GNuna6NBpXaTfPo1rseSYUAxHmkwtKZ
+         e/eBPfV2UsBHeAA1U6YzaiLcigAyqZEBKQWmI8IlqsmSGwfDqe9FNFuKKeUrK2FJ2raQ
+         NWiSvvj2THnMbyocUImcTGqVTMR1jqSJLVrZxaaiva8zXy9vUkzLFacvBmw0vUK56cAH
+         4KOX1cYs7zT3vkR7KhFtSThZODmPr31vjQaqlmXIozqdKhqnscII+5bXcW/HNQ07/Uha
+         kQAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683180833; x=1685772833;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CNK+GFYQNFfrXlO2P4DY/jJ+PwhqpeLTvSaR5hnoRsc=;
+        b=ZYqJlMS/zmqaQZFn583F7IlP/JOol2kODiPk682RG+Dllo03tTE6V98z+N0iguE9a2
+         NyWdkBA2TAJvdaWWWWAe3/O/l99cxWaDuD5nmAEcOv5Gjctexu1R6poGj/dxSjtqH8vH
+         WDL8Ba79zmdNQtdpdxliQzKmx/KH414SF+jkND9GVx8CutNimxrqn/V6oRG2xcZsQZav
+         IoYatFNNKp6B750pFpF+anHbXfdhs4Q/th4OA4BSdjkKGJ1clgbIrYJUZu4BUV5mRUEt
+         /6563K/s0A/WJUJT4im0ZYAxUpicx67T0Ps1Vsf+nP1kTWOcK8QLozTv4suzO937ByMq
+         QgIA==
+X-Gm-Message-State: AC+VfDzhCW1xRuO1WGNjNgYRb8z3fV6B6vGHMr8JYo4CTvK76+tdgAfE
+        vkQ6to5QSUqQhJcBXgT3coNz5w==
+X-Google-Smtp-Source: ACHHUZ4hFmmxf0M5EGFJXGNp3Gt4Cc9D6Zz6i9qxeYbKWEI58Temqu0vJB2ffgyTwXON0VJxohz7YA==
+X-Received: by 2002:a05:6a20:4422:b0:f2:4c39:8028 with SMTP id ce34-20020a056a20442200b000f24c398028mr1218466pzb.21.1683180833218;
+        Wed, 03 May 2023 23:13:53 -0700 (PDT)
+Received: from localhost ([122.172.85.8])
+        by smtp.gmail.com with ESMTPSA id m9-20020a629409000000b00639eae8816asm24506697pfe.130.2023.05.03.23.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 May 2023 23:13:52 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] bindings: rust: skip building all rust crates by default
+Date:   Thu,  4 May 2023 11:43:44 +0530
+Message-Id: <7bdede8a77fd5868d19a255378bebfb2d7706bfd.1683180819.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -1.0 (-)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If static allocation and dynamic allocation GPIOs are present,
-dynamic allocation pollutes the numberspace for static allocation,
-causing static allocation to fail.
-Enforce dynamic allocation above GPIO_DYNAMIC_BASE.
+We don't really need to build all the available rust crates here by
+default, but only what's required by the libgpiod crate.
 
-Seen on a GTA04 when omap-gpio (static) and twl-gpio (dynamic)
-raced:
-[some successful registrations of omap_gpio instances]
-[    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 161..178
-[    2.561401] gpiochip_find_base: found new base at 160
-[    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
-[    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
-[...]
-[    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
-[    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
-[    2.703643] gpiochip_find_base: found new base at 178
-[    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
-[    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
-[...]
-[    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecated, use dynamic allocation.
-[    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap, cannot add chip
-[    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) failed to register, -16
-[    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register gpio chip
+Currently we try to build gpiosim-sys crate as well, even if
+"--enable-tests" isn't passed to autogen.sh, which results in following
+build failure:
 
-On that device it is fixed invasively by
-commit 92bf78b33b0b4 ("gpio: omap: use dynamic allocation of base")
-but let's also fix that for devices where there is still
-a mixture of static and dynamic allocation.
+  error: could not find native static library `gpiosim`, perhaps an -L flag is missing?
 
-Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Reviewed-by: <christophe.leroy@csgroup.eu>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Fix this by building just the libgpiod crate instead, which can force
+building of the other crates based on the enabled configuration options.
+
+Reported-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
-Changes in V3:
-   typos
+ bindings/rust/Makefile.am          | 17 -----------------
+ bindings/rust/libgpiod/Makefile.am | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 17 deletions(-)
 
-Changes in V2:
-   handle also the case of overlapping static allocation
-   across DYNAMIC_BASE
-
- drivers/gpio/gpiolib.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 19bd23044b017..4472214fcd43a 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -193,6 +193,8 @@ static int gpiochip_find_base(int ngpio)
- 			break;
- 		/* nope, check the space right after the chip */
- 		base = gdev->base + gdev->ngpio;
-+		if (base < GPIO_DYNAMIC_BASE)
-+			base = GPIO_DYNAMIC_BASE;
- 	}
+diff --git a/bindings/rust/Makefile.am b/bindings/rust/Makefile.am
+index 1e01024b04ea..7903f828d87d 100644
+--- a/bindings/rust/Makefile.am
++++ b/bindings/rust/Makefile.am
+@@ -2,22 +2,5 @@
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+ # SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- 	if (gpio_is_valid(base)) {
+-command = cargo build --release --lib
+-
+-if WITH_TESTS
+-command += --tests
+-endif
+-
+-if WITH_EXAMPLES
+-command += --examples
+-endif
+-
+-all:
+-	$(command)
+-
+-clean:
+-	cargo clean
+-
+ EXTRA_DIST = Cargo.toml
+-
+ SUBDIRS = gpiosim-sys libgpiod libgpiod-sys
+diff --git a/bindings/rust/libgpiod/Makefile.am b/bindings/rust/libgpiod/Makefile.am
+index 6b55d0d509d1..38f2ebf37aff 100644
+--- a/bindings/rust/libgpiod/Makefile.am
++++ b/bindings/rust/libgpiod/Makefile.am
+@@ -2,5 +2,21 @@
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+ # SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
++command = cargo build --release --lib
++
++if WITH_TESTS
++command += --tests
++endif
++
++if WITH_EXAMPLES
++command += --examples
++endif
++
++all:
++	$(command)
++
++clean:
++	cargo clean
++
+ EXTRA_DIST = Cargo.toml
+ SUBDIRS = examples src tests
 -- 
-2.39.2
+2.31.1.272.g89b43f80a514
 
