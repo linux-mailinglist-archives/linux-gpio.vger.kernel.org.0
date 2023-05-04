@@ -2,81 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6614F6F6AC3
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 14:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B78F6F6AF4
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 14:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjEDMD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 08:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39932 "EHLO
+        id S230139AbjEDMNq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 08:13:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjEDMDZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 08:03:25 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 832535BB1
-        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 05:03:20 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-94ed7e49541so59592866b.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 May 2023 05:03:20 -0700 (PDT)
+        with ESMTP id S229845AbjEDMNp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 08:13:45 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7185FCF
+        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 05:13:44 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-b9a879cd49cso573227276.0
+        for <linux-gpio@vger.kernel.org>; Thu, 04 May 2023 05:13:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683201799; x=1685793799;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s+Flag063oKB8Q1wi7qSq3Ulfch+IJh7NyCjAcrM3ZE=;
-        b=IYSagRNF//SQQg3BUrc4S0KxF4KoLFjA33rsTrtPcO+JqKa0apRPWl3U/wTAQGSPab
-         EMIlYccEyXfAq/FZbXhwWuNSi9fTJA9Mvk9gQXY3XKjy+jJyqiAgA4hdAzjo7YwIYV9A
-         kLY7Gb5r0+74CruZqUJR7vCI7ztmSbAPfO5C5oDy9r/TPJX7gxQx/7lFewrjHkxU/2iD
-         FJmcWSSM9eMxEfD9id6y3uUHPpxJJ9rfw9l9k8ONvWbnLsu9CXahoFDQHWwz84eFGUG6
-         l4hoPL76xLEX1cchsBjY6o/dy2dFCUZUy67fDdvDV7VXOHgksXeEf/g5VnVW6OcaOHct
-         luCw==
+        d=linaro.org; s=google; t=1683202424; x=1685794424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Nz4N7dBdEb2mhhYgRb5Ac4u0WnwPfPfvIfQEz/oEYw=;
+        b=qXqX6HaLiyrnJBChHeBKAzAM0vEPq7TbgRHZmOwkhPcM1GakZW/ItPgWR/1Oxue1sq
+         cIQu/c6Te65Z6dExIcbTmK56lU8phMg7PhezCdVW01BBBZHUgp1ZKWGGn5qeH6nnbuup
+         WaQrY9cQ0IxucKvfSKHdn582Lw1aATNnMQbM5p8jhmClkRAxphauBfnB2jbMtqG/Mbdg
+         nYRvSlUJHZQ1KCee/9iJU0aTK9Ocu7E14ijm767M5v5YStjfGynNY7RKqbh7V9aCwG7/
+         R8XTpaRviX4SAFpYAgJ/n8CxrUgqgUL5QY598WnmHCY6w2dSR5iihskgnaRLQOXn+zJQ
+         JnyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683201799; x=1685793799;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+Flag063oKB8Q1wi7qSq3Ulfch+IJh7NyCjAcrM3ZE=;
-        b=H2d5TyMBX5y2HfX0+4zaYMLA80DpjLbL4jWEsnmUGXaHvPpv+XiIRkz5bRD8mDbZ/t
-         ksxuOrZYXZcTgyO7KHCrrlptbLhcKt+v+xuIsn+yHQ73gfLAoJgpZ4o0rAn2CRV17HSx
-         zPWkIhW4AwioXeXf0WLOyleixI01sXp4ie1Lyia8bB7GnwisE5FJGnIyiMdqU/HRkQpe
-         tdMdFswuapALijsbMU+p0eFxKoX0ySre1z129NXSx+2wSoRIzUj47zn3936Mv+UcUp60
-         EV9fZb6nBxR90++fV/tXcmCf+m8kyVgs8ajdmZQrtU+tIOq6NEDZ7gAqAuQ5wZlauMXh
-         sgjw==
-X-Gm-Message-State: AC+VfDxh0PRpjHv7XKTTtNmc3qNBWTteEIRryrYi0uJsw5WzOAuKZGnq
-        KVcJGG33GZHRN11ZWmze3elKjQ==
-X-Google-Smtp-Source: ACHHUZ47YNIr6sZk/XYPHNt6yECSYNBOnFaK5lc1XKM9RfUQ+Fa5l3+EvXb6aEqviIAPoQw+tOeQvQ==
-X-Received: by 2002:a17:907:268c:b0:92b:3c78:91fa with SMTP id bn12-20020a170907268c00b0092b3c7891famr5405677ejc.28.1683201798867;
-        Thu, 04 May 2023 05:03:18 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:cbf1:e7ef:fb81:e912? ([2a02:810d:15c0:828:cbf1:e7ef:fb81:e912])
-        by smtp.gmail.com with ESMTPSA id oz15-20020a1709077d8f00b0095850aef138sm15707511ejc.6.2023.05.04.05.03.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 05:03:18 -0700 (PDT)
-Message-ID: <659a9637-f82c-054b-99a8-dc25416c8e13@linaro.org>
-Date:   Thu, 4 May 2023 14:03:16 +0200
+        d=1e100.net; s=20221208; t=1683202424; x=1685794424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Nz4N7dBdEb2mhhYgRb5Ac4u0WnwPfPfvIfQEz/oEYw=;
+        b=G8Nrzut424Tm2JznvoyQLzhJ7E7OA+6taejxVnQH2YDmZGf3DzVMAkffdQg4rqT2vS
+         Da3InW1uIes6YC0VeAxg4EyXlFa6N35SYQ5BARZgcaNVdEaboflqYmRUrWgTatX6NEFL
+         pssb2J8jOgU7+hP/RoQpVmuLWHvF+vRzlfxxr2VFI6GaSE0FXMQeiJaT7BFvCBteg2W3
+         qP2GIFl+Fagz9m1ZObv2sTVZciS8v3ZUsUIfKZYXT1byTWEvnXSLSnL4hwy60cuENWNH
+         1KnjFAgOiXqkMXEXAYSyQea6CgUR9QueEUKxO2MjjVj5zDv/SI5i9YsC1XtWDSHU2sEH
+         7SkQ==
+X-Gm-Message-State: AC+VfDwAUa1ClpfJU7yIwKznhiuP9DsxiZWeBWqCST/cy1Mg69tYat6q
+        srVsPFY7+Rj64DXcgV9+T1yf8MZ6PLa/T01Voc9EMQ==
+X-Google-Smtp-Source: ACHHUZ7tC86v2dmQ/+32Ze+s5HIZkFWybkq5UTok2Fe2Q+hGI7uuxQK7pXSEjtNakF83A5FXhyVV12KWSUK8lqUIixE=
+X-Received: by 2002:a25:41ca:0:b0:b97:e31e:47b with SMTP id
+ o193-20020a2541ca000000b00b97e31e047bmr21780417yba.62.1683202423837; Thu, 04
+ May 2023 05:13:43 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v3 02/18] remoteproc: qcom: Move minidump specific data to
- qcom_minidump.h
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-3-git-send-email-quic_mojha@quicinc.com>
- <fe94ed5c-c444-436d-720a-c96538c1026d@linaro.org>
- <e69862cc-4185-a7a2-07b2-15e331c4678a@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <e69862cc-4185-a7a2-07b2-15e331c4678a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20230425173241.GF444508@darkstar.musicnaut.iki.fi>
+ <20230425201117.457f224c@aktux> <20230425183857.GG444508@darkstar.musicnaut.iki.fi>
+ <20230425212040.5a4d5b09@aktux> <20230425193637.GH444508@darkstar.musicnaut.iki.fi>
+ <20230425215848.247a936a@aktux> <20230426071910.GE14287@atomide.com> <20230504055156.GO14287@atomide.com>
+In-Reply-To: <20230504055156.GO14287@atomide.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 May 2023 14:13:32 +0200
+Message-ID: <CACRpkdY9ShRATHa776KyzeArmQdKxdwGxJC11YnmhWiCdSGzEA@mail.gmail.com>
+Subject: Re: [BISECTED REGRESSION] OMAP1 GPIO breakage
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -85,41 +74,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/05/2023 13:58, Mukesh Ojha wrote:
-> 
-> 
-> On 5/4/2023 5:08 PM, Krzysztof Kozlowski wrote:
->> On 03/05/2023 19:02, Mukesh Ojha wrote:
->>> Move minidump specific data types and macros to a separate internal
->>> header(qcom_minidump.h) so that it can be shared among different
->>> Qualcomm drivers.
->>
->> No, this is not internal header. You moved it to global header.
->>
->> There is no reason driver internals should be exposed to other unrelated
->> subsystems.
->>
->>>
->>> There is no change in functional behavior after this.
->>
->> It is. You made all these internal symbols available to others.
->>
->>>
->>
->> This comes without justification why other drivers needs to access
->> private and internal data. It does not look correct design. NAK.
-> 
-> Thanks for catching outdated commit text, will fix the commit with
-> more descriptive reasoning.
-> 
-> It has to be global so that co-processor minidump and apss minidump can
-> share data structure and they are lying in different directory.
-> 
+On Thu, May 4, 2023 at 7:52=E2=80=AFAM Tony Lindgren <tony@atomide.com> wro=
+te:
+> * Tony Lindgren <tony@atomide.com> [230426 07:20]:
+> > Seems that we should just revert this patch for now and try again after
+> > the issues have been fixed.
+>
+> Looking at the proposed fixes being posted seems like they are quite
+> intrusive.. How about we partially revert this patch so omap1 still
+> uses static assigment of gpios?
 
-Then you should not share all the internals of memory layout but only
-few pieces necessary to talk with minidump driver. The minidump driver
-should organize everything how it wants.
+I think Andreas patch (commit 92bf78b33b0b463b00c6b0203b49aea845daecc8)
+kind of describes the problem with that: the probe order is now unpredictab=
+le,
+so if we revert the patch then that problem returns, but I don't know how
+serious that problem is.
 
-Best regards,
-Krzysztof
+It's one of the reasons why we can't have static GPIO bases anymore FWIW.
+The only fix that would actually fix the problem would be to undo deferred
+probe and the ongoing work to determine probe order from the device
+tree resource tree, and it is way too late for that, it's just not possible=
+.
 
+Yours,
+Linus Walleij
