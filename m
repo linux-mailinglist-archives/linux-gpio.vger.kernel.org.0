@@ -2,83 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D6E26F6E87
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 17:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE716F6EBD
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 17:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230443AbjEDPDU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 11:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52574 "EHLO
+        id S231314AbjEDPQI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 11:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbjEDPDG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 11:03:06 -0400
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACE3420B
-        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 08:02:50 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id baf915f5-ea8c-11ed-b3cf-005056bd6ce9;
-        Thu, 04 May 2023 18:02:47 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Thu, 4 May 2023 18:02:47 +0300
-To:     Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        ping.bai@nxp.com, kernel@pengutronix.de, linus.walleij@linaro.org,
-        shenwei.wang@nxp.com, peng.fan@nxp.com,
-        bartosz.golaszewski@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] pinctrl: freescale: Fix a memory out of bounds
- when num_configs is 1
-Message-ID: <ZFPJFwYLHtR6C5nf@surfacebook>
-References: <20230504003330.1075531-1-xiaolei.wang@windriver.com>
- <20230504003330.1075531-2-xiaolei.wang@windriver.com>
+        with ESMTP id S231230AbjEDPQH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 11:16:07 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B971BE4E
+        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 08:16:04 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-965ab8ed1fcso107905666b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 May 2023 08:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683213363; x=1685805363;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z+YrgzgoPKytJxQg/9aWnDzI+B7K2mIhuVq013nUpWU=;
+        b=E7BE/gBtv4WgcDrRzQsAoLqMpAZ98Ge5Um79Csth4J3G5mvi2Jw1ZP0xq7c4Rfws0r
+         57ZHgKB4KyisECxk6NPYpZ+pJlaQS62Jm7mvtbV6BtS7y4E+hVtaUDe4i5hMLL+WjVqw
+         ocRXaRyfFAABWrJZO/P9o5oVRDfmxclBFNEy2G5+jZlHMdnLPP+SpGrsPFsGYKOkvSLa
+         4WSEjctHqsczIY9gNN2PoRQxQIPaDltsp9mbYezbHI/ua42J8gi7dGYc3AAEckQ548VK
+         kvxHdRe3MBzRUVr6q1w08SDbf6d254J7Im9DnuhEQzAfJy/hi0SniJcHLf8mrNJdablu
+         H9EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683213363; x=1685805363;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z+YrgzgoPKytJxQg/9aWnDzI+B7K2mIhuVq013nUpWU=;
+        b=d/u0cEP/xyt1vfzEwYsT8nIKlYpCD0fod1L9VptOSBBGVKfMKv59wxcYfEqlxxkB2B
+         Mq/evxqAuwSzRCPVRHfNgK81Gl63JD2hW8l0CVrqqhNyUg71qLWyeAg4BuNcJsDe5xMU
+         sm3ST4ND1WMnDbVbugENXotHVh1eFkEf4KS5ouaobN5hRsWnKb6Grj1wrX6yqPeqZGaG
+         8nlIXvrgQ7Ao89tjoRc9dCxJMTXPD4buorxdzpTs+2S/6+aM6Wkm4zF/pX4u/In8Sf0x
+         AReZW7hSVo4ku27xowy3Z4d01fNV+ba6z2DXz4mPdV4Loguvzfxbu6C5ZddCe5GLg7m9
+         W0Bg==
+X-Gm-Message-State: AC+VfDzMPuLlePlME1HbJhmDg1BLtdrpPW+BIheLcHF+OrNBi52NND2S
+        2IT2shTUyod/k3fJ55Qob1gr9Q==
+X-Google-Smtp-Source: ACHHUZ6snrat2F+BKDls0HrQaUaCQg8gmYaY6QGB8NtBsm1kSQSuiQaQkBo7Y+hSpHEZKau5uGmG+Q==
+X-Received: by 2002:a17:907:97c3:b0:94a:474a:4dd7 with SMTP id js3-20020a17090797c300b0094a474a4dd7mr7177702ejc.60.1683213363181;
+        Thu, 04 May 2023 08:16:03 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:cbf1:e7ef:fb81:e912? ([2a02:810d:15c0:828:cbf1:e7ef:fb81:e912])
+        by smtp.gmail.com with ESMTPSA id i6-20020a17090639c600b0094b5ce9d43dsm18959477eje.85.2023.05.04.08.16.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 May 2023 08:16:02 -0700 (PDT)
+Message-ID: <caea3ae8-7cce-7c08-e524-93685c00a3c4@linaro.org>
+Date:   Thu, 4 May 2023 17:16:01 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504003330.1075531-2-xiaolei.wang@windriver.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v3 02/18] remoteproc: qcom: Move minidump specific data to
+ qcom_minidump.h
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-3-git-send-email-quic_mojha@quicinc.com>
+ <fe94ed5c-c444-436d-720a-c96538c1026d@linaro.org>
+ <e69862cc-4185-a7a2-07b2-15e331c4678a@quicinc.com>
+ <659a9637-f82c-054b-99a8-dc25416c8e13@linaro.org>
+ <33ea7c3b-4317-5aff-5e6a-af6e093d45a0@quicinc.com>
+ <1a4f4b55-6284-6149-4c7b-7b45fa1de291@linaro.org>
+ <d80868bf-610d-7e79-d279-da704efb38f0@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <d80868bf-610d-7e79-d279-da704efb38f0@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thu, May 04, 2023 at 08:33:30AM +0800, Xiaolei Wang kirjoitti:
+On 04/05/2023 14:57, Mukesh Ojha wrote:
+> 
+> 
+> On 5/4/2023 6:06 PM, Krzysztof Kozlowski wrote:
+>> On 04/05/2023 14:26, Mukesh Ojha wrote:
+>>>
+>>>
+>>> On 5/4/2023 5:33 PM, Krzysztof Kozlowski wrote:
+>>>> On 04/05/2023 13:58, Mukesh Ojha wrote:
+>>>>>
+>>>>>
+>>>>> On 5/4/2023 5:08 PM, Krzysztof Kozlowski wrote:
+>>>>>> On 03/05/2023 19:02, Mukesh Ojha wrote:
+>>>>>>> Move minidump specific data types and macros to a separate internal
+>>>>>>> header(qcom_minidump.h) so that it can be shared among different
+>>>>>>> Qualcomm drivers.
+>>>>>>
+>>>>>> No, this is not internal header. You moved it to global header.
+>>>>>>
+>>>>>> There is no reason driver internals should be exposed to other unrelated
+>>>>>> subsystems.
+>>>>>>
+>>>>>>>
+>>>>>>> There is no change in functional behavior after this.
+>>>>>>
+>>>>>> It is. You made all these internal symbols available to others.
+>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>> This comes without justification why other drivers needs to access
+>>>>>> private and internal data. It does not look correct design. NAK.
+>>>>>
+>>>>> Thanks for catching outdated commit text, will fix the commit with
+>>>>> more descriptive reasoning.
+>>>>>
+>>>>> It has to be global so that co-processor minidump and apss minidump can
+>>>>> share data structure and they are lying in different directory.
+>>>>>
+>>>>
+>>>> Then you should not share all the internals of memory layout but only
+>>>> few pieces necessary to talk with minidump driver. The minidump driver
+>>>> should organize everything how it wants.
+>>>
+>>> These are core data structure which is shared with boot firmware and the
+>>> one's are moved here all are required by minidump driver .
+>>
+>> I am not sure if I understand correctly. If they are all required by
+>> minidump driver, then this must not be in include, but stay with
+>> minidump. Remoteproc then should not touch it.
+>>
+>> I don't understand why internals of minidump should be important for
+>> remoteproc. If they are, means you broken encapsulation.
+>>
+>>>
+>>> If you follow here[1], i raised by concern to make this particular one's
+>>> as private and later to avoid confusion went with single header.
+>>> But if others agree, I will keep the one that get shared with minidump
+>>> as separate one or if relative path of headers are allowed that can make
+>>> it private between these drivers(which i don't think, will be allowed or
+>>> recommended).
+>>
+>> Let's be specific: why MD_REGION_VALID must be available for remoteproc
+>> or any other driver after introducing qcom minidump driver?
+> 
+> Forget about this driver for a moment.
+> 
+> I am not sure  how much you know about existing qcom_minidump()
+> implementation and why is it there in first place in remoteproc
+> code in driver/remoteproc/qcom_common.c
+> 
+> The idea is, remoteproc co-processor like adsp/cdsp etc. may have their
+> static predefined region (segments) to be collected on their crash which 
+> is what exactly existing qcom_minidump() is doing.
+> 
+> Now, after this minidump series, APSS (linux) will have it's
+> own of collecting linux client region independent of whether
+> remoteproc minidump collection.
+> 
+> I think, are you hinting to move all minidump related code from 
+> remoteproc to qcom_minidump driver, is this what are you trying
+> to say ?
 
-...
+Close, not all but the ones not necessary to identify the
+regions/storage/layout. If some variable about this
+region/storage/layout is the same everywhere, it means it's basically a
+property of qcom minidump and you have just exposed it to consumers
+breaking encapsulation.
 
-The link to the documentation I have added into reply to your v1 was about
-backtraces in the commit messages. For a single patch there is no need to have
-a cover letter.
-
-> BUG: KASAN: stack out of bounds in imx_pinconf_set_scu+0x9c/0x160
->   Read size 8 at address ffff8000104c7558 by task sh/664
->   CPU: 3 PID: 664 Communication: sh Tainted: G WC 6.1.20 #1
->      Hardware name: Freescale i.MX8QM MEK (DT)
->   Call trace:
->     dump_backtrace.part.0+0xe0/0xf0
->     show stack+0x18/0x30
->     dump_stack_lvl+0x64/0x80
->     print report +0x154/0x458
->     kasan_report+0xb8/0x100
->     __asan_load8+0x80/0xac
->     imx_pinconf_set_scu+0x9c/0x160
->     imx_pinconf_set+0x6c/0x214
->     pinconf_set_config+0x68/0x90
->     pinctrl_gpio_set_config+0x138/0x170
->     gpiochip_generic_config+0x44/0x60
->     mxc_gpio_set_pad_wakeup+0x100/0x140
-
-This is too long backtrace. The documentation tells you to shrink it to the
-important lines only, which in this case something like less than 10 and not
-17. Hence, remove _at least_ 8 lines from the backtrace.
-
-Codewise the proposed change is good, though.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
