@@ -2,114 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 096126F6D90
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 16:16:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89AA76F6DE9
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 16:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjEDOQK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 10:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        id S230312AbjEDOoY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 10:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230424AbjEDOQH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 10:16:07 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2080c.outbound.protection.outlook.com [IPv6:2a01:111:f403:704b::80c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3635383FD;
-        Thu,  4 May 2023 07:16:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f387mgaaKU+HiHbHN5SmO/05EhYqlND8GR7Cn6qcVPOdhs0s5xekCyRAWwN5YLAooCoIGzs9m4PYSTqxY82BdcAIkKpoylJ5FISCFwre2tM6FTbaKkPL/NUyDe6qIGCGPHj2s7QWDBvcEH5ZsjtWZg8rVHF2maXkGWGUj95m7qIQq1ADEAbZl9eJ/WGjcArKS8C92hZIVUyTUQuapLifeq9glcy6QH5jk2zbEWevjAA8ANsHE7K+ucod9bjDaytZiBLb915lz9VeN93zLNrZeVu9YR5SLw+BIgmCcMFVvDOmpQXHC8j7QBdVe53B+54r/yuFK5XM1Ze6AnQmmOimyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mn8aM/iOlqop1wIUdOpz0u7+SqgKrBcg5DuetY0DXiE=;
- b=Qb8E7lzhPYWp+95ngli/UEsMOdivGuYNHURWvNjIhe3drdmUEZE8/sqDhSPVzDLAMBRyLJt3RqGM9mTBw6qzoIwB8Z15b8BvnKSpR8SS9o45AwIoarb7nF94+Ie/zcQKBGFKKlsUVSUDGAUWuIWbUO3T3Pwfm9Wjf0JcRaMurjtDwUvky8eGyfgGMz1OF4NhRAliGobmapOSnfwPU6fpb0CqPqmCjlLo0QK5X0HexnZOoN03SA/4acQlWMdtuLG0wfmPnfXUGTwRkv+EpQvInXVCXeOjRl03cI3mV5P2ZPmTNDNx5Yo6wf0e9aX7uTG4nWszUV1ry8GmxuAlOHzjFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mn8aM/iOlqop1wIUdOpz0u7+SqgKrBcg5DuetY0DXiE=;
- b=oLVFaxLvxcLwAhYrWiEhKbZFZea5uYAz365vu2PRKcXYbrIcPvgjBgEIzl3JliBpa0vDsS46WEFAGk73msjs6gRFAef8scDP6NGHQAXjr+DuMuMy1lpJ6efTkrAdCyFyHrwoETYLfKx8AKA5sQSegSr15KbVoLikDxC/KzVShTO54nOOj6Ln+rZUsrQvDRa7d5MITFIRKmfOAnJkEVcwjLPR1R/LxcIy4tUah7V1D3fodkvPWFV+U9+w+G/zPJuAosClnTcNPLdeRWThLwnaIYib+CAKl/tjJNIwbLvZQkd8lxYYl9Xp9ryw27TO3e5r91Bft9UbN1NSJPwpyKdY3A==
-Received: from TY0PR01MB5444.apcprd01.prod.exchangelabs.com
- (2603:1096:400:32b::13) by PSAPR01MB3926.apcprd01.prod.exchangelabs.com
- (2603:1096:301:23::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.26; Thu, 4 May
- 2023 14:16:01 +0000
-Received: from TY0PR01MB5444.apcprd01.prod.exchangelabs.com
- ([fe80::3f42:e9a0:b922:882b]) by TY0PR01MB5444.apcprd01.prod.exchangelabs.com
- ([fe80::3f42:e9a0:b922:882b%7]) with mapi id 15.20.6363.027; Thu, 4 May 2023
- 14:16:01 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH v2] gpio: gpiolib: clear the array_info's memory space
-From:   Yan Wang <rk.code@outlook.com>
-In-Reply-To: <CAHp75VdFqL4e=awSg0pxnzEYLvWRenTYohRfZ5p-ZOc2B5Lzgg@mail.gmail.com>
-Date:   Thu, 4 May 2023 22:15:57 +0800
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <TY0PR01MB5444D77F48A2BF19F3A44087E66D9@TY0PR01MB5444.apcprd01.prod.exchangelabs.com>
-References: <202304232146.7M89pwCz-lkp@intel.com>
- <KL1PR01MB5448327326B6EDA8001AF714E6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
- <ZEk4YNQeYohEwnSg@surfacebook>
- <KL1PR01MB544880BE86B3890E33609C5AE66D9@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
- <CAHp75VdFqL4e=awSg0pxnzEYLvWRenTYohRfZ5p-ZOc2B5Lzgg@mail.gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.2)
-X-TMN:  [Pzso/XucFW6dDeewCU4AbMNLPkl68h0K]
-X-ClientProxiedBy: TY2PR02CA0052.apcprd02.prod.outlook.com
- (2603:1096:404:e2::16) To TY0PR01MB5444.apcprd01.prod.exchangelabs.com
- (2603:1096:400:32b::13)
-X-Microsoft-Original-Message-ID: <553231DF-FCE4-4DBF-A9EB-48D3EA5B1F9A@outlook.com>
+        with ESMTP id S230430AbjEDOoX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 10:44:23 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13DC1212D;
+        Thu,  4 May 2023 07:44:22 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3444xV5g003734;
+        Thu, 4 May 2023 14:43:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=o4esY378CGg1puYP89nqAn0HOXZL3EM2geQTdW+QLbo=;
+ b=UPjpZb1qGSrKjQlftJhEQMMfNElvZE5HXMYbduhMmh+I8D8HTIJ4osVqWHSyJJbHPlI0
+ q2fXy1DD3CjMY5psdeBH2epFAVaeMdgvWObQ0OlL8r8Hx4ms1Ij/UjZTn4Oeo7xPJNY9
+ 749ItGS5Y8UN9orbYR3FoF0/+/FKRmrvfOSlT6jjBl+Ju6dv3dVBuo54ODSDtuUDHGBR
+ z+5d1BDldYXKOork3mbqfURg/uZIIsz5vu7iIennM3UnIIX6gXbEekL4/ANGY97TAroR
+ HX9q8mOdrY318alLjohhZXF6Q24QIvo2ytNpfNnq+PXqvuba6F54QMPNLKuI/YZSVTgF Dg== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qc652h9yt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 May 2023 14:43:45 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 344EhiWo016505
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 4 May 2023 14:43:44 GMT
+Received: from [10.216.46.158] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 4 May 2023
+ 07:43:37 -0700
+Message-ID: <2fb1658a-3a38-7eb4-0e6e-d8c61981bdab@quicinc.com>
+Date:   Thu, 4 May 2023 20:13:34 +0530
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY0PR01MB5444:EE_|PSAPR01MB3926:EE_
-X-MS-Office365-Filtering-Correlation-Id: ade3c397-a6c6-4564-54c4-08db4caa1681
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yUrGKgbvctuT7+s6ERSW7LpWNtG2CB8vFkQ1FLnJgMdOYbVVqZ8+dafxGZsjwhS+yXqoGFeBvQjT1OKztrB0OmE/MiM4OMOzRsX+gSIfuUpa/W8PxHfrT3yD+h9nPr/oh7tYO8GlXIC5B7EVAB0QGP4JheWBAvW1ImWd8FrTkA0WrCVK91L+E2k+7cyD/OEkFoZYUkAPtWWdZVe7WrPDjGOfLs4xRJBzUI+EZFDoK4Y1wS4KIbE5P9zTd1Rs2tnODvHNNjyCyXI2OKJdBOQH/BG3QVhxF0Bv5uK4rEJ0giUhvBDhRc5jISMwwZ0HH7BHL5K0AXGvO2TsJTmw7tRXy9EsLADzJ+ZQrwzK9IWxFwlMYIRofCeOxcWvXphAZuS5PNWhTOVxzr9waCiBfuDiYeV6eGFm5US6S4fYwntNS/W6DjJGBob+So9iT+bIsLy+40i8q8N422L0IALw2KcXaduyz8Vg89dLBe+uug4Rt4MDjQbyTKnC5X2OWURFlvXxog8HPdV5CXvViMagPOBLLqIZd/6357Z7buq3KJi3AH0cBL4pwfKDLUdaYKKB6+/gIWM9LxGnDb6PXq9pqF0MTXPeRVsxziLBUQbchg4/558=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?blFWTUdjZUtVeWg5N25GRlpJK0pKUVVBOWs1N2tlajhKM2xsOUtsTGhhdWJY?=
- =?utf-8?B?UUpjOGNFUnFhQWJsVjNsV0xCZHc0OEl5UDJ2bEdZVWFzNjMxUUUxSmU0L0Fy?=
- =?utf-8?B?SWh2cVExUTdqWm5XOE1CRDFZSHB6UVRWYkYwN3M4VWptdm9pVkxWcnRYVm5w?=
- =?utf-8?B?Rjc5Z0xkZE9PTTE0cjU5WVN6Mk9BODYrMnNBWk93WmU4d3E4VVNBRXZTSE9p?=
- =?utf-8?B?SUI4MDRNcDBobmRnSTJpeHNvMmNBYTNlcWhtSHFFNmExNWp2Mmt1dnlUNDdz?=
- =?utf-8?B?WFNBR3lIanVhSmxnZ0t2N21TRkFMT2M3ZnMwUzlWYnlqZTJuUnZWUFJqT0l2?=
- =?utf-8?B?cDYvMW4xZmxMOGRFclR1VDZ3WDVyWHk0bjBMWXZTN0czSGo1WldMcEtzN1dV?=
- =?utf-8?B?Qnl3MXZyc3J3QzdNT3ZmT2x5Tm5xaExMWWp1ckFvWkxwbTErTEZLTHNaZmtY?=
- =?utf-8?B?VmRKcVZSZ21VcjJFeTB4T0VsVVBUR0syKzgzZmRUYXRSRkNPQ2pNaFN4UHpI?=
- =?utf-8?B?ZnVvYndFdUtSSU04Zkw4OGNuM0J1bDNVcHk4SjdRMVhPMnJqRlhpYUhoVTN2?=
- =?utf-8?B?MDQ0MmdGOWlvTUx1QkdyTEdsL1BFaDVFTzJxZjdXSjRNOTlsVWNuN1NGb3Er?=
- =?utf-8?B?ZCtMTnAxVUJNQk1XbzUrU2NYeGloQlZ1MTVuTUd2SW5GMlFublZjWWF6N1N6?=
- =?utf-8?B?b0FmM3lCN0pwR3FFUE5ya2pVMzl4eFdRRG54NWhvSit1ZllPS1lJRUYxVnpu?=
- =?utf-8?B?Q1M5VUlPMUJYR002ajA3NUdGMGVVMDRWSDAyUmkxZk90aVRUcVNXb2xxbUJy?=
- =?utf-8?B?M3QvdGRUTUFVR1JqZ1M0RHRueTRHUkZWREtKU3F2NUtGbGdHdjlYU2tjTGpZ?=
- =?utf-8?B?Vy96NWt1b3pPL0R1b0NSN3Z1Y3UydW9yUm1PT0xMdXFpMkx0cXBiekI0K216?=
- =?utf-8?B?aVcyMnpOZHBENEFNSmR1VlQ2b24zMXVXbFRmYi83YmpXdnlTNTUzR2F3SW9X?=
- =?utf-8?B?WWlOczZwNGQvYitxc0lRZDh6VEtHTFpzVGFWY1daSHFid0R3QTF2RmhZTHdB?=
- =?utf-8?B?cStpdHVJaG0rWkRid25HbjU4VExLaFliZlJ3SC9uUTIwOG9ET3FmZHRUSHZv?=
- =?utf-8?B?L0NsRHpxVkNQM1p6a2g5eTZHR2VIWlAwTGk5c2p6K0x6aDUzYWhObUJPSndh?=
- =?utf-8?B?RmxJQUpPSGQ2ZVE1dUxGSng2UlRMQWExYlhodEZySzczcE1VckNCYytXdnls?=
- =?utf-8?B?cTNoK284NHJjMVhVY05yWGQrTmtZVjdVZUEyYTJUYThhNDA4a0lnbk9lV0oy?=
- =?utf-8?B?Zjh6ZE5QbTQzQ3NFenY1LzBNTnlwNmIwMWNoM0l4a1EzWFdXN1BhRWhoSTBv?=
- =?utf-8?B?cGhtUDdXY2x5WEhZaFlVL3dJTGc4RnRQckF0M1JBbjJyRTlqcmhYdFZQb1NP?=
- =?utf-8?B?R0hRUWpNN2psWDA0cFBlS2x3SmpLT0VYc3JGUU9ReWg4RHV5aTh0dis5Nk8x?=
- =?utf-8?B?WSswdHR1SnRHWjdkenZYcUM4V052TWUxM2hmSjNhcEVVditVaDUvSTFoaFpm?=
- =?utf-8?B?MC9hSUNzUGNiUHlvd0REUndMSlE5SUI1K2RxcjBwdzRqdHo2TUZZT21saTEr?=
- =?utf-8?B?bzlCUmZjcVlnc1RGZlZxdURlTkUySWc9PQ==?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ade3c397-a6c6-4564-54c4-08db4caa1681
-X-MS-Exchange-CrossTenant-AuthSource: TY0PR01MB5444.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2023 14:16:01.3603
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR01MB3926
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 07/18] arm64: defconfig: Enable Qualcomm minidump
+ driver
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-8-git-send-email-quic_mojha@quicinc.com>
+ <ad9915b2-56ff-3f95-7c92-fae597d6ed43@linaro.org>
+ <4325c2e7-8ca1-7e45-db14-5ba8bc83f5d7@quicinc.com>
+ <a4118697-d575-6499-ed8e-656e51ca0da3@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <a4118697-d575-6499-ed8e-656e51ca0da3@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VXrFV397fZXsjxuO3pxir-3bNZM62dOx
+X-Proofpoint-ORIG-GUID: VXrFV397fZXsjxuO3pxir-3bNZM62dOx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-04_10,2023-05-04_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=945 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ impostorscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305040120
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -118,74 +94,66 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-> On May 4, 2023, at 19:36, Andy Shevchenko <andy.shevchenko@gmail.com> wro=
-te:
->=20
-> On Thu, May 4, 2023 at 12:38=E2=80=AFPM Yan Wang <rk.code@outlook.com> wr=
-ote:
->> On 4/26/2023 10:42 PM, andy.shevchenko@gmail.com wrote:
->>> Sun, Apr 23, 2023 at 09:59:43PM +0800, Yan Wang kirjoitti:
->>>> if hardware number different to array index,it needs to clear to point=
-s
->>>> memory space if the array_info have been assigned a value.
->>> Can you explain a bit more what's going on there?
->=20
-> ...
->=20
->> I use gpiod_get_array() to get a gpio array form the node of DTS.
->>=20
->> the node is as follows:
->> ...
->> gpios =3D <&gpio1 0 0>, <&gpio1 10 0>;
->> ...
->>=20
->> First scan pin-0 of gpio1,its index and hardware number are 0,
->>=20
->> if (descs->ndescs =3D=3D 0 && gpio_chip_hwgpio(desc) =3D=3D 0) {
->> ...
->> descs->info =3D array_info.
->> }
->>=20
->> Then scan pin-10 , its index is 1 ,but hardware number is 10 .
->>=20
->> if (gpio_chip_hwgpio(desc) !=3D descs->ndescs) {
->> array_info =3D NULL;
->> }
->> just set array_info =3D NULL, Should the array_info point to memory be
->> cleared ?
->=20
-> This is a good question. The entire algorithm is a bit difficult to
-> understand from the first glance. I need some time to check it myself.
-Looking forward to your test results.
->=20
->> if not cleared ,I use the gpiod_set_array_value_cansleep() to pull up or
->> down pin-10 is invalid.
->=20
-> I'm not sure I follow. The array operations are against the given
-> array of the descriptors. If you ask to have that operation done, the
-> all descriptors in the array should be considered.
->=20
->> I found that the set_mask and get_mask vlaues of descs->info are seted
->> 0x03 in gpiod_get_array(),
->=20
-> Yes, this mask is for the argument. The 0x03 is the correct one.
->=20
->> I think 0x401 is their correct value.
->=20
-> No. You have an array of two elements, and not 11.
+On 5/4/2023 6:02 PM, Krzysztof Kozlowski wrote:
+> On 04/05/2023 13:45, Mukesh Ojha wrote:
+>>
+>>
+>> On 5/4/2023 4:53 PM, Krzysztof Kozlowski wrote:
+>>> On 03/05/2023 19:02, Mukesh Ojha wrote:
+>>>> Previous patches add the Qualcomm minidump driver support, so
+>>>> lets enable minidump config so that it can be used by kernel
+>>>> clients.
+>>>>
+>>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>>>
+>>> This patchset is split too much. Defconfig change is one change. Not two
+>>> or three.
+>>>
+>>>> ---
+>>>>    arch/arm64/configs/defconfig | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>>> index a24609e..831c942 100644
+>>>> --- a/arch/arm64/configs/defconfig
+>>>> +++ b/arch/arm64/configs/defconfig
+>>>> @@ -1250,6 +1250,7 @@ CONFIG_QCOM_STATS=m
+>>>>    CONFIG_QCOM_WCNSS_CTRL=m
+>>>>    CONFIG_QCOM_APR=m
+>>>>    CONFIG_QCOM_ICC_BWMON=m
+>>>> +CONFIG_QCOM_MINIDUMP=y
+>>>
+>>> This must be a module.
+>>
+>> Why do you think this should be a module ?
+>>
+>> Is it because, it is lying here among others '=m' ?
+> 
+> Because we want and insist on everything being a module. That's the
+> generic rule. There are exceptions, so if this justifies being an
+> exception, please bring appropriate arguments.
+> 
+>>
+>> Or you have some other reasoning ? like it is for qcom specific
+>> soc and can not be used outside ? but that is not true for
+>> all configs mentioned here.
+>>
+>> The reason behind making it as '=y' was, to collect information from
+>> core kernel data structure as well as the information like percpu data,
+>> run queue, irq stat kind of information on kernel crash on a target
+>> running some perf configuration(android phone).
+> 
+> I don't understand why =m stops you from all that.
 
-Due to hardware number are 10 and 0 , so this mask is 0x401=EF=BC=88bit10 a=
-nd bit0 are 1=EF=BC=89.
+How do i get kernel symbol address from a modules
+can we use kallsyms_lookup_name from modules ?
 
->=20
->>>> if (bitmap_full(array_info->get_mask, descs->ndescs)) {
->>>> + /*clear descs->info*/
->>>> + memset(array_info, 0, sizeof(struct gpio_array));
->>>> array_info =3D NULL;
->>>> }
->=20
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
+--Mukesh
 
+  What's more, I don't
+> understand why do you refer to the Android here. This is a development
+> and debugging Linux defconfig, not Android reference config for vendors...
+> 
+> Best regards,
+> Krzysztof
+> 
