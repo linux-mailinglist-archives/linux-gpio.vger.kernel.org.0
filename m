@@ -2,119 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 236F46F6B18
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 14:23:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC6A6F6B21
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 May 2023 14:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjEDMXK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 08:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        id S230183AbjEDM3F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 08:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbjEDMXJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 08:23:09 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8645FFE
-        for <linux-gpio@vger.kernel.org>; Thu,  4 May 2023 05:23:07 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-55a1462f9f6so2971037b3.3
-        for <linux-gpio@vger.kernel.org>; Thu, 04 May 2023 05:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683202987; x=1685794987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PFy1RBKM5Kcpg+NQ3BgZ5VLZiasvJE1KM8oJrv46mjo=;
-        b=k8NGS2RoUaPlaFGnbNnozITZIC7RFzujBKehrchANS16GXgN2iRN7A8pcae/DY5ArN
-         r98AVlVzAjzzwgwR7KQf80ueCnWJywuFiWLr5scCj3gK1yGJ5mLGpKlVlZF5ZeGS/M/x
-         F8qhdfp46a1EM/ksrOdvkVmxPw5QUC6vENxN6mWILgEL7K/BXLiNdL6WZ+b+kwHO6UqL
-         wdqWQCR6sE4Vv0P13PfheKzjD5G61R6EcrwIMBlOFkGk4Gudf7b3PySuxzc6bB0jO2Bx
-         vph91wx7L5lF6GEE4ek4SMI9xgSEhbyMZuRx7A64D+t1q/WFhjk5atGWdEWBlIDIQWM4
-         Y7Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683202987; x=1685794987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PFy1RBKM5Kcpg+NQ3BgZ5VLZiasvJE1KM8oJrv46mjo=;
-        b=O07sYZCeUmO/VBfys45dxmYE96AkmF0fh1jSikIfpxQf/qCzr2nkAKIbLxqqEsNNwY
-         0Rp71y8Vfu4dsUPCfV6aR7ehZzkLeEOFFquxkTrJ3fE7QHIDwuVnSCwxtL7Yu1LqsX22
-         7KyklMEiv774oe0MxMdBRhA0bN81ap+NC8lDk4vmcLBgtoOz7PO4uaci2PUbL5GR2Vll
-         CEVwWy94FSviyyaSeLtGsp2yNfIgQniWKLr8Zy7OJQM88HCVjRcHrAvVFnZxtGb7FX6h
-         QtmJUWIYzCurKNZGSu2UDNPRJkKFxqLenoEOa7zYa4yvppYzJRwS0OzCZ/Nurm/65UDW
-         0UMQ==
-X-Gm-Message-State: AC+VfDypUmUL+GDDOlyHugnDt+Zng4/4XSc/ddfPcIfhxU2l6KCtyM4v
-        muOkHukC/ewh9PnclOxFrD/7h9hZw/49kzzQ0/vJzg==
-X-Google-Smtp-Source: ACHHUZ7JAeBstDHq+3hR0npxfBMjYla1Q+/pPK5AHGlISOXcDEwBbF5CxCX3cGaKL2oYcROZ/tLej+iD9Pk4osSuIMQ=
-X-Received: by 2002:a25:1885:0:b0:b92:3f59:26e with SMTP id
- 127-20020a251885000000b00b923f59026emr21205278yby.41.1683202987075; Thu, 04
- May 2023 05:23:07 -0700 (PDT)
+        with ESMTP id S229606AbjEDM3E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 08:29:04 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439726185;
+        Thu,  4 May 2023 05:29:03 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 344C6mSH018634;
+        Thu, 4 May 2023 12:28:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=PUpzOZj3934Z7RYhXVQ62PQUTt99uv5wnpS3MmtTpDk=;
+ b=ScENoJCIMPa/nuFo6WTOFsnXjEuxC+Det3kt10e9fKn1ztsXrEJgHbbjsrZr+z5JwEZn
+ hmDJvGzGPJOWJPgP54zFyhoGSr5FDEjM8rUt6QmcFddNfV1plbgwK+LXhnMor7f+liYY
+ 1VzHTBDenyXsxo4f+TPGNgKFKQlY69BCo4IOauZNvlUsoplFqSEJ1b0jsbVeIxerH20p
+ 2cMQx/I2NegcwPzWHd437O+XwqrUHodbP6rO/0i2hxFnPLW+lEWAHsWnsoc2PGBOBzfU
+ rwYE9NbH2hxJZz2f/7dMVEAr3GchS+Yc5D8oRURBysTFiHSxPjcCbNE2QfMSYh7IOXJC fg== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qc8kw8mh7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 May 2023 12:28:41 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 344CQiX9004732
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 4 May 2023 12:28:40 GMT
+Received: from [10.216.46.158] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 4 May 2023
+ 05:26:37 -0700
+Message-ID: <33ea7c3b-4317-5aff-5e6a-af6e093d45a0@quicinc.com>
+Date:   Thu, 4 May 2023 17:56:33 +0530
 MIME-Version: 1.0
-References: <20230504060421.804168-1-andreas@kemnade.info>
-In-Reply-To: <20230504060421.804168-1-andreas@kemnade.info>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 May 2023 14:22:56 +0200
-Message-ID: <CACRpkdZ=ri8OxqwtLqQe--GGkNDdY7NSzyhzHLfcCv99togfJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: fix allocation of mixed dynamic/static GPIOs
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     brgl@bgdev.pl, christophe.leroy@csgroup.eu,
-        andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 02/18] remoteproc: qcom: Move minidump specific data to
+ qcom_minidump.h
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-3-git-send-email-quic_mojha@quicinc.com>
+ <fe94ed5c-c444-436d-720a-c96538c1026d@linaro.org>
+ <e69862cc-4185-a7a2-07b2-15e331c4678a@quicinc.com>
+ <659a9637-f82c-054b-99a8-dc25416c8e13@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <659a9637-f82c-054b-99a8-dc25416c8e13@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2We-ouX9jSCh1TC1DTCqu74GKsCnUQj-
+X-Proofpoint-ORIG-GUID: 2We-ouX9jSCh1TC1DTCqu74GKsCnUQj-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-04_08,2023-05-04_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=396 malwarescore=0 phishscore=0
+ adultscore=0 clxscore=1015 spamscore=0 impostorscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305040101
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 4, 2023 at 8:04=E2=80=AFAM Andreas Kemnade <andreas@kemnade.inf=
-o> wrote:
 
-> If static allocation and dynamic allocation GPIOs are present,
-> dynamic allocation pollutes the numberspace for static allocation,
-> causing static allocation to fail.
-> Enforce dynamic allocation above GPIO_DYNAMIC_BASE.
->
-> Seen on a GTA04 when omap-gpio (static) and twl-gpio (dynamic)
-> raced:
-> [some successful registrations of omap_gpio instances]
-> [    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 16=
-1..178
-> [    2.561401] gpiochip_find_base: found new base at 160
-> [    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
-> [    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
-> [...]
-> [    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
-> [    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
-> [    2.703643] gpiochip_find_base: found new base at 178
-> [    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
-> [    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
-> [...]
-> [    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap=
-, cannot add chip
-> [    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) =
-failed to register, -16
-> [    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register =
-gpio chip
->
-> On that device it is fixed invasively by
-> commit 92bf78b33b0b4 ("gpio: omap: use dynamic allocation of base")
-> but let's also fix that for devices where there is still
-> a mixture of static and dynamic allocation.
->
-> Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Reviewed-by: <christophe.leroy@csgroup.eu>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Looks good to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 5/4/2023 5:33 PM, Krzysztof Kozlowski wrote:
+> On 04/05/2023 13:58, Mukesh Ojha wrote:
+>>
+>>
+>> On 5/4/2023 5:08 PM, Krzysztof Kozlowski wrote:
+>>> On 03/05/2023 19:02, Mukesh Ojha wrote:
+>>>> Move minidump specific data types and macros to a separate internal
+>>>> header(qcom_minidump.h) so that it can be shared among different
+>>>> Qualcomm drivers.
+>>>
+>>> No, this is not internal header. You moved it to global header.
+>>>
+>>> There is no reason driver internals should be exposed to other unrelated
+>>> subsystems.
+>>>
+>>>>
+>>>> There is no change in functional behavior after this.
+>>>
+>>> It is. You made all these internal symbols available to others.
+>>>
+>>>>
+>>>
+>>> This comes without justification why other drivers needs to access
+>>> private and internal data. It does not look correct design. NAK.
+>>
+>> Thanks for catching outdated commit text, will fix the commit with
+>> more descriptive reasoning.
+>>
+>> It has to be global so that co-processor minidump and apss minidump can
+>> share data structure and they are lying in different directory.
+>>
+> 
+> Then you should not share all the internals of memory layout but only
+> few pieces necessary to talk with minidump driver. The minidump driver
+> should organize everything how it wants.
 
-Yours,
-Linus Walleij
+These are core data structure which is shared with boot firmware and the
+one's are moved here all are required by minidump driver .
+
+If you follow here[1], i raised by concern to make this particular one's
+as private and later to avoid confusion went with single header.
+But if others agree, I will keep the one that get shared with minidump
+as separate one or if relative path of headers are allowed that can make
+it private between these drivers(which i don't think, will be allowed or
+recommended).
+
+[1]
+https://lore.kernel.org/lkml/3df1ec27-7e4d-1f84-ff20-94e8ea91c86f@quicinc.com/
+
+-- Mukesh
+> 
+> Best regards,
+> Krzysztof
+> 
