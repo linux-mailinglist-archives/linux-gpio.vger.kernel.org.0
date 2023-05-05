@@ -2,72 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BBE76F8225
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 13:39:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE786F823B
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 13:43:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjEELjG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 May 2023 07:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42680 "EHLO
+        id S231918AbjEELn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 May 2023 07:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbjEELjB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 07:39:01 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0B518845
-        for <linux-gpio@vger.kernel.org>; Fri,  5 May 2023 04:39:00 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-b980e16b27bso1472324276.2
-        for <linux-gpio@vger.kernel.org>; Fri, 05 May 2023 04:39:00 -0700 (PDT)
+        with ESMTP id S231842AbjEELn6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 07:43:58 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430411887E
+        for <linux-gpio@vger.kernel.org>; Fri,  5 May 2023 04:43:56 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-55a20a56a01so28473807b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 05 May 2023 04:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683286739; x=1685878739;
+        d=linaro.org; s=google; t=1683287035; x=1685879035;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=puWCJyuFf3yp6BwyAz5qUYq78oF9e+xdSzj78gCEdNE=;
-        b=Y0Y/0YC+7QL81nt9H9hIuiBWkuL7s/MD2CaHmSwYjTa9/pP1nMLmCAYN5YYZLHeY+9
-         QHRWhAZFPTLqMLBuQGfw3+7GQMtw8hx+rr6QOcZOEx/Q1WC8Ep7HZXRnUmuxoDm7jt71
-         rgSHQqKW9BTHsYCkUySzUGBr8ro5MavFn09rFJcUazJXA1O5PIUOKhUIuM/I+cWuNTqF
-         TJEGOZW422cFvc4OOlja9+727aErAFw25YusDW1D5aFJoZsjbHCzcJQTKSnq7dtz6Fe+
-         TAuBu9qis9CBMPOcHnexsoS/bHvgGbNhxmXURDjYr/BOhUMysnln/dG3efrq/VdfG4hN
-         jsOw==
+        bh=ujLLumrKh4q+bshtlIQ6r54rkrCQR8hj9C2xEoyLMFo=;
+        b=TfNrY4h1C7phIcd7lcuwhAN5y160ShZqKhwyHQ0csa1IwEkQrcnzG2A+sxNyRSAWHw
+         XlKH+c68P1CICMVnAevc/iAhJ2lfGjq1GDMdzcnEPSyVwlMOmkwMyGDOO2h4sz9RFm0f
+         QWGrEDJ23O839qREbS8t6pbhg8FdQA5Ofc6rkeXQpmeRPo3xFkArAicHRJJvQ9gnsfTg
+         PXwvfj6ev/NUVV683ez8bn8iZZQfPkhnK9lmuLWOhuML89t734fxfhVZTpda9wgNgUYd
+         f3xIMPe4Z0+Ukfvv3BoiGgL+IFeJkvlX1zEZVB6IDKKEwBDec4XeSeGgXPk0nZpfCHkU
+         TL4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683286739; x=1685878739;
+        d=1e100.net; s=20221208; t=1683287035; x=1685879035;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=puWCJyuFf3yp6BwyAz5qUYq78oF9e+xdSzj78gCEdNE=;
-        b=UmkSh3r8J+EpZKTTamynVP8P14Y9Z/2PvnXVvuwoHAxpd1bmrJwm665t6JPKQhscaM
-         3QkKT87VgjvvKrZ0lnw8AGEI7X+Qn3p75sFhkEafyO+v5nTXhuaZtjczC7GbJW85TY0Q
-         M91RBcsScU/e1U7f+Sysg5cbrKF3Tv01zGqE+XEVeCLOC/e7DzD/7GdUQUdQMerTXO0r
-         nJuVPSLJjZNJEv1pJT/UwwQ4TAJhBel7q0tuv3OW3rW2aNQg/fFRCsK/57iagFuMOC/C
-         00HHWrGW4RE+6RDNEYtXm3n81oNXWj3nNtv7Jf38S+QKxiWsgyYd49205Ox64soViv3l
-         yvRA==
-X-Gm-Message-State: AC+VfDySfz1ccbu1beRVdjMiLEbKq3gD7tqPU/fMM4iPtBhwLS8OT98z
-        08ppgeZJ9G/p/ozQl5wG12YD91nHIRYaTBFabUckcw==
-X-Google-Smtp-Source: ACHHUZ7URXttrI5x/goP9FFi/xqVcIK9Vs/9Rym9CIhV8xMlCn+jPRw8C8kuiLQGeBOCQaw3GehxNG8DWIICXQgQaeU=
-X-Received: by 2002:a25:c7ce:0:b0:b95:941a:86c4 with SMTP id
- w197-20020a25c7ce000000b00b95941a86c4mr1291465ybe.26.1683286739409; Fri, 05
- May 2023 04:38:59 -0700 (PDT)
+        bh=ujLLumrKh4q+bshtlIQ6r54rkrCQR8hj9C2xEoyLMFo=;
+        b=NW46VRmIzU/Wvox5pS4XkT9UKU6CK+qFBOtfP0lBXMWrOwmfUpnX7+YK3NhThuQxRL
+         EbW/jkslFIhhKg9L+KYj1m9tA3cXb+T8tsGa3vT7JvhSe4T0dmRXOCnbq9nHdjgNBRf0
+         hlvK+LbeD2wfAnn6g6AsF7Cr0vjb64LTHfcI/3/Qo28LmNR47k32aTw5iKn7g1ZEoUTC
+         jLRshqiLzzpXnwrJdqr+ZeuA7pOwHyyErjf7FHRS5cx2KRhlx3BGTZpHiQjuVVxhoF5z
+         nMiz35imqreWpANDoqvzdtfydCJ3h4wwFQ3/rbhXfsQYtdtIuN9+8acNvSQmT4fsuYOb
+         YGKw==
+X-Gm-Message-State: AC+VfDxsttZIfMWw0lNf1GXLsTqo9iUXGVBM8kKdf/IBkl6YdKRhR3bw
+        W/YAq11GnzO+Rg7P6ZZMgMha3v1M5ARZLji5nTB6dw==
+X-Google-Smtp-Source: ACHHUZ4F3IOG9rWuMS12gMDvukRJKxCG9ar8cI2zgHLUwfCzu6OzvjZWooJ1qnSYuUIqY97pc17fpBuJTGp8jhMZ2KI=
+X-Received: by 2002:a81:6dcc:0:b0:55a:1c79:8eab with SMTP id
+ i195-20020a816dcc000000b0055a1c798eabmr1036671ywc.32.1683287035463; Fri, 05
+ May 2023 04:43:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <98c3b5890bb72415145c9fe4e1d974711edae376.1681681402.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <98c3b5890bb72415145c9fe4e1d974711edae376.1681681402.git.christophe.jaillet@wanadoo.fr>
+References: <20230421120625.3366-1-mario.limonciello@amd.com>
+In-Reply-To: <20230421120625.3366-1-mario.limonciello@amd.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 5 May 2023 13:38:48 +0200
-Message-ID: <CACRpkdZYeHUkFC6U-abk=-e-3MO6DwTqE4WSc+rnHv5teQcdyA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: bcm2835: Handle gpiochip_add_pin_range() errors
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 5 May 2023 13:43:43 +0200
+Message-ID: <CACRpkda6zyvQ6a4ycEyyi=k5dTZo2Ecm6t6w_9e8hf3gih3qGA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] pinctrl: amd: Adjust handling for firmware misconfigurations
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     linux-gpio@vger.kernel.org, nakato@nakato.io, korneld@chromium.org,
+        richard.gong@amd.com, Shyam-sundar.S-k@amd.com,
+        Basavaraj.Natikar@amd.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,17 +69,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 16, 2023 at 11:43=E2=80=AFPM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
+On Fri, Apr 21, 2023 at 2:06=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 
-> gpiochip_add_pin_range() can fail, so better return its error code than
-> a hard coded '0'.
+> commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on probe"=
+)
+> had intended to work around firmware problems on a Microsoft Surface
+> device but actually masked other real bugs in firmware and the driver.
 >
-> Fixes: d2b67744fd99 ("pinctrl: bcm2835: implement hook for missing gpio-r=
-anges")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Before this commit, "wake on lid" doesn't work properly on a number of
+> systems, but this is because debounce handling was improperly configured
+> in the driver and due to a bug in this commit it gets configured a
+> different way.
+>
+> commit b26cd9325be4 ("pinctrl: amd: Disable and mask interrupts on
+> resume") attempted to build on top of this to mask issues on resume, but
+> it happened to "fix" the bug in commit 4e5a04be88fe ("pinctrl: amd:
+> disable and mask interrupts on probe") which "broke" wake on lid since
+> the debounce handling was programmed differently.
+>
+> This was reverted in commit 534e465845eb ("Revert "pinctrl: amd: Disable
+> and mask interrupts on resume"") which fixed the wake on lid.
+>
+> To fix this series of unfortunate events and prevent them in the future
+> this series corrects the GPIO0 debounce handling and reverts commit
+> 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on probe"). A ne=
+w
+> patch that is safer is included that will fix spurious interrupt handling
+> and is expected to fix the issues that both
+> commit 4e5a04be88fe ("pinctrl: amd: disable and mask interrupts on probe"=
+)
+> and
+> commit b26cd9325be4 ("pinctrl: amd: Disable and mask interrupts on
+> resume") attempted to fix in a more scalable way.
 
-Patch applied for the next kernel cycle (becoming v6.5)
+I applied the series for the next kernel cycle (becoming v6.5).
+
+If it gets urgent to get this in we can move it into the fixes (for v6.4 an=
+d
+stable) but at least this way we get some rotation in linux-next and wide
+testing of the patches.
+
+I will push it once v6.4-rc1 is out.
 
 Yours,
 Linus Walleij
