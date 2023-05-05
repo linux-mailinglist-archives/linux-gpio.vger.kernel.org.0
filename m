@@ -2,204 +2,231 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFC756F8A0C
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 22:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07DE86F8A3F
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 22:35:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232455AbjEEUO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 May 2023 16:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
+        id S230092AbjEEUf0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 May 2023 16:35:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231636AbjEEUO4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 16:14:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BFA632125;
-        Fri,  5 May 2023 13:14:54 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF4E11FB;
-        Fri,  5 May 2023 13:15:38 -0700 (PDT)
-Received: from e120937-lin.. (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10E843F64C;
-        Fri,  5 May 2023 13:14:52 -0700 (PDT)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     cristian.marussi@arm.com
-Cc:     Oleksii_Moisieiev@epam.com, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michal.simek@amd.com,
-        peng.fan@oss.nxp.com, sudeep.holla@arm.com
-Subject: [PATCH] firmware: arm_scmi: Add optional flags to extended names helper
-Date:   Fri,  5 May 2023 21:14:40 +0100
-Message-Id: <20230505201440.3196734-1-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZFVeY3jVNfAkW1G9@e120937-lin>
-References: <ZFVeY3jVNfAkW1G9@e120937-lin>
+        with ESMTP id S229862AbjEEUf0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 16:35:26 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF2049ED
+        for <linux-gpio@vger.kernel.org>; Fri,  5 May 2023 13:35:24 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 5addbdeb-eb84-11ed-b3cf-005056bd6ce9;
+        Fri, 05 May 2023 23:35:21 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Fri, 5 May 2023 23:35:21 +0300
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Peng Fan <peng.fan@oss.nxp.com>,
+        Michal Simek <michal.simek@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC v2 2/3] pinctrl: Implementation of the generic scmi-pinctrl
+ driver
+Message-ID: <ZFVoiWnvq7UXSBBw@surfacebook>
+References: <cover.1682513390.git.oleksii_moisieiev@epam.com>
+ <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some recently added SCMI protocols needs an additional flags parameter to
-be able to properly configure the command used to query the extended name
-of a resource.
+Wed, Apr 26, 2023 at 01:26:37PM +0000, Oleksii Moisieiev kirjoitti:
+> scmi-pinctrl driver implements pinctrl driver interface and using
+> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> SCP firmware, which does the changes in HW.
+> 
+> This setup expects SCP firmware (or similar system, such as ATF)
+> to be installed on the platform, which implements pinctrl driver
+> for the specific platform.
+> 
+> SCMI-Pinctrl driver should be configured from the device-tree and uses
+> generic device-tree mappings for the configuration.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- drivers/firmware/arm_scmi/clock.c     | 2 +-
- drivers/firmware/arm_scmi/driver.c    | 8 ++++++--
- drivers/firmware/arm_scmi/perf.c      | 3 ++-
- drivers/firmware/arm_scmi/power.c     | 2 +-
- drivers/firmware/arm_scmi/powercap.c  | 2 +-
- drivers/firmware/arm_scmi/protocols.h | 3 ++-
- drivers/firmware/arm_scmi/reset.c     | 3 ++-
- drivers/firmware/arm_scmi/sensors.c   | 2 +-
- drivers/firmware/arm_scmi/voltage.c   | 2 +-
- 9 files changed, 17 insertions(+), 10 deletions(-)
+...
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 96060bf90a24..e6e087686e8c 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -169,7 +169,7 @@ static int scmi_clock_attributes_get(const struct scmi_protocol_handle *ph,
- 	if (!ret && PROTOCOL_REV_MAJOR(version) >= 0x2) {
- 		if (SUPPORTS_EXTENDED_NAMES(attributes))
- 			ph->hops->extended_name_get(ph, CLOCK_NAME_GET, clk_id,
--						    clk->name,
-+						    NULL, clk->name,
- 						    SCMI_MAX_STR_SIZE);
- 
- 		if (SUPPORTS_RATE_CHANGED_NOTIF(attributes))
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index e7d97b59963b..5be931a07c84 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1438,6 +1438,7 @@ struct scmi_msg_resp_domain_name_get {
-  * @ph: A protocol handle reference.
-  * @cmd_id: The specific command ID to use.
-  * @res_id: The specific resource ID to use.
-+ * @flags: A pointer to specific flags to use, if any.
-  * @name: A pointer to the preallocated area where the retrieved name will be
-  *	  stored as a NULL terminated string.
-  * @len: The len in bytes of the @name char array.
-@@ -1445,8 +1446,8 @@ struct scmi_msg_resp_domain_name_get {
-  * Return: 0 on Succcess
-  */
- static int scmi_common_extended_name_get(const struct scmi_protocol_handle *ph,
--					 u8 cmd_id, u32 res_id, char *name,
--					 size_t len)
-+					 u8 cmd_id, u32 res_id, u32 *flags,
-+					 char *name, size_t len)
- {
- 	int ret;
- 	struct scmi_xfer *t;
-@@ -1458,6 +1459,9 @@ static int scmi_common_extended_name_get(const struct scmi_protocol_handle *ph,
- 		goto out;
- 
- 	put_unaligned_le32(res_id, t->tx.buf);
-+	if (flags)
-+		put_unaligned_le32(*flags,
-+				   (u8 *)t->tx.buf + sizeof(res_id));
- 	resp = t->rx.buf;
- 
- 	ret = ph->xops->do_xfer(ph, t);
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index ecf5c4de851b..d85d4a0e3605 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -237,7 +237,8 @@ scmi_perf_domain_attributes_get(const struct scmi_protocol_handle *ph,
- 	if (!ret && PROTOCOL_REV_MAJOR(version) >= 0x3 &&
- 	    SUPPORTS_EXTENDED_NAMES(flags))
- 		ph->hops->extended_name_get(ph, PERF_DOMAIN_NAME_GET, domain,
--					    dom_info->name, SCMI_MAX_STR_SIZE);
-+					    NULL, dom_info->name,
-+					    SCMI_MAX_STR_SIZE);
- 
- 	return ret;
- }
-diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-index 356e83631664..077767d6e902 100644
---- a/drivers/firmware/arm_scmi/power.c
-+++ b/drivers/firmware/arm_scmi/power.c
-@@ -133,7 +133,7 @@ scmi_power_domain_attributes_get(const struct scmi_protocol_handle *ph,
- 	if (!ret && PROTOCOL_REV_MAJOR(version) >= 0x3 &&
- 	    SUPPORTS_EXTENDED_NAMES(flags)) {
- 		ph->hops->extended_name_get(ph, POWER_DOMAIN_NAME_GET,
--					    domain, dom_info->name,
-+					    domain, NULL, dom_info->name,
- 					    SCMI_MAX_STR_SIZE);
- 	}
- 
-diff --git a/drivers/firmware/arm_scmi/powercap.c b/drivers/firmware/arm_scmi/powercap.c
-index 244929cb4f3e..86c9a0b5a765 100644
---- a/drivers/firmware/arm_scmi/powercap.c
-+++ b/drivers/firmware/arm_scmi/powercap.c
-@@ -270,7 +270,7 @@ scmi_powercap_domain_attributes_get(const struct scmi_protocol_handle *ph,
- 	 */
- 	if (!ret && SUPPORTS_EXTENDED_NAMES(flags))
- 		ph->hops->extended_name_get(ph, POWERCAP_DOMAIN_NAME_GET,
--					    domain, dom_info->name,
-+					    domain, NULL, dom_info->name,
- 					    SCMI_MAX_STR_SIZE);
- 
- 	return ret;
-diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
-index 78e1a01eb656..b3c6314bb4b8 100644
---- a/drivers/firmware/arm_scmi/protocols.h
-+++ b/drivers/firmware/arm_scmi/protocols.h
-@@ -256,7 +256,8 @@ struct scmi_fc_info {
-  */
- struct scmi_proto_helpers_ops {
- 	int (*extended_name_get)(const struct scmi_protocol_handle *ph,
--				 u8 cmd_id, u32 res_id, char *name, size_t len);
-+				 u8 cmd_id, u32 res_id, u32 *flags, char *name,
-+				 size_t len);
- 	void *(*iter_response_init)(const struct scmi_protocol_handle *ph,
- 				    struct scmi_iterator_ops *ops,
- 				    unsigned int max_resources, u8 msg_id,
-diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-index e9afa8cab730..7217fd7c6afa 100644
---- a/drivers/firmware/arm_scmi/reset.c
-+++ b/drivers/firmware/arm_scmi/reset.c
-@@ -128,7 +128,8 @@ scmi_reset_domain_attributes_get(const struct scmi_protocol_handle *ph,
- 	if (!ret && PROTOCOL_REV_MAJOR(version) >= 0x3 &&
- 	    SUPPORTS_EXTENDED_NAMES(attributes))
- 		ph->hops->extended_name_get(ph, RESET_DOMAIN_NAME_GET, domain,
--					    dom_info->name, SCMI_MAX_STR_SIZE);
-+					    NULL, dom_info->name,
-+					    SCMI_MAX_STR_SIZE);
- 
- 	return ret;
- }
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index 0b5853fa9d87..9952a7bc6682 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -644,7 +644,7 @@ iter_sens_descr_process_response(const struct scmi_protocol_handle *ph,
- 	if (PROTOCOL_REV_MAJOR(si->version) >= 0x3 &&
- 	    SUPPORTS_EXTENDED_NAMES(attrl))
- 		ph->hops->extended_name_get(ph, SENSOR_NAME_GET, s->id,
--					    s->name, SCMI_MAX_STR_SIZE);
-+					    NULL, s->name, SCMI_MAX_STR_SIZE);
- 
- 	if (s->extended_scalar_attrs) {
- 		s->sensor_power = le32_to_cpu(sdesc->power);
-diff --git a/drivers/firmware/arm_scmi/voltage.c b/drivers/firmware/arm_scmi/voltage.c
-index eaa8d944926a..36e2df77738c 100644
---- a/drivers/firmware/arm_scmi/voltage.c
-+++ b/drivers/firmware/arm_scmi/voltage.c
-@@ -242,7 +242,7 @@ static int scmi_voltage_descriptors_get(const struct scmi_protocol_handle *ph,
- 			if (SUPPORTS_EXTENDED_NAMES(attributes))
- 				ph->hops->extended_name_get(ph,
- 							VOLTAGE_DOMAIN_NAME_GET,
--							v->id, v->name,
-+							v->id, NULL, v->name,
- 							SCMI_MAX_STR_SIZE);
- 			if (SUPPORTS_ASYNC_LEVEL_SET(attributes))
- 				v->async_level_set = true;
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+
+> +#include <linux/of.h>
+
+I do not see any user of this header. Do you?
+
+> +#include <linux/module.h>
+> +#include <linux/seq_file.h>
+> +
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinmux.h>
+
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+
+Please, move these two to the upper group of the generic headers.
+
+> +struct scmi_pinctrl_funcs {
+> +	unsigned int num_groups;
+> +	const char **groups;
+> +};
+
+Please, use struct pinfunction.
+
+...
+
+> +struct scmi_pinctrl {
+
+> +	struct scmi_pinctrl_funcs *functions;
+> +	unsigned int nr_functions;
+
+> +	char **groups;
+> +	unsigned int nr_groups;
+
+I'm not sure what is the difference to what "functions" above represent.
+
+> +};
+
+...
+
+> +static void pinctrl_scmi_pin_dbg_show(struct pinctrl_dev *pctldev,
+> +				      struct seq_file *s,
+> +				      unsigned int offset)
+> +{
+> +	seq_puts(s, DRV_NAME);
+> +}
+
+What is the usefulness of this method?
+
+...
+
+> +static int pinctrl_scmi_pinconf_group_get(struct pinctrl_dev *pctldev,
+> +					  unsigned int _pin,
+> +					  unsigned long *config)
+> +{
+> +	int ret;
+> +	struct scmi_pinctrl *pmx;
+> +	enum pin_config_param config_type;
+> +	unsigned long config_value;
+> +
+> +	if (!pctldev)
+> +		return -EINVAL;
+> +
+> +	pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	if (!pmx || !pmx->ph || !config)
+> +		return -EINVAL;
+> +
+> +	config_type = pinconf_to_config_param(*config);
+> +
+> +	ret = pinctrl_ops->get_config(pmx->ph, _pin, GROUP_TYPE,
+> +				      config_type, (u32 *)&config_value);
+
+Endianess issue. This is, while likely working code, still ugly.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(config_type, config_value);
+> +
+> +	return 0;
+> +}
+
+...
+
+> + err:
+
+err_free.
+
+> +	kfree(pmx->pins);
+> +	pmx->nr_pins = 0;
+> +
+> +	return ret;
+
+...
+
+> +static const struct scmi_device_id scmi_id_table[] = {
+> +	{ SCMI_PROTOCOL_PINCTRL, "pinctrl" },
+
+> +	{ },
+
+No comma for the terminator entry.
+
+> +};
+
+...
+
+> +	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL,
+> +						&ph);
+
+Can be on one line.
+
+> +	if (IS_ERR(pinctrl_ops))
+> +		return PTR_ERR(pinctrl_ops);
+
+...
+
+> +	if (pmx->nr_functions) {
+> +		pmx->functions =
+> +			devm_kcalloc(&sdev->dev, pmx->nr_functions,
+> +				     sizeof(*pmx->functions),
+> +				     GFP_KERNEL);
+> +		if (!pmx->functions) {
+> +			ret = -ENOMEM;
+> +			goto clean;
+
+Interleaving devm_*() with non-devm_*() in such order is not a good idea.
+
+> +		}
+> +	}
+> +
+> +	if (pmx->nr_groups) {
+> +		pmx->groups =
+> +			devm_kcalloc(&sdev->dev, pmx->nr_groups,
+> +				     sizeof(*pmx->groups),
+> +				     GFP_KERNEL);
+> +		if (!pmx->groups) {
+> +			ret = -ENOMEM;
+> +			goto clean;
+> +		}
+> +	}
+> +
+> +	return pinctrl_enable(pmx->pctldev);
+> +
+> +clean:
+
+err_free:
+
+> +	if (pmx) {
+> +		kfree(pmx->functions);
+> +		kfree(pmx->groups);
+
+Ah, this is simply wrong.
+
+> +	}
+> +
+> +	kfree(pmx);
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
