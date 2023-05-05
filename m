@@ -2,172 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E103E6F79BF
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 01:38:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 353126F7A36
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 02:53:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbjEDXiP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 May 2023 19:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56280 "EHLO
+        id S229697AbjEEAxk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 May 2023 20:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjEDXiO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 19:38:14 -0400
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BBA9ED9;
-        Thu,  4 May 2023 16:38:13 -0700 (PDT)
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-        by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 344MR5XE009181;
-        Thu, 4 May 2023 16:37:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=PPS06212021;
- bh=NU641QE65oiioIfWKot+3wzK3GSfqmHWvF1fFTWyRpk=;
- b=gw0YfZxMBvZK3wIHYzhT5x7JK2aaeafKf+Ym/ONs6vKmBSXQ+5umjBcp/alkpq5uY42q
- ZBl2OUkA+RHfXqVoGyxIkoUmGAVDdWQydRmW8xe6s/T3nLJGPUX6B0J9OXqK8FebhhOW
- t4yePUc1vwoEPymJXeZFJQLE7uP5LU7t446CmZ2ouPKy+ihVA8oInT1iTYMK9XJkwk6u
- 6zVGtBs/McFjmQd1FgHBAr4lWzUhWfe1U9jX0gZ7gXnXZiM+HyO1PZLgXvTbibpQ3Pjp
- tk7a4oWe3QkRQHiYgNkemzpXl5lnHNNHSQefzwEz7Z0hm3rgQ25iQfjXBb5f2PYyGueO SA== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-        by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3q92rnd1t4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 May 2023 16:37:55 -0700
+        with ESMTP id S229524AbjEEAxj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 May 2023 20:53:39 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2074.outbound.protection.outlook.com [40.107.6.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3DE11625;
+        Thu,  4 May 2023 17:53:37 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XbFhMcene/xgIwFprZal9er5JVU7xf5LIsKvpigUBYOwklRmeiV6KELRsAcfPsEre5uT3flGG7sp+1SQsxi1oAFPLhZc2O+o8LiDp1MYPxhZDcPpumrnod5G5W0Xn1+MmJbS+3zDQz1LYrTNeWYbKWfBWrc6JxfSOXqy3gVys83OnbyOkuzsjrMZy5X6urvRwvWmrpiu3j35TyQ0wCMVknX3i4eI2YaRjnZPXcW8XUpCoL6JzeW+OrVt6R/FwYZmEzt3/uYjlm3Ktt3/ak8k7p+bjeISCXPK9jq2h3noQhaJffO09WbwpRZlZwAT+5hpOA4pZ1hiihQyirxaX8c4kg==
+ b=BBjVwp1193ahbuGuYu+wNd4ERFAfk7JWY4k8n652zg3rHy2EDYToABYyYWrdw7WHMckrJcudmTeglWngOrqeSNrz018RXYzerOP3+zAvZfjdXQFcYFqSeKrvW13kd+onYA42dYfGwgV2l8+3IVM6LldbrbPt6toSMNIo+SH9VDQFsNM5vgOCVHOBNI4OW9iDXLPkLucjyrmExj1D/xKjnJc/NGMgd/wu5lTGWKUVFzcX/Dh3Fvwm6liJDoigSzd+3/GqdiS+n3yKHKKTEKnWKeoG7k2y8UGeoDjwoMRpoVB9irdYdCsPcZm1Uj0iGYTPdF/79RNjc2usZ5541W1Cbg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NU641QE65oiioIfWKot+3wzK3GSfqmHWvF1fFTWyRpk=;
- b=Y0UhDTm1F00iqs19yJYiygN6JDsEUd3osti6KWb4pl0ih9CX8Fkf8mo5oDl0Fg7tkHb3gEiHwi6u5HPM1Yn3jMvCQi8gVgbxVWZWF9tQ0wi3SQcT1i1ZgOXqPBy3w0zhIMY+XmPilYD8ExKcxbzJh+riiRb2yn1/n7Q5Hssl1plPb+9eGMmm6+CjG+JPjgttfrQ+hk5i8TFvNiuyhXbB7uYur4jvGXkN2mPXCgdYQkY7+Me/K/f9TbCAT2Pv/H0PZnB02ykZP4mfJ28r3bQRGvt5EkO7rOrLc2QsPZB0D9DCW6TfsrqnM5fJEuCVv9/gZy8+rYOyN+xOXuYK+GkmLQ==
+ bh=xbysqy1RMqxJqVYIq773OBQ0XCvAucxKsvS+tNM6rYA=;
+ b=Kn5PFrKq559DBlNpnP6iI46Hb+8cpVb72R36pPMrVnO3AP5NjTSSAfgDBnYPOIS+wM4WeysfXcPY5fxbRjiVgc2MaJdeSV44Gt6Gwbs0v8kqH3dFRQ1iQHxBWL6f6ukegedMguqoQ65tIXPqAq0PpsYAqlJCAnP3y6madWXNoz997X5BF4PhAiapn8yaotx1sun5PEzTHchH4/1V2iohXEHQwo3nS5m/xrhRwEf2X3ABaTBlRuS2E4+ut4vwj71Sz5OZxGScqGvReRVrbVLo/HEBldkxPzvHgbQ4Lxiij2Ka95P6ZefpdA08SRpsyFPixjKBkEQgtx6RziIxpqBubw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from MW5PR11MB5764.namprd11.prod.outlook.com (2603:10b6:303:197::8)
- by MW4PR11MB5872.namprd11.prod.outlook.com (2603:10b6:303:169::14) with
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xbysqy1RMqxJqVYIq773OBQ0XCvAucxKsvS+tNM6rYA=;
+ b=LYFr+aVNUQqEYQgHM5Gem/Uv9ZLmo3wb7MQMzft7e6hKcY2e/B2wh0bOJHEQu6hE1jEPnvTnv73ethxdEuG8llH70QyN8lEKGgnzRLW86EQ8EUHebi+CCwXH2gIAFTbBCN7wxrIvYyxDg+JG5UHYJxq17fj69C/0CFTRa4/EZWg=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PR3PR04MB7420.eurprd04.prod.outlook.com (2603:10a6:102:93::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.26; Thu, 4 May
- 2023 23:37:53 +0000
-Received: from MW5PR11MB5764.namprd11.prod.outlook.com
- ([fe80::6485:357:72c7:e45]) by MW5PR11MB5764.namprd11.prod.outlook.com
- ([fe80::6485:357:72c7:e45%7]) with mapi id 15.20.6363.026; Thu, 4 May 2023
- 23:37:52 +0000
-From:   Xiaolei Wang <xiaolei.wang@windriver.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        ping.bai@nxp.com, kernel@pengutronix.de, linus.walleij@linaro.org,
-        peng.fan@nxp.com, shenwei.wang@nxp.com,
-        bartosz.golaszewski@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [v4][PATCH] pinctrl: freescale: Fix a memory out of bounds when num_configs is 1
-Date:   Fri,  5 May 2023 07:37:36 +0800
-Message-Id: <20230504233736.3766296-1-xiaolei.wang@windriver.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0052.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::16) To MW5PR11MB5764.namprd11.prod.outlook.com
- (2603:10b6:303:197::8)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.27; Fri, 5 May
+ 2023 00:53:35 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::b999:f2c6:a8cc:7b4]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::b999:f2c6:a8cc:7b4%4]) with mapi id 15.20.6363.027; Fri, 5 May 2023
+ 00:53:35 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Xiaolei Wang <xiaolei.wang@windriver.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [v4][PATCH] pinctrl: freescale: Fix a memory out of bounds when
+ num_configs is 1
+Thread-Topic: [v4][PATCH] pinctrl: freescale: Fix a memory out of bounds when
+ num_configs is 1
+Thread-Index: AQHZfuF74rzFVHCVREWkPCOsozeZb69K2iMQ
+Date:   Fri, 5 May 2023 00:53:35 +0000
+Message-ID: <DU0PR04MB94177E959F6A18D4FABE8D8B88729@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20230504233736.3766296-1-xiaolei.wang@windriver.com>
+In-Reply-To: <20230504233736.3766296-1-xiaolei.wang@windriver.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PR3PR04MB7420:EE_
+x-ms-office365-filtering-correlation-id: f82474f5-0e40-4c8f-f273-08db4d0327f7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cPTKk3jQHulqdn/sotNVrmPxE7JauissGtD53+7wmr+u+qNipU3jBUQOB6JuydYynmDA1xEWiWffOWQOse/YqWdV3wajPFGibr4iM8lDAuIf525mjdCKnKoVmYaixJyJLn0RkW9gJLhmyQa3+uMLjJSYiGDz57ql2iMjtyg0kOGz/+5P65CMWy6CC88mpvJx2ulmp4i6LgzZ8shuDvmWJBCOifMt1D/xB9YYdCtKgJJcBHGwORnVdcI/XzbRf14mA+dr6/935akcs4AZz5qhn77D40gu6G3N080KfUuFKGtFckUDkbUHzzExAWYwTcC/RFnfgVeiLnq3xaZSMgoHwUVuJVZoSmh9HSVhOXGUTPWqtBeOGraUp1J6s71xQuZ5ox6f7vIhFqWVJNPeLVVRR+dZq81dvMOlBWq0SlExZQmF5L4rl0PdxfyDuYSX2WCYE4nXHE98RCm5HVnVFMrP11gDICMfN7h2V1Im0aVs8OMyPAl+eeVnfhvz+syrmr/88oFcgjwzKSv82ouiVafSgHgf/K/O63L9EmmOXXrB4M6ogIDpemekGrkh3Wqk8TPZQr5ewx+J0ZYM5kKbJlGcAnSciHmhZRVvI7dGUJ3ziAs=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(136003)(376002)(39860400002)(366004)(451199021)(33656002)(86362001)(54906003)(110136005)(316002)(66946007)(66556008)(66476007)(66446008)(64756008)(4326008)(76116006)(7696005)(71200400001)(478600001)(41300700001)(55016003)(5660300002)(52536014)(8676002)(8936002)(4744005)(2906002)(44832011)(38070700005)(38100700002)(122000001)(186003)(6506007)(9686003)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?uS0zfVbeYChRJDqBBBKziK7UUDrzVfmpmLJ4rzlWwxqJlMDmxoOPk9EE6PRY?=
+ =?us-ascii?Q?3y1kU+qRVkWL+AZ0l94vquxIJFzTOcwM43l7mcJ72gbfnIroyZj8i51W5hwI?=
+ =?us-ascii?Q?umSFQXg1ZMMeV3CRLG2Iwf96sQ2V6WAgi6FxtYHQLtn1LyOidINp+YDp/yP3?=
+ =?us-ascii?Q?JH98i+PUMLc5QSHmb2LxBnW5ZSsrjv+C7NKO0vIg1gxWRacBFspSX8gp9K3T?=
+ =?us-ascii?Q?/KcjxIyp4CGWEQQCMTKIJ7Sv6jpZ7aMqIqcRNmlLuRcRTaHMgV3fB0IWNTTB?=
+ =?us-ascii?Q?YPczTX31k9IKHUq+u21RWIBsV416GrADlHKpSvBdRqlpEyoT2+qXLQA4CzIZ?=
+ =?us-ascii?Q?HGsIdlJu3wsMXSsZXV5YJ0MY6mxwl6JK3dJpORLaLE1b7uIT3P//SsRBOsL7?=
+ =?us-ascii?Q?5zcpMn36IKp9EF8KLqJDz12HH0UPLsGNrP5e34DljLieT2BxhjZNQr8mOTpJ?=
+ =?us-ascii?Q?jGCuZ/956htY5C7mtDu/HZ+vJMwYFZoshwdYmWXybL++0Y0MO01WTxUCChbf?=
+ =?us-ascii?Q?guqqwskQhaBDOzADkpCgXMtocLIG/XI+38drYP5p0uqR5wC5EfsZ4K3jT5ul?=
+ =?us-ascii?Q?iZiJITnDxQnTN38cCxjb2xTzbkPvayoAhDE8lBr3MryNH71CIgoInYPdL6O5?=
+ =?us-ascii?Q?oQ4kH+3+u5z35QXPTaWdFE247jB7HkhHlqtTp0ei9ULMmiAF4doALtAsmCTz?=
+ =?us-ascii?Q?4AzsNErggZ3f8yt8x8DaNVxalosebsMI3sjQrwkP//5VseMN6ver0lF+iXPG?=
+ =?us-ascii?Q?eY6JFdV8QaSff/DpuOJgohzCqL7gELOYS4xi1Pj/LW8fZ0Eae+xS3P1NitzD?=
+ =?us-ascii?Q?kxYkknSXnwBqqSbSq8Rft/qsZmbVlwKq5eBEgCheNS0paJDNAx07JEASajRf?=
+ =?us-ascii?Q?cpme5Jh3JAxGy/xi3PuMweZBbRFiZXxJotCE2kjgUPD4GbgYrew4gTRd/hy5?=
+ =?us-ascii?Q?y6hpRyhQxMNgCBgHS9hXiGiqZfY/pa/ZkPfGmBwpwSBG/FhyLAtPfrTPGdcE?=
+ =?us-ascii?Q?5H2PbD2vQ50jU4KbshTzdgYXcAtsoBDqMKdZ8Jq2OVHtid4WEnq6nnT2Kvy0?=
+ =?us-ascii?Q?nD3twmcY9ESYDnajpMrPGBr7u3C75/PP9RUsTBk1QrVt+m7O8Rs5a0JQYgK5?=
+ =?us-ascii?Q?7RjGG+Ssiz5DcA+mtRRpADh/eaGGFO+4/QOYpGtaUjAzO6KgbD6THmtjRw9o?=
+ =?us-ascii?Q?8HrI3kquKWc47GlFmcpmFGWlZQupfiGuzcm8nQMBEf8gLoKLQsTmpX4/8jPc?=
+ =?us-ascii?Q?Nnxm04yHckBnBxfVLGsjl/rljruY9qOUiwjHcTdncLps32h9Cc5E2CXrGlGN?=
+ =?us-ascii?Q?cn927kt5L6XOR2hDYqAjN32hb0PZh9FCNVLZ5iw8nDJjVTJvF0pbrJagr7iR?=
+ =?us-ascii?Q?G+ImzMPIyfbJC+oj5PLbdoreHhlczL1I/ewuy29EmyYUE0caFllmJTHQKu19?=
+ =?us-ascii?Q?h8oaaIpsWeGsABeBbWzgTvRinJ7L1f8Dp8auz6V2Y67cLre8ehHuyGI/U1UZ?=
+ =?us-ascii?Q?gA4Ljd0E4huqXGuVa4qlS0EjVvrH0CKqnf3kHGFvgot9v98NdvRztmJMUg?=
+ =?us-ascii?Q?=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW5PR11MB5764:EE_|MW4PR11MB5872:EE_
-X-MS-Office365-Filtering-Correlation-Id: 135aaa8b-5c68-4a8c-31a9-08db4cf89428
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gLL+1PC6ZfU1e3idGELIvng4Dutiy7KwC0CbDCCjtifmP45fG6xjkXDuaQ+ThONsf1z70DyoEmVwZ68996SSYGnJI15BqRMKqvQBFbW/B0BWB5kYCI8L3gzTGpseMXLiTJlbWjIgLXjElk9fstWolpQUbS57lyho1SLU0qasaOOlddS/NtVTboSC+k3BTqbbtbDdX/6vOpRp2N/ESD0aIvHTPZqbYtdURL/RXqHdBhSd7joGKUOHX4q0CEgt3ByS5AGKNH5HkPDzquJIfAkMfvR/fEt34VblaTLoURgdQ2XBOFpXZuEAJrrYLhuiYOJ4LR4x+TTYp1G299sR0UNZmq2u1wFQiXI6uDR/6SWgMyc9FX2DiaPPxkaXq88X0jXYAjqZfQotJckKptiQ+OhLTDwBHi1P1cJE2t0R95U7b2vrdEkVBS1Gjq8zvSt9ZjByFZUbj9nMXM7SszP73uSlyJtCfaQG1oYnzJLSpHw231Sy4RX3mxWf/nOFUGVc8UewmvoBXEVBaA4QwsrhLzuLwgrQfa8eBrCFa21NgHgiQFo8oNUc2lCjNdFhf53nr03jnDhQVouyTgFxExY2/dmRPBoVGysZeaY1N50Ynsk/GGlaLAyVDNvMKXqQJHvIb0HT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5764.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(396003)(136003)(39850400004)(366004)(451199021)(83380400001)(52116002)(6486002)(1076003)(186003)(478600001)(6666004)(2616005)(6506007)(6512007)(26005)(44832011)(2906002)(7416002)(36756003)(5660300002)(38350700002)(38100700002)(66946007)(4326008)(41300700001)(8936002)(66556008)(66476007)(8676002)(316002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8kJ6Vb9+EGYY2tkNcEtY8+tc2kOXKgt2US85IkeF/pmrYrbznPpSKmHjbR4y?=
- =?us-ascii?Q?whKqAYinjM7pJ0/fa7qL4dCGuWWqjsvfH5vohmg71bGWKyedz+F3mvCgRSow?=
- =?us-ascii?Q?3Yh5rCAbQj+UXCfKXOA+cxanoTsIBrx2oEAJI71Pkr6rQ/Xhz0C0fRPCODbN?=
- =?us-ascii?Q?zOV2o4yLsU2S7XeH0oWrnfs0Fu0Rl6E4KSsQ0bcGXoqWrG7SedS36E2V21RK?=
- =?us-ascii?Q?nLPmiLVzR2xg7ZqolRT+FmOU9nppxORfeWUEhnQWprCOIlt8t5Np7auTZ9B8?=
- =?us-ascii?Q?32wyJ68tUXIClOr71eXwQSupNntcMR+QHd68ry6GeJq6RE2o+QQA4fI7CEjL?=
- =?us-ascii?Q?DQfw1blw5tcrFIeoqW1XI1CMTBSpIkKcDIUGK1gYaJARBuAA0YRsU6uN3a+I?=
- =?us-ascii?Q?PsNKYDcWWE0grw9C3QgNDoI19ie5EUUxq1TUqXZZOuDZ7WwOCYqvOkUO98BQ?=
- =?us-ascii?Q?HpDSEHzU8vCeeFSuK/VzJtMBccYwq0YRa9OwMM9GBNq1msW4fwdgKSllMOCt?=
- =?us-ascii?Q?4q8Wo/Y3vY+8UNYkES9JbUE/t106APu40U/CzVPE4+nygqOf9nV9vwz5UxxU?=
- =?us-ascii?Q?kF4bU/Falhp+aemKX5djGOw/fIcissslD4amUlRNkc0PGVsjQXOy2BourFbV?=
- =?us-ascii?Q?MUBGVpOw78uWgdBGvhdmNSb71kgM2+GIeSrnfVbm7m8Ibur+SVAc6LHrn0G6?=
- =?us-ascii?Q?1pm/8HlmAIA//1ChbYXT8QjR0DFlmXRr8Uu6OWg83stSTLSQqXNKJx0rxI2a?=
- =?us-ascii?Q?clMrCI1d8BvTrD+kEw5asCuUpYlzY2bFtocT5JT2Cx5IOq+9McWq42ZBUZL9?=
- =?us-ascii?Q?w9a6T5GxoIKAEb+tk/5xUH1dqLn4WYlStrD+tUA5YaWNTXTgZhcxKnsyhEF5?=
- =?us-ascii?Q?hLDvVmLXF3sPyGs/pXOFs5yMzWVZgkhXxe4wHjJWzdGdBEzFSzCLF+qsX8lP?=
- =?us-ascii?Q?8gQG1v9GVZqMb9ht4E5jOKNBdR1GSTQN8fA+F0NA2wd6zA+r5xma1GEcaaG8?=
- =?us-ascii?Q?nh2XWTHjhBAGNC6oRB5Ar67jeWJUFXFZwzAfH6hQi4gRuONCBbZDpO4L19RA?=
- =?us-ascii?Q?XBO+I/EaU8z1oMH3P151gfM37VCt61+zWd3Tu4Z1oSs4UcShCEcYgO8YKSIL?=
- =?us-ascii?Q?fjeiqHyTmdqK2TXL05SFIa7gCnnrUtCNNh5W8ub8ChhLVxa0pxiShVNgLSEC?=
- =?us-ascii?Q?y9Bm111wgIC+bdhz7pK4d6VoGQxjmX8F6prcqcwSUEZePNiWZQN+X6CTlTq+?=
- =?us-ascii?Q?iJvutFQvk/EJSEsDOnfkKhcuEPqgDemxhrlRVHJgW1UZKYHqOhrqPRvbSsZz?=
- =?us-ascii?Q?9ei9jK2u2DCa0kgWSdSYBsboFpMyVvZ4mfeGm6ffpPakSpCBhB5yi+8l572F?=
- =?us-ascii?Q?xkI7H/t3zBiZ1+bqHu1HSel3Vg7Iw55sfNagn6Nfv9mzmyehTOXDQNsa9O/t?=
- =?us-ascii?Q?8IQ7LnpCSIQ3P2fO6nGpkOOpqlB7eMRQSzN6/KaKucpfUG/pFev3o/ddmbvo?=
- =?us-ascii?Q?dWA4A/3Zgr3/evxI8QmUyQjKLXd0Xrv1ZPF42vl+aX3rOfp68j5Fy/4+ArLp?=
- =?us-ascii?Q?rnYIh3+dYNAnuoKFgIt4iOkEj3MK1SoCI5ruXfy34ZYPyz34QmrCu8jIlevA?=
- =?us-ascii?Q?Ew=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 135aaa8b-5c68-4a8c-31a9-08db4cf89428
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5764.namprd11.prod.outlook.com
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2023 23:37:52.7050
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f82474f5-0e40-4c8f-f273-08db4d0327f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2023 00:53:35.3714
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BJnXlzOSEgpErzzS6FUxJPl+UXvdJkFNq54p47+KGMpNuicDyVkQwvWWhRtYSo48E8CQY8tYza6MBz8KlUuG6zboFLqVEQmO7GsbLL4unXs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5872
-X-Proofpoint-ORIG-GUID: pxcQC2M8v2_ZRQgZSlLEI-xUO2xTuTMS
-X-Proofpoint-GUID: pxcQC2M8v2_ZRQgZSlLEI-xUO2xTuTMS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-04_15,2023-05-04_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- bulkscore=0 clxscore=1015 mlxlogscore=747 adultscore=0 lowpriorityscore=0
- mlxscore=0 suspectscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2305040190
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZyGSBLASIP00p6WMBkIeOQJfn35q750Y2xILLb6CyyZNNKQuK8WctkKA0rm6nxvvIR8f3Rg2o7GgCtrR6uhhwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7420
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The config passed in by pad wakeup is 1, when num_configs is 1,
-Configuration [1] should not be fetched, which will be detected
-by KASAN as a memory out of bounds condition. Modify to get
-configs[1] when num_configs is 2.
+> Subject: [v4][PATCH] pinctrl: freescale: Fix a memory out of bounds when
+> num_configs is 1
+>=20
+> The config passed in by pad wakeup is 1, when num_configs is 1,
+> Configuration [1] should not be fetched, which will be detected by KASAN =
+as
+> a memory out of bounds condition. Modify to get configs[1] when
+> num_configs is 2.
+>=20
+> Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x platforms")
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
 
-Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x platforms")
-Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
----
-Changes since  v3:
- - update commit log, delete call trace
-
- drivers/pinctrl/freescale/pinctrl-scu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
-index ea261b6e7458..3b252d684d72 100644
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -90,7 +90,7 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
- 	struct imx_sc_msg_req_pad_set msg;
- 	struct imx_sc_rpc_msg *hdr = &msg.hdr;
- 	unsigned int mux = configs[0];
--	unsigned int conf = configs[1];
-+	unsigned int conf;
- 	unsigned int val;
- 	int ret;
- 
-@@ -115,6 +115,7 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
- 	 * Set mux and conf together in one IPC call
- 	 */
- 	WARN_ON(num_configs != 2);
-+	conf = configs[1];
- 
- 	val = conf | BM_PAD_CTL_IFMUX_ENABLE | BM_PAD_CTL_GP_ENABLE;
- 	val |= mux << BP_PAD_CTL_IFMUX;
--- 
-2.25.1
-
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
