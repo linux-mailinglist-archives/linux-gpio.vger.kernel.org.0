@@ -2,231 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07DE86F8A3F
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 22:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DAA76F8AA5
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 23:21:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbjEEUf0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 May 2023 16:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
+        id S232336AbjEEVVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 May 2023 17:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbjEEUf0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 16:35:26 -0400
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF2049ED
-        for <linux-gpio@vger.kernel.org>; Fri,  5 May 2023 13:35:24 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id 5addbdeb-eb84-11ed-b3cf-005056bd6ce9;
-        Fri, 05 May 2023 23:35:21 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Fri, 5 May 2023 23:35:21 +0300
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Peng Fan <peng.fan@oss.nxp.com>,
-        Michal Simek <michal.simek@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v2 2/3] pinctrl: Implementation of the generic scmi-pinctrl
- driver
-Message-ID: <ZFVoiWnvq7UXSBBw@surfacebook>
-References: <cover.1682513390.git.oleksii_moisieiev@epam.com>
- <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
+        with ESMTP id S232171AbjEEVVd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 17:21:33 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D30525D;
+        Fri,  5 May 2023 14:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683321691; x=1714857691;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NcrdFZhFRig2Ni9b5QUbKvT5QpeRHY0bJM+OZxzy1Uw=;
+  b=DlhDnA/NzOiS2pFNoRYf6RQy9JnEMwvKJA5WI4yt9oNrI3HGRxcMN0ra
+   5mDvR2XGwJtgEtTkDYiJwsAF6f501/dJ4bSxCCoxbehxzQwpv7VlseDTc
+   5zCZkKO033EZpEpT0XXa0sA81B0ofMid7vq5BKRHW8HwZQkqBU8lUz/XC
+   EAIf0kFVD9TqG4UUA2Pt4cW38c62FPh5I8niUL8+dD2l9+DfXDc+aIJO5
+   1bQAx86M6TUmcmewZ/rsUg15rb6vq0IK0on1MwzFWKicfOTR/PgjBThRu
+   5QdDQYdKwxXjRpmTeYI9PhaEAkpkfaQWA/XEGkU8bJljd9iLVPqzcv623
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="412541880"
+X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
+   d="scan'208";a="412541880"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2023 14:21:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="697746745"
+X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
+   d="scan'208";a="697746745"
+Received: from lkp-server01.sh.intel.com (HELO fe5d646e317d) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 05 May 2023 14:21:28 -0700
+Received: from kbuild by fe5d646e317d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pv2rn-0000rh-1E;
+        Fri, 05 May 2023 21:21:27 +0000
+Date:   Sat, 6 May 2023 05:20:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     oe-kbuild-all@lists.linux.dev, Oleksii_Moisieiev@epam.com,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@amd.com, peng.fan@oss.nxp.com, sudeep.holla@arm.com
+Subject: Re: [PATCH] [REVIEW][PINCTRL]: Misc Fixes and refactor
+Message-ID: <202305060517.oC3TTnp4-lkp@intel.com>
+References: <20230505201012.3171817-1-cristian.marussi@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230505201012.3171817-1-cristian.marussi@arm.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Wed, Apr 26, 2023 at 01:26:37PM +0000, Oleksii Moisieiev kirjoitti:
-> scmi-pinctrl driver implements pinctrl driver interface and using
-> SCMI protocol to redirect messages from pinctrl subsystem SDK to
-> SCP firmware, which does the changes in HW.
-> 
-> This setup expects SCP firmware (or similar system, such as ATF)
-> to be installed on the platform, which implements pinctrl driver
-> for the specific platform.
-> 
-> SCMI-Pinctrl driver should be configured from the device-tree and uses
-> generic device-tree mappings for the configuration.
+Hi Cristian,
 
-...
+kernel test robot noticed the following build warnings:
 
-> +#include <linux/device.h>
-> +#include <linux/err.h>
 
-> +#include <linux/of.h>
 
-I do not see any user of this header. Do you?
+url:    https://github.com/intel-lab-lkp/linux/commits/UPDATE-20230506-041158/Oleksii-Moisieiev/pinctrl-Implementation-of-the-generic-scmi-pinctrl-driver/20230426-222739
+base:   the 1th patch of https://lore.kernel.org/r/b4d60f3408f8fe839933fa3938ecdc9bfceb75d7.1682513390.git.oleksii_moisieiev%40epam.com
+patch link:    https://lore.kernel.org/r/20230505201012.3171817-1-cristian.marussi%40arm.com
+patch subject: [PATCH] [REVIEW][PINCTRL]: Misc Fixes and refactor
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230506/202305060517.oC3TTnp4-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/c3e47504d3b8eac203b4ae3fc56c3791790dd88b
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review UPDATE-20230506-041158/Oleksii-Moisieiev/pinctrl-Implementation-of-the-generic-scmi-pinctrl-driver/20230426-222739
+        git checkout c3e47504d3b8eac203b4ae3fc56c3791790dd88b
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/firmware/
 
-> +#include <linux/module.h>
-> +#include <linux/seq_file.h>
-> +
-> +#include <linux/pinctrl/machine.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202305060517.oC3TTnp4-lkp@intel.com/
 
-> +#include <linux/scmi_protocol.h>
-> +#include <linux/slab.h>
+All warnings (new ones prefixed by >>):
 
-Please, move these two to the upper group of the generic headers.
+   drivers/firmware/arm_scmi/pinctrl.c: In function 'scmi_pinctrl_attributes':
+   drivers/firmware/arm_scmi/pinctrl.c:227:45: error: passing argument 4 of '((const struct scmi_proto_helpers_ops *)ph->hops)->extended_name_get' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     227 |                                             (u32 *)&type, name,
+         |                                             ^~~~~~~~~~~~
+         |                                             |
+         |                                             u32 * {aka unsigned int *}
+   drivers/firmware/arm_scmi/pinctrl.c:227:45: note: expected 'char *' but argument is of type 'u32 *' {aka 'unsigned int *'}
+>> drivers/firmware/arm_scmi/pinctrl.c:227:59: warning: passing argument 5 of '((const struct scmi_proto_helpers_ops *)ph->hops)->extended_name_get' makes integer from pointer without a cast [-Wint-conversion]
+     227 |                                             (u32 *)&type, name,
+         |                                                           ^~~~
+         |                                                           |
+         |                                                           char *
+   drivers/firmware/arm_scmi/pinctrl.c:227:59: note: expected 'size_t' {aka 'unsigned int'} but argument is of type 'char *'
+   drivers/firmware/arm_scmi/pinctrl.c:226:17: error: too many arguments to function '((const struct scmi_proto_helpers_ops *)ph->hops)->extended_name_get'
+     226 |                 ph->hops->extended_name_get(ph, PINCTRL_NAME_GET, selector,
+         |                 ^~
+   cc1: some warnings being treated as errors
 
-> +struct scmi_pinctrl_funcs {
-> +	unsigned int num_groups;
-> +	const char **groups;
-> +};
 
-Please, use struct pinfunction.
+vim +227 drivers/firmware/arm_scmi/pinctrl.c
 
-...
-
-> +struct scmi_pinctrl {
-
-> +	struct scmi_pinctrl_funcs *functions;
-> +	unsigned int nr_functions;
-
-> +	char **groups;
-> +	unsigned int nr_groups;
-
-I'm not sure what is the difference to what "functions" above represent.
-
-> +};
-
-...
-
-> +static void pinctrl_scmi_pin_dbg_show(struct pinctrl_dev *pctldev,
-> +				      struct seq_file *s,
-> +				      unsigned int offset)
-> +{
-> +	seq_puts(s, DRV_NAME);
-> +}
-
-What is the usefulness of this method?
-
-...
-
-> +static int pinctrl_scmi_pinconf_group_get(struct pinctrl_dev *pctldev,
-> +					  unsigned int _pin,
-> +					  unsigned long *config)
-> +{
-> +	int ret;
-> +	struct scmi_pinctrl *pmx;
-> +	enum pin_config_param config_type;
-> +	unsigned long config_value;
-> +
-> +	if (!pctldev)
-> +		return -EINVAL;
-> +
-> +	pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	if (!pmx || !pmx->ph || !config)
-> +		return -EINVAL;
-> +
-> +	config_type = pinconf_to_config_param(*config);
-> +
-> +	ret = pinctrl_ops->get_config(pmx->ph, _pin, GROUP_TYPE,
-> +				      config_type, (u32 *)&config_value);
-
-Endianess issue. This is, while likely working code, still ugly.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	*config = pinconf_to_config_packed(config_type, config_value);
-> +
-> +	return 0;
-> +}
-
-...
-
-> + err:
-
-err_free.
-
-> +	kfree(pmx->pins);
-> +	pmx->nr_pins = 0;
-> +
-> +	return ret;
-
-...
-
-> +static const struct scmi_device_id scmi_id_table[] = {
-> +	{ SCMI_PROTOCOL_PINCTRL, "pinctrl" },
-
-> +	{ },
-
-No comma for the terminator entry.
-
-> +};
-
-...
-
-> +	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL,
-> +						&ph);
-
-Can be on one line.
-
-> +	if (IS_ERR(pinctrl_ops))
-> +		return PTR_ERR(pinctrl_ops);
-
-...
-
-> +	if (pmx->nr_functions) {
-> +		pmx->functions =
-> +			devm_kcalloc(&sdev->dev, pmx->nr_functions,
-> +				     sizeof(*pmx->functions),
-> +				     GFP_KERNEL);
-> +		if (!pmx->functions) {
-> +			ret = -ENOMEM;
-> +			goto clean;
-
-Interleaving devm_*() with non-devm_*() in such order is not a good idea.
-
-> +		}
-> +	}
-> +
-> +	if (pmx->nr_groups) {
-> +		pmx->groups =
-> +			devm_kcalloc(&sdev->dev, pmx->nr_groups,
-> +				     sizeof(*pmx->groups),
-> +				     GFP_KERNEL);
-> +		if (!pmx->groups) {
-> +			ret = -ENOMEM;
-> +			goto clean;
-> +		}
-> +	}
-> +
-> +	return pinctrl_enable(pmx->pctldev);
-> +
-> +clean:
-
-err_free:
-
-> +	if (pmx) {
-> +		kfree(pmx->functions);
-> +		kfree(pmx->groups);
-
-Ah, this is simply wrong.
-
-> +	}
-> +
-> +	kfree(pmx);
+   182	
+   183	static int scmi_pinctrl_attributes(const struct scmi_protocol_handle *ph,
+   184					   enum scmi_pinctrl_selector_type type,
+   185					   u32 selector, char *name,
+   186					   unsigned int *n_elems)
+   187	{
+   188		int ret;
+   189		u32 attrs;
+   190		struct scmi_xfer *t;
+   191		struct scmi_msg_pinctrl_attributes *tx;
+   192		struct scmi_resp_pinctrl_attributes *rx;
+   193	
+   194		if (!name)
+   195			return -EINVAL;
+   196	
+   197		ret = scmi_pinctrl_validate_id(ph, selector, type);
+   198		if (ret)
+   199			return ret;
+   200	
+   201		ret = ph->xops->xfer_get_init(ph, PINCTRL_ATTRIBUTES, sizeof(*tx),
+   202					      sizeof(*rx), &t);
+   203		if (ret)
+   204			return ret;
+   205	
+   206		tx = t->tx.buf;
+   207		rx = t->rx.buf;
+   208		tx->identifier = cpu_to_le32(selector);
+   209		tx->flags = cpu_to_le32(type);
+   210	
+   211		ret = ph->xops->do_xfer(ph, t);
+   212		if (!ret) {
+   213			attrs = le32_to_cpu(rx->attributes);
+   214			if (n_elems)
+   215				*n_elems = NUM_ELEMS(attrs);
+   216			strscpy(name, rx->name, SCMI_SHORT_NAME_MAX_SIZE);
+   217		}
+   218	
+   219		ph->xops->xfer_put(ph, t);
+   220	
+   221		/*
+   222		 * If supported overwrite short name with the extended one;
+   223		 * on error just carry on and use already provided short name.
+   224		 */
+   225		if (!ret && EXT_NAME_FLAG(attrs))
+   226			ph->hops->extended_name_get(ph, PINCTRL_NAME_GET, selector,
+ > 227						    (u32 *)&type, name,
+   228						    SCMI_MAX_STR_SIZE);
+   229		return ret;
+   230	}
+   231	
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
