@@ -2,46 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E0B66F7F31
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 10:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 895F66F7F67
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 May 2023 10:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231282AbjEEIiU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 May 2023 04:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        id S231200AbjEEIya (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 May 2023 04:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbjEEIiU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 04:38:20 -0400
+        with ESMTP id S229450AbjEEIya (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 May 2023 04:54:30 -0400
 Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 19EE51885E;
-        Fri,  5 May 2023 01:38:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D7BB150FF;
+        Fri,  5 May 2023 01:54:29 -0700 (PDT)
 Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3D4C480FC;
-        Fri,  5 May 2023 08:38:18 +0000 (UTC)
-Date:   Fri, 5 May 2023 11:38:16 +0300
+        by muru.com (Postfix) with ESMTPS id 7A93C80FC;
+        Fri,  5 May 2023 08:54:28 +0000 (UTC)
+Date:   Fri, 5 May 2023 11:54:27 +0300
 From:   Tony Lindgren <tony@atomide.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BISECTED REGRESSION] OMAP1 GPIO breakage
-Message-ID: <20230505083816.GQ14287@atomide.com>
-References: <20230425173241.GF444508@darkstar.musicnaut.iki.fi>
- <20230425201117.457f224c@aktux>
- <20230425183857.GG444508@darkstar.musicnaut.iki.fi>
- <20230425212040.5a4d5b09@aktux>
- <20230425193637.GH444508@darkstar.musicnaut.iki.fi>
- <20230425215848.247a936a@aktux>
- <20230426071910.GE14287@atomide.com>
- <20230504055156.GO14287@atomide.com>
- <CACRpkdY9ShRATHa776KyzeArmQdKxdwGxJC11YnmhWiCdSGzEA@mail.gmail.com>
- <20230504144521.1b3a3574@aktux>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: Pinconf issues on AMxxx plattforms
+Message-ID: <20230505085427.GR14287@atomide.com>
+References: <aa493d62327f26e4c65d649a812346cdfb26771f.camel@siemens.com>
+ <20230504053509.GN14287@atomide.com>
+ <CACRpkdaQe61Jk6WoCr8vYkGKJPMiM7D+iF0w9fKjoOxBWtinhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230504144521.1b3a3574@aktux>
+In-Reply-To: <CACRpkdaQe61Jk6WoCr8vYkGKJPMiM7D+iF0w9fKjoOxBWtinhg@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
@@ -51,35 +43,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Andreas Kemnade <andreas@kemnade.info> [230504 12:45]:
-> Hi,
+* Linus Walleij <linus.walleij@linaro.org> [230504 08:31]:
+> On Thu, May 4, 2023 at 7:35 AM Tony Lindgren <tony@atomide.com> wrote:
+> > * Niedermayr, BENEDIKT <benedikt.niedermayr@siemens.com> [230503 08:38]:
 > 
-> On Thu, 4 May 2023 14:13:32 +0200
-> Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > We encountered some issues when accessing the gpiochardev interface on an
+> > > AM65xx plaform.
 > 
-> > On Thu, May 4, 2023 at 7:52 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > * Tony Lindgren <tony@atomide.com> [230426 07:20]:  
-> > > > Seems that we should just revert this patch for now and try again after
-> > > > the issues have been fixed.  
+> Thank you for using contemporary APIs!
+> 
+> > > The pinctrl offers 3 different options for muxing:
 > > >
-> > > Looking at the proposed fixes being posted seems like they are quite
-> > > intrusive.. How about we partially revert this patch so omap1 still
-> > > uses static assigment of gpios?  
-> > 
-> > I think Andreas patch (commit 92bf78b33b0b463b00c6b0203b49aea845daecc8)
-> > kind of describes the problem with that: the probe order is now unpredictable,
-> > so if we revert the patch then that problem returns, but I don't know how
-> > serious that problem is.
-> > 
-> well, I think we can even fully revert 92bf78b33b0b463b00c6b0203b49aea845daecc8
-> after my patch
+> > > 1.  Using the generic kernel APIs:
+> > >      Call pinctrl_select_state() function as stated
+> > > in  Documentation/driver-api/pin-control.rst (section "Pin control requests
+> > > from drivers").
+> > >      This function will select a defined state which has been defined in DTB
+> > > with "pinctrl-0", "pinctrl-1", "pinctrl-x"
+> > > 2.  Mux pins with debugfs:
+> > >      Write the desired pingroup and pinfunction into the "pinmux-select"
+> > > file of the related pin controller.
+> > > 3. Mux the GPIO function of a requested GPIO pin by calling the pinctrl
+> > > drivers pcs_request_gpio() function.
+> > >
+> > > The problem now is that only option 1. will store the current mux
+> > > information in the pinctrl subsystems core.
+> > > The pinctrl-single driver highly depends on that information, which is not
+> > > available at all wenn muxing with options 2&3.
+> > >
+> > > I was able to fix that for option 2 but not for option 3. The problem here
+> > > is that the pcs_request_gpio() function just does not provide enough
+> > > parameters with sufficient information for achieving that task.
 > 
-> gpiolib: fix allocation of mixed dynamic/static GPIOs
+> The fact that 3) doesn't work has to do with how pinctrl-single has
+> been engineered I think, what the pinctrl_ops .gpio_request_enable/
+> .gpio_disable_free/.gpio_set_direction provide is a "shortcut"
+> for drivers that want to take it, in case they can provide the right
+> information.
 > 
-> is in as a short time solution. That should only leave unpredictable
-> numbers of multiple dynamic gpio controllers.
+> The pinctrl-single driver only implements .gpio_request_enable()
+> but often that is enough.
+> 
+> Then it is the callbacks for generic config that you said you already
+> added to gpio-davinci.c, so that part should be fine, patches welcome!
 
-OK thanks sounds good to me.
+Thanks for explaining. Sounds like pinctrl-single should possibly
+implement the missing functions and update pinctrl core with the
+changes when a gpio is requested.
 
 Regards,
 
