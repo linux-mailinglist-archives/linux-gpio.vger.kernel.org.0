@@ -2,72 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 493A56F918C
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 May 2023 13:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9AF16F922A
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 May 2023 15:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232072AbjEFLfJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 May 2023 07:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
+        id S231986AbjEFNFO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 May 2023 09:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231576AbjEFLfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 May 2023 07:35:08 -0400
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9966A76A5;
-        Sat,  6 May 2023 04:35:07 -0700 (PDT)
-Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-5eefa0a5561so26635286d6.1;
-        Sat, 06 May 2023 04:35:07 -0700 (PDT)
+        with ESMTP id S231675AbjEFNFM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 May 2023 09:05:12 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E061942C
+        for <linux-gpio@vger.kernel.org>; Sat,  6 May 2023 06:05:10 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-55a5a830238so25547107b3.3
+        for <linux-gpio@vger.kernel.org>; Sat, 06 May 2023 06:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683372907; x=1685964907;
+        d=linaro.org; s=google; t=1683378309; x=1685970309;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1sK36cKnvukm+DR/gYW/LoqX2aifa388gDAb/9gGJFM=;
-        b=MjYJhLZJUraZ9r0jbqCNE05KXBwtUhhlscYfDjCWi6DwoXlFHMs0ouY57e1qfjJBpx
-         7byz+9W5QFXQu1UsdRjZEIR7zYdJIxFvW+/25bYRh6xQ1Eaq7Y++yHyUryrm+jjoAKxP
-         FcLYWhOIVH4X9VM6epBOzlBm5o0O3OnNW1kILTyMRIjwI4BJ7DVEjSOOIBP23ePidIjY
-         PpSCYksQmeMpB/aDYqDk+8fhNHc6gjrrY7wF17YX0Mw0XioU/a1BCof0gMnai2YIILEf
-         uEzkFwZaB21uuTi0X7GBlhkIsmRwu+S2exXY0c3gVhwlM5Riq1VDGfbhLAODbgtD8FgE
-         ExrA==
+        bh=dS8atcxZJwQbExVYUG7qwyvLFr0woVdllJ5J88pacr0=;
+        b=DCykVX2iDtsYcneW4PPWteSHTcPeriDOFOHPt6gDdO8MbW//UGK+mHF0NPClFjniVY
+         u4hPje+y+Lzg4vuJe9Urcz60CHyL7gaX854Kdr2Lrl3z1H7UxB03xAm/e1MtGzrJp3Fc
+         dkL1XlndlpEYEdFSrRRtJA+j4/1pOtm14S0u5/KiFdCcoj9bYDqPreHA4LZg1HaBRYLz
+         +7r2Lfq1Be9ptUmjiQgTD82dV9DMuDsKrNV2E+CGEDgmC0AfUXXY1CFjQd2gKZcI/m5J
+         Vg9QhZx1IFZt9ps58NfkozIjwds75g/fwhwKjRnaSaKygHa85H7nFJ9q/6wZgSVlSS6+
+         Zt5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683372907; x=1685964907;
+        d=1e100.net; s=20221208; t=1683378309; x=1685970309;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1sK36cKnvukm+DR/gYW/LoqX2aifa388gDAb/9gGJFM=;
-        b=YjHPEYGtHHWKiVhXr3qwNNQ9DLgaz+Hq4pcDWiGW9pxyWslD7HI1YDzeoS0+2T+ILv
-         Qoxt95ATfC0S4c4SeFhJiP+xv4Ns9WQj7+wDlFxM3OS8QMmfVkcj50CXpmtEc27aS+Qk
-         bHmnyyA6RXT8P0cUNCoVz13n090fabsb63EA5b5g/j5rrojy4Fq1GfaSRigPXr9C2FzL
-         xrqvw9JD3bjrAwkgjsgIZDOOqvQjByccKiAaFJnyxjXlUiaVsOi/CQZIUgC8I7bSgXHa
-         XWISo04PaeJwKfuIHTXz6TQPvSI6PSy8qPOf/rI2zrweKcS4t0y8DlLXy8kN3bIc2k0y
-         b/UQ==
-X-Gm-Message-State: AC+VfDxaoVWQ/TFXOQf8YFgpVnX97T2upWD4PkhOJOY4mBJcBNTfhQgd
-        9JtFYmgIK3H/fDszUvTCi97OQSA43bWwvbUv6OB3Cvp9njMmsg==
-X-Google-Smtp-Source: ACHHUZ7/w5GybeH4u/9nQ9t3b/C79E8Tvvt3ygLViSILeHXSXAcn7TV0DL0HrtpRSxSCFHRPxueMZSkYMYzYrXlcG+U=
-X-Received: by 2002:ad4:596a:0:b0:61a:ee15:4a93 with SMTP id
- eq10-20020ad4596a000000b0061aee154a93mr4834907qvb.28.1683372906726; Sat, 06
- May 2023 04:35:06 -0700 (PDT)
+        bh=dS8atcxZJwQbExVYUG7qwyvLFr0woVdllJ5J88pacr0=;
+        b=JaP084iFl7kbgcoQaxa5fcrxpAR42LW6un3M0z1QDbrMsMwRCIrOWbRAcu3ZHo1dHP
+         QWpN9XRKd9aKywReAiay12Tk5+R/XZb9i9QToRjoU5DWqsijMrgeHaW5oJjHp45H2sIH
+         V6iG4wMR49l7KyZXzRbNLKRyOMEZ1XvhPphSpmzCNITDx8XESIY+wmOYTgagHBTii2+W
+         wxwJJf15i5xMQgI7r9K2EfDMx2WfEbG2m3jmIsXRLcg+AdM51wQmoc3jR+Xg77/OOjDM
+         tBt/GHkkBokDfl5c3ZPUGz+IGM1H1V7zBns22fuQ//kM+ILFfbmXhaKvihNpjvJFUom/
+         rxNQ==
+X-Gm-Message-State: AC+VfDwjYNfjJxAYIox/pIja0BJDiUptGYo4ayP1XFbzSkSua2+3sbac
+        JemCjtS9uKn5cPdE1UVcNiddivVFefszZG6wmI08qA==
+X-Google-Smtp-Source: ACHHUZ6rFGSTb20HGZ4YRsYPn++p+CYHLbDboEdLCfyzgV+VBdsiBJ48Dzhm4uy73zYYfmP6l2duieVJod/40FcKKYw=
+X-Received: by 2002:a81:4ed8:0:b0:55a:a625:cd22 with SMTP id
+ c207-20020a814ed8000000b0055aa625cd22mr4941600ywb.30.1683378309515; Sat, 06
+ May 2023 06:05:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230505074228.84679-1-jiawenwu@trustnetic.com>
- <20230505074228.84679-3-jiawenwu@trustnetic.com> <ZFVPYSKfvQq3WeeO@surfacebook>
- <ZFViufP6qh79C1-T@surfacebook> <000001d97ffd$39ae2db0$ad0a8910$@trustnetic.com>
-In-Reply-To: <000001d97ffd$39ae2db0$ad0a8910$@trustnetic.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 6 May 2023 14:34:30 +0300
-Message-ID: <CAHp75Vfj1RDSv2gX=NokEaXgcD9W83V_sYwyTP35a1BfosCFXg@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 2/9] i2c: designware: Add driver support
- for Wangxun 10Gb NIC
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com
+References: <20230506085928.933737-1-haibo.chen@nxp.com>
+In-Reply-To: <20230506085928.933737-1-haibo.chen@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 6 May 2023 15:04:58 +0200
+Message-ID: <CACRpkdZDTxxNn2CDSBu5yKnw0qVuWH-a+dPYXdHndLZbxmyFAw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: vf610: switch to dynamic allocat GPIO base
+To:     haibo.chen@nxp.com
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        christophe.leroy@csgroup.eu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,40 +69,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 6, 2023 at 12:29=E2=80=AFPM Jiawen Wu <jiawenwu@trustnetic.com>=
- wrote:
-> On Saturday, May 6, 2023 4:11 AM, andy.shevchenko@gmail.com wrote:
-> > Fri, May 05, 2023 at 09:48:01PM +0300, andy.shevchenko@gmail.com kirjoi=
-tti:
-> > > Fri, May 05, 2023 at 03:42:21PM +0800, Jiawen Wu kirjoitti:
+On Sat, May 6, 2023 at 10:56=E2=80=AFAM <haibo.chen@nxp.com> wrote:
 
-...
-
-> > > > + device_property_read_u32(&pdev->dev, "wx,i2c-snps-model", &dev->f=
-lags);
-> > >
-> > > I believe in your case it should be named something like
-> > > "linux,i2c-synopsys-platform". But in any case this I leave
-> > > to the more experienced people.
-> >
-> > Or "snps,i2c-platform", I dunno...
+> From: Haibo Chen <haibo.chen@nxp.com>
 >
-> I thought you wanted me to introduce a property specific to my device,
-> so I named it "wx,...".
+> gpiolib want to get completely rid of static gpiobase allocation,
+> so switch to dynamic allocat GPIO base, also can avoid warning
+> message:
+>
+> [    1.529974] gpio gpiochip0: Static allocation of GPIO base
+> is deprecated, use dynamic allocation.
+>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-But the property meaning is not in this case. If you want the specific
-one, it should be boolean (it's also a possible way to go):
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-  if (device_property_present(...))
-    dev->flags |=3D MODEL_...;
-
-> But if it's a universal property for platform device,
-> maybe it's necessary to check if flag is NULL, otherwise the second resul=
-t
-> will overwrite it.
-
-Right. With boolean like above it will be more robust.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
