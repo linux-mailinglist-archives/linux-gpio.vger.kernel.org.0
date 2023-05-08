@@ -2,77 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C4176FB19F
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 15:34:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD816FB1F5
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 15:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234272AbjEHNel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 May 2023 09:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51032 "EHLO
+        id S233999AbjEHNq2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 May 2023 09:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234254AbjEHNei (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 09:34:38 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15342C3C5
-        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 06:34:35 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-50bcb00a4c2so7188623a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 08 May 2023 06:34:35 -0700 (PDT)
+        with ESMTP id S234221AbjEHNq1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 09:46:27 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC6E35D94
+        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 06:46:14 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-55a83e80262so67498597b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 08 May 2023 06:46:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683552874; x=1686144874;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dNv2I8D8lHC3anjLGdCgDfw3zwn1qSi0/Ip3IkTMaV0=;
-        b=tOIFXK+lcH2ykBPyI8q9+jKClkFjlnFfoO3N14ovB/CYtesjCHJJmlb8dkToJGhO+6
-         QAoykSOtKQLG/ZLkx2qFyD5crlXQayazRidED74shOgBwO7S7mLTWot8pXyn/Z4WrIT3
-         Zjh+dqDt91gUt+MmbO4U+9WmhPnWBlmapabIIbvZ3OS8t4dERqAJULeiNk6F1GyqhaXT
-         TRoZNTgnQ+J20M9zAtT94kpiYNITnDeqMKbGrBsiUnswaIMCrIssL4/NJ8dqIcmx7Tlw
-         GHl4VPGWiAxP0IBV11SvPpOhb+y0pghAA3EIfXMk4hLXPJsvM5Tzn+qLLT2gNtE+I4tp
-         9bDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683552874; x=1686144874;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1683553573; x=1686145573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dNv2I8D8lHC3anjLGdCgDfw3zwn1qSi0/Ip3IkTMaV0=;
-        b=WQu1krEVmildMhtvR4HYocDWV6gUhAfE/lejrI5ad7kRjpxiLyMDaXyKZF7Z2nwsqa
-         rKaUhiJ+Rnr5rQ+1JI7aTPROUqzP3zzq2WIRyJtGIdVWmH8esVNP/SVT7x1wTJgwPS5X
-         oUA+1p2N9auE9S1JmkodUEIDLzJSkCJwUgZR50kyw0Pv1O0b3JD1iG640RfnmjWHlXNw
-         SwLHBjctsFd4w/dC2AksKWbelseNUGAsLiyD2cET80MSp6J3YAI79XiEgux1sHfISm8e
-         WckEqqAfLcERatBwsATMRM3ExMGRA8cBJ9fenc2QMF0LWYIjJ85depv3REEF++rlF0Sg
-         1wdQ==
-X-Gm-Message-State: AC+VfDw5y0vX/qhYI3AUzIvxH8WQFx6jZJeU2ffjY9ei0LIPi5YRwIWh
-        FhDgKjS8a1U9ExCgQO8tydLFVA==
-X-Google-Smtp-Source: ACHHUZ4ccIzX5gazJRfi3DwQwRaXaprMkRCzcmHzIhwgt0MLpsVSjOBy5X0r6zj7lZcpfTtUfJAYQA==
-X-Received: by 2002:a17:907:5ca:b0:965:6cb9:b768 with SMTP id wg10-20020a17090705ca00b009656cb9b768mr7216816ejb.31.1683552874325;
-        Mon, 08 May 2023 06:34:34 -0700 (PDT)
-Received: from krzk-bin ([2a02:810d:15c0:828:50e0:ebdf:b755:b300])
-        by smtp.gmail.com with ESMTPSA id ib11-20020a1709072c6b00b00965ac1510f8sm5007185ejc.185.2023.05.08.06.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 06:34:33 -0700 (PDT)
-Date:   Mon, 8 May 2023 15:34:31 +0200
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marek Vasut <marex@denx.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>,
-        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: MFD: Convert STMPE to YAML schema
-Message-ID: <20230508133431.tqi7jmgcmfs5c3cf@krzk-bin>
-References: <20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org>
- <20230426-stmpe-dt-bindings-v4-2-36fdd53d9919@linaro.org>
+        bh=LtbChOf1tjuBGN4NDKgEEhazW09wYkOh6AQbXDOmpHI=;
+        b=JlOrjF/+6+saQagRBCzBr90QAHbMkvCEwgM9/27PYOxIRywYYESAHoJR9u7Fy7qnzP
+         hxTXC0SmZsWjmAxtA08YtzkbjPYRCNtzwuwyV73KeQVPJnqiGT2loTqFiy7TLoK19ZTL
+         wc6U+NVS0x4yr9WBfeMQK3+yie9DYZi35i7QgHQ6WZc2SgkCAngVm72M8ZCRPyB0BwID
+         ZvKp0bfjda0eVMbzGlQXp9gaT4VcNBQSQSb0jQdXSP8PF8k1FaU7rLqN/i3A/BB8hu2V
+         gr3FRAYqr9jYPOJ2jtnRFYM3FE6iHPQoDN+XBJvxFSHyIDVjAT2al174N7gWPjk4q6pc
+         n6jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683553573; x=1686145573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LtbChOf1tjuBGN4NDKgEEhazW09wYkOh6AQbXDOmpHI=;
+        b=OEehui/fZWYZ2CC95I5NRY0gMjXYhwZ8KtXuOUOKfNoxDnUr8DvKXNDEQDRXZKhFa3
+         iSTtF3wwix6RhFojfiLT1yf5ORJe7F2sbGW7H5q66U+EGZhhP0T7GDRMaXT9OqYw8UI/
+         qKWlKXzL8O91WBW1/aF4W2TUqHwamX7LSc8oKKPOWoITK55Ta3DhinaNbIeS+SmsioBl
+         w9/ME90nwY190VmRuFWGIq0JKk17jUdcEnFrOdmmfzYfykzGqPF3ntSlJpsf/4Y8fjzL
+         gP6y0FDpxqVJUQEUuot0lDhUKwYML6OQaKLEc/SWsjMhIkbF+ZX1XrdqVGfETLRAejZh
+         9xYQ==
+X-Gm-Message-State: AC+VfDxTwccTAILCT4id4Jbv8gMaQ4tYrRYCfjYVDnxoio0Owx4HOJ1Q
+        YHDG1grT6rLvTJTL/tT/CGe0EnppxlAiUY2pcE0uHA==
+X-Google-Smtp-Source: ACHHUZ7AGqNntEBQYHD+CeYee2P0eMMSqdEwKZO8T8dqMJUpCyHjSg1QO68c8TmNAAKY72R8N/lD4uOs4dL5ZW/HQWY=
+X-Received: by 2002:a0d:cc0b:0:b0:55a:9b56:acee with SMTP id
+ o11-20020a0dcc0b000000b0055a9b56aceemr11702886ywd.38.1683553573515; Mon, 08
+ May 2023 06:46:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230426-stmpe-dt-bindings-v4-2-36fdd53d9919@linaro.org>
+References: <20230508131848.142602-1-milo.spadacini@gmail.com>
+In-Reply-To: <20230508131848.142602-1-milo.spadacini@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 May 2023 15:46:02 +0200
+Message-ID: <CACRpkdYN6XCw7wyGPjmsGUqbbF-3N7iSURAB2rqwurDFKdT5ug@mail.gmail.com>
+Subject: Re: [PATCH v3] tools: gpio: fix debounce_period_us output of lsgpio
+To:     Milo Spadacini <milo.spadacini@gmail.com>
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org, warthog618@gmail.com,
+        andy.shevchenko@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -83,75 +68,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 08 May 2023 14:35:10 +0200, Linus Walleij wrote:
-> This converts the STMPE MFD device tree bindings to the YAML
-> schema.
-> 
-> Reference the existing schema for the ADC, just define the
-> other subnode schemas directly in the MFD schema.
-> 
-> Add two examples so we have examples covering both the simple
-> GPIO expander and the more complex with ADC and touchscreen.
-> 
-> Some in-tree users do not follow the naming conventions for nodes
-> so these DTS files need to be augmented to use proper node names
-> like "adc", "pwm", "gpio", "keyboard-controller" etc before the
-> bindings take effect on them.
-> 
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v2->v3:
-> - Drop the required pwm properties already required by the
->   template pwm schema.
-> - Add the number of PWM cells as const.
-> ChangeLog v1->v2:
-> - Split off the GPIO bindings to their own schema, as the old
->   bindings didn't even have any GPIO bindings. Put the GPIO
->   schema before this schema so we can use GPIO in the examples.
-> - Drop nodename and pattern as STMPE is not a generic name.
-> - Add maxItems to the resets.
-> - Make wakeup-source just :true, as it is a generic property.
-> - Move unevaluatedProperties for subnodes right before properties
->   as requested.
-> - Name devices "port-expander" in the examples.
-> - Use lowercase hex in line init.
-> ---
->  .../devicetree/bindings/input/stmpe-keypad.txt     |  41 ---
->  .../bindings/input/touchscreen/stmpe.txt           | 108 --------
->  .../devicetree/bindings/mfd/st,stmpe.yaml          | 297 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/stmpe.txt    |  42 ---
->  4 files changed, 297 insertions(+), 191 deletions(-)
-> 
+On Mon, May 8, 2023 at 3:20=E2=80=AFPM Milo Spadacini <milo.spadacini@gmail=
+.com> wrote:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> Fix incorrect output that could occur when more attributes are used and
+> GPIO_V2_LINE_ATTR_ID_DEBOUNCE is not the first one.
+>
+> Signed-off-by: Milo Spadacini <milo.spadacini@gmail.com>
 
-yamllint warnings/errors:
+Thanks Milo!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/mfd/st,stmpe.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/gpio/st,stmpe-gpio.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/st,stmpe.example.dtb: port-expander@43: gpio: False schema does not allow {'compatible': ['st,stmpe-gpio'], 'gpio-controller': True, '#gpio-cells': [[2]], 'interrupt-controller': True, '#interrupt-cells': [[2]], 'st,norequest-mask': [[15790082]]}
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
-Documentation/devicetree/bindings/mfd/st,stmpe.example.dtb: /example-0/i2c/port-expander@43/gpio: failed to match any schema with compatible: ['st,stmpe-gpio']
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/st,stmpe.example.dtb: port-expander@41: gpio: False schema does not allow {'compatible': ['st,stmpe-gpio'], 'gpio-controller': True, '#gpio-cells': [[2]], 'interrupt-controller': True, '#interrupt-cells': [[2]]}
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
-Documentation/devicetree/bindings/mfd/st,stmpe.example.dtb: /example-0/i2c/port-expander@41/gpio: failed to match any schema with compatible: ['st,stmpe-gpio']
-
-doc reference errors (make refcheckdocs):
-Documentation/usb/gadget_uvc.rst: Documentation/userspace-api/media/v4l/pixfmt-packed.yuv.rst
-MAINTAINERS: Documentation/devicetree/bindings/pwm/pwm-apple.yaml
-
-See https://patchwork.ozlabs.org/patch/1778351
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
+Yours,
+Linus Walleij
