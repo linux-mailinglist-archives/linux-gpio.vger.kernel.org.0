@@ -2,145 +2,281 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E340C6FB7BC
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 21:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6441E6FB947
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 23:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233867AbjEHTvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 May 2023 15:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35644 "EHLO
+        id S232941AbjEHVUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 May 2023 17:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233875AbjEHTug (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 15:50:36 -0400
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on061f.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe1f::61f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5817D83
-        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 12:49:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K5f7MDkmHvXmenb4ysETcLgFTmId4xqYJWCyJzRCak9c5f24sInc638JqvBFTNaqsC1xbkKpfazzHqyCFTe0FDEHg0JTJuQRQnz39jZHG/IgUL6+HZueHf3FQnP1RMMhDL3VHwdam3PSCmIVofmiWL0mhbtqI5Y6ZMo3Qiq0NpvRH3qRNwTUaiXjK16VkKx2+bGmsgYRaq6LSHr3RjMAhefjn4PMaNIOPinAP8aTYIlD0k/OSluM0XGT02aNmJMg22VaTTW5tjcZgqWeO06pytsKRPHbrzEDesxiEHk5+GezJm5rEWuI0/thVaZR8C4WsTWuAg7NIXnIsI4JNsOYMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gADqRQXLynLoiir00MNBtgUGCmU8mv044v84hAOYbPE=;
- b=bTKJXngleq2QHoX1L9TQ3kkaa0McXaKu+bgh7ZIJV/Y8vO7Ht+09FpbEAcMmxz5zvME4ba5xDRLg0WYDNzBMYN++vdnc8fHDBL90s8HXeOPNVvCQ+9r9JSybGkVtQZVq7ur4eBAbCs/vddnrXeRFJCnt2E5oiJm2vHyMBq637Ix5IYWhv3O7hJS26KJOlYcQJEA5wV7NWDTNHoFkwwRUupJVGCKkm/5vvCuuVr8LNzQP0t7HCMIgCNNqBzNgrhvJOZ5ijPcn61v1kAigkRYrN1X1jcI6/5NDSWC6dtQEe4QUKHrDam73xcXk9ckQL7jX4DjqbaIITbHXZaZRw9m8bQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gADqRQXLynLoiir00MNBtgUGCmU8mv044v84hAOYbPE=;
- b=dWlO21RaJ7GgKbs/ddJO4MbYBAfdDJOW5KPuc/t36OYj8KtuEwzojGuRtTbE1foNKMhM6iJtyhh6Vth6q531rfFS3YlIz5U1uavEi2P+nlxfSTn96Vsdqx894VWg81x8UrQS+Sq7KKxsq5Y0ABz2qtfi+CUq8mCe0OtlpsE9dUc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
- by AM8PR04MB7860.eurprd04.prod.outlook.com (2603:10a6:20b:245::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.33; Mon, 8 May
- 2023 19:46:23 +0000
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::28fb:82ec:7a6:62f3]) by PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::28fb:82ec:7a6:62f3%5]) with mapi id 15.20.6363.032; Mon, 8 May 2023
- 19:46:22 +0000
-From:   Shenwei Wang <shenwei.wang@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-gpio@vger.kernel.org, imx@lists.linux.dev, linux-imx@nxp.com,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>
-Subject: [PATCH 1/1] gpio: mxc: use platform_get_irq_optional() to avoid error message
-Date:   Mon,  8 May 2023 14:45:55 -0500
-Message-Id: <20230508194555.1057007-1-shenwei.wang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR17CA0058.namprd17.prod.outlook.com
- (2603:10b6:a03:167::35) To PAXPR04MB9185.eurprd04.prod.outlook.com
- (2603:10a6:102:231::11)
+        with ESMTP id S229690AbjEHVUR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 17:20:17 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC118F;
+        Mon,  8 May 2023 14:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683580816; x=1715116816;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZXD+ewt6EPlLmAFkTGfXobVhsHMapRgravjPxFdOVE4=;
+  b=a43J2D7mz0ajuhi6OAaU97iordnG5/AXXlAYqyCyZv97YR0h/TWAQR+U
+   bUsg8vf/UjgpH0rH6H7p+gisnoCMqIu/U2kaJt4zpgMZi3Og3O/WV3hjS
+   SlWG86Aaf5jTf+nGbDi3TGsjnurwsaHJ1JTQpCrbSaZRotmMK5IjAzkcO
+   7VZ2SzBLajeizdHOgj/jJjz8l3k+SpklWJI3fTICrU1fZ0IXTAG4mWxAH
+   wUXUEUaQ0j+hzB96fUY/A+UkLQomXKYxuHb/31TRD2fovo/5It3QAZJsf
+   uvn1JuanRrfAYYrEj3C7TwmrA9/k6BWDkup9yZJzIWmxb+HO5fxg6kDsd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="436079617"
+X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
+   d="scan'208";a="436079617"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 14:19:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="692727524"
+X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
+   d="scan'208";a="692727524"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 08 May 2023 14:19:42 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pw8Gk-0001QT-02;
+        Mon, 08 May 2023 21:19:42 +0000
+Date:   Tue, 9 May 2023 05:19:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lizhe <sensor1010@163.com>, marcan@marcan.st, sven@svenpeter.dev,
+        alyssa@rosenzweig.io, linus.walleij@linaro.org,
+        neil.armstrong@linaro.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@foss.st.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr
+Cc:     oe-kbuild-all@lists.linux.dev, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-oxnas@groups.io,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Lizhe <sensor1010@163.com>
+Subject: Re: [PATCH] dirvers/pinctrl.c : using pinctrl_dev->dev to obtain
+ struct device * dev
+Message-ID: <202305090411.OyJRHVis-lkp@intel.com>
+References: <20230508154043.11859-1-sensor1010@163.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|AM8PR04MB7860:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9991f50d-ceff-46f3-4d0c-08db4ffce6bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fQx+5KtTzICfMtqos3LB1DYj7+JIAKuWxc1vs6nooDXfDvA2AZrmm0DJOmbK/FmXn2Zrkr9hmQxAXfQXDT4+Sj2m1akMxgzq+A/oEQhdSW+nwMr7iAql9C0/7/tg+ZBpVthCwgaRZxCojdNQq/IYn6oe2cdfAsVmtq8XRCvYzHX8eR9s3Q1Y4UXC/tp2jDGBMQ6xjUvNgVonDfN9CqwbVPYfA74rIFShiGp0sJy/SI6CCwj4ueJrKZZCR7O8xfgFYoFRAYGFQFYyIP4ST8ejdnacJaqJf5nb4joZ8OaKbdhiMH8gNR4hBvcEcOysyR/CxyTqakWix8pLQK7atMDb31573iS2d4kK11UFKIigW3jz9QKVJN7WH5+TPe1sjY4RZUVwsWEr1TRhm+UH3Y1FFZ6BQJG2B6kbdsTBn8ULQ9qBaAIzUhieSBQ33Qmg/pjZ5bFSF7kyWWs6DqZLoVy14dnPTtiBq+6mQaF4WySeWS1JrAEZ/8n1AIigIJt5FQA+U4xtFK8CelKbSZ9ckQI+giF6H283Xf2PIa8PjTa3gE4FKWMw+h93O7CsF90PEOrLfXw6naZVKFldgTZC+alfLBTq5z3+LgljLY82GNTu7rBILkfgHI6StjB5Nc1NbNvk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(451199021)(52116002)(66946007)(66556008)(66476007)(4326008)(478600001)(6486002)(6666004)(316002)(110136005)(54906003)(86362001)(36756003)(83380400001)(2616005)(6512007)(6506007)(1076003)(26005)(55236004)(8676002)(8936002)(5660300002)(44832011)(41300700001)(15650500001)(4744005)(2906002)(186003)(38350700002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uC27n6joJCgegsXiahz0L46aI0m2GdutcK3E3RErSZ6Qd6eMjUfD9LEMF5yP?=
- =?us-ascii?Q?LdhR8UrLkAyLDXjzTHXrulu7zdpr7y/hCn182T8xEmcZFRio/NuhQ6xD2ill?=
- =?us-ascii?Q?LDYc7wd/7iEpPwTpu4+lTMADwbC/Kz56QCNVvdL8OdI7SZbX5skuX1IeLIWO?=
- =?us-ascii?Q?QWyER0Vji8m7xmbzrcz1CBvogGgyXlwlRrhJYHxwmPEJNHCo+ec/JdUdQbKr?=
- =?us-ascii?Q?t4A9LvfVGSTkoUMbI/pK/b+H2hyZ68iajOTLkboGX7IPkNJUWZO5krF9IScK?=
- =?us-ascii?Q?g/mw8WU2zKk7vDIeXWSIPA3DQNKSrotPK1FSP115oULJVoZDje308kZHKrOl?=
- =?us-ascii?Q?oKpSdd3HZyc69xvdv9jTsnvyuM9O+6+PH1tyfrJ7OylTx7J4yL5T8Ycu5iNr?=
- =?us-ascii?Q?iL78b5jKrUSfK/B7a2yvdYXLnzhzZXIzkXUyDPO/5v6F7Sfea8xzNWytIRyV?=
- =?us-ascii?Q?Q2o+FRYpLvVAs6D8SuTxfss5PuIvZifaxS6rzHtw9uqMa4JP8YJsPzf4+cgI?=
- =?us-ascii?Q?nykp7Zm/ncrkZfLU9+JgV69YP0BLEvRjZdSWW3kj3LcGpyFKnSErhGEL1I68?=
- =?us-ascii?Q?/K1ojc5LN1fWybFvYA8gv3sNtu0qobK7+QRFX+OvfytivjLSXYhq48F3cbqh?=
- =?us-ascii?Q?Jpj5UEb4iOrkxfRbPLsEDeYcYQFIEPZ/z4owo/QKaSGQNn1Lj3yLK+KKi5uQ?=
- =?us-ascii?Q?HTfZOmNA1mPlJr2ccpjq1Pc1/xNsP0yLIkDiPhIU95Me5l3TG1/z2sjN9mC/?=
- =?us-ascii?Q?1Rl0SL2KVdWKrR6LSiRd2vYSYWpwNiEl7cnhY/RztJ/tOBMqXiptY66WmH32?=
- =?us-ascii?Q?pRl6xHMsjkscxC8hojmf8HwdlKpu4RLVUOaB30Z1HxttDXLfl3D+ZmtYQimv?=
- =?us-ascii?Q?oQLPn6Rp3w+1P/Wgr+zIiPw6xx8uIxvDXGLtHcL5xCXKH/wCWaCucrhfYMyi?=
- =?us-ascii?Q?w/ToSMbV1RDBmKrVHzlssjslbXmI+/91dMgPty107jo5y2K3t/WtDzgfoPRh?=
- =?us-ascii?Q?cL2lYk7RGTaFwJboYdE2RTAW3BgumWfxUNXiVNZdnyUbzW0FYWJYYRUGtlOq?=
- =?us-ascii?Q?/nEC2+kefamOJlmDc7HUlw7uHljfnU9wvWxiFnXX5ihZM7SqHz+qZ3MB4SzV?=
- =?us-ascii?Q?qSzovFptMYu0c9onrurBVE8BxwzBHrp7wM4fh2dRcAsYm7G2jxO8g5lWsXKc?=
- =?us-ascii?Q?z6v0FWUG1LEhj1uahBuTeR9vtQyE0ZhR5DJ8MRpanTD7/kvAWas4v+2qSB/d?=
- =?us-ascii?Q?LsSCWrDwxtAE0nm3M8DSQlm/11fBfgkvw7UnkY5ClfoThEiYYUKMmwDbjwGn?=
- =?us-ascii?Q?FUQTSrjc8p0Cgn443y+erEl96SF0gTANAiDjl3P81FEsp4AG8oO2F0Twe6fK?=
- =?us-ascii?Q?2fku4C/fXWjMrhVOXqPgb6xmM8CvMatUX1Ax9/cVQaL8EcFcN3UAKdxPG13Z?=
- =?us-ascii?Q?6RefTjs/09ipBcFxHuTM8am+MrKUgEamAOsXzeIbiEZMJNyq660do7oOHqGP?=
- =?us-ascii?Q?ScrRmYtnFdvoTbUty0plkaNUFJY613v3A+0r9V88AQKT5us2JByUT2HDYFge?=
- =?us-ascii?Q?uqZRlnPXQ4EOz3vMuBToOk/JbPQA/nn2ltJqDsDz?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9991f50d-ceff-46f3-4d0c-08db4ffce6bc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2023 19:46:22.6199
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SZYP15LFTkCB/0WTSZoOME3y5FxsOPoH/ssDRXf5LZ2/bCQLhKQ1xzUJ6YTjeX6vf/LJ0hu/uUYL42wOoxUpsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7860
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508154043.11859-1-sensor1010@163.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+Hi Lizhe,
 
-Use platform_get_irq_optional() to avoid error message for the
-optional irq.
+kernel test robot noticed the following build errors:
 
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
----
- drivers/gpio/gpio-mxc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next linus/master v6.4-rc1 next-20230508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 9d0cec4b82a3..aa5a9c25e415 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -406,7 +406,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 		return irq_count;
- 
- 	if (irq_count > 1) {
--		port->irq_high = platform_get_irq(pdev, 1);
-+		port->irq_high = platform_get_irq_optional(pdev, 1);
- 		if (port->irq_high < 0)
- 			port->irq_high = 0;
- 	}
+url:    https://github.com/intel-lab-lkp/linux/commits/Lizhe/dirvers-pinctrl-c-using-pinctrl_dev-dev-to-obtain-struct-device-dev/20230508-234502
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230508154043.11859-1-sensor1010%40163.com
+patch subject: [PATCH] dirvers/pinctrl.c : using pinctrl_dev->dev to obtain struct device * dev
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230509/202305090411.OyJRHVis-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/83751a28d7f5223597b6742300796fb80362dc20
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Lizhe/dirvers-pinctrl-c-using-pinctrl_dev-dev-to-obtain-struct-device-dev/20230508-234502
+        git checkout 83751a28d7f5223597b6742300796fb80362dc20
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202305090411.OyJRHVis-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/platform_device.h:13,
+                    from drivers/pinctrl/pinctrl-stmfx.c:12:
+   drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
+>> drivers/pinctrl/pinctrl-stmfx.c:714:25: error: 'pctldev' undeclared (first use in this function); did you mean 'pci_dev'?
+     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
+         |                         ^~~~~~~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/pinctrl/pinctrl-stmfx.c:714:17: note: in expansion of macro 'dev_err'
+     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
+         |                 ^~~~~~~
+   drivers/pinctrl/pinctrl-stmfx.c:714:25: note: each undeclared identifier is reported only once for each function it appears in
+     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
+         |                         ^~~~~~~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/pinctrl/pinctrl-stmfx.c:714:17: note: in expansion of macro 'dev_err'
+     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
+         |                 ^~~~~~~
+--
+   In file included from include/linux/printk.h:564,
+                    from include/asm-generic/bug.h:22,
+                    from arch/m68k/include/asm/bug.h:32,
+                    from include/linux/bug.h:5,
+                    from include/linux/io.h:11,
+                    from drivers/pinctrl/pxa/pinctrl-pxa2xx.c:9:
+   drivers/pinctrl/pxa/pinctrl-pxa2xx.c: In function 'pxa2xx_pmx_gpio_set_direction':
+>> drivers/pinctrl/pxa/pinctrl-pxa2xx.c:94:24: error: invalid use of undefined type 'struct pinctrl_dev'
+      94 |         dev_dbg(pctldev->dev, "set_direction(pin=%d): dir=%d\n",
+         |                        ^~
+   include/linux/dynamic_debug.h:222:29: note: in definition of macro '__dynamic_func_call_cls'
+     222 |                 func(&id, ##__VA_ARGS__);                       \
+         |                             ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '_dynamic_func_call_cls'
+     248 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:271:9: note: in expansion of macro '_dynamic_func_call'
+     271 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:155:9: note: in expansion of macro 'dynamic_dev_dbg'
+     155 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~
+   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:94:9: note: in expansion of macro 'dev_dbg'
+      94 |         dev_dbg(pctldev->dev, "set_direction(pin=%d): dir=%d\n",
+         |         ^~~~~~~
+   drivers/pinctrl/pxa/pinctrl-pxa2xx.c: In function 'pxa2xx_pmx_set_mux':
+   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:159:24: error: invalid use of undefined type 'struct pinctrl_dev'
+     159 |         dev_dbg(pctldev->dev, "set_mux(pin=%d): af=%d dir=%d\n",
+         |                        ^~
+   include/linux/dynamic_debug.h:222:29: note: in definition of macro '__dynamic_func_call_cls'
+     222 |                 func(&id, ##__VA_ARGS__);                       \
+         |                             ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '_dynamic_func_call_cls'
+     248 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:271:9: note: in expansion of macro '_dynamic_func_call'
+     271 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:155:9: note: in expansion of macro 'dynamic_dev_dbg'
+     155 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~
+   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:159:9: note: in expansion of macro 'dev_dbg'
+     159 |         dev_dbg(pctldev->dev, "set_mux(pin=%d): af=%d dir=%d\n",
+         |         ^~~~~~~
+
+
+vim +714 drivers/pinctrl/pinctrl-stmfx.c
+
+   638	
+   639	static int stmfx_pinctrl_probe(struct platform_device *pdev)
+   640	{
+   641		struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
+   642		struct device_node *np = pdev->dev.of_node;
+   643		struct stmfx_pinctrl *pctl;
+   644		struct gpio_irq_chip *girq;
+   645		int irq, ret;
+   646	
+   647		pctl = devm_kzalloc(stmfx->dev, sizeof(*pctl), GFP_KERNEL);
+   648		if (!pctl)
+   649			return -ENOMEM;
+   650	
+   651		platform_set_drvdata(pdev, pctl);
+   652	
+   653		pctl->dev = &pdev->dev;
+   654		pctl->stmfx = stmfx;
+   655	
+   656		if (!of_property_present(np, "gpio-ranges")) {
+   657			dev_err(pctl->dev, "missing required gpio-ranges property\n");
+   658			return -EINVAL;
+   659		}
+   660	
+   661		irq = platform_get_irq(pdev, 0);
+   662		if (irq <= 0)
+   663			return -ENXIO;
+   664	
+   665		mutex_init(&pctl->lock);
+   666	
+   667		/* Register pin controller */
+   668		pctl->pctl_desc.name = "stmfx-pinctrl";
+   669		pctl->pctl_desc.pctlops = &stmfx_pinctrl_ops;
+   670		pctl->pctl_desc.confops = &stmfx_pinconf_ops;
+   671		pctl->pctl_desc.pins = stmfx_pins;
+   672		pctl->pctl_desc.npins = ARRAY_SIZE(stmfx_pins);
+   673		pctl->pctl_desc.owner = THIS_MODULE;
+   674		pctl->pctl_desc.link_consumers = true;
+   675	
+   676		ret = devm_pinctrl_register_and_init(pctl->dev, &pctl->pctl_desc,
+   677						     pctl, &pctl->pctl_dev);
+   678		if (ret) {
+   679			dev_err(pctl->dev, "pinctrl registration failed\n");
+   680			return ret;
+   681		}
+   682	
+   683		ret = pinctrl_enable(pctl->pctl_dev);
+   684		if (ret) {
+   685			dev_err(pctl->dev, "pinctrl enable failed\n");
+   686			return ret;
+   687		}
+   688	
+   689		/* Register gpio controller */
+   690		pctl->gpio_chip.label = "stmfx-gpio";
+   691		pctl->gpio_chip.parent = pctl->dev;
+   692		pctl->gpio_chip.get_direction = stmfx_gpio_get_direction;
+   693		pctl->gpio_chip.direction_input = stmfx_gpio_direction_input;
+   694		pctl->gpio_chip.direction_output = stmfx_gpio_direction_output;
+   695		pctl->gpio_chip.get = stmfx_gpio_get;
+   696		pctl->gpio_chip.set = stmfx_gpio_set;
+   697		pctl->gpio_chip.set_config = gpiochip_generic_config;
+   698		pctl->gpio_chip.base = -1;
+   699		pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+   700		pctl->gpio_chip.can_sleep = true;
+   701	
+   702		girq = &pctl->gpio_chip.irq;
+   703		gpio_irq_chip_set_chip(girq, &stmfx_pinctrl_irq_chip);
+   704		/* This will let us handle the parent IRQ in the driver */
+   705		girq->parent_handler = NULL;
+   706		girq->num_parents = 0;
+   707		girq->parents = NULL;
+   708		girq->default_type = IRQ_TYPE_NONE;
+   709		girq->handler = handle_bad_irq;
+   710		girq->threaded = true;
+   711	
+   712		ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+   713		if (ret) {
+ > 714			dev_err(pctldev->dev, "gpio_chip registration failed\n");
+   715			return ret;
+   716		}
+   717	
+   718		ret = stmfx_pinctrl_gpio_function_enable(pctl);
+   719		if (ret)
+   720			return ret;
+   721	
+   722		ret = devm_request_threaded_irq(pctl->dev, irq, NULL,
+   723						stmfx_pinctrl_irq_thread_fn,
+   724						IRQF_ONESHOT,
+   725						dev_name(pctl->dev), pctl);
+   726		if (ret) {
+   727			dev_err(pctldev->dev, "cannot request irq%d\n", irq);
+   728			return ret;
+   729		}
+   730	
+   731		dev_info(pctldev->dev,
+   732			 "%ld GPIOs available\n", hweight_long(pctl->gpio_valid_mask));
+   733	
+   734		return 0;
+   735	}
+   736	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
