@@ -2,97 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0BD6FB156
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 15:21:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D9936FB18A
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 15:31:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232748AbjEHNVJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 May 2023 09:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        id S233886AbjEHNb4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 May 2023 09:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234149AbjEHNVC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 09:21:02 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBEF2C3E1
-        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 06:20:41 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-50bc37e1525so8808360a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 08 May 2023 06:20:41 -0700 (PDT)
+        with ESMTP id S229567AbjEHNbz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 09:31:55 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12EBE62
+        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 06:31:48 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-b99489836aaso3880714276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 May 2023 06:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683552039; x=1686144039;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9DPSTYLZzx0IB6urGrXbO9kytDdB95tFh7AHyKZFl7s=;
-        b=kaRvbigS/7N1hlGDbYjC230gag7zBGHtym03wChKWPTr9C1dlkkHeSRMuoizAhx07g
-         i//WLMw2mSEmWrWJqUCcVBB1ZBmPV9H8kVE7UmXgAVihUegtK70UuTZDziQnWlbYiOPo
-         BTHfKtc6dcy8hDt+u0tTZKMNvYmMrAPFJbJLEnpRie+51AeXXqjiTw9w1ctnz3N5Qosb
-         rSV04DbMHej61wMkgPYOVAI1QvAmLXCK0HaPFEyNoZ1AIqJPONRFGMdJXirv3cQCMPTi
-         rM76dTgHGCz4PKIuLWw5vbY2jTq1xdv69duh4R54vAV49uRSDAbJ9qsdbar4Al5b3Gwp
-         d9WQ==
+        d=linaro.org; s=google; t=1683552708; x=1686144708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nr9w5cmS2eq49rL51s0xqNBBfFgzUL5Y5GMD9MQOesQ=;
+        b=TO3PvQZADCj0COlKZ4+WHaCTfp6EyaO6auN7izNpEs3K7mdd7CQI2Y8zsFlZFlZmQ8
+         6rqM4PrkJ8yQGZVKZUiWjnwDXDvRa6dN2LCqcBqoF5gEuwvjm+fkMAMOC8uAD0pw8URA
+         DJc+2/MybkZyF8aPMRXjty1yFohrH6F64Tcf+JhIiMQVfGSuPn7lmlH5t4zKAKsGweUn
+         XRJ2J6nJi27rAWu3tyb6hi0FkjkJXDZiiiZbOw8/7rm1Aymjski5I8qj+loUM///xN4G
+         BCoc9CwzSkHELG1OQFHiCeQfemwxer0fp/3g2J3r8/lyEfzAXPxSj4PmiVNlP9X9bY14
+         LbYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683552039; x=1686144039;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9DPSTYLZzx0IB6urGrXbO9kytDdB95tFh7AHyKZFl7s=;
-        b=JOdGoWLQegxHEaZ86SAmd+wolZNBjS+lKwUygBesbR142bYCIWx1RNtp/eHk2gZdSH
-         lJBe1lXk3oe4CQ82RRuvAb1T64CnwvzYghKC3cc5Gyh2pbD1g9Gv4IidGMJ6ZgBQJIjb
-         dlKBPcxKsLiGcy4xcUuadaPRrtU90iyhE/MBB5Xu4jjaJ5Xd/dWt35ud8oe2wGVjaFKF
-         TbDO3OYDRFTM7PKnQ3pkj29XIvv399is7no35qtEbQASLCekxK6wdbw2/Q+wHm3wJ0ih
-         x+7zidtarWSlBwDJ1DIxnsyJWIGhkqfvtUTb5gyjfLG+JPkve1sx3usWvpA9E9HI5cNx
-         vDtQ==
-X-Gm-Message-State: AC+VfDzrPAdMezNNd4RDbkpEZpWCEX3qelb+QXenwr7kYs/Y7uJplCkR
-        60XzcQDGdvksmI2zAb/sOiyUmMq2iVlz9A==
-X-Google-Smtp-Source: ACHHUZ4IaC0FqAkYNwiY8ldS4aQxf4ciE68zWkCg5/XCpyNP1aNbxW0Sk7zjJSLEsKKx9gGMk5PP+g==
-X-Received: by 2002:aa7:cd4e:0:b0:504:ae37:77d0 with SMTP id v14-20020aa7cd4e000000b00504ae3777d0mr9154152edw.10.1683552039593;
-        Mon, 08 May 2023 06:20:39 -0700 (PDT)
-Received: from computer001049.comelit.it (net-2-40-105-25.cust.vodafonedsl.it. [2.40.105.25])
-        by smtp.gmail.com with ESMTPSA id s2-20020aa7cb02000000b0050d82f96860sm3551901edt.59.2023.05.08.06.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 06:20:39 -0700 (PDT)
-From:   Milo Spadacini <milo.spadacini@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, warthog618@gmail.com,
-        andy.shevchenko@gmail.com
-Cc:     Milo Spadacini <milo.spadacini@gmail.com>
-Subject: [PATCH v3] tools: gpio: fix debounce_period_us output of lsgpio
-Date:   Mon,  8 May 2023 15:18:48 +0200
-Message-Id: <20230508131848.142602-1-milo.spadacini@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20221208; t=1683552708; x=1686144708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nr9w5cmS2eq49rL51s0xqNBBfFgzUL5Y5GMD9MQOesQ=;
+        b=QpRJYB93xLeTw1G0ITJGNMSjbHU2IAxSN1TQlioUNkfFOTI+IFahUSZklEpVvxRaHZ
+         Q3dlfkJKZVP4QM/CDMFEnFPss+NPZ2k4zlK00W3PvdiaaVFZKPaRhRDa1hE5n941Or6e
+         iX4HstYltV0g/E+CpyZzw/q7mNZUpno/6oBM+HgDD/4zYArIOpWI7lDLYp2JOY4TwD4Q
+         vRJ50b633LK/nXuhZ8JnZQ8Vf4zUEbpMOJRrNPPTtI3FL1OpQV7Pu3tI21hoACHKmuv3
+         t5AqkNpyw37nkn9KrXLO4vOZTSN9R9wf91KCeC3fXy9wLQjeMtGkPYKQ2jf6rmgRaIpA
+         rupQ==
+X-Gm-Message-State: AC+VfDygHg6N5IBUyKOV2NN+5y3SfKVa0Lm2Q2KNnAAyh92gn0bu+HNB
+        l9n+9HV1dgKSs6mIxVpZR/udByRBSXfd2TSaanN9lg==
+X-Google-Smtp-Source: ACHHUZ7wAqyTe5iPHQGaSdYgh3yDOd0MhcEVy5FmoJaSUIRilMmSMYivYIKa/FJ4sffOGbGiXaYB8ob851Z0KwlH294=
+X-Received: by 2002:a25:25c3:0:b0:ba1:9c87:113f with SMTP id
+ l186-20020a2525c3000000b00ba19c87113fmr10800782ybl.28.1683552707727; Mon, 08
+ May 2023 06:31:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230428061109.102343-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20230428061109.102343-1-yang.lee@linux.alibaba.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 May 2023 15:31:36 +0200
+Message-ID: <CACRpkdY0bX_Sw_6zxmp4pPZD1+_mhYhO7XdwpX6NiUyiY-=wuQ@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: brcmstb: Use devm_platform_get_and_ioremap_resource()
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     brgl@bgdev.pl, opendmb@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix incorrect output that could occur when more attributes are used and
-GPIO_V2_LINE_ATTR_ID_DEBOUNCE is not the first one.
+On Fri, Apr 28, 2023 at 8:11=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.com=
+> wrote:
 
-Signed-off-by: Milo Spadacini <milo.spadacini@gmail.com>
----
-V2 -> V3 add signature
-V1 -> V2 fix commit syntax
----
- tools/gpio/lsgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Convert platform_get_resource(), devm_ioremap_resource() to a single
+> call to devm_platform_get_and_ioremap_resource(), as this is exactly
+> what this function does.
+>
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index c61d061247e1..52a0be45410c 100644
---- a/tools/gpio/lsgpio.c
-+++ b/tools/gpio/lsgpio.c
-@@ -94,7 +94,7 @@ static void print_attributes(struct gpio_v2_line_info *info)
- 	for (i = 0; i < info->num_attrs; i++) {
- 		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
- 			fprintf(stdout, ", debounce_period=%dusec",
--				info->attrs[0].debounce_period_us);
-+				info->attrs[i].debounce_period_us);
- 	}
- }
- 
--- 
-2.34.1
+Looks good
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
