@@ -2,165 +2,299 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D92336FCAA1
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 18:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3933D6FCAB7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 18:06:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234673AbjEIQA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 May 2023 12:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
+        id S234919AbjEIQGj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 May 2023 12:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235526AbjEIQAy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 12:00:54 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2044.outbound.protection.outlook.com [40.107.6.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7546730DF
-        for <linux-gpio@vger.kernel.org>; Tue,  9 May 2023 09:00:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jwtKDn2kbi3AM7rZRzzjliTHLI3PTswHikuJpaTH74L2nJ8pYjHF7baIzm9afulXHK5dl6dVxoIV/PSUoNoXFGXqWCrcY8xZ6og2p9Cs9y8h3cDDdSvGaiP/Qst64+Gsi/HBfXVYsLUhGFbgY3bE+mQvyaJ5Se+flnAELQCKzhlTC6Lai0hFZTlQTESyr7A5Qdzq6Ju4QtoLiW3xB19kjDwAK4pvGLvNVctOiPhJLGbl4LQmPyvVWyOg36w2wzeWH0LLbUmtS7Fc4FudzFAY6/59t9/pfRZYibv85SpaiZO9WVh9KLz9fNhW+JmWKa43ooIk2QEbDu1Tt0wnvDmBTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5+wYwyEqeCxyIbJXENFGTSLz1rEoFKjD48R8BxRYtPM=;
- b=f1IRp2sgrUoHhsnot0pm/2c+25m+LgB4iadtGir/WUjSSaMPCjnYVO7UF+7b70QhI6feDDkB5nFXOeDkFp8dLorcBWRPD99QMzTd5jSI7z2fbffGggUYQSEmj3YOjLSn6RhK92gbg4YS+lJv2WWcPnHwFGldVWlJqcpKVyRNNkoaS/dwKKuDt8KqZsrud8iih+10Md9PvqEGvBCBgb/0MCzTKbaueoGjxUsdp1LU63vtf0Q47qghvzD3N99VV9lHKzCPcfBzGLbVyHgmJtj6NuQscl0fdwMDHYJ8qnSkA2KZi7I+DlkpmaZtK+lhoODXsEluxh5NRANjoVM5MBZynQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5+wYwyEqeCxyIbJXENFGTSLz1rEoFKjD48R8BxRYtPM=;
- b=Bf5U45q7UVv5I6n6JVyPm/s1BjJtTi7IuON2eyuRLlqbT89HrtkWvxbRfDZVDPMiXjGdsxKJAUqUkipXIKAbJDB/0ZTPVSJbjiqcw3MwshXupt/pkkeswcdOtMfGN6kqTl6j1jsgja0fBUrdwHkNP8M+iBygGWWg1sVgCE0SfHw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
- by PA4PR04MB7677.eurprd04.prod.outlook.com (2603:10a6:102:eb::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.31; Tue, 9 May
- 2023 16:00:51 +0000
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::28fb:82ec:7a6:62f3]) by PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::28fb:82ec:7a6:62f3%5]) with mapi id 15.20.6363.032; Tue, 9 May 2023
- 16:00:51 +0000
-From:   Shenwei Wang <shenwei.wang@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-gpio@vger.kernel.org, imx@lists.linux.dev, linux-imx@nxp.com,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>
-Subject: [PATCH v2 1/1] gpio: mxc: use platform_get_irq_optional() to avoid an error message
-Date:   Tue,  9 May 2023 11:00:16 -0500
-Message-Id: <20230509160016.1074446-1-shenwei.wang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR04CA0025.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::35) To PAXPR04MB9185.eurprd04.prod.outlook.com
- (2603:10a6:102:231::11)
+        with ESMTP id S231488AbjEIQGi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 12:06:38 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C7D46B5;
+        Tue,  9 May 2023 09:06:36 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-52caed90d17so3337166a12.0;
+        Tue, 09 May 2023 09:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683648396; x=1686240396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3D71as6LJWsYMDTb4BiasqKDmId0LkGzfVkMgY6tMoc=;
+        b=i8dhhnQhpe5/KpsAyTAlVssvMR0ux0o5onT9Qxzie9BfoGIHQ6SOniG0AlO8B8ZxcL
+         5ycfkMwgNjmSIibN/NNfkn5qZaljGAlKPr57vAGXYGktC0jXrY5E3SYQOEMfRwCeEQFL
+         uKWsMhtcVzW3In+kDKdi2wn5Zt3T9g0umMlR3PVNGEAmEwpKDiQm8j3Nf2+fS8+b6wrQ
+         slylNYxXZbljTUQPhSahBLwdE6akjNBDXMX3KSnJBc6J9/YegRPSLvDgCQi4f4sn080/
+         TTwiccVSfo0zo/TKN8B3VIRGxBT4XF5YWG9gNZVgUmrGAPLNalb6F/h0pDd29iRKFfen
+         IzNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683648396; x=1686240396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3D71as6LJWsYMDTb4BiasqKDmId0LkGzfVkMgY6tMoc=;
+        b=FL9KIVU6CPp+vYH4I42K4NbiR3GC85wqxdLwqyjbY3ibrN/m7fE1oUZccGIZfEMsUo
+         8LLP4jwH7JscImeBcc+zCko5NAlonuhdLVg+7exS5rzr0D4EFCIf7A6zuVN2lEoOZG6Y
+         iu8xqSbLsAsU3mPw5vFTsOVeQeY5vNgrVcDDXym6jZmRMo937o0e4mXL7C5/7e+faxgn
+         bPwPIrY5NJUK0oUQJgPm2k83bfqGp1h2lJyzu98fRixKNInjJJYBi9FlZ8KHZdEa4AXA
+         igZl8eC0beww4j+fzji17OsKCpY4pob8+bPS10B3zjLqloTMX0/kkWSjPsAyoWveke/h
+         IVbw==
+X-Gm-Message-State: AC+VfDwjOfKcYCdMy7TZQntMYl+nOwEP38FEibbkA5qMLQo84hQiUkb4
+        sANt2I58TYdDP/Vfux2h7S0=
+X-Google-Smtp-Source: ACHHUZ6vq6rgO7usSQ6hQ8Rf6iwdW69I+IF91CuCUFV2Mybvsjlx3XmHs9ctzTW8ientqNcQ3qg9iA==
+X-Received: by 2002:a17:90a:ba8a:b0:240:f8a6:55c7 with SMTP id t10-20020a17090aba8a00b00240f8a655c7mr14101831pjr.20.1683648395618;
+        Tue, 09 May 2023 09:06:35 -0700 (PDT)
+Received: from [192.168.50.148] (net-2-32-39-33.cust.vodafonedsl.it. [2.32.39.33])
+        by smtp.gmail.com with ESMTPSA id o6-20020a17090ac08600b00250ad795d72sm1599484pjs.44.2023.05.09.09.06.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 09:06:34 -0700 (PDT)
+Message-ID: <e25723bf-be85-b458-a84c-1a45392683bb@gmail.com>
+Date:   Tue, 9 May 2023 18:06:26 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|PA4PR04MB7677:EE_
-X-MS-Office365-Filtering-Correlation-Id: 852cd8fc-67e7-4817-a67b-08db50a68f79
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dFglhLdEvquT1Oizfreirk+UqmUytSahzpoc7Kv74pGCJBSwLleuNRTN92gs69P0V5FkcsQfL5sg0h+QWZPRjtVuHmR1RDq46ue8BX6DfAWDbSTLT027knvph9U/Pn7S95FMx4Im7LficWLZzD2QF5zN1u32Oh649KdryceGxq7IcL9+nVdrd7lMKC0nvHLyZifsj66+6hXsy3ifWeVo9cwCHM3pPFv8ks2xgxax4W9gbdYldRCAmOxFB5yw1oRGk0rXEjFFGu1ssKj4klSRdjBd9JsApVSme0Qdy1nktEMeyg+BFZv/aAkrQ8kRkPO9v13+xgLmzmFd+ZyDbd+Dtvf1eiiS5jiqq2ihtE7/FY0ynq8+TyV3pHrC2HC/KjWN6Rvf8EXKS36blnzjcL+KT8DQnfROXXCGaqwm05LJ3dIcrTJ7MzJpeC40QQ7dDSUN2DpVBJw/4LS+ayIumMC/KK2dPmUA1mrARSl7hVJd1Bq+M/eMPEjPtVn0mATs8xer3y5ntt58LWQopUNZzzwuPlecWEXfbSbKbTvTQubxay0EP5LN7BZOL4cIEtogKQbAywHe72paYGu+Lh4XQeQw8lay+NK4PHNDlTpR2cNEDZXqfCqArjeMnAcA81EGcssA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199021)(86362001)(66476007)(36756003)(52116002)(110136005)(54906003)(316002)(478600001)(4326008)(66556008)(6486002)(66946007)(5660300002)(41300700001)(2906002)(15650500001)(8676002)(8936002)(186003)(44832011)(38350700002)(38100700002)(26005)(55236004)(6506007)(1076003)(6512007)(83380400001)(2616005)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iAk05bBtimjQAclzqUEtzXUxcJAP7ujXttKNmWQiomSmVId7t2vHiaoXP0ft?=
- =?us-ascii?Q?/d8MVjjTbhQoJLcu+gP5BeqvQa6Y2ydl/jSR2GhIdyn0hGzUsh6LTKw1DX5/?=
- =?us-ascii?Q?G2CJWrabq4BNFfivzD9BI911ks0UiMm7SxGSV2xrTGpXrmyrldn2KFO1OGto?=
- =?us-ascii?Q?CcqP0l9qNONXhnUtnbOxPi+idAvDpyJMmFAqH6KX7mgHv4HSIwh+qjpSoXpQ?=
- =?us-ascii?Q?GwQ6ZEvPq+q9ZHWQYbe1hLDyD1EAu4fGbVaFWb9MFYN5CgM0f7rMxqKv7j3h?=
- =?us-ascii?Q?ktVAZZNgNVmjPjMyhGS/JInlXmpZ3pVApqbQPA6qXXKgzisNIeWSSSufhd9M?=
- =?us-ascii?Q?XfTlmREmqUTCVLxHrdW8zEeEX4LGUqXmXPZOh2y+rLIsGPWU7UnYWwjoZO5l?=
- =?us-ascii?Q?PuanDiNMzxHDThp7FxqSZ21oso09LVmWIwgUudmEXHrZFTSRWmhmcUuEzUFE?=
- =?us-ascii?Q?9FEa7Ga1yuESrNdua+3r8GhAaeWhwCZE6U4TYnWXacoScHbDbnoYPcLRU9Pz?=
- =?us-ascii?Q?Y/aadq70BTDpqaQryz71j3i5+VTzawDP711N9td66iVLLnmLSaAUaSqvkvlH?=
- =?us-ascii?Q?2pSrSo+1OQtyvW2RhSesbsqflBmhmxsqCGv441Qlkxy6ZXEsuovDwrVltliC?=
- =?us-ascii?Q?kF7c2XGQf7AXWXuybdCXea7d7BbGHwb9Z5oGU0QsIwQOJ87u6bJ6Z6LLrdgv?=
- =?us-ascii?Q?wuuP0ukK5A/FTXwhmVOSgDk5OuDG/4oy3avQzY+kwkvZ8kdPMLO3M9SNoQp+?=
- =?us-ascii?Q?sUVFFcZhVUBgch05bTBGk2mf+r4DUIatW4Yq1aitQQ+iZ+ggMWhmmwUazGId?=
- =?us-ascii?Q?jGoDu078OXVH8ngJ3g7ugpiWgr6su+FoOE7Z/93scOjxirvqnGTPtoH/EU5+?=
- =?us-ascii?Q?aq7UQVEqs7b2XaoKHm92YWDSNWccjnmGOIwzUH9PzGFTrJYFB5kgLwz4L2tX?=
- =?us-ascii?Q?vcdFF7l0mXPUUIsznD41JJe8UB0O/VJFHhfcvyE0fWbyCAyjriF+4xxkEzzK?=
- =?us-ascii?Q?UtZ/fXzdzQZXZzEtg2rEYqQKHccBNA7NREBinIg2rSyejWLepuTYnR3n967b?=
- =?us-ascii?Q?6SA44nv2ryeTv/9krtfWtp1iHY2HwC4xKbi5OYniYwMWRjjECVqVohStXpJV?=
- =?us-ascii?Q?GHvouLfILHPqIHJIUEu8SIBxRq5OU8YTRmxRoJE0p2RgPZrkoKomkrnDSJm2?=
- =?us-ascii?Q?Iq5D7OUpnQH5gptIuu0ZI7Lkw4UPLmtGF1MMp+o5h4fo0h0ZwS7PhLq1XAh/?=
- =?us-ascii?Q?Bs7dyCDQd19x9CwmfRA57IfXm+Z2XQQmBReZMjm3Uqq3vdKVD/y8J9wNYxCl?=
- =?us-ascii?Q?UldNkbLE9xRDdFYUT57cMkFh3Zs5dxtf5R4ORoXZqFPXSqQ//gUq8xrFc0o/?=
- =?us-ascii?Q?FZK86ny/zqMXeOOFuGl+sPNUl2UaYBKKfmlB/kVqZNwKkM4CUzI90ogM5K4I?=
- =?us-ascii?Q?fy9yDnxvTOqkCcrVPjFo23gMQO8Su/OYdI3W5v8bxheLP0YWblc1AfOkpi5j?=
- =?us-ascii?Q?GzYUR9BpukFJhDz8H8BDpenRnZZlEW0ij34oMDzkY0yqpyQBn4kUVrdQKIEb?=
- =?us-ascii?Q?4wFAUikJaZkfBZZuy4JGCKshVsWhHG+x/KtxtyG1?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 852cd8fc-67e7-4817-a67b-08db50a68f79
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2023 16:00:50.8100
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9A73QpS0zulc5JWlJOdtWanxtGGyFH9ewnqdnQMqb9NdlXnRJStQ/f6a87orcs+Mtfe6+I8ebYOUnKIx0Z5haw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7677
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 09/18] soc: qcom: Add qcom's pstore minidump driver
+ support
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-10-git-send-email-quic_mojha@quicinc.com>
+From:   Luca Stefani <luca.stefani.ge1@gmail.com>
+In-Reply-To: <1683133352-10046-10-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
 
-Use platform_get_irq_optional() to avoid an error message for the
-optional irq.
+On 03/05/23 19:02, Mukesh Ojha wrote:
+> This driver was inspired from the fact pstore ram region should be
+> fixed and boot firmware need to have awarness about this region,
+> so that it will be persistent across boot. But, there are many
+> QCOM SoC which does not support warm boot from hardware but they
+> have minidump support from the software, and for them, there is
+> no need of this pstore ram region to be fixed, but at the same
+> time have interest in the pstore frontends. So, this driver
+> get the dynamic reserved region from the ram and register the
+> ramoops platform device.
+>
+>   +---------+     +---------+   +--------+     +---------+
+>   | console |     | pmsg    |   | ftrace |     | dmesg   |
+>   +---------+     +---------+   +--------+     +---------+
+>         |             |             |              |
+>         |             |             |              |
+>         +------------------------------------------+
+>                            |
+>                           \ /
+>                    +----------------+
+>              (1)   |pstore frontends|
+>                    +----------------+
+>                            |
+>                           \ /
+>                   +------------------- +
+>              (2)  | pstore backend(ram)|
+>                   +--------------------+
+>                            |
+>                           \ /
+>                   +--------------------+
+>              (3)  |qcom_pstore_minidump|
+>                   +--------------------+
+>                            |
+>                           \ /
+>                     +---------------+
+>              (4)    | qcom_minidump |
+>                     +---------------+
+>
+> This driver will route all the pstore front data to the stored
+> in qcom pstore reserved region and the reason of showing an
+> arrow from (3) to (4) as qcom_pstore_minidump driver will register
+> all the available frontends region with qcom minidump driver
+> in upcoming patch.
+>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>   drivers/soc/qcom/Kconfig                |  11 +++
+>   drivers/soc/qcom/Makefile               |   1 +
+>   drivers/soc/qcom/qcom_pstore_minidump.c | 116 ++++++++++++++++++++++++++++++++
+>   3 files changed, 128 insertions(+)
+>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+>
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 15c931e..afdc634 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -293,4 +293,15 @@ config QCOM_MINIDUMP
+>   	  these selective regions will be dumped instead of the entire DDR.
+>   	  This saves significant amount of time and/or storage space.
+>   
+> +config QCOM_PSTORE_MINIDUMP
+> +	tristate "Pstore support for QCOM Minidump"
+> +	depends on ARCH_QCOM
+> +	depends on PSTORE_RAM
+> +	depends on QCOM_MINIDUMP
+> +	help
+> +	  Enablement of this driver ensures that ramoops region can be anywhere
+> +	  reserved in ram instead of being fixed address which needs boot firmware
+> +	  awareness. So, this driver creates plaform device and registers available
+> +	  frontend region with the Qualcomm's minidump driver.
+> +
+>   endmenu
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index 1ebe081..02d30d7 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -34,3 +34,4 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
+>   obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
+>   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= ice.o
+>   obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
+> +obj-$(CONFIG_QCOM_PSTORE_MINIDUMP) += qcom_pstore_minidump.o
+> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
+> new file mode 100644
+> index 0000000..8d58500
+> --- /dev/null
+> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_reserved_mem.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pstore_ram.h>
+> +#include <soc/qcom/qcom_minidump.h>
+> +
+> +struct qcom_ramoops_config {
+> +	unsigned long	record_size;
+> +	unsigned long	console_size;
+> +	unsigned long	ftrace_size;
+> +	unsigned long	pmsg_size;
+> +	unsigned int	mem_type;
+> +	unsigned int	flags;
+> +	int		max_reason;
+> +};
+> +
+> +struct qcom_ramoops_dd {
+> +	struct ramoops_platform_data qcom_ramoops_pdata;
+> +	struct platform_device *ramoops_pdev;
+> +};
+> +
+> +static struct qcom_ramoops_config default_ramoops_config = {
+> +	.mem_type = 2,
+> +	.record_size = 0x0,
+> +	.console_size = 0x200000,
+> +	.ftrace_size = 0x0,
+> +	.pmsg_size = 0x0,
+> +};
 
-Restructuring the codes to ask for the first mandatory IRQ before
-the optional one.
+This is effectively hard-cording the configuration of ramoops.
 
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
----
- v2:
-  - restructuring the codes per Andy Shevchenko's review
+Since the memory range is dynamic and by itself doesn't impose any 
+limitation this should be configurable in the device-tree, like a 
+standard ramoops entry backed by a memory range.
 
- drivers/gpio/gpio-mxc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+I think this should provide the same interface/knobs as pstore-ram does, 
+unless there's some known limitations to minidump, in which case those 
+should be expressed.
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 9d0cec4b82a3..b8fa44a3fd4c 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -405,16 +405,16 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 	if (irq_count < 0)
- 		return irq_count;
-
--	if (irq_count > 1) {
--		port->irq_high = platform_get_irq(pdev, 1);
--		if (port->irq_high < 0)
--			port->irq_high = 0;
--	}
--
- 	port->irq = platform_get_irq(pdev, 0);
- 	if (port->irq < 0)
- 		return port->irq;
-
-+	if (irq_count > 1) {
-+		err = platform_get_irq_optional(pdev, 1);
-+		if (err > 0)
-+			port->irq_high = err;
-+	}
-+
- 	/* the controller clock is optional */
- 	port->clk = devm_clk_get_optional(&pdev->dev, NULL);
- 	if (IS_ERR(port->clk))
---
-2.34.1
-
+> +
+> +static struct qcom_ramoops_dd *qcom_rdd;
+> +static int qcom_ramoops_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *of_node = pdev->dev.of_node;
+> +	struct device_node *node;
+> +	const struct qcom_ramoops_config *cfg;
+> +	struct ramoops_platform_data *pdata;
+> +	struct reserved_mem *rmem;
+> +	long ret;
+> +
+> +	node = of_parse_phandle(of_node, "memory-region", 0);
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	rmem = of_reserved_mem_lookup(node);
+> +	of_node_put(node);
+> +	if (!rmem) {
+> +		dev_err(&pdev->dev, "failed to locate DT /reserved-memory resource\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	qcom_rdd = devm_kzalloc(&pdev->dev, sizeof(*qcom_rdd), GFP_KERNEL);
+> +	if (!qcom_rdd)
+> +		return -ENOMEM;
+> +
+> +	cfg = of_device_get_match_data(&pdev->dev);
+> +	if (!cfg) {
+> +		dev_err(&pdev->dev, "failed to get supported matched data\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	pdata = &qcom_rdd->qcom_ramoops_pdata;
+> +	pdata->mem_size = rmem->size;
+> +	pdata->mem_address = rmem->base;
+> +	pdata->mem_type = cfg->mem_type;
+> +	pdata->record_size = cfg->record_size;
+> +	pdata->console_size = cfg->console_size;
+> +	pdata->ftrace_size = cfg->ftrace_size;
+> +	pdata->pmsg_size = cfg->pmsg_size;
+> +	pdata->max_reason = KMSG_DUMP_PANIC;
+> +
+> +	qcom_rdd->ramoops_pdev = platform_device_register_data(NULL, "ramoops", -1,
+> +							       pdata, sizeof(*pdata));
+> +	if (IS_ERR(qcom_rdd->ramoops_pdev)) {
+> +		ret = PTR_ERR(qcom_rdd->ramoops_pdev);
+> +		dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
+> +		qcom_rdd->ramoops_pdev = NULL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_ramoops_remove(struct platform_device *pdev)
+> +{
+> +	platform_device_unregister(qcom_rdd->ramoops_pdev);
+> +	qcom_rdd->ramoops_pdev = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_ramoops_of_match[] = {
+> +	{ .compatible = "qcom,sm8450-ramoops-minidump", .data = &default_ramoops_config },
+> +	{ .compatible = "qcom,ramoops-minidump", .data = &default_ramoops_config },
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, qcom_ramoops_of_match);
+> +static struct platform_driver qcom_ramoops_drv = {
+> +	.driver		= {
+> +		.name	= "qcom,ramoops-minidump",
+> +		.of_match_table = qcom_ramoops_of_match,
+> +	},
+> +	.probe = qcom_ramoops_probe,
+> +	.remove = qcom_ramoops_remove,
+> +};
+> +
+> +module_platform_driver(qcom_ramoops_drv);
+> +
+> +MODULE_DESCRIPTION("Qualcomm minidump pstore driver");
+> +MODULE_LICENSE("GPL");
