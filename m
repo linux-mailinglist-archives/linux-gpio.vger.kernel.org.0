@@ -2,69 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6441E6FB947
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 May 2023 23:20:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A97F76FBD2F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 04:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbjEHVUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 May 2023 17:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59252 "EHLO
+        id S233828AbjEICaM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 May 2023 22:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjEHVUR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 17:20:17 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC118F;
-        Mon,  8 May 2023 14:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683580816; x=1715116816;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZXD+ewt6EPlLmAFkTGfXobVhsHMapRgravjPxFdOVE4=;
-  b=a43J2D7mz0ajuhi6OAaU97iordnG5/AXXlAYqyCyZv97YR0h/TWAQR+U
-   bUsg8vf/UjgpH0rH6H7p+gisnoCMqIu/U2kaJt4zpgMZi3Og3O/WV3hjS
-   SlWG86Aaf5jTf+nGbDi3TGsjnurwsaHJ1JTQpCrbSaZRotmMK5IjAzkcO
-   7VZ2SzBLajeizdHOgj/jJjz8l3k+SpklWJI3fTICrU1fZ0IXTAG4mWxAH
-   wUXUEUaQ0j+hzB96fUY/A+UkLQomXKYxuHb/31TRD2fovo/5It3QAZJsf
-   uvn1JuanRrfAYYrEj3C7TwmrA9/k6BWDkup9yZJzIWmxb+HO5fxg6kDsd
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="436079617"
-X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="436079617"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 14:19:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="692727524"
-X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="692727524"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2023 14:19:42 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pw8Gk-0001QT-02;
-        Mon, 08 May 2023 21:19:42 +0000
-Date:   Tue, 9 May 2023 05:19:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lizhe <sensor1010@163.com>, marcan@marcan.st, sven@svenpeter.dev,
-        alyssa@rosenzweig.io, linus.walleij@linaro.org,
-        neil.armstrong@linaro.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com, daniel@zonque.org,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr
-Cc:     oe-kbuild-all@lists.linux.dev, asahi@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-oxnas@groups.io,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Lizhe <sensor1010@163.com>
-Subject: Re: [PATCH] dirvers/pinctrl.c : using pinctrl_dev->dev to obtain
- struct device * dev
-Message-ID: <202305090411.OyJRHVis-lkp@intel.com>
-References: <20230508154043.11859-1-sensor1010@163.com>
+        with ESMTP id S234296AbjEICaL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 22:30:11 -0400
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B225469C;
+        Mon,  8 May 2023 19:29:53 -0700 (PDT)
+X-QQ-mid: bizesmtp78t1683599338tav6i44r
+Received: from wxdbg.localdomain.com ( [125.119.253.217])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Tue, 09 May 2023 10:28:39 +0800 (CST)
+X-QQ-SSF: 01400000000000I0Z000000A0000000
+X-QQ-FEAT: LE7C6P2vL8S1CRIbgI3gKRvRenjzf/dLyRfNopDzpyZ2NgrD6JR30LZyzKC46
+        shSM9vwtmyUawiMD2WMKUvv3WjqJ9R31lrd+O7OPcmFzoVrTqRJmwhQmgoIUBFEc5StkuIa
+        dPGG53Bwp5sqlwV1B3QOplA87JVlUivaBDvWGPDJreGy5kUmlfnsZZC/Rdhvof5IhXFuh3K
+        N+lOMtEi2IYZ22TUdPW4rJR39W6z84V8i6R3HeglpBfnF4iF0PfX5Ocmgcue5rSnE1gau/M
+        R5D38FlNA40UxL4NYq5W2iThtoivpMir+YhRhuDJUtvum0HhsXkxa/3RnR8PZgmlotSlhio
+        gpJH86l2hnr/ea0/0Vi/7LKmvpd3M2yN/aRSif6B0FCk6R/rSdP7X39xzxlyA==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 15120649050218020363
+From:   Jiawen Wu <jiawenwu@trustnetic.com>
+To:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk
+Cc:     linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com, Jiawen Wu <jiawenwu@trustnetic.com>
+Subject: [PATCH net-next v7 0/9] TXGBE PHYLINK support
+Date:   Tue,  9 May 2023 10:27:25 +0800
+Message-Id: <20230509022734.148970-1-jiawenwu@trustnetic.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230508154043.11859-1-sensor1010@163.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,211 +51,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lizhe,
+Implement I2C, SFP, GPIO and PHYLINK to setup TXGBE link.
 
-kernel test robot noticed the following build errors:
+Because our I2C and PCS are based on Synopsys Designware IP-core, extend
+the i2c-designware and pcs-xpcs driver to realize our functions.
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next linus/master v6.4-rc1 next-20230508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v6 -> v7:
+- change swnode property of I2C platform to be boolean
+- use device_property_present() to match I2C device data
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lizhe/dirvers-pinctrl-c-using-pinctrl_dev-dev-to-obtain-struct-device-dev/20230508-234502
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230508154043.11859-1-sensor1010%40163.com
-patch subject: [PATCH] dirvers/pinctrl.c : using pinctrl_dev->dev to obtain struct device * dev
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230509/202305090411.OyJRHVis-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/83751a28d7f5223597b6742300796fb80362dc20
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Lizhe/dirvers-pinctrl-c-using-pinctrl_dev-dev-to-obtain-struct-device-dev/20230508-234502
-        git checkout 83751a28d7f5223597b6742300796fb80362dc20
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/
+v5 -> v6:
+- fix to set error code if pointer of txgbe is NULL
+- change "if" to "switch" for *_i2c_dw_xfer_quirk()
+- rename property for I2C device flag
+- use regmap to access I2C mem region
+- use DEFINE_RES_IRQ()
+- use phylink_mii_c45_pcs_get_state() for DW_XPCS_10GBASER
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202305090411.OyJRHVis-lkp@intel.com/
+v4 -> v5:
+- add clock register
+- delete i2c-dw.h with platform data
+- introduce property "i2c-dw-flags" to match device flags
+- get resource from platform info to do ioremap
+- rename quirk functions in i2c-designware-*.c
+- fix calling txgbe_phylink_init()
 
-All errors (new ones prefixed by >>):
+v3 -> v4:
+- modify I2C transfer to be generic implementation
+- avoid to read DW_IC_COMP_PARAM_1
+- remove redundant "if" statement
+- add specific labels to handle error in txgbe_init_phy(), and remove
+  "if" conditions in txgbe_remove_phy()
 
-   In file included from include/linux/device.h:15,
-                    from include/linux/platform_device.h:13,
-                    from drivers/pinctrl/pinctrl-stmfx.c:12:
-   drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
->> drivers/pinctrl/pinctrl-stmfx.c:714:25: error: 'pctldev' undeclared (first use in this function); did you mean 'pci_dev'?
-     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
-         |                         ^~~~~~~
-   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                         ^~~
-   drivers/pinctrl/pinctrl-stmfx.c:714:17: note: in expansion of macro 'dev_err'
-     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
-         |                 ^~~~~~~
-   drivers/pinctrl/pinctrl-stmfx.c:714:25: note: each undeclared identifier is reported only once for each function it appears in
-     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
-         |                         ^~~~~~~
-   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                         ^~~
-   drivers/pinctrl/pinctrl-stmfx.c:714:17: note: in expansion of macro 'dev_err'
-     714 |                 dev_err(pctldev->dev, "gpio_chip registration failed\n");
-         |                 ^~~~~~~
---
-   In file included from include/linux/printk.h:564,
-                    from include/asm-generic/bug.h:22,
-                    from arch/m68k/include/asm/bug.h:32,
-                    from include/linux/bug.h:5,
-                    from include/linux/io.h:11,
-                    from drivers/pinctrl/pxa/pinctrl-pxa2xx.c:9:
-   drivers/pinctrl/pxa/pinctrl-pxa2xx.c: In function 'pxa2xx_pmx_gpio_set_direction':
->> drivers/pinctrl/pxa/pinctrl-pxa2xx.c:94:24: error: invalid use of undefined type 'struct pinctrl_dev'
-      94 |         dev_dbg(pctldev->dev, "set_direction(pin=%d): dir=%d\n",
-         |                        ^~
-   include/linux/dynamic_debug.h:222:29: note: in definition of macro '__dynamic_func_call_cls'
-     222 |                 func(&id, ##__VA_ARGS__);                       \
-         |                             ^~~~~~~~~~~
-   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '_dynamic_func_call_cls'
-     248 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:271:9: note: in expansion of macro '_dynamic_func_call'
-     271 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:155:9: note: in expansion of macro 'dynamic_dev_dbg'
-     155 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~
-   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:94:9: note: in expansion of macro 'dev_dbg'
-      94 |         dev_dbg(pctldev->dev, "set_direction(pin=%d): dir=%d\n",
-         |         ^~~~~~~
-   drivers/pinctrl/pxa/pinctrl-pxa2xx.c: In function 'pxa2xx_pmx_set_mux':
-   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:159:24: error: invalid use of undefined type 'struct pinctrl_dev'
-     159 |         dev_dbg(pctldev->dev, "set_mux(pin=%d): af=%d dir=%d\n",
-         |                        ^~
-   include/linux/dynamic_debug.h:222:29: note: in definition of macro '__dynamic_func_call_cls'
-     222 |                 func(&id, ##__VA_ARGS__);                       \
-         |                             ^~~~~~~~~~~
-   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '_dynamic_func_call_cls'
-     248 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:271:9: note: in expansion of macro '_dynamic_func_call'
-     271 |         _dynamic_func_call(fmt, __dynamic_dev_dbg,              \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:155:9: note: in expansion of macro 'dynamic_dev_dbg'
-     155 |         dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~
-   drivers/pinctrl/pxa/pinctrl-pxa2xx.c:159:9: note: in expansion of macro 'dev_dbg'
-     159 |         dev_dbg(pctldev->dev, "set_mux(pin=%d): af=%d dir=%d\n",
-         |         ^~~~~~~
+v2 -> v3:
+- delete own I2C bus master driver, support it in i2c-designware
+- delete own PCS functions, remove pma configuration and 1000BASE-X mode
+- add basic function for 10GBASE-R interface in pcs-xpcs
+- add helper to get txgbe pointer from netdev
 
+v1 -> v2:
+- add comments to indicate GPIO lines
+- add I2C write operation support
+- modify GPIO direction functions
+- rename functions related to PHY interface
+- add condition on interface changing to re-config PCS
+- add to set advertise and fix to get status for 1000BASE-X mode
+- other redundant codes remove
 
-vim +714 drivers/pinctrl/pinctrl-stmfx.c
+Jiawen Wu (9):
+  net: txgbe: Add software nodes to support phylink
+  i2c: designware: Add driver support for Wangxun 10Gb NIC
+  net: txgbe: Register fixed rate clock
+  net: txgbe: Register I2C platform device
+  net: txgbe: Add SFP module identify
+  net: txgbe: Support GPIO to SFP socket
+  net: pcs: Add 10GBASE-R mode for Synopsys Designware XPCS
+  net: txgbe: Implement phylink pcs
+  net: txgbe: Support phylink MAC layer
 
-   638	
-   639	static int stmfx_pinctrl_probe(struct platform_device *pdev)
-   640	{
-   641		struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
-   642		struct device_node *np = pdev->dev.of_node;
-   643		struct stmfx_pinctrl *pctl;
-   644		struct gpio_irq_chip *girq;
-   645		int irq, ret;
-   646	
-   647		pctl = devm_kzalloc(stmfx->dev, sizeof(*pctl), GFP_KERNEL);
-   648		if (!pctl)
-   649			return -ENOMEM;
-   650	
-   651		platform_set_drvdata(pdev, pctl);
-   652	
-   653		pctl->dev = &pdev->dev;
-   654		pctl->stmfx = stmfx;
-   655	
-   656		if (!of_property_present(np, "gpio-ranges")) {
-   657			dev_err(pctl->dev, "missing required gpio-ranges property\n");
-   658			return -EINVAL;
-   659		}
-   660	
-   661		irq = platform_get_irq(pdev, 0);
-   662		if (irq <= 0)
-   663			return -ENXIO;
-   664	
-   665		mutex_init(&pctl->lock);
-   666	
-   667		/* Register pin controller */
-   668		pctl->pctl_desc.name = "stmfx-pinctrl";
-   669		pctl->pctl_desc.pctlops = &stmfx_pinctrl_ops;
-   670		pctl->pctl_desc.confops = &stmfx_pinconf_ops;
-   671		pctl->pctl_desc.pins = stmfx_pins;
-   672		pctl->pctl_desc.npins = ARRAY_SIZE(stmfx_pins);
-   673		pctl->pctl_desc.owner = THIS_MODULE;
-   674		pctl->pctl_desc.link_consumers = true;
-   675	
-   676		ret = devm_pinctrl_register_and_init(pctl->dev, &pctl->pctl_desc,
-   677						     pctl, &pctl->pctl_dev);
-   678		if (ret) {
-   679			dev_err(pctl->dev, "pinctrl registration failed\n");
-   680			return ret;
-   681		}
-   682	
-   683		ret = pinctrl_enable(pctl->pctl_dev);
-   684		if (ret) {
-   685			dev_err(pctl->dev, "pinctrl enable failed\n");
-   686			return ret;
-   687		}
-   688	
-   689		/* Register gpio controller */
-   690		pctl->gpio_chip.label = "stmfx-gpio";
-   691		pctl->gpio_chip.parent = pctl->dev;
-   692		pctl->gpio_chip.get_direction = stmfx_gpio_get_direction;
-   693		pctl->gpio_chip.direction_input = stmfx_gpio_direction_input;
-   694		pctl->gpio_chip.direction_output = stmfx_gpio_direction_output;
-   695		pctl->gpio_chip.get = stmfx_gpio_get;
-   696		pctl->gpio_chip.set = stmfx_gpio_set;
-   697		pctl->gpio_chip.set_config = gpiochip_generic_config;
-   698		pctl->gpio_chip.base = -1;
-   699		pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
-   700		pctl->gpio_chip.can_sleep = true;
-   701	
-   702		girq = &pctl->gpio_chip.irq;
-   703		gpio_irq_chip_set_chip(girq, &stmfx_pinctrl_irq_chip);
-   704		/* This will let us handle the parent IRQ in the driver */
-   705		girq->parent_handler = NULL;
-   706		girq->num_parents = 0;
-   707		girq->parents = NULL;
-   708		girq->default_type = IRQ_TYPE_NONE;
-   709		girq->handler = handle_bad_irq;
-   710		girq->threaded = true;
-   711	
-   712		ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
-   713		if (ret) {
- > 714			dev_err(pctldev->dev, "gpio_chip registration failed\n");
-   715			return ret;
-   716		}
-   717	
-   718		ret = stmfx_pinctrl_gpio_function_enable(pctl);
-   719		if (ret)
-   720			return ret;
-   721	
-   722		ret = devm_request_threaded_irq(pctl->dev, irq, NULL,
-   723						stmfx_pinctrl_irq_thread_fn,
-   724						IRQF_ONESHOT,
-   725						dev_name(pctl->dev), pctl);
-   726		if (ret) {
-   727			dev_err(pctldev->dev, "cannot request irq%d\n", irq);
-   728			return ret;
-   729		}
-   730	
-   731		dev_info(pctldev->dev,
-   732			 "%ld GPIOs available\n", hweight_long(pctl->gpio_valid_mask));
-   733	
-   734		return 0;
-   735	}
-   736	
+ drivers/i2c/busses/i2c-designware-common.c    |   8 +
+ drivers/i2c/busses/i2c-designware-core.h      |   1 +
+ drivers/i2c/busses/i2c-designware-master.c    |  89 ++-
+ drivers/i2c/busses/i2c-designware-platdrv.c   |  15 +
+ drivers/net/ethernet/wangxun/Kconfig          |   8 +
+ drivers/net/ethernet/wangxun/libwx/wx_lib.c   |   3 +-
+ drivers/net/ethernet/wangxun/libwx/wx_type.h  |   3 +
+ drivers/net/ethernet/wangxun/txgbe/Makefile   |   1 +
+ .../ethernet/wangxun/txgbe/txgbe_ethtool.c    |  28 +
+ .../net/ethernet/wangxun/txgbe/txgbe_main.c   |  65 +-
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 651 ++++++++++++++++++
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.h    |  10 +
+ .../net/ethernet/wangxun/txgbe/txgbe_type.h   |  94 +++
+ drivers/net/pcs/pcs-xpcs.c                    |  30 +
+ include/linux/pcs/pcs-xpcs.h                  |   1 +
+ 15 files changed, 969 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.27.0
+
