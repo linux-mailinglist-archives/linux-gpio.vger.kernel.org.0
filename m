@@ -2,150 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 200CB6FC036
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 09:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 150856FC26F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 11:12:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235223AbjEIHLk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 May 2023 03:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41334 "EHLO
+        id S232571AbjEIJMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 May 2023 05:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235229AbjEIHLi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 03:11:38 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D617AD0A
-        for <linux-gpio@vger.kernel.org>; Tue,  9 May 2023 00:11:36 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bc25f0c7dso10285535a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 09 May 2023 00:11:36 -0700 (PDT)
+        with ESMTP id S229937AbjEIJMh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 05:12:37 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E783DC58
+        for <linux-gpio@vger.kernel.org>; Tue,  9 May 2023 02:12:32 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-757984bcbe0so13265485a.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 May 2023 02:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683616295; x=1686208295;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
-        b=e7j6qkllm/T/2M2c1EkqE/Qd/638PextIBR0EfhntkXwIPUhY6InG0cTEP19Pl6rJX
-         tzpjvB4ljG1Wpv06IP8v0iJEsTwM4pF4IdAbZvRdo2cjs5Wv4t8ffGIy4i89YSSwoyZY
-         QIWbShgowuM5OzwGJdJ1FxIYWJO8yENJsZnyGyyMcDCnf5X/AfB0a4iDpCyXAzK5kv83
-         YhQ2A8UNHBgzd9cPjbCi7+0ZFJkOowMKZg7uOa2zCrr9/kDcXodhAZYIk727px/1eZA4
-         D+/Wf5n6mnlx2gWnDoJQyYp8xv+TH0psqoE9I70jPYNednkYtru0ZwjFHM60MdO5DDQg
-         WJ8Q==
+        d=gmail.com; s=20221208; t=1683623551; x=1686215551;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lD4d87xGqwj8x/aAkdAtB6F7zNjiV/R05nAVNR7p0Yc=;
+        b=cyNNxcOgMAEz+pxIK8jws3GF/GGwMhJkgByFMbLlweStwKPs3fD/uGEYk18D0SnO0E
+         xP5BD9cS/mxaNydVKAFG9OHI1AoLSJ+KCl0y3AsmsShmVhprLCmKEpaSbHb4qLBA2PHY
+         PVFriZB/RgjH4iRxsiLW3hElqgz4nu3ljjlaZFUXXj2eHhQN5hkl6Ttvkj4p8ohmZ5Aa
+         TSFAy20YjtTi0vxfys+NOfYK+V78kxc4aD3FxGy5A+dJR7hLy1kvHGJOFIuQueVUjsd7
+         RQqVJeUxfEb8IGIICnA9HRXdIYvTXUsIHLh1EMQtlcIOWJnlM4+3qSxd1MvTmN+IGgB4
+         k8NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683616295; x=1686208295;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
-        b=VT9sx/QWPPA7I/KLM4yu6meAsefduv5VnfZtuQG9T3/Ug9U2j0els1j01ujtmsvjx7
-         KETqrrvqgemqnJXTJKqyfQUqsj6nS7qLeQbs6SWHFji4AdRJiRyRo3DpGz3vgP9p3tMP
-         pk2cnsRMh8kQ9eyDsA2ZdE2sBJYJ7ikVPIPHlbqp0O0P1QJ1OOb1Ik9Fk+7fqydgLjU0
-         b41d6g296qEmJUH/KQVCrET4bzRkHf347idnWtxpkj81tdmSPeCMn16y0LfqFyVQkWg8
-         idiMT0NaOcY1cWI4DLpGNkK1t0RxSorZP2Ep/yisU9m0fwnela9ayaaGgJ0yiPyRRtu+
-         YNBQ==
-X-Gm-Message-State: AC+VfDw49Zghh5EE5BxNc9ltod1zbc6Hut6UDQZ4uEjI9dyP6oIBgG2X
-        rrQKZ3GKRSuSgcu4asEwTjceHw==
-X-Google-Smtp-Source: ACHHUZ4NTgyfxBlvxeFNFcg9A0+pojhfwrdDKrGACJsSCpzT73/PLN82DOw9k/K7FMCu1mximsVIng==
-X-Received: by 2002:a05:6402:8c3:b0:506:7d3e:ade5 with SMTP id d3-20020a05640208c300b005067d3eade5mr9710332edz.33.1683616294764;
-        Tue, 09 May 2023 00:11:34 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:d0d5:7818:2f46:5e76? ([2a02:810d:15c0:828:d0d5:7818:2f46:5e76])
-        by smtp.gmail.com with ESMTPSA id n7-20020aa7d047000000b004fbdfbb5acesm415192edo.89.2023.05.09.00.11.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 00:11:34 -0700 (PDT)
-Message-ID: <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
-Date:   Tue, 9 May 2023 09:11:32 +0200
+        d=1e100.net; s=20221208; t=1683623551; x=1686215551;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lD4d87xGqwj8x/aAkdAtB6F7zNjiV/R05nAVNR7p0Yc=;
+        b=PVKhvFAzNgNdrVOzrU+KS5yDYG1keDLZMrpk8HNwEhgcmKB8XqL5ekMa4AtxCmPMZb
+         Ns/06YOwtd5I6IL3jjXsYgOdr4emKh2H1XLkthXA5bkxwXcSuHb/SPo/dD/mWyRp9HxV
+         +QGrYkWi0H08OtRRxL5HErMZOxm6vtREDuITQQkx0g0LytzyDagMFA3zPaPOeDTbZSLC
+         XIh0xDRiSxexCkh6ffYgq82G6tTUFKiimd/2veIiBdGIwViq1StCTobSkxZ28YXFEJyz
+         zN8+kj3bB5auTaJHnIyAw5uGigBK15rC7lDv9FdM+yVAbQ5WDEl0Da6OcN199KRO47Iz
+         vHnw==
+X-Gm-Message-State: AC+VfDwvoMDhXyBYZrfY5+EWuIzFqE0SaqxnOeDyFDyplO4FLXv3px5s
+        gjZ+t/WFoK0zel/aAuyDg0bamaH0VC8gCqBgZXT9ev1jsyFqTcQj
+X-Google-Smtp-Source: ACHHUZ5BcIZfNZTH4hgGhb4e61mAhrMwQOYuyprUJnkY6wCix/GB42D/aI964LID1LLH3QEZTxuTdcl13nbKuBezaGk=
+X-Received: by 2002:a05:6214:d05:b0:61b:637a:64df with SMTP id
+ 5-20020a0562140d0500b0061b637a64dfmr16250848qvh.3.1683623551626; Tue, 09 May
+ 2023 02:12:31 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
- <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
- <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
- <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
- <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
- <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230508194555.1057007-1-shenwei.wang@nxp.com>
+In-Reply-To: <20230508194555.1057007-1-shenwei.wang@nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 9 May 2023 12:11:54 +0300
+Message-ID: <CAHp75VesbGkmG_7haH3LvHawA1Z3=TGv+w-kqF5nUkaTd5tfag@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: mxc: use platform_get_irq_optional() to avoid
+ error message
+To:     Shenwei Wang <shenwei.wang@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-gpio@vger.kernel.org, imx@lists.linux.dev, linux-imx@nxp.com,
+        Fugang Duan <fugang.duan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08/05/2023 09:10, Mukesh Ojha wrote:
-> 
-> 
-> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
->> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
->>>>>
->>>>>> +	ret = qcom_minidump_init_apss_subsystem(md);
->>>>>> +	if (ret) {
->>>>>> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
->>>>>> +		goto unlock;
->>>>>> +	}
->>>>>> +
->>>>>> +	__md = md;
->>>>>
->>>>> No. This is a platform device, so it can have multiple instances.
->>>>
->>>> It can have only one instance that is created from SMEM driver probe.
->>>
->>> Anyone can instantiate more of them.... how did you solve it?
->>
->> To clarify - sprinkling more of singletons makes everything tightly
->> coupled, difficult to debug and non-portable. You cannot have two
->> instances, you have to control concurrent initialization by yourself in
->> each of such singletons.
->>
->> I understand sometimes they are unavoidable, for example when this does
->> not map to hardware property. However here you have the parent - smem -
->> which can return you valid instance. Thus you avoid entire problem of
->> file-scope variables.
-> 
-> I get your point, why one's should avoid file scope variables.
-> 
-> 
-> This is infrastructure driver and will not have multiple instances and 
-> even if it happens could be avoided with with the help of global mutex 
-> and protect below function which i am already doing at the moment and 
+On Mon, May 8, 2023 at 10:46=E2=80=AFPM Shenwei Wang <shenwei.wang@nxp.com>=
+ wrote:
+>
+> From: Fugang Duan <fugang.duan@nxp.com>
+>
+> Use platform_get_irq_optional() to avoid error message for the
 
-But we do not want global mutexes... so incorrect design is being
-improved by more incorrect design.
+an error
 
-> fail the other probe if it is already initialized with proper logging..e.g
-> 
-> "already initialized..."
-> 
-> 
-> ret = qcom_minidump_init_apss_subsystem(md);
-> 
-> 
-> And this will be in-lined with
-> 
-> /* Pointer to the one and only smem handle */
-> static struct qcom_smem *__smem;
-> 
-> Let me know if you still disagree...and have some other way ?
+> optional irq.
 
-Why the parent - smem - cannot return every consumer the instance it
-has? There will be one smem having only one minidump, so all problems
-solved?
+...
 
-Best regards,
-Krzysztof
+>         if (irq_count > 1) {
+> -               port->irq_high =3D platform_get_irq(pdev, 1);
+> +               port->irq_high =3D platform_get_irq_optional(pdev, 1);
+>                 if (port->irq_high < 0)
+>                         port->irq_high =3D 0;
 
+I would rather do
+
+  err =3D platform_get_irq_optional(pdev, 1);
+  if (err >=3D 0)
+    port->irq_high =3D err;
+
+>         }
+
+And looking into the code the above piece makes more sense after
+asking for the first (mandatory) IRQ.
+
+--=20
+With Best Regards,
+Andy Shevchenko
