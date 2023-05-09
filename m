@@ -2,80 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E64C6FC692
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 14:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FE4E6FC838
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 15:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235563AbjEIMjE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 May 2023 08:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
+        id S235287AbjEINwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 May 2023 09:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234580AbjEIMjD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 08:39:03 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF29C469A;
-        Tue,  9 May 2023 05:39:00 -0700 (PDT)
+        with ESMTP id S234919AbjEINwq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 09:52:46 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4363C33;
+        Tue,  9 May 2023 06:52:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683635940; x=1715171940;
+  t=1683640364; x=1715176364;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=xzdk72KbUe+yYCAi7WYxzDZUHKcsZ1rtLocbpgNiAd8=;
-  b=XVzxpyW45X0aVIsnsNs3D7N71p2F/kPVReDwAJRzrXG3vtCl/guQVw5K
-   pWvB+Gk3ULdeFbhyfM1FGbEmcySf17FKsalDC8yOq/7+sZE5CCZ0HWD7I
-   wjRKyhR1/4IjGW9k3dRg/Q1+JjEE/ChSeDPZ6aoCR/iIFg7XzNzXN8yCy
-   jNdHOe0e4qqP2MKzyw4BiPVMoEk3LnJ3xNal3bd2QXRMeqUyxvdYKCU3Z
-   OxTtcGhAjoGnF70ialdaNBp/h8lx3C+0J/rI5aVvT2fQ415yVNcJopsrv
-   SdlyZNHcH7QyK8Ek2S5MapxWLNULMe8DddktsSpRHhb93P6mYTBcbqIfj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="329536230"
+  bh=yT0Qf9oU1mfClbd/wqWLRrMOt3BKwcEKgF8G/8Fn4xE=;
+  b=eaTTPZ8xX1KIjDW/qpkku97iMPXy1z3U9tF8BWB7c3bszS0V/XWrYcCD
+   2yMca7bmIbFgOr2Wy1TWZgcyDXFA6BcC1DF6op5GkeG5PuloCqLx7/LBo
+   AHUztVfyfmM0Od+GPEaR6ACH0SxDfaOnTpF2vBxDSj/Lm2f86wiWx4Rpg
+   pbhJfgBNoE9q5Rr3XF6bX5b3fD2RDXbeZy4xQhmOiaa3daWxBhRJKm3LL
+   mHGBAhQqItYY/5ACY6vZLa++YoZEdJ77OD1WQ5FhUyQrqkaW/NXnc5a8J
+   Ij2q4uOGiSFizMCbT2dy+MRXNw787z2nIaMv1Dloe403kJ2TPjqOPvV13
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="436247068"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="329536230"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 05:38:40 -0700
+   d="scan'208";a="436247068"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:52:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="810659266"
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="693001283"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="810659266"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga002.fm.intel.com with ESMTP; 09 May 2023 05:38:40 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+   d="scan'208";a="693001283"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga007.jf.intel.com with ESMTP; 09 May 2023 06:52:43 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 9 May 2023 06:52:43 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 9 May 2023 06:52:42 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
  fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 9 May 2023 05:38:39 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 9 May 2023 05:38:39 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 9 May 2023 05:38:39 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Tue, 9 May 2023 06:52:42 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 9 May 2023 05:38:39 -0700
+ 15.1.2507.23; Tue, 9 May 2023 06:52:42 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lEaxEOXHj797ymJ0Heu2z2KHrCtXbcne+NcN0XRwsq+/MqtqUeRcj8q/5dZKcsRVf0CnPPR004FVWSt8gWH62Vszvf++edCcuNTkW0vyE2FKZRSHEAxyZgY9n0EfhcmGc2bcpFTXnf+/E2nC6tQ4Ct2l4vooYa99ry3bPJeVvtOYy8xP/EwQ8ejsJj816Z+ognFJjRGOeAOpkrr6CmuUhJu3bNCx/vBE5ObWNiUJ7GV5mak7Ilm+1VtQnUMwa2WenP5BpfRrpTCKjKWvhUVtAY3WcNOeZyfTT95khmRzK/4CcRW5myhov4XpBE+vqee60/jo6fEA4ulpTu/mUFUECg==
+ b=H9eUGw8yMHijOQelaVlmbIaY32br0V988tFf7+QFisU8l5ulOZWux9Zu6MUs9+YAbz5D1Ur4FBxKLaj9FhP8+Ch00xLm1ts9pW93rkqHGslkKGysUXvh19aAlz4K6Wu2VRXKtBCl9erbAI1FjKPeQi06N9Hqe8R8tHC8yFti9Yp7Gg0Eq5Q/i2krLqWr/tPcUqOL94cTiseL4x7/LpcPgmBkdq0zCW0Y9Ka/kkpra8PGh0ZQjlq8YSBmjfugfoxJZcg3UyIvnsilXXMEcqdYgKS947aBiZnFqx8oeQoaApVfGQ+N6Ry+1YoNsRUYPnjeH5maNVHcgK3d1X05gn2n3w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hgxHxTMEnsbsRw5yyuYYMwslSn/tQ0w1K3guacXUyqQ=;
- b=Np2A3+fwfOdusHjvnahWBdqbJqRWY3PcwZNwMro3hqphsF/MonR5wsT6SpFBXhtE6zsLl5a3beyNPAq7WSRtEAS6HbIyHzKv/RF4xPCz93xn0MtscHThAo4Hbk6ngytdcbSDAxcEPoeW7iO1POtv8ljSifQw2wReYwpcybFYDwXuCXkNt4qbeiHEQq283gL7Y+ly+WAjKVulVy4K4/R/aO+qtvKhygCb3/euvSWIoKQbPJVH8qtZ8kuYH/KICaGTqaitGTKSnPib6hsdUqPBbi5bmHzyjJyt3sSRcDhWySFvWeVThHmQic30ztQ6v1ayeECQRvi9fF5+WHwwd1eGnw==
+ bh=jRFZHuMwmlnDXRW5lS+D38N7DePj1lcFTxSjCTyczjg=;
+ b=QCNRZuE6c05bu29JP564ChuWerAUBpUqP9CDssmhxBD0Fl3acTWRuPYi4nnILWUYXwJUd6znwfz9OvCu1oPl6kVSV/EOuKsj1STvrPgWmy8umH9RsrxXwJTaSvKWnx08hkSM4nIYaIFFeqBjayJ69tfK9SicnsP6P4E27m1sixmJFOclWE8a5JVwgtOZIrl+koMMgW+AtsZ5iKMtsIHRExNeMcrZYfhMe1YhGDb2jtArBi7sYdF8++fXF7ifYkJx/pkBAU+dAMNU2JSMNi3r9PEJ6uodS4rBg84oaXpCXG3DBGfx16v/oYrflv06Rhkiu2w6BhW5DXerEH5rwHn2pQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH0PR11MB7471.namprd11.prod.outlook.com (2603:10b6:510:28a::13)
- by PH8PR11MB6753.namprd11.prod.outlook.com (2603:10b6:510:1c8::22) with
+ by SA0PR11MB4671.namprd11.prod.outlook.com (2603:10b6:806:9f::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Tue, 9 May
- 2023 12:38:37 +0000
+ 2023 13:52:40 +0000
 Received: from PH0PR11MB7471.namprd11.prod.outlook.com
  ([fe80::ee76:10c6:9f42:9ed9]) by PH0PR11MB7471.namprd11.prod.outlook.com
  ([fe80::ee76:10c6:9f42:9ed9%4]) with mapi id 15.20.6363.033; Tue, 9 May 2023
- 12:38:37 +0000
-Date:   Tue, 9 May 2023 14:38:27 +0200
+ 13:52:40 +0000
+Date:   Tue, 9 May 2023 15:52:23 +0200
 From:   Piotr Raczynski <piotr.raczynski@intel.com>
 To:     Jiawen Wu <jiawenwu@trustnetic.com>
 CC:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
@@ -85,69 +85,69 @@ CC:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
         <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
         <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <mengyuanlou@net-swift.com>
-Subject: Re: [PATCH net-next v7 1/9] net: txgbe: Add software nodes to
- support phylink
-Message-ID: <ZFo+w43/kIAN4ite@nimitz>
+Subject: Re: [PATCH net-next v7 2/9] i2c: designware: Add driver support for
+ Wangxun 10Gb NIC
+Message-ID: <ZFpQF4hi0FciwQsj@nimitz>
 References: <20230509022734.148970-1-jiawenwu@trustnetic.com>
- <20230509022734.148970-2-jiawenwu@trustnetic.com>
+ <20230509022734.148970-3-jiawenwu@trustnetic.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230509022734.148970-2-jiawenwu@trustnetic.com>
-X-ClientProxiedBy: LO2P265CA0393.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:f::21) To PH0PR11MB7471.namprd11.prod.outlook.com
+In-Reply-To: <20230509022734.148970-3-jiawenwu@trustnetic.com>
+X-ClientProxiedBy: LO4P123CA0072.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:153::23) To PH0PR11MB7471.namprd11.prod.outlook.com
  (2603:10b6:510:28a::13)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB7471:EE_|PH8PR11MB6753:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35f68dd5-3590-4106-e807-08db508a4f2a
+X-MS-TrafficTypeDiagnostic: PH0PR11MB7471:EE_|SA0PR11MB4671:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbc27674-3060-48d1-87ec-08db5094a78e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 96aXeDNb3ny9rwH0+yhher04KOveXi7ms5Ijr14Z8JEYD8qKdDyTp8lIQ6mBd3IzZHACMrADCanaADdMxbKKw47swwZq+zoOuM3hI7v+X9/JkbLAcEZWG9igetosF4DSU3J/D9HJ9aCZkVMzUKQwSwUTFURBYouL3KmurTFeuQ12gKZ4eOgStxD+dvcH7ptSxDZNuAgFuh1dqkmCLkttIOPIXSAXvxxw4TUSGrFpMW42Of8Ow2LVSF+R1k+ZsQcHAYLUGOQQWlcl93xGvQsaOp+J/vkUA/FxrutpX1kI45+mXVJBZAiDn9XS79mfZR3jjIPm2/KLW19TtKXE1OiGNZMNglovqG5eG4BR5hOVgF5dbHss9QMM93sTy+FzrMrE+wQYg0A1MXZEApm+7fMKDc5K03657EGlMMmCK/5pFQoKwQLhPU9nvMeMyPK1HXT5suXBsYH3tFeS3xfm/lMjebnMcQXz1RnnUx4Wboq/wMbirJ283ElAEupSxSf7wHhJymc49y37tok+j3lr0sAHH6s+p8sfhY7TDMX3C2bPuxIhM00DLXyS8NGHHVlrXFU+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB7471.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(39860400002)(346002)(376002)(136003)(396003)(366004)(451199021)(86362001)(478600001)(66476007)(316002)(6916009)(4326008)(66556008)(6486002)(6666004)(66946007)(33716001)(5660300002)(8676002)(30864003)(8936002)(2906002)(7416002)(41300700001)(44832011)(82960400001)(38100700002)(186003)(6512007)(9686003)(26005)(6506007)(83380400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: pcTLjGb3b4cA36GSqgCsXeRdRThelzXa93wdbChzNnBV9uzqFQ/l/ThppVLI5Ssm8JXomAwPdyZr4aYipAcyPc5/CjlV2SI2uGTwC36xdcu6KSslcqVf/bQY+6fml/SFVtIyKeiTKHyrZyu+qA+Uw+Xe33+FtvW2E33mVqR0IshuD581fNt0qrEIg0eAODmxLk3bU3mOAzXXmD2nP44D7isS4d+pD2NaONrIYF9df2TQJaC01P283Ed935uH2ZssbHtUN5Uv4Sotmeuz9sWoiwaO7aHf5mR9DqoLdqM/wf4T1BV2IL+0uDGgZJpFIMx25M533K8p2vCq7zZBgPlxSiRTUAJKaJql4Ibrd0Lm9427mA5fEJkZcZygc2KVs20kV8T6ASZSHKaKk/5DcmfTLvm/lZCLYbGsACGCn08M7BfCNDZTvYrdS6RIUYQ+jXnqZsJZtq0IWPakhPoO1MSKsH9f5tZXRwPyqi6MO5jEjhX6ygL1q88pQjrP18IymgJKJAKKWjxPwFCRNPDSqAT641I63rHlz2e0D51ENnWi1embCOhWPhdzE69QnhsMl1N/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB7471.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(136003)(396003)(39860400002)(346002)(366004)(451199021)(83380400001)(6486002)(478600001)(6512007)(9686003)(26005)(6506007)(186003)(8676002)(41300700001)(4326008)(6916009)(66946007)(66476007)(6666004)(66899021)(8936002)(66556008)(316002)(5660300002)(7416002)(2906002)(44832011)(38100700002)(86362001)(33716001)(82960400001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Sl2wxpx7QII3Sr4b4gU8JRYsfOF+8qJ2HLNlD8S64vDg4TJvtSai5KVmb0Jk?=
- =?us-ascii?Q?gvfliC+3fHhtPVI5AHvCIowQ9rT405aGEMADUYWAGJZJmNn+2uCycsgCRGxx?=
- =?us-ascii?Q?gSbd2RptYkslxYgbE8Slc8eD9zrbNZ+VrL6GCRy5kMSC+NgkOoQcWcTxvILI?=
- =?us-ascii?Q?kqIeyuCWQsJQiOSPLh/jUv3NuiMXzuK1OLuNfaPKSL8ws77UAHXD4HSJOhsT?=
- =?us-ascii?Q?B+ZIH5ddHH6ey3vBBKYS8NitUFgNq66md9GBkCh2dcVs9vQc+YBlp+s6WIzX?=
- =?us-ascii?Q?ruyvQjKGQsSiPTgssRqNBhjQbOhe8ESnWE74Tqu4amSUc2Yo65FvWn86/STB?=
- =?us-ascii?Q?jEWZ6LJGOphUMT4WJZCBqEUTSqnUcOmcG+hhEu7wIq5xdwLKx+ejhdga/jZn?=
- =?us-ascii?Q?rqBraU2FbL/q4kxfj8334IUNSEizUdmpcb9rodeNV1Nruec3WvwgNZ+EPz8y?=
- =?us-ascii?Q?0fpE9TpXx1FVLu/7U+fJAcV4JJWCLtG1u7EiLaMmzMLSz/dy/CSZo2WlKjL2?=
- =?us-ascii?Q?LNlzeAdQcYmi9t5wDY+6S130uzgu/sAZ6d0PuXqjrYHOk1fMuIIibT5FiczM?=
- =?us-ascii?Q?w+Mp51zot8qhWbFq4zcydq+Jra2JaisnVV/zX9hz0Mfxe8TeMW+7gRoUs2ey?=
- =?us-ascii?Q?1M4+Xmx3V4bnMM8EThN91dCxIJCyc9vPTIGLMzOx97ZSo3ImgoAXqstaVo5u?=
- =?us-ascii?Q?U/FlpqGYWCsiHQGI2dhqgIHzyBR1DKRlcj6xb9gOpOR223LKDhhiFApWETdr?=
- =?us-ascii?Q?5l5fc0FlrvYmtaeSBd1R8yYyrrDMGi8H3vEc3jedQS1FnP+lkZAe8AJGh8Vs?=
- =?us-ascii?Q?DgqPEXVKvysx3+CsVA0n1b6I0uo3+pNMYu76gCR4clKmBRxq/o+JOSQ1nOK8?=
- =?us-ascii?Q?0DYFlVJuy2NtiFC2s+pt5zQxR/WTVLn4uqH4nw2LSxjz8ftEQy6PkPB0XljI?=
- =?us-ascii?Q?yvVwnmSbc9WY9MnbsRnn8kpZUgbKVFJZBr6C9qifXPFoeou59D+lfx1Lmn/X?=
- =?us-ascii?Q?66N0J3jR1yw0VjfcfyggMig/csGvw/AKhJBrcdAyjptyzptUaottB1Z7OASZ?=
- =?us-ascii?Q?/pzBM159jSL9WPm5aIflJHtdfrnOq7N4VNmuYzhgUZF7zq94hboJ2lEhuVaX?=
- =?us-ascii?Q?StGbTreYXgOMb0cXeW6PPwMBtSTtHe94PdmgTFuy956kFaVIunitF2xgK9rY?=
- =?us-ascii?Q?UhqgobIpjLYjltGVkQ7dOfKkxAY8e2YEZDBodFjoIxp6tfBXN0r9VanE5ga+?=
- =?us-ascii?Q?npxDc6uWUNGsQ/Eatair+uJyO4cnlB6iyPYlt/kYPBtil0xEtq2iYfkrQPHW?=
- =?us-ascii?Q?efc50p/GrHg+Hb4nsVktkipmcjkAw8yVvbO+T03IQ4h/WdKNfCrSfwK9a3XQ?=
- =?us-ascii?Q?uzEBURwJWnDMcVAPvk0Ad1befJWKDp+EI2DxRtKmWc6jJ8ltUhsyC50OgxNB?=
- =?us-ascii?Q?xPfAZq5RHieYepDlruyBA5phtf7GzmPkr5ygvyvwg4CTBJtfAavr1uVNO4HZ?=
- =?us-ascii?Q?m+SnqOSdkKHI5Ggx/txarkE1xFKBbV55CV/X032Pd+03ohrJrKJ/g0eYD7Ly?=
- =?us-ascii?Q?ORK7Z6BbofrBOWU0+/Nfijd1YP17jVZKNVU23k+aUbZgo7U1N9R+Lr82rCgx?=
- =?us-ascii?Q?fw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35f68dd5-3590-4106-e807-08db508a4f2a
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1+wSyq1f53/yGLrigZJXv3RY6QXTEMjupCYVO4EdOUnVPmuI775aBtHl2U6C?=
+ =?us-ascii?Q?yxkKSoMdD3D7fOhJ+sSe9TckLnuJ+fxYdbespVstSW9cPblCQg1dvoFkixCB?=
+ =?us-ascii?Q?Os5hoT5NNhYoodNhEMuslK4gb8PwecqcI9MvSccV8EvCO4+FGkmk5rXV+psY?=
+ =?us-ascii?Q?7MU8efy9gOaOF4NzVaTpM1DBRcxbgaqt2KOwbfI0puwfPdnCpFsR1LTykUQz?=
+ =?us-ascii?Q?Us9ghwcqDAyETQaK1N7piP0IMJgehkOS8D48ShKFt4jDqHDf3aq33uRviEg1?=
+ =?us-ascii?Q?VICr18OnnPO37gJbCoxDCqXD2aD0rZnCZaFVhbdiybM8efmSAtvaF0PX468C?=
+ =?us-ascii?Q?LlVcMq2WTD5pCZuWM25Tkz0zW0iFIRDxe6IJb2qSAwHXvHYLGHpAm2h8PduT?=
+ =?us-ascii?Q?gZkUlG0efnH2x7uvRlT5zfTYXt6M0zDYpTdRbxuObviuwyVYWXVSixZ3gCDB?=
+ =?us-ascii?Q?e+IHtwWp+1UJYbmpXFxyF4whnRfODp2YQ3eAxE6FjbupsHxwsKwI3bFIKAEy?=
+ =?us-ascii?Q?FkFsaVVJZ6Isbq1pCSNQ9ptNddA8PlnfBQG/Jyf4PKDxUS8/TyRFJZkJgvV0?=
+ =?us-ascii?Q?foogUmJrTLkqN6vPX77M1SFQp9XUvMm2Uevx+cIsJrskRCeYgAdS6iSKy0RT?=
+ =?us-ascii?Q?oDKlDwWtCSjzi4a13NnndSPYTqvHj9HIZ3kLkZO6BEyjTg2lb9yEbow74IZ0?=
+ =?us-ascii?Q?G3AtyAomIzqsqPsCl1hMUI925UxockjHiyyqut004VAL9QmEsi8BNj8ULytv?=
+ =?us-ascii?Q?JIpphDCRnKNrMwwtcHrGDX2fO3M/+BeVfE+kOKXn48981PJY4FkQaCAdQ02r?=
+ =?us-ascii?Q?c1F3c7cWrVv6eMykNxk1WT1KJBzPzaGC2fnPW1OXRX3PxeWPFWOuFWAFUzpX?=
+ =?us-ascii?Q?s+H6KWT3qCMJKbIs4g1KMYZI3I4Zdlg4O0d85XMwOhU/b/FtJf1nxoW/3eX6?=
+ =?us-ascii?Q?u4P9d2PRfzYjcKGQHP9LY061ppD55hIK3rLfVV7x5Dsz2mEvo2dLAuhGyrKs?=
+ =?us-ascii?Q?MjBjPjwnIFm5FLo1gBN4pxmm4kcuvNEOb63cRN4g8Z93MAh8D7Q4yTeYWHQv?=
+ =?us-ascii?Q?nZi4Pieo+JOpTE3kZtW9pBy6ZVz7Ul01Z5w0cddWWV89yKJfbqUXq8tUnkpm?=
+ =?us-ascii?Q?5C6FnNMNQgXnHCCZDsXKHYCC1aWz4y+t599JFcKGiBOhhJ0SXpqyRkb78l7w?=
+ =?us-ascii?Q?063iV7G4kyO2G9NcSTjIuu9n1JPCOiwnCVUKdStVS8wlnDreQ0R+FdKECQPE?=
+ =?us-ascii?Q?odPSMPxWg24Bju7TqjnPq0vVnBr2TDzBpY+Tip2VbZtGwqt7D6oZBiAWv9TP?=
+ =?us-ascii?Q?V8RDAr9Ni/in6xPz/67TtSrs3isnFRaCbX0iPOAaTiy2UvcqrigV89z/exYW?=
+ =?us-ascii?Q?wqty0GF5qUSsNVhrKd6GuPehJqArDuRboeYWbkcFOFIxkqBH5YdZ83PXaYI7?=
+ =?us-ascii?Q?WpT17YmavyZuKOw1uRW5yTVHrSCE9enRZXCl2/uGjR8YXBY9MkrEsxMvhyIW?=
+ =?us-ascii?Q?vVGkc+I2W+wYrouBPwYZqBGosE9PY7gnDsBIMxKHXgZu4K7vGG/5sm8UhdsH?=
+ =?us-ascii?Q?QVYAeVpzsoG8FEq2d3luqzjgw4qhr87ewYe7tA3kYN5NX4J9aEXMUb4EYWgs?=
+ =?us-ascii?Q?rw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbc27674-3060-48d1-87ec-08db5094a78e
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB7471.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2023 12:38:36.9487
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2023 13:52:40.1424
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ReeLsA/DRxuNAloWm3EJcHOsY4eRfs302tXJLe70rZxzjCN3U3G+NiYx14ggU1Y4EDBaCwzcM1y0hIC+v3ekohdafaawLalaudnUFGU2JbY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6753
+X-MS-Exchange-CrossTenant-UserPrincipalName: w3yP+018+nCaMp3mbPDsbRgLzdudW0uC3m3Lc701rZ8TdjGR8w0VhpM8ZpuEOD+foqO/xd/94IpdfQJfrp9NysPDirHeGrGhaMykB14R+Vs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4671
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -155,291 +155,256 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 09, 2023 at 10:27:26AM +0800, Jiawen Wu wrote:
-> Register software nodes for GPIO, I2C, SFP and PHYLINK. Define the
-> device properties.
+On Tue, May 09, 2023 at 10:27:27AM +0800, Jiawen Wu wrote:
+> Wangxun 10Gb ethernet chip is connected to Designware I2C, to communicate
+> with SFP.
+> 
+> Introduce the property "snps,i2c-platform" to match device data for Wangxun
+> in software node case. Since IO resource was mapped on the ethernet driver,
+> add a model quirk to get regmap from parent device.
+> 
+> The exists IP limitations are dealt as workarounds:
+> - IP does not support interrupt mode, it works on polling mode.
+> - Additionally set FIFO depth address the chip issue.
 > 
 > Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
-LGTM, thanks.
+
+I'm definitely not an i2c expert, a couple of nit picks below, thanks.
 Reviewed-by: Piotr Raczynski <piotr.raczynski@intel.com>
+
 > ---
->  drivers/net/ethernet/wangxun/libwx/wx_type.h  |  1 +
->  drivers/net/ethernet/wangxun/txgbe/Makefile   |  1 +
->  .../net/ethernet/wangxun/txgbe/txgbe_main.c   | 22 ++++-
->  .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 89 +++++++++++++++++++
->  .../net/ethernet/wangxun/txgbe/txgbe_phy.h    | 10 +++
->  .../net/ethernet/wangxun/txgbe/txgbe_type.h   | 49 ++++++++++
->  6 files changed, 171 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
->  create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
+>  drivers/i2c/busses/i2c-designware-common.c  |  8 ++
+>  drivers/i2c/busses/i2c-designware-core.h    |  1 +
+>  drivers/i2c/busses/i2c-designware-master.c  | 89 +++++++++++++++++++--
+>  drivers/i2c/busses/i2c-designware-platdrv.c | 15 ++++
+>  4 files changed, 108 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/wangxun/libwx/wx_type.h b/drivers/net/ethernet/wangxun/libwx/wx_type.h
-> index 32f952d93009..97bce855bc60 100644
-> --- a/drivers/net/ethernet/wangxun/libwx/wx_type.h
-> +++ b/drivers/net/ethernet/wangxun/libwx/wx_type.h
-> @@ -611,6 +611,7 @@ enum wx_isb_idx {
+> diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
+> index 0dc6b1ce663f..a7c2e67ccbf6 100644
+> --- a/drivers/i2c/busses/i2c-designware-common.c
+> +++ b/drivers/i2c/busses/i2c-designware-common.c
+> @@ -575,6 +575,14 @@ int i2c_dw_set_fifo_size(struct dw_i2c_dev *dev)
+>  	unsigned int param;
+>  	int ret;
 >  
->  struct wx {
->  	u8 __iomem *hw_addr;
-> +	void *priv;
->  	struct pci_dev *pdev;
->  	struct net_device *netdev;
->  	struct wx_bus_info bus;
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/Makefile b/drivers/net/ethernet/wangxun/txgbe/Makefile
-> index 6db14a2cb2d0..7507f762edfe 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/Makefile
-> +++ b/drivers/net/ethernet/wangxun/txgbe/Makefile
-> @@ -8,4 +8,5 @@ obj-$(CONFIG_TXGBE) += txgbe.o
->  
->  txgbe-objs := txgbe_main.o \
->                txgbe_hw.o \
-> +              txgbe_phy.o \
->                txgbe_ethtool.o
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> index 5b8a121fb496..e10296abf5b4 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-> @@ -15,6 +15,7 @@
->  #include "../libwx/wx_hw.h"
->  #include "txgbe_type.h"
->  #include "txgbe_hw.h"
-> +#include "txgbe_phy.h"
->  #include "txgbe_ethtool.h"
->  
->  char txgbe_driver_name[] = "txgbe";
-> @@ -513,6 +514,7 @@ static int txgbe_probe(struct pci_dev *pdev,
->  	struct net_device *netdev;
->  	int err, expected_gts;
->  	struct wx *wx = NULL;
-> +	struct txgbe *txgbe;
->  
->  	u16 eeprom_verh = 0, eeprom_verl = 0, offset = 0;
->  	u16 eeprom_cfg_blkh = 0, eeprom_cfg_blkl = 0;
-> @@ -663,10 +665,23 @@ static int txgbe_probe(struct pci_dev *pdev,
->  			 "0x%08x", etrack_id);
->  	}
->  
-> -	err = register_netdev(netdev);
-> +	txgbe = devm_kzalloc(&pdev->dev, sizeof(*txgbe), GFP_KERNEL);
-> +	if (!txgbe) {
-> +		err = -ENOMEM;
-> +		goto err_release_hw;
+> +	/* DW_IC_COMP_PARAM_1 not implement for IP issue */
+> +	if ((dev->flags & MODEL_MASK) == MODEL_WANGXUN_SP) {
+> +		dev->tx_fifo_depth = 4;
+I understand this is some kind of workaround but is the number chosen
+empirically? Maybe a defined value would be clearer instead of magic
+number.
+> +		dev->rx_fifo_depth = 0;
+> +
+> +		return 0;
 > +	}
 > +
-> +	txgbe->wx = wx;
-> +	wx->priv = txgbe;
-> +
-> +	err = txgbe_init_phy(txgbe);
->  	if (err)
->  		goto err_release_hw;
+>  	/*
+>  	 * Try to detect the FIFO depth if not set by interface driver,
+>  	 * the depth could be from 2 to 256 from HW spec.
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index c5d87aae39c6..e2213b08d724 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -303,6 +303,7 @@ struct dw_i2c_dev {
+>  #define MODEL_MSCC_OCELOT			BIT(8)
+>  #define MODEL_BAIKAL_BT1			BIT(9)
+>  #define MODEL_AMD_NAVI_GPU			BIT(10)
+> +#define MODEL_WANGXUN_SP			BIT(11)
+>  #define MODEL_MASK				GENMASK(11, 8)
 >  
-> +	err = register_netdev(netdev);
-> +	if (err)
-> +		goto err_remove_phy;
-> +
->  	pci_set_drvdata(pdev, wx);
->  
->  	netif_tx_stop_all_queues(netdev);
-> @@ -694,6 +709,8 @@ static int txgbe_probe(struct pci_dev *pdev,
->  
+>  /*
+> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+> index 55ea91a63382..3bfd7a2232db 100644
+> --- a/drivers/i2c/busses/i2c-designware-master.c
+> +++ b/drivers/i2c/busses/i2c-designware-master.c
+> @@ -354,6 +354,68 @@ static int amd_i2c_dw_xfer_quirk(struct i2c_adapter *adap, struct i2c_msg *msgs,
 >  	return 0;
+>  }
 >  
-> +err_remove_phy:
-> +	txgbe_remove_phy(txgbe);
->  err_release_hw:
->  	wx_clear_interrupt_scheme(wx);
->  	wx_control_hw(wx, false);
-> @@ -719,11 +736,14 @@ static int txgbe_probe(struct pci_dev *pdev,
->  static void txgbe_remove(struct pci_dev *pdev)
->  {
->  	struct wx *wx = pci_get_drvdata(pdev);
-> +	struct txgbe *txgbe = wx->priv;
->  	struct net_device *netdev;
->  
->  	netdev = wx->netdev;
->  	unregister_netdev(netdev);
->  
-> +	txgbe_remove_phy(txgbe);
-> +
->  	pci_release_selected_regions(pdev,
->  				     pci_select_bars(pdev, IORESOURCE_MEM));
->  
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> new file mode 100644
-> index 000000000000..3476074869cb
-> --- /dev/null
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2015 - 2023 Beijing WangXun Technology Co., Ltd. */
-> +
-> +#include <linux/gpio/property.h>
-> +#include <linux/i2c.h>
-> +#include <linux/pci.h>
-> +
-> +#include "../libwx/wx_type.h"
-> +#include "txgbe_type.h"
-> +#include "txgbe_phy.h"
-> +
-> +static int txgbe_swnodes_register(struct txgbe *txgbe)
+> +static int i2c_dw_poll_tx_empty(struct dw_i2c_dev *dev)
 > +{
-> +	struct txgbe_nodes *nodes = &txgbe->nodes;
-> +	struct pci_dev *pdev = txgbe->wx->pdev;
-> +	struct software_node *swnodes;
-> +	u32 id;
+> +	u32 val;
 > +
-> +	id = (pdev->bus->number << 8) | pdev->devfn;
-> +
-> +	snprintf(nodes->gpio_name, sizeof(nodes->gpio_name), "txgbe_gpio-%x", id);
-> +	snprintf(nodes->i2c_name, sizeof(nodes->i2c_name), "txgbe_i2c-%x", id);
-> +	snprintf(nodes->sfp_name, sizeof(nodes->sfp_name), "txgbe_sfp-%x", id);
-> +	snprintf(nodes->phylink_name, sizeof(nodes->phylink_name), "txgbe_phylink-%x", id);
-> +
-> +	swnodes = nodes->swnodes;
-> +
-> +	/* GPIO 0: tx fault
-> +	 * GPIO 1: tx disable
-> +	 * GPIO 2: sfp module absent
-> +	 * GPIO 3: rx signal lost
-> +	 * GPIO 4: rate select, 1G(0) 10G(1)
-> +	 * GPIO 5: rate select, 1G(0) 10G(1)
-> +	 */
-> +	nodes->gpio_props[0] = PROPERTY_ENTRY_STRING("pinctrl-names", "default");
-> +	swnodes[SWNODE_GPIO] = NODE_PROP(nodes->gpio_name, nodes->gpio_props);
-> +	nodes->gpio0_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 0, GPIO_ACTIVE_HIGH);
-> +	nodes->gpio1_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 1, GPIO_ACTIVE_HIGH);
-> +	nodes->gpio2_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 2, GPIO_ACTIVE_LOW);
-> +	nodes->gpio3_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 3, GPIO_ACTIVE_HIGH);
-> +	nodes->gpio4_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 4, GPIO_ACTIVE_HIGH);
-> +	nodes->gpio5_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_GPIO], 5, GPIO_ACTIVE_HIGH);
-> +
-> +	nodes->i2c_props[0] = PROPERTY_ENTRY_STRING("compatible", "snps,designware-i2c");
-> +	nodes->i2c_props[1] = PROPERTY_ENTRY_BOOL("snps,i2c-platform");
-> +	nodes->i2c_props[2] = PROPERTY_ENTRY_U32("clock-frequency", I2C_MAX_STANDARD_MODE_FREQ);
-> +	swnodes[SWNODE_I2C] = NODE_PROP(nodes->i2c_name, nodes->i2c_props);
-> +	nodes->i2c_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_I2C]);
-> +
-> +	nodes->sfp_props[0] = PROPERTY_ENTRY_STRING("compatible", "sff,sfp");
-> +	nodes->sfp_props[1] = PROPERTY_ENTRY_REF_ARRAY("i2c-bus", nodes->i2c_ref);
-> +	nodes->sfp_props[2] = PROPERTY_ENTRY_REF_ARRAY("tx-fault-gpios", nodes->gpio0_ref);
-> +	nodes->sfp_props[3] = PROPERTY_ENTRY_REF_ARRAY("tx-disable-gpios", nodes->gpio1_ref);
-> +	nodes->sfp_props[4] = PROPERTY_ENTRY_REF_ARRAY("mod-def0-gpios", nodes->gpio2_ref);
-> +	nodes->sfp_props[5] = PROPERTY_ENTRY_REF_ARRAY("los-gpios", nodes->gpio3_ref);
-> +	nodes->sfp_props[6] = PROPERTY_ENTRY_REF_ARRAY("rate-select1-gpios", nodes->gpio4_ref);
-> +	nodes->sfp_props[7] = PROPERTY_ENTRY_REF_ARRAY("rate-select0-gpios", nodes->gpio5_ref);
-> +	swnodes[SWNODE_SFP] = NODE_PROP(nodes->sfp_name, nodes->sfp_props);
-> +	nodes->sfp_ref[0] = SOFTWARE_NODE_REFERENCE(&swnodes[SWNODE_SFP]);
-> +
-> +	nodes->phylink_props[0] = PROPERTY_ENTRY_STRING("managed", "in-band-status");
-> +	nodes->phylink_props[1] = PROPERTY_ENTRY_REF_ARRAY("sfp", nodes->sfp_ref);
-> +	swnodes[SWNODE_PHYLINK] = NODE_PROP(nodes->phylink_name, nodes->phylink_props);
-> +
-> +	nodes->group[SWNODE_GPIO] = &swnodes[SWNODE_GPIO];
-> +	nodes->group[SWNODE_I2C] = &swnodes[SWNODE_I2C];
-> +	nodes->group[SWNODE_SFP] = &swnodes[SWNODE_SFP];
-> +	nodes->group[SWNODE_PHYLINK] = &swnodes[SWNODE_PHYLINK];
-> +
-> +	return software_node_register_node_group(nodes->group);
+> +	return regmap_read_poll_timeout(dev->map, DW_IC_RAW_INTR_STAT, val,
+> +					val & DW_IC_INTR_TX_EMPTY,
+> +					100, 1000);
 > +}
 > +
-> +int txgbe_init_phy(struct txgbe *txgbe)
+> +static int i2c_dw_poll_rx_full(struct dw_i2c_dev *dev)
 > +{
-> +	int ret;
+> +	u32 val;
 > +
-> +	ret = txgbe_swnodes_register(txgbe);
-> +	if (ret) {
-> +		wx_err(txgbe->wx, "failed to register software nodes\n");
-> +		return ret;
+> +	return regmap_read_poll_timeout(dev->map, DW_IC_RAW_INTR_STAT, val,
+> +					val & DW_IC_INTR_RX_FULL,
+> +					100, 1000);
+> +}
+> +
+> +static int txgbe_i2c_dw_xfer_quirk(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +				   int num_msgs)
+> +{
+> +	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
+> +	int msg_idx, buf_len, data_idx, ret;
+> +	unsigned int val, stop = 0;
+> +	u8 *buf;
+> +
+> +	dev->msgs = msgs;
+> +	dev->msgs_num = num_msgs;
+> +	i2c_dw_xfer_init(dev);
+> +	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+> +
+> +	for (msg_idx = 0; msg_idx < num_msgs; msg_idx++) {
+> +		buf = msgs[msg_idx].buf;
+> +		buf_len = msgs[msg_idx].len;
+> +
+> +		for (data_idx = 0; data_idx < buf_len; data_idx++) {
+> +			if (msg_idx == num_msgs - 1 && data_idx == buf_len - 1)
+> +				stop |= BIT(9);
+> +
+> +			if (msgs[msg_idx].flags & I2C_M_RD) {
+> +				regmap_write(dev->map, DW_IC_DATA_CMD, 0x100 | stop);
+> +
+> +				ret = i2c_dw_poll_rx_full(dev);
+> +				if (ret)
+> +					return ret;
+> +
+> +				regmap_read(dev->map, DW_IC_DATA_CMD, &val);
+> +				buf[data_idx] = val;
+> +			} else {
+> +				ret = i2c_dw_poll_tx_empty(dev);
+> +				if (ret)
+> +					return ret;
+> +
+> +				regmap_write(dev->map, DW_IC_DATA_CMD,
+> +					     buf[data_idx] | stop);
+> +			}
+> +		}
 > +	}
+> +
+> +	return num_msgs;
+> +}
+> +
+>  /*
+>   * Initiate (and continue) low level master read/write transaction.
+>   * This function is only called from i2c_dw_isr, and pumping i2c_msg
+> @@ -559,13 +621,19 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+>  	pm_runtime_get_sync(dev->dev);
+>  
+>  	/*
+> -	 * Initiate I2C message transfer when AMD NAVI GPU card is enabled,
+> +	 * Initiate I2C message transfer when polling mode is enabled,
+>  	 * As it is polling based transfer mechanism, which does not support
+>  	 * interrupt based functionalities of existing DesignWare driver.
+>  	 */
+> -	if ((dev->flags & MODEL_MASK) == MODEL_AMD_NAVI_GPU) {
+> +	switch (dev->flags & MODEL_MASK) {
+> +	case MODEL_AMD_NAVI_GPU:
+>  		ret = amd_i2c_dw_xfer_quirk(adap, msgs, num);
+>  		goto done_nolock;
+> +	case MODEL_WANGXUN_SP:
+> +		ret = txgbe_i2c_dw_xfer_quirk(adap, msgs, num);
+> +		goto done_nolock;
+> +	default:
+> +		break;
+>  	}
+Nit pick, when I first saw above code it looked a little weird, maybe it would be a
+little clearer with:
+
+	if (i2c_dw_is_model_poll(dev)) {
+		switch (dev->flags & MODEL_MASK) {
+		case MODEL_AMD_NAVI_GPU:
+			ret = amd_i2c_dw_xfer_quirk(adap, msgs, num);
+			break;
+		case MODEL_WANGXUN_SP:
+			ret = txgbe_i2c_dw_xfer_quirk(adap, msgs, num);
+			break;
+		default:
+			break;
+		}
+		goto done_nolock;
+	}
+
+I do not insist though.
+
+>  
+>  	reinit_completion(&dev->cmd_complete);
+> @@ -848,7 +916,7 @@ static int i2c_dw_init_recovery_info(struct dw_i2c_dev *dev)
+>  	return 0;
+>  }
+>  
+> -static int amd_i2c_adap_quirk(struct dw_i2c_dev *dev)
+> +static int i2c_dw_poll_adap_quirk(struct dw_i2c_dev *dev)
+>  {
+>  	struct i2c_adapter *adap = &dev->adapter;
+>  	int ret;
+> @@ -862,6 +930,17 @@ static int amd_i2c_adap_quirk(struct dw_i2c_dev *dev)
+>  	return ret;
+>  }
+>  
+> +static bool i2c_dw_is_model_poll(struct dw_i2c_dev *dev)
+> +{
+> +	switch (dev->flags & MODEL_MASK) {
+> +	case MODEL_AMD_NAVI_GPU:
+> +	case MODEL_WANGXUN_SP:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+>  int i2c_dw_probe_master(struct dw_i2c_dev *dev)
+>  {
+>  	struct i2c_adapter *adap = &dev->adapter;
+> @@ -917,8 +996,8 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
+>  	adap->dev.parent = dev->dev;
+>  	i2c_set_adapdata(adap, dev);
+>  
+> -	if ((dev->flags & MODEL_MASK) == MODEL_AMD_NAVI_GPU)
+> -		return amd_i2c_adap_quirk(dev);
+> +	if (i2c_dw_is_model_poll(dev))
+> +		return i2c_dw_poll_adap_quirk(dev);
+>  
+>  	if (dev->flags & ACCESS_NO_IRQ_SUSPEND) {
+>  		irq_flags = IRQF_NO_SUSPEND;
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index 89ad88c54754..1bf50150386d 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -168,6 +168,15 @@ static inline int dw_i2c_of_configure(struct platform_device *pdev)
+>  }
+>  #endif
+>  
+> +static int txgbe_i2c_request_regs(struct dw_i2c_dev *dev)
+> +{
+> +	dev->map = dev_get_regmap(dev->dev->parent, NULL);
+> +	if (!dev->map)
+> +		return -ENODEV;
 > +
 > +	return 0;
 > +}
 > +
-> +void txgbe_remove_phy(struct txgbe *txgbe)
-> +{
-> +	software_node_unregister_node_group(txgbe->nodes.group);
-> +}
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
-> new file mode 100644
-> index 000000000000..1ab592124986
-> --- /dev/null
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2015 - 2023 Beijing WangXun Technology Co., Ltd. */
-> +
-> +#ifndef _TXGBE_PHY_H_
-> +#define _TXGBE_PHY_H_
-> +
-> +int txgbe_init_phy(struct txgbe *txgbe);
-> +void txgbe_remove_phy(struct txgbe *txgbe);
-> +
-> +#endif /* _TXGBE_NODE_H_ */
-> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> index 63a1c733718d..5bef0f9df523 100644
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-> @@ -4,6 +4,8 @@
->  #ifndef _TXGBE_TYPE_H_
->  #define _TXGBE_TYPE_H_
+>  static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
+>  {
+>  	pm_runtime_disable(dev->dev);
+> @@ -185,6 +194,9 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+>  	case MODEL_BAIKAL_BT1:
+>  		ret = bt1_i2c_request_regs(dev);
+>  		break;
+> +	case MODEL_WANGXUN_SP:
+> +		ret = txgbe_i2c_request_regs(dev);
+> +		break;
+>  	default:
+>  		dev->base = devm_platform_ioremap_resource(pdev, 0);
+>  		ret = PTR_ERR_OR_ZERO(dev->base);
+> @@ -277,6 +289,9 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
 >  
-> +#include <linux/property.h>
+>  	dev->flags = (uintptr_t)device_get_match_data(&pdev->dev);
+> +	if (device_property_present(&pdev->dev, "snps,i2c-platform"))
+> +		dev->flags |= MODEL_WANGXUN_SP;
 > +
->  /* Device IDs */
->  #define TXGBE_DEV_ID_SP1000                     0x1001
->  #define TXGBE_DEV_ID_WX1820                     0x2001
-> @@ -99,4 +101,51 @@
->  
->  extern char txgbe_driver_name[];
->  
-> +static inline struct txgbe *netdev_to_txgbe(struct net_device *netdev)
-> +{
-> +	struct wx *wx = netdev_priv(netdev);
-> +
-> +	return wx->priv;
-> +}
-> +
-> +#define NODE_PROP(_NAME, _PROP)			\
-> +	(const struct software_node) {		\
-> +		.name = _NAME,			\
-> +		.properties = _PROP,		\
-> +	}
-> +
-> +enum txgbe_swnodes {
-> +	SWNODE_GPIO = 0,
-> +	SWNODE_I2C,
-> +	SWNODE_SFP,
-> +	SWNODE_PHYLINK,
-> +	SWNODE_MAX
-> +};
-> +
-> +struct txgbe_nodes {
-> +	char gpio_name[32];
-> +	char i2c_name[32];
-> +	char sfp_name[32];
-> +	char phylink_name[32];
-> +	struct property_entry gpio_props[1];
-> +	struct property_entry i2c_props[3];
-> +	struct property_entry sfp_props[8];
-> +	struct property_entry phylink_props[2];
-> +	struct software_node_ref_args i2c_ref[1];
-> +	struct software_node_ref_args gpio0_ref[1];
-> +	struct software_node_ref_args gpio1_ref[1];
-> +	struct software_node_ref_args gpio2_ref[1];
-> +	struct software_node_ref_args gpio3_ref[1];
-> +	struct software_node_ref_args gpio4_ref[1];
-> +	struct software_node_ref_args gpio5_ref[1];
-> +	struct software_node_ref_args sfp_ref[1];
-> +	struct software_node swnodes[SWNODE_MAX];
-> +	const struct software_node *group[SWNODE_MAX + 1];
-> +};
-> +
-> +struct txgbe {
-> +	struct wx *wx;
-> +	struct txgbe_nodes nodes;
-> +};
-> +
->  #endif /* _TXGBE_TYPE_H_ */
+>  	dev->dev = &pdev->dev;
+>  	dev->irq = irq;
+>  	platform_set_drvdata(pdev, dev);
 > -- 
 > 2.27.0
 > 
