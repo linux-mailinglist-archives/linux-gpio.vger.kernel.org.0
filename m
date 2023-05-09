@@ -2,51 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F5E56FBD3F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 04:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D66326FBEE2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 07:50:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234304AbjEICa2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 May 2023 22:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39488 "EHLO
+        id S234437AbjEIFuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 May 2023 01:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233270AbjEICa1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 May 2023 22:30:27 -0400
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA2F49CF;
-        Mon,  8 May 2023 19:30:24 -0700 (PDT)
-X-QQ-mid: bizesmtp78t1683599370tns8qfgk
-Received: from wxdbg.localdomain.com ( [125.119.253.217])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Tue, 09 May 2023 10:29:29 +0800 (CST)
-X-QQ-SSF: 01400000000000I0Z000000A0000000
-X-QQ-FEAT: eTp2eCgHrZl3YnRfsGfPMpzHtMjIVZwpJo0/0Wbpx+ARJ9hjmntKuN4nia8nP
-        wQNB06REXVAloo8wootUpxkt3t0h26/ro3aAIviIZdzh1ELyTQQIQugEqsQa3M4nqY41l7+
-        5ttcxVh93v+zRYCcraoAOXJ6gzSxLJ6CZLStgUxNQyOJpvL8gzQrYUWji8vpLAUD9RDkxvf
-        Tr35asRb4xALav6C16fp7g6duZVE/cg5CuVEzGmFlCrFP5rmaZ5qEAyipPigN9tkPzdM+ly
-        5uSgMLCq9USkZk5VqhTuJydtCZE1KXVsLxVhyfYszEHpTvQjgrjr3oKtP1GqVacDGzNAxNJ
-        3HE71tellzhxraN1vo9Ip53+Q+Cg6E/A7A3zL/2qmvkh+1wmoDU4DB0EhSe2HTtJpGUwgio
-        LBkKj1M6lhB/esiuqZTdpnHbFdcMiine
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 2865250660286101631
-From:   Jiawen Wu <jiawenwu@trustnetic.com>
-To:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
-        hkallweit1@gmail.com, linux@armlinux.org.uk
-Cc:     linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com, Jiawen Wu <jiawenwu@trustnetic.com>
-Subject: [PATCH net-next v7 9/9] net: txgbe: Support phylink MAC layer
-Date:   Tue,  9 May 2023 10:27:34 +0800
-Message-Id: <20230509022734.148970-10-jiawenwu@trustnetic.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20230509022734.148970-1-jiawenwu@trustnetic.com>
-References: <20230509022734.148970-1-jiawenwu@trustnetic.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        with ESMTP id S229641AbjEIFuG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 01:50:06 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EC39028
+        for <linux-gpio@vger.kernel.org>; Mon,  8 May 2023 22:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683611405; x=1715147405;
+  h=date:from:to:cc:subject:message-id;
+  bh=vgB/rWXMzDbKYsAzgm2TUFle4tlUe0Hu//QpjAyp8gw=;
+  b=aZutm6t68jSwnYYzVODzhOvl9ipEeKiWv0Ykn5tCOME6AkvNwkteXPEb
+   ZOGGJ6WgGY1Tuomt/rQLIUuWc0Sxf4vqU0DcTVZnaeEGObNpFFfd+9v6f
+   Kzlvh3Eq6GkFA1iADjx0e05D/ueDYQKMWHuNwyn7hfol31Wg9ne+Nj5av
+   v4GXrzKt0mt7fJuO45fKBFyyYoqOoox/Plbs5+DPPtpXtQs51w8n9gyOc
+   58p/GTQbwdS+mw0UM6yL3J0uDorkKBizhU36TKiYP8Eo65bM5nFZk9XeE
+   2qF42riz2fRN9FqI/w6FqIqVP/O50ysf5RqSk35F4layVpsomK6SoNz9x
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="349850276"
+X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
+   d="scan'208";a="349850276"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 22:50:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="810522123"
+X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
+   d="scan'208";a="810522123"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2023 22:50:03 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pwGEd-0001o0-0q;
+        Tue, 09 May 2023 05:50:03 +0000
+Date:   Tue, 09 May 2023 13:49:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ cbbe077815144ad98fd2ea724d9ec3dade09ca92
+Message-ID: <20230509054920.Eus_w%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,347 +59,204 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add phylink support to Wangxun 10Gb Ethernet controller for the 10GBASE-R
-interface.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: cbbe077815144ad98fd2ea724d9ec3dade09ca92  pinctrl: qcom: spmi-gpio: Add PM8953 support
 
-Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
----
- drivers/net/ethernet/wangxun/Kconfig          |   1 +
- .../ethernet/wangxun/txgbe/txgbe_ethtool.c    |  28 +++++
- .../net/ethernet/wangxun/txgbe/txgbe_main.c   |  23 ++--
- .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 113 +++++++++++++++++-
- .../net/ethernet/wangxun/txgbe/txgbe_type.h   |   5 +
- 5 files changed, 154 insertions(+), 16 deletions(-)
+elapsed time: 733m
 
-diff --git a/drivers/net/ethernet/wangxun/Kconfig b/drivers/net/ethernet/wangxun/Kconfig
-index f3fb273e6fd0..2ca163f07359 100644
---- a/drivers/net/ethernet/wangxun/Kconfig
-+++ b/drivers/net/ethernet/wangxun/Kconfig
-@@ -46,6 +46,7 @@ config TXGBE
- 	select REGMAP
- 	select COMMON_CLK
- 	select PCS_XPCS
-+	select PHYLINK
- 	select LIBWX
- 	select SFP
- 	help
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-index d914e9a05404..859da112586a 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_ethtool.c
-@@ -6,11 +6,39 @@
- #include <linux/netdevice.h>
- 
- #include "../libwx/wx_ethtool.h"
-+#include "../libwx/wx_type.h"
-+#include "txgbe_type.h"
- #include "txgbe_ethtool.h"
- 
-+static int txgbe_nway_reset(struct net_device *netdev)
-+{
-+	struct txgbe *txgbe = netdev_to_txgbe(netdev);
-+
-+	return phylink_ethtool_nway_reset(txgbe->phylink);
-+}
-+
-+static int txgbe_get_link_ksettings(struct net_device *netdev,
-+				    struct ethtool_link_ksettings *cmd)
-+{
-+	struct txgbe *txgbe = netdev_to_txgbe(netdev);
-+
-+	return phylink_ethtool_ksettings_get(txgbe->phylink, cmd);
-+}
-+
-+static int txgbe_set_link_ksettings(struct net_device *netdev,
-+				    const struct ethtool_link_ksettings *cmd)
-+{
-+	struct txgbe *txgbe = netdev_to_txgbe(netdev);
-+
-+	return phylink_ethtool_ksettings_set(txgbe->phylink, cmd);
-+}
-+
- static const struct ethtool_ops txgbe_ethtool_ops = {
- 	.get_drvinfo		= wx_get_drvinfo,
-+	.nway_reset		= txgbe_nway_reset,
- 	.get_link		= ethtool_op_get_link,
-+	.get_link_ksettings	= txgbe_get_link_ksettings,
-+	.set_link_ksettings	= txgbe_set_link_ksettings,
- };
- 
- void txgbe_set_ethtool_ops(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-index ded04e9e136f..bdf735e863eb 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-@@ -7,6 +7,7 @@
- #include <linux/netdevice.h>
- #include <linux/string.h>
- #include <linux/etherdevice.h>
-+#include <linux/phylink.h>
- #include <net/ip.h>
- #include <linux/if_vlan.h>
- 
-@@ -204,7 +205,8 @@ static int txgbe_request_irq(struct wx *wx)
- 
- static void txgbe_up_complete(struct wx *wx)
- {
--	u32 reg;
-+	struct net_device *netdev = wx->netdev;
-+	struct txgbe *txgbe = netdev_to_txgbe(netdev);
- 
- 	wx_control_hw(wx, true);
- 	wx_configure_vectors(wx);
-@@ -213,24 +215,16 @@ static void txgbe_up_complete(struct wx *wx)
- 	smp_mb__before_atomic();
- 	wx_napi_enable_all(wx);
- 
-+	phylink_start(txgbe->phylink);
-+
- 	/* clear any pending interrupts, may auto mask */
- 	rd32(wx, WX_PX_IC(0));
- 	rd32(wx, WX_PX_IC(1));
- 	rd32(wx, WX_PX_MISC_IC);
- 	txgbe_irq_enable(wx, true);
- 
--	/* Configure MAC Rx and Tx when link is up */
--	reg = rd32(wx, WX_MAC_RX_CFG);
--	wr32(wx, WX_MAC_RX_CFG, reg);
--	wr32(wx, WX_MAC_PKT_FLT, WX_MAC_PKT_FLT_PR);
--	reg = rd32(wx, WX_MAC_WDG_TIMEOUT);
--	wr32(wx, WX_MAC_WDG_TIMEOUT, reg);
--	reg = rd32(wx, WX_MAC_TX_CFG);
--	wr32(wx, WX_MAC_TX_CFG, (reg & ~WX_MAC_TX_CFG_SPEED_MASK) | WX_MAC_TX_CFG_SPEED_10G);
--
- 	/* enable transmits */
--	netif_tx_start_all_queues(wx->netdev);
--	netif_carrier_on(wx->netdev);
-+	netif_tx_start_all_queues(netdev);
- }
- 
- static void txgbe_reset(struct wx *wx)
-@@ -264,7 +258,6 @@ static void txgbe_disable_device(struct wx *wx)
- 		wx_disable_rx_queue(wx, wx->rx_ring[i]);
- 
- 	netif_tx_stop_all_queues(netdev);
--	netif_carrier_off(netdev);
- 	netif_tx_disable(netdev);
- 
- 	wx_irq_disable(wx);
-@@ -295,8 +288,12 @@ static void txgbe_disable_device(struct wx *wx)
- 
- static void txgbe_down(struct wx *wx)
- {
-+	struct net_device *netdev = wx->netdev;
-+	struct txgbe *txgbe = netdev_to_txgbe(netdev);
-+
- 	txgbe_disable_device(wx);
- 	txgbe_reset(wx);
-+	phylink_stop(txgbe->phylink);
- 
- 	wx_clean_all_tx_rings(wx);
- 	wx_clean_all_rx_rings(wx);
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-index 0ab2898e764a..4eedb60e93af 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
-@@ -10,11 +10,13 @@
- #include <linux/clkdev.h>
- #include <linux/clk-provider.h>
- #include <linux/pcs/pcs-xpcs.h>
-+#include <linux/phylink.h>
- #include <linux/mdio.h>
- #include <linux/i2c.h>
- #include <linux/pci.h>
- 
- #include "../libwx/wx_type.h"
-+#include "../libwx/wx_lib.h"
- #include "../libwx/wx_hw.h"
- #include "txgbe_type.h"
- #include "txgbe_phy.h"
-@@ -156,6 +158,95 @@ static int txgbe_mdio_pcs_init(struct txgbe *txgbe)
- 	return 0;
- }
- 
-+static struct phylink_pcs *txgbe_phylink_mac_select(struct phylink_config *config,
-+						    phy_interface_t interface)
-+{
-+	struct txgbe *txgbe = netdev_to_txgbe(to_net_dev(config->dev));
-+
-+	return &txgbe->xpcs->pcs;
-+}
-+
-+static void txgbe_mac_config(struct phylink_config *config, unsigned int mode,
-+			     const struct phylink_link_state *state)
-+{
-+}
-+
-+static void txgbe_mac_link_down(struct phylink_config *config,
-+				unsigned int mode, phy_interface_t interface)
-+{
-+	struct wx *wx = netdev_priv(to_net_dev(config->dev));
-+
-+	wr32m(wx, WX_MAC_TX_CFG, WX_MAC_TX_CFG_TE, 0);
-+}
-+
-+static void txgbe_mac_link_up(struct phylink_config *config,
-+			      struct phy_device *phy,
-+			      unsigned int mode, phy_interface_t interface,
-+			      int speed, int duplex,
-+			      bool tx_pause, bool rx_pause)
-+{
-+	struct wx *wx = netdev_priv(to_net_dev(config->dev));
-+	u32 txcfg, wdg;
-+
-+	txcfg = rd32(wx, WX_MAC_TX_CFG);
-+	txcfg &= ~WX_MAC_TX_CFG_SPEED_MASK;
-+
-+	switch (speed) {
-+	case SPEED_10000:
-+		txcfg |= WX_MAC_TX_CFG_SPEED_10G;
-+		break;
-+	case SPEED_1000:
-+	case SPEED_100:
-+	case SPEED_10:
-+		txcfg |= WX_MAC_TX_CFG_SPEED_1G;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	wr32(wx, WX_MAC_TX_CFG, txcfg | WX_MAC_TX_CFG_TE);
-+
-+	/* Re configure MAC Rx */
-+	wr32m(wx, WX_MAC_RX_CFG, WX_MAC_RX_CFG_RE, WX_MAC_RX_CFG_RE);
-+	wr32(wx, WX_MAC_PKT_FLT, WX_MAC_PKT_FLT_PR);
-+	wdg = rd32(wx, WX_MAC_WDG_TIMEOUT);
-+	wr32(wx, WX_MAC_WDG_TIMEOUT, wdg);
-+}
-+
-+static const struct phylink_mac_ops txgbe_mac_ops = {
-+	.mac_select_pcs = txgbe_phylink_mac_select,
-+	.mac_config = txgbe_mac_config,
-+	.mac_link_down = txgbe_mac_link_down,
-+	.mac_link_up = txgbe_mac_link_up,
-+};
-+
-+static int txgbe_phylink_init(struct txgbe *txgbe)
-+{
-+	struct phylink_config *config;
-+	struct fwnode_handle *fwnode;
-+	struct wx *wx = txgbe->wx;
-+	phy_interface_t phy_mode;
-+	struct phylink *phylink;
-+
-+	config = devm_kzalloc(&wx->pdev->dev, sizeof(*config), GFP_KERNEL);
-+	if (!config)
-+		return -ENOMEM;
-+
-+	config->dev = &wx->netdev->dev;
-+	config->type = PHYLINK_NETDEV;
-+	config->mac_capabilities = MAC_10000FD | MAC_1000FD | MAC_SYM_PAUSE | MAC_ASYM_PAUSE;
-+	phy_mode = PHY_INTERFACE_MODE_10GBASER;
-+	__set_bit(PHY_INTERFACE_MODE_10GBASER, config->supported_interfaces);
-+	fwnode = software_node_fwnode(txgbe->nodes.group[SWNODE_PHYLINK]);
-+	phylink = phylink_create(config, fwnode, phy_mode, &txgbe_mac_ops);
-+	if (IS_ERR(phylink))
-+		return PTR_ERR(phylink);
-+
-+	txgbe->phylink = phylink;
-+
-+	return 0;
-+}
-+
- static int txgbe_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct wx *wx = gpiochip_get_data(chip);
-@@ -302,7 +393,9 @@ static void txgbe_irq_handler(struct irq_desc *desc)
- 	irq_hw_number_t hwirq;
- 	unsigned long gpioirq;
- 	struct gpio_chip *gc;
--	u32 gpio;
-+	u32 gpio, eicr, reg;
-+
-+	eicr = wx_misc_isb(wx, WX_ISB_MISC);
- 
- 	chained_irq_enter(chip, desc);
- 
-@@ -319,6 +412,11 @@ static void txgbe_irq_handler(struct irq_desc *desc)
- 
- 	chained_irq_exit(chip, desc);
- 
-+	if (eicr & (TXGBE_PX_MISC_ETH_LK | TXGBE_PX_MISC_ETH_LKDN)) {
-+		reg = rd32(wx, TXGBE_CFG_PORT_ST);
-+		phylink_mac_change(txgbe->phylink, !!(reg & TXGBE_CFG_PORT_ST_LINK_UP));
-+	}
-+
- 	/* unmask interrupt */
- 	if (netif_running(wx->netdev))
- 		wx_intr_enable(wx, TXGBE_INTR_MISC(wx));
-@@ -494,16 +592,22 @@ int txgbe_init_phy(struct txgbe *txgbe)
- 		goto err_unregister_swnode;
- 	}
- 
-+	ret = txgbe_phylink_init(txgbe);
-+	if (ret) {
-+		wx_err(txgbe->wx, "failed to init phylink\n");
-+		goto err_destroy_xpcs;
-+	}
-+
- 	ret = txgbe_gpio_init(txgbe);
- 	if (ret) {
- 		wx_err(txgbe->wx, "failed to init gpio\n");
--		goto err_destroy_xpcs;
-+		goto err_destroy_phylink;
- 	}
- 
- 	ret = txgbe_clock_register(txgbe);
- 	if (ret) {
- 		wx_err(txgbe->wx, "failed to register clock: %d\n", ret);
--		goto err_destroy_xpcs;
-+		goto err_destroy_phylink;
- 	}
- 
- 	ret = txgbe_i2c_register(txgbe);
-@@ -525,6 +629,8 @@ int txgbe_init_phy(struct txgbe *txgbe)
- err_unregister_clk:
- 	clkdev_drop(txgbe->clock);
- 	clk_unregister(txgbe->clk);
-+err_destroy_phylink:
-+	phylink_destroy(txgbe->phylink);
- err_destroy_xpcs:
- 	xpcs_destroy(txgbe->xpcs);
- err_unregister_swnode:
-@@ -539,6 +645,7 @@ void txgbe_remove_phy(struct txgbe *txgbe)
- 	platform_device_unregister(txgbe->i2c_dev);
- 	clkdev_drop(txgbe->clock);
- 	clk_unregister(txgbe->clk);
-+	phylink_destroy(txgbe->phylink);
- 	xpcs_destroy(txgbe->xpcs);
- 	software_node_unregister_node_group(txgbe->nodes.group);
- }
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-index 75b9c7ae3c21..a889f340b14d 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_type.h
-@@ -80,6 +80,10 @@
- 				TXGBE_PX_MISC_INT_ERR | \
- 				TXGBE_PX_MISC_GPIO)
- 
-+/* Port cfg registers */
-+#define TXGBE_CFG_PORT_ST                       0x14404
-+#define TXGBE_CFG_PORT_ST_LINK_UP               BIT(0)
-+
- /* I2C registers */
- #define TXGBE_I2C_BASE                          0x14900
- 
-@@ -180,6 +184,7 @@ struct txgbe {
- 	struct txgbe_nodes nodes;
- 	struct mdio_device *mdiodev;
- 	struct dw_xpcs *xpcs;
-+	struct phylink *phylink;
- 	struct platform_device *sfp_dev;
- 	struct platform_device *i2c_dev;
- 	struct clk_lookup *clock;
+configs tested: 185
+configs skipped: 10
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r002-20230507   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r001-20230507   gcc  
+alpha                randconfig-r016-20230507   gcc  
+alpha                randconfig-r016-20230508   gcc  
+alpha                randconfig-r025-20230507   gcc  
+alpha                randconfig-r026-20230507   gcc  
+alpha                randconfig-r033-20230507   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r002-20230507   gcc  
+arc          buildonly-randconfig-r003-20230508   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r003-20230508   gcc  
+arc                  randconfig-r005-20230508   gcc  
+arc                  randconfig-r032-20230508   gcc  
+arc                  randconfig-r035-20230507   gcc  
+arc                  randconfig-r036-20230508   gcc  
+arc                  randconfig-r043-20230507   gcc  
+arc                  randconfig-r043-20230508   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r001-20230507   clang
+arm                  randconfig-r024-20230507   gcc  
+arm                  randconfig-r026-20230508   clang
+arm                  randconfig-r036-20230508   gcc  
+arm                  randconfig-r046-20230507   gcc  
+arm                  randconfig-r046-20230508   clang
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r001-20230507   gcc  
+arm64        buildonly-randconfig-r003-20230507   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r002-20230507   gcc  
+arm64                randconfig-r002-20230508   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r003-20230507   gcc  
+csky                 randconfig-r006-20230508   gcc  
+hexagon      buildonly-randconfig-r002-20230508   clang
+hexagon      buildonly-randconfig-r006-20230508   clang
+hexagon              randconfig-r013-20230507   clang
+hexagon              randconfig-r015-20230508   clang
+hexagon              randconfig-r023-20230507   clang
+hexagon              randconfig-r023-20230508   clang
+hexagon              randconfig-r041-20230507   clang
+hexagon              randconfig-r041-20230508   clang
+hexagon              randconfig-r045-20230507   clang
+hexagon              randconfig-r045-20230508   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                          randconfig-a001   gcc  
+i386                          randconfig-a002   clang
+i386                          randconfig-a003   gcc  
+i386                          randconfig-a004   clang
+i386                          randconfig-a005   gcc  
+i386                          randconfig-a006   clang
+i386                 randconfig-a011-20230508   gcc  
+i386                 randconfig-a012-20230508   gcc  
+i386                 randconfig-a013-20230508   gcc  
+i386                 randconfig-a014-20230508   gcc  
+i386                 randconfig-a015-20230508   gcc  
+i386                 randconfig-a016-20230508   gcc  
+i386                 randconfig-r011-20230508   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r005-20230508   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r004-20230508   gcc  
+ia64                 randconfig-r021-20230507   gcc  
+ia64                 randconfig-r023-20230507   gcc  
+ia64                 randconfig-r025-20230508   gcc  
+ia64                 randconfig-r026-20230507   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r006-20230507   gcc  
+loongarch            randconfig-r013-20230508   gcc  
+loongarch            randconfig-r014-20230508   gcc  
+loongarch            randconfig-r024-20230508   gcc  
+loongarch            randconfig-r031-20230508   gcc  
+loongarch            randconfig-r033-20230508   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r005-20230507   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r024-20230507   gcc  
+microblaze   buildonly-randconfig-r004-20230507   gcc  
+microblaze   buildonly-randconfig-r004-20230508   gcc  
+microblaze   buildonly-randconfig-r006-20230507   gcc  
+microblaze           randconfig-r022-20230507   gcc  
+microblaze           randconfig-r032-20230508   gcc  
+microblaze           randconfig-r034-20230508   gcc  
+microblaze           randconfig-r036-20230507   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r006-20230507   clang
+mips                 randconfig-r033-20230508   gcc  
+mips                 randconfig-r035-20230507   clang
+mips                 randconfig-r035-20230508   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r011-20230507   gcc  
+nios2                randconfig-r012-20230507   gcc  
+nios2                randconfig-r031-20230507   gcc  
+nios2                randconfig-r034-20230508   gcc  
+openrisc     buildonly-randconfig-r006-20230507   gcc  
+openrisc             randconfig-r004-20230507   gcc  
+openrisc             randconfig-r015-20230507   gcc  
+openrisc             randconfig-r021-20230508   gcc  
+parisc       buildonly-randconfig-r001-20230507   gcc  
+parisc       buildonly-randconfig-r004-20230507   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r011-20230507   gcc  
+parisc               randconfig-r014-20230507   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r002-20230507   gcc  
+powerpc              randconfig-r005-20230507   gcc  
+powerpc              randconfig-r016-20230507   clang
+powerpc              randconfig-r021-20230507   clang
+powerpc              randconfig-r022-20230508   gcc  
+powerpc              randconfig-r025-20230507   clang
+powerpc              randconfig-r033-20230507   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r005-20230507   clang
+riscv                               defconfig   gcc  
+riscv                randconfig-r022-20230508   gcc  
+riscv                randconfig-r025-20230508   gcc  
+riscv                randconfig-r042-20230507   clang
+riscv                randconfig-r042-20230508   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r003-20230508   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230507   clang
+s390                 randconfig-r044-20230508   gcc  
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r003-20230507   gcc  
+sh           buildonly-randconfig-r005-20230508   gcc  
+sh                   randconfig-r012-20230508   gcc  
+sh                   randconfig-r013-20230507   gcc  
+sh                   randconfig-r014-20230507   gcc  
+sh                   randconfig-r032-20230507   gcc  
+sparc        buildonly-randconfig-r001-20230508   gcc  
+sparc        buildonly-randconfig-r002-20230508   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r001-20230508   gcc  
+sparc                randconfig-r005-20230507   gcc  
+sparc                randconfig-r015-20230507   gcc  
+sparc                randconfig-r022-20230507   gcc  
+sparc                randconfig-r031-20230508   gcc  
+sparc64      buildonly-randconfig-r004-20230508   gcc  
+sparc64              randconfig-r012-20230507   gcc  
+sparc64              randconfig-r032-20230507   gcc  
+sparc64              randconfig-r034-20230507   gcc  
+sparc64              randconfig-r035-20230508   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230508   clang
+x86_64                        randconfig-a001   clang
+x86_64               randconfig-a002-20230508   clang
+x86_64                        randconfig-a002   gcc  
+x86_64               randconfig-a003-20230508   clang
+x86_64                        randconfig-a003   clang
+x86_64               randconfig-a004-20230508   clang
+x86_64                        randconfig-a004   gcc  
+x86_64               randconfig-a005-20230508   clang
+x86_64                        randconfig-a005   clang
+x86_64               randconfig-a006-20230508   clang
+x86_64                        randconfig-a006   gcc  
+x86_64               randconfig-a011-20230508   gcc  
+x86_64               randconfig-a012-20230508   gcc  
+x86_64               randconfig-a013-20230508   gcc  
+x86_64               randconfig-a014-20230508   gcc  
+x86_64               randconfig-a015-20230508   gcc  
+x86_64               randconfig-a016-20230508   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r001-20230508   gcc  
+xtensa               randconfig-r003-20230507   gcc  
+xtensa               randconfig-r021-20230508   gcc  
+
 -- 
-2.27.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
