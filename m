@@ -2,248 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F81A6FCA75
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 17:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D92336FCAA1
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 May 2023 18:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235799AbjEIPqG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 May 2023 11:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
+        id S234673AbjEIQA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 May 2023 12:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231488AbjEIPqF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 11:46:05 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F46110CF;
-        Tue,  9 May 2023 08:46:04 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6435bbedb4fso6530350b3a.3;
-        Tue, 09 May 2023 08:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683647164; x=1686239164;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=71PM0c8jNHbE9hDVzelzE+44lPJ6yhnjh+al/DYMEGM=;
-        b=SEA4YE+jIMxurE4v8za3MHr2O6gaolZclraB7UcAIamSS+Dj8yKy0jXrX7aKbd7XqM
-         ODwEULvon/ZHeJlDO0e2X7NsBu3EQ9VjifJNDxJysAg5ImkgjjCBTeJ6aV/SAr+2PnrP
-         r73qgNNowQKOJlzR61Cj6po0v3hMx2fl8dDNacu/Ul+YccRQ6EzlQKoue3Ew4PvJ64e9
-         CvqZRSE4RgeGuuxOY+r+YWXqXDEAKd58vhrbbpGyklzNWQkYD10DyrnkdVVSnasi0q9O
-         3yA4Docte3BTc1xIHgWT7+39MYRFhDvH4p+r7yzJJlKu8w6kZxSHJqhNaPKRBoLRIFjE
-         2fYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683647164; x=1686239164;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=71PM0c8jNHbE9hDVzelzE+44lPJ6yhnjh+al/DYMEGM=;
-        b=FZcL8YF2172WCJ8SW2A+oz5iqIR7xklbEojaXM1KRdq5+8AXOyXjQyeEsaufIvR9lQ
-         txnJejphe+YD3iywews/JcyNfV7thdisO3N3PvdYAO6MiJ438qeBT1/7RGj0ruL6vZ4I
-         5OvgBTIQ/B5EyGYtjdqY/VUhTiyjcd9fwehECWKffsP9F/OuKFLBry0Jtu9TpX1J7pcm
-         af/MzEMxAYHL1a5fJzcL5yCL1puMfWJvDVescbzwShvCYnr/xITk9vfose4YoCXdB0rO
-         6NBU9GIrMbOTOj665my2ZK+4J7CylfwhfgQtinjTKrvlr5vcS/4mlDsJTGSNrwDHF69z
-         s8MA==
-X-Gm-Message-State: AC+VfDwdM6AQhMDYRhzUCktQafOGcm4ydRhun5QQhppVuW9yQ8bVbmMO
-        tWmxV06c/x777tVc2VstzNM=
-X-Google-Smtp-Source: ACHHUZ40OSB3ygellDJMvNryY1OSEE6VRfNqx3TuFWOwXIXAE8QVpIUy0A0EEw+J+Wkbd/hFvnAwEA==
-X-Received: by 2002:a05:6a20:429b:b0:101:4c8c:d1fa with SMTP id o27-20020a056a20429b00b001014c8cd1famr3595014pzj.5.1683647163538;
-        Tue, 09 May 2023 08:46:03 -0700 (PDT)
-Received: from [192.168.50.148] (net-2-32-39-33.cust.vodafonedsl.it. [2.32.39.33])
-        by smtp.gmail.com with ESMTPSA id b30-20020a631b1e000000b0050bd4bb900csm1489844pgb.71.2023.05.09.08.45.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 08:46:02 -0700 (PDT)
-Message-ID: <e59064e1-a826-1b90-fed4-29b0cabb1a87@gmail.com>
-Date:   Tue, 9 May 2023 17:45:54 +0200
+        with ESMTP id S235526AbjEIQAy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 May 2023 12:00:54 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2044.outbound.protection.outlook.com [40.107.6.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7546730DF
+        for <linux-gpio@vger.kernel.org>; Tue,  9 May 2023 09:00:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jwtKDn2kbi3AM7rZRzzjliTHLI3PTswHikuJpaTH74L2nJ8pYjHF7baIzm9afulXHK5dl6dVxoIV/PSUoNoXFGXqWCrcY8xZ6og2p9Cs9y8h3cDDdSvGaiP/Qst64+Gsi/HBfXVYsLUhGFbgY3bE+mQvyaJ5Se+flnAELQCKzhlTC6Lai0hFZTlQTESyr7A5Qdzq6Ju4QtoLiW3xB19kjDwAK4pvGLvNVctOiPhJLGbl4LQmPyvVWyOg36w2wzeWH0LLbUmtS7Fc4FudzFAY6/59t9/pfRZYibv85SpaiZO9WVh9KLz9fNhW+JmWKa43ooIk2QEbDu1Tt0wnvDmBTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5+wYwyEqeCxyIbJXENFGTSLz1rEoFKjD48R8BxRYtPM=;
+ b=f1IRp2sgrUoHhsnot0pm/2c+25m+LgB4iadtGir/WUjSSaMPCjnYVO7UF+7b70QhI6feDDkB5nFXOeDkFp8dLorcBWRPD99QMzTd5jSI7z2fbffGggUYQSEmj3YOjLSn6RhK92gbg4YS+lJv2WWcPnHwFGldVWlJqcpKVyRNNkoaS/dwKKuDt8KqZsrud8iih+10Md9PvqEGvBCBgb/0MCzTKbaueoGjxUsdp1LU63vtf0Q47qghvzD3N99VV9lHKzCPcfBzGLbVyHgmJtj6NuQscl0fdwMDHYJ8qnSkA2KZi7I+DlkpmaZtK+lhoODXsEluxh5NRANjoVM5MBZynQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5+wYwyEqeCxyIbJXENFGTSLz1rEoFKjD48R8BxRYtPM=;
+ b=Bf5U45q7UVv5I6n6JVyPm/s1BjJtTi7IuON2eyuRLlqbT89HrtkWvxbRfDZVDPMiXjGdsxKJAUqUkipXIKAbJDB/0ZTPVSJbjiqcw3MwshXupt/pkkeswcdOtMfGN6kqTl6j1jsgja0fBUrdwHkNP8M+iBygGWWg1sVgCE0SfHw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by PA4PR04MB7677.eurprd04.prod.outlook.com (2603:10a6:102:eb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.31; Tue, 9 May
+ 2023 16:00:51 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::28fb:82ec:7a6:62f3]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::28fb:82ec:7a6:62f3%5]) with mapi id 15.20.6363.032; Tue, 9 May 2023
+ 16:00:51 +0000
+From:   Shenwei Wang <shenwei.wang@nxp.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-gpio@vger.kernel.org, imx@lists.linux.dev, linux-imx@nxp.com,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>
+Subject: [PATCH v2 1/1] gpio: mxc: use platform_get_irq_optional() to avoid an error message
+Date:   Tue,  9 May 2023 11:00:16 -0500
+Message-Id: <20230509160016.1074446-1-shenwei.wang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR04CA0025.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::35) To PAXPR04MB9185.eurprd04.prod.outlook.com
+ (2603:10a6:102:231::11)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 12/18] soc: qcom: Register pstore frontend region with
- minidump
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-13-git-send-email-quic_mojha@quicinc.com>
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-In-Reply-To: <1683133352-10046-13-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|PA4PR04MB7677:EE_
+X-MS-Office365-Filtering-Correlation-Id: 852cd8fc-67e7-4817-a67b-08db50a68f79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dFglhLdEvquT1Oizfreirk+UqmUytSahzpoc7Kv74pGCJBSwLleuNRTN92gs69P0V5FkcsQfL5sg0h+QWZPRjtVuHmR1RDq46ue8BX6DfAWDbSTLT027knvph9U/Pn7S95FMx4Im7LficWLZzD2QF5zN1u32Oh649KdryceGxq7IcL9+nVdrd7lMKC0nvHLyZifsj66+6hXsy3ifWeVo9cwCHM3pPFv8ks2xgxax4W9gbdYldRCAmOxFB5yw1oRGk0rXEjFFGu1ssKj4klSRdjBd9JsApVSme0Qdy1nktEMeyg+BFZv/aAkrQ8kRkPO9v13+xgLmzmFd+ZyDbd+Dtvf1eiiS5jiqq2ihtE7/FY0ynq8+TyV3pHrC2HC/KjWN6Rvf8EXKS36blnzjcL+KT8DQnfROXXCGaqwm05LJ3dIcrTJ7MzJpeC40QQ7dDSUN2DpVBJw/4LS+ayIumMC/KK2dPmUA1mrARSl7hVJd1Bq+M/eMPEjPtVn0mATs8xer3y5ntt58LWQopUNZzzwuPlecWEXfbSbKbTvTQubxay0EP5LN7BZOL4cIEtogKQbAywHe72paYGu+Lh4XQeQw8lay+NK4PHNDlTpR2cNEDZXqfCqArjeMnAcA81EGcssA
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199021)(86362001)(66476007)(36756003)(52116002)(110136005)(54906003)(316002)(478600001)(4326008)(66556008)(6486002)(66946007)(5660300002)(41300700001)(2906002)(15650500001)(8676002)(8936002)(186003)(44832011)(38350700002)(38100700002)(26005)(55236004)(6506007)(1076003)(6512007)(83380400001)(2616005)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iAk05bBtimjQAclzqUEtzXUxcJAP7ujXttKNmWQiomSmVId7t2vHiaoXP0ft?=
+ =?us-ascii?Q?/d8MVjjTbhQoJLcu+gP5BeqvQa6Y2ydl/jSR2GhIdyn0hGzUsh6LTKw1DX5/?=
+ =?us-ascii?Q?G2CJWrabq4BNFfivzD9BI911ks0UiMm7SxGSV2xrTGpXrmyrldn2KFO1OGto?=
+ =?us-ascii?Q?CcqP0l9qNONXhnUtnbOxPi+idAvDpyJMmFAqH6KX7mgHv4HSIwh+qjpSoXpQ?=
+ =?us-ascii?Q?GwQ6ZEvPq+q9ZHWQYbe1hLDyD1EAu4fGbVaFWb9MFYN5CgM0f7rMxqKv7j3h?=
+ =?us-ascii?Q?ktVAZZNgNVmjPjMyhGS/JInlXmpZ3pVApqbQPA6qXXKgzisNIeWSSSufhd9M?=
+ =?us-ascii?Q?XfTlmREmqUTCVLxHrdW8zEeEX4LGUqXmXPZOh2y+rLIsGPWU7UnYWwjoZO5l?=
+ =?us-ascii?Q?PuanDiNMzxHDThp7FxqSZ21oso09LVmWIwgUudmEXHrZFTSRWmhmcUuEzUFE?=
+ =?us-ascii?Q?9FEa7Ga1yuESrNdua+3r8GhAaeWhwCZE6U4TYnWXacoScHbDbnoYPcLRU9Pz?=
+ =?us-ascii?Q?Y/aadq70BTDpqaQryz71j3i5+VTzawDP711N9td66iVLLnmLSaAUaSqvkvlH?=
+ =?us-ascii?Q?2pSrSo+1OQtyvW2RhSesbsqflBmhmxsqCGv441Qlkxy6ZXEsuovDwrVltliC?=
+ =?us-ascii?Q?kF7c2XGQf7AXWXuybdCXea7d7BbGHwb9Z5oGU0QsIwQOJ87u6bJ6Z6LLrdgv?=
+ =?us-ascii?Q?wuuP0ukK5A/FTXwhmVOSgDk5OuDG/4oy3avQzY+kwkvZ8kdPMLO3M9SNoQp+?=
+ =?us-ascii?Q?sUVFFcZhVUBgch05bTBGk2mf+r4DUIatW4Yq1aitQQ+iZ+ggMWhmmwUazGId?=
+ =?us-ascii?Q?jGoDu078OXVH8ngJ3g7ugpiWgr6su+FoOE7Z/93scOjxirvqnGTPtoH/EU5+?=
+ =?us-ascii?Q?aq7UQVEqs7b2XaoKHm92YWDSNWccjnmGOIwzUH9PzGFTrJYFB5kgLwz4L2tX?=
+ =?us-ascii?Q?vcdFF7l0mXPUUIsznD41JJe8UB0O/VJFHhfcvyE0fWbyCAyjriF+4xxkEzzK?=
+ =?us-ascii?Q?UtZ/fXzdzQZXZzEtg2rEYqQKHccBNA7NREBinIg2rSyejWLepuTYnR3n967b?=
+ =?us-ascii?Q?6SA44nv2ryeTv/9krtfWtp1iHY2HwC4xKbi5OYniYwMWRjjECVqVohStXpJV?=
+ =?us-ascii?Q?GHvouLfILHPqIHJIUEu8SIBxRq5OU8YTRmxRoJE0p2RgPZrkoKomkrnDSJm2?=
+ =?us-ascii?Q?Iq5D7OUpnQH5gptIuu0ZI7Lkw4UPLmtGF1MMp+o5h4fo0h0ZwS7PhLq1XAh/?=
+ =?us-ascii?Q?Bs7dyCDQd19x9CwmfRA57IfXm+Z2XQQmBReZMjm3Uqq3vdKVD/y8J9wNYxCl?=
+ =?us-ascii?Q?UldNkbLE9xRDdFYUT57cMkFh3Zs5dxtf5R4ORoXZqFPXSqQ//gUq8xrFc0o/?=
+ =?us-ascii?Q?FZK86ny/zqMXeOOFuGl+sPNUl2UaYBKKfmlB/kVqZNwKkM4CUzI90ogM5K4I?=
+ =?us-ascii?Q?fy9yDnxvTOqkCcrVPjFo23gMQO8Su/OYdI3W5v8bxheLP0YWblc1AfOkpi5j?=
+ =?us-ascii?Q?GzYUR9BpukFJhDz8H8BDpenRnZZlEW0ij34oMDzkY0yqpyQBn4kUVrdQKIEb?=
+ =?us-ascii?Q?4wFAUikJaZkfBZZuy4JGCKshVsWhHG+x/KtxtyG1?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 852cd8fc-67e7-4817-a67b-08db50a68f79
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2023 16:00:50.8100
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9A73QpS0zulc5JWlJOdtWanxtGGyFH9ewnqdnQMqb9NdlXnRJStQ/f6a87orcs+Mtfe6+I8ebYOUnKIx0Z5haw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7677
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-FYI the following comments also apply to the downstream driver, as the 
-same bogus logic is implemented.
+From: Fugang Duan <fugang.duan@nxp.com>
 
-On 03/05/23 19:02, Mukesh Ojha wrote:
+Use platform_get_irq_optional() to avoid an error message for the
+optional irq.
 
-> Since qcom_pstore_minidump driver creates platform device
-> for qualcomm devices, so it knows the physical addresses
-> of the frontend region now. Let's register the regions
-> with qcom_minidump driver.
->
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->   drivers/soc/qcom/qcom_pstore_minidump.c | 80 ++++++++++++++++++++++++++++++++-
->   1 file changed, 79 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
-> index 8d58500..c2bba4e 100644
-> --- a/drivers/soc/qcom/qcom_pstore_minidump.c
-> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
-> @@ -11,6 +11,8 @@
->   #include <linux/pstore_ram.h>
->   #include <soc/qcom/qcom_minidump.h>
->   
-> +#define QCOM_PSTORE_TYPE_MAX	4
-Unused
-> +
->   struct qcom_ramoops_config {
->   	unsigned long	record_size;
->   	unsigned long	console_size;
-> @@ -24,6 +26,11 @@ struct qcom_ramoops_config {
->   struct qcom_ramoops_dd {
->   	struct ramoops_platform_data qcom_ramoops_pdata;
->   	struct platform_device *ramoops_pdev;
-> +	struct device *dev;
-> +	struct qcom_apss_minidump_region *record_region;
+Restructuring the codes to ask for the first mandatory IRQ before
+the optional one.
 
-In the pstore driver record_size is used to split the KDMESG region into 
-different chunks.
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+---
+ v2:
+  - restructuring the codes per Andy Shevchenko's review
 
-There's no "record" region anywhere in RAM that should be preserved, it 
-should instead be the dmesg_region.
+ drivers/gpio/gpio-mxc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> +	struct qcom_apss_minidump_region *console_region;
-> +	struct qcom_apss_minidump_region *pmsg_region;
-> +	struct qcom_apss_minidump_region *ftrace_region;
->   };
->   
->   static struct qcom_ramoops_config default_ramoops_config = {
-> @@ -35,6 +42,64 @@ static struct qcom_ramoops_config default_ramoops_config = {
->   };
->   
->   static struct qcom_ramoops_dd *qcom_rdd;
-> +
-> +static int
-> +__qcom_ramoops_minidump_region_register(struct qcom_apss_minidump_region *md_region,
-> +					const char *name, phys_addr_t phys_addr,
-> +					unsigned long size)
-> +{
-> +	int ret;
-> +
-> +	if (!size)
-> +		return 0;
-> +
-> +	md_region = devm_kzalloc(qcom_rdd->dev, sizeof(*md_region), GFP_KERNEL);
-> +	if (!md_region)
-> +		return -ENOMEM;
-> +
-> +	strlcpy(md_region->name, name, sizeof(md_region->name));
-> +	md_region->phys_addr = phys_addr;
-> +	md_region->virt_addr = phys_to_virt(phys_addr);
-> +	md_region->size = size;
-> +	ret = qcom_apss_minidump_region_register(md_region);
-> +	if (ret)
-> +		dev_err(qcom_rdd->dev,
-> +			"failed to add %s in minidump: err: %d\n", name, ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int
-> +qcom_ramoops_minidump_region_register(struct ramoops_platform_data *qcom_ramoops_data)
-> +{
-> +	phys_addr_t phys_addr;
-> +	int ret = 0;
-> +
-> +	phys_addr = qcom_ramoops_data->mem_address;
-> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->record_region,
-> +			"KDMESG", phys_addr, qcom_ramoops_data->record_size);
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 9d0cec4b82a3..b8fa44a3fd4c 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -405,16 +405,16 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ 	if (irq_count < 0)
+ 		return irq_count;
 
-You can't use record_size here as it's not the actual size of the dmesg 
-region.
+-	if (irq_count > 1) {
+-		port->irq_high = platform_get_irq(pdev, 1);
+-		if (port->irq_high < 0)
+-			port->irq_high = 0;
+-	}
+-
+ 	port->irq = platform_get_irq(pdev, 0);
+ 	if (port->irq < 0)
+ 		return port->irq;
 
-The size is calculated in fs/pstore/ram.c as mem_size - console_size - 
-ftrace_size - pmsg_size, where mem_size is the size on the ramoops 
-memory region in the devicetree.
-
-Since the actual size is never exposed by the pstore driver you have to 
-re-purpose the same logic in this driver, hoping it never changes.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	phys_addr += qcom_ramoops_data->record_size;
-> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->console_region,
-> +			"KCONSOLE", phys_addr, qcom_ramoops_data->console_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	phys_addr += qcom_ramoops_data->console_size;
-> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->pmsg_region,
-> +			"KPMSG", phys_addr, qcom_ramoops_data->pmsg_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	phys_addr += qcom_ramoops_data->pmsg_size;
-> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->ftrace_region,
-> +			"KFTRACE", phys_addr, qcom_ramoops_data->ftrace_size);
-> +
-> +	return ret;
-> +}
-> +
->   static int qcom_ramoops_probe(struct platform_device *pdev)
->   {
->   	struct device_node *of_node = pdev->dev.of_node;
-> @@ -59,6 +124,7 @@ static int qcom_ramoops_probe(struct platform_device *pdev)
->   	if (!qcom_rdd)
->   		return -ENOMEM;
->   
-> +	qcom_rdd->dev = &pdev->dev;
->   	cfg = of_device_get_match_data(&pdev->dev);
->   	if (!cfg) {
->   		dev_err(&pdev->dev, "failed to get supported matched data\n");
-> @@ -81,13 +147,25 @@ static int qcom_ramoops_probe(struct platform_device *pdev)
->   		ret = PTR_ERR(qcom_rdd->ramoops_pdev);
->   		dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
->   		qcom_rdd->ramoops_pdev = NULL;
-> +		return ret;
->   	}
->   
-> -	return ret;
-> +	return qcom_ramoops_minidump_region_register(pdata);
->   }
->   
->   static int qcom_ramoops_remove(struct platform_device *pdev)
->   {
-> +	struct ramoops_platform_data *pdata;
-> +
-> +	pdata = &qcom_rdd->qcom_ramoops_pdata;
-> +	if (pdata->record_size)
-> +		qcom_apss_minidump_region_unregister(qcom_rdd->record_region);
-> +	if (pdata->console_size)
-> +		qcom_apss_minidump_region_unregister(qcom_rdd->console_region);
-> +	if (pdata->pmsg_size)
-> +		qcom_apss_minidump_region_unregister(qcom_rdd->pmsg_region);
-> +	if (pdata->ftrace_size)
-> +		qcom_apss_minidump_region_unregister(qcom_rdd->ftrace_region);
->   	platform_device_unregister(qcom_rdd->ramoops_pdev);
->   	qcom_rdd->ramoops_pdev = NULL;
->   
-
-Regards,
-
-Luca Stefani
++	if (irq_count > 1) {
++		err = platform_get_irq_optional(pdev, 1);
++		if (err > 0)
++			port->irq_high = err;
++	}
++
+ 	/* the controller clock is optional */
+ 	port->clk = devm_clk_get_optional(&pdev->dev, NULL);
+ 	if (IS_ERR(port->clk))
+--
+2.34.1
 
