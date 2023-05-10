@@ -2,95 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 605086FDC8A
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 13:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7379E6FDCEC
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 13:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236797AbjEJLVA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 May 2023 07:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45616 "EHLO
+        id S236890AbjEJLjR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 May 2023 07:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235609AbjEJLU7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 07:20:59 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 131571FF7;
-        Wed, 10 May 2023 04:20:53 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5CCD18109;
-        Wed, 10 May 2023 11:20:52 +0000 (UTC)
-Date:   Wed, 10 May 2023 14:20:51 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: pinctrl: Update pinctrl-single to
- use yaml
-Message-ID: <20230510112051.GD14287@atomide.com>
-References: <20230510095330.30742-1-tony@atomide.com>
- <20230510095330.30742-2-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230510095330.30742-2-tony@atomide.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S236829AbjEJLjO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 07:39:14 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C0376BC;
+        Wed, 10 May 2023 04:38:55 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34AAnNUX032668;
+        Wed, 10 May 2023 11:38:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=3sGwKKYam5v86mImLzcLB5fvsdPpnSafkRrpMnTr56A=;
+ b=MDEEvWjUtBYXrdX6r1qD1wBmio3FfiNWKUpg1qB/PiB3iqAbQFM0IeDN2JgPnf2BxbgN
+ zXl/IZ/mUC53pGZcKno8OqEirJuPLW8YOTR1P8Q2Ccy1DII1hMEP9hd0KGy74TAET1lC
+ OlGnt9RJNYjcSQnnWXZ5Pe0Ve3HbC7tDuWSH+5wFoxj8EkGlwXErwHhF6cn/y2dV7rqM
+ DQPwW7D3q9nDm9sPO0MdkuqFBSj04HCfdkUVU/ONYJ994fmMwfvNtvKiDLSt2+wJZNwU
+ SpMRJgbWDeRdOtye1IyhYjZZfQHlU4qav7O97OnTvq5nadn98NRDm4fLMrgpwlr1XJ60 PA== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qfuna1jmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 May 2023 11:38:51 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 34ABclwC020132;
+        Wed, 10 May 2023 11:38:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3qdy5bkpvj-1;
+        Wed, 10 May 2023 11:38:47 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34ABcl1g020122;
+        Wed, 10 May 2023 11:38:47 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 34ABckh3020120;
+        Wed, 10 May 2023 11:38:46 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 0A5035129; Wed, 10 May 2023 17:08:46 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     andy.shevchenko@gmail.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        richardcochran@gmail.com, manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v6 0/4] Add pinctrl support for SDX75
+Date:   Wed, 10 May 2023 17:08:41 +0530
+Message-Id: <1683718725-14869-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: wM9zHwdKnb177XZLwryzBoWPySDPfQDm
+X-Proofpoint-GUID: wM9zHwdKnb177XZLwryzBoWPySDPfQDm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-10_04,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=747 mlxscore=0 clxscore=1011 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305100092
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [230510 09:54]:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-...
-> +patternProperties:
-...
-> +  'cpsw_default|cpsw_sleep|davinci_mdio_default|davinci_mdio_sleep':
-> +    description: Deprecated legacy naming for cpsw and mdio on TI SoCs
-> +    deprecated: true
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-> +
-> +  'usb1_drvvbus|usb_hub_ctrl|usb2_phy':
-> +    description: Deprecated legacy naming for USB on TI SoCs
-> +    deprecated: true
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-> +
-> +  'gpio_keys_s0|matrix_keypad_default|matrix_keypad_sleep|matrix_keypad_s0':
-> +    description: Deprecated legacy naming for input on TI SoCs
-> +    deprecated: true
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-> +
-> +  'user_leds_s0|gpio_led_pmx':
-> +    description: Deprecated legacy naming for LEDs on TI SoCs
-> +    deprecated: true
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-> +
-> +  'nand_flash_x8':
-> +    description: Deprecated legacy naming for NAND on TI SoCs
-> +    deprecated: true
-> +    type: object
-> +    $ref: pinmux-node.yaml#
+Hi,
 
-Looks like fixing the pin group node names for all the older TI SoC dts
-files should not be too bad, for example diffstat for experimental am335x
-changes is:
+Changes in v6:
+ - Refactoring as per suggestions from Andy to remove msm_function and
+   reusing the pinfunction and pingroup struct with macros as well.
 
-42 files changed, 323 insertions(+), 323 deletions(-)
+Changes in v5:
+ - Refactor the pinctrl target files based on the new macro and
+   structure defined as suggested by Andy.
 
-This includes changing node names to use - instead of _ while at it.
-I'll send out about 10 or so patches once Rob has the dts subdirectories
-created.
+Changes in v4:
+ - Fixed the bindings check and rebased on linux-next.
 
-Regards,
+Changes in v3:
+ - Rebased the bindings on linux-next as suggested by Krzysztof.
 
-Tony
+Changes in v2:
+ - Updated the bindings to clear the bindings check.
+
+This patch series adds pinctrl bindings and tlmm support for SDX75.
+
+Thanks,
+Rohit.
+
+Rohit Agarwal (4):
+  dt-bindings: pinctrl: qcom: Add SDX75 pinctrl devicetree compatible
+  pinctrl: qcom: Remove the msm_function struct
+  pinctrl: qcom: Refactor generic qcom pinctrl driver
+  pinctrl: qcom: Add SDX75 pincontrol driver
+
+ .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          |  169 +++
+ drivers/pinctrl/qcom/Kconfig                       |   30 +-
+ drivers/pinctrl/qcom/Makefile                      |    3 +-
+ drivers/pinctrl/qcom/pinctrl-apq8064.c             |  104 +-
+ drivers/pinctrl/qcom/pinctrl-apq8084.c             |  264 ++--
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c             |  104 +-
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c             |  206 ++-
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c             |  260 ++--
+ drivers/pinctrl/qcom/pinctrl-ipq8064.c             |  114 +-
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c             |  240 ++-
+ drivers/pinctrl/qcom/pinctrl-mdm9607.c             |  276 ++--
+ drivers/pinctrl/qcom/pinctrl-mdm9615.c             |   90 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   13 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |   42 +-
+ drivers/pinctrl/qcom/pinctrl-msm8226.c             |  156 +-
+ drivers/pinctrl/qcom/pinctrl-msm8660.c             |  252 ++-
+ drivers/pinctrl/qcom/pinctrl-msm8909.c             |  268 ++--
+ drivers/pinctrl/qcom/pinctrl-msm8916.c             |  556 ++++---
+ drivers/pinctrl/qcom/pinctrl-msm8953.c             |  424 +++---
+ drivers/pinctrl/qcom/pinctrl-msm8960.c             |  464 +++---
+ drivers/pinctrl/qcom/pinctrl-msm8976.c             |  212 ++-
+ drivers/pinctrl/qcom/pinctrl-msm8994.c             |  564 ++++---
+ drivers/pinctrl/qcom/pinctrl-msm8996.c             |  508 +++----
+ drivers/pinctrl/qcom/pinctrl-msm8998.c             |  380 +++--
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c             |  474 +++---
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c             |  230 ++-
+ drivers/pinctrl/qcom/pinctrl-qcs404.c              |  388 +++--
+ drivers/pinctrl/qcom/pinctrl-qdf2xxx.c             |    6 +-
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c             |  249 ++-
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c             |  308 ++--
+ drivers/pinctrl/qcom/pinctrl-sc7180.c              |  254 ++--
+ drivers/pinctrl/qcom/pinctrl-sc7280.c              |  322 ++--
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c             |  286 ++--
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c            |  358 +++--
+ drivers/pinctrl/qcom/pinctrl-sdm660.c              |  387 +++--
+ drivers/pinctrl/qcom/pinctrl-sdm670.c              |  284 ++--
+ drivers/pinctrl/qcom/pinctrl-sdm845.c              |  286 ++--
+ drivers/pinctrl/qcom/pinctrl-sdx55.c               |  190 ++-
+ drivers/pinctrl/qcom/pinctrl-sdx65.c               |  194 ++-
+ drivers/pinctrl/qcom/pinctrl-sdx75.c               | 1601 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-sm6115.c              |  162 +-
+ drivers/pinctrl/qcom/pinctrl-sm6125.c              |  282 ++--
+ drivers/pinctrl/qcom/pinctrl-sm6350.c              |  296 ++--
+ drivers/pinctrl/qcom/pinctrl-sm6375.c              |  358 +++--
+ drivers/pinctrl/qcom/pinctrl-sm8150.c              |  286 ++--
+ drivers/pinctrl/qcom/pinctrl-sm8250.c              |  258 ++--
+ drivers/pinctrl/qcom/pinctrl-sm8350.c              |  298 ++--
+ drivers/pinctrl/qcom/pinctrl-sm8450.c              |  300 ++--
+ drivers/pinctrl/qcom/pinctrl-sm8550.c              |  320 ++--
+ 49 files changed, 7763 insertions(+), 6313 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx75.c
+
+-- 
+2.7.4
+
