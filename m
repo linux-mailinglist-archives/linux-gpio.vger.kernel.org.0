@@ -2,123 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A1646FE4ED
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 22:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BBCF6FE568
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 22:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236148AbjEJUSk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 May 2023 16:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        id S236358AbjEJUtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 May 2023 16:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235944AbjEJUSi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 16:18:38 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548302D66;
-        Wed, 10 May 2023 13:18:35 -0700 (PDT)
-Received: (Authenticated sender: jeanmichel.hautbois@yoseli.org)
-        by mail.gandi.net (Postfix) with ESMTPSA id F027A40002;
-        Wed, 10 May 2023 20:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-        t=1683749913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VNEEyYKpfVOr28cZNeS8TXCo4aaHFV1TNLCNzOagDv0=;
-        b=ELECcCHLGPcxNkrpYZYraLgOrjS5PDyS2mL3IFcfqH8hD8Y2tl5JxMtz1yJprviEWoXzKa
-        n+pqsU6hefDA94kpbUvx0pl6qhcgOlt7uEc4TjJ6jN4enhcnPhMu/fsgMf7VDbZxL+5JoY
-        2T911dXkh87toWnlLMrvqNux1rU6cH33Kt9ieYsAyEKIhRM5wn6gFOThuhxBT7F7kwRvxx
-        9qSFu2yq9anRTQRVShjeGHJbm0Ew8yvOzaXJsNXLOJ5Pmc5rmMovr3MJOTSCCOd92gzu0w
-        RyKMbCNF3ujSqMWbQBGNbIsWiq0Nhoj6/0PeThL9+M30w43J8wLCObcEJiJa+Q==
-Message-ID: <32ecb9f3-1443-210c-0fc9-40891629e25a@yoseli.org>
-Date:   Wed, 10 May 2023 22:18:32 +0200
+        with ESMTP id S230520AbjEJUtT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 16:49:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2912BE62;
+        Wed, 10 May 2023 13:49:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AEC6561380;
+        Wed, 10 May 2023 20:49:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F82C433EF;
+        Wed, 10 May 2023 20:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683751757;
+        bh=sm5QAcd0taaclIH56EabPTS7FFL37JY5nKCmhFvm5pE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NsGp/Ck3h+O1cVsRbjpAUj0G/fUSo56FJzkXEZAgP9/lNUdZAcfoC6s0V7MYLIFt2
+         0xWBhEiNNrrT1umiTd+MqbqfUmtmufproi+j5/3t+Mvz4vptSfGEGe0+wiHLtDwOHW
+         LSi3NyGTDlPYQWguSmlDu/qu+AU9KYDqfOsyJrfyF5KX0WD/d4xK8ybFNDUEhwukLO
+         R9MgcriM9WyO5c0kia9pn883x0XQIuyUfpp5uwmD8ioOTHwmx12C6iFWjK/pE/raan
+         dpR2CDG5KALeZh4bAbwCTfufqtjy8AeuasMUbRIxT4jXncpHZ07inJMn6xcfeyDaR5
+         eNeNM4xC/QHvQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.3 1/9] pinctrl: at91: use devm_kasprintf() to avoid potential leaks (part 2)
+Date:   Wed, 10 May 2023 16:48:57 -0400
+Message-Id: <20230510204905.104628-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: pca953x issue when driving a DSI bridge
-Content-Language: en-US
-To:     andy.shevchenko@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brgl@bgdev.pl, linus.walleij@linaro.org
-References: <0b3a257a-f1e5-ad86-4c69-93e038a33ce9@yoseli.org>
- <ZFvTi3tQGUq2OCHi@surfacebook>
-From:   Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <ZFvTi3tQGUq2OCHi@surfacebook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 10/05/2023 19:25, andy.shevchenko@gmail.com wrote:
-> Wed, May 10, 2023 at 06:12:19PM +0200, Jean-Michel Hautbois kirjoitti:
->> Hello there !
->>
->> I have a custom board, based on a i.MX8mm SoC which has a MIPI-DSI to eDP
->> bridge (namely, a TI sn65dsi86). This bridge has a DSI enable pin, which is
->> basically its reset pin, connected to my PCA9539 GPIO expander.
->>
->> The issue is that this pin can't be sleeping, and it is tested in the
->> gpiod_set_value() function.
->>
->> Here is where it fails in my dmesg:
-> 
-> ...
-> 
->> [   11.273968]  gpiod_set_value+0x5c/0xcc
->> [   11.277722]  ti_sn65dsi86_resume+0x4c/0x94 [ti_sn65dsi86]
-> 
-> Your problem even worse, i.e. ->resume() might sleep.
+[ Upstream commit f494c1913cbb34b9e2078b7b045c87c1ca6df791 ]
 
-Indeed it is worse ;-).
+Use devm_kasprintf() instead of kasprintf() to avoid any potential
+leaks. At the moment drivers have no remove functionality hence
+there is no need for fixes tag.
 
-> 
->> [   11.283131]  __rpm_callback+0x48/0x19c
->> [   11.286885]  rpm_callback+0x6c/0x80
->> [   11.290375]  rpm_resume+0x3b0/0x660
->> [   11.293864]  __pm_runtime_resume+0x4c/0x90
->> [   11.297960]  __device_attach+0x90/0x1e4
->> [   11.301797]  device_initial_probe+0x14/0x20
->> [   11.305980]  bus_probe_device+0x9c/0xa4
->> [   11.309817]  device_add+0x3d8/0x820
->> [   11.313308]  __auxiliary_device_add+0x40/0xa0
->> [   11.317668]  ti_sn65dsi86_add_aux_device.isra.0+0xb0/0xe0 [ti_sn65dsi86]
->> [   11.324381]  ti_sn65dsi86_probe+0x20c/0x2ec [ti_sn65dsi86]
->> [   11.329876]  i2c_device_probe+0x3b8/0x3f0
->> [   11.333889]  really_probe+0xc0/0x3dc
-> 
-> ...
-> 
->> I suppose this is not a corner case and we may have other drivers and other
->> boards connecting a GPIO which can sleep in a context where it should not ?
->>
->> I would like to add one thing: on this board, the expander is routed in a
->> way that makes it impossible to "sleep" as the reset is forced pulled-up and
->> the power regulators are fixed and can't be stopped.
-> 
-> Can you elaborate why you think there is a problem?
+While at it, switch to use devm_kasprintf_strarray().
 
-I didn't know if it could be an issue or not, so I mentioned it but 
-sounds like a nonsense :-).
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lore.kernel.org/r/20230215134242.37618-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/pinctrl-at91.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-> 
->> I don't know how to address this issue nicely and any thoughts is
->> appreciated !
-> 
-> As a workaround you can consider the code around i2c_in_atomic_xfer_mode()
-> but since I have heard about i.MX8 so many negative remarks which makes me
-> think that hardware is a train wreck and shouldn't be used at all.
->
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 735c501e7a06c..9fa68ca4a412d 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -18,6 +18,7 @@
+ #include <linux/pm.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
++#include <linux/string_helpers.h>
+ 
+ /* Since we request GPIOs from ourself */
+ #include <linux/pinctrl/consumer.h>
+@@ -1371,6 +1372,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
+ 
+ static int at91_pinctrl_probe(struct platform_device *pdev)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct at91_pinctrl *info;
+ 	struct pinctrl_pin_desc *pdesc;
+ 	int ret, i, j, k;
+@@ -1394,9 +1396,19 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0, k = 0; i < gpio_banks; i++) {
++		char **names;
++
++		names = devm_kasprintf_strarray(dev, "pio", MAX_NB_GPIO_PER_BANK);
++		if (!names)
++			return -ENOMEM;
++
+ 		for (j = 0; j < MAX_NB_GPIO_PER_BANK; j++, k++) {
++			char *name = names[j];
++
++			strreplace(name, '-', i + 'A');
++
+ 			pdesc->number = k;
+-			pdesc->name = kasprintf(GFP_KERNEL, "pio%c%d", i + 'A', j);
++			pdesc->name = name;
+ 			pdesc++;
+ 		}
+ 	}
+@@ -1797,7 +1809,8 @@ static const struct of_device_id at91_gpio_of_match[] = {
+ 
+ static int at91_gpio_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct at91_gpio_chip *at91_chip = NULL;
+ 	struct gpio_chip *chip;
+ 	struct pinctrl_gpio_range *range;
+@@ -1866,16 +1879,14 @@ static int at91_gpio_probe(struct platform_device *pdev)
+ 			chip->ngpio = ngpio;
+ 	}
+ 
+-	names = devm_kcalloc(&pdev->dev, chip->ngpio, sizeof(char *),
+-			     GFP_KERNEL);
+-
++	names = devm_kasprintf_strarray(dev, "pio", chip->ngpio);
+ 	if (!names) {
+ 		ret = -ENOMEM;
+ 		goto clk_enable_err;
+ 	}
+ 
+ 	for (i = 0; i < chip->ngpio; i++)
+-		names[i] = devm_kasprintf(&pdev->dev, GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
++		strreplace(names[i], '-', alias_idx + 'A');
+ 
+ 	chip->names = (const char *const *)names;
+ 
+-- 
+2.39.2
 
-Not sure to get the workaround proposal right...
-I won't argue about i.MX8 ;-).
-
-Thanks,
-JM
