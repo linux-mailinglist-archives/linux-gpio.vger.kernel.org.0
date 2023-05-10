@@ -2,172 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C809F6FDE15
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 14:48:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E73A46FDEC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 15:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236925AbjEJMsn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 May 2023 08:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
+        id S237169AbjEJNmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 May 2023 09:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236617AbjEJMsm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 08:48:42 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D77D65BD
-        for <linux-gpio@vger.kernel.org>; Wed, 10 May 2023 05:48:40 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-50bc0ced1d9so10786318a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 10 May 2023 05:48:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683722919; x=1686314919;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NTb3PFqZjRywOvCruaTWXhoZpVjyn+1Cf6fGgu1FyAA=;
-        b=VMwvLylU7oHixR+Vw7boud6qkZdq99f7ytTvREQcW2PAcYSHJpEdwJmd9RN852zY4E
-         1nTtLoJAcHrxi8QZm97lUota5mrfeEEQQSeaVaNlsR9k/ca4euKz1GkUftrdvLYE/9K7
-         G2IIgzKq4mEKQ8p52/rFs3hPL169BqFeV++ICeLX02HIqh20vIAIaOetw9CvXjaU8EgF
-         j+CFLO6njGI18REzulX+qsuC+UBSUwfA4NgTTxt2rhwkEdiM3aL+VzlNCJ9PAzLRh1E8
-         mIQY/uRsrGmGbuea82e+6VjalOszkIkevhRkXXvZtf+K5Nwa1HH53Bqqb87C90T7KJtC
-         +YeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683722919; x=1686314919;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NTb3PFqZjRywOvCruaTWXhoZpVjyn+1Cf6fGgu1FyAA=;
-        b=RtdLuVo1DRNTI8v6NFRjNNNj7KmslF9hXlWzPTXrIlsCBDbytjM7WwhgNBWMcQEmp5
-         tHeGX1yM1xki0nasXA1X4SVpjCIb7bE2vuIaUagJl483dBYXtLmahpdW/gxuCnmKx1M/
-         5NoYMpS30i5RAX5+Nyt6IpVXTViTa8geBlH1goGqqa0j41DM63ZnXg0wf7CGPewOQ6cQ
-         NegaGDh6cogAW5rTm+5YfJs2xTs2faGbaQ9vf6/g4vx6cp1OKZi2xj8sSY/lsx+fKNCO
-         D97+tb8DJ8IdGOk+5Z+kuJCXZHyKUmIKq68Px4Erk7ueKuUf3oNXpmsDYE0ud3X3Xmmu
-         5nAw==
-X-Gm-Message-State: AC+VfDyKisZqtSwc0pumAihPcezLTVB/Z1lOWRiUUoAwhjHNRmlWEipo
-        JHCdvuKOCbWQVHNijML6KC16bQ==
-X-Google-Smtp-Source: ACHHUZ5zs4uO98cPUCdsu7HaNKzqF2WWD5nkbIVuD12iDI8wUC2Ut0meoqoO0vBvWUP451RR8sbmcA==
-X-Received: by 2002:a05:6402:182:b0:50d:abde:c7a3 with SMTP id r2-20020a056402018200b0050dabdec7a3mr6932109edv.42.1683722918754;
-        Wed, 10 May 2023 05:48:38 -0700 (PDT)
-Received: from krzk-bin ([2a02:810d:15c0:828:c175:a0f9:6928:8c9d])
-        by smtp.gmail.com with ESMTPSA id w23-20020aa7cb57000000b0050b57848b01sm1810482edt.82.2023.05.10.05.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 05:48:38 -0700 (PDT)
-Date:   Wed, 10 May 2023 14:48:36 +0200
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Nishanth Menon <nm@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: pinctrl: Update pinctrl-single to
- use yaml
-Message-ID: <20230510124836.thqtol6qac762ggx@krzk-bin>
-References: <20230510095330.30742-1-tony@atomide.com>
- <20230510095330.30742-2-tony@atomide.com>
+        with ESMTP id S237162AbjEJNmQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 09:42:16 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B9286A52;
+        Wed, 10 May 2023 06:42:15 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34AD7udc020379;
+        Wed, 10 May 2023 13:42:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=AM5hRRVid6vttUj2gZ9JrIaCq684VKKdQ2gLLKXG9DY=;
+ b=X+2jx2h87H/au5bMtx+zTBbHpZfxW9oqlOL24zL9An46qzAef52uklbPiNIJVz4wQfxs
+ 9XkDOUQQ1HVJBrDF7ONewVGi5MRYyHihTMM7tu8l0aNyO8w+hTXugXPN1dqVRq+xY9TQ
+ wumyn0fsPjPB+Yrd2pjXkrAkDowtTLDGxXQpBjYAF6f8jzoSJbgrPDRZIxa5rKi2J+DQ
+ Pxt8s/WwVpdPYicsoVCdPAitMkTcWbQG/C4WQgJSr+c16fXq2oDxC8VRNE6sY0XXiLP+
+ 7gNj+4EmpxtsZFiYXl6AV4w1rpzr/5L2D093wj59Wl2Ugeaei2csQ7EGkrUuJa6dl+gU 2A== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qg79crkdw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 May 2023 13:42:05 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34ADfe5L010514
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 May 2023 13:41:40 GMT
+Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Wed, 10 May 2023 06:41:35 -0700
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <quic_srichara@quicinc.com>
+Subject: [PATCH v4 0/8] Add minimal boot support for IPQ5018
+Date:   Wed, 10 May 2023 19:11:13 +0530
+Message-ID: <20230510134121.1232286-1-quic_srichara@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230510095330.30742-2-tony@atomide.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yvgwojd-irm1kv0FpNAtkEPvj4JtZcd2
+X-Proofpoint-ORIG-GUID: yvgwojd-irm1kv0FpNAtkEPvj4JtZcd2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-10_04,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 mlxscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 priorityscore=1501 mlxlogscore=748 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305100109
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 10 May 2023 12:53:29 +0300, Tony Lindgren wrote:
-> Update binding for yaml and remove the old related txt bindings. Note that
-> we are also adding the undocumented pinctrl-single,slew-rate property. And
-> we only use the first example from the old binding.
-> 
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> Changes since v3:
-> - Fix issues noted by Rob for v2 version that I had missed
-> 
-> - Categorize patternProperties a bit to make fixing dts files easier
-> 
-> Changes since v2:
-> 
-> - Drop old ti,omap-pinctrl.txt in addition to old pinctrl-single.txt
-> 
-> - Replace reference to pinctrl-single.txt to point to the yaml in ctrl.txt
-> 
-> Changes since v1:
-> 
-> - The v1 version was a WIP patch posted as an example in thread
->   "dt binding check error with hash and comma"
-> 
-> ---
->  .../devicetree/bindings/arm/omap/ctrl.txt     |   2 +-
->  .../bindings/pinctrl/pinctrl-single.txt       | 262 ------------------
->  .../bindings/pinctrl/pinctrl-single.yaml      | 235 ++++++++++++++++
->  .../bindings/pinctrl/ti,omap-pinctrl.txt      |  13 -
->  4 files changed, 236 insertions(+), 276 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
-> 
+The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+This series adds minimal board boot support for ipq5018-mp03.1-c2 board.
 
-yamllint warnings/errors:
+[v4]
+       Fixed all comments for clocks, schema, dts
+       Added Reviewed-by tags.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'i2c1-pmx-func' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: '_pmx_func|_pmx_idle|_cfg_func|_cfg_idle|gpio_key_func' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'cpsw_default|cpsw_sleep|davinci_mdio_default|davinci_mdio_sleep' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'usb1_drvvbus|usb_hub_ctrl|usb2_phy' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'gpio_keys_s0|matrix_keypad_default|matrix_keypad_sleep|matrix_keypad_s0' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'user_leds_s0|gpio_led_pmx' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml: patternProperties: 'nand_flash_x8' does not match '[\\^$()*@]'
-	hint: Fixed strings belong in 'properties', not 'patternProperties'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: #pinctrl-cells: [[2]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: #pinctrl-cells: [[2]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,register-width: [[16]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,register-width: [[16]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,function-mask: [[65535]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,function-mask: [[65535]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,gpio-range: [[1, 0, 3, 0]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,gpio-range: [[1, 0, 3, 0]] is not of type 'object'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+[v3]
+	Fixed all comments for clocks, schema fixes
+        Picked up Reviewed-by from Bjorn for pinctrl driver
 
-See https://patchwork.ozlabs.org/patch/1779341
+[v2]
+	Fixed all comments and rebased for TOT.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+Sricharan Ramabadhran (8):
+  dt-bindings: arm64: Add IPQ5018 clock and reset
+  clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018
+  dt-bindings: pinctrl: qcom: Add support for ipq5018
+  pinctrl: qcom: Add IPQ5018 pinctrl driver
+  dt-bindings: qcom: Add ipq5018 bindings
+  dt-bindings: firmware: document IPQ5018 SCM
+  arm64: dts: Add ipq5018 SoC and rdp432-c2 board support
+  arm64: defconfig: Enable IPQ5018 SoC base configs
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+ .../devicetree/bindings/arm/qcom.yaml         |    7 +
+ .../bindings/clock/qcom,ipq5018-gcc.yaml      |   63 +
+ .../bindings/firmware/qcom,scm.yaml           |    1 +
+ .../bindings/pinctrl/qcom,ipq5018-tlmm.yaml   |  127 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |   72 +
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi         |  250 ++
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/qcom/Kconfig                      |   10 +-
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-ipq5018.c                | 3731 +++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq5018.c        |  791 ++++
+ include/dt-bindings/clock/qcom,gcc-ipq5018.h  |  183 +
+ include/dt-bindings/reset/qcom,gcc-ipq5018.h  |  122 +
+ 16 files changed, 5371 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-tlmm.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5018.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq5018.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq5018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq5018.h
 
-pip3 install dtschema --upgrade
+-- 
+2.34.1
 
-Please check and re-submit.
