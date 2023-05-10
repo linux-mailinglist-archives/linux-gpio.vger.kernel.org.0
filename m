@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBCF6FE568
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 22:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E56236FE586
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 May 2023 22:50:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236358AbjEJUtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 May 2023 16:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
+        id S236842AbjEJUu0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 May 2023 16:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbjEJUtT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 16:49:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2912BE62;
-        Wed, 10 May 2023 13:49:18 -0700 (PDT)
+        with ESMTP id S236848AbjEJUuU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 May 2023 16:50:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D30B7A8A;
+        Wed, 10 May 2023 13:49:52 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AEC6561380;
-        Wed, 10 May 2023 20:49:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F82C433EF;
-        Wed, 10 May 2023 20:49:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 429E861380;
+        Wed, 10 May 2023 20:49:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BDDC433D2;
+        Wed, 10 May 2023 20:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683751757;
-        bh=sm5QAcd0taaclIH56EabPTS7FFL37JY5nKCmhFvm5pE=;
+        s=k20201202; t=1683751782;
+        bh=xl6G8yc6vNmG4q6vayBP1pskVK69TK32jZsANQIhq2Q=;
         h=From:To:Cc:Subject:Date:From;
-        b=NsGp/Ck3h+O1cVsRbjpAUj0G/fUSo56FJzkXEZAgP9/lNUdZAcfoC6s0V7MYLIFt2
-         0xWBhEiNNrrT1umiTd+MqbqfUmtmufproi+j5/3t+Mvz4vptSfGEGe0+wiHLtDwOHW
-         LSi3NyGTDlPYQWguSmlDu/qu+AU9KYDqfOsyJrfyF5KX0WD/d4xK8ybFNDUEhwukLO
-         R9MgcriM9WyO5c0kia9pn883x0XQIuyUfpp5uwmD8ioOTHwmx12C6iFWjK/pE/raan
-         dpR2CDG5KALeZh4bAbwCTfufqtjy8AeuasMUbRIxT4jXncpHZ07inJMn6xcfeyDaR5
-         eNeNM4xC/QHvQ==
+        b=U340RIukB7baPgt9agjTBeVSf0I2JkNzxfhDFLP7oYxGG+7zcoMBSM3CGS6pj5Dn9
+         kmzyldnBt9eR7fM5SAXG/V3Hk6HlyJc4+f9c3tJQiPD/VLwEVVgi65azR1EfNYzF2R
+         h2uIzZ69NsoFtAKimR86GNySntTgsn6cHJdsn8ArSyme4g/g4SEumynP3Riy92z0ke
+         euIPW0i+umh2oYIQ+qYZpDdXd2NXWPQYMO8oHcb95eBWUJ4GBN6mc8KKG2GzuMli5U
+         YorjC1PNWJo7t0NY/UxbLhBzqfxIU0NDITIy6E0qkzkYfgD4TCZuHwTWcuDyPLzZd2
+         VLWBe9d04evRg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -40,16 +40,16 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
         alexandre.belloni@bootlin.com,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 1/9] pinctrl: at91: use devm_kasprintf() to avoid potential leaks (part 2)
-Date:   Wed, 10 May 2023 16:48:57 -0400
-Message-Id: <20230510204905.104628-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.2 1/9] pinctrl: at91: use devm_kasprintf() to avoid potential leaks (part 2)
+Date:   Wed, 10 May 2023 16:49:18 -0400
+Message-Id: <20230510204926.104747-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,7 +79,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 735c501e7a06c..9fa68ca4a412d 100644
+index c405296e49896..2a081b13846e2 100644
 --- a/drivers/pinctrl/pinctrl-at91.c
 +++ b/drivers/pinctrl/pinctrl-at91.c
 @@ -18,6 +18,7 @@
@@ -90,15 +90,15 @@ index 735c501e7a06c..9fa68ca4a412d 100644
  
  /* Since we request GPIOs from ourself */
  #include <linux/pinctrl/consumer.h>
-@@ -1371,6 +1372,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
+@@ -1364,6 +1365,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
  
  static int at91_pinctrl_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
  	struct at91_pinctrl *info;
  	struct pinctrl_pin_desc *pdesc;
- 	int ret, i, j, k;
-@@ -1394,9 +1396,19 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ 	int ret, i, j, k, ngpio_chips_enabled = 0;
+@@ -1404,9 +1406,19 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
  		return -ENOMEM;
  
  	for (i = 0, k = 0; i < gpio_banks; i++) {
@@ -119,7 +119,7 @@ index 735c501e7a06c..9fa68ca4a412d 100644
  			pdesc++;
  		}
  	}
-@@ -1797,7 +1809,8 @@ static const struct of_device_id at91_gpio_of_match[] = {
+@@ -1807,7 +1819,8 @@ static const struct of_device_id at91_gpio_of_match[] = {
  
  static int at91_gpio_probe(struct platform_device *pdev)
  {
@@ -129,7 +129,7 @@ index 735c501e7a06c..9fa68ca4a412d 100644
  	struct at91_gpio_chip *at91_chip = NULL;
  	struct gpio_chip *chip;
  	struct pinctrl_gpio_range *range;
-@@ -1866,16 +1879,14 @@ static int at91_gpio_probe(struct platform_device *pdev)
+@@ -1876,16 +1889,14 @@ static int at91_gpio_probe(struct platform_device *pdev)
  			chip->ngpio = ngpio;
  	}
  
