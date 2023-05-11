@@ -2,95 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5DBB6FF9A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 20:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75E176FFA25
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 21:34:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238390AbjEKSzu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 14:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60140 "EHLO
+        id S239119AbjEKTeD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 15:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238053AbjEKSzt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 14:55:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1C740E0;
-        Thu, 11 May 2023 11:55:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F388563D81;
-        Thu, 11 May 2023 18:55:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F252C433D2;
-        Thu, 11 May 2023 18:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683831347;
-        bh=51tobzSJ4CHR3t43CA/+6zmp7vaUcOP2gvXgutyaO+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WDo9IB685bWp4uy1p75LcM03RQ1qDwjJy29C4jXWER1LAj5ZVBgmm+mtoISfPEyx3
-         TEgygUlqzI1Ez86xJmSG41lBg3ALBAWy2x5eOeTvOJTdHmBHwoOFSwork+gei8HyH0
-         KD4LoKyVRUaADkfp0PtTd16YGm4Grt3/X5vqpDhs6uhmLUQI6axSjb4Xb0BDFYTLjB
-         CsdBAK0ejLG7xBiFI8WRBGYHtbH8RPtdjGS88jpNvB90eTjklH+eXFY99yRzaR9HXo
-         gIyiNXD8r2+BkuQ1sFq4AeMgmiP5qkrxKk38OcHzJxeCbCIY2GHX31i0YCNqxOHj6F
-         hk2q8fsxoQm7w==
-Date:   Thu, 11 May 2023 19:55:42 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpio: Add GPIO3 for AXP209 GPIO
- binding schema
-Message-ID: <20230511-lapel-onboard-ccac0b959921@spud>
-References: <cover.1681580558.git.noodles@earth.li>
- <cover.1683719613.git.noodles@earth.li>
- <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
+        with ESMTP id S232629AbjEKTeC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 15:34:02 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491735BBD;
+        Thu, 11 May 2023 12:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=RkGmYCCswpnJVF63DZkpYZ3U9ILFcaWvTWc6uYhsnE4=; b=dngZJKeVZf7NZGAhz5bgj1XpA2
+        khxacQpmYHCgBvpAb26umYOrRr4x18JNBZGrSWJHDs7l0zxfdky6VoCz+CLKIbnS/CaMHSLFjJG74
+        rAxPsFw4xkLttWrurQDvneOaDe66c/Ntluhl2N5EQjQJNZiwcMAC26S8B0goYXe/hOYc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1pxC2r-00CaPt-DY; Thu, 11 May 2023 21:33:45 +0200
+Date:   Thu, 11 May 2023 21:33:45 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Subject: Re: [PATCH net-next v7 8/9] net: txgbe: Implement phylink pcs
+Message-ID: <a49b0cff-dd1c-4d89-8287-2909942d718f@lunn.ch>
+References: <20230509022734.148970-1-jiawenwu@trustnetic.com>
+ <20230509022734.148970-9-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HWXMSkJJfXxLImVu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230509022734.148970-9-jiawenwu@trustnetic.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+> +static int txgbe_pcs_read(struct mii_bus *bus, int addr, int devnum, int regnum)
+> +{
+> +	struct wx *wx  = bus->priv;
+> +	u32 offset, val;
+> +
+> +	offset = devnum << 16 | regnum;
+> +
+> +	/* Set the LAN port indicator to IDA_ADDR */
+> +	wr32(wx, TXGBE_XPCS_IDA_ADDR, offset);
+> +
+> +	/* Read the data from IDA_DATA register */
+> +	val = rd32(wx, TXGBE_XPCS_IDA_DATA);
 
---HWXMSkJJfXxLImVu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+addr is ignored here. So i assume the hardware only supports a single
+address? Please add a check for address. If it is 0, do the read,
+otherwise return either -EOPNOTSUPP, or 0xffff. What we don't want is
+it to appear there are 32 PCS devices.
 
-On Wed, May 10, 2023 at 01:01:12PM +0100, Jonathan McDowell wrote:
-> The AXP209 has a 4th GPIO, so add it in preparation for support in the
-> driver.
->=20
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
---HWXMSkJJfXxLImVu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZF06LQAKCRB4tDGHoIJi
-0ryJAQDsVpUaAEJAA3CFENMLfIoTABI1Ik8bAkd4jMrr8C8ajgEAn49e8m267hN5
-2UHyMX8OasllSM86Smdo966e+nqAYwg=
-=wzug
------END PGP SIGNATURE-----
-
---HWXMSkJJfXxLImVu--
+   Andrew
