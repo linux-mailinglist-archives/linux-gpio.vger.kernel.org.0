@@ -2,201 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 435FA6FF554
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 16:59:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E3156FF62E
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 17:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238282AbjEKO7b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 10:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
+        id S238468AbjEKPlT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 11:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238299AbjEKO7a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 10:59:30 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6E9D065
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 07:59:03 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-44ffef66dabso4786100e0c.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 07:59:03 -0700 (PDT)
+        with ESMTP id S238653AbjEKPlR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 11:41:17 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72094C3F;
+        Thu, 11 May 2023 08:41:15 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-965f7bdab6bso1439159966b.3;
+        Thu, 11 May 2023 08:41:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1683817138; x=1686409138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1683819674; x=1686411674;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VpO6U7Z1mcKtQslpBIHzR8nzCY5JK29I5far4gQgMlo=;
-        b=kKN3/B2JbJVf5rKF4ZI6Zg9LF1s3E60sEfHVHP9UbUqP9yq81zQWR60MUMAJ4fAfjN
-         Gel8g1Xnxi5hayYrGVJI40UDFzephMAweqGfKfUYQBSTsicEj2WmtQ15Rg2DjcVLV/ld
-         NaoHkM6cRUtI/ikfsF7kNKqRQEFLtO7xLZQLhCRJr/FqGZFoO38bZJsHlKmPZGs8Bik9
-         jREETS8YKz8fyWWk0OsvFSm22XIOIIuwCKzo+5kZdjzIULNACR10MRIn0DBvrzPKpDCQ
-         kwL2St4jWiYuFot2AnULe5bPxqNQGH/B5ovtEXrDZEfkRVNN4ZlS2lx8ZoTgaWefQNc6
-         LplQ==
+        bh=gQvmwXze/gAqnIrgLBTRF6o+N3iet63b3mZHiWkHo1M=;
+        b=R+mM0kDvSAW9/bcQxchnx8KMaoBJkzUgdxFshMn3eziIIGnQj4hUwIRJ5QJmvD9PsE
+         rsvJ2qdw8grzDjiCNhyrsVxtqUBqUTeZfhyym/KI0oS7K8nQom6jjwU6t6a9t/SUJCgs
+         drI/3UKkfV0Fjr+sSUjQcyYEI5nfjxrevWeodqgra9gNfYy1uh2+yAxyjqd7sx50PztG
+         IKPMaC4MBwS30zHmOgHPdIORETB72ERmSnrFnfEhM2EoiZSXdFrIBfsfWbc+xMfpcMxX
+         2EYTLQWrBSQvOqP2fz6Jz0dNEoNu6gBilktSfirZ7kD6Th+alKOwND418ifu2LjrVQRb
+         maXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683817138; x=1686409138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1683819674; x=1686411674;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VpO6U7Z1mcKtQslpBIHzR8nzCY5JK29I5far4gQgMlo=;
-        b=FGb8VCLvoZ7qBOigoSmRbkx1+1Y3wStJing3qr1rnOR3xHUtC74AwVsbHqANrqOfcC
-         u82kHy2N9FA3R7QOJqUSjZEnQ0N1hRbBJJVjXLn5DzyZmEyROJ0/rasBRz8y3x0hU7zi
-         7vMAWy+5zpuu4dmi1VVosK5sFHKuFxvJcjkiAZICdVo+iE4uoSpcOQVEXC1I27ATqLcj
-         dW1CPi00HPCpaW8J9es6BkCk5aeuMbSR27upu6unYNJKMIUJ8yGIDcYiQqIOERplx6Pb
-         7yn9Tww65kyEU/e6X10WATEWu897n+Hc/mWjpzpFRf30/zv7ciqTfFCMiaxSxBSZR4Rf
-         XVjQ==
-X-Gm-Message-State: AC+VfDyc4qHaeUtg3rXJzMJV4SUvtjOH29OAwxsiRXI6bhhSXEoBmBQ7
-        PZfl3586P3krlagaW/MHJ8v+KOYaPJeAJ9lkrvmnAwk6VTPBPAZT
-X-Google-Smtp-Source: ACHHUZ7MMZXbQEYaI0ke/9+cA4R2GurFJnuqHXbPsB3wyk49ZXE7ZZzuwXH49+QFkWCEgSBps0X9X5IGzCMlfeGTxTU=
-X-Received: by 2002:a1f:c905:0:b0:43f:c280:c10b with SMTP id
- z5-20020a1fc905000000b0043fc280c10bmr8367140vkf.7.1683817138527; Thu, 11 May
- 2023 07:58:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org> <20230426-stmpe-dt-bindings-v4-1-36fdd53d9919@linaro.org>
-In-Reply-To: <20230426-stmpe-dt-bindings-v4-1-36fdd53d9919@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 11 May 2023 16:58:47 +0200
-Message-ID: <CAMRc=MdsBiV3AvzSPtCuR58w0N9z7o+hUrBDtXUC4a++pECb8w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: Convert STMPE GPIO to YAML schema
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        bh=gQvmwXze/gAqnIrgLBTRF6o+N3iet63b3mZHiWkHo1M=;
+        b=bM9tsJq7nYuWHBQElOz7BDHc9USKeM7Qm/cZAqimI5ru1MM6OxXbkY63+/1mcZIQLW
+         SotZYt9RCHe2iuMTmkSPYtD2s+OCi93g80XGlBs4AWQtRIZ5rtC5P8hJX83sLxvdSX4G
+         vfLbqZGhiYvnb5HHdee+hugoABsKDTVeSlWAEk7j+OxtPvnJs8qdfjcxI0N5dGZREv90
+         o6Vtkz117rvim8LZDzyBDSBA31ugn4Z2mHyeNtzWpR8X54hzuM2VIe4hXiL1nzxbRayL
+         LzNT1aIh66wmMeyWMMToGTGDcyt9bn6pa3WDmf2TVoyyuk8gIFVoPFottG2eg+qpyQPK
+         POSg==
+X-Gm-Message-State: AC+VfDybHCfg2vfnE3XJ1Rm2/iDqIIYMQSdUK1n/YAXKSiRN5bnU/+4E
+        TbHrHPDgIriBfpXxvDwlnrI=
+X-Google-Smtp-Source: ACHHUZ41ANw5B2GkPpvpGC9WwEa6jWcyO6TJtFU3f5cKq/IkQ3D9s43WRsjgI6WPzHoEL79KPbR8IA==
+X-Received: by 2002:a17:907:2d09:b0:966:4d75:4a44 with SMTP id gs9-20020a1709072d0900b009664d754a44mr15271821ejc.24.1683819674270;
+        Thu, 11 May 2023 08:41:14 -0700 (PDT)
+Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
+        by smtp.gmail.com with ESMTPSA id p1-20020a170906838100b009662b4230cesm4257581ejx.148.2023.05.11.08.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 08:41:13 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jonathan McDowell <noodles@earth.li>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: gpio: Add GPIO3 for AXP209 GPIO binding
+ schema
+Date:   Thu, 11 May 2023 17:41:11 +0200
+Message-ID: <9107543.CDJkKcVGEf@jernej-laptop>
+In-Reply-To: <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
+References: <cover.1681580558.git.noodles@earth.li>
+ <cover.1683719613.git.noodles@earth.li>
+ <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 8, 2023 at 2:35=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> This rewrites the STMPE GPIO bindings to a YAML schema.
->
-> We add the properties that are used in the widely used
-> STMPE GPIO device nodes found in the wild, most notably
-> interrupt support, so interrupt-cells and
-> interrupt-controller is now part of the bindings.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v3->v4:
-> - Realize that there were actually some old bindings so we
->   need to get rid of them as part of this patch.
-> - Fix blank lines after description: keyword.
-> ChangeLog v2->v3:
-> - Use a compact hog node schema backed by the standard hog
->   schema.
-> ChangeLog v1->v2:
-> - New patch split off from the MFD patch.
-> ---
->  .../devicetree/bindings/gpio/gpio-stmpe.txt        | 17 -------
->  .../devicetree/bindings/gpio/st,stmpe-gpio.yaml    | 53 ++++++++++++++++=
-++++++
->  2 files changed, 53 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio-stmpe.txt
-> deleted file mode 100644
-> index b33f8f02c0d7..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-> +++ /dev/null
-> @@ -1,17 +0,0 @@
-> -STMPE gpio
-> -----------
-> -
-> -Required properties:
-> - - compatible: "st,stmpe-gpio"
-> -
-> -Optional properties:
-> - - st,norequest-mask: bitmask specifying which GPIOs should _not_ be req=
-uestable
-> -   due to different usage (e.g. touch, keypad)
-> -
-> -Node should be child node of stmpe node to which it belongs.
-> -
-> -Example:
-> -       stmpe_gpio {
-> -               compatible =3D "st,stmpe-gpio";
-> -               st,norequest-mask =3D <0x20>;     //gpio 5 can't be used
-> -       };
-> diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/=
-Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> new file mode 100644
-> index 000000000000..22c0cae73425
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/st,stmpe-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectonics Port Expander (STMPE) GPIO Block
-> +
-> +description:
-> +  STMicroelectronics Port Expander (STMPE) is a series of slow
-> +  bus controllers for various expanded peripherals such as GPIO, keypad,
-> +  touchscreen, ADC, PWM or rotator. It can contain one or several differ=
-ent
-> +  peripherals connected to SPI or I2C. These bindings pertain to the
-> +  GPIO portions of these expanders.
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stmpe-gpio
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  interrupt-controller: true
-> +
-> +  st,norequest-mask:
-> +    description:
-> +      A bitmask of GPIO lines that cannot be requested because for
-> +      for example not being connected to anything on the system
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +patternProperties:
-> +  "^.+-hog(-[0-9]+)?$":
-> +    type: object
-> +
-> +    required:
-> +      - gpio-hog
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - "#gpio-cells"
-> +  - "#interrupt-cells"
-> +  - gpio-controller
-> +  - interrupt-controller
->
-> --
-> 2.34.1
->
+Dne sreda, 10. maj 2023 ob 14:01:12 CEST je Jonathan McDowell napisal(a):
+> The AXP209 has a 4th GPIO, so add it in preparation for support in the
+> driver.
+> 
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
 
-Applied, thanks!
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-Bart
+Best regards,
+Jernej
+
+
