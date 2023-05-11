@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E3156FF62E
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 17:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C876A6FF633
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 17:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238468AbjEKPlT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 11:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
+        id S238779AbjEKPly (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 11:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238653AbjEKPlR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 11:41:17 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72094C3F;
-        Thu, 11 May 2023 08:41:15 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-965f7bdab6bso1439159966b.3;
-        Thu, 11 May 2023 08:41:15 -0700 (PDT)
+        with ESMTP id S238773AbjEKPlx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 11:41:53 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42ACC5255;
+        Thu, 11 May 2023 08:41:52 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-969f90d71d4so567849066b.3;
+        Thu, 11 May 2023 08:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683819674; x=1686411674;
+        d=gmail.com; s=20221208; t=1683819711; x=1686411711;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gQvmwXze/gAqnIrgLBTRF6o+N3iet63b3mZHiWkHo1M=;
-        b=R+mM0kDvSAW9/bcQxchnx8KMaoBJkzUgdxFshMn3eziIIGnQj4hUwIRJ5QJmvD9PsE
-         rsvJ2qdw8grzDjiCNhyrsVxtqUBqUTeZfhyym/KI0oS7K8nQom6jjwU6t6a9t/SUJCgs
-         drI/3UKkfV0Fjr+sSUjQcyYEI5nfjxrevWeodqgra9gNfYy1uh2+yAxyjqd7sx50PztG
-         IKPMaC4MBwS30zHmOgHPdIORETB72ERmSnrFnfEhM2EoiZSXdFrIBfsfWbc+xMfpcMxX
-         2EYTLQWrBSQvOqP2fz6Jz0dNEoNu6gBilktSfirZ7kD6Th+alKOwND418ifu2LjrVQRb
-         maXw==
+        bh=dJn87lJ+zB7x7vYlqcoYdFAqcEQVzkzw8cISkbBs2PM=;
+        b=MS/vKOlgjTFJ16STLx9hkywiw4c8JZR12KReEBjR04OeuXt56Qz/AWNR2lORa8Q9le
+         qcfVllR1+I75JnPVB9xm/tHB9ajNViScW5q/fgOctvhzm2Cav3rE3i+z7FFT27Gpu33a
+         Vt4h/FY+JgCMyAUFN6ElSYX0l2e6vxhmEQYOMCyDoBjaHoKoLDGJ3F2RhbvOkkwXLIxY
+         39dztP+3BZqO5SIsP8Fr5WgWi837L8cLmXWRAk6acX+O/aWZ/6t5PzyCoMVy7FmAnjIB
+         0EA05FrOTj0+JlM4IreOiWoGf4dAFLhtnQ7bxNkGlKTXX7SYpfi8lazD2/ZgeIVYatHX
+         DYsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683819674; x=1686411674;
+        d=1e100.net; s=20221208; t=1683819711; x=1686411711;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gQvmwXze/gAqnIrgLBTRF6o+N3iet63b3mZHiWkHo1M=;
-        b=bM9tsJq7nYuWHBQElOz7BDHc9USKeM7Qm/cZAqimI5ru1MM6OxXbkY63+/1mcZIQLW
-         SotZYt9RCHe2iuMTmkSPYtD2s+OCi93g80XGlBs4AWQtRIZ5rtC5P8hJX83sLxvdSX4G
-         vfLbqZGhiYvnb5HHdee+hugoABsKDTVeSlWAEk7j+OxtPvnJs8qdfjcxI0N5dGZREv90
-         o6Vtkz117rvim8LZDzyBDSBA31ugn4Z2mHyeNtzWpR8X54hzuM2VIe4hXiL1nzxbRayL
-         LzNT1aIh66wmMeyWMMToGTGDcyt9bn6pa3WDmf2TVoyyuk8gIFVoPFottG2eg+qpyQPK
-         POSg==
-X-Gm-Message-State: AC+VfDybHCfg2vfnE3XJ1Rm2/iDqIIYMQSdUK1n/YAXKSiRN5bnU/+4E
-        TbHrHPDgIriBfpXxvDwlnrI=
-X-Google-Smtp-Source: ACHHUZ41ANw5B2GkPpvpGC9WwEa6jWcyO6TJtFU3f5cKq/IkQ3D9s43WRsjgI6WPzHoEL79KPbR8IA==
-X-Received: by 2002:a17:907:2d09:b0:966:4d75:4a44 with SMTP id gs9-20020a1709072d0900b009664d754a44mr15271821ejc.24.1683819674270;
-        Thu, 11 May 2023 08:41:14 -0700 (PDT)
+        bh=dJn87lJ+zB7x7vYlqcoYdFAqcEQVzkzw8cISkbBs2PM=;
+        b=fHvCTFCn9Jgwocm2/qRWgeaSaHj2GWxepuiI5XDf20YjtY+owfxresTsTgw2MRL3ep
+         VEcb5yCmOSp5znkwCfgWi3wY7VBtT5tVmrrk7GEvEip8Ui4A/Py/PfHAQ0DmxApeCY+O
+         /WXJA9M8VdUBU0aF6Yj0CfhCOb7Q96JM28wYYH7qprON6HRqtBnhNEZEtMgdRNq7s3ir
+         0T6Ex5XZAHjEiWX669wx3IJc262+lTa0cw7Em0p6gHaudBlHvBAwcut923VuOltoghKd
+         ijvXOYPSxXIw8w/d04nimO46TLU+x2dxD+3JOPmSH7uXZsHgFSYOGxDjdvvxBrXb6Odo
+         BHMw==
+X-Gm-Message-State: AC+VfDz6NmehbNmY63SDh/9tlAKJSuZyUsbsxIXs8DgcVDOBg0sT6TF2
+        rHmTQ9CT866OjEUYoZfV20M=
+X-Google-Smtp-Source: ACHHUZ6JCiu+908nEHSeb+NqEkZ2J9uyEZ9iWqzL4O/f7zJB+PWkptxto5+kHizkAM11S+cRdWVCxQ==
+X-Received: by 2002:a17:907:9347:b0:94f:694e:b953 with SMTP id bv7-20020a170907934700b0094f694eb953mr18294466ejc.59.1683819710654;
+        Thu, 11 May 2023 08:41:50 -0700 (PDT)
 Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
-        by smtp.gmail.com with ESMTPSA id p1-20020a170906838100b009662b4230cesm4257581ejx.148.2023.05.11.08.41.12
+        by smtp.gmail.com with ESMTPSA id n12-20020a1709065dac00b009664cdb3fc5sm4142676ejv.138.2023.05.11.08.41.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 08:41:13 -0700 (PDT)
+        Thu, 11 May 2023 08:41:50 -0700 (PDT)
 From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -61,14 +61,13 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpio: Add GPIO3 for AXP209 GPIO binding
- schema
-Date:   Thu, 11 May 2023 17:41:11 +0200
-Message-ID: <9107543.CDJkKcVGEf@jernej-laptop>
-In-Reply-To: <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
+Subject: Re: [PATCH v2 3/5] ARM: dts: sun5i: chip: Enable bluetooth
+Date:   Thu, 11 May 2023 17:41:49 +0200
+Message-ID: <5832181.MhkbZ0Pkbq@jernej-laptop>
+In-Reply-To: <49ff7f3cc79838a55a89baae09a4ba12c88573fb.1683719613.git.noodles@earth.li>
 References: <cover.1681580558.git.noodles@earth.li>
  <cover.1683719613.git.noodles@earth.li>
- <e22cd891ea966bc18411d01d5e3b0d94e7ba6869.1683719613.git.noodles@earth.li>
+ <49ff7f3cc79838a55a89baae09a4ba12c88573fb.1683719613.git.noodles@earth.li>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -82,9 +81,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dne sreda, 10. maj 2023 ob 14:01:12 CEST je Jonathan McDowell napisal(a):
-> The AXP209 has a 4th GPIO, so add it in preparation for support in the
-> driver.
+Dne sreda, 10. maj 2023 ob 14:01:43 CEST je Jonathan McDowell napisal(a):
+> The C.H.I.P has an rtl8723bs device with the bluetooth interface hooked
+> up on UART3. Support for this didn't exist in mainline when the DTS was
+> initially added, but it does now, so enable it.
 > 
 > Signed-off-by: Jonathan McDowell <noodles@earth.li>
 
