@@ -2,94 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A89D6FFB4A
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 22:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D0F16FFB52
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 22:33:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231446AbjEKU2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 16:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        id S238914AbjEKUdM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 16:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239233AbjEKU2j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 16:28:39 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D736EBD
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 13:28:37 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-30786c6082dso4588763f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 13:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683836915; x=1686428915;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMd5xR53GNb+x9w6wY02eLBsxHW43rKgLD8CcsFceWQ=;
-        b=CTcD29CFdUg0qSUXsoNexSGIkb8XZpk00GdD9Njwg7hHjGscjJK7JhiNcayMDFDHcV
-         2djNWTGQrYQkm1N7n3N7n+Nt7wTVPWo8zqC7aa//vuWKryopGLjEFplhwvR9WkLRV4lZ
-         4VaOzKKAL4jWqYqoPOGGwfy0TmUdJne6gW2El/+U82bkWdf1hyaHeD9R1iIplEh5BsuH
-         xdbmZ9UHtARN3WcSX65XnYPjlpTs5J6YPgrv1tBB8XXEe8Pvt8LaNNwpiRDHGJ3TCWkj
-         k6gul9CwH2P4PrO2QPB5gI6fFqi6jvIM3DG4j3E4iXXyNSridgpxKu2YkKXxI2f2c7P+
-         TAnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683836915; x=1686428915;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMd5xR53GNb+x9w6wY02eLBsxHW43rKgLD8CcsFceWQ=;
-        b=TiLAYsyLbEdAw0LtozijP5SF5IcKfRyYaaGR2bNSJp7d0Z6EWmqbNI3cj0M1MQqG5W
-         Lzq+2YvwWI8uS0m/+LHzWceJLxTYpJjSeVebT0r3NCR3gz+yrgwYuob0jtzbDXprilJP
-         sSH0PmcHyEV+XB0tCQ/74F80qCASYYJ90xihJk69X+9F5+FTNuMmmMV7J3PCrT0WHyOw
-         4X9tAQZOataTflG5rr5PbjM6jm3LaEw5E8aCDauM94/wrhnsIfEKLlys1SjZ9onR11W+
-         Hr/Mv1CPL8nCo2lOED5diYaJiPk9AEY/kdkl37kTPkgz19nfCzvI7UMWRj0xqYDqs5HL
-         LhIw==
-X-Gm-Message-State: AC+VfDzGUG9pY7UoX//qPjKC+j9lafCmszb7h/tTDC5nrdS9OvsEfcuy
-        RjVSHsnvhrzZhZUMnWKV6rdBO4/DcjA=
-X-Google-Smtp-Source: ACHHUZ7vAeOWenffOwO8saIwe6wnZJpvRFhMBAsUzph6g/eN1G1nzoYki0h/RR5jA8xpjKA0x7zwvA==
-X-Received: by 2002:adf:e48b:0:b0:2f5:8e8b:572c with SMTP id i11-20020adfe48b000000b002f58e8b572cmr14754550wrm.49.1683836915602;
-        Thu, 11 May 2023 13:28:35 -0700 (PDT)
-Received: from archbook.localnet (84-72-105-84.dclient.hispeed.ch. [84.72.105.84])
-        by smtp.gmail.com with ESMTPSA id i14-20020a5d558e000000b003079f2c2de7sm10006368wrv.112.2023.05.11.13.28.34
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 13:28:35 -0700 (PDT)
-From:   Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Subject: [libgpiod] Python bindings don't allow to wait on events indefinitely
-Date:   Thu, 11 May 2023 22:28:34 +0200
-Message-ID: <3545766.4eto28bQOc@archbook>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        with ESMTP id S229611AbjEKUdL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 16:33:11 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11F630D3;
+        Thu, 11 May 2023 13:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683837188; x=1715373188;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=nCwIfhFbc9lutSoyFn/SJJerC2I6NrHYH3m1kk38dc0=;
+  b=gaAws3RuuxMh3Ukr9NUwnftCVxfM8kDIpzsJUhWhgF0X6MhmYvVkySv0
+   5bisEvhU0EDa5ODhoT5JnUjzeFjPM+UeKCDBO107x1+AIr8MnsXPQJ6S1
+   rcIS2w2TrFTenX2DK0mmFWO8aG1T7YYqgYVfT1ihJ7gGicJQJtzpjvtbr
+   8evUIJwshtwt7kn7LIVZWY/UmnYENsgUBg+ddfH745RwZcJL4GGR4kUji
+   vROlccmkqHChzrdZRXxe+8jKBz9f0JZb1VsHUhIjp9VUiebZupjPuQ5ti
+   kC4K0/5WLRRHgAKDU/aIY+VLEafV18ZMGYtuKJGh7JNhO8BNUdYOOZUUQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="330243517"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="330243517"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 13:33:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="811782948"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="811782948"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga002.fm.intel.com with ESMTP; 11 May 2023 13:33:07 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 11 May 2023 13:33:06 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 11 May 2023 13:33:06 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 11 May 2023 13:33:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OW7pqac085W83LGQWi1VqM1B3o5iZ88vepCKGK8zYLYqTlDDp8qmS06N0q5F1Qhx367rsPc7sZsRjCkGMJPPI4aJuGUsE/qdvrlvf0EOUXz+5oc2vmXaPSJRTtGx4tryp9ibjnoM/2mWKYWmjMz0ud0jnsOJOZYPkHsmEAPy/N/acbbp2DHKMT922Atzm7nc267zh7QpPTmcqdTwhBEf4g2xdhVozzFtgeQylAGfHR0QVAX+MPJdyq7ECfCoy9tCHmVqYmhjf9X89/S2b9fxAav6miODzH9/WncndVJRUiDr61+5Sfc0Hd5T7jKUy06DkakZswTCj5cpndjIMPEukg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Nd8D/ahR9vlnpCC9eu9XiAXem8GtaXiUNJuKdNc3e7s=;
+ b=jvryOfQ7/2VzG0cnals0dYdTVCLuZu4F6mqWBxEEh55RCMLq06XPpVPnE30GDnhOCrY7pxQ7q5ZGpVc28qDQGCD818U0ZoM3rMl9jbvZxT+tox10YaLpf+rjgFFpsV/nOCOY6D8TiR89LWmhe2MVOUydnfjDUlGe1wmzRGffPiaRRqA1Oan7W6qtOfl+MCOap61BxZ/cFIHvSjMsw7/jPMjQCsOCDS0gVShIMLLx1oAO0A9C3V5RhckmPyA7LOvqaaD8IABF+bO53yd9bQTEt1WBbDmtnCHc5ama16EpZim92QsDWAQMxFc1yiZL3tvH2HTGG3XAs+aB6NmP+ibHjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH0PR11MB7471.namprd11.prod.outlook.com (2603:10b6:510:28a::13)
+ by CH3PR11MB8153.namprd11.prod.outlook.com (2603:10b6:610:163::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.33; Thu, 11 May
+ 2023 20:33:04 +0000
+Received: from PH0PR11MB7471.namprd11.prod.outlook.com
+ ([fe80::ee76:10c6:9f42:9ed9]) by PH0PR11MB7471.namprd11.prod.outlook.com
+ ([fe80::ee76:10c6:9f42:9ed9%4]) with mapi id 15.20.6363.033; Thu, 11 May 2023
+ 20:33:03 +0000
+Date:   Thu, 11 May 2023 22:32:53 +0200
+From:   Piotr Raczynski <piotr.raczynski@intel.com>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+CC:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
+        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <mengyuanlou@net-swift.com>
+Subject: Re: [PATCH net-next v7 8/9] net: txgbe: Implement phylink pcs
+Message-ID: <ZF1Q9Tc6wHKhnp/q@nimitz>
+References: <20230509022734.148970-1-jiawenwu@trustnetic.com>
+ <20230509022734.148970-9-jiawenwu@trustnetic.com>
 Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20230509022734.148970-9-jiawenwu@trustnetic.com>
+X-ClientProxiedBy: FR3P281CA0136.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:95::9) To PH0PR11MB7471.namprd11.prod.outlook.com
+ (2603:10b6:510:28a::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR11MB7471:EE_|CH3PR11MB8153:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3ca8ae9-4e27-4126-9ee9-08db525eeaf6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3yA11MtaX3+dMR+TvZRIJMoEYc+kXkjQAjYJ8e1Bh2bk6vVDejc+9n5QvFILOPPzMwn86/a3IGGyyILu7U8B4l+Jci906FN8uKF6ppZwSYlC0hmXFzmSPJwFrMA0s89zK8PLR1IRTzxxtp0/O5GGSnSRQe/bfvh0kRHdM3+bBgNU8GdTfRNf4Kwv6xnp5LgZk/CMLb3SmccSZKYfoknHIfbhNS70WEAr/jH/kjMCcHdG+6SVMWA9zUSwqu9QP/FCVnJBOyJ2BexQ2mJ3dkfau3ZTs7Sk7zufX9RxE/Wq4RaLYJXjt+G3VceyNgrEYVpke8ZjAEIl+8RE9q5hIvKyCqBwK/cpyd9rr7L9/MAaHdcUij39rLgz52wzxNjDZ94ejP/pwlnk09HPLnAoE8DRT1EAclS07Zpp/5/XudA9LLkuQI0P6xvAwVwcR8MGnCn1JEJ24fJC9WyGRzDatlAoKnmaw5xM6YOVcmRoQasPZDXBLjxDzVwSIDVzNcGivY1qsTQZ3rS8YlwKnsqNp/rKlWc/QK6/cU4uRmnc1Edx7ox6AgouEY+QILgCqpZDzoDO
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB7471.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(346002)(366004)(136003)(39860400002)(396003)(451199021)(86362001)(9686003)(478600001)(6506007)(6512007)(6666004)(6486002)(26005)(66556008)(6916009)(66476007)(82960400001)(316002)(4326008)(186003)(66946007)(38100700002)(5660300002)(8676002)(41300700001)(8936002)(44832011)(2906002)(7416002)(33716001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Nu5bJJJlsUnytpkAwvqvz3N94VKbLx08yLiwM3IVQhNzeNSxS6IU77eqvuF5?=
+ =?us-ascii?Q?DwS0SXnWJ/qo8xj1b/vGdmIF5r26w2pTjo5fvlSKMCk6jdIW8zGmhlsasXuS?=
+ =?us-ascii?Q?loGXG1ZHCDUlMkIYnPBnY9otO6y/hIdjxtUbgUH/pAsU7JFx7g4Dm/G5V31n?=
+ =?us-ascii?Q?nijprDSTlsH2pKeQqjr+9ukke+qseeaawAfjEKYmxyfOZx+VeXCxxEoELsaE?=
+ =?us-ascii?Q?hWoclqcyitIVrm0tQDRTi7HRAt9RL03fSfjsH5yH8RJxCZye4udUX5cMaZIc?=
+ =?us-ascii?Q?qfzWquqzK/fE6X1XYu4DNNBzVfCaYlbE84wF7aVP1JoKxt0d+CNVGX8OuA9N?=
+ =?us-ascii?Q?jM/0g/EG4sCnXdZLBI9YIa5ywM1fTYUU+msHGP45AuQWlybejCDlHGOSq0DS?=
+ =?us-ascii?Q?jHGGFYNtrQqohVCN9rB0jla1i1PBWDNKGbIg2LowjbJ8/3gF7end99uckG/X?=
+ =?us-ascii?Q?dI+7+KSMsoq2XttalcVh6dX45562IVxcwsSZ2g4yYHtoxQjW+fnElqsjfR8A?=
+ =?us-ascii?Q?zDdSlLqdUvUZEl9aDyw8ew+oXe2N4GpZcBxbRvuRa3JWE3f0m9UMu0G2LEdT?=
+ =?us-ascii?Q?xq1A3NPcsNe5surJ/GMvhFh0SS7v5JNXF5Ic4kZDFrxiSM60xn4sw2vSiCOc?=
+ =?us-ascii?Q?efaiLumSkUqT1ytoSwa+WUbYx9uCaCzHIWhSAxWWAnOS+PT01VEE8txNp29k?=
+ =?us-ascii?Q?fclQNZJ7zBPlfz/tZ/NMSgxi1JTRDDWjVrCpgVaavrI/2fTTTjnRktl4bqdf?=
+ =?us-ascii?Q?jw/0FFDiVZYTXhHY4Q1ImvVRpd5MYdHQ4Zror7corA1n/CABlHdEE7uVyAmL?=
+ =?us-ascii?Q?TgmQ6sbgX0EZ/gezpIG4OvQNCb/xLtB2tyOL6kCksxSa70zTYu/7URJywEbj?=
+ =?us-ascii?Q?yajLw0giuxHEz1q85h+rXllA2MbDWlUufniEAJVQyAGxFRoZnU+eVn8vuRw+?=
+ =?us-ascii?Q?dTpQVCiaSsE7KxMBgqijaxA86R3OEAVsIDGHe4YqFdWu+AmwIs7R0VXid19K?=
+ =?us-ascii?Q?NCgPA9EWMZ4TuZCa0MOHEfST7NIQipH3zc42s79b90xyk+baOwKuSdHLOqKo?=
+ =?us-ascii?Q?amQezpZPMkrNhWbzwPeKpBUVIElZMZQ39x0b/kb0elxBYihQZgTd41BqRTOk?=
+ =?us-ascii?Q?yX7kRY0JuKiFytvcTnZNXMkdBGRSXd47nBpQvwhsunmNvG0q0X0cBT4AkD5E?=
+ =?us-ascii?Q?rE8IZ6l7yRxcPyK0etzn7F9T++8QVrq+kKomY3WeIKRNsQmbxWd1JZznv23w?=
+ =?us-ascii?Q?iz/mfOfnW3+8+Qhbb+l1eJxuuXyBPKcluctBzOEST4/64PHUDsIckN6Demm/?=
+ =?us-ascii?Q?7FdrZ9UkPhAIVAdp2W9U+SkiLcyR8qU3bjhwftvZLvJ8/qn/EGe8MMX/9aCS?=
+ =?us-ascii?Q?EWeXjtm0kJJsZe9ILSO5uxu0Qy1zq3WjqmHYw/XtnXIozAB91bJcg8os5VC6?=
+ =?us-ascii?Q?/YH+m3QjZ9VOvg6NR+8UkMAzugDieosJ0cnuHLWF33GpW3KY4mMWC0ALNr5m?=
+ =?us-ascii?Q?ujASq2RHoC28rNhJVosZb4JzVCL4TNrSxV14VhBnZIQvkRzM2Pn6xZS+rNTP?=
+ =?us-ascii?Q?DSc0ORGPq5ZvBwx3+JTrwV3QQte15ncHWfNti2U1d57F9FsPhturxN/bw7PS?=
+ =?us-ascii?Q?Lg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3ca8ae9-4e27-4126-9ee9-08db525eeaf6
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB7471.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2023 20:33:02.6948
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9mGkrgfkjiUHYhVzu40DUzi/C8GUeVh5n5KOZkjhcdz0GmjalrrqHATdU5AExGrkGVC/MMzBjq5ggO8qikvYetMll/9we1vNN2+cLpviyVM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8153
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+> +static int txgbe_mdio_pcs_init(struct txgbe *txgbe)
+> +{
+> +	struct mdio_device *mdiodev;
+> +	struct wx *wx = txgbe->wx;
+> +	struct mii_bus *mii_bus;
+> +	struct dw_xpcs *xpcs;
+> +	struct pci_dev *pdev;
+> +	int ret = 0;
+> +
+> +	pdev = wx->pdev;
+> +
+> +	mii_bus = devm_mdiobus_alloc(&pdev->dev);
+> +	if (!mii_bus)
+> +		return -ENOMEM;
+> +
+> +	mii_bus->name = "txgbe_pcs_mdio_bus";
+> +	mii_bus->read_c45 = &txgbe_pcs_read;
+> +	mii_bus->write_c45 = &txgbe_pcs_write;
+> +	mii_bus->parent = &pdev->dev;
+> +	mii_bus->phy_mask = ~0;
+> +	mii_bus->priv = wx;
+> +	snprintf(mii_bus->id, MII_BUS_ID_SIZE, "txgbe_pcs-%x",
+> +		 (pdev->bus->number << 8) | pdev->devfn);
+> +
+> +	ret = devm_mdiobus_register(&pdev->dev, mii_bus);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mdiodev = mdio_device_create(mii_bus, 0);
+> +	if (IS_ERR(mdiodev))
+> +		return PTR_ERR(mdiodev);
+> +
+> +	xpcs = xpcs_create(mdiodev, PHY_INTERFACE_MODE_10GBASER);
+> +	if (IS_ERR_OR_NULL(xpcs)) {
+> +		mdio_device_free(mdiodev);
+> +		return PTR_ERR(xpcs);
+> +	}
 
-in libgpiod 1.6.x, Line.event_wait's codepath had no path where ts
-as passed to ppoll could ever be NULL. This means waiting indefinitely
-was impossible.
+xpcs_create does not seem to return NULL but if it would then you'd
+return success here. Is this intentional?
 
-I thought hey, maybe the new Python bindings in libgpiod 2.x fixed this,
-but no, it has made it worse by explicitly setting timeout to 0 seconds
-if it's None[1]. Obviously, this behaviour can't be changed now, because
-people depend on this API to return immediately now with None as the
-parameter, and changing it to wait indefinitely would no doubt break
-actual programs.
-
-So I'm left wondering if there's a particular reason users of these
-bindings shouldn't wait on events indefinitely or if that same mistake
-was just made twice in a row.
-
-Is there some way the API could be enhanced to support waiting for
-events indefinitely without having to slap a While True with
-an arbitrarily high timeout around every single invocation?
-
-Regards,
-Nicolas Frattaroli
-
-[1]: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/bindings/python/gpiod/internal.py#n11
-
-
+> +
+> +	txgbe->mdiodev = mdiodev;
+> +	txgbe->xpcs = xpcs;
+> +
+> +	return 0;
+> +}
