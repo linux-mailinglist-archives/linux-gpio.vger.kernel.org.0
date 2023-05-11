@@ -2,82 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E416FF8B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 19:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF5FF6FF91D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 20:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238516AbjEKRvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 13:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44216 "EHLO
+        id S238926AbjEKSBz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 14:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238084AbjEKRvT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 13:51:19 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BE21BEF
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 10:51:14 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-55a5e0f5b1aso87662697b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 10:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683827473; x=1686419473;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AJf82yenaiO5gd3GrLwZqndqFsgk7YATjQEjq8QoNyo=;
-        b=nFPOQHMQlzPNwdJ8+1XfMbmdj5/OgtPiaTOxfwWE2Yj4L8/p4fnSAsKHY1F1jiw3WH
-         hiOqGVfqT7mkcHGMqchJOLLzoVe8Uq//4NfE2whgaB5/Pp3sVY9tVOhgnJXnUuhka214
-         0jhFc4SBtar21kA6Bro2hYAA8KZczbp63vpgb94MSZGN+lSDi7zfgXr2obeenNO87BYZ
-         w+BJjmboVBiGhcrjsLlAmj5TWznKhDFF+1IaIo/xIhhHOy+4ubjF6j+U/xzMEzJdLkeU
-         xm5fXd4hPce9yiYYP9UJ+V0+Gf4KSzsxSHkUd75FiVvbpBiwJUxb/DL0mA9rQyHpnULv
-         D+Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683827473; x=1686419473;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AJf82yenaiO5gd3GrLwZqndqFsgk7YATjQEjq8QoNyo=;
-        b=JogWFhz8KA/bRGbHcIM5WykUrLYWHLkNz/aEVRnMS42yX0lrwsZWGKfrSd+c3rjaii
-         K0QPn918qIThhCTBbXcSP5+XPwZO7F4yOWbHxsUL4bWFy0RSvppUw2+RUCTOHbU3nUHy
-         zh/NCcXcAJyRjQ/VvVOa/qD8B1pc+MdY8aTCQQ3ssWLNXHYlhWhEJ7zsk7+Pr8I98kO1
-         Sx/KbDIukw126Y/mSd/x5AZpb1B3A5S10Y5xrI+qipzpYngq+YY5/ptQ44ko26HYV+XX
-         9u5RebC1gYcryOnpRtO8mfaMKtbS1QesEW7JyZLytW8pBLLAD3Wz6cvYsqxTS0/Ab1/U
-         N+yQ==
-X-Gm-Message-State: AC+VfDyHVNYFWKs/4LKQFZaoOFZxlSGHS6a/RL/Qwchbiuab8vY5tW5M
-        t004zWrIVmxB7euJUf40k+KFe539ZxZFYD3hvHM=
-X-Google-Smtp-Source: ACHHUZ4ht3YIiQ50e8huJt2XxdPKH3NDmiEMRyFqq9xXTdAkUC6C03nSsn3iEVOSU3w1gmk1o/YuGxesawPWwGdqCtQ=
-X-Received: by 2002:a0d:d401:0:b0:55a:a9b6:6da with SMTP id
- w1-20020a0dd401000000b0055aa9b606damr22977371ywd.11.1683827473537; Thu, 11
- May 2023 10:51:13 -0700 (PDT)
+        with ESMTP id S238952AbjEKSBv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 14:01:51 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB18D10C;
+        Thu, 11 May 2023 11:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683828104; x=1715364104;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YmntpvtFHJS3jrZkGSqUkMwqsVJxjst16k/I4ZCZIMs=;
+  b=FBgw+ylDzA60Cxe55E0rk9FBimMH47VzG+JapG3+i6WN4AqPV58MmAlI
+   38UCTx8MWenT9MWYNjVRXiQF1H7Gm8BKkTNBbTE4iPFDd6Jl+6jnbApu8
+   EjAEQmDnDb4cR7s6m0YmXMY7glG8QLSaZtCtHIpux49EhswV09sqGk1kF
+   ycs9qcBrIfO8EoJ0b0ElbxZqdMzhBsrjT5AQ+8Ke7AxO9uqRQFYKCp+ir
+   gkLIqw6B4R7wJUkBwHK45Ayo5sJMj8pTS2LWV6lAA4biZN9i7cK3Cy30i
+   Rb+YigcgT4pGcbgpV+yZBgEgc3V75TwoUIQqrXHSZ4MppCAA7RdYlREQl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="413942558"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="413942558"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 11:00:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="874061365"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="874061365"
+Received: from ye-nuc7i7dnhe.sh.intel.com ([10.239.153.70])
+  by orsmga005.jf.intel.com with ESMTP; 11 May 2023 11:00:39 -0700
+From:   Ye Xiang <xiang.ye@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Tyrone Ting <kfting@nuvoton.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
+        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com,
+        Ye Xiang <xiang.ye@intel.com>
+Subject: [PATCH v8 0/6] Add Intel LJCA device driver
+Date:   Fri, 12 May 2023 01:58:38 +0800
+Message-Id: <20230511175844.185070-1-xiang.ye@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-From:   Charlotte George <eventdatalist6@gmail.com>
-Date:   Thu, 11 May 2023 23:21:02 +0530
-Message-ID: <CACS77DVEqswLstbHaU395iaB=cfYBqD4GxhyMPVm_3-t9jrZoQ@mail.gmail.com>
-Subject: RE: ISC West Attendees Data List 2023
-To:     Charlotte George <eventdatalist6@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FILL_THIS_FORM,
-        FILL_THIS_FORM_LONG,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Add driver for Intel La Jolla Cove Adapter (LJCA) device.
+This is a USB-GPIO, USB-I2C and USB-SPI device. We add 4
+drivers to support this device: a USB driver, a GPIO chip
+driver, a I2C controller driver and a SPI controller driver.
 
- I hope you're doing great and staying healthy!
+---
+v8:
+ - ljca: use READ_ONCE to make the value of ibuf consistent.
+ - gpio: inplement get_direction callback.
+ - gpio: move kconfig item into `USB GPIO expanders` menu.
 
- Would you be interested in acquiring ISC West Attendees data list 2023?
+v7:
+ - ljca: remove unused field `udev` in struct ljca_dev.
+ - ljca: rename ljca module name to usb-ljca.
+ - ljca: use CONFIG_ACPI to enclose acpi related code.
+ - ljca/gpio/i2c/spi: align MACRO defination.
 
- List contains: Company Name, Contact Name, First Name, Middle Name,
-Last Name, Title,   Address, Street, City, Zip code, State, Country,
-Telephone and Email address.
+v6:
+ - ljca: split LJCA USB driver into two commits: USB part and API part.
+ - gpio/i2c/spi: use auxiliary bus for sub-module device enumeration instead of MFD.
+ - move document patch for LJCA sysfs entry to the 3th patch of this patch series.
+ - ljca: fix potential race condition when wait response timeout.
+ - ljca: use devm_kzalloc to malloc ljca device struct. 
 
- Number of Contacts: 34,526
- Cost: $1,789
+v5:
+ - move ljca.h from drivers/include/mfd to drivers/include/usb.
+ - ljca: fix a potential memory leak issue.
+ - add a blank line before return to adust to kernel code style.
+ - ljca: sysfs: split "cmd" to "ljca_dfu" and "ljca_trace_level".
 
- I appreciate your time. Looking forward to your response.
+v4:
+ - move ljca.c from drivers/mfd to drivers/usb/misc folder.
+ - fix index warning in sysfs-bus-devices-ljca.
 
- Kind Regards,
- Charlotte George
- Marketing Coordinator
+v3:
+ - spi: make ljca_spi_transfer inline and fix an endian issue.
+
+v2:
+ - ljca: remove reset command.
+ - gpio/spi/i2c: add `default MFD_LJCA` in Kconfig.
+ - gpio: add "select GPIOLIB_IRQCHIP" in Kconfig.
+
+Ye Xiang (6):
+  usb: Add support for Intel LJCA device
+  usb: ljca: Add transport interfaces for sub-module drivers
+  Documentation: Add ABI doc for attributes of LJCA device
+  gpio: Add support for Intel LJCA USB GPIO driver
+  i2c: Add support for Intel LJCA USB I2C driver
+  spi: Add support for Intel LJCA USB SPI driver
+
+ .../ABI/testing/sysfs-bus-usb-devices-ljca    |   36 +
+ drivers/gpio/Kconfig                          |   12 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-ljca.c                      |  479 ++++++++
+ drivers/i2c/busses/Kconfig                    |   11 +
+ drivers/i2c/busses/Makefile                   |    1 +
+ drivers/i2c/busses/i2c-ljca.c                 |  350 ++++++
+ drivers/spi/Kconfig                           |   11 +
+ drivers/spi/Makefile                          |    1 +
+ drivers/spi/spi-ljca.c                        |  290 +++++
+ drivers/usb/misc/Kconfig                      |   14 +
+ drivers/usb/misc/Makefile                     |    1 +
+ drivers/usb/misc/usb-ljca.c                   | 1068 +++++++++++++++++
+ include/linux/usb/ljca.h                      |  102 ++
+ 14 files changed, 2377 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-usb-devices-ljca
+ create mode 100644 drivers/gpio/gpio-ljca.c
+ create mode 100644 drivers/i2c/busses/i2c-ljca.c
+ create mode 100644 drivers/spi/spi-ljca.c
+ create mode 100644 drivers/usb/misc/usb-ljca.c
+ create mode 100644 include/linux/usb/ljca.h
+
+-- 
+2.34.1
+
