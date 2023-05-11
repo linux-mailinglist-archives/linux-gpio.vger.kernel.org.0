@@ -2,110 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E896FF051
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 12:59:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92A0A6FF151
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 14:14:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237828AbjEKK7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 06:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        id S237277AbjEKMOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 08:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237540AbjEKK7o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 06:59:44 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB2E5B84;
-        Thu, 11 May 2023 03:59:42 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-24e5d5782edso7983207a91.0;
-        Thu, 11 May 2023 03:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683802781; x=1686394781;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=P7WwGv5KdS3JZFK3LNUp5MC3xbE7T89T2fedtq/0oXc=;
-        b=N26j+VMrYeUL3Ark717FdrXcfToyaCqMS6iY+FeQsEcpY7/CRFjD3pm8JXhDkmG3rx
-         JV0ZiQt4bw3mexLUenLy6ujL4q3ujgm8A+Ky29XFZV3Cj5OOPV1IuAYRDbLkbE8gSwNP
-         ywrBKf0PMdL1wJ+gR09fiRNI/cpEZtY7GuL8jWl0vqi1X94S2LgmJC1/evJ1HdjdJC0K
-         IYgieE/37snCsLXQaF8f5r4cL6BKYkUXVhwaUOBe56uWmG0bvuwHgLD/s6OIf2Tm5q8K
-         NgRDEHB2S0dD5M7Cq5Tn85z0vO5dJ6Om9XNEau6HgDD8HJ0yPSUvBO8Z3w7n6dthvgh3
-         LIVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683802781; x=1686394781;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P7WwGv5KdS3JZFK3LNUp5MC3xbE7T89T2fedtq/0oXc=;
-        b=BItbdS9mgDU3PuCUwT91l1oKsxqHaM6N+Zpwi5SP3z7jmm6+ZJrU6NWv59CtprUrJZ
-         pFcQlBZuHWKiYz3/vS6TRAlLoWFyT3kProSTcRyZ3bLRje4jfb1XBFshqDe7XtHCUNpW
-         VAc4w2/RNz9zsAXoQUo+FXQBYBzsFwXd+yBZcOPQ3x1XCiEV4iXKS0Ybyes++iAFQWT4
-         b8Cm/N3UMJ15XZssNPTWrT5sjBId4pnXuLSFkHNzggu7PTVtPipufEGW7RPYSZW+Va/k
-         8rYYghqXQUz6RGEOfK//XmpHjTCl64qkJKtquAY9A/3Kn5U9eFuryxv8UfMPA11l7Xei
-         6d2w==
-X-Gm-Message-State: AC+VfDxZ19aCFhhH9EuDRmVplHosnS/hhQuUnduewqGcep2rMmxHSyhT
-        Omml8tkuq34LywBZ4eK39rvp5MprpFs+YfxBs+0=
-X-Google-Smtp-Source: ACHHUZ4GERe0mUrXPvRcXq786LmJzoOQzwlw+H1gHijJA7ExVdrv/E5/FTfzxC5+hMYC4qyX3FLDtumdrE0sbuVolo4=
-X-Received: by 2002:a17:90b:1296:b0:24e:596:624f with SMTP id
- fw22-20020a17090b129600b0024e0596624fmr20866667pjb.22.1683802781153; Thu, 11
- May 2023 03:59:41 -0700 (PDT)
+        with ESMTP id S229752AbjEKMOb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 08:14:31 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158A5D2C1;
+        Thu, 11 May 2023 05:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=DTYdqg9GuNl0z1QFlSaTKNAXW7aoItrk39K2/m7YtyA=; b=WsRPNksHXaSsZEQ3/WP2PoAp3A
+        DT24WRSgyb9t8eN3kgw9qnx8oss3clEv4dPiNJBuegUrgtAdAIpjKmeKyQpOanu7b/YkE5sCe4SsJ
+        UqKhiuJfHLK6ZKPg+V0vH68BBmEj9LxYQ5uxTmI+LGY5cW4rbn7bURCys6EjaD0CSMoM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1px5AU-00CYDj-Ps; Thu, 11 May 2023 14:13:10 +0200
+Date:   Thu, 11 May 2023 14:13:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Subject: Re: [PATCH net-next v7 4/9] net: txgbe: Register I2C platform device
+Message-ID: <548e6aa5-5a8c-4be2-9f2b-1514be2f999d@lunn.ch>
+References: <20230509022734.148970-1-jiawenwu@trustnetic.com>
+ <20230509022734.148970-5-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-References: <20230510134121.1232286-1-quic_srichara@quicinc.com>
- <20230510134121.1232286-8-quic_srichara@quicinc.com> <8f5040e0-169b-554b-c9e6-479b8f098bc6@gmail.com>
- <daff6818-525d-7a99-de08-e289848cadf9@quicinc.com>
-In-Reply-To: <daff6818-525d-7a99-de08-e289848cadf9@quicinc.com>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Thu, 11 May 2023 12:59:30 +0200
-Message-ID: <CAOX2RU6_TmOfv5298fs6zgCvivdA6=GK5SnhGu7cDsmGQ2-ATw@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] arm64: dts: Add ipq5018 SoC and rdp432-c2 board support
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230509022734.148970-5-jiawenwu@trustnetic.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 11 May 2023 at 12:54, Sricharan Ramabadhran
-<quic_srichara@quicinc.com> wrote:
->
->
->
-> On 5/11/2023 3:54 PM, Robert Marko wrote:
-> >
-> > On 10. 05. 2023. 15:41, Sricharan Ramabadhran wrote:
-> >> Add initial device tree support for the Qualcomm IPQ5018 SoC and
-> >> rdp432-c2 board.
-> >
-> > Hi, does reboot work for you with this patchset?
-> > I have tested on 2 different IPQ5018 boards and they wont reboot,
-> > I get the:
-> > Requesting system reboot
-> > [  321.005977] qcom_scm firmware:scm: No available mechanism for setting
-> > download mode
-> > [  321.006128] reboot: Restarting system
-> >
-> > And then it just hangs there.
-> >
->
->   Yes, that is because SDI disabling using separate SCM is still not
->   there. I will add support for that in a separate series.
+On Tue, May 09, 2023 at 10:27:29AM +0800, Jiawen Wu wrote:
+> Register the platform device to use Designware I2C bus master driver.
+> Use regmap to read/write I2C device region from given base offset.
+> 
+> Signed-off-by: Jiawen Wu <jiawenwu@trustnetic.com>
 
-Do you maybe have a workaround for this, as it's driving me crazy to
-have to pull power?
-Also, it would probably be good to note this in the commit to avoid
-more questions like this.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Regards,
-Robert
->
-> Regards,
->   Sricharan
+    Andrew
