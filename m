@@ -2,134 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A076FEBA7
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 08:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 548F06FED1F
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 May 2023 09:50:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236751AbjEKGTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 May 2023 02:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
+        id S237652AbjEKHue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 May 2023 03:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236163AbjEKGTf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 02:19:35 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938243A89;
-        Wed, 10 May 2023 23:19:34 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34B6JKtS022130;
-        Thu, 11 May 2023 06:19:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=MFmlOXzWKlh6xmSzF7dgNVpK+OIYZ+my/PD5cZRH0Tk=;
- b=at7kA05jLfwkpUtE+uP0nW2kx43EWJMeQyT8Qpo96asw/C8HlLDHePVoi73bkTVTZ4ir
- QTt4VcbsoD5A7Oeme82hPHWU9/yxmPgpC6XN8Ge7gLtFJxRxXCZgn8nFyYneIBumjkat
- 7jhHv23jkvzeaW3IHczKg3p7NpqdMF1xxbzjRBqlJ9kaue5s8zLG63LrG8d2dCCxLFXQ
- bcOsHT+SCVWQeuODzetRp73SVHWIeW7UXzMbctutoxM35VVy8d+appt3lhoSh0R8G/os
- ayQGVVTAgIDuanu2FeMkk26y+MJiifHUlRdN0Zght5pj7Y0qhTaDnty32vn6ZSsffU2G uw== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qggen92k3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 May 2023 06:19:19 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34B6JI98010116
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 May 2023 06:19:18 GMT
-Received: from [10.201.3.182] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 10 May
- 2023 23:19:12 -0700
-Message-ID: <a9437620-6946-16a9-1b13-faaf34fa5d48@quicinc.com>
-Date:   Thu, 11 May 2023 11:49:10 +0530
+        with ESMTP id S231625AbjEKHuc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 May 2023 03:50:32 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0674E469F;
+        Thu, 11 May 2023 00:50:31 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-61b5a6865dfso66000836d6.3;
+        Thu, 11 May 2023 00:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683791430; x=1686383430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7WMuVCgOkbuhGC7m2MG5PQvTB0YoiyPQB7UrE0k3Fc=;
+        b=CEFjlzJKSM1hdKrGSd1YWdxYQtJjNJZUgp0Hpwo+48YtiR13q+SlCC26ynEHHDp2t9
+         8BKtQsh0PXmwtMJvPJ8KN/SB3hQ9ZiXhdYCP4bi4rkFhC/2T6/NSq0uV4RjWv0vadZ9x
+         +nGhvoUUBJpIJ5Z+PQujwVzZTEuM/IF24cYu26yL93Qe93efI0pEmI63b0nHXIMDp9oG
+         D64Uzz6AmTRMBvDwqI9UdcQKgcpNYbdlJL15vAmze2b3E8/uNi9CS8AB4jfHYcEhXxcZ
+         8JOjhpYgazGbyqHW8i2XLar5ZtyzZcwq2DQ35ltRwowLCunSFQZiAyD0/L1KWKLh32y6
+         sQtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683791430; x=1686383430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H7WMuVCgOkbuhGC7m2MG5PQvTB0YoiyPQB7UrE0k3Fc=;
+        b=V1al4H5kSX+GBwI/u/41M3Qo5ZQePWzMbVvfpFB+tWYuH5A3ekqk6XlP0V1lIwT6Q3
+         EtrteMMn3bkRUqgp+eX+7mqfwpN6MD0CsoJk9NU4Te8C354c38yl1m7y8SbOoJ+vjBOD
+         xtQrdnjjsidw+yu9wSZvak6CCakhsypMMsb105JLxiHsxgAHD/cYZw1yUJG4X+AG2H84
+         2siJ3wyASIU11zXnoROsTVY50gkQTH6eaqV1Z03QVCLdUkCaSFCx1xm1Ug50M0/Dr5pf
+         1rTlyxzyQ1c0axyEGSSQxgtsglwt8/YQvGbvGlVLvGiIX98VwDSykgy3MQEpuDfmnoz/
+         hDAQ==
+X-Gm-Message-State: AC+VfDx6n7x8DDCCSFGWOPiR0HlYj+iU8ntoL86xYKOfMxD6wxp06kPa
+        mO87eFpaHWtkfAMlGsGWVXX/xzfYZRf7Lh0Z9O+rARhb4CnLvA==
+X-Google-Smtp-Source: ACHHUZ6zuzpuizwBFMWuTu3XPGD4XZW9WJPgQChSNY0dB9AMuJlvz+wNMJOijEDmuj4y2YAWZucpS/oc03EGAUYcipc=
+X-Received: by 2002:a05:6214:48b:b0:5ef:486a:505e with SMTP id
+ pt11-20020a056214048b00b005ef486a505emr32434740qvb.41.1683791430102; Thu, 11
+ May 2023 00:50:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v4 4/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
-Content-Language: en-US
-To:     <andy.shevchenko@gmail.com>
-CC:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20230510134121.1232286-1-quic_srichara@quicinc.com>
- <20230510134121.1232286-5-quic_srichara@quicinc.com>
- <ZFupNrdrcsrIFpYq@surfacebook>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <ZFupNrdrcsrIFpYq@surfacebook>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 8Er7DcdvxmzTkegwCefZsH92-86EqJDQ
-X-Proofpoint-GUID: 8Er7DcdvxmzTkegwCefZsH92-86EqJDQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-10_04,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- clxscore=1011 lowpriorityscore=0 malwarescore=0 spamscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305110053
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <0b3a257a-f1e5-ad86-4c69-93e038a33ce9@yoseli.org>
+ <ZFvTi3tQGUq2OCHi@surfacebook> <32ecb9f3-1443-210c-0fc9-40891629e25a@yoseli.org>
+In-Reply-To: <32ecb9f3-1443-210c-0fc9-40891629e25a@yoseli.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 11 May 2023 10:49:53 +0300
+Message-ID: <CAHp75Vcsieiab8ks7yLwJvhjHTPv2qeCBJYjMOVYBJXmNhbTYQ@mail.gmail.com>
+Subject: Re: pca953x issue when driving a DSI bridge
+To:     Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brgl@bgdev.pl, linus.walleij@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, May 10, 2023 at 11:18=E2=80=AFPM Jean-Michel Hautbois
+<jeanmichel.hautbois@yoseli.org> wrote:
+> On 10/05/2023 19:25, andy.shevchenko@gmail.com wrote:
+> > Wed, May 10, 2023 at 06:12:19PM +0200, Jean-Michel Hautbois kirjoitti:
+
+...
+
+> >> [   11.273968]  gpiod_set_value+0x5c/0xcc
+> >> [   11.277722]  ti_sn65dsi86_resume+0x4c/0x94 [ti_sn65dsi86]
+> >
+> > Your problem even worse, i.e. ->resume() might sleep.
+>
+> Indeed it is worse ;-).
+>
+> >> [   11.283131]  __rpm_callback+0x48/0x19c
+> >> [   11.286885]  rpm_callback+0x6c/0x80
+> >> [   11.290375]  rpm_resume+0x3b0/0x660
+> >> [   11.293864]  __pm_runtime_resume+0x4c/0x90
+> >> [   11.297960]  __device_attach+0x90/0x1e4
+> >> [   11.301797]  device_initial_probe+0x14/0x20
+> >> [   11.305980]  bus_probe_device+0x9c/0xa4
+> >> [   11.309817]  device_add+0x3d8/0x820
+> >> [   11.313308]  __auxiliary_device_add+0x40/0xa0
+> >> [   11.317668]  ti_sn65dsi86_add_aux_device.isra.0+0xb0/0xe0 [ti_sn65d=
+si86]
+> >> [   11.324381]  ti_sn65dsi86_probe+0x20c/0x2ec [ti_sn65dsi86]
+> >> [   11.329876]  i2c_device_probe+0x3b8/0x3f0
+> >> [   11.333889]  really_probe+0xc0/0x3dc
+
+...
+
+> >> I suppose this is not a corner case and we may have other drivers and =
+other
+> >> boards connecting a GPIO which can sleep in a context where it should =
+not ?
+> >>
+> >> I would like to add one thing: on this board, the expander is routed i=
+n a
+> >> way that makes it impossible to "sleep" as the reset is forced pulled-=
+up and
+> >> the power regulators are fixed and can't be stopped.
+> >
+> > Can you elaborate why you think there is a problem?
+>
+> I didn't know if it could be an issue or not, so I mentioned it but
+> sounds like a nonsense :-).
+
+Maybe not. I don't know that hardware, schematics and more information
+is needed to understand. But I leave it to you.
+
+> >> I don't know how to address this issue nicely and any thoughts is
+> >> appreciated !
+> >
+> > As a workaround you can consider the code around i2c_in_atomic_xfer_mod=
+e()
+> > but since I have heard about i.MX8 so many negative remarks which makes=
+ me
+> > think that hardware is a train wreck and shouldn't be used at all.
+
+> Not sure to get the workaround proposal right...
+
+There are possibilities to have atomic I2C transfers, but as comment
+says (on top of the above mentioned function) that is only for PMIC
+communications at the system shutdown.
+
+In your case I would try the easiest way (taking into account that
+hardware connection is not preventing us from sleeping context), i.e.
+check if the function that has GPIO call may sleep on its own and
+simply replace gpiod_set_value() by gpiod_set_value_cansleep().
+
+> I won't argue about i.MX8 ;-).
 
 
-On 5/10/2023 7:54 PM, andy.shevchenko@gmail.com wrote:
-> Wed, May 10, 2023 at 07:11:17PM +0530, Sricharan Ramabadhran kirjoitti:
->> Add pinctrl definitions for the TLMM of IPQ5018.
-> 
-> ...
-> 
->> +#define FUNCTION(fname)			                \
->> +	[msm_mux_##fname] = {		                \
->> +		.name = #fname,				\
->> +		.groups = fname##_groups,               \
->> +		.ngroups = ARRAY_SIZE(fname##_groups),	\
->> +	}
-> 
-> Can you coordinate with Rohit Agarwal <quic_rohiagar@quicinc.com> and use
-> his work [1] which moves the QCom drivers to use struct pingroup and struct
-> pinfunction?
-> 
-> [1]: https://lore.kernel.org/r/1683718725-14869-1-git-send-email-quic_rohiagar@quicinc.com
-> 
-
-  ok, will do.
-
-> ...
-> 
->> +static const struct of_device_id ipq5018_pinctrl_of_match[] = {
->> +	{ .compatible = "qcom,ipq5018-tlmm", },
-> 
->> +	{ },
-> 
-> No comma for the terminator entry.
-> 
-
-  ok.
-
->> +};
-> 
-> Move MODULE_DEVICE_TABLE() here.
-> 
-
-  ok
-
-Regards,
-  Sricharan
+--=20
+With Best Regards,
+Andy Shevchenko
