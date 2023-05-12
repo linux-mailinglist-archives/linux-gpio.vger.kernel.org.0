@@ -2,115 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88C3F70012F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 09:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E941700162
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 09:24:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240266AbjELHQH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 03:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57510 "EHLO
+        id S240105AbjELHYE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 03:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240138AbjELHPg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 03:15:36 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274E0106C3
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 00:13:26 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3f4ad71b00eso18379845e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 00:13:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1683875604; x=1686467604;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PPhQRy4HPP9Hjp11lzPQ3zP0xKs4X8HPNb5FmQafXzg=;
-        b=4YJ/nGQcwmjEJyXetQTMv6vZEtXXnXCtVTEj6ZJdD2ZvjIzR3cQx7mlmlJ7h9/a8aM
-         +I9WYuDl63SaxIOwA1i37KQb6r3G4Oz7rZEkXbkjRMnXWyghHJ0b13VY9NMQMFdRGoKm
-         Z9VJG4TBTIMsIKdUPuahjsx7g2cc9PXUjdjS4hw3wCfMXEYoFfQXUv7LWHEGUV+uxFP9
-         sriHw/fEKQAUcFDV1AkZcmUhz5Jcu1RByKC4NPxtiiIqicFgJSKZfEuXb1XX8YFegQdL
-         rw+/2sB5eYUhznaLEfvUl3n9pgk2OOhczWSWdlYQpxPS70IfRd2V6+bsaltJgtdDJV7I
-         tjqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683875604; x=1686467604;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PPhQRy4HPP9Hjp11lzPQ3zP0xKs4X8HPNb5FmQafXzg=;
-        b=dWo2nXUdfqz/IwlscWTnPhFMRDg90KM7lzNcbZ+P7LWFGkWxUdXW9vqYKWGWcDJivH
-         /JRViBK7w2Y16/NGcMXkypQTWLcABELih+M8GabsB5bbaapth5AeZKDjRjK3SL6nveRo
-         1nrc0BobXyVarT+HyRbJ4omb2ioxm2W62T4bb0nuKMeoBpZ7jDk39W2pPhrWv2gi0TUS
-         x925OqXiYerrNFJ8FxG21M703K+Q9Sjv1vcYd97qWbmye9lc5yAIxqOZnRkYOMTNB+KK
-         HZzi9WKQ/OxxzL/cAky1EHMC0vmnX9yX1e1yc+Oawl98dOtdv6RlBeLyx7PrRlbvU2zN
-         styg==
-X-Gm-Message-State: AC+VfDyMVsXo5IRpYQ/V8is8+G/dN5VGkw66fs2ZjioL88s7mzonWmyi
-        OW99NJUEvlTFfdS/wOvcNgx/by5hdXeV3ZF4dZc=
-X-Google-Smtp-Source: ACHHUZ5hHZ8pzx0QW5qL2MCBfXq4LuVRXmvd12CX+0R+UxFwrl9+UX5BRoq6I4Rf9oyUske5iZPZPg==
-X-Received: by 2002:a7b:c3cf:0:b0:3f4:220a:bbf8 with SMTP id t15-20020a7bc3cf000000b003f4220abbf8mr13053335wmj.34.1683875604597;
-        Fri, 12 May 2023 00:13:24 -0700 (PDT)
-Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
-        by smtp.gmail.com with ESMTPSA id y12-20020adffa4c000000b00306281cfa59sm22474955wrr.47.2023.05.12.00.13.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 May 2023 00:13:24 -0700 (PDT)
-Message-ID: <2e5cae40-7040-a92f-3d11-ce68f1307049@baylibre.com>
-Date:   Fri, 12 May 2023 09:13:23 +0200
+        with ESMTP id S240109AbjELHYC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 03:24:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DDC10DF;
+        Fri, 12 May 2023 00:24:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 755A765358;
+        Fri, 12 May 2023 07:24:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5535C4339B;
+        Fri, 12 May 2023 07:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683876239;
+        bh=HfUj4/s95uvz7Tk19IO4GOkQ3Gb/dTDAKkge/PI7650=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PoS6M9j6GwJZ1fGGcuJ9aBlIkZjBIoigcpC8senelnx9LAnakyrGNBJrx5rHZ1MfW
+         DufeI6ryHogGxT+C51Lv47GclZasRDxkv9L7GHPPGJOMFg9jv+DS6vR2Z8KfwxBsXt
+         5q8XCTLAoPYyA4JwApx5jAfQ4FYlPbUkQ3dK4CfHHl9CkvkhMPThHkwsjst0oxi9Di
+         21uAuf5HcSQIcXVVxL7FTY+f4+vKdWtUTosPSHEJPhIhm6rS/BevKytGiS7NcqUvuk
+         uqI81+07qGFhboi0/QcA7oDEeY4Ay20B/k59lBQtBRbsCbqjj/kuH/YMxevnZDiC08
+         4843IJbPnp5UA==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pxN8c-0002Co-QC; Fri, 12 May 2023 09:24:27 +0200
+Date:   Fri, 12 May 2023 09:24:26 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy.shevchenko@gmail.com,
+        maz@kernel.org, Ben Brown <ben.brown@alliedtelesis.co.nz>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
+Message-ID: <ZF3pqvOVv6eZl62y@hovoldconsulting.com>
+References: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
- <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
- <CACRpkdbjjoOoGeaqv9yQ4fTKqxt5eLDBjZCnNAYQnng3L+n8TQ@mail.gmail.com>
-From:   jerome Neanne <jneanne@baylibre.com>
-In-Reply-To: <CACRpkdbjjoOoGeaqv9yQ4fTKqxt5eLDBjZCnNAYQnng3L+n8TQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, May 12, 2023 at 04:28:06PM +1200, Chris Packham wrote:
+> Calling gpiod_to_irq() creates an irq_desc for the GPIO. This is not
+> something that should happen when just exporting the GPIO via sysfs. The
+> effect of this was observed as triggering a warning in
+> gpiochip_disable_irq() when kexec()ing after exporting a GPIO.
 
+You need a better explanation as to why this is an issue. What does the
+warning look like for example?
 
-On 11/05/2023 22:57, Linus Walleij wrote:
->> +       /* Documentation is stating that GPIO0 direction must not be changed in Linux:
->> +        * Table 8-34. MFP_1_CONFIG(3): MULTI_DEVICE_ENABLE,
->> +        * Should only be changed in INITIALIZE state (prior to ON Request).
->> +        * Set statically by NVM, changing direction in application can cause a hang.
->> +        * Below can be used for test purpose only:
->> +        */
->> +
->> +#if 0
->> +       int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
->> +                                TPS65219_GPIO0_DIR_MASK, direction);
->> +       if (ret)
->> +               return ret;
->> +#endif
->> +       dev_err(gpio->tps->dev,
->> +               "GPIO%d direction set by NVM, change to %u failed, not allowed by specification\n",
->> +                offset, direction);
->> +       return -EOPNOTSUPP;
->> +}
+> Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
+> intended creation of the irq_desc comes via edge_store() when requested
+> by the user.
+
+And why does that avoid whatever problem you're seeing?
+
+> Fixes: ebbeba120ab2 ("gpio: sysfs: fix gpio attribute-creation race")
+
+This is clearly not the right Fixes tag. The above commit only moved the
+creation of the attribute to before registering the sysfs device and
+specifically gpiod_to_irq() was used also prior to that commit.
+
+As a matter of fact, back then there was no call to
+irq_create_mapping() in gpiod_to_irq() either. That was added years
+later by commit
+
+	dc749a09ea5e ("gpiolib: allow gpio irqchip to map irqs dynamically")
+
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 > 
-> Normally people would complain about #if 0 code.
+> Notes:
+>     This is technically a v2 of
+>     https://lore.kernel.org/lkml/20230510001151.3946931-1-chris.packham@alliedtelesis.co.nz/
+>     but the solution is so different it's probably best to treat it as a new
+>     patch.
 > 
-> But this is a special case!
+>  drivers/gpio/gpiolib-sysfs.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> I definitely want the code to be in there somehow.
-> 
-> What about:
-> 
-> if (IS_ENABLED(DEBUG))?
-> 
-> If someone enables debug with an explicit -DDEBUG to the compiler
-> this could be allowed.
-I'm fine with your proposal. Will wait few days just in case anyone 
-wants to add any comment then go for this.
+> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+> index 530dfd19d7b5..f859dcd1cbf3 100644
+> --- a/drivers/gpio/gpiolib-sysfs.c
+> +++ b/drivers/gpio/gpiolib-sysfs.c
+> @@ -362,8 +362,6 @@ static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
+>  		if (!show_direction)
+>  			mode = 0;
+>  	} else if (attr == &dev_attr_edge.attr) {
+> -		if (gpiod_to_irq(desc) < 0)
+> -			mode = 0;
+>  		if (!show_direction && test_bit(FLAG_IS_OUT, &desc->flags))
+>  			mode = 0;
+>  	}
+
+Johan
