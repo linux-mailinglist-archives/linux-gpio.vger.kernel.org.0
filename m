@@ -2,104 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E7A6FFFA9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 06:28:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A6286FFFB1
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 06:38:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239719AbjELE2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 00:28:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        id S239828AbjELEil (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 00:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbjELE2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 00:28:23 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9656F49D5
-        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 21:28:21 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 55A4C2C011D;
-        Fri, 12 May 2023 16:28:10 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1683865690;
-        bh=GagT8hvc6P+NCio8S5NQPhJe5E1qdikT/egb1xEX7Sk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iehmeGg+iFi+wZL1fXyiIkGnqAASLqWP88gDMMd6xXVOPJH0zWZXsjyUiij/jToF0
-         DR4rtOGrd6YIUqTqn1GJ/23h9JVBEnCvfns3jFpn/hCxx1jZ/Q5EGoHFwjy0eqq4hb
-         Dp40EgewMLMfyc2IOlhDfItqpJaYVxHzH/f2QxqwYIo06rJACovWCrVeMtRxiodZO+
-         FIEuJeUC3C45mN0hOztXTUtJ8fWTiVg6Z9Tc0hu7FVVIFpJGNvM2IrHDwi7f7pGqMS
-         KwQPqNyFeij49xYPxr2z/93GK/H+t9YGvrq214lyfzRFvaNapvu6AsdMdntzNXusAe
-         bCPa4A2PYJ58w==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B645dc0590000>; Fri, 12 May 2023 16:28:09 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id F01DF13ED95;
-        Fri, 12 May 2023 16:28:09 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id EB5B3283899; Fri, 12 May 2023 16:28:09 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, johan@kernel.org,
-        andy.shevchenko@gmail.com, maz@kernel.org,
-        Ben Brown <ben.brown@alliedtelesis.co.nz>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Date:   Fri, 12 May 2023 16:28:06 +1200
-Message-Id: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.40.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=P0xRbXHiH_UA:10 a=VwQbUJbxAAAA:8 a=Op8SjpqLE0gF3w78xgEA:9 a=AjGcO6oz07-iQ99wixmX:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S239826AbjELEij (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 00:38:39 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E5F12D
+        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 21:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683866318; x=1715402318;
+  h=date:from:to:cc:subject:message-id;
+  bh=7YKD1vq8nCDO2JkpObbQyhT5iwk9STc1Fr5PfMaMqAo=;
+  b=bunH6a+RWJy3g7XxNg5PFOTnMs6GeldVbHZHih0pYOgDagwXZ6M4AGHP
+   jzmQRnOAWUe2AtLTsCNM5fS3M+EDrYGHR/qurW4TZotbf9gDHOzzPM3LZ
+   jwHJAlRCsvvkcFKMZjGg9l5FrsSbKDSFAVR4Asbew4gjOo5YHDK0zMNIX
+   OxbxaWXOHZBK/4osCw4ysOPE/qyAJ/RseN2rUb+dw1wa+mmQX5yYD1uPs
+   kG8KCUWnXjKOgIruuUDCTUC9lklsHH3LHsK0Q3ioCQbJri87fJQJWNyNR
+   esW5xqTZ3BpXixq5vMFjoaJcQqBfHsqmjzCDWhfqz7uT8Xk1MJrr+H8/Q
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="340009766"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="340009766"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 21:38:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="730661243"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="730661243"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 11 May 2023 21:38:36 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pxKY8-0004W2-00;
+        Fri, 12 May 2023 04:38:36 +0000
+Date:   Fri, 12 May 2023 12:38:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 6c19974d1e83fba2cca1cbea2fbf250f093eb5ed
+Message-ID: <20230512043823.KEC2n%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Calling gpiod_to_irq() creates an irq_desc for the GPIO. This is not
-something that should happen when just exporting the GPIO via sysfs. The
-effect of this was observed as triggering a warning in
-gpiochip_disable_irq() when kexec()ing after exporting a GPIO.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 6c19974d1e83fba2cca1cbea2fbf250f093eb5ed  dt-bindings: gpio: Convert STMPE GPIO to YAML schema
 
-Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
-intended creation of the irq_desc comes via edge_store() when requested
-by the user.
+elapsed time: 731m
 
-Fixes: ebbeba120ab2 ("gpio: sysfs: fix gpio attribute-creation race")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+configs tested: 73
+configs skipped: 7
 
-Notes:
-    This is technically a v2 of
-    https://lore.kernel.org/lkml/20230510001151.3946931-1-chris.packham@a=
-lliedtelesis.co.nz/
-    but the solution is so different it's probably best to treat it as a =
-new
-    patch.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- drivers/gpio/gpiolib-sysfs.c | 2 --
- 1 file changed, 2 deletions(-)
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r015-20230509   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                 nsimosci_hs_smp_defconfig   gcc  
+arc                  randconfig-r043-20230509   gcc  
+arc                  randconfig-r043-20230511   gcc  
+arc                           tb10x_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                         nhk8815_defconfig   gcc  
+arm                            qcom_defconfig   gcc  
+arm                  randconfig-r046-20230509   gcc  
+arm                           sunxi_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r011-20230509   gcc  
+csky                 randconfig-r021-20230511   gcc  
+csky                 randconfig-r026-20230511   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                          randconfig-a012   gcc  
+i386                          randconfig-a014   gcc  
+i386                          randconfig-a016   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r012-20230511   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r016-20230509   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r012-20230509   gcc  
+nios2                randconfig-r016-20230511   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r013-20230511   gcc  
+parisc               randconfig-r024-20230511   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r001-20230511   clang
+powerpc              randconfig-r015-20230511   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r004-20230511   clang
+riscv                randconfig-r006-20230511   clang
+riscv                randconfig-r042-20230511   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r014-20230511   gcc  
+s390                 randconfig-r022-20230511   gcc  
+s390                 randconfig-r044-20230511   gcc  
+sh                               allmodconfig   gcc  
+sh                           se7712_defconfig   gcc  
+sparc                               defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                               rhel-8.3   gcc  
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 530dfd19d7b5..f859dcd1cbf3 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -362,8 +362,6 @@ static umode_t gpio_is_visible(struct kobject *kobj, =
-struct attribute *attr,
- 		if (!show_direction)
- 			mode =3D 0;
- 	} else if (attr =3D=3D &dev_attr_edge.attr) {
--		if (gpiod_to_irq(desc) < 0)
--			mode =3D 0;
- 		if (!show_direction && test_bit(FLAG_IS_OUT, &desc->flags))
- 			mode =3D 0;
- 	}
---=20
-2.40.1
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
