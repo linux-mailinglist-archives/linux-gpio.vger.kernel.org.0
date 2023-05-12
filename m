@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C16D7700DA8
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 19:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 778F1700DCC
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 19:22:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237968AbjELRIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 13:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55762 "EHLO
+        id S238039AbjELRWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 13:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236982AbjELRIL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 13:08:11 -0400
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84462DDA7
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 10:08:03 -0700 (PDT)
+        with ESMTP id S237979AbjELRWs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 13:22:48 -0400
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA3ED2F8
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 10:22:46 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-        id 8bd276d0-f0e7-11ed-b972-005056bdfda7;
-        Fri, 12 May 2023 20:08:00 +0300 (EEST)
+        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+        id 9aaf40ea-f0e9-11ed-abf4-005056bdd08f;
+        Fri, 12 May 2023 20:22:44 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Fri, 12 May 2023 20:07:59 +0300
+Date:   Fri, 12 May 2023 20:22:43 +0300
 To:     Esteban Blanc <eblanc@baylibre.com>
 Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
@@ -27,15 +27,14 @@ Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
         linux-rtc@vger.kernel.org, jpanis@baylibre.com,
         jneanne@baylibre.com, aseketeli@baylibre.com, sterzik@ti.com,
         u-kumar1@ti.com
-Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-Message-ID: <ZF5yb4DbVDbfxVU4@surfacebook>
+Subject: Re: [PATCH v4 1/3] rtc: tps6594: Add driver for TPS6594 RTC
+Message-ID: <ZF514wvUt_xrU1gG@surfacebook>
 References: <20230512141755.1712358-1-eblanc@baylibre.com>
- <20230512141755.1712358-3-eblanc@baylibre.com>
+ <20230512141755.1712358-2-eblanc@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230512141755.1712358-3-eblanc@baylibre.com>
+In-Reply-To: <20230512141755.1712358-2-eblanc@baylibre.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
         FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
         SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
@@ -46,137 +45,169 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
-> TI TPS6594 PMIC has 11 GPIOs which can be used
-> for different functions.
+Fri, May 12, 2023 at 04:17:53PM +0200, Esteban Blanc kirjoitti:
+> TPS6594 PMIC is a MFD. This patch adds support for
+> the RTC found inside TPS6594 family of PMIC.
 > 
-> This patch adds a pinctrl and GPIO drivers in
-> order to use those functions.
+> Alarm is also supported.
 
 ...
 
-> +config PINCTRL_THUNDERBAY
+> +/*
+> + * Min and max values supported with 'offset' interface (swapped sign)
+> + * After conversion, the values does not exceed the range [-32767, 33767] which COMP_REG must
+> + * conform to
 
-Is it correct name? To me sounds not. The problem is that you use platform name
-for the non-platform-wide pin control, i.e. for PMIC exclusively.
-Did I miss anything?
+Please, format it better and do not forget to use proper punctuation (commas,
+periods, etc.).
 
-> +	tristate "Generic pinctrl and GPIO driver for Intel Thunder Bay SoC"
-> +	depends on ARCH_THUNDERBAY || (ARM64 && COMPILE_TEST)
-
-This doesn't look correct, but I remember some Kconfig options that are using
-this way of dependency.
-
-> +	depends on HAS_IOMEM
-> +	select PINMUX
-> +	select PINCONF
-> +	select GENERIC_PINCONF
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select GENERIC_PINMUX_FUNCTIONS
-> +	select GPIOLIB
-> +	select GPIOLIB_IRQCHIP
-> +	select GPIO_GENERIC
-> +	help
-> +	  This selects pin control driver for the Intel Thunder Bay SoC.
-> +	  It provides pin config functions such as pull-up, pull-down,
-> +	  interrupt, drive strength, sec lock, Schmitt trigger, slew
-> +	  rate control and direction control. This module will be
-> +	  called as pinctrl-thunderbay.
-
-Ah, the above simply a mistake. right?
-Why is it in this patch?
-
-> +config PINCTRL_TPS6594
-> +	tristate "Pinctrl and GPIO driver for TI TPS6594 PMIC"
-> +	depends on MFD_TPS6594
-> +	default MFD_TPS6594
-> +	select PINMUX
-> +	select GPIOLIB
-> +	select REGMAP
-> +	select GPIO_REGMAP
-> +	help
-> +	  This driver supports GPIOs and pinmuxing for the TPS6594
-> +	  PMICs chip family.
-
-Module name?
+> + */
+> +#define MIN_OFFSET (-277774)
+> +#define MAX_OFFSET (277774)
 
 ...
 
-> +obj-$(CONFIG_PINCTRL_THUNDERBAY) += pinctrl-thunderbay.o
+> +/* Multiplier for ppb conversions */
+> +#define PPB_MULT (1000000000LL)
 
-Huh?!
-
-> +obj-$(CONFIG_PINCTRL_TPS6594)	+= pinctrl-tps6594.o
-
-...
-
-> +#include <linux/gpio/regmap.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinmux.h>
-
-Ordered?
+We have something in units.h. Can you use generic macro?
 
 ...
 
-> +static const char *groups_name[TPS6594_PINCTRL_PINS_NB] = {
-> +	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
-> +	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10"
+> +	ret = regmap_update_bits(tps->regmap, TPS6594_REG_RTC_INTERRUPTS,
+> +				 TPS6594_BIT_IT_ALARM, val);
+> +
+> +	return ret;
 
-Leave trailing comma even for known size.
-
-> +};
-
-...
-
-> +struct tps6594_pinctrl_function {
-> +	const char *name;
-> +	u8 muxval;
-> +	const char **groups;
-> +	unsigned long ngroups;
-
-We have struct pinfunction. Use it here (as embedded).
-
-> +};
+	return regmap_update_bits(...);
 
 ...
 
-> +static const struct tps6594_pinctrl_function pinctrl_functions[] = {
-> +	{ "gpio", TPS6594_PINCTRL_GPIO_FUNCTION, groups_name,
-> +	  TPS6594_PINCTRL_PINS_NB },
+> +	/*
+> +	 * Set GET_TIME to 0. This way, next time we set GET_TIME to 1 we are sure to store an
+> +	 * up-to-date timestamp
+> +	 */
 
-Here and further use PINCTRL_PINFUNCTION() macro.
-
-> +};
+Please, check all your multi-line comments for proper punctuation.
 
 ...
 
-> +static int tps6594_group_pins(struct pinctrl_dev *pctldev,
-> +			      unsigned int selector, const unsigned int **pins,
-> +			      unsigned int *num_pins)
+> +	/* Check if RTC is running. */
+
+Please, keep a single style for the one-line comments (with or without period
+at the end).
+
+> +	alm->enabled = int_val & TPS6594_BIT_IT_ALARM ? 1 : 0;
+
+Ternary is reduntand.
+
+> +	return ret;
+
+Why not return 0 explicitly? Or do you return positive value?
+
+...
+
+> +	comp_data[0] = (u16)value & 0xFF;
+> +	comp_data[1] = ((u16)value >> 8) & 0xFF;
+
+Use proper bitwise type, i.e. __le16.
+
+...
+
+> +	value = (u16)comp_data[0] | ((u16)comp_data[1] << 8);
+
+Ditto.
+
+...
+
+> +	/* Convert from RTC calibration register format to ppb format */
+> +	tmp = calibration * (s64)PPB_MULT;
+
+Is casting really needed?
+
+> +	if (tmp < 0)
+> +		tmp -= TICKS_PER_HOUR / 2LL;
+> +	else
+> +		tmp += TICKS_PER_HOUR / 2LL;
+
+Is it guaranteed to have no overflow here?
+
+> +	tmp = div_s64(tmp, TICKS_PER_HOUR);
+> +
+> +	/*
+> +	 * Offset value operates in negative way, so swap sign.
+> +	 * See 8.3.10.5, (32768 - COMP_REG)
+> +	 */
+> +	*offset = (long)-tmp;
+> +
+> +	return ret;
+
+ret?!
+
+> +}
+> +
+> +static int tps6594_rtc_set_offset(struct device *dev, long offset)
 > +{
-> +	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	*pins = (unsigned int *)&pinctrl->pins[selector];
+> +	int calibration;
+> +	s64 tmp;
 
-Why casting?
+Similar questions here as per above routine.
 
-> +	*num_pins = 1;
+> +	/* Make sure offset value is within supported range */
+> +	if (offset < MIN_OFFSET || offset > MAX_OFFSET)
+> +		return -ERANGE;
 > +
-> +	return 0;
+> +	/* Convert from ppb format to RTC calibration register format */
+> +	tmp = offset * (s64)TICKS_PER_HOUR;
+> +	if (tmp < 0)
+> +		tmp -= PPB_MULT / 2LL;
+> +	else
+> +		tmp += PPB_MULT / 2LL;
+> +	tmp = div_s64(tmp, PPB_MULT);
+> +
+> +	/* Offset value operates in negative way, so swap sign */
+> +	calibration = (int)-tmp;
+> +
+> +	return tps6594_rtc_set_calibration(dev, calibration);
 > +}
 
 ...
 
-> +	pinctrl->pctl_dev =
-> +		devm_pinctrl_register(&pdev->dev, pctrl_desc, pinctrl);
+> +static int tps6594_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct tps6594 *tps;
+> +	struct rtc_device *rtc;
+> +	int irq;
+> +	int ret;
 
-One line?
+> +	tps = dev_get_drvdata(pdev->dev.parent);
 
-> +	if (IS_ERR(pinctrl->pctl_dev)) {
-> +		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
-> +		return PTR_ERR(pinctrl->pctl_dev);
+Can be united with definition of tps above.
+
+...
+
+> +	/* RTC not running */
+> +	if (ret == 0) {
+> +		/* Start rtc */
+
+RTC for the sake of consistency.
+
+But I think one of the comment is redundant.
+
+...
+
+> +		mdelay(100);
+
+Such long delays have to be explicitly elaborated (in the comment on top).
+
+> +	}
+
+...
+
+> +	irq = platform_get_irq_byname(pdev, TPS6594_IRQ_NAME_ALARM);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "Failed to get irq\n");
+> +		return irq;
 
 	return dev_err_probe(...);
 
@@ -184,25 +215,25 @@ One line?
 
 ...
 
-> +	pinctrl->gpio_regmap = devm_gpio_regmap_register(&pdev->dev, &config);
-> +	if (IS_ERR(pinctrl->gpio_regmap)) {
-> +		dev_err(&pdev->dev, "Couldn't register gpio_regmap driver\n");
-> +		return PTR_ERR(pinctrl->pctl_dev);
+> +		dev_err(&pdev->dev, "Failed to request_threaded_irq\n");
+> +		return ret;
 
 Ditto.
 
-> +	}
-> +
-> +	return 0;
-> +}
+...
+
+> +		dev_err(&pdev->dev, "Failed to init rtc as wakeup source\n");
+> +		return ret;
+
+Ditto.
 
 ...
 
-> -#define TPS6594_REG_GPIOX_CONF(gpio_inst)		(0x31 + (gpio_inst))
-> +#define TPS6594_REG_GPIO1_CONF				0x31
-> +#define TPS6594_REG_GPIOX_CONF(gpio_inst)	(TPS6594_REG_GPIO1_CONF + (gpio_inst))
+> +
 
-Why? The original code with parameter 0 will issue the same.
+Blank line is not needed.
+
+> +module_platform_driver(tps6594_rtc_driver);
 
 -- 
 With Best Regards,
