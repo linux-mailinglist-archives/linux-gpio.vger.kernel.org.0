@@ -2,101 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8FF7700CC2
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E22B5700CED
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjELQST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 12:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
+        id S232174AbjELQZ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 12:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjELQSS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:18:18 -0400
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3FF19A6;
-        Fri, 12 May 2023 09:18:17 -0700 (PDT)
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34CF0mCP031838;
-        Fri, 12 May 2023 11:18:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=cYDZFBjy9xn0CeTo2bB3Xkf+o7JVqsijVPAIa/NvjQ4=;
- b=HnkKmBnvrttAdUDiM9W1SJNOa40uZpodP+TjixTD0o4bn664DEStR4IGc/eJKrNH5hH+
- WgCImN9/5vnrkSo28NtbPzA/PXnDVFiFMHEi6SaggnGHBN/jHwY7fE83EiZ8OC6UBqqc
- KZ/KLYG4Qo4Iid24Z4J6JGfeXywaJbvNHRkshYEKuxPBnHCBuPma3DzKNfD7lpi+S6Wk
- R69APWtrZ7MDaJI9kmXKrTLOWeKvaQgrz0+ZpLmO5BHqhqNPR3pcr7jQshZv/kdwdBkt
- SoqffvcF3n4dwLz9lA+Qe2oT0n7P2cFO97pSz6osEZqZ/G/QzwaTSpDdOTf3a6zvJJ5n tg== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3qf7nb5qaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 May 2023 11:18:05 -0500
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Fri, 12 May
- 2023 11:18:03 -0500
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 12 May 2023 11:18:03 -0500
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7E57445;
-        Fri, 12 May 2023 16:18:03 +0000 (UTC)
-Date:   Fri, 12 May 2023 16:18:03 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC:     <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <tglx@linutronix.de>, <maz@kernel.org>, <linus.walleij@linaro.org>,
-        <vkoul@kernel.org>, <lgirdwood@gmail.com>,
-        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: mfd: cirrus,cs42l43: Add initial DT
- binding
-Message-ID: <20230512161803.GM68926@ediswmail.ad.cirrus.com>
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-6-ckeepax@opensource.cirrus.com>
- <5969fe82-69cd-34d6-edd1-d16ea741d9cb@linaro.org>
+        with ESMTP id S231566AbjELQZ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:25:27 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8A949F9
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 09:25:24 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-50b383222f7so15071826a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 09:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683908723; x=1686500723;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8Vpo2Jow16tTvLpB1BAyUoXf/oVQLicLfPhZQQL2iY=;
+        b=EvCTIfLLl3tu6txxsj1jBkd2imFPgNwyWj7Q+QWu+DffLJ2SDP9EEmkmO49icd+Fyz
+         xoqpsmr3+5Uw4EOGGAxSzZXB7Y5IWeCEt9j/0e/5/CtYYZXM1hj9QlmXT9Z3/1Wzy4JW
+         lAyAfalEMmCH1IXXnIgvnL/lBpytkhTFAFP4lHwwGPSfxCPV2P6pjkhxGUDJ9gndMZFf
+         3NGon03xYGtIOQza64IhOGzpeBjRx1EVF4T8MqutECoNWVo9Qm6osRj4UBOnHS7jPGLd
+         Lya0+dwhmX+1cBwSJUfEXzzKiuzlL30Dsz/G79hoTzwC6oGfkBNVz1ZX9fU2SqwvPXsm
+         iEOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683908723; x=1686500723;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o8Vpo2Jow16tTvLpB1BAyUoXf/oVQLicLfPhZQQL2iY=;
+        b=ZwiwALJPwvafRvIi8ZU2UQT4ebqP/EUAERz9tewPbnFG3bT6EJQTDjVbAUhWgZ5E7S
+         2gZlO63M1Z875WfB1DjNnnh/bgrZpSA5NaQSt6paYhkOmWdx1cNZRCp8BODdCqMLozt7
+         v62h1qYL9slg6vnX8JG1jNSMoyoW910fgv+fpokm6SRnjvee0w2SKAJ7HqZ2AMgGO9G5
+         5OYWXcyuIJKEP1ILKsQdLeD4X4TV3Zzz16NDinLjcpuShTmTrL+ybJLGmsuJ+6x1FI/e
+         ZFR2ZqBqoBF1R7daTl9zIQnMlkRef6H3Q13Q0zFqlCnq8DD9qNfgkEzIKah5k5QwNEn0
+         M8dA==
+X-Gm-Message-State: AC+VfDx3Xd54b5vAC+4FHdC13ldcOvBJuno8DG3cyiumKKugT/nzWm2W
+        GG5UMrmqQWL40y/y/h4QGuk/Ng==
+X-Google-Smtp-Source: ACHHUZ52MOF5+sFRcmlq51wY2NeIrwwBRri0aFmEMbrRTi5DNlYhpCnV5koplj8nrcA2LoSmJgHf6g==
+X-Received: by 2002:a05:6402:b09:b0:50d:889e:8d35 with SMTP id bm9-20020a0564020b0900b0050d889e8d35mr16257630edb.7.1683908723143;
+        Fri, 12 May 2023 09:25:23 -0700 (PDT)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:7ede:fc7b:2328:3883])
+        by smtp.gmail.com with ESMTPSA id r23-20020aa7da17000000b00506987c5c71sm4144116eds.70.2023.05.12.09.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 09:25:22 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Richard Acayan <mailingradian@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Iskren Chernev <me@iskren.info>,
+        Martin Botka <martin.botka@somainline.org>,
+        Danila Tikhonov <danila@jiaxyga.com>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH 04/40] dt-bindings: pinctrl: qcom,ipq9574-tlmm: simplify with unevaluatedProperties
+Date:   Fri, 12 May 2023 18:25:15 +0200
+Message-Id: <168390871587.209400.8810729198013675037.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230407184546.161168-4-krzysztof.kozlowski@linaro.org>
+References: <20230407184546.161168-1-krzysztof.kozlowski@linaro.org> <20230407184546.161168-4-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5969fe82-69cd-34d6-edd1-d16ea741d9cb@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: cKKLR5NHv2LkYDuUMNf4OaRfgWUBfsrC
-X-Proofpoint-GUID: cKKLR5NHv2LkYDuUMNf4OaRfgWUBfsrC
-X-Proofpoint-Spam-Reason: safe
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 12, 2023 at 05:25:52PM +0200, Krzysztof Kozlowski wrote:
-> On 12/05/2023 14:28, Charles Keepax wrote:
-> > The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
-> > (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
-> > for portable applications. It provides a high dynamic range, stereo
-> > DAC for headphone output, two integrated Class D amplifiers for
+
+On Fri, 07 Apr 2023 20:45:10 +0200, Krzysztof Kozlowski wrote:
+> All Qualcomm SoC Top Level Mode Multiplexer pin controllers have similar
+> capabilities regarding pin properties, thus we can just accept entire
+> set provided by qcom,tlmm-common.yaml schema.
 > 
-> ...
-> 
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  '#interrupt-cells':
-> > +    const: 2
-> 
-> Hm, are you sure? Who is the consumer/user of this interrupt controller?
 > 
 
-Anyone who wants the device has GPIOs that can signal IRQs. Some
-of the other IRQs could be more generally useful, such as some of
-the jack detection ones.
+Applied, thanks!
 
-Thanks,
-Charles
+[04/40] dt-bindings: pinctrl: qcom,ipq9574-tlmm: simplify with unevaluatedProperties
+        https://git.kernel.org/krzk/linux-dt/c/8625372628afd9627a28427427037e2b13b75949
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
