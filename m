@@ -2,118 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F01E1700AB9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 16:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D9B700A22
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 16:18:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241525AbjELOyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 10:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40910 "EHLO
+        id S241501AbjELOSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 10:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241510AbjELOyY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 10:54:24 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A6410CC;
-        Fri, 12 May 2023 07:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683903263; x=1715439263;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uGW19VCfL7GXY1Mq1+j9cRUyiM2wju2JbHUARR1lJbw=;
-  b=OeDQ3lXyICa0IZUfp3HISW1EQRo2dZmkNj9dtn2twHC6szLd8E1WWJhE
-   vD6jpwnhP0PG7TAvuJZz+XmAkIbb/lM6BtC70lmPbeppY7stSWj7pWJ1G
-   a4bJAjAHuCwErdD4HzYtauS8a1hmXTAATO1R1FtEKmdacbUDdIHRBErTq
-   wiHN0eYOOl8o9/bAwEm3PjlzLrcB+6mUAC77gow0tuMNz0Vl+vop/xi7q
-   JJP/L/JuCcPpyD5AgUF+Iff7J/MA2zaJaEnNhkfzjcpmiXd1RILZYI45m
-   pgU0uFGLmlGNb7Iv3Iq19fJSCsNVOLkLMBQ3Z2vQyTeTBLjdw+u4SYAm9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="437140412"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="437140412"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 07:54:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="844441294"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="844441294"
-Received: from winkelru-mobl.amr.corp.intel.com (HELO [10.212.144.249]) ([10.212.144.249])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 07:54:22 -0700
-Message-ID: <138e5c73-c33b-806a-b64e-5c93aaefb140@linux.intel.com>
-Date:   Fri, 12 May 2023 08:48:40 -0500
+        with ESMTP id S241497AbjELOSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 10:18:13 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F7413C02
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 07:17:59 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3063208beedso9557290f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 07:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1683901077; x=1686493077;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rrJxMU8vIMHm/TMwdpWrRCixZQfDd4ErxxMWxBnxsIw=;
+        b=xsWSJes1/LDFaZJmw5SGhHwYE3xlBrAEX7eqH6b8Gsbuof6UB2KjGVk1gNwLXvNMUZ
+         y757ReyoLYsWKwMnCITiGnkPSvyqXS9H3TG8rUxuOTR+2dI9goQdiiyVT32XZon2F8oG
+         AWpFJt8CfCw9DK9VGT1PXZVxijHEpGuxaqCpGmklOnA1bE49qNdjDRth5NbYp0kqyA21
+         eNm1/b68d0+wg96IClikVvcqJSwB6FTj0AaeSKdkwQO6sv1zqpemPIFNR7fmFBPr+NZi
+         tZqt8rlQEzqXtq6xfAIBfJFhFeLJIhcEJW6WVIOAU2EQrzemVvMyvHcbCxBgn35AKw9s
+         q7Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683901077; x=1686493077;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rrJxMU8vIMHm/TMwdpWrRCixZQfDd4ErxxMWxBnxsIw=;
+        b=Ftby/4XdOnxZc8Q5+hXNfIfkWgJ4K6hbxCJsVZejf/0i7LYCtPkkO7dD8TpbHgGX3O
+         2UwSy8THDd3giLdjRoAjcTS7Zkvp50H4McK8tF/yHeCcBrE3pDr4ys1SsfRaa/E1l/es
+         We3kBODj90iDeQfsb6GovKASCwRAIjrtaCWbkUK25Bw0shEhciShg9uB6mMyd8HN9HYH
+         uf92rmzvVl0qShs08057AyqvUoa6fZ2EqbeIGyc/P0RJTKQv1OMQffyqdhvYfwHw64a7
+         5bsHUGiV9Pt02y/jQJ9P+DAEYTBZKpPhNcoHjmVjG9kTvVEFhelgP2dv7cU9IOP57/yu
+         d5mQ==
+X-Gm-Message-State: AC+VfDxyOyWS+BkXiuInkA9PiKmhsooBRGlIHuYzrKQkeGQ4/PwZVYr8
+        XfvWH2iRuxXK8xfg8Wm6o7tcFQ==
+X-Google-Smtp-Source: ACHHUZ5Dam+p3j2mO7hOPDi7EwOapz3Q9dzuaFpo1CqgC96qPBKIszszLRwntx88jEu+00Gim4jxxA==
+X-Received: by 2002:a5d:6dce:0:b0:306:db7b:bb2d with SMTP id d14-20020a5d6dce000000b00306db7bbb2dmr17042012wrz.38.1683901077543;
+        Fri, 12 May 2023 07:17:57 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:28d:66d0:c0c4:a67e:f152:1413])
+        by smtp.gmail.com with ESMTPSA id r12-20020a5d494c000000b003077f3dfcc8sm22819982wrs.32.2023.05.12.07.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 07:17:57 -0700 (PDT)
+From:   Esteban Blanc <eblanc@baylibre.com>
+To:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com, aseketeli@baylibre.com, eblanc@baylibre.com,
+        sterzik@ti.com, u-kumar1@ti.com
+Subject: [PATCH v4 0/3] TI TPS6594 PMIC support (RTC, pinctrl, regulators)
+Date:   Fri, 12 May 2023 16:17:52 +0200
+Message-Id: <20230512141755.1712358-1-eblanc@baylibre.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH 03/10] ASoC: ak4118: Update to use new component control
- notify helper
-Content-Language: en-US
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
-        lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
-        vkoul@kernel.org
-Cc:     lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
-        sanyog.r.kale@intel.com, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-4-ckeepax@opensource.cirrus.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20230512122838.243002-4-ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+TPS6594 is a Power Management IC which provides regulators and others
+features like GPIOs, RTC, watchdog, ESMs (Error Signal Monitor), and
+PFSM (Pre-configurable Finite State Machine). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces.
+TPS6594 is the super-set device while TPS6593 and LP8764 are derivatives.
 
+This series adds support to TI TPS6594 PMIC and its derivatives.
 
-On 5/12/23 07:28, Charles Keepax wrote:
-> Update the driver to use the new ASoC core control notify helper.
-> This also fixes a bug where the control would not be found if the
-> CODEC was given a name prefix.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  sound/soc/codecs/ak4118.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/ak4118.c b/sound/soc/codecs/ak4118.c
+This should be applied on top of other patch series:
+- https://lore.kernel.org/all/20230406075622.8990-1-jpanis@baylibre.com/
+  For core MFD driver
 
-should patches 2, 3, 4 be part of a separate series, they really have
-nothing to do with the Cirrus CS32L43?
+The features implemented in this series are:
+- RTC (child device)
+- Pinmux/GPIO (child device)
+- Regulator (child device)
 
-> index b6d9a10bdccdc..74ccfb0d921d6 100644
-> --- a/sound/soc/codecs/ak4118.c
-> +++ b/sound/soc/codecs/ak4118.c
-> @@ -264,8 +264,6 @@ static irqreturn_t ak4118_irq_handler(int irq, void *data)
->  	struct ak4118_priv *ak4118 = data;
->  	struct snd_soc_component *component = ak4118->component;
->  	struct snd_kcontrol_new *kctl_new;
-> -	struct snd_kcontrol *kctl;
-> -	struct snd_ctl_elem_id *id;
->  	unsigned int i;
->  
->  	if (!component)
-> @@ -273,13 +271,8 @@ static irqreturn_t ak4118_irq_handler(int irq, void *data)
->  
->  	for (i = 0; i < ARRAY_SIZE(ak4118_iec958_controls); i++) {
->  		kctl_new = &ak4118_iec958_controls[i];
-> -		kctl = snd_soc_card_get_kcontrol(component->card,
-> -						 kctl_new->name);
-> -		if (!kctl)
-> -			continue;
-> -		id = &kctl->id;
-> -		snd_ctl_notify(component->card->snd_card,
-> -			       SNDRV_CTL_EVENT_MASK_VALUE, id);
-> +
-> +		snd_soc_component_notify_control(component, kctl_new->name);
->  	}
->  
->  	return IRQ_HANDLED;
+RTC description:
+The TPS6594 family has an RTC built-in, except for LP8764.
+It provides time and an alarm.
+
+Pinmux/GPIO:
+TPS6594 family has 11 GPIOs. Those GPIO can also serve different
+functions such as I2C or SPI interface, watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+Regulator:
+TPS6594/TPS6593: 5 BUCKs and 4LDOs
+LP8764: 4 BUCKs and no LDO
+Bucks can be used in multipahse mode.
+
+Changes since v1:
+https://lore.kernel.org/all/20230224133129.887203-1-eblanc@baylibre.com/
+Rtc:
+- Removed struct tps6594_rtc.
+- Removed some dev_err messages.
+- Removed some comments.
+- Remove some whitespaces in comments and error messages.
+- Check if RTC is running before reading a timestamp in read_rtc.
+- Stop RTC at the end of probe to wait for a timestamp to be set.
+- Add default MFD_TPS6594 to Kconfig.
+
+Pinctrl:
+- Removed #define DEBUG.
+- Add default MFD_TPS6594 to Kconfig.
+- Fix typo and reword help message of Kconfig.
+
+Regulators:
+Further to Mark Brown review:
+- File header whole block C++ style.
+- Configuring modes not supported: omit all mode operations
+- Log the error before notifying.
+- Request the interrupts while registering the regulators (then remove
+  the lookup function).
+Further to Matti review:
+- Postponed: devm_regulator_irq_helper() and
+  regulator_irq_map_event_simple() can probably be used but code.
+  refactoring is not so trivial. This can be done later as an enhancement
+  after this patch list is merged.
+Buck Multi phase management:
+- Multiphase property can take an array when 2 multi phase buck, buck12
+  and buck34.
+- Configuration multi phase buck34 without multiphase buck12 is not
+  supported (when only one multiphase, must be buck12). Not clear from the
+  spec but confirmed by TI.
+- Supported multiphase conficurations: buck12, buck123, buck1234,
+  buck12 + buck34.
+- All interrupts are attached to the multiphase buck (ie: for regulator
+  buck12, buck1 & buck2 interrupts are registered).
+
+Changes since v2:
+https://lore.kernel.org/all/20230328091448.648452-1-eblanc@baylibre.com/
+Rtc:
+- Add logic to avoid reinitializing a working clock.
+- Fix some multiline comments format.
+
+Regulators:
+Further to Mark Brown review:
+- Log the error before notifying.
+- Request the interrupts while registering the regulators.
+Further to Krzysztof Kozlowski:
+https://lore.kernel.org/all/75f0a18d-aed9-8610-2925-4e604b4b0241@baylibre.com/
+- Remove ti, multi-phase-id property which is redundant with buck dts naming
+  rules.
+
+Changes since v3:
+https://lore.kernel.org/lkml/20230414101217.1342891-1-eblanc@baylibre.com/
+RTC:
+- Add wakeup source
+
+Pinctrl:
+- Switch to GPIO_REGMAP framework
+
+Esteban Blanc (2):
+  rtc: tps6594: Add driver for TPS6594 RTC
+  pinctrl: tps6594: Add driver for TPS6594 pinctrl and GPIOs
+
+Jerome Neanne (1):
+  regulator: tps6594-regulator: Add driver for TI TPS6594 regulators
+
+ drivers/pinctrl/Kconfig               |  31 ++
+ drivers/pinctrl/Makefile              |   2 +
+ drivers/pinctrl/pinctrl-tps6594.c     | 301 +++++++++++++
+ drivers/regulator/Kconfig             |  13 +
+ drivers/regulator/Makefile            |   1 +
+ drivers/regulator/tps6594-regulator.c | 620 ++++++++++++++++++++++++++
+ drivers/rtc/Kconfig                   |   9 +
+ drivers/rtc/Makefile                  |   1 +
+ drivers/rtc/rtc-tps6594.c             | 479 ++++++++++++++++++++
+ include/linux/mfd/tps6594.h           |   3 +-
+ 10 files changed, 1459 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/pinctrl-tps6594.c
+ create mode 100644 drivers/regulator/tps6594-regulator.c
+ create mode 100644 drivers/rtc/rtc-tps6594.c
+
+-- 
+2.39.2
+
