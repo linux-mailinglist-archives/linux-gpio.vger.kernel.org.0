@@ -2,115 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF8B17000AD
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 08:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B64E57000F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 08:59:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240128AbjELGjQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 02:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33188 "EHLO
+        id S239902AbjELG7f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 02:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240123AbjELGjQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 02:39:16 -0400
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451BAD2DB;
-        Thu, 11 May 2023 23:39:09 -0700 (PDT)
-X-QQ-mid: Yeas54t1683873496t612t58675
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [125.119.253.217])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 15562655820059693255
-To:     "'Andrew Lunn'" <andrew@lunn.ch>
-Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230509022734.148970-1-jiawenwu@trustnetic.com> <20230509022734.148970-7-jiawenwu@trustnetic.com> <ab8852ce-72e8-4d5b-8c88-772a6c9f1485@lunn.ch>
-In-Reply-To: <ab8852ce-72e8-4d5b-8c88-772a6c9f1485@lunn.ch>
-Subject: RE: [PATCH net-next v7 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Fri, 12 May 2023 14:38:15 +0800
-Message-ID: <019201d9849c$54e88730$feb99590$@trustnetic.com>
+        with ESMTP id S239625AbjELG7e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 02:59:34 -0400
+Received: from first.geanix.com (first.geanix.com [116.203.34.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF6554C02
+        for <linux-gpio@vger.kernel.org>; Thu, 11 May 2023 23:59:33 -0700 (PDT)
+Received: from xps.skovby (85.184.138.13.dynamic.dhcp.aura-net.dk [85.184.138.13])
+        by first.geanix.com (Postfix) with ESMTPSA id EA71C4E50D4;
+        Fri, 12 May 2023 06:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1683874179; bh=ftg3uIR+C7op/jYgo/Ad5XVflC5LGRCa0S30bZueYD8=;
+        h=From:To:Cc:Subject:Date;
+        b=CkHB8fFwaUPSp3vdx/UHgxaMip2Lp7BU1d/yW23VIBKOMM/EonZBRCy4EjZNVyDG0
+         jQeBANogMnw6wYt7a9jjf+1BDWOlqOCtAy4PaGdb2vmpE3xxShwW570J9xMfbltmz6
+         hgyU8J3C6Q4zM7ybUR+G1AxgNIplLB2cnxPEWUZIQX2zB2HeYPG3Y3vl2PBKHc46RD
+         r/yvMLCpfwXx36UcmpryPAFiQKJWgHc9Ar8NVnbnOv1f/4yPqE9b46w01XKoYWN3dX
+         VjQPEevgaRzaUeFVSV8NGVrf99b4sbnpGeaOpSoRduAOJqvCL6xYQOKNGUxpprbi05
+         6GkaQ8hXlbFZw==
+From:   =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Yixun Lan <yixun.lan@amlogic.com>
+Cc:     =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
+        stable@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] pinctrl: meson-axg: add missing GPIOA_18 gpio group
+Date:   Fri, 12 May 2023 08:49:25 +0200
+Message-Id: <20230512064925.133516-1-martin@geanix.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJdw4zS3rpHMobUlf9gBLGLbLpYXQGeWQPmAvTOeO2uKNBTkA==
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thursday, May 11, 2023 8:32 PM, Andrew Lunn wrote:
-> > +static int txgbe_gpio_get(struct gpio_chip *chip, unsigned int
-> > +offset) {
-> > +	struct wx *wx = gpiochip_get_data(chip);
-> > +	struct txgbe *txgbe = wx->priv;
-> > +	int val;
-> > +
-> > +	val = rd32m(wx, WX_GPIO_EXT, BIT(offset));
-> > +
-> > +	txgbe->gpio_orig &= ~BIT(offset);
-> > +	txgbe->gpio_orig |= val;
-> > +
-> > +	return !!(val & BIT(offset));
-> > +}
-> 
-> > +static void txgbe_irq_handler(struct irq_desc *desc) {
-> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +	struct wx *wx = irq_desc_get_handler_data(desc);
-> > +	struct txgbe *txgbe = wx->priv;
-> > +	irq_hw_number_t hwirq;
-> > +	unsigned long gpioirq;
-> > +	struct gpio_chip *gc;
-> > +	u32 gpio;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +
-> > +	gpioirq = rd32(wx, WX_GPIO_INTSTATUS);
-> > +
-> > +	/* workaround for hysteretic gpio interrupts */
-> > +	gpio = rd32(wx, WX_GPIO_EXT);
-> > +	if (!gpioirq)
-> > +		gpioirq = txgbe->gpio_orig ^ gpio;
-> 
-> Please could you expand on the comment. Are you saying that
-> WX_GPIO_INTSTATUS sometimes does not contain the GPIO which caused the
-> interrupt? If so, you then compare the last gpio_get with the current value and
-> assume that is what caused the interrupt?
+Without this, the gpio cannot be explicitly mux'ed to its gpio function.
 
-Yes. Sometime there is a lag in WX_GPIO_INTSTATUS. When the GPIO interrupt
-cause,  the GPIO state has been back to its previous state. So I added this
-workaround to save some...but only if there are other interrupts at the same
-time, i.e. txgbe_irq_handler() called.
+Fixes: 83c566806a68a ("pinctrl: meson-axg: Add new pinctrl driver for Meson AXG SoC")
+Cc: stable@vger.kernel.org
+Signed-off-by: Martin Hundebøll <martin@geanix.com>
+---
+Changes since first mail:
+ * Added Cc: stable to commit message
+ * Expanded To: and Cc: with full list from get_maintainers.pl
 
-But I will remove it in the next version, because I find a more accurate solution.
+ drivers/pinctrl/meson/pinctrl-meson-axg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> > +
-> > +	gc = txgbe->gpio;
-> > +	for_each_set_bit(hwirq, &gpioirq, gc->ngpio)
-> > +		generic_handle_domain_irq(gc->irq.domain, hwirq);
-> > +
-> > +	chained_irq_exit(chip, desc);
-> > +
-> > +	/* unmask interrupt */
-> > +	if (netif_running(wx->netdev))
-> > +		wx_intr_enable(wx, TXGBE_INTR_MISC(wx));
-> 
-> Is that a hardware requirement, that interrupts only work when the interface is
-> running? Interrupts are not normally conditional like this, at least when the SoC
-> provides the GPIO controller.
-
-Should we handle the interrupts when interface is not running?
-
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+index 7bfecdfba177..d249a035c2b9 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+@@ -400,6 +400,7 @@ static struct meson_pmx_group meson_axg_periphs_groups[] = {
+ 	GPIO_GROUP(GPIOA_15),
+ 	GPIO_GROUP(GPIOA_16),
+ 	GPIO_GROUP(GPIOA_17),
++	GPIO_GROUP(GPIOA_18),
+ 	GPIO_GROUP(GPIOA_19),
+ 	GPIO_GROUP(GPIOA_20),
+ 
+-- 
+2.34.1
 
