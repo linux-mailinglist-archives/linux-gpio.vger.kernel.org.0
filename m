@@ -2,74 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2A5700D39
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:44:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C16D7700DA8
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 19:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237225AbjELQn7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 12:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
+        id S237968AbjELRIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 13:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237183AbjELQn4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:43:56 -0400
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7F94C1F;
-        Fri, 12 May 2023 09:43:55 -0700 (PDT)
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34CGhg8j002411;
-        Fri, 12 May 2023 11:43:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=KHP+zGWNNyEYE5XHABG55hQK3WgV3doZaTwhtsR76zM=;
- b=Fyny9AMPJnQBeSmw7GKI8YAxgT4aRKeApQ/nFtPDj1eu3PYBhfHlZZHkIzGtqyFgD2cx
- SVR65Fz1Z5CwcMms6IIGGHyxsOT92q4qB9Xb/sngsD6VEpvb+yXRUrfS6rWMOJrQgWht
- la7mK6UC0sFzksXpPXu/+jigbnSCitkpPNAYQeLefwq36Y3NJQcVVxD43FQrver+74lE
- tUVOiURbOciTmuAiTgbnzto7tyJKOPUPI0PjYC+4VKRAFpQTsnjZYm9XwF62PaxIb+6k
- b97gupOvD88OX/mw6TGL022a48m/xbOT4gBKqcKrO55ZIoPQG/ouLjDO5FnD1Fcfd2wO Ag== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3qf7nb5r4r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 May 2023 11:43:42 -0500
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Fri, 12 May
- 2023 11:43:40 -0500
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 12 May 2023 11:43:40 -0500
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 098AC45;
-        Fri, 12 May 2023 16:43:40 +0000 (UTC)
-Date:   Fri, 12 May 2023 16:43:40 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-CC:     <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <tglx@linutronix.de>, <maz@kernel.org>, <linus.walleij@linaro.org>,
-        <vkoul@kernel.org>, <lgirdwood@gmail.com>,
-        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] soundwire: bus: Allow SoundWire peripherals to
- register IRQ handlers
-Message-ID: <20230512164340.GO68926@ediswmail.ad.cirrus.com>
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-2-ckeepax@opensource.cirrus.com>
- <0471f085-14bf-c159-9b92-62983af6c19a@linux.intel.com>
- <20230512160224.GK68926@ediswmail.ad.cirrus.com>
- <5363c7b7-7a5b-490c-445b-fb7ccd693c63@linux.intel.com>
+        with ESMTP id S236982AbjELRIL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 13:08:11 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84462DDA7
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 10:08:03 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id 8bd276d0-f0e7-11ed-b972-005056bdfda7;
+        Fri, 12 May 2023 20:08:00 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Fri, 12 May 2023 20:07:59 +0300
+To:     Esteban Blanc <eblanc@baylibre.com>
+Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com, aseketeli@baylibre.com, sterzik@ti.com,
+        u-kumar1@ti.com
+Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+Message-ID: <ZF5yb4DbVDbfxVU4@surfacebook>
+References: <20230512141755.1712358-1-eblanc@baylibre.com>
+ <20230512141755.1712358-3-eblanc@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5363c7b7-7a5b-490c-445b-fb7ccd693c63@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: CoZYeJn9JTKmEOtjTGiNl15yYAnAwqjj
-X-Proofpoint-GUID: CoZYeJn9JTKmEOtjTGiNl15yYAnAwqjj
-X-Proofpoint-Spam-Reason: safe
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+In-Reply-To: <20230512141755.1712358-3-eblanc@baylibre.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,48 +46,166 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 12, 2023 at 11:34:44AM -0500, Pierre-Louis Bossart wrote:
+Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
+> TI TPS6594 PMIC has 11 GPIOs which can be used
+> for different functions.
 > 
-> 
-> On 5/12/23 11:02, Charles Keepax wrote:
-> > On Fri, May 12, 2023 at 08:45:51AM -0500, Pierre-Louis Bossart wrote:
-> >>> @@ -1711,6 +1739,9 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
-> >>>  				struct device *dev = &slave->dev;
-> >>>  				struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
-> >>>  
-> >>> +				if (slave->prop.use_domain_irq && slave->irq)
-> >>> +					handle_nested_irq(slave->irq);
-> >>> +
-> >>
-> >> I am a bit lost here, I can understand that alerts would be handled by a
-> >> dedicated handler, but here the code continues and will call the
-> >> existing interrupt_callback.
-> >>
-> >> Is this intentional? I wonder if there's a risk with two entities
-> >> dealing with the same event and programming the same registers.
-> >> Shouldn't there be some sort of 'either or' rule?
-> >>
-> > 
-> > I guess there is a risk of them "handling" the IRQ twice,
-> > although it is hard to see why you would write the driver that
-> > way. Also since they are sequencial the second would I guess
-> > just see that no IRQs are pending.
-> > 
-> > The intention for calling both is that it facilitates using
-> > the same IRQ handler for I2C and SoundWire. At least on the
-> > Cirrus devices there are a bunch of chip specific registers
-> > that need treated exactly the same on I2C and SoundWire, but
-> > then a couple of extra registers that need handled in the
-> > SoundWire case. This way the handling of those can be kept
-> > completely in the SoundWire part of the code and not ifdef-ed
-> > into the main IRQ path.
-> 
-> Sounds good to me, but it's worth adding a comment and improving the
-> commit message with design intent/rules since it's a common part in
-> drivers/soundwire/
+> This patch adds a pinctrl and GPIO drivers in
+> order to use those functions.
 
-Yeah no issues with updating the commit message to explain that
-in more detail.
+...
 
-Thanks,
-Charles
+> +config PINCTRL_THUNDERBAY
+
+Is it correct name? To me sounds not. The problem is that you use platform name
+for the non-platform-wide pin control, i.e. for PMIC exclusively.
+Did I miss anything?
+
+> +	tristate "Generic pinctrl and GPIO driver for Intel Thunder Bay SoC"
+> +	depends on ARCH_THUNDERBAY || (ARM64 && COMPILE_TEST)
+
+This doesn't look correct, but I remember some Kconfig options that are using
+this way of dependency.
+
+> +	depends on HAS_IOMEM
+> +	select PINMUX
+> +	select PINCONF
+> +	select GENERIC_PINCONF
+> +	select GENERIC_PINCTRL_GROUPS
+> +	select GENERIC_PINMUX_FUNCTIONS
+> +	select GPIOLIB
+> +	select GPIOLIB_IRQCHIP
+> +	select GPIO_GENERIC
+> +	help
+> +	  This selects pin control driver for the Intel Thunder Bay SoC.
+> +	  It provides pin config functions such as pull-up, pull-down,
+> +	  interrupt, drive strength, sec lock, Schmitt trigger, slew
+> +	  rate control and direction control. This module will be
+> +	  called as pinctrl-thunderbay.
+
+Ah, the above simply a mistake. right?
+Why is it in this patch?
+
+> +config PINCTRL_TPS6594
+> +	tristate "Pinctrl and GPIO driver for TI TPS6594 PMIC"
+> +	depends on MFD_TPS6594
+> +	default MFD_TPS6594
+> +	select PINMUX
+> +	select GPIOLIB
+> +	select REGMAP
+> +	select GPIO_REGMAP
+> +	help
+> +	  This driver supports GPIOs and pinmuxing for the TPS6594
+> +	  PMICs chip family.
+
+Module name?
+
+...
+
+> +obj-$(CONFIG_PINCTRL_THUNDERBAY) += pinctrl-thunderbay.o
+
+Huh?!
+
+> +obj-$(CONFIG_PINCTRL_TPS6594)	+= pinctrl-tps6594.o
+
+...
+
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pinctrl/pinmux.h>
+
+Ordered?
+
+...
+
+> +static const char *groups_name[TPS6594_PINCTRL_PINS_NB] = {
+> +	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
+> +	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10"
+
+Leave trailing comma even for known size.
+
+> +};
+
+...
+
+> +struct tps6594_pinctrl_function {
+> +	const char *name;
+> +	u8 muxval;
+> +	const char **groups;
+> +	unsigned long ngroups;
+
+We have struct pinfunction. Use it here (as embedded).
+
+> +};
+
+...
+
+> +static const struct tps6594_pinctrl_function pinctrl_functions[] = {
+> +	{ "gpio", TPS6594_PINCTRL_GPIO_FUNCTION, groups_name,
+> +	  TPS6594_PINCTRL_PINS_NB },
+
+Here and further use PINCTRL_PINFUNCTION() macro.
+
+> +};
+
+...
+
+> +static int tps6594_group_pins(struct pinctrl_dev *pctldev,
+> +			      unsigned int selector, const unsigned int **pins,
+> +			      unsigned int *num_pins)
+> +{
+> +	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	*pins = (unsigned int *)&pinctrl->pins[selector];
+
+Why casting?
+
+> +	*num_pins = 1;
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	pinctrl->pctl_dev =
+> +		devm_pinctrl_register(&pdev->dev, pctrl_desc, pinctrl);
+
+One line?
+
+> +	if (IS_ERR(pinctrl->pctl_dev)) {
+> +		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
+> +		return PTR_ERR(pinctrl->pctl_dev);
+
+	return dev_err_probe(...);
+
+> +	}
+
+...
+
+> +	pinctrl->gpio_regmap = devm_gpio_regmap_register(&pdev->dev, &config);
+> +	if (IS_ERR(pinctrl->gpio_regmap)) {
+> +		dev_err(&pdev->dev, "Couldn't register gpio_regmap driver\n");
+> +		return PTR_ERR(pinctrl->pctl_dev);
+
+Ditto.
+
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> -#define TPS6594_REG_GPIOX_CONF(gpio_inst)		(0x31 + (gpio_inst))
+> +#define TPS6594_REG_GPIO1_CONF				0x31
+> +#define TPS6594_REG_GPIOX_CONF(gpio_inst)	(TPS6594_REG_GPIO1_CONF + (gpio_inst))
+
+Why? The original code with parameter 0 will issue the same.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
