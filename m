@@ -2,112 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89535700D13
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EABB700D1E
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233993AbjELQfK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 12:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
+        id S232858AbjELQhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 12:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231358AbjELQfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:35:08 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE44BA25F;
-        Fri, 12 May 2023 09:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683909305; x=1715445305;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=478mvwmsv9IeCMZb4/HmUb/CH/Ey2PB85AwyLXEFDQk=;
-  b=UeEvL9hWfot7tSnqfsI2FbgI5ESm1HAlmg3BbnV7MgpL/ysAA3dhbjv8
-   6zVUa4KFZ+8wJV35SYcvBezL46wytR+Z4VRj4TlpZb5dxgz3Jbo6YWXst
-   KAt1/R0jIWobmrhdQxOCWVkaXgNpZcZd1RP/URnBUaogS/I0g2J7VzlEt
-   DfyBCBZr5nU63VMD2iSwlOv1lGweEXsgUPQky/T6M0F9umqPemUyui48K
-   jGFgdE/w3L9OfPjxe10jFJHHhneIiWT4XiFPsSPDs8+PVSmkm7msjR68p
-   LTT90qUbyq44P5axVYuQLhu64TT2tUJ+/55wZZn6lfY4+a86nj0FMDy08
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="331193612"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="331193612"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 09:35:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="1030146824"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="1030146824"
-Received: from winkelru-mobl.amr.corp.intel.com (HELO [10.212.144.249]) ([10.212.144.249])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 09:35:03 -0700
-Message-ID: <5363c7b7-7a5b-490c-445b-fb7ccd693c63@linux.intel.com>
-Date:   Fri, 12 May 2023 11:34:44 -0500
+        with ESMTP id S229812AbjELQhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:37:14 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3D78A7D;
+        Fri, 12 May 2023 09:37:13 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-50bd2d7ba74so91145864a12.1;
+        Fri, 12 May 2023 09:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683909431; x=1686501431;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QTY/iNPhSxqsOYVuVF5oPridnajCISLwpvB33cCStX4=;
+        b=mQXoys12JvgdLa62LLYJLDzvL+tsH1KN3YfXhC27Z2LXWBDAyL4sAy6E0hG/t0xXtB
+         AVAog6/+PYoXEq+ed3XdJqz2/jZ8xKjBID+qoLIW+tYcw+Nkkg9YeANhRjmh6ykQKPS7
+         VGwn/KRajhXuvvdVaZ+xxI0jS9XS9zHsVX0eLKfyGJrLjlsuUmGxgmKGJ0FOVrHh9Qg3
+         7qWI7PndkHVQAUgwyEduQJNWq5Uumwh06tB8TiJFMq6BwnRxIqhlKq4qs2Qi1WOwub6L
+         FYybZIBV92FE15seZ946u1LrhcO/nVQIi7+XOAQWc4VbaUpVvfzWHH/Bkcnj5ESK9jEY
+         IW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683909431; x=1686501431;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QTY/iNPhSxqsOYVuVF5oPridnajCISLwpvB33cCStX4=;
+        b=P038aNADXZJfWX34r/tahcjvAdMvprrWC202dfJEKhsjcIixLfgCcnaxK6Qd+h+UlQ
+         lFW58Ey6r4J8tSXKxpIGlXnrLsQss8h2K6RFLZuvATnWCTC+pdItLEslYGilzolcLmkr
+         ZTsF8ZAy7z9oTGsHs088UNH75o4oXX0TFwGw1NPZeeR0/cEa2kdIc6yTpH6Was4m2YG2
+         qx0eYk2ERzeOgvSYVgthOF5hTvF9HhS4+hQMBP7JdobOSUbm8MM/1JegcpPZ0NgDkFDU
+         tErmYHl4NPlutGfqoG0yIZyoCzzblHZznSZogsAu45kQiF/JJmWB2sWoM0fZEPXXEfaI
+         QGsw==
+X-Gm-Message-State: AC+VfDxv0SJwv0exDizJzk1HeCgHHcY+oQlZ6lttRVJCGnM29u1ZZ5PH
+        bnorG7JUaKKm3h/TkylY7lW2DNChES+9zQ==
+X-Google-Smtp-Source: ACHHUZ6oEr96mBEftUGvQgedCvHzktnamXm3QY6YaaVsVAMNVUmfiCMwnVR7gm8jofdWN5YF0zwLWA==
+X-Received: by 2002:a17:907:3e2a:b0:966:4973:b35 with SMTP id hp42-20020a1709073e2a00b0096649730b35mr17510063ejc.22.1683909431229;
+        Fri, 12 May 2023 09:37:11 -0700 (PDT)
+Received: from jernej-laptop.localnet (89-212-118-115.static.t-2.net. [89.212.118.115])
+        by smtp.gmail.com with ESMTPSA id gv28-20020a1709072bdc00b00965cfc209d5sm5619198ejc.8.2023.05.12.09.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 09:37:10 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] ARM: dts: axp209: Add iio-hwmon node for internal
+ temperature
+Date:   Fri, 12 May 2023 18:37:09 +0200
+Message-ID: <2679706.mvXUDI8C0e@jernej-laptop>
+In-Reply-To: <ZF4VSCxvb6ihw9JL@earth.li>
+References: <cover.1681580558.git.noodles@earth.li> <3421275.QJadu78ljV@jernej-laptop>
+ <ZF4VSCxvb6ihw9JL@earth.li>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH 01/10] soundwire: bus: Allow SoundWire peripherals to
- register IRQ handlers
-Content-Language: en-US
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, lgirdwood@gmail.com,
-        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
-        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-2-ckeepax@opensource.cirrus.com>
- <0471f085-14bf-c159-9b92-62983af6c19a@linux.intel.com>
- <20230512160224.GK68926@ediswmail.ad.cirrus.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20230512160224.GK68926@ediswmail.ad.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Dne petek, 12. maj 2023 ob 12:30:32 CEST je Jonathan McDowell napisal(a):
+> On Thu, May 11, 2023 at 06:11:49PM +0200, Jernej =C5=A0krabec wrote:
+> > Dne sreda, 10. maj 2023 ob 14:02:28 CEST je Jonathan McDowell napisal(a=
+):
+> > > This adds a DT node to hook up the internal temperature ADC to the
+> > > iio-hwmon driver. The various voltage + current ADCs are consumed and
+> > > exposed by their respective drivers, but this is not and is always
+> > > available. Naming chosen to match the axp20x_ prefix the power sensors
+> > > use.
+> >=20
+> > Sorry for maybe obvious thing, but where are other ADC channels exposed?
+>=20
+> In the associated power drivers; e.g. axp20x_ac_power, axp20x_usb_power
+> + axp20x_battery. The internal temperature is the only one that
+> logically belongs to the chip as a whole rather than one of the
+> subfunctions.
+>=20
+> root@chip:~# sensors
+> axp20x_battery-isa-0000
+> Adapter: ISA adapter
+> in0:           0.00 V
+> curr1:         0.00 A
+>=20
+> pmic_temp-isa-0000
+> Adapter: ISA adapter
+> temp1:        +42.5=C2=B0C
+>=20
+> axp20x_ac-isa-0000
+> Adapter: ISA adapter
+> in0:           0.00 V
+> curr1:         0.00 A
+>=20
+> axp20x_usb-isa-0000
+> Adapter: ISA adapter
+> in0:           4.93 V  (min =3D  +4.00 V)
+> curr1:       330.00 mA (max =3D  +0.00 A)
+
+Right.
+
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
+
+>=20
+> > > Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> > > ---
+> > >=20
+> > >  arch/arm/boot/dts/axp209.dtsi | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/axp209.dtsi
+> > > b/arch/arm/boot/dts/axp209.dtsi
+> > > index ca240cd6f6c3..469d0f7d5185 100644
+> > > --- a/arch/arm/boot/dts/axp209.dtsi
+> > > +++ b/arch/arm/boot/dts/axp209.dtsi
+> > > @@ -48,6 +48,13 @@
+> > >=20
+> > >   * http://dl.linux-sunxi.org/AXP/AXP209%20Datasheet%20v1.0_cn.pdf
+> > >   */
+> > >=20
+> > > +/ {
+> > > +	pmic-temp {
+> > > +		compatible =3D "iio-hwmon";
+> > > +		io-channels =3D <&axp_adc 4>; /* Internal temperature */
+> > > +	};
+> > > +};
+> > > +
+> > >=20
+> > >  &axp209 {
+> > > =20
+> > >  	compatible =3D "x-powers,axp209";
+> > >  	interrupt-controller;
+>=20
+> J.
 
 
-On 5/12/23 11:02, Charles Keepax wrote:
-> On Fri, May 12, 2023 at 08:45:51AM -0500, Pierre-Louis Bossart wrote:
->>> @@ -1711,6 +1739,9 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
->>>  				struct device *dev = &slave->dev;
->>>  				struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
->>>  
->>> +				if (slave->prop.use_domain_irq && slave->irq)
->>> +					handle_nested_irq(slave->irq);
->>> +
->>
->> I am a bit lost here, I can understand that alerts would be handled by a
->> dedicated handler, but here the code continues and will call the
->> existing interrupt_callback.
->>
->> Is this intentional? I wonder if there's a risk with two entities
->> dealing with the same event and programming the same registers.
->> Shouldn't there be some sort of 'either or' rule?
->>
-> 
-> I guess there is a risk of them "handling" the IRQ twice,
-> although it is hard to see why you would write the driver that
-> way. Also since they are sequencial the second would I guess
-> just see that no IRQs are pending.
-> 
-> The intention for calling both is that it facilitates using
-> the same IRQ handler for I2C and SoundWire. At least on the
-> Cirrus devices there are a bunch of chip specific registers
-> that need treated exactly the same on I2C and SoundWire, but
-> then a couple of extra registers that need handled in the
-> SoundWire case. This way the handling of those can be kept
-> completely in the SoundWire part of the code and not ifdef-ed
-> into the main IRQ path.
 
-Sounds good to me, but it's worth adding a comment and improving the
-commit message with design intent/rules since it's a common part in
-drivers/soundwire/
+
