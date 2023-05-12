@@ -2,165 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B88700BD2
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 17:31:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A961700BE4
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 17:33:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241888AbjELPbi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 11:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
+        id S241984AbjELPdQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 11:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241892AbjELPbW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 11:31:22 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEF8DDBC
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:30:47 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-96aae59bbd6so144764866b.3
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:30:46 -0700 (PDT)
+        with ESMTP id S241990AbjELPdA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 11:33:00 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD4E8A60
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:32:39 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-30789a4c537so5142715f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683905440; x=1686497440;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xefq3pdZcO0e8EKQ19pFTto53xIKapXB7LmHWfDyQu4=;
-        b=B3wUVVsls0aEbOr/VInqZjyshEeKanQt80a2sIm/FNUZlIQ9xR8OUTxnSZ5AgNhS5b
-         I1FQ37AJtyHDuRoXWZ0SB023RcQmLubkjYBsu65owCYFhe96Wq9PrjYghN8cNEXUuEiE
-         xkIWdGT0nleZobLTdcoI7WmSrwhlUo/Fgx5W0KCyYXVfmGQW/+IVUTY0i7KMdeu+DhFU
-         rzZKJSa+so2eE5r2DUjWbcURlNbIA3/4VzDd5lzGfeY1Gj71F/Q4WYpaiYKPBnjm9npI
-         QW9TVbJvsF7aO6viJuxShULipefO1sPsY7zumjiUcNwoufCtOSjgdnDOKM8VywTQLcNo
-         ti7w==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1683905556; x=1686497556;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdRjXwoE3aSQA5gXBX6EnGzJ4k23uXOffiYXMsRnd04=;
+        b=xlPB94hVfrwAP/mRQrLn9uGgGz9detJ9DWZGhx1hIdhbqQCyXtocp+2KLR6Oa0Xvfo
+         KZdPPFJ4NR0q+bezU+CpXTL4g0uhwLoeJyOsIw/Of0KWKq0TOUA3TOvQD2kKpa8909q8
+         SBPk1MPHiT51IZxM/F670pM6lNEayPdMu6MA9gsv1g+wma3RPgL8Gez6+SdynsnUd8qp
+         YvmoxA0xzOXZ0wc3oBBHWfLnAUR6fan2WljH1RiinqkvQa2hD+mXLAS+A7K7yH3QZseO
+         X2IMIsxvuAWdcSYQnvRSyV1K9/cPpEXugXGLfSver/u17s5EHN5+E3Y8A17WdRsw8HZr
+         zi2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683905440; x=1686497440;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xefq3pdZcO0e8EKQ19pFTto53xIKapXB7LmHWfDyQu4=;
-        b=MsB3rP2J7jNaDoN2ZToDIbX28dQ3gv24k0iX95KGoxQvkFIKKMLRduNM1ZOvemefLb
-         IW7JEP2O20YbtWTl4mZ9a6IdhWjZc9J3PFEFo+EmwgQ3/NSwjG9j4FlNyOAXzhtaioOT
-         5wFYSDGTXKDld+bOJ/T6Rz1YAaLpKjp2909cq8BsnntHKgfhUtAAA06FvQPYviGqk8A2
-         8LWL/gOsrha7zDW1tWdQWHtQB68kEOtaUl3avQsEZiTRl29iSVL4dtEeToKd6blWmdWU
-         7cqrHf5+yfu2TFTu0cPXOAiiG0cCVXLpeuBKr9WDlZbQ2i2W87iYqKMljHNW+r0ecTKC
-         RGPw==
-X-Gm-Message-State: AC+VfDxIykrqztoOP6VTVD7og9o0XKyJDV+WR8nmVjdmI1Tu7peSBVt+
-        cstqrphbMVOqDyKEjKEJG1bvLQ==
-X-Google-Smtp-Source: ACHHUZ7ox4zpEalJuln5LCdWNNjDzEjIcylFmSEdARdvEn9rrWst0L377ZSaS0MUvfliMWUYEJBOGg==
-X-Received: by 2002:a17:907:d16:b0:966:391b:5b3e with SMTP id gn22-20020a1709070d1600b00966391b5b3emr20842436ejc.55.1683905439693;
-        Fri, 12 May 2023 08:30:39 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:7ede:fc7b:2328:3883? ([2a02:810d:15c0:828:7ede:fc7b:2328:3883])
-        by smtp.gmail.com with ESMTPSA id bn13-20020a170906c0cd00b0096599bf7029sm5588639ejb.145.2023.05.12.08.30.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 May 2023 08:30:39 -0700 (PDT)
-Message-ID: <9591999e-9d7f-2a4a-29df-d9c42dfa736b@linaro.org>
-Date:   Fri, 12 May 2023 17:30:37 +0200
+        d=1e100.net; s=20221208; t=1683905556; x=1686497556;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zdRjXwoE3aSQA5gXBX6EnGzJ4k23uXOffiYXMsRnd04=;
+        b=FyOkSekoS+WXaRoZSbF2cu789OZ8GRK8vUiA2M4yYQVBi7tvQ8NyhCzXy5NwZuRHYE
+         Q9Ti+0igo/fmuWjl6mKR1gGC4NgKBdGDfjy4yTVXc6l54JJCqXS6Sb5CEgLpLHEZhOuy
+         JCZC8yttz35xmAK3qEx1vUQTIXLvEedMbi8dUJr3oRcV4fwveNuTR3RExHKuWCbhMAoL
+         96nQDTS+Z0UjfRfWAdTY4DKBKULpD2Oj8KWYN0CsnKeiCx54RaeZj3llxZLkJJxBQ8Se
+         SVXoKYsYt8c9BCFycZ4bZXSksFBcbmDh/G3MvtwmjehxAq0Q8fkiv+fh2uiDVxCKBgf7
+         MRJA==
+X-Gm-Message-State: AC+VfDzTMt72E7dsOX9uKmoa0ZF3alzwR10UMwCQoWRDWBF0AhJ/PZ3i
+        W7JcosGIrEiw7/cpn9oXtma8xg==
+X-Google-Smtp-Source: ACHHUZ4+TVYFirpywkjwvQlmpE6BN6sbv1BJPlU7VMtoyaA5BYkDpyoEx9z6K7EPZxOX7qmc3EbXXQ==
+X-Received: by 2002:a5d:594e:0:b0:307:8691:1eae with SMTP id e14-20020a5d594e000000b0030786911eaemr14249014wri.20.1683905555624;
+        Fri, 12 May 2023 08:32:35 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4c87:5cb4:6fba:6a65])
+        by smtp.gmail.com with ESMTPSA id z8-20020adfec88000000b003062675d4c9sm23636458wrn.39.2023.05.12.08.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 08:32:34 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] pinctrl: qcom: sa8775p: add the wakeirq map
+Date:   Fri, 12 May 2023 17:32:32 +0200
+Message-Id: <20230512153232.92450-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 08/10] pinctrl: cs42l43: Add support for the cs42l43
-Content-Language: en-US
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
-        lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
-        vkoul@kernel.org
-Cc:     lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
-        sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-9-ckeepax@opensource.cirrus.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230512122838.243002-9-ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/05/2023 14:28, Charles Keepax wrote:
-> The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
-> (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
-> for portable applications. It provides a high dynamic range, stereo
-> DAC for headphone output, two integrated Class D amplifiers for
-> loudspeakers, and two ADCs for wired headset microphone input or
-> stereo line input. PDM inputs are provided for digital microphones.
-> 
-> Add a basic pinctrl driver which supports driver strength for the
-> various pins, gpios, and pinmux for the 2 multi-function pins.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+The SA8775P TLMM driver is missing the GPIO-to-wakeup-pin mapping. This
+adds it.
 
-> +{
-> +	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
-> +	struct cs42l43_pin *priv;
-> +	struct pinctrl_dev *pctldev;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = &pdev->dev;
-> +	priv->regmap = cs42l43->regmap;
-> +
-> +	priv->shutters_locked = cs42l43->hw_lock;
-> +
-> +	priv->gpio_chip.request = gpiochip_generic_request;
-> +	priv->gpio_chip.free = gpiochip_generic_free;
-> +	priv->gpio_chip.direction_input = cs42l43_gpio_direction_in;
-> +	priv->gpio_chip.direction_output = cs42l43_gpio_direction_out;
-> +	priv->gpio_chip.get = cs42l43_gpio_get;
-> +	priv->gpio_chip.set = cs42l43_gpio_set;
-> +	priv->gpio_chip.label = dev_name(priv->dev);
-> +	priv->gpio_chip.parent = priv->dev;
-> +	priv->gpio_chip.can_sleep = true;
-> +	priv->gpio_chip.base = -1;
-> +	priv->gpio_chip.ngpio = CS42L43_NUM_GPIOS;
-> +	priv->gpio_chip.fwnode = dev_fwnode(cs42l43->dev);
-> +
-> +	if (is_of_node(dev_fwnode(cs42l43->dev))) {
-> +		device_set_node(priv->dev,
-> +				fwnode_get_named_child_node(dev_fwnode(cs42l43->dev),
-> +							    "pinctrl"));
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-That's something unusual. It seems you want to bind to a DT node because
-you miss compatible in DT node?
-
-> +	} else {
-> +		device_set_node(priv->dev, dev_fwnode(cs42l43->dev));
-> +	}
-> +
-> +	pm_runtime_enable(priv->dev);
-> +	pm_runtime_idle(priv->dev);
-> +
-
-....
-
-> +
-> +static struct platform_driver cs42l43_pin_driver = {
-> +	.driver = {
-> +		.name	= "cs42l43-pinctrl",
-> +	},
-> +
-> +	.probe		= cs42l43_pin_probe,
-> +	.remove		= cs42l43_pin_remove,
-> +};
-> +module_platform_driver(cs42l43_pin_driver);
-> +
-> +MODULE_DESCRIPTION("CS42L43 Pinctrl Driver");
-> +MODULE_AUTHOR("Charles Keepax <ckeepax@opensource.cirrus.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:cs42l43-pinctrl");
-
-Same comment, so I guess you have this pattern everywhere.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+index 2ae7cdca65d3..422d72ed1012 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
++++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+@@ -1491,6 +1491,23 @@ static const struct msm_pingroup sa8775p_groups[] = {
+ 	[153] = SDC_QDSD_PINGROUP(sdc1_data, 0x199000, 9, 0),
+ };
+ 
++static const struct msm_gpio_wakeirq_map sa8775p_pdc_map[] = {
++	{ 0, 169 }, { 1, 174 }, { 2, 170 }, { 3, 175 }, { 4, 171 }, { 5, 173 },
++	{ 6, 172 }, { 7, 182 }, { 10, 220 }, { 11, 213 }, { 12, 221 },
++	{ 16, 230 }, { 19, 231 }, { 20, 232 }, { 23, 233 }, { 24, 234 },
++	{ 26, 223 }, { 27, 235 }, { 28, 209 }, { 29, 176 }, { 39, 200 },
++	{ 31, 201 }, { 32, 212 }, { 35, 177 }, { 36, 178 }, { 39, 184 },
++	{ 40, 185 }, { 41, 227 }, { 42, 186 }, { 43, 228 }, { 45, 187 },
++	{ 47, 188 }, { 48, 194 }, { 51, 195 }, { 52, 196 }, { 55, 197 },
++	{ 56, 198 }, { 57, 236 }, { 58, 192 }, { 59, 193 }, { 72, 179 },
++	{ 73, 180 }, { 74, 181 }, { 75, 202 }, { 76, 183 }, { 77, 189 },
++	{ 78, 190 }, { 79, 191 }, { 80, 199 }, { 83, 204 }, { 84, 205 },
++	{ 85, 229 }, { 86, 206 }, { 89, 207 }, { 91, 208 }, { 94, 214 },
++	{ 95, 215 }, { 96, 237 }, { 97, 216 }, { 98, 238 }, { 99, 217 },
++	{ 100, 239 }, { 105, 219 }, { 106, 210 }, { 107, 211 }, { 108, 222 },
++	{ 109, 203 }, { 145, 225 }, { 146, 226 },
++};
++
+ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
+ 	.pins = sa8775p_pins,
+ 	.npins = ARRAY_SIZE(sa8775p_pins),
+@@ -1499,6 +1516,8 @@ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
+ 	.groups = sa8775p_groups,
+ 	.ngroups = ARRAY_SIZE(sa8775p_groups),
+ 	.ngpios = 150,
++	.wakeirq_map = sa8775p_pdc_map,
++	.nwakeirq_map = ARRAY_SIZE(sa8775p_pdc_map),
+ };
+ 
+ static int sa8775p_pinctrl_probe(struct platform_device *pdev)
+-- 
+2.39.2
 
