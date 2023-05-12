@@ -2,87 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F7D7700CF9
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89535700D13
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 18:35:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234030AbjELQZk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 12:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55100 "EHLO
+        id S233993AbjELQfK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 12:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232182AbjELQZb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:25:31 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D54386AB
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 09:25:29 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-50bc075d6b2so18619992a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 09:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683908728; x=1686500728;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zvQk+svCP50HKElKrlCVyAJgzuwb5SdFt55hE/Eiezk=;
-        b=EaWN1rYIfwhZ2E/kWq48ltb87MtkqMX9ZbP2nuz6SIw1KHQy7OsUXIvuZNzURxaIsr
-         Q+hWdqd1GxScSw3+Gk8K0nzdmcpGvow9Oyb4Dh4W1TK7wSvtmSr09fo+saXcey5DXlPU
-         CKWSb/6Lv0ECb5d+qACJvT2O/uV+6oH9ywFjM2hVMdATC8htjq32Wk7dneV1C6+1sJEL
-         Dp+2IqhmsDciECq2WatDBTfycfz/s3xJaCSXtxLfmdC9LrGYMBbuZQHUTwI/inQkPvXm
-         /IkK47r/zbGy5RWewzQj//8F9WyEVIykRRSprLe2R6rXLfBRCwKdbCvp7js413Z7ENP0
-         8Hxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683908728; x=1686500728;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zvQk+svCP50HKElKrlCVyAJgzuwb5SdFt55hE/Eiezk=;
-        b=H6vdwca8XnSnurdrkc7zKL8YUQq+NlS1r/Ndj+qgUUabNB+gbylHqvA9m8SvptC7aX
-         jgw7SyrnUOAztO+piTlh4daif2MP/JrmWCC3X+3yQqQcearBqRzp0YfbPxC3HIApe1Rs
-         6GhPTb1pFTD8bDWhBUUONBxtJ26kF1YcdAntbulaiQC70znyfz0AmhYH92OfwE7uAyXB
-         hNOCD0TilMVd2+wW6PUvW434lsl/Qn3NUv0EBItGqQJUGxYM4Li6oulQogG1QVdgLtx/
-         ARK8cThvgHh62Fsc3WZgFMF9F1tWPPFKB+dNAauXhH+wgS1bMQhTs5g0LrGrdUWNBwmP
-         Xshw==
-X-Gm-Message-State: AC+VfDyPStX7m1o+tDVz60uBaOyuzXsU/1tscjJ8jiZk4Pp9HEaoUCC1
-        H5LKfoWlJl3K7l/s4mVxSU8OxQ==
-X-Google-Smtp-Source: ACHHUZ6uXUT0lW+LFVr4KL5Jm5mw4HaigdvvK4SmfDrSMK0reRn9kNg11GffukuojXCHJ+5xydomtA==
-X-Received: by 2002:a50:ed0b:0:b0:50b:d83b:9c61 with SMTP id j11-20020a50ed0b000000b0050bd83b9c61mr20007419eds.32.1683908727795;
-        Fri, 12 May 2023 09:25:27 -0700 (PDT)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:7ede:fc7b:2328:3883])
-        by smtp.gmail.com with ESMTPSA id r23-20020aa7da17000000b00506987c5c71sm4144116eds.70.2023.05.12.09.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 09:25:27 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Melody Olvera <quic_molvera@quicinc.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Richard Acayan <mailingradian@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        krishna Lanka <quic_vamslank@quicinc.com>,
-        Iskren Chernev <me@iskren.info>,
-        Martin Botka <martin.botka@somainline.org>,
-        Danila Tikhonov <danila@jiaxyga.com>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH 35/40] dt-bindings: pinctrl: qcom,sm7150-tlmm: simplify with unevaluatedProperties
-Date:   Fri, 12 May 2023 18:25:18 +0200
-Message-Id: <168390871588.209400.11438301358631937951.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230407184546.161168-35-krzysztof.kozlowski@linaro.org>
-References: <20230407184546.161168-1-krzysztof.kozlowski@linaro.org> <20230407184546.161168-35-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S231358AbjELQfI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 12:35:08 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE44BA25F;
+        Fri, 12 May 2023 09:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683909305; x=1715445305;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=478mvwmsv9IeCMZb4/HmUb/CH/Ey2PB85AwyLXEFDQk=;
+  b=UeEvL9hWfot7tSnqfsI2FbgI5ESm1HAlmg3BbnV7MgpL/ysAA3dhbjv8
+   6zVUa4KFZ+8wJV35SYcvBezL46wytR+Z4VRj4TlpZb5dxgz3Jbo6YWXst
+   KAt1/R0jIWobmrhdQxOCWVkaXgNpZcZd1RP/URnBUaogS/I0g2J7VzlEt
+   DfyBCBZr5nU63VMD2iSwlOv1lGweEXsgUPQky/T6M0F9umqPemUyui48K
+   jGFgdE/w3L9OfPjxe10jFJHHhneIiWT4XiFPsSPDs8+PVSmkm7msjR68p
+   LTT90qUbyq44P5axVYuQLhu64TT2tUJ+/55wZZn6lfY4+a86nj0FMDy08
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="331193612"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="331193612"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 09:35:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10708"; a="1030146824"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="1030146824"
+Received: from winkelru-mobl.amr.corp.intel.com (HELO [10.212.144.249]) ([10.212.144.249])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 09:35:03 -0700
+Message-ID: <5363c7b7-7a5b-490c-445b-fb7ccd693c63@linux.intel.com>
+Date:   Fri, 12 May 2023 11:34:44 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH 01/10] soundwire: bus: Allow SoundWire peripherals to
+ register IRQ handlers
+Content-Language: en-US
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
+        vkoul@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-2-ckeepax@opensource.cirrus.com>
+ <0471f085-14bf-c159-9b92-62983af6c19a@linux.intel.com>
+ <20230512160224.GK68926@ediswmail.ad.cirrus.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20230512160224.GK68926@ediswmail.ad.cirrus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -90,18 +74,40 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Fri, 07 Apr 2023 20:45:41 +0200, Krzysztof Kozlowski wrote:
-> All Qualcomm SoC Top Level Mode Multiplexer pin controllers have similar
-> capabilities regarding pin properties, thus we can just accept entire
-> set provided by qcom,tlmm-common.yaml schema.
+
+On 5/12/23 11:02, Charles Keepax wrote:
+> On Fri, May 12, 2023 at 08:45:51AM -0500, Pierre-Louis Bossart wrote:
+>>> @@ -1711,6 +1739,9 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
+>>>  				struct device *dev = &slave->dev;
+>>>  				struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
+>>>  
+>>> +				if (slave->prop.use_domain_irq && slave->irq)
+>>> +					handle_nested_irq(slave->irq);
+>>> +
+>>
+>> I am a bit lost here, I can understand that alerts would be handled by a
+>> dedicated handler, but here the code continues and will call the
+>> existing interrupt_callback.
+>>
+>> Is this intentional? I wonder if there's a risk with two entities
+>> dealing with the same event and programming the same registers.
+>> Shouldn't there be some sort of 'either or' rule?
+>>
 > 
+> I guess there is a risk of them "handling" the IRQ twice,
+> although it is hard to see why you would write the driver that
+> way. Also since they are sequencial the second would I guess
+> just see that no IRQs are pending.
 > 
+> The intention for calling both is that it facilitates using
+> the same IRQ handler for I2C and SoundWire. At least on the
+> Cirrus devices there are a bunch of chip specific registers
+> that need treated exactly the same on I2C and SoundWire, but
+> then a couple of extra registers that need handled in the
+> SoundWire case. This way the handling of those can be kept
+> completely in the SoundWire part of the code and not ifdef-ed
+> into the main IRQ path.
 
-Applied, thanks!
-
-[35/40] dt-bindings: pinctrl: qcom,sm7150-tlmm: simplify with unevaluatedProperties
-        https://git.kernel.org/krzk/linux-dt/c/647c16ac7b15fc8fe6ab679690ac2ffe7c53abd3
-
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Sounds good to me, but it's worth adding a comment and improving the
+commit message with design intent/rules since it's a common part in
+drivers/soundwire/
