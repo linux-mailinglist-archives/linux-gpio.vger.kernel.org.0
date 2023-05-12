@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B21B700B6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 17:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74358700B82
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 17:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241819AbjELPXw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 11:23:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40604 "EHLO
+        id S241840AbjELPZ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 11:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241437AbjELPXs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 11:23:48 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C03DDA6
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:23:27 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-96ab81aa68dso105204366b.3
-        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:23:27 -0700 (PDT)
+        with ESMTP id S241629AbjELPZ5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 11:25:57 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D27A103
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:25:56 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-50bc0117683so17845644a12.1
+        for <linux-gpio@vger.kernel.org>; Fri, 12 May 2023 08:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683905004; x=1686497004;
+        d=linaro.org; s=google; t=1683905154; x=1686497154;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FfQ9FxtPdpC851oVhzEAGMTkMIl0aMvmC/2RqbAkd2s=;
-        b=nyMdsmlw1ScV6BDNUHPLdOeR/G1neobRp00csc6jItIUmYyHpHzaaX2gjuNOvj2jON
-         6N9b2oykZspNcDSnv0v2eM6lYcdaD7FNLqnFk11MUw9uEyGOaimUPCuxeTvcxg0V2vCh
-         DCRn+aBQj7t+XHTZpb2E4b4p2sFomNWVEYrXE3IfTycXl4wTEoOTNACP0EmwQZDSCUD6
-         mqYB7v8Keh2Eo1sJlYuYIAQu6MMx5m19l2TExvBFBte+7wNJb+As9vZg82gZQuIQbyIz
-         2WRyTXIarLVRJYNqovEYHdcw9xTHSeHeMY6W6jp9/nvIpv4WtbcFl6lzS6QdUhoyEvYY
-         5UdA==
+        bh=8tAvOql5lp6FWkpzgWQiK30SNN35QkWi8X6zAAtYsbE=;
+        b=evUjakgZfiWHOeaGTxTvfwse8uA7XL2gV7DSxc6/YHDPwIZl9h7joIgg5+ImdcVlHJ
+         fjWqIG7H3/sjSQsQ7t1gM5Hub04ClnfGFAaVoYXpNUQI7u/H9G+Fi7bzsO7Go4cy5T4L
+         0Czmo/a7u4d6cG2iPg1iT5UX3DtQezAD51OF21qH9ae5xIRttV0uN8WO+7yNAUP8ncrH
+         qJoWmqK9TDkZq5JsM9TC4GwylZtD/8H1Ml7c7hwcPu/ayDsACxOrU6uEF71ZoajKP/C4
+         ka22BMTKAmKmwVokU68coV0y6EK15f8XkZDstTj/HBoOwy4VGXHL9nACxplBZHIq64lO
+         Gcxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683905004; x=1686497004;
+        d=1e100.net; s=20221208; t=1683905154; x=1686497154;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FfQ9FxtPdpC851oVhzEAGMTkMIl0aMvmC/2RqbAkd2s=;
-        b=FPwt+fbIKw2TQbWvZyfyvqCX6tjw7eFtzO6CZbW60MXIHUZkmm87RTBgyK69ErSC02
-         ERZhXbKHo+t29hXwF/rzf0cMABTPwwqKqj8zJIhk57+bnd0urGU1xeU2hZa7kRGIOUHi
-         mPEXxcvz1Gwh0v3U7QoV0W8aoNwltU71ZyvvfjFPMiNQ+2N1d6U42O2i/YSzJYx6FttF
-         riJE6CzXYLFDAm6zeqLQvWuVOUhqONMU5yeMwDdWilOduQLKOFwjQaAInPQDJlrsfBCq
-         ztsJrzBqx0r2UqI4MP5G4YfrJkzfntfVOan6ihv6qyjbKy/Cfu/47LruVY9on15xHFe6
-         eOjg==
-X-Gm-Message-State: AC+VfDziP/u01SWJCSv/Re6iI1WVh+I6Q5dTgqrI4hQRD5NQY3Xa4qaM
-        X9YxzHkLuqhLTQQhVr8lRN4kTw==
-X-Google-Smtp-Source: ACHHUZ6nZMMkDDiDxKJfcjw7N3HVq2iQ7vtBFGa+8tadn1RArRXANKKvEhVj4w7QzX4+UHuzGd+Gnw==
-X-Received: by 2002:a17:907:80e:b0:94e:9a73:1637 with SMTP id wv14-20020a170907080e00b0094e9a731637mr20678495ejb.75.1683905004574;
-        Fri, 12 May 2023 08:23:24 -0700 (PDT)
+        bh=8tAvOql5lp6FWkpzgWQiK30SNN35QkWi8X6zAAtYsbE=;
+        b=UkSQzJHCBc7NcS3OaVpcuuCa0KlbFsLJoEHvGtFcH3Fmb11+sigUx4xI0rwDpgkJq8
+         W32IFCG4PLm21IVLxVAzSlurlopZGvE9Qy78/7iNZREfyWlHZSTsWZ2i3GE58SRNXJre
+         bHFd0f1AbLJEopCQWbLRJgnDRtnWXhILPwS0mxVyetA2LEWNLVKcY974YcuPa6a2zvO2
+         s/TaqPoVI2eFnjItxH8MPxZhcNfTlbRV/VCeD6zOjUEuklFia51QKF/NC2cdm52xzJqH
+         dAunfpm5Qz1afUryRFvKqmspKZpfhD9O1LDj6QU1D3dFx2FpKwDDTldNuwwniTCEWtdC
+         BKUg==
+X-Gm-Message-State: AC+VfDx7SlSPruMwLCSqr/UR5UW08OnG8rOQjJoJaczWrKFQC+I0vP9Y
+        Snd8Fa9ZY9R/FgH5m1EoKtNirg==
+X-Google-Smtp-Source: ACHHUZ6VLH5TEFcmhdJSIdLisEJz4f2jKiPaq4t5hSh2saBPH6sCMNzCPOVC3ciAXYocEELNXOGVhg==
+X-Received: by 2002:a05:6402:1a48:b0:50c:d5d:c960 with SMTP id bf8-20020a0564021a4800b0050c0d5dc960mr20446684edb.38.1683905154708;
+        Fri, 12 May 2023 08:25:54 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:7ede:fc7b:2328:3883? ([2a02:810d:15c0:828:7ede:fc7b:2328:3883])
-        by smtp.gmail.com with ESMTPSA id ml17-20020a170906cc1100b009661484e84esm5554723ejb.191.2023.05.12.08.23.23
+        by smtp.gmail.com with ESMTPSA id x14-20020aa7d38e000000b0050c0d651fb1sm4031539edq.75.2023.05.12.08.25.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 May 2023 08:23:24 -0700 (PDT)
-Message-ID: <25c92476-7bca-90c4-9130-cb765495a783@linaro.org>
-Date:   Fri, 12 May 2023 17:23:22 +0200
+        Fri, 12 May 2023 08:25:54 -0700 (PDT)
+Message-ID: <5969fe82-69cd-34d6-edd1-d16ea741d9cb@linaro.org>
+Date:   Fri, 12 May 2023 17:25:52 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
@@ -76,7 +76,7 @@ Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -88,120 +88,17 @@ On 12/05/2023 14:28, Charles Keepax wrote:
 > (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
 > for portable applications. It provides a high dynamic range, stereo
 > DAC for headphone output, two integrated Class D amplifiers for
-> loudspeakers, and two ADCs for wired headset microphone input or
-> stereo line input. PDM inputs are provided for digital microphones.
-> 
-> Add a YAML DT binding document for this device.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  .../bindings/mfd/cirrus,cs42l43.yaml          | 212 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 213 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,cs42l43.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,cs42l43.yaml b/Documentation/devicetree/bindings/mfd/cirrus,cs42l43.yaml
-> new file mode 100644
-> index 0000000000000..e1fd70e0a3467
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/cirrus,cs42l43.yaml
-> @@ -0,0 +1,212 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/cirrus,cs42l43.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cirrus Logic CS42L43 Audio CODEC
 
-That's audio codec, so it should be in sound, not MFD.
+...
 
-> +
-> +maintainers:
-> +  - patches@opensource.cirrus.com
-> +
-> +description: |
-> +  The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
-> +  (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
-> +  for portable applications. It provides a high dynamic range, stereo
-> +  DAC for headphone output, two integrated Class D amplifiers for
-> +  loudspeakers, and two ADCs for wired headset microphone input or
-> +  stereo line input. PDM inputs are provided for digital microphones.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - VDD_P-supply
-> +  - VDD_A-supply
-> +  - VDD_D-supply
-> +  - VDD_IO-supply
-> +  - VDD_CP-supply
-
-lowercase, no underscores in all property names.
-
-> +
-> +additionalProperties: false
-
-This order is quite unexpected... please do not invent your own layout.
-Use example-schema as your starting point. I suspect there will be many
-things to fix, so limited review follows (not complete).
-
-
-Missing ref to dai-common
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cirrus,cs42l43
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  VDD_P-supply:
-> +    description:
-> +      Power supply for the high voltage interface.
-> +
-> +  VDD_A-supply:
-> +    description:
-> +      Power supply for internal analog circuits.
-> +
-> +  VDD_D-supply:
-> +    description:
-> +      Power supply for internal digital circuits.
-> +
-> +  VDD_IO-supply:
-> +    description:
-> +      Power supply for external interface and internal digital logic.
-> +
-> +  VDD_CP-supply:
-> +    description:
-> +      Power supply for the amplifier 3 and 4 charge pump.
-> +
-> +  VDD_AMP-supply:
-> +    description:
-> +      Power supply for amplifier 1 and 2.
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    items:
-> +      - description: A phandle to the CODEC pinctrl node
-> +        minimum: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 3
 > +
 > +  interrupt-controller: true
 > +
 > +  '#interrupt-cells':
 > +    const: 2
+
+Hm, are you sure? Who is the consumer/user of this interrupt controller?
+
 > +
 > +  interrupts:
 > +    maxItems: 1
@@ -210,106 +107,6 @@ Missing ref to dai-common
 > +    const: 1
 > +
 > +  clocks:
-> +    items:
-> +      - description: Synchronous audio clock provided on mclk_in.
-> +
-> +  clock-names:
-> +    const: mclk
-> +
-> +  pinctrl:
-> +    type: object
-
-additionalProperties: false
-
-> +
-> +    allOf:
-> +      - $ref: "../pinctrl/pinctrl.yaml#"
-
-No quotes, absolute path, so /schemas/pinctrl/....
-
-> +
-> +    properties:
-> +      pin-settings:
-
-What's this node about? pinctrl/pinctrl/pins? One level too much.
-
-> +        type: object
-> +
-> +        additionalProperties: false
-> +
-> +        patternProperties:
-> +          '-pins$':
-> +            type: object
-> +
-> +            allOf:
-> +              - $ref: "../pinctrl/pincfg-node.yaml#"
-> +              - $ref: "../pinctrl/pinmux-node.yaml#"
-
-Same comments.
-
-> +
-> +            oneOf:
-> +              - required: [ groups ]
-> +              - required: [ pins ]
-> +
-> +            unevaluatedProperties: false
-> +
-> +            properties:
-> +              groups:
-> +                enum: [ gpio1, gpio2, gpio3, asp, pdmout2, pdmout1, i2c, spi ]
-> +
-> +              pins:
-> +                enum: [ gpio1, gpio2, gpio3,
-> +                        asp_dout, asp_fsync, asp_bclk,
-> +                        pdmout2_clk, pdmout2_data, pdmout1_clk, pdmout1_data,
-> +                        i2c_sda, i2c_scl,
-> +                        spi_miso, spi_sck, spi_ssb ]
-> +
-> +              function:
-> +                enum: [ gpio, spdif, irq, mic-shutter, spk-shutter ]
-> +
-> +              drive-strength:
-> +                description: Set drive strength in mA
-> +                enum: [ 1, 2, 4, 8, 9, 10, 12, 16 ]
-> +
-> +              input-debounce:
-> +                description: Set input debounce in uS
-> +                enum: [ 0, 85 ]
-> +
-> +  spi:
-> +    type: object
-> +
-> +    allOf:
-> +      - $ref: "../spi/spi-controller.yaml#"
-
-Same comments.
-> +
-> +    unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c@e0004000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        reg = <0xe0004000 0x1000>;
-
-Drop, just i2c
-
-> +
-> +        cs42l43: codec@1a {
-> +            compatible = "cirrus,cs42l43";
-> +            reg = <0x1a>;
-> +
-> +            VDD_P-supply = <&vdd5v0>;
-> +            VDD_D-supply = <&vdd1v8>;
-> +            VDD_A-supply = <&vdd1v8>;
-> +            VDD_IO-supply = <&vdd1v8>;
-> +            VDD_CP-supply = <&vdd1v8>;
-> +            VDD_AMP-supply = <&vdd5v0>;
-> +
-> +            reset-gpios = <&gpio 0>;
-
-Use proper defines for flags.
 
 
 Best regards,
