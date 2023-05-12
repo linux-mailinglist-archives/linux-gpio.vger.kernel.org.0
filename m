@@ -2,78 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21FAF70074E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 13:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 400CC700785
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 14:18:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241020AbjELL4X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 07:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
+        id S240395AbjELMSY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 08:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240963AbjELL4W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 07:56:22 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B1513C37;
-        Fri, 12 May 2023 04:56:16 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34CBm79U027975;
-        Fri, 12 May 2023 11:56:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=UJeHGLYPIeIXF+k0TIrqFIA6Y928xc2ti6QPsb0aQ/U=;
- b=hz3IqYM8o8/YBYkAcLOS+lgHVoGMLApIhRzlkaxI8TD5CO7aaRmnMaAD2+OeuQ27JhgY
- v5r1RJs7IKHmUE6O1OfLMbokLc9eXV+bSU19Y5YJISM3cKUPHqNFQfrFiC3an/6f8jFG
- Sj42pBvFqmp2MUai4iMZjr70fF/b38qQnfn5jPFOAYMFLyTcWtZIZ5Yp/fZ6w1MO5Lt+
- k7I98ZA56H0lpUMArQVuz29UZMYZoZzQjENYjbJNcCM/4/l2MTGjYUjJ4bA0BwbtuilV
- E6kCeOgNqLevZR28CzFTZTSDK7Y/lXy/08s+jtrbtvri5G34ucMmcS3ypOUwm7YkZzRC LQ== 
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qhes20v8d-1
+        with ESMTP id S240338AbjELMSX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 08:18:23 -0400
+Received: from mx0a-0039f301.pphosted.com (mx0a-0039f301.pphosted.com [148.163.133.242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAFA7DA2;
+        Fri, 12 May 2023 05:18:22 -0700 (PDT)
+Received: from pps.filterd (m0174676.ppops.net [127.0.0.1])
+        by mx0a-0039f301.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34CBVsbl005889;
+        Fri, 12 May 2023 12:18:08 GMT
+Received: from eur03-am7-obe.outbound.protection.outlook.com (mail-am7eur03lp2234.outbound.protection.outlook.com [104.47.51.234])
+        by mx0a-0039f301.pphosted.com (PPS) with ESMTPS id 3qh6u0ar62-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 May 2023 11:56:02 +0000
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 34CBtxxA003738;
-        Fri, 12 May 2023 11:55:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3qdy59txbs-1;
-        Fri, 12 May 2023 11:55:59 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34CBtwYh003728;
-        Fri, 12 May 2023 11:55:58 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 34CBtw6U003718;
-        Fri, 12 May 2023 11:55:58 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
-        id 0A0475137; Fri, 12 May 2023 17:25:58 +0530 (+0530)
-From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
-        manivannan.sadhasivam@linaro.org, andy.shevchenko@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
-Subject: [PATCH 2/2] pinctrl: qcom: Refactor generic qcom pinctrl driver
-Date:   Fri, 12 May 2023 17:25:53 +0530
-Message-Id: <1683892553-19882-3-git-send-email-quic_rohiagar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1683892553-19882-1-git-send-email-quic_rohiagar@quicinc.com>
-References: <1683892553-19882-1-git-send-email-quic_rohiagar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: a22I287K8QGs2ctIy8AnyLtnQTkPSP3B
-X-Proofpoint-GUID: a22I287K8QGs2ctIy8AnyLtnQTkPSP3B
+        Fri, 12 May 2023 12:18:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Uxi4poFl7M3S0SAreiB2ulQIKJNmy0xtf+chy4Mdj8E/GoLfIwV74RufYeMssMXKIpwpuA9IZGioygT6DaZOwst2I5bXdq6fnC46AsdJne5F5SRSKL45h+oBeRQxZw2aiPfvBj2aOJ8O80enaEfdZAYC7n5fuFznRL2vRUq6TNC9E/3+mKphV2BbmrKZLYPk0pC0S94AwOVMfdJPzMKsQ26G0DPyJfOzj37Qn9MURzN9e/7gTMWlAJfJlQKwFPFe3b/UJr1h4HFNLX6FXPdT9d1vmevBqaY67bIO16fWmN0Un+ozElTRyfEvCFVSouJVqCbJD4tIgkMQblxFtO1GKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=caO53I9T6uU4/1sKhh+YHtxHJBZXQOqTPwrfdFRCTfs=;
+ b=Zs5YuCcWpYr8vqGbnncniXmUNwMdDe0tZmCexumKiKkGfluL03jzrKFf06gSPU/x9G56LFwIUc8X8/KzL0V70V3YHjkFt7p2yotb2WV4VpRBt//a6R4JybZvGCAvDknGdd4kxPyMbjW4wHdZrUYE5zXV0BXGWwX3RWAszKS+Wf46gtgXkhyNjeWkKZ7AO2T5Jkyy4Wrg4+0GNzXj1ayL2NcQLgCz73gzVFjHm+T0nWMg9qofXONvrH9SdYNXwPY+L61y74SDDD/6tt6fXKhwtf9zEZN8PzH3E3LPfiqSgu1lxY5Q1uvIFmdOovylrzjUa4ZeF5vR1icATBH7DzGzCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=caO53I9T6uU4/1sKhh+YHtxHJBZXQOqTPwrfdFRCTfs=;
+ b=UYRzGNkSO95ZaFkd32x8UKBmeYGbBlYZjEFDc3nc6IVAuNL4WIqLFTaUmiWfaJf1Iu7l5eNMtEj8rii59JLAiS9xbFOJB/RMLqf0LevXPvMEsuus1S9uFSwGz64/cSG/6/FWVycey9s1HXBjo+R8zAAUFeXMebOoTxkQJT3ii12exBjalZBPRAe/bOdUQ1bRZagW1tRFcYd8PQYNjqkn5z1ZIpy5yGXSHIwRVwhfj3IDXiFcVJ+8EjLkYpCLNgtJREYuJmKMbz9XkzkshWEkeAa08ShykK+KyDThuIq2jkBd0mjG/M6EydwuQ5ayCkhpnb21tWnghI1rCd+5M5HfcA==
+Received: from PA4PR03MB7136.eurprd03.prod.outlook.com (2603:10a6:102:ea::23)
+ by DB9PR03MB7785.eurprd03.prod.outlook.com (2603:10a6:10:2ce::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.21; Fri, 12 May
+ 2023 12:18:03 +0000
+Received: from PA4PR03MB7136.eurprd03.prod.outlook.com
+ ([fe80::bcf5:cd14:fd35:1300]) by PA4PR03MB7136.eurprd03.prod.outlook.com
+ ([fe80::bcf5:cd14:fd35:1300%4]) with mapi id 15.20.6387.021; Fri, 12 May 2023
+ 12:18:03 +0000
+From:   Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peng Fan <peng.fan@oss.nxp.com>,
+        Michal Simek <michal.simek@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC v2 2/3] pinctrl: Implementation of the generic scmi-pinctrl
+ driver
+Thread-Topic: [RFC v2 2/3] pinctrl: Implementation of the generic scmi-pinctrl
+ driver
+Thread-Index: AQHZeEK66Y+E4GsA3km+qVBMGvAGK69MMbOAgAjzKoCAAUwwgIAANgSA
+Date:   Fri, 12 May 2023 12:18:03 +0000
+Message-ID: <20230512121801.GA3494263@EPUAKYIW0A6A>
+References: <cover.1682513390.git.oleksii_moisieiev@epam.com>
+ <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
+ <ZFVoiWnvq7UXSBBw@surfacebook>
+ <152bbad1-a759-df18-1efa-4e25c54847d9@epam.com>
+ <ZF4BKZkbLr2mKN0s@e120937-lin>
+In-Reply-To: <ZF4BKZkbLr2mKN0s@e120937-lin>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR03MB7136:EE_|DB9PR03MB7785:EE_
+x-ms-office365-filtering-correlation-id: edd7a8f8-9552-460e-26d4-08db52e2ef1e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: W2BMKhPoGv1RKdR5Yv2WAoi+gceXu9TVriyAROQmg3lV/OBe3wkXZO5jtw44CwLJUHMHCcxFftDO+JoUGIt6mcpoHdZPDQj113mOXozk5bwHKlbCIsD2SKGQpSzmkdiw4cF0VINgCB9NcConeikQhi42fjgqSumLMoLMauNVsNglkevBUn3r6ckfiWbqQiCOHhcM1vjcevq9ptdiGBzWLVpNJQ/m3dMEPAXsHDyT0cXMQDEW73NT/cyXZs2Uh05HDOkWIydJEcxZdeJ+IZY9cXsizF/qsNKXsaBaEolNdZcNRalDwf9/kXAh0HozbQC0rZN01yBU7W8zGM0bLSy6r2FqifRuhNM60juwvjHHqwigObVk8z+OVIjI9gj6xgkEYEOZKUNquEmoxmEMNYp4ahWSFHfSGbCg4EJPPbIXBTjuESmGOqA3i2BiIpgvQLnPozGtq/2E8Ip/2QtK87yk5XOmwvvsQUL+WkJCrMHViRIDzINKBze20OGecJIU/qP7aIzbumgIs5HkIHqPjhEiE+BS6SPYxEc+echZmt3SQJy3PYmvMA4sEBMrDvNtCTgN9aJ5EAhv+nWMqjf2pAb5ut0l6zBlH01rnC0E2XXcOF5nr/otC7bjVhG6ga5B5I1mwa9ZtFdJi03DX+NYuFUemQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR03MB7136.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(136003)(366004)(396003)(346002)(376002)(39860400002)(451199021)(66946007)(66446008)(66476007)(6916009)(66556008)(4326008)(91956017)(6486002)(76116006)(64756008)(478600001)(54906003)(316002)(86362001)(33656002)(83380400001)(186003)(26005)(1076003)(6512007)(9686003)(53546011)(6506007)(8676002)(41300700001)(33716001)(5660300002)(8936002)(38100700002)(38070700005)(122000001)(2906002)(71200400001)(41533002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Hi958AhsHXAVgU6brw8RVJGJeIp3tRqk8NkOhXiXzfSLV+DKpveQt6msx8UU?=
+ =?us-ascii?Q?CFouLBZJ+nR5H/4Eo3d9+wU/VepdNdU4UGERBik5057JJrYaQhVkIozrUwlB?=
+ =?us-ascii?Q?GhS9wYjFMv4pUkj++4wF8rEg0KNJRAnM8ZCLZT1eFZFEetiRC+YYMugKmHm4?=
+ =?us-ascii?Q?faXWGXPx6apif0zESRFNPM3T+FXMP+h8WD1sKjIEK1N0bjBb9xusGadxxs+S?=
+ =?us-ascii?Q?N7uE1H9BxHzY4zR2XlZgeUciOsTrBSN4WPiBBvDIC7FEbQPYmp2cwxCUWgdW?=
+ =?us-ascii?Q?I1DlLxGjYUC3F3D6/KwZtz9lcTpz+KWJ792YSH+8qjHCCVhct+iChMb8C6DF?=
+ =?us-ascii?Q?zQ80Mq/jGP+J87nyGx+xVqr+tSCfgdd8QDYkor3aq5MtHc91P1WVUJX29IGm?=
+ =?us-ascii?Q?AlaZ4HHJk4aWhZ84/OcMabMlyuBiLuLZHniGz56BeJYROtqntS5MZx6/yPgf?=
+ =?us-ascii?Q?rG31VLZG17BGHedRZHRl9jkMvjZ78ydDQYP7WWANIn9IGJLHV28NGViGDyM8?=
+ =?us-ascii?Q?GYfYFMQ90VDwHsoHCoPECmsrgHH8i9ArNtAo3bA5puGMzhEaRnQ0FsBAAhI8?=
+ =?us-ascii?Q?0ZmLMvjNs7rbu9IDE+2SWStBOUSFABzlR0n9ZlWkB+YvhOkwD/HTkdKUViHu?=
+ =?us-ascii?Q?sjuvVgKbKqqEfVLo5u8Vg0FBdzujBvLY0e4fBgn+m6HcxkBZxttjWUfmpCSf?=
+ =?us-ascii?Q?reHdlAlxrFM9SeYrum01Vlfu0vVsZmxvuonp28uWiGb1Nywl8mwXB8Ase7Ee?=
+ =?us-ascii?Q?+X6JfJLT/92vq643dGwwI11cztAq646P/RtiQGH0NTg//eih3Za85YdTV3kj?=
+ =?us-ascii?Q?y95Mb9q3HX0Ks6TM0HuXOR+vTs59EK6zwm+cZoozCdnT8kUA2OL27+OWfZ98?=
+ =?us-ascii?Q?ca9dIohHsVICQk2DMm3a17pOfnERUX0eJLUxEJIianN2F1BIGcMbWLZVHltL?=
+ =?us-ascii?Q?E8Zju5AiRxQyBuUBvNfZkFZTt0a+EvkjmF4A+mvrTElBAZQkuKz61CtikUBd?=
+ =?us-ascii?Q?K/PmYajKTM7VIRhGSxRbrMRzX2neRNHrT1CCU0DIzfXbTHQ5vVhDzxdYRKEx?=
+ =?us-ascii?Q?hwz9/p37uca5OVruK4WMVFgQBmokgtjNGNmtTgrwSmBrHp0wPP4L4L6wehCJ?=
+ =?us-ascii?Q?XgpE4pYgsN6b373jWDZH4McSEamXisLGk4evzexjccMCHbHy3x34Gp3DcTjs?=
+ =?us-ascii?Q?ncPX6WyPAjn1SIkQFNZl15VG6CpBLzntVG7Q9Vk0xH5GiFXXHtxfEXLMlZvZ?=
+ =?us-ascii?Q?FsY9kW2hy7FSRu6RFzckJbm76WZWg3kLXLvmtti3y+VyxjDoTy6yPhUIzFRD?=
+ =?us-ascii?Q?4PR0w/eRrW4ONnIEmDfZeaA+FF2WNnauoxdipyAYFAPhZtL0/AAxrpLgReUu?=
+ =?us-ascii?Q?lO2ONKvmmQX/RciDqwUDlffzsOybDGuzJpzJTuyZLITduoDJ0y9W3Owf8G6s?=
+ =?us-ascii?Q?SxRObvD4msJBZcAAntJ+pFso1rmOW5Ca8D3yveYFAYk9Ztvn+wrpMtNBvkok?=
+ =?us-ascii?Q?XzuB0oa25d+7hg0JuAoBaevFoYI1fIBCyYA6pmr0vxRufuVAs8f86sIQjNqw?=
+ =?us-ascii?Q?Bb5FuUlxufaV0AGOcJ3tNtmw/aNO725DAOczMg5lBTqkxICvbWDOau941oky?=
+ =?us-ascii?Q?+A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D45A78653434314A971D2BBC2A38130A@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR03MB7136.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edd7a8f8-9552-460e-26d4-08db52e2ef1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2023 12:18:03.0739
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mjXggMTQ3AJ5Egv6W43KbL/UhvI4YOCyK10j5D++xyeazySSe+Qx9CEUwJvKCpQ/iuKB7S3vEIiNj98PXoym232tLnUve3u3S9HB5jlVdks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR03MB7785
+X-Proofpoint-ORIG-GUID: F_qENu-SenMNONOB45BD_DwBoIn7fqwI
+X-Proofpoint-GUID: F_qENu-SenMNONOB45BD_DwBoIn7fqwI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-05-12_08,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0
- mlxscore=0 suspectscore=0 mlxlogscore=998 phishscore=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 spamscore=0 mlxlogscore=978 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305120099
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+ definitions=main-2305120102
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,1649 +144,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Reuse the generic pingroup struct from pinctrl.h in msm_pingroup
-along with the macro defined.
+Hello Cristian,
 
-Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
----
- drivers/pinctrl/qcom/pinctrl-apq8064.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-apq8084.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-ipq4019.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-ipq5332.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-ipq6018.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-ipq8064.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-ipq8074.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-ipq9574.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-mdm9607.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-mdm9615.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-msm.c      | 10 +++++-----
- drivers/pinctrl/qcom/pinctrl-msm.h      |  8 ++------
- drivers/pinctrl/qcom/pinctrl-msm8226.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8660.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8909.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8916.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8953.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8960.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8976.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8994.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8996.c  | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-msm8998.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-msm8x74.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-qcm2290.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-qcs404.c   | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-qdf2xxx.c  |  6 +++---
- drivers/pinctrl/qcom/pinctrl-qdu1000.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sa8775p.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sc7180.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sc7280.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sc8180x.c  | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sc8280xp.c | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sdm660.c   | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-sdm670.c   | 24 ++++++++++++------------
- drivers/pinctrl/qcom/pinctrl-sdm845.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sdx55.c    | 12 ++++++------
- drivers/pinctrl/qcom/pinctrl-sdx65.c    | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm6115.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm6125.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm6350.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm6375.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm8150.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm8250.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm8350.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm8450.c   | 18 +++++++++---------
- drivers/pinctrl/qcom/pinctrl-sm8550.c   | 18 +++++++++---------
- 46 files changed, 316 insertions(+), 320 deletions(-)
+On Fri, May 12, 2023 at 10:04:41AM +0100, Cristian Marussi wrote:
+> On Thu, May 11, 2023 at 01:15:46PM +0000, Oleksii Moisieiev wrote:
+> > Hello Andy,
+> >=20
+> > On 05.05.23 23:35, andy.shevchenko@gmail.com wrote:
+> > > Wed, Apr 26, 2023 at 01:26:37PM +0000, Oleksii Moisieiev kirjoitti:
+> > >> scmi-pinctrl driver implements pinctrl driver interface and using
+> > >> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> > >> SCP firmware, which does the changes in HW.
+> > >>
+> > >> This setup expects SCP firmware (or similar system, such as ATF)
+> > >> to be installed on the platform, which implements pinctrl driver
+> > >> for the specific platform.
+> > >>
+> > >> SCMI-Pinctrl driver should be configured from the device-tree and us=
+es
+> > >> generic device-tree mappings for the configuration.
+> > >=20
+> > > ...
+> > >=20
+> > >> +#include <linux/device.h>
+> > >> +#include <linux/err.h>
+> > >=20
+> > >> +#include <linux/of.h>
+> > >=20
+> > > I do not see any user of this header. Do you?
+> > >=20
+> > Yes, thanks. Removing
+> >=20
+> > >> +#include <linux/module.h>
+> > >> +#include <linux/seq_file.h>
+> > >> +
+> > >> +#include <linux/pinctrl/machine.h>
+> > >> +#include <linux/pinctrl/pinconf.h>
+> > >> +#include <linux/pinctrl/pinconf-generic.h>
+> > >> +#include <linux/pinctrl/pinctrl.h>
+> > >> +#include <linux/pinctrl/pinmux.h>
+> > >=20
+> > >> +#include <linux/scmi_protocol.h>
+> > >> +#include <linux/slab.h>
+> > >=20
+> > > Please, move these two to the upper group of the generic headers.
+> > >=20
+> > Thanks, fixed.
+> >=20
+> > >> +struct scmi_pinctrl_funcs {
+> > >> +	unsigned int num_groups;
+> > >> +	const char **groups;
+> > >> +};
+> > >=20
+> > > Please, use struct pinfunction.
+> > >
+> > I can't use pincfunction here because it has the following groups=20
+> > definition:
+> > const char * const *groups;
+> >=20
+> > Which is meant to be constantly allocated.
+> > So I when I try to gather list of groups in=20
+> > pinctrl_scmi_get_function_groups I will receive compilation error.
+> >=20
+>=20
+> Maybe this is a further signal that we should re-evaluate the benefits of
+> the lazy allocations you now perform during protocol initialization
+> instead of querying and allocating statically all the info structs about
+> existing resources.
+>=20
+> Not saying that is necessarily bad, I understood your points about reduci=
+ng
+> the number of SCMI queries during boot and let pinctrl subsystem trigger =
+only
+> the strictly needed one, just saying maybe good to reason a bit more abou=
+t this
+> once V3 is posted. (i.e. I could bother you more :P ..)
+>=20
+> Thanks,
+> Cristian
+>=20
+> P.S. [off-topic]: remember to use get_maintainer.pl as advised elsewhere
+> to include proper maintainers (and their bots)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8064.c b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-index 57b9a4a..20c3b90 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-@@ -210,9 +210,9 @@ static const unsigned int sdc3_data_pins[] = { 95 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			APQ_MUX_gpio,			\
- 			APQ_MUX_##f1,			\
-@@ -251,9 +251,9 @@ static const unsigned int sdc3_data_pins[] = { 95 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8084.c b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-index 7a9b6e9..3fc0a407 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8084.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-@@ -325,9 +325,9 @@ static const unsigned int sdc2_data_pins[] = { 152 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)        \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			APQ_MUX_gpio,			\
- 			APQ_MUX_##f1,			\
-@@ -363,9 +363,9 @@ static const unsigned int sdc2_data_pins[] = { 152 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,	                \
--		.pins = pg_name##_pins,                 \
--		.npins = ARRAY_SIZE(pg_name##_pins),    \
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,                         \
- 		.io_reg = 0,                            \
- 		.intr_cfg_reg = 0,                      \
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-index 3ab859b..1f7944d 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-@@ -217,9 +217,9 @@ DECLARE_QCA_GPIO_PINS(99);
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14) \
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			qca_mux_gpio, /* gpio mode */	\
- 			qca_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5332.c b/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-index bc90c68..625f801 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq5332.c
-@@ -12,9 +12,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq6018.c b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-index 1e1255c..0ad0864 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-@@ -12,9 +12,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-index 54cca32..e2bb94e 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-@@ -162,9 +162,9 @@ static const unsigned int sdc3_data_pins[] = { 71 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			IPQ_MUX_gpio,			\
- 			IPQ_MUX_##f1,			\
-@@ -203,9 +203,9 @@ static const unsigned int sdc3_data_pins[] = { 71 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,	                \
--		.pins = pg_name##_pins,                 \
--		.npins = ARRAY_SIZE(pg_name##_pins),    \
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,                         \
- 		.io_reg = 0,                            \
- 		.intr_cfg_reg = 0,                      \
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-index 0d325aa..337f3a1 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-@@ -12,9 +12,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq9574.c b/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-index 59a8b52..e249161 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq9574.c
-@@ -12,9 +12,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9607.c b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-index 331d4c1..e7cd3ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-@@ -205,9 +205,9 @@ static const unsigned int qdsd_data3_pins[] = { 91 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{							\
--		.name = "gpio" #id,				\
--		.pins = gpio##id##_pins,			\
--		.npins = ARRAY_SIZE(gpio##id##_pins),		\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){				\
- 			msm_mux_gpio,				\
- 			msm_mux_##f1,				\
-@@ -244,9 +244,9 @@ static const unsigned int qdsd_data3_pins[] = { 91 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9615.c b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-index 7278f45..0a2ae38 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-@@ -196,9 +196,9 @@ DECLARE_MSM_GPIO_PINS(87);
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 94b984a..2585ef2 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -120,7 +120,7 @@ static const char *msm_get_group_name(struct pinctrl_dev *pctldev,
- {
- 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pctrl->soc->groups[group].name;
-+	return pctrl->soc->groups[group].grp.name;
- }
- 
- static int msm_get_group_pins(struct pinctrl_dev *pctldev,
-@@ -130,8 +130,8 @@ static int msm_get_group_pins(struct pinctrl_dev *pctldev,
- {
- 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 
--	*pins = pctrl->soc->groups[group].pins;
--	*num_pins = pctrl->soc->groups[group].npins;
-+	*pins = pctrl->soc->groups[group].grp.pins;
-+	*num_pins = pctrl->soc->groups[group].grp.npins;
- 	return 0;
- }
- 
-@@ -705,11 +705,11 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 		val = !!(io_reg & BIT(g->in_bit));
- 
- 	if (egpio_enable) {
--		seq_printf(s, " %-8s: egpio\n", g->name);
-+		seq_printf(s, " %-8s: egpio\n", g->grp.name);
- 		return;
- 	}
- 
--	seq_printf(s, " %-8s: %-3s", g->name, is_out ? "out" : "in");
-+	seq_printf(s, " %-8s: %-3s", g->grp.name, is_out ? "out" : "in");
- 	seq_printf(s, " %-4s func%d", val ? "high" : "low", func);
- 	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
- 	if (pctrl->soc->pull_no_keeper)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index b9363e2..5e4410b 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -36,9 +36,7 @@ struct pinctrl_pin_desc;
- 
- /**
-  * struct msm_pingroup - Qualcomm pingroup definition
-- * @name:                 Name of the pingroup.
-- * @pins:	          A list of pins assigned to this pingroup.
-- * @npins:	          Number of entries in @pins.
-+ * @grp:                  Generic data of the pin group (name and pins)
-  * @funcs:                A list of pinmux functions that can be selected for
-  *                        this group. The index of the selected function is used
-  *                        for programming the function selector.
-@@ -71,9 +69,7 @@ struct pinctrl_pin_desc;
-  *                        otherwise 1.
-  */
- struct msm_pingroup {
--	const char *name;
--	const unsigned *pins;
--	unsigned npins;
-+	struct pingroup grp;
- 
- 	unsigned *funcs;
- 	unsigned nfuncs;
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-index cb8044b..9946198 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-@@ -264,9 +264,9 @@ static const unsigned int sdc2_data_pins[] = { 122 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -301,9 +301,9 @@ static const unsigned int sdc2_data_pins[] = { 122 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8660.c b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-index 114c5b4..999a5f8 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-@@ -376,9 +376,9 @@ static const unsigned int sdc3_data_pins[] = { 178 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -414,9 +414,9 @@ static const unsigned int sdc3_data_pins[] = { 178 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8909.c b/drivers/pinctrl/qcom/pinctrl-msm8909.c
-index fdf262f..756856d 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8909.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8909.c
-@@ -13,9 +13,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8916.c b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-index d3776a5..cea5c54 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8916.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-@@ -287,9 +287,9 @@ static const unsigned int qdsd_data3_pins[] = { 133 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{							\
--		.name = "gpio" #id,				\
--		.pins = gpio##id##_pins,			\
--		.npins = ARRAY_SIZE(gpio##id##_pins),		\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){				\
- 			msm_mux_gpio,				\
- 			msm_mux_##f1,				\
-@@ -326,9 +326,9 @@ static const unsigned int qdsd_data3_pins[] = { 133 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8953.c b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-index 8969bb52..998351b 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8953.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-@@ -9,9 +9,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{							\
--		.name = "gpio" #id,				\
--		.pins = gpio##id##_pins,			\
--		.npins = ARRAY_SIZE(gpio##id##_pins),		\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){				\
- 			msm_mux_gpio, /* gpio mode */		\
- 			msm_mux_##f1,				\
-@@ -48,9 +48,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8960.c b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-index 615614e..ebe230b 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8960.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-@@ -335,9 +335,9 @@ static const unsigned int sdc3_data_pins[] = { 157 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -377,9 +377,9 @@ static const unsigned int sdc3_data_pins[] = { 157 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8976.c b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-index b2cad1d..c30d80e 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8976.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-@@ -15,9 +15,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -54,9 +54,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8994.c b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-index 73b2901..b1a6759 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8994.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-@@ -11,9 +11,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8996.c b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-index 9437305..46cc0b49 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8996.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-@@ -13,9 +13,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8998.c b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-index 4c1a551..b7cbf32 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8998.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-@@ -15,9 +15,9 @@
- 
- #define PINGROUP(id, base, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -54,9 +54,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -79,9 +79,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-index 5da17f2..d5fe629 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-@@ -326,9 +326,9 @@ static const unsigned int hsic_data_pins[] = { 153 };
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_##f1,			\
-@@ -363,9 +363,9 @@ static const unsigned int hsic_data_pins[] = { 153 };
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)		\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -389,9 +389,9 @@ static const unsigned int hsic_data_pins[] = { 153 };
- 
- #define HSIC_PINGROUP(pg_name, ctl)			\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio,			\
- 			msm_mux_hsic_ctl,		\
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcm2290.c b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-index e252e6c..ba699ea 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-@@ -13,9 +13,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -77,9 +77,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs404.c b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-index 3820808..ae72240 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs404.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-@@ -23,9 +23,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -63,9 +63,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-index 43bd15f..b0f1b3d 100644
---- a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-@@ -90,17 +90,17 @@ static int qdf2xxx_pinctrl_probe(struct platform_device *pdev)
- 	 */
- 	for (i = 0; i < num_gpios; i++) {
- 		pins[i].number = i;
--		groups[i].pins = &pins[i].number;
-+		groups[i].grp.pins = &pins[i].number;
- 	}
- 
- 	/* Populate the entries that are meant to be exposed as GPIOs. */
- 	for (i = 0; i < avail_gpios; i++) {
- 		unsigned int gpio = gpios[i];
- 
--		groups[gpio].npins = 1;
-+		groups[gpio].grp.npins = 1;
- 		snprintf(names[i], NAME_SIZE, "gpio%u", gpio);
- 		pins[gpio].name = names[i];
--		groups[gpio].name = names[i];
-+		groups[gpio].grp.name = names[i];
- 
- 		groups[gpio].ctl_reg = 0x10000 * gpio;
- 		groups[gpio].io_reg = 0x04 + 0x10000 * gpio;
-diff --git a/drivers/pinctrl/qcom/pinctrl-qdu1000.c b/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-index d4670fe..47bc529 100644
---- a/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qdu1000.c
-@@ -15,9 +15,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -54,9 +54,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = REG_BASE + ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -79,9 +79,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-index b0bf65c..81dd213 100644
---- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-@@ -14,9 +14,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -55,9 +55,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -80,9 +80,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 1bdd5ea..6eb0c73 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -21,9 +21,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -61,9 +61,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -87,9 +87,9 @@ enum {
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-index bb98afa..0c10eeb 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-@@ -11,9 +11,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -77,9 +77,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-index 9b2876b0..f86b176 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-@@ -40,9 +40,9 @@ static const struct tile_info sc8180x_tile_info[] = {
- #define REG_SIZE 0x1000
- #define PINGROUP_OFFSET(id, _tile, offset, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -83,9 +83,9 @@ static const struct tile_info sc8180x_tile_info[] = {
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -109,9 +109,9 @@ static const struct tile_info sc8180x_tile_info[] = {
- 
- #define UFS_RESET(pg_name)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = 0xb6000,			\
- 		.io_reg = 0xb6004,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-index 1ad1b2c..96f4fb5 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
-@@ -13,9 +13,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -77,9 +77,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm660.c b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-index 863c8b1..c2e0d5c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-@@ -26,9 +26,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -66,9 +66,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm670.c b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-index e630460..cc3cce0 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm670.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-@@ -17,9 +17,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, base, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -60,9 +60,9 @@
-  */
- #define PINGROUP_DUMMY(id)				\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.ctl_reg = 0,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -85,9 +85,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -110,9 +110,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index f8cd74d..cc05c41 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -16,9 +16,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, base, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -56,9 +56,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -81,9 +81,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-index 64957e1..8826db9 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-@@ -13,9 +13,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx65.c b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-index d94de5b..f6f319c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx65.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-@@ -13,9 +13,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -77,9 +77,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115.c b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-index 73408eb..2a06025 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6115.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-@@ -23,9 +23,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -63,9 +63,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, _tile, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -89,9 +89,9 @@ enum {
- 
- #define UFS_RESET(pg_name, offset)			\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6125.c b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-index f94d6da..d5e2b89 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6125.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-@@ -20,9 +20,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -60,9 +60,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, _tile, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -86,9 +86,9 @@ enum {
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6350.c b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-index 0193917..f3828c0 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-@@ -13,9 +13,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -52,9 +52,9 @@
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -77,9 +77,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6375.c b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-index 778f56e..c82c851 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6375.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-@@ -14,9 +14,9 @@
- #define REG_SIZE 0x1000
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -55,9 +55,9 @@
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -80,9 +80,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-index c7df131..01aea9c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-@@ -23,9 +23,9 @@ enum {
- 
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -63,9 +63,9 @@ enum {
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -89,9 +89,9 @@ enum {
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index 2d18588..e9961a4 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -24,9 +24,9 @@ enum {
- #define REG_SIZE 0x1000
- #define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9) \
- 	{						\
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -64,9 +64,9 @@ enum {
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -90,9 +90,9 @@ enum {
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{						\
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-index 6c402a1..9c69458 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-@@ -14,9 +14,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9) \
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -53,9 +53,9 @@
- 
- #define SDC_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -78,9 +78,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450.c b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-index 5dcebea..d11bb1e 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-@@ -14,9 +14,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -55,9 +55,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -80,9 +80,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8550.c b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-index d69e702..3c847d9 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8550.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-@@ -15,9 +15,9 @@
- 
- #define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
- 	{					        \
--		.name = "gpio" #id,			\
--		.pins = gpio##id##_pins,		\
--		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-+		.grp = PINCTRL_PINGROUP("gpio" #id, 	\
-+			gpio##id##_pins, 		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
- 		.funcs = (int[]){			\
- 			msm_mux_gpio, /* gpio mode */	\
- 			msm_mux_##f1,			\
-@@ -57,9 +57,9 @@
- 
- #define SDC_QDSD_PINGROUP(pg_name, ctl, pull, drv)	\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = ctl,				\
- 		.io_reg = 0,				\
- 		.intr_cfg_reg = 0,			\
-@@ -82,9 +82,9 @@
- 
- #define UFS_RESET(pg_name, offset)				\
- 	{					        \
--		.name = #pg_name,			\
--		.pins = pg_name##_pins,			\
--		.npins = (unsigned int)ARRAY_SIZE(pg_name##_pins),	\
-+		.grp = PINCTRL_PINGROUP(#pg_name, 	\
-+			pg_name##_pins, 		\
-+			ARRAY_SIZE(pg_name##_pins)),	\
- 		.ctl_reg = offset,			\
- 		.io_reg = offset + 0x4,			\
- 		.intr_cfg_reg = 0,			\
--- 
-2.7.4
+That's a good point to think about. Actually, functions are the only
+thing that should be cached on pinctrl side. And we need it specifically
+because groups in each function are presented by names, not selectors.
+Maybe It's better to move this caching to pinctrl scmi driver. But, from
+the other side - storing group names for each function is Linux Kernel
+specific implementation and we probably don't want to add some specific
+case to the Generic protocol driver.
 
+I think I would leave it as in V3 so we can continue discussion.
+
+Oleksii.=
