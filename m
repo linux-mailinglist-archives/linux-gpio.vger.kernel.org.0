@@ -2,111 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81432700321
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 10:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD05D70034D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 11:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240243AbjELI6q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 04:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
+        id S240134AbjELJFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 05:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240273AbjELI6h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 04:58:37 -0400
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D454D10E67;
-        Fri, 12 May 2023 01:58:32 -0700 (PDT)
-X-QQ-mid: Yeas3t1683881853t174t45976
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [125.119.253.217])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 2705097927430388980
-To:     <andy.shevchenko@gmail.com>
-Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>
-References: <20230509022734.148970-1-jiawenwu@trustnetic.com> <20230509022734.148970-7-jiawenwu@trustnetic.com> <ZF1T62BnVFgR33w0@surfacebook>
-In-Reply-To: <ZF1T62BnVFgR33w0@surfacebook>
-Subject: RE: [PATCH net-next v7 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Fri, 12 May 2023 16:57:32 +0800
-Message-ID: <000001d984af$c9bc89e0$5d359da0$@trustnetic.com>
+        with ESMTP id S240072AbjELJFJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 05:05:09 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D78B11548;
+        Fri, 12 May 2023 02:04:47 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A57FCFEC;
+        Fri, 12 May 2023 02:05:29 -0700 (PDT)
+Received: from e120937-lin (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9B123F663;
+        Fri, 12 May 2023 02:04:43 -0700 (PDT)
+Date:   Fri, 12 May 2023 10:04:41 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peng Fan <peng.fan@oss.nxp.com>,
+        Michal Simek <michal.simek@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC v2 2/3] pinctrl: Implementation of the generic scmi-pinctrl
+ driver
+Message-ID: <ZF4BKZkbLr2mKN0s@e120937-lin>
+References: <cover.1682513390.git.oleksii_moisieiev@epam.com>
+ <812ae71d017b115c55648dbf0a4c3502715b1955.1682513390.git.oleksii_moisieiev@epam.com>
+ <ZFVoiWnvq7UXSBBw@surfacebook>
+ <152bbad1-a759-df18-1efa-4e25c54847d9@epam.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQJdw4zS3rpHMobUlf9gBLGLbLpYXQGeWQPmAYIr88uuNK3a0A==
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <152bbad1-a759-df18-1efa-4e25c54847d9@epam.com>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > +static int txgbe_gpio_direction_out(struct gpio_chip *chip, unsigned int offset,
-> > +				    int val)
-> > +{
-> > +	struct wx *wx = gpiochip_get_data(chip);
-> > +	u32 mask;
-> > +
-> > +	mask = BIT(offset) | BIT(offset - 1);
-> > +	if (val)
-> > +		wr32m(wx, WX_GPIO_DR, mask, mask);
-> > +	else
-> > +		wr32m(wx, WX_GPIO_DR, mask, 0);
-> > +
-> > +	wr32m(wx, WX_GPIO_DDR, BIT(offset), BIT(offset));
+On Thu, May 11, 2023 at 01:15:46PM +0000, Oleksii Moisieiev wrote:
+> Hello Andy,
 > 
-> Can you explain, what prevents to have this flow to be interleaved by other API
-> calls, like ->direction_in()? Didn't you missed proper locking schema?
+> On 05.05.23 23:35, andy.shevchenko@gmail.com wrote:
+> > Wed, Apr 26, 2023 at 01:26:37PM +0000, Oleksii Moisieiev kirjoitti:
+> >> scmi-pinctrl driver implements pinctrl driver interface and using
+> >> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> >> SCP firmware, which does the changes in HW.
+> >>
+> >> This setup expects SCP firmware (or similar system, such as ATF)
+> >> to be installed on the platform, which implements pinctrl driver
+> >> for the specific platform.
+> >>
+> >> SCMI-Pinctrl driver should be configured from the device-tree and uses
+> >> generic device-tree mappings for the configuration.
+> > 
+> > ...
+> > 
+> >> +#include <linux/device.h>
+> >> +#include <linux/err.h>
+> > 
+> >> +#include <linux/of.h>
+> > 
+> > I do not see any user of this header. Do you?
+> > 
+> Yes, thanks. Removing
+> 
+> >> +#include <linux/module.h>
+> >> +#include <linux/seq_file.h>
+> >> +
+> >> +#include <linux/pinctrl/machine.h>
+> >> +#include <linux/pinctrl/pinconf.h>
+> >> +#include <linux/pinctrl/pinconf-generic.h>
+> >> +#include <linux/pinctrl/pinctrl.h>
+> >> +#include <linux/pinctrl/pinmux.h>
+> > 
+> >> +#include <linux/scmi_protocol.h>
+> >> +#include <linux/slab.h>
+> > 
+> > Please, move these two to the upper group of the generic headers.
+> > 
+> Thanks, fixed.
+> 
+> >> +struct scmi_pinctrl_funcs {
+> >> +	unsigned int num_groups;
+> >> +	const char **groups;
+> >> +};
+> > 
+> > Please, use struct pinfunction.
+> >
+> I can't use pincfunction here because it has the following groups 
+> definition:
+> const char * const *groups;
+> 
+> Which is meant to be constantly allocated.
+> So I when I try to gather list of groups in 
+> pinctrl_scmi_get_function_groups I will receive compilation error.
+> 
 
-It's true, I should add spinlock for writing GPIO registers.
+Maybe this is a further signal that we should re-evaluate the benefits of
+the lazy allocations you now perform during protocol initialization
+instead of querying and allocating statically all the info structs about
+existing resources.
 
-> 
-> > +	return 0;
-> > +}
-> 
-> ...
-> 
-> > +	switch (type) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		level |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		level |= BIT(hwirq);
-> > +		polarity |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		level |= BIT(hwirq);
-> 
-> > +		polarity &= ~BIT(hwirq);
-> 
-> This...
-> 
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		level &= ~BIT(hwirq);
-> 
-> ...and this can be done outside of the switch-case. Then you simply set certain
-> bits where it's needed.
-> 
-> > +		polarity |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_LOW:
-> > +		level &= ~BIT(hwirq);
-> > +		polarity &= ~BIT(hwirq);
-> > +		break;
-> 
-> default?
+Not saying that is necessarily bad, I understood your points about reducing
+the number of SCMI queries during boot and let pinctrl subsystem trigger only
+the strictly needed one, just saying maybe good to reason a bit more about this
+once V3 is posted. (i.e. I could bother you more :P ..)
 
-Do you mean that treat IRQ_TYPE_LEVEL_LOW as default case, clear level and
-polarity firstly, then set the bits in other needed case? 
+Thanks,
+Cristian
 
-
+P.S. [off-topic]: remember to use get_maintainer.pl as advised elsewhere
+to include proper maintainers (and their bots)
