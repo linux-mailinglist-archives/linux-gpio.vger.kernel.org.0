@@ -2,277 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A479C7005F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 12:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A250700748
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 May 2023 13:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240869AbjELKrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 May 2023 06:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
+        id S240627AbjELL4K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 May 2023 07:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240884AbjELKrf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 06:47:35 -0400
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE56B1BFD;
-        Fri, 12 May 2023 03:47:29 -0700 (PDT)
-X-QQ-mid: Yeas52t1683888384t286t23713
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [125.119.253.217])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 14702659080937180453
-To:     "'Russell King \(Oracle\)'" <linux@armlinux.org.uk>
-Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230509022734.148970-1-jiawenwu@trustnetic.com> <20230509022734.148970-7-jiawenwu@trustnetic.com> <ZF4Hri1yzpeq4X3T@shell.armlinux.org.uk>
-In-Reply-To: <ZF4Hri1yzpeq4X3T@shell.armlinux.org.uk>
-Subject: RE: [PATCH net-next v7 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Fri, 12 May 2023 18:46:23 +0800
-Message-ID: <000201d984be$fe86f390$fb94dab0$@trustnetic.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQJdw4zS3rpHMobUlf9gBLGLbLpYXQGeWQPmAvQUsH+uKU/xEA==
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S240622AbjELL4J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 May 2023 07:56:09 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD69DDA4;
+        Fri, 12 May 2023 04:56:07 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34CBTUSs015701;
+        Fri, 12 May 2023 11:56:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=yHlQfXiN3GaouJUmrChLI34lMMNZ0SrIvYTSsJEJWCg=;
+ b=YEyQPtQkT5L68mRZZpEa5a1OVekU3muTrwdcHM5Q6tUo62cwTrtpmzVUUVyCiUwEsv7Y
+ V/gU5P4pGuGn3JZU0ChYULx6uCbN8dBG6dVgCf/xQ4NkB2BMfdXXaPOv2kl33d/aEXSU
+ ucKbp75tiakDbPyL0DoioBoGqCEwVRvlFCdspPMlY6NaINu3VY9zPH7zPi03GWvALHba
+ 1TRjueLxtefcpLnYFpayVWDU7nJv5NufERGlIuDn24rEFHC4AJyBF7b5XQYuF6y7e1C6
+ AY3nNJG5YPdJ/ACJNmiiVFkFxwNtNss5L0QERz3ZSTpSG3v1+QZ5YFqjrDmO6uZRPPKZ RQ== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qhfww0n4v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 May 2023 11:56:03 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 34CBtwjG003719;
+        Fri, 12 May 2023 11:55:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3qdy59txbg-1;
+        Fri, 12 May 2023 11:55:58 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34CBtwPr003707;
+        Fri, 12 May 2023 11:55:58 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 34CBtwvO003705;
+        Fri, 12 May 2023 11:55:58 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 6240E50CE; Fri, 12 May 2023 17:25:57 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, richardcochran@gmail.com,
+        manivannan.sadhasivam@linaro.org, andy.shevchenko@gmail.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH 0/2] Refactor the pinctrl driver
+Date:   Fri, 12 May 2023 17:25:51 +0530
+Message-Id: <1683892553-19882-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: r9OpPr1f_dNF66iKj91ksu7Lb7GFA0GO
+X-Proofpoint-GUID: r9OpPr1f_dNF66iKj91ksu7Lb7GFA0GO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-12_08,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=417 malwarescore=0
+ spamscore=0 clxscore=1015 adultscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305120099
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > +static int txgbe_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> > +{
-> > +	struct wx *wx = gpiochip_get_data(chip);
-> > +	struct txgbe *txgbe = wx->priv;
-> > +	int val;
-> > +
-> > +	val = rd32m(wx, WX_GPIO_EXT, BIT(offset));
-> > +
-> > +	txgbe->gpio_orig &= ~BIT(offset);
-> > +	txgbe->gpio_orig |= val;
-> 
-> You seem to be using this as a way to implement triggering interrupts on
-> both levels. Reading the GPIO value using the GPIO functions should not
-> change the interrupt state, so this is wrong.
+Hi,
 
-Yes, I just found the correct way to deal with it.
+This series refactor the target specific pinctrl driver for qcom
+by reusing the generic pinfunction struct, pingroup struct and the defined
+macros to avoid code repetition.
+The series is rebased on linux-next and based on all the review and
+comments from different versions of [1].
 
-> > +static int txgbe_gpio_direction_out(struct gpio_chip *chip, unsigned int offset,
-> > +				    int val)
-> > +{
-> > +	struct wx *wx = gpiochip_get_data(chip);
-> > +	u32 mask;
-> > +
-> > +	mask = BIT(offset) | BIT(offset - 1);
-> > +	if (val)
-> > +		wr32m(wx, WX_GPIO_DR, mask, mask);
-> > +	else
-> > +		wr32m(wx, WX_GPIO_DR, mask, 0);
-> 
-> Why are you writing two neighbouring bits here? If GPIO 0 is requested
-> to change, offset will be zero, and BIT(-1) is probably not what you
-> want.
-> 
-> Moreover, if requesting a change to GPIO 3, BIT(offset - 1) will also
-> hit GPIO 2.
-> 
-> Maybe there's a "* 2" missing here?
-> 
-> If this code is in fact correct, it needs a comment to explain what's
-> going on here.
+[1] https://lore.kernel.org/linux-arm-msm/1681966915-15720-1-git-send-email-quic_rohiagar@quicinc.com/
 
-GPIO lines description:
-	/* GPIO 0: tx fault
-	 * GPIO 1: tx disable
-	 * GPIO 2: sfp module absent
-	 * GPIO 3: rx signal lost
-	 * GPIO 4: rate select 1, 1G(0) 10G(1)
-	 * GPIO 5: rate select 0, 1G(0) 10G(1)
-	 */
-The previous consideration was processing GPIO 0&1, 4&5. The output
-lines are 1/4/5. Under the persistent misconfiguration of flash, GPIO 0 is
-treated as the output signal to enable/disable TX laser, together with
-GPIO 1. And GPIO 4 seems not be used by SFP driver, to change module
-rate, also this driver does not implement rate switching either.
+Thanks,
+Rohit.
 
-In my understanding, the input GPIO does not call this function, so I put
-no  condition there. But in general, with all GPIO being used correctly,
-removing these odd codes should work as well. I'll fix it and test it again.
+Rohit Agarwal (2):
+  pinctrl: qcom: Remove the msm_function struct
+  pinctrl: qcom: Refactor generic qcom pinctrl driver
 
-> > +static int txgbe_gpio_set_type(struct irq_data *d, unsigned int type)
-> > +{
-> > +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > +	struct wx *wx = gpiochip_get_data(gc);
-> > +	u32 level, polarity;
-> > +
-> > +	level = rd32(wx, WX_GPIO_INTTYPE_LEVEL);
-> > +	polarity = rd32(wx, WX_GPIO_POLARITY);
-> > +
-> > +	switch (type) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		level |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		level |= BIT(hwirq);
-> > +		polarity |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		level |= BIT(hwirq);
-> 
-> Are you sure you've got this correct. "level" gets set when edge cases
-> are requested and cleared when level cases are requested. It seems that
-> the register really selects edge-mode if the bit is set? Is it described
-> in the documentation as "not level" ?
+ drivers/pinctrl/qcom/pinctrl-apq8064.c  | 104 +++---
+ drivers/pinctrl/qcom/pinctrl-apq8084.c  | 264 ++++++++-------
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c  | 104 +++---
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c  | 206 ++++++------
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c  | 260 +++++++--------
+ drivers/pinctrl/qcom/pinctrl-ipq8064.c  | 114 +++----
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c  | 240 +++++++-------
+ drivers/pinctrl/qcom/pinctrl-ipq9574.c  | 176 +++++-----
+ drivers/pinctrl/qcom/pinctrl-mdm9607.c  | 276 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-mdm9615.c  |  90 +++--
+ drivers/pinctrl/qcom/pinctrl-msm.c      |  13 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h      |  42 ++-
+ drivers/pinctrl/qcom/pinctrl-msm8226.c  | 156 +++++----
+ drivers/pinctrl/qcom/pinctrl-msm8660.c  | 252 +++++++-------
+ drivers/pinctrl/qcom/pinctrl-msm8909.c  | 268 ++++++++-------
+ drivers/pinctrl/qcom/pinctrl-msm8916.c  | 556 ++++++++++++++++---------------
+ drivers/pinctrl/qcom/pinctrl-msm8953.c  | 424 ++++++++++++------------
+ drivers/pinctrl/qcom/pinctrl-msm8960.c  | 464 +++++++++++++-------------
+ drivers/pinctrl/qcom/pinctrl-msm8976.c  | 212 ++++++------
+ drivers/pinctrl/qcom/pinctrl-msm8994.c  | 564 ++++++++++++++++----------------
+ drivers/pinctrl/qcom/pinctrl-msm8996.c  | 508 ++++++++++++++--------------
+ drivers/pinctrl/qcom/pinctrl-msm8998.c  | 380 +++++++++++----------
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c  | 474 +++++++++++++--------------
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c  | 230 +++++++------
+ drivers/pinctrl/qcom/pinctrl-qcs404.c   | 388 +++++++++++-----------
+ drivers/pinctrl/qcom/pinctrl-qdf2xxx.c  |   6 +-
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c  | 249 +++++++-------
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c  | 308 +++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sc7180.c   | 254 +++++++-------
+ drivers/pinctrl/qcom/pinctrl-sc7280.c   | 322 +++++++++---------
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c  | 286 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c | 358 ++++++++++----------
+ drivers/pinctrl/qcom/pinctrl-sdm660.c   | 387 +++++++++++-----------
+ drivers/pinctrl/qcom/pinctrl-sdm670.c   | 284 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sdm845.c   | 286 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sdx55.c    | 190 ++++++-----
+ drivers/pinctrl/qcom/pinctrl-sdx65.c    | 194 ++++++-----
+ drivers/pinctrl/qcom/pinctrl-sm6115.c   | 162 +++++----
+ drivers/pinctrl/qcom/pinctrl-sm6125.c   | 282 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sm6350.c   | 296 ++++++++---------
+ drivers/pinctrl/qcom/pinctrl-sm6375.c   | 358 ++++++++++----------
+ drivers/pinctrl/qcom/pinctrl-sm8150.c   | 286 ++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sm8250.c   | 258 +++++++--------
+ drivers/pinctrl/qcom/pinctrl-sm8350.c   | 298 ++++++++---------
+ drivers/pinctrl/qcom/pinctrl-sm8450.c   | 300 +++++++++--------
+ drivers/pinctrl/qcom/pinctrl-sm8550.c   | 320 +++++++++---------
+ 46 files changed, 6055 insertions(+), 6394 deletions(-)
 
-Yes, the WX_GPIO_INTTYPE_LEVEL register shows that 0 for level-sensitive,
-1 for edge-sensitive.
-
-> 
-> > +		polarity &= ~BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_HIGH:
-> > +		level &= ~BIT(hwirq);
-> > +		polarity |= BIT(hwirq);
-> > +		break;
-> > +	case IRQ_TYPE_LEVEL_LOW:
-> > +		level &= ~BIT(hwirq);
-> > +		polarity &= ~BIT(hwirq);
-> > +		break;
-> > +	}
-> > +
-> > +	if (type & IRQ_TYPE_LEVEL_MASK)
-> > +		irq_set_handler_locked(d, handle_level_irq);
-> > +	else if (type & IRQ_TYPE_EDGE_BOTH)
-> > +		irq_set_handler_locked(d, handle_edge_irq);
-> 
-> So what handler do we end up with if a GPIO is initially requested for
-> a level IRQ, released, and then requested for an edge IRQ?
-
-Sorry I don't know much about it, who controls the IRQ type? In fact,
-edge IRQ always be requested in my test, and the type is EDGE_BOTH.
-
-> 
-> Secondly, a more general comment. You are using the masks here, and we
-> can see from the above that there is a pattern to the setting of level
-> and polarity. Also, IMHO there's a simpler way to do this:
-> 
-> 	u32 level, polarity, mask, val;
-> 
-> 	mask = BIT(hwirq);
-> 
-> 	if (type & IRQ_TYPE_LEVEL_MASK) {
-> 		level = 0;
-> 		irq_set_handler_locked(d, handle_level_irq);
-> 	} else {
-> 		level = mask;
-> 		/* fixme: irq_set_handler_locked(handle_edge_irq); ? */
-> 	}
-> 
-> 	if (type == IRQ_TYPE_EDGE_RISING || type == IRQ_TYPE_LEVEL_HIGH)
-> 		polarity = mask;
-> 	else
-> 		polarity = 0;
-> 
-> 	/* fixme: what does this register do, and why is it configured
-> 	 * here?
-> 	 */
-> 	wr32m(wx, WX_GPIO_INTEN, mask, mask);
-
-It enables corresponding GPIO interrupt.
-
-> 
-> 	wr32m(wx, WX_GPIO_INTTYPE_LEVEL, mask, level);
-> 	if (type != IRQ_TYPE_EDGE_BOTH)
-> 		wr32m(wx, WX_GPIO_POLARITY, mask, polarity);
-> 
-> Now, as for both-edge interrupts, this needs further thought. As I say
-> above, using the _get method to update the internal interrupt state
-> won't be reliable.
-> 
-> If the hardware has no way to trigger on both edges, then it's going to
-> take some additional complexity to make this work. Firstly, you need to
-> record which interrupts are using both-edges in the driver, so you know
-> which need extra work in the interrupt handler.
-> 
-> Secondly, you still need to configure the polarity as best you can to
-> pick up the first change in state here. That means reading the current
-> GPIO state, and configuring the GPIO polarity correctly here. It's
-> going to be racy with the hardware, so the closer together you can get
-> the GPIO state-to-polarity-set the better in terms of the size of the
-> race window.
-
-Thanks for the detailed advice. Hardware can trigger the interrupts on both
-edges, just set polarity.
-
-> 
-> > +static void txgbe_irq_handler(struct irq_desc *desc)
-> > +{
-> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +	struct wx *wx = irq_desc_get_handler_data(desc);
-> > +	struct txgbe *txgbe = wx->priv;
-> > +	irq_hw_number_t hwirq;
-> > +	unsigned long gpioirq;
-> > +	struct gpio_chip *gc;
-> > +	u32 gpio;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +
-> > +	gpioirq = rd32(wx, WX_GPIO_INTSTATUS);
-> 
-> Does reading INTSTATUS clear down any of the pending status bits?
-
-No, it's read only. Interrupt status bits will be cleared in txgbe_gpio_irq_ack().
-
-> 
-> > +
-> > +	/* workaround for hysteretic gpio interrupts */
-> > +	gpio = rd32(wx, WX_GPIO_EXT);
-> > +	if (!gpioirq)
-> > +		gpioirq = txgbe->gpio_orig ^ gpio;
-> 
-> This doesn't solve the both-edge case, because this will only get
-> evaluated if some other GPIO also happens to raise an interrupt.
-> 
-> For any GPIOs should have both-edge applied, you need to read the
-> current state of the GPIO and program the polarity appropriately,
-> then re-read the GPIO to see if it changed state during that race
-> and handle that as best that can be.
-> 
-> The problem is that making both-edge work reliably on hardware that
-> doesn't support both-edge will always be rather racy.
-
-Thanks again, I learned a lot.
-
-> 
-> > +
-> > +	gc = txgbe->gpio;
-> > +	for_each_set_bit(hwirq, &gpioirq, gc->ngpio)
-> > +		generic_handle_domain_irq(gc->irq.domain, hwirq);
-> > +
-> > +	chained_irq_exit(chip, desc);
-> > +
-> > +	/* unmask interrupt */
-> > +	if (netif_running(wx->netdev))
-> > +		wx_intr_enable(wx, TXGBE_INTR_MISC(wx));
-> 
-> Why does this depend on whether the network interface is running, and
-> why is it done at the end of the interrupt handler? Maybe this needs a
-> better comment in the code explaining what it's actually doing?
-
-This register should be written after handling interrupts, otherwise the next
-Interrupt may not come, by hardware design. And should we handle the
-interrupts when interface is not running? I didn't think it should do, so I made
-it conditional.
-
+-- 
+2.7.4
 
