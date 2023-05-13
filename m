@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15D827018EE
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 May 2023 20:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 616777018F7
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 May 2023 20:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236662AbjEMSGb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 May 2023 14:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43460 "EHLO
+        id S233142AbjEMSIW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 May 2023 14:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237169AbjEMSGL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 14:06:11 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65D159DA
-        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 11:05:39 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-953343581a4so1747727466b.3
-        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 11:05:39 -0700 (PDT)
+        with ESMTP id S231256AbjEMSIP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 14:08:15 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B31E3C34
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 11:08:08 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-965e4be7541so1911090466b.1
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 11:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684001137; x=1686593137;
+        d=linaro.org; s=google; t=1684001287; x=1686593287;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VORmC64siVlBa/0lsts3YfZ0fyyp1pGdpaqv6LESwso=;
-        b=wEKkAyeWa52ws3iAGnzglLlKlS3zlbpBZ4QgIsfT3pJDn0B03VxbK080SEDVumngKN
-         Xdr9wix17dCRN5YoJMGYMo9kqgtQ2fzH6cI3wGX8OqNuDjaNMfijfLhE/b6Dn4BlVtAd
-         KBHNxbh78/fNEK4gw7Wme7nVqhR7+9muiraIOzH9ojNzoL6HSTuIpRbK9C+H6ivxaeou
-         J2tAWi2B644hS5Pr8BPft2de8uC2ffIWcP7T9KmksbbXtaQ8Q07Ud6vjttKqWNL8V2x1
-         8fhBBGRKKjTaegm/1Ns61Ea/dl93XMKRuTunMW/0vUBHFb5DFhnYIWQVu3Nk2Kt0fns+
-         4m/g==
+        bh=Pz3pC3oD+mRQD2yh5jV0jp+d2wnh2+HWJqx/JQaPzB0=;
+        b=EVBWjh+d6IhLcfQHvnPqNtgl2kB1ZPchXw0HXjFU2qSUtuwNy0q6Sp0YZggQOXxfjz
+         oEcw/2Tl/2G+fh5jken5DOv1L2V0oQGBznQKAHYXr5FEYY+2rEcvHxbvLt9IC6T7d2pm
+         j+JUVuj+iQUbkEXes1F1CBctgEWYrWPuR7xLWrMjBF263X4+bzOn/pWNhcqVAypZKXAx
+         ikR1LxkTi5RNV8l0ufwPRld9j5r5vXg8+d6nfVq3ozPse6EdauUgXDDiXX8GGkzWphAd
+         OXs/uwKHfMDIkh+2EG5f+tVdc5Zs9rGtQ8K5jD4iljzDntk+BUytG4wJjg7lSp4gpCJp
+         o9CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684001137; x=1686593137;
+        d=1e100.net; s=20221208; t=1684001287; x=1686593287;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VORmC64siVlBa/0lsts3YfZ0fyyp1pGdpaqv6LESwso=;
-        b=V/nIY5vlTbzuU+/LY3TXSaUKt+31Fd1SGTkGJBVQZxI1skWpJL7fD4LDHyxP05r3km
-         HLum2lKzkisXPseCm98+MWf71ropsVEYcq73XcadpovY/VMFwTs5k/XZJW435lewyWbk
-         3wXZG+NeB8J53aTUWEnKSa59qPcE5/+9DlwJTqEy3xegQEAUKnZmRi5qPc8NgRW2BZod
-         nvRNhu4EVR8tWSWXttpLmqtpmSrxVTKnO6DGeMIsP2tTYdR9P003SnhYlq0m8ne5Odxc
-         tq94ZSvsCQKBGKH67VSKjZDbZyJ8xWihfOyedqQiPr/yRuIxTY6w6JI2wnApEPT+A17m
-         9ERQ==
-X-Gm-Message-State: AC+VfDygWvFp+NwWUS3m4Bb6oiA/fx1iQOPxAREEImQdB/sesCDgJWXA
-        iMgMItoZ5puUtmRvbV5xGDNUIA==
-X-Google-Smtp-Source: ACHHUZ456NqFDsI+SzfZLKpEWQ+eDqx16S3lEUJwP8MVzdzMH2X2yE1vj8bXjIo/Mqxrqh0ozu1OcA==
-X-Received: by 2002:a17:907:6295:b0:94e:cbfb:5fab with SMTP id nd21-20020a170907629500b0094ecbfb5fabmr27362822ejc.75.1684001137121;
-        Sat, 13 May 2023 11:05:37 -0700 (PDT)
+        bh=Pz3pC3oD+mRQD2yh5jV0jp+d2wnh2+HWJqx/JQaPzB0=;
+        b=Oe3RGanyY1HuyF9qMNUQar88k76ggOC7H7XqDLfXlUSIRP1YTI417z26clhtTSAbBE
+         vC3nTQky3p4wTAhfYWnH7mZA6fhQK5brntHUC9ERhMCHhbRxyRl+kH4Q1wBZOK6gMdUb
+         HC78Grt4TfJP18WYVfHWBwDM35imzBIYlPoMxpVUgrqYtGwILjlws5EgCBa0a/cmcA63
+         9hiTm2+Fpuw4Qd5p0fA0yxtJ0S89mBvNqnRH07M+0XGFN3SRrnSyBx7MeLDMgu2Epbp1
+         NSZXXpioE9yv9go2fxT3paUoA0dkwCU/KVEw1rNW5w5VJl5sszhKwpdpiGoRyG0Nxw8g
+         FpsA==
+X-Gm-Message-State: AC+VfDwT2RgUVeEWpsyFCc5UKVMlsEZSNS7lm4yQS8W53YCPBZZy7t14
+        lxlM1RzWFhfDw6S7+yLO1yquTg==
+X-Google-Smtp-Source: ACHHUZ7ZC5ghgGrfBuRI4KprxyOU5k85ez2jlpAKSpf+r5Q8qvL256LVhRrTCK365P5OAJhDuRHo/g==
+X-Received: by 2002:a17:907:9405:b0:957:12a6:a00f with SMTP id dk5-20020a170907940500b0095712a6a00fmr25591950ejc.21.1684001286843;
+        Sat, 13 May 2023 11:08:06 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:ba68:e5c9:694e:c6e4? ([2a02:810d:15c0:828:ba68:e5c9:694e:c6e4])
-        by smtp.gmail.com with ESMTPSA id hx7-20020a170906846700b00965a4350411sm6962208ejc.9.2023.05.13.11.05.35
+        by smtp.gmail.com with ESMTPSA id ib10-20020a1709072c6a00b009531d9efcc4sm7023439ejc.133.2023.05.13.11.08.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 May 2023 11:05:36 -0700 (PDT)
-Message-ID: <015c5208-ac85-8a14-3455-c70781fd92f8@linaro.org>
-Date:   Sat, 13 May 2023 20:05:34 +0200
+        Sat, 13 May 2023 11:08:06 -0700 (PDT)
+Message-ID: <db2dcafb-db14-96ab-87cc-88408f3bab4b@linaro.org>
+Date:   Sat, 13 May 2023 20:08:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
@@ -69,10 +69,10 @@ Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org
 References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
  <20230512122838.243002-6-ckeepax@opensource.cirrus.com>
- <25c92476-7bca-90c4-9130-cb765495a783@linaro.org>
- <20230512161545.GL68926@ediswmail.ad.cirrus.com>
+ <5969fe82-69cd-34d6-edd1-d16ea741d9cb@linaro.org>
+ <20230512161803.GM68926@ediswmail.ad.cirrus.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230512161545.GL68926@ediswmail.ad.cirrus.com>
+In-Reply-To: <20230512161803.GM68926@ediswmail.ad.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -85,96 +85,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/05/2023 18:15, Charles Keepax wrote:
-> On Fri, May 12, 2023 at 05:23:22PM +0200, Krzysztof Kozlowski wrote:
+On 12/05/2023 18:18, Charles Keepax wrote:
+> On Fri, May 12, 2023 at 05:25:52PM +0200, Krzysztof Kozlowski wrote:
 >> On 12/05/2023 14:28, Charles Keepax wrote:
->>> +$id: http://devicetree.org/schemas/mfd/cirrus,cs42l43.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
+>>> (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
+>>> for portable applications. It provides a high dynamic range, stereo
+>>> DAC for headphone output, two integrated Class D amplifiers for
+>>
+>> ...
+>>
 >>> +
->>> +title: Cirrus Logic CS42L43 Audio CODEC
->>
->> That's audio codec, so it should be in sound, not MFD.
->>
-> 
-> Is this true even despite the device being implemented as an MFD?
-
-Implementation in Linux almost does not matter here. Bindings location
-match the device main purpose. We indeed stuff into MFD bindings things
-like PMIC, because PMIC is a bit more than just regulators, and we do
-not have here subsystem for PMICs. If you call it Audio Codec, then I
-vote for sound directory for bindings.
-
-> I am happy to move it, and will do so unless I hear otherwise.
-> 
->>> +  - VDD_P-supply
->>> +  - VDD_A-supply
->>> +  - VDD_D-supply
->>> +  - VDD_IO-supply
->>> +  - VDD_CP-supply
->>
->> lowercase, no underscores in all property names.
-> 
-> I guess we can rename all the regulators to lower case.
-> 
->>> +additionalProperties: false
->>
->> This order is quite unexpected... please do not invent your own layout.
->> Use example-schema as your starting point. I suspect there will be many
->> things to fix, so limited review follows (not complete).
->>
->>
->> Missing ref to dai-common
-> 
-> Apologies for that I was a little hesitant about this but this
-> order did make the binding document much more readable, the
-> intentation got really hard to follow in the traditional order. I
-> guess since I have things working now I can put it back, again I
-> will do so unless I hear otherwise.
-
-The additional/unevaluatedProperties from child nodes are indeed moved
-then up - following the property:
-   pinctrl:
-     type: object
-     additionalProperties: false
-
-but that's exception and for the rest I don't see any troubles with
-indentation. That would be the only binding... so what's here so special?
-
-> 
->>> +  pinctrl:
->>> +    type: object
->>
->> additionalProperties: false
->>
-> 
-> Can do.
-> 
+>>> +  interrupt-controller: true
 >>> +
->>> +    allOf:
->>> +      - $ref: "../pinctrl/pinctrl.yaml#"
+>>> +  '#interrupt-cells':
+>>> +    const: 2
 >>
->> No quotes, absolute path, so /schemas/pinctrl/....
->>
-> 
-> Can do.
-> 
->>> +
->>> +    properties:
->>> +      pin-settings:
->>
->> What's this node about? pinctrl/pinctrl/pins? One level too much.
+>> Hm, are you sure? Who is the consumer/user of this interrupt controller?
 >>
 > 
-> codec/pinctrl/pins
-> 
-> The device is a codec, so the main node should be called codec,
-> then it has a subnode called pinctrl to satisfy the pinctrl DT
-> binding.
+> Anyone who wants the device has GPIOs that can signal IRQs. Some
+> of the other IRQs could be more generally useful, such as some of
+> the jack detection ones.
 
-Sure, but then you do not need pin-settings. Look at Qualcomm bindings
-for example:
 
-Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml
+OK, makes sense, but it is a bit odd then to have:
+codec {
+  which is GPIO and interrupt controller, but not pin controller
+  pinctrl {
+    pin controller, which is not GPIO and not interrupt controller
+  }
+}
+Maybe all the GPIO/pin/related interrupt properties should be moved to
+pinctrl node?
 
 Best regards,
 Krzysztof
