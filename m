@@ -2,77 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2497701553
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 May 2023 10:51:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 392607015A3
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 May 2023 11:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233212AbjEMIv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 May 2023 04:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
+        id S235208AbjEMJ0t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 May 2023 05:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjEMIv4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 04:51:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3E449C0;
-        Sat, 13 May 2023 01:51:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B081361C33;
-        Sat, 13 May 2023 08:51:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B68C4339B;
-        Sat, 13 May 2023 08:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1683967913;
-        bh=IH5vicqvrPOYUBi1HJ5D3GZ4J4lLH8IlZCxqQG06Cgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OtaOoZQfWI10UcINkOrUvS2E384DY5KyHtCiK/03pKKUnj8MNGO0sxlnlcYueb9pW
-         gcPHxioaRXBmdWh/iIKC7RovIbtoS73jLPkr8I2SXBk14RCOGbITfKHHdzRB/o6tiz
-         bW+8ebY+wGcS/1C33BGGlOXnpxHojp9vzcbzXmBk=
-Date:   Sat, 13 May 2023 17:50:13 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ye Xiang <xiang.ye@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lee Jones <lee@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        srinivas.pandruvada@intel.com, heikki.krogerus@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, sakari.ailus@linux.intel.com,
-        zhifeng.wang@intel.com, wentong.wu@intel.com, lixu.zhang@intel.com
-Subject: Re: [PATCH v8 0/6] Add Intel LJCA device driver
-Message-ID: <2023051318-anchovy-sincere-65e3@gregkh>
-References: <20230511175844.185070-1-xiang.ye@intel.com>
+        with ESMTP id S230430AbjEMJ0t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 05:26:49 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D46F10DC
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 02:26:47 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4f11d267d8bso12199441e87.2
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 02:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683970006; x=1686562006;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2F71NeKdPntAy3Z+ybix75zHfY0YIpg6kv622GJFXbM=;
+        b=kIB5yKWaX6ZaCvUKn3kXUrjMYUF88HJaMXHgVi2t3hQ3JTo5HnpCt14+OuQb+b4vRX
+         J+nsWQ88vatV/5dehwNGRTZQa3qFh+FcpuHXXzJ5f0p6S0aVlRJwOeO3j3kfXc6z+p0c
+         pvLytz7PGqC5TOD+xDD55tJvTYCujKFIiaLxGqc7OrDRqdQ/Yyl/B3XX+g/dKUalwFCr
+         dNFjzPfJvRLaOIkYEUKqTGRL0WLey4gkM0KdV058ooXgfHA5pZgAI8zZ3kUGJ/jcYVXi
+         FxuxPg13WjebERx/pQVOcCAk2coAPVVFYLTdBxvSDA7E9PBqQFiWgIcoH4WzwQGsL/sB
+         wzVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683970006; x=1686562006;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2F71NeKdPntAy3Z+ybix75zHfY0YIpg6kv622GJFXbM=;
+        b=HFMoySoOu1+aBa+RjSxOgdR2vKO9RKV1cdCEtP/46zbVeC61tvFPq2S794bMlBZvaY
+         jpWDGqGIk1xeTZDrP42nAmz8eAB7Xps3oxYgHmnBR6GDsTbaJvaeL31XptMckifYUEsZ
+         D0RcBOGa4KdcqTol6wWH7dpZGSLpqgVvlVpvBt/HehoytZTPBKfd+GH6DglaREhEEgan
+         XgZ7J+PNtuZ240r7fjijthhmC+8idhDbJN2wCdQcqAMYLdE6Fx5VvHeQBt8XFvAaPYre
+         tTHwEjv8DVqG/ZqVyRAw8Q2YA86aGVLvcCRvSwS4ywj7FYoePWMLLgfIpSwOFA8EtfYg
+         gBrg==
+X-Gm-Message-State: AC+VfDwhsatUbTWvIsCN9NemwGqukHfbBVi9mcU+/CERRKJ4Ykrl4ckS
+        9j7jqcPehEOOwQ0Jvgz27oingQ==
+X-Google-Smtp-Source: ACHHUZ4IdptFTHvQTAPgHe+AFQmfte3OSLwL1OE2oj7TahT+Pg06PNqiQBcQ8sIHgGgpBlxTuXKK/g==
+X-Received: by 2002:a05:6512:3907:b0:4f1:dcd2:ab6d with SMTP id a7-20020a056512390700b004f1dcd2ab6dmr3841495lfu.28.1683970005801;
+        Sat, 13 May 2023 02:26:45 -0700 (PDT)
+Received: from [192.168.1.101] (abxi58.neoplus.adsl.tpnet.pl. [83.9.2.58])
+        by smtp.gmail.com with ESMTPSA id e28-20020ac2547c000000b004f13634da05sm1772978lfn.180.2023.05.13.02.26.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 May 2023 02:26:45 -0700 (PDT)
+Message-ID: <7738357b-801c-e1a7-8ea9-28d8a3d3d997@linaro.org>
+Date:   Sat, 13 May 2023 11:26:43 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230511175844.185070-1-xiang.ye@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH] pinctrl: qcom: sa8775p: add the wakeirq map
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230512153232.92450-1-brgl@bgdev.pl>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230512153232.92450-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 12, 2023 at 01:58:38AM +0800, Ye Xiang wrote:
-> Add driver for Intel La Jolla Cove Adapter (LJCA) device.
-> This is a USB-GPIO, USB-I2C and USB-SPI device. We add 4
-> drivers to support this device: a USB driver, a GPIO chip
-> driver, a I2C controller driver and a SPI controller driver.
 
-I am sorry, but you have not followed the required Intel-specific
-requirements for submitting code like this.  Please work with the Linux
-Intel developer group to resolve this issue and do it properly for your
-next patch submission as I can not take this one for this obvious
-reason.
 
-thanks,
+On 12.05.2023 17:32, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The SA8775P TLMM driver is missing the GPIO-to-wakeup-pin mapping. This
+> adds it.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+This almost matches
 
-greg k-h
+https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/commit/d7af4a14603957d414e931b5f175f36f3537ae34
+
+minus one diff:
+
+< { 39, 200 },
+---
+> { 30, 200 },
+
+please consult which one is correct with qc folks
+
+Konrad
+>  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> index 2ae7cdca65d3..422d72ed1012 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> @@ -1491,6 +1491,23 @@ static const struct msm_pingroup sa8775p_groups[] = {
+>  	[153] = SDC_QDSD_PINGROUP(sdc1_data, 0x199000, 9, 0),
+>  };
+>  
+> +static const struct msm_gpio_wakeirq_map sa8775p_pdc_map[] = {
+> +	{ 0, 169 }, { 1, 174 }, { 2, 170 }, { 3, 175 }, { 4, 171 }, { 5, 173 },
+> +	{ 6, 172 }, { 7, 182 }, { 10, 220 }, { 11, 213 }, { 12, 221 },
+> +	{ 16, 230 }, { 19, 231 }, { 20, 232 }, { 23, 233 }, { 24, 234 },
+> +	{ 26, 223 }, { 27, 235 }, { 28, 209 }, { 29, 176 }, { 39, 200 },
+> +	{ 31, 201 }, { 32, 212 }, { 35, 177 }, { 36, 178 }, { 39, 184 },
+> +	{ 40, 185 }, { 41, 227 }, { 42, 186 }, { 43, 228 }, { 45, 187 },
+> +	{ 47, 188 }, { 48, 194 }, { 51, 195 }, { 52, 196 }, { 55, 197 },
+> +	{ 56, 198 }, { 57, 236 }, { 58, 192 }, { 59, 193 }, { 72, 179 },
+> +	{ 73, 180 }, { 74, 181 }, { 75, 202 }, { 76, 183 }, { 77, 189 },
+> +	{ 78, 190 }, { 79, 191 }, { 80, 199 }, { 83, 204 }, { 84, 205 },
+> +	{ 85, 229 }, { 86, 206 }, { 89, 207 }, { 91, 208 }, { 94, 214 },
+> +	{ 95, 215 }, { 96, 237 }, { 97, 216 }, { 98, 238 }, { 99, 217 },
+> +	{ 100, 239 }, { 105, 219 }, { 106, 210 }, { 107, 211 }, { 108, 222 },
+> +	{ 109, 203 }, { 145, 225 }, { 146, 226 },
+> +};
+> +
+>  static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
+>  	.pins = sa8775p_pins,
+>  	.npins = ARRAY_SIZE(sa8775p_pins),
+> @@ -1499,6 +1516,8 @@ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
+>  	.groups = sa8775p_groups,
+>  	.ngroups = ARRAY_SIZE(sa8775p_groups),
+>  	.ngpios = 150,
+> +	.wakeirq_map = sa8775p_pdc_map,
+> +	.nwakeirq_map = ARRAY_SIZE(sa8775p_pdc_map),
+>  };
+>  
+>  static int sa8775p_pinctrl_probe(struct platform_device *pdev)
