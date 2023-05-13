@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11924701A9B
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 00:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8BCC701AC0
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 01:02:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjEMWwD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 May 2023 18:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
+        id S231190AbjEMXCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 May 2023 19:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjEMWwC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 18:52:02 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A5F2699
-        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 15:52:01 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64395e2a715so11514288b3a.3
-        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 15:52:01 -0700 (PDT)
+        with ESMTP id S229447AbjEMXCe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 May 2023 19:02:34 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10311703
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 16:02:30 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1aae5c2423dso109553695ad.3
+        for <linux-gpio@vger.kernel.org>; Sat, 13 May 2023 16:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20221208.gappssmtp.com; s=20221208; t=1684018320; x=1686610320;
+        d=kernelci-org.20221208.gappssmtp.com; s=20221208; t=1684018950; x=1686610950;
         h=from:to:subject:content-transfer-encoding:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYIDtetzCFdUfwRbzIS04waV0IfvvWAmLwTn8rRJoe8=;
-        b=X/FGDc3PsI2XliTheEMyQp4pqn2C7fbmDKAHCeu6X76V2pTICE4V6YZizYb8GkCJ/g
-         QpZvVEGQzSMG8r9nKCXtwbaf2C7/c7TYXUbTOKJCpRv3ePn8t/bUhpOfKDfgJ4FnmcPn
-         Ch9p1l6bKUTnxTGexR3NFNxRJajHEvAVY4oVq0c59BzJU1Sr6cWNgJN3S4GUCUoN3ooj
-         BMDnks6/UCk4IIRCwp7MMqaJL6Icei1rV4AeXRGlHI1d38BeXmupcOxmPP/e1PfUjD8p
-         S8tcgPCCNqs4JZ3f2xNI44APbNwrYKnRx7JG/2Duzvsbigdl6QqBAE7mJAUYdKgiXMXi
-         U6pg==
+        bh=dsW7RsWrlyy5FXHePmWZFahhfn0HyQXKGunTc36vu8I=;
+        b=Phgf7kDwnLFX+Jp4dLwZkQ7euuPPutLZg+GYVO7WETEuCPexj1eYG+WSJbnrFTzxCe
+         eOCnNl/FwyJoLjwOnpGafwYe2xsY3Fj39DnevvoNbu6RKsd38ASoo2XAF9Ybc2cCbb1E
+         hJNUremcPRCN9WaHBFjphdHKVs+VQjHs1+hO3ijyzoPnO2q8Eja7HJhh5633mXz9cdgE
+         45YylmfBcNuSqF7dnnIz9EwBuHq5zbDzB9sAQ9GsUT+2iJh1EkRRVcjtBIFZcRSroaA9
+         Mer9jNGtzzwpJCI0nbD+mF7TsmPjOYGrI9Q59Sjj8cLec5At8Ojgi71ZDiEtJ5E13tCb
+         Gsyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684018320; x=1686610320;
+        d=1e100.net; s=20221208; t=1684018950; x=1686610950;
         h=from:to:subject:content-transfer-encoding:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HYIDtetzCFdUfwRbzIS04waV0IfvvWAmLwTn8rRJoe8=;
-        b=L+xKXFJoW6k/hDFjbDQdUdYojm/H3LwlQ1YIyY7qxeSivGNA2fCmE9WeIUt00+wwxa
-         CF0ZnBbG9nZRigIV5Dc/qo0Ba/JYXGMEovHBoL0CSMo7cQ8XI7pdX5X3UBimZM3XledS
-         CuGhjsVj1+RBWKYlMVYJ0ciaweLgjCfUNueBPD8Zt99LjQPwaJpiHEI/4vPI8eFj8vdy
-         aT/p3UQbZX7mDJizar/wy4Vxw9G+e02yIH6ZEywNCHGTqNdQBg68Z2/kcK5Z7y/Jl/As
-         GOSV68rVHuufGfKydrMUyKXb7AOitZk0LSYS9/gQh7tIzC0C958iG+XlAF5sGFvPpAL9
-         2Zkg==
-X-Gm-Message-State: AC+VfDzVSFOiwbnYn4+SwSC4OcIYwlt2iJJzB2t6p3JH97E+4/bzn1dI
-        ysm0ExbwiGvioJZlaDL1VDqW/7vliTiqUEr8h+o=
-X-Google-Smtp-Source: ACHHUZ7KHw8fdM8bBRhZewBF1JN6yXIWhlcgcU77dfUinBS+g1qi5Xvf3+VjEQiFIZLaE7bCMJ09zA==
-X-Received: by 2002:a05:6a00:1741:b0:649:93a7:571b with SMTP id j1-20020a056a00174100b0064993a7571bmr13044505pfc.13.1684018320582;
-        Sat, 13 May 2023 15:52:00 -0700 (PDT)
+        bh=dsW7RsWrlyy5FXHePmWZFahhfn0HyQXKGunTc36vu8I=;
+        b=i0OKflShRCgJf2rhldQq5FF4hiH4sX4JGJ3rkwIFFaUbWe1mUJ40bhN/tHaLJi1Klx
+         H/MDBTIZ+UICQzKwU84MukEmHYWr4qkB7KlfqKXTL+k461Q/0RS5Yvjni1NSLRCKUmEQ
+         0nJEEHd/+78OLwJzdzEr2rcxbDl2nRXUuk7jiJDpnJMcVbD8aJpxLZn1DTMrxx5FUZvm
+         P6+6XsySXqzbwRDnwpHQTMr3tOT97FjnfUkDB3N8CWQL9Wh5BkM27XvsQ0Ff/m2+Qano
+         I7fRfeCo2Q8EdiB4Sd6kdjsh6LkwJ1KgwR3tty9RgupohKYCkcXUX56vsOHz2P07Zd/K
+         2E9g==
+X-Gm-Message-State: AC+VfDxi/oSQLMF41MatYoqP+xSe25z9HtuhtuAxKJVcmrlFktZbuNDh
+        inzO99HpYXTaH6b+vChkKeij9iuqKQP/x7b5B6M=
+X-Google-Smtp-Source: ACHHUZ69KkJQN1QStkpRTAhsT2dfNmQijWiJ1FvsQ1MbY7T8qJarHdAijrCsYxkBhlGSbCsMLHLdng==
+X-Received: by 2002:a17:902:b593:b0:1ad:ea13:1918 with SMTP id a19-20020a170902b59300b001adea131918mr5722232pls.69.1684018949951;
+        Sat, 13 May 2023 16:02:29 -0700 (PDT)
 Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id u12-20020aa7848c000000b0063f00898245sm9463406pfn.146.2023.05.13.15.51.59
+        by smtp.gmail.com with ESMTPSA id c9-20020a170902d48900b001ac38343438sm10377443plg.176.2023.05.13.16.02.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 May 2023 15:51:59 -0700 (PDT)
-Message-ID: <6460148f.a70a0220.f01ec.33ec@mx.google.com>
-Date:   Sat, 13 May 2023 15:51:59 -0700 (PDT)
+        Sat, 13 May 2023 16:02:29 -0700 (PDT)
+Message-ID: <64601705.170a0220.561a3.4d33@mx.google.com>
+Date:   Sat, 13 May 2023 16:02:29 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: fixes
+X-Kernelci-Branch: devel
 X-Kernelci-Tree: linusw
 X-Kernelci-Kernel: v6.2-rc1
 X-Kernelci-Report-Type: build
-Subject: linusw/fixes build: 8 builds: 0 failed, 8 passed,
+Subject: linusw/devel build: 8 builds: 0 failed, 8 passed,
  5 warnings (v6.2-rc1)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
@@ -71,13 +71,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 8 builds: 0 failed, 8 passed, 5 warnings (v6.2-rc1)
+linusw/devel build: 8 builds: 0 failed, 8 passed, 5 warnings (v6.2-rc1)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
 6.2-rc1/
 
 Tree: linusw
-Branch: fixes
+Branch: devel
 Git Describe: v6.2-rc1
 Git Commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
