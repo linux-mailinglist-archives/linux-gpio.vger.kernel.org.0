@@ -2,48 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6983E701E49
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 18:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8B2701E55
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 19:00:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjENQrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 14 May 2023 12:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        id S235504AbjENRAJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 14 May 2023 13:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbjENQrs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 May 2023 12:47:48 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.216])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43D871FC8;
-        Sun, 14 May 2023 09:47:45 -0700 (PDT)
+        with ESMTP id S229894AbjENRAI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 May 2023 13:00:08 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E3B73A8F;
+        Sun, 14 May 2023 10:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=rXLNr
-        rQ2Y423zWrRyCGFEOlcg07uqKROXf9zZcuH+wI=; b=crGWH7uShgXwegJOiN9JX
-        rRxblWm8EPfWOQ4llDz2qu3x9ij5jASbZ85oYGjsJtal8YRM8vjHOdKmE8l2CSu1
-        XaNaj7o+hL43QwqUxvxpkdsyJFSuelb9EIZw0X0z4usDMIInzIPMxmUGWvhjotf1
-        cd1R9gstOcJLZ3ZvInebOs=
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=IENsN
+        D1np6J/rLyHblKjvAzLL1b2z/sAgmijvedzrLM=; b=OQgMQLuFxOPi2gynFpw7R
+        EIrruI9dqi764WomABsUY3q1nsvOJETragCYY75b22Oi30+iqWcxnI5jfduEBymd
+        Mc/vurOHOeIXtdscmHQX144HamLwZWVU9jbbe6jOA11Jhd6df4zX4AL6ow+ewRku
+        GHTUjtSxvQCynB4NgDoMj4=
 Received: from lizhe.. (unknown [120.245.132.205])
-        by zwqz-smtp-mta-g5-4 (Coremail) with SMTP id _____wB3S3WEEGFktc6EBw--.6929S4;
-        Mon, 15 May 2023 00:47:31 +0800 (CST)
+        by zwqz-smtp-mta-g3-2 (Coremail) with SMTP id _____wB3pRl2E2FkWM+gBw--.149S4;
+        Mon, 15 May 2023 01:00:00 +0800 (CST)
 From:   Lizhe <sensor1010@163.com>
 To:     linus.walleij@linaro.org
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lizhe <sensor1010@163.com>
-Subject: [PATCH] drivers/pinconf.c: Remove redundant check for the existence of the member
-Date:   Mon, 15 May 2023 00:46:58 +0800
-Message-Id: <20230514164658.246613-1-sensor1010@163.com>
+Subject: [PATCH v1] drivers/pinconf.c: Remove redundant check for the existence of the member
+Date:   Mon, 15 May 2023 00:59:32 +0800
+Message-Id: <20230514165932.251200-1-sensor1010@163.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wB3S3WEEGFktc6EBw--.6929S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1DJryxtFyxuw4UWr1UGFg_yoWkAFg_uF
-        WrJry7JrWkCa4Ikr109rs5Zr92ya10kF1xKF1qvay7AFy7Zw17J3ykKFsFqr97X3yfKFyq
-        qrWrZr9aqr4kAjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRt6wZJUUUUU==
+X-CM-TRANSID: _____wB3pRl2E2FkWM+gBw--.149S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ury5CryUurW5CFyfXry3twb_yoW8Gr47pa
+        yfWr15Ar1rKFs8Ca1UGay0gFyYk3Z7GanrCw47tas3AF13AFyDArn5Kw4Iy34jkrn5uw1a
+        q34ruFyY934kKFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zi1rWxUUUUU=
 X-Originating-IP: [120.245.132.205]
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBlwRvq2I0ZA6G8gAAsf
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBlxBvq2I0ZA6V4wAAsJ
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -51,6 +52,10 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 "pin_config_set" in pinconf_ops.
+
+In the function of registering pinctrl_dev, pinctrl_init_controller(),
+a non-null check has already been performed on the members
+pin_config_set and pin_config_group_set in the ops structure.
 
 Signed-off-by: Lizhe <sensor1010@163.com>
 ---
