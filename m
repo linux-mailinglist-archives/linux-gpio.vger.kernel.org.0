@@ -2,48 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC8B2701E55
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 19:00:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C49701FA6
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 May 2023 23:10:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235504AbjENRAJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 14 May 2023 13:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
+        id S234322AbjENVKq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 14 May 2023 17:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbjENRAI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 May 2023 13:00:08 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E3B73A8F;
-        Sun, 14 May 2023 10:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=IENsN
-        D1np6J/rLyHblKjvAzLL1b2z/sAgmijvedzrLM=; b=OQgMQLuFxOPi2gynFpw7R
-        EIrruI9dqi764WomABsUY3q1nsvOJETragCYY75b22Oi30+iqWcxnI5jfduEBymd
-        Mc/vurOHOeIXtdscmHQX144HamLwZWVU9jbbe6jOA11Jhd6df4zX4AL6ow+ewRku
-        GHTUjtSxvQCynB4NgDoMj4=
-Received: from lizhe.. (unknown [120.245.132.205])
-        by zwqz-smtp-mta-g3-2 (Coremail) with SMTP id _____wB3pRl2E2FkWM+gBw--.149S4;
-        Mon, 15 May 2023 01:00:00 +0800 (CST)
-From:   Lizhe <sensor1010@163.com>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lizhe <sensor1010@163.com>
-Subject: [PATCH v1] drivers/pinconf.c: Remove redundant check for the existence of the member
-Date:   Mon, 15 May 2023 00:59:32 +0800
-Message-Id: <20230514165932.251200-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229667AbjENVKp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 May 2023 17:10:45 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8143410D9
+        for <linux-gpio@vger.kernel.org>; Sun, 14 May 2023 14:10:43 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id c70aa805-f29b-11ed-b972-005056bdfda7;
+        Mon, 15 May 2023 00:10:39 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Mon, 15 May 2023 00:10:39 +0300
+To:     Lizhe <sensor1010@163.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] drivers/pinconf.c: Remove redundant check for the
+ existence of the member
+Message-ID: <ZGFOT9cWNTzJDXo7@surfacebook>
+References: <20230514165932.251200-1-sensor1010@163.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wB3pRl2E2FkWM+gBw--.149S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ury5CryUurW5CFyfXry3twb_yoW8Gr47pa
-        yfWr15Ar1rKFs8Ca1UGay0gFyYk3Z7GanrCw47tas3AF13AFyDArn5Kw4Iy34jkrn5uw1a
-        q34ruFyY934kKFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zi1rWxUUUUU=
-X-Originating-IP: [120.245.132.205]
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBlxBvq2I0ZA6V4wAAsJ
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230514165932.251200-1-sensor1010@163.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,44 +41,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-"pin_config_set" in pinconf_ops.
+Mon, May 15, 2023 at 12:59:32AM +0800, Lizhe kirjoitti:
+> "pin_config_set" in pinconf_ops.
+> 
+> In the function of registering pinctrl_dev, pinctrl_init_controller(),
+> a non-null check has already been performed on the members
+> pin_config_set and pin_config_group_set in the ops structure.
 
-In the function of registering pinctrl_dev, pinctrl_init_controller(),
-a non-null check has already been performed on the members
-pin_config_set and pin_config_group_set in the ops structure.
+NAK.
 
-Signed-off-by: Lizhe <sensor1010@163.com>
----
- drivers/pinctrl/pinconf.c | 9 ---------
- 1 file changed, 9 deletions(-)
+Try to analyse what `if (!foo && !bar)` means from the logic perspective and
+deduce from that the problem in your proposal.
 
-diff --git a/drivers/pinctrl/pinconf.c b/drivers/pinctrl/pinconf.c
-index d9d54065472e..7b078d4ab61e 100644
---- a/drivers/pinctrl/pinconf.c
-+++ b/drivers/pinctrl/pinconf.c
-@@ -158,10 +158,6 @@ int pinconf_apply_setting(const struct pinctrl_setting *setting)
- 
- 	switch (setting->type) {
- 	case PIN_MAP_TYPE_CONFIGS_PIN:
--		if (!ops->pin_config_set) {
--			dev_err(pctldev->dev, "missing pin_config_set op\n");
--			return -EINVAL;
--		}
- 		ret = ops->pin_config_set(pctldev,
- 				setting->data.configs.group_or_pin,
- 				setting->data.configs.configs,
-@@ -174,11 +170,6 @@ int pinconf_apply_setting(const struct pinctrl_setting *setting)
- 		}
- 		break;
- 	case PIN_MAP_TYPE_CONFIGS_GROUP:
--		if (!ops->pin_config_group_set) {
--			dev_err(pctldev->dev,
--				"missing pin_config_group_set op\n");
--			return -EINVAL;
--		}
- 		ret = ops->pin_config_group_set(pctldev,
- 				setting->data.configs.group_or_pin,
- 				setting->data.configs.configs,
+P.S. It's not the first wrong proposed change from you. Dunno if you even
+trying to read the code...
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
