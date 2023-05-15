@@ -2,68 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD48570269A
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 10:05:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 692CE7026F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 10:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237910AbjEOIFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 May 2023 04:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
+        id S231640AbjEOIQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 04:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239825AbjEOIDj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 04:03:39 -0400
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3014F26A1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 01:01:15 -0700 (PDT)
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-44f985f250aso4215965e0c.3
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 01:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684137674; x=1686729674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NhB6D2mBgNYWOcxL7gtrfu2QJzPbQO2mileHEDqqD+g=;
-        b=tBds+1Rb94ncth5clUQwX1GHR0sEOSgAQjuBcqla8ixZCmaOiT9n/8oHbzwQelIn61
-         ALDeW4yYNBcB3VMMXxw2LrjhLsx+M5EYV7dr0VyA1fwoOaFLgG7L+ttOty+a0q/jlPJ3
-         cSxytH79/Iqf5lHMWR9E61ymhjdmJr5z271yuRu4JqvF7FCjCyo7/A7wWx7opiJ7/r/I
-         RavVvNrwUJxRvfLtPzwFK8udrgYvPDkDTCtfg0wFFimDSF/w7K7TJOY2ifQ5wvWHdkxT
-         G73O0fEUyFSh+EbJzpEVQi157Fda7MQ+VxTCGAwngC7qQ3KEBgj1gwRX1Ea95+z10hB+
-         cxuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684137674; x=1686729674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NhB6D2mBgNYWOcxL7gtrfu2QJzPbQO2mileHEDqqD+g=;
-        b=f2evzaCWaoXUNkOdn9TeJwOL5uYzdjiJPhKz/Rhh+3mEAfKk/YwBzVThEYI+hOu/fl
-         IFIfcbtkMUg9qe6Co7L9VH8GFzgzwUA569KcDl7aIPfR+SXG5htihWI+ny12mn+18Tw3
-         FZ2w2Kg6f+01VzubRg6zI/ykuzh/R4sjku70GV9D0ofhihwQgiu/3hND+bkvXk2Ef8De
-         61CeIyVUWFVfrxzKaA2oo60gQzS1WZ7X2BfY9oy8JsXUZvNeEjWY9wfB3e5EZUYscObC
-         ipC/UR7kLLBJbz4ij/q9Rp2voNgQfCCauSm+wfxmbfh0Wr4etN5euuzPeKigwKYX2CGL
-         GfFQ==
-X-Gm-Message-State: AC+VfDycBmeVwc1DQ7BbSrPag1irMUlvGo9jJxpoZpvNSMzSfwDgRgpc
-        ib2mMpK3JDcduy3x0Tcz7AR3rcfl4XWdUrjAKdSaHg==
-X-Google-Smtp-Source: ACHHUZ4VM5oZef2/vINe45Q6hG3XQ5373nE1uW4H5hdogJhf2Xuiz0zpleiaXuG74HnehwxG3s+fDUslCXToNltXZ1o=
-X-Received: by 2002:a1f:cf44:0:b0:43f:c8ee:62e9 with SMTP id
- f65-20020a1fcf44000000b0043fc8ee62e9mr9667239vkg.15.1684137674258; Mon, 15
- May 2023 01:01:14 -0700 (PDT)
+        with ESMTP id S231829AbjEOIQd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 04:16:33 -0400
+X-Greylist: delayed 310 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 15 May 2023 01:16:29 PDT
+Received: from mail.tipvortexbiz.com (mail.tipvortexbiz.com [51.254.102.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0629102
+        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 01:16:29 -0700 (PDT)
+Received: by mail.tipvortexbiz.com (Postfix, from userid 1002)
+        id 8C4A545BA9; Mon, 15 May 2023 08:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tipvortexbiz.com;
+        s=mail; t=1684138271;
+        bh=P1Han34balTJAB06sltOuaQxWoVYtmotA0/1aw855g4=;
+        h=Date:From:To:Subject:From;
+        b=Q60sJEE5Pm0c9kXq5+lXGXPn9kETWz+FabeYMDBLvRZFqO3Pn0BAhUtqqhroeZk/6
+         xVPCaUMIMESXgCPwWRJqJbst5F4VQTbqgVmGTSgz9vVsA5uPuowqikNm6XpfnJ7v0D
+         4gCsdKFOrf3I9ff0KYcLuScWT19ONopZL2pT+WhtWuzabdMqiqTG2PqhZ+tZrMAb6C
+         IwYmsnexGhKbL95Q53r75AKIvPv1JSJWZ6K7OJyMfSjRZPy602KrOOoR6GwZcM9RQl
+         bKQAfK6O1cMvsvTWCfpVm4r5AyXbGaq+0z7d8r1JsdNhsU8tpGDf1h+favAkiUsAme
+         eE425jcsSUw9A==
+Received: by mail.tipvortexbiz.com for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 08:11:01 GMT
+Message-ID: <20230515064500-0.1.1p.3feo.0.nq77f86n0a@tipvortexbiz.com>
+Date:   Mon, 15 May 2023 08:11:01 GMT
+From:   "Victor Pollard" <victor.pollard@tipvortexbiz.com>
+To:     <linux-gpio@vger.kernel.org>
+Subject: Wake up - Audit time
+X-Mailer: mail.tipvortexbiz.com
 MIME-Version: 1.0
-References: <20230512153232.92450-1-brgl@bgdev.pl> <7738357b-801c-e1a7-8ea9-28d8a3d3d997@linaro.org>
-In-Reply-To: <7738357b-801c-e1a7-8ea9-28d8a3d3d997@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 15 May 2023 10:01:02 +0200
-Message-ID: <CAMRc=Mfb6xYVrgurL=ZfsNwUT4ghqgOYgg11ij7LjLaVUwJEGg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: sa8775p: add the wakeirq map
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,80 +46,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 13, 2023 at 11:26=E2=80=AFAM Konrad Dybcio <konrad.dybcio@linar=
-o.org> wrote:
->
->
->
-> On 12.05.2023 17:32, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The SA8775P TLMM driver is missing the GPIO-to-wakeup-pin mapping. This
-> > adds it.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> This almost matches
->
-> https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/commit/d7af4a14603957=
-d414e931b5f175f36f3537ae34
->
-> minus one diff:
->
-> < { 39, 200 },
-> ---
-> > { 30, 200 },
->
+Good morning,
 
-It's my typo, thanks for catching it.
+we provide a solution that significantly shortens the audit time, enables=
+ standards control and non-compliance reporting:
 
-Bartosz
+=E2=97=8F Audits - to check quality or process standards (ISO, 5S, LPA)
+=E2=97=8F Scheduler - all work can be scheduled and linked to the notific=
+ation system
+=E2=97=8F Checklists - for carrying out work "point by point" with a desc=
+ription illustrated with a photo or video
+=E2=97=8F Non-conformances - immediately report non-conformances and send=
+ them to responsible persons
+=E2=97=8F Tests - to check knowledge after training or (customer's) expec=
+tations
+=E2=97=8F Summary of Results and Reports - presented on dashboards
 
-> please consult which one is correct with qc folks
->
-> Konrad
-> >  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/q=
-com/pinctrl-sa8775p.c
-> > index 2ae7cdca65d3..422d72ed1012 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-> > @@ -1491,6 +1491,23 @@ static const struct msm_pingroup sa8775p_groups[=
-] =3D {
-> >       [153] =3D SDC_QDSD_PINGROUP(sdc1_data, 0x199000, 9, 0),
-> >  };
-> >
-> > +static const struct msm_gpio_wakeirq_map sa8775p_pdc_map[] =3D {
-> > +     { 0, 169 }, { 1, 174 }, { 2, 170 }, { 3, 175 }, { 4, 171 }, { 5, =
-173 },
-> > +     { 6, 172 }, { 7, 182 }, { 10, 220 }, { 11, 213 }, { 12, 221 },
-> > +     { 16, 230 }, { 19, 231 }, { 20, 232 }, { 23, 233 }, { 24, 234 },
-> > +     { 26, 223 }, { 27, 235 }, { 28, 209 }, { 29, 176 }, { 39, 200 },
-> > +     { 31, 201 }, { 32, 212 }, { 35, 177 }, { 36, 178 }, { 39, 184 },
-> > +     { 40, 185 }, { 41, 227 }, { 42, 186 }, { 43, 228 }, { 45, 187 },
-> > +     { 47, 188 }, { 48, 194 }, { 51, 195 }, { 52, 196 }, { 55, 197 },
-> > +     { 56, 198 }, { 57, 236 }, { 58, 192 }, { 59, 193 }, { 72, 179 },
-> > +     { 73, 180 }, { 74, 181 }, { 75, 202 }, { 76, 183 }, { 77, 189 },
-> > +     { 78, 190 }, { 79, 191 }, { 80, 199 }, { 83, 204 }, { 84, 205 },
-> > +     { 85, 229 }, { 86, 206 }, { 89, 207 }, { 91, 208 }, { 94, 214 },
-> > +     { 95, 215 }, { 96, 237 }, { 97, 216 }, { 98, 238 }, { 99, 217 },
-> > +     { 100, 239 }, { 105, 219 }, { 106, 210 }, { 107, 211 }, { 108, 22=
-2 },
-> > +     { 109, 203 }, { 145, 225 }, { 146, 226 },
-> > +};
-> > +
-> >  static const struct msm_pinctrl_soc_data sa8775p_pinctrl =3D {
-> >       .pins =3D sa8775p_pins,
-> >       .npins =3D ARRAY_SIZE(sa8775p_pins),
-> > @@ -1499,6 +1516,8 @@ static const struct msm_pinctrl_soc_data sa8775p_=
-pinctrl =3D {
-> >       .groups =3D sa8775p_groups,
-> >       .ngroups =3D ARRAY_SIZE(sa8775p_groups),
-> >       .ngpios =3D 150,
-> > +     .wakeirq_map =3D sa8775p_pdc_map,
-> > +     .nwakeirq_map =3D ARRAY_SIZE(sa8775p_pdc_map),
-> >  };
-> >
-> >  static int sa8775p_pinctrl_probe(struct platform_device *pdev)
+Are you open to a conversation about using such a tool in your company?
+
+
+Regards
+Victor Pollard
