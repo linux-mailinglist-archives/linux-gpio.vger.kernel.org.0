@@ -2,101 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF46470212B
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 03:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59027024E6
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 08:36:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232505AbjEOBeQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 14 May 2023 21:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
+        id S238811AbjEOGgd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 02:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbjEOBeP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 14 May 2023 21:34:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B201FE6D;
-        Sun, 14 May 2023 18:34:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4EAF461C22;
-        Mon, 15 May 2023 01:34:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC76C433EF;
-        Mon, 15 May 2023 01:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684114453;
-        bh=yEFfMawWA6faS6Ce0SG/FOijcLBaZ/OfoWo2b6rwzE0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=olqq25I2ple0yj35L3gH4mm3gElRgVs8RyvR98YmPiEZXU+kQ6e7RWHtmxsU9qIoU
-         WwfG46xBP6OLXRv0TGMhanLSy0N0gpqQ+6+9CV5bfkQqwZxPMH7SBUWSOo+ICbeXYI
-         WCxrfz4Z3NvY12hvkNsG1qRwk3wvVQ5TdbBG1DCmM5zF+rHFsG7o7HdSMyKH19cIYl
-         7dNCCkQKQpaXxKOSaGP5NeZkPik4faB1Mzgqd8W4kmhc7uipESAPHiXiCB4W3YbDu8
-         BXaENUNoMfPMuOKlhOwsidQeG2fHa4nFqVwi9M7dbKng19zzzb0mSmyTB/rSCASvPA
-         y/Tt2Ur6BHGWA==
-Date:   Sun, 14 May 2023 18:38:06 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: sc8180x: gracefully handle missing IO
- memory resource
-Message-ID: <20230515013806.ag2rdswrhdhiahis@ripper>
-References: <20230513113510.177666-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S236330AbjEOGgc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 02:36:32 -0400
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEA112A;
+        Sun, 14 May 2023 23:36:27 -0700 (PDT)
+X-QQ-mid: bizesmtp69t1684132401tpih40w1
+Received: from wxdbg.localdomain.com ( [115.200.228.151])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Mon, 15 May 2023 14:33:11 +0800 (CST)
+X-QQ-SSF: 01400000000000I0Z000000A0000000
+X-QQ-FEAT: UMQM+3VOEYvLvVjSfgirFzRIbLkZO815l3sDfBgWElD8KhfPJJnDM1hkuB3ov
+        U/3ZHA0ZrhX1cj9oAPB5QP9Upvo82W4E3HQyjv6pwrNrDfivTXZy4kxr++KAY+dvjTML/lQ
+        firHu6Iq7GXREkG1/p7SvaC14ARyCMCRiQmseiFO5UMtcASY1a0YY1+rB25GiHMWB+U3zY/
+        pa8tPf5Er20BWn9675FIHViKzapzJEqjoua+v/Joa7opHUjhPSiyx9oGZFuHbA9svNUAxQt
+        3k5Himp6toQitVAHPDdSLU+ExoUiU5xeYmsQviak94+P3qubLqqtei1ck80qwWHSWjaP2cb
+        0DJIvrAZ7spNQBFimCW/grLdbz/frw53yHmdiWWVaAePtJAEC0=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 10739016503611961022
+From:   Jiawen Wu <jiawenwu@trustnetic.com>
+To:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk
+Cc:     linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com, Jiawen Wu <jiawenwu@trustnetic.com>
+Subject: [PATCH net-next v8 0/9] TXGBE PHYLINK support
+Date:   Mon, 15 May 2023 14:31:51 +0800
+Message-Id: <20230515063200.301026-1-jiawenwu@trustnetic.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230513113510.177666-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 13, 2023 at 01:35:10PM +0200, Krzysztof Kozlowski wrote:
-> If device was probed with incorrect DT or ACPI tables, the IO memory
-> resource would be missing and driver would derefernce NULL pointer in
-> sc8180x_pinctrl_add_tile_resources().  Add simplep check if IO memory
-> resource was provided to silence Smatch warning:
-> 
->   drivers/pinctrl/qcom/pinctrl-sc8180x.c:1664 sc8180x_pinctrl_add_tile_resources() error: potentially dereferencing uninitialized 'mres'.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Implement I2C, SFP, GPIO and PHYLINK to setup TXGBE link.
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Because our I2C and PCS are based on Synopsys Designware IP-core, extend
+the i2c-designware and pcs-xpcs driver to realize our functions.
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-sc8180x.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> index 704a99d2f93c..2fabec096aae 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-> @@ -1630,7 +1630,8 @@ static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
->  static int sc8180x_pinctrl_add_tile_resources(struct platform_device *pdev)
->  {
->  	int nres_num = pdev->num_resources + ARRAY_SIZE(sc8180x_tiles) - 1;
-> -	struct resource *mres, *nres, *res;
-> +	struct resource *mres = NULL;
-> +	struct resource *nres, *res;
->  	int i, ret;
->  
->  	/*
-> @@ -1657,6 +1658,9 @@ static int sc8180x_pinctrl_add_tile_resources(struct platform_device *pdev)
->  			*res++ = *r;
->  	}
->  
-> +	if (!mres)
-> +		return -EINVAL;
-> +
->  	/* Append tile memory resources */
->  	for (i = 0; i < ARRAY_SIZE(sc8180x_tiles); i++, res++) {
->  		const struct tile_info *info = &sc8180x_tile_info[i];
-> -- 
-> 2.34.1
-> 
+v7 -> v8:
+- use macro defined I2C FIFO depth instead of magic number
+- fix return code of clock create failure
+- add spinlock for writing GPIO registers
+- implement triggering GPIO interrupts for both-edge type
+- remove the condition that enables interrupts
+- add mii bus check for PCS device
+- other minor style changes
+
+v6 -> v7:
+- change swnode property of I2C platform to be boolean
+- use device_property_present() to match I2C device data
+
+v5 -> v6:
+- fix to set error code if pointer of txgbe is NULL
+- change "if" to "switch" for *_i2c_dw_xfer_quirk()
+- rename property for I2C device flag
+- use regmap to access I2C mem region
+- use DEFINE_RES_IRQ()
+- use phylink_mii_c45_pcs_get_state() for DW_XPCS_10GBASER
+
+v4 -> v5:
+- add clock register
+- delete i2c-dw.h with platform data
+- introduce property "i2c-dw-flags" to match device flags
+- get resource from platform info to do ioremap
+- rename quirk functions in i2c-designware-*.c
+- fix calling txgbe_phylink_init()
+
+v3 -> v4:
+- modify I2C transfer to be generic implementation
+- avoid to read DW_IC_COMP_PARAM_1
+- remove redundant "if" statement
+- add specific labels to handle error in txgbe_init_phy(), and remove
+  "if" conditions in txgbe_remove_phy()
+
+v2 -> v3:
+- delete own I2C bus master driver, support it in i2c-designware
+- delete own PCS functions, remove pma configuration and 1000BASE-X mode
+- add basic function for 10GBASE-R interface in pcs-xpcs
+- add helper to get txgbe pointer from netdev
+
+v1 -> v2:
+- add comments to indicate GPIO lines
+- add I2C write operation support
+- modify GPIO direction functions
+- rename functions related to PHY interface
+- add condition on interface changing to re-config PCS
+- add to set advertise and fix to get status for 1000BASE-X mode
+- other redundant codes remove
+
+Jiawen Wu (9):
+  net: txgbe: Add software nodes to support phylink
+  i2c: designware: Add driver support for Wangxun 10Gb NIC
+  net: txgbe: Register fixed rate clock
+  net: txgbe: Register I2C platform device
+  net: txgbe: Add SFP module identify
+  net: txgbe: Support GPIO to SFP socket
+  net: pcs: Add 10GBASE-R mode for Synopsys Designware XPCS
+  net: txgbe: Implement phylink pcs
+  net: txgbe: Support phylink MAC layer
+
+ drivers/i2c/busses/i2c-designware-common.c    |   8 +
+ drivers/i2c/busses/i2c-designware-core.h      |   4 +
+ drivers/i2c/busses/i2c-designware-master.c    |  89 ++-
+ drivers/i2c/busses/i2c-designware-platdrv.c   |  15 +
+ drivers/net/ethernet/wangxun/Kconfig          |   8 +
+ drivers/net/ethernet/wangxun/libwx/wx_lib.c   |   3 +-
+ drivers/net/ethernet/wangxun/libwx/wx_type.h  |   4 +
+ drivers/net/ethernet/wangxun/txgbe/Makefile   |   1 +
+ .../ethernet/wangxun/txgbe/txgbe_ethtool.c    |  28 +
+ .../net/ethernet/wangxun/txgbe/txgbe_main.c   |  65 +-
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.c    | 672 ++++++++++++++++++
+ .../net/ethernet/wangxun/txgbe/txgbe_phy.h    |  10 +
+ .../net/ethernet/wangxun/txgbe/txgbe_type.h   |  90 +++
+ drivers/net/pcs/pcs-xpcs.c                    |  30 +
+ include/linux/pcs/pcs-xpcs.h                  |   1 +
+ 15 files changed, 990 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.c
+ create mode 100644 drivers/net/ethernet/wangxun/txgbe/txgbe_phy.h
+
+-- 
+2.27.0
+
