@@ -2,94 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAE61702600
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 09:26:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD48570269A
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 10:05:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238294AbjEOH0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 May 2023 03:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
+        id S237910AbjEOIFl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 04:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235175AbjEOH0H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 03:26:07 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1961A5
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 00:26:05 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-ba7327cd32eso4069485276.0
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 00:26:05 -0700 (PDT)
+        with ESMTP id S239825AbjEOIDj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 04:03:39 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3014F26A1
+        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 01:01:15 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-44f985f250aso4215965e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 01:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684135565; x=1686727565;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eurMz9NQAUmkORq8ZJu1AgnEBQF8a6B21GIn/UfxOEI=;
-        b=URaTzQG6g74E8biL/yJ5/3corUdz5kezIBq8rpkzGX9Lj4RGuyYIwzggM9i3yP/toH
-         TWT9U3hF7A5kDzqL7CrTnM/e7/2qSclroVT1O3JKPjx7eN4O5ztR9SOnKNGgBL5Cn4M6
-         720A5c4RLjqxkCe3SZVi5906Lc8023qjsuk5lOVoHtFJSXve5zsQJzmXLGyvan3hAPm1
-         G1al3fa/jAL177yGkpoqGNHpVi7sQU4O7k2+H27pTjFvlPdBZmpTazg3BgZ/CJZoeMDS
-         Fv7wmuUNmcTEF5WEpzg8QfroJgQjdjl4XCtW1xdXcM5sNDw2Go4KZqLhavnSlv4laa8W
-         iwug==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684137674; x=1686729674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NhB6D2mBgNYWOcxL7gtrfu2QJzPbQO2mileHEDqqD+g=;
+        b=tBds+1Rb94ncth5clUQwX1GHR0sEOSgAQjuBcqla8ixZCmaOiT9n/8oHbzwQelIn61
+         ALDeW4yYNBcB3VMMXxw2LrjhLsx+M5EYV7dr0VyA1fwoOaFLgG7L+ttOty+a0q/jlPJ3
+         cSxytH79/Iqf5lHMWR9E61ymhjdmJr5z271yuRu4JqvF7FCjCyo7/A7wWx7opiJ7/r/I
+         RavVvNrwUJxRvfLtPzwFK8udrgYvPDkDTCtfg0wFFimDSF/w7K7TJOY2ifQ5wvWHdkxT
+         G73O0fEUyFSh+EbJzpEVQi157Fda7MQ+VxTCGAwngC7qQ3KEBgj1gwRX1Ea95+z10hB+
+         cxuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684135565; x=1686727565;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eurMz9NQAUmkORq8ZJu1AgnEBQF8a6B21GIn/UfxOEI=;
-        b=LNZzb37t7d94LqI0ZiAVxy/sqI5jLvN21QthnXg4cihGS33ZgNfvGeB0JlCt6dN/XI
-         xuu7rssPF3phQ+J2Dd5D/MaZiSv6Sp4R0UBsv9p3sM/E6x1txkrDWdpcSdSuFya05IUX
-         05lMorcaEPbd8RvgJyVEnMhHNZMmfz/ROwf+G+L6LAID6/6UgCluAZ+3Es/EcWHMKqOB
-         ecPqPqTuJTSnX3RLJ5dmMC6VHEGRDOiAim/Zh9a0eraTLkMCf+eOWEqLsfjFR2lTUgb3
-         rc9ZuinOnvBf6ewoxny5ss+dxQmad5CcW2d72bybrzzx1CHx4eafJpSMcjneFyzqL+FI
-         A+2A==
-X-Gm-Message-State: AC+VfDx9R/BoaQwp47ZwP/JpC5nI/so/1jMtnQTERQ6nGEh4m26AkdNs
-        1scaV12DynH/msjUT1G2OrP47zCXeFvEc2ROfSc+xEBZkQRuLs+V
-X-Google-Smtp-Source: ACHHUZ4rQ+YJh1EEoZTA+7CazQQ7vitOT3vS9R1tfo6aJWm4yep7gQisGdpXMJ5icbi8vBLCRVbW1YCcFJ4YkotuEMY=
-X-Received: by 2002:a0d:fc44:0:b0:555:d983:f4f0 with SMTP id
- m65-20020a0dfc44000000b00555d983f4f0mr28247355ywf.24.1684135564884; Mon, 15
- May 2023 00:26:04 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684137674; x=1686729674;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NhB6D2mBgNYWOcxL7gtrfu2QJzPbQO2mileHEDqqD+g=;
+        b=f2evzaCWaoXUNkOdn9TeJwOL5uYzdjiJPhKz/Rhh+3mEAfKk/YwBzVThEYI+hOu/fl
+         IFIfcbtkMUg9qe6Co7L9VH8GFzgzwUA569KcDl7aIPfR+SXG5htihWI+ny12mn+18Tw3
+         FZ2w2Kg6f+01VzubRg6zI/ykuzh/R4sjku70GV9D0ofhihwQgiu/3hND+bkvXk2Ef8De
+         61CeIyVUWFVfrxzKaA2oo60gQzS1WZ7X2BfY9oy8JsXUZvNeEjWY9wfB3e5EZUYscObC
+         ipC/UR7kLLBJbz4ij/q9Rp2voNgQfCCauSm+wfxmbfh0Wr4etN5euuzPeKigwKYX2CGL
+         GfFQ==
+X-Gm-Message-State: AC+VfDycBmeVwc1DQ7BbSrPag1irMUlvGo9jJxpoZpvNSMzSfwDgRgpc
+        ib2mMpK3JDcduy3x0Tcz7AR3rcfl4XWdUrjAKdSaHg==
+X-Google-Smtp-Source: ACHHUZ4VM5oZef2/vINe45Q6hG3XQ5373nE1uW4H5hdogJhf2Xuiz0zpleiaXuG74HnehwxG3s+fDUslCXToNltXZ1o=
+X-Received: by 2002:a1f:cf44:0:b0:43f:c8ee:62e9 with SMTP id
+ f65-20020a1fcf44000000b0043fc8ee62e9mr9667239vkg.15.1684137674258; Mon, 15
+ May 2023 01:01:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <202304232146.7M89pwCz-lkp@intel.com> <KL1PR01MB5448327326B6EDA8001AF714E6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
-In-Reply-To: <KL1PR01MB5448327326B6EDA8001AF714E6669@KL1PR01MB5448.apcprd01.prod.exchangelabs.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 15 May 2023 09:25:53 +0200
-Message-ID: <CACRpkdbDNfrUZiVbDRx9EQWByfzXHtA3ZO+dUXvEK5RzYYYgUw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: gpiolib: clear the array_info's memory space
-To:     Yan Wang <rk.code@outlook.com>
-Cc:     brgl@bgdev.pl,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20230512153232.92450-1-brgl@bgdev.pl> <7738357b-801c-e1a7-8ea9-28d8a3d3d997@linaro.org>
+In-Reply-To: <7738357b-801c-e1a7-8ea9-28d8a3d3d997@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 15 May 2023 10:01:02 +0200
+Message-ID: <CAMRc=Mfb6xYVrgurL=ZfsNwUT4ghqgOYgg11ij7LjLaVUwJEGg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sa8775p: add the wakeirq map
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> @@ -4359,6 +4359,8 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+On Sat, May 13, 2023 at 11:26=E2=80=AFAM Konrad Dybcio <konrad.dybcio@linar=
+o.org> wrote:
+>
+>
+>
+> On 12.05.2023 17:32, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The SA8775P TLMM driver is missing the GPIO-to-wakeup-pin mapping. This
+> > adds it.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> This almost matches
+>
+> https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/commit/d7af4a14603957=
+d414e931b5f175f36f3537ae34
+>
+> minus one diff:
+>
+> < { 39, 200 },
+> ---
+> > { 30, 200 },
+>
 
->                          * hardware number is different from its array index.
->                          */
->                         if (bitmap_full(array_info->get_mask, descs->ndescs)) {
-> +                               /*clear descs->info*/
-> +                               memset(array_info, 0, sizeof(struct gpio_array));
->                                 array_info = NULL;
+It's my typo, thanks for catching it.
 
-This is not the right solution.
+Bartosz
 
-The array_info points beyond descs and descs have be krealloc:ed
-to fit the array info.
-
-The right solution is not to fill that memory with zeroes, but to krealloc
-back to the size that descs had before we did this resizing to begin
-with.
-
-Possibly the condition should be detected *before* we start to krealloc()
-so we can avoid all the krealloc():ing.
-
-If the actual issue cannot be fixed I think it is no better or worse to just
-leave the code as it is, we are just zeroing some unused memory.
-
-Yours,
-Linus Walleij
+> please consult which one is correct with qc folks
+>
+> Konrad
+> >  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/q=
+com/pinctrl-sa8775p.c
+> > index 2ae7cdca65d3..422d72ed1012 100644
+> > --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> > +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> > @@ -1491,6 +1491,23 @@ static const struct msm_pingroup sa8775p_groups[=
+] =3D {
+> >       [153] =3D SDC_QDSD_PINGROUP(sdc1_data, 0x199000, 9, 0),
+> >  };
+> >
+> > +static const struct msm_gpio_wakeirq_map sa8775p_pdc_map[] =3D {
+> > +     { 0, 169 }, { 1, 174 }, { 2, 170 }, { 3, 175 }, { 4, 171 }, { 5, =
+173 },
+> > +     { 6, 172 }, { 7, 182 }, { 10, 220 }, { 11, 213 }, { 12, 221 },
+> > +     { 16, 230 }, { 19, 231 }, { 20, 232 }, { 23, 233 }, { 24, 234 },
+> > +     { 26, 223 }, { 27, 235 }, { 28, 209 }, { 29, 176 }, { 39, 200 },
+> > +     { 31, 201 }, { 32, 212 }, { 35, 177 }, { 36, 178 }, { 39, 184 },
+> > +     { 40, 185 }, { 41, 227 }, { 42, 186 }, { 43, 228 }, { 45, 187 },
+> > +     { 47, 188 }, { 48, 194 }, { 51, 195 }, { 52, 196 }, { 55, 197 },
+> > +     { 56, 198 }, { 57, 236 }, { 58, 192 }, { 59, 193 }, { 72, 179 },
+> > +     { 73, 180 }, { 74, 181 }, { 75, 202 }, { 76, 183 }, { 77, 189 },
+> > +     { 78, 190 }, { 79, 191 }, { 80, 199 }, { 83, 204 }, { 84, 205 },
+> > +     { 85, 229 }, { 86, 206 }, { 89, 207 }, { 91, 208 }, { 94, 214 },
+> > +     { 95, 215 }, { 96, 237 }, { 97, 216 }, { 98, 238 }, { 99, 217 },
+> > +     { 100, 239 }, { 105, 219 }, { 106, 210 }, { 107, 211 }, { 108, 22=
+2 },
+> > +     { 109, 203 }, { 145, 225 }, { 146, 226 },
+> > +};
+> > +
+> >  static const struct msm_pinctrl_soc_data sa8775p_pinctrl =3D {
+> >       .pins =3D sa8775p_pins,
+> >       .npins =3D ARRAY_SIZE(sa8775p_pins),
+> > @@ -1499,6 +1516,8 @@ static const struct msm_pinctrl_soc_data sa8775p_=
+pinctrl =3D {
+> >       .groups =3D sa8775p_groups,
+> >       .ngroups =3D ARRAY_SIZE(sa8775p_groups),
+> >       .ngpios =3D 150,
+> > +     .wakeirq_map =3D sa8775p_pdc_map,
+> > +     .nwakeirq_map =3D ARRAY_SIZE(sa8775p_pdc_map),
+> >  };
+> >
+> >  static int sa8775p_pinctrl_probe(struct platform_device *pdev)
