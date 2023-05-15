@@ -2,100 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4464703F2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 23:01:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64DBD703F63
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 23:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244167AbjEOVBm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 May 2023 17:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
+        id S231544AbjEOVJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 17:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245224AbjEOVBg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 17:01:36 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD71DC51
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 14:01:26 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0C8E82C03F9;
-        Tue, 16 May 2023 09:01:24 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1684184484;
-        bh=Tz5+g/BvNw8GbUeCGGoq026ZsxVO8Vm9awwmEtoqSOw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ZYlYo/13O5wZO6P8sJQ7Licx4xymSAc5tPLLespeJmHXSBjCkG3eI57Gkp9AyS1/0
-         L1GZCzDPF5IqlBGsp2/OpDcLL/yOd4fHDoYgT2S4cQCsbsvLXvRxgaKteoGZDjG6GN
-         P9mCGas3J2n00nlETvTrddezhExPNDNc3OlhpCJ8tKptrFRIIWgGUT+47tok2X+Q28
-         jfxd1nMmjihzY40yLOnwetmkjoeQuQ+Xbxvp+prxy30O3CKFBggZNHlZr+uiI82SP8
-         KVSN+F5f9+ScXPFoYvQ+zLeJRxAjG2Vru14KpIG2r3hqp/QWzlptD9Hz6XgFZAaNG/
-         /6YnU27aYKJsA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B64629da30001>; Tue, 16 May 2023 09:01:23 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.26; Tue, 16 May 2023 09:01:23 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Tue, 16 May 2023 09:01:23 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.026; Tue, 16 May 2023 09:01:23 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-CC:     Johan Hovold <johan@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>, "maz@kernel.org" <maz@kernel.org>,
-        Ben Brown <Ben.Brown@alliedtelesis.co.nz>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Topic: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Index: AQHZhIoofApft8Zm8kuYZtpxH+f53K9Vc1EAgAQYugCAAJLPgIAA77UA
-Date:   Mon, 15 May 2023 21:01:23 +0000
-Message-ID: <00b3447d-ead2-c5c6-c38f-94d38fc8040b@alliedtelesis.co.nz>
-References: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
- <ZF3pqvOVv6eZl62y@hovoldconsulting.com>
- <2265adee-e003-08ae-e66d-fb41bdd79122@alliedtelesis.co.nz>
- <ZGHUjUpI-5JWNCAf@surfacebook>
-In-Reply-To: <ZGHUjUpI-5JWNCAf@surfacebook>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.33.22.30]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EEFB3F9149AEBF41ADA1C4B8D577A384@atlnz.lc>
-Content-Transfer-Encoding: base64
+        with ESMTP id S244799AbjEOVJK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 17:09:10 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B66E6D;
+        Mon, 15 May 2023 14:09:08 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-7576516c81fso1024193785a.1;
+        Mon, 15 May 2023 14:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684184948; x=1686776948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wq0o/8p4FZPAmRFUAQ0rfN/u9SgX8f0uwc+1Yna0210=;
+        b=G6QsJbf5NUzZl3Yted2qE5YjizUvlyhoHuoUQSk6rEEmNEX/L8lMT4vgzQEWLSJhYO
+         x3v8Rn+sRS7G+sbpHiPGv7DHoHB0JJ8Hti2V121bSA4b8fp4ibqfq1GUcgMBZ/fT72Wi
+         YdhsxIA/GahYdLusb9vnC2KrJ9Gf1/NvwjwEEgT5KJEjQS9Kp6IovzwaLsNPZ3vOmky9
+         IN52IQNDIEhcKV8ioGcUbm7uenRsLxe5LOpIAAPgvdpnwnNGWv6fZEuhv1eYIOpM33HE
+         gXeSXbepMIyVvQZDurL5cdG7354t8p4bDZgYw51tvFcn6dX/1GhYbiyBGFb+L9U1yZNL
+         vw7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684184948; x=1686776948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wq0o/8p4FZPAmRFUAQ0rfN/u9SgX8f0uwc+1Yna0210=;
+        b=ehaLOqkyFoNS44VwnL/6IqsaZRL6RYG7He+rEKkqZrNjPLPykwKGbRhmnTisLP3sPt
+         89sarJZduEc0wPLK9QmAGav77kpPzbGPIrOLS9+iv+PQd3SZwpDdeprSoJqYdcrTupgz
+         5lUOU8b/IkuGVPqdv6cc4tvhlYNt1uKr8qLyIxBL49Z2TrUguMU6hlSMCGPK1MVAzRDA
+         7nXT3ZsWnqnDxU8JqccWN/HKXARduO2joiSy455mceV2GFZfKA1pm4Rm4hG2yCRqhM4m
+         GiF9qlQraEnd32wi5mqcWKarqSb9zpxGBTz9Su2dPhfv2GSv75RHVvzQN+EbCu9kK1Yl
+         OsWw==
+X-Gm-Message-State: AC+VfDwtZum4fkFhfzvqo3HV4lGuj/iJt++9VjY6P3Ireif6j8StJXkg
+        2KUra2Cz5Iobubx/gKKXnImg2gOvW2xhuU41QFk=
+X-Google-Smtp-Source: ACHHUZ51/aKHgFdpcLMsrSziQUJZGZ8PCZ5e4zImtndwtajs0yJLWDCu8QuZWkEoA8oh3e4gO7i5U7JE5iJ6YyXFqOg=
+X-Received: by 2002:a05:6214:5299:b0:5c1:fa35:fe6 with SMTP id
+ kj25-20020a056214529900b005c1fa350fe6mr51005095qvb.24.1684184947993; Mon, 15
+ May 2023 14:09:07 -0700 (PDT)
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=1HLHooU2AtUqCnB0nEYA:9 a=QEXdDO2ut3YA:10 a=uYmH_lBRNJ4A:10 a=AjGcO6oz07-iQ99wixmX:22
-X-SEG-SpamProfiler-Score: 0
+References: <20230515174224.494631-1-afd@ti.com>
+In-Reply-To: <20230515174224.494631-1-afd@ti.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 16 May 2023 00:08:32 +0300
+Message-ID: <CAHp75Veu-HbANATV2trD=wAkNx4zia2L8Y+roLQ9k9VA_Vxu3Q@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sch311x: Use devm_gpiochip_add_data() to
+ simplify remove path
+To:     Andrew Davis <afd@ti.com>
+Cc:     Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiAxNS8wNS8yMyAxODo0MywgYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToNCj4g
-U3VuLCBNYXkgMTQsIDIwMjMgYXQgMDk6NTc6NThQTSArMDAwMCwgQ2hyaXMgUGFja2hhbSBraXJq
-b2l0dGk6DQo+PiBPbiAxMi8wNS8yMyAxOToyNCwgSm9oYW4gSG92b2xkIHdyb3RlOg0KPj4+IE9u
-IEZyaSwgTWF5IDEyLCAyMDIzIGF0IDA0OjI4OjA2UE0gKzEyMDAsIENocmlzIFBhY2toYW0gd3Jv
-dGU6DQo+IC4uLg0KPg0KPj4+IFlvdSBuZWVkIGEgYmV0dGVyIGV4cGxhbmF0aW9uIGFzIHRvIHdo
-eSB0aGlzIGlzIGFuIGlzc3VlLiBXaGF0IGRvZXMgdGhlDQo+Pj4gd2FybmluZyBsb29rIGxpa2Ug
-Zm9yIGV4YW1wbGU/DQo+PiBJcm9uaWNhbGx5IEkgaGFkIHRoYXQgaW4gbXkgZmlyc3QgYXR0ZW1w
-dCB0byBhZGRyZXNzIHRoZSBpc3N1ZSBidXQgd2FzDQo+PiB0b2xkIGl0IHdhcyB0b28gbXVjaCBk
-ZXRhaWwuIFNvIG5vdyBJJ3ZlIGdvbmUgdG9vIGZhciB0aGUgb3RoZXIgd2F5Lg0KPj4gSSdsbCBp
-bmNsdWRlIGl0IGluIHRoZSByZXNwb25zZSBJJ20gYWJvdXQgdG8gc2VuZCB0byBMaW51c1cuDQo+
-IFlvdSBoYXZlIGJlZW4gKGltcGxpY2l0bHkpIHRvbGQgdG8gcmVkdWNlIHRoZSBzY29wZSBvZiB0
-aGUgZGV0YWlscyB0byBoYXZlDQo+IHRoZSBvbmx5IGltcG9ydGFudCBvbmVzLCByZW1vdmluZyB0
-aGUgdHJhY2ViYWNrIGNvbXBsZXRlbHkgd2Fzbid0IG9uIHRoZQ0KPiB0YWJsZS4NCj4NCj4gQ2l0
-YXRpb246ICJCZXNpZGVzIHRoZSB2ZXJ5IG5vaXN5IHRyYWNlYmFjayBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2UgKHJlYWQNCj4gaHR0cHM6Ly9rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNz
-L3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sI2JhY2t0cmFjZXMtaW4tY29tbWl0LW1lc3NhZ2VzIg0K
-DQpZZXMgZmFpciBwb2ludC4gSSBqdXN0IG92ZXIgY29tcGVuc2F0ZWQgYW4gdGhvdWdodCB0aGUg
-ZXhwbGFuYXRpb24gb2YgDQp3YXJuaW5nIGluIGdwaW9jaGlwX2Rpc2FibGVfaXJxKCkgd2FzIHN1
-ZmZpY2llbnQuDQo=
+On Mon, May 15, 2023 at 8:42=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+>
+> Use devm version of gpiochip add function to handle removal for us.
+
+...version of gpiochip_add() function...
+
+...
+
+> +               err =3D devm_gpiochip_add_data(&pdev->dev, &block->chip, =
+block);
+>                 if (err < 0) {
+>                         dev_err(&pdev->dev,
+>                                 "Could not register gpiochip, %d\n", err)=
+;
+> -                       goto exit_err;
+> +                       return err;
+
+With this applied you can consider a followup to have this be converted to =
+use
+
+    return dev_err_probe(...);
+
+here and in other ->probe() related pieces.
+
+>                 }
+
+--=20
+With Best Regards,
+Andy Shevchenko
