@@ -2,77 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EFC702988
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 11:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C9C67029C1
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 11:58:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239795AbjEOJvd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 May 2023 05:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55184 "EHLO
+        id S239763AbjEOJ63 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 05:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240591AbjEOJvR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 05:51:17 -0400
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472941BFD
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 02:50:36 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-        id eea96ea3-f305-11ed-a9de-005056bdf889;
-        Mon, 15 May 2023 12:50:33 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Mon, 15 May 2023 12:50:32 +0300
-To:     Ryan.Wanner@microchip.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        Claudiu.Beznea@microchip.com
-Subject: Re: GPIO set config argument value difference in pinconf and gpiolib
-Message-ID: <ZGIAaPSycsmOq690@surfacebook>
-References: <120117b6-feda-e7aa-4f09-a126a0747388@microchip.com>
+        with ESMTP id S239784AbjEOJ6Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 05:58:25 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5565BA0;
+        Mon, 15 May 2023 02:58:24 -0700 (PDT)
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34F6Fla8029603;
+        Mon, 15 May 2023 04:57:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=fVXZo9QUEpij5PoSS2UHn6KP8HowvSC0ezonm6gqMfA=;
+ b=n1ev97nDDtUw8I4lyBasev4lFaovSJbjP71tmEypieWA7TOzXqM+JcMT9DDqoKUXi4Vr
+ slWpAvQX0Fx845pM5MfzvFaqkpf7LCRchKYSaY18t4LLyagJtX/lsvOsNLjAo9H2QdVC
+ tRXBWWY7+WNc6u6cCo8AO2DPWcjjkxqFcRaOFxNhqYequjlmgsNTpX1d9A/O3GMlO5qz
+ 9indsEu5nywdeW3vAmJ2WmQMvq1YXSHU9pZlZ27UE4NsweF+kYCrqm+a1K8y0+uB/wjc
+ 52KSoS7ORFD+6W4gyP6uwl+L7jv9whjaruCupApO550dDtotIFu7devYRIPmASprx2gH /Q== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3qj6ymtp31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 May 2023 04:57:54 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Mon, 15 May
+ 2023 04:57:52 -0500
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 15 May 2023 04:57:52 -0500
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CA70F45;
+        Mon, 15 May 2023 09:57:52 +0000 (UTC)
+Date:   Mon, 15 May 2023 09:57:52 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>, <lee@kernel.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <linus.walleij@linaro.org>, <vkoul@kernel.org>,
+        <lgirdwood@gmail.com>, <yung-chuan.liao@linux.intel.com>,
+        <sanyog.r.kale@intel.com>, <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 07/10] irqchip/cs42l43: Add support for the cs42l43 IRQs
+Message-ID: <20230515095752.GQ68926@ediswmail.ad.cirrus.com>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-8-ckeepax@opensource.cirrus.com>
+ <86o7mpmvqq.wl-maz@kernel.org>
+ <20230512153933.GH68926@ediswmail.ad.cirrus.com>
+ <86mt29mt2m.wl-maz@kernel.org>
+ <20230512164233.GN68926@ediswmail.ad.cirrus.com>
+ <ZGGGGcZNEx7o8GC6@finisterre.sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <120117b6-feda-e7aa-4f09-a126a0747388@microchip.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZGGGGcZNEx7o8GC6@finisterre.sirena.org.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-GUID: lWnGF2LbEFzXlgDSJ7wqSHx-nXoGofXe
+X-Proofpoint-ORIG-GUID: lWnGF2LbEFzXlgDSJ7wqSHx-nXoGofXe
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, May 15, 2023 at 08:21:35AM +0000, Ryan.Wanner@microchip.com kirjoitti:
-> Hello,
+On Mon, May 15, 2023 at 10:08:41AM +0900, Mark Brown wrote:
+> On Fri, May 12, 2023 at 04:42:33PM +0000, Charles Keepax wrote:
 > 
-> I have a question about gpiochip_generic_config function. I noticed when
-> calling this function the pin configuration is incorrect for
-> push-pull/open-drain in pinctrl-at91-pio4. I traced this down to a
-> argument value that is incorrect, this is extracted from the config
-> using pinconf_to_config_argument. The pinctrl driver processes this
-> config argument value correctly but when gpiolib calls this function
-> that value is not passed causing the argument to be 0 in the function
-> atmel_conf_pin_config_group_set. I see this same structure in other
-> pinctrl drivers as well.
+> > I guess if Mark doesn't mind I think the only internal bit of the
+> > device that uses the IRQs is the CODEC driver so I could move the
+> > IRQ handling in there, it does seem a little odd to me, but I
+> > guess I don't have any problems with it.
 > 
-> It seems that gpio_set_config is called which hard codes 0 into
-> gpio_set_config_with_arugment function call making the argument 0 when
-> passed into the pinctrl set config function.
+> The obvious (and previously standard) place for it would be the MFD.
 
-Correct.
+Alright I certainly have no objection to moving it there, although
+would be good to get Lee's thoughts, make sure he is happy with
+that too.
 
-> It seems that the correct
-> way would to mimic the gpio_set_bias function handling of this argument
-> value. Doing a small local test seems to confirm my suggestion.
-
-Nope. The driver developer(s) didn't get this correctly. The state
-configuration are booleans, hence argument is ignored. It can be anything.
-
-Seems they missed to add the switch to PUSH_PULL.
-
-TL;DR: I'm pretty sure this is the bug in the above mentioned driver.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Charles
