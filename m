@@ -2,69 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C7370286B
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 11:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72432702897
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 May 2023 11:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239969AbjEOJ07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 May 2023 05:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60204 "EHLO
+        id S231637AbjEOJaZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 May 2023 05:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238637AbjEOJ0l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 05:26:41 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC5A2D45
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 02:25:21 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f435658d23so62217055e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 02:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684142718; x=1686734718;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PVidKPM6B2z7ddqDY5aZH6ShVFOkPon+GZvhdRhyC+I=;
-        b=yvkH4Qgu/dwqliFP7mDhEJKWKKVgcEUkdrPtIxjen3Hd6A7Tu0RXeDdCtK0m7KJLKk
-         k7+FpDzBxJNRgbFpxWPtvBhFdowCcoibvxT7VFm2Kf/VmP8jA/2P/OLV6BbM4Fd6/7tt
-         cAWULVtEsc1vq0pvO8dbjFKVUbINxHOb985FoR4jB/g+Wm0qakdTe+ctmYWMBhqJz4mV
-         1MeH8UqbP71+F+OksoBcAfgEG3lGzlYtPZd8d7GQVU/d4g8svoB5wsBN7u6AvfV1tkZa
-         k8/VDCpPlPwbxQV4JAnlkw06255O/V92DgvrAkROh8LcXUAUjjEiiZQ+SEebQIh6YjSg
-         EbEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684142718; x=1686734718;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PVidKPM6B2z7ddqDY5aZH6ShVFOkPon+GZvhdRhyC+I=;
-        b=gP0yPKruBX0SqGkV8vrvEKcZLR3zv3qxyv/C1OLlIZv9mgIba3smGSa2xUH8z6yr5E
-         FUMNvNhzSQEhjCqvxN3Q5aLryCa65Sl1xA+Y5xmITsreJEyTQMLuIv5nZ5BcOibM+W++
-         Z5gwc1dRzDN8cTbQhCvEObfhIMMDpyx2SCkPF+MrCgm5t7EZTVflQIawHWyf2PJ5dRvQ
-         VuBi8R8YjgeMfdJA//OUvRliRjCNTqoYeKoJX2m6HP2eOVdE7vv2yoswkgsu8OrV/FgA
-         jw93CaMdYuoPHC7zR1jSH6fM9hj3lvtVpZzZdIQrQZWjt5lB/pLPkdbUxdNy/v67X7oh
-         a5Mw==
-X-Gm-Message-State: AC+VfDzVBTv90pmmfk7OqrzZmRLeZT+CYM+NOv/kbc+Fg2WTl/LH6gKh
-        Q+T1SZrF5FnAyHeABYc4pJJbJw==
-X-Google-Smtp-Source: ACHHUZ62YhhyaBS2jVJvAuBbi9ScTBt4hk24OJHdQyaZCVpoDF+uyjZhhpE8DLxisuDUzjVVGH5xdQ==
-X-Received: by 2002:a05:600c:cf:b0:3f4:9bee:b9c with SMTP id u15-20020a05600c00cf00b003f49bee0b9cmr13459168wmm.18.1684142717849;
-        Mon, 15 May 2023 02:25:17 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:1388:9f6:c7d9:3b77])
-        by smtp.gmail.com with ESMTPSA id s2-20020a5d4ec2000000b003063a92bbf5sm32013764wrv.70.2023.05.15.02.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 02:25:17 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2] pinctrl: qcom: sa8775p: add the wakeirq map
-Date:   Mon, 15 May 2023 11:25:15 +0200
-Message-Id: <20230515092515.180920-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S240713AbjEOJaB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 May 2023 05:30:01 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C1F171D
+        for <linux-gpio@vger.kernel.org>; Mon, 15 May 2023 02:29:36 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 0016b2ae-f303-11ed-b3cf-005056bd6ce9;
+        Mon, 15 May 2023 12:29:34 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Mon, 15 May 2023 12:29:32 +0300
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com,
+        Piotr Raczynski <piotr.raczynski@intel.com>
+Subject: Re: [PATCH net-next v8 4/9] net: txgbe: Register I2C platform device
+Message-ID: <ZGH7fHlq0Ao_Mr3U@surfacebook>
+References: <20230515063200.301026-1-jiawenwu@trustnetic.com>
+ <20230515063200.301026-5-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230515063200.301026-5-jiawenwu@trustnetic.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,56 +46,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Mon, May 15, 2023 at 02:31:55PM +0800, Jiawen Wu kirjoitti:
+> Register the platform device to use Designware I2C bus master driver.
+> Use regmap to read/write I2C device region from given base offset.
 
-The SA8775P TLMM driver is missing the GPIO-to-wakeup-pin mapping. This
-adds it.
+...
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-v1 -> v2:
-- fix the 30->200 mapping
+> +#include <linux/platform_device.h>
+>  #include <linux/gpio/property.h>
+> +#include <linux/regmap.h>
 
- drivers/pinctrl/qcom/pinctrl-sa8775p.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Perhaps keeping this ordered?
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-index 2ae7cdca65d3..6ea0197b36c6 100644
---- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-@@ -1491,6 +1491,23 @@ static const struct msm_pingroup sa8775p_groups[] = {
- 	[153] = SDC_QDSD_PINGROUP(sdc1_data, 0x199000, 9, 0),
- };
- 
-+static const struct msm_gpio_wakeirq_map sa8775p_pdc_map[] = {
-+	{ 0, 169 }, { 1, 174 }, { 2, 170 }, { 3, 175 }, { 4, 171 }, { 5, 173 },
-+	{ 6, 172 }, { 7, 182 }, { 10, 220 }, { 11, 213 }, { 12, 221 },
-+	{ 16, 230 }, { 19, 231 }, { 20, 232 }, { 23, 233 }, { 24, 234 },
-+	{ 26, 223 }, { 27, 235 }, { 28, 209 }, { 29, 176 }, { 30, 200 },
-+	{ 31, 201 }, { 32, 212 }, { 35, 177 }, { 36, 178 }, { 39, 184 },
-+	{ 40, 185 }, { 41, 227 }, { 42, 186 }, { 43, 228 }, { 45, 187 },
-+	{ 47, 188 }, { 48, 194 }, { 51, 195 }, { 52, 196 }, { 55, 197 },
-+	{ 56, 198 }, { 57, 236 }, { 58, 192 }, { 59, 193 }, { 72, 179 },
-+	{ 73, 180 }, { 74, 181 }, { 75, 202 }, { 76, 183 }, { 77, 189 },
-+	{ 78, 190 }, { 79, 191 }, { 80, 199 }, { 83, 204 }, { 84, 205 },
-+	{ 85, 229 }, { 86, 206 }, { 89, 207 }, { 91, 208 }, { 94, 214 },
-+	{ 95, 215 }, { 96, 237 }, { 97, 216 }, { 98, 238 }, { 99, 217 },
-+	{ 100, 239 }, { 105, 219 }, { 106, 210 }, { 107, 211 }, { 108, 222 },
-+	{ 109, 203 }, { 145, 225 }, { 146, 226 },
-+};
-+
- static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
- 	.pins = sa8775p_pins,
- 	.npins = ARRAY_SIZE(sa8775p_pins),
-@@ -1499,6 +1516,8 @@ static const struct msm_pinctrl_soc_data sa8775p_pinctrl = {
- 	.groups = sa8775p_groups,
- 	.ngroups = ARRAY_SIZE(sa8775p_groups),
- 	.ngpios = 150,
-+	.wakeirq_map = sa8775p_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(sa8775p_pdc_map),
- };
- 
- static int sa8775p_pinctrl_probe(struct platform_device *pdev)
+>  #include <linux/clkdev.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/i2c.h>
+
+...
+
+> +static const struct regmap_config i2c_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_read = txgbe_i2c_read,
+> +	.reg_write = txgbe_i2c_write,
+
+	fast_io = true;
+
+? (Note, I haven't checked if IO accessors are really fast)
+
+> +};
+
+...
+
+> +	i2c_regmap = devm_regmap_init(&pdev->dev, NULL, wx,
+> +				      &i2c_regmap_config);
+
+This is exactly a single line (80 characters), why to have two?
+
+> +	if (IS_ERR(i2c_regmap)) {
+> +		wx_err(wx, "failed to init regmap\n");
+> +		return PTR_ERR(i2c_regmap);
+> +	}
+
+...
+
+> +	res = DEFINE_RES_IRQ(pdev->irq);
+> +	info.res = &res;
+
+You can do
+
+	info.res = &DEFINE_RES_IRQ(pdev->irq);
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
