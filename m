@@ -2,46 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB0FC705A7A
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 00:19:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA3E705AC0
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 00:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjEPWT1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 18:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        id S229533AbjEPWrY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 18:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjEPWT0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 18:19:26 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FC559D6
-        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 15:19:24 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 047C02C04E1;
-        Wed, 17 May 2023 10:19:15 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1684275555;
-        bh=arElUNBLxYP/oS8PzLnuVnQ8MmR2mLGZDAgu2O2gSP0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=HPFIGvXnhVHJyEKGFnxyaxSijIvhEllmsTmbBGp+8Qqb35g1/YKCDZq1dzTp/zGdp
-         MXO8b3wk0ogBOt3D7T01o0EGsIT6bnIyt4Jw66MetNrL71J1GWgdz2qk+gVyCaBrnP
-         lur/J26PiuQlUlw/DoQV7mxuscX3d5cBg5wO6kh0InNO8zat9PEJ/AwkJlnxA2/SHb
-         g/R8eaZOyN1+rp9+Jkf419hgcKUkcYwN8dVrvFumOgt1dQH7eB64AoEzBFsXlqvhlF
-         sxl5asI2MU3uLmd5ubSc9/+TTCWzas5K8fMRuZcG+0An4HO2E64k59/eqrFmcasVt8
-         eoMAfK1L2DdJw==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B646401620001>; Wed, 17 May 2023 10:19:14 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 17 May 2023 10:19:14 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.026; Wed, 17 May 2023 10:19:14 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        with ESMTP id S229457AbjEPWrX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 18:47:23 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E5DEE;
+        Tue, 16 May 2023 15:47:22 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1aaf70676b6so1339875ad.3;
+        Tue, 16 May 2023 15:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684277242; x=1686869242;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BwVx45rSbRoG0Y+Iq+9ELL0fyg9NpBr4MhKOR0qWqws=;
+        b=Nd7FCY4bWcmsXY+AFsbhYhBxW+O1J23SD+AlrtCULGzIco+tyeQhfIw/2imrd31Dpd
+         MKPd4Acm4TdWi55iocMN/z+H8aN4a2AhjfxvmzODNJJhF4rSAv5k4XOoiCAzI8yVfB1y
+         5xLI82/cPX8alqfcVq7CcucnjHChIWA7SeO4Sa/UyemaNE21Jl6ns9mm8b+S479RAl1f
+         Bhzl5VHj9dnitQFE8emzrOlC5twuxNpYvOrI45E41E92OOIF/M29+uDUqxeTvQboxvW3
+         q6UIY22FFmCeSHQWi1nFtwz0FsAsbSLCZ4wZO0s4u3H80CUDSg4Hy54dfCM7o6OyPZtw
+         XeFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684277242; x=1686869242;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BwVx45rSbRoG0Y+Iq+9ELL0fyg9NpBr4MhKOR0qWqws=;
+        b=HjlRnMCVb0iQ9PiOLZLFzJBImLKsK8OJ1SOeCcDGq+R8vGGreveoXj1AbDe1kgvLxP
+         yYSzdp5gmqgDTqYxP+ALAPkAoRDaZPz4YHzNIpB7NY2E8BvoQx6Ngtx5gKt4I6/vzsXy
+         0Wqfv/SlLc4U+6lCtHiylOWA2Dop6Fckp2L4NuP6mGVbKMlOMv+tecz4HaoCnugnIPaQ
+         aRce4xczdm15o743T2i8C2kIlamDJ7u0pLmKaLlgiW94f1yaK+WYH1P+k97vRt3BPsql
+         EdiJhlGs/z5RgnUjLGw69HuTFSCD4gs4NZ/OgG9GHVe/B0cFfSNqYqSCOuajnvBYx2U+
+         6HuA==
+X-Gm-Message-State: AC+VfDxKaMmJPP4uGbK+kBFi/qKbsnH9sbGwbH1HuHH5BfRZMbVeotg0
+        g3Hcg1/7CwywvSFvuxUCpdY=
+X-Google-Smtp-Source: ACHHUZ6uOxhrdk0jihUU8nu1Mn4we7DZ5iE/mJumFGxqxQz2WPh2o7fPytaCe+YSKDintfzgKwWoAw==
+X-Received: by 2002:a17:902:d4c9:b0:1ac:6c46:8c80 with SMTP id o9-20020a170902d4c900b001ac6c468c80mr41809977plg.53.1684277242190;
+        Tue, 16 May 2023 15:47:22 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id b17-20020a170903229100b001ab39cd885esm15986779plh.212.2023.05.16.15.47.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 May 2023 15:47:21 -0700 (PDT)
+Date:   Wed, 17 May 2023 06:47:15 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
         "johan@kernel.org" <johan@kernel.org>,
         "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
         "maz@kernel.org" <maz@kernel.org>,
@@ -49,72 +61,66 @@ CC:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Topic: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Index: AQHZhIoofApft8Zm8kuYZtpxH+f53K9VfDeAgAQYHQCAApZDgIAAjA4A
-Date:   Tue, 16 May 2023 22:19:14 +0000
-Message-ID: <31a23398-9b0e-4a19-3576-84fcfd3ce4b5@alliedtelesis.co.nz>
+Message-ID: <ZGQH8/hH0Llx3rzZ@sol>
 References: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
  <CACRpkdYz9ipNTo2ORXKWy5Q4uCpKL=9Gd+kK76pestX7Onuz-Q@mail.gmail.com>
  <b36fcdf1-45ab-0c06-efe4-237df0612466@alliedtelesis.co.nz>
  <CACRpkdbiSAFoJP_JB1d_6gQ+Xx7Y+mLAh=C6Za+fpyWuRe6Gbw@mail.gmail.com>
-In-Reply-To: <CACRpkdbiSAFoJP_JB1d_6gQ+Xx7Y+mLAh=C6Za+fpyWuRe6Gbw@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.33.22.30]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0E08B0DD9C4BAB49AB098DDA8173E7C0@atlnz.lc>
-Content-Transfer-Encoding: base64
+ <31a23398-9b0e-4a19-3576-84fcfd3ce4b5@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=3N-_S7HmHMGHqhwlQE4A:9 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <31a23398-9b0e-4a19-3576-84fcfd3ce4b5@alliedtelesis.co.nz>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiAxNy8wNS8yMyAwMTo1NywgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24gTW9uLCBNYXkg
-MTUsIDIwMjMgYXQgMTI6MjfigK9BTSBDaHJpcyBQYWNraGFtDQo+IDxDaHJpcy5QYWNraGFtQGFs
-bGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPg0KPj4gSW4gbXkgb3JpZ2luYWwgY2FzZSB3aGlj
-aCBpcyBhIGtlcm5lbCBtb2R1bGUgdGhhdCBleHBvcnRzIGEgR1BJTyBmb3INCj4+IHVzZXJzcGFj
-ZSB1c2luZyBncGlvZF9leHBvcnQoKQ0KPiBXZSBzaG91bGQgbm90IGFkZCBuZXcgdXNlcnMgZm9y
-IHRoYXQgQVBJIGFzIGl0IGluY3JlYXNlIHRoZSB1c2FnZQ0KPiBvZiB0aGUgc3lzZnMgQUJJIGJ1
-dCBpZiBpdCdzIGFuIGV4aXN0aW5nIGluLXRyZWUgdXNlY2FzZSBJIGJ1eSBpdC4NCj4NCj4+IFRo
-ZSBjcnV4IG9mIHRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlIGlycV9kZXNjIGlzIGNyZWF0ZWQgd2hl
-biBpdCBoYXNuJ3QNCj4+IGJlZW4gcmVxdWVzdGVkLg0KPiBUaGUgcmlnaHQgc29sdXRpb24gdG8g
-bWUgc2VlbXMgdG8gYmUgdG8gbm90IHVzZSBncGlvZF9leHBvcnQoKQ0KPiBhbmQgbm90IHVzZSBz
-eXNmcyBUQkguDQoNClRoYXQncyBub3QgcmVhbGx5IGEgZmVhc2libGUgc29sdXRpb24uIEknbSBk
-ZWFsaW5nIHdpdGggYXBwbGljYXRpb24gY29kZSANCnRoYXQgaGFzIGJlZW4gaGFwcGlseSB1c2lu
-ZyB0aGUgc3lzZnMgaW50ZXJmYWNlIGZvciBtYW55IHllYXJzLg0KDQpJIGFjdHVhbGx5IGRpZCBs
-b29rIGF0IGdldHRpbmcgdGhhdCBjb2RlIHVwZGF0ZWQgdG8gdXNlIGxpYmdwaW8gZWFybGllciAN
-CnRoaXMgeWVhciBidXQgZm91bmQgdGhlIEFQSSB3YXMgaW4gYSBzdGF0ZSBvZiBmbHV4IGFuZCBJ
-IHdhc24ndCBnb2luZyB0byANCnJlY29tbWVuZCByZS13cml0aW5nIHRoZSBhcHBsaWNhdGlvbiBj
-b2RlIHRvIHVzZSBsaWJncGlvIGlmIEkga25ldyB0aGUgDQpBUEkgd2FzIGdvaW5nIHRvIGNoYW5n
-ZSBhbmQgd2UnZCBoYXZlIHRvIHJlLXdyaXRlIGl0IGFnYWluLg0KDQpFdmVuIG5vdyB3aXRoIHRo
-ZSAyLjAuMSBsaWJncGlvIHRoZXJlIGRvZXNuJ3Qgc2VlbSB0byBiZSBhIHdheSBvZiBhc2tpbmcg
-DQphYm91dCBqdXN0IEdQSU8gbGluZXMgaW4gdGhlIHN5c3RlbSwgYXBwbGljYXRpb24gY29kZSB3
-b3VsZCBzdGlsbCBuZWVkIA0KdG8gb3BlbiBldmVyeSAvZGV2L2dwaW9jaGlwTiBkZXZpY2UgYW5k
-IGFzayB3aGF0IGxpbmVzIGFyZSBvbiB0aGUgY2hpcCANCmFuZCBrZWVwIHRoZSBmZHMgb3BlbiBm
-b3IgdGhlIGNoaXBzIHRoYXQgaGF2ZSBsaW5lcyB0aGUgYXBwbGljYXRpb24gDQpjYXJlcyBhYm91
-dCBidXQgbWFrZSBzdXJlIHRvIGNsb3NlIHRoZSBmZCBmb3IgdGhlIG9uZXMgdGhhdCBkb24ndC4g
-U28gDQpub3cgdGhlIGFwcGxpY2F0aW9uIGNvZGUgaGFzIHRvIGNhcmUgYWJvdXQgR1BJTyBjaGlw
-cyBpbiBhZGRpdGlvbiB0byB0aGUgDQpHUElPIGxpbmVzLg0KDQo+PiBJbiBzb21lIGNhc2VzIHdl
-IGtub3cgdGhlIEdQSU8gcGluIGlzIGFuIG91dHB1dCBzbyB3ZQ0KPj4gY291bGQgYXZvaWQgaXQs
-IGluIG90aGVycyB3ZSBjb3VsZCBkZWxheSB0aGUgY3JlYXRpb24gdW50aWwgYW4gaW50ZXJydXB0
-DQo+PiBpcyBhY3R1YWxseSByZXF1ZXN0ZWQgKHdoaWNoIGlzIHdoYXQgSSdtIGF0dGVtcHRpbmcg
-dG8gZG8pLg0KPiBZZWFoIEkgZ3Vlc3MuIElmIHdlIHdhbm5hIGtlZXAgcGFwZXJpbmcgb3ZlciBp
-c3N1ZXMgY3JlYXRlZA0KPiBieSB0aGUgc3lzZnMgQUJJLg0KDQpTbyB0aGF0IGFzaWRlLiBJcyBp
-cyByZWFzb25hYmxlIHRvIGV4cGVjdCB0aGF0IGdwaW9faXNfdmlzaWJsZSgpIHNob3VsZCANCm5v
-dCBoYXZlIGFueSBzaWRlIGVmZmVjdHM/DQoNCkkgc3RpbGwgYmVsaWV2ZSB0aGF0IHRoaXMgY2hh
-bmdlIGlzIGluIHRoZSByaWdodCBkaXJlY3Rpb24gYWx0aG91Z2ggDQpjbGVhcmx5IEkgbmVlZCB0
-byBwcm92aWRlIGEgYmV0dGVyIGV4cGxhbmF0aW9uIG9mIHdoeSBJIHRoaW5rIHRoYXQgaXMgDQp0
-aGUgY2FzZS4gQW5kIHRoZXJlIG1pZ2h0IGJlIGEgYmV0dGVyIHdheSBvZiBhY2hpZXZpbmcgbXkg
-Z29hbCBvZiBub3QgDQp0cmlnZ2VyaW5nIHRoZSB3YXJuaW5nIG9uIGtleGVjIChjZXJ0YWlubHkg
-bXkgaW5pdGlhbCBlZmZvcnQgd2FzIHdheSBvZmYgDQp0aGUgbWFyaykuDQoNCj4NCj4gWW91cnMs
-DQo+IExpbnVzIFdhbGxlaWo=
+On Tue, May 16, 2023 at 10:19:14PM +0000, Chris Packham wrote:
+> 
+> On 17/05/23 01:57, Linus Walleij wrote:
+> > On Mon, May 15, 2023 at 12:27 AM Chris Packham
+> > <Chris.Packham@alliedtelesis.co.nz> wrote:
+> >
+> >> In my original case which is a kernel module that exports a GPIO for
+> >> userspace using gpiod_export()
+> > We should not add new users for that API as it increase the usage
+> > of the sysfs ABI but if it's an existing in-tree usecase I buy it.
+> >
+> >> The crux of the problem is that the irq_desc is created when it hasn't
+> >> been requested.
+> > The right solution to me seems to be to not use gpiod_export()
+> > and not use sysfs TBH.
+> 
+> That's not really a feasible solution. I'm dealing with application code 
+> that has been happily using the sysfs interface for many years.
+> 
+> I actually did look at getting that code updated to use libgpio earlier 
+> this year but found the API was in a state of flux and I wasn't going to 
+> recommend re-writing the application code to use libgpio if I knew the 
+> API was going to change and we'd have to re-write it again.
+> 
+
+Its 'libgpiod'.
+
+> Even now with the 2.0.1 libgpio there doesn't seem to be a way of asking 
+> about just GPIO lines in the system, application code would still need 
+> to open every /dev/gpiochipN device and ask what lines are on the chip 
+> and keep the fds open for the chips that have lines the application 
+> cares about but make sure to close the fd for the ones that don't. So 
+> now the application code has to care about GPIO chips in addition to the 
+> GPIO lines.
+> 
+
+Trying to better understand your use case - how does your application
+identify lines of interest - just whatever lines pop up in
+/sys/class/gpio?
+
+Cheers,
+Kent.
