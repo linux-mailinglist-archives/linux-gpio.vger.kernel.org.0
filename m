@@ -2,78 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B235705498
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 19:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F30F70554A
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 19:47:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjEPQ7m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 12:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        id S229454AbjEPRrW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 13:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231685AbjEPQ7g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 12:59:36 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9DC593ED;
-        Tue, 16 May 2023 09:59:23 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34GDvewr001646;
-        Tue, 16 May 2023 16:59:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=T8XoqpXDyaET013xmrLDBkOm8cU8UuGqCHGSI8E8QUU=;
- b=oR4vB7Hru48KOo5GqcOMNORvxNg2rRDEJVafL0j8VELBdFBi/48bODDX9CkYCACoa627
- 9OWU+mvX/aOV80/MW+nhMMNlvBKWpthwPmpllLFezrrKGCbzL30ca5+/igf6hrhvN41b
- luxtMkSw0pWgIinWtkhtG5Sl4jNLAqxvBA+CU1fsVxJY3vSt//eldVIVDIJ7B+mmLSOL
- kaZ47viBIBf1lilzxCvh2ue/xv2/PIE6yHBEXy6jhp/5fVaLoeqxoSdBZHbkcZmto7yn
- 9CHb0QoLfpPiTE4Rgp1JN60Odoh/PJYAHGXevf/gfOo8vcxoot/X07+toq/ZPfE9P7UO PQ== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qm74p921a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 May 2023 16:59:13 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34GGxCXw008589
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 May 2023 16:59:12 GMT
-Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Tue, 16 May 2023 09:59:06 -0700
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
-        <andy.shevchenko@gmail.com>, <quic_srichara@quicinc.com>
-Subject: [PATCH V6 8/8] arm64: defconfig: Enable IPQ5018 SoC base configs
-Date:   Tue, 16 May 2023 22:24:13 +0530
-Message-ID: <20230516165413.3361867-9-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230516165413.3361867-1-quic_srichara@quicinc.com>
-References: <20230516165413.3361867-1-quic_srichara@quicinc.com>
+        with ESMTP id S230475AbjEPRrU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 13:47:20 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA981BD9;
+        Tue, 16 May 2023 10:47:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+        s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+jmwZ/VQPKLzXqOASuQptTiU2AfHtoEzL3jUEy1Vj6w=; b=Y5ulmajI5rjxBoJ2o1WiWxvcmQ
+        5Y6FtHAZG+Jp0o3S4nRPUrFbwWPon1WB1tL0E1eDUcin0/nMILlYdQqzIDno6kAB67Y26WPh7qMph
+        6SmxMNjxKDjVq2xnXotIa5C4e5Ij3TPSpErqTb9IvW9HmUasx9AE2a5OhIn0NCMbO5xzVVoDzn01f
+        tLBP2kcILngvV6MaMHSf6HodAR3JP2lURXjgrGBbyCVOObLU26sFt9ftRQI0WVI4OUWOZ3fx9Q2Mv
+        1UgHjAame9umTP/5DSx2xS/xssugcDtAf/VfP6H1S9Nzmr4s5/1Lw+nizACpH1FJBnTLeG4jcNHgd
+        0HRMWNvA==;
+Received: from [2001:4d48:ad59:1403::16a3] (helo=earth.li)
+        by the.earth.li with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <noodles@earth.li>)
+        id 1pyylJ-00GMpP-9P; Tue, 16 May 2023 18:47:01 +0100
+Date:   Tue, 16 May 2023 18:46:55 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/5] Minor device-tree additions for C.H.I.P
+Message-ID: <cover.1684258957.git.noodles@earth.li>
+References: <cover.1683719613.git.noodles@earth.li>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JX0hxsTBxVs2jizmpEX18gJ7R9vGu2px
-X-Proofpoint-ORIG-GUID: JX0hxsTBxVs2jizmpEX18gJ7R9vGu2px
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-16_09,2023-05-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 malwarescore=0 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=885 suspectscore=0
- clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305160144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1683719613.git.noodles@earth.li>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -84,37 +61,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enables clk & pinctrl related configs
+This small patch series adds some improvements for the C.H.I.P DTS,
+enabling bluetooth, exporting the PMIC temperature details via iio-hwmon
+and finally adding the appropriate base pinmux info for an external MMC
+card. As a pre-requisite for the Bluetooth it also adds support to the
+AXP209 driver for GPIO3, which is the Bluetooth device wakeup line.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [v6] Added Reviewed by
+v3:
+- Add Reviewed-By/Acked-Bys
+- Drop redundant else
+- Switch to GENMASK/decimal values for GPIO3 function defs
+v2:
+- Fix missing ; on bluetooth stanza in DTS
+- Add device/host wake GPIOs for Bluetooth device
+- Add omit-if-no-ref on the port E pinmux stanza
+- Rename axp20x_temp to pmic-temp
+- Add AXP209 GPIO3 support
 
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Jonathan McDowell (5):
+  dt-bindings: gpio: Add GPIO3 for AXP209 GPIO binding schema
+  pinctrl: axp209: Add support for GPIO3 on the AXP209
+  ARM: dts: sun5i: chip: Enable bluetooth
+  ARM: dts: sun5i: Add port E pinmux settings for mmc2
+  ARM: dts: axp209: Add iio-hwmon node for internal temperature
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a24609e14d50..8bf0ef77f375 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -553,6 +553,7 @@ CONFIG_PINCTRL_IMX8ULP=y
- CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
-+CONFIG_PINCTRL_IPQ5018=y
- CONFIG_PINCTRL_IPQ5332=y
- CONFIG_PINCTRL_IPQ6018=y
- CONFIG_PINCTRL_IPQ9574=y
-@@ -1154,6 +1155,8 @@ CONFIG_QCOM_CLK_APCC_MSM8996=y
- CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
- CONFIG_IPQ_GCC_5332=y
-+CONFIG_IPQ_APSS_5018=y
-+CONFIG_IPQ_GCC_5018=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
- CONFIG_IPQ_GCC_9574=y
+ .../bindings/gpio/x-powers,axp209-gpio.yaml   |  1 +
+ arch/arm/boot/dts/axp209.dtsi                 |  7 ++++
+ arch/arm/boot/dts/sun5i-r8-chip.dts           |  6 +++
+ arch/arm/boot/dts/sun5i.dtsi                  |  9 ++++
+ drivers/pinctrl/pinctrl-axp209.c              | 42 +++++++++++++++++++
+ 5 files changed, 65 insertions(+)
+
 -- 
-2.34.1
+2.39.2
 
