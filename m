@@ -2,131 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF7570522E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 17:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B721970523D
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 17:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233572AbjEPPdR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 11:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54102 "EHLO
+        id S233511AbjEPPeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 11:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233314AbjEPPcu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 11:32:50 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E325C618F
-        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 08:32:42 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-50bc5197d33so26014669a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 08:32:42 -0700 (PDT)
+        with ESMTP id S233728AbjEPPec (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 11:34:32 -0400
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C8C7DAA
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 08:34:31 -0700 (PDT)
+Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-77d508ba6faso4730121241.2
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 08:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684251161; x=1686843161;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+WfDmrqy+QvMst4XEpE/xoK4sak7nQ3C4hjNO9HTTG0=;
-        b=xDEJo0SLmGVlDXhX/NOriVq2mlAqG47xuhR/5aeirsLGvc7tkTl9nINt7oJZhqwU6o
-         koJhGF/IIzflE+YEoTP50NrniSiBi0YiQRxPW6iLxHejXOiDzRaDMgTVxhbW3e3EL5Dh
-         nuUQkhfOcADYBv3spwgyGfSZLOlDBU5J9PVGl3aATwbkjucWdrAxzPZuYLZBn9iDJm3S
-         A4/nurYAYt32tYoLTewVmH9oXggLmJ74/ynZ9y3ksrgZnbZQn4MOm6osU8cZ8D/XK7VR
-         hAvXQejna4ki7fOPorsJxh03h+xg2xP5CaH1XM+RGR4AjYLWCKw6LgH0+fhVeMYnrItR
-         LOvg==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684251270; x=1686843270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YvdEFRzutnbNOOurn60T1w5qVmFLZEprgNl0tF1OCLU=;
+        b=tZVNSEGczk6kIRbArRY4cT/mlLGwGfeFEZC4vS6WmlRMOls5d8PmqRrLKMEDSZ7GMO
+         eJfDXy/lUNmgKxKOYPOirx0QdqTi2brRnvQas/Q5iwI1OY8cu634PHz2WZkYLlRJ5DM3
+         wpOjIXL0HnUomCYNJemdDzBpvfWBBuIytX4NppipIL0y0B/tY0P3UZeGK341HTCTLTRT
+         A7zGY3V4+y+0ors7BTT9n3iEnkvkbkSUZvXKu7foGVRPGUjZ8YSkUHn5tyfMzgz0D4oR
+         xxIJxVa8F9xH0YeMWc1g+w2j3KWD5t6Ud8hg85Tgt5vTk3utd/0jzDJl93mHAhoZJdgl
+         4Nbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684251161; x=1686843161;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+WfDmrqy+QvMst4XEpE/xoK4sak7nQ3C4hjNO9HTTG0=;
-        b=FhsZynO/shC7RGG2NGzV+fYMc+Wl+22GEf5ih3+9qvgPJcRr2gox6yULs1qf32d8y8
-         ncdkZ3M5ok6Itfbi3LQxmAZGLmpkezRXvJmu2JHMC53BYgi/KRnDNqVFYA0LremMA59B
-         T8WrcqGB0YNcEm0jC8ZYzZ5TBkSEO48obtZZvMM9eW7QS/joOt9CINZE/wiqeT04gJ+k
-         SdLNer8EFxmPxCQOTk3x5mzv6a2ELChySs4RZb+9t1BB7edHjVWiX75gzZWNCAoOwRZ4
-         1GGn4xMVwn3/x0xUqyUbrUjviX8uNPJ9hq/CJQj4iClgAGsGmHB9q+GfLPl2HDFRC9eN
-         LnAw==
-X-Gm-Message-State: AC+VfDyg0xeG4T14K/vWJKNWSbiFREkgQqm8z0FQeWC62kFGE0J+sm1k
-        aHxvxp3bHrlZKLLC0U4oAJOmzw==
-X-Google-Smtp-Source: ACHHUZ7x0LFHxkX8C01IljtyBknQMJkvvH2qc+W3wIiGMrH81XlGSgasoeiOPj4uhkFFeOaCs2aTJg==
-X-Received: by 2002:a50:ed99:0:b0:50b:c41b:25d with SMTP id h25-20020a50ed99000000b0050bc41b025dmr27405434edr.7.1684251161319;
-        Tue, 16 May 2023 08:32:41 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:77d1:16a1:abe1:84fc? ([2a02:810d:15c0:828:77d1:16a1:abe1:84fc])
-        by smtp.gmail.com with ESMTPSA id w15-20020a50fa8f000000b0050d89daaa70sm8389780edr.2.2023.05.16.08.32.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 May 2023 08:32:40 -0700 (PDT)
-Message-ID: <5b818f32-33c4-3f89-ce02-eb803d34ea48@linaro.org>
-Date:   Tue, 16 May 2023 17:32:38 +0200
+        d=1e100.net; s=20221208; t=1684251270; x=1686843270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YvdEFRzutnbNOOurn60T1w5qVmFLZEprgNl0tF1OCLU=;
+        b=Psxs+tQ2x3NWvvQo7b44Ld13I8T7JD6UTJNItVoP3Qnl40MKNXtaj3ylXWWUXMrOY5
+         0QM3mUxc7EWmraaXtwH8I+9fpwYlac8pZ+cI8awSL1mcRGZlR/mohV99wgAh1haMdnHr
+         uwNQzfy1iqssfTCegTUYIxFpRb63OOCrb1M29M1SRXummuyci2icZHnSqJVaswPNalqq
+         JRU1KERJQ3FHcIP4Uoj2sGGbpQcpIr+AQ8mFnYZDc2nVhEFSfIx+A1pf6pRCRDoUYyEJ
+         yBFdCyh3dzlIZYduH+30eaZH8zVO1uNbqloY6ThD6lWK1aYNs0dbT2+A7sNW7M8KSf3U
+         lTRw==
+X-Gm-Message-State: AC+VfDwIRwrrOPd3Qyf1kTNMZj+wIk7sZoDdRYKWquZ16xHx0+RaXFN8
+        jbNGk5muhFbcGLRAdpZbNBxkZiAO2r3rDcIZJQdNEw==
+X-Google-Smtp-Source: ACHHUZ5sCb0e2/K3Uf+Pa17albTb/UYZ+MkMOgqzIyHbPaxLBkNnJDii6OJqSgfWeqRTkGUNL2gYv09etbeSxK8EXMo=
+X-Received: by 2002:a67:ee55:0:b0:434:711e:e2c4 with SMTP id
+ g21-20020a67ee55000000b00434711ee2c4mr15531301vsp.14.1684251270212; Tue, 16
+ May 2023 08:34:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
-Content-Language: en-US
-To:     Michal Simek <michal.simek@amd.com>, piyush.mehta@amd.com,
-        nava.kishore.manne@amd.com, sai.krishna.potthuri@amd.com,
-        shubhrajyoti.datta@amd.com, vishal.sagar@amd.com,
-        kalyani.akula@amd.com, bharat.kumar.gogada@amd.com,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
+References: <20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org>
+ <20230426-stmpe-dt-bindings-v4-1-36fdd53d9919@linaro.org> <CAMRc=MdsBiV3AvzSPtCuR58w0N9z7o+hUrBDtXUC4a++pECb8w@mail.gmail.com>
+ <CACRpkdaJrB1f13LB4aHSWys63448a4NQZORgwdk8z=C8qe-BDA@mail.gmail.com>
+In-Reply-To: <CACRpkdaJrB1f13LB4aHSWys63448a4NQZORgwdk8z=C8qe-BDA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 16 May 2023 17:34:19 +0200
+Message-ID: <CAMRc=Mf+RsU6PT7fwm=r9OLbmxNjiv9Ru8HEfpMEAqDN5-0Qig@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: Convert STMPE GPIO to YAML schema
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/05/2023 15:51, Michal Simek wrote:
-> @xilinx.com is still working but better to switch to new amd.com after
-> AMD/Xilinx acquisition.
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+On Thu, May 11, 2023 at 10:39=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+>
+> On Thu, May 11, 2023 at 4:58=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > Applied, thanks!
+>
+> That works ... but patch 2/2 depends on this one. (uses $ref).
+> You'd have to give Lee an immutable branch that he can pull
+> before applying patch 2/2 so he has the dependency, or let him
+> apply both.
+>
+> Yours,
+> Linus Walleij
 
+Sure:
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b=
+:
 
-Best regards,
-Krzysztof
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+tags/v6.4-stmpe-gpio
+
+for you to fetch changes up to 6c19974d1e83fba2cca1cbea2fbf250f093eb5ed:
+
+  dt-bindings: gpio: Convert STMPE GPIO to YAML schema (2023-05-11
+16:58:04 +0200)
+
+Bart
