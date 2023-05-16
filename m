@@ -2,97 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 635BE705562
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 19:49:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 309717055AD
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 20:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232096AbjEPRtT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 13:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
+        id S232097AbjEPSJg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 14:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232132AbjEPRsw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 13:48:52 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBCCD2FC;
-        Tue, 16 May 2023 10:48:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-        s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=KbcQkYKNRCHyuXFCuS3kkLD2pB2ybnzz6U+C/4pf2yo=; b=CKgH460/CO2JV+oflOuijS3r5q
-        6vIPnY51LwvOvEthIh3DFtITt3uPivgwuC7GNCxIiORdo06NXt9khGgUuzMizF3Tm7PXKapoBWD12
-        EA3JDVVx8WNN73SejQX4RNgQZGAuwWP+DWyFaoIRml/UvOQwmNfTVHF2KkHXwxIftWU9ASBjEx5/S
-        qUzecZonZeN8e3VqtxIq4wEVavhAvPJVw6wJLVjylHA0I/jqq85+darZ5v+x1aoDzGJtMxjSN8mxC
-        P00c7jBoleNHGiiv2ri2R0IAb9WMMgTlciXVDV4nadQi+H8ln8rSJ+AIefjdCWEj0V7q9MKEn6Jas
-        H3Utr+Bg==;
-Received: from [2001:4d48:ad59:1403::16a3] (helo=earth.li)
-        by the.earth.li with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <noodles@earth.li>)
-        id 1pyymh-00GMwv-FJ; Tue, 16 May 2023 18:48:27 +0100
-Date:   Tue, 16 May 2023 18:48:21 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v3 5/5] ARM: dts: axp209: Add iio-hwmon node for internal
- temperature
-Message-ID: <a0f48e6d799ce7f95cd536cf9e13b18d73c920d4.1684258957.git.noodles@earth.li>
-References: <cover.1683719613.git.noodles@earth.li>
- <cover.1684258957.git.noodles@earth.li>
+        with ESMTP id S229571AbjEPSJf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 14:09:35 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D53518E
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 11:09:33 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-55a14807e4cso249024067b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 11:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684260572; x=1686852572;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HOOCBtnPBFwUcTzbyrJ0D+u8r9EEiyuqpPeng26UuJw=;
+        b=qmxo71Iu51dxFxvJUFwzFuvE5d4/yYabhhGeWleeEm4S88WH1eWl0ErD0jyC4E4Yw4
+         kTAlQonYg0MmNr6Lvn8vC+nHf2rA+KvFG+LWsMiS0LBHhEFghvMt8DKhK8ViUaFADlfy
+         LgUNrPAHtqz0J/rOZuJLs6YHWWXNsyH5TMAwK2hQG+K+7JuqIl6X4+iOmZri0mYKJrkS
+         vQfel+hfcdz3pLMvRD+0xBDdGTGaN9gCNPp4eRf3Yiy7WW9bTH+Nxd6snpjBwcr6/LXB
+         F2T46T91x4YRYJakVsZrBKMVK9YMbm7l+sLh1ogMnYSjVAI8XOFtNd3Ghx0Ot/yr84ca
+         nAaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684260572; x=1686852572;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HOOCBtnPBFwUcTzbyrJ0D+u8r9EEiyuqpPeng26UuJw=;
+        b=INzeKelYSRvatY3k2vwJL+hLfyDD+ixEYpM235omBkSo1rz4elU9jUNJCq7h7vK9/F
+         s+rlwoGc06NC/lW9anm5x3S7U+arntV7ohz6na4P7rnq5etBtQo2OOgatSOuUVm7fMxU
+         5kLMR5wHTdpTncBH094+O4Wh14nnX2/G/Behx2LG/tfRqJLrZfcBN82L4XgOryzXnCBT
+         P5HwIKQOHCTTaN4h5u0SLoq1aU6qhlXa/XOGW0bomwOBI4ekLpf7Qk3n+QiIwx0xrtAY
+         TckYnaLJHPEqQUHmBYYEC/9fokMfDgFxt3gPafEVRuJIC3phMFqFi4SU3cKBajeu574B
+         K4Qw==
+X-Gm-Message-State: AC+VfDxJ1grwE1iapKXi7MtuDZClEnAFNWVjAnrepxkCyscu4amEsJJ+
+        9yEIRbNhyX6IK+oWL7WgVzvnxMZa9VyfdmcVNnZKExZWtU5JAL61
+X-Google-Smtp-Source: ACHHUZ7XF6q2Bm1/49+wSfDCry1UkLwKzxIvfA8o0ztp9zAXasmfZmqYoLT5ce/cEdz0K4L4NDqNhKlG99yf44fNy44=
+X-Received: by 2002:a81:6c45:0:b0:561:bae4:c377 with SMTP id
+ h66-20020a816c45000000b00561bae4c377mr255712ywc.14.1684260572560; Tue, 16 May
+ 2023 11:09:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1684258957.git.noodles@earth.li>
+References: <20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org>
+ <20230426-stmpe-dt-bindings-v4-1-36fdd53d9919@linaro.org> <CAMRc=MdsBiV3AvzSPtCuR58w0N9z7o+hUrBDtXUC4a++pECb8w@mail.gmail.com>
+ <CACRpkdaJrB1f13LB4aHSWys63448a4NQZORgwdk8z=C8qe-BDA@mail.gmail.com> <CAMRc=Mf+RsU6PT7fwm=r9OLbmxNjiv9Ru8HEfpMEAqDN5-0Qig@mail.gmail.com>
+In-Reply-To: <CAMRc=Mf+RsU6PT7fwm=r9OLbmxNjiv9Ru8HEfpMEAqDN5-0Qig@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 May 2023 20:09:21 +0200
+Message-ID: <CACRpkdbCiEtiXkhaoUMCqeqcOaTYu0hSp0cDTy8NzzwitfQL+g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: Convert STMPE GPIO to YAML schema
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a DT node to hook up the internal temperature ADC to the
-iio-hwmon driver. The various voltage + current ADCs are consumed and
-exposed by their respective drivers, but this is not and is always
-available. Naming chosen to match the axp20x_ prefix the power sensors
-use.
+On Tue, May 16, 2023 at 5:34=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Thu, May 11, 2023 at 10:39=E2=80=AFPM Linus Walleij <linus.walleij@lin=
+aro.org> wrote:
+> >
+> > On Thu, May 11, 2023 at 4:58=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> >
+> > > Applied, thanks!
+> >
+> > That works ... but patch 2/2 depends on this one. (uses $ref).
+> > You'd have to give Lee an immutable branch that he can pull
+> > before applying patch 2/2 so he has the dependency, or let him
+> > apply both.
+> >
+> > Yours,
+> > Linus Walleij
+>
+> Sure:
+>
+> The following changes since commit ac9a78681b921877518763ba0e89202254349d=
+1b:
+>
+>   Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+> tags/v6.4-stmpe-gpio
+>
+> for you to fetch changes up to 6c19974d1e83fba2cca1cbea2fbf250f093eb5ed:
+>
+>   dt-bindings: gpio: Convert STMPE GPIO to YAML schema (2023-05-11
+> 16:58:04 +0200)
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
----
- arch/arm/boot/dts/axp209.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hey cool :D
 
-diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-index ca240cd6f6c3..469d0f7d5185 100644
---- a/arch/arm/boot/dts/axp209.dtsi
-+++ b/arch/arm/boot/dts/axp209.dtsi
-@@ -48,6 +48,13 @@
-  * http://dl.linux-sunxi.org/AXP/AXP209%20Datasheet%20v1.0_cn.pdf
-  */
- 
-+/ {
-+	pmic-temp {
-+		compatible = "iio-hwmon";
-+		io-channels = <&axp_adc 4>; /* Internal temperature */
-+	};
-+};
-+
- &axp209 {
- 	compatible = "x-powers,axp209";
- 	interrupt-controller;
--- 
-2.39.2
+Lee if you pull this in you can apply 2/2 on top if it checks out.
 
+Yours,
+Linus Walleij
