@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E3D705558
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 19:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 381E470555F
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 19:49:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbjEPRs0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 13:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
+        id S231921AbjEPRtC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 13:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231888AbjEPRsR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 13:48:17 -0400
+        with ESMTP id S231925AbjEPRsa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 13:48:30 -0400
 Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF55A5FA;
-        Tue, 16 May 2023 10:48:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C230F272C;
+        Tue, 16 May 2023 10:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:
         Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=NwKDN2wROXKQZ2KQl5DJ4omg17om01ewgOzriNwmhpQ=; b=o+eKAF4DKB2NXA4uiJKvdRv4++
-        Rhk2UnZpDCeIDcXdP+wEiy5AcER6TtBerveeVkIIR1OiDsycPHvIu3aWyITi6aLtW+M8LAaWr0YWy
-        UJU8MWqHXB7xKYFhijtrpDkyIgtAyDwOfbNoxk6xcaVrsGtJm0rUwjncKRcmClVz//zAZHHweN/Np
-        icdWOhYK0mogyr4MgscWYZTT1q3NzZsSY/0ya+nVeMlxzCzzQy5wxanxeWPBilJe44lyJtz8qnfL5
-        eeHiTS+WNBw3vpeN0djduxrE11+zVEENRY4i3sl8ETBjwBmV5GqKYJQX6ie1UGvfmjGyrqenq3NrT
-        jRnNIjlA==;
+        bh=EaPNEMUKyDQN26JSwTClLnrKV94BnN1/m1X9svWJsHE=; b=fgGNK20tVf6lKE/XBJsbvivEtj
+        f89o+cJwIwkH8VRHgHAUUGq3Vdtdlzw4kD/LL1wTKVZtD32nazepzwJX8E3+R1aPcx/0u1YqRuerx
+        RI4EuyoFxt7aMdiH6pYF8whMsbbYQHMB8cV/wxkccMzGq4gUUd2iqI6LpP25AbYCWySEVqCX1srIR
+        ZXMDP2LtqAhjXtGCKaIdg4ankggG6DTN2rD9lST4EG+N4tZ3k0qqKcgKQBgSgHHgSg4JztVt9PTXZ
+        0IxXjmqrNhQj0jWyR4WG0HJep1xDiaLj4StaaP8Ay1KBm10CLWJmDwW9GuiKeZIzK4NF+qIjznFJX
+        PFIhpBdA==;
 Received: from [2001:4d48:ad59:1403::16a3] (helo=earth.li)
         by the.earth.li with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <noodles@earth.li>)
-        id 1pyym9-00GMu0-L7; Tue, 16 May 2023 18:47:53 +0100
-Date:   Tue, 16 May 2023 18:47:47 +0100
+        id 1pyymR-00GMvT-7Y; Tue, 16 May 2023 18:48:11 +0100
+Date:   Tue, 16 May 2023 18:48:05 +0100
 From:   Jonathan McDowell <noodles@earth.li>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -44,8 +44,8 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH v3 3/5] ARM: dts: sun5i: chip: Enable bluetooth
-Message-ID: <08eb325e3332441ea102da109acb22557d12de89.1684258957.git.noodles@earth.li>
+Subject: [PATCH v3 4/5] ARM: dts: sun5i: Add port E pinmux settings for mmc2
+Message-ID: <644b0a6aee41d205eb51d35365265ed63669707b.1684258957.git.noodles@earth.li>
 References: <cover.1683719613.git.noodles@earth.li>
  <cover.1684258957.git.noodles@earth.li>
 MIME-Version: 1.0
@@ -62,33 +62,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The C.H.I.P has an rtl8723bs device with the bluetooth interface hooked
-up on UART3. Support for this didn't exist in mainline when the DTS was
-initially added, but it does now, so enable it.
+These alternate pins for mmc2 are brought out to the 40 pin U14 header
+on the C.H.I.P and can be used to add an external MMC device with a 4
+bit interface. See
+
+https://byteporter.com/ntc-chip-micro-sd-slot/
+
+for further details on how.
 
 Signed-off-by: Jonathan McDowell <noodles@earth.li>
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 ---
- arch/arm/boot/dts/sun5i-r8-chip.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/sun5i.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-r8-chip.dts b/arch/arm/boot/dts/sun5i-r8-chip.dts
-index fd37bd1f3920..4192c23848c3 100644
---- a/arch/arm/boot/dts/sun5i-r8-chip.dts
-+++ b/arch/arm/boot/dts/sun5i-r8-chip.dts
-@@ -255,6 +255,12 @@ &uart3 {
- 	pinctrl-0 = <&uart3_pg_pins>,
- 		    <&uart3_cts_rts_pg_pins>;
- 	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		device-wake-gpios = <&axp_gpio 3 GPIO_ACTIVE_HIGH>;
-+		host-wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
-+	};
- };
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index 250d6b87ab4d..ab7f675aeec4 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -517,6 +517,15 @@ mmc2_4bit_pc_pins: mmc2-4bit-pc-pins {
+ 				bias-pull-up;
+ 			};
  
- &usb_otg {
++			/omit-if-no-ref/
++			mmc2_4bit_pe_pins: mmc2-4bit-pe-pins {
++				pins = "PE4", "PE5", "PE6", "PE7",
++				       "PE8", "PE9";
++				function = "mmc2";
++				drive-strength = <30>;
++				bias-pull-up;
++			};
++
+ 			mmc2_8bit_pins: mmc2-8bit-pins {
+ 				pins = "PC6", "PC7", "PC8", "PC9",
+ 				       "PC10", "PC11", "PC12", "PC13",
 -- 
 2.39.2
 
