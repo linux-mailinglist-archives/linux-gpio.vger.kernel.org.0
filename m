@@ -2,117 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71CA470468B
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 09:38:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A60A1704831
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 May 2023 10:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbjEPHiJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 03:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38422 "EHLO
+        id S230477AbjEPIwE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 04:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230388AbjEPHiI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 03:38:08 -0400
-Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d501])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9329C423C;
-        Tue, 16 May 2023 00:38:05 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net [IPv6:2a02:6b8:c14:2991:0:640:bb47:0])
-        by forward501b.mail.yandex.net (Yandex) with ESMTP id 6695D5F29E;
-        Tue, 16 May 2023 10:38:03 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id rbVsqF6Wo4Y0-UkaxrYJI;
-        Tue, 16 May 2023 10:38:01 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1684222681;
-        bh=R3NyR73k7IhF7nI84HX4UghfXKGpid2SwwTSfXwtO70=;
-        h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-        b=QotG58g6dFkLdzg/jCTCPqPNHWfIFJSnx9H8OHC12M2roLLuxVWKx6W2h25dkjVSe
-         HRwtXoqfClom0cLuEY16ejoh6MbeEy+uPI8UAhwOs+j0NQ/gw1AVexLnYUBpraFKDp
-         l0egQl1rEQANggrBncTSCi4j3ZinsQfxms2ylvX4=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <4f81a96b826344f45d0994539e3b3fe94fe7eb50.camel@maquefel.me>
-Subject: Re: [PATCH 00/43] ep93xx device tree conversion
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Brian Norris <briannorris@chromium.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Eric Dumazet <edumazet@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jean Delvare <jdelvare@suse.de>, Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Le Moal <damien.lemoal@opensource.wdc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lukasz Majewski <lukma@denx.de>, Lv Ruyi <lv.ruyi@zte.com.cn>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Qin Jian <qinjian@cqplus1.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Peter <sven@svenpeter.dev>, Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Walker Chen <walker.chen@starfivetech.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        netdev@vger.kernel.org, soc@kernel.org
-Date:   Tue, 16 May 2023 13:37:54 +0300
-In-Reply-To: <1ff2333a-8f78-c066-0158-9c8a1a17684f@gmail.com>
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-         <1ff2333a-8f78-c066-0158-9c8a1a17684f@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        with ESMTP id S231418AbjEPIwC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 04:52:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CB34C0E;
+        Tue, 16 May 2023 01:52:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3DFD063663;
+        Tue, 16 May 2023 08:52:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90387C433D2;
+        Tue, 16 May 2023 08:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684227119;
+        bh=5i87WjgwyMiViOIMguz296sht10SHl9HYvunIq8Fdz4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QLNhcuAENyPWj8HBP1xQi92yQxaGrmxituQp8obI3cx7BjaPVB9+qsvvsvlI4Nqgf
+         u9K1wOfF+YfKEf4fhK3iI5ee+6qgGb8I9l8eonvaN4PeSuzlq+BzFeB/NuzdKw45tc
+         fn5rSwzJFYbqRvRD2T0Bike6LbN5JyhXXNm+dD+kZ3XAydlEsduQ9US8S7kqe35Cmi
+         nOjb9Wew+jxCiWaQv9ICqZTPNKMpaXCUsqk/2ytILmk5a7V6VPJtoIPI+sZblVbsoS
+         l7YSO3KKqTC7c5miN190ZnZXEcXB6xx43fCS6g99KF/COv9tKlP9rtCkDbmUVtCR1M
+         pCyqIxfYS9kmA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pyqPV-00FTKi-5E;
+        Tue, 16 May 2023 09:51:57 +0100
+Date:   Tue, 16 May 2023 09:51:56 +0100
+Message-ID: <86h6scmzf7.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lee Jones <lee@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, tglx@linutronix.de, linus.walleij@linaro.org,
+        vkoul@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/10] irqchip/cs42l43: Add support for the cs42l43 IRQs
+In-Reply-To: <20230515112554.GA10825@google.com>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+        <20230512122838.243002-8-ckeepax@opensource.cirrus.com>
+        <86o7mpmvqq.wl-maz@kernel.org>
+        <20230512153933.GH68926@ediswmail.ad.cirrus.com>
+        <86mt29mt2m.wl-maz@kernel.org>
+        <20230515112554.GA10825@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lee@kernel.org, ckeepax@opensource.cirrus.com, broonie@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -120,30 +77,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Florian!
+On Mon, 15 May 2023 12:25:54 +0100,
+Lee Jones <lee@kernel.org> wrote:
+> 
+> On Fri, 12 May 2023, Marc Zyngier wrote:
+> 
+> > On Fri, 12 May 2023 16:39:33 +0100,
+> > Charles Keepax <ckeepax@opensource.cirrus.com> wrote:
+> > > 
+> > > On Fri, May 12, 2023 at 04:10:05PM +0100, Marc Zyngier wrote:
+> > > > On Fri, 12 May 2023 13:28:35 +0100,
+> > > > Charles Keepax <ckeepax@opensource.cirrus.com> wrote:
+> > > > > 
+> > > > > The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
+> > > > > (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
+> > > > > for portable applications. It provides a high dynamic range, stereo
+> > > > > DAC for headphone output, two integrated Class D amplifiers for
+> > > > > loudspeakers, and two ADCs for wired headset microphone input or
+> > > > > stereo line input. PDM inputs are provided for digital microphones.
+> > > > > 
+> > > > > The IRQ chip provides IRQ functionality both to other parts of the
+> > > > > cs42l43 device and to external devices that wish to use its IRQs.
+> > > > 
+> > > > Sorry, but this isn't much of an interrupt controller driver. A modern
+> > > > interrupt controller driver is firmware-driven (DT or ACPI, pick your
+> > > > poison), uses irq domains, and uses the irqchip API.
+> > > > 
+> > > 
+> > > Apologies but I really need a little help clarifying the issues
+> > > here. I am totally happy to fix things up but might need a couple
+> > > pointers.
+> > > 
+> > > 1) uses the irqchip API / uses irq domains
+> > > 
+> > > The driver does use both the irqchip API and domains, what
+> > > part of the IRQ API are we not using that we should be?
+> > > 
+> > > The driver registers an irq domain using
+> > > irq_domain_create_linear.  It requests its parent IRQ using
+> > > request_threaded_irq. It passes IRQs onto the devices requesting
+> > > IRQs from it using handle_nested_irq and irq_find_mapping.
+> > > 
+> > > Is the objection here that regmap is making these calls for us,
+> > > rather than them being hard coded into this driver?
+> > 
+> > That's one of the reasons. Look at the existing irqchip drivers: they
+> > have nothing in common with yours. The regmap irqchip abstraction may
+> > be convenient for what you are doing, but the result isn't really an
+> > irqchip driver. It is something that is a small bit of a larger device
+> > and not an interrupt controller driver on its own. The irqchip
+> > subsystem is there for "first class" interrupt controllers.
+> 
+> I'm not aware of another subsystem that deals with !IRQChip level IRQ
+> controllers.  Where do simple or "second class" interrupt controllers
+> go?
 
-On Mon, 2023-05-15 at 20:47 -0700, Florian Fainelli wrote:
->=20
->=20
-> On 4/24/2023 5:34 AM, Nikita Shubin wrote:
-> > This series aims to convert ep93xx from platform to full device
-> > tree support.
-> >=20
-> > Tested on ts7250 64 RAM/128 MiB Nand flash, edb9302.
-> >=20
-> > Thank you Linus and Arnd for your support, review and comments,
-> > sorry if i missed something -
-> > these series are quite big for me.
-> >=20
-> > Big thanks to Alexander Sverdlin for his testing, support, review,
-> > fixes and patches.
->=20
-> If anyone is interested I still have a TS-7300 board [1] that is
-> fully=20
-> functional and could be sent out to a new home.
+This isn't an interrupt controller. This is internal signalling, local
+to a single component that has been artificially broken into discrete
+bits, including an interrupt controller. The only *real* interrupts
+here are the GPIOs.
 
-Thank you kindly, i'll keep this in mind !
+I'm happy to see an interrupt controller for the GPIOs. But the rest
+is just internal muck that doesn't really belong here. Where should it
+go? Together with the rest of the stuff that manages the block as a
+whole. Which looks like the MFD subsystem to me.
 
->=20
-> https://www.embeddedts.com/products/TS-7300
+Thanks,
 
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
