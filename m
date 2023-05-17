@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB497705D5D
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 04:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8683C705D5E
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 04:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232128AbjEQCgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 22:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        id S231906AbjEQCgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 22:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232147AbjEQCgC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 22:36:02 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DACC4ECD
-        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 19:35:48 -0700 (PDT)
+        with ESMTP id S229533AbjEQCgt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 22:36:49 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396D3E44
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 19:36:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684290948; x=1715826948;
+  t=1684291008; x=1715827008;
   h=date:from:to:cc:subject:message-id;
-  bh=3NwMx1aeb5iEZlEeoyhlHIyUsHyO+lWlTLkI1apPaFc=;
-  b=UNr8P3d3UOX6YNZRD6pAErumo5dPLGHD6h0EUnpUJEQ0yYmdAgTblqUy
-   loTspl4c+S8ZGY8PxNkodHlw01H5oBzsmdsrJsgPIXVCJnWtkZBn66Ag0
-   JUVtTH4vAOakf4Fx75j0c8j4/mfycclSWF6RRcJd8XzXkJAldsfbqr9zH
-   AVi6TSWHdW91/EQ5OAXLeO6Fi+fBQ5OVFu9yyl5i1APPiQ3aMvtfUAtTV
-   7/5Ue9r0jTpC1tuE8lzS3lCgf1hRPNUUBVgM598l9CSjLTlVwd/ERHbtd
-   k2GuBj2SkFXWuCBYMLcyKjRTKKlpoIqLJnsqe/fka4nW2cLSRrJ0Lkjvq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="417302669"
+  bh=XP9fMEQFhgUj+hj6a1y68EJMta7irH4t6e2kAaBN5c0=;
+  b=QxGxKvBA99Ow26Gy8Mmbq9scRE7rs9Bn7J5yPOf4NvwRJ7OkRe4E1gEG
+   2NvHT4zgBM3RdqaGGjv4J86MB26B1S+IeicbQqD0icRRXBiaJZqYIin1d
+   N5RRqvii8lHyhiH9+h9yZb07czsQeVfftYxgcdJhPRRG+O2PKz3tc0Wua
+   eCJ/UyvHGwhHyZHLtt0xDf/rAaDcPjp/NwX2LMYFCSib5di7vPXapdmuw
+   cbZOrXoj5uHZI0mCJiVdeZ06hkurPGOOzajBGC+w8iiI7QNUXJyb8aV0q
+   zkfzPja8Ng7DrcYo0k8GLdJS99G937ePlA3CFMd9zy1uUEfpOJh0o20/O
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="353935906"
 X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
-   d="scan'208";a="417302669"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 19:35:47 -0700
+   d="scan'208";a="353935906"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 19:36:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="732214468"
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="825795982"
 X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
-   d="scan'208";a="732214468"
+   d="scan'208";a="825795982"
 Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 16 May 2023 19:35:46 -0700
+  by orsmga004.jf.intel.com with ESMTP; 16 May 2023 19:36:46 -0700
 Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pz70z-00086G-22;
-        Wed, 17 May 2023 02:35:45 +0000
-Date:   Wed, 17 May 2023 10:34:57 +0800
+        id 1pz71x-00086f-30;
+        Wed, 17 May 2023 02:36:45 +0000
+Date:   Wed, 17 May 2023 10:36:11 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 5b10ff013e8a57f8845615ac2cc37edf7f6eef05
-Message-ID: <20230517023457.JLo_O%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 0ad8190a7aa01efdf773a7c918184cb8a87b7b0a
+Message-ID: <20230517023611.HIZWK%lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -60,8 +61,8 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 tree/branch: INFO setup_repo_specs: /db/releases/20230516180935/lkp-src/repo/*/linusw-pinctrl
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 5b10ff013e8a57f8845615ac2cc37edf7f6eef05  pinctrl: meson-axg: add missing GPIOA_18 gpio group
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 0ad8190a7aa01efdf773a7c918184cb8a87b7b0a  Merge branch 'devel' into for-next
 
 elapsed time: 728m
 
