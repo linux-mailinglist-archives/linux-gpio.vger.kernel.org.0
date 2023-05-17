@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8683C705D5E
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 04:36:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A8A705D5F
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 04:36:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbjEQCgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 May 2023 22:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
+        id S229533AbjEQCgw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 May 2023 22:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjEQCgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 22:36:49 -0400
+        with ESMTP id S232111AbjEQCgv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 May 2023 22:36:51 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396D3E44
-        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 19:36:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB92A1BD9
+        for <linux-gpio@vger.kernel.org>; Tue, 16 May 2023 19:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684291008; x=1715827008;
+  t=1684291009; x=1715827009;
   h=date:from:to:cc:subject:message-id;
-  bh=XP9fMEQFhgUj+hj6a1y68EJMta7irH4t6e2kAaBN5c0=;
-  b=QxGxKvBA99Ow26Gy8Mmbq9scRE7rs9Bn7J5yPOf4NvwRJ7OkRe4E1gEG
-   2NvHT4zgBM3RdqaGGjv4J86MB26B1S+IeicbQqD0icRRXBiaJZqYIin1d
-   N5RRqvii8lHyhiH9+h9yZb07czsQeVfftYxgcdJhPRRG+O2PKz3tc0Wua
-   eCJ/UyvHGwhHyZHLtt0xDf/rAaDcPjp/NwX2LMYFCSib5di7vPXapdmuw
-   cbZOrXoj5uHZI0mCJiVdeZ06hkurPGOOzajBGC+w8iiI7QNUXJyb8aV0q
-   zkfzPja8Ng7DrcYo0k8GLdJS99G937ePlA3CFMd9zy1uUEfpOJh0o20/O
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="353935906"
+  bh=dvwvzALxh78UslY6uXZd8DPp+c6Tn8SVO4PfSpKcNSo=;
+  b=iZo54Q1IaUGOwnNsm95m+jUeXD7lGq1byu3kDi7UUsnItB2o9u5T+Rg6
+   Y1eVmniOx2+4Dm9b08kMKX4WejcS4IIqwqGNrAPeC253KuNqquXhKE6x3
+   5dumakH8VFLF9Vahf8i+ph56MXWJrlaTPwvOlQWvcUxlcfDeuh4wGxUyS
+   p9t1tPQ+A4Yf6x0F4sWaEVZS9Y7QYUevl9rR2vlJfIcIYQrnvRDXGVNEz
+   L2jYW3+RIPfkszyPoYHD+mzadncWNxwtSg3P6jVsQtQ93wVsn6hro9EZM
+   6N4qqst0RYD2GSG6IzZARqN5BW0WA9lMhZpXY1t76KxIQ3axbAUHF3kXO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="353935909"
 X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
-   d="scan'208";a="353935906"
+   d="scan'208";a="353935909"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 19:36:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="825795982"
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="825795981"
 X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
-   d="scan'208";a="825795982"
+   d="scan'208";a="825795981"
 Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
   by orsmga004.jf.intel.com with ESMTP; 16 May 2023 19:36:46 -0700
 Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pz71x-00086f-30;
+        id 1pz71x-00086c-2r;
         Wed, 17 May 2023 02:36:45 +0000
-Date:   Wed, 17 May 2023 10:36:11 +0800
+Date:   Wed, 17 May 2023 10:36:20 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 0ad8190a7aa01efdf773a7c918184cb8a87b7b0a
-Message-ID: <20230517023611.HIZWK%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 070a10d6fe1b2f4cc5d6c38b478cc059461eabe9
+Message-ID: <20230517023620.ILdNU%lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -61,10 +61,10 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 tree/branch: INFO setup_repo_specs: /db/releases/20230516180935/lkp-src/repo/*/linusw-pinctrl
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 0ad8190a7aa01efdf773a7c918184cb8a87b7b0a  Merge branch 'devel' into for-next
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 070a10d6fe1b2f4cc5d6c38b478cc059461eabe9  pinctrl: qcom: sc8180x: gracefully handle missing IO memory resource
 
-elapsed time: 728m
+elapsed time: 730m
 
 configs tested: 376
 configs skipped: 23
