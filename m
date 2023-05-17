@@ -2,177 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E41C2706AD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7D0D706B1A
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231907AbjEQOQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 10:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42520 "EHLO
+        id S231808AbjEQOa7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 10:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231888AbjEQOQ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:16:56 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9A718C;
-        Wed, 17 May 2023 07:16:54 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-9661a1ff1e9so119738366b.1;
-        Wed, 17 May 2023 07:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684333013; x=1686925013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9mWuBFORINAsgkFiENnuZWACjGF2Zo8AfvFi7n4DTJY=;
-        b=biypyogl/DqZwN8+l2p9gGZMhx1QXp7js5dS6YSXbdcF3ZHK3bAXOKr9bIZ2d5+mvl
-         Qn4Gx8A74tCXzyGwgnn35/7evQqgN/7wXY9AeQJjQf2d0yv+FYmCHdYp8GwNzBMM0M2X
-         RepZrNuNaoOJQYiVZCSiNqbUDnKxLYbuFDB8j4b1yBI/QsVPe3WOIE4R72ZLtO7EIxoT
-         24iEumAIof2PKi6dQYEuyikyK+F0NROw542Ffk8G2rKhOQY1gF3SmvrkEBVbE4TJefAI
-         GSNWr7uxGsud5z6OeWp2cGbBzJ4OT09LPkQaqsMmhTV5gi2hCXnVzgGn3dz+0FxHoXgI
-         VP5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684333013; x=1686925013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9mWuBFORINAsgkFiENnuZWACjGF2Zo8AfvFi7n4DTJY=;
-        b=Z+pQ/oqFjWFJrG9+QOfmcz2fk6OWGFRuNpj7cn7shDKRiYpYGRowq2JkVCH+kIFmIE
-         Z+0NVG8IOQUjZKlbbISdY7MjZKegbdAZtLRCoaG1zNR0fgP1TIgmH3N5XFiNQzdHdBnq
-         /abMBpvgJN9Fhoxr2Unjzxbrf982Poi9gPfMU/V+4s8UYXrLNCrOxyg/2ZFPVVdup7oM
-         V2twmI0RsL0z51GbdEiOchF4MggywuQOyDAYGkJlRsqmXHdd7IprC9JGRI2HIlRl0F42
-         5AjgXpG+NqpXRXqQKXbczJ3a9xWbkvy1NFceT+GK4eMZUxXbd6K/9yEmefwohVyZzQ0P
-         lziQ==
-X-Gm-Message-State: AC+VfDwxtRBr8RIE7cgkgUEf6LEFJU/lPfTBEAuqBqM5CSGiYZfEo1KB
-        BXxqVrmLl5g5ht0kVKhEg9+SlUrulB4J1qMrc2c=
-X-Google-Smtp-Source: ACHHUZ5TyNAWL0L+xFq4qCoGU4tNyKIEpqxlZu0ALd+ZVRg36+lSEN4BwR3Z/P1zVEHc2oshTTV+tnv1x2FEG17G5M8=
-X-Received: by 2002:a17:907:36c3:b0:96a:3811:f589 with SMTP id
- bj3-20020a17090736c300b0096a3811f589mr24647279ejc.10.1684333012989; Wed, 17
- May 2023 07:16:52 -0700 (PDT)
+        with ESMTP id S231785AbjEQOa5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:30:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2757DA7;
+        Wed, 17 May 2023 07:30:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0DD645BE;
+        Wed, 17 May 2023 14:30:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94DB4C433EF;
+        Wed, 17 May 2023 14:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684333855;
+        bh=m6Os9B2ed6cigaZgyvST3zp5sKK8MZYV/M/roj0u/iI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RP/qhpzfg0S6E2//ryq4SNYkedqo/IWGritLtCDNhEgQHZtNfcDiCVK4yp7Jqokur
+         eZpH0XvtuStZo6aqN+hogrkZ3ILJCcOls7Tl7kcazXTdN/ubmWTgkH9rUIxhuJjz0a
+         UBgRVYr3p3w4zT8k+AcySzysNtLfh0Ceap+08PWvRWxYluu8VbpOvpNhKHhNDfUioF
+         rrqhnzZsSp2amH1YpoV2Nc23APNXZN5+MCglArTtOdsxNja8I8s1oVOpVnIceiFQHi
+         IQUQqLLdXnY2QrLuYg7Pr0y8sIk+L8FCFGHO8OffGQbzXK7BD5WOF8JDk69EcP2T9I
+         dLsa58uJTvBGA==
+Date:   Wed, 17 May 2023 23:30:52 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>, lee@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, tglx@linutronix.de, maz@kernel.org,
+        linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/10] pinctrl: cs42l43: Add support for the cs42l43
+Message-ID: <ZGTlHMRl/ifaQmiN@finisterre.sirena.org.uk>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-9-ckeepax@opensource.cirrus.com>
+ <ZF6RMqElYZVMpWRt@surfacebook>
+ <20230515101350.GS68926@ediswmail.ad.cirrus.com>
+ <CAHp75Vcizrucc-2KFdFNeHNrxCzz4GwX1OzZYyjPH7P9RgnKYQ@mail.gmail.com>
+ <20230517101301.GV68926@ediswmail.ad.cirrus.com>
+ <CAHp75VchpbiYcd2yaP1WTjX17P0hg3qON5JGAXu08aDVw6Ydkw@mail.gmail.com>
 MIME-Version: 1.0
-References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-In-Reply-To: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 17 May 2023 09:16:41 -0500
-Message-ID: <CABb+yY2JaC8b-HFEU_WnSBSCr2edgEezXJkfMUYqjeLBA1MvYw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
-To:     Michal Simek <michal.simek@amd.com>
-Cc:     piyush.mehta@amd.com, nava.kishore.manne@amd.com,
-        sai.krishna.potthuri@amd.com, shubhrajyoti.datta@amd.com,
-        vishal.sagar@amd.com, kalyani.akula@amd.com,
-        bharat.kumar.gogada@amd.com, linux-kernel@vger.kernel.org,
-        monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Ov0voJhDONNyMty6"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VchpbiYcd2yaP1WTjX17P0hg3qON5JGAXu08aDVw6Ydkw@mail.gmail.com>
+X-Cookie: Avoid contact with eyes.
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 16, 2023 at 8:51=E2=80=AFAM Michal Simek <michal.simek@amd.com>=
- wrote:
->
-> @xilinx.com is still working but better to switch to new amd.com after
-> AMD/Xilinx acquisition.
->
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
->
->  Documentation/devicetree/bindings/arm/xilinx.yaml             | 2 +-
->  Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml     | 2 +-
->  .../devicetree/bindings/clock/xlnx,clocking-wizard.yaml       | 2 +-
->  Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml  | 2 +-
->  Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml | 4 ++--
->  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml        | 2 +-
->  .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml        | 2 +-
->  Documentation/devicetree/bindings/fpga/xlnx,versal-fpga.yaml  | 2 +-
->  .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.yaml       | 2 +-
->  Documentation/devicetree/bindings/gpio/gpio-zynq.yaml         | 2 +-
->  Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml  | 2 +-
->  .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 2 +-
->  Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml     | 2 +-
->  .../devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml  | 2 +-
->  .../devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml       | 2 +-
->  .../bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml      | 2 +-
->  .../bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml       | 2 +-
->  Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml  | 2 +-
->  .../devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml        | 2 +-
->  .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml      | 2 +-
->  .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml    | 2 +-
->  Documentation/devicetree/bindings/rtc/xlnx,zynqmp-rtc.yaml    | 2 +-
->  Documentation/devicetree/bindings/serial/cdns,uart.yaml       | 2 +-
->  Documentation/devicetree/bindings/spi/spi-cadence.yaml        | 2 +-
->  Documentation/devicetree/bindings/spi/spi-xilinx.yaml         | 2 +-
->  Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml    | 2 +-
->  Documentation/devicetree/bindings/spi/xlnx,zynq-qspi.yaml     | 2 +-
->  Documentation/devicetree/bindings/timer/cdns,ttc.yaml         | 2 +-
->  .../devicetree/bindings/watchdog/xlnx,xps-timebase-wdt.yaml   | 4 ++--
->  29 files changed, 31 insertions(+), 31 deletions(-)
->
-.....
-> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-ma=
-ilbox.yaml b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mail=
-box.yaml
-> index 374ffe64016f..aeaddbf574b0 100644
-> --- a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.y=
-aml
-> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.y=
-aml
-> @@ -33,7 +33,7 @@ description: |
->                +------------------------------------------+
->
->  maintainers:
-> -  - Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> +  - Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
->
->  properties:
->    compatible:
->
-Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
 
-Just curious, some developers' ids are left unchanged, and not all
-devs have S.O.B.
+--Ov0voJhDONNyMty6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers.
+On Wed, May 17, 2023 at 04:59:50PM +0300, Andy Shevchenko wrote:
+> On Wed, May 17, 2023 at 1:13=E2=80=AFPM Charles Keepax
+
+> > I am very very far from confident we can guarantee that will be
+> > present in the ACPI. The ACPI is typically made for and by the
+> > Windows side.
+
+> Why? You may insist firmware vendors / OEMs to use that as a
+> requirement to the platforms that would like to use your chip. The
+> _DSD() is part of the specification, I don't see how the above can be
+> an argument.
+
+> The times when ACPI =3D=3D Windows are quite behind.
+
+Nobody is going to loose a sale over something like that, especially
+when it's just not idiomatic.  It's very unlikely to even be worth the
+effort of educating customers who don't care what DSD is when there's no
+ecosystem push for it, it'd just make you look difficult and weird.
+
+--Ov0voJhDONNyMty6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmRk5RsACgkQJNaLcl1U
+h9DaIggAgmCuOSFXfbUoH1Su2DcLeh0wIfTqcONVi5GSZAbHyuk9dy5MrNYj7nfa
+BcKuolLtwCe4MMP4zB5zLMSydCTOL6J4vPUUcGrQgOl0jUHkF+k/G292o5wyf3B5
+346PTZPODQloCnkBdi+vjpx+7XLYki/f4sjbTFZ0i4AeKblgvmROpqBpk7e0oWRa
+phVv/QMLjXuxIi+wmCuR8MfiBA3G+V4nhHFpiOQ7tJynbOXwEqwf+Pap/bT1l/pp
+q/SLuiz+4SqQLPP/OWZNMDzVLpDfFfHHumuKTS6jztcZ2+EkDjI/NSESl85fkee0
+b4R9RbjgMmuLqwnWKrgLotCs+oO0pg==
+=aZyT
+-----END PGP SIGNATURE-----
+
+--Ov0voJhDONNyMty6--
