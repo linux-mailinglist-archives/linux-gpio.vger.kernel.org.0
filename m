@@ -2,94 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70CB706539
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 12:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C929706729
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 13:54:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbjEQK3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 06:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48596 "EHLO
+        id S229815AbjEQLyG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 07:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjEQK3K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 06:29:10 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAD93A80;
-        Wed, 17 May 2023 03:29:08 -0700 (PDT)
+        with ESMTP id S229937AbjEQLyF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 07:54:05 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D73BB10FE;
+        Wed, 17 May 2023 04:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684319349; x=1715855349;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=s+Q9MD8MUeL3jqq4EHyk0PRGS6hQxwGEoNlmystB14k=;
-  b=HZf5EORYCAd4Gpzxje6G6gu/k/6yyRtNN7rr4QggBvQGGStWsxtRp1Sn
-   /FOqL+v5G4Ucp4A1Yd4VMUakEe5EnNICp96PQcTqoFAFx+Z2W1FxdRXIF
-   VKkNgbpQvgPvC0QOYbcuBDhymO0JFz/Y1qa6+2s9ilWPCh4RtXO4JXGgd
-   AsMFPSFrK8zSJoMFNlqTWN/YqoPVMMBu1TtDl969b1ryQkkO7w3PkGlsS
-   K8UkVTTSEVQxft6x8FWgMnRCdt2jUqoDouPPOgfdIryQimGsGPHWEL6Jc
-   gM+GtAgEJP0//havY0ZZZxxtEJ2dVhLt/12JuDo/jTi0dVtpstdPBvW6x
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1684324444; x=1715860444;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=x/TZ2v45jbxmXqFd0/TXltD77HteerLNjobEtu6yQas=;
+  b=05l2pQZjojV9PGLkF8ygoV0fRJzSkZbAAt+ZIbWaAuR83lDyq52onO2C
+   QyII7ZD+WuuH4NNbHmc73wqJuDLWvqc+dRtBaKy4DR0f6LzaFHrwEUv3Y
+   4BLEypdcKZnkorNGMZ9ZNWe7WRnGU72vkCnO2EfItXI4Z/t/Bm8571/wc
+   vf+ba0JAYCO9qHE9nbEpoaVVTo+jDFqd6/PthmG0BZsoAhIPwqvHbRAfd
+   33DdicPcDryEVhk8dGE/LZoAezgzx+vOZuP++c7ODFMVoR1hVZHmqrFJW
+   ZJeN2O8HpxlrLY6WGuyJZo6fm0UG5nLSIgqwLU9XDkN5XMFnxc0VA1tor
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="438066579"
-X-IronPort-AV: E=Sophos;i="5.99,281,1677571200"; 
-   d="scan'208";a="438066579"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 03:29:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="876013032"
-X-IronPort-AV: E=Sophos;i="5.99,281,1677571200"; 
-   d="scan'208";a="876013032"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 17 May 2023 03:29:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pzEP0-0008HZ-1H;
-        Wed, 17 May 2023 13:29:02 +0300
-Date:   Wed, 17 May 2023 13:29:02 +0300
-From:   'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Message-ID: <ZGSsbr7oPZAZ4U7V@smile.fi.intel.com>
-References: <20230515063200.301026-1-jiawenwu@trustnetic.com>
- <20230515063200.301026-7-jiawenwu@trustnetic.com>
- <ZGKlzFXfqCuq3s8u@smile.fi.intel.com>
- <00c601d9879a$ea72dd90$bf5898b0$@trustnetic.com>
+X-IronPort-AV: E=Sophos;i="5.99,282,1677567600"; 
+   d="scan'208";a="215867507"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 May 2023 04:54:04 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 17 May 2023 04:54:04 -0700
+Received: from ryan-Precision-5560.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.21 via Frontend Transport; Wed, 17 May 2023 04:54:00 -0700
+From:   <Ryan.Wanner@microchip.com>
+To:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <claudiu.beznea@microchip.com>,
+        <linus.walleij@linaro.org>, <ludovic.desroches@microchip.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH 0/3] AT91 PIO4 push-pull enable
+Date:   Wed, 17 May 2023 13:54:03 +0200
+Message-ID: <cover.1684313910.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00c601d9879a$ea72dd90$bf5898b0$@trustnetic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 16, 2023 at 10:05:41AM +0800, Jiawen Wu wrote:
-> On Tuesday, May 16, 2023 5:36 AM, Andy Shevchenko wrote:
-> > On Mon, May 15, 2023 at 02:31:57PM +0800, Jiawen Wu wrote:
-> > > Register GPIO chip and handle GPIO IRQ for SFP socket.
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-...
+This patch set enables push-pull pin configuation for PIO4 IP as well as
+updating the DT binding.
 
-> > > +	spin_lock_init(&wx->gpio_lock);
-> > 
-> > Almost forgot to ask, are you planning to use this GPIO part on PREEMPT_RT
-> > kernels? Currently you will get a splat in case IRQ is fired.
-> 
-> Hmmm, I don't know much about this. Should I use raw_spinlock_t instead of
-> spinlock_t?
+Removing the integer argument for open-drain allows the driver to
+process drive configuration from gpiolib as the integer argument is
+discarded.
 
-If you need support PREEMPT_RT.
+Ryan Wanner (3):
+  pinctrl: at91-pio4: Enable Push-Pull configuration
+  dt-bindings: pinctrl: at91-pio4: Add push-pull support
+  ARM: dts: at91: Return to boolean properties
+
+ .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt  |  3 ++-
+ arch/arm/boot/dts/at91-kizbox3-hs.dts             |  2 +-
+ arch/arm/boot/dts/at91-kizbox3_common.dtsi        |  2 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c               | 15 +++++++++++----
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
