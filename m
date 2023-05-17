@@ -2,67 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9147706A35
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 15:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADD13706A63
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbjEQNwC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 09:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53822 "EHLO
+        id S230098AbjEQOAf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 10:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbjEQNwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 09:52:01 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9198DFC;
-        Wed, 17 May 2023 06:52:00 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id af79cd13be357-759219bed84so45514685a.0;
-        Wed, 17 May 2023 06:52:00 -0700 (PDT)
+        with ESMTP id S230082AbjEQOAf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:00:35 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2B67292;
+        Wed, 17 May 2023 07:00:28 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-61b5a653df7so6681576d6.0;
+        Wed, 17 May 2023 07:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684331519; x=1686923519;
+        d=gmail.com; s=20221208; t=1684332028; x=1686924028;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ezYf5IVfbVTCbEX5g86Cn6xuAKYKN/qRPzWXKbKvo2o=;
-        b=WeUhl4LBKzduD22xO2R0081ed064xsO9ugJ8ZrnRB7xlpbbnJF4fTuEpo58H/kZac1
-         3lk5IiJiFcBAi43kYl06BIeiguHnagX+Y7MPeEyeYbzpoN3YcRuQp3zKJz6m1J6XhJhg
-         G+MhM6yPo1GEBxEC96l3Zrk9a1a4f+5JfF6sLpoCd5sDqHYaeyYQMtMXLQLH+RHzj4p5
-         c8NfABSIr/AJKe7DY4p2PTpxs41QpaKTh4QGh20YX3qlJADTGuBPKd42Lp6xq482keTC
-         Y5ZyXirgHHkXBzqJimcLCleTdbD04M6uES76dabaGVmhagKC+1i1vYmaVCdiD1JA3hgK
-         IcZA==
+        bh=kF/bfVMkR2h3+gHlTD2VrM3fzaZfhgR5R+8jewhi4kQ=;
+        b=f79+NO3WafffxprPEUX+MpIWRo6r4PqFlcXxubPrc5PoTBP656Fn9Mcm7a2mwB5G7C
+         w5UPPUw1EMxkhtW6Zv4TXzVfEg5MZrMiduqd66tOriGLtyCimkn9S3lGxNBnKtYQM3+G
+         +pwFiCW5l91dJjXzmS0TzXb2KtnyyCo685VDetUFEshUciT7yPMPbB68DIrs3wtHC3VG
+         3wG3jdPdkaBHkOdGh7NDRnIsj4vwiuqnHYsMfDz++4ij673rakRNl8aEW4I9PSMiTuUD
+         5l/IqeFpNgqz7FYStFzg/tpoDw+DOHF0/ExUT2Fn/t9nV0oF9qRRSmsogt3yNtf+S7/o
+         M0+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684331519; x=1686923519;
+        d=1e100.net; s=20221208; t=1684332028; x=1686924028;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ezYf5IVfbVTCbEX5g86Cn6xuAKYKN/qRPzWXKbKvo2o=;
-        b=Bz6tC6e6jrC7X/htvw/vMZEwgpvschynHNkE9RH2nh9H2XNiSEKhdRNioCs+ZtY9YM
-         zjqBEIBX42hxTsTVtWNjmjq+bTkn5Tda2q2qef6aErz3OIdRS/1Yx77cNlsyw7BYtqH2
-         /rcHSr8UMbWrb5PAxaeZnz0BRmrL37Whvw0OSV/ttH7ju51OZxtL7pMaCjJLG1olFFAX
-         OYI47lpXY7HJiGPiDwP3kQ37SX83pXTPCd+7jxpmJxmseNrEKK/eW+pgHRMoeqZJkFs6
-         lxZQ05r92V50gp2aJFrMIXyqNaKMZZx+vKbzoD1/eTNxGJ0O/ryC8IvUNl8culDE2Bw1
-         diyA==
-X-Gm-Message-State: AC+VfDxg0AuabVlnB1jcrXRotoQ/L770l41IrquHcy7yfhN7Dnzk0fOk
-        OU0+cQPPk003MJYc1Co7LQmhXD5B6/i+bolMvIY=
-X-Google-Smtp-Source: ACHHUZ5A1vF0iMFZI92bdSvrqfDdCd/qvml5Miyj0FM1UfLesAbUIoG8oLNvNUuXscoT1oHyfpiqtdRGD0KtBcdCPwc=
-X-Received: by 2002:a05:6214:628:b0:621:42c8:9bdd with SMTP id
- a8-20020a056214062800b0062142c89bddmr46799995qvx.29.1684331519668; Wed, 17
- May 2023 06:51:59 -0700 (PDT)
+        bh=kF/bfVMkR2h3+gHlTD2VrM3fzaZfhgR5R+8jewhi4kQ=;
+        b=IXG0KDX8L0bP3EriR/dl3WK+Ic5teW3Oa3NKgGS9aZiAshGnxb07Xi5FKooTDUxSfP
+         SDppVS3lr5HGo4+x6dkWup4qkCw3UZ8wcDXg4Zxg4XDmo4wnV5S1HTRlaWuFwGpvSujp
+         9OuGZGPaGOMqtEPgeQS3INX6wHDvUfuWgvKndLtvk5qSRZIGCUdoPzs5lkxcnm+oFb39
+         pePcLHgozGpIzHJvemld7unYbnBAW34qUk6bY3RbhqNfdrfPv9925gxNV3WnNFcGM/3I
+         dGQVOq6ITFNDSGljR2oeZc8qw/WYRY0JJbtPSbJeByLLDCkIT2y2LX0c4ujOaRirM3Wt
+         8y+A==
+X-Gm-Message-State: AC+VfDzw4mYw3m7vcMRFvA8X80Rcv1nVi73sK5GZAMXyZ7p3g3JnuZd6
+        EPOjiBQlsCOfY7+heniyj8uLUNmevs//Y0WAmiU=
+X-Google-Smtp-Source: ACHHUZ5dgDWb+fDdj9ateE9Q5/4olnyjZM5M0pe72NMZbgcEFxb1cJTJVSxAul4O+5JAir2aZNO7h0ejLa3/duMEZP8=
+X-Received: by 2002:a05:6214:d03:b0:623:46d8:535 with SMTP id
+ 3-20020a0562140d0300b0062346d80535mr24128643qvh.34.1684332026063; Wed, 17 May
+ 2023 07:00:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com> <20230512141755.1712358-3-eblanc@baylibre.com>
- <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
- <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com> <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
-In-Reply-To: <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-9-ckeepax@opensource.cirrus.com> <ZF6RMqElYZVMpWRt@surfacebook>
+ <20230515101350.GS68926@ediswmail.ad.cirrus.com> <CAHp75Vcizrucc-2KFdFNeHNrxCzz4GwX1OzZYyjPH7P9RgnKYQ@mail.gmail.com>
+ <20230517101301.GV68926@ediswmail.ad.cirrus.com>
+In-Reply-To: <20230517101301.GV68926@ediswmail.ad.cirrus.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 17 May 2023 16:51:23 +0300
-Message-ID: <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-To:     Esteban Blanc <eblanc@baylibre.com>
-Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
-        jneanne@baylibre.com, aseketeli@baylibre.com, sterzik@ti.com,
-        u-kumar1@ti.com
+Date:   Wed, 17 May 2023 16:59:50 +0300
+Message-ID: <CAHp75VchpbiYcd2yaP1WTjX17P0hg3qON5JGAXu08aDVw6Ydkw@mail.gmail.com>
+Subject: Re: [PATCH 08/10] pinctrl: cs42l43: Add support for the cs42l43
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
+        vkoul@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,49 +78,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:58=E2=80=AFPM Esteban Blanc <eblanc@baylibre.com=
-> wrote:
-> On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
-> > On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@baylibre.=
-com> wrote:
-> > > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
-> > > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
+On Wed, May 17, 2023 at 1:13=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+> On Tue, May 16, 2023 at 10:03:45PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 15, 2023 at 1:13=E2=80=AFPM Charles Keepax
+> > <ckeepax@opensource.cirrus.com> wrote:
+> > > On Fri, May 12, 2023 at 10:19:14PM +0300, andy.shevchenko@gmail.com w=
+rote:
+> > > > Fri, May 12, 2023 at 01:28:36PM +0100, Charles Keepax kirjoitti:
+> > > > > +   if (!of_property_read_bool(dev_of_node(cs42l43->dev), "gpio-r=
+anges")) {
+> > > > > +           ret =3D gpiochip_add_pin_range(&priv->gpio_chip, priv=
+->gpio_chip.label,
+> > > > > +                                        0, 0, CS42L43_NUM_GPIOS)=
+;
+> > > > > +           if (ret) {
+> > > > > +                   dev_err(priv->dev, "Failed to add GPIO pin ra=
+nge: %d\n", ret);
+> > > > > +                   goto err_pm;
+> > > > > +           }
+> > > > > +   }
+> > > >
+> > > > Besides the fact that we have a callback for this, why GPIO library=
+ can't
+> > > > handle this for you already?
+> > >
+> > > Apologies but I am not quite sure I follow you, in the device
+> > > tree case this will be handled by the GPIO library. But for ACPI
+> > > this information does not exist so has to be called manually, the
+> > > library does not necessarily know which values to call with,
+> > > although admittedly our case is trivial but not all are.
+> >
+> > Why can't the firmware provide this information? _DSD() is a part of
+> > ACPI v5.1 IIRC.
+>
+> I am very very far from confident we can guarantee that will be
+> present in the ACPI. The ACPI is typically made for and by the
+> Windows side.
+
+Why? You may insist firmware vendors / OEMs to use that as a
+requirement to the platforms that would like to use your chip. The
+_DSD() is part of the specification, I don't see how the above can be
+an argument.
+
+The times when ACPI =3D=3D Windows are quite behind.
+
+> > Although it might require moving some code from gpiolib-of.c to
+> > gpiolib.c with replacing OF APIs with agnostic ones.
+>
+> I really think if we want to start doing things that way on ACPI
+> platforms someone with a little more clout than us needs to start
+> doing it first. If Intel or someone was doing it that way it
+> might give us a little more levelage to push it as being the
+> "correct" way to do it.
+
+So, we have the meta-acpi [1] project which contains dozens of
+examples on how ACPI DSD is being used for real devices, besides some
+documentation in the Linux kernel.
+
+> I will switch to the callback, but really don't think we can rely
+> on this being in DSD yet.
+
+Why not?
 
 ...
 
-> > > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 + (gpio=
-_inst))
-> > > > > +#define TPS6594_REG_GPIO1_CONF                             0x31
-> > > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GPIO1_CO=
-NF + (gpio_inst))
-> > > >
-> > > > Why? The original code with parameter 0 will issue the same.
-> > >
-> > > I felt that replacing 0x31 with a constant would make the computation
-> > > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you think?
+> > > I had missed there are now devm_pm_runtime calls,
+
+Btw, even if there is no such API one can always call
+devm_add_action() / devm_add_action_or_reset() to open code such a
+call.
+
+> > > I will switch
+> > > to that. But I would like to understand the wrong order, remove
+> > > will be called before the devm bits are destroyed and it seems
+> > > reasonable to disable the pm_runtime before destroying the
+> > > pinctrl device. What exactly would run in the wrong order here?
 > >
-> > The question is why that register is so special that you need to have
-> > it as a constant explicitly?
+> > At the ->remove() stage after this call an IRQ can be fired (or on SMP
+> > systems any other APIs can be called), for example. So, would it be a
+> > problem to service it with PM disabled?
+> >
+> > But in any case the shuffling ordering like this is prone to subtle
+> > bugs. I prefer to have strict ordering if there is nothing preventing
+> > from doing that way.
 >
-> It is not special, it's just the first one of the serie of config
-> registers. I felt like just having 0x31 without context was a bit weird
+> Yeah happy enough to use devm_ here, just didn't know it existed
+> and wanted to better understand your concerns as I was having
+> difficulty seeing the issue.
 
-I'm not sure I understand what 'context' you are talking about.
-This is pretty normal to have two kind of definitions (depending on the cas=
-e):
-1/
+Ah, you are welcome!
 
-  #define FOO_1 ...
-  #define FOO_2 ...
+...
 
-and so on
-
-2/
-
-  #define FOO(x)  (... (x) ...)
-
-
-Having a mix of them seems quite unusual.
+[1]: https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-tabl=
+es/samples
+(mostly under edison/ folder)
 
 --=20
 With Best Regards,
