@@ -2,77 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B67587064C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 11:59:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA0BC7064EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 12:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbjEQJ7M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 05:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
+        id S229623AbjEQKNY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 06:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjEQJ7L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 05:59:11 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7533420B
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:59:00 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f4271185daso5500425e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684317539; x=1686909539;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ai+XJcD6q02E74/RveX4hPtq3MlwXKz1QHBcBUcFNo=;
-        b=NYPWtNMpM/bWn2LM8NEIe3TP3xMkwDSnDKxRs2mcUsAWBI5r8202lrNKrOzFsUDasn
-         9qiOQRjjWpzU0A5euUFl5+yUgZ/Hed1+v/UwQ//qMwAb1jsJrLmQOJZLUNJUnI9sGwJA
-         LSUbHAtu37E7Im/L4tRgnb9Gnq6UtI9e2Y+cbV6EHrwmxQ0tqMkqyecNaq1RC6wdGV9O
-         hYabnvN5IBi27WEdrUVSk5FAF9RIEAiLSul39oFq5TTo2ndOEq6SxYk9B3GssMwTPhae
-         XiCB3XSCcAJBaBWgtsd2MI8m2jpzyANAAmbezvyI5GbRDhgNoe5POlyUH/9pR2287gd8
-         44MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684317539; x=1686909539;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3ai+XJcD6q02E74/RveX4hPtq3MlwXKz1QHBcBUcFNo=;
-        b=J31GBTcCKaHlBND3OSMcLcPJcuLh1Z2OPFNEm44Ny36JrAVt5SFRj52Ci80BIPaULw
-         kVfMcqAswTfIqWFOW6SYcxTXvGRKIcquptzxMxn0+/D+dvZBWRSkD/HT3ApRwgjzHW94
-         pA7HnIC18m8tGnntZhBcDWal6IUy4NeSfD/Oqidaou5lqLL3/chS5fvLql+HP4Fguya/
-         vjyw/ZIojWd+aTYsbok2hQY6wJm9CQJInLZOC6VgfAObxr1xOMonaduHr3Qi4lBdWkcp
-         f7/dqBCNPI7ZOO/z1jDfjvwO/B3ZEvc0SNa4l5A26PJuOi9mUwUhwV3RSj5qeH8Ma1yR
-         0AHA==
-X-Gm-Message-State: AC+VfDyCjM2SWumx7MK2RXcx8hOVM7xy3JflfXFot5v1DdRz2sa0kAeK
-        lnEGicnOG1HFtL9ZBHp7iKFuUg==
-X-Google-Smtp-Source: ACHHUZ7ICZHWcsgX6bdkWaWTOXtSGTkJT7t+F6SP7Yq+8hpaG9+L8EAdtndZiwXg4Vpj2czekB/cPw==
-X-Received: by 2002:a1c:4c08:0:b0:3f4:2737:a016 with SMTP id z8-20020a1c4c08000000b003f42737a016mr20100741wmf.29.1684317538966;
-        Wed, 17 May 2023 02:58:58 -0700 (PDT)
-Received: from localhost ([2a01:e0a:28d:66d0:5b2e:1428:59f1:44a4])
-        by smtp.gmail.com with ESMTPSA id z3-20020a5d6543000000b002fda1b12a0bsm2237051wrv.2.2023.05.17.02.58.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 02:58:58 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 17 May 2023 11:58:57 +0200
-Message-Id: <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
-        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-X-Mailer: aerc 0.14.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com>
- <20230512141755.1712358-3-eblanc@baylibre.com>
- <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
- <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
-In-Reply-To: <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        with ESMTP id S229545AbjEQKNW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 06:13:22 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699E7E4D;
+        Wed, 17 May 2023 03:13:21 -0700 (PDT)
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34H6sFqA004446;
+        Wed, 17 May 2023 05:13:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=Xpb1EWBMfi+Jisb8QnCvI2wmKB3bYLxwbNbSZLNIp3M=;
+ b=P9lZtHUZVwbkmZDE5vVygaoxtsyGAnba+uL/acfYiQBVvTk4+IkqJ2tg01ycyBQHocRU
+ 6dZNsVaypvtbrKVudMv67oGzLxMwzWzP/2hdsNmMwAPwHdbcpZt6W4L8ZB92tMG65hza
+ NCp/K2MblSmvnAMKfKZFuUCb0PS3vzQLufVxQiK0XSJQ6EZbDow3UrhIFL5nMlV3DetT
+ q2D+xV+2SxcVEIjPTkpriFZ12whLcPQ41yiUzGL+KDest4tL6DOAZFpRnX8wkyfICsWR
+ 4LXUZ+17daG1kJZhWiYt6PgJPMWmW9ZlUoGIpqrQ0wKYbKey+jBKw8DL42xXhFpweczb OA== 
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3qj6ymwq4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 May 2023 05:13:02 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Wed, 17 May
+ 2023 05:13:01 -0500
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 17 May 2023 05:13:01 -0500
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3234311CA;
+        Wed, 17 May 2023 10:13:01 +0000 (UTC)
+Date:   Wed, 17 May 2023 10:13:01 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <tglx@linutronix.de>, <maz@kernel.org>, <linus.walleij@linaro.org>,
+        <vkoul@kernel.org>, <lgirdwood@gmail.com>,
+        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/10] pinctrl: cs42l43: Add support for the cs42l43
+Message-ID: <20230517101301.GV68926@ediswmail.ad.cirrus.com>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-9-ckeepax@opensource.cirrus.com>
+ <ZF6RMqElYZVMpWRt@surfacebook>
+ <20230515101350.GS68926@ediswmail.ad.cirrus.com>
+ <CAHp75Vcizrucc-2KFdFNeHNrxCzz4GwX1OzZYyjPH7P9RgnKYQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vcizrucc-2KFdFNeHNrxCzz4GwX1OzZYyjPH7P9RgnKYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-GUID: E83zWdV2Sk2QsBLUBUii7rBv6xNydwdo
+X-Proofpoint-ORIG-GUID: E83zWdV2Sk2QsBLUBUii7rBv6xNydwdo
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,33 +78,76 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
-> On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@baylibre.co=
-m> wrote:
-> > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
-> > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
-
-...
-
-> > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 + (gpio_i=
-nst))
-> > > > +#define TPS6594_REG_GPIO1_CONF                             0x31
-> > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GPIO1_CONF=
- + (gpio_inst))
+On Tue, May 16, 2023 at 10:03:45PM +0300, Andy Shevchenko wrote:
+> On Mon, May 15, 2023 at 1:13 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> > On Fri, May 12, 2023 at 10:19:14PM +0300, andy.shevchenko@gmail.com wrote:
+> > > Fri, May 12, 2023 at 01:28:36PM +0100, Charles Keepax kirjoitti:
+> > > > +   if (!of_property_read_bool(dev_of_node(cs42l43->dev), "gpio-ranges")) {
+> > > > +           ret = gpiochip_add_pin_range(&priv->gpio_chip, priv->gpio_chip.label,
+> > > > +                                        0, 0, CS42L43_NUM_GPIOS);
+> > > > +           if (ret) {
+> > > > +                   dev_err(priv->dev, "Failed to add GPIO pin range: %d\n", ret);
+> > > > +                   goto err_pm;
+> > > > +           }
+> > > > +   }
 > > >
-> > > Why? The original code with parameter 0 will issue the same.
+> > > Besides the fact that we have a callback for this, why GPIO library can't
+> > > handle this for you already?
 > >
-> > I felt that replacing 0x31 with a constant would make the computation
-> > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you think?
->
-> The question is why that register is so special that you need to have
-> it as a constant explicitly?
+> > Apologies but I am not quite sure I follow you, in the device
+> > tree case this will be handled by the GPIO library. But for ACPI
+> > this information does not exist so has to be called manually, the
+> > library does not necessarily know which values to call with,
+> > although admittedly our case is trivial but not all are.
+> 
+> Why can't the firmware provide this information? _DSD() is a part of
+> ACPI v5.1 IIRC.
+> 
 
-It is not special, it's just the first one of the serie of config
-registers. I felt like just having 0x31 without context was a bit weird
+I am very very far from confident we can guarantee that will be
+present in the ACPI. The ACPI is typically made for and by the
+Windows side.
 
-Best regards,
+> Although it might require moving some code from gpiolib-of.c to
+> gpiolib.c with replacing OF APIs with agnostic ones.
+> 
 
---=20
-Esteban Blanc
-BayLibre
+I really think if we want to start doing things that way on ACPI
+platforms someone with a little more clout than us needs to start
+doing it first. If Intel or someone was doing it that way it
+might give us a little more levelage to push it as being the
+"correct" way to do it.
+
+I will switch to the callback, but really don't think we can rely
+on this being in DSD yet.
+
+> 
+> > > > +static int cs42l43_pin_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +   pm_runtime_disable(&pdev->dev);
+> > >
+> > > This is simply wrong order because it's a mix of non-devm_*() followed by
+> > > devm_*() calls in the probe.
+> > >
+> >
+> > I had missed there are now devm_pm_runtime calls, I will switch
+> > to that. But I would like to understand the wrong order, remove
+> > will be called before the devm bits are destroyed and it seems
+> > reasonable to disable the pm_runtime before destroying the
+> > pinctrl device. What exactly would run in the wrong order here?
+> 
+> At the ->remove() stage after this call an IRQ can be fired (or on SMP
+> systems any other APIs can be called), for example. So, would it be a
+> problem to service it with PM disabled?
+> 
+> But in any case the shuffling ordering like this is prone to subtle
+> bugs. I prefer to have strict ordering if there is nothing preventing
+> from doing that way.
+
+Yeah happy enough to use devm_ here, just didn't know it existed
+and wanted to better understand your concerns as I was having
+difficulty seeing the issue.
+
+Thanks,
+Charles
