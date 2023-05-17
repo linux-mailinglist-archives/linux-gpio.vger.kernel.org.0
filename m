@@ -2,116 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA1E706EC9
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 18:54:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92EFB706EF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 19:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjEQQxk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 12:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
+        id S229545AbjEQRDn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 13:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjEQQxI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 12:53:08 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE901A255;
-        Wed, 17 May 2023 09:52:43 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-61b19406102so1327656d6.1;
-        Wed, 17 May 2023 09:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684342362; x=1686934362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pvyuk45qAwIZHtrdAvIYk8lq6oEJbOWM7TWmUfxEmXc=;
-        b=diNUrRiIcfwrHfCYK8S3a5dVoAnso/EVGvDEvCsURN9COJxCKfROWRtDZ1J3o2A5Tc
-         3n+TPqwKRH541c3ZdXz0vCsjAr7c52VCsHAMsmeMO3iI5On37wN2JqiLu2lJZtlI3bw2
-         pPjYyv91nCohYATMb0dbJEdbwAEZmGD42aDWAUIKRhwQiiEyFLXlcA1tH+42UWt8Srlr
-         3KSmJepx8fAyyibOdJEgQ3Qf92ql8Yg/+fZxVSa2QDemYChfoJDgWv7n2IvypaCuE7Np
-         trrkHqPtOG77pgt9pSarG81U80WzB5xjG+6+s8tuLTNSNQ7vwcRSc3Y8lP+HcemDg6Yq
-         Ta7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684342362; x=1686934362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pvyuk45qAwIZHtrdAvIYk8lq6oEJbOWM7TWmUfxEmXc=;
-        b=JpRey+pq9QKA743v++Sqn7ybc5n9dsG8kdkeSsColrTSzDr2WYJF18Pyg1Gy94bQDK
-         pHNl9lZF8qR/uVDoRhPP55AevUmMihUmCm3xg5nSb1eKSM25XOodMWNKdWwisx2Vp32c
-         mAH3rT4Sqq/WDHvqrAreksC1s9lJZSC/gA9puucXVAaprqFOgcx4LmUxw/gisLywIKqN
-         34g5S8K6Yjioi1UmB+WyJoTIR9FFejGRpNdlY6DthRLTj2QCa98QN7eXb4v4BVSLL5Xq
-         1UMhkvo/wrIY5TinHlE/YcWnGq2n/TFGl2+INH5gibiwMLdh77slvrjikOLeOG6x8uqb
-         vAGA==
-X-Gm-Message-State: AC+VfDyr5/dxiEYqPBUJrwNNSdnzD2mwAp0CSn5EiQxQ1bE5guauCWAe
-        P9e9W8riz8BtQ1bqAxWWrOGL1gnhGllbJ62e27TNfL3TY+nXhA==
-X-Google-Smtp-Source: ACHHUZ6GfNaGFm2xtZWG1blndv3Mz+ujglmZyG7jXWpyaCYi94a28PlelYGaw4Sf1EYfzFhCXHUMrVih5wefdxhfzI8=
-X-Received: by 2002:a05:6214:1944:b0:5ef:4f83:f454 with SMTP id
- q4-20020a056214194400b005ef4f83f454mr112213qvk.24.1684342362617; Wed, 17 May
- 2023 09:52:42 -0700 (PDT)
+        with ESMTP id S229456AbjEQRDm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 13:03:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D989E;
+        Wed, 17 May 2023 10:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684343021; x=1715879021;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=2y9dc4fvVXmSayb63VV0cFv6otKKoZXMYMxw98nbiUY=;
+  b=kRcCOgBggZt0gF/jc+KW4oVF1X8CHd4VGfx3lWlIry/tdwVU8QS/zubG
+   xe0NQamEfwys21whCOa/0Qc3+3/TlThDBOoEixu2sjuhLRfisygi2U0Qj
+   KATSMUNpuTMJtvFlraIFdbbEN+YtVp4kg9kBxskU0+Nknp9FUWg1tqeTD
+   /Dy7tCw4fzxFq9Oey4h2ippE57VfKzI8DvXoK+2HSSLOcAQBYv5Vcx8fs
+   YkcV0hdQdmaIzyu/2Jy5/4EWYJdgApN8RCZ2dc30mYa/XcJMpfI7fbOjv
+   zxuaFLH2WY0lTYl0/FCWjdBs3ub7IFe0vUri4fykpr9pksi8HI70Cftpr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="351840399"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="351840399"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 10:03:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="813944402"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="813944402"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 17 May 2023 10:03:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pzKYi-0008V6-2X;
+        Wed, 17 May 2023 20:03:28 +0300
+Date:   Wed, 17 May 2023 20:03:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Wolfram Sang <wsa@kernel.org>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        netdev@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v4 4/7] pinctrl: wpcm450: elax return value check for IRQ
+ get
+Message-ID: <ZGUI4J27h69ed005@smile.fi.intel.com>
+References: <cover.1684220962.git.mazziesaccount@gmail.com>
+ <2d89de999a1d142efbd5eb10ff31cca12309e66d.1684220962.git.mazziesaccount@gmail.com>
+ <ZGOwCSPH68DJN/NC@probook>
 MIME-Version: 1.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com> <20230512141755.1712358-2-eblanc@baylibre.com>
- <ZF514wvUt_xrU1gG@surfacebook> <CSOPFJOVLSS1.1XKI60F9TLBMN@burritosblues>
-In-Reply-To: <CSOPFJOVLSS1.1XKI60F9TLBMN@burritosblues>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 17 May 2023 19:52:06 +0300
-Message-ID: <CAHp75Vfg+yAhJ58qt76GHqxWHD48hF-6ZnT=xEUh+1rzr7UvVg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] rtc: tps6594: Add driver for TPS6594 RTC
-To:     Esteban Blanc <eblanc@baylibre.com>
-Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
-        jneanne@baylibre.com, aseketeli@baylibre.com, sterzik@ti.com,
-        u-kumar1@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZGOwCSPH68DJN/NC@probook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 17, 2023 at 7:47=E2=80=AFPM Esteban Blanc <eblanc@baylibre.com>=
- wrote:
-> On Fri May 12, 2023 at 7:22 PM CEST,  wrote:
-> > Fri, May 12, 2023 at 04:17:53PM +0200, Esteban Blanc kirjoitti:
+On Tue, May 16, 2023 at 06:32:09PM +0200, Jonathan Neuschäfer wrote:
+> On Tue, May 16, 2023 at 10:13:14AM +0300, Matti Vaittinen wrote:
 
-...
+> > The special handling in this driver was added when fixing a problem
+> > where returning zero from fwnode_irq_get[_byname]() was treated as
+> > succes yielding zero being used as a valid IRQ by the driver.
+> > f4a31facfa80 ("pinctrl: wpcm450: Correct the fwnode_irq_get() return value check")
+> > The commit message does not mention if choosing not to abort the probe
+> > on device-tree mapping failure (as is done on other errors) was chosen
+> > because: a) Abort would have broken some existing setup. b) Because skipping
+> > an IRQ on failure is "the right thing to do", or c) because it sounded like
+> > a way to minimize risk of breaking something.
+> > 
+> > If the reason is a) - then I'd appreciate receiving some more
+> > information and a suggestion how to proceed (if possible). If the reason
+> > is b), then it might be best to just skip the IRQ instead of aborting
+> > the probe for all errors on IRQ getting. Finally, in case of c), well,
+> > by acking this change you will now accept the risk :)
 
-> > > +/* Multiplier for ppb conversions */
-> > > +#define PPB_MULT (1000000000LL)
-> >
-> > We have something in units.h. Can you use generic macro?
->
-> I found GIGA, NANO and NANOHZ_PER_HZ that have the same value in
-> units.h. However I'm not sure any of them have the correct meaning in
-> this situation.
+From my side it was c).
 
-MULT[IPLIER] has no units AFAIU, so SI macro can be used, no? NANO or
-GIGA depends on what the actual sign of the exponent of the multiplier
-is. Write it on paper and check the exponent in the equation(s) and
-hence decide which one to use.
+> > The first patch of the series changes the fwnode_irq_get() so this depends
+> > on the first patch of the series and should not be applied alone.
+> 
+> Thanks for investigating this!
+> 
+> It's not a), because there are no existing setups that rely on broken
+> IRQs connected to this pinctrl/GPIO controller.
+> 
+> I suspect b) or c), but I'll let Andy give a more definite answer.
 
-...
 
-> > > +   if (tmp < 0)
-> > > +           tmp -=3D TICKS_PER_HOUR / 2LL;
-> > > +   else
-> > > +           tmp +=3D TICKS_PER_HOUR / 2LL;
-> >
-> > Is it guaranteed to have no overflow here?
->
-> We know from `tps6594_rtc_set_offset` that the loaded value can't be
-> more than 277774 (register default value is 0), So `tmp` can't exceed
-> 277774000000000 which is lower than 2^63-1. No overflow here.
->
-> TICK_PER_HOUR / 2LL =3D 117964800, so at the end of this computation,
-> `tmp` can have a maximum value of 277774117964800 which is still
-> inferior to 2^63-1.
-
-Please add a respective comment.
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
