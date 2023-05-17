@@ -2,110 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D0D706B1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0217D706B42
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:36:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231808AbjEQOa7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 10:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
+        id S232073AbjEQOgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 10:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231785AbjEQOa5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:30:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2757DA7;
-        Wed, 17 May 2023 07:30:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0DD645BE;
-        Wed, 17 May 2023 14:30:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94DB4C433EF;
-        Wed, 17 May 2023 14:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684333855;
-        bh=m6Os9B2ed6cigaZgyvST3zp5sKK8MZYV/M/roj0u/iI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RP/qhpzfg0S6E2//ryq4SNYkedqo/IWGritLtCDNhEgQHZtNfcDiCVK4yp7Jqokur
-         eZpH0XvtuStZo6aqN+hogrkZ3ILJCcOls7Tl7kcazXTdN/ubmWTgkH9rUIxhuJjz0a
-         UBgRVYr3p3w4zT8k+AcySzysNtLfh0Ceap+08PWvRWxYluu8VbpOvpNhKHhNDfUioF
-         rrqhnzZsSp2amH1YpoV2Nc23APNXZN5+MCglArTtOdsxNja8I8s1oVOpVnIceiFQHi
-         IQUQqLLdXnY2QrLuYg7Pr0y8sIk+L8FCFGHO8OffGQbzXK7BD5WOF8JDk69EcP2T9I
-         dLsa58uJTvBGA==
-Date:   Wed, 17 May 2023 23:30:52 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>, lee@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, tglx@linutronix.de, maz@kernel.org,
-        linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com,
-        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] pinctrl: cs42l43: Add support for the cs42l43
-Message-ID: <ZGTlHMRl/ifaQmiN@finisterre.sirena.org.uk>
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-9-ckeepax@opensource.cirrus.com>
- <ZF6RMqElYZVMpWRt@surfacebook>
- <20230515101350.GS68926@ediswmail.ad.cirrus.com>
- <CAHp75Vcizrucc-2KFdFNeHNrxCzz4GwX1OzZYyjPH7P9RgnKYQ@mail.gmail.com>
- <20230517101301.GV68926@ediswmail.ad.cirrus.com>
- <CAHp75VchpbiYcd2yaP1WTjX17P0hg3qON5JGAXu08aDVw6Ydkw@mail.gmail.com>
+        with ESMTP id S231932AbjEQOgH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:36:07 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5887ED6
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:36:01 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-783f7e82f2aso251490241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684334160; x=1686926160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lz5kmzNsavtOXsUzx7dQc9M1tds+op6IxOA3B91Azz0=;
+        b=kEBnaf/eeVqzJkmoxSwK6peHNyQN+nMavdMcPVNxoA/YtqRfVXI/YUM+PZ/Lvc3wNS
+         hVXtRBeuIU5EbJ1IMZzDkXNA5Oj4TgcaVDqrKTk4D5ExVb5yRgqQ/jSYVuORgpdNcL6L
+         MriRQTXYJ8djpALImFTsuGEERsEO4WzcksyUR6fxdgxGap7urYQGvCNJxX7QRwxbsw+9
+         CNxiIV+lxfAGTWT5IwcQzOQ/8Hhblhdo+QASH2ZeFU+nrCllHccOnGK1VQ2yeXaau2sS
+         +BjDsLgVzY373Lyi1WQ836Uz40dDJMKhdT4MnLExI/q5+fS+Yabqba2a2LP/n9KgdFVz
+         u7hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684334160; x=1686926160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lz5kmzNsavtOXsUzx7dQc9M1tds+op6IxOA3B91Azz0=;
+        b=j9Z1WpWmchFMvwhN/7oU0MrpyK0vMplpBE+HVz2z6YvvRW1yWklzrMUbOJ7l9Q6WYO
+         85cuOvNoJOy23dPVAYhywyQqwTxIGjbnFyM2jgEcr+cMy5g7kLQmLuGHK5QWZyLb1vR/
+         CfO7OJHQ4lU59x7GaFnmjgX0RRT3PJcxzZ4Kn43PBfgM2TTk7J8FSZsS42FjuwOLOCmt
+         lNtSq+Z4Lm9L6fMeHJ+pdcihjWeGj+HpepGS9TOXkxGwowHk+8JTjU/Em9gXj7HR6siZ
+         b5Est0x6AHz9GMmRpmNB0MECQctFeWJucM7r8NSrPa0526Y2PxLasAJOlZPleEy0GLWb
+         BdZA==
+X-Gm-Message-State: AC+VfDw2Nb7KKpxp+hH7EATD2tpoCDduGeLRs3tEn85xQojqfyjn64m9
+        NS/C0HNysjHrFq3QzKuwYzMjDadevaPr1xqomEqDzg==
+X-Google-Smtp-Source: ACHHUZ7gScw3B7Blt8hgcjoSXltzPzfmqUmn74kB2d3RJD7T7Duv8dW/jaqi0ljwaYfG+jzVNghYLuUgSJkSi7F/H3g=
+X-Received: by 2002:a05:6102:2ed:b0:434:6f77:4f62 with SMTP id
+ j13-20020a05610202ed00b004346f774f62mr15827147vsj.1.1684334160192; Wed, 17
+ May 2023 07:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ov0voJhDONNyMty6"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VchpbiYcd2yaP1WTjX17P0hg3qON5JGAXu08aDVw6Ydkw@mail.gmail.com>
-X-Cookie: Avoid contact with eyes.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <cover.1681665189.git.william.gray@linaro.org> <dc4d0d5ca6ea28eda18815df114ecb21226cb345.1681665189.git.william.gray@linaro.org>
+In-Reply-To: <dc4d0d5ca6ea28eda18815df114ecb21226cb345.1681665189.git.william.gray@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 17 May 2023 16:35:49 +0200
+Message-ID: <CAMRc=Mc7JTvakp4fD4kfoFOAv_yd81MsDiEOGB1tUjPZ9e7zxg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: 104-dio-48e: Add Counter/Timer support
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Apr 16, 2023 at 7:37=E2=80=AFPM William Breathitt Gray
+<william.gray@linaro.org> wrote:
+>
+> The 104-DIO-48E features an 8254 Counter/Timer chip providing three
+> counter/timers which can be used for frequency measurement, frequency
+> output, pulse width modulation, pulse width measurement, event count,
+> etc. The counter/timers use the same addresses as PPI 0 (addresses 0x0
+> to 0x3), so a raw_spinlock_t is used to synchronize operations between
+> the two regmap mappings to prevent clobbering.
+>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 
---Ov0voJhDONNyMty6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me. Let me know when you have an immutable tag to pull.
 
-On Wed, May 17, 2023 at 04:59:50PM +0300, Andy Shevchenko wrote:
-> On Wed, May 17, 2023 at 1:13=E2=80=AFPM Charles Keepax
-
-> > I am very very far from confident we can guarantee that will be
-> > present in the ACPI. The ACPI is typically made for and by the
-> > Windows side.
-
-> Why? You may insist firmware vendors / OEMs to use that as a
-> requirement to the platforms that would like to use your chip. The
-> _DSD() is part of the specification, I don't see how the above can be
-> an argument.
-
-> The times when ACPI =3D=3D Windows are quite behind.
-
-Nobody is going to loose a sale over something like that, especially
-when it's just not idiomatic.  It's very unlikely to even be worth the
-effort of educating customers who don't care what DSD is when there's no
-ecosystem push for it, it'd just make you look difficult and weird.
-
---Ov0voJhDONNyMty6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmRk5RsACgkQJNaLcl1U
-h9DaIggAgmCuOSFXfbUoH1Su2DcLeh0wIfTqcONVi5GSZAbHyuk9dy5MrNYj7nfa
-BcKuolLtwCe4MMP4zB5zLMSydCTOL6J4vPUUcGrQgOl0jUHkF+k/G292o5wyf3B5
-346PTZPODQloCnkBdi+vjpx+7XLYki/f4sjbTFZ0i4AeKblgvmROpqBpk7e0oWRa
-phVv/QMLjXuxIi+wmCuR8MfiBA3G+V4nhHFpiOQ7tJynbOXwEqwf+Pap/bT1l/pp
-q/SLuiz+4SqQLPP/OWZNMDzVLpDfFfHHumuKTS6jztcZ2+EkDjI/NSESl85fkee0
-b4R9RbjgMmuLqwnWKrgLotCs+oO0pg==
-=aZyT
------END PGP SIGNATURE-----
-
---Ov0voJhDONNyMty6--
+Bart
