@@ -2,67 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0217D706B42
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B9C706B6F
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232073AbjEQOgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 10:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58742 "EHLO
+        id S230476AbjEQOnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 10:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbjEQOgH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:36:07 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5887ED6
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:36:01 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-783f7e82f2aso251490241.1
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:36:00 -0700 (PDT)
+        with ESMTP id S230041AbjEQOnT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:43:19 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1672D77
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:43:05 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-30781184e78so71141f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684334160; x=1686926160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684334583; x=1686926583;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lz5kmzNsavtOXsUzx7dQc9M1tds+op6IxOA3B91Azz0=;
-        b=kEBnaf/eeVqzJkmoxSwK6peHNyQN+nMavdMcPVNxoA/YtqRfVXI/YUM+PZ/Lvc3wNS
-         hVXtRBeuIU5EbJ1IMZzDkXNA5Oj4TgcaVDqrKTk4D5ExVb5yRgqQ/jSYVuORgpdNcL6L
-         MriRQTXYJ8djpALImFTsuGEERsEO4WzcksyUR6fxdgxGap7urYQGvCNJxX7QRwxbsw+9
-         CNxiIV+lxfAGTWT5IwcQzOQ/8Hhblhdo+QASH2ZeFU+nrCllHccOnGK1VQ2yeXaau2sS
-         +BjDsLgVzY373Lyi1WQ836Uz40dDJMKhdT4MnLExI/q5+fS+Yabqba2a2LP/n9KgdFVz
-         u7hA==
+        bh=r4SNOGQNiXUm9Rm9DfrimxqrzH0Clgmb4qexx/tZZaE=;
+        b=MzulslZ5umnE2BE9tC3QxO+hO8k2i4NUqTMTr9GSakhsiJ2Z5Z+RQJENFLTSRzIs3w
+         0VmAwtKZz3gNf2RVLYLK6MOaBfD3Yvd0lbCw0oPhSMN8HA4SprmF+Wrh13UjGxHaF4g+
+         XCKfYITyAWa/6E6yI38uDLr5Kx8N9Wt2BfXgvFjInxfXwidQeTH7JGtQ2+RT7CrEjIu5
+         KzsHOhO9kwBVmzn73JIE2/X8Gq9za6YiexjrS+R8OGSwDCIERq0kCZafqqeg4eC7E0Lm
+         qyHQkj8fBou1ESemvE4deq5NVH1+eW7UttUaDEQAznQHo853ETWM9eQWYNuQrTyUNWW9
+         qMEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684334160; x=1686926160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lz5kmzNsavtOXsUzx7dQc9M1tds+op6IxOA3B91Azz0=;
-        b=j9Z1WpWmchFMvwhN/7oU0MrpyK0vMplpBE+HVz2z6YvvRW1yWklzrMUbOJ7l9Q6WYO
-         85cuOvNoJOy23dPVAYhywyQqwTxIGjbnFyM2jgEcr+cMy5g7kLQmLuGHK5QWZyLb1vR/
-         CfO7OJHQ4lU59x7GaFnmjgX0RRT3PJcxzZ4Kn43PBfgM2TTk7J8FSZsS42FjuwOLOCmt
-         lNtSq+Z4Lm9L6fMeHJ+pdcihjWeGj+HpepGS9TOXkxGwowHk+8JTjU/Em9gXj7HR6siZ
-         b5Est0x6AHz9GMmRpmNB0MECQctFeWJucM7r8NSrPa0526Y2PxLasAJOlZPleEy0GLWb
-         BdZA==
-X-Gm-Message-State: AC+VfDw2Nb7KKpxp+hH7EATD2tpoCDduGeLRs3tEn85xQojqfyjn64m9
-        NS/C0HNysjHrFq3QzKuwYzMjDadevaPr1xqomEqDzg==
-X-Google-Smtp-Source: ACHHUZ7gScw3B7Blt8hgcjoSXltzPzfmqUmn74kB2d3RJD7T7Duv8dW/jaqi0ljwaYfG+jzVNghYLuUgSJkSi7F/H3g=
-X-Received: by 2002:a05:6102:2ed:b0:434:6f77:4f62 with SMTP id
- j13-20020a05610202ed00b004346f774f62mr15827147vsj.1.1684334160192; Wed, 17
- May 2023 07:36:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1681665189.git.william.gray@linaro.org> <dc4d0d5ca6ea28eda18815df114ecb21226cb345.1681665189.git.william.gray@linaro.org>
-In-Reply-To: <dc4d0d5ca6ea28eda18815df114ecb21226cb345.1681665189.git.william.gray@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 17 May 2023 16:35:49 +0200
-Message-ID: <CAMRc=Mc7JTvakp4fD4kfoFOAv_yd81MsDiEOGB1tUjPZ9e7zxg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: 104-dio-48e: Add Counter/Timer support
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20221208; t=1684334583; x=1686926583;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r4SNOGQNiXUm9Rm9DfrimxqrzH0Clgmb4qexx/tZZaE=;
+        b=Fqz8rIqfBvsyACYtGSHhBhuHcn921/pur2qmCPS71ZidgMBMDP/2f45yoQ7nA+c0Lt
+         elz+pov/AQLLJw7NkbqcL6qOXWB5k6RSQUUtGTEAbrC7DXGUqHYXz8xgGfq06PYQ7ptf
+         wOd3xQEiKe1TeGDy5I7sI2GKEgC+EzIoO/FDqJKSpEnZT0FIeBHCwmvgT9KJYsNgVM9u
+         N7A/afOqxjAT34quZ1SponFlEleLmrRj6/xhsoj4S+C1VlpQ93GtlOYHZbtUsrwfp8fD
+         zqB9w+aVRPDzY3t1RzZR9RgjF3LS2CtObrE5Dl+1bwmBWbKjya8DHxrojpKLMOD+wJYD
+         fMdg==
+X-Gm-Message-State: AC+VfDyJIlg0Ezn6s7Wpzs4y2/AwyGSojfJCtVtbV5qmcsmaAwE/hpVZ
+        azphUvfXNjmzoo+It8tzupGKpA==
+X-Google-Smtp-Source: ACHHUZ42OQJxELGRspU3oO9Qc9cnP92grnvk4j1tgMqg9+ovQpWz4bYEat0/wlCEUV7IkWUkpY0sUg==
+X-Received: by 2002:adf:ea8d:0:b0:2f0:583:44be with SMTP id s13-20020adfea8d000000b002f0058344bemr829973wrm.0.1684334583431;
+        Wed, 17 May 2023 07:43:03 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:5b2e:1428:59f1:44a4])
+        by smtp.gmail.com with ESMTPSA id o7-20020a5d62c7000000b003078354f774sm3375200wrv.36.2023.05.17.07.43.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 07:43:02 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 17 May 2023 16:43:01 +0200
+Message-Id: <CSOMS0W9MIUG.2MN43QZO9EX7Q@burritosblues>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
+        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+X-Mailer: aerc 0.14.0
+References: <20230512141755.1712358-1-eblanc@baylibre.com>
+ <20230512141755.1712358-3-eblanc@baylibre.com>
+ <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
+ <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
+ <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
+ <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
+In-Reply-To: <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,18 +81,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 16, 2023 at 7:37=E2=80=AFPM William Breathitt Gray
-<william.gray@linaro.org> wrote:
+On Wed May 17, 2023 at 3:51 PM CEST, Andy Shevchenko wrote:
+> On Wed, May 17, 2023 at 12:58=E2=80=AFPM Esteban Blanc <eblanc@baylibre.c=
+om> wrote:
+> > On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
+> > > On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@baylibr=
+e.com> wrote:
+> > > > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
+> > > > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
 >
-> The 104-DIO-48E features an 8254 Counter/Timer chip providing three
-> counter/timers which can be used for frequency measurement, frequency
-> output, pulse width modulation, pulse width measurement, event count,
-> etc. The counter/timers use the same addresses as PPI 0 (addresses 0x0
-> to 0x3), so a raw_spinlock_t is used to synchronize operations between
-> the two regmap mappings to prevent clobbering.
+> ...
 >
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> > > > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 + (gp=
+io_inst))
+> > > > > > +#define TPS6594_REG_GPIO1_CONF                             0x3=
+1
+> > > > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GPIO1_=
+CONF + (gpio_inst))
+> > > > >
+> > > > > Why? The original code with parameter 0 will issue the same.
+> > > >
+> > > > I felt that replacing 0x31 with a constant would make the computati=
+on
+> > > > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you think?
+> > >
+> > > The question is why that register is so special that you need to have
+> > > it as a constant explicitly?
+> >
+> > It is not special, it's just the first one of the serie of config
+> > registers. I felt like just having 0x31 without context was a bit weird
+>
+> I'm not sure I understand what 'context' you are talking about.
+I was trying to convey the fact that 0x31 was representing
+TPS6594_REG_GPIO1_CONF address. This way when looking at
+TPS6594_REG_GPIOX_CONF(...), one will better understand that this macro
+is just about offsetting from the first GPIO_CONF register.
 
-Looks good to me. Let me know when you have an immutable tag to pull.
+> This is pretty normal to have two kind of definitions (depending on the c=
+ase):
+> 1/
+>
+>   #define FOO_1 ...
+>   #define FOO_2 ...
+>
+> and so on
+>
+> 2/
+>
+>   #define FOO(x)  (... (x) ...)
+>
+>
+> Having a mix of them seems quite unusual.
+I did not know that. I will revert this change for next version then.
 
-Bart
+Thanks again for your time. Best regards,
+
+--=20
+Esteban Blanc
+BayLibre
