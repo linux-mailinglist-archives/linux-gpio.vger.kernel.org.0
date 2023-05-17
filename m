@@ -2,144 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FDE570647F
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 11:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 663B0706494
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 11:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbjEQJrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 05:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51370 "EHLO
+        id S229455AbjEQJvu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 05:51:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229622AbjEQJrq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 05:47:46 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1225A273A
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:47:45 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-434706ea450so137994137.2
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:47:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684316864; x=1686908864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ukNjPAx9d0iOoRqrYjfOc+/Spp/uHfwiRW0HzoxFUwc=;
-        b=34eJpNltFy5r3j7xyweF0m9LhAkBWwY8hKf978OR6oUwTfvXcjvpqgnZ2Ur2j8pthq
-         nstsK4huk4yP8jVdO5Rk82lW8hrHBGAkj2Ecq+dliFLMEc8OUrgZ91GV50Fkup3eH70m
-         dWi0OCdMMmRiNC3qNtARc2n13Uh70kzKexmsSmsVi2u1ZhGE/pf25PWTzF5ISGAXHj61
-         H9PHh3qFoIjIlCwTs/UbeFGzSzJY1V6QorsWRyO6MxLaXqS8mO4L60K9RiH+O1zNpUGB
-         D0Mx3mEEnVq/yjnGU89BXJHNdVyW3QWP1meUsYALrec4o93fLRD4CU/4Qwwjt2fPtUgy
-         I8fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684316864; x=1686908864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ukNjPAx9d0iOoRqrYjfOc+/Spp/uHfwiRW0HzoxFUwc=;
-        b=g3cgAF87eYXw5TmT08941cybBonlfKWbwEyj8pdutsfPx5sDHB2itaXODOq0rdf8Mo
-         UWzx8YIT9uhqskGn4NtOfNVoGyiPBme3nalmNRyg09d27BTMBN24lCxklHgedWlEWwvk
-         Il/pB9AIVZBZPlgkSONE3xKflJYFzE0RIkCKizn6L1LNrkLlZ9TwkrNjN8uCEqHie/QG
-         r5nwGCKf/3D9pKgDtgLjTseFctUgH65vKyctNvr97k0SNyGX5H2P7w8aBRPyNMGFWiMb
-         72iKAx0mXxW7YocHo+t9PtgeMVSCZ4wN/bDdGs9WmCo1OlZFzSyZKekJUY2+OQtUlrPJ
-         qOfQ==
-X-Gm-Message-State: AC+VfDyh8OjQWxCoQRPbgC13Vdf1C2PFkrruPNhetTfp2E85WWNKqXIN
-        lkGk3RFN10YtQTRI/sDBQbhqLJ0JfNV6A8XIwCsuzg==
-X-Google-Smtp-Source: ACHHUZ5r7AzilbbV6CXJQoruBvYwslqsCA+M6kdtvOBrPmxv6yIy2wtEjPw4XGksp8/Y6U1N51Lp6w4Qrx4XoVROyCc=
-X-Received: by 2002:a05:6102:519:b0:430:9bc:e82 with SMTP id
- l25-20020a056102051900b0043009bc0e82mr14914119vsa.34.1684316864120; Wed, 17
- May 2023 02:47:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230504060421.804168-1-andreas@kemnade.info>
-In-Reply-To: <20230504060421.804168-1-andreas@kemnade.info>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 17 May 2023 11:47:33 +0200
-Message-ID: <CAMRc=Md9VJx9nZEXR9C5MQeo1PE_ugLbhBGjVL4_=pif0ERqJw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: fix allocation of mixed dynamic/static GPIOs
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     linus.walleij@linaro.org, christophe.leroy@csgroup.eu,
-        andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S229542AbjEQJvt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 05:51:49 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8124F1BF8;
+        Wed, 17 May 2023 02:51:48 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 635E05C00E3;
+        Wed, 17 May 2023 05:51:44 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 17 May 2023 05:51:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1684317104; x=1684403504; bh=V3xsILHICgJLZkK2B+bruOp3fFAhB06OWCO
+        PN9kuRmo=; b=mWqI5wtYr3Fr0/W0KfPiRryajdbIiJMvuhB6FawPWn8fZbh3y9d
+        zbPHSga41RW2CnQQTRvPYzEAKjjD/o3GCJ7U/1dtad41EdkqwYsiDhDWD4YB/mma
+        rxMEU6CXgYI/AxUiiKcEIfPbbkpWlNTujasf7EuccEU0Wfn3sQfby8kOEuZKC80d
+        dCQX1/OgD5citKbfrQhMywCYUjezGbrnlaE1FiqYkv+C2iyMLDRk84jFF94sb7Rk
+        b5VW3h5548nfx9aY3tTM0/XSyX2GKdFdNk6z5lPUTIeTpB61slRbj5JR+qttfO89
+        LZGKo6X9DSMqdDlh93GD0hcIlNdGIR09p8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1684317104; x=1684403504; bh=V3xsILHICgJLZkK2B+bruOp3fFAhB06OWCO
+        PN9kuRmo=; b=rtKjnAURDnI/lG2lOecTJGeLUc1xlML8p9RcznY5ArlQNO+semU
+        N0B+UIq/T+uPwvT6QdkyAQNA5hrjaPNI4rdRDJOofeSalu5wlk5D78/4LBSQAiLW
+        M9AxTuW1X3Wzmkv54QaeeIHkxoIUnz75OMRLWo/rv0x2xGuh53ZVNuyqYj2wiTl1
+        hVio1J50OoRtIyt5Ka8qEWwuNyZshJYjJAZSRdO82qrnS3hHtXPzC9ixYL1yRKnw
+        MtOvVU4zzvy2q5cAMK+70y+SI90wnQdLSEMBZS2UlbBGVel2Z2kAZsjVmn8E7F8P
+        788EvRYAd9bxxQNTfb6UiiT6o/XkNV9q9hw==
+X-ME-Sender: <xms:sKNkZO9YeNUkY-1agj9p1cWGfD5-JM3EPv01SX4qS5_ECTZwnxsdug>
+    <xme:sKNkZOuzbopH_DC7NeKSkQrflz0BsiRZKPAJAMH7b9HJ6lbg4E_U2bDeuvd-AwWbi
+    BC0F_j-6WQSmvJprK0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeiuddgvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:sKNkZEAVzATeNX4ng_FUgG2ly-efk7TUjJjSGY5wEc8AI2ynvRdK3w>
+    <xmx:sKNkZGf438EPn-Ue1OCJIGY_MpdMkZJq7bPSrZt_WrnKm--qzoBphg>
+    <xmx:sKNkZDMSwVJlBIP8qAIxegFp6KCzOItmkUjp79hr0ooV12an_glI3Q>
+    <xmx:sKNkZMYSW6CPcicKyKyDh5337P8qblJgsNu693rwMKtDgP9yl0PDPg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0EE08B60086; Wed, 17 May 2023 05:51:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
+Mime-Version: 1.0
+Message-Id: <9d350346-c45e-470c-bfe5-0a98d549f29a@app.fastmail.com>
+In-Reply-To: <CAMRc=Mdic_d3KaxFXrz7aVUcLyK8fBBHPgRGYP8nQvxN-ZwJXQ@mail.gmail.com>
+References: <20230516201642.557733-1-arnd@kernel.org>
+ <CAMRc=Mdic_d3KaxFXrz7aVUcLyK8fBBHPgRGYP8nQvxN-ZwJXQ@mail.gmail.com>
+Date:   Wed, 17 May 2023 11:51:23 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Arnd Bergmann" <arnd@kernel.org>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sa1100: include <mach/generic.h>
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 4, 2023 at 8:04=E2=80=AFAM Andreas Kemnade <andreas@kemnade.inf=
-o> wrote:
+On Wed, May 17, 2023, at 11:33, Bartosz Golaszewski wrote:
+> On Tue, May 16, 2023 at 10:16=E2=80=AFPM Arnd Bergmann <arnd@kernel.or=
+g> wrote:
+>>
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> sa1100_init_gpio() is declared in a machine specific header so it
+>> can be called from platform code, but the definition is in the device
+>> driver, which causes a warning:
+>>
+>> drivers/gpio/gpio-sa1100.c:310:13: error: no previous prototype for '=
+sa1100_init_gpio' [-Werror=3Dmissing-prototypes]
+>>
+>> It's already possible to include mach/generic.h from drivers, so add
+>> this one here as well.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  drivers/gpio/gpio-sa1100.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/gpio/gpio-sa1100.c b/drivers/gpio/gpio-sa1100.c
+>> index 342a59ea489a..3b1cc8462fcb 100644
+>> --- a/drivers/gpio/gpio-sa1100.c
+>> +++ b/drivers/gpio/gpio-sa1100.c
+>> @@ -13,6 +13,7 @@
+>>  #include <mach/hardware.h>
+>>  #include <mach/regs-gpio.h>
 >
-> If static allocation and dynamic allocation GPIOs are present,
-> dynamic allocation pollutes the numberspace for static allocation,
-> causing static allocation to fail.
-> Enforce dynamic allocation above GPIO_DYNAMIC_BASE.
->
-> Seen on a GTA04 when omap-gpio (static) and twl-gpio (dynamic)
-> raced:
-> [some successful registrations of omap_gpio instances]
-> [    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 16=
-1..178
-> [    2.561401] gpiochip_find_base: found new base at 160
-> [    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
-> [    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
-> [...]
-> [    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
-> [    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
-> [    2.703643] gpiochip_find_base: found new base at 178
-> [    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
-> [    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
-> [...]
-> [    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecat=
-ed, use dynamic allocation.
-> [    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap=
-, cannot add chip
-> [    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) =
-failed to register, -16
-> [    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register =
-gpio chip
->
-> On that device it is fixed invasively by
-> commit 92bf78b33b0b4 ("gpio: omap: use dynamic allocation of base")
-> but let's also fix that for devices where there is still
-> a mixture of static and dynamic allocation.
->
-> Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Reviewed-by: <christophe.leroy@csgroup.eu>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> Changes in V3:
->    typos
->
-> Changes in V2:
->    handle also the case of overlapping static allocation
->    across DYNAMIC_BASE
->
->  drivers/gpio/gpiolib.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 19bd23044b017..4472214fcd43a 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -193,6 +193,8 @@ static int gpiochip_find_base(int ngpio)
->                         break;
->                 /* nope, check the space right after the chip */
->                 base =3D gdev->base + gdev->ngpio;
-> +               if (base < GPIO_DYNAMIC_BASE)
-> +                       base =3D GPIO_DYNAMIC_BASE;
->         }
->
->         if (gpio_is_valid(base)) {
-> --
-> 2.39.2
->
+> This doesn't apply on top of my branch (neither on next) because of
+> this line. I can't see where this was added. Any hint?
 
-Queued for fixes, thanks!
+My mistake, my working tree had some experimental patches in it.
 
-Bart
+I'll send a v2.
+
+    Arnd
