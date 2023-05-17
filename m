@@ -2,140 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B9C706B6F
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 16:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4690B706CF5
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 17:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230476AbjEQOnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 10:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
+        id S230232AbjEQPha (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 11:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbjEQOnT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 10:43:19 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1672D77
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:43:05 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-30781184e78so71141f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 07:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684334583; x=1686926583;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4SNOGQNiXUm9Rm9DfrimxqrzH0Clgmb4qexx/tZZaE=;
-        b=MzulslZ5umnE2BE9tC3QxO+hO8k2i4NUqTMTr9GSakhsiJ2Z5Z+RQJENFLTSRzIs3w
-         0VmAwtKZz3gNf2RVLYLK6MOaBfD3Yvd0lbCw0oPhSMN8HA4SprmF+Wrh13UjGxHaF4g+
-         XCKfYITyAWa/6E6yI38uDLr5Kx8N9Wt2BfXgvFjInxfXwidQeTH7JGtQ2+RT7CrEjIu5
-         KzsHOhO9kwBVmzn73JIE2/X8Gq9za6YiexjrS+R8OGSwDCIERq0kCZafqqeg4eC7E0Lm
-         qyHQkj8fBou1ESemvE4deq5NVH1+eW7UttUaDEQAznQHo853ETWM9eQWYNuQrTyUNWW9
-         qMEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684334583; x=1686926583;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=r4SNOGQNiXUm9Rm9DfrimxqrzH0Clgmb4qexx/tZZaE=;
-        b=Fqz8rIqfBvsyACYtGSHhBhuHcn921/pur2qmCPS71ZidgMBMDP/2f45yoQ7nA+c0Lt
-         elz+pov/AQLLJw7NkbqcL6qOXWB5k6RSQUUtGTEAbrC7DXGUqHYXz8xgGfq06PYQ7ptf
-         wOd3xQEiKe1TeGDy5I7sI2GKEgC+EzIoO/FDqJKSpEnZT0FIeBHCwmvgT9KJYsNgVM9u
-         N7A/afOqxjAT34quZ1SponFlEleLmrRj6/xhsoj4S+C1VlpQ93GtlOYHZbtUsrwfp8fD
-         zqB9w+aVRPDzY3t1RzZR9RgjF3LS2CtObrE5Dl+1bwmBWbKjya8DHxrojpKLMOD+wJYD
-         fMdg==
-X-Gm-Message-State: AC+VfDyJIlg0Ezn6s7Wpzs4y2/AwyGSojfJCtVtbV5qmcsmaAwE/hpVZ
-        azphUvfXNjmzoo+It8tzupGKpA==
-X-Google-Smtp-Source: ACHHUZ42OQJxELGRspU3oO9Qc9cnP92grnvk4j1tgMqg9+ovQpWz4bYEat0/wlCEUV7IkWUkpY0sUg==
-X-Received: by 2002:adf:ea8d:0:b0:2f0:583:44be with SMTP id s13-20020adfea8d000000b002f0058344bemr829973wrm.0.1684334583431;
-        Wed, 17 May 2023 07:43:03 -0700 (PDT)
-Received: from localhost ([2a01:e0a:28d:66d0:5b2e:1428:59f1:44a4])
-        by smtp.gmail.com with ESMTPSA id o7-20020a5d62c7000000b003078354f774sm3375200wrv.36.2023.05.17.07.43.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 07:43:02 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 17 May 2023 16:43:01 +0200
-Message-Id: <CSOMS0W9MIUG.2MN43QZO9EX7Q@burritosblues>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
-        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-X-Mailer: aerc 0.14.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com>
- <20230512141755.1712358-3-eblanc@baylibre.com>
- <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
- <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
- <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
- <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
-In-Reply-To: <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229824AbjEQPh3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 11:37:29 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1A7139;
+        Wed, 17 May 2023 08:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+        Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+        In-Reply-To:References; bh=THRohlh+qrIfJaD8xBh2JXBEFCjX78n18Ij4ZY5/zzs=; b=Vb
+        GMZ1pwH2Qebg4Rq+4SXFXKvxHUuZaAgc5GkKv1iuh5QDUXRJqcAkx1gcjZ73MZFrI4OBNqlBk2AxN
+        0lDr4wVIMF0JUak9+RMxeD1oYm4HnzTMbugzpcb1+wbq9hIXQyZS+S+aAoDF3s2nw+X1Tv7xyr0fK
+        AyIzuoXW7TihuNk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1pzIe1-00D9Ct-FS; Wed, 17 May 2023 17:00:49 +0200
+Date:   Wed, 17 May 2023 17:00:49 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     'Andy Shevchenko' <andy.shevchenko@gmail.com>,
+        netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Subject: Re: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
+Message-ID: <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch>
+References: <20230515063200.301026-1-jiawenwu@trustnetic.com>
+ <20230515063200.301026-7-jiawenwu@trustnetic.com>
+ <ZGH-fRzbGd_eCASk@surfacebook>
+ <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com>
+ <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com>
+ <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed May 17, 2023 at 3:51 PM CEST, Andy Shevchenko wrote:
-> On Wed, May 17, 2023 at 12:58=E2=80=AFPM Esteban Blanc <eblanc@baylibre.c=
-om> wrote:
-> > On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
-> > > On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@baylibr=
-e.com> wrote:
-> > > > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
-> > > > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
->
-> ...
->
-> > > > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 + (gp=
-io_inst))
-> > > > > > +#define TPS6594_REG_GPIO1_CONF                             0x3=
-1
-> > > > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GPIO1_=
-CONF + (gpio_inst))
-> > > > >
-> > > > > Why? The original code with parameter 0 will issue the same.
+On Wed, May 17, 2023 at 10:55:01AM +0800, Jiawen Wu wrote:
+> > > > > +   gc = devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
+> > > > > +   if (!gc)
+> > > > > +           return -ENOMEM;
+> > > > > +
+> > > > > +   gc->label = devm_kasprintf(dev, GFP_KERNEL, "txgbe_gpio-%x",
+> > > > > +                              (wx->pdev->bus->number << 8) | wx->pdev->devfn);
+> > > > > +   gc->base = -1;
+> > > > > +   gc->ngpio = 6;
+> > > > > +   gc->owner = THIS_MODULE;
+> > > > > +   gc->parent = dev;
+> > > > > +   gc->fwnode = software_node_fwnode(txgbe->nodes.group[SWNODE_GPIO]);
 > > > >
-> > > > I felt that replacing 0x31 with a constant would make the computati=
-on
-> > > > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you think?
+> > > > Looking at the I²C case, I'm wondering if gpio-regmap can be used for this piece.
 > > >
-> > > The question is why that register is so special that you need to have
-> > > it as a constant explicitly?
-> >
-> > It is not special, it's just the first one of the serie of config
-> > registers. I felt like just having 0x31 without context was a bit weird
->
-> I'm not sure I understand what 'context' you are talking about.
-I was trying to convey the fact that 0x31 was representing
-TPS6594_REG_GPIO1_CONF address. This way when looking at
-TPS6594_REG_GPIOX_CONF(...), one will better understand that this macro
-is just about offsetting from the first GPIO_CONF register.
+> > > I can access this GPIO region directly, do I really need to use regmap?
+> > 
+> > It's not a matter of access, it's a matter of using an existing
+> > wrapper that will give you already a lot of code done there, i.o.w.
+> > you don't need to reinvent a wheel.
+> 
+> I took a look at the gpio-regmap code, when I call devm_gpio_regmap_register(),
+> I should provide gpio_regmap_config.irq_domain if I want to add the gpio_irq_chip.
+> But in this use, GPIO IRQs are requested by SFP driver. How can I get irq_domain
+> before SFP probe? And where do I add IRQ parent handler?
+ 
+I _think_ you are mixing upstream IRQs and downstream IRQs.
 
-> This is pretty normal to have two kind of definitions (depending on the c=
-ase):
-> 1/
->
->   #define FOO_1 ...
->   #define FOO_2 ...
->
-> and so on
->
-> 2/
->
->   #define FOO(x)  (... (x) ...)
->
->
-> Having a mix of them seems quite unusual.
-I did not know that. I will revert this change for next version then.
+Interrupts are arranged in trees. The CPU itself only has one or two
+interrupts. e.g. for ARM you have FIQ and IRQ. When the CPU gets an
+interrupt, you look in the interrupt controller to see what external
+or internal interrupt triggered the CPU interrupt. And that interrupt
+controller might indicate the interrupt came from another interrupt
+controller. Hence the tree structure. And each node in the tree is
+considered an interrupt domain.
 
-Thanks again for your time. Best regards,
+A GPIO controller can also be an interrupt controller. It has an
+upstream interrupt, going to the controller above it. And it has
+downstream interrupts, the GPIO lines coming into it which can cause
+an interrupt. And the GPIO interrupt controller is a domain.
 
---=20
-Esteban Blanc
-BayLibre
+So what exactly does gpio_regmap_config.irq_domain mean? Is it the
+domain of the upstream interrupt controller? Is it an empty domain
+structure to be used by the GPIO interrupt controller? It is very
+unlikely to have anything to do with the SFP devices below it.
+
+	 Andrew
+
+
+
