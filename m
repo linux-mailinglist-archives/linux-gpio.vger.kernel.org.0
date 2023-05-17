@@ -2,113 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFBF67064BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 11:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B67587064C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 11:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbjEQJ5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 05:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
+        id S230172AbjEQJ7M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 05:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbjEQJ5Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 05:57:24 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5EC10E0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:57:22 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-434706ea450so140765137.2
-        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:57:22 -0700 (PDT)
+        with ESMTP id S230153AbjEQJ7L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 05:59:11 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7533420B
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:59:00 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f4271185daso5500425e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 17 May 2023 02:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684317441; x=1686909441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684317539; x=1686909539;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VynSA3MQFwVAlFJdNBzl7ESPzIRRYdlEm8KKXbrpLiw=;
-        b=dxMWiPc/RBQNG0nw7gRRx8RJ1ieg+Q1e0goSUeFafR5dy3j9uXHba1ehIfcXfgpwtt
-         lQsoXLyM/5ZCBuoBu62jfg4LL9jfOsl1J/8Dz3Y95JfSnOIU/4GpXHmN7t45PmgNKzD+
-         +iiFiBxdYGsN1ftn63I4laptCzzfJUacG+A8de8o/OkfJU87LgJywI3rkBjERaO2PZ+Q
-         BTIMQTOafenASM7DTp3gyBumA1Sm/TwSYekq4oXM6/cc7eIuY47MNO0wL2o385gI4Ew+
-         OB5VqBtyIrCwZgfpK081tlmrG8pKNCe/UsSrkf/MJVZguF6ryVPHKGFleeXOHBFBVDMy
-         moyg==
+        bh=3ai+XJcD6q02E74/RveX4hPtq3MlwXKz1QHBcBUcFNo=;
+        b=NYPWtNMpM/bWn2LM8NEIe3TP3xMkwDSnDKxRs2mcUsAWBI5r8202lrNKrOzFsUDasn
+         9qiOQRjjWpzU0A5euUFl5+yUgZ/Hed1+v/UwQ//qMwAb1jsJrLmQOJZLUNJUnI9sGwJA
+         LSUbHAtu37E7Im/L4tRgnb9Gnq6UtI9e2Y+cbV6EHrwmxQ0tqMkqyecNaq1RC6wdGV9O
+         hYabnvN5IBi27WEdrUVSk5FAF9RIEAiLSul39oFq5TTo2ndOEq6SxYk9B3GssMwTPhae
+         XiCB3XSCcAJBaBWgtsd2MI8m2jpzyANAAmbezvyI5GbRDhgNoe5POlyUH/9pR2287gd8
+         44MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684317441; x=1686909441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VynSA3MQFwVAlFJdNBzl7ESPzIRRYdlEm8KKXbrpLiw=;
-        b=Y9z3AkPl8az86aJy9aR399HJP7NJK3i+mEqyHIeKecildeHd8iRXnrNGQWgQccJdHy
-         SVdwXgwP6VavzjTRxjuAeqo4LMiR4TyF9O1F5q5Plccn4pDGreeDxkojmDAszhz9BT6T
-         QcyNUSqQPkz5H4WAC/7yVion3wQ/axStHyomFghJmP2qW+xl087OTLcd43sfiKQHtxIk
-         gbBDL/miZWHu4NMqq/ffYKHu/Q9dxJsvPA1oicVPPu25h06jeIpTq8fwZqf2JN3IMokr
-         jyoKdc09/JsV+mZnzUt99OXrYvBkyNeZfIFafSQxpNnZn8UG/wOpGyGNDg031Jy92dS5
-         9lug==
-X-Gm-Message-State: AC+VfDy/TeaLlhIDvkzbWX4p/04MqXRChw6PZoFEQKjcI2TNzxCotF2P
-        EJWzxLq4hPmzv4x39XjQEts4K7uGZfrufGX0sd1uUQ==
-X-Google-Smtp-Source: ACHHUZ5h7TQ820u7krPwOeein/T5RuKnCImpgUUK7k9MkkO14WXVMJJhr8wd8FomNgs2ecq9zPQccveEy/DRhwF9UfQ=
-X-Received: by 2002:a67:e988:0:b0:436:1e1:685e with SMTP id
- b8-20020a67e988000000b0043601e1685emr13184350vso.28.1684317441643; Wed, 17
- May 2023 02:57:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230430-omap2-pdata-quirks-v1-0-e015f3a3ea46@linaro.org>
- <20230430-omap2-pdata-quirks-v1-1-e015f3a3ea46@linaro.org>
- <CAMRc=MczGKVFo+iWe_Pnvi3-hCK0fhmmkjp-h92RHONEHFAP_g@mail.gmail.com> <CACRpkdbYR+kobi3-xx7FgQG5aZb37JJageP+JWMss=D+KZUkFw@mail.gmail.com>
-In-Reply-To: <CACRpkdbYR+kobi3-xx7FgQG5aZb37JJageP+JWMss=D+KZUkFw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 17 May 2023 11:57:10 +0200
-Message-ID: <CAMRc=Me3KdxwjHYE4SQWo=CvDx9ccHp1qmzEBc7PszhOSYgS3w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM/gpio: Push OMAP2 quirk down into TWL4030 driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lee Jones <lee@kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20221208; t=1684317539; x=1686909539;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3ai+XJcD6q02E74/RveX4hPtq3MlwXKz1QHBcBUcFNo=;
+        b=J31GBTcCKaHlBND3OSMcLcPJcuLh1Z2OPFNEm44Ny36JrAVt5SFRj52Ci80BIPaULw
+         kVfMcqAswTfIqWFOW6SYcxTXvGRKIcquptzxMxn0+/D+dvZBWRSkD/HT3ApRwgjzHW94
+         pA7HnIC18m8tGnntZhBcDWal6IUy4NeSfD/Oqidaou5lqLL3/chS5fvLql+HP4Fguya/
+         vjyw/ZIojWd+aTYsbok2hQY6wJm9CQJInLZOC6VgfAObxr1xOMonaduHr3Qi4lBdWkcp
+         f7/dqBCNPI7ZOO/z1jDfjvwO/B3ZEvc0SNa4l5A26PJuOi9mUwUhwV3RSj5qeH8Ma1yR
+         0AHA==
+X-Gm-Message-State: AC+VfDyCjM2SWumx7MK2RXcx8hOVM7xy3JflfXFot5v1DdRz2sa0kAeK
+        lnEGicnOG1HFtL9ZBHp7iKFuUg==
+X-Google-Smtp-Source: ACHHUZ7ICZHWcsgX6bdkWaWTOXtSGTkJT7t+F6SP7Yq+8hpaG9+L8EAdtndZiwXg4Vpj2czekB/cPw==
+X-Received: by 2002:a1c:4c08:0:b0:3f4:2737:a016 with SMTP id z8-20020a1c4c08000000b003f42737a016mr20100741wmf.29.1684317538966;
+        Wed, 17 May 2023 02:58:58 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:5b2e:1428:59f1:44a4])
+        by smtp.gmail.com with ESMTPSA id z3-20020a5d6543000000b002fda1b12a0bsm2237051wrv.2.2023.05.17.02.58.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 02:58:58 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 17 May 2023 11:58:57 +0200
+Message-Id: <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
+        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+X-Mailer: aerc 0.14.0
+References: <20230512141755.1712358-1-eblanc@baylibre.com>
+ <20230512141755.1712358-3-eblanc@baylibre.com>
+ <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
+ <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
+In-Reply-To: <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 4, 2023 at 2:19=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Wed, May 3, 2023 at 3:02=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> > On Mon, May 1, 2023 at 11:05=E2=80=AFAM Linus Walleij <linus.walleij@li=
-naro.org> wrote:
-> > >
-> > > The TWL4030 GPIO driver has a custom platform data .set_up()
-> > > callback to call back into the platform and do misc stuff such
-> > > as hog and export a GPIO for WLAN PWR on a specific OMAP3 board.
-> > >
-> > > Avoid all the kludgery in the platform data and the boardfile
-> > > and just put the quirks right into the driver. Make it
-> > > conditional on OMAP3.
-> > >
-> > > I think the exported GPIO is used by some kind of userspace
-> > > so ordinary DTS hogs will probably not work.
-> > >
-> >
-> > While I haven't tested it (nor can I) so don't take my word for it, it
-> > looks to me as if regular DTS hogs *should* work. If anything, the way
-> > this quirk is implemented in your patch moves the export past the chip
-> > registration, while ordinary hogs would be applied when the chip is
-> > first added.
-> >
-> > Am I missing something?
->
-> DTS hogs cannot do gpiod_export(), that's the problem. I think the OMAP2
-> (Nokia phones?) need those exported GPIOs.
->
-> Yours,
-> Linus Walleij
+On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
+> On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@baylibre.co=
+m> wrote:
+> > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
+> > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitti:
 
-Ah, it needs to manipulate the GPIOs then. Get it. I don't have a
-better idea either.
+...
 
-Bart
+> > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 + (gpio_i=
+nst))
+> > > > +#define TPS6594_REG_GPIO1_CONF                             0x31
+> > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GPIO1_CONF=
+ + (gpio_inst))
+> > >
+> > > Why? The original code with parameter 0 will issue the same.
+> >
+> > I felt that replacing 0x31 with a constant would make the computation
+> > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you think?
+>
+> The question is why that register is so special that you need to have
+> it as a constant explicitly?
+
+It is not special, it's just the first one of the serie of config
+registers. I felt like just having 0x31 without context was a bit weird
+
+Best regards,
+
+--=20
+Esteban Blanc
+BayLibre
