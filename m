@@ -2,198 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6833706D21
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 17:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C745706E81
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 18:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231389AbjEQPqi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 11:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
+        id S229572AbjEQQr7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 12:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbjEQPqf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 11:46:35 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B714558B;
-        Wed, 17 May 2023 08:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=iYZEtg7pd8shIjXTbUZsXmOLd2eioSqHBYcaXseCGHM=; b=pA8xXVO8YNlITcRaUxTfPVrXlp
-        kwsY1TLAN8mrJTMjsi3L6fMVynx3eBwFr02/75gER+fw3W7dm0SX219XgTrrXuLbScJpxmTZLHi8b
-        1cQRiiBsdg/mxOIp8wmwJ41oL3zFBpkKUJm5rGkGrXi75XoM6msGU5Y2tDyjsonjIpdQ=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:45486 helo=pettiford.lan)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1pzIkz-0007IE-78; Wed, 17 May 2023 11:08:02 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Lech Perczak <l.perczak@camlintechnologies.com>,
-        =?UTF-8?q?Tomasz=20Mo=C5=84?= <tomasz.mon@camlingroup.com>
-Cc:     hugo@hugovil.com, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 17 May 2023 11:07:47 -0400
-Message-Id: <20230517150746.3823249-2-hugo@hugovil.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230517150746.3823249-1-hugo@hugovil.com>
-References: <20230517150746.3823249-1-hugo@hugovil.com>
+        with ESMTP id S229457AbjEQQr5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 12:47:57 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28CDE59DC;
+        Wed, 17 May 2023 09:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684342076; x=1715878076;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3aGbiMN0V+5yc6Amt+Y7GgCQxqWtHVXzMieUoBpl1Y0=;
+  b=NwujApARbS7z1+LSFfGoME6jThv38EVEpbFbdRsSmpRq/iKKAQs2HeIZ
+   jJlEWubv7r4iGiwuTLAoRvQDvWLxJqRj7o/J9WXzngQy4EoBJsBFjI9fP
+   rjdNxavDWXW5CtSU2AU4CXvE46E1VGSbPUVKcaIhu2AllfO55IQEvDp/c
+   klRU9gK1V50fBPsHNXAkzXK9LcKuGS9MjHnNCNR+7Wku7Z6T6iqyuvMCF
+   kWe+DgG5JMjPI14pnwIsQ3G4My6eP10PKejM0RsYy3mD463l6zeQWwYre
+   5r1AdcPFAxjCiiWSiu3Qu9/g1ujYOThj1fqnHQWKXQuQni50baQfZV707
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="351834340"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="351834340"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 09:47:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="948338934"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="948338934"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP; 17 May 2023 09:47:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pzKJL-0008UB-36;
+        Wed, 17 May 2023 19:47:35 +0300
+Date:   Wed, 17 May 2023 19:47:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matti Vaittinen <mazziesaccount@gmail.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Wolfram Sang <wsa@kernel.org>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        netdev@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] iio: mb1232: relax return value check for IRQ get
+Message-ID: <ZGUFJ5LRCzW2V0a1@smile.fi.intel.com>
+References: <cover.1684220962.git.mazziesaccount@gmail.com>
+ <429804dac3b1ea55dd233d1e2fdf94240e2f2b93.1684220962.git.mazziesaccount@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <429804dac3b1ea55dd233d1e2fdf94240e2f2b93.1684220962.git.mazziesaccount@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: [PATCH 2/2] serial: sc16is7xx: fix regression with GPIO configuration
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Tue, May 16, 2023 at 10:12:41AM +0300, Matti Vaittinen wrote:
+> fwnode_irq_get() was changed to not return 0 anymore.
+> 
+> Drop check for return value 0.
 
-Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-changed the function of the GPIOs pins to act as modem control
-lines without any possibility of selecting GPIO function.
+...
 
-As a consequence, applications that depends on GPIO lines configured
-by default as GPIO pins no longer work as expected.
+> -	if (data->irqnr <= 0) {
+> +	if (data->irqnr < 0) {
+>  		/* usage of interrupt is optional */
+>  		data->irqnr = -1;
+>  	} else {
 
-Also, the change to select modem control lines function was done only
-for channel A of dual UART variants (752/762). This was not documented
-in the log message.
 
-This new patch allows to specify GPIO or modem control line function
-in the device tree, and for each of the ports (A or B).
+After this change I'm not sure we need this branch at all, I mean that -errn is
+equal to -1 in the code (but needs to be checked for silly checks like == -1).
 
-This is done by using the new device-tree property named
-"modem-control-line-ports" (property added in separate patch).
+Hence
 
-Boards that need to have GPIOS configured as modem control lines
-should add that property to their device tree. Here is a list of
-boards using the sc16is7xx driver in their device tree and that may
-need to be modified:
-    arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
-    mips/boot/dts/ingenic/cu1830-neo.dts
-    mips/boot/dts/ingenic/cu1000-neo.dts
+Entire excerpt can be replaced with
 
-Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/tty/serial/sc16is7xx.c | 42 ++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+	if (data->irqnr > 0) {
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index a7c4da3cfd2b..1a3143331c1f 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -236,7 +236,8 @@
- 
- /* IOControl register bits (Only 75x/76x) */
- #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
--#define SC16IS7XX_IOCONTROL_MODEM_BIT	(1 << 1) /* Enable GPIO[7:4] as modem pins */
-+#define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
-+#define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
- #define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
- 
- /* EFCR register bits */
-@@ -306,7 +307,6 @@ struct sc16is7xx_devtype {
- 	char	name[10];
- 	int	nr_gpio;
- 	int	nr_uart;
--	int	has_mctrl;
- };
- 
- #define SC16IS7XX_RECONF_MD		(1 << 0)
-@@ -447,35 +447,30 @@ static const struct sc16is7xx_devtype sc16is74x_devtype = {
- 	.name		= "SC16IS74X",
- 	.nr_gpio	= 0,
- 	.nr_uart	= 1,
--	.has_mctrl	= 0,
- };
- 
- static const struct sc16is7xx_devtype sc16is750_devtype = {
- 	.name		= "SC16IS750",
--	.nr_gpio	= 4,
-+	.nr_gpio	= 8,
- 	.nr_uart	= 1,
--	.has_mctrl	= 1,
- };
- 
- static const struct sc16is7xx_devtype sc16is752_devtype = {
- 	.name		= "SC16IS752",
--	.nr_gpio	= 0,
-+	.nr_gpio	= 8,
- 	.nr_uart	= 2,
--	.has_mctrl	= 1,
- };
- 
- static const struct sc16is7xx_devtype sc16is760_devtype = {
- 	.name		= "SC16IS760",
--	.nr_gpio	= 4,
-+	.nr_gpio	= 8,
- 	.nr_uart	= 1,
--	.has_mctrl	= 1,
- };
- 
- static const struct sc16is7xx_devtype sc16is762_devtype = {
- 	.name		= "SC16IS762",
--	.nr_gpio	= 0,
-+	.nr_gpio	= 8,
- 	.nr_uart	= 2,
--	.has_mctrl	= 1,
- };
- 
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
-@@ -1457,12 +1452,6 @@ static int sc16is7xx_probe(struct device *dev,
- 				     SC16IS7XX_EFCR_RXDISABLE_BIT |
- 				     SC16IS7XX_EFCR_TXDISABLE_BIT);
- 
--		/* Use GPIO lines as modem status registers */
--		if (devtype->has_mctrl)
--			sc16is7xx_port_write(&s->p[i].port,
--					     SC16IS7XX_IOCONTROL_REG,
--					     SC16IS7XX_IOCONTROL_MODEM_BIT);
--
- 		/* Initialize kthread work structs */
- 		kthread_init_work(&s->p[i].tx_work, sc16is7xx_tx_proc);
- 		kthread_init_work(&s->p[i].reg_work, sc16is7xx_reg_proc);
-@@ -1498,6 +1487,25 @@ static int sc16is7xx_probe(struct device *dev,
- 					 prop, p, u)
- 			if (u < devtype->nr_uart)
- 				s->p[u].irda_mode = true;
-+
-+		val = 0;
-+
-+		of_property_for_each_u32(dev->of_node, "modem-control-line-ports",
-+					 prop, p, u)
-+			if (u < devtype->nr_uart) {
-+				/* Use GPIO lines as modem control lines */
-+				if (u == 0)
-+					val |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
-+				else if (u == 1)
-+					val |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
-+			}
-+
-+		if (val)
-+			regmap_update_bits(
-+				s->regmap,
-+				SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
-+				SC16IS7XX_IOCONTROL_MODEM_A_BIT |
-+				SC16IS7XX_IOCONTROL_MODEM_B_BIT, val);
- 	}
- 
- #ifdef CONFIG_GPIOLIB
 -- 
-2.30.2
+With Best Regards,
+Andy Shevchenko
+
 
