@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E2B7706F4D
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 19:25:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EFF9706FA3
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 May 2023 19:39:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbjEQRZ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 May 2023 13:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
+        id S229970AbjEQRjF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 May 2023 13:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbjEQRZ1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 13:25:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38ACD93F7;
-        Wed, 17 May 2023 10:25:14 -0700 (PDT)
+        with ESMTP id S229942AbjEQRjD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 May 2023 13:39:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0FAAD15;
+        Wed, 17 May 2023 10:38:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FB1363E35;
-        Wed, 17 May 2023 17:25:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E9E6C433D2;
-        Wed, 17 May 2023 17:25:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B07E46499C;
+        Wed, 17 May 2023 17:38:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0978DC4339B;
+        Wed, 17 May 2023 17:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684344311;
-        bh=mjFoAWFzRrM9eTl/Zbmccy0cVg5yWUVZAjtxpZaRWyI=;
+        s=k20201202; t=1684345113;
+        bh=GOTkZbPkforXCIzWEdpo7am5du/j5nr8N+7mzoL0Zmc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJSAp3/DeICH3C9UGkhuNBJHDqlTc+oJYD3lah9UEjSbbpdIHvYVt4JKbJrnKpfq8
-         jGOB90ZzNGUrHIdwLsKVgnZZeJha/DjxWrpMMNkKQenM/5a3pr4oDcH6tm0RoB1OSv
-         TyFFVgNn198G+8R8noWEfYc/XgQ4fkTWHH1R8mo5MCCpwQIl4ZI1EYBX4jX3sNLuWX
-         nB7N1AzvlkCZ9eFoTVWSVlQTQl8WV62hJOsoU/+VR77WAywEPx3jeZ2kioD+F2uEhE
-         bgZb3B4QWO7VWT8KQJ0+Jo1reEbgfSETto+mmz5A5VKu/zBOVO47qqyNwcnaAhuVRe
-         keX2nmUYvMgVg==
-Date:   Wed, 17 May 2023 18:25:07 +0100
+        b=kl3C95iruW7qNl8NfsMmB+NUtYvxQemdp3dXvg1/hKthWgpHqVk4u7n1AYETbf35G
+         RDftNzec9GoRcL3fSiFRZiSKsB2soe8omYAnqFmOxZv+6nsfcD0HJDt3O0zGhqEy6L
+         q6J6lFlIoTMnwWfAMO6huTtvX+GDgRIyc/fVRPIvE9ziWSA77NsrqcP0UxtvmvvBHW
+         /M0BYoY6ZCGTFSRQ73eLwETY6TTE+LbJDTAIsIlKCFNgpGsbIULRjNaoJjeuEJaNti
+         MPdEHibhjbTWMGbdnXNmdg8MXJX1/bsnxyfgblXsLu970Ekk/G4wnUWaQ5MfhwE8j1
+         K2F+fmnzkCDQw==
+Date:   Wed, 17 May 2023 18:38:28 +0100
 From:   Conor Dooley <conor@kernel.org>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: sc16is7xx: Add property to change GPIO
- function
-Message-ID: <20230517-argue-unbeaten-b07405fdd313@spud>
-References: <20230517150746.3823249-1-hugo@hugovil.com>
+To:     Ryan.Wanner@microchip.com
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
+        linus.walleij@linaro.org, ludovic.desroches@microchip.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: at91-pio4: Add push-pull
+ support
+Message-ID: <20230517-arrogance-unroll-5e6770618364@spud>
+References: <cover.1684313910.git.Ryan.Wanner@microchip.com>
+ <048a41d1dcb3da0e845986a73eaac61a54c69269.1684313910.git.Ryan.Wanner@microchip.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mpbHctzDX7UX2Sd6"
+        protocol="application/pgp-signature"; boundary="+3SZHxIRozdmFSZb"
 Content-Disposition: inline
-In-Reply-To: <20230517150746.3823249-1-hugo@hugovil.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <048a41d1dcb3da0e845986a73eaac61a54c69269.1684313910.git.Ryan.Wanner@microchip.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -61,55 +61,32 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---mpbHctzDX7UX2Sd6
+--+3SZHxIRozdmFSZb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 17, 2023 at 11:07:46AM -0400, Hugo Villeneuve wrote:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Wed, May 17, 2023 at 01:54:05PM +0200, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
 >=20
-> Some variants in this series of uart controllers have GPIO pins that
-> are shared between GPIO and modem control lines.
+> Add generic push-pull support for pio4 driver.
 >=20
-> The pin mux mode (GPIO or modem control lines) can be set for each
-> ports (channels) supported by the variant.
->=20
-> This adds a property to the device tree to set the GPIO pin mux to
-> modem control lines on selected ports if needed.
->=20
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
->  .../bindings/serial/nxp,sc16is7xx.txt         | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b=
-/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> index 0fa8e3e43bf8..426b7285ad50 100644
-> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> @@ -23,6 +23,9 @@ Optional properties:
->      1 =3D active low.
->  - irda-mode-ports: An array that lists the indices of the port that
->  		   should operate in IrDA mode.
-> +- modem-control-line-ports: An array that lists the indices of the port =
-that
-> +			    should have shared GPIO lines configured as modem
-> +			    control lines.
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-If this is an NXP specific property, should it not have an nxp, vendor
-prefix?
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+Thanks,
+Conor.
 
---mpbHctzDX7UX2Sd6
+--+3SZHxIRozdmFSZb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGUN8wAKCRB4tDGHoIJi
-0hp1AP9FdcuRN7IO7H2al/5we3uqXf0P4Jd54EhBY+MkzKRGxwD8DuYBxPPExott
-pQjz7PK7eIvyCdbZuUagAiV4Q8GrCAQ=
-=M+2F
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGURFAAKCRB4tDGHoIJi
+0te7AQDt8TKK6+zVXzAH08t+Tkji/Yh/hqx6L9JKrOlcW0ZpNAD+Jq+csic1yeFP
+ILADgL/Ov0YL7qBr8oRdJvBngPbPogk=
+=TyW4
 -----END PGP SIGNATURE-----
 
---mpbHctzDX7UX2Sd6--
+--+3SZHxIRozdmFSZb--
