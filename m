@@ -2,206 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 443A27079F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 May 2023 07:55:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62FA5707A5C
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 May 2023 08:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjERFzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 May 2023 01:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
+        id S229812AbjERGtP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 May 2023 02:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjERFzG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 May 2023 01:55:06 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DD010F5;
-        Wed, 17 May 2023 22:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684389302; x=1715925302;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=tGSd2ndveozlp7aMyHG4OefEV8fScTkBhyYxa4n0A5g=;
-  b=wBi/cFHFQ9TrtHfOm38FNgx7fHyFhtK8yvyO17ScYrBo6+/oEd/f+le7
-   tqIAYWCCVsDitfx66TYA9BbJj9ffQS9hTtDN+k4XHZXKG5/aLSeyvB9Ae
-   scgE2s1z2adUyHN89JpUm7oEirco6g3zE5rZcX6QeR5p+F7a/3XkGna82
-   2scjPkm9PZCCbx7ZfoY9oyqTDikUgP/n4a2mZIBTkqfXLwzGTSQfx+cY8
-   YHs6FhrpRa9BLllNIOjy64fhguXsEtgamMxbKczDWmp8B/6yrBIxL1b/w
-   G+XqTv4Fr3nu1AmZ4nxwhB7K7s8OUz5P9rduL6+pepKJHRQ7jg1M2ryqb
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.99,284,1677567600"; 
-   d="scan'208";a="225873652"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 May 2023 22:55:01 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 17 May 2023 22:55:01 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Wed, 17 May 2023 22:55:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fln34WFPs81EV1p1fhOyBNrHKyoyFRjaJ8Plwmm9Kg7sPid5HvxPOFcwouwqS/o48s6NjLNEq+FnOu0PHdQhqQDYazDx9ZY0FEeC+qYy5pCGQ2CSHv/JpONRw+FqNb7sVYY3r6BHpeiD1n3bC9JRWE7GNTGX39A2c5PgDVWSQVrPBvyIndVju+rgkI2J0yd+OVN7Fs7yDEoYfZhxVsW8XXwgTUjK18mI8YBqqRisERb6ou/CZtvnPTD1ewtK3Mp61hH5lEo0pKBXG+D4qqhsStVDtBwAdj7KHvypG4DWUgFoEVcjD2P1ylxOp8Mv+2DBEQZZZfAfCMVz+HTWjBymnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tGSd2ndveozlp7aMyHG4OefEV8fScTkBhyYxa4n0A5g=;
- b=DnE1gNSg/gJbrYZ+tr4h+FTD37QfzElFOmLJouYVHKghDK4T+uBmDEv+eki2QCJRhbYjXmEG055tBuoXQiQ/SVupVSvUMy5R8nFBS/uCb2qFGtWpZWGjwE7XmGLiztnOO4MYLdP7mZYynfApTys3aB5GEeQc98BJI9lu84dwROsmlTYa3xkTVyW7EZg/V/z0Kaxw7cGSLzIQ/avExpzjYWCJDzCJbD7oTXbMiODb4recqoLVtxY4rbttmFCpN5OJU/YtylPeNq2Yoce5EO2e1Pa72U3MflmlZz5Bww7VfbKakWM13Tyjzxnbnx8lGhipUd9Ks2o1qj//caELbv7vFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tGSd2ndveozlp7aMyHG4OefEV8fScTkBhyYxa4n0A5g=;
- b=rJNvMzj8A6icHm4muQfaxTtCePl5E1Ot4Ut5RufMGLWmmwlXM01+unZB8jeg1wG8Rge6xXvhUR5A3ZUZHGMjmFGPM0eaPOEobDQEatju/E70yzOP1qWDvJV9zSkN3DbSRjcZBHEUJGfiI+qVrrlT8HYQuWeon1XWlATaBrf/MeI=
-Received: from SJ2PR11MB7648.namprd11.prod.outlook.com (2603:10b6:a03:4c3::17)
- by MW4PR11MB7029.namprd11.prod.outlook.com (2603:10b6:303:22e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Thu, 18 May
- 2023 05:54:59 +0000
-Received: from SJ2PR11MB7648.namprd11.prod.outlook.com
- ([fe80::27bf:a69f:806f:67be]) by SJ2PR11MB7648.namprd11.prod.outlook.com
- ([fe80::27bf:a69f:806f:67be%5]) with mapi id 15.20.6411.019; Thu, 18 May 2023
- 05:54:58 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Ryan.Wanner@microchip.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <linus.walleij@linaro.org>, <Ludovic.Desroches@microchip.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] pinctrl: at91-pio4: Enable Push-Pull configuration
-Thread-Topic: [PATCH 1/3] pinctrl: at91-pio4: Enable Push-Pull configuration
-Thread-Index: AQHZiU1Gay4Js6/Z5k+xcK86PRuXHQ==
-Date:   Thu, 18 May 2023 05:54:58 +0000
-Message-ID: <c83ccbc9-bed9-1d2a-e181-02b105336701@microchip.com>
-References: <cover.1684313910.git.Ryan.Wanner@microchip.com>
- <d898c31277f6bce6f7d830edf4332ff605498c7b.1684313910.git.Ryan.Wanner@microchip.com>
- <c85c1f09-64c3-c8d4-7e8f-985665d1622e@microchip.com>
-In-Reply-To: <c85c1f09-64c3-c8d4-7e8f-985665d1622e@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ2PR11MB7648:EE_|MW4PR11MB7029:EE_
-x-ms-office365-filtering-correlation-id: c279a4ee-9567-462d-244c-08db576469f1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +dUsVHAeJEpH6vaDFF9YzZ1A4lyP/oVkVtob6ll0csTAEfUdCYKQHS/amNjYeRvHWMXBpEeYzuRl3Y1KxNwc9+7oHcclsxa595vD64EjEZHYrx6P1vEWncYEQ7P/WF1Y1ChBqDb76mZTFKNdwcib4ejmSbwZKwY8Cq8pd2IKT3z04rd9MxEUsW2uUiB0taBP4QenccgvgWQRVKIiDhrFZdvq3/wvh71lEKRV9XOcM71SpztEdgupJvb8cePajcByKAAObVjTnxlhjcE5lmeTc7/l1uEwWeCfFijoxhX8JyO45bFvM+T/rPmUbLagUa4KkpnAGe/k+Cs2seXwqUxnYqZk5T45YO8VBJMyDSJFYvfGoPtOKgtu6EK1KYAhkHJ4P9k4kSIRzktTcE5dLMq4j4tBR0eqTxv/mEi5lX3DJEss4mMX5BMVa7sIp8HdywEMnJ5gmHCWg/JVmmosa0VvXMUsYiRjeKNpPkTW2KQBmSXs7N+r6zJmp2GzjAT86fPEpoeGDEzRzuYjLwRnrgyEkLeIdff5VmrsBkqfZxN0khYDx6Rt/RXACQzQLobYendie4D1B9gd9tZZENM7bVTe/VUrXwnhNSEmFwaugH0Ia7hHa+jvAlEXPEXVyvs70V7v9Vtcsm5b0GaRG2ttFOUX9Im2VYN9CGvjVTAYqdZgtUk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7648.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(136003)(39860400002)(346002)(376002)(451199021)(2906002)(91956017)(41300700001)(54906003)(31696002)(86362001)(110136005)(71200400001)(478600001)(76116006)(4326008)(8676002)(64756008)(66946007)(66476007)(66446008)(31686004)(316002)(8936002)(5660300002)(6636002)(66556008)(186003)(966005)(38070700005)(6486002)(6512007)(38100700002)(26005)(6506007)(122000001)(53546011)(83380400001)(2616005)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NTNvMnV2NFdZd2JuSm4wSTIyVWtaV2RSWENyZjBtRWtwSWR6OWFQb2N0Skdx?=
- =?utf-8?B?Q29odjBlNytzUnVZYVZMS3ZVbEhTUjVaUkZ5a2VyL1ZtU3JacklnZmc2d055?=
- =?utf-8?B?dG1RZmRWdjY4RytIemVyaWFRcE82NVdiSFVNQ1ZxbjU3N05XdlBOejZVeWl2?=
- =?utf-8?B?OGpTMW5iVFZJWjBIcklqa1RYNnBuVEJJSnNyVHVPQVFZZWJVVjB1K0NEalRI?=
- =?utf-8?B?c3BVOXo2Q1NsNmU1RzgxTnYxNlFaNTJ0L09SaE9IZEwrRTh3T1M4YWhWa1hz?=
- =?utf-8?B?Y2VqRWlRaGRMSnhxUnA5dHhSWWd3WER4YlM1SE5pMnV6cm83RzVFQnVISWVh?=
- =?utf-8?B?WmhhWVN1OVFUeW9ua0p0YjZYVmhLT0dqUnltN3JPMnVjQVI2RDRkL3JnWkZ2?=
- =?utf-8?B?T3JvVTB4dnY2RVh0dTlrVHI0MTBoQzFHRlMvdEJZVFVSOFRmU25ucWxyNklw?=
- =?utf-8?B?YjZSOTZ5SDJaVGRiNkFHOTB1b0xhZUZnYk0ybEJ3Y1h3SGd5bzBabUE3YzVQ?=
- =?utf-8?B?VTJ2N0d3T1d6U1hSWEZHbHRnWmY1UDVJUGwvUDNDOU5ib01HUHBlVU9ZNUNt?=
- =?utf-8?B?bHo5ZmMwTm9BajFiRGxkVHI4c3l3MklCUFVqbm5KM1Q1bTZxY3VuaVRhbVIy?=
- =?utf-8?B?Y2tGQm1FVXpFbGNKam50MUhlMWVrSlU2eWxYRDZsQ003SEdkYWhsUHgwUWZG?=
- =?utf-8?B?QmhBbkdNMUprMlpTQkIzVUc1ZDVXR2dOVjBTWWpDS3lpUVRscmhjcVVlbGoz?=
- =?utf-8?B?enhsenRHZjRkWXFPZjZkemxyV2VEZkQ2YjhpQW0vKzRqUEFwOFc2eWNSWjRp?=
- =?utf-8?B?SjhGSnkzandWSitLckJ5ak42YlNkdllBeElINEV4QitxVnpBcmdIME91M3BZ?=
- =?utf-8?B?NE5KbGZmNHhGb2JsQkNIeGdiOC9SM2JoSGczNEZRbHV3REhuYmFFZWU5SjFw?=
- =?utf-8?B?VzUyMWhGeXo3TjdBaUNaUHV4aGhCRmhhOGVOSS9HN2xubStDdENvbHVSRU1i?=
- =?utf-8?B?QjFHVHhEbGVpd3ViRGwwaEYrTlZTNEtkcDN2ZDdRSW5BbnJDeXc4M0lJWE5C?=
- =?utf-8?B?VG8yaG9CclNQRFhtT3oyWXNYNGFzbmJhOHp0blVHcUtqTEZJQkV0TmdtWVdi?=
- =?utf-8?B?RWFVczNsTFcvZ1BUVnlseGl4UkdCOWVPVnNRTk16WGIwN1R1VkpjWHZ3SXFy?=
- =?utf-8?B?S0NwYlUwYzNhUEpBbjJDZ1VPWS9udDZLTVV1dHhiYi81aWs3MElYUUlucFVq?=
- =?utf-8?B?ZHhrZzAxaUF2RW4yaXNTbkJvZ0x3TWFqT0pkZkV2cnBSYXY2REdFTHRtSjNR?=
- =?utf-8?B?UDM5YTVzUkNRMWVUM01WUlNjVENBZk5UbTc3cFJsQU43R1BweTFXMHpHMzBR?=
- =?utf-8?B?THl0cHRZbWNubXN0ekVQZmhsTzZqS3R3R3RoajN0RmsvVjRjT3B3em5NZFZX?=
- =?utf-8?B?SjVqYTcrWFViazhwYURONDVkRmdwTVBqS2pTMHI0TmZRWkNuYThxUkQ1MXE1?=
- =?utf-8?B?YVd5RnVHRTNteDhCYmhvTGdBQkZLQUZtUDVNOHRrWXh0UGx5K3UvbXl2aVhG?=
- =?utf-8?B?NGRvWlhHcloxYkN2Q3ZNbkJLaUJ4QlBYS3JqWlJ4TDd2RGdGR1hRRlpRdVpH?=
- =?utf-8?B?dzBZOHNWeERjZHB5emJmNndTUG1Ici9UNnpEc1JXRWpzSEt0bEdRUHNWZkE2?=
- =?utf-8?B?YWtmMnBnV3dNS2JyTEFyQnhmQ0N4bFNoRWNNb3MzVXRISmthcS9pV0NLblFZ?=
- =?utf-8?B?WDBUUEZ6RGgyWHdPemFuTUN5dzJiYmorcHB0TW9PSHB0R1pQRm1RczZQeGZP?=
- =?utf-8?B?czZablFFdkcrWmNabEQvMGNkK2xXcUpYVzl4V0U5MEZMUi8zZUN5UHZSQUp2?=
- =?utf-8?B?MVBtanhtaEtsWEVNNzdPZ1BKcmtZZnVSdEZCNFB1a1hFcTMvMkZXa3RPd0tZ?=
- =?utf-8?B?K1lyOVdUUTZSQndDNWRldHZKVlNKRmUwdUhhRFE2UjhjOXc2MFhxWEVZd0Rn?=
- =?utf-8?B?WUducXVwbTJIMnc5cnppRUtRVTdkTXN1b2ltQlVVbGZLQ2RWRlRTOXh4bXo1?=
- =?utf-8?B?YWJWbGhra2JkRU5Kc1ZJRUVnKzNaaVUrVEtMTmJyYnkwTm41T05ycnluMGJV?=
- =?utf-8?Q?tsgnZP0HMnYZKAawWzHztyqiD?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <932802C8AA84F249BB013E91E9E59D18@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229807AbjERGtO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 May 2023 02:49:14 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552AE2122;
+        Wed, 17 May 2023 23:49:13 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34I6a5vp009104;
+        Thu, 18 May 2023 06:48:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=GdRg7Y9j4xrW11AwJfAZpy43hBuEn4tHcz/Itw1Jsto=;
+ b=C/3Hc9KooNQVYypd4dGPnoFzkfHYGQfxYozTGBt81F/OttJxFDyTYMl9J9TC8yeebT6J
+ iMzoU2zCjhIEeF9T4moV2EXFPAqeCcbVBJD1AJWVu7eRbTIl/E0Gm8Tsv90uydi6NXLq
+ KsFXdcQLMjD5+Ge2YhIEV/SMqmFSMSDoWBL8FpVwJjthGSdjQxjp79TJbL3MT3QUWyLP
+ paTLU8u/3wvwhbFsRiOLRKU0CGjQL883HlnpW0JpBzvJb9truum8hbLzqcCqGHNE7cYM
+ 4Qq3f58aS78LpjAGkO0AH+7rCGkJspL9PyhRPkHEjkr8F6z9Ym3710je9jeILeq8vpVl +Q== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qncbhr91a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 May 2023 06:48:53 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34I6mpqZ028262
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 May 2023 06:48:51 GMT
+Received: from [10.216.51.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 17 May
+ 2023 23:48:43 -0700
+Message-ID: <0374e88f-5b12-271a-41f0-32a31fbecbec@quicinc.com>
+Date:   Thu, 18 May 2023 12:18:39 +0530
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7648.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c279a4ee-9567-462d-244c-08db576469f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2023 05:54:58.8526
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aWS0uHri0maRVND/pG1kE+ByyZYLNQ3lr97F5jP1LDsEM67I0mgqRPMyplgpRjhVtyynUvUX+mqLYaUM6LrXn7ld+4a2k5zGfXKAnVFC7LA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7029
-X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH V6 7/8] arm64: dts: Add ipq5018 SoC and rdp432-c2 board
+ support
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
+        <andy.shevchenko@gmail.com>
+References: <20230516165413.3361867-1-quic_srichara@quicinc.com>
+ <20230516165413.3361867-8-quic_srichara@quicinc.com>
+Content-Language: en-US
+From:   Kathiravan T <quic_kathirav@quicinc.com>
+In-Reply-To: <20230516165413.3361867-8-quic_srichara@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3seELNgdxH5fZtduLxDlSRu1sBZ8GeU0
+X-Proofpoint-ORIG-GUID: 3seELNgdxH5fZtduLxDlSRu1sBZ8GeU0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-18_04,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1011 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2304280000 definitions=main-2305180050
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gMTguMDUuMjAyMyAwODo0MCwgQ2xhdWRpdSBCZXpuZWEgLSBNMTgwNjMgd3JvdGU6DQo+IE9u
-IDE3LjA1LjIwMjMgMTQ6NTQsIFJ5YW4uV2FubmVyQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBG
-cm9tOiBSeWFuIFdhbm5lciA8Unlhbi5XYW5uZXJAbWljcm9jaGlwLmNvbT4NCj4+DQo+PiBFbmFi
-bGUgcHVzaC1wdWxsIGNvbmZpZ3VyYXRpb24uIFJlbW92ZSBpbnRlZ2VyIHZhbHVlIGFyZ3VtZW50
-IGZyb20NCj4+IG9wZW4tZHJhaW4gY29uZmlndXJhdGlvbiBhcyBpdCBpcyBkaXNjYXJkZWQgd2hl
-biBwaW5jb25mIGZ1bmN0aW9uIGlzDQo+PiBjYWxsZWQgZnJvbSBncGlvbGliLg0KPiANCj4gQUZB
-SUNUIGl0IGlzIHN0aWxsIHRha2VuIGludG8gYWNjb3VudCB3aGVuIHBhc3NlZCB0b3VnaCBkcml2
-ZS1vcGVuLWRyYWluIERUDQo+IHByb3BlcnR5IGJ1dCBhdCB0aGUgbW9tZW50IHRoZXJlIGFyZSBu
-byBkZXZpY2UgdHJlZXMgdXNpbmcgdGhpcyBwcm9wZXJ0eS4NCg0KYWgsIGlnbm9yZSB0aGlzIGFz
-IEkndmUganVzdCBzYXcgeW91ciBxdWVzdGlvbiBhYm91dCB0aGlzIGhlcmU6DQpodHRwczovL2xv
-cmUua2VybmVsLm9yZy9hbGwvMTIwMTE3YjYtZmVkYS1lN2FhLTRmMDktYTEyNmEwNzQ3Mzg4QG1p
-Y3JvY2hpcC5jb20vDQoNCj4gDQo+PiBBZGQgcHVzaC1wdWxsIGRvIGRlYnVnIGFuZCBnZXQgZnVu
-Y3Rpb25zLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFJ5YW4gV2FubmVyIDxSeWFuLldhbm5lckBt
-aWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtYXQ5MS1w
-aW80LmMgfCAxNSArKysrKysrKysrKy0tLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0
-aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5j
-dHJsL3BpbmN0cmwtYXQ5MS1waW80LmMgYi9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkxLXBp
-bzQuYw0KPj4gaW5kZXggMmZlNDBhY2I2YTNlLi4zYzM5ZDYyYmJjM2MgMTAwNjQ0DQo+PiAtLS0g
-YS9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC1hdDkxLXBpbzQuYw0KPj4gKysrIGIvZHJpdmVycy9w
-aW5jdHJsL3BpbmN0cmwtYXQ5MS1waW80LmMNCj4+IEBAIC03NjIsNiArNzYyLDExIEBAIHN0YXRp
-YyBpbnQgYXRtZWxfY29uZl9waW5fY29uZmlnX2dyb3VwX2dldChzdHJ1Y3QgcGluY3RybF9kZXYg
-KnBjdGxkZXYsDQo+PiAgCQkJcmV0dXJuIC1FSU5WQUw7DQo+PiAgCQlhcmcgPSAxOw0KPj4gIAkJ
-YnJlYWs7DQo+PiArCWNhc2UgUElOX0NPTkZJR19EUklWRV9QVVNIX1BVTEw6DQo+PiArCQlpZiAo
-cmVzICYgQVRNRUxfUElPX09QRF9NQVNLKQ0KPj4gKwkJCXJldHVybiAtRUlOVkFMOw0KPj4gKwkJ
-YXJnID0gMTsNCj4+ICsJCWJyZWFrOw0KPj4gIAljYXNlIFBJTl9DT05GSUdfSU5QVVRfU0NITUlU
-VF9FTkFCTEU6DQo+PiAgCQlpZiAoIShyZXMgJiBBVE1FTF9QSU9fU0NITUlUVF9NQVNLKSkNCj4+
-ICAJCQlyZXR1cm4gLUVJTlZBTDsNCj4+IEBAIC04MjcsMTAgKzgzMiwxMCBAQCBzdGF0aWMgaW50
-IGF0bWVsX2NvbmZfcGluX2NvbmZpZ19ncm91cF9zZXQoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3Rs
-ZGV2LA0KPj4gIAkJCWNvbmYgJj0gKH5BVE1FTF9QSU9fUFVFTl9NQVNLKTsNCj4+ICAJCQlicmVh
-azsNCj4+ICAJCWNhc2UgUElOX0NPTkZJR19EUklWRV9PUEVOX0RSQUlOOg0KPj4gLQkJCWlmIChh
-cmcgPT0gMCkNCj4+IC0JCQkJY29uZiAmPSAofkFUTUVMX1BJT19PUERfTUFTSyk7DQo+PiAtCQkJ
-ZWxzZQ0KPj4gLQkJCQljb25mIHw9IEFUTUVMX1BJT19PUERfTUFTSzsNCj4+ICsJCQljb25mIHw9
-IEFUTUVMX1BJT19PUERfTUFTSzsNCj4+ICsJCQlicmVhazsNCj4+ICsJCWNhc2UgUElOX0NPTkZJ
-R19EUklWRV9QVVNIX1BVTEw6DQo+PiArCQkJY29uZiAmPSAofkFUTUVMX1BJT19PUERfTUFTSyk7
-DQo+PiAgCQkJYnJlYWs7DQo+PiAgCQljYXNlIFBJTl9DT05GSUdfSU5QVVRfU0NITUlUVF9FTkFC
-TEU6DQo+PiAgCQkJaWYgKGFyZyA9PSAwKQ0KPj4gQEAgLTk0OCw2ICs5NTMsOCBAQCBzdGF0aWMg
-dm9pZCBhdG1lbF9jb25mX3Bpbl9jb25maWdfZGJnX3Nob3coc3RydWN0IHBpbmN0cmxfZGV2ICpw
-Y3RsZGV2LA0KPj4gIAkJc2VxX3ByaW50ZihzLCAiJXMgIiwgImRlYm91bmNlIik7DQo+PiAgCWlm
-IChjb25mICYgQVRNRUxfUElPX09QRF9NQVNLKQ0KPj4gIAkJc2VxX3ByaW50ZihzLCAiJXMgIiwg
-Im9wZW4tZHJhaW4iKTsNCj4+ICsJaWYgKCEoY29uZiAmIEFUTUVMX1BJT19PUERfTUFTSykpDQo+
-IA0KPiBlbHNlIHdvdWxkIGZpdCBiZXR0ZXIgaGVyZS4NCj4gDQo+PiArCQlzZXFfcHJpbnRmKHMs
-ICIlcyAiLCAicHVzaC1wdWxsIik7DQo+PiAgCWlmIChjb25mICYgQVRNRUxfUElPX1NDSE1JVFRf
-TUFTSykNCj4+ICAJCXNlcV9wcmludGYocywgIiVzICIsICJzY2htaXR0Iik7DQo+PiAgCWlmIChh
-dG1lbF9waW9jdHJsLT5zbGV3X3JhdGVfc3VwcG9ydCAmJiAoY29uZiAmIEFUTUVMX1BJT19TUl9N
-QVNLKSkNCj4gDQoNCg==
+
+On 5/16/2023 10:24 PM, Sricharan Ramabadhran wrote:
+> Add initial device tree support for the Qualcomm IPQ5018 SoC and
+> rdp432-c2 board.
+>
+> Few things like 'reboot' does not work because, couple of more 'SCM'
+> APIS are needed to clear some TrustZone settings. Those will be
+> posted separately.
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+>    [v6] Added Reviewed by and fixed commit log as per comments from
+>         robimarko@gmail.com
+>
+>   arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>   .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |  72 +++++
+>   arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 250 ++++++++++++++++++
+>   3 files changed, 323 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+>   create mode 100644 arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index d42c59572ace..57858e7f2095 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= apq8094-sony-xperia-kitakami-karin_windy.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-ifc6640.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq5018-rdp432-c2.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= ipq5332-mi01.2.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= ipq5332-rdp468.dtb
+>   dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+> new file mode 100644
+> index 000000000000..e636a1cb9b77
+> --- /dev/null
+
+
+<snip>
+
+
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		tz_region: tz@4ac00000 {
+> +			reg = <0x0 0x4ac00000 0x0 0x400000>;
+
+
+TZ size is 2MB not 4MB.
+
+<snip>...
+
+Thanks
+
