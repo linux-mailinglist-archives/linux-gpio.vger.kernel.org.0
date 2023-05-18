@@ -2,129 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C63D70862F
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 May 2023 18:47:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 117FB7086C9
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 May 2023 19:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjERQrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 May 2023 12:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        id S229916AbjERR2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 May 2023 13:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjERQrR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 May 2023 12:47:17 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6401CF0;
-        Thu, 18 May 2023 09:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684428436; x=1715964436;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eZIiTyret7MDus74XojVEWyZ/KiqME39bi31YIWnNnw=;
-  b=FpD284i00jMAhHPpFqJE6HWk/5e/78BvJ4mL+gXbVgSgrYJDXSI5FDtA
-   AIOVl8sw3PDusym5vDaKJWLh73qhPXK1hCg/RNJ4f8+6i+838p5NqpBRy
-   xZbQgEef6jrylsFfwOUWtE6wgDv6ngg/Ypyj+jxyje8wGo5qDGYAA4QvF
-   Ig5b5bTixORgCvpU3Fi1oyPkzye9WNzvQ7ZCvUXgopfZzFwl2pUlP/hSA
-   DGBwduNKkoLgCNRPbIGlHLxrmDB6Ii+tLsQXI2EMVVW0kiz0AkasTJ41A
-   B8cOtlBX82I3kYEOj+1wNgOJmieU5qdiNlJugn9fGdslRozDQLFmhHgsC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354457514"
-X-IronPort-AV: E=Sophos;i="6.00,285,1681196400"; 
-   d="scan'208";a="354457514"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 09:47:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="735164963"
-X-IronPort-AV: E=Sophos;i="6.00,285,1681196400"; 
-   d="scan'208";a="735164963"
-Received: from nithinks-mobl1.amr.corp.intel.com (HELO [10.209.80.104]) ([10.209.80.104])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 09:47:13 -0700
-Message-ID: <3fd73def-4765-d43c-4c2c-e0fb0e2e0516@linux.intel.com>
-Date:   Thu, 18 May 2023 11:47:12 -0500
+        with ESMTP id S229712AbjERR2j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 May 2023 13:28:39 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9151BC;
+        Thu, 18 May 2023 10:28:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RFK8vYyhyH3BlzZDr9fcJ7a8in0wT3++38ZEf1Cr1ylhrY3STgO6gbbVj+OREcfjiCvP3pnfHorhss0U4H+SfZyFZLBQV2CtaHpFH+5eE2wAtiim+i7jeuzmRptuoxnWcOf2OlI7wu4QCL5BZ/HVBKa+sGYg5zzNrsTrbkU1ll/Ij3K0OTt+YITxNM+Kii3Nxs3mgNmG+dNftPRHn1OFV+QA5cbbK76ShfugAAUe/P3s5nuBcvd/reNmNFieFXhPpmJEWGtULXTmGUCbLC5wKpBTHFw1h+dOuHUNvrOQtwWv/6X/YXjAFFRdRXvOPnueB/V1x8FYm6NYljIGFpSvIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m/LWIfrKalGUuvIfgcJBFdyNSY5mZeMpBOTga2nxvi0=;
+ b=j2Bo/i++oNYyS+1pYBMA/HQxCPP8kuHm4RPYD2aD5Zyeufe4FWQJ6fbegPN02Kepz41yESHUsr8oNESdBPzRvpDPRafrkjL0Hgl105WtJoM2ZYgT5WvEHolTKjHQ42QL/Avtq5G0FTwtyuB7U103az1Q5ss0ojhtch7Z+a12YslLuNzdOWowrDKQMMKwxRzqTwS18W3KDnHZ09e6WNYGDzzMmQOjE4Fp8WQKF6xsSg3Khx2DoL97ATzOKdU1BduSnp1hhVBAieXaCF+PaRRMHP+rvV+eEo0uxn9tuIvc/ebewt77iG7z7ZliPHTaCiATq8rnEZseabCg4p0VxQygCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m/LWIfrKalGUuvIfgcJBFdyNSY5mZeMpBOTga2nxvi0=;
+ b=lNzp/s8he/W/UgWmvhYC0BGzSNGrPMD3eDV4yLZ7sv/eO+QstmrAy31OoK3OqdC9+8ahjwvFVEbmJ/8p6CQEJERMG1n4DjHQgoL5I6uqunomBJTQPT9Ns9nmhcdi/71JF9fo4az/VRYgHNbLACRCCS84pBB2CCKgQxu45GMcCFY=
+Received: from MW4P220CA0023.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::28)
+ by SJ0PR12MB8139.namprd12.prod.outlook.com (2603:10b6:a03:4e8::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Thu, 18 May
+ 2023 17:28:36 +0000
+Received: from CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:115:cafe::75) by MW4P220CA0023.outlook.office365.com
+ (2603:10b6:303:115::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.19 via Frontend
+ Transport; Thu, 18 May 2023 17:28:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT060.mail.protection.outlook.com (10.13.175.132) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6411.20 via Frontend Transport; Thu, 18 May 2023 17:28:36 +0000
+Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 18 May
+ 2023 12:28:34 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <rafael@kernel.org>, <hdegoede@redhat.com>,
+        <linus.walleij@linaro.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <Shyam-sundar.S-k@amd.com>, <Basavaraj.Natikar@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 0/4] Add consumers for pm_pr_debug() outside of pm
+Date:   Thu, 18 May 2023 12:27:48 -0500
+Message-ID: <20230518172752.93322-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH 06/10] mfd: cs42l43: Add support for cs42l43 core driver
-Content-Language: en-US
-To:     Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, linus.walleij@linaro.org,
-        vkoul@kernel.org, lgirdwood@gmail.com,
-        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
-        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
- <20230512122838.243002-7-ckeepax@opensource.cirrus.com>
- <73438e58-bd96-818d-1f43-5681b0d1a1de@linaro.org>
- <20230518102442.GZ68926@ediswmail.ad.cirrus.com>
- <650012a3-b455-8be5-fd6d-d0775e718e6a@linux.intel.com>
- <049c2470-536a-1b1c-9828-7acb4d483309@opensource.cirrus.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <049c2470-536a-1b1c-9828-7acb4d483309@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT060:EE_|SJ0PR12MB8139:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee7f75c6-e0a2-434d-48af-08db57c54fda
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ym+c4MB/U+6ha1erlVyfAUlq5QNvVCogaGjzqU5X4Ew6wVF70sA7b9cl27lUI/PnyhgFWeQY7qmagWFA6A1vA9moQdxqyjDpSU/Rhl8W3a47zp4Bw6/7T7TF27rsnyFGZMrBzrwgzpubLtXN8Zk9Lbtse92Xr/Gfi6nb0PO970xW5fmRxbvlbZMZxsXcF5JUn2bG31bmkL4w6s64+JucE5KL9kq098zEVumkvXlMGiLifF+rPaS8wNkScopzrQUZwaTnNzTbP1Ug37y3MpkW1cXfm+bmmSN6RHlLprjeuNiD14qtFLH+iUMen2j6P7+LVVOx+NVDL7tHhzPSf9JN3BkGds0b8kEgVcgIH/78hy+5ilK/cruvxq36c1Ng76jZpr3siLdSitzX3gKO/RvVwk/YyY5oraqMpuxtT9pUKNB/ev8RNqDJkdug4uGkLeRbBLasWz42NwrDTHcEBpgZwo/hR/gbSAvQuWXISGtCxUGG8h/2lMpaSHVhs8sJujrQ6n+Kbf757Ujw5qS/dXN2Aa4iBBFRjjWwsoZjRuakm9c3ygfphN73JlAEq3HF+JZAoSEyJcSUhn0SqyQsS2QUBV+G1WOtLqWnSjTPUN4xZxMtsMU/3gaToiAe5CsxFsyuUIKgdeBSUZBdfe1C0v0J9J7dFpAkmb4HNZrO/gRiixLe4jQDdOLywv12P9VaSO0MpXtwag0kDv+dTDz0y+a98milmG5JIUBRXDAnATvuvvek35S8ivEBuZQe6IrT9Ewv9eyGLkvJU7Dxym/ubVOkZg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(396003)(346002)(39860400002)(451199021)(46966006)(36840700001)(40470700004)(186003)(36756003)(8936002)(40460700003)(356005)(426003)(16526019)(1076003)(81166007)(26005)(36860700001)(83380400001)(336012)(47076005)(82740400003)(82310400005)(70586007)(4326008)(316002)(8676002)(2906002)(44832011)(41300700001)(40480700001)(7696005)(5660300002)(6666004)(2616005)(86362001)(70206006)(478600001)(110136005)(54906003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2023 17:28:36.1530
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee7f75c6-e0a2-434d-48af-08db57c54fda
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8139
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The amd-pmc and pinctrl-amd drivers have messages that are generally
+useful for debugging power or wakeup issues, but users need to know to
+turn on dynamic debug to get them.
+
+Add support for using the pm_pr_debug() macro outside of pm code so
+that other drivers can use it to show messages when a user turns on
+`/sys/power/pm_debug_messages`.
+
+NOTE: There aren't hard dependencies that would make this apply to a
+single tree, but the pinctrl-amd message is in an IRQ handler.
+It shouldn't be applied unless the changes to the macro are included.
+
+Mario Limonciello (4):
+  include/linux/suspend.h: Only show pm_pr_dbg messages at
+    suspend/resume
+  ACPI: x86: Add pm_debug_messages for LPS0 _DSM state tracking
+  pinctrl: amd: Use pm_pr_dbg to show debugging messages
+  platform/x86/amd: pmc: Use pm_pr_dbg() for suspend related messages
+
+ drivers/acpi/x86/s2idle.c      | 52 ++++++++++++++++++++++++++++++----
+ drivers/pinctrl/pinctrl-amd.c  |  6 ++--
+ drivers/platform/x86/amd/pmc.c |  4 +--
+ include/linux/suspend.h        |  6 ++--
+ 4 files changed, 55 insertions(+), 13 deletions(-)
 
 
-On 5/18/23 11:15, Richard Fitzgerald wrote:
-> 
-> 
-> On 18/05/2023 16:16, Pierre-Louis Bossart wrote:
->>
->>>>> +    ret = regmap_register_patch(cs42l43->regmap, cs42l43_reva_patch,
->>>>> +                    ARRAY_SIZE(cs42l43_reva_patch));
->>>>> +    if (ret) {
->>>>> +        dev_err(cs42l43->dev, "Failed to apply register patch:
->>>>> %d\n", ret);
->>>>> +        goto err;
->>>>> +    }
->>>>> +
->>>>> +    pm_runtime_mark_last_busy(cs42l43->dev);
->>>>> +    pm_runtime_put_autosuspend(cs42l43->dev);
->>>>> +
->>>>> +    ret = devm_mfd_add_devices(cs42l43->dev, PLATFORM_DEVID_NONE,
->>>>> +                   cs42l43_devs, ARRAY_SIZE(cs42l43_devs),
->>>>
->>>> I don't why adding devices is not in probe. They use the same regmap
->>>> right? So there will be no problem in probing them from MFD probe.
->>>
->>> Well except SoundWire is a bit of a special boy, the hardware is
->>> not necessarily available in probe, the hardware is only available
->>> at some point later when the device attaches. Doing it this way all
->>> of the attaching (and various detach/attach cycles the device needs
->>> during configuration) are over by the time the child drivers bind, so
->>> they don't all need special code to handle that.
->>
->> if the devices are added in the probe, then the regmap needs to be moved
->> to cache-only and another special API would be needed to tell the MFD
->> framework to turn the regmap cache-only off.
->>
->> But if it's the same regmap, the regmap cache is handled in the
->> SoundWire update_status callback so maybe  Krzysztof's proposal does
->> work?
-> 
-> But you still can't access the hardware in probe(). So you'd have all
-> the child drivers probing but not able to talk to the hardware. The
-> child drivers would have to hook into the update_status() somehow so
-> they know when the peripheral has enumerated.
-> It's simpler to add them after the hardware has enumerated - they will
-> be able to access the hardware in their probe().
+base-commit: dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d
+-- 
+2.34.1
 
-It depends on what you mean by 'access the hardware'. If the only
-interface is regmap and regmap is in cache-only, then the child drivers
-could "access the hardware" without anything happening until after
-regmap is no longer cache-only.
-
-But yeah, I realize it's a long shot.
