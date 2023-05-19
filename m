@@ -2,116 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E842708F28
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB1ED708F43
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjESFHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 01:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55882 "EHLO
+        id S229840AbjESFRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 01:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjESFHW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:07:22 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFD7CE
-        for <linux-gpio@vger.kernel.org>; Thu, 18 May 2023 22:07:18 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7FBD12C01D8;
-        Fri, 19 May 2023 17:07:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1684472825;
-        bh=32gSY5w+PANxi1B/B+/bHMGQXs4kLuI5sUqJUzM4hx8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=j9oZFf/dluAWoTYulElN+w8l9fvAQUkGal799tiCONo1/vUAPfFO4ctkMWEg4Y8Ys
-         03Fcou3vxiU6I4OBtjwjdQG3UURU07meQI3ORqxtj1sKtwphzNbVpnS/hHSdyyZqYb
-         d4CJrKJFsyJW3XILr4HhOspau1qxtbQ4+kKdpFhzu8lDia8AL5Q1GZIzpRGBEpWewB
-         v5bkn4Sf9ZoPJkan60Ru2u5erpGfrEJREuYZ6HPWJ3DqYCLFEczFbHp33c8zKubHxw
-         QthnIoYe7fApSt2aj8VUXkcNETlpsb8RgoMP8oSL8f3ea+Brn2CMWntFGMJbtsmDQn
-         RpddfrO9Ev/LQ==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B646703f90000>; Fri, 19 May 2023 17:07:05 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id 4AB3513EDAE;
-        Fri, 19 May 2023 17:07:05 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 4731B28DACC; Fri, 19 May 2023 17:07:05 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy.shevchenko@gmail.com,
-        johan@kernel.org, maz@kernel.org, warthog618@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
-Date:   Fri, 19 May 2023 17:07:02 +1200
-Message-Id: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S229480AbjESFRd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:17:33 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736A5E4C
+        for <linux-gpio@vger.kernel.org>; Thu, 18 May 2023 22:17:32 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d2b42a8f9so699123b3a.3
+        for <linux-gpio@vger.kernel.org>; Thu, 18 May 2023 22:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684473452; x=1687065452;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GopQx/2MVI31GgAif5rdj1bBkoYmtiPhSKueL8o1BI8=;
+        b=GeKbZ7xGugoCH+ZfB3V7m9b5M/1PF+H6HpPSTJO9d5qTNm992k3SYoct1EiGOKGZeE
+         vs6B1aG8xCU4JtL8URMG7WsFzDGUAFm+mH0lEHFKNM920D/arTGS1f3vBZ4uLH5ScszG
+         mE3d7FrEIg68LALnDfSlZzUdIgyICHyudDHJwpdB9qKynR6rMKI3Nn/kWHPCXlfOyoT6
+         wbR4df6s594Pxu6JoPktvTGqRMU/eYe9ZsqfShHD7I9sRXoZyvtqzmHY0DcBfoewZWvx
+         ig5NZL4WiBp2ZoUivrnnYvy0dPqajEZR1B0j3w7ANohTGdXQe3Yr2R9frqt0sd26smk5
+         kYWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684473452; x=1687065452;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GopQx/2MVI31GgAif5rdj1bBkoYmtiPhSKueL8o1BI8=;
+        b=DYXg5bNBy/8ikwetx5ncYYWcYUcCC+DsDp1wot3PSwpaB8p/UHtyQa2Da4BURcLtbf
+         keVbMPGevAGn09QaPbVHJ0148cadTw2x4lUWgf4xnphjs5+VfJICtzLz6vgsMPD5ghQh
+         t8OEqH9MwuDRm2JfouBUo60itOuHOlfK5jeRnjWyoloNCa1ZOvBc7wUbsOqL2Hkhgvry
+         oX5nU0pKGAf0E/dUIuPGjqQyz/HoeUzrmMD5oSJfnYRYh1NdJKFKwFNUNs1mz+DMA6vR
+         aOAxaPOIj6coor7CzzZwzxjj9EBZq6Dz6hMcgI+qMQUdK7midqCMxk/2RolDrbiSjs3Z
+         WbhA==
+X-Gm-Message-State: AC+VfDzCxiv9vTr7IhKUZ5xfFe1L3zbOvfUj5ARJ2hd3Mfuqab24g8Ba
+        VC0wDyRQ6y+VrkJMCByxKiQ=
+X-Google-Smtp-Source: ACHHUZ6yhRbln7Ffgr3FktK2wdLujWjktMcwUqumOEj2bAH0IyTQ4HeoMEdKN+LGGyBjmLTMaedMgA==
+X-Received: by 2002:a05:6a00:1783:b0:644:d77:a2c5 with SMTP id s3-20020a056a00178300b006440d77a2c5mr1738253pfg.29.1684473451792;
+        Thu, 18 May 2023 22:17:31 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id j13-20020aa78dcd000000b0064afdc88465sm2151638pfr.213.2023.05.18.22.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 May 2023 22:17:31 -0700 (PDT)
+Date:   Fri, 19 May 2023 13:17:27 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [libgpiod] Python bindings don't allow to wait on events
+ indefinitely
+Message-ID: <ZGcGZwwRiy2jFfR0@sol>
+References: <3545766.4eto28bQOc@archbook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=P0xRbXHiH_UA:10 a=Op8SjpqLE0gF3w78xgEA:9
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3545766.4eto28bQOc@archbook>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On a system with pca9555 GPIOs that have been exported via sysfs the
-following warning could be triggered on kexec().
+On Thu, May 11, 2023 at 10:28:34PM +0200, Nicolas Frattaroli wrote:
+> Hello,
+> 
+> in libgpiod 1.6.x, Line.event_wait's codepath had no path where ts
+> as passed to ppoll could ever be NULL. This means waiting indefinitely
+> was impossible.
+> 
+> I thought hey, maybe the new Python bindings in libgpiod 2.x fixed this,
+> but no, it has made it worse by explicitly setting timeout to 0 seconds
+> if it's None[1]. Obviously, this behaviour can't be changed now, because
+> people depend on this API to return immediately now with None as the
+> parameter, and changing it to wait indefinitely would no doubt break
+> actual programs.
+> 
+> So I'm left wondering if there's a particular reason users of these
+> bindings shouldn't wait on events indefinitely or if that same mistake
+> was just made twice in a row.
+> 
+> Is there some way the API could be enhanced to support waiting for
+> events indefinitely without having to slap a While True with
+> an arbitrarily high timeout around every single invocation?
+> 
 
-  WARNING: CPU: 0 PID: 265 at drivers/gpio/gpiolib.c:3411 gpiochip_disabl=
-e_irq
-  Call trace:
-   gpiochip_disable_irq
-   machine_crash_shutdown
-   __crash_kexec
-   panic
-   sysrq_reset_seq_param_set
-   __handle_sysrq
-   write_sysrq_trigger
+That does sound like a bug to me, but the rest of your mail isn't worth
+responding to.
 
-The warning is triggered because there is an irq_desc for the GPIO but
-it does not have the FLAG_USED_AS_IRQ set. This is because when the GPIO
-is exported via gpiod_export(), gpio_is_visible() is used to determine
-if the "edge" attribute should be provided but in doing so it ends up
-calling gpiochip_to_irq() which creates the irq_desc.
+A more productive approach could be to submit a patch that describes the
+problem and suggests a fix, say:
 
-Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
-intended creation of the irq_desc comes via edge_store() when requested
-by the user.
+ def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
+-    if timeout is None:
+-        timeout = 0.0
+-
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+and see where that goes.
 
-Notes:
-    Changes in v2:
-    - expand commit message to (hopefully) better describe the problem an=
-d
-      solution
-    - drop the inaccurate fixes tag
-
- drivers/gpio/gpiolib-sysfs.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 530dfd19d7b5..f859dcd1cbf3 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -362,8 +362,6 @@ static umode_t gpio_is_visible(struct kobject *kobj, =
-struct attribute *attr,
- 		if (!show_direction)
- 			mode =3D 0;
- 	} else if (attr =3D=3D &dev_attr_edge.attr) {
--		if (gpiod_to_irq(desc) < 0)
--			mode =3D 0;
- 		if (!show_direction && test_bit(FLAG_IS_OUT, &desc->flags))
- 			mode =3D 0;
- 	}
---=20
-2.40.1
-
+Cheers,
+Kent.
