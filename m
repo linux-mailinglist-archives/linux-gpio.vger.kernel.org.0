@@ -2,172 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D02570919A
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 10:25:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 693CD7092F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 11:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbjESIZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 04:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55916 "EHLO
+        id S229611AbjESJY4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 05:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjESIZ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 04:25:26 -0400
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFBEE4D
-        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 01:25:21 -0700 (PDT)
-X-QQ-mid: Yeas54t1684484656t878t52425
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [115.200.228.151])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 18003444399140416337
-To:     "'Andrew Lunn'" <andrew@lunn.ch>
-Cc:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
-        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230515063200.301026-1-jiawenwu@trustnetic.com> <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook> <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
-In-Reply-To: <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
-Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Fri, 19 May 2023 16:24:15 +0800
-Message-ID: <02ad01d98a2b$4cd080e0$e67182a0$@trustnetic.com>
+        with ESMTP id S230047AbjESJYu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 05:24:50 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9A5192;
+        Fri, 19 May 2023 02:24:49 -0700 (PDT)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34J8avZD027124;
+        Fri, 19 May 2023 04:24:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=Lj8uAFjxCnrls2KQSGxc7f2MX/UDnvhG2wQcOtyDCOw=;
+ b=S2KVVdJmdHng3w9Hp7cbJMoY88VJakVPsqSLXrUO9w4tEsKUhznLwBtuWXfHGh5qaUm5
+ mUts8DQUijd4zefb3qsJL5Ogg+JOfr9qDnb94txG0+mK4qXh2fa6oqzht76wFeH2LGG6
+ MyJIkFCR7RaQJ3gTNVYObUoi/K8CzieVmwoL4F6y5H97SBWbLk357e5U6ulolPm0Mc8K
+ IqK0GHJ4N6sE8G3KURSY7DLCWkZzE/cjvTi41Fn8jk8XLh8UTE6naIGM2EiTvxEsNfNC
+ aw7ZHXOkgk/dO9VD6JvOAyokq7RlqaVboEhBJjvPEecf/bRJ93/tS68h3QRAwdmyMcQk 4w== 
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3qj7y180rk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 04:24:27 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Fri, 19 May
+ 2023 04:24:25 -0500
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 19 May 2023 04:24:25 -0500
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0B66CB38;
+        Fri, 19 May 2023 09:24:25 +0000 (UTC)
+Date:   Fri, 19 May 2023 09:24:25 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+CC:     Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <tglx@linutronix.de>, <maz@kernel.org>, <linus.walleij@linaro.org>,
+        <vkoul@kernel.org>, <lgirdwood@gmail.com>,
+        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/10] mfd: cs42l43: Add support for cs42l43 core driver
+Message-ID: <20230519092425.GA68926@ediswmail.ad.cirrus.com>
+References: <20230512122838.243002-1-ckeepax@opensource.cirrus.com>
+ <20230512122838.243002-7-ckeepax@opensource.cirrus.com>
+ <73438e58-bd96-818d-1f43-5681b0d1a1de@linaro.org>
+ <20230518102442.GZ68926@ediswmail.ad.cirrus.com>
+ <650012a3-b455-8be5-fd6d-d0775e718e6a@linux.intel.com>
+ <049c2470-536a-1b1c-9828-7acb4d483309@opensource.cirrus.com>
+ <3fd73def-4765-d43c-4c2c-e0fb0e2e0516@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQHvj8QD3pC+6Aq9H9h6P1+q5LrHRgMH5FTyAkITzAABJU2Y7wJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNeuwZQUsA==
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fd73def-4765-d43c-4c2c-e0fb0e2e0516@linux.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-GUID: UZNsi0zSqoCKwhpogjcObBxZtv6JtPfq
+X-Proofpoint-ORIG-GUID: UZNsi0zSqoCKwhpogjcObBxZtv6JtPfq
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thursday, May 18, 2023 8:49 PM, Andrew Lunn wrote:
-> > > I _think_ you are mixing upstream IRQs and downstream IRQs.
-> > >
-> > > Interrupts are arranged in trees. The CPU itself only has one or two
-> > > interrupts. e.g. for ARM you have FIQ and IRQ. When the CPU gets an
-> > > interrupt, you look in the interrupt controller to see what external
-> > > or internal interrupt triggered the CPU interrupt. And that interrupt
-> > > controller might indicate the interrupt came from another interrupt
-> > > controller. Hence the tree structure. And each node in the tree is
-> > > considered an interrupt domain.
-> > >
-> > > A GPIO controller can also be an interrupt controller. It has an
-> > > upstream interrupt, going to the controller above it. And it has
-> > > downstream interrupts, the GPIO lines coming into it which can cause
-> > > an interrupt. And the GPIO interrupt controller is a domain.
-> > >
-> > > So what exactly does gpio_regmap_config.irq_domain mean? Is it the
-> > > domain of the upstream interrupt controller? Is it an empty domain
-> > > structure to be used by the GPIO interrupt controller? It is very
-> > > unlikely to have anything to do with the SFP devices below it.
-> >
-> > Sorry, since I don't know much about interrupt,  it is difficult to understand
-> > regmap-irq in a short time. There are many questions about regmap-irq.
-> >
-> > When I want to add an IRQ chip for regmap, for the further irq_domain,
-> > I need to pass a parameter of IRQ, and this IRQ will be requested with handler:
-> > regmap_irq_thread(). Which IRQ does it mean?
+On Thu, May 18, 2023 at 11:47:12AM -0500, Pierre-Louis Bossart wrote:
+> On 5/18/23 11:15, Richard Fitzgerald wrote:
+> > On 18/05/2023 16:16, Pierre-Louis Bossart wrote:
+> >>>>> +    ret = devm_mfd_add_devices(cs42l43->dev, PLATFORM_DEVID_NONE,
+> >>>>> +                   cs42l43_devs, ARRAY_SIZE(cs42l43_devs),
+> >>>>
+> >>>> I don't why adding devices is not in probe. They use the same regmap
+> >>>> right? So there will be no problem in probing them from MFD probe.
+> >>>
+> >>> Well except SoundWire is a bit of a special boy, the hardware is
+> >>> not necessarily available in probe, the hardware is only available
+> >>> at some point later when the device attaches. Doing it this way all
+> >>> of the attaching (and various detach/attach cycles the device needs
+> >>> during configuration) are over by the time the child drivers bind, so
+> >>> they don't all need special code to handle that.
+> >>
+> >> if the devices are added in the probe, then the regmap needs to be moved
+> >> to cache-only and another special API would be needed to tell the MFD
+> >> framework to turn the regmap cache-only off.
+> >>
+> >> But if it's the same regmap, the regmap cache is handled in the
+> >> SoundWire update_status callback so maybe  Krzysztof's proposal does
+> >> work?
+> > 
+> > But you still can't access the hardware in probe(). So you'd have all
+> > the child drivers probing but not able to talk to the hardware. The
+> > child drivers would have to hook into the update_status() somehow so
+> > they know when the peripheral has enumerated.
+> > It's simpler to add them after the hardware has enumerated - they will
+> > be able to access the hardware in their probe().
 > 
-> That is your upstream IRQ, the interrupt indicating one of your GPIO
-> lines has changed state.
+> It depends on what you mean by 'access the hardware'. If the only
+> interface is regmap and regmap is in cache-only, then the child drivers
+> could "access the hardware" without anything happening until after
+> regmap is no longer cache-only.
 > 
-> > In the previous code of using
-> > devm_gpiochip_add_data(), I set the MSI-X interrupt as gpio-irq's parent, but
-> > it was used to set chained handler only. Should the parent be this IRQ? I found
-> > the error with irq_free_descs and irq_domain_remove when I remove txgbe.ko.
-> 
-> Do you have one MSI-X dedicated for GPIOs. Or is it your general MAC
-> interrupt, and you need to read an interrupt controller register to
-> determine it was GPIOs which triggered the interrupt?
-> 
-> If you are getting errors when removing the driver it means you are
-> missing some level of undoing what us done in probe. Are you sure
-> regmap_del_irq_chip() is being called on unload?
-> 
-> > As you said, the interrupt of each tree node has its domain. Can I understand
-> > that there are two layer in the interrupt tree for MSI-X and GPIOs, and requesting
-> > them separately is not conflicting? Although I thought so, but after I implement
-> > gpio-regmap, SFP driver even could not find gpio_desc. Maybe I missed something
-> > on registering gpio-regmap...
-> 
-> That is probably some sort of naming issue. You might want to add some
-> prints in swnode_find_gpio() and gpiochip_find() to see what it is
-> looking for vs what the name actually is.
+> But yeah, I realize it's a long shot.
 
-It's true for the problem of name, but there is another problem. SFP driver has
-successfully got gpio_desc, then it failed to get gpio_irq from gpio_desc (with error
-return -517). I traced the function gpiod_to_irq():
+Yeah, its never just the regmap. Take the sound driver for example,
+when the sound driver binds all the components will be inplace
+and a soundcard will be created. This means the user could then
+start an audio stream before any hardware is actually available,
+various bits of the audio bring up rely on timing or reading state
+so won't work in cache-only. Yeah you could add work arounds for
+these problems as they arise, but you will end up with a lot of them.
 
-	gc = desc->gdev->chip;
-	offset = gpio_chip_hwgpio(desc);
-	if (gc->to_irq) {
-		int retirq = gc->to_irq(gc, offset);
+I would flip this around and ask, what is the problem with adding
+the child devices once the device has completed initialisation?
+As far as I can see it looks like a choice between moving one
+function call with no obvious downside, against loads lines of
+various work arounds in each of the child drivers for whatever
+subsystem specific problems are caused by the device not actually
+being available.
 
-		/* Zero means NO_IRQ */
-		if (!retirq)
-			return -ENXIO;
-
-		return retirq;
-	}
-
-'gc->to_irq = gpiochip_to_irq' was set in [4]gpiochip_irqchip_add_domain().
-So:
-
-	static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
-	{
-		struct irq_domain *domain = gc->irq.domain;
-
-	#ifdef CONFIG_GPIOLIB_IRQCHIP
-		/*
-		 * Avoid race condition with other code, which tries to lookup
-		 * an IRQ before the irqchip has been properly registered,
-		 * i.e. while gpiochip is still being brought up.
-		 */
-		if (!gc->irq.initialized)
-			return -EPROBE_DEFER;
-	#endif
-
-gc->irq.initialized is set to true at the end of [3]gpiochip_add_irqchip() only.
-Firstly, it checks if irqchip is NULL:
-
-	static int gpiochip_add_irqchip(struct gpio_chip *gc,
-					struct lock_class_key *lock_key,
-					struct lock_class_key *request_key)
-	{
-		struct fwnode_handle *fwnode = dev_fwnode(&gc->gpiodev->dev);
-		struct irq_chip *irqchip = gc->irq.chip;
-		unsigned int type;
-		unsigned int i;
-
-		if (!irqchip)
-			return 0;
-
-The result shows that it was NULL, so gc->irq.initialized = false.
-Above all, return irq = -EPROBE_DEFER.
-
-So let's sort the function calls. In chronological order, [1] calls [2], [2] calls
-[3], then [1] calls [4]. The irq_chip was added to irq_domain->host_data->irq_chip
-before [1]. But I don't find where to convert gpio_chip->irq.domain->host_data->irq_chip
-to gpio_chip->irq.chip, it seems like it should happen after [4] ? But if it wants to use
-'gc->to_irq' successfully, it should happen before [3]?
-
-[1] gpio_regmap_register()
-[2] gpiochip_add_data()
-[3] gpiochip_add_irqchip()
-[4] gpiochip_irqchip_add_domain()
-
-I'm sorry that I described the problem in a confusing way, apologize if I missed
-some code that caused this confusion.
-
-
+Thanks,
+Charles
