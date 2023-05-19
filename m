@@ -2,109 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB1ED708F43
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49417708F62
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:26:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbjESFRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 01:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
+        id S229493AbjESF0G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 01:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbjESFRd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:17:33 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736A5E4C
-        for <linux-gpio@vger.kernel.org>; Thu, 18 May 2023 22:17:32 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d2b42a8f9so699123b3a.3
-        for <linux-gpio@vger.kernel.org>; Thu, 18 May 2023 22:17:32 -0700 (PDT)
+        with ESMTP id S229449AbjESF0G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:26:06 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FF7E4C;
+        Thu, 18 May 2023 22:26:04 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f25d79f6bfso3323068e87.2;
+        Thu, 18 May 2023 22:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684473452; x=1687065452;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GopQx/2MVI31GgAif5rdj1bBkoYmtiPhSKueL8o1BI8=;
-        b=GeKbZ7xGugoCH+ZfB3V7m9b5M/1PF+H6HpPSTJO9d5qTNm992k3SYoct1EiGOKGZeE
-         vs6B1aG8xCU4JtL8URMG7WsFzDGUAFm+mH0lEHFKNM920D/arTGS1f3vBZ4uLH5ScszG
-         mE3d7FrEIg68LALnDfSlZzUdIgyICHyudDHJwpdB9qKynR6rMKI3Nn/kWHPCXlfOyoT6
-         wbR4df6s594Pxu6JoPktvTGqRMU/eYe9ZsqfShHD7I9sRXoZyvtqzmHY0DcBfoewZWvx
-         ig5NZL4WiBp2ZoUivrnnYvy0dPqajEZR1B0j3w7ANohTGdXQe3Yr2R9frqt0sd26smk5
-         kYWA==
+        d=gmail.com; s=20221208; t=1684473962; x=1687065962;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wNtRnyQN8vO04gSlcyvpsqnkimMuzHNYu/QdOo0JXbg=;
+        b=MmMPzTf5aPuDZyy+pZTLvBgU5RoGY7h4ncqYpeVHj+sAwcpYtepWH2v7u7wE8tOJzH
+         bQ5aF6x3HuDfU4LKnPHxc46tOqC0CsVkDkt18RKY4+/oF01Zkb2oFebosWut936pCpOy
+         92KBvUQcEMweaWq9cp97c8g/pPRra1YqK8CFHze+UV8JedIm0WcFrvkmX2RnHxsCrBTn
+         tbX7hz5/zz9ObpEGIJC3MFYqQoiwit4jmSpt1clolDqy455jzvYUo4VWl1oZFAOHd1/T
+         lrt4WwatKqHTU2QOnFZAaf1rDlL+FccUx8Eb7ZKUBhJvz7XM22RkLPBnUbjgKCxS1wyO
+         fv9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684473452; x=1687065452;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GopQx/2MVI31GgAif5rdj1bBkoYmtiPhSKueL8o1BI8=;
-        b=DYXg5bNBy/8ikwetx5ncYYWcYUcCC+DsDp1wot3PSwpaB8p/UHtyQa2Da4BURcLtbf
-         keVbMPGevAGn09QaPbVHJ0148cadTw2x4lUWgf4xnphjs5+VfJICtzLz6vgsMPD5ghQh
-         t8OEqH9MwuDRm2JfouBUo60itOuHOlfK5jeRnjWyoloNCa1ZOvBc7wUbsOqL2Hkhgvry
-         oX5nU0pKGAf0E/dUIuPGjqQyz/HoeUzrmMD5oSJfnYRYh1NdJKFKwFNUNs1mz+DMA6vR
-         aOAxaPOIj6coor7CzzZwzxjj9EBZq6Dz6hMcgI+qMQUdK7midqCMxk/2RolDrbiSjs3Z
-         WbhA==
-X-Gm-Message-State: AC+VfDzCxiv9vTr7IhKUZ5xfFe1L3zbOvfUj5ARJ2hd3Mfuqab24g8Ba
-        VC0wDyRQ6y+VrkJMCByxKiQ=
-X-Google-Smtp-Source: ACHHUZ6yhRbln7Ffgr3FktK2wdLujWjktMcwUqumOEj2bAH0IyTQ4HeoMEdKN+LGGyBjmLTMaedMgA==
-X-Received: by 2002:a05:6a00:1783:b0:644:d77:a2c5 with SMTP id s3-20020a056a00178300b006440d77a2c5mr1738253pfg.29.1684473451792;
-        Thu, 18 May 2023 22:17:31 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id j13-20020aa78dcd000000b0064afdc88465sm2151638pfr.213.2023.05.18.22.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 May 2023 22:17:31 -0700 (PDT)
-Date:   Fri, 19 May 2023 13:17:27 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod] Python bindings don't allow to wait on events
- indefinitely
-Message-ID: <ZGcGZwwRiy2jFfR0@sol>
-References: <3545766.4eto28bQOc@archbook>
+        d=1e100.net; s=20221208; t=1684473962; x=1687065962;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wNtRnyQN8vO04gSlcyvpsqnkimMuzHNYu/QdOo0JXbg=;
+        b=c8z9ksRvASxb8bNb0nDjddM/qVNIEyohrvNkQzd6otMp7UhkoqTb9862FtyfMde75B
+         GKOKEGfCeXgEvPlkKGM7Q6lhFDCZEBJWWsQFqBJtoiSsTNqFyL9JYZM/k+lYv9Wk8MYF
+         T7oqlL0G5+zg2HiS4BwRJWfT2QpUsZKrvh2nMVK5suWI3qqT+fDOCqNtQehbNmnBwWNZ
+         vhh64bEK2UaoJIEFzjQtvLtrZ8TF9r7rI8hfr8tSKw8kKy0X/LDo6Fpc4Kpx/wLDSByE
+         5TMQwFKHpZ9zBdytEhuYnf8vQLTo+/lINq5DV2oCJMlHP+MeJyH6weR+IJO2mIvWv2dZ
+         ZT8Q==
+X-Gm-Message-State: AC+VfDxzt0itKxYxl/RqC2xbEeU0nFF7HBfx2e8GfuQ30V1V3hTgXiEx
+        3vf2Y+nxE7idWpT2xrVNIoY=
+X-Google-Smtp-Source: ACHHUZ7okWk9/fgEhxsg8/G1HG9gq5sDzS/nZVIxkKaxoXGvjfkpg8GlqgOs4szyC1dxuJJOg4zqFg==
+X-Received: by 2002:ac2:4352:0:b0:4f0:124:b56b with SMTP id o18-20020ac24352000000b004f00124b56bmr441637lfl.7.1684473962219;
+        Thu, 18 May 2023 22:26:02 -0700 (PDT)
+Received: from [192.168.1.126] (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id m5-20020ac24ac5000000b004eed8de597csm472747lfp.32.2023.05.18.22.26.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 May 2023 22:26:01 -0700 (PDT)
+Message-ID: <6ab1852e-139f-579b-3ef4-5c98e0ea446d@gmail.com>
+Date:   Fri, 19 May 2023 08:26:00 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3545766.4eto28bQOc@archbook>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 2/7] iio: mb1232: relax return value check for IRQ get
+Content-Language: en-US, en-GB
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Wolfram Sang <wsa@kernel.org>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        netdev@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
+References: <cover.1684220962.git.mazziesaccount@gmail.com>
+ <429804dac3b1ea55dd233d1e2fdf94240e2f2b93.1684220962.git.mazziesaccount@gmail.com>
+ <ZGUFJ5LRCzW2V0a1@smile.fi.intel.com>
+ <1a3a84d4-1955-f0ee-5c6d-ab36fddc5e15@gmail.com>
+From:   Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <1a3a84d4-1955-f0ee-5c6d-ab36fddc5e15@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 11, 2023 at 10:28:34PM +0200, Nicolas Frattaroli wrote:
-> Hello,
+On 5/19/23 08:00, Matti Vaittinen wrote:
+> On 5/17/23 19:47, Andy Shevchenko wrote:
+>> On Tue, May 16, 2023 at 10:12:41AM +0300, Matti Vaittinen wrote:
+>>> fwnode_irq_get() was changed to not return 0 anymore.
+>>>
+>>> Drop check for return value 0.
+>>
+>> ...
+>>
+>>> -    if (data->irqnr <= 0) {
+>>> +    if (data->irqnr < 0) {
+>>>           /* usage of interrupt is optional */
+>>>           data->irqnr = -1;
+>>>       } else {
+>>
+>>
+>> After this change I'm not sure we need this branch at all, I mean that 
+>> -errn is
+>> equal to -1 in the code (but needs to be checked for silly checks like 
+>> == -1).
+>>
+>> Hence
+>>
+>> Entire excerpt can be replaced with
+>>
+>>     if (data->irqnr > 0) {
+>>
 > 
-> in libgpiod 1.6.x, Line.event_wait's codepath had no path where ts
-> as passed to ppoll could ever be NULL. This means waiting indefinitely
-> was impossible.
+> I agree. Furthermore, at a quick glance it seems the whole irqnr could 
+> be dropped from the private data, and the private data struct could 
+> probably be static. I'd send them as separate clean-ups though as those 
+> changes are not really related to this return-value series.
+
+Please, ignore everything I wrote above, except that I agree to your 
+suggestion. I was writing utter nonsense. Sorry for the noise.
+
 > 
-> I thought hey, maybe the new Python bindings in libgpiod 2.x fixed this,
-> but no, it has made it worse by explicitly setting timeout to 0 seconds
-> if it's None[1]. Obviously, this behaviour can't be changed now, because
-> people depend on this API to return immediately now with None as the
-> parameter, and changing it to wait indefinitely would no doubt break
-> actual programs.
-> 
-> So I'm left wondering if there's a particular reason users of these
-> bindings shouldn't wait on events indefinitely or if that same mistake
-> was just made twice in a row.
-> 
-> Is there some way the API could be enhanced to support waiting for
-> events indefinitely without having to slap a While True with
-> an arbitrarily high timeout around every single invocation?
+> Yours,
+>      -- Matti
 > 
 
-That does sound like a bug to me, but the rest of your mail isn't worth
-responding to.
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-A more productive approach could be to submit a patch that describes the
-problem and suggests a fix, say:
+~~ When things go utterly wrong vim users can always type :help! ~~
 
- def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
--    if timeout is None:
--        timeout = 0.0
--
-
-and see where that goes.
-
-Cheers,
-Kent.
