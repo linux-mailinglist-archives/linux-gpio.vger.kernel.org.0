@@ -2,94 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 027D8709040
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 09:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D02570919A
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 10:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjESHRI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 03:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
+        id S229559AbjESIZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 04:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbjESHRG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 03:17:06 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01093E6E;
-        Fri, 19 May 2023 00:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684480626; x=1716016626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ruhXfckvLspilVJ3phWpSekvwmW04n6cod92Xsdx9rw=;
-  b=GZijsJFhZqgtSoeUukdpQKV6OoD03TNzwRADhELcT5qJHj/+Lwh+mQQT
-   33ECol+vVKUmgNv+NsHwQ/YiZ+aW02zdSPgRO7LGtdeEtHDONbIb4CjIr
-   08QgVxjsY4XfNHr8yj8mWWBjFgZTIFZkVKLjL0cIcpu3MLvVhbP/RSTBn
-   f7lfi7+nQJ+S5HvDFecsi5LC6aZciYOMIhyH9w4PWCyH72DdK8aPbfGyA
-   uprbhF7J+5tbtRd8QJ3425O8oio1KsYbIe9aDHC+GeBjGBL7HLEScQOeK
-   C0O5KLq8lSeuXvvQP6wrWM5D9tVlJKYQqycmIKJCg8S9ceeVVYkCZYCwc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="380515528"
-X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
-   d="scan'208";a="380515528"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 00:17:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="826692519"
-X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
-   d="scan'208";a="826692519"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 19 May 2023 00:17:02 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pzuMI-000Ag2-09;
-        Fri, 19 May 2023 07:17:02 +0000
-Date:   Fri, 19 May 2023 15:16:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>, rafael@kernel.org,
-        hdegoede@redhat.com, linus.walleij@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state
- tracking
-Message-ID: <202305191405.u2HzFqxM-lkp@intel.com>
-References: <20230518172752.93322-3-mario.limonciello@amd.com>
+        with ESMTP id S229502AbjESIZ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 04:25:26 -0400
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFBEE4D
+        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 01:25:21 -0700 (PDT)
+X-QQ-mid: Yeas54t1684484656t878t52425
+Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [115.200.228.151])
+X-QQ-SSF: 00400000000000F0FNF000000000000
+From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 18003444399140416337
+To:     "'Andrew Lunn'" <andrew@lunn.ch>
+Cc:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
+        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
+        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
+        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
+References: <20230515063200.301026-1-jiawenwu@trustnetic.com> <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook> <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
+In-Reply-To: <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
+Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
+Date:   Fri, 19 May 2023 16:24:15 +0800
+Message-ID: <02ad01d98a2b$4cd080e0$e67182a0$@trustnetic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230518172752.93322-3-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: zh-cn
+Thread-Index: AQHvj8QD3pC+6Aq9H9h6P1+q5LrHRgMH5FTyAkITzAABJU2Y7wJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNeuwZQUsA==
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mario,
+On Thursday, May 18, 2023 8:49 PM, Andrew Lunn wrote:
+> > > I _think_ you are mixing upstream IRQs and downstream IRQs.
+> > >
+> > > Interrupts are arranged in trees. The CPU itself only has one or two
+> > > interrupts. e.g. for ARM you have FIQ and IRQ. When the CPU gets an
+> > > interrupt, you look in the interrupt controller to see what external
+> > > or internal interrupt triggered the CPU interrupt. And that interrupt
+> > > controller might indicate the interrupt came from another interrupt
+> > > controller. Hence the tree structure. And each node in the tree is
+> > > considered an interrupt domain.
+> > >
+> > > A GPIO controller can also be an interrupt controller. It has an
+> > > upstream interrupt, going to the controller above it. And it has
+> > > downstream interrupts, the GPIO lines coming into it which can cause
+> > > an interrupt. And the GPIO interrupt controller is a domain.
+> > >
+> > > So what exactly does gpio_regmap_config.irq_domain mean? Is it the
+> > > domain of the upstream interrupt controller? Is it an empty domain
+> > > structure to be used by the GPIO interrupt controller? It is very
+> > > unlikely to have anything to do with the SFP devices below it.
+> >
+> > Sorry, since I don't know much about interrupt,  it is difficult to understand
+> > regmap-irq in a short time. There are many questions about regmap-irq.
+> >
+> > When I want to add an IRQ chip for regmap, for the further irq_domain,
+> > I need to pass a parameter of IRQ, and this IRQ will be requested with handler:
+> > regmap_irq_thread(). Which IRQ does it mean?
+> 
+> That is your upstream IRQ, the interrupt indicating one of your GPIO
+> lines has changed state.
+> 
+> > In the previous code of using
+> > devm_gpiochip_add_data(), I set the MSI-X interrupt as gpio-irq's parent, but
+> > it was used to set chained handler only. Should the parent be this IRQ? I found
+> > the error with irq_free_descs and irq_domain_remove when I remove txgbe.ko.
+> 
+> Do you have one MSI-X dedicated for GPIOs. Or is it your general MAC
+> interrupt, and you need to read an interrupt controller register to
+> determine it was GPIOs which triggered the interrupt?
+> 
+> If you are getting errors when removing the driver it means you are
+> missing some level of undoing what us done in probe. Are you sure
+> regmap_del_irq_chip() is being called on unload?
+> 
+> > As you said, the interrupt of each tree node has its domain. Can I understand
+> > that there are two layer in the interrupt tree for MSI-X and GPIOs, and requesting
+> > them separately is not conflicting? Although I thought so, but after I implement
+> > gpio-regmap, SFP driver even could not find gpio_desc. Maybe I missed something
+> > on registering gpio-regmap...
+> 
+> That is probably some sort of naming issue. You might want to add some
+> prints in swnode_find_gpio() and gpiochip_find() to see what it is
+> looking for vs what the name actually is.
 
-kernel test robot noticed the following build warnings:
+It's true for the problem of name, but there is another problem. SFP driver has
+successfully got gpio_desc, then it failed to get gpio_irq from gpio_desc (with error
+return -517). I traced the function gpiod_to_irq():
 
-[auto build test WARNING on dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d]
+	gc = desc->gdev->chip;
+	offset = gpio_chip_hwgpio(desc);
+	if (gc->to_irq) {
+		int retirq = gc->to_irq(gc, offset);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/include-linux-suspend-h-Only-show-pm_pr_dbg-messages-at-suspend-resume/20230519-013031
-base:   dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d
-patch link:    https://lore.kernel.org/r/20230518172752.93322-3-mario.limonciello%40amd.com
-patch subject: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state tracking
-config: x86_64-randconfig-c022 (https://download.01.org/0day-ci/archive/20230519/202305191405.u2HzFqxM-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+		/* Zero means NO_IRQ */
+		if (!retirq)
+			return -ENXIO;
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305191405.u2HzFqxM-lkp@intel.com/
+		return retirq;
+	}
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/acpi/x86/s2idle.c:345:3-4: Unneeded semicolon
+'gc->to_irq = gpiochip_to_irq' was set in [4]gpiochip_irqchip_add_domain().
+So:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
+	{
+		struct irq_domain *domain = gc->irq.domain;
+
+	#ifdef CONFIG_GPIOLIB_IRQCHIP
+		/*
+		 * Avoid race condition with other code, which tries to lookup
+		 * an IRQ before the irqchip has been properly registered,
+		 * i.e. while gpiochip is still being brought up.
+		 */
+		if (!gc->irq.initialized)
+			return -EPROBE_DEFER;
+	#endif
+
+gc->irq.initialized is set to true at the end of [3]gpiochip_add_irqchip() only.
+Firstly, it checks if irqchip is NULL:
+
+	static int gpiochip_add_irqchip(struct gpio_chip *gc,
+					struct lock_class_key *lock_key,
+					struct lock_class_key *request_key)
+	{
+		struct fwnode_handle *fwnode = dev_fwnode(&gc->gpiodev->dev);
+		struct irq_chip *irqchip = gc->irq.chip;
+		unsigned int type;
+		unsigned int i;
+
+		if (!irqchip)
+			return 0;
+
+The result shows that it was NULL, so gc->irq.initialized = false.
+Above all, return irq = -EPROBE_DEFER.
+
+So let's sort the function calls. In chronological order, [1] calls [2], [2] calls
+[3], then [1] calls [4]. The irq_chip was added to irq_domain->host_data->irq_chip
+before [1]. But I don't find where to convert gpio_chip->irq.domain->host_data->irq_chip
+to gpio_chip->irq.chip, it seems like it should happen after [4] ? But if it wants to use
+'gc->to_irq' successfully, it should happen before [3]?
+
+[1] gpio_regmap_register()
+[2] gpiochip_add_data()
+[3] gpiochip_add_irqchip()
+[4] gpiochip_irqchip_add_domain()
+
+I'm sorry that I described the problem in a confusing way, apologize if I missed
+some code that caused this confusion.
+
+
