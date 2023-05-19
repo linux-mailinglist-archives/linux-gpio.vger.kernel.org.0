@@ -2,63 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E559F70947D
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 12:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C1670959D
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 13:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjESKJf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 06:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40276 "EHLO
+        id S231772AbjESLAo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 07:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231753AbjESKJe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 06:09:34 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA6FE5F;
-        Fri, 19 May 2023 03:09:28 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id af79cd13be357-757807cb299so168975685a.2;
-        Fri, 19 May 2023 03:09:28 -0700 (PDT)
+        with ESMTP id S231437AbjESLAl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 07:00:41 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 411DA19AD;
+        Fri, 19 May 2023 04:00:24 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2af2958db45so270611fa.1;
+        Fri, 19 May 2023 04:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684490967; x=1687082967;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWPrIQpavQse0yrjECi1Bzp77wOdSMU9RuJ1sY2T/oY=;
-        b=FG4fx6/fJsVA0LcEEZjeVRJRUDBqCYqHqYr0KyXwLmkRuUE/RIvun8eEIp388EMdcV
-         DoDTtbMvAxPongRM62QuSODSDDK2PQeQ4c6w9/nbsdenalJb7Gjt/dtq5KeVzphZW66S
-         0PP44hEiV/x5GbZKlO+RrWI1/NLTbiYMr1nay+QN/AntBoJaDZp4kvt2dXvXs8r7c9eK
-         1fY4NTQvonXtFs/EwDLJBcOby/vu5lMMMUt6cxY3jZBPL1iyYkpun1dvJpWqJGRxh7Sq
-         mcNOFKCvQNQN4s6ikZcW5vv40DfLFyN5lephAeRa4Gl+34ZLUYSz2649P4kpCu9/uDwJ
-         ngpA==
+        d=gmail.com; s=20221208; t=1684494022; x=1687086022;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8HzmV/EeDYZAd/CQ0iL4Qog48xkS+m0Ot11dMlnkfWk=;
+        b=lq4mmsZwnHP6gVL70/70n3IEu+qRUZxV6CrqxoWmz+p3PqhmSGSiLkcmDwIz3p8nnA
+         FxljhyLOZURY+0yRe8FiBn7NIqMkNDyTm25WLh8RyawQ/j2VvypfuxHLa1p/md6kLet/
+         z6sM7XmgbwGKibzPPAGdnxUVDV293ikW2jkktcrK0rk8V8N3Gu0dr/eBLrLMBvY55vSQ
+         T1Xy8PehhET0azvS5z0pK0hEjeICzIMUC+vnruC9BKZtP+Het7FdEBQdDT2iefB6B3yh
+         0IQicLkvYo6PIMdy0Qp2Zw8c21AImgXBUcSDeQaLyOBKaiqLt8TuLFAV5Qtfs0SlN8gm
+         +auA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684490967; x=1687082967;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dWPrIQpavQse0yrjECi1Bzp77wOdSMU9RuJ1sY2T/oY=;
-        b=EMer2sfXORXh5D3Q+6kHtB6DB5+NVcHqyqvgBEgb0HLIy3aHE8+IJax9bU4HfNObKT
-         dTLu4gg2VUJJnVFAsSjduBQcL96qOxUgtOeopH1Z/4sNJ0XcJZAz5fgMuUZDgL5DxmoX
-         1qrX6bki43ShoVOVAUiLIle6JdvcaU6FSF0g3BboXuqB1bMFNTaX14vyDWn0TiLrLJP5
-         1/LNIijuI7KvhrO8fOe9yf2ERMdHaSdpsH/589FAf8PbSeHvHc7d3g1DQjNSD3JDbmfD
-         5kaMYSfPa+4rCs6Z8gfPCtvod7EvaSwGbAnSG+KRIjEUTuIfBAGtfNAyMg1CXAecaK1S
-         b0gg==
-X-Gm-Message-State: AC+VfDzseyrEJUh3JNWCrtLpYhSd1F9EAwkCV+6F2ELP0h7+ADdPzbIz
-        fhoLXtAys+NNG2Aq08NUWg/os4oGU5WanWWaO98=
-X-Google-Smtp-Source: ACHHUZ5vBRw0GXtUhMFzhODE1MN8b8XqI/WYuGIujirALEyANC5wadWFGY5kJ+eZmO85GGaANIqC6rk9WBZLIP4+ISA=
-X-Received: by 2002:a05:6214:509b:b0:623:557d:91ba with SMTP id
- kk27-20020a056214509b00b00623557d91bamr3284512qvb.34.1684490967463; Fri, 19
- May 2023 03:09:27 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684494022; x=1687086022;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8HzmV/EeDYZAd/CQ0iL4Qog48xkS+m0Ot11dMlnkfWk=;
+        b=aS7xSY1PKgHva/yoeqhrDXms0bQawoVumIKUFcSfXVO3iAuFBo1Togz4c4FNNA2p9j
+         BWytI1jL8WukQ7HcQGsfkVOmekSv8bcJAiU9sYZosQVVTZ84cSBQwwFkoRk2inlHSWJV
+         Q2/fR0RJuiyRXTA7oyIyWW0KnNdYcaiHMXvsGh6mkAUPk29sKucN/IsHGWDIkqBzPWWZ
+         MFIIYGfFE2YBaFxX1am7DJzuIYrXmap2IvLVD3JZqFnQ4J5/2bNRgNVHP4ROTXll0p2H
+         rmMBz72GJ0Tq03/D6OIEWPxvS5hYny5ZepFkRMizHApH7zSyJtHK3iBliV/soZGhMUgH
+         Km5w==
+X-Gm-Message-State: AC+VfDw8fjMcklna+3MvixFlm/Q/X0WnV+1QJkdQYDHFSV30nE59JKtA
+        elXij+Jw8L4VZGd/MejUYpk=
+X-Google-Smtp-Source: ACHHUZ7+pbJy3k9uH6C/3QKxyqqHfaOoWdXRDl+dyMEzF1Svz3USEJ6WBcHYU1FvyB6JAnaRftDLGg==
+X-Received: by 2002:a2e:99ca:0:b0:2af:1adf:d2ce with SMTP id l10-20020a2e99ca000000b002af1adfd2cemr595260ljj.52.1684494022071;
+        Fri, 19 May 2023 04:00:22 -0700 (PDT)
+Received: from fedora (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id t4-20020a2e9c44000000b002ad90280503sm763254ljj.138.2023.05.19.04.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 May 2023 04:00:21 -0700 (PDT)
+Date:   Fri, 19 May 2023 14:00:12 +0300
+From:   Matti Vaittinen <mazziesaccount@gmail.com>
+To:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v5 0/8] fix fwnode_irq_get[_byname()] returnvalue
+Message-ID: <cover.1684493615.git.mazziesaccount@gmail.com>
 MIME-Version: 1.0
-References: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 19 May 2023 13:08:50 +0300
-Message-ID: <CAHp75Vcd8Q+-XMyfg3Y_hv_AL00PGgqg0jo7Yd7TTC4GrxPOuQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, johan@kernel.org,
-        maz@kernel.org, warthog618@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="BxFZ2ncJS53EetEw"
+Content-Disposition: inline
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -69,42 +92,159 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 19, 2023 at 8:07=E2=80=AFAM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> On a system with pca9555 GPIOs that have been exported via sysfs the
-> following warning could be triggered on kexec().
->
->   WARNING: CPU: 0 PID: 265 at drivers/gpio/gpiolib.c:3411 gpiochip_disabl=
-e_irq
->   Call trace:
->    gpiochip_disable_irq
->    machine_crash_shutdown
->    __crash_kexec
->    panic
->    sysrq_reset_seq_param_set
->    __handle_sysrq
->    write_sysrq_trigger
->
-> The warning is triggered because there is an irq_desc for the GPIO but
-> it does not have the FLAG_USED_AS_IRQ set. This is because when the GPIO
-> is exported via gpiod_export(), gpio_is_visible() is used to determine
-> if the "edge" attribute should be provided but in doing so it ends up
-> calling gpiochip_to_irq() which creates the irq_desc.
->
-> Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
-> intended creation of the irq_desc comes via edge_store() when requested
-> by the user.
 
-To me it still sounds like a hack and the real solution should be done
-differently/elsewhere.
+--BxFZ2ncJS53EetEw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also I'm worrying that not having this file visible or not may affect
-existing user space custom scripts we will never hear about.
+The fwnode_irq_get() and the fwnode_irq_get_byname() may have returned
+zero if mapping the IRQ fails. This contradicts the
+fwnode_irq_get_byname() documentation. Furthermore, returning zero or
+errno on error is unepected and can easily lead to problems
+like:
 
-P.S. TBH, I don't care much about sysfs, so if this patch finds its
-way upstream, I won't be unhappy.
+int probe(foo)
+{
+=2E..
+	ret =3D fwnode_irq_get_byname(...);
+	if (ret < 0)
+		return ret;
+=2E..
+}
+
+or
+
+int probe(foo)
+{
+=2E..
+	ret =3D fwnode_irq_get_byname(...);
+	if (ret <=3D 0)
+		return ret;
+=2E..
+}
+
+which are both likely to be wrong. First treats zero as successful call and
+misses the IRQ mapping failure. Second returns zero from probe even though
+it detects the IRQ mapping failure correvtly.
+
+Here we change the fwnode_irq_get() and the fwnode_irq_get_byname() to
+always return a negative errno upon failure.
+
+I have audited following callers (v6.4-rc2):
+
+fwnode_irq_get_byname():
+drivers/i2c/i2c-smbus.c
+drivers/iio/accel/adxl355_core.c
+drivers/iio/accel/kionix-kx022a.c
+drivers/iio/adc/ad4130.c
+drivers/iio/adc/max11410.c
+drivers/iio/addac/ad74115.c
+drivers/iio/gyro/fxas21002c_core.c
+drivers/iio/imu/adis16480.c
+drivers/iio/imu/bmi160/bmi160_core.c
+drivers/iio/imu/bmi160/bmi160_core.c
+
+fwnode_irq_get():
+drivers/gpio/gpio-dwapb.c
+drivers/iio/chemical/scd30_serial.c
+drivers/iio/proximity/mb1232.c
+drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+drivers/net/mdio/fwnode_mdio.c
+drivers/pinctrl/pinctrl-ingenic.c
+drivers/pinctrl/pinctrl-microchip-sgpio.c
+drivers/pinctrl/pinctrl-pistachio.c
+
+and it seems to me these calls will be Ok after the change. The
+i2c-smbus.c and kionix-kx022a.c will gain a functional change (bugfix?) as
+after this patch the probe will return -EINVAL should the IRQ mapping fail.
+The series will also adjust the return value check for zero to be omitted.
+
+NOTES:
+
+Changes are compile-tested only.
+
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+will also gain a functional change. The pinctrl-wpcm450.c change is easy
+to see - after this series the device-tree mapping failures will be
+handled as any other errors - probe will be aborted with -EINVAL. Other
+feasible option could be treating other errors in IRQ getting same way
+as the DT mapping failures - just silently skip the IRQ. Please see
+comment in the respective patch.
+
+drivers/iio/cdc/ad7150.c
+will gain functional change as well. Here the logic is less
+straightforward but boils down to the same question as with the
+pinctrl-wpcm450.c. Should all the IRQ getting errors jump to same
+'no-IRQ' branch as the DT mapping error, or should the DT mapping error
+abort the probe with error same way as other IRQ getting failures do?
+
+Revision history:
+v4 =3D> v5:
+ - Fix subject lines for mvpp2 and wpcm450
+ - drop unnecessary irqno assignment from mb1232
+ - add back the drivers/i2c/i2c-smbus.c change which was accidentally
+   dropped during v3 =3D> v4 work
+v3 =3D> v4:
+ - Change also the fwnode_irq_get() as was suggested by Jonathan.
+Changelog v2 =3D> v3:
+ - rebase/resend/add kx022a fix.
+Changelog v1 =3D> v2:
+ - minor styling
+
+---
+
+Matti Vaittinen (8):
+  drivers: fwnode: fix fwnode_irq_get[_byname]()
+  iio: mb1232: relax return value check for IRQ get
+  net-next: mvpp2: relax return value check for IRQ get
+  pinctrl: wpcm450: relax return value check for IRQ get
+  pinctrl: ingenic: relax return value check for IRQ get
+  pinctrl: pistachio: relax return value check for IRQ get
+  iio: cdc: ad7150: Functional change
+  i2c: i2c-smbus: fwnode_irq_get_byname() return value fix
+
+ drivers/base/property.c                         | 12 +++++++++---
+ drivers/i2c/i2c-smbus.c                         |  2 +-
+ drivers/iio/cdc/ad7150.c                        |  3 +--
+ drivers/iio/proximity/mb1232.c                  |  7 ++-----
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |  4 ++--
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c       |  2 --
+ drivers/pinctrl/pinctrl-ingenic.c               |  2 --
+ drivers/pinctrl/pinctrl-pistachio.c             |  6 ------
+ 8 files changed, 15 insertions(+), 23 deletions(-)
+
+
+base-commit: f1fcbaa18b28dec10281551dfe6ed3a3ed80e3d6
+--=20
+2.40.1
+
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--BxFZ2ncJS53EetEw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmRnVrgACgkQeFA3/03a
+ocXKfQf9FR4vRNiIHHmlud3RjASI1JLVQDy/8HiKbQnvk3cqblRFPxJ+8X2315MU
+zLjfDm8PR/J4ojfgRUDxeTpwLAOwj5rl06FRy2+5Oa9kSNiUGr2PRP8gbnzJMHv7
+80pWnylW1oDJpIT6l3Grrp4gTCYxVUKrMiZWHWofmPvv2znGFrIK3LuC4T/Sxk17
+IQpAia0hdIpiPX9CeObO90+yjU7XyAW1ReOHk1H9VCBU5KM3HMy3IX6mjdEDY6OT
+DLKOx5Q5sDa7hdFr49VvjmpWGFxCtC2a0qLMfz1usGgFBxWzAXMxTWSdVp09HKBu
+cODupD9ML9av8AwAtAQZZYxOrHtUlg==
+=iCN4
+-----END PGP SIGNATURE-----
+
+--BxFZ2ncJS53EetEw--
