@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BD69709855
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 15:31:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3286B709891
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 15:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbjESNbW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 09:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
+        id S231470AbjESNls (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 09:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230385AbjESNbV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 09:31:21 -0400
+        with ESMTP id S229965AbjESNls (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 09:41:48 -0400
 Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9F910FA;
-        Fri, 19 May 2023 06:30:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69930AA;
+        Fri, 19 May 2023 06:41:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
         ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
         References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=UypC+Fjn11VnjJygL5tXSDcswwncKx7lMzFTsnuTFt8=; b=FPQ9Q/VIZIPAS1E62j4/oxM8hg
-        ygKO7Il8Zthayo/YKxejv9l0m3peNlu6gxxcBjrqSsFr9Al0YJic36jWrp/fXCscFxofvahNBVDL+
-        bUXeupIVPCree4sgHxQTnPyr/Fffglm5I8ExlPOxo4NS8mvpmyWxjd+KN/7YnXxFLKOo=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:48258 helo=pettiford)
+        bh=IJYfBpV1Zwf3BzrVfAdQFFfJDHBMUc/yv4xMCNhOuI4=; b=eYBW/Tt4QolXN2IQMHuNkwTH3J
+        fDwlvaBx+649hhWM9loUse2xDrBAjheJiwzkGpqxRFzFQ4nKBStMqnPnVEdQDNVl1wCUTCAeJule5
+        /15oH6kfHfpwNwfM7KbVGURATlQZyYyp6D82GnKAS3hsPzebXoUGI8mHVgpUYJefD2Gs=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:50140 helo=pettiford)
         by mail.hugovil.com with esmtpa (Exim 4.92)
         (envelope-from <hugo@hugovil.com>)
-        id 1q00Bj-0004EA-U2; Fri, 19 May 2023 09:30:33 -0400
-Date:   Fri, 19 May 2023 09:30:31 -0400
+        id 1q00MT-0004IR-3D; Fri, 19 May 2023 09:41:38 -0400
+Date:   Fri, 19 May 2023 09:41:36 -0400
 From:   Hugo Villeneuve <hugo@hugovil.com>
 To:     Lech Perczak <lech.perczak@camlingroup.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,8 +36,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tomasz =?UTF-8?Q?Mo=C5=84?= <tomasz.mon@camlingroup.com>,
         linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <20230519093031.9c35c8ee5387e1fc4bdf79f1@hugovil.com>
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hugo@hugovil.com
+Message-Id: <20230519094136.c80a516b549f416a100fa814@hugovil.com>
 In-Reply-To: <3a8cf0e2-b11c-d2f3-081e-a43bdad66224@camlingroup.com>
 References: <20230518132905.4182265-1-hugo@hugovil.com>
         <20230518132905.4182265-2-hugo@hugovil.com>
@@ -208,9 +209,6 @@ ol-line-ports",
 > The general idea looks solid to me.
 > I think, that with this property set, we should also reduce number of GPI=
 Os exported by gpiochip.
-
-OK, I will look into that.
-
 > > +                       if (u < devtype->nr_uart) {
 > > +                               /* Use GPIO lines as modem control line=
 s */
@@ -240,27 +238,31 @@ account.
 > Without your patch, when DTR is set, all other pins (DCD, DSR, RI) are se=
 t. With it - they are cleared, according to statserial.
 
-It is strange, because the only conceptual change is the moment in time whe=
-n we set the IOControl register. Before, IOControl was set within the for/l=
-oop for initializing each port. Now it is done after.
+Maybe it is not related, but I have submitted a separate patch to fix an in=
+itialization bug with port 0, maybe you can try also with this patch first =
+applied:
 
-Maybe you could try to put the section that reads the DT property just afte=
-r resetting the device.
-
-While suggesting this, I just noticed that when the device is reset, we do =
-not wait before initiating communication with the device. Thefore, I would =
-suggest the following change (that I will submit as a separate patch):
-
-        regmap_write(s->regmap, SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SH=
-IFT,
-                        SC16IS7XX_IOCONTROL_SRESET_BIT);
-=20
-+       /* After reset, the host must wait at least 3us before initializing=
- a
-+        * communication with the device: */
-+       usleep_range(3, 5);
-
-Then like I said, insert the code that read the modem-control-line-port DT =
-property right after that to see if it helps.
+https://lkml.org/lkml/2023/5/17/1311
 
 Hugo.
+
+
+> >         }
+> >
+> >  #ifdef CONFIG_GPIOLIB
+> > --
+> > 2.30.2
+> >
+> >
+> --=20
+> Pozdrawiam/With kind regards,
+> Lech Perczak
+>=20
+> Sr. Software Engineer
+> Camlin Technologies Poland Limited Sp. z o.o.
+> Strzegomska 54,
+> 53-611 Wroclaw
+> Tel:     (+48) 71 75 000 16
+> Email:   lech.perczak@camlingroup.com
+> Website: http://www.camlingroup.com
+>=20
