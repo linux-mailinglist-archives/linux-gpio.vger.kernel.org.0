@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B0E709D8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 19:10:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBA1F709DAF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 19:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbjESRJ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 13:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51880 "EHLO
+        id S230046AbjESRRa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 13:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbjESRJX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 13:09:23 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.196])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9306A170B;
-        Fri, 19 May 2023 10:09:04 -0700 (PDT)
+        with ESMTP id S229887AbjESRRa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 13:17:30 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 333AF103;
+        Fri, 19 May 2023 10:17:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ermZR
-        AVuUoVUkWCNUZOtH1iovxjOCeT0E8mJeG1r0+I=; b=c8bg5UGkN+QKNMc7GUCVj
-        nbRykxbHGXSq6kDTA0CCIynXgQiwtfU+WEMBP3GV44WqWelTu0N1XuTqmk7NZZLL
-        SB6hTSYVDUWIEJK5Bc1WqJhVi21tUxRQHmFoum6OR3mQWH+bIZgNMzrEfhL4UUoM
-        aniNd2AfBAOBN7fiGizrVk=
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ru5cR
+        PmsF9ZMmZyJkpTmhO87sRRfpND2S5AIZbRneS8=; b=bQ/oHxfJne6jh2qRAo3sJ
+        DIGM3BeIyQS4NwLwTtBLv7uJZ40NmH11M7SaHCtIpQkipYii1pRcvvV/UjWaytxe
+        EKzo0p7wyF7u96AYzwRmfOl3KE00TThbwfejCSnN4WFzhm4XprXnMy9l87/VcqTA
+        rzmV02ufCu8gDUdAhOTLv4=
 Received: from lizhe.. (unknown [120.245.132.248])
-        by zwqz-smtp-mta-g5-3 (Coremail) with SMTP id _____wCnJg_FrGdktqNhAA--.38178S4;
-        Sat, 20 May 2023 01:07:59 +0800 (CST)
+        by zwqz-smtp-mta-g2-0 (Coremail) with SMTP id _____wC3XiPdrmdkLUBgAA--.35714S4;
+        Sat, 20 May 2023 01:16:37 +0800 (CST)
 From:   Lizhe <sensor1010@163.com>
-To:     lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
-        daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
-        linus.walleij@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lizhe <sensor1010@163.com>
-Subject: [PATCH] drivers/pinctrl.c : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
-Date:   Sat, 20 May 2023 01:07:16 +0800
-Message-Id: <20230519170716.3459-1-sensor1010@163.com>
+To:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, linux@armlinux.org.uk,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Lizhe <sensor1010@163.com>
+Subject: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
+Date:   Sat, 20 May 2023 01:16:11 +0800
+Message-Id: <20230519171611.6810-1-sensor1010@163.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wCnJg_FrGdktqNhAA--.38178S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy8uF1xGF4UZF1kWr1rJFb_yoWfGrX_uF
-        W5J39Fq3y8WF1ayrWxKr43ZFZ0yF4UXFnYgasYqan3CrW5Aw4jyrn7uF15Cws3uryUuFyj
-        yryrXr4Fyry7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKpBTDUUUUU==
+X-CM-TRANSID: _____wC3XiPdrmdkLUBgAA--.35714S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy8uF1xGF4rZF1fZw1fZwb_yoWDKwb_Cw
+        n5Kay3Xw4rtFn8ZrnIka1xZrZFyw4DW3Z5urn5t3ZxArn5Zr13ursrW3WSyFW5Zr4I9FWU
+        tayrCr4avFW7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRK6wZ7UUUUU==
 X-Originating-IP: [120.245.132.248]
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBdBF0q1gi6LwzcwAAsU
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBohV0q1aEIQz7awAAsH
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -58,22 +59,34 @@ type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
 
 Signed-off-by: Lizhe <sensor1010@163.com>
 ---
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/plat-orion/gpio.c | 1 -
+ drivers/gpio/gpio-mvebu.c  | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 4794602316e7..59f232a68b5a 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -719,8 +719,6 @@ static void microchip_sgpio_irq_ack(struct irq_data *data)
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
+index 595e9cb33c1d..863fa497b1a2 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/plat-orion/gpio.c
+@@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 type)
+ 		return -EINVAL;
+ 	}
  
- static int microchip_sgpio_irq_set_type(struct irq_data *data, unsigned int type)
- {
 -	type &= IRQ_TYPE_SENSE_MASK;
--
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_BOTH:
- 		irq_set_handler_locked(data, handle_edge_irq);
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a68f682aec01..34fd007b0308 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	if ((u & BIT(pin)) == 0)
+ 		return -EINVAL;
+ 
+-	type &= IRQ_TYPE_SENSE_MASK;
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
 -- 
 2.34.1
 
