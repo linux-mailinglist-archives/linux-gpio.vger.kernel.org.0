@@ -2,148 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49417708F62
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:26:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 027D8709040
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 09:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbjESF0G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 01:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
+        id S229676AbjESHRI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 03:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjESF0G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:26:06 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FF7E4C;
-        Thu, 18 May 2023 22:26:04 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f25d79f6bfso3323068e87.2;
-        Thu, 18 May 2023 22:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684473962; x=1687065962;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wNtRnyQN8vO04gSlcyvpsqnkimMuzHNYu/QdOo0JXbg=;
-        b=MmMPzTf5aPuDZyy+pZTLvBgU5RoGY7h4ncqYpeVHj+sAwcpYtepWH2v7u7wE8tOJzH
-         bQ5aF6x3HuDfU4LKnPHxc46tOqC0CsVkDkt18RKY4+/oF01Zkb2oFebosWut936pCpOy
-         92KBvUQcEMweaWq9cp97c8g/pPRra1YqK8CFHze+UV8JedIm0WcFrvkmX2RnHxsCrBTn
-         tbX7hz5/zz9ObpEGIJC3MFYqQoiwit4jmSpt1clolDqy455jzvYUo4VWl1oZFAOHd1/T
-         lrt4WwatKqHTU2QOnFZAaf1rDlL+FccUx8Eb7ZKUBhJvz7XM22RkLPBnUbjgKCxS1wyO
-         fv9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684473962; x=1687065962;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wNtRnyQN8vO04gSlcyvpsqnkimMuzHNYu/QdOo0JXbg=;
-        b=c8z9ksRvASxb8bNb0nDjddM/qVNIEyohrvNkQzd6otMp7UhkoqTb9862FtyfMde75B
-         GKOKEGfCeXgEvPlkKGM7Q6lhFDCZEBJWWsQFqBJtoiSsTNqFyL9JYZM/k+lYv9Wk8MYF
-         T7oqlL0G5+zg2HiS4BwRJWfT2QpUsZKrvh2nMVK5suWI3qqT+fDOCqNtQehbNmnBwWNZ
-         vhh64bEK2UaoJIEFzjQtvLtrZ8TF9r7rI8hfr8tSKw8kKy0X/LDo6Fpc4Kpx/wLDSByE
-         5TMQwFKHpZ9zBdytEhuYnf8vQLTo+/lINq5DV2oCJMlHP+MeJyH6weR+IJO2mIvWv2dZ
-         ZT8Q==
-X-Gm-Message-State: AC+VfDxzt0itKxYxl/RqC2xbEeU0nFF7HBfx2e8GfuQ30V1V3hTgXiEx
-        3vf2Y+nxE7idWpT2xrVNIoY=
-X-Google-Smtp-Source: ACHHUZ7okWk9/fgEhxsg8/G1HG9gq5sDzS/nZVIxkKaxoXGvjfkpg8GlqgOs4szyC1dxuJJOg4zqFg==
-X-Received: by 2002:ac2:4352:0:b0:4f0:124:b56b with SMTP id o18-20020ac24352000000b004f00124b56bmr441637lfl.7.1684473962219;
-        Thu, 18 May 2023 22:26:02 -0700 (PDT)
-Received: from [192.168.1.126] (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id m5-20020ac24ac5000000b004eed8de597csm472747lfp.32.2023.05.18.22.26.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 May 2023 22:26:01 -0700 (PDT)
-Message-ID: <6ab1852e-139f-579b-3ef4-5c98e0ea446d@gmail.com>
-Date:   Fri, 19 May 2023 08:26:00 +0300
+        with ESMTP id S229531AbjESHRG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 03:17:06 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01093E6E;
+        Fri, 19 May 2023 00:17:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684480626; x=1716016626;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ruhXfckvLspilVJ3phWpSekvwmW04n6cod92Xsdx9rw=;
+  b=GZijsJFhZqgtSoeUukdpQKV6OoD03TNzwRADhELcT5qJHj/+Lwh+mQQT
+   33ECol+vVKUmgNv+NsHwQ/YiZ+aW02zdSPgRO7LGtdeEtHDONbIb4CjIr
+   08QgVxjsY4XfNHr8yj8mWWBjFgZTIFZkVKLjL0cIcpu3MLvVhbP/RSTBn
+   f7lfi7+nQJ+S5HvDFecsi5LC6aZciYOMIhyH9w4PWCyH72DdK8aPbfGyA
+   uprbhF7J+5tbtRd8QJ3425O8oio1KsYbIe9aDHC+GeBjGBL7HLEScQOeK
+   C0O5KLq8lSeuXvvQP6wrWM5D9tVlJKYQqycmIKJCg8S9ceeVVYkCZYCwc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="380515528"
+X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
+   d="scan'208";a="380515528"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 00:17:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="826692519"
+X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
+   d="scan'208";a="826692519"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 19 May 2023 00:17:02 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pzuMI-000Ag2-09;
+        Fri, 19 May 2023 07:17:02 +0000
+Date:   Fri, 19 May 2023 15:16:05 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>, rafael@kernel.org,
+        hdegoede@redhat.com, linus.walleij@linaro.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state
+ tracking
+Message-ID: <202305191405.u2HzFqxM-lkp@intel.com>
+References: <20230518172752.93322-3-mario.limonciello@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 2/7] iio: mb1232: relax return value check for IRQ get
-Content-Language: en-US, en-GB
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Wolfram Sang <wsa@kernel.org>,
-        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        netdev@vger.kernel.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
-References: <cover.1684220962.git.mazziesaccount@gmail.com>
- <429804dac3b1ea55dd233d1e2fdf94240e2f2b93.1684220962.git.mazziesaccount@gmail.com>
- <ZGUFJ5LRCzW2V0a1@smile.fi.intel.com>
- <1a3a84d4-1955-f0ee-5c6d-ab36fddc5e15@gmail.com>
-From:   Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <1a3a84d4-1955-f0ee-5c6d-ab36fddc5e15@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230518172752.93322-3-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 5/19/23 08:00, Matti Vaittinen wrote:
-> On 5/17/23 19:47, Andy Shevchenko wrote:
->> On Tue, May 16, 2023 at 10:12:41AM +0300, Matti Vaittinen wrote:
->>> fwnode_irq_get() was changed to not return 0 anymore.
->>>
->>> Drop check for return value 0.
->>
->> ...
->>
->>> -    if (data->irqnr <= 0) {
->>> +    if (data->irqnr < 0) {
->>>           /* usage of interrupt is optional */
->>>           data->irqnr = -1;
->>>       } else {
->>
->>
->> After this change I'm not sure we need this branch at all, I mean that 
->> -errn is
->> equal to -1 in the code (but needs to be checked for silly checks like 
->> == -1).
->>
->> Hence
->>
->> Entire excerpt can be replaced with
->>
->>     if (data->irqnr > 0) {
->>
-> 
-> I agree. Furthermore, at a quick glance it seems the whole irqnr could 
-> be dropped from the private data, and the private data struct could 
-> probably be static. I'd send them as separate clean-ups though as those 
-> changes are not really related to this return-value series.
+Hi Mario,
 
-Please, ignore everything I wrote above, except that I agree to your 
-suggestion. I was writing utter nonsense. Sorry for the noise.
+kernel test robot noticed the following build warnings:
 
-> 
-> Yours,
->      -- Matti
-> 
+[auto build test WARNING on dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/include-linux-suspend-h-Only-show-pm_pr_dbg-messages-at-suspend-resume/20230519-013031
+base:   dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d
+patch link:    https://lore.kernel.org/r/20230518172752.93322-3-mario.limonciello%40amd.com
+patch subject: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state tracking
+config: x86_64-randconfig-c022 (https://download.01.org/0day-ci/archive/20230519/202305191405.u2HzFqxM-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202305191405.u2HzFqxM-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> drivers/acpi/x86/s2idle.c:345:3-4: Unneeded semicolon
 
 -- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
