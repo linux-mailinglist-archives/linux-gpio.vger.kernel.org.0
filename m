@@ -2,125 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CAA708DC4
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 04:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01B5A708F18
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 May 2023 07:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbjESC0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 May 2023 22:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
+        id S230157AbjESFBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 01:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjESC0a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 May 2023 22:26:30 -0400
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60991E4A;
-        Thu, 18 May 2023 19:26:24 -0700 (PDT)
-X-QQ-mid: Yeas5t1684463112t045t22887
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [115.200.228.151])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 16046267783000829659
-To:     "'Andrew Lunn'" <andrew@lunn.ch>
-Cc:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
-        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230515063200.301026-1-jiawenwu@trustnetic.com> <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook> <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
-In-Reply-To: <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch>
-Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Fri, 19 May 2023 10:25:11 +0800
-Message-ID: <028601d989f9$230ee120$692ca360$@trustnetic.com>
+        with ESMTP id S230233AbjESFAx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 01:00:53 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08B5198A;
+        Thu, 18 May 2023 22:00:32 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4eff4ea8e39so3149341e87.1;
+        Thu, 18 May 2023 22:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684472430; x=1687064430;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JfbxFVUmc/KzvVhEC8vdQgF5kFe1WFt3rzR4UINE0fo=;
+        b=BFi0u5sIoEnnX4okI+aOE7hqReySKr/IeZj7zzxVZhgribIxFlafyHNvVilTaGLzmN
+         knIms4YLm7U1y/I5CNlsVXcBP9x8QeZROW5X41r24p2hhc7Ht3Y4EDGjq93s+4l3lDsJ
+         Pk/DbGLMigKfroPs0SUi9ijtAABZtaIECKrtHjRAj4DFK6yRhSltBg58NMpe4kky+Z5O
+         VR84UsYsFePdUZ8Ndp3YYDRJmnp1CZ6RWZ5xZ1xMg3MBPh2F2h1/Q+8YX8HR0dCfZZNo
+         ZwiEpoF6NMGYC9Ro0HSPdvsk7wNlp2nw4vOoWzS/zWeG4WYgrDi7X3Gbvss9CZVlDv8q
+         oVAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684472430; x=1687064430;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JfbxFVUmc/KzvVhEC8vdQgF5kFe1WFt3rzR4UINE0fo=;
+        b=jBCIvaJXkIPkyRLULvJYXewhUmpnIy6ICOms4Bv3nLFzAr+oZAa0dpwrninDcM0sn/
+         AJl4fvps5X6mM92KD/xA1DSJJON+5yNlkc2lO3xA2tI+4DtuhhbR3uaur5WPOUWQHHMz
+         EutDu0ikgvlDV3id+xsf84RjpkUF/ECVdHLM4UasLYeIwo2pisytu061WAa1KBCU4DLm
+         /Mb5qWvmsC0saOaOKY9qf5g2QWBtb/nnldUD+8LABnIox2F7s5WBo4cLeHZpflmuJhIi
+         FxyYYJNbInQF0smtKG7RCFMY52S++rCJJuAmSW5npCYyTEZOsp2MzbEG4GMYDG/2Vx9/
+         EPZg==
+X-Gm-Message-State: AC+VfDzREo2Jr5BHxuamUlnoSxeoqwMEEKoLSEJg937rhPXos4LGR16O
+        voFUb78BLtxLLAdrnpdwOAk=
+X-Google-Smtp-Source: ACHHUZ4VR47UvOx+IPM4HXNSDpSzTFPO0t3QVDvnSvGmOpkMfDVf6cQwy6rSnQkrabXwi7lrCaHYdg==
+X-Received: by 2002:ac2:5e81:0:b0:4f3:872d:10ff with SMTP id b1-20020ac25e81000000b004f3872d10ffmr313027lfq.64.1684472429409;
+        Thu, 18 May 2023 22:00:29 -0700 (PDT)
+Received: from [192.168.1.126] (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id w4-20020a05651204c400b004db3900da02sm467200lfq.73.2023.05.18.22.00.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 May 2023 22:00:28 -0700 (PDT)
+Message-ID: <1a3a84d4-1955-f0ee-5c6d-ab36fddc5e15@gmail.com>
+Date:   Fri, 19 May 2023 08:00:27 +0300
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 2/7] iio: mb1232: relax return value check for IRQ get
+Content-Language: en-US, en-GB
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Wolfram Sang <wsa@kernel.org>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        netdev@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
+References: <cover.1684220962.git.mazziesaccount@gmail.com>
+ <429804dac3b1ea55dd233d1e2fdf94240e2f2b93.1684220962.git.mazziesaccount@gmail.com>
+ <ZGUFJ5LRCzW2V0a1@smile.fi.intel.com>
+From:   Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <ZGUFJ5LRCzW2V0a1@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQHvj8QD3pC+6Aq9H9h6P1+q5LrHRgMH5FTyAkITzAABJU2Y7wJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNeuwTkbsA==
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Andrew Lunn <andrew@lunn.ch>
-> Sent: Thursday, May 18, 2023 8:49 PM
-> To: Jiawen Wu <jiawenwu@trustnetic.com>
-> Cc: 'Andy Shevchenko' <andy.shevchenko@gmail.com>; netdev@vger.kernel.org; jarkko.nikula@linux.intel.com;
-> andriy.shevchenko@linux.intel.com; mika.westerberg@linux.intel.com; jsd@semihalf.com; Jose.Abreu@synopsys.com;
-> hkallweit1@gmail.com; linux@armlinux.org.uk; linux-i2c@vger.kernel.org; linux-gpio@vger.kernel.org; mengyuanlou@net-swift.com
-> Subject: Re: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
+On 5/17/23 19:47, Andy Shevchenko wrote:
+> On Tue, May 16, 2023 at 10:12:41AM +0300, Matti Vaittinen wrote:
+>> fwnode_irq_get() was changed to not return 0 anymore.
+>>
+>> Drop check for return value 0.
 > 
-> > > I _think_ you are mixing upstream IRQs and downstream IRQs.
-> > >
-> > > Interrupts are arranged in trees. The CPU itself only has one or two
-> > > interrupts. e.g. for ARM you have FIQ and IRQ. When the CPU gets an
-> > > interrupt, you look in the interrupt controller to see what external
-> > > or internal interrupt triggered the CPU interrupt. And that interrupt
-> > > controller might indicate the interrupt came from another interrupt
-> > > controller. Hence the tree structure. And each node in the tree is
-> > > considered an interrupt domain.
-> > >
-> > > A GPIO controller can also be an interrupt controller. It has an
-> > > upstream interrupt, going to the controller above it. And it has
-> > > downstream interrupts, the GPIO lines coming into it which can cause
-> > > an interrupt. And the GPIO interrupt controller is a domain.
-> > >
-> > > So what exactly does gpio_regmap_config.irq_domain mean? Is it the
-> > > domain of the upstream interrupt controller? Is it an empty domain
-> > > structure to be used by the GPIO interrupt controller? It is very
-> > > unlikely to have anything to do with the SFP devices below it.
-> >
-> > Sorry, since I don't know much about interrupt,  it is difficult to understand
-> > regmap-irq in a short time. There are many questions about regmap-irq.
-> >
-> > When I want to add an IRQ chip for regmap, for the further irq_domain,
-> > I need to pass a parameter of IRQ, and this IRQ will be requested with handler:
-> > regmap_irq_thread(). Which IRQ does it mean?
+> ...
 > 
-> That is your upstream IRQ, the interrupt indicating one of your GPIO
-> lines has changed state.
+>> -	if (data->irqnr <= 0) {
+>> +	if (data->irqnr < 0) {
+>>   		/* usage of interrupt is optional */
+>>   		data->irqnr = -1;
+>>   	} else {
 > 
-> > In the previous code of using
-> > devm_gpiochip_add_data(), I set the MSI-X interrupt as gpio-irq's parent, but
-> > it was used to set chained handler only. Should the parent be this IRQ? I found
-> > the error with irq_free_descs and irq_domain_remove when I remove txgbe.ko.
 > 
-> Do you have one MSI-X dedicated for GPIOs. Or is it your general MAC
-> interrupt, and you need to read an interrupt controller register to
-> determine it was GPIOs which triggered the interrupt?
-
-I have one MSI-X interrupt for all general MAC interrupt (see TXGBE_PX_MISC_IEN_MASK).
-It has 32 bits to indicate various interrupts, GPIOs are the one of them. When GPIO
-interrupt is determined, GPIO_INT_STATUS register should be read to determine
-which GPIO line has changed state.
-
-> If you are getting errors when removing the driver it means you are
-> missing some level of undoing what us done in probe. Are you sure
-> regmap_del_irq_chip() is being called on unload?
-
-I used devm_* all when I registered them.
-
-> > As you said, the interrupt of each tree node has its domain. Can I understand
-> > that there are two layer in the interrupt tree for MSI-X and GPIOs, and requesting
-> > them separately is not conflicting? Although I thought so, but after I implement
-> > gpio-regmap, SFP driver even could not find gpio_desc. Maybe I missed something
-> > on registering gpio-regmap...
+> After this change I'm not sure we need this branch at all, I mean that -errn is
+> equal to -1 in the code (but needs to be checked for silly checks like == -1).
 > 
-> That is probably some sort of naming issue. You might want to add some
-> prints in swnode_find_gpio() and gpiochip_find() to see what it is
-> looking for vs what the name actually is.
+> Hence
+> 
+> Entire excerpt can be replaced with
+> 
+> 	if (data->irqnr > 0) {
+> 
 
-Thanks for the advice, I'll try again today.
+I agree. Furthermore, at a quick glance it seems the whole irqnr could 
+be dropped from the private data, and the private data struct could 
+probably be static. I'd send them as separate clean-ups though as those 
+changes are not really related to this return-value series.
+
+Yours,
+	-- Matti
+
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
