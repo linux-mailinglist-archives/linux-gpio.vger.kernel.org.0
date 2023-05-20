@@ -2,41 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA2E70A6E7
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 11:54:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7655E70A8B7
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 17:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbjETJx5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 May 2023 05:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
+        id S231738AbjETPOq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 May 2023 11:14:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbjETJx5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 May 2023 05:53:57 -0400
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9889E54
-        for <linux-gpio@vger.kernel.org>; Sat, 20 May 2023 02:53:54 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-        id 397b899a-f6f4-11ed-a9de-005056bdf889;
-        Sat, 20 May 2023 12:53:51 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Sat, 20 May 2023 12:53:51 +0300
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
+        with ESMTP id S229737AbjETPOp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 May 2023 11:14:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFF610D;
+        Sat, 20 May 2023 08:14:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEC8D6111D;
+        Sat, 20 May 2023 15:14:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49422C433EF;
+        Sat, 20 May 2023 15:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684595683;
+        bh=nb87eHnSrLM+miw1D/xmByQKBJTG9jxqONUG12aAE/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YJiWLEfcf3avvzKkf0/4oJxV8pWWGzRVuLM4f/x2+OR+4JArle8ElxEOn19FJo5sc
+         ANNF8hS9HDrk/UIXhGTRcRiOeCeXEEG+emMIgpLYYGXCgh2Lt/FKtW0mq+BPA12C2L
+         60QXtylPkn1Jr269Kwb77s4gQXP1IOslbuUbp7bRmON1Fam9/7JDSjuCYSi82v5CxA
+         ihARPaGg6Z1UFsSyxpUFnNiQHKaPPSHMqRu6dboJ4GU+qc8EyNdsB8si09biiS5dA2
+         KTxTabR7ik77KLxFQaJZf41e4S0c8W2/LRPjz4mcayc28X1FOFxy7V75DI34aCFHFq
+         Z27rwwrsBG6TA==
+Date:   Sat, 20 May 2023 16:30:49 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Matti Vaittinen <mazziesaccount@gmail.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/3] Add Intel 8254 Counter support
-Message-ID: <ZGiYr6XLguZ8R3_8@surfacebook>
-References: <cover.1681665189.git.william.gray@linaro.org>
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v5 7/8] iio: cdc: ad7150: relax return value check for
+ IRQ get
+Message-ID: <20230520163049.3204f31b@jic23-huawei>
+In-Reply-To: <73c633ccab80bdfaa1adf6ae099cfc9d365be6a2.1684493615.git.mazziesaccount@gmail.com>
+References: <cover.1684493615.git.mazziesaccount@gmail.com>
+        <73c633ccab80bdfaa1adf6ae099cfc9d365be6a2.1684493615.git.mazziesaccount@gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1681665189.git.william.gray@linaro.org>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,45 +79,94 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Sun, Apr 16, 2023 at 01:36:52PM -0400, William Breathitt Gray kirjoitti:
-> The Intel 8254 PIT first appeared in the early 1980s and was used
-> initially in IBM PC compatibles. The popularity of the original Intel
-> 825x family of chips led to many subsequent variants and clones of the
-> interface in various chips and integrated circuits. Although still
-> popular, interfaces compatible with the Intel 8254 PIT are nowdays
-> typically found embedded in larger VLSI processing chips and FPGA
-> components rather than as discrete ICs.
+On Fri, 19 May 2023 14:04:32 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> fwnode_irq_get[_byname]() were changed to not return 0 anymore. The
+> special error case where device-tree based IRQ mapping fails can't no
+> longer be reliably detected from this return value. This yields a
+> functional change in the driver where the mapping failure is treated as
+> an error.
 > 
-> This patch series introduces a library to provide support for interfaces
-> compatible with the venerable Intel 8254 Programmable Interval Timer
-> (PIT). Modules wanting access to the i8254 library should select the
-> newly introduced CONFIG_I8254 Kconfig option, and import the I8254
-> symbol namespace.
+> The mapping failure can occur for example when the device-tree IRQ
+> information translation call-back(s) (xlate) fail, IRQ domain is not
+> found, IRQ type conflicts, etc. In most cases this indicates an error in
+> the device-tree and special handling is not really required.
 > 
-> Support for the i8254 is added in respective follow-up patches for the
-> 104-dio-48e driver and stx104 driver whose devices feature i8254
-> compatible interfaces. Several additional dependencies are necessary for
-> the 104-dio-48e [0][1][2] and stx104 [3][4].
+> One more thing to note is that ACPI APIs do not return zero for any
+> failures so this special handling did only apply on device-tree based
+> systems.
 > 
-> Due to the dependency requirements, I can take the i8254 introduction
-> patch through the Counter tree and provide an immutable branch that can
-> be merged to the GPIO and IIO trees; the 104-dio-48e patch and stx104
-> patch could then be picked up separately by the respective subsystem
-> maintainers.
+> Drop the special handling for DT mapping failures as these can no longer
+> be separated from other errors at driver side.
+> 
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> 
+> ---
+> 
+> Please note that I don't have the hardware to test this change.
+> Furthermore, testing this type of device-tree error cases is not
+> trivial, as the question we probably dive in is "what happens with the
+> existing users who have errors in the device-tree". Answering to this
+> question is not simple.
+> 
+> I did this patch with minimal code changes - but a question is if we
+> should really jump into the else branch below on all IRQ getting errors?
+> 
+>         } else {
+>                 indio_dev->info = &ad7150_info_no_irq;
+>                 switch (id->driver_data) {
+>                 case AD7150:
+>                         indio_dev->channels = ad7150_channels_no_irq;
+>                         indio_dev->num_channels =
+>                                 ARRAY_SIZE(ad7150_channels_no_irq);
+>                         break;
+>                 case AD7151:
+>                         indio_dev->channels = ad7151_channels_no_irq;
+>                         indio_dev->num_channels =
+>                                 ARRAY_SIZE(ad7151_channels_no_irq);
+>                         break;
+>                 default:
+>                         return -EINVAL;
+>                 }
+> 
+> Why do we have special handling for !chip->interrupts[0] while other
+> errors on getting the fwnode_irq_get(dev_fwnode(&client->dev), 0); will
+> abort the probe?
 
-Good job!
+Gut feeling is that this was a rework of board file code where 0 meant not
+provided. We should look to do the same here.  I'm not sure we have a consistent
+return for no irq though across the various fw types.
 
-What I'm wondering is that. Can x86 core and others which are using that chip
-utilize (some of) the functions from the library?
+The driver looks like it should support either no interrupts or all the
+ones for a given device.
 
-> [0] https://lore.kernel.org/all/05a878d340251b781387db4b6490f288e41a651c.1680543810.git.william.gray@linaro.org/
-> [1] https://lore.kernel.org/all/20230208105542.9459-1-william.gray@linaro.org/
-> [2] https://lore.kernel.org/all/cover.1679323449.git.william.gray@linaro.org/
-> [3] https://lore.kernel.org/all/20230318185503.341914-1-william.gray@linaro.org/
-> [4] https://lore.kernel.org/all/cover.1680790580.git.william.gray@linaro.org/
+Currrently it definitely doesn't handle the no irqs provided case right.
+Its not elegant, but if we have to have all failures to get irqs result
+in carrying on without them then that's better than now.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Jonathan
 
+
+> 
+> The first patch of the series changes the fwnode_irq_get() so this depends
+> on the first patch of the series and should not be applied alone.
+> ---
+>  drivers/iio/cdc/ad7150.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/cdc/ad7150.c b/drivers/iio/cdc/ad7150.c
+> index 79aeb0aaea67..d7ba50b9780d 100644
+> --- a/drivers/iio/cdc/ad7150.c
+> +++ b/drivers/iio/cdc/ad7150.c
+> @@ -567,8 +567,7 @@ static int ad7150_probe(struct i2c_client *client)
+>  		if (chip->interrupts[1] < 0)
+>  			return chip->interrupts[1];
+>  	}
+> -	if (chip->interrupts[0] &&
+> -	    (id->driver_data == AD7151 || chip->interrupts[1])) {
+> +	if (id->driver_data == AD7151 || chip->interrupts[1]) {
+>  		irq_set_status_flags(chip->interrupts[0], IRQ_NOAUTOEN);
+>  		ret = devm_request_threaded_irq(&client->dev,
+>  						chip->interrupts[0],
 
