@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2098270A493
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 04:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D03FA70A4D2
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 05:12:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbjETCPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 May 2023 22:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57970 "EHLO
+        id S230174AbjETDL7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 May 2023 23:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbjETCPf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 22:15:35 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B5119A
-        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 19:15:34 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d2a613ec4so1540930b3a.1
-        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 19:15:34 -0700 (PDT)
+        with ESMTP id S230390AbjETDL4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 May 2023 23:11:56 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B08FE54
+        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 20:11:33 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1ae3a5dfa42so28760275ad.0
+        for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 20:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684548934; x=1687140934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ipc/fH1HtTc9iVCyYaRzRttwn/c7QEusN/EaZt1y0z0=;
-        b=YFoAkIkkY0if/ce1ZliQ6xY6jr7pZHf2r62ItYqLU023wiTed7iiydEe+m9KsdCMc8
-         Kb4HTiDQBFhEqCZ8fvPoPRgAcf3+0ybQuUicDG+E8qnpOlfCcTbwBhDiF3gM9R7tPmuV
-         nOJCCjW58DhUrcxXoZA4xbkq20tnU16zxMXN9a10Ap3MvnGkLGQZc/H1+AirKGGIM8q0
-         E4QRTAeLnmNGzj+le8dnTfd1m0oKS3bRlkddD3E/MKlWygYgJAZyP5ag3WDwshFMEUIL
-         6ZGH0qyvLururZv4tORc8hLIMX0NAI1arlh71oRxSIA8P09IW+OYfOotEpg+L1/eRVeO
-         0P3A==
+        d=gmail.com; s=20221208; t=1684552293; x=1687144293;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFxL+xvj5ULYtAwst8vctQ8zilxx0w/pyvqusSdRs2Q=;
+        b=jumcdiVi9NdRp852gr0IIZ2Ok9s3M0b9fFHmHUroaNTWdsVLvfw94pKxoruEfJvHxZ
+         ZS2RlWBI0Sb08aVGP2BkvL0aPJ/T+fe+/73/SvlqYXHTnFiGFjARCRFt+RVl5++0BAcc
+         517+09QjOw8oBIxBOTzCAHiRWI/xXta9TTNbLzpwi/gumJEFnyvpYpaRNsKxu/BrG9oM
+         OKWuznChDatKj2bc90gfM71xNPgxcWXqIUhJaYCqWCaCimlekq1ZmyTvD4NhfI+xScQs
+         1N8xdbh9J8zrYHfR+Bjy/LLAul4wZnsrFOZaUrNEH4Q/wIRGzXvvVVU3i+GPMVG7smpe
+         vk2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684548934; x=1687140934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ipc/fH1HtTc9iVCyYaRzRttwn/c7QEusN/EaZt1y0z0=;
-        b=ZvVgdnXpwls1AEMWaGg46mk5aN4vG6uFYbMkp4tCLprSDUvDVaAd59/r7akC0vsamG
-         jOTnA8ivzQb8naDZwqbMnjmTB3shHl0LGNQFPtrQ2t5VhvSclH+tcSu9OG9I7rBN2Gtg
-         soBXn67UuzXVAzxdzbR9S7hqn2V5JlwYSG8K3UlM6Nhc4637vXuWTmYdzM2e4hqq8tRL
-         fhAgssistso3ulYFbiVTIvGeBDvpLw15wcmzekxokvONJQLKCOSDLRNdn/cAXgNtiaSH
-         SUMG48/3Xjqhe/pZ0NT/3b+v6LHO/HlUGvBs9TvtuGu+Lv57GzZ5zQiVAM5OgAhhBlNG
-         f/ZQ==
-X-Gm-Message-State: AC+VfDyhzghXC4Xu4NTu6YpO1gzJ+9eh6w8xMmw6cSXxVBEaORKBF9Ea
-        xMOeckrCjkjIDkZcvSzF2Fschi5LJMM=
-X-Google-Smtp-Source: ACHHUZ6ClJTY+6NhBb+J0E28XjN1ZkzJ5x6ygjekF0QlczY562ehyHVQnUqSkeEi6Dnkbmg5tAWN8Q==
-X-Received: by 2002:aa7:88c4:0:b0:64c:c65f:7322 with SMTP id k4-20020aa788c4000000b0064cc65f7322mr5550325pff.30.1684548933835;
-        Fri, 19 May 2023 19:15:33 -0700 (PDT)
-Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id i23-20020aa78b57000000b0063d44634d8csm308938pfd.71.2023.05.19.19.15.31
+        d=1e100.net; s=20221208; t=1684552293; x=1687144293;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IFxL+xvj5ULYtAwst8vctQ8zilxx0w/pyvqusSdRs2Q=;
+        b=B0fuitPIblAD/QE5Gm3yhAJdhqdbkYb7RYGKNeol4cwQMgtN6coSx760nqvQQD8+1p
+         gqnPX3hqNeT4nszCRrUxlvAGL6WdgrB2CWLJqJVRQOvahX2H2N0PGI5Na2G5sspkbf4Y
+         K0Votu9HuRORJkIXuNiBBzLE1+inKnXcG3uD3VmBaGKHpYUbgtycq8dzCFtwKi/TdDP8
+         hIALvBWCl/bjZYDBydKpQJ4X3iEMzEjWUzULDLnRz9B8c3jCgfpBxeun35gHysbC4YgK
+         jqirH1PDVOo2OxGi1lvXPYBxa6u4VYsHQYJxXqv2PkPrZnQzgT85SjOoU59t5U1eg6Bc
+         4Zhw==
+X-Gm-Message-State: AC+VfDxoEuyIf9OylK9G+5p47C6Xxi2k3g6vD13XoojAcbR8ehz4Ox0A
+        oCJYG/e/iQAs0oTK2VeD65xpKmQl4IA=
+X-Google-Smtp-Source: ACHHUZ6I1nkg7b+MHHaGTvu3ysdc0LXQaG7fqMG7tPGs9Wn6BIC6roe3qLZQVctT5y6cMeEla9tc1g==
+X-Received: by 2002:a17:902:e9d5:b0:1ac:8cd4:a82d with SMTP id 21-20020a170902e9d500b001ac8cd4a82dmr3911077plk.27.1684552292693;
+        Fri, 19 May 2023 20:11:32 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id iw10-20020a170903044a00b001ac2f98e953sm331303plb.216.2023.05.19.20.11.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 19:15:33 -0700 (PDT)
+        Fri, 19 May 2023 20:11:32 -0700 (PDT)
+Date:   Sat, 20 May 2023 11:11:28 +0800
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] README: provide more info in Contributing
-Date:   Sat, 20 May 2023 10:15:09 +0800
-Message-Id: <20230520021509.12135-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.40.1
+Subject: Re: [PATCH] README: provide more info in Contributing
+Message-ID: <ZGg6YP/4a2IuGfqE@sol>
+References: <20230520021509.12135-1-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230520021509.12135-1-warthog618@gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -67,42 +68,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add more detail to Contributing to make it easier for new users to
-contribute.
+On Sat, May 20, 2023 at 10:15:09AM +0800, Kent Gibson wrote:
+> Add more detail to Contributing to make it easier for new users to
+> contribute.
+> 
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-I was tempted to add something on formatting with clang-format, but I'm
-not 100% clear on the formatting policy myself.
-Would be nice for that to be clarified.
+Bah, ironically forgot the [libgpiod] prefix.
+Sorry for the noise. Will resubmit.
 
- README | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/README b/README
-index b71739e..8e726fe 100644
---- a/README
-+++ b/README
-@@ -275,8 +275,16 @@ were selected and help2man is available in the system.
- CONTRIBUTING
- ------------
- 
--Contributions are welcome - please send patches and bug reports to
--linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail subject
--line) and stick to the linux kernel coding style when submitting new code.
-+Contributions are welcome - please send questions, patches and bug reports
-+to linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail
-+subject line).  Note that the mailing list quietly drops HTML formatted
-+e-mail, so be sure to send plain text[2].
-+
-+Code submissions should stick to the linux kernel coding style[3] and
-+follow the kernel patch submission process[4] as applied to the libgpiod
-+source tree.
- 
- [1] https://github.com/bats-core/bats-core
-+[2] https://docs.kernel.org/process/email-clients.html
-+[3] https://docs.kernel.org/process/coding-style.html
-+[4] https://docs.kernel.org/process/submitting-patches.html
--- 
-2.40.1
-
+Cheers,
+Kent.
