@@ -2,64 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C8C570A682
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 10:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 223E770A653
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 May 2023 10:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231177AbjETIy4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 May 2023 04:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
+        id S229609AbjETIRH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 May 2023 04:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbjETIyz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 May 2023 04:54:55 -0400
-X-Greylist: delayed 86689 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 20 May 2023 01:54:51 PDT
-Received: from mail.corrib.pl (mail.corrib.pl [185.58.226.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5C01B7
-        for <linux-gpio@vger.kernel.org>; Sat, 20 May 2023 01:54:51 -0700 (PDT)
-Received: by mail.corrib.pl (Postfix, from userid 1001)
-        id 10CD9A5AA7; Fri, 19 May 2023 09:06:19 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corrib.pl; s=mail;
-        t=1684483593; bh=85MOfYTjIHwki6Ys5IeFKzEzX5V7umZoL3TytLG0W/k=;
-        h=Date:From:To:Subject:From;
-        b=rF/1PNcfd6k19nwK+kO5cnx263H+v/K1higaL1RU9gwixC98FZXbhSWcB/k3FxUQW
-         VnipluNa4HjgE/JHZn299cHsTAHtsA4hjq77DYaP/strliFO4xQmX+bw7r36tugSWr
-         D73Il1heC02OtXDhqgTqT7+n9o0O9Lo6/1vr9NCYMBVGpwkGrkdsxsbLkNEe8bdsM8
-         X71vVBGXMtW+Pqa2h6vbDKHrbNeEMQhfzjfo3EX26qco62MGU/ROUW1DzKfYtoWSCq
-         4odxWbLTGx6Jy9m3T6EBwtnkl712KiexAmjeovlV7r5UrOai3j9e9ECISa+ELmNPAL
-         pj4CzcQSjj9VQ==
-Received: by mail.corrib.pl for <linux-gpio@vger.kernel.org>; Fri, 19 May 2023 08:06:12 GMT
-Message-ID: <20230519074500-0.1.7b.ofb8.0.hp8xvvp14s@corrib.pl>
-Date:   Fri, 19 May 2023 08:06:12 GMT
-From:   "Szczepan Andryszczuk" <szczepan.andryszczuk@corrib.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Faktoring
-X-Mailer: mail.corrib.pl
+        with ESMTP id S229523AbjETIRG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 May 2023 04:17:06 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F9EC1B0
+        for <linux-gpio@vger.kernel.org>; Sat, 20 May 2023 01:17:01 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4efe8b3f3f7so4607290e87.2
+        for <linux-gpio@vger.kernel.org>; Sat, 20 May 2023 01:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684570619; x=1687162619;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dBUzdWOxAaFg2ZMfsQEtUXSQUsrELWherQAFXLI3b6w=;
+        b=Ph9K+Vpux4x0DDiBElpenfxB6QRTj6G48N/eYNB0dKDj+YnkNyEJ5Wh6tvJ2uLsjMf
+         FsGmGFhYxiu35nnxEBkIySIbTwudrjniqjH3HlZ2b3fafnKjGy72xjZz5hkcduPlxW1k
+         x+1NdqLDVZIskgTBkpq9MJzbxoz/h3Eo//OYwUxyGzfo/mZURcPx+7aSYARzb5JH8A3g
+         outT7tCDx3Z8gWRNHEG5KL+YBKGhoOWhAf+fQzPl9r0HLRvZ6lArZ4O3836UkUrRrRWr
+         N5vhwj0wo2if4shDp6p1tGwPGoVKRY8O+1iEzRQ8LjjEdeaN8yEicOIAQOU9/tblUF7Y
+         YFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684570619; x=1687162619;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dBUzdWOxAaFg2ZMfsQEtUXSQUsrELWherQAFXLI3b6w=;
+        b=f4QwHDscLhVklGY3UP8kCjPeWkFXV4+Cq8yflZWaVbPGUBXDusup3UbYDuyrm4zTQ4
+         XBhxbLoIJi9sRoa+6bSCxV+Q7HumFi4Im0fJMzV2Km0HgJAYND+XCUvff9iZrBm4Rg53
+         Y7qZAVnWDeBbWzOeETiP2ySzexZi66nl1I1Qpi+rTQh65mcveGBhofzul4ARYViXyWcD
+         02g0qP5dxZk8sSy2X24GfOdoFi4o98LF8cJhxuaM0gnVujeZcHpS4t4dLG+aLcHoxmMH
+         7sQbFC+rm/0iMnvDLUlYnTTCksFfCngxc2s01XPpAwdpj0cQdwT5QDhRejzRsJsdx3kQ
+         x9Qw==
+X-Gm-Message-State: AC+VfDy6aP/UFvrpkkXc27yHYlxxcFS87da6ITL/dho+z79FyDLy6QxE
+        PQ6ZXWj0/SzGmnyp6xdDxbTvH64w036z80dEVng=
+X-Google-Smtp-Source: ACHHUZ5cd516VD1P5M6X/AQ4hWzid2SSSLcSFdKFHkpGa1aHnrpxxIUuNc29ajfR96b7KoZTTbknnGoY47veOuvu82Q=
+X-Received: by 2002:a05:6512:64:b0:4f3:963a:7007 with SMTP id
+ i4-20020a056512006400b004f3963a7007mr1418991lfo.34.1684570619434; Sat, 20 May
+ 2023 01:16:59 -0700 (PDT)
 MIME-Version: 1.0
+Sender: romeolucca5@gmail.com
+Received: by 2002:a05:6520:2e12:b0:25c:b091:2e7f with HTTP; Sat, 20 May 2023
+ 01:16:58 -0700 (PDT)
+From:   United Nation <turkey.un.info@gmail.com>
+Date:   Sat, 20 May 2023 01:16:58 -0700
+X-Google-Sender-Auth: RMmwppAb_MaHZqqmInEm0btgO7s
+Message-ID: <CAL7wM2qoJEYtbNEYHvdVFgqydUu20zk-wf8RBJmsXr6-nq5v0g@mail.gmail.com>
+Subject: United Nation Compensation
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,HK_SCAM,LOTS_OF_MONEY,MONEY_FRAUD_3,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Congratulations,
+I am a representative from the United Nation compensation program
+headed on this day 01, MAY 2023. This is to officially notify you that
+you have been selected as one of the lucky beneficiaries of 2023
+United Nations Compensation Program. Your name is among the top 50
+scammed victims listed by IMF/UNITED NATIONS FUND RECOVERY to be
+compensated with the sum of $1.5 Million Unites States of American
+Dollars ($1,500,000 USD). You are advised to send the following
+details below for immediate release of your compensation ($1,500,000
+USD) through Swift Transfer (T&T) or through ATM CREDIT CARD
 
-rozwa=C5=BCali Pa=C5=84stwo wyb=C3=B3r finansowania, kt=C3=B3re spe=C5=82=
-ni potrzeby firmy, zapewniaj=C4=85c natychmiastowy dost=C4=99p do got=C3=B3=
-wki, bez zb=C4=99dnych przestoj=C3=B3w?=20
-
-Przygotowali=C5=9Bmy rozwi=C4=85zania faktoringowe dopasowane do Pa=C5=84=
-stwa bran=C5=BCy i wielko=C5=9Bci firmy, dzi=C4=99ki kt=C3=B3rym, nie mus=
-z=C4=85 Pa=C5=84stwo martwi=C4=87 si=C4=99 o niewyp=C5=82acalno=C5=9B=C4=87=
- kontrahent=C3=B3w, poniewa=C5=BC transakcje s=C4=85 zabezpieczone i posi=
-adaj=C4=85 gwarancj=C4=99 sp=C5=82aty.=20
-
-Chc=C4=85 Pa=C5=84stwo przeanalizowa=C4=87 dost=C4=99pne opcje?
-
-
-Pozdrawiam
-Szczepan Andryszczuk
+Please kindly contact us with your below information for your immediate payment.
+Mr. Kenny Frank
+United Nation Compensation Commission
+UN Office, Istanbul Turkey
+EMAIL: ( turkey.un.info@gmail.com )
+WHATSAPP NUMBER: +90 501 067 1429
