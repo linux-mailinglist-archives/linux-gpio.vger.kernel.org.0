@@ -2,128 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23BE870BC3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 13:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31CF470BCF2
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 14:08:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233526AbjEVLu3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 07:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
+        id S231281AbjEVMIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 08:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233567AbjEVLuL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 07:50:11 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E14621B5
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 04:50:01 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-30781184e78so2401276f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 04:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684756200; x=1687348200;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sKgwbXDZ93PhOsZpMHYSuhMcEuh5tVlQ5GHAYoAXTTk=;
-        b=oXlZi6dQ+locvnwMb6tXz6Haerq4h2rmMsYNDuyKGsjCLrXuZZ1WoRXsul7Hmffq5V
-         BAL5Xy1fvZBlwHlGAT4Gt9cdnpFuUHC2JYFmRLtAE9y3lQmrh0C+vKG4mtkZbEBMn711
-         CKts6AS3KF5mRTiEiAI+P31FqY1psc+RKnBht4wKqqVdoaW+l7FwVq9KM4rxq6MEu5Fq
-         Io9rAmmmjXOOwWXFp2Xy8qeX1NwzTdOOwg3ScATZSQ8mzRVx61Q2314f4i1dos2r1GoA
-         cMt8ymh+xftxI78J0hkyTAuZvtfVhvhgUMELKVvy7asFaUmGTrJNEsNXE2Rowf+wWf42
-         dQww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684756200; x=1687348200;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sKgwbXDZ93PhOsZpMHYSuhMcEuh5tVlQ5GHAYoAXTTk=;
-        b=VVuE5zY8CRA1npMVocI6WdxJW+CDw+7gw0K3+lKhioLP7ai5Lceo1nSutc22eV/PXg
-         KtNH6rtl3nGXU7LWGZs4cKbgpGdSKxfLJrprrJysPChpRMRv2QZDR26Zfxfbl78IXZG5
-         Vtlm+iMxg3Z4vNKxnRx0TAgk5SPOryf9JY1aNjnxIuc7t3RlT5VfuO1E30bPygpJiXet
-         PgO01RM44NJPmZqQGGSHzNGWVq5fP6F3FaC6KangrT9IVR6H8bf1CicM83Z2ulTsMSh0
-         R++Rrx4YwW1gZOes6b228Z0VxalWuJpG1VPSugghFBSnU3al/9YwL2TTnvThjcd+zEHR
-         1Cmg==
-X-Gm-Message-State: AC+VfDyE367Hwp0xiKJSFqugUaKzB3KYcRvOGCBP5tFXurqezEcgbKQK
-        vk1ekGjkwaC6le4zUtCNuSm3HA==
-X-Google-Smtp-Source: ACHHUZ4aNoH0wsH4IeJXzePZtSiXVMs1nKqN0mwAKpV4dgI33pkdm3OAwuaeuaJLSl4OQrhKVI7aag==
-X-Received: by 2002:adf:f48f:0:b0:307:5091:5b96 with SMTP id l15-20020adff48f000000b0030750915b96mr10113342wro.22.1684756200409;
-        Mon, 22 May 2023 04:50:00 -0700 (PDT)
-Received: from localhost ([2a01:e0a:28d:66d0:72d:52cc:8221:fcda])
-        by smtp.gmail.com with ESMTPSA id n16-20020a1c7210000000b003f6042d6d92sm3490280wmc.46.2023.05.22.04.49.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 May 2023 04:49:59 -0700 (PDT)
-Mime-Version: 1.0
+        with ESMTP id S229577AbjEVMIe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 08:08:34 -0400
+X-Greylist: delayed 85577 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 22 May 2023 05:08:18 PDT
+Received: from silec.com.co (unknown [186.155.227.156])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B23118;
+        Mon, 22 May 2023 05:08:18 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by silec.com.co (Postfix) with ESMTP id DF8C574E6C3A;
+        Sun, 21 May 2023 02:13:35 -0500 (-05)
+Received: from silec.com.co ([127.0.0.1])
+        by localhost (silec.com.co [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id rla3vMJ0SKUq; Sun, 21 May 2023 02:13:35 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by silec.com.co (Postfix) with ESMTP id 39CE074E6DA7;
+        Sun, 21 May 2023 02:13:31 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 silec.com.co 39CE074E6DA7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silec.com.co;
+        s=7EE18876-0B6B-11EC-ADD2-D54151E56927; t=1684653211;
+        bh=3DuXWiZC+hCKu7q7bKqvoS3B3zt+zYJYDMke5QOTtAg=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=CdbUekq7fxLCbW3D7YoWb6x/tYmHEfC98XpifB0QaSKoM3ckvp8DbgPl1rtLAcNoW
+         2iDxDJockdXIwS4ohhYECmImoP3D3djyJM5N4cnLhhw6sM0bf5z04nmQuGo79jRpTq
+         vQk4aMRgEzacjOoTparzMeyg+TMIrRoLJQJ5Jy4M1NfQCEsLteCyTYWPkrvhOueewj
+         5BorRYQymcbM6mK6piv8bG4PDNd/hq+pLVRxVTIG9Sk5x/JaPfgioTZM2Ik6AAiut6
+         I3BK60jxi/8h3fJ2zDnkj86y4aSbcp+FT2SHNby6SC10pecYq82sZhTtma7obKCyyD
+         l4cwh4XUGDpUA==
+X-Virus-Scanned: amavisd-new at silec.com.co
+Received: from silec.com.co ([127.0.0.1])
+        by localhost (silec.com.co [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id jty3PH0Lqxj7; Sun, 21 May 2023 02:13:31 -0500 (-05)
+Received: from [10.4.18.247] (unknown [217.138.192.221])
+        by silec.com.co (Postfix) with ESMTPSA id 131F574E6C65;
+        Sun, 21 May 2023 02:13:08 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 22 May 2023 13:49:58 +0200
-Message-Id: <CSSS892QYLWK.3T71MRNHOH0IZ@burritosblues>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
-        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v4 1/3] rtc: tps6594: Add driver for TPS6594 RTC
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-X-Mailer: aerc 0.14.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com>
- <20230512141755.1712358-2-eblanc@baylibre.com>
- <ZF514wvUt_xrU1gG@surfacebook> <CSOPFJOVLSS1.1XKI60F9TLBMN@burritosblues>
- <CAHp75Vfg+yAhJ58qt76GHqxWHD48hF-6ZnT=xEUh+1rzr7UvVg@mail.gmail.com>
-In-Reply-To: <CAHp75Vfg+yAhJ58qt76GHqxWHD48hF-6ZnT=xEUh+1rzr7UvVg@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Description: Mail message body
+Subject: RE
+To:     Recipients <manuel.trivino@silec.com.co>
+From:   "Yuliia Kadulina" <manuel.trivino@silec.com.co>
+Date:   Sun, 21 May 2023 08:12:36 +0100
+Reply-To: yuliakadulina2@gmail.com
+Message-Id: <20230521071309.131F574E6C65@silec.com.co>
+X-Spam-Status: Yes, score=6.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_MSPIKE_H2,RCVD_IN_SBL_CSS,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5745]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [217.138.192.221 listed in zen.spamhaus.org]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [yuliakadulina2[at]gmail.com]
+        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+        *      [186.155.227.156 listed in wl.mailspike.net]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed May 17, 2023 at 6:52 PM CEST, Andy Shevchenko wrote:
-> On Wed, May 17, 2023 at 7:47=E2=80=AFPM Esteban Blanc <eblanc@baylibre.co=
-m> wrote:
-> > On Fri May 12, 2023 at 7:22 PM CEST,  wrote:
-> > > Fri, May 12, 2023 at 04:17:53PM +0200, Esteban Blanc kirjoitti:
->
-> ...
->
-> > > > +/* Multiplier for ppb conversions */
-> > > > +#define PPB_MULT (1000000000LL)
-> > >
-> > > We have something in units.h. Can you use generic macro?
-> >
-> > I found GIGA, NANO and NANOHZ_PER_HZ that have the same value in
-> > units.h. However I'm not sure any of them have the correct meaning in
-> > this situation.
->
-> MULT[IPLIER] has no units AFAIU, so SI macro can be used, no? NANO or
-> GIGA depends on what the actual sign of the exponent of the multiplier
-> is. Write it on paper and check the exponent in the equation(s) and
-> hence decide which one to use.
 
-Thanks. I've checked and it should be NANO.
+Top of the day to you, =
 
-> > > > +   if (tmp < 0)
-> > > > +           tmp -=3D TICKS_PER_HOUR / 2LL;
-> > > > +   else
-> > > > +           tmp +=3D TICKS_PER_HOUR / 2LL;
-> > >
-> > > Is it guaranteed to have no overflow here?
-> >
-> > We know from `tps6594_rtc_set_offset` that the loaded value can't be
-> > more than 277774 (register default value is 0), So `tmp` can't exceed
-> > 277774000000000 which is lower than 2^63-1. No overflow here.
-> >
-> > TICK_PER_HOUR / 2LL =3D 117964800, so at the end of this computation,
-> > `tmp` can have a maximum value of 277774117964800 which is still
-> > inferior to 2^63-1.
->
-> Please add a respective comment.
 
-I've reformatted this and put it in a SAFETY comment.
+I'm Yuliia Kadulina Deputy Chairman of the Management Board, and Personal F=
+inance Director @ Ukrsibbank Ukraine. I have a proposal for you. Kindly rev=
+ert so I can fill you in on the details.
 
-Thanks for your help,
-
---=20
-Esteban Blanc
-BayLibre
+Thanks,
+Yuliia
