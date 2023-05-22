@@ -2,120 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EAE070BBAD
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 13:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23BE870BC3A
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 13:50:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233152AbjEVLYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 07:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
+        id S233526AbjEVLu3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 07:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233350AbjEVLXu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 07:23:50 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0783F30DF;
-        Mon, 22 May 2023 04:20:18 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-62384e391e3so22973476d6.3;
-        Mon, 22 May 2023 04:20:17 -0700 (PDT)
+        with ESMTP id S233567AbjEVLuL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 07:50:11 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E14621B5
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 04:50:01 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-30781184e78so2401276f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 04:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684754367; x=1687346367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684756200; x=1687348200;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i83fQte0kPi44BubtTWNEheRMfnxb2j5LDfuJQhOHp0=;
-        b=qFdG49JI+6ZhvL/SM76DpZsKLsV0sl7pKc094y4HAIa5y9qJ8WIgvNjXo0hmYv3rfp
-         6Z/VrjHO0f3hoRQgOucTA2PJozbwA822zdQLN0L6IFRwEGiNB3PlzzNnFX0Kub5LuKtp
-         GQUCUHHlVeC7SwzZ4c754QxfHPioOq+B4q2l1MK22iNOgQ5994l0NDnG67H9ZLcbKjSr
-         zPqCyQh+bbXkL/kpI9s9yGuHt0inSXtgpASxYHSgPlDB3FtRRg3cU0l/gs/yEwK74mvc
-         8IQsGLN1mNO/nQs884wWbCKTqmEFx0+1MnDnAQlMVee+NF4/8eShKR3FEtuxUkTGw/l9
-         t+Aw==
+        bh=sKgwbXDZ93PhOsZpMHYSuhMcEuh5tVlQ5GHAYoAXTTk=;
+        b=oXlZi6dQ+locvnwMb6tXz6Haerq4h2rmMsYNDuyKGsjCLrXuZZ1WoRXsul7Hmffq5V
+         BAL5Xy1fvZBlwHlGAT4Gt9cdnpFuUHC2JYFmRLtAE9y3lQmrh0C+vKG4mtkZbEBMn711
+         CKts6AS3KF5mRTiEiAI+P31FqY1psc+RKnBht4wKqqVdoaW+l7FwVq9KM4rxq6MEu5Fq
+         Io9rAmmmjXOOwWXFp2Xy8qeX1NwzTdOOwg3ScATZSQ8mzRVx61Q2314f4i1dos2r1GoA
+         cMt8ymh+xftxI78J0hkyTAuZvtfVhvhgUMELKVvy7asFaUmGTrJNEsNXE2Rowf+wWf42
+         dQww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684754367; x=1687346367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i83fQte0kPi44BubtTWNEheRMfnxb2j5LDfuJQhOHp0=;
-        b=fXLuFPQI5Q53WITxtl/lxEJBTbdqWdjNn29gat70etwpmm0LNKw3TfpywdfhggMQV3
-         aphXfsU/QwguGyXE/jaQ4c2q5Nol4SnsYbnwrGvcdgDBM1iYvxU1WHQmocJhEWv48nev
-         Z5JXulussqxe56XDrxNM/bnDNqZZoXoy6MFBCU16EcCbHIqY+pqobu2N3yvGHS8UBqkn
-         Hhu7ZzZB9/8jY3YkasKGl9vT4DeOPNMsgMcEmeISIbXQS75Mtodw2CDuGa5oxAgdBjgN
-         QcKzCjmmh0v5cv4c+bDNNmVkQb/kCGDHX/jrZ8hTh/p9+5XS8Tua05A026/FmZYD9tZa
-         Gf9w==
-X-Gm-Message-State: AC+VfDxB1Ls3DwAdo+RTTK1AK9a4EygQhg3ACfAjISpMCmdXZFTgbcwR
-        iC+6QFFsouZbkbelDUK1DpShNEtVFlWDMeTVGYI=
-X-Google-Smtp-Source: ACHHUZ7At+03MmzdjnVYn32VGSuVFMl+tRrffaBTjQzv7x24hKdLsK3EbrSk4RFF9BVvITYCu4aH1m0Nz1gBBjaudRQ=
-X-Received: by 2002:a05:6214:c62:b0:5ef:7e33:c6c9 with SMTP id
- t2-20020a0562140c6200b005ef7e33c6c9mr18954386qvj.38.1684754366919; Mon, 22
- May 2023 04:19:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
- <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
- <CAMRc=Md-CzrG3QPtnh0OxYaHTAYZ2aUfMKhkAOeRm2Zn30qE0A@mail.gmail.com>
- <ZGiWdQcR6Zq6Aw65@surfacebook> <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
-In-Reply-To: <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 22 May 2023 14:18:50 +0300
-Message-ID: <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-To:     jerome Neanne <jneanne@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20221208; t=1684756200; x=1687348200;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sKgwbXDZ93PhOsZpMHYSuhMcEuh5tVlQ5GHAYoAXTTk=;
+        b=VVuE5zY8CRA1npMVocI6WdxJW+CDw+7gw0K3+lKhioLP7ai5Lceo1nSutc22eV/PXg
+         KtNH6rtl3nGXU7LWGZs4cKbgpGdSKxfLJrprrJysPChpRMRv2QZDR26Zfxfbl78IXZG5
+         Vtlm+iMxg3Z4vNKxnRx0TAgk5SPOryf9JY1aNjnxIuc7t3RlT5VfuO1E30bPygpJiXet
+         PgO01RM44NJPmZqQGGSHzNGWVq5fP6F3FaC6KangrT9IVR6H8bf1CicM83Z2ulTsMSh0
+         R++Rrx4YwW1gZOes6b228Z0VxalWuJpG1VPSugghFBSnU3al/9YwL2TTnvThjcd+zEHR
+         1Cmg==
+X-Gm-Message-State: AC+VfDyE367Hwp0xiKJSFqugUaKzB3KYcRvOGCBP5tFXurqezEcgbKQK
+        vk1ekGjkwaC6le4zUtCNuSm3HA==
+X-Google-Smtp-Source: ACHHUZ4aNoH0wsH4IeJXzePZtSiXVMs1nKqN0mwAKpV4dgI33pkdm3OAwuaeuaJLSl4OQrhKVI7aag==
+X-Received: by 2002:adf:f48f:0:b0:307:5091:5b96 with SMTP id l15-20020adff48f000000b0030750915b96mr10113342wro.22.1684756200409;
+        Mon, 22 May 2023 04:50:00 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:72d:52cc:8221:fcda])
+        by smtp.gmail.com with ESMTPSA id n16-20020a1c7210000000b003f6042d6d92sm3490280wmc.46.2023.05.22.04.49.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 May 2023 04:49:59 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 22 May 2023 13:49:58 +0200
+Message-Id: <CSSS892QYLWK.3T71MRNHOH0IZ@burritosblues>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
+        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v4 1/3] rtc: tps6594: Add driver for TPS6594 RTC
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+X-Mailer: aerc 0.14.0
+References: <20230512141755.1712358-1-eblanc@baylibre.com>
+ <20230512141755.1712358-2-eblanc@baylibre.com>
+ <ZF514wvUt_xrU1gG@surfacebook> <CSOPFJOVLSS1.1XKI60F9TLBMN@burritosblues>
+ <CAHp75Vfg+yAhJ58qt76GHqxWHD48hF-6ZnT=xEUh+1rzr7UvVg@mail.gmail.com>
+In-Reply-To: <CAHp75Vfg+yAhJ58qt76GHqxWHD48hF-6ZnT=xEUh+1rzr7UvVg@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 22, 2023 at 10:47=E2=80=AFAM jerome Neanne <jneanne@baylibre.co=
+On Wed May 17, 2023 at 6:52 PM CEST, Andy Shevchenko wrote:
+> On Wed, May 17, 2023 at 7:47=E2=80=AFPM Esteban Blanc <eblanc@baylibre.co=
 m> wrote:
-> On 20/05/2023 11:44, andy.shevchenko@gmail.com wrote:
-> > Mon, May 15, 2023 at 05:36:46PM +0200, Bartosz Golaszewski kirjoitti:
-> >> On Thu, May 11, 2023 at 4:09=E2=80=AFPM Jerome Neanne <jneanne@baylibr=
-e.com> wrote:
-
-...
-
-> >>> +       gpio->gpio_chip =3D tps65219_gpio_chip;
-> >>
-> >> Aren't you getting any warnings here about dropping the 'const' from
-> >> the global structure?
+> > On Fri May 12, 2023 at 7:22 PM CEST,  wrote:
+> > > Fri, May 12, 2023 at 04:17:53PM +0200, Esteban Blanc kirjoitti:
+>
+> ...
+>
+> > > > +/* Multiplier for ppb conversions */
+> > > > +#define PPB_MULT (1000000000LL)
+> > >
+> > > We have something in units.h. Can you use generic macro?
 > >
-> > But this is a copy of the contents and not the simple pointer.
+> > I found GIGA, NANO and NANOHZ_PER_HZ that have the same value in
+> > units.h. However I'm not sure any of them have the correct meaning in
+> > this situation.
+>
+> MULT[IPLIER] has no units AFAIU, so SI macro can be used, no? NANO or
+> GIGA depends on what the actual sign of the exponent of the multiplier
+> is. Write it on paper and check the exponent in the equation(s) and
+> hence decide which one to use.
 
-I commented on Bart's question.
+Thanks. I've checked and it should be NANO.
 
-> In many other places where this is done, the struct is declared like:
+> > > > +   if (tmp < 0)
+> > > > +           tmp -=3D TICKS_PER_HOUR / 2LL;
+> > > > +   else
+> > > > +           tmp +=3D TICKS_PER_HOUR / 2LL;
+> > >
+> > > Is it guaranteed to have no overflow here?
+> >
+> > We know from `tps6594_rtc_set_offset` that the loaded value can't be
+> > more than 277774 (register default value is 0), So `tmp` can't exceed
+> > 277774000000000 which is lower than 2^63-1. No overflow here.
+> >
+> > TICK_PER_HOUR / 2LL =3D 117964800, so at the end of this computation,
+> > `tmp` can have a maximum value of 277774117964800 which is still
+> > inferior to 2^63-1.
 >
-> static const struct gpio_chip template_chip =3D {
->
-> After internal review, I changed this to:
->
-> static const struct gpio_chip tps65219_gpio_chip =3D {
->
-> This is because I didn't want to have this "template" that sounds to me
-> like "dummy". Maybe I misunderstood and this "template" was used on
-> purpose because this const struct is just copied once to initialize
-> tps65219_gpio->gpio_chip during probe.
->
-> Introducing tps65219_gpio_chip name is maybe confusing with
-> tps65219_gpio struct.
->
-> I think the const should not be a problem here but the naming I used
-> might be misleading. If you have a suggestion of what is a good practice
-> to make this piece of code clearer. I'll follow your suggestion (use
-> template? more_explicit name like ???).
+> Please add a respective comment.
 
-It's up to Bart.
+I've reformatted this and put it in a SAFETY comment.
+
+Thanks for your help,
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Esteban Blanc
+BayLibre
