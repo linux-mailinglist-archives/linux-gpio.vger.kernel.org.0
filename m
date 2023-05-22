@@ -2,110 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B7070BB1A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 13:06:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EAE070BBAD
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 13:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233108AbjEVLG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 07:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
+        id S233152AbjEVLYD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 07:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233119AbjEVLFs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 07:05:48 -0400
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C462B10F1;
-        Mon, 22 May 2023 04:00:39 -0700 (PDT)
-X-QQ-mid: Yeas48t1684753100t145t45753
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [122.235.247.1])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 5886321521965178754
-To:     "'Andrew Lunn'" <andrew@lunn.ch>,
-        "'Michael Walle'" <michael@walle.cc>,
-        "'Shreeya Patel'" <shreeya.patel@collabora.com>
-Cc:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
-        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230515063200.301026-1-jiawenwu@trustnetic.com> <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook> <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch> <028601d989f9$230ee120$692ca360$@trustnetic.com> <f0b571ab-544b-49c3-948f-d592f931673b@lunn.ch> <005a01d98c8b$e48d2b60$ada78220$@trustnetic.com>
-In-Reply-To: <005a01d98c8b$e48d2b60$ada78220$@trustnetic.com>
-Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Mon, 22 May 2023 18:58:19 +0800
-Message-ID: <005e01d98c9c$5181fb00$f485f100$@trustnetic.com>
+        with ESMTP id S233350AbjEVLXu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 07:23:50 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0783F30DF;
+        Mon, 22 May 2023 04:20:18 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-62384e391e3so22973476d6.3;
+        Mon, 22 May 2023 04:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684754367; x=1687346367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i83fQte0kPi44BubtTWNEheRMfnxb2j5LDfuJQhOHp0=;
+        b=qFdG49JI+6ZhvL/SM76DpZsKLsV0sl7pKc094y4HAIa5y9qJ8WIgvNjXo0hmYv3rfp
+         6Z/VrjHO0f3hoRQgOucTA2PJozbwA822zdQLN0L6IFRwEGiNB3PlzzNnFX0Kub5LuKtp
+         GQUCUHHlVeC7SwzZ4c754QxfHPioOq+B4q2l1MK22iNOgQ5994l0NDnG67H9ZLcbKjSr
+         zPqCyQh+bbXkL/kpI9s9yGuHt0inSXtgpASxYHSgPlDB3FtRRg3cU0l/gs/yEwK74mvc
+         8IQsGLN1mNO/nQs884wWbCKTqmEFx0+1MnDnAQlMVee+NF4/8eShKR3FEtuxUkTGw/l9
+         t+Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684754367; x=1687346367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i83fQte0kPi44BubtTWNEheRMfnxb2j5LDfuJQhOHp0=;
+        b=fXLuFPQI5Q53WITxtl/lxEJBTbdqWdjNn29gat70etwpmm0LNKw3TfpywdfhggMQV3
+         aphXfsU/QwguGyXE/jaQ4c2q5Nol4SnsYbnwrGvcdgDBM1iYvxU1WHQmocJhEWv48nev
+         Z5JXulussqxe56XDrxNM/bnDNqZZoXoy6MFBCU16EcCbHIqY+pqobu2N3yvGHS8UBqkn
+         Hhu7ZzZB9/8jY3YkasKGl9vT4DeOPNMsgMcEmeISIbXQS75Mtodw2CDuGa5oxAgdBjgN
+         QcKzCjmmh0v5cv4c+bDNNmVkQb/kCGDHX/jrZ8hTh/p9+5XS8Tua05A026/FmZYD9tZa
+         Gf9w==
+X-Gm-Message-State: AC+VfDxB1Ls3DwAdo+RTTK1AK9a4EygQhg3ACfAjISpMCmdXZFTgbcwR
+        iC+6QFFsouZbkbelDUK1DpShNEtVFlWDMeTVGYI=
+X-Google-Smtp-Source: ACHHUZ7At+03MmzdjnVYn32VGSuVFMl+tRrffaBTjQzv7x24hKdLsK3EbrSk4RFF9BVvITYCu4aH1m0Nz1gBBjaudRQ=
+X-Received: by 2002:a05:6214:c62:b0:5ef:7e33:c6c9 with SMTP id
+ t2-20020a0562140c6200b005ef7e33c6c9mr18954386qvj.38.1684754366919; Mon, 22
+ May 2023 04:19:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHvj8QD3pC+6Aq9H9h6P1+q5LrHRgMH5FTyAkITzAABJU2Y7wJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNcC/cxtnwIXsv+OAc8FI2Cuj14aYA==
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
+ <CAMRc=Md-CzrG3QPtnh0OxYaHTAYZ2aUfMKhkAOeRm2Zn30qE0A@mail.gmail.com>
+ <ZGiWdQcR6Zq6Aw65@surfacebook> <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
+In-Reply-To: <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 22 May 2023 14:18:50 +0300
+Message-ID: <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+To:     jerome Neanne <jneanne@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Monday, May 22, 2023 5:01 PM, Jiawen Wu wrote:
-> On Friday, May 19, 2023 9:13 PM, Andrew Lunn wrote:
-> > > I have one MSI-X interrupt for all general MAC interrupt (see TXGBE_PX_MISC_IEN_MASK).
-> > > It has 32 bits to indicate various interrupts, GPIOs are the one of them. When GPIO
-> > > interrupt is determined, GPIO_INT_STATUS register should be read to determine
-> > > which GPIO line has changed state.
+On Mon, May 22, 2023 at 10:47=E2=80=AFAM jerome Neanne <jneanne@baylibre.co=
+m> wrote:
+> On 20/05/2023 11:44, andy.shevchenko@gmail.com wrote:
+> > Mon, May 15, 2023 at 05:36:46PM +0200, Bartosz Golaszewski kirjoitti:
+> >> On Thu, May 11, 2023 at 4:09=E2=80=AFPM Jerome Neanne <jneanne@baylibr=
+e.com> wrote:
+
+...
+
+> >>> +       gpio->gpio_chip =3D tps65219_gpio_chip;
+> >>
+> >> Aren't you getting any warnings here about dropping the 'const' from
+> >> the global structure?
 > >
-> > So you have another interrupt controller above the GPIO interrupt
-> > controller. regmap-gpio is pushing you towards describing this
-> > interrupt controller as a Linux interrupt controller.
-> >
-> > When you look at drivers handling interrupts, most leaf interrupt
-> > controllers are not described as Linux interrupt controllers. The
-> > driver interrupt handler reads the interrupt status register and
-> > internally dispatches to the needed handler. This works well when
-> > everything is internal to one driver.
-> >
-> > However, here, you have two drivers involved, your MAC driver and a
-> > GPIO driver instantiated by the MAC driver. So i think you are going
-> > to need to described the MAC interrupt controller as a Linux interrupt
-> > controller.
-> >
-> > Take a look at the mv88e6xxx driver, which does this. It has two
-> > interrupt controller embedded within it, and they are chained.
-> 
-> Now I add two interrupt controllers, the first one for the MAC interrupt,
-> and the second one for regmap-gpio. In the second adding flow,
-> 
-> 	irq = irq_find_mapping(txgbe->misc.domain, TXGBE_PX_MISC_GPIO_OFFSET);
-> 	err = regmap_add_irq_chip_fwnode(fwnode, regmap, irq, 0, 0,
-> 					 chip, &chip_data);
-> 
-> and then,
-> 
-> 	config.irq_domain = regmap_irq_get_domain(chip_data);
-> 	gpio_regmap = gpio_regmap_register(&config);
-> 
-> "txgbe->misc.domain" is the MAC interrupt domain. I think this flow should
-> be correct, but still failed to get gpio_irq from gpio_desc with err -517.
-> 
-> And I still have doubts about what I said earlier:
-> https://lore.kernel.org/netdev/20230515063200.301026-1-
-> jiawenwu@trustnetic.com/T/#me1be68e1a1e44426ecc0dd8edf0f6b224e50630d
-> 
-> There really is nothing wrong with gpiochip_to_irq()??
+> > But this is a copy of the contents and not the simple pointer.
 
-There is indeed something wrong in gpiochip_to_irq(), since commit 5467801 ("gpio:
-Restrict usage of GPIO chip irq members before initialization"):
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit?id=5467801f1fcbdc46bc7298a84dbf3ca1ff2a7320
+I commented on Bart's question.
 
-When I use gpio_regmap_register() to add gpiochip, gpiochip_add_irqchip() will just
-return 0 since irqchip = NULL, then gc->irq.initialized = false.
+> In many other places where this is done, the struct is declared like:
+>
+> static const struct gpio_chip template_chip =3D {
+>
+> After internal review, I changed this to:
+>
+> static const struct gpio_chip tps65219_gpio_chip =3D {
+>
+> This is because I didn't want to have this "template" that sounds to me
+> like "dummy". Maybe I misunderstood and this "template" was used on
+> purpose because this const struct is just copied once to initialize
+> tps65219_gpio->gpio_chip during probe.
+>
+> Introducing tps65219_gpio_chip name is maybe confusing with
+> tps65219_gpio struct.
+>
+> I think the const should not be a problem here but the naming I used
+> might be misleading. If you have a suggestion of what is a good practice
+> to make this piece of code clearer. I'll follow your suggestion (use
+> template? more_explicit name like ???).
 
- Cc the committer: Shreeya Patel.
+It's up to Bart.
 
-
+--=20
+With Best Regards,
+Andy Shevchenko
