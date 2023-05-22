@@ -2,61 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A545270B88A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 11:08:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E70C170B8AF
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 11:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbjEVJID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 05:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
+        id S230350AbjEVJSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 05:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232447AbjEVJHu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 05:07:50 -0400
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50990DC;
-        Mon, 22 May 2023 02:07:43 -0700 (PDT)
-X-QQ-mid: Yeas5t1684746410t956t64919
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [122.235.247.1])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 6015390893035020288
-To:     "'Andrew Lunn'" <andrew@lunn.ch>,
-        "'Michael Walle'" <michael@walle.cc>
-Cc:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
-        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <20230515063200.301026-1-jiawenwu@trustnetic.com> <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook> <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch> <028601d989f9$230ee120$692ca360$@trustnetic.com> <f0b571ab-544b-49c3-948f-d592f931673b@lunn.ch> <005a01d98c8b$e48d2b60$ada78220$@trustnetic.com>
-In-Reply-To: <005a01d98c8b$e48d2b60$ada78220$@trustnetic.com>
-Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Mon, 22 May 2023 17:06:50 +0800
-Message-ID: <005b01d98c8c$be718100$3b548300$@trustnetic.com>
+        with ESMTP id S229673AbjEVJSn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 05:18:43 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FE995;
+        Mon, 22 May 2023 02:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1684747122; x=1716283122;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BC/9OS8kOdk7SPv1XjRs1P3rGecz/xIyWEwTr6oiDys=;
+  b=DHv+KlyrNVYd5vCdEURszDYmNfyFZkigdRRk2iA2aCdgwxfKQ5j1eD5n
+   RdEJW/0bPazimwf+MQpqyK2S9sMQwz12zr5o+bjfG13eDH5e/MMGhRFwR
+   ZlxY1XdhsErS37knv8NgW9LsSyd2MX2QsXVff0i41Jy2TRhUyyOV32Q5c
+   Onxhk1v61gWF1xZxH2Dr6aKcXKOuXxyythHAkUGfdhU4053WbgfZuhQEm
+   whSROFU6uARnDk8hGnydNzL58V9SsYjRRv75qwMxieo8x2ZwYktN+dlSv
+   HPATbS5ngFjFYOTBkcNxEsBA/X3lWoEtMth/IfBMkLY3VIW6M72uiIj3K
+   A==;
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="scan'208";a="216609302"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 May 2023 02:18:41 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 22 May 2023 02:18:39 -0700
+Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Mon, 22 May 2023 02:18:37 -0700
+Message-ID: <ad907a40-3e00-e785-e072-460e955457cf@microchip.com>
+Date:   Mon, 22 May 2023 11:18:33 +0200
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/3] pinctrl: at91-pio4: Enable Push-Pull configuration
+Content-Language: en-US
+To:     <Ryan.Wanner@microchip.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <alexandre.belloni@bootlin.com>, <claudiu.beznea@microchip.com>,
+        <linus.walleij@linaro.org>, <ludovic.desroches@microchip.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <cover.1684313910.git.Ryan.Wanner@microchip.com>
+ <d898c31277f6bce6f7d830edf4332ff605498c7b.1684313910.git.Ryan.Wanner@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <d898c31277f6bce6f7d830edf4332ff605498c7b.1684313910.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHvj8QD3pC+6Aq9H9h6P1+q5LrHRgMH5FTyAkITzAABJU2Y7wJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNcC/cxtnwIXsv+OAc8FI2Cuj0G0AA==
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> And I still have doubts about what I said earlier:
-> https://lore.kernel.org/netdev/20230515063200.301026-1-
-> jiawenwu@trustnetic.com/T/#me1be68e1a1e44426ecc0dd8edf0f6b224e50630d
+On 17/05/2023 at 13:54, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> 
+> Enable push-pull configuration. Remove integer value argument from
+> open-drain configuration as it is discarded when pinconf function is
+> called from gpiolib. Add push-pull do debug and get functions.
+> 
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Sorry for paste error, the true link is:
-https://lore.kernel.org/netdev/02ad01d98a2b$4cd080e0$e67182a0$@trustnetic.com/
+Looks good to me:
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
+Thanks,
+   Nicolas
+
+> ---
+>   drivers/pinctrl/pinctrl-at91-pio4.c | 15 +++++++++++----
+>   1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+> index 2fe40acb6a3e..3c39d62bbc3c 100644
+> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
+> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+> @@ -762,6 +762,11 @@ static int atmel_conf_pin_config_group_get(struct pinctrl_dev *pctldev,
+>   			return -EINVAL;
+>   		arg = 1;
+>   		break;
+> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		if (res & ATMEL_PIO_OPD_MASK)
+> +			return -EINVAL;
+> +		arg = 1;
+> +		break;
+>   	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+>   		if (!(res & ATMEL_PIO_SCHMITT_MASK))
+>   			return -EINVAL;
+> @@ -827,10 +832,10 @@ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
+>   			conf &= (~ATMEL_PIO_PUEN_MASK);
+>   			break;
+>   		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> -			if (arg == 0)
+> -				conf &= (~ATMEL_PIO_OPD_MASK);
+> -			else
+> -				conf |= ATMEL_PIO_OPD_MASK;
+> +			conf |= ATMEL_PIO_OPD_MASK;
+> +			break;
+> +		case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +			conf &= (~ATMEL_PIO_OPD_MASK);
+>   			break;
+>   		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+>   			if (arg == 0)
+> @@ -948,6 +953,8 @@ static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
+>   		seq_printf(s, "%s ", "debounce");
+>   	if (conf & ATMEL_PIO_OPD_MASK)
+>   		seq_printf(s, "%s ", "open-drain");
+> +	if (!(conf & ATMEL_PIO_OPD_MASK))
+> +		seq_printf(s, "%s ", "push-pull");
+>   	if (conf & ATMEL_PIO_SCHMITT_MASK)
+>   		seq_printf(s, "%s ", "schmitt");
+>   	if (atmel_pioctrl->slew_rate_support && (conf & ATMEL_PIO_SR_MASK))
+
+-- 
+Nicolas Ferre
 
