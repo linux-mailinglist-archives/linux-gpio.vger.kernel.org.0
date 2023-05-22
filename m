@@ -2,171 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6A670B70E
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 09:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECFA170B7E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 10:45:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232366AbjEVHvt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 03:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
+        id S232401AbjEVIpJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 04:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbjEVHvX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 03:51:23 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FE2124
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 00:49:50 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f60444238cso8023375e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 00:49:50 -0700 (PDT)
+        with ESMTP id S232213AbjEVIpI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 04:45:08 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83ACBA
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 01:45:05 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-3095b1b6e02so1599592f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 01:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684741751; x=1687333751;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9wWxl1zF62p1V2faLQ05QihXd2miK3f6UiC5lo5sl/8=;
-        b=LEnu1D30qe2YE8VmMxMBbbqjcid/lq8JZvTcPdqHrlMNo8Jw607akLhWgSWRElfhcF
-         nlmOyb3K2nqU57Kd1CQW+Vwx1sVLNIN0p4FF7nhV9Yy5jm0aRvAZLsgd6+MijlzkR3Z+
-         trlyRq7P5ns7iblr0yh/VLvoqQtaIb+iIwK0xpVNWup+qsyH3UFzP4TP/256GZC5NOB0
-         mR+JuD5PLJK7kjokdeeYL8H/z9Fg6Eb4lU5vMLMhjKroVHLApeEQI8mt6uoxBjONv1Ol
-         rpOmHW0aWZ7T6AcbjExBv0U1LV+0iuz6dnuj3s9Dmb4O1Dr6f1Uti/uTniQ3Q78RKKEo
-         Enyg==
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684745104; x=1687337104;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xx/yHMnjVgWF4QcF/HJeTU6OliuvijvBL2Kqd+0E4e8=;
+        b=1UDYjGh+BPZr2LEsSh3RQXEFzaHhqBaP1+FsoGcNjDbS4uZXZi9F2KyQryNpg7pETT
+         6k02A5SKqgyKKCDVoJL55gYIoY4N22aUXcW47uzYv+9g3+2fdBRKT1/pJW+WqVKPqaTd
+         mqqHO+4A4ijOEzV3M/vu/DhYAbFIHVkbhYry2pIOKE09IIcMvWJDTgeYtLE2fL+7clN1
+         vRWXZP0PcRI8fje/hRD7cz4CsOmkuCliCGWwfsDbzz14XJQZRcBg6qo8q7UzcPmhxoWg
+         6cK2JAdANkgRMLu4lmMRJ65lWS9lGM0z3FqGwtNub4koooLVr37assjeS8FCZiBHgyaV
+         7FOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684741751; x=1687333751;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9wWxl1zF62p1V2faLQ05QihXd2miK3f6UiC5lo5sl/8=;
-        b=UJW+SmZM+CiSUuzOMrVVhqU21ypT+aa4RU54Xr/Y0ypEo0IrZkSHAtJDPdxBxVTh0k
-         Kdtm9Psi7tHoXkOF+UTI9BFEM0DE+XweZLnfuOpdttSKh97kMxfLlsAAEj+X52YVtl4X
-         GYTLLkaTZz8/GQCfI4JkhDlLyeAANZ8U9JHjRJSw7ct2XwAGtJJQMeFagEi1Tmvx/44T
-         F+iipNCUTpEDXzrNdGVfrUjels8wsDouozm3XOiVMrK7ntFAqpD+sWbE61GRmT5rFl/r
-         Wtt7SXM3Vnvla8yYq6NVI+Qw6s+i1XW+T+FDN1hPTdb744w2CKILYeinuX+ge2YKwnz1
-         +2yA==
-X-Gm-Message-State: AC+VfDza681PPUveHYtdOGsRuSfH0d99E9A4LfNqMAn6RPBK+K31g+HJ
-        yxK5rieE4961PWkjbqibxAwJlDyt+NzglHhDWnI=
-X-Google-Smtp-Source: ACHHUZ4Ox5p2Dzx7thIScRw5rM1FRwOL+nyUGxhNXo/ZtC5TPo3sWT0tGe60E34J1srluQzAJIutRQ==
-X-Received: by 2002:a1c:7c01:0:b0:3f5:db0f:4a74 with SMTP id x1-20020a1c7c01000000b003f5db0f4a74mr6952078wmc.21.1684741751225;
-        Mon, 22 May 2023 00:49:11 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id i7-20020a05600c290700b003f506e6ff83sm7427201wmd.22.2023.05.22.00.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 00:49:10 -0700 (PDT)
-Date:   Mon, 22 May 2023 10:49:06 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     wellslutw@gmail.com
-Cc:     linux-gpio@vger.kernel.org
-Subject: [bug report] pinctrl: Add driver for Sunplus SP7021
-Message-ID: <c58e0499-ecc8-4383-b607-a168db53ecdf@kili.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        d=1e100.net; s=20221208; t=1684745104; x=1687337104;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xx/yHMnjVgWF4QcF/HJeTU6OliuvijvBL2Kqd+0E4e8=;
+        b=KwCw82e9S7S6M1+SvHEYlUgT0qhyhK0uJLyJLh4pxVbXe2D0YcLcsWTl0YqFcE5Gn5
+         DjMNry4D06UYnPSDPDFqxWuzQo4j1QVwyEEgNjtw5H/SlR9ab/sIsZJ7iSNRm+axFm2r
+         CRvW7JpsNR0FxTyymuGJyBtYuzC8/KsmoPSh/umqR71naVm2Kji+dPDz7L2+NOKVsuJV
+         JR/CQurIo6HhRC/6/m6lCbQalxC4/TxL5tKk36HTs09V3zXL0YCVJcQqio+yqgsfBjFH
+         lu+05d0TWUkrb55T8hmHqOHy/Zjrv6aWha5S4rPqkZT2DFhDIBME00RRbWLocyWJpFoN
+         zIUA==
+X-Gm-Message-State: AC+VfDzIVceqmaFM4gxVW2b/gZItE0bdLZEJvr9rKBAFh4nKlAOsXocl
+        gS4s0a4hVqlUU1ViXzg9CVNgkg==
+X-Google-Smtp-Source: ACHHUZ7BDGQPkYzVpmgbmhFfKupu4EBCiwWLCV9C3ObjST1s1V08/DvUXG+k8JTERV+zaCiVUb/vrA==
+X-Received: by 2002:a5d:568d:0:b0:306:4239:4cd with SMTP id f13-20020a5d568d000000b00306423904cdmr6026365wrv.31.1684745104189;
+        Mon, 22 May 2023 01:45:04 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:bdef:c8a1:3699:6b83])
+        by smtp.gmail.com with ESMTPSA id n1-20020a5d4001000000b003062ad45243sm7016080wrp.14.2023.05.22.01.45.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 May 2023 01:45:03 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 22 May 2023 10:45:02 +0200
+Message-Id: <CSSOANIQ2JQR.9JFPM92KNQX9@burritosblues>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
+        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+X-Mailer: aerc 0.14.0
+References: <20230512141755.1712358-1-eblanc@baylibre.com>
+ <20230512141755.1712358-3-eblanc@baylibre.com>
+ <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
+ <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
+ <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
+ <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
+ <CSOMS0W9MIUG.2MN43QZO9EX7Q@burritosblues>
+ <CAHp75VeNvfDqkQZq_ghiv8vb2NaogKqkiFi9i0N3yLgA=ZTDbA@mail.gmail.com>
+In-Reply-To: <CAHp75VeNvfDqkQZq_ghiv8vb2NaogKqkiFi9i0N3yLgA=ZTDbA@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Wells Lu,
+On Wed May 17, 2023 at 5:04 PM CEST, Andy Shevchenko wrote:
+> On Wed, May 17, 2023 at 5:43=E2=80=AFPM Esteban Blanc <eblanc@baylibre.co=
+m> wrote:
+> > On Wed May 17, 2023 at 3:51 PM CEST, Andy Shevchenko wrote:
+> > > On Wed, May 17, 2023 at 12:58=E2=80=AFPM Esteban Blanc <eblanc@baylib=
+re.com> wrote:
+> > > > On Tue May 16, 2023 at 6:48 PM CEST, Andy Shevchenko wrote:
+> > > > > On Tue, May 16, 2023 at 4:05=E2=80=AFPM Esteban Blanc <eblanc@bay=
+libre.com> wrote:
+> > > > > > On Fri May 12, 2023 at 7:07 PM CEST,  wrote:
+> > > > > > > Fri, May 12, 2023 at 04:17:54PM +0200, Esteban Blanc kirjoitt=
+i:
+>
+> ...
+>
+> > > > > > > > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)          (0x31 +=
+ (gpio_inst))
+> > > > > > > > +#define TPS6594_REG_GPIO1_CONF                            =
+ 0x31
+> > > > > > > > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)  (TPS6594_REG_GP=
+IO1_CONF + (gpio_inst))
+> > > > > > >
+> > > > > > > Why? The original code with parameter 0 will issue the same.
+> > > > > >
+> > > > > > I felt that replacing 0x31 with a constant would make the compu=
+tation
+> > > > > > in TPS6594_REG_GPIOX_CONFIG more understandable. What do you th=
+ink?
+> > > > >
+> > > > > The question is why that register is so special that you need to =
+have
+> > > > > it as a constant explicitly?
+> > > >
+> > > > It is not special, it's just the first one of the serie of config
+> > > > registers. I felt like just having 0x31 without context was a bit w=
+eird
+> > >
+> > > I'm not sure I understand what 'context' you are talking about.
+> > I was trying to convey the fact that 0x31 was representing
+> > TPS6594_REG_GPIO1_CONF address. This way when looking at
+> > TPS6594_REG_GPIOX_CONF(...), one will better understand that this macro
+> > is just about offsetting from the first GPIO_CONF register.
+>
+> You can add a comment on top of the macro, so anybody can read and see
+> what this macro is doing.
 
-The patch aa74c44be19c: "pinctrl: Add driver for Sunplus SP7021" from
-Jan 16, 2022, leads to the following Smatch static checker warning:
+Ok I will do that then. Thanks :)
 
-drivers/pinctrl/sunplus/sppctl.c:886 sppctl_dt_node_to_map() error: potential null dereference 'configs'.  (kmalloc returns null)
-drivers/pinctrl/sunplus/sppctl.c:899 sppctl_dt_node_to_map() error: potential null dereference 'configs'.  (kmalloc returns null)
+> > > This is pretty normal to have two kind of definitions (depending on t=
+he case):
+> > > 1/
+> > >
+> > >   #define FOO_1 ...
+> > >   #define FOO_2 ...
+> > >
+> > > and so on
+> > >
+> > > 2/
+> > >
+> > >   #define FOO(x)  (... (x) ...)
+> > >
+> > > Having a mix of them seems quite unusual.
+> > I did not know that. I will revert this change for next version then.
+>
+> Don't get me wrong, it's possible to have, but since it's unusual it
+> needs to be well justified. In the change you proposed you have
+> changed that, but I haven't seen where the new definition is used  (in
+> *.c files).
 
-drivers/pinctrl/sunplus/sppctl.c
-    820 static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node *np_config,
-    821                                  struct pinctrl_map **map, unsigned int *num_maps)
-    822 {
-    823         struct sppctl_pdata *pctl = pinctrl_dev_get_drvdata(pctldev);
-    824         int nmG = of_property_count_strings(np_config, "groups");
-    825         const struct sppctl_func *f = NULL;
-    826         u8 pin_num, pin_type, pin_func;
-    827         struct device_node *parent;
-    828         unsigned long *configs;
-    829         struct property *prop;
-    830         const char *s_f, *s_g;
-    831 
-    832         const __be32 *list;
-    833         u32 dt_pin, dt_fun;
-    834         int i, size = 0;
-    835 
-    836         list = of_get_property(np_config, "sunplus,pins", &size);
-    837 
-    838         if (nmG <= 0)
-    839                 nmG = 0;
-    840 
-    841         parent = of_get_parent(np_config);
-    842         *num_maps = size / sizeof(*list);
-    843 
-    844         /*
-    845          * Process property:
-    846          *     sunplus,pins = < u32 u32 u32 ... >;
-    847          *
-    848          * Each 32-bit integer defines a individual pin in which:
-    849          *
-    850          *   Bit 32~24: defines GPIO pin number. Its range is 0 ~ 98.
-    851          *   Bit 23~16: defines types: (1) fully-pinmux pins
-    852          *                             (2) IO processor pins
-    853          *                             (3) digital GPIO pins
-    854          *   Bit 15~8:  defines pins of peripherals (which are defined in
-    855          *              'include/dt-binging/pinctrl/sppctl.h').
-    856          *   Bit 7~0:   defines types or initial-state of digital GPIO pins.
-    857          */
-    858         for (i = 0; i < (*num_maps); i++) {
-    859                 dt_pin = be32_to_cpu(list[i]);
-    860                 pin_num = FIELD_GET(GENMASK(31, 24), dt_pin);
-    861 
-    862                 if (pin_num >= sppctl_pins_all_sz) {
-    863                         dev_err(pctldev->dev, "Invalid pin property at index %d (0x%08x)\n",
-    864                                 i, dt_pin);
-    865                         return -EINVAL;
-    866                 }
-    867         }
-    868 
-    869         *map = kcalloc(*num_maps + nmG, sizeof(**map), GFP_KERNEL);
-    870         if (*map == NULL)
-    871                 return -ENOMEM;
-    872 
-    873         for (i = 0; i < (*num_maps); i++) {
-    874                 dt_pin = be32_to_cpu(list[i]);
-    875                 pin_num = FIELD_GET(GENMASK(31, 24), dt_pin);
-    876                 pin_type = FIELD_GET(GENMASK(23, 16), dt_pin);
-    877                 pin_func = FIELD_GET(GENMASK(15, 8), dt_pin);
-    878                 (*map)[i].name = parent->name;
-    879 
-    880                 if (pin_type == SPPCTL_PCTL_G_GPIO) {
-    881                         /* A digital GPIO pin */
-    882                         (*map)[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
-    883                         (*map)[i].data.configs.num_configs = 1;
-    884                         (*map)[i].data.configs.group_or_pin = pin_get_name(pctldev, pin_num);
-    885                         configs = kmalloc(sizeof(*configs), GFP_KERNEL);
-                                ^^^^^^^^^^^^^^^^^^
-Static checkers like for kmalloc to be checked.
+GPIO1_CONF is only used by the GPIOX_CONF macro in the header.
 
---> 886                         *configs = FIELD_GET(GENMASK(7, 0), dt_pin);
-    887                         (*map)[i].data.configs.configs = configs;
-    888 
-    889                         dev_dbg(pctldev->dev, "%s: GPIO (%s)\n",
-    890                                 (*map)[i].data.configs.group_or_pin,
-    891                                 (*configs & (SPPCTL_PCTL_L_OUT | SPPCTL_PCTL_L_OU1)) ?
-    892                                 "OUT" : "IN");
-    893                 } else if (pin_type == SPPCTL_PCTL_G_IOPP) {
-    894                         /* A IO Processor (IOP) pin */
-    895                         (*map)[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
-    896                         (*map)[i].data.configs.num_configs = 1;
-    897                         (*map)[i].data.configs.group_or_pin = pin_get_name(pctldev, pin_num);
-    898                         configs = kmalloc(sizeof(*configs), GFP_KERNEL);
-                                ^^^^^^^^^^^^^^^^^^
-Here too.
+Best regards,
 
-    899                         *configs = SPPCTL_IOP_CONFIGS;
-    900                         (*map)[i].data.configs.configs = configs;
-    901 
-    902                         dev_dbg(pctldev->dev, "%s: IOP\n",
-    903                                 (*map)[i].data.configs.group_or_pin);
-    904                 } else {
-    905                         /* A fully-pinmux pin */
-
-regards,
-dan carpenter
+--=20
+Esteban Blanc
+BayLibre
