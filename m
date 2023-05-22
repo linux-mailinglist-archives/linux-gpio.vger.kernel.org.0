@@ -2,82 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31CF470BCF2
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 14:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3435670BE5D
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 14:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbjEVMIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 08:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45336 "EHLO
+        id S234019AbjEVMa3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 08:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjEVMIe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 08:08:34 -0400
-X-Greylist: delayed 85577 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 22 May 2023 05:08:18 PDT
-Received: from silec.com.co (unknown [186.155.227.156])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B23118;
-        Mon, 22 May 2023 05:08:18 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by silec.com.co (Postfix) with ESMTP id DF8C574E6C3A;
-        Sun, 21 May 2023 02:13:35 -0500 (-05)
-Received: from silec.com.co ([127.0.0.1])
-        by localhost (silec.com.co [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id rla3vMJ0SKUq; Sun, 21 May 2023 02:13:35 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by silec.com.co (Postfix) with ESMTP id 39CE074E6DA7;
-        Sun, 21 May 2023 02:13:31 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.10.3 silec.com.co 39CE074E6DA7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silec.com.co;
-        s=7EE18876-0B6B-11EC-ADD2-D54151E56927; t=1684653211;
-        bh=3DuXWiZC+hCKu7q7bKqvoS3B3zt+zYJYDMke5QOTtAg=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=CdbUekq7fxLCbW3D7YoWb6x/tYmHEfC98XpifB0QaSKoM3ckvp8DbgPl1rtLAcNoW
-         2iDxDJockdXIwS4ohhYECmImoP3D3djyJM5N4cnLhhw6sM0bf5z04nmQuGo79jRpTq
-         vQk4aMRgEzacjOoTparzMeyg+TMIrRoLJQJ5Jy4M1NfQCEsLteCyTYWPkrvhOueewj
-         5BorRYQymcbM6mK6piv8bG4PDNd/hq+pLVRxVTIG9Sk5x/JaPfgioTZM2Ik6AAiut6
-         I3BK60jxi/8h3fJ2zDnkj86y4aSbcp+FT2SHNby6SC10pecYq82sZhTtma7obKCyyD
-         l4cwh4XUGDpUA==
-X-Virus-Scanned: amavisd-new at silec.com.co
-Received: from silec.com.co ([127.0.0.1])
-        by localhost (silec.com.co [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id jty3PH0Lqxj7; Sun, 21 May 2023 02:13:31 -0500 (-05)
-Received: from [10.4.18.247] (unknown [217.138.192.221])
-        by silec.com.co (Postfix) with ESMTPSA id 131F574E6C65;
-        Sun, 21 May 2023 02:13:08 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S234241AbjEVMaB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 08:30:01 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF05E1989
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 05:26:50 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-3093d10442aso3789678f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 05:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684758409; x=1687350409;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HEaX8WhwboBEc6UgbMSxe5Jo+RE1bpmPJglCuEjejv0=;
+        b=ZiyXi5mj46qZs5cRDwXSALxq2q6Wr34xjKFCdrL9RvSOo7jl1rLiH1FOJ7ScllRxN+
+         UpJVYoj++XLXJ7h2lvcouJWScoc6tL5ESZK9enz8ZRK7BnoHum4mOM09LtzPDUAcrIAQ
+         LTB9VtjdxoeoyweLvXMQH/UvhEfh49uUhG9GmUcHZeQuP8bX99Ta+DWmlpMbGe4dBjiW
+         nrZd91lQ2G9BSOCgpnn/Mhh7KHN/aGc82UFvFzraMUy5eXFydaI1COAQS5YogvEpAws7
+         0qryjlPxx+KqvL0suhQKoYMCnxkMCj6xjvxtXz5vFR1W5FQRWd3rpSuXVTnEEOJNyL1u
+         F9dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684758409; x=1687350409;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HEaX8WhwboBEc6UgbMSxe5Jo+RE1bpmPJglCuEjejv0=;
+        b=GBd7+X009NluuUwAOBejd6q1aZ8T8FHoP1hdW00A+od9RLZwDHkjs7NVk/9FjX1l/R
+         y7KM9f5w3bH1/FJJn9CnCyMFtIaSQNs4WoyMUIlhRNX0I4JfiEIc92vM3HqAXEVXejvn
+         BFXgMejq2K5pz9jnC8oy+IeVZ2yEtyL6IuCaS4bbCDTD75cM8RaP/0uwMACH9qXbXOkM
+         nGI4t/ZsiStXXBxwEuBlGHSJ5pl6sWKax7Vygnyr9Q5HBHuHwhWuYC1ZNXIECH4CHnDI
+         QjoAXLK7BpNpRKNRChVxHgXqWp8FbWk1QJoiXBN4JrpTUUFWk3Zg657tkAvb8rmNQK6F
+         w4hQ==
+X-Gm-Message-State: AC+VfDxBsFxVZmCidtUaqAXXtxkoNsib0Vpyz+r4lPAhNKf3odXADke7
+        1+oz4sywwJ07nM5CLC/ODnn5VQhXMaic8b3G3NS+hbxY
+X-Google-Smtp-Source: ACHHUZ6uVYGLu/k0kOcjRdUMY/5MGNk02xLAtvueCfV/L4V4MZRkiJlDvQ6zqI0ZqWE0IjHjks/low==
+X-Received: by 2002:a5d:594a:0:b0:2f7:c224:cd32 with SMTP id e10-20020a5d594a000000b002f7c224cd32mr7254934wri.10.1684758409343;
+        Mon, 22 May 2023 05:26:49 -0700 (PDT)
+Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
+        by smtp.gmail.com with ESMTPSA id o2-20020a056000010200b002ca864b807csm7766430wrx.0.2023.05.22.05.26.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 May 2023 05:26:48 -0700 (PDT)
+Message-ID: <071614c0-0f84-6087-47c6-385541c5733d@baylibre.com>
+Date:   Mon, 22 May 2023 14:26:48 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: RE
-To:     Recipients <manuel.trivino@silec.com.co>
-From:   "Yuliia Kadulina" <manuel.trivino@silec.com.co>
-Date:   Sun, 21 May 2023 08:12:36 +0100
-Reply-To: yuliakadulina2@gmail.com
-Message-Id: <20230521071309.131F574E6C65@silec.com.co>
-X-Spam-Status: Yes, score=6.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_MSPIKE_H2,RCVD_IN_SBL_CSS,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5745]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *      [217.138.192.221 listed in zen.spamhaus.org]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [yuliakadulina2[at]gmail.com]
-        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
-        *      [186.155.227.156 listed in wl.mailspike.net]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: ******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+Content-Language: en-US
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
+ <CACRpkdbjjoOoGeaqv9yQ4fTKqxt5eLDBjZCnNAYQnng3L+n8TQ@mail.gmail.com>
+ <2e5cae40-7040-a92f-3d11-ce68f1307049@baylibre.com>
+ <20230517063303.GO14287@atomide.com>
+From:   jerome Neanne <jneanne@baylibre.com>
+In-Reply-To: <20230517063303.GO14287@atomide.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -85,12 +82,72 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Top of the day to you, =
 
+On 17/05/2023 08:33, Tony Lindgren wrote:
+> * jerome Neanne <jneanne@baylibre.com> [230512 07:13]:
+>>
+>>
+>> On 11/05/2023 22:57, Linus Walleij wrote:
+>>>> +       /* Documentation is stating that GPIO0 direction must not be changed in Linux:
+>>>> +        * Table 8-34. MFP_1_CONFIG(3): MULTI_DEVICE_ENABLE,
+>>>> +        * Should only be changed in INITIALIZE state (prior to ON Request).
+>>>> +        * Set statically by NVM, changing direction in application can cause a hang.
+>>>> +        * Below can be used for test purpose only:
+>>>> +        */
+>>>> +
+>>>> +#if 0
+>>>> +       int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
+>>>> +                                TPS65219_GPIO0_DIR_MASK, direction);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +#endif
+>>>> +       dev_err(gpio->tps->dev,
+>>>> +               "GPIO%d direction set by NVM, change to %u failed, not allowed by specification\n",
+>>>> +                offset, direction);
+>>>> +       return -EOPNOTSUPP;
+>>>> +}
+>>>
+>>> Normally people would complain about #if 0 code.
+>>>
+>>> But this is a special case!
+>>>
+>>> I definitely want the code to be in there somehow.
+>>>
+>>> What about:
+>>>
+>>> if (IS_ENABLED(DEBUG))?
+>>>
+>>> If someone enables debug with an explicit -DDEBUG to the compiler
+>>> this could be allowed.
+>> I'm fine with your proposal. Will wait few days just in case anyone wants to
+>> add any comment then go for this.
+> 
+> Just wondering.. Would it help for the driver probe to set gpio0 as a gpio
+> hog after reading the configured value?
+> 
+> Maybe the multi device enable just means the pin may be shared with no
+> specific hardware reason to not change it during the runtime?
 
-I'm Yuliia Kadulina Deputy Chairman of the Management Board, and Personal F=
-inance Director @ Ukrsibbank Ukraine. I have a proposal for you. Kindly rev=
-ert so I can fill you in on the details.
+Your point looks valid. But I think we can't simply add a regular 
+"gpio-hog" as a property in the device tree because we don't have a one 
+to one mapping for GPIO consumer (theoretically we can have more than 2 
+PMICs).
 
-Thanks,
-Yuliia
+I think your suggestion is to read the multi-device value through regmap 
+then "kind of" hog gpio with devm_gpio_request_one
+So that gpio0 is preserved from being requested by other user.
+Is this correct understanding?
+
+Practically the board I'm using for test currently only have one PMIC.
+I'm reluctant to implement additional logic that does not look so 
+"conventional" that I can't test.
+
+If maintainers agree, I'll postpone the implementation of your proposal 
+until a platform compatible with this implementation is available for 
+testing. So that we can check what is most accurate in real life.
+
+Side Note: wo this implementation use of the driver is less optimal in 
+multi-device configuration but still usable.
+
+Regards,
+Jerome.
