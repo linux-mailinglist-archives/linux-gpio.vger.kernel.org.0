@@ -2,153 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4C170B473
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 07:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 976CB70B676
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 09:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231877AbjEVFQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 01:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
+        id S231964AbjEVH1K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 03:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231795AbjEVFQh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 01:16:37 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4935A1;
-        Sun, 21 May 2023 22:16:35 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2ab3e8f4efeso37738321fa.0;
-        Sun, 21 May 2023 22:16:35 -0700 (PDT)
+        with ESMTP id S231620AbjEVH1J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 03:27:09 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4849B9
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 00:27:07 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-561d611668eso72756397b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 00:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684732594; x=1687324594;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CYrQOZoyONEufq+LqeQBmXVtdJJKIjdnOxohkmrAY6o=;
-        b=edyY9Uwr97Vumn46XigszV1y/m9Gv7cv/j55TMmwIGEBhAFVFRjWdybCzaYU5NixCS
-         Oy7lbHC2nES3xXibpgL20jNZZ577FxfG418ggGueA9EsKAShwZ80/RwFfsmDiyfuoofG
-         XU5tXwCrBra5Kb2IvMC1SC5YRCcGgqEd8E5TJILGa6uctQYZ4d81y/YWJBbzULtudJv2
-         klWuGT31X8OqVVju7bO1OnRz0QH+E15bv0xwtpRZSYjuP4vcqj9KUqB6De6Au5r1ta5M
-         t5g3mkhXjYHbCEbcK5SWO7imUJDRp2fJpvWX9EBEPoxFWUNHkX1CKznVwUWPDat7ybXT
-         7RXA==
+        d=linaro.org; s=google; t=1684740427; x=1687332427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LMlFZlbI4ySF1wdTEg09fhaUlUaIRMv07rpw84NY8QE=;
+        b=n/c7dpTJe99PSONa4M7CzWpYeAMu22CHoj4aR5/8iS++KFtwjo0e9VQDFOjpUmVGHZ
+         dBZ12ofGHLbwzOmVlx9WdmnECa2q9WZ4CsVXoCK5BSE5pJSTadSGID3CFZvznXaJv0Zl
+         o7wNqRdYs34dK88QaDnNUJL9DmfK/TLRrw+eNwNFeoM7+9gkYSRbH/Jc9rFXdb4GTSbB
+         dtrV+aY8yC64QDnWUiofqHNO7/LVJ1g+Ra9lUThE+uYpqyPsERVXuB419kquH83RvyBb
+         5MX7YxaBpRXB+KSzAfTptp4u1Sa2AkfOKy6xoP59Spe4HcwX+cBJbBMNETIvAr7H9YO9
+         sXgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684732594; x=1687324594;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYrQOZoyONEufq+LqeQBmXVtdJJKIjdnOxohkmrAY6o=;
-        b=Unde6ivhDmImx+1VDzBYxnncnXyEWeSky6TC+qomHv08Czep048XWuHfFodUufv9j8
-         LicV1Bb4Xc499ffySw1rwLVuKqpoN03aH4Ffi+WQr/GAkXr2aH/DsC2x8L75QkIhuTlE
-         S/+NhnwpJdb3s0H/Dxya1NdLg2y30hMMUaLuHJyF3g0wiLCb5iJUIEPmZaezDTZvECTB
-         nDU9fEnDwoKaP2RgHHzb/3YY9t04kgF22+tFtbwPRynPaxcAn1sWRIi92cy1dcjbx2mI
-         YxMUSfIEmRtPq1FLRJv5tQSa9Xovk5wRC7HMWbPIbLXU74eHLioUpWYIlE0+a/TBweO8
-         qCww==
-X-Gm-Message-State: AC+VfDzYnfPrNmiF8q2F7D5tBzTV3R/uTymWGPdP9IBbtFWychMwNtnx
-        AJ2Qlt1iAPFqfSRHS8R3qxA=
-X-Google-Smtp-Source: ACHHUZ7TbanQlhwifMepu7ORWVh/VP5bZ18ETSV+MsG47HW0VXAqmzXXDf/VvqNJ6H52yVSkjCYq8A==
-X-Received: by 2002:a05:6512:3f1e:b0:4f3:a763:ccb7 with SMTP id y30-20020a0565123f1e00b004f3a763ccb7mr3425929lfa.2.1684732593811;
-        Sun, 21 May 2023 22:16:33 -0700 (PDT)
-Received: from [192.168.1.126] (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id k19-20020ac24573000000b004f00189e1dasm847966lfm.143.2023.05.21.22.16.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 May 2023 22:16:33 -0700 (PDT)
-Message-ID: <44c87ed5-f14d-e690-1e5f-74212370611b@gmail.com>
-Date:   Mon, 22 May 2023 08:16:32 +0300
+        d=1e100.net; s=20221208; t=1684740427; x=1687332427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LMlFZlbI4ySF1wdTEg09fhaUlUaIRMv07rpw84NY8QE=;
+        b=HVluMiVuuMiS80pXSsQtpQqfL7efu87UoiViebK8wiqU7+4Hh3jAViC5jvQYfNKhyS
+         abG/JK5TX2002Tgof9zmpY/hMDz/14QgSM6LtakioEWTVaBYfz+fH+tMJG9wyqhO+DDY
+         vZAEZFtdY1SFvl5KnDgGc5Gn274a7AodXWqblRASQrVMyGxF4BdWPxzmiEyXbV/n45hA
+         yZ2TNdhKIfu5XoqGN4a7w9tinDcYvzbY68hd5sBu6+Nslex+9e67AcH/NJLNsHzT4sOg
+         8sLp1tuzXS8IPjofmjl6WNtAlyJ7ghkmH17zbmqa+Urxl6NJGl1ierIPXtXHAi6sT0DB
+         2yFw==
+X-Gm-Message-State: AC+VfDwLE12dQLhNJF6YYZQGiJRbkkg9+P7faKjTfMNw3MkCpkKgNm1n
+        3WmuIYpINMQN02jmhTkcuK/zvOiEFoUgudDyQBLrkA==
+X-Google-Smtp-Source: ACHHUZ7LHYViD/+rr9bjm+Sh4tyfdpg3jtfID7OXXNY78Gl3n9A/T/AurUd2Uf4zuxpZGD81Eho89mF1wDhxi0gasuI=
+X-Received: by 2002:a0d:e654:0:b0:55a:30f5:3d65 with SMTP id
+ p81-20020a0de654000000b0055a30f53d65mr9648470ywe.41.1684740427039; Mon, 22
+ May 2023 00:27:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v5 4/8] pinctrl: wpcm450: relax return value check for IRQ
- get
-Content-Language: en-US, en-GB
-To:     andy.shevchenko@gmail.com
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, netdev@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <cover.1684493615.git.mazziesaccount@gmail.com>
- <42264f1b12a91e415ffa47ff9adb53f02a6aa3ea.1684493615.git.mazziesaccount@gmail.com>
- <ZGpS-13CozLp-p4f@surfacebook>
-From:   Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <ZGpS-13CozLp-p4f@surfacebook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230520174735.364367-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230520174735.364367-1-u.kleine-koenig@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 22 May 2023 09:26:56 +0200
+Message-ID: <CACRpkdZRNGW8kWH2a2V4waoYa6hs=wo7A5o2sq18kqNMThm4nw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Switch i2c drivers back to use .probe()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 5/21/23 20:20, andy.shevchenko@gmail.com wrote:
-> Fri, May 19, 2023 at 02:02:16PM +0300, Matti Vaittinen kirjoitti:
->> fwnode_irq_get[_byname]() were changed to not return 0 anymore. The
->> special error case where device-tree based IRQ mapping fails can't no
->> longer be reliably detected from this return value. This yields a
->> functional change in the driver where the mapping failure is treated as
->> an error.
->>
->> The mapping failure can occur for example when the device-tree IRQ
->> information translation call-back(s) (xlate) fail, IRQ domain is not
->> found, IRQ type conflicts, etc. In most cases this indicates an error in
->> the device-tree and special handling is not really required.
->>
->> One more thing to note is that ACPI APIs do not return zero for any
->> failures so this special handling did only apply on device-tree based
->> systems.
->>
->> Drop the special (no error, just skip the IRQ) handling for DT mapping
->> failures as these can no longer be separated from other errors at driver
->> side.
-> 
-> ...
-> 
->> The commit message does not mention if choosing not to abort the probe
->> on device-tree mapping failure (as is done on other errors) was chosen
->> because: a) Abort would have broken some existing setup. b) Because skipping
->> an IRQ on failure is "the right thing to do", or c) because it sounded like
->> a way to minimize risk of breaking something.
->>
->> If the reason is a) - then I'd appreciate receiving some more
->> information and a suggestion how to proceed (if possible). If the reason
->> is b), then it might be best to just skip the IRQ instead of aborting
->> the probe for all errors on IRQ getting. Finally, in case of c), well,
->> by acking this change you will now accept the risk :)
-> 
-> No need to repeat this. As I answered the case c) was in my mind when I made
-> that change.
+On Sat, May 20, 2023 at 7:47=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-True. I'll drop that if I re-spin. Thanks for pointing it out.
+> After commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
+> call-back type"), all drivers being converted to .probe_new() and then
+> 03c835f498b5 ("i2c: Switch .probe() to not take an id parameter") convert
+> back to (the new) .probe() to be able to eventually drop .probe_new() fro=
+m
+> struct i2c_driver.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks for your persistent work to clean this up Uwe!
 
 Yours,
-	-- Matti
-
--- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
-
+Linus Walleij
