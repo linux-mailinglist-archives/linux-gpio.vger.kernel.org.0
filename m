@@ -2,207 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC9F970B9AD
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 12:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74F1C70BA8B
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 12:52:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232290AbjEVKMd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 06:12:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
+        id S232901AbjEVKvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 06:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbjEVKMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 06:12:31 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69379CD
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 03:12:30 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-528dd896165so4040345a12.2
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 03:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684750350; x=1687342350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T2CMMjuOZ7SheZ6hHLAdcPHZAVyD3xyIbZ0CaxKgzAY=;
-        b=VuNDaACWnAvGjRieYahMmrmoiiUE1U6Ja2bRKayUFHkIir4Tw9DE2DjaSIVyMgbFIN
-         fsH5F0b8LzFpd6RQtMFv2OothigodzTgGrlbNeg2Uw429Hoje63XHqQcItKXN4jkXtu3
-         ouoF41nx5UDe14lN4EM/qKD2ykG2aKOxvI6VYD6pm8EJPby8dGGsxYb+GP4D4Bqci0Zs
-         rDQwCCS3kP9/lxEE26fWGtOsyNukTvSZllfOZ2OK1rxZ2eMJqZh9Z+ETtBwh0t20CqHZ
-         zb7W3doxaRE20nl31S5RhcFfzkpf5+lqe1kwgYx4/FRiLIDXROAjT0C++tjFoyGL5gQM
-         islw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684750350; x=1687342350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T2CMMjuOZ7SheZ6hHLAdcPHZAVyD3xyIbZ0CaxKgzAY=;
-        b=MT5OY7F0Kg8Ba69WhNZkD24aPtQVPFmaUZRj4cChJYYAi8q6rj3HCbEx0nbnGBus+a
-         aT4wKenPEFwaGB/iqLup9iv7mbi29czmein1+z6U7Np3uNRUvSRRAcfxJrGVFkXHFx/i
-         Z5iVsyXQxEdrDBA9myDX1j6GTBLdbdiCmE850k9zj+86CoP+CbaygsUMj+Vasq6F4Xb8
-         nrnR/7bjsF6sjrWUqPkaOrq5J126q4I3GD/M39pv4wbKKRIFMb3+fOPwtI1gxgB/JIEb
-         bAnFFVs+/f4sRWrhSwOHItEL3azoHXYfw2JqsY2x2OF1XR6tTKlKKcdW9Lo923ihCDyG
-         v+5A==
-X-Gm-Message-State: AC+VfDzpgkVhu7Qi//2ePDnahTgdseqALj31pGA527q6XJiCGhrCXlAG
-        PKhfDgx6tXbGGsSEg9AYJjO7i8CAODqh5DvfKI3tx1UL
-X-Google-Smtp-Source: ACHHUZ4S+dG1rgCv1W5f2wtFCG0rsBPEYk+1b0OziLqm7EJ84Tk5xC9hxfd8iCR2bmu/J32ABfzXE27zbch5+c9tT+E=
-X-Received: by 2002:a17:90b:1050:b0:24e:507:7408 with SMTP id
- gq16-20020a17090b105000b0024e05077408mr9402753pjb.37.1684750349569; Mon, 22
- May 2023 03:12:29 -0700 (PDT)
+        with ESMTP id S232876AbjEVKvi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 06:51:38 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21702103;
+        Mon, 22 May 2023 03:51:19 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34MAbXmk012319;
+        Mon, 22 May 2023 10:51:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=6+4RrjdTfnJAshOCnAfyvJneuAtW/UXGQv11A4MgapE=;
+ b=VyrSDAsAYDFG6OEqx5enKzSk51dcNvfQbBjK4MsPGZ3D4fUaWuyCtxUZdk7wVN8d9U4J
+ Un7t9MT0zYwnW8LdKoaT1AJQdWYeC5OG/ZNiOc/a55YN6UjWyRybIXwKEuN3d2LODddV
+ nAEYbUp29RO4qjxF8tP8RYQ1X2m7lBMOMtqcZAvlgfVimJ878v02B6emauFnmz/f/dJQ
+ aBvZRlneTldH0UE2lISrldC1CJt16z79EQkFIr6iPVl2NLYaNHDjXywP8WrMhznzHFQB
+ FYw9v4X18Q2CwMf+zMAqqxTex09UrG6ZTMajnhz0na27JwqMwblk4b8gs487ZaJ2YP4o dw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qq7qjgn5p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 10:51:05 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34MAmxsk005059;
+        Mon, 22 May 2023 10:51:04 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qq7qjgn4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 10:51:04 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34M5ooLM001949;
+        Mon, 22 May 2023 10:51:01 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3qppcs8s0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 May 2023 10:51:01 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34MAox7e15925974
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 May 2023 10:50:59 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E86A2004B;
+        Mon, 22 May 2023 10:50:59 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A79B520040;
+        Mon, 22 May 2023 10:50:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 22 May 2023 10:50:58 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v5 11/44] gpio: add HAS_IOPORT dependencies
+Date:   Mon, 22 May 2023 12:50:16 +0200
+Message-Id: <20230522105049.1467313-12-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-References: <c58e0499-ecc8-4383-b607-a168db53ecdf@kili.mountain>
-In-Reply-To: <c58e0499-ecc8-4383-b607-a168db53ecdf@kili.mountain>
-From:   =?UTF-8?B?5ZGC6Iqz6aiw?= <wellslutw@gmail.com>
-Date:   Mon, 22 May 2023 18:12:18 +0800
-Message-ID: <CAFnkrsk34aopsMHm3g9SGZ0-Wq4HTU3eJvLmp7i8oa-AzLyW7A@mail.gmail.com>
-Subject: Re: [bug report] pinctrl: Add driver for Sunplus SP7021
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: aSnFaYpRsTjOi28xxWAIUX2crvxnb9OA
+X-Proofpoint-GUID: x-LN_IorG9amB50fBQe3pvKBvQPVNJcZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-22_06,2023-05-22_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=734 impostorscore=0
+ mlxscore=0 bulkscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305220089
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dan Carpenter,
+In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+not being declared. We thus need to add HAS_IOPORT as dependency for
+those drivers using them.
 
-Thanks for inform me the issue. I'll send to patch to fix this issue.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+ drivers/gpio/Kconfig | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Best Regards,
-Wells Lu
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5521f060d58e..a470ec8d617b 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -704,18 +704,6 @@ config GPIO_VISCONTI
+ 	help
+ 	  Say yes here to support GPIO on Tohisba Visconti.
+ 
+-config GPIO_VX855
+-	tristate "VIA VX855/VX875 GPIO"
+-	depends on (X86 || COMPILE_TEST) && PCI
+-	select MFD_CORE
+-	select MFD_VX855
+-	help
+-	  Support access to the VX855/VX875 GPIO lines through the GPIO library.
+-
+-	  This driver provides common support for accessing the device.
+-	  Additional drivers must be enabled in order to use the
+-	  functionality of the device.
+-
+ config GPIO_WCD934X
+ 	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 GPIO controller driver"
+ 	depends on MFD_WCD934X && OF_GPIO
+@@ -835,7 +823,19 @@ config GPIO_IDT3243X
+ endmenu
+ 
+ menu "Port-mapped I/O GPIO drivers"
+-	depends on X86 # Unconditional I/O space access
++	depends on X86 && HAS_IOPORT # I/O space access
++
++config GPIO_VX855
++	tristate "VIA VX855/VX875 GPIO"
++	depends on PCI
++	select MFD_CORE
++	select MFD_VX855
++	help
++	  Support access to the VX855/VX875 GPIO lines through the GPIO library.
++
++	  This driver provides common support for accessing the device.
++	  Additional drivers must be enabled in order to use the
++	  functionality of the device.
+ 
+ config GPIO_I8255
+ 	tristate
+-- 
+2.39.2
 
-Dan Carpenter <dan.carpenter@linaro.org> =E6=96=BC 2023=E5=B9=B45=E6=9C=882=
-2=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> Hello Wells Lu,
->
-> The patch aa74c44be19c: "pinctrl: Add driver for Sunplus SP7021" from
-> Jan 16, 2022, leads to the following Smatch static checker warning:
->
-> drivers/pinctrl/sunplus/sppctl.c:886 sppctl_dt_node_to_map() error: poten=
-tial null dereference 'configs'.  (kmalloc returns null)
-> drivers/pinctrl/sunplus/sppctl.c:899 sppctl_dt_node_to_map() error: poten=
-tial null dereference 'configs'.  (kmalloc returns null)
->
-> drivers/pinctrl/sunplus/sppctl.c
->     820 static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, str=
-uct device_node *np_config,
->     821                                  struct pinctrl_map **map, unsign=
-ed int *num_maps)
->     822 {
->     823         struct sppctl_pdata *pctl =3D pinctrl_dev_get_drvdata(pct=
-ldev);
->     824         int nmG =3D of_property_count_strings(np_config, "groups"=
-);
->     825         const struct sppctl_func *f =3D NULL;
->     826         u8 pin_num, pin_type, pin_func;
->     827         struct device_node *parent;
->     828         unsigned long *configs;
->     829         struct property *prop;
->     830         const char *s_f, *s_g;
->     831
->     832         const __be32 *list;
->     833         u32 dt_pin, dt_fun;
->     834         int i, size =3D 0;
->     835
->     836         list =3D of_get_property(np_config, "sunplus,pins", &size=
-);
->     837
->     838         if (nmG <=3D 0)
->     839                 nmG =3D 0;
->     840
->     841         parent =3D of_get_parent(np_config);
->     842         *num_maps =3D size / sizeof(*list);
->     843
->     844         /*
->     845          * Process property:
->     846          *     sunplus,pins =3D < u32 u32 u32 ... >;
->     847          *
->     848          * Each 32-bit integer defines a individual pin in which:
->     849          *
->     850          *   Bit 32~24: defines GPIO pin number. Its range is 0 ~=
- 98.
->     851          *   Bit 23~16: defines types: (1) fully-pinmux pins
->     852          *                             (2) IO processor pins
->     853          *                             (3) digital GPIO pins
->     854          *   Bit 15~8:  defines pins of peripherals (which are de=
-fined in
->     855          *              'include/dt-binging/pinctrl/sppctl.h').
->     856          *   Bit 7~0:   defines types or initial-state of digital=
- GPIO pins.
->     857          */
->     858         for (i =3D 0; i < (*num_maps); i++) {
->     859                 dt_pin =3D be32_to_cpu(list[i]);
->     860                 pin_num =3D FIELD_GET(GENMASK(31, 24), dt_pin);
->     861
->     862                 if (pin_num >=3D sppctl_pins_all_sz) {
->     863                         dev_err(pctldev->dev, "Invalid pin proper=
-ty at index %d (0x%08x)\n",
->     864                                 i, dt_pin);
->     865                         return -EINVAL;
->     866                 }
->     867         }
->     868
->     869         *map =3D kcalloc(*num_maps + nmG, sizeof(**map), GFP_KERN=
-EL);
->     870         if (*map =3D=3D NULL)
->     871                 return -ENOMEM;
->     872
->     873         for (i =3D 0; i < (*num_maps); i++) {
->     874                 dt_pin =3D be32_to_cpu(list[i]);
->     875                 pin_num =3D FIELD_GET(GENMASK(31, 24), dt_pin);
->     876                 pin_type =3D FIELD_GET(GENMASK(23, 16), dt_pin);
->     877                 pin_func =3D FIELD_GET(GENMASK(15, 8), dt_pin);
->     878                 (*map)[i].name =3D parent->name;
->     879
->     880                 if (pin_type =3D=3D SPPCTL_PCTL_G_GPIO) {
->     881                         /* A digital GPIO pin */
->     882                         (*map)[i].type =3D PIN_MAP_TYPE_CONFIGS_P=
-IN;
->     883                         (*map)[i].data.configs.num_configs =3D 1;
->     884                         (*map)[i].data.configs.group_or_pin =3D p=
-in_get_name(pctldev, pin_num);
->     885                         configs =3D kmalloc(sizeof(*configs), GFP=
-_KERNEL);
->                                 ^^^^^^^^^^^^^^^^^^
-> Static checkers like for kmalloc to be checked.
->
-> --> 886                         *configs =3D FIELD_GET(GENMASK(7, 0), dt_=
-pin);
->     887                         (*map)[i].data.configs.configs =3D config=
-s;
->     888
->     889                         dev_dbg(pctldev->dev, "%s: GPIO (%s)\n",
->     890                                 (*map)[i].data.configs.group_or_p=
-in,
->     891                                 (*configs & (SPPCTL_PCTL_L_OUT | =
-SPPCTL_PCTL_L_OU1)) ?
->     892                                 "OUT" : "IN");
->     893                 } else if (pin_type =3D=3D SPPCTL_PCTL_G_IOPP) {
->     894                         /* A IO Processor (IOP) pin */
->     895                         (*map)[i].type =3D PIN_MAP_TYPE_CONFIGS_P=
-IN;
->     896                         (*map)[i].data.configs.num_configs =3D 1;
->     897                         (*map)[i].data.configs.group_or_pin =3D p=
-in_get_name(pctldev, pin_num);
->     898                         configs =3D kmalloc(sizeof(*configs), GFP=
-_KERNEL);
->                                 ^^^^^^^^^^^^^^^^^^
-> Here too.
->
->     899                         *configs =3D SPPCTL_IOP_CONFIGS;
->     900                         (*map)[i].data.configs.configs =3D config=
-s;
->     901
->     902                         dev_dbg(pctldev->dev, "%s: IOP\n",
->     903                                 (*map)[i].data.configs.group_or_p=
-in);
->     904                 } else {
->     905                         /* A fully-pinmux pin */
->
-> regards,
-> dan carpenter
