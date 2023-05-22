@@ -2,125 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5111670C3B1
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 18:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E99470CA30
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 May 2023 22:01:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233203AbjEVQoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 12:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
+        id S234838AbjEVUBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 16:01:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233193AbjEVQom (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 12:44:42 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90A6107
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 09:44:36 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-4571d25d288so2149093e0c.3
-        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 09:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684773876; x=1687365876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qf40rv8DBLq+v06OlsPRtE2dsuAUv6hxQKxmbaIviKQ=;
-        b=e7Lw+thSe5d1e6sITwdpnIdOdUGvIxVmEe0BxIhp63kB5BnA31eHqpKgglctBgKKVN
-         7fvb2Zyxc/lxgxT2vG5V9rnnoCvNUPUuB2PRU2TQ5X68oY9HwLq6Vra6FqguuC14+kXn
-         QNoD6rMywiw/EdacPC7yJeW+xXRwV5TjWocAOtbeCafNZpAvikJIok28T2aaqle0WWcV
-         OLTftqPlJz/HtreogAAWIsoD+yI9ysS5WOHcMjuQURz59EQEFlZjz9nM26+BvMAqevDV
-         t3o/tVYOE6Gk5h0GQBE5RBl9oj5Vh8T+iEbJbOB4GeuIZdVRbveX39aElDnNfM1OiSyQ
-         Iy0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684773876; x=1687365876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qf40rv8DBLq+v06OlsPRtE2dsuAUv6hxQKxmbaIviKQ=;
-        b=HETW2BmTRnQZPwAtnldv8ORNKwxT6kk/xwDseeZoW1tak3gmOWSTvLUHj6pl9asyMi
-         359YdgG76+vOTDJuKiAxz5Nu45wvHYORL81bPeTzbcHvjLQAvnfdnUapiZqGkWCkkC4Y
-         o0Vpb2he/oJxWzKBPhvTuvhTC9GDtemhotmeQj3rpIc51KNTXWJQnqXoZSMm3i2CzfQa
-         Ah4I35SIvJDBhzp2daQ63HOSLU5I70qaXF8KT2S18fJvoyOCaiR3psIq3WSamy4xfq+b
-         22hRJMzEFXrl2PRMjrF3vLRwNmuNLaQdp86Gg4WbvED+aBM5o6tFxmPc030j/VKtO6pH
-         cGzA==
-X-Gm-Message-State: AC+VfDxX8gcXC8F/wGnQCcQkZXZCYQvzO0m+a5XxeKxyrFwjbysR94rh
-        iqOmRgP5TEbE1g9PGZJEN0tvgQ==
-X-Google-Smtp-Source: ACHHUZ6DYaJdwqgap33MUTKTqBjgi25tq8wBKTHfrsMuN4GY7bGQLQIEt24m6QyflO3bjIxsEJRf/w==
-X-Received: by 2002:a1f:5c10:0:b0:44f:eae4:da84 with SMTP id q16-20020a1f5c10000000b0044feae4da84mr4325461vkb.5.1684773875933;
-        Mon, 22 May 2023 09:44:35 -0700 (PDT)
-Received: from fedora (072-189-067-006.res.spectrum.com. [72.189.67.6])
-        by smtp.gmail.com with ESMTPSA id 205-20020a1f14d6000000b0044ad1d3834bsm1143752vku.29.2023.05.22.09.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 09:44:35 -0700 (PDT)
-Date:   Mon, 22 May 2023 12:44:32 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] gpio: 104-dio-48e: Add Counter/Timer support
-Message-ID: <ZGub8Gyu773b+V92@fedora>
-References: <cover.1681665189.git.william.gray@linaro.org>
- <dc4d0d5ca6ea28eda18815df114ecb21226cb345.1681665189.git.william.gray@linaro.org>
- <CACRpkdYdcU1JNmk7Jyyw+MA+GBKG950P1Nbn7QB4Nx7YJ1jwig@mail.gmail.com>
+        with ESMTP id S231236AbjEVUBL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 16:01:11 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2081.outbound.protection.outlook.com [40.107.94.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3660A3;
+        Mon, 22 May 2023 13:01:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hu5pvUEqfgpe1mnZpZoiJtiY2oOytMEzZZ6G2/txTBqIiwu8l3Rf7eRnzUCj6aJZ3plLUce6+z3MDKK3atpiJFC4t+1hU1QEjIpTCNZ0Kk6aF8VOAvgXbDOM/QMJbDesTxsIZtXqwfCpzEjhIca5gswEKJcsuvqSSiqyFdfC0kZFc2bhMbv0o+5qpLOfA+J8G+zYcqqFtpgIkhM+0qf8wbFaQWSTIOQHhE2Cg3Yjjw8hIwwG6Ez1HEWNG01dihIkPaQXixvynoUfXUk05gW1Fulm1BGIqrppTXyHmFfYCJpfMkjN1nEqiZymEPhzSzQ9uRwlcIpTD4YaEoZASIzJ2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ubPxSYLQGxhGoWRcu44ovgwIBi2Oo1TW3ZlBkvAqxpU=;
+ b=SD5W2Tfqg5ieESe7Qak+6raTAqmtk4RwIra8WjhL8OVHegXPXhFggXALy6R7RS6JRohCBRNCvw8qgL7KM5QZJJaDbSorTkgIqIV7/zI6NOi2W0Y/d1gGIiqZXK/VKzW5N7CjwYFJBGnYYmH3DlJ3/ZfF7gx3ro4MuNGUMFwScwI+/wvPhVU9TvkPvG2f9gUqKGxDzerDkN6eoGXkPku9qoU+VADXe3Lt/WQGbGHRHYfK9ba3ziQxIj5wzqqNu5WREAZ2NcXTDVXLAehPC2SUm93QJ2jectueAZRk7msRJsTSjrf0FDkU+sMWtqGOH25soJN4x0w08TwaM0yswFwRaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubPxSYLQGxhGoWRcu44ovgwIBi2Oo1TW3ZlBkvAqxpU=;
+ b=dgikT8MRgjf5ozdDVVeUVwuI45y+p2WRKC0+QkaLvx/qhGlBZkxiprwW8I4QSxatqlanYBpiP73VkOSFIcH+d9b96LS3+z3O5bnnLF80Gv0X6J9gOX4wLWfvR6eCBudt+SnjrevqPQtYGjFbMQAPz2SsfUPObu1OfWcy9DAI9tc=
+Received: from MW4PR03CA0179.namprd03.prod.outlook.com (2603:10b6:303:8d::34)
+ by DS0PR12MB8768.namprd12.prod.outlook.com (2603:10b6:8:14f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
+ 2023 20:01:07 +0000
+Received: from CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8d:cafe::63) by MW4PR03CA0179.outlook.office365.com
+ (2603:10b6:303:8d::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28 via Frontend
+ Transport; Mon, 22 May 2023 20:01:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT060.mail.protection.outlook.com (10.13.175.132) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6411.28 via Frontend Transport; Mon, 22 May 2023 20:01:06 +0000
+Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 22 May
+ 2023 15:01:04 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <rafael@kernel.org>, <hdegoede@redhat.com>,
+        <linus.walleij@linaro.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <Shyam-sundar.S-k@amd.com>, <Basavaraj.Natikar@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2 1/4] include/linux/suspend.h: Only show pm_pr_dbg messages at suspend/resume
+Date:   Mon, 22 May 2023 15:00:30 -0500
+Message-ID: <20230522200033.2605-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nY+9GuX2jNswXxCO"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYdcU1JNmk7Jyyw+MA+GBKG950P1Nbn7QB4Nx7YJ1jwig@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT060:EE_|DS0PR12MB8768:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2bb469ce-ddb1-4ba6-6f59-08db5aff47ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tYWlnN2I89r0gMTnjkhwoS8rjNk+ODi51F3uYt7Z0IhD1D3dIzaRqnIuMk1coXp3tL1f1SkClQmQF0zU3wOA6cvMnhkBfekbXwbybkXN05Lu6mYXXBDflxKzJ8IovwXEBhz4cE+fJyU8LMtNIPOOJIHDUhwNxyw1wHrFcBvnkPh/jIVlvxRNsUVV1yUBJdyiofCgPadPV4ALuEWonACcBdhq67trn3DoKPY8SN8pJwKav51m7waFB/0gGPTMz+S/JucZGIlVYtj5zPcOkZVnP0CvEyPRDhfXWBjYZzZ/t1Eg3xtzrz6XOs0sV4gn0/HuxCHxQmEckAIJ7BUzhYFUnPlo0Jfp4FJboC5dwqV2glIBGdVR9GEoD8P3RugelE5rclTUtWDKFW8bZZom9H0s6YwNfcM+HNHAcSeBiWtD+coObsmRbHkRMHHJrh+Q7+sucxIFvScxbROYs62t6AXjHIGC5SWeP+D/3qZVvi1Mn0Vcs5jC4JhBZNKuk6Gv8YyK0cWFcAfnxZ8Zdqapgp5pJmteG7zs+IzUxmqj7oLDG+lF+WGs71yZ+EVQ29yVZLw3Njsq88hKcwwzSHc9QVNkp30SW0xfAheKtC3I5olzwuLZhqYaCihLH0y+taouM6LeA0HL/jv68r6RZv3jDrA4vJ05NLhMm6FMnwgsRHGIZ5qsKPNi8Y8Qfh+xju4gHLoCmHVjjws6BQ7ytLxwFlFKfMNFTHt5Yf/ovHaUOgM/cQC10oH2OfGIhYVWpnwOkIyp2QTGpTgZ7s47Jy3u+iYf2A==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(136003)(39860400002)(396003)(451199021)(36840700001)(46966006)(40470700004)(8936002)(8676002)(47076005)(5660300002)(44832011)(36860700001)(82310400005)(83380400001)(186003)(16526019)(1076003)(86362001)(2616005)(26005)(81166007)(356005)(82740400003)(426003)(336012)(40460700003)(41300700001)(6666004)(7696005)(40480700001)(70206006)(70586007)(316002)(4326008)(36756003)(478600001)(110136005)(54906003)(2906002)(15650500001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 20:01:06.9104
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bb469ce-ddb1-4ba6-6f59-08db5aff47ca
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8768
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+All uses in the kernel are currently already oriented around
+suspend/resume. As some other parts of the kernel may also use these
+messages in functions that could also be used outside of
+suspend/resume, only enable in suspend/resume path.
 
---nY+9GuX2jNswXxCO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ include/linux/suspend.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On Sat, May 20, 2023 at 09:28:15PM +0200, Linus Walleij wrote:
-> On Sun, Apr 16, 2023 at 7:37=E2=80=AFPM William Breathitt Gray
-> <william.gray@linaro.org> wrote:
->=20
-> > The 104-DIO-48E features an 8254 Counter/Timer chip providing three
-> > counter/timers which can be used for frequency measurement, frequency
-> > output, pulse width modulation, pulse width measurement, event count,
-> > etc. The counter/timers use the same addresses as PPI 0 (addresses 0x0
-> > to 0x3), so a raw_spinlock_t is used to synchronize operations between
-> > the two regmap mappings to prevent clobbering.
-> >
-> > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
->=20
-> Very interesting development here.
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Yours,
-> Linus Walleij
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index d0d4598a7b3f..a40f2e667e09 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -564,7 +564,8 @@ static inline int pm_dyn_debug_messages_on(void)
+ #endif
+ #define __pm_pr_dbg(fmt, ...)					\
+ 	do {							\
+-		if (pm_debug_messages_on)			\
++		if (pm_debug_messages_on &&			\
++		    pm_suspend_target_state != PM_SUSPEND_ON)	\
+ 			printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
+ 		else if (pm_dyn_debug_messages_on())		\
+ 			pr_debug(fmt, ##__VA_ARGS__);	\
+@@ -589,7 +590,8 @@ static inline int pm_dyn_debug_messages_on(void)
+ /**
+  * pm_pr_dbg - print pm sleep debug messages
+  *
+- * If pm_debug_messages_on is enabled, print message.
++ * If pm_debug_messages_on is enabled and the system is entering/leaving
++ *      suspend, print message.
+  * If pm_debug_messages_on is disabled and CONFIG_DYNAMIC_DEBUG is enabled,
+  *	print message only from instances explicitly enabled on dynamic debug's
+  *	control.
 
-With this patch, we should now have complete support for every feature
-available on this device. A nice milestone as well after first
-introducing basic GPIO support for the ACCES 104-DIO-48E in 2016.
+base-commit: 42dfdd08422dec99bfe526072063f65c0b9fb7d2
+-- 
+2.34.1
 
-Given that there is also Intel 8255 support, it would be fun to route
-back one of the device's GPIO outputs into the Intel 8254 timer gate and
-hook up a simple speaker; we could get some nice beep generation going
-and party like it's 1989! B-)
-
-William Breathitt Gray
-
---nY+9GuX2jNswXxCO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZGub8AAKCRC1SFbKvhIj
-K2kGAQDQ4etWXlSzJn2uKfMuRCmiO+y67grNnTuy7sjzMZTZNwD/S8BOaRUrfrWL
-iRvXchrNN0b5qCcKvm9eJHnirLZ9lwI=
-=enuv
------END PGP SIGNATURE-----
-
---nY+9GuX2jNswXxCO--
