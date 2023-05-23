@@ -2,156 +2,326 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 948BF70E531
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 21:14:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A7870E5A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 21:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238112AbjEWTOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 15:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
+        id S238376AbjEWTfj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 15:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjEWTOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 15:14:39 -0400
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6143B91
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 12:14:37 -0700 (PDT)
+        with ESMTP id S238282AbjEWTfc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 15:35:32 -0400
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A4E13E
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 12:35:05 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id 0d73c900-f99e-11ed-b3cf-005056bd6ce9;
-        Tue, 23 May 2023 22:14:35 +0300 (EEST)
+        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+        id be849199-f9a0-11ed-abf4-005056bdd08f;
+        Tue, 23 May 2023 22:33:50 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 23 May 2023 22:14:34 +0300
+Date:   Tue, 23 May 2023 22:33:50 +0300
 To:     Esteban Blanc <eblanc@baylibre.com>
 Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-rtc@vger.kernel.org, jpanis@baylibre.com,
         jneanne@baylibre.com, aseketeli@baylibre.com, u-kumar1@ti.com
-Subject: Re: [PATCH v5 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-Message-ID: <ZG0QmjZwvzWbNwA4@surfacebook>
+Subject: Re: [PATCH v5 3/3] regulator: tps6594-regulator: Add driver for TI
+ TPS6594 regulators
+Message-ID: <ZG0VHnEByyMW9i4a@surfacebook>
 References: <20230522163115.2592883-1-eblanc@baylibre.com>
- <20230522163115.2592883-3-eblanc@baylibre.com>
+ <20230522163115.2592883-4-eblanc@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230522163115.2592883-3-eblanc@baylibre.com>
+In-Reply-To: <20230522163115.2592883-4-eblanc@baylibre.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, May 22, 2023 at 06:31:14PM +0200, Esteban Blanc kirjoitti:
-> TI TPS6594 PMIC has 11 GPIOs which can be used
-> for different functions.
+Mon, May 22, 2023 at 06:31:15PM +0200, Esteban Blanc kirjoitti:
+> From: Jerome Neanne <jneanne@baylibre.com>
 > 
-> This patch adds a pinctrl and GPIO drivers in
-> order to use those functions.
+> This patch adds support for TPS6594 regulators (bucks and LDOs).
+
+BUCKs (otherwise $$$?)
+
+> The output voltages are configurable and are meant to supply power
+> to the main processor and other components.
+> Bucks can be used in single or multiphase mode, depending on PMIC
+
+BUCKs (otherwise $$$?)
+
+> part number.
 
 ...
 
-> +#define FUNCTION(n, g, v)                                                    \
-> +	{                                                                    \
-> +		.pinfunction = PINCTRL_PINFUNCTION((n), (g), ARRAY_SIZE(g)), \
-> +		.muxval = v,                                                 \
-> +	}
+> +	help
+> +	  This driver supports TPS6594 voltage regulator chips.
+> +	  TPS6594 series of PMICs have 5 BUCKs and 4 LDOs
+> +	  voltage regulators.
+> +	  BUCKs 1,2,3,4 can be used in single phase or multiphase mode.
+> +	  Part number defines which single or multiphase mode is i used.
 
-It seems you have used SPACEs before \, can you move to TABs?
+i?!
+
+> +	  It supports software based voltage control
+> +	  for different voltage domains.
 
 ...
 
-> +static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
-> +				     unsigned int base, unsigned int offset,
-> +				     unsigned int *reg, unsigned int *mask)
-> +{
-> +	unsigned int line = offset % 8;
-> +	unsigned int stride = offset / 8;
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of_device.h>
+
+Are you sure this one is correct and / or of.h is not missing? of_match_ptr()
+IIRC is defined in of.h.
+
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+
+...
+
+> +/* Operations permitted on BUCK1/2/3/4/5 */
+> +static const struct regulator_ops tps6594_bucks_ops = {
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.enable			= regulator_enable_regmap,
+> +	.disable		= regulator_disable_regmap,
+> +	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+> +	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+> +	.list_voltage		= regulator_list_voltage_linear_range,
+> +	.map_voltage		= regulator_map_voltage_linear_range,
+> +	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
+
 > +
-> +	switch (base) {
-> +	case TPS6594_REG_GPIO1_CONF:
-> +		*reg = TPS6594_REG_GPIOX_CONF(offset);
-> +		*mask = TPS6594_BIT_GPIO_DIR;
-> +		break;
-> +	case TPS6594_REG_GPIO_IN_1:
-> +	case TPS6594_REG_GPIO_OUT_1:
-> +		*reg = base + stride;
-> +		*mask = BIT(line);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
 
-> +	return 0;
+Redundant blank line.
 
-You can return directly instead of breaking.
-
-> +}
-
-> +	pinctrl->pins = tps6594_pins;
-> +	pinctrl->pctl_dev =
-> +		devm_pinctrl_register(&pdev->dev, pctrl_desc, pinctrl);
-
-With
-
-	struct device *dev = &pdev->dev;
-
-the above becomes a single line. This may help other similar uses.
-
-> +	if (IS_ERR(pinctrl->pctl_dev)) {
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pinctrl->pctl_dev),
-> +				     "Couldn't register pinctrl driver\n");
-> +	}
-
-Also the {} can be dropped.
-
-...
-
-> +	pinctrl->gpio_regmap = devm_gpio_regmap_register(&pdev->dev, &config);
-> +	if (IS_ERR(pinctrl->gpio_regmap)) {
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pinctrl->gpio_regmap),
-> +				     "Couldn't register gpio_regmap driver\n");
-> +	}
-
-Ditto.
-
-...
-
-> +static struct platform_driver tps6594_pinctrl_driver = {
-> +	.driver = { .name = "tps6594-pinctrl" },
-
-Can you use more standard way of style here, i.e.
-
-	.driver = {
-		.name = "tps6594-pinctrl",
-	},
-
-In case someone is going to add something there in the future it will become
-just as cleaner as possible.
-
-> +	.probe = tps6594_pinctrl_probe,
 > +};
-> +
-> +module_platform_driver(tps6594_pinctrl_driver);
-
-Move the above blank line here.
-
-> +MODULE_ALIAS("platform:tps6594-pinctrl");
-> +MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
 
 ...
 
-> +// Used to compute register address of GPIO1_CONF to GPIO11_CONF
+> +	int error;
+> +
+> +	for (j = 0; j < REGS_INT_NB; j++) {
+> +		irq_type = &tps6594_regs_irq_types[j];
+> +		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+> +		if (irq < 0)
+> +			return -EINVAL;
+> +
+> +		irq_data[*irq_idx + j].dev = tps->dev;
+> +		irq_data[*irq_idx + j].type = irq_type;
+> +		irq_data[*irq_idx + j].rdev = rdev;
+> +
+> +		error = devm_request_threaded_irq(tps->dev, irq, NULL,
+> +						  tps6594_regulator_irq_handler,
+> +						  IRQF_ONESHOT,
+> +						  irq_type->irq_name,
+> +						  &irq_data[*irq_idx]);
 
-This is good.
+> +		(*irq_idx)++;
 
-> -#define TPS6594_REG_GPIOX_CONF(gpio_inst)		(0x31 + (gpio_inst))
-> +#define TPS6594_REG_GPIOX_CONF(gpio_inst)	(0x31 + (gpio_inst))
+This is interesing. So, even in error case we touch given parameter. Usually
+the pattern is not to touch the output if we know there is an error.
 
-But why this?!
+> +		if (error) {
+> +			dev_err(tps->dev, "tps6594 failed to request %s IRQ %d: %d\n",
+> +				irq_type->irq_name, irq, error);
+> +			return error;
+> +		}
+> +	}
+
+...
+
+> +	u8 buck_configured[BUCK_NB] = { 0 };
+> +	u8 buck_multi[MULTI_PHASE_NB] = { 0 };
+
+0:s are not needed but I dunno if it's a style in the regulator subsystem.
+
+> +	static const char * const multiphases[] = {"buck12", "buck123", "buck1234", "buck34"};
+> +	static const char *npname;
+> +	int error, i, irq, multi, delta;
+> +	int irq_idx = 0;
+> +	int buck_idx = 0;
+> +	int ext_reg_irq_nb = 2;
+
+> +
+
+Redundant blank line.
+
+> +	enum {
+> +		MULTI_BUCK12,
+> +		MULTI_BUCK123,
+> +		MULTI_BUCK1234,
+> +		MULTI_BUCK12_34,
+
+> +		MULTI_FIRST = MULTI_BUCK12,
+> +		MULTI_LAST = MULTI_BUCK12_34,
+> +		MULTI_NUM = MULTI_LAST - MULTI_FIRST + 1
+
+		MULT_NUM
+
+will suffice instead all this.
+
+> +	};
+
+But why enum at all? See below.
+
+...
+
+> +	/*
+> +	 * Switch case defines different possible multi phase config
+> +	 * This is based on dts buck node name.
+> +	 * Buck node name must be chosen accordingly.
+> +	 * Default case is no Multiphase buck.
+> +	 * In case of Multiphase configuration, value should be defined for
+> +	 * buck_configured to avoid creating bucks for every buck in multiphase
+> +	 */
+> +	for (multi = MULTI_FIRST; multi < MULTI_NUM; multi++) {
+> +		np = of_find_node_by_name(tps->dev->of_node, multiphases[multi]);
+> +		npname = of_node_full_name(np);
+> +		np_pmic_parent = of_get_parent(of_get_parent(np));
+> +		if (of_node_cmp(of_node_full_name(np_pmic_parent), tps->dev->of_node->full_name))
+
+Why not of_node_full_name() in the second case?
+
+
+> +			continue;
+> +		delta = strcmp(npname, multiphases[multi]);
+> +		if (!delta) {
+> +			switch (multi) {
+> +			case MULTI_BUCK12:
+
+This all looks like match_string() reinvention.
+
+> +				buck_multi[0] = 1;
+> +				buck_configured[0] = 1;
+> +				buck_configured[1] = 1;
+> +				break;
+> +			/* multiphase buck34 is supported only with buck12 */
+> +			case MULTI_BUCK12_34:
+> +				buck_multi[0] = 1;
+> +				buck_multi[1] = 1;
+> +				buck_configured[0] = 1;
+> +				buck_configured[1] = 1;
+> +				buck_configured[2] = 1;
+> +				buck_configured[3] = 1;
+> +				break;
+> +			case MULTI_BUCK123:
+> +				buck_multi[2] = 1;
+> +				buck_configured[0] = 1;
+> +				buck_configured[1] = 1;
+> +				buck_configured[2] = 1;
+> +				break;
+> +			case MULTI_BUCK1234:
+> +				buck_multi[3] = 1;
+> +				buck_configured[0] = 1;
+> +				buck_configured[1] = 1;
+> +				buck_configured[2] = 1;
+> +				buck_configured[3] = 1;
+> +				break;
+> +			}
+> +		}
+> +	}
+
+...
+
+> +	irq_data = devm_kmalloc_array(tps->dev,
+> +				REGS_INT_NB * sizeof(struct tps6594_regulator_irq_data),
+> +				ARRAY_SIZE(tps6594_bucks_irq_types) +
+> +				ARRAY_SIZE(tps6594_ldos_irq_types),
+> +				GFP_KERNEL);
+
+Have you checked overflow.h? There are macros to help with the above calculus.
+
+> +	if (!irq_data)
+> +		return -ENOMEM;
+
+...
+
+> +		rdev = devm_regulator_register(&pdev->dev, &multi_regs[i], &config);
+> +		if (IS_ERR(rdev))
+> +			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+
+Why not &pdev->dev here?
+
+> +					     "failed to register %s regulator\n",
+> +					     pdev->name);
+
+...
+
+> +		rdev = devm_regulator_register(&pdev->dev, &buck_regs[i], &config);
+> +		if (IS_ERR(rdev))
+> +			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> +					     "failed to register %s regulator\n",
+> +					     pdev->name);
+
+Hmm... Again, why the error is printed against different device than regulator
+registration?
+
+...
+
+> +	/* LP8764 dosen't have LDO */
+> +	if (tps->chip_id != LP8764) {
+> +		for (i = 0; i < ARRAY_SIZE(ldo_regs); i++) {
+> +			rdev = devm_regulator_register(&pdev->dev, &ldo_regs[i], &config);
+> +			if (IS_ERR(rdev))
+> +				return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> +						     "failed to register %s regulator\n",
+> +						     pdev->name);
+> +
+> +			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+> +							 tps6594_ldos_irq_types[i],
+> +							 &irq_idx);
+> +			if (error)
+> +				return error;
+> +		}
+> +	}
+> +
+> +	if (tps->chip_id == LP8764)
+
+'else'?
+
+Or actually
+
+	if (tps->chip_id == LP8764) {
+		...
+	} else {
+		the above part
+	}
+
+?
+
+
+> +		ext_reg_irq_nb = ARRAY_SIZE(tps6594_ext_regulator_irq_types);
+
+...
+
+> +static struct platform_driver tps6594_regulator_driver = {
+> +	.driver = {
+> +		.name = "tps6594-regulator",
+> +	},
+> +	.probe = tps6594_regulator_probe,
+> +};
+
+> +
+
+This blank line is not needed.
+
+> +module_platform_driver(tps6594_regulator_driver);
 
 -- 
 With Best Regards,
