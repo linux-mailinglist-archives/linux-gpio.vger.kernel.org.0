@@ -2,171 +2,767 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95ECD70D67F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29BCF70D685
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:01:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235903AbjEWIBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 04:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51906 "EHLO
+        id S235957AbjEWIBt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 04:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235924AbjEWIAz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:00:55 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on20609.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::609])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC3D10CA;
-        Tue, 23 May 2023 01:00:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eeyTDYg3F3gMGifOtW8klRlXhYI+qeBztHRpmdP2rM3MbhekLpdjN7gPtDmXvavdouvFRTZDZtn2QvZMDdNCcjfZry3ECSU7+N/qKrCtWckqqxkwt/koL1JocOCG6YgICQYqQLNZASM1N0nEkkI/gVhWVD/ZXKz5hc2o5h2dUzcfXBU18KQ3iLP1PFvmb2VknsdPoh0sY/MbP73f93Uzz3TDi5J5yvDAWfZI3qSGEJ6qCIg1Hf+ueA4Kk84riSMtLtwtUMpAeNJaNdNqQKTep2Od7g+yJcmD8ZwWeO40oE63hb7sLLLSlNFev2QlKK/wnBiskAr93sW15a6zZ+Yf0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c9EhnQ78hCku7lUAPNPEZM4a1je2Nek0a29n0tcASno=;
- b=nsAbnupceGiFi3NrUq1dfIAWASQS9y2AyVOKlxJyQnSucwTLrZXX5iidmA3LpDermeEm9aDrTxg+B3aXQnUCMuxOUOzn1G9/4l1fsDIfEITuBJK7bW/DwB+P6AA39tAlhGNhmTrd9AMKGk9C8VrpUSFd88dfIgqoRwMaXTvljRKas2U7ajQCDvYu3nshrsIUlbqyTcQSF6zspYRQb9S9x3NrA5d0fx3ezcpyvFAi/JfQiOETY4V1iJiH0Hy/sKQrH6IemnbYW7u6VlHIVeGRB5pRqnO73JFY5yujAbo07jOIjCf/+f8RJf+z/wVZ/jOiZqfYTrsM2ioyiTEYQiA3Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c9EhnQ78hCku7lUAPNPEZM4a1je2Nek0a29n0tcASno=;
- b=4PVUSoWJgtOFjh3QyjCk92b12MLF4vNGZXxvzS3AcMhif63rnDXJirDARbi99vZpbzlvVzxxod2U8aU2BgCetM0b5vttLnNfkgLYYmCJ/fBBYYkUzGJQY0iBuJ5ADxzXCX/G5z66mZuG35QAbmk++JaKznwUuceleOJikyu3Snk=
-Received: from CY5PR14CA0002.namprd14.prod.outlook.com (2603:10b6:930:2::12)
- by SA1PR12MB6996.namprd12.prod.outlook.com (2603:10b6:806:24f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Tue, 23 May
- 2023 07:57:02 +0000
-Received: from CY4PEPF0000C978.namprd02.prod.outlook.com
- (2603:10b6:930:2:cafe::47) by CY5PR14CA0002.outlook.office365.com
- (2603:10b6:930:2::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29 via Frontend
- Transport; Tue, 23 May 2023 07:57:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000C978.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6433.7 via Frontend Transport; Tue, 23 May 2023 07:57:01 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 23 May
- 2023 02:57:00 -0500
-From:   Michal Simek <michal.simek@amd.com>
-To:     <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-        <michal.simek@xilinx.com>, <git@xilinx.com>
-CC:     Conor Dooley <conor+dt@kernel.org>,
-        Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH] dt-bindings: xilinx: Remove Rajan, Jolly and Manish
-Date:   Tue, 23 May 2023 09:56:57 +0200
-Message-ID: <9b252dd71c82593fa6b137eca2174d9ab6e57f7a.1684828606.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.36.1
+        with ESMTP id S235976AbjEWIBj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:01:39 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC5718E
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:01:03 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-253e0f1e514so2476193a91.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684828776; x=1687420776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OOySykTT7sqL7uBoM3k+RPN8SX5X1CuIPzecSPH1hR0=;
+        b=X4zGe8lbj+4+Okr3vUH532CcCReCtaAWYN/2e0vgVss1/Oo7RihURIRK3Na3ycZ70W
+         Ni8jB4iigvKXtvN8wBEBIqejoQ/KZL/na5zyT1Dss7hIreLY7HgZTDyzSbao1h1HbXqz
+         pIZfSqNhGRy2UL+9AZurQf4HoHqToDpuPKHDq23kR6Q2jK4z+8/5SPr2Z9v7W1ZxU0md
+         SNIrNHHYzh5Cu3vkDKzsg+FTOxCnkZveA5I1kQtAO2OkgINqlxwxsqzYE69tbU7PYsyK
+         LeZWMI38sjgj567LniTlX4pLMqAUYQOGyf84MaN1hQxpevgU7EY8PavUEPF8hF1dnQOa
+         0Xzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684828776; x=1687420776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OOySykTT7sqL7uBoM3k+RPN8SX5X1CuIPzecSPH1hR0=;
+        b=aRPxrb5vR0mordhezVNazB7yxTd1r2nE9E7qVJM0MK1NtvZgn51ueDk9aYEXJWFxEd
+         fvjXaTkaTEHoWxfke8EWA9ThqvXaKJ4CMKb7b5dqW2Cqnclg4gBvlE1A18PVTZqCU5Ww
+         N7LqDXQze0lVk1geKEZHaDNQLb93W+jSLHopEJRLG1wtan1dQhkvoll6w+P5fvBV6A0E
+         QlYjoCl7RRbvuU/+JO/AskhaP+tqUrAW9AAYu9QBzFm+RZsM3+9Z0g9MYcM+Io8Vt0mj
+         J4pJKOXuhwnI++HafNpOYlKooXicUgWp8deUPdHXzplASiBckcr0Q5lLfHEy6zWg11oh
+         PEKw==
+X-Gm-Message-State: AC+VfDyj1i0MnyKU8UWaEZp9IjdrcHo9Y8+AMWBxH5i96xmWGzpWVZEB
+        DgaUCV3zVOKAfjzJ2+dfQY9VxA==
+X-Google-Smtp-Source: ACHHUZ7cwGvQShhKiAp0UDFY0Q+3xu/HPT4goqsmZ+4eS3OY+sP1KSqNXUTwZ/4xFhi9KwTvL+sGnA==
+X-Received: by 2002:a17:90b:1912:b0:24d:e4fd:f487 with SMTP id mp18-20020a17090b191200b0024de4fdf487mr9119208pjb.14.1684828776015;
+        Tue, 23 May 2023 00:59:36 -0700 (PDT)
+Received: from localhost ([122.172.87.195])
+        by smtp.gmail.com with ESMTPSA id bt21-20020a17090af01500b0023d0c2f39f2sm6827370pjb.19.2023.05.23.00.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 00:59:34 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Erik Schilling <erik.schilling@linaro.org>
+Subject: [libgpiod][PATCH] bindings: Fix typo "SPDX-FileCopyrightTest"
+Date:   Tue, 23 May 2023 13:29:29 +0530
+Message-Id: <2a4dd7e50f7be9d515059f1ac4709eb2fdc7d36d.1684828674.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3004; i=michal.simek@amd.com; h=from:subject:message-id; bh=NKJc2kq1nVhiptTBxgUHKpfRZRk9NYR6CyNsuSqsnak=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhpScwv3FH+8a7O61dw6VCQlxuF1ke3CvEet8y70XLz1Z+ OSXr+D8jlgWBkEmBlkxRRZpmytn9lbOmCJ88bAczBxWJpAhDFycAjCRT+4M8wveTuoTOCLlPenE tOfVyibuDT+a9zHMT1p66MuPd5V8117/fmO5fxHj2o15QgA=
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000C978:EE_|SA1PR12MB6996:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30fa1d4b-0f6f-4359-b876-08db5b634af4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NAL5YVmLV9nfJGkVh6X/OiUnvo0JV0ZUa4svMXLawyiP8gPE4tfOb/l9SCKGRvOdEP2l1z8qoBN7oJXYNSZBf2pkF/808pR3+mE3USAz+ZX/ti9F9KzY1S0xgwo6ItCbmq2PTJw7m0w4HToZk558aN4ejnzrPypaL2K7WZQ2VWUTXC17ppQctXXP3y2URWyRfrHU2mdYWnGPacuNJAJo+H+8uXlQwj62vo9K45VQOHXnraAP1ljvrEmRjPanHePALb44ryFSRGZ7iuDKvF4tATUsCB7+rtNeA1cKQ2wlwIFAGTi6BlrpzIJPwh8Q9fKG0WYX9L1xmExUYLXTBPTw2inVQBN/3W6cL+/6WRhSi5YF08dYHnJ47WU8UIaAR8O7tI+jUDVLpxfIlkvQmFxIlWj3+EgeeXtfrBaMcwJYM+AClUxcYHlBCws+DUh92JY7dQOqCXl2G1U8SiAgOKejaDbpYuYNORStbGm0Cd7tQcO1JXQUpbSGpW3p2Hd/D/SVsu6mxQFL8T/6R3QcvWa78VUkC2o1qtIb3U0xyVyBnJyhsBFnyCHYEGblvybcBCy9VDPBLCuyhl7IaH1B4Dffc6ryj+Q2R3+2V795PJLVJdAP298qGWkzmWvQAXNgSS7M+KcVBXdAmtVEAObdcKIFjN/7+M2aU+FEKx2ut8NWd604MGecSTIwQQECK0YAW4iy1rjVe2077jzEPPqjTEobWr8m2xq+9DOp+R+w8aYcWw8jO3f4DYYXiorIRszC8nFbFbBCgMxFkvRI/d/rLoHFfHLIxnpenFU5X69/d636nzQ=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(136003)(376002)(346002)(451199021)(46966006)(40470700004)(36840700001)(186003)(316002)(86362001)(26005)(16526019)(6666004)(2906002)(8936002)(8676002)(40480700001)(36756003)(7416002)(5660300002)(40460700003)(41300700001)(44832011)(478600001)(36860700001)(54906003)(110136005)(356005)(82740400003)(336012)(426003)(81166007)(2616005)(82310400005)(70206006)(4326008)(47076005)(70586007)(83380400001)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2023 07:57:01.9405
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30fa1d4b-0f6f-4359-b876-08db5b634af4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000C978.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6996
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rajan, Jolly and Manish are no longer work for AMD/Xilinx and there is no
-activity from them to continue to maintain bindings that's why remove them.
+It should be SPDX-FileCopyrightText instead. Fix it.
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
+Reported-by: Erik Schilling <erik.schilling@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
+ bindings/python/gpiod/version.py                             | 2 +-
+ bindings/rust/.gitignore                                     | 2 +-
+ bindings/rust/Cargo.toml                                     | 2 +-
+ bindings/rust/Makefile.am                                    | 2 +-
+ bindings/rust/gpiosim-sys/Cargo.toml                         | 2 +-
+ bindings/rust/gpiosim-sys/Makefile.am                        | 2 +-
+ bindings/rust/gpiosim-sys/README.md                          | 2 +-
+ bindings/rust/gpiosim-sys/build.rs                           | 2 +-
+ bindings/rust/gpiosim-sys/src/Makefile.am                    | 2 +-
+ bindings/rust/gpiosim-sys/src/lib.rs                         | 2 +-
+ bindings/rust/gpiosim-sys/src/sim.rs                         | 2 +-
+ bindings/rust/libgpiod-sys/Cargo.toml                        | 2 +-
+ bindings/rust/libgpiod-sys/Makefile.am                       | 2 +-
+ bindings/rust/libgpiod-sys/README.md                         | 2 +-
+ bindings/rust/libgpiod-sys/build.rs                          | 2 +-
+ bindings/rust/libgpiod-sys/src/Makefile.am                   | 2 +-
+ bindings/rust/libgpiod-sys/src/lib.rs                        | 2 +-
+ bindings/rust/libgpiod/Cargo.toml                            | 2 +-
+ bindings/rust/libgpiod/Makefile.am                           | 2 +-
+ bindings/rust/libgpiod/examples/Makefile.am                  | 2 +-
+ bindings/rust/libgpiod/examples/gpio_events.rs               | 2 +-
+ bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs | 2 +-
+ bindings/rust/libgpiod/examples/gpiodetect.rs                | 2 +-
+ bindings/rust/libgpiod/examples/gpiofind.rs                  | 2 +-
+ bindings/rust/libgpiod/examples/gpioget.rs                   | 2 +-
+ bindings/rust/libgpiod/examples/gpioinfo.rs                  | 2 +-
+ bindings/rust/libgpiod/examples/gpiomon.rs                   | 2 +-
+ bindings/rust/libgpiod/examples/gpionotify.rs                | 2 +-
+ bindings/rust/libgpiod/examples/gpioset.rs                   | 2 +-
+ bindings/rust/libgpiod/examples/gpiowatch.rs                 | 2 +-
+ bindings/rust/libgpiod/src/Makefile.am                       | 2 +-
+ bindings/rust/libgpiod/src/chip.rs                           | 2 +-
+ bindings/rust/libgpiod/src/edge_event.rs                     | 2 +-
+ bindings/rust/libgpiod/src/event_buffer.rs                   | 2 +-
+ bindings/rust/libgpiod/src/info_event.rs                     | 2 +-
+ bindings/rust/libgpiod/src/lib.rs                            | 2 +-
+ bindings/rust/libgpiod/src/line_config.rs                    | 2 +-
+ bindings/rust/libgpiod/src/line_info.rs                      | 2 +-
+ bindings/rust/libgpiod/src/line_request.rs                   | 2 +-
+ bindings/rust/libgpiod/src/line_settings.rs                  | 2 +-
+ bindings/rust/libgpiod/src/request_config.rs                 | 2 +-
+ bindings/rust/libgpiod/tests/Makefile.am                     | 2 +-
+ bindings/rust/libgpiod/tests/chip.rs                         | 2 +-
+ bindings/rust/libgpiod/tests/common/Makefile.am              | 2 +-
+ bindings/rust/libgpiod/tests/common/config.rs                | 2 +-
+ bindings/rust/libgpiod/tests/common/mod.rs                   | 2 +-
+ bindings/rust/libgpiod/tests/edge_event.rs                   | 2 +-
+ bindings/rust/libgpiod/tests/info_event.rs                   | 2 +-
+ bindings/rust/libgpiod/tests/line_config.rs                  | 2 +-
+ bindings/rust/libgpiod/tests/line_info.rs                    | 2 +-
+ bindings/rust/libgpiod/tests/line_request.rs                 | 2 +-
+ bindings/rust/libgpiod/tests/line_settings.rs                | 2 +-
+ bindings/rust/libgpiod/tests/request_config.rs               | 2 +-
+ 53 files changed, 53 insertions(+), 53 deletions(-)
 
- Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml    | 2 --
- .../bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml        | 1 -
- .../bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml         | 1 -
- .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml        | 1 -
- 4 files changed, 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-index 93ae349cf9e9..5cbb34d0b61b 100644
---- a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-+++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-@@ -8,8 +8,6 @@ title: Xilinx Versal clock controller
+diff --git a/bindings/python/gpiod/version.py b/bindings/python/gpiod/version.py
+index 1ad903e09146..2e182a3dc765 100644
+--- a/bindings/python/gpiod/version.py
++++ b/bindings/python/gpiod/version.py
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
  
- maintainers:
-   - Michal Simek <michal.simek@amd.com>
--  - Jolly Shah <jolly.shah@xilinx.com>
--  - Rajan Vaja <rajan.vaja@xilinx.com>
+ __version__ = "2.0.1"
+diff --git a/bindings/rust/.gitignore b/bindings/rust/.gitignore
+index 6fe7bde6f8a7..a8bda09778f5 100644
+--- a/bindings/rust/.gitignore
++++ b/bindings/rust/.gitignore
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- description: |
-   The clock controller is a hardware block of Xilinx versal clock tree. It
-diff --git a/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml b/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-index 6b62d5d83476..87ff9ee098f5 100644
---- a/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-@@ -8,7 +8,6 @@ title: Synopsys DesignWare Universal Multi-Protocol Memory Controller
+ target
+ Cargo.lock
+diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+index b4a28fd7129c..2e026b49103a 100644
+--- a/bindings/rust/Cargo.toml
++++ b/bindings/rust/Cargo.toml
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
--  - Manish Narani <manish.narani@xilinx.com>
-   - Michal Simek <michal.simek@amd.com>
+ [workspace]
  
- description: |
-diff --git a/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml b/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-index 7864a1c994eb..75143db51411 100644
---- a/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-@@ -8,7 +8,6 @@ title: Zynq A05 DDR Memory Controller
+diff --git a/bindings/rust/Makefile.am b/bindings/rust/Makefile.am
+index 7903f828d87d..e89c39327c89 100644
+--- a/bindings/rust/Makefile.am
++++ b/bindings/rust/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
--  - Manish Narani <manish.narani@xilinx.com>
-   - Michal Simek <michal.simek@amd.com>
+ EXTRA_DIST = Cargo.toml
+ SUBDIRS = gpiosim-sys libgpiod libgpiod-sys
+diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim-sys/Cargo.toml
+index 9aa047feba82..af307486badb 100644
+--- a/bindings/rust/gpiosim-sys/Cargo.toml
++++ b/bindings/rust/gpiosim-sys/Cargo.toml
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- description:
-diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-index cdebfa991e06..24ad0614e61b 100644
---- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-@@ -8,7 +8,6 @@ title: Xilinx ZynqMP Pinctrl
+ [package]
+ name = "gpiosim-sys"
+diff --git a/bindings/rust/gpiosim-sys/Makefile.am b/bindings/rust/gpiosim-sys/Makefile.am
+index 9471b0eb35c1..310722319835 100644
+--- a/bindings/rust/gpiosim-sys/Makefile.am
++++ b/bindings/rust/gpiosim-sys/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
  
- maintainers:
-   - Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
--  - Rajan Vaja <rajan.vaja@xilinx.com>
+ EXTRA_DIST = build.rs Cargo.toml README.md
+ SUBDIRS = src
+diff --git a/bindings/rust/gpiosim-sys/README.md b/bindings/rust/gpiosim-sys/README.md
+index 686d522bf174..6cd24d9aaa52 100644
+--- a/bindings/rust/gpiosim-sys/README.md
++++ b/bindings/rust/gpiosim-sys/README.md
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
- description: |
-   Please refer to pinctrl-bindings.txt in this directory for details of the
+ # Generated gpiosim Rust FFI bindings
+ Automatically generated Rust FFI bindings via
+diff --git a/bindings/rust/gpiosim-sys/build.rs b/bindings/rust/gpiosim-sys/build.rs
+index 0651c6115322..c31fccb09684 100644
+--- a/bindings/rust/gpiosim-sys/build.rs
++++ b/bindings/rust/gpiosim-sys/build.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ extern crate bindgen;
+ 
+diff --git a/bindings/rust/gpiosim-sys/src/Makefile.am b/bindings/rust/gpiosim-sys/src/Makefile.am
+index af104d05eae4..e88f477083a0 100644
+--- a/bindings/rust/gpiosim-sys/src/Makefile.am
++++ b/bindings/rust/gpiosim-sys/src/Makefile.am
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = lib.rs sim.rs
+diff --git a/bindings/rust/gpiosim-sys/src/lib.rs b/bindings/rust/gpiosim-sys/src/lib.rs
+index e3630442e24b..eed2a425afd6 100644
+--- a/bindings/rust/gpiosim-sys/src/lib.rs
++++ b/bindings/rust/gpiosim-sys/src/lib.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use libgpiod::{Error, OperationType, Result};
+ 
+diff --git a/bindings/rust/gpiosim-sys/src/sim.rs b/bindings/rust/gpiosim-sys/src/sim.rs
+index 777bf086061a..896596f07955 100644
+--- a/bindings/rust/gpiosim-sys/src/sim.rs
++++ b/bindings/rust/gpiosim-sys/src/sim.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::ffi::{CStr, CString};
+ use std::os::raw::c_char;
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+index 3bc3525aedca..938a0d5e9f22 100644
+--- a/bindings/rust/libgpiod-sys/Cargo.toml
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ [package]
+ name = "libgpiod-sys"
+diff --git a/bindings/rust/libgpiod-sys/Makefile.am b/bindings/rust/libgpiod-sys/Makefile.am
+index 9471b0eb35c1..310722319835 100644
+--- a/bindings/rust/libgpiod-sys/Makefile.am
++++ b/bindings/rust/libgpiod-sys/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = build.rs Cargo.toml README.md
+ SUBDIRS = src
+diff --git a/bindings/rust/libgpiod-sys/README.md b/bindings/rust/libgpiod-sys/README.md
+index 7e6e643ab2ab..3eb5c9defeac 100644
+--- a/bindings/rust/libgpiod-sys/README.md
++++ b/bindings/rust/libgpiod-sys/README.md
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ # Generated libgpiod-sys Rust FFI bindings
+ Automatically generated Rust FFI bindings via
+diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
+index e3ed04afa141..d4825a924f81 100644
+--- a/bindings/rust/libgpiod-sys/build.rs
++++ b/bindings/rust/libgpiod-sys/build.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ extern crate bindgen;
+ 
+diff --git a/bindings/rust/libgpiod-sys/src/Makefile.am b/bindings/rust/libgpiod-sys/src/Makefile.am
+index 36361e7e0be5..0ef728b7ffac 100644
+--- a/bindings/rust/libgpiod-sys/src/Makefile.am
++++ b/bindings/rust/libgpiod-sys/src/Makefile.am
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = lib.rs
+diff --git a/bindings/rust/libgpiod-sys/src/lib.rs b/bindings/rust/libgpiod-sys/src/lib.rs
+index 68526910c8ee..06f1a50c2753 100644
+--- a/bindings/rust/libgpiod-sys/src/lib.rs
++++ b/bindings/rust/libgpiod-sys/src/lib.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ #[allow(non_camel_case_types, non_upper_case_globals)]
+ #[cfg_attr(test, allow(deref_nullptr, non_snake_case))]
+diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
+index 655e7a2ce107..48681defc316 100644
+--- a/bindings/rust/libgpiod/Cargo.toml
++++ b/bindings/rust/libgpiod/Cargo.toml
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: CC0-1.0
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ [package]
+ name = "libgpiod"
+diff --git a/bindings/rust/libgpiod/Makefile.am b/bindings/rust/libgpiod/Makefile.am
+index 38f2ebf37aff..e9a10c18b45f 100644
+--- a/bindings/rust/libgpiod/Makefile.am
++++ b/bindings/rust/libgpiod/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ command = cargo build --release --lib
+ 
+diff --git a/bindings/rust/libgpiod/examples/Makefile.am b/bindings/rust/libgpiod/examples/Makefile.am
+index 2e1ccbd63f3f..c1d2c174370e 100644
+--- a/bindings/rust/libgpiod/examples/Makefile.am
++++ b/bindings/rust/libgpiod/examples/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = \
+ 	gpiodetect.rs \
+diff --git a/bindings/rust/libgpiod/examples/gpio_events.rs b/bindings/rust/libgpiod/examples/gpio_events.rs
+index b26c60b064d9..a45b6dbba384 100644
+--- a/bindings/rust/libgpiod/examples/gpio_events.rs
++++ b/bindings/rust/libgpiod/examples/gpio_events.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation to show handling of events, when the buffer
+ // is read into multiple times. Based on gpiomon example.
+diff --git a/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs b/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
+index 620f4ec57ca0..8853a7bc720e 100644
+--- a/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
++++ b/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation to show handling of info events, that are
+ // generated from another thread.
+diff --git a/bindings/rust/libgpiod/examples/gpiodetect.rs b/bindings/rust/libgpiod/examples/gpiodetect.rs
+index 96581bc604c6..97922524188f 100644
+--- a/bindings/rust/libgpiod/examples/gpiodetect.rs
++++ b/bindings/rust/libgpiod/examples/gpiodetect.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of gpiodetect tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpiofind.rs b/bindings/rust/libgpiod/examples/gpiofind.rs
+index 99fba30c1a3c..da0530daf0fc 100644
+--- a/bindings/rust/libgpiod/examples/gpiofind.rs
++++ b/bindings/rust/libgpiod/examples/gpiofind.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of gpiofind tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpioget.rs b/bindings/rust/libgpiod/examples/gpioget.rs
+index a71612bd1988..8e390f3928c5 100644
+--- a/bindings/rust/libgpiod/examples/gpioget.rs
++++ b/bindings/rust/libgpiod/examples/gpioget.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of gpioget tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpioinfo.rs b/bindings/rust/libgpiod/examples/gpioinfo.rs
+index 02d8c9765ab3..1fe1ae01dd3b 100644
+--- a/bindings/rust/libgpiod/examples/gpioinfo.rs
++++ b/bindings/rust/libgpiod/examples/gpioinfo.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of gpioinfo tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpiomon.rs b/bindings/rust/libgpiod/examples/gpiomon.rs
+index 8f2a71adaa14..c3564db2465a 100644
+--- a/bindings/rust/libgpiod/examples/gpiomon.rs
++++ b/bindings/rust/libgpiod/examples/gpiomon.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of the gpiomon tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpionotify.rs b/bindings/rust/libgpiod/examples/gpionotify.rs
+index 54445d293eaf..fca108638c53 100644
+--- a/bindings/rust/libgpiod/examples/gpionotify.rs
++++ b/bindings/rust/libgpiod/examples/gpionotify.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2023 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ //
+ // Simplified Rust implementation of the gpionotify tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpioset.rs b/bindings/rust/libgpiod/examples/gpioset.rs
+index 4b43010a3b80..607407d5a68f 100644
+--- a/bindings/rust/libgpiod/examples/gpioset.rs
++++ b/bindings/rust/libgpiod/examples/gpioset.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of the gpioset tool.
+ 
+diff --git a/bindings/rust/libgpiod/examples/gpiowatch.rs b/bindings/rust/libgpiod/examples/gpiowatch.rs
+index a356fd589721..26a2ed88d6d8 100644
+--- a/bindings/rust/libgpiod/examples/gpiowatch.rs
++++ b/bindings/rust/libgpiod/examples/gpiowatch.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Simplified Rust implementation of the gpiowatch tool.
+ 
+diff --git a/bindings/rust/libgpiod/src/Makefile.am b/bindings/rust/libgpiod/src/Makefile.am
+index df63c7275d9e..589260069464 100644
+--- a/bindings/rust/libgpiod/src/Makefile.am
++++ b/bindings/rust/libgpiod/src/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = \
+ 	chip.rs \
+diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
+index f4554a116946..f4de008b5048 100644
+--- a/bindings/rust/libgpiod/src/chip.rs
++++ b/bindings/rust/libgpiod/src/chip.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ pub mod info {
+     /// GPIO chip info event related definitions.
+diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
+index d8404952b0b0..d324ce675df8 100644
+--- a/bindings/rust/libgpiod/src/edge_event.rs
++++ b/bindings/rust/libgpiod/src/edge_event.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::time::Duration;
+ 
+diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
+index 0675ea6c5181..1deaf2bc3983 100644
+--- a/bindings/rust/libgpiod/src/event_buffer.rs
++++ b/bindings/rust/libgpiod/src/event_buffer.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::ptr;
+ 
+diff --git a/bindings/rust/libgpiod/src/info_event.rs b/bindings/rust/libgpiod/src/info_event.rs
+index 8bd558532095..b0ceb3b26f78 100644
+--- a/bindings/rust/libgpiod/src/info_event.rs
++++ b/bindings/rust/libgpiod/src/info_event.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::time::Duration;
+ 
+diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
+index 8073bd440bf4..26354e5b4eee 100644
+--- a/bindings/rust/libgpiod/src/lib.rs
++++ b/bindings/rust/libgpiod/src/lib.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ //
+ // Rust wrappers for GPIOD APIs
+ 
+diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
+index a2721a20e4fa..e973cde4a2fa 100644
+--- a/bindings/rust/libgpiod/src/line_config.rs
++++ b/bindings/rust/libgpiod/src/line_config.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use super::{
+     gpiod,
+diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libgpiod/src/line_info.rs
+index b45878c523c9..702f1b478dec 100644
+--- a/bindings/rust/libgpiod/src/line_info.rs
++++ b/bindings/rust/libgpiod/src/line_info.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::ffi::CStr;
+ use std::str;
+diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
+index ebf41f240ae2..b175eea3217e 100644
+--- a/bindings/rust/libgpiod/src/line_request.rs
++++ b/bindings/rust/libgpiod/src/line_request.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::os::unix::prelude::AsRawFd;
+ use std::time::Duration;
+diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
+index 1c5ac66f9ce7..918d6c26f27e 100644
+--- a/bindings/rust/libgpiod/src/line_settings.rs
++++ b/bindings/rust/libgpiod/src/line_settings.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::time::Duration;
+ 
+diff --git a/bindings/rust/libgpiod/src/request_config.rs b/bindings/rust/libgpiod/src/request_config.rs
+index 2ad68efdd12a..0c6c5c1d8275 100644
+--- a/bindings/rust/libgpiod/src/request_config.rs
++++ b/bindings/rust/libgpiod/src/request_config.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::ffi::{CStr, CString};
+ use std::os::raw::c_char;
+diff --git a/bindings/rust/libgpiod/tests/Makefile.am b/bindings/rust/libgpiod/tests/Makefile.am
+index 198f4e4dfe4c..8927649d07e0 100644
+--- a/bindings/rust/libgpiod/tests/Makefile.am
++++ b/bindings/rust/libgpiod/tests/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = \
+ 	chip.rs \
+diff --git a/bindings/rust/libgpiod/tests/chip.rs b/bindings/rust/libgpiod/tests/chip.rs
+index 702af93e5f2c..f2647084aaab 100644
+--- a/bindings/rust/libgpiod/tests/chip.rs
++++ b/bindings/rust/libgpiod/tests/chip.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/common/Makefile.am b/bindings/rust/libgpiod/tests/common/Makefile.am
+index 4cfc3555229b..6a32db427ecc 100644
+--- a/bindings/rust/libgpiod/tests/common/Makefile.am
++++ b/bindings/rust/libgpiod/tests/common/Makefile.am
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ EXTRA_DIST = config.rs mod.rs
+diff --git a/bindings/rust/libgpiod/tests/common/config.rs b/bindings/rust/libgpiod/tests/common/config.rs
+index 36ccc948860e..7bb1f659a928 100644
+--- a/bindings/rust/libgpiod/tests/common/config.rs
++++ b/bindings/rust/libgpiod/tests/common/config.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::sync::{Arc, Mutex};
+ use std::time::Duration;
+diff --git a/bindings/rust/libgpiod/tests/common/mod.rs b/bindings/rust/libgpiod/tests/common/mod.rs
+index 5f725c61f905..586115b5accb 100644
+--- a/bindings/rust/libgpiod/tests/common/mod.rs
++++ b/bindings/rust/libgpiod/tests/common/mod.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ #[allow(dead_code)]
+ mod config;
+diff --git a/bindings/rust/libgpiod/tests/edge_event.rs b/bindings/rust/libgpiod/tests/edge_event.rs
+index 45c1cfc09022..03b7e7cb05f7 100644
+--- a/bindings/rust/libgpiod/tests/edge_event.rs
++++ b/bindings/rust/libgpiod/tests/edge_event.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/info_event.rs b/bindings/rust/libgpiod/tests/info_event.rs
+index f06dd2d2dd67..c969af782383 100644
+--- a/bindings/rust/libgpiod/tests/info_event.rs
++++ b/bindings/rust/libgpiod/tests/info_event.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/line_config.rs b/bindings/rust/libgpiod/tests/line_config.rs
+index b5a04ef8949a..7fccf8cc3daa 100644
+--- a/bindings/rust/libgpiod/tests/line_config.rs
++++ b/bindings/rust/libgpiod/tests/line_config.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/line_info.rs b/bindings/rust/libgpiod/tests/line_info.rs
+index 9e4928b49682..ce66a605b8f4 100644
+--- a/bindings/rust/libgpiod/tests/line_info.rs
++++ b/bindings/rust/libgpiod/tests/line_info.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
+index d60e15a7a106..d49874f77ac9 100644
+--- a/bindings/rust/libgpiod/tests/line_request.rs
++++ b/bindings/rust/libgpiod/tests/line_request.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/line_settings.rs b/bindings/rust/libgpiod/tests/line_settings.rs
+index de2148ee6018..1aaa6b44ed63 100644
+--- a/bindings/rust/libgpiod/tests/line_settings.rs
++++ b/bindings/rust/libgpiod/tests/line_settings.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
+diff --git a/bindings/rust/libgpiod/tests/request_config.rs b/bindings/rust/libgpiod/tests/request_config.rs
+index d78c4bddc443..a925a6833105 100644
+--- a/bindings/rust/libgpiod/tests/request_config.rs
++++ b/bindings/rust/libgpiod/tests/request_config.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-// SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
++// SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ mod common;
+ 
 -- 
-2.36.1
+2.31.1.272.g89b43f80a514
 
