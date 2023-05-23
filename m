@@ -2,210 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E2B870DD8F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 15:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0351570DDC4
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 15:43:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230421AbjEWNhE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 09:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
+        id S236977AbjEWNnJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 09:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232424AbjEWNhE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 09:37:04 -0400
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D67FF
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 06:37:02 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-        id e485e3fa-f96e-11ed-b972-005056bdfda7;
-        Tue, 23 May 2023 16:37:00 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Tue, 23 May 2023 16:36:59 +0300
-To:     Esteban Blanc <eblanc@baylibre.com>
-Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
-        jneanne@baylibre.com, aseketeli@baylibre.com, u-kumar1@ti.com
-Subject: Re: [PATCH v5 1/3] rtc: tps6594: Add driver for TPS6594 RTC
-Message-ID: <ZGzBe6O_mw_pdSkH@surfacebook>
-References: <20230522163115.2592883-1-eblanc@baylibre.com>
- <20230522163115.2592883-2-eblanc@baylibre.com>
+        with ESMTP id S236937AbjEWNm5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 09:42:57 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E45126
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 06:42:40 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-64d341bdedcso3299645b3a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 06:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684849360; x=1687441360;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WgkyALS6JYBFkaNS/DVfHOSeKUcpoLOhGaVsSzn7wMo=;
+        b=sLgp4rSO+oK0EWrvJ1dxjpit6CFLUlpCjQQTYyQ2fuYXPwBiJq25Ib0qqbYAJRH3Dj
+         8lWzJjK+ApRVl04uKlAynV/66DmQWs41UdZXeevgN/2uKHg1kWR/HiNihq8cFZXr1Mw8
+         RSOviteiWTPW7yAkcaNSbrQ6mD4JnqAOELkGQ7LLbqsoKQR7xpF9QT4/4j0h6z1u64yb
+         eVQS2FQ5ivIZgbETUXQXAOkHtURZZ1lcaGGd8KMBMYfBJOwmiXPBLi0APPURlZfLN4Cr
+         Kgt1RLe3I5u/pTYK0M6cgwLaD08CWCxJp+ecyroiS8RGuxNamx0QcLKPp3SDRIMEFMaU
+         ek5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684849360; x=1687441360;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WgkyALS6JYBFkaNS/DVfHOSeKUcpoLOhGaVsSzn7wMo=;
+        b=RoeJdKe+QXgT3Rg6OBtgqsONlR17LHpccvkjvbhIRjwLf0jZoHtalrv3+pF9tMGY0/
+         iexYG867VJWLFTmPHgxgcsGXd8dnHV+3rhxooHQiA4uvcPVSSdp0TfrIVIvhrIGNCFF/
+         xeaUov89F2okg6w9jQPgnPv3Zs6DoDpaCSt5xXYRL+oOQ2eaWgf0mM2nPYDzmdVe3qPl
+         qSfQlJSWymrA/LV9CrHSzqiJb0RhIlG4Qpi+YmCbrHrVLAhR4K+HC1gQeJZoJKFJSq5y
+         TMzox+H2iQEeFYyDvfLQnclsnlARaXNbfTp7bidWo+FSOFNef1d+A4hJ1lAecnafUxaO
+         wZkw==
+X-Gm-Message-State: AC+VfDyTXu0LsrI6hDhjgqYc415M4T3ZLpkNDk1t/n2g4e4u764Sikgp
+        WZfN2JVD8XM+8COBvYDf5TM=
+X-Google-Smtp-Source: ACHHUZ6rO4qy9v2KTmLxKfMWa36TiYhI0T5s5M7VEI+V1qXH92n9bdK8GT2jJcqJ5SdIC0ANYtWsgQ==
+X-Received: by 2002:a05:6a00:23d1:b0:646:8a8:9334 with SMTP id g17-20020a056a0023d100b0064608a89334mr17900586pfc.20.1684849360036;
+        Tue, 23 May 2023 06:42:40 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id i24-20020aa787d8000000b0064d3e4c7658sm5976700pfo.96.2023.05.23.06.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 06:42:39 -0700 (PDT)
+Date:   Tue, 23 May 2023 21:42:34 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] bindings: python: change the interpretation of
+ None in event wait
+Message-ID: <ZGzCyoLKyTySqR3L@sol>
+References: <20230523133427.194558-1-brgl@bgdev.pl>
+ <CAMRc=MdOpX4+9=DTdg7yuzUj3RBNYw=Qaw6Ny-YnyyngAP02pg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230522163115.2592883-2-eblanc@baylibre.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdOpX4+9=DTdg7yuzUj3RBNYw=Qaw6Ny-YnyyngAP02pg@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, May 22, 2023 at 06:31:13PM +0200, Esteban Blanc kirjoitti:
-> TPS6594 PMIC is a MFD. This patch adds support for
-> the RTC found inside TPS6594 family of PMIC.
+On Tue, May 23, 2023 at 03:35:30PM +0200, Bartosz Golaszewski wrote:
+> On Tue, May 23, 2023 at 3:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The docs don't mention it but currently passing None as the timeout to
+> > one of the event wait methods works like passing 0 to select() - the wait
+> > method returns immediately. Change it to a more standard behavior - None
+> > makes the method block indefinitely until an even becomes available for
+> > reading.
+> >
+> > This is a slight change in the behavior but let's hope nobody complains
+> > as libgpiod v2 is still pretty recent and its adoption is (hopegully)
+> > not wide-spread yet.
+> >
+> > Suggested-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
 > 
-> Alarm is also supported.
+> Cr*p, it was supposed to be Kent who suggested it and Nicolas who
+> Reported it. I can change it when applying if the patch is fine.
+> 
+> Bart
+> 
 
-...
+Man, wish I could get away with that little sleep.
 
-> +	help
-> +	  TI Power Management IC TPS6594 supports RTC functionality
-> +	  along with alarm. This driver supports the RTC driver for
-> +	  the TPS6594 RTC module.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called tps6594-rtc
+Anyway, that works for me.
 
-Grammar period at the end?
-
-...
-
-> +#define TPS6594_GET_TIME_ON TPS6594_BIT_GET_TIME
-> +#define TPS6594_GET_TIME_OFF 0
-
-Not used.
-
-> +#define TPS6594_IT_ALARM_ON TPS6594_BIT_IT_ALARM
-> +#define TPS6594_IT_ALARM_OFF 0
-
-Used only once.
-
-> +#define TPS6594_AUTO_COMP_ON TPS6594_BIT_IT_ALARM
-
-No _OFF counterpart.
-
-That said the _OFF can be dropped completely. And the rest I see no value to
-have, just use those bit definitions directly?
-
-...
-
-> +static int tps6594_rtc_alarm_irq_enable(struct device *dev,
-> +					unsigned int enabled)
-> +{
-> +	struct tps6594 *tps = dev_get_drvdata(dev->parent);
-> +	u8 val = 0;
-
-Redundant assignment.
-
-> +	val = enabled ? TPS6594_IT_ALARM_ON : TPS6594_IT_ALARM_OFF;
-> +
-> +	return regmap_update_bits(tps->regmap, TPS6594_REG_RTC_INTERRUPTS,
-> +				  TPS6594_BIT_IT_ALARM, val);
-> +}
-
-...
-
-> +	// Read shadowed RTC registers.
-> +	ret = regmap_bulk_read(tps->regmap, TPS6594_REG_RTC_SECONDS, rtc_data,
-> +			       NUM_TIME_REGS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	tm->tm_sec = bcd2bin(rtc_data[0]);
-> +	tm->tm_min = bcd2bin(rtc_data[1]);
-> +	tm->tm_hour = bcd2bin(rtc_data[2]);
-> +	tm->tm_mday = bcd2bin(rtc_data[3]);
-> +	tm->tm_mon = bcd2bin(rtc_data[4]) - 1;
-> +	tm->tm_year = bcd2bin(rtc_data[5]) + 100;
-> +	tm->tm_wday = bcd2bin(rtc_data[6]);
-> +
-> +	return ret;
-
-	return 0;
-
-No?
-
-...
-
-> +static int tps6594_rtc_set_calibration(struct device *dev, int calibration)
-> +{
-> +	unsigned char comp_data[NUM_COMP_REGS];
-> +	struct tps6594 *tps = dev_get_drvdata(dev->parent);
-> +	__le16 value;
-> +	int ret;
-> +
-> +	/*
-> +	 * TPS6594 uses two's complement 16 bit value for compensation of RTC
-> +	 * crystal inaccuracies. One time every hour when seconds counter
-> +	 * increments from 0 to 1 compensation value will be added to internal
-> +	 * RTC counter value.
-> +	 *
-> +	 * Valid range for compensation value: [-32767 .. 32767].
-
-This is defined naturally by the bits available, correct?
-
-> +	 */
-> +	if (calibration < -32767 || calibration > 32767) {
-
-So, this can be S16_MIN / S16_MAX range. The question here is what the
--32768 meaning is and why it can't be used.
-
-> +		dev_err(dev, "RTC calibration value out of range: %d\n",
-> +			calibration);
-> +		return -EINVAL;
-
--ERANGE
-
-> +	}
-
-> +	value = (__le16)calibration;
-> +
-> +	comp_data[0] = value & 0xFF;
-> +	comp_data[1] = (value >> 8) & 0xFF;
-
-Of course these three lines is not what expected.
-
-	value = cpu_to_le16();
-
-> +	// Update all the compensation registers in one shot.
-> +	ret = regmap_bulk_write(tps->regmap, TPS6594_REG_RTC_COMP_LSB,
-> +				comp_data, NUM_COMP_REGS);
-
-				&value, sizeof(value) ?
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	// Enable automatic compensation.
-> +	return regmap_set_bits(tps->regmap, TPS6594_REG_RTC_CTRL_1,
-> +			       TPS6594_BIT_AUTO_COMP);
-> +}
-
-...
-
-> +	ret = regmap_bulk_read(tps->regmap, TPS6594_REG_RTC_COMP_LSB, comp_data,
-> +			       NUM_COMP_REGS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	value = (__le16)comp_data[0] | ((__le16)comp_data[1] << 8);
-> +
-> +	*calibration = value;
-
-In the similar (complementary API) way as above.
-
-...
-
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-
-Having
-
-	struct device *dev = &pdev->dev;
-
-might make this and other lines shorter / neater.
-
-> +					tps6594_rtc_interrupt, IRQF_ONESHOT,
-> +					TPS6594_IRQ_NAME_ALARM, &pdev->dev);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to request_threaded_irq\n");
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
