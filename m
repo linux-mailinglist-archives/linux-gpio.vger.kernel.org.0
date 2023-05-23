@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF6870D698
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 662EB70D6A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:05:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235614AbjEWIEO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 04:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
+        id S235259AbjEWIFm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 04:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235411AbjEWIEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:04:14 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F08E4F
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:03:32 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-78412128326so3501943241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:03:32 -0700 (PDT)
+        with ESMTP id S236267AbjEWIFV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:05:21 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E309B18F
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:04:48 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-253e0edc278so2559579a91.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:04:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684828940; x=1687420940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y/B3kiCliFfKeFEtWk8i6ctleQ5AEphVCcNSN8Gd7fE=;
-        b=Kdd9zM9V/1FhOp66ETDWIQ6UtOjjuBH+3NatzUyc2NLLocDAG3YSv9pv9QMBTGEDLj
-         S/1nghoeFJRrZ1AmP9ciN4HHQqh28fdMJGWdRW4IZg1IWVFFRGq9o/hjyTYXpmrzYHI7
-         sj1L626xWgZbvcIx5cN6pcN7by41T2ycFkUjjvfHprKSBXvrEGSr1zg3R/PoN4sOGCMa
-         NvbOA9fQQJZKph0AQHn5Ph4QJR5X0+sodgj7X9K5Nts9CrUvJJWEkkyQQ1f2jvg42jsz
-         ZO3HHDusrIL6g/uEEQJX4GaPeputNroRtM04NUY/W6GzpA7O6hBp9QVT93Ylgjq9sHba
-         cdIQ==
+        d=gmail.com; s=20221208; t=1684829028; x=1687421028;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uXxswV9F88lm9yuu4eGkfqqU6VA143P27jOssPy5N0E=;
+        b=oLMD/9JXTt1UFnytnZ/1CW9aVhkD9G3UJmKWTjXyIq04cpOWWIHCKbOTTW26bGzWrR
+         Ezfj1oVtcDUWSBjGLRKEyA1ttWNwa5zBOlumkeQd3kdAyUzAO9nNaJJWE/nYvgPU2oDV
+         XkBdBLp49cSs5hzt/LtkdN6nN8PePUZxoOHl7z95kFZDZJYMonuM7ytvvsmrRmLPsz01
+         DA7Bdd5/ahy7+589vKYyoNV/lgAAnAhNggLMLlHGP+rKZRtWwZdxbxkAP3aRuylAX45c
+         IoZfskXeFuT1WU1iaoWyiROe6ADwJBWqRYR1gQwsgOprM6tXB/cbsAVngPnKF//58dmM
+         +CXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684828940; x=1687420940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y/B3kiCliFfKeFEtWk8i6ctleQ5AEphVCcNSN8Gd7fE=;
-        b=XXQq7ScOtUr9ddqSPZkgrjDWFewv99vvFEvNkR/NZkRrHkhXOVKbW0+RXnERK0NDdD
-         pzKQBwvqjfSlsGsk2lkJEpmsmPg1aGShMcE1/aVz/zWr3Z9UGHQTxoQODKkFU6u+geyQ
-         RDzNiMwdQ9xpMG92Xl/8+UfDRvC+ixOPBVmVHsnfh6H8+n7eR1XYWdAaDGU8ORAxDSvN
-         pFRflLZlUsWOQcHu4m3fb8GRiz1Sx7bsuKfWn2hhINtqGDZ+voLYz5zxCP0OwpVoCgGw
-         CV5diTc8xWKoy3AojPwaYNATAB9hNfdREw+uxUDI3lqYwnUiOygmKZRdhrrtTMBgFuw1
-         EgSQ==
-X-Gm-Message-State: AC+VfDzJJSbWScfWxkzQXQF8NAj/V7qrDgmjKGy7AZrIljqwvBCOVKOM
-        QMBgeC017l6t031gukKJ/aQEVbaOsvwFxZ1heBJdwLoIl6lA2TMNB0I=
-X-Google-Smtp-Source: ACHHUZ5NKPzGMQp9jYc3t4B2JFbW91QnVKKPSXW7Ixm1CrykHmyaR9lR5tcgX9FeK9VFjujnNuYjfdbc6RCwG62iLJw=
-X-Received: by 2002:a67:ee16:0:b0:42c:9a74:c724 with SMTP id
- f22-20020a67ee16000000b0042c9a74c724mr3834033vsp.3.1684828940027; Tue, 23 May
- 2023 01:02:20 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684829028; x=1687421028;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uXxswV9F88lm9yuu4eGkfqqU6VA143P27jOssPy5N0E=;
+        b=IOW0NCbEdXytpYUwv+/JvKZXFG82avJGcodgC7wDo6zzMRmltdhL5vmxE1g3SRLvS7
+         vTQsABoMYymZjRKjdwFF1xu4mk8RNhkjFGLPYUzfStH5TC0AErAdXB9oqHpw4ftaNUXF
+         BbJt12Sg4Q57pjb8F/KBnBB44vYJXq68mY2VD4nmDLTJWHEp2YqAwxDPDKBFh2Mde1QU
+         umI5nmCLRVDF0DVdpzMritkgu4AjFMfQW6TrsLUvvr5BMXwI5We4PycRc48YQZINObUK
+         UUzT4UBK33kfEYtOhDB51FcND6h9gRwz7f2xhtR9+dmX41nF7cRmVmHoiqIrPTaU6tBC
+         5azw==
+X-Gm-Message-State: AC+VfDw65NmOOsfQsWMtEdJ8L/jvYlT3VdbYkEEYhAaaGCRU4H9+bLdC
+        8hMMb/IlDD6Vf9Z+jfethwSGNRHZhaQ=
+X-Google-Smtp-Source: ACHHUZ6hvsgUsiPhyY3tMXfYn/IYTDjoadyYEniFvbA5D8U8Q85Hm0ChV8jnnCWyhNgUnpNP8RRgQQ==
+X-Received: by 2002:a17:90a:c912:b0:255:47fd:9ab4 with SMTP id v18-20020a17090ac91200b0025547fd9ab4mr7492682pjt.10.1684829028016;
+        Tue, 23 May 2023 01:03:48 -0700 (PDT)
+Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id 19-20020a631653000000b0050376cedb3asm5379470pgw.24.2023.05.23.01.03.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 01:03:47 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH v2] README: provide more info in Contributing
+Date:   Tue, 23 May 2023 16:03:34 +0800
+Message-Id: <20230523080334.38971-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20230520031150.20062-1-warthog618@gmail.com> <CAMRc=Mf3uKRwXkkaZdOQS2-a_iph--M3FrVd3dfqqt5wK8aDTA@mail.gmail.com>
- <ZGwjNt/jZ+MsIT8c@sol> <CAMRc=MfmxWqMWxckwfRH-na-4GKBGd+o_wVrkRBF7UoJ+CUrQA@mail.gmail.com>
-In-Reply-To: <CAMRc=MfmxWqMWxckwfRH-na-4GKBGd+o_wVrkRBF7UoJ+CUrQA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 10:02:08 +0200
-Message-ID: <CAMRc=Me-wp3AvGxZXC6y=t-_tWvxJ0=2sFcK6aME6nRawkqMkg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] README: provide more info in Contributing
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,123 +67,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 23, 2023 at 9:41=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Tue, May 23, 2023 at 4:21=E2=80=AFAM Kent Gibson <warthog618@gmail.com=
-> wrote:
-> >
-> > On Mon, May 22, 2023 at 06:29:27PM +0200, Bartosz Golaszewski wrote:
-> > > On Sat, May 20, 2023 at 5:12=E2=80=AFAM Kent Gibson <warthog618@gmail=
-.com> wrote:
-> > > >
-> > > > Add more detail to Contributing to make it easier for new users to
-> > > > contribute.
-> > > >
-> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > > ---
-> > > > I was tempted to add something on formatting with clang-format, but=
- I'm
-> > > > not 100% clear on the formatting policy myself.
-> > > > Would be nice for that to be clarified.
-> > > >
-> > > >  README | 14 +++++++++++---
-> > > >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/README b/README
-> > > > index b71739e..8e726fe 100644
-> > > > --- a/README
-> > > > +++ b/README
-> > > > @@ -275,8 +275,16 @@ were selected and help2man is available in the=
- system.
-> > > >  CONTRIBUTING
-> > > >  ------------
-> > > >
-> > > > -Contributions are welcome - please send patches and bug reports to
-> > > > -linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mai=
-l subject
-> > > > -line) and stick to the linux kernel coding style when submitting n=
-ew code.
-> > > > +Contributions are welcome - please send questions, patches and bug=
- reports
-> > > > +to linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-=
-mail
-> > > > +subject line).  Note that the mailing list quietly drops HTML form=
-atted
-> > > > +e-mail, so be sure to send plain text[2].
-> > > > +
-> > > > +Code submissions should stick to the linux kernel coding style[3] =
-and
-> > > > +follow the kernel patch submission process[4] as applied to the li=
-bgpiod
-> > > > +source tree.
-> > > >
-> > > >  [1] https://github.com/bats-core/bats-core
-> > > > +[2] https://docs.kernel.org/process/email-clients.html
-> > > > +[3] https://docs.kernel.org/process/coding-style.html
-> > > > +[4] https://docs.kernel.org/process/submitting-patches.html
-> > > > --
-> > > > 2.40.1
-> > > >
-> > >
-> > > Thanks for doing this. Maybe even add a link to the linux-gpio mailin=
-g
-> > > list main page and archives? I sometimes get mail from people confuse=
-d
-> > > as to what the linux-gpio mailing list actually is.
-> > >
-> >
-> > Fair point - will add something in v2.
-> >
-> > Anything to add on formatting?
-> > I was going to mention clang-format, but IIRC you tweak that a bit wher=
-e
-> > the old way looks nicer.
->
-> I used the kernel's .clang-format but in some places it resulted in
-> worse readability.
->
-> > FWIW I'd rather the clang-format was definitive, or if you can't get
-> > what you want from clang directly, that any tweaking could be automated=
-.
-> > Essentially that there is some definitive format that can be applied by
-> > a tool - I'd rather not be spending time musing over whitespace.
-> >
->
-> I agree. I'll revisit the kernel's format file and see if I can tweak it =
-a bit.
->
-> Until that's done let's leave it out of README though.
->
-> Bart
+Add more detail to Contributing to make it easier for new users to
+contribute.
 
-Ah, I remember now why I hated the "official" kernel .clang-format
-which the kernel doesn't even seem to use itself because this is an
-example of what applying it results in:
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+Changes v1 -> v2:
+ - add more info on the mailing list and archive.
 
--        static const GPIOSimLineName names[] =3D {
--                { .offset =3D 1, .name =3D "foo", },
--                { .offset =3D 2, .name =3D "bar", },
--                { .offset =3D 4, .name =3D "baz", },
--                { .offset =3D 5, .name =3D "xyz", },
--                { }
--        };
-+        static const GPIOSimLineName names[] =3D { {
-+                                                         .offset =3D 1,
-+                                                         .name =3D "foo",
-+                                                 },
-+                                                 {
-+                                                         .offset =3D 2,
-+                                                         .name =3D "bar",
-+                                                 },
-+                                                 {
-+                                                         .offset =3D 4,
-+                                                         .name =3D "baz",
-+                                                 },
-+                                                 {
-+                                                         .offset =3D 5,
-+                                                         .name =3D "xyz",
-+                                                 },
-+                                                 {} };
+ README | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-Bart
+diff --git a/README b/README
+index b71739e..85b6300 100644
+--- a/README
++++ b/README
+@@ -275,8 +275,26 @@ were selected and help2man is available in the system.
+ CONTRIBUTING
+ ------------
+ 
+-Contributions are welcome - please send patches and bug reports to
+-linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail subject
+-line) and stick to the linux kernel coding style when submitting new code.
++Contributions are welcome - please send questions, patches and bug reports
++to the linux-gpio mailing list[2] by e-mailing to linux-gpio@vger.kernel.org
++(add the [libgpiod] prefix to the e-mail subject line).
++Note that the mailing list quietly drops HTML formatted e-mail, so be sure
++to send plain text[3].
++
++Code submissions should stick to the linux kernel coding style[4] and
++follow the kernel patch submission process[5] as applied to the libgpiod
++source tree.
++
++The mailing list archive[6] contains all the historical mails to the list,
++and is the place to check to ensure your e-mail has been received.
++Search for "libgpiod" to filter the list down to relevant messages.
++Those also provide examples of the expected formatting.
++Allow some time for your e-mail to propagate to the list before retrying,
++particularly if there are no e-mails in the list more recent than yours.
+ 
+ [1] https://github.com/bats-core/bats-core
++[2] http://vger.kernel.org/vger-lists.html#linux-gpio
++[3] https://docs.kernel.org/process/email-clients.html
++[4] https://docs.kernel.org/process/coding-style.html
++[5] https://docs.kernel.org/process/submitting-patches.html
++[6] https://lore.kernel.org/linux-gpio/
+-- 
+2.40.1
+
