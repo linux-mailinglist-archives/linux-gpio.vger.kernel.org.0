@@ -2,202 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC9E70D0D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 04:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6ADF70D121
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 04:22:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjEWCJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 May 2023 22:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
+        id S231320AbjEWCWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 May 2023 22:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjEWCJN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 22:09:13 -0400
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B8EE6;
-        Mon, 22 May 2023 19:09:09 -0700 (PDT)
-X-QQ-mid: Yeas47t1684807693t352t56282
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [122.235.247.1])
-X-QQ-SSF: 00400000000000F0FNF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 17576591825519533520
-To:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>
-Cc:     "'Andrew Lunn'" <andrew@lunn.ch>,
-        "'Michael Walle'" <michael@walle.cc>,
-        "'Shreeya Patel'" <shreeya.patel@collabora.com>,
-        <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <mengyuanlou@net-swift.com>
-References: <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com> <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch> <025b01d9897e$d8894660$899bd320$@trustnetic.com> <1e1615b3-566c-490c-8b1a-78f5521ca0b0@lunn.ch> <028601d989f9$230ee120$692ca360$@trustnetic.com> <f0b571ab-544b-49c3-948f-d592f931673b@lunn.ch> <005a01d98c8b$e48d2b60$ada78220$@trustnetic.com> <005e01d98c9c$5181fb00$f485f100$@trustnetic.com> <ZGvgcdXPBy53y4mn@smile.fi.intel.com>
-In-Reply-To: <ZGvgcdXPBy53y4mn@smile.fi.intel.com>
-Subject: RE: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
-Date:   Tue, 23 May 2023 10:08:12 +0800
-Message-ID: <007701d98d1b$6d9decc0$48d9c640$@trustnetic.com>
+        with ESMTP id S231577AbjEWCWU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 May 2023 22:22:20 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F05120
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 19:21:47 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64a9335a8e7so2918325b3a.0
+        for <linux-gpio@vger.kernel.org>; Mon, 22 May 2023 19:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684808507; x=1687400507;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kuuyzI6aEswex7GOeormqMMZEuiJ/WAORDc+LdkM7YY=;
+        b=gg6srY5lTZTDGAwnDiSba7tABd3Ij7EdLkCyirmkhrtvU/ziH84Ncq9xgmer4t/xP7
+         3bCYeJ8w6yr0W221dibBw7ZnNtoCbGSNILSXeR6JBOF7Shz/Er1bjQh3DOHiWNxW9GL+
+         7Ce/VGbanCeBhyoKSLUgGxTwBQoNUKJhpf45xBIKoQIj/DoIyPYf4Sco7doFBUxQnKFB
+         ki9JOBmDUKb2y3VKu59I/bOCoiX/2PTu4UydtWMfqJ0ifbsWjXVK9/EavZCs87h5g9/B
+         69yLVGmt9PIMDnCx62gbKtv1rxqvER09l6HY7mdn2cUBfm/ey6MegK0FUG2SLFfdJnyd
+         OLlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684808507; x=1687400507;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kuuyzI6aEswex7GOeormqMMZEuiJ/WAORDc+LdkM7YY=;
+        b=gvuNVUe1IBCjzMTgXapH97qosx1SdItCu14q72v6Qrr+MOpG1AkTkLpuKgZAf3zkQ1
+         hkj640wdIfiHcRP5iu2NJu6Llz1jd7ByZdC+YmWtYMNz5ANeEVwLwCiTZpLNlcGE1mXl
+         6snDG4l8Q/3I4j4CXHWzz39lQl+rGEj5GYo3QiD2SchT3B3wbsdJ7UU464AO4R3jfx+w
+         xExaJjpTj4QrWQYM70+SZCI73v7qIKdIFtyy2oyF8oN6nBdNuhTvaFIHhwRT2UIThuis
+         PvA+qTLzWBLskoFejNGKwnoNMGbuPMq4TkuVpCXzpOrl+vJS4gYwhrdUMWMYIVH+hWE4
+         GG6Q==
+X-Gm-Message-State: AC+VfDxhL3+6RIipeuf4HveepKPyKibMH/Pk5P9Cwj1aMFxPD88utZ32
+        AMDifJNCVGPqVfApLt2rzKZNgDeqJ8s=
+X-Google-Smtp-Source: ACHHUZ4aXUOzcOEbeibF+niJDhnyrVZMuntmzBl/XX2QparPNPQQMe+ZIDGa4wtco/bC+EbSTY1Ktg==
+X-Received: by 2002:a05:6a20:8e1b:b0:10b:bf2d:71bb with SMTP id y27-20020a056a208e1b00b0010bbf2d71bbmr4855129pzj.27.1684808506588;
+        Mon, 22 May 2023 19:21:46 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id a20-20020aa780d4000000b00637b0c719c5sm4699019pfn.201.2023.05.22.19.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 19:21:45 -0700 (PDT)
+Date:   Tue, 23 May 2023 10:21:42 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH] README: provide more info in Contributing
+Message-ID: <ZGwjNt/jZ+MsIT8c@sol>
+References: <20230520031150.20062-1-warthog618@gmail.com>
+ <CAMRc=Mf3uKRwXkkaZdOQS2-a_iph--M3FrVd3dfqqt5wK8aDTA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQElTZjva91B8RKPJxABTESLbvgbBwJ7xjhgAYjDQqsBr+FHUgDJ87o1AYTHtNcC/cxtnwIXsv+OAc8FI2ACJJqqegMG4Q+ssC78MhA=
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mf3uKRwXkkaZdOQS2-a_iph--M3FrVd3dfqqt5wK8aDTA@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tuesday, May 23, 2023 5:37 AM, Andy Shevchenko wrote:
-> On Mon, May 22, 2023 at 06:58:19PM +0800, Jiawen Wu wrote:
-> > On Monday, May 22, 2023 5:01 PM, Jiawen Wu wrote:
-> > > On Friday, May 19, 2023 9:13 PM, Andrew Lunn wrote:
-> > > > > I have one MSI-X interrupt for all general MAC interrupt (see TXGBE_PX_MISC_IEN_MASK).
-> > > > > It has 32 bits to indicate various interrupts, GPIOs are the one of them. When GPIO
-> > > > > interrupt is determined, GPIO_INT_STATUS register should be read to determine
-> > > > > which GPIO line has changed state.
-> > > >
-> > > > So you have another interrupt controller above the GPIO interrupt
-> > > > controller. regmap-gpio is pushing you towards describing this
-> > > > interrupt controller as a Linux interrupt controller.
-> > > >
-> > > > When you look at drivers handling interrupts, most leaf interrupt
-> > > > controllers are not described as Linux interrupt controllers. The
-> > > > driver interrupt handler reads the interrupt status register and
-> > > > internally dispatches to the needed handler. This works well when
-> > > > everything is internal to one driver.
-> > > >
-> > > > However, here, you have two drivers involved, your MAC driver and a
-> > > > GPIO driver instantiated by the MAC driver. So i think you are going
-> > > > to need to described the MAC interrupt controller as a Linux interrupt
-> > > > controller.
-> > > >
-> > > > Take a look at the mv88e6xxx driver, which does this. It has two
-> > > > interrupt controller embedded within it, and they are chained.
-> > >
-> > > Now I add two interrupt controllers, the first one for the MAC interrupt,
-> > > and the second one for regmap-gpio. In the second adding flow,
-> > >
-> > > 	irq = irq_find_mapping(txgbe->misc.domain, TXGBE_PX_MISC_GPIO_OFFSET);
-> > > 	err = regmap_add_irq_chip_fwnode(fwnode, regmap, irq, 0, 0,
-> > > 					 chip, &chip_data);
-> > >
-> > > and then,
-> > >
-> > > 	config.irq_domain = regmap_irq_get_domain(chip_data);
-> > > 	gpio_regmap = gpio_regmap_register(&config);
-> > >
-> > > "txgbe->misc.domain" is the MAC interrupt domain. I think this flow should
-> > > be correct, but still failed to get gpio_irq from gpio_desc with err -517.
-> > >
-> > > And I still have doubts about what I said earlier:
-> > > https://lore.kernel.org/netdev/20230515063200.301026-1-
-> > > jiawenwu@trustnetic.com/T/#me1be68e1a1e44426ecc0dd8edf0f6b224e50630d
-> > >
-> > > There really is nothing wrong with gpiochip_to_irq()??
+On Mon, May 22, 2023 at 06:29:27PM +0200, Bartosz Golaszewski wrote:
+> On Sat, May 20, 2023 at 5:12 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > There is indeed something wrong in gpiochip_to_irq(), since commit 5467801 ("gpio:
-> > Restrict usage of GPIO chip irq members before initialization"):
-> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit?id=5467801f1fcbdc46bc7298a84dbf3ca1ff2a7320
+> > Add more detail to Contributing to make it easier for new users to
+> > contribute.
 > >
-> > When I use gpio_regmap_register() to add gpiochip, gpiochip_add_irqchip() will just
-> > return 0 since irqchip = NULL, then gc->irq.initialized = false.
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> > I was tempted to add something on formatting with clang-format, but I'm
+> > not 100% clear on the formatting policy myself.
+> > Would be nice for that to be clarified.
+> >
+> >  README | 14 +++++++++++---
+> >  1 file changed, 11 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/README b/README
+> > index b71739e..8e726fe 100644
+> > --- a/README
+> > +++ b/README
+> > @@ -275,8 +275,16 @@ were selected and help2man is available in the system.
+> >  CONTRIBUTING
+> >  ------------
+> >
+> > -Contributions are welcome - please send patches and bug reports to
+> > -linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail subject
+> > -line) and stick to the linux kernel coding style when submitting new code.
+> > +Contributions are welcome - please send questions, patches and bug reports
+> > +to linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail
+> > +subject line).  Note that the mailing list quietly drops HTML formatted
+> > +e-mail, so be sure to send plain text[2].
+> > +
+> > +Code submissions should stick to the linux kernel coding style[3] and
+> > +follow the kernel patch submission process[4] as applied to the libgpiod
+> > +source tree.
+> >
+> >  [1] https://github.com/bats-core/bats-core
+> > +[2] https://docs.kernel.org/process/email-clients.html
+> > +[3] https://docs.kernel.org/process/coding-style.html
+> > +[4] https://docs.kernel.org/process/submitting-patches.html
+> > --
+> > 2.40.1
+> >
 > 
-> As far as I understood your hardware, you need to provide an IRQ chip for your
-> GPIOs. The driver that provides an IRQ chip for GPIO and uses GPIO regmap is
-> drivers/gpio/gpio-sl28cpld.c.
+> Thanks for doing this. Maybe even add a link to the linux-gpio mailing
+> list main page and archives? I sometimes get mail from people confused
+> as to what the linux-gpio mailing list actually is.
 > 
-> So, you need to create a proper IRQ domain tree before calling for GPIO
-> registration.
 
-I've already created it. There is the full code snippet:
+Fair point - will add something in v2.
 
-+static int txgbe_gpio_init(struct txgbe *txgbe)
-+{
-+       struct regmap_irq_chip_data *chip_data;
-+       struct gpio_regmap_config config = {};
-+       struct gpio_regmap *gpio_regmap;
-+       struct fwnode_handle *fwnode;
-+       struct regmap_irq_chip *chip;
-+       struct regmap *regmap;
-+       struct pci_dev *pdev;
-+       struct device *dev;
-+       unsigned int irq;
-+       struct wx *wx;
-+       int err;
-+
-+       wx = txgbe->wx;
-+       pdev = wx->pdev;
-+       dev = &pdev->dev;
-+       fwnode = software_node_fwnode(txgbe->nodes.group[SWNODE_GPIO]);
-+
-+       regmap = devm_regmap_init(dev, NULL, wx, &gpio_regmap_config);
-+       if (IS_ERR(regmap)) {
-+               wx_err(wx, "failed to init GPIO regmap\n");
-+               return PTR_ERR(regmap);
-+       }
-+
-+       chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+       if (!chip)
-+               return -ENOMEM;
-+
-+       chip->name = "txgbe-gpio-irq";
-+       chip->irq_drv_data = wx;
-+       chip->num_regs = 1;
-+       chip->irqs = txgbe_gpio_irqs;
-+       chip->num_irqs = ARRAY_SIZE(txgbe_gpio_irqs);
-+       chip->status_base = WX_GPIO_INTSTATUS;
-+       chip->ack_base = WX_GPIO_EOI;
-+       chip->mask_base = WX_GPIO_INTMASK;
-+       chip->get_irq_reg = txgbe_get_irq_reg;
-+       chip->handle_post_irq = txgbe_handle_post_irq;
-+
-+       irq = irq_find_mapping(txgbe->misc.domain, TXGBE_PX_MISC_GPIO_OFFSET);
-+       err = regmap_add_irq_chip_fwnode(fwnode, regmap, irq, 0, 0,
-+                                        chip, &chip_data);
-+       if (err) {
-+               wx_err(wx, "GPIO IRQ register failed\n");
-+               return err;
-+       }
-+
-+       txgbe->gpio_irq = irq;
-+       txgbe->gpio_data = chip_data;
-+
-+       config.label = devm_kasprintf(dev, GFP_KERNEL, "txgbe_gpio-%x",
-+                                     (pdev->bus->number << 8) | pdev->devfn);
-+       config.parent = dev;
-+       config.regmap = regmap;
-+       config.fwnode = fwnode;
-+       config.drvdata = txgbe;
-+       config.ngpio = 6;
-+       config.reg_mask_xlate = txgbe_reg_mask_xlate;
-+       config.reg_dat_base = WX_GPIO_EXT;
-+       config.reg_set_base = WX_GPIO_DR;
-+       config.reg_dir_out_base = WX_GPIO_DDR;
-+       config.irq_domain = regmap_irq_get_domain(chip_data);
-+
-+       gpio_regmap = gpio_regmap_register(&config);
-+       if (IS_ERR(gpio_regmap)) {
-+               wx_err(wx, "GPIO regmap register failed\n");
-+               regmap_del_irq_chip(irq, chip_data);
-+               return PTR_ERR(gpio_regmap);
-+       }
-+
-+       txgbe->gpio_regmap = gpio_regmap;
-+
-+       return 0;
-+}
+Anything to add on formatting?
+I was going to mention clang-format, but IIRC you tweak that a bit where
+the old way looks nicer.
+FWIW I'd rather the clang-format was definitive, or if you can't get
+what you want from clang directly, that any tweaking could be automated.
+Essentially that there is some definitive format that can be applied by
+a tool - I'd rather not be spending time musing over whitespace.
 
-> 
-> >  Cc the committer: Shreeya Patel.
-> 
-> You meant "author", right?
-
-Yes, author.
-I think "gpiochip_add_data" does not take gpio-regmap case into account.
-
+Cheers,
+Kent.
 
