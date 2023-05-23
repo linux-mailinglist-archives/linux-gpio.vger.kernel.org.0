@@ -2,110 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A4DE70DB80
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 13:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0791070DC5D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 14:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236605AbjEWLdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 07:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
+        id S236557AbjEWMTS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 08:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236542AbjEWLdI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 07:33:08 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00850E43
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:33:01 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-970056276acso283106966b.2
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684841580; x=1687433580;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YClmjJRn0Gknkx4/41Zk8mWnA/6JxfHSw1B2SHo36gQ=;
-        b=H9en1s01qV88TYN40D8bv/EI5Rlu5X10LvG0tYeE8+p60kwYTCgbxUFA9L25CvUabs
-         IjKGuLTo7TjhmnTqlgAha1ako1fxMQxSQfUWXP+yWHlj/NRKd0VvrCHGyU6QF+RpfkTn
-         NepUBUUaCc817xCgcQYaQbQ2Qrf9ZY2oMw3ZHwupHr3vvot2A4bYZMcHYBNrUFgdvAR2
-         /ZyWIG/G+sm1C1EdSQHrv+qsPdXoic8QOHdYxEMWIWomF4vHqd23T+PTsUfdr8Ikkm8m
-         OeFbxyIHTHn09z1RjTQ+SZjewSodpu+K+LbqyAQ5tiiBMLZwKvuCj+lbXmjWJZ+ZORxC
-         gJKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684841580; x=1687433580;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YClmjJRn0Gknkx4/41Zk8mWnA/6JxfHSw1B2SHo36gQ=;
-        b=Hy9Zd2I+a4UO12GWaBtgdKDTwHJLx7syZbejfFawXeiPM9x/9kd1i2EY1Xrsqpo98l
-         CJhH/0jezf3RbQeUnuS1UBDMImqkBoPlPTRqCQaMug0mKTjfgci3hz5pw2odhaNi4uT2
-         r49MgQBWP2jmT65Uwu/xYv8MefQVMmqUk2EIJsGXVaWNzQQOxNsw6wxtbhehgOEb6Mox
-         jVtlEGI6ozbHok2Ft/myBdSUnMw+Xhhp8eKZxxcY+u1cl8YnwpwOZSu8Fm22pwBVx+1S
-         hplHkXubHBtZLwDtjSoqP8u+Pe5wmJfkx+YngWcJx7S+ciozrXrVYSDiNg6qxi/+Vk7H
-         czVg==
-X-Gm-Message-State: AC+VfDyaSBmwzBBUCQrOz+1k9SJDQjjBFGaIi8DJ08cZjIZH91M+HL/i
-        7pXc2ArzKclNGIQWOVu4upt3/g==
-X-Google-Smtp-Source: ACHHUZ5XKzvEpRfOQrISQnpERtmMR3k5PjPTu1OR3NUNRg6n+kCsQI5pmKtx0oFz6sv3MiXxOPIumw==
-X-Received: by 2002:a17:907:7e9c:b0:96f:7483:529c with SMTP id qb28-20020a1709077e9c00b0096f7483529cmr13616218ejc.30.1684841579957;
-        Tue, 23 May 2023 04:32:59 -0700 (PDT)
-Received: from localhost (abordeaux-655-1-129-86.w90-5.abo.wanadoo.fr. [90.5.10.86])
-        by smtp.gmail.com with ESMTPSA id v3-20020a170906858300b0096a68648329sm4324635ejx.214.2023.05.23.04.32.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 04:32:59 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 23 May 2023 13:32:58 +0200
-Message-Id: <CSTMHRRDTCXQ.15F813VOYL54S@burritosblues>
-Subject: Re: [PATCH v4 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
- and GPIOs
-From:   "Esteban Blanc" <eblanc@baylibre.com>
-To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
-        <aseketeli@baylibre.com>, <sterzik@ti.com>, <u-kumar1@ti.com>
-X-Mailer: aerc 0.14.0
-References: <20230512141755.1712358-1-eblanc@baylibre.com>
- <20230512141755.1712358-3-eblanc@baylibre.com>
- <ZF5yb4DbVDbfxVU4@surfacebook> <CSNQ2RRG7XDC.164H6P357UHSR@burritosblues>
- <CAHp75VdNgBv5yVTXzDpY3rrF31p=p99cfXdEs0q7m8VmLLJwbg@mail.gmail.com>
- <CSOGQIRNP61G.1Q2A4ZXB43YYQ@burritosblues>
- <CAHp75Vc-c=VU5Bfy5097z4wm43=bZ4LG83QBYV19YOrC7zSGag@mail.gmail.com>
- <CSOMS0W9MIUG.2MN43QZO9EX7Q@burritosblues>
- <CAHp75VeNvfDqkQZq_ghiv8vb2NaogKqkiFi9i0N3yLgA=ZTDbA@mail.gmail.com>
- <CSTJSWD0ZQGE.2XVJAULQKQTRM@burritosblues>
- <CAHp75Vch5h8SRdLvFc=T_1C0ncj6Ti2KtN76RfZQSL0v22GXLA@mail.gmail.com>
-In-Reply-To: <CAHp75Vch5h8SRdLvFc=T_1C0ncj6Ti2KtN76RfZQSL0v22GXLA@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234997AbjEWMTR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 08:19:17 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B93130
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 05:19:08 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id f9c03db6-f963-11ed-b972-005056bdfda7;
+        Tue, 23 May 2023 15:18:50 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Tue, 23 May 2023 15:18:50 +0300
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] [RFC PATCH] bindings: python: allow specifying
+ infinite timeout
+Message-ID: <ZGyvKn4NG0j9K2Q_@surfacebook>
+References: <20230519174619.58308-1-frattaroli.nicolas@gmail.com>
+ <CAMRc=McrerNizhJ+d1m6PaDf65UX-RrZjAYjdABiLjZ69TPRWA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McrerNizhJ+d1m6PaDf65UX-RrZjAYjdABiLjZ69TPRWA@mail.gmail.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue May 23, 2023 at 1:03 PM CEST, Andy Shevchenko wrote:
-> On Tue, May 23, 2023 at 12:26=E2=80=AFPM Esteban Blanc <eblanc@baylibre.c=
-om> wrote:
-> > On Wed May 17, 2023 at 5:04 PM CEST, Andy Shevchenko wrote:
-> > > On Wed, May 17, 2023 at 5:43=E2=80=AFPM Esteban Blanc <eblanc@baylibr=
-e.com> wrote:
+Tue, May 23, 2023 at 12:06:47PM +0200, Bartosz Golaszewski kirjoitti:
+> On Fri, May 19, 2023 at 7:47 PM Nicolas Frattaroli
+> <frattaroli.nicolas@gmail.com> wrote:
+
+> > So far, libgpiod's Python bindings had no way to state that a
+> > user wishes to wait for events indefinitely, as a timeout of
+> > None would intentionally be converted to 0 seconds, i.e. return
+> > from the select call in poll_fd immediately.
+> >
+> > The usual Python convention and even the select convention is
+> > to block indefinitely on a timeout=None. However, changing the
+> > poll_fd function to do this now would change an (intentional)
+> > API design choice by libgpiod 2.0 that API users presumably
+> > rely on.
+> >
+> > By allowing float("inf") (or in fact math.inf, or your favourite
+> > other way to get an infinite float) to mean waiting infinitely
+> > solves this by extending the API rather than changing it.
+> >
+> > On gpiod Python bindings without this change, passing inf results
+> > in an OverflowError being raised in select. API users who wish to
+> > support older versions of the bindings can catch this exception and
+> > act on it.
 
 ...
 
-> > I need to send a v6 now anyway. Should I convert all
-> > TPS6594_REG_GPIO1_CONF to TPS6594_REG_GPIOX_CONF(0)?
->
-> Again, if you want to leave that definition you need to well justify
-> why it's so special that code needs it. Easiest way is to use the
-> macro with 0 as an argument.
+> I like this approach too. In fact - it may be even clearer and more
+> intuitive than converting None to infinite timeout.
 
-Ok. Thanks for your input and your patience :)
+With all respect to the clever design solutions I would rather go the
+de facto Pythonic way. If the native libraries use None for indefinite
+then it's better to do that way, otherwise we will add quite a confusion
+to the Python users.
 
-Best regards,
+> Any objections against using negative numbers for the same purpose as well?
 
---=20
-Esteban Blanc
-BayLibre
+The question here is: What in the very same situations are other (presumably
+native) Python libraries using?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
