@@ -2,72 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D1DD70E47C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 20:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 948BF70E531
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 21:14:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjEWSUr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 14:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34100 "EHLO
+        id S238112AbjEWTOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 15:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjEWSUq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 14:20:46 -0400
-X-Greylist: delayed 599 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 11:20:43 PDT
-Received: from mg.sunplus.com (unknown [113.196.136.162])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74151E5;
-        Tue, 23 May 2023 11:20:43 -0700 (PDT)
-X-MailGates: (compute_score:DELIVER,40,3)
-Received: from 172.17.9.202
-        by mg01.sunplus.com with MailGates ESMTP Server V5.0(23310:0:AUTH_RELAY)
-        (envelope-from <wells.lu@sunplus.com>); Wed, 24 May 2023 01:39:50 +0800 (CST)
-Received: from sphcmbx02.sunplus.com.tw (172.17.9.112) by
- sphcmbx01.sunplus.com.tw (172.17.9.202) with Microsoft SMTP Server (TLS) id
- 15.0.1497.47; Wed, 24 May 2023 01:39:51 +0800
-Received: from sphcmbx02.sunplus.com.tw ([fe80::b840:bb05:862c:855c]) by
- sphcmbx02.sunplus.com.tw ([fe80::15f8:1252:3f23:8595%12]) with mapi id
- 15.00.1497.047; Wed, 24 May 2023 01:39:51 +0800
-From:   =?big5?B?V2VsbHMgTHUgp2aq2sTL?= <wells.lu@sunplus.com>
-To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        Wells Lu <wellslutw@gmail.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] pinctrl:sunplus: Add check for kmalloc
-Thread-Topic: [PATCH] pinctrl:sunplus: Add check for kmalloc
-Thread-Index: AQHZjZWky9lKVU39LE6VqnWnQX/Sxa9oG1MQ
-Date:   Tue, 23 May 2023 17:39:51 +0000
-Message-ID: <1560e9c0e5154802ab020b9da846d65f@sphcmbx02.sunplus.com.tw>
-References: <1684836688-9204-1-git-send-email-wellslutw@gmail.com>
- <ZGztCHNr1jmpFq0A@surfacebook>
-In-Reply-To: <ZGztCHNr1jmpFq0A@surfacebook>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.25.108.39]
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        with ESMTP id S229445AbjEWTOj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 15:14:39 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6143B91
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 12:14:37 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 0d73c900-f99e-11ed-b3cf-005056bd6ce9;
+        Tue, 23 May 2023 22:14:35 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Tue, 23 May 2023 22:14:34 +0300
+To:     Esteban Blanc <eblanc@baylibre.com>
+Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com, aseketeli@baylibre.com, u-kumar1@ti.com
+Subject: Re: [PATCH v5 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+Message-ID: <ZG0QmjZwvzWbNwA4@surfacebook>
+References: <20230522163115.2592883-1-eblanc@baylibre.com>
+ <20230522163115.2592883-3-eblanc@baylibre.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230522163115.2592883-3-eblanc@baylibre.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PiA+IEZpeCBTbWF0Y2ggc3RhdGljIGNoZWNrZXIgd2FybmluZzoNCj4gPiBwb3RlbnRpYWwgbnVs
-bCBkZXJlZmVyZW5jZSAnY29uZmlncycuIChrbWFsbG9jIHJldHVybnMgbnVsbCkNCj4gDQo+IC4u
-Lg0KPiANCj4gPiAgCQkJY29uZmlncyA9IGttYWxsb2Moc2l6ZW9mKCpjb25maWdzKSwgR0ZQX0tF
-Uk5FTCk7DQo+ID4gKwkJCWlmICghY29uZmlncykNCj4gDQo+ID4gKwkJCQlyZXR1cm4gLUVOT01F
-TTsNCj4gDQo+ICJGaXhpbmciIGJ5IGFkZGluZyBhIG1lbW9yeSBsZWFrIGlzIG5vdCBwcm9iYWJs
-eSBhIGdvb2QgYXBwcm9hY2guDQoNCkRvIHlvdSBtZWFuIEkgbmVlZCB0byBmcmVlIGFsbCBtZW1v
-cnkgd2hpY2ggYXJlIGFsbG9jYXRlZCBpbiB0aGlzIHN1YnJvdXRpbmUgYmVmb3JlDQpyZXR1cm4g
-LUVOT01FTT8NCg0KDQo+IC4uLg0KPiANCj4gPiAgCQkJY29uZmlncyA9IGttYWxsb2Moc2l6ZW9m
-KCpjb25maWdzKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwkJCWlmICghY29uZmlncykNCj4gPiArCQkJ
-CXJldHVybiAtRU5PTUVNOw0KPiANCj4gRGl0dG8uDQo+IA0KPiAuLi4NCj4gDQo+IEl0IG1pZ2h0
-IGJlIHRoYXQgSSdtIG1pc3Rha2VuLiBJbiB0aGlzIGNhc2UgcGxlYXNlIGFkZCBhbiBleHBsYW5h
-dGlvbiB3aHkgaW4gdGhlIGNvbW1pdA0KPiBtZXNzYWdlLg0KPiANCj4gLS0NCj4gV2l0aCBCZXN0
-IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KPiANCg0KDQpCZXN0IHJlZ2FyZHMsDQpXZWxs
-cyBMdQ0K
+Mon, May 22, 2023 at 06:31:14PM +0200, Esteban Blanc kirjoitti:
+> TI TPS6594 PMIC has 11 GPIOs which can be used
+> for different functions.
+> 
+> This patch adds a pinctrl and GPIO drivers in
+> order to use those functions.
+
+...
+
+> +#define FUNCTION(n, g, v)                                                    \
+> +	{                                                                    \
+> +		.pinfunction = PINCTRL_PINFUNCTION((n), (g), ARRAY_SIZE(g)), \
+> +		.muxval = v,                                                 \
+> +	}
+
+It seems you have used SPACEs before \, can you move to TABs?
+
+...
+
+> +static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
+> +				     unsigned int base, unsigned int offset,
+> +				     unsigned int *reg, unsigned int *mask)
+> +{
+> +	unsigned int line = offset % 8;
+> +	unsigned int stride = offset / 8;
+> +
+> +	switch (base) {
+> +	case TPS6594_REG_GPIO1_CONF:
+> +		*reg = TPS6594_REG_GPIOX_CONF(offset);
+> +		*mask = TPS6594_BIT_GPIO_DIR;
+> +		break;
+> +	case TPS6594_REG_GPIO_IN_1:
+> +	case TPS6594_REG_GPIO_OUT_1:
+> +		*reg = base + stride;
+> +		*mask = BIT(line);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+
+> +	return 0;
+
+You can return directly instead of breaking.
+
+> +}
+
+> +	pinctrl->pins = tps6594_pins;
+> +	pinctrl->pctl_dev =
+> +		devm_pinctrl_register(&pdev->dev, pctrl_desc, pinctrl);
+
+With
+
+	struct device *dev = &pdev->dev;
+
+the above becomes a single line. This may help other similar uses.
+
+> +	if (IS_ERR(pinctrl->pctl_dev)) {
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(pinctrl->pctl_dev),
+> +				     "Couldn't register pinctrl driver\n");
+> +	}
+
+Also the {} can be dropped.
+
+...
+
+> +	pinctrl->gpio_regmap = devm_gpio_regmap_register(&pdev->dev, &config);
+> +	if (IS_ERR(pinctrl->gpio_regmap)) {
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(pinctrl->gpio_regmap),
+> +				     "Couldn't register gpio_regmap driver\n");
+> +	}
+
+Ditto.
+
+...
+
+> +static struct platform_driver tps6594_pinctrl_driver = {
+> +	.driver = { .name = "tps6594-pinctrl" },
+
+Can you use more standard way of style here, i.e.
+
+	.driver = {
+		.name = "tps6594-pinctrl",
+	},
+
+In case someone is going to add something there in the future it will become
+just as cleaner as possible.
+
+> +	.probe = tps6594_pinctrl_probe,
+> +};
+> +
+> +module_platform_driver(tps6594_pinctrl_driver);
+
+Move the above blank line here.
+
+> +MODULE_ALIAS("platform:tps6594-pinctrl");
+> +MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
+
+...
+
+> +// Used to compute register address of GPIO1_CONF to GPIO11_CONF
+
+This is good.
+
+> -#define TPS6594_REG_GPIOX_CONF(gpio_inst)		(0x31 + (gpio_inst))
+> +#define TPS6594_REG_GPIOX_CONF(gpio_inst)	(0x31 + (gpio_inst))
+
+But why this?!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
