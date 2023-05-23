@@ -2,205 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E899C70E73A
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 23:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 930B870E9D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 01:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238441AbjEWVRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 17:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55706 "EHLO
+        id S233169AbjEWX6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 19:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235436AbjEWVRd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 17:17:33 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4129E5
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 14:17:30 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 23D8F2C0547;
-        Wed, 24 May 2023 09:17:27 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1684876647;
-        bh=ZvXitr014EREBUifBncsKvKKnEFL9Kh1HAGb9bEhHis=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=fEZNX6Ni9/wa04cjBAj6H274iIhgY+Eo3s1cBLVNP0TgZQ9iXVY8xBgAMPXDdRTGx
-         zxwtLSxsKgB7Y3/eEsl2ngHj6cBCbWBzHX9JhT/ziUiM9k7Qnv21vHgM6XC+RPmqLL
-         dxCnrm4pynpTcFD9udxZ/HHGZMDup7L1ljjPYmJ3HXe+npWVbCfRUOPNeWoJ7KocZj
-         DIeHs+xCnF7lQM8q+nvudksjR1iC0Dqi0dIt8ZPAdCf2nUOiweiXg5eLpmA9X6n53s
-         LIDV0GoIjEALNJRHK9em+7FkiV47cfRFiqulvna1+ckSkki5WcTVebIQTtWak+Re+0
-         kxYlerXosE5pQ==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B646d2d670000>; Wed, 24 May 2023 09:17:27 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.26; Wed, 24 May 2023 09:17:26 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Wed, 24 May 2023 09:17:26 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.026; Wed, 24 May 2023 09:17:26 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-CC:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "johan@kernel.org" <johan@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        Ben Brown <Ben.Brown@alliedtelesis.co.nz>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Topic: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Index: AQHZhIoofApft8Zm8kuYZtpxH+f53K9VfDeAgAQYHQCAApZDgIAAjA4AgAAH1ICAABG6AIAAmBEAgADTMYCACRxagIAATeQA
-Date:   Tue, 23 May 2023 21:17:26 +0000
-Message-ID: <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
-References: <ZGzsD_HMbMGhGwcr@surfacebook>
-In-Reply-To: <ZGzsD_HMbMGhGwcr@surfacebook>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.33.22.30]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <80F6D28F8932D6449F0394320FBA0349@atlnz.lc>
-Content-Transfer-Encoding: base64
+        with ESMTP id S232416AbjEWX6o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 19:58:44 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0440E5;
+        Tue, 23 May 2023 16:58:42 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b33c72686so176069a12.1;
+        Tue, 23 May 2023 16:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684886322; x=1687478322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7kGogYwbeBpGrkLOt20ejXjOaJrdpOttOMird93sj9w=;
+        b=NdEOGO3k6l7wBWhJ4+HL/Sv/zDh7pgICXiFYQqGANln9esGUDlw4naqTPMyMC3yYT9
+         aTvlCOxmhZ6EWVtnrSsRQ0k2fM7faVnHge/PmuTNLpvWI6SXsXUIrFDDv5Uk0DoIR0lX
+         pi4GBYqo5lRvKWKrUbBbAEK/VGJl5gRYnrM/8KnjgRLyxvLGmY8HMavDJfP/HpP0N8Tq
+         8NdB0hdSFICvUwWu84bjokTr2uG14kUM1OGGLEWj497a13Rf2TIbBzbCqyHP0PjhXT2U
+         htSo7OAHIOKdD9DHO3m1nczKYP4iVqwI2vIo1Y0gbAM4WoYLOltanTDbvlvHg7jpnGE4
+         oHow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684886322; x=1687478322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7kGogYwbeBpGrkLOt20ejXjOaJrdpOttOMird93sj9w=;
+        b=SqGWriyOeYuyzCB7mMmOoFSjJg2gUG+raEG7gt1yFvobxe3co6kkavdVbcjiO8JIvF
+         INmkM/5RZWTqtzK4bPMTOmdqGduQohphvs+cZ+mIk13UdDK44S+sVp1BCRnPo0POn0rj
+         +Hc+nm8Xl9ukq9DpJWB48fIl+o46ujT5hVY5ElBEH70zKvZd/Ai+ZPcchJwbbc5dfSQt
+         6Zkp1zvnlO/7HF+KoAeKS3RkBjClpDZF5P6nQeSz/aeLJF/mWec6eCOtjFGQCgOExZtq
+         O9bOngR+e0rPTtE5YhA/4/SrOVnQCcqxiWMtBBAmy5FsVwOjiRYYsIMc7g9GoY23vAwX
+         j6tQ==
+X-Gm-Message-State: AC+VfDyWtZmJ3AfAtFz0dE98Wh8rJzXYLTY3WGj7oE4waTDZ/egUgQ5B
+        kVMt5G7zxdFv2xr/ewjBnXwMPeicVSk=
+X-Google-Smtp-Source: ACHHUZ4HVcUZT28fltGJKpZZxxCYxUoPVXGHh/AwKO2FS0XZ/wJJn7C6vCcTiZcyvZdxelWxGwY04g==
+X-Received: by 2002:a17:90b:3146:b0:255:8063:c8dd with SMTP id ip6-20020a17090b314600b002558063c8ddmr5932499pjb.18.1684886322009;
+        Tue, 23 May 2023 16:58:42 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id l11-20020a17090a598b00b002532ddc3a00sm118416pji.15.2023.05.23.16.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 16:58:41 -0700 (PDT)
+Date:   Wed, 24 May 2023 07:58:36 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: cdev: fix a crash on line-request release
+Message-ID: <ZG1TLBsOy4mZQlW3@sol>
+References: <20230523155101.196853-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=pGLkceISAAAA:8 a=FI1P0K7GtinFDTRE2UUA:9 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230523155101.196853-1-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiAyNC8wNS8yMyAwNDozOCwgYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToNCj4g
-V2VkLCBNYXkgMTcsIDIwMjMgYXQgMDk6MzA6NTFQTSArMDAwMCwgQ2hyaXMgUGFja2hhbSBraXJq
-b2l0dGk6DQo+PiBPbiAxNy8wNS8yMyAyMDo1NCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPj4+
-IE9uIFdlZCwgTWF5IDE3LCAyMDIzIGF0IDI6NTDigK9BTSBDaHJpcyBQYWNraGFtDQo+Pj4gPENo
-cmlzLlBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4gd3JvdGU6DQo+Pj4+IE9uIDE3LzA1LzIz
-IDEwOjQ3LCBLZW50IEdpYnNvbiB3cm90ZToNCj4gLi4uDQo+DQo+Pj4+IFRoZSBmaXJzdCBpcyBh
-IHVzZXJzcGFjZSBkcml2ZXIgZm9yIGEgUG93ZXIgT3ZlciBFdGhlcm5ldCBDb250cm9sbGVyK1BT
-RQ0KPj4+PiBjaGlwc2V0IChJJ2xsIHJlZmVyIHRvIHRoaXMgYXMgYW4gTUNVIHNpbmNlIHRoZSB0
-aGluZyB3ZSB0YWxrIHRvIGlzDQo+Pj4+IHJlYWxseSBhIG1pY3JvIGNvbnRyb2xsZXIgd2l0aCBh
-IHZlbmRvciBzdXBwbGllZCBmaXJtd2FyZSBvbiBpdCB0aGF0DQo+Pj4+IGRvZXMgbW9zdCBvZiB0
-aGUgUG9FIHN0dWZmKS4gQ29tbXVuaWNhdGlvbiB0byB0aGUgTUNVIGlzIGJhc2VkIGFyb3VuZA0K
-Pj4+PiBjb21tYW5kcyBzZW50IHZpYSBpMmMuIEJ1dCB0aGVyZSBhcmUgYSBmZXcgZXh0cmEgR1BJ
-T3MgdGhhdCBhcmUgdXNlZCB0bw0KPj4+PiByZXNldCB0aGUgTUNVIGFzIHdlbGwgYXMgcHJvdmlk
-ZSBhIG1lY2hhbmlzbSBmb3IgcXVpY2tseSBkcm9wcGluZyBwb3dlcg0KPj4+PiBvbiBjZXJ0YWlu
-IGV2ZW50cyAoZS5nLiBpZiB0aGUgdGVtcGVyYXR1cmUgbW9uaXRvcmluZyBkZXRlY3RzIGEgcHJv
-YmxlbSkuDQo+Pj4gV2h5IGRvZXMgdGhlIE1DVSBoYXZlIG5vIGluLWtlcm5lbCBkcml2ZXI/DQo+
-PiBUaGVyZSBpc24ndCBhbnkgUG9FIFBTRSBpbmZyYXN0cnVjdHVyZSBpbiB0aGUga2VybmVsLiBJ
-J20gbm90IHJlYWxseQ0KPj4gc3VyZSB3aGF0IGl0J2QgbG9vayBsaWtlIGVpdGhlciBhcyB0aGUg
-aGFyZHdhcmUgZGVzaWducyBhcmUgYWxsIGhpZ2hseQ0KPj4gY3VzdG9taXplZCBhbmQgb2Z0ZW4g
-aGF2ZSB2ZXJ5IHNwZWNpYWxpemVkIHJlcXVpcmVtZW50cy4gRXZlbiB0aGUgdmVuZG9yDQo+PiBy
-ZWZlcmVuY2UgYm9hcmRzIHRlbmQgdG8gdXNlIHRoZSBpMmMgdXNlcnNwYWNlIGludGVyZmFjZSBh
-bmQgcHVudA0KPj4gZXZlcnl0aGluZyB0byBhIHNwZWNpYWxpc3QgYXBwbGljYXRpb24uDQo+Pg0K
-Pj4gT2YgY291cnNlIGlmIGFueW9uZSBpcyB0aGlua2luZyBhYm91dCBhZGRpbmcgUG9FIFBTRSBz
-dXBwb3J0IGluLWtlcm5lbA0KPj4gSSdkIGJlIHZlcnkga2VlbiB0byBiZSBpbnZvbHZlZC4NCj4g
-QnV0IHdoYXQgZG8gbmV0IHN1YnN5c3RlbSBndXlzIGtub3cgYWJvdXQgdGhpcz8gSGF2ZSB5b3Ug
-aGFkIGEgY2hhbmNlDQo+IHRvIGFzayB0aGVtPw0KDQpJIGhhdmVuJ3QgcmVhbGx5IHRhbGtlZCB0
-byBhbnkgbmV0IHN1YnN5c3RlbSBkZXZlbG9wZXJzIGFib3V0IFBvRS4gDQpUaGVyZSdzIGFkZGVk
-IGNvbXBsaWNhdGlvbnMgdGhhdCB0aGUgbmV3ZXIgUG9FIHN0YW5kYXJkcyByZXF1aXJlIExMRFAg
-DQooYnV0IEkgdGhpbmsgdGhhdCBjb3VsZCBiZSBkb25lIGluIHVzZXJsYW5kIGlmIHRoZSBrZXJu
-ZWwgcHJvdmlkZWQgdGhlIA0KcmlnaHQgaW50ZXJmYWNlIHRvIHRoZSBoYXJkd2FyZSkuDQoNCkkn
-bSBub3Qgc3VyZSBob3cgc3VjaCBhIGNvbnZlcnNhdGlvbiB3b3VsZCBldmVuIGdvLCBmZWVscyBs
-aWtlIHNvbWV0aGluZyANCnRoYXQgd291bGQgYmUgYmV0dGVyIGZhY2UgdG8gZmFjZSByYXRoZXIg
-dGhhbiBvbiBhIG1haWxpbmcgbGlzdC4gDQpQcmUtY292aWQgSSBtYXkgaGF2ZSBiZWVuIGFibGUg
-dG8gY2hhdCB0byBzb21lb25lIGluIHRoZSBoYWxsd2F5IHRyYWNrIA0KYXQgTENBIGJ1dCB0aGUg
-b3Bwb3J0dW5pdGllcyBmb3IgdGhpcyBraW5kIG9mIHRoaW5nIGhhdmUgZHJpZWQgdXAgaW4gbXkg
-DQpjb3JuZXIgb2YgdGhlIGdsb2JlLg0KDQo+Pj4+IFdlIGRvIGhhdmUgYSBzbWFsbCBrZXJuZWwg
-bW9kdWxlIHRoYXQgZ3JhYnMgdGhlIEdQSU9zIGJhc2VkIG9uIHRoZQ0KPj4+PiBkZXZpY2UgdHJl
-ZSBhbmQgZXhwb3J0cyB0aGVtIHdpdGggYSBrbm93biBuYW1lcyAoZS5nLiAicG9lLXJlc2V0IiwN
-Cj4+Pj4gInBvZS1kaXMiKSB0aGF0IHRoZSB1c2Vyc3BhY2UgZHJpdmVyIGNhbiB1c2UuDQo+Pj4g
-U28sIGJlc2lkZXMgdGhhdCB5b3UgcmVwZWF0IGdwaW8tYWdncmVnYXRvciBmdW5jdGlvbmFsaXR5
-LCB5b3UgYWxyZWFkeQ0KPj4+IGhhdmUgYSAicHJveHkiIGRyaXZlciBpbiB0aGUga2VybmVsLiBX
-aGF0IHByZXZlbnRzIHlvdSBmcm9tIGRvaW5nIG1vcmUNCj4+PiBpbi1rZXJuZWw/DQo+PiBZZXMg
-dHJ1ZS4gVGhlIG1haW4gaXNzdWUgaXMgdGhhdCB3aXRob3V0IHRvdGFsIHN1cHBvcnQgZm9yIHRo
-ZSBjbGFzcyBvZg0KPj4gZGV2aWNlIGluIHRoZSBrZXJuZWwgdGhlcmUncyBsaXR0bGUgbW9yZSB0
-aGF0IHlvdSBjYW4gZG8gb3RoZXIgdGhhbg0KPj4gZXhwb3NpbmcgZ3Bpb3MgKGVpdGhlciBhcyBn
-cGlvX2V4cG9ydF9saW5rKCkgb3Igc29tZSBvdGhlciBiZXNwb2tlDQo+PiBpbnRlcmZhY2UpLg0K
-Pj4NCj4+Pj4gICAgQmFjayB3aGVuIHRoYXQgY29kZSB3YXMNCj4+Pj4gd3JpdHRlbiB3ZSBkaWQg
-Y29uc2lkZXIgbm90IGV4cG9ydGluZyB0aGUgR1BJT3MgYW5kIGluc3RlYWQgaGF2aW5nIHNvbWUN
-Cj4+Pj4gb3RoZXIgc3lzZnMvaW9jdGwgaW50ZXJmYWNlIGludG8gdGhpcyBrZXJuZWwgbW9kdWxl
-IGJ1dCB0aGF0IHNlZW1lZCBtb3JlDQo+Pj4+IHdvcmsgdGhhbiBqdXN0IGNhbGxpbmcgZ3Bpb2Rf
-ZXhwb3J0KCkgZm9yIGxpdHRsZSBnYWluLiBUaGlzIGlzIHdoZXJlDQo+Pj4+IGFkZGluZyB0aGUg
-Z3Bpby1uYW1lcyBwcm9wZXJ0eSBpbiBvdXIgLmR0cyB3b3VsZCBhbGxvdyBsaWJncGlvZCB0byBk
-bw0KPj4+PiBzb21ldGhpbmcgc2ltaWxhci4NCj4+Pj4NCj4+Pj4gSGF2aW5nIHRoZSBHUElPcyBp
-biBzeXNmcyBpcyBhbHNvIGNvbnZlbmllbnQgYXMgd2UgY2FuIGhhdmUgYSBzeXN0ZW1kDQo+Pj4+
-IEV4ZWNTdG9wUG9zdCBzY3JpcHQgdGhhdCBjYW4gZHJvcCBwb3dlciBhbmQvb3IgcmVzZXQgdGhl
-IE1DVSBpZiBvdXINCj4+Pj4gYXBwbGljYXRpb24gY3Jhc2hlcy4NCj4+PiBJJ20gYSBiaXQgbG9z
-dC4gV2hhdCB5b3VyIGFwcCBpcyBkb2luZyBhbmQgaG93IHRoYXQgaXMgcmVsYXRlZCB0byB0aGUN
-Cj4+PiAodXNlcnNwYWNlKSBkcml2ZXJzPw0KPj4gUHJvYmFibHkgb25lIG9mIHRoZSBwcmltYXJ5
-IHRoaW5ncyBpdCdzIGRvaW5nIGlzIGJyaW5naW5nIHRoZSBjaGlwIG91dA0KPj4gb2YgcmVzZXQg
-YnkgZHJpdmluZyB0aGUgR1BJTyAod2UgZG9uJ3Qgd2FudCB0aGUgUG9FIFBTRSBzdXBwbHlpbmcg
-cG93ZXINCj4+IGlmIG5vdGhpbmcgaXMgbW9uaXRvcmluZyB0aGUgdGVtcGVyYXR1cmUgb2YgdGhl
-IHN5c3RlbSkuIFRoZXJlJ3MgYWxzbw0KPj4gc29tZSBjb3JuZXIgY2FzZXMgaW52b2x2aW5nIG5v
-dCByZXNldHRpbmcgdGhlIFBvRSBjaGlwc2V0IG9uIGEgaG90IHJlc3RhcnQuDQo+IFNvLCBkbyBJ
-IHVuZGVyc3RhbmQgY29ycmVjdCB0aGUgZm9sbG93aW5nPw0KPiBUaGVyZSBpcyBhIFBvRSBQU0Ug
-d2hpY2ggaGFzIGEgcHJvcHJpZXRhcnkgdXNlciBzcGFjZSBkcml2ZXIgYW5kIHRvIG1ha2UgaXQN
-Cj4gd29yayByZWxpYWJseSB3ZSBoYXZlIHRvIGFkZCBhIHF1aXJrIHdoaWNoIHV0aWxpemVzIHRo
-ZSBHUElPIHN5c2ZzPw0KDQpJdCdzIG5vdCByZWFsbHkgYWRkaW5nIGFueXRoaW5nIHRvIHN1cHBv
-cnQgdGhlIHByb3ByaWV0YXJ5IHVzZXJzcGFjZSANCmRyaXZlci4gSXQncyBtYWtpbmcgdXNlIG9m
-IGEgbG9uZyBlc3RhYmxpc2hlZCAoYWxiZWl0IGRlcHJlY2F0ZWQpIEFCSS4NCg0KPj4+PiBJJ20g
-bm90IHN1cmUgaWYgdGhlIEdQSU8gY2hhcmRldiBpbnRlcmZhY2UgZGVhbHMNCj4+Pj4gd2l0aCBy
-ZWxlYXNpbmcgdGhlIEdQSU8gbGluZXMgaWYgdGhlIHByb2Nlc3MgdGhhdCByZXF1ZXN0ZWQgdGhl
-bSBleGl0cw0KPj4+PiBhYm5vcm1hbGx5IChJIGFzc3VtZSBpdCBkb2VzKSBhbmQgb2J2aW91c2x5
-IG91ciBFeGVjU3RvcFBvc3Qgc2NyaXB0DQo+Pj4+IHdvdWxkIG5lZWQgdXBkYXRpbmcgdG8gdXNl
-IHNvbWUgb2YgdGhlIGxpYmdwaW9kIGFwcGxpY2F0aW9ucyB0byBkbyB3aGF0DQo+Pj4+IGl0IGN1
-cnJlbnRseSBkb2VzIHdpdGggYSBzaW1wbGUgJ2VjaG8gMSA+Li4uL3BvZS1yZXNldCcNCj4+Pj4N
-Cj4+Pj4gVGhlIHNlY29uZCBhcHBsaWNhdGlvbiBpcyBhIHVzZXJzcGFjZSBkcml2ZXIgZm9yIGEg
-TDMgbmV0d29yayBzd2l0Y2gNCj4+Pj4gKGFjdHVhbGx5IHR3byBvZiB0aGVtIGZvciBkaWZmZXJl
-bnQgc2lsaWNvbiB2ZW5kb3JzKS4gQWdhaW4gdGhpcyBuZWVkcw0KPj4+PiB0byBkZWFsIHdpdGgg
-cmVzZXRzIGZvciBQSFlzIGNvbm5lY3RlZCB0byB0aGUgc3dpdGNoIHRoYXQgdGhlIGtlcm5lbCBo
-YXMNCj4+Pj4gbm8gdmlzaWJpbGl0eSBvZiBhcyB3ZWxsIGFzIHRoZSBHUElPcyBmb3IgdGhlIFNG
-UCBjYWdlcy4gQWdhaW4gd2UgaGF2ZSBhDQo+Pj4+IHNsaWdodGx5IGxlc3Mgc2ltcGxlIGtlcm5l
-bCBtb2R1bGUgdGhhdCBncmFicyBhbGwgdGhlc2UgR1BJT3MgYW5kDQo+Pj4+IGV4cG9ydHMgdGhl
-bSB3aXRoIGtub3duIG5hbWVzLiBUaGlzIHRpbWUgdGhlcmUgYXJlIGNvbnNpZGVyYWJseSBtb3Jl
-IG9mDQo+Pj4+IHRoZXNlIEdQSU9zIChvdXIgbGFyZ2VzdCBzeXN0ZW0gY3VycmVudGx5IGhhcyA5
-NiBTRlArIHBvcnRzIHdpdGggNCBHUElPcw0KPj4+PiBwZXIgcG9ydCkgc28gd2UncmUgbXVjaCBt
-b3JlIHJlbGlhbnQgb24gYmVpbmcgYWJsZSB0byBkbyB0aGluZ3MgbGlrZQ0KPj4+PiBgZm9yIHgg
-aW4gcG9ydCp0eC1kaXM7IGRvIGVjaG8gMSA+JHg7IGRvbmVgDQo+Pj4gSG1tLi4uIEhhdmUgeW91
-IHRhbGtlZCB0byB0aGUgbmV0IHN1YnN5c3RlbSBndXlzPyBJIGtub3cgdGhhdCB0aGVyZSBpcw0K
-Pj4+IGEgbG90IGdvaW5nIG9uIGFyb3VuZCBTRlAgY2FnZSBlbnVtZXJhdGlvbiBmb3Igc29tZSBv
-ZiB0aGUgbW9kdWxlcw0KPj4+IChNYXJ2ZWxsPykgYW5kIHBlcmhhcHMgdGhleSBjYW4gYWR2aXNl
-IHNvbWV0aGluZyBkaWZmZXJlbnQuDQo+PiBZZXMgSSdtIGF3YXJlIG9mIHRoZSBzd2l0Y2hkZXYg
-d29yayBhbmQgSSdtIHZlcnkgZW50aHVzaWFzdGljIGFib3V0IGl0DQo+PiAoYXMgYW4gYXNpZGUg
-SSBkbyBoYXZlIGEgZmFpcmx5IGZ1bmN0aW9uYWwgc3dpdGNoZGV2IGRyaXZlciBmb3Igc29tZSBv
-Zg0KPj4gdGhlIG9sZGVyIE1hcnZlbGwgUG9uY2F0MiBzaWxpY29uLCBuZXZlciBxdWl0ZSBnb3Qg
-dG8gc3VibWl0dGluZyBpdA0KPj4gdXBzdHJlYW0gYmVmb3JlIHdlIHJhbiBvdXQgb2YgdGltZSBv
-biB0aGUgcHJvamVjdCkuDQo+Pg0KPj4gQWdhaW4gdGhlIHByb2JsZW0gYm9pbHMgZG93biB0byB0
-aGUgZmFjdCB0aGF0IHdlIGhhdmUgYSB1c2Vyc3BhY2Ugc3dpdGNoDQo+PiBkcml2ZXIgKHdoaWNo
-IHVzZXMgYSB2ZW5kb3Igc3VwcGxpZWQgbm9uLWZyZWUgU0RLKS4gU28gZGVzcGl0ZSB0aGUNCj4+
-IGtlcm5lbCBoYXZpbmcgcXVpdGUgZ29vZCBzdXBwb3J0IGZvciBTRlBzIEkgY2FuJ3QgdXNlIGl0
-IHdpdGhvdXQgYQ0KPj4gbmV0ZGV2IHRvIGF0dGFjaCBpdCB0by4NCj4gVGhhdCB1c2VyIHNwYWNl
-IGRyaXZlciBpcyB1c2luZyB3aGF0IGZyb20gdGhlIGtlcm5lbD8gR1BJTyBzeXNmcz8NCg0KWWVz
-IEdQSU8gc3lzZnMgYW5kIGV4cG9ydGVkIGxpbmtzIHdpdGgga25vd24gbmFtZXMsIHdoaWNoIGFs
-bG93cyB0aGluZ3MgDQp0byBiZSBkb25lIHBlci1wb3J0IGJ1dCBhbHNvIHdpbGRjYXJkZWQgZnJv
-bSBzaGVsbCBzY3JpcHRzIGlmIG5lY2Vzc2FyeS4gDQpJIHRoaW5rIHRoZSBrZXkgcG9pbnQgaGVy
-ZSBpcyB0aGF0IGl0IGRvZXNuJ3QgY2FyZSBhYm91dCB0aGUgR1BJTyBjaGlwcyANCmp1c3QgdGhl
-IGluZGl2aWR1YWwgR1BJTyBsaW5lcy4gQW55dGhpbmcgaW52b2x2aW5nIGxpYmdwaW9kIGN1cnJl
-bnRseSANCmhhcyB0byBzdGFydCBjYXJpbmcgYWJvdXQgR1BJTyBjaGlwcyAob3IgSSdtIG1pc3Jl
-YWRpbmcgdGhlIGRvY3MpLg0KDQo+Pj4+IEknbSBzdXJlIGJvdGggb2YgdGhlc2UgYXBwbGljYXRp
-b25zIGNvdWxkIGJlIHJlLXdyaXR0ZW4gYXJvdW5kIGxpYmdwaW9kDQo+Pj4+IGJ1dCB0aGF0IHdv
-dWxkIGluY3VyIGEgc2lnbmlmaWNhbnQgYW1vdW50IG9mIHJlZ3Jlc3Npb24gdGVzdGluZyBvbg0K
-Pj4+PiBleGlzdGluZyBwbGF0Zm9ybXMuIEFuZCBJIHN0aWxsIGNvbnNpZGVyIGRlYWxpbmcgd2l0
-aCBHUElPIGNoaXBzIGFuDQo+Pj4+IGV4dHJhIGhlYWRhY2hlIHRoYXQgdGhlIGFwcGxpY2F0aW9u
-cyBkb24ndCBuZWVkIChwYXJ0aWN1bGFybHkgd2l0aCB0aGUNCj4+Pj4gc2hlZXIgbnVtYmVyIG9m
-IHRoZW0gdGhlIFNGUCBjYXNlKS4NCj4+PiBJdCBzZWVtcyB0byBtZSB0aGF0IGhhdmluZyBubyBp
-bi1rZXJuZWwgZHJpdmVyIGZvciB5b3VyIHN0dWZmIGlzIHRoZQ0KPj4+IG1haW4gcG9pbnQgb2Yg
-YWxsIGhlYWRhY2hlIGhlcmUuIEJ1dCBJIG1pZ2h0IGJlIG1pc3Rha2VuLg0KPj4gSXQgY2VydGFp
-bmx5IGRvZXNuJ3QgaGVscCwgYnV0IEkgZG8gdGhpbmsgdGhhdCBpcyBhbGwgb3J0aG9nb25hbCB0
-byB0aGUNCj4+IGZhY3QgdGhhdCBncGlvX2lzX3Zpc2libGUoKSBjaGFuZ2VzIHRoaW5ncyByYXRo
-ZXIgdGhhbiBqdXN0IGRldGVybWluaW5nDQo+PiBpZiBhbiBhdHRyaWJ1dGUgc2hvdWxkIGJlIGV4
-cG9ydGVkIG9yIG5vdC4NCj4gU29ycnkgZm9yIGJlaW5nIHVuaGVscGZ1bCBoZXJlLiBCdXQgd2l0
-aG91dCB1bmRlcnN0YW5kaW5nIHRoZSBpc3N1ZSB3ZSBjYW4ndA0KPiBwcm9wb3NlIGJldHRlciBz
-b2x1dGlvbnMuDQpObyBwcm9ibGVtLCB0aGlzIGlzIHByb2JhYmx5IHRoZSBtb3N0IGVuZ2FnZW1l
-bnQgSSd2ZSBoYWQgb3V0IG9mIGEgTGludXggDQpwYXRjaCBzdWJtaXNzaW9uLiBIb3BlZnVsbHkg
-aXQncyBub3QgdG9vIGFubm95aW5nIGZvciB0aG9zZSBvbiB0aGUgQ2MgbGlzdC4=
+On Tue, May 23, 2023 at 05:51:01PM +0200, Bartosz Golaszewski wrote:
+> When a GPIO device is forcefully unregistered, we are left with an
+> inactive object. If user-space kept an open file descriptor to a line
+> request associated with such a structure, upon closing it, we'll see the
+> kernel crash due to freeing unexistent GPIO descriptors.
+> 
+
+nonexistent
+
+But I'm not sure that works - gpiod_free() is null aware, so strictly
+speaking "freeing nonexistent GPIO descriptors" isn't the problem.
+You mean orphaned GPIO descriptors?
+
+> Fix it by checking if chip is still alive before calling gpiod_free() in
+> release callbacks for both v2 and v1 ABI.
+> 
+> Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+
+The problem is also in v1, so do we want to consider backporting a fix
+for that too?
+
+> Reported-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 0a33971c964c..6830f668a1b0 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -315,13 +315,19 @@ static long linehandle_ioctl_compat(struct file *file, unsigned int cmd,
+>  
+>  static void linehandle_free(struct linehandle_state *lh)
+>  {
+> +	struct gpio_device *gdev = lh->gdev;
+
+It isn't clear to me what this is for.
+The flow below now calls gpiod_free() less often, so not that.
+It is there for the normal case??
+
+>  	int i;
+>  
+> -	for (i = 0; i < lh->num_descs; i++)
+> -		if (lh->descs[i])
+> -			gpiod_free(lh->descs[i]);
+> +	for (i = 0; i < lh->num_descs; i++) {
+> +		if (lh->descs[i]) {
+> +			down_write(&gdev->sem);
+> +			if (gdev->chip)
+> +				gpiod_free(lh->descs[i]);
+> +			up_write(&gdev->sem);
+> +		}
+> +	}
+>  	kfree(lh->label);
+> -	gpio_device_put(lh->gdev);
+> +	gpio_device_put(gdev);
+>  	kfree(lh);
+>  }
+>  
+
+lineevent_free() needs the fix too?
+
+> @@ -1565,17 +1571,21 @@ static ssize_t linereq_read(struct file *file, char __user *buf,
+>  
+>  static void linereq_free(struct linereq *lr)
+>  {
+> +	struct gpio_device *gdev = lr->gdev;
+>  	unsigned int i;
+>  
+>  	for (i = 0; i < lr->num_lines; i++) {
+>  		if (lr->lines[i].desc) {
+>  			edge_detector_stop(&lr->lines[i]);
+> -			gpiod_free(lr->lines[i].desc);
+> +			down_write(&gdev->sem);
+> +			if (gdev->chip)
+> +				gpiod_free(lr->lines[i].desc);
+> +			up_write(&gdev->sem);
+>  		}
+>  	}
+>  	kfifo_free(&lr->events);
+>  	kfree(lr->label);
+> -	gpio_device_put(lr->gdev);
+> +	gpio_device_put(gdev);
+>  	kfree(lr);
+>  }
+>  
+
+TBH the fact you have to mess with sems here indicates to me the problem
+lies in gpiolib itself.  As a gpiolib client, cdev should just be able to
+release the desc back to gpiolib and have it cleanup the mess.
+
+Not that I ever got my head around the whole gpiolib object lifecycle here
+- for v2 I just followed what v1 did.
+
+Also, gpiolib still reports an error when forceably removing chips that
+have open requests:
+
+    dev_crit(&gdev->dev,
+			 "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED\n");
+
+Any other gpiolib clients out there that this might impact?
+Else why report that crit error if you expect it is dealt with?
+
+So while this may fix the crash, I can't say I'm happy with it.
+
+Cheers,
+Kent.
