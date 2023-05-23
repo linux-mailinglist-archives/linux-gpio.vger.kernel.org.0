@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BF1E70DB6C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 13:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 266DC70DB6F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 13:26:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbjEWL0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S236326AbjEWL0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 23 May 2023 07:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233200AbjEWL00 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 07:26:26 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C38611A
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:26:22 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-50c8d87c775so1140530a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:26:22 -0700 (PDT)
+        with ESMTP id S235695AbjEWL01 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 07:26:27 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272F5121
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:26:26 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-96fbe7fbdd4so534501866b.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1684841181; x=1687433181;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zSRh5YpJNZyKU79HfIsiaXhN0Nt28k1YrpgmzdCgZJM=;
-        b=VgwXg+DxUPKzVaorm7wwxR5WwXectIFPoJ32mhgfBaMkpB93PI6uJKR9tmEEPoSGzF
-         QGmpQ68mzRm7Yc9R2IsKsIjnHsY2cNKuQAQEB3DlAu0dtiNDZ0rCWm6siURs1G/J3jQ6
-         AN6xtZBBKovuOQfvn2bPnoWY9mprOm63riEIpsN5ZnERCJPjr0oMIfpV4oLEm0iVOuh7
-         /0yTYtBEkNN0RlcJexEJmsBfewSwGsMvrub6fYwGIsZsboLeYksvdQlfAPWxABkIIu1E
-         m3qX17be1g5BSIlXHa/CAfRn/hZPqu9uVnWuVNRhaxZPsajvzVTEkqvkdcti3G880r6+
-         BGAw==
+        bh=od3SP5ky8Y9LxP+1XQ7PmGRAgzgjOHbNgHLzMDz2k38=;
+        b=QG7KYGcA8AkGBnh6XlZeaTUIhqOXn8GAd0e3E45FyvgOGgE4IwMIGdEEgRzOoVFqAz
+         /1I1d7g31Y1qK724Fl/hphs8Q8F4kqmQQBRU7fv6ZPkMYhDmNBGc1RxaJYdc+/MNr6fe
+         MgDVT4zzRFtflixbIPhYD75HIKj+ntdU5sx8SLDZJZYkauO4dFm1ZkEWI8oCX3SyD6cD
+         t/6gx6zLuttMjo+ep282MXaFZNXOjLbi9aRKc1mZBkq9dOU5aj5oCoRWqyh9lBqTKkHm
+         P8OpE91PAFege+909eeulbCLsy41bIdT/vt3udZoiKkmNLW6mg0+DUqe25D80kFmV8yE
+         RppA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20221208; t=1684841181; x=1687433181;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zSRh5YpJNZyKU79HfIsiaXhN0Nt28k1YrpgmzdCgZJM=;
-        b=jS/gq4a5xHQHFiykJgnJvnawA+UGZKwToi7gLttMcwrUha+Y/6MnQs9hWX4LTRBNMP
-         jLtlxDdrZsJU6EsZ85KFZ5IeoBMJproct46SZ+K6crbKpiXhSPZ7zpPxFhdm7EVbwGMi
-         YyamgkfdNgK/X6q2O7P1Uxn4VQB3vsyl7mt4Y9GpoqlFgu7iT71Wcsz7ST8EibMPGMLq
-         BGVyR2sYegxEeq3XE1ffMguvfLskkH6c0s0EGUrov8jeaa0e/muGXfbuc7RPaoXBhLYG
-         Qy9btROHkhVk8YciqZNRvtuoAVJHRrAddc5E/j+wQ7ZP3RhA46GfVcRotYRx62PtlxRP
-         NfNw==
-X-Gm-Message-State: AC+VfDxMWc4Bd5sLbNOb1xFSjdSMLGL4GRIbmjWmP6+m2wHqo+Wxo3AV
-        FAHjcNyWreHMIzdEkcUey1Qynw==
-X-Google-Smtp-Source: ACHHUZ4wWgAxDpeqw8HC7wzzEE0golCb12CYPjdGues95vI6v2PASq06b6IvUIxdiGVaxduWlOqkBQ==
-X-Received: by 2002:a17:907:70a:b0:966:2123:e0c3 with SMTP id xb10-20020a170907070a00b009662123e0c3mr13159458ejb.15.1684841181041;
+        bh=od3SP5ky8Y9LxP+1XQ7PmGRAgzgjOHbNgHLzMDz2k38=;
+        b=cgOlRMigiTps1qGqSTUMIRjIEV+SS58XdDYla1HxnUkaIUKjsFM0563P9Fus0Ye1EQ
+         FQr5/aPPTblMsMSIX7zoMGn/f72j3/3Zh/liXXvk3u/LHDB7nHwbUIwYip3ZG6zE2qxY
+         XL8EllNWKtT0Q9BISS0LOxGSYzgn98YA0W7n8YMo3BIrhP2AV4PVyhNit4fbe+iALry9
+         2gB7BWXpm/7KfpeW9oGR41midg6fFs2rtIhsHS8LYBnl1kJO1w/+nGLbDXwdtW5elXKP
+         NyZbvibrYeKF2vF8fS8Nb2RxoKDUM8UdUOugUWfBJg5hq1LoVLGUDWc+XAERsr7PNqz6
+         Xs8Q==
+X-Gm-Message-State: AC+VfDwWcNXjy/zcJfe8siYR5WUOCUsV/lb9H1IsXlxB44UaJEtZ3+4x
+        IFucfeixbzaBvdkRwMGKlD6s2CPTgbaRXyH3Kn0=
+X-Google-Smtp-Source: ACHHUZ6+Sv5lckUHJ0RyTdvhH208cw5iZYv6gL7eOwgVMhg5dz+YG1L0xP75jZ/LFwHhzWOmlcK/XA==
+X-Received: by 2002:a17:906:6a0d:b0:96a:928c:d391 with SMTP id qw13-20020a1709066a0d00b0096a928cd391mr14399139ejc.4.1684841181694;
         Tue, 23 May 2023 04:26:21 -0700 (PDT)
 Received: from [192.168.1.149] (i5C7409D3.versanet.de. [92.116.9.211])
-        by smtp.gmail.com with ESMTPSA id gv3-20020a1709072bc300b0094f3b18044bsm4342911ejc.218.2023.05.23.04.26.20
+        by smtp.gmail.com with ESMTPSA id gv3-20020a1709072bc300b0094f3b18044bsm4342911ejc.218.2023.05.23.04.26.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 04:26:20 -0700 (PDT)
+        Tue, 23 May 2023 04:26:21 -0700 (PDT)
 From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Tue, 23 May 2023 13:25:46 +0200
-Subject: [PATCH libgpiod RFC 1/3] bindings: rust: drop legacy extern crate
- syntax
+Date:   Tue, 23 May 2023 13:25:47 +0200
+Subject: [PATCH libgpiod RFC 2/3] bindings: rust: remove unneeded cc
+ dependency
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230522-crates-io-v1-1-42eeee775eb6@linaro.org>
+Message-Id: <20230522-crates-io-v1-2-42eeee775eb6@linaro.org>
 References: <20230522-crates-io-v1-0-42eeee775eb6@linaro.org>
 In-Reply-To: <20230522-crates-io-v1-0-42eeee775eb6@linaro.org>
 To:     Linux-GPIO <linux-gpio@vger.kernel.org>
@@ -66,11 +66,11 @@ Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
         Erik Schilling <erik.schilling@linaro.org>
 X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1684841179; l=743;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1684841179; l=663;
  i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=PcWsfB5fQWns8QdVUTDMIWalHo+rM28xkDqyRS9wXmQ=;
- b=ogoCZFzLziKez78FWpeIVrQhZABukbHgHCCOeH5+v0faZXMitBpRhuA067tyBWPNAuNGB+rBq
- Pufsb2oWjAkCb3MSBk/3IpfdlnA4R+yaWySdK6qDe36HDnTURqxzmsZ
+ bh=mH7k+DOE/0trTqK7DJ7T4IJFhqsFAqGTsXPFyu/Zb+E=;
+ b=CMCUWMImpYwF2ES0kAeWe9ab9V3euSKaJHKRVNVdYc1pfXFS7/4uguC4GhQKUnQ10N4SlfMOJ
+ b/V+JM5d717Al/7AKmOkLbx7lTAWKYZUe5ApR2cW8vewBEs8jK8ifau
 X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
  pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,28 +83,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is a relict from old Rust standards and no longer requires [1].
+It was never used in upstream. The use was dropped during review [1], but
+this dependency did not get removed.
 
-[1] https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html#no-more-extern-crate
+[1] https://lore.kernel.org/r/cover.1659442066.git.viresh.kumar@linaro.org/
 
 Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 ---
- bindings/rust/libgpiod-sys/build.rs | 2 --
- 1 file changed, 2 deletions(-)
+ bindings/rust/libgpiod-sys/Cargo.toml | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
-index e3ed04a..b1333f1 100644
---- a/bindings/rust/libgpiod-sys/build.rs
-+++ b/bindings/rust/libgpiod-sys/build.rs
-@@ -2,8 +2,6 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+index 3bc3525..cb8dc70 100644
+--- a/bindings/rust/libgpiod-sys/Cargo.toml
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -18,4 +18,3 @@ edition = "2021"
  
--extern crate bindgen;
--
- use std::env;
- use std::path::PathBuf;
- 
+ [build-dependencies]
+ bindgen = "0.63"
+-cc = "1.0.46"
 
 -- 
 2.40.0
