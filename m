@@ -2,129 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B29770DB2D
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 13:08:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C1570DB3F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 13:10:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236600AbjEWLI3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 07:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
+        id S236343AbjEWLKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 07:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230258AbjEWLI1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 07:08:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6574B120
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:07:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684840060;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TgAfeWGrsZZYnBL05wn3YJIuhT7jiDrtSHb3+2pNJ5c=;
-        b=TTlnBzLXCbyiO7ZBf5AN18ieEyD4DNR859GiI9qbuh6taxDdJmy7KmIBofpVSefvPRmIbf
-        ZHuRgmaDR2zGvat2vzGeuNVDODm9d704aKlnmhxnAtmu0Umr5Zq3gTBt7/+WkbGcqS3dxj
-        q+ilDIdiweCd/weWZOg09etJNDCQi2I=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-88-osBGloe9NdiWITpMcuX1zg-1; Tue, 23 May 2023 07:07:39 -0400
-X-MC-Unique: osBGloe9NdiWITpMcuX1zg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-96fa4c724fdso418014566b.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 04:07:38 -0700 (PDT)
+        with ESMTP id S236022AbjEWLKx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 07:10:53 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF84121;
+        Tue, 23 May 2023 04:10:40 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-62577da77d0so11013366d6.2;
+        Tue, 23 May 2023 04:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684840239; x=1687432239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vOWmJda5SbAjg1Q/q+OVszHEV/UtN0kJreVGiB6t0X8=;
+        b=YBFTcbE25Zw7lgrUsnlgmRC5tmZcrlha7oTeGNCC2lsVrWf1NH+FALrh3GbYYW/gVK
+         V44PrQZDxk6CH3f4CUfnplJhwxkchiOVRLSpl1H0IwxM+lT2ICH1M6y2NpQKIF3mrRB9
+         kOS27joqfvRcXrqjw7bOccHNgHzcMiaUddG4ilVhuv2hgHp4k0kg9ZcKWFcouboSjpz3
+         0re0NbCPIBS6/MOxmRTnUfEAnyFJNcZRE5+6WOyofeT2B3RpljmjbeT3k7co8Y0thsx/
+         WMDQir7eedmkO1pSHpdSQWFNda+8WybH/NVA7ME5zZKK4y4nJNUvY2DjGzo97A9H7RAm
+         qOMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684840058; x=1687432058;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TgAfeWGrsZZYnBL05wn3YJIuhT7jiDrtSHb3+2pNJ5c=;
-        b=XL2Na4AQ/2iyb8AsroDP6MgSxlgyVqCsen9TACB5ubpNuK2dG6CWHQK6fEIpFWmh2c
-         7OeUwqw4QbyWqYd3FmOMxhL4ktPFjODJalGxTfartLUEB7MPmXTWGcZVzQrVWjRAJrdT
-         reBNECK5vQR6CWqURT110GiabJkVN+WzyZp6Si07MZG+x+VlDKXD7YQ5O/bG8MNv/kMs
-         2G3TsMpD+qH06PtZBP3KDIHcmBQ16GUB4kZh2/kzm50vML7Q66pvWfd90qB8Q7D1Rwom
-         gS0wVueYJo4DUE27Slet7NOFJwdQbqHfsXmi5Ypd5AdRQnMK0Q4PV0Vrh6p7rRRli8et
-         o3yw==
-X-Gm-Message-State: AC+VfDz3O65CoM1jQpMrgJG+zr0iL7l88YOmYhx0Ri7OYvuu2lrKHhKK
-        m9/ScT+e/umLVJoyrJ0KTyVPrSHseivWRsOHNCVKraLLzr+ZeTfIlgYgR2hMKw0+SCt+ra1pkiF
-        MRfyeyIdKNTtg8J5zzOdO6w==
-X-Received: by 2002:a17:907:6287:b0:966:a691:55f9 with SMTP id nd7-20020a170907628700b00966a69155f9mr11068562ejc.30.1684840057962;
-        Tue, 23 May 2023 04:07:37 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4caVLW/8Ni1Ot2OEe8VHt0hfZFf8rele1i6QgoUF5MCgzUhu+7eQSnBFXZ045menh2EQYUAw==
-X-Received: by 2002:a17:907:6287:b0:966:a691:55f9 with SMTP id nd7-20020a170907628700b00966a69155f9mr11068553ejc.30.1684840057699;
-        Tue, 23 May 2023 04:07:37 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j26-20020a17090686da00b0096f7500502csm4299108ejy.199.2023.05.23.04.07.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 04:07:37 -0700 (PDT)
-Message-ID: <e9eb526d-84fe-b814-67a3-6f7977aa0078@redhat.com>
-Date:   Tue, 23 May 2023 13:07:36 +0200
+        d=1e100.net; s=20221208; t=1684840239; x=1687432239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vOWmJda5SbAjg1Q/q+OVszHEV/UtN0kJreVGiB6t0X8=;
+        b=E8jvLVqDyCce7y33ZMfft4d6/ZvRDDXvhEhcAHfwlJ0Le6iHX8mbj8LOkkQ93DTH3J
+         wq5ahiJEpGDe6FPHBiByDfYJrSnAQA7HlL3DFGZDitd2L05HkPHVRs/+I+YHpc+9pKNA
+         wgUuq9j6Axj3BY5OADpfNha/CR0az5RQAGIGZEWa0CbKQSQOoiCEpsYoF0mOu/xQGWIM
+         hD/S9CaiETqHnJCP57WAY2pxmELDUTYsiFmR+1pPBAmPYBMyzUzlWOi6X5Je951hqQM6
+         DpwEgozLZV3SnZzqVdkvTSSRdJ7XuW3Zt6eJtBWvAqOPUEBCAB/UKJ0zyx5bu1RhoSp3
+         Futg==
+X-Gm-Message-State: AC+VfDwkg/Ne7hD+NNwEqIqkduk73nlbhS873FQASPyQjliArBt28BxD
+        4KW+/DDZiJKSaDLiim5QjYrSldQ3MhPZmalfDD4=
+X-Google-Smtp-Source: ACHHUZ5g6G8bxkKCC9AMoWunRTUOr4oKHkZwqp0AJDEc5a7Mpa5fVUwqzPYGS2iZ4JoUq+0gG2vuHX3wH2Yb2tF4qCc=
+X-Received: by 2002:ad4:5b8c:0:b0:5a3:cbc6:8145 with SMTP id
+ 12-20020ad45b8c000000b005a3cbc68145mr21037922qvp.19.1684840239590; Tue, 23
+ May 2023 04:10:39 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for suspend
- related messages
-Content-Language: en-US, nl
-To:     Mario Limonciello <mario.limonciello@amd.com>, rafael@kernel.org,
-        linus.walleij@linaro.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com,
-        Basavaraj.Natikar@amd.com
-References: <20230522200033.2605-1-mario.limonciello@amd.com>
- <20230522200033.2605-4-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230522200033.2605-4-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230515063200.301026-1-jiawenwu@trustnetic.com>
+ <20230515063200.301026-7-jiawenwu@trustnetic.com> <ZGH-fRzbGd_eCASk@surfacebook>
+ <00cd01d9879f$8e444950$aaccdbf0$@trustnetic.com> <CAHp75VdthEZL6GvT5Q=f7rbcDfA5XX=7-VLfVz1kZmBFem_eCA@mail.gmail.com>
+ <016701d9886a$f9b415a0$ed1c40e0$@trustnetic.com> <90ef7fb8-feac-4288-98e9-6e67cd38cdf1@lunn.ch>
+ <025b01d9897e$d8894660$899bd320$@trustnetic.com> <CAHp75VfuB5dHp1U+G2OFpupMnbBJv=aHRWaBHemtPU-xOZA_3g@mail.gmail.com>
+ <013101d98d5c$b8fdd1d0$2af97570$@trustnetic.com> <CAHp75Vc=i2ft=M-gdXYDMeTAmK4RcPbZpmiy1pEjO-jOVD_pgA@mail.gmail.com>
+In-Reply-To: <CAHp75Vc=i2ft=M-gdXYDMeTAmK4RcPbZpmiy1pEjO-jOVD_pgA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 23 May 2023 14:10:03 +0300
+Message-ID: <CAHp75Ve5c-ak9B_ZSZMayubBA+tP-im3jJf89ZW7xcebv5EsLQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v8 6/9] net: txgbe: Support GPIO to SFP socket
+To:     Jiawen Wu <jiawenwu@trustnetic.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
+        netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mario,
+I just realized that we are discussing all this without GPIO
+maintainers to be involved!
+Cc'ed to Linus and Bart for their valuable opinions / comments.
 
-On 5/22/23 22:00, Mario Limonciello wrote:
-> Using pm_pr_dbg() allows users to toggle `/sys/power/pm_debug_messages`
-> as a single knob to turn on messages that amd-pmc can emit to aid in
-> any s2idle debugging.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 427905714f79..1304cd6f13f6 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -543,7 +543,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->  	}
->  
->  	if (dev)
-> -		dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
-> +		pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
->  
->  	if (s)
->  		seq_printf(s, "SMU idlemask : 0x%x\n", val);
+(TL;DR: GPIO regmap seems need some fixes)
 
-This does not compile, amd/pmc.c may be build as an amd-pmc.ko module
-and currently the pm_debug_messages_on flag used by pm_pr_dbg()
-is not exported to modules:
+On Tue, May 23, 2023 at 2:07=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, May 23, 2023 at 12:57=E2=80=AFPM Jiawen Wu <jiawenwu@trustnetic.c=
+om> wrote:
+> > > > Anyway it is a bit complicated, could I use this version of GPIO im=
+plementation if
+> > > > it's really tough?
+> > >
+> > > It's possible but from GPIO subsystem point of view it's discouraged
+> > > as long as there is no technical impediment to go the regmap way.
+> >
+> > After these days of trying, I guess there are still some bugs on gpio -=
+ regmap - irq.
+> > It looks like an compatibility issue with gpio_irq_chip and regmap_irq_=
+chip (My rough
+> > fixes seems to work).
+> >
+> > Other than that, it seems to be no way to add interrupt trigger in regm=
+ap_irq_thread(),
+> > to solve the both-edge problem for my hardware.
+> >
+> > I'd be willing to use gpio-regmap if above issues worked out, I learned=
+ IRQ controller,
+> > IRQ domain, etc. , after all.
+>
+> And thank you for all this!
+> Now you may suggest the fixes to the GPIO regmap with all your
+> knowledge of the area.
+>
+> > But if not, I'd like to implement GPIO in the original way,
+> > it was tested to work. May I? Thanks for all your suggestions.
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-  CC [M]  drivers/platform/x86/amd/pmc.o
-  LD [M]  drivers/platform/x86/amd/amd-pmc.o
-  MODPOST Module.symvers
-ERROR: modpost: "pm_debug_messages_on" [drivers/platform/x86/amd/amd-pmc.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:136: Module.symvers] Error 1
-make: *** [Makefile:1978: modpost] Error 2
-
-Regards,
-
-Hans
 
 
+--
+With Best Regards,
+Andy Shevchenko
