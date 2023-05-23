@@ -2,64 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D331A70D77F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:34:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A0F370D7D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236154AbjEWIeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 04:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
+        id S235924AbjEWIsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 04:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232466AbjEWIdT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:33:19 -0400
-Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3A82694
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:29:40 -0700 (PDT)
-Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-45701a8a1b3so1688316e0c.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:29:40 -0700 (PDT)
+        with ESMTP id S235984AbjEWIso (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:48:44 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F844119
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:48:42 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-456f7ea8694so1548562e0c.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684830579; x=1687422579;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684831721; x=1687423721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ILn21p3iZ6SH9K+Q+SIaeY3G2Mcp4yvUaAoc5C5tStU=;
-        b=2J0fHnbfrRcsZzK2npGTKcC947Oxi0EKxXXqTryFytqM/KdAH7mmQzjXziTWKE4XL/
-         /p4CsRETrbQTzVDW+xYCs0pYOOAE15B2b49/gJuYWis29SxGD049DasfOre7uY8j8AWb
-         MJKJ3jv26G1zdwv0qpvt4lXcUIm9HKhDnp0di6CXCAoiJqbyawcrOneRatg4Ycz2RQCI
-         Fsy+fKZuP4SOJKRVYpTOEjrD5mGHZYB6dgJmXp9uw3dNJTc6aiSHkv1PfGLeQrYVLfyp
-         I0HtUI7J1vnTxOisHOF1vFO4ESa/pafBf8hqu0MaBw9tjoA4uqSMxGiw8xgcMRVcndz7
-         m3JQ==
+        bh=nsCD0of1x6zAZe4E8ewHElcvWX4G+68HMU5ECsDupIE=;
+        b=1MkyHwpRBLggLehbgS6eNfVckrrq+fSGe5Ml3QKm23i2ADWDBXeDmBN5mQpLixA1L7
+         /STGoEzvvRpB9YR2lAH38LNK5EPoPYKR0USAiTHsMkH6PTlH/4pBmYOjfPYy2J/Y2FcC
+         W0SzIJp0LCOnczI45DnIN/FEU25qCLA55krEq3uZR/TWW0lkWemQI6q2sZ56sLldQeO4
+         d/eXHJjaLnm4UoLa2As4aYZOgyoAXDh3WFoT3NduC98nzH9ryrxihWhELLMp37MvEnu9
+         wTZIKhJ5nO1lXo+qss4xvuc4vmH3GlFD9n7BGgxhyQbeV/BjRa2SUxLokggVFcHHaH+a
+         DmOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684830579; x=1687422579;
+        d=1e100.net; s=20221208; t=1684831721; x=1687423721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ILn21p3iZ6SH9K+Q+SIaeY3G2Mcp4yvUaAoc5C5tStU=;
-        b=SI51Qs8wenDE6xs38AtStyUfrrCISeDxo61ijljnXEP872jZrGYMEVMxOZlp4d87Zq
-         F+Thf+MlFX9Uk3PwDVtXy27hE11469g8G4jvXHNvzoRwP4LPs2rV7t11QUOXqrfB2u3n
-         fCDCgP/Fof4jbbH5kxFeXEi2A9vqtFhgHw4yrSzj1ihBvphanO41sRms+8VuMazlP9Dp
-         VxpkT9m0G9jl0thvzLwFqs4NINLuTFltPdS78UlThjWzV/1PaD6vtT9Vjztd7/RN2nNT
-         VV+TJf5iOPvPTHs2AOrRAqMGhm4JKTITEEle98Bi9C7PBO/ewuJcTRihkj66+3HLwpVH
-         QQwA==
-X-Gm-Message-State: AC+VfDwnx79VLjcdI67mCWSqWiNrOauyx/WLn4VVkOFANukh3tDQOpq0
-        wkaXKtwpVIH9RjcgS8j4QpFox7NSqw0NPF2hTYmY/A==
-X-Google-Smtp-Source: ACHHUZ7YKuSwrv0dWkaxm1I+dNkm97+KbpOtnb5BMYhmZ1vmG+hGVaj/tYJPg9kc1sbMWLiBy43AICYO3yKBeV6NVnM=
-X-Received: by 2002:a1f:3f03:0:b0:453:8f1c:eb31 with SMTP id
- m3-20020a1f3f03000000b004538f1ceb31mr4017125vka.14.1684830579480; Tue, 23 May
- 2023 01:29:39 -0700 (PDT)
+        bh=nsCD0of1x6zAZe4E8ewHElcvWX4G+68HMU5ECsDupIE=;
+        b=CG/tgYV75QwwHqUju54G7eRB56mKa+dwBFPgNmQ1xuZG3g2XpkhTDvlJMgMM+HkiRo
+         432IPWH5qXInio0m2B2iqJVPRKtdDljditPpLpGSyPXYkFyiI6LDr3kJlokg44Qp/vLs
+         JdtxWraBMRqQyB+xuFABvBnanrAs7eZY+TcrR47jWJsIjdmHR0DeRJ7Nw6ZSZ7yeHQ+9
+         wkFJMG0kYu0HMcXzNQCYsSCkCJ2EZB/lwuv8Wy1ja1aFoX0FdFn+3ayLDHhzaiI9PjJE
+         IYczrd14uOYN/jXTbSO1+mB8TmzR2iumo+E2WNVEmQdm0W1UprPRGa9WNHf5R5giJPFT
+         poOg==
+X-Gm-Message-State: AC+VfDyNQVxRcbKHNFlH4BUdeObdZfcdWGexhi7a3f79Enw2I7uEXHT/
+        I4EPPiUgwAfghj5IUqnIFe46aqQ1P+h2d+g9UlnUlwic1+J4uGal
+X-Google-Smtp-Source: ACHHUZ4g3A8Ho/5ndNryXQpmLu1vYMnDo3U7OPTUNTtRkDJDs/TtPHk0tvFU6g2UWK2DN5PGxRYri4rRpoeNl2oXti8=
+X-Received: by 2002:a1f:4113:0:b0:44f:d1f5:6bec with SMTP id
+ o19-20020a1f4113000000b0044fd1f56becmr4252400vka.4.1684831721544; Tue, 23 May
+ 2023 01:48:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230519171611.6810-1-sensor1010@163.com>
-In-Reply-To: <20230519171611.6810-1-sensor1010@163.com>
+References: <20230427152055.18380-1-henning.schild@siemens.com>
+ <20230427152055.18380-2-henning.schild@siemens.com> <ZEuBMCxeWAx9OilV@76cbfcf04d45>
+ <759b2df004e2445e850a01b33e748972@siemens.com> <20230428113332.3a7b9a18@md1za8fc.ad001.siemens.net>
+ <CAMRc=Mdfptr0ZXV=fzBE0T+=vTxhL1tOKxRy+ccFLOqinb0w1A@mail.gmail.com> <20230513115326.0a9f669e@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20230513115326.0a9f669e@md1za8fc.ad001.siemens.net>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 10:29:28 +0200
-Message-ID: <CAMRc=Mf9nLX1uSngiXB3dfbE7P6Ec093iRt90MVCa+1A15Zc4A@mail.gmail.com>
-Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
-To:     Lizhe <sensor1010@163.com>
-Cc:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
-        gregory.clement@bootlin.com, linux@armlinux.org.uk,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+Date:   Tue, 23 May 2023 10:48:30 +0200
+Message-ID: <CAMRc=MegFzyKSW6KAOUHfdMqnZGb3iAqhCbVrn2GFmyEqPTbcw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix chip name and pin count on
+ Nuvoton chip
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     "Wu, Xing Tong (DI FA CTR IPC CN PRC4)" <XingTong.Wu@siemens.com>,
+        Simon Guinot <simon.guinot@sequanux.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,52 +77,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 19, 2023 at 7:17=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
+On Sat, May 13, 2023 at 11:53=E2=80=AFAM Henning Schild
+<henning.schild@siemens.com> wrote:
 >
-> Before executing microchip_sgpio_irq_set_type(),
-> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger(=
-).
+> Am Thu, 11 May 2023 14:52:17 +0200
+> schrieb Bartosz Golaszewski <brgl@bgdev.pl>:
 >
-> Signed-off-by: Lizhe <sensor1010@163.com>
-> ---
->  arch/arm/plat-orion/gpio.c | 1 -
->  drivers/gpio/gpio-mvebu.c  | 1 -
->  2 files changed, 2 deletions(-)
+> > On Fri, Apr 28, 2023 at 11:33=E2=80=AFAM Henning Schild
+> > <henning.schild@siemens.com> wrote:
+> > >
+> > > Am Fri, 28 Apr 2023 10:26:18 +0200
+> > > schrieb "Wu, Xing Tong (DI FA CTR IPC CN PRC4)"
+> > > <XingTong.Wu@siemens.com>:
+> > >
+> > > > Hi all
+> > > >
+> > > > The chip id of NCT6116D is 0XD281, you can refer to
+> > > > NCT6116D_Datasheet_V1_0.pdf, Page 291
+> > >
+> > > Thanks Xing Tong. I think we have come to agree that for now
+> > > NCT6116D 0xD281 will not be supported in the kernel. Maybe until
+> > > someone has access to that very chip and a use-case.
+> > >
+> > > But you managed to somehow get these datasheets, which are still not
+> > > publicly available. Maybe you can use your contacts at Nuvoton to
+> > > kindly ask them to publish those specs on their website for future
+> > > reference. Some specs are there, but not all. That would help
+> > > people to add more chips and avoid mistakes like they happened to
+> > > me.
+> > >
+> > > Henning
+> > >
+> >
+> > Henning, do you plan to respin this with the ID corrected?
 >
-> diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-> index 595e9cb33c1d..863fa497b1a2 100644
-> --- a/arch/arm/plat-orion/gpio.c
-> +++ b/arch/arm/plat-orion/gpio.c
-> @@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 =
-type)
->                 return -EINVAL;
->         }
+> Bart, no this one fixes the name of the chip i have at hand, and fixes
+> the size of its last bank. So it is valid on its own and should IMHO be
+> merged as is.
 >
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
+> Since i do not have a NCT6116D (0xD281) i could basically just guess
+> (not too hard) but not test. And i do not really feel like contributing
+> untested code for which there is no known user/tester.
 >
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index a68f682aec01..34fd007b0308 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d=
-, unsigned int type)
->         if ((u & BIT(pin)) =3D=3D 0)
->                 return -EINVAL;
+> Henning
 >
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
->
-> --
-> 2.34.1
+> > Bart
 >
 
-Please split it into two patches. I can apply the second part but
-arch/arm is beyond my jurisdiction.
-
-While at it: is this platform even used at all? If so, then maybe we
-could migrate this driver to drivers/gpio/?
+Fair enough, applied.
 
 Bart
