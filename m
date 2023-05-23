@@ -2,114 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3198470E0AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 17:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 585F770E0D9
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 17:47:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236205AbjEWPgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 11:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43292 "EHLO
+        id S233433AbjEWPrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 11:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233770AbjEWPgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 11:36:49 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 942BAE53
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 08:36:13 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-64d2ca9ef0cso3851432b3a.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 08:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684856173; x=1687448173;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uXu+V5nJnHH4YyVsiUEAa2ukmrSVQtNJr6qhVO18g0c=;
-        b=hfWxMDSFbCwN1gbWjVwS6SyP0L+j5qH8mqnKlkiyBj1PgjmTMAHcasX+zdZMdAnS8w
-         rS18dOMbqL1BwZXPguM2efop1a5Awx8hk0qGE6I9reEtCoJ11kg3pUnKD7HJHAX5d/Ke
-         vXPUAjUi/jHJv+WR2dzkdAo3GqzuqnGQXNefTcQLYO+8CtBuu5unqqC+KVPoeXAhSAde
-         MJwVn3D7ndMY9ro0Y1lZtPqFwTgpL+pAWnnZqaDU9Din/yFcNzZJGe7KoJf7XeZkLxdg
-         M9RGGUEuzDiszOSeG809GEyxN8zNqdvDZr8iS3usGcovuyPCIC8LPjRiwB8u57Gx5AJO
-         aU7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684856173; x=1687448173;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uXu+V5nJnHH4YyVsiUEAa2ukmrSVQtNJr6qhVO18g0c=;
-        b=SmFoiITLSmYuA2u5NpEL1Bd9SUDRzK+OBTfgXwk4JsDDjsUpDIUWF0n64AcGO69nq3
-         N/VeLl/1rYssg2c/fQgIhsoW/cBS5wffRCTntEKJhx3gQLPN6kt0J6XkKriz6aWzUCSn
-         S5JCd3y+C+a2xJtrtVwZ8AILb754JlvBI/6PSMaof+TAb/BD3FWfa7kxQ7j6cy8piYJ4
-         Hq5vYViA+ZyroRZLNbUQcTu9HQc0A6bojDGI/2pIgJB9ZMcYGLIA54MNUg77imY355vt
-         WljzxJolImKs5pgIJdWeMJRFI7mwRJEZvn0jk87yVVp4Zd0KjpluDpqS4IESDydLtE2D
-         Fw/Q==
-X-Gm-Message-State: AC+VfDwp5EbK1GW4uGBQxie5teg3XDL7ud52rDh6tEhtfQ58wEs3f4lC
-        sBoq6t/RpiRiUExpJxY1qyNXnYtGfrU=
-X-Google-Smtp-Source: ACHHUZ5lscEOvZcpE0hfu7gYCmzPHFCq3C64yGEiL9cs8FEwc3jXhSj1+qQqUaZFJQfUAeE5tOCYwg==
-X-Received: by 2002:a05:6a20:7d93:b0:10c:3cf3:ef91 with SMTP id v19-20020a056a207d9300b0010c3cf3ef91mr4379243pzj.4.1684856172949;
-        Tue, 23 May 2023 08:36:12 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id i14-20020a63cd0e000000b005287a0560c9sm6285879pgg.1.2023.05.23.08.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 08:36:12 -0700 (PDT)
-Date:   Tue, 23 May 2023 23:36:08 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Esben Haabendal <esben@geanix.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [RFC PATCH] gpioset: only print prompt when stdout is tty
-Message-ID: <ZGzdaJ/wBSUDsJdU@sol>
-References: <3dcc614b9d28f04e42f78afdd18518c7251b52ae.1684849980.git.esben@geanix.com>
+        with ESMTP id S237020AbjEWPrk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 11:47:40 -0400
+X-Greylist: delayed 351 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 08:47:39 PDT
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [IPv6:2a02:1800:110:4::f00:10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C490611A
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 08:47:39 -0700 (PDT)
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by riemann.telenet-ops.be (Postfix) with ESMTPS id 4QQdpg05gtz4x9XP
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 17:41:47 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:b0ac:7afd:272:4cff])
+        by laurent.telenet-ops.be with bizsmtp
+        id 0Fgi2A00U0Jkz7G01Fgi8n; Tue, 23 May 2023 17:40:46 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q1U7g-002t5B-8n;
+        Tue, 23 May 2023 17:40:42 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q1U7u-00CkiL-KO;
+        Tue, 23 May 2023 17:40:42 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] backlight: pwm_bl: Remove unneeded checks for valid GPIOs
+Date:   Tue, 23 May 2023 17:40:41 +0200
+Message-Id: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3dcc614b9d28f04e42f78afdd18518c7251b52ae.1684849980.git.esben@geanix.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 23, 2023 at 03:54:41PM +0200, Esben Haabendal wrote:
-> When gpioset interactive mode is used as intended, as a human controlled
-> interface, stdout should be a tty.
-> 
+All of gpiod_set_value_cansleep() and gpiod_direction_output() handle
+NULL GPIO pointers just fine, so there is no need to check for that in
+the caller.
 
-Yeah, no, the interactive mode is also intended to be script driven -
-checkout the test suite, gpio-tools-tests.bat, as an example of it being
-driven using a coproc from bash.
-Removing the prompt would break the handshaking with the controlling
-script - that is how it determines the slave process is up.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/video/backlight/pwm_bl.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-I'll try running your patch through the test suite tommorrow, but I'm
-pretty sure it will break it - IIRC the code you removed was put there
-precisely to get the test suite to run.
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index fce412234d10399a..a51fbab96368053b 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -54,8 +54,7 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+ 	if (pb->post_pwm_on_delay)
+ 		msleep(pb->post_pwm_on_delay);
+ 
+-	if (pb->enable_gpio)
+-		gpiod_set_value_cansleep(pb->enable_gpio, 1);
++	gpiod_set_value_cansleep(pb->enable_gpio, 1);
+ 
+ 	pb->enabled = true;
+ }
+@@ -65,8 +64,7 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+ 	if (!pb->enabled)
+ 		return;
+ 
+-	if (pb->enable_gpio)
+-		gpiod_set_value_cansleep(pb->enable_gpio, 0);
++	gpiod_set_value_cansleep(pb->enable_gpio, 0);
+ 
+ 	if (pb->pwm_off_delay)
+ 		msleep(pb->pwm_off_delay);
+@@ -429,8 +427,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ 	 * Synchronize the enable_gpio with the observed state of the
+ 	 * hardware.
+ 	 */
+-	if (pb->enable_gpio)
+-		gpiod_direction_output(pb->enable_gpio, active);
++	gpiod_direction_output(pb->enable_gpio, active);
+ 
+ 	/*
+ 	 * Do not change pb->enabled here! pb->enabled essentially
+-- 
+2.34.1
 
-Have you tried running the test suite?
-
-> By leaving out the prompt when stdout is not a tty, gpioset interactive mode can
-> be used as a really simple deamon for controlling GPIOs by connecting it to a
-> FIFO.
-> 
-
-It can do that already - just direct the output to /dev/null.
-Which you would need in your case anyway - the prompt isn't the only
-output - try piping a get command to your daemon and see what happens.
-
-This works for me as a simple daemon script:
-
-#!/bin/bash
-
-pipe=/tmp/gpiosetd
-
-mkfifo $pipe
-
-trap "rm -f $pipe" EXIT
-
-# as bash will block until something is written to the pipe...
-echo "" > $pipe &
-gpioset -i GPIO23=0 < $pipe > /dev/null
-
-Does that not work for you?
-
-Cheers,
-Kent.
