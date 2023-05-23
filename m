@@ -2,181 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0448E70D9D3
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 12:04:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D1070D9F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 12:07:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236547AbjEWKEF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 06:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
+        id S233125AbjEWKHD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 06:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236509AbjEWKDq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 06:03:46 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3EB10F9
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 03:03:26 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-783ec566cb9so2338369241.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 03:03:26 -0700 (PDT)
+        with ESMTP id S236362AbjEWKHA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 06:07:00 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3949094
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 03:06:59 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-4394217a8cbso692163137.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 03:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684836205; x=1687428205;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684836418; x=1687428418;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8zT+mgDlV2kvR+7AXEfcgokZitKqnJyd7IB0TDC2J/s=;
-        b=P/+xQCTcXs4zLyDA3Vc2QDYZ2AF4QxRBkA2zR0SEU4rSvGJbZKKC0Fv17aII8F8azI
-         pTkmCbCsfD/WMMhhKNSNnIQDYpKgoSAjNzaL1Es7Jk+q8LuiMF9SVo8KdAco9SHiMDte
-         EiBNI96Es7P1kuFN97i1Yue1yCKc3+yJZ25/8GnB7QzqLf6TlRSJpXnmaajC0qkG2MMF
-         rr+LZAYg+/CW+0XcWbaSS5xz140yFIICYKuqBtaGqdk1lQxvKv4/+/wNnJU3HAK/UDRE
-         5zM/2a5IFG8UUi3OZodCqIMcr5pquAY3b07F49KImVsKkOCoGWouq8O8+Uu6xEPsNW5L
-         Dm6A==
+        bh=sveMA1pLHpFzwHr/zLzHhtetXlVeCK1ds1U199Fo7do=;
+        b=k3/J0NEzE8gEAx1mVhl3ELbtxaO8A75LexhtvnvrmSX77SJxq8yh1s5SYNB/PS+bvl
+         WCvhVHhQsHW2aUljfHPVpqjmDXxjp5uAdRMGdIbrXys51rS1BRIGe/9YgXz/z2j8TwMG
+         4U/gZvPx3kRUvopPOBzhvM49vGQ6FMJajVDN2kzslF3JmrMeUWMl5OKDHeKP6/SlJ4ws
+         YLqQAyThKx9WhuOxVsnWklzE7IoIKtxwsBNwvJOt8jdHoDK4G/6MoRuUxp1S+fpkbn3a
+         n8m/Lg6EaBG+yaUHagq4wVEdsGNvfq07x8E5lT0ZoVSxu0/usNW9yNVdUd6BrTjhCXYB
+         +S4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684836205; x=1687428205;
+        d=1e100.net; s=20221208; t=1684836418; x=1687428418;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8zT+mgDlV2kvR+7AXEfcgokZitKqnJyd7IB0TDC2J/s=;
-        b=VLmHBV8I6T69rE8UNmhNvLl2RWNeRwhimsy+Lp5aOzExrLrLdK8uECsYjTvzNTHf8N
-         dY/x8FbO18yaRItL6fPywDithYn1KrkqHR+Eb9JswJ/UBoyIQQRfEkqYK/Y2aO+QUFji
-         NzyOtd73us3hf/M6nk7WEBvuqy+cxfINgNUwVjGugEbyGni+SA1EFvlFzfMfToSy0fzE
-         La9Q3TGHNfToezYF92wAMhOAju1AtUdPtFoDIgBP64n0wJBK1UTqV7zE3Fz1iy1CI7Hd
-         mrN8zpmtuqI1bAqVSxpeU/hsEY/v5PrejaCLKHuZVMpoSSkMi+d4J1dZ3gg6eaSYMwRU
-         AdUw==
-X-Gm-Message-State: AC+VfDwIn3Zs2fFwxbHpTIfHGhfE4Is48ThRigM/PoZteh546evIVaCw
-        NGg9OVYshIyrJgvxb0IZwp4VPlAlpKQQ9JlOFeHteQ==
-X-Google-Smtp-Source: ACHHUZ4/LsfOkwUZY7EQfQthFyZZjn3vH4GpBQ8hVtK+Fk3VgXSEtk9P5DYaau1fM8buZvHJky8Fasjb5Pk3Hr5GLfQ=
-X-Received: by 2002:a05:6102:3c1:b0:439:e3c:8ef8 with SMTP id
- n1-20020a05610203c100b004390e3c8ef8mr3415987vsq.28.1684836205079; Tue, 23 May
- 2023 03:03:25 -0700 (PDT)
+        bh=sveMA1pLHpFzwHr/zLzHhtetXlVeCK1ds1U199Fo7do=;
+        b=RePx2mr0Q76Ij/uUkx1g+HSLrUWhw2jWzl9+H2teiwjru7sGWcT/FEod1bkUjJmCEk
+         Ob6A/Yi/Mu+JNWqFOkWu3OHgj8iLxvSvMkDGh/C5cQgz2cUfJQT7WR9YOZMnXJL69xvL
+         rBDRge0Njin/a6NPBFEWG4jd3NFplvgUrFhWXmeAUtDmi245AL91O5AxBr6OCf6GvKxG
+         /+gOAxNw2vBC089V3NNNcJCnii2VCLVIWGbwmBpXvwwNOQTRpPLPoA0VER51E2QcnvvE
+         BuCvmbU2KGEiQ1zI7iQa9AY3IWHcufQzF59vUaAjRFGvdUczGB75uMsSNSIbSksIw5Ym
+         1P2Q==
+X-Gm-Message-State: AC+VfDz5riymHiZGdx8VfG5aEZKhjH7dWAFqqOW1QKxa2M86Q1SEXur8
+        asFnApDNw8oZCduibcfmUzRHTfVdNsX9sEbKracwLn2jxsXeH7M8
+X-Google-Smtp-Source: ACHHUZ6xdJNdh7DJEsGL+ny21Ar67ZAhdZmPPipdV66f8GZUStVAueQSbtbe8Q8QyRbArY8IRXHeGGAoiiDs9yQidSo=
+X-Received: by 2002:a67:f711:0:b0:434:8c89:17f9 with SMTP id
+ m17-20020a67f711000000b004348c8917f9mr3317655vso.20.1684836418268; Tue, 23
+ May 2023 03:06:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <3545766.4eto28bQOc@archbook> <ZGcGZwwRiy2jFfR0@sol>
- <46830564.8zq9ZvEiHi@archbook> <ZGeOLYZ1tEKfMOwn@sol>
-In-Reply-To: <ZGeOLYZ1tEKfMOwn@sol>
+References: <20230519174619.58308-1-frattaroli.nicolas@gmail.com>
+In-Reply-To: <20230519174619.58308-1-frattaroli.nicolas@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 12:03:14 +0200
-Message-ID: <CAMRc=McTcK=fPPrkPSr2X5hhypr3aas_f2HJs4TivsJtPHqjeA@mail.gmail.com>
-Subject: Re: [libgpiod] Python bindings don't allow to wait on events indefinitely
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
-        linux-gpio@vger.kernel.org
+Date:   Tue, 23 May 2023 12:06:47 +0200
+Message-ID: <CAMRc=McrerNizhJ+d1m6PaDf65UX-RrZjAYjdABiLjZ69TPRWA@mail.gmail.com>
+Subject: Re: [libgpiod] [RFC PATCH] bindings: python: allow specifying
+ infinite timeout
+To:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 19, 2023 at 4:56=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Fri, May 19, 2023 at 7:47=E2=80=AFPM Nicolas Frattaroli
+<frattaroli.nicolas@gmail.com> wrote:
 >
-> On Fri, May 19, 2023 at 04:32:32PM +0200, Nicolas Frattaroli wrote:
-> > On Freitag, 19. Mai 2023 07:17:27 CEST Kent Gibson wrote:
-> > > On Thu, May 11, 2023 at 10:28:34PM +0200, Nicolas Frattaroli wrote:
-> > > > Hello,
-> > > >
-> > > > in libgpiod 1.6.x, Line.event_wait's codepath had no path where ts
-> > > > as passed to ppoll could ever be NULL. This means waiting indefinit=
-ely
-> > > > was impossible.
-> > > >
-> > > > I thought hey, maybe the new Python bindings in libgpiod 2.x fixed =
-this,
-> > > > but no, it has made it worse by explicitly setting timeout to 0 sec=
-onds
-> > > > if it's None[1]. Obviously, this behaviour can't be changed now, be=
-cause
-> > > > people depend on this API to return immediately now with None as th=
+> So far, libgpiod's Python bindings had no way to state that a
+> user wishes to wait for events indefinitely, as a timeout of
+> None would intentionally be converted to 0 seconds, i.e. return
+> from the select call in poll_fd immediately.
+>
+> The usual Python convention and even the select convention is
+> to block indefinitely on a timeout=3DNone. However, changing the
+> poll_fd function to do this now would change an (intentional)
+> API design choice by libgpiod 2.0 that API users presumably
+> rely on.
+>
+> By allowing float("inf") (or in fact math.inf, or your favourite
+> other way to get an infinite float) to mean waiting infinitely
+> solves this by extending the API rather than changing it.
+>
+> On gpiod Python bindings without this change, passing inf results
+> in an OverflowError being raised in select. API users who wish to
+> support older versions of the bindings can catch this exception and
+> act on it.
+>
+> Signed-off-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+> ---
+>  bindings/python/gpiod/chip.py         | 3 ++-
+>  bindings/python/gpiod/internal.py     | 4 ++++
+>  bindings/python/gpiod/line_request.py | 3 ++-
+>  3 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.p=
+y
+> index 97ff340..95c5757 100644
+> --- a/bindings/python/gpiod/chip.py
+> +++ b/bindings/python/gpiod/chip.py
+> @@ -195,7 +195,8 @@ class Chip:
+>          Args:
+>            timeout:
+>              Wait time limit represented as either a datetime.timedelta o=
+bject
+> -            or the number of seconds stored in a float.
+> +            or the number of seconds stored in a float. A timeout of Non=
 e
-> > > > parameter, and changing it to wait indefinitely would no doubt brea=
-k
-> > > > actual programs.
-> > > >
-> > > > So I'm left wondering if there's a particular reason users of these
-> > > > bindings shouldn't wait on events indefinitely or if that same mist=
-ake
-> > > > was just made twice in a row.
-> > > >
-> > > > Is there some way the API could be enhanced to support waiting for
-> > > > events indefinitely without having to slap a While True with
-> > > > an arbitrarily high timeout around every single invocation?
-> > > >
-> >
-> > Hello Kent,
-> >
-> > > That does sound like a bug to me, but the rest of your mail isn't wor=
-th
-> > > responding to.
-> >
-> > I'm not quite sure what you mean. Was my tone this off? I apologise if
-> > you took my displeasure with libgpiod's bindings as a personal attack,
-> > it wasn't intended as such.
-> >
+> +            returns immediately, use float("inf") to wait indefinitely.
 >
-> Not a personal attack on me, but offensive none the less.
-> Assume you are the code owner and see how it parses to you.
+>          Returns:
+>            True if an info event is ready to be read from the chip, False=
+ if the
+> diff --git a/bindings/python/gpiod/internal.py b/bindings/python/gpiod/in=
+ternal.py
+> index 37e8b62..141cfe9 100644
+> --- a/bindings/python/gpiod/internal.py
+> +++ b/bindings/python/gpiod/internal.py
+> @@ -2,6 +2,7 @@
+>  # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 >
-> > > A more productive approach could be to submit a patch that describes =
-the
-> > > problem and suggests a fix, say:
-> > >
-> > >  def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] =3D =
-None) -> bool:
-> > > -    if timeout is None:
-> > > -        timeout =3D 0.0
-> > > -
-> > >
-> > > and see where that goes.
-> >
-> > That would go nowhere, as this makes the API behave differently for cur=
-rent
-> > users calling the function without an argument, as I've mentioned.
-> >
+>  from datetime import timedelta
+> +from math import inf
+>  from select import select
+>  from typing import Optional, Union
 >
-> By that logic any bug that has visible effects cannot be fixed - in case
-> some user depends on those effects.
-> And all bugs have visible effects.
+> @@ -15,5 +16,8 @@ def poll_fd(fd: int, timeout: Optional[Union[timedelta,=
+ float]] =3D None) -> bool:
+>      else:
+>          sec =3D timeout
 >
-> The function docs don't specify the behaviour when None is passed -
-> despite None being the default.
+> +    if sec =3D=3D inf:
+> +        sec =3D None
+> +
+>      readable, _, _ =3D select([fd], [], [], sec)
+>      return True if fd in readable else False
+> diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpio=
+d/line_request.py
+> index a0f97b7..ae21835 100644
+> --- a/bindings/python/gpiod/line_request.py
+> +++ b/bindings/python/gpiod/line_request.py
+> @@ -178,7 +178,8 @@ class LineRequest:
+>          Args:
+>            timeout:
+>              Wait time limit expressed as either a datetime.timedelta obj=
+ect
+> -            or the number of seconds stored in a float.
+> +            or the number of seconds stored in a float. None returns
+> +            immediately. Use float("inf") to wait indefinitely.
 >
-> > One solution would be to pass float("inf") and then check for that, thi=
-s
-> > wouldn't break the API, merely extend it, but I'm not sure how good of
-> > an idea that is to do if someone uses an older libgpiod that doesn't
-> > have an explicit check for inf. I don't even know what passing inf does
-> > right now, but it's probably worth looking into.
-> >
->
-> Please no.
->
-> I would expect the API should stick to standard Python conventions,
-> similar to select itself - " When the timeout argument is omitted the
-> function blocks until at least one file descriptor is ready."
-> so wait_edge_event() should block, as should wait_edge_event(None)
->
-> > > to submit a patch
-> >
-> > Move the project back to a git forge and I will.
-> >
->
-> And there you go being confrontational again. GFY.
->
-> Read the README - you submit patches to this list.
->
-> And not my project, so not my call on where it is hosted.
-> I'm just trying to help you out here, but I'm left wondering why.
+>          Returns:
+>            True if events are ready to be read. False on timeout.
+> --
+> 2.40.1
 >
 
-I wouldn't call it a bug, more like unusual behavior as far as Python APIs =
-go.
+I like this approach too. In fact - it may be even clearer and more
+intuitive than converting None to infinite timeout.
 
-I never noticed it before because I typically use the file descriptor
-directly and pass it to the polling function of choice.
-
-In any case - the easiest way to fix this would be allowing the use of
-a negative number to indicate that we should wait forever. Any issue
-with that?
+Any objections against using negative numbers for the same purpose as well?
 
 Bart
