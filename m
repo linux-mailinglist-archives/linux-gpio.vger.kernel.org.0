@@ -2,128 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01F0F70D87C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 11:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4CEA70D8BC
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 11:18:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232553AbjEWJK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 05:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
+        id S236345AbjEWJSQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 05:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235511AbjEWJK4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 05:10:56 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7E7FF
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:10:54 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-96aae59bbd6so1323920966b.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:10:54 -0700 (PDT)
+        with ESMTP id S236344AbjEWJSI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 05:18:08 -0400
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315711B9
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:17:51 -0700 (PDT)
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-456fc318dd4so1570726e0c.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684832993; x=1687424993;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zoEso63g+0SKeGzDkD1maNgqaaGX52WJnGRxyXGPsc4=;
-        b=FYAUUJhu+cevF0Zg6iafvi/RtW1iniieS1LAaBi9MEVhqlz2zQbYCstnjRu/XTE8Tf
-         acH2KyB0IdWo6ugqPyNwIz21e+g2LeWBYqRvA0GOg0lbQzchwHoUQNzoNNAd7QLVWU07
-         au1DvBzxTw9kUXKLd2247RVQOQfQHmX9VNs2E56xdNsSNFbNUy4gSKZMclU1/+3cLBAF
-         VtMJKIjpxd1kltJ468dOvHZ+pnitvI8oMKRF5I8NcdITJS6SqrFi+DQS62zLPqyvBZjj
-         fEjz8degm1IisEbJokZhmTYZ9ScHgDPiSzCLQUMZJFanPMgXE/lf9aSxV3spPupYJzwb
-         59qw==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684833470; x=1687425470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pk8OMJU/i+DL9domkx1SxECiIr/Cw8hUh9Jh7kwNm3g=;
+        b=Bdx1POUAqFJkjBgUi/GS0mdhya6BUMSBtxOpkjIYslelvZMDyOxdXjpHp6KFSmNEva
+         DoOqH5YE55cxw/OsjFJJBF7wk+RyoXA8VtxHSZvBNTT0mSO8EX9QoDi84yUx7KqeYkWM
+         oqiwIFlMfqGgdQYrLVnv/dQdV1Exbu+tyWFoImqXR8cukKC/BBLWaXTz+7CeDZc5dyUO
+         mv7Iigd20c11CjpzH0Rhi20M4szWE9i55a9Z3Y0CGMM6wTnhtwEoBPSPVTp1v1eRPpOD
+         jaQYgGUuWkjbZD8Ehm6yhyBOBpTB0prxNiEUCIpa25Ccs88q+Ero7ifnfv/B6SOMwhQ2
+         e/aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684832993; x=1687424993;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zoEso63g+0SKeGzDkD1maNgqaaGX52WJnGRxyXGPsc4=;
-        b=K//NjtKCNdAFgo4XqMm6Bmkd5YKYvf6Zzp3WVaPYvQ9xoRlKAyN7T5PFXmRz+adMwY
-         nuE1QMK1A1p6jHfU4GYMEtZNMR83iSweooYbaxH3oCO96KE/zP8rywUQW1TWzJb5ZT2M
-         +XuYzySPK9xODib1t3hoKcTmJwneWRzvLy75GiJX4N0NuNiFft7t2+cn0aWbgYIG9eNo
-         UguQFps0QDYjpUqO0ICVajDEbqF+CaVZOtXqJq1gkmP4jLdEeC3cVUdMakBObXv9kvB2
-         kiumpBMPOy3gBvWH0IM+YPOyVcNC7cztlrp3UJt0G8wpA/MuNOdzMSlxS4gKCPw4/s7T
-         CZhQ==
-X-Gm-Message-State: AC+VfDwAvxU0lgXigxvedFMfeRcMayxKHuvVXC04d8V8imGCYN9n52xV
-        UMFhVeyUZOEEQB3nzfcuegVFCQ==
-X-Google-Smtp-Source: ACHHUZ5zYnuYGtxhCBEc6UuB0mA8LCTKfqijjVsWcN9D+xkiJ0rEyMKWdCr9Yd6nvdeUbwg/r/Dqxw==
-X-Received: by 2002:a17:907:60cc:b0:96a:580e:bf0f with SMTP id hv12-20020a17090760cc00b0096a580ebf0fmr15054349ejc.14.1684832993139;
-        Tue, 23 May 2023 02:09:53 -0700 (PDT)
-Received: from [10.2.5.18] (abordeaux-655-1-129-86.w90-5.abo.wanadoo.fr. [90.5.10.86])
-        by smtp.gmail.com with ESMTPSA id p26-20020a17090664da00b0096f7105b3a6sm4213801ejn.189.2023.05.23.02.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 02:09:52 -0700 (PDT)
-Message-ID: <0cf870f1-8cdb-df74-79d6-a4004cdfcc2f@baylibre.com>
-Date:   Tue, 23 May 2023 11:09:51 +0200
+        d=1e100.net; s=20221208; t=1684833470; x=1687425470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pk8OMJU/i+DL9domkx1SxECiIr/Cw8hUh9Jh7kwNm3g=;
+        b=lHzhoCMUqBWU3yX1ohnInZgi2EwtIp/p2xcuHFiwuKi84S91hpuI0BVPSHghyfTxfb
+         RZrroS0PNY8YDbgICSw/H87vphWRJeGr2P0KBLRKbOU+w4ZIr1rzrvtKJtZJYLWHw/3f
+         shufkLdPfJ5lQ2XBETNXf5Mv9y6EcuGbemMBNixA4tHkuK11m2U/mW/gNk1GvtZ83s0k
+         hKHuV6lALHDcWpwQhn9nQzmRGnnUprugtTN4mboH5p8vBjmtKc83P9U4lZrWLTnqWz/z
+         UD8XoUN/k1gD4pe4EN3F8zXpIfNr6mKT5rPLDHo9v1bpUXmwAN9d8zYTFnBMU6GuOqQf
+         3JeA==
+X-Gm-Message-State: AC+VfDxEYeh+hWcTFJVgOrMibV8zFu2wJfCbgQGFHheLXxtGtwBr8u36
+        Q4rGw/QSghUTtUzVphG1yE7t7uaQk8EjveV2CWo3EA==
+X-Google-Smtp-Source: ACHHUZ7CHtarrucWGhxACF3S5WCro6uTcboj0GJAKcNxdbnYzGOU1NsbYTqH38dbQghvd72lmfdBvFudK2a6RwnqVzQ=
+X-Received: by 2002:a05:6102:2f4:b0:437:e5d1:a0e0 with SMTP id
+ j20-20020a05610202f400b00437e5d1a0e0mr3647966vsj.19.1684833470145; Tue, 23
+ May 2023 02:17:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
- <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
- <CAMRc=Md-CzrG3QPtnh0OxYaHTAYZ2aUfMKhkAOeRm2Zn30qE0A@mail.gmail.com>
- <ZGiWdQcR6Zq6Aw65@surfacebook>
- <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
- <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
-From:   jerome Neanne <jneanne@baylibre.com>
-In-Reply-To: <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <Yz62XmiH8YG3Dtsf@orome> <20221007055936.5446-1-pshete@nvidia.com>
+ <CACRpkdYkJdZ67kyTnDg3xFzO8MJhC0nHK98O+KJwCLBqV_5f-Q@mail.gmail.com> <1de5b7fb-a39e-183a-1407-7d6489f706b4@nvidia.com>
+In-Reply-To: <1de5b7fb-a39e-183a-1407-7d6489f706b4@nvidia.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 May 2023 11:17:39 +0200
+Message-ID: <CAMRc=MdCiieaYR3BeATm+2o8UDz+9D5vs=dTNDAavi19BmKZ8w@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: tegra186: Check GPIO pin permission before access.
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Prathamesh Shete <pshete@nvidia.com>, thierry.reding@gmail.com,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        smangipudi@nvidia.com, kyarlagadda@nvidia.com,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, May 23, 2023 at 8:22=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> w=
+rote:
+>
+>
+> On 17/10/2022 10:31, Linus Walleij wrote:
+> > On Fri, Oct 7, 2022 at 7:59 AM Prathamesh Shete <pshete@nvidia.com> wro=
+te:
+> >
+> >> This change checks if we have the necessary permission to
+> >> access the GPIO. For devices that have support for virtualisation
+> >> we need to check both the TEGRA186_GPIO_VM_REG and the
+> >> TEGRA186_GPIO_SCR_REG registers. For device that do not have
+> >> virtualisation support for GPIOs we only need to check the
+> >> TEGRA186_GPIO_SCR_REG register.
+> >>
+> >> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> >> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> >
+> > Very nice patch!
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+>
+> I did not see this anywhere in the mainline/next. However, I also
+> noticed that we don't have the correct email address for Bartosz (again).
+>
 
+I have only ever changed my address in MAINTAINERS once, so "again" is
+not really the right term. And scripts/get_maintainer.pl should be
+used anyway every time when submitting patches.
 
-On 22/05/2023 13:18, Andy Shevchenko wrote:
-> On Mon, May 22, 2023 at 10:47 AM jerome Neanne <jneanne@baylibre.com> wrote:
->> On 20/05/2023 11:44, andy.shevchenko@gmail.com wrote:
->>> Mon, May 15, 2023 at 05:36:46PM +0200, Bartosz Golaszewski kirjoitti:
->>>> On Thu, May 11, 2023 at 4:09 PM Jerome Neanne <jneanne@baylibre.com> wrote:
-> 
-> ...
-> 
->>>>> +       gpio->gpio_chip = tps65219_gpio_chip;
->>>>
->>>> Aren't you getting any warnings here about dropping the 'const' from
->>>> the global structure?
->>>
->>> But this is a copy of the contents and not the simple pointer.
-> 
-> I commented on Bart's question.
-> 
->> In many other places where this is done, the struct is declared like:
->>
->> static const struct gpio_chip template_chip = {
->>
->> After internal review, I changed this to:
->>
->> static const struct gpio_chip tps65219_gpio_chip = {
->>
->> This is because I didn't want to have this "template" that sounds to me
->> like "dummy". Maybe I misunderstood and this "template" was used on
->> purpose because this const struct is just copied once to initialize
->> tps65219_gpio->gpio_chip during probe.
->>
->> Introducing tps65219_gpio_chip name is maybe confusing with
->> tps65219_gpio struct.
->>
->> I think the const should not be a problem here but the naming I used
->> might be misleading. If you have a suggestion of what is a good practice
->> to make this piece of code clearer. I'll follow your suggestion (use
->> template? more_explicit name like ???).
-> 
-> It's up to Bart.
-> 
-Bart, should I keep the code like this or do you suggest a name change 
-so that's it's more appealing?
+> Bartosz, let me know if you can pick this up? Thierry also ack'ed
+> previously for Tegra too.
+>
+> FWIW ...
+>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+>
+
+This doesn't apply to v6.4-rc1. Prathmesh: could you rebase and resend?
+
+Bart
+
+> Thanks
+> Jon
+>
+> --
+> nvpublic
