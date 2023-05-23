@@ -2,39 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7CA70E1C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 18:29:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9CD70E219
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 18:49:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232696AbjEWQ1h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 12:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
+        id S231770AbjEWQcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 12:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbjEWQ1g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 12:27:36 -0400
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3A4E0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 09:27:32 -0700 (PDT)
+        with ESMTP id S237543AbjEWQcx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 12:32:53 -0400
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BB1E5
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 09:32:51 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-        id b2c8a84a-f986-11ed-a9de-005056bdf889;
-        Tue, 23 May 2023 19:27:24 +0300 (EEST)
+        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+        id 747c35c3-f987-11ed-abf4-005056bdd08f;
+        Tue, 23 May 2023 19:32:49 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 23 May 2023 19:27:23 +0300
-To:     Ryan.Wanner@microchip.com
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
-        linus.walleij@linaro.org, ludovic.desroches@microchip.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/3] pinctrl: at91-pio4: Enable Push-Pull configuration
-Message-ID: <ZGzpa5HVVCKzQu3E@surfacebook>
-References: <cover.1684313910.git.Ryan.Wanner@microchip.com>
- <d898c31277f6bce6f7d830edf4332ff605498c7b.1684313910.git.Ryan.Wanner@microchip.com>
+Date:   Tue, 23 May 2023 19:32:48 +0300
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Prathamesh Shete <pshete@nvidia.com>, thierry.reding@gmail.com,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        smangipudi@nvidia.com, kyarlagadda@nvidia.com,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: Re: [PATCH v3] gpio: tegra186: Check GPIO pin permission before
+ access.
+Message-ID: <ZGzqsGG7uTYkO7Uf@surfacebook>
+References: <Yz62XmiH8YG3Dtsf@orome>
+ <20221007055936.5446-1-pshete@nvidia.com>
+ <CACRpkdYkJdZ67kyTnDg3xFzO8MJhC0nHK98O+KJwCLBqV_5f-Q@mail.gmail.com>
+ <1de5b7fb-a39e-183a-1407-7d6489f706b4@nvidia.com>
+ <CAMRc=MdCiieaYR3BeATm+2o8UDz+9D5vs=dTNDAavi19BmKZ8w@mail.gmail.com>
+ <a3d7c16f-fe87-9c04-5f92-42f10597df6d@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d898c31277f6bce6f7d830edf4332ff605498c7b.1684313910.git.Ryan.Wanner@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3d7c16f-fe87-9c04-5f92-42f10597df6d@nvidia.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
         FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
         SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
@@ -45,33 +52,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Wed, May 17, 2023 at 01:54:04PM +0200, Ryan.Wanner@microchip.com kirjoitti:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+Tue, May 23, 2023 at 02:42:52PM +0100, Jon Hunter kirjoitti:
+> On 23/05/2023 10:17, Bartosz Golaszewski wrote:
+> > On Tue, May 23, 2023 at 8:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+> > > On 17/10/2022 10:31, Linus Walleij wrote:
+
+...
+
+> > > I did not see this anywhere in the mainline/next. However, I also
+> > > noticed that we don't have the correct email address for Bartosz (again).
+> > 
+> > I have only ever changed my address in MAINTAINERS once, so "again" is
+> > not really the right term. And scripts/get_maintainer.pl should be
+> > used anyway every time when submitting patches.
 > 
-> Enable push-pull configuration. Remove integer value argument from
-> open-drain configuration as it is discarded when pinconf function is
-> called from gpiolib. Add push-pull do debug and get functions.
+> Sorry I meant that WE did not send to the correct email AGAIN and not that
+> you updated your email address :-)
 
-Right, thank you for fixing this!
-Other comments below.
+FWIW, you may look into my "smart" script [1] which automatically fills the Cc
+and To WRT MAINTAINERS records.
 
-...
-
-> +		case PIN_CONFIG_DRIVE_PUSH_PULL:
-> +			conf &= (~ATMEL_PIO_OPD_MASK);
-
-Parentheses are redundant.
-
->  			break;
-
-...
-
->  	if (conf & ATMEL_PIO_OPD_MASK)
->  		seq_printf(s, "%s ", "open-drain");
-> +	if (!(conf & ATMEL_PIO_OPD_MASK))
-> +		seq_printf(s, "%s ", "push-pull");
-
-As commented already by others, the else would be better.
+[1]: https://lore.kernel.org/linux-gpio/Yz62XmiH8YG3Dtsf@orome/T/#t
 
 -- 
 With Best Regards,
