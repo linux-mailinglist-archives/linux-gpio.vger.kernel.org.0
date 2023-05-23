@@ -2,128 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A0F370D7D6
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7564C70D819
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 10:59:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235924AbjEWIsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 04:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
+        id S232935AbjEWI7K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 04:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235984AbjEWIso (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:48:44 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F844119
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:48:42 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-456f7ea8694so1548562e0c.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:48:42 -0700 (PDT)
+        with ESMTP id S232957AbjEWI7J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 04:59:09 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA591139
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:58:52 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-7841f18f9f7so1485372241.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 01:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684831721; x=1687423721;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684832331; x=1687424331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nsCD0of1x6zAZe4E8ewHElcvWX4G+68HMU5ECsDupIE=;
-        b=1MkyHwpRBLggLehbgS6eNfVckrrq+fSGe5Ml3QKm23i2ADWDBXeDmBN5mQpLixA1L7
-         /STGoEzvvRpB9YR2lAH38LNK5EPoPYKR0USAiTHsMkH6PTlH/4pBmYOjfPYy2J/Y2FcC
-         W0SzIJp0LCOnczI45DnIN/FEU25qCLA55krEq3uZR/TWW0lkWemQI6q2sZ56sLldQeO4
-         d/eXHJjaLnm4UoLa2As4aYZOgyoAXDh3WFoT3NduC98nzH9ryrxihWhELLMp37MvEnu9
-         wTZIKhJ5nO1lXo+qss4xvuc4vmH3GlFD9n7BGgxhyQbeV/BjRa2SUxLokggVFcHHaH+a
-         DmOQ==
+        bh=UFLTcRy2N0UvPET3C/xFrBjQWyA15WWYRqkz704pwVo=;
+        b=r4bLLBv6otuBtne6V2AsArlOGSjVvhWXOMmTmrcRYC1lwQmUfGiROR71cwQGBcgqU3
+         SNdBGLHhsDtLGMUMXuKyGgR2aU9JVcu/3CRqNFeHF1qq89tOHHJCdRK0AyBLVTIgLVMe
+         Pw9t8r1PukhJwBnaHAnn9KkZIcQpHiwqh4rEsjO00eHTF5XMPhBefi5u/9OR1x+c6Fcr
+         Z4+9seGiwZqbPkZHX00pm63cbYRQvDyPo2iw2DpJCF63/qU51xrR35HTjy0wBlXQEbzP
+         fewfhPwjq6xEIuVUzFFMPrg9RBP5mkBx42aZejzNzKKWsc45rRr6qG8Crqjjis8j5NkX
+         DoRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684831721; x=1687423721;
+        d=1e100.net; s=20221208; t=1684832331; x=1687424331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nsCD0of1x6zAZe4E8ewHElcvWX4G+68HMU5ECsDupIE=;
-        b=CG/tgYV75QwwHqUju54G7eRB56mKa+dwBFPgNmQ1xuZG3g2XpkhTDvlJMgMM+HkiRo
-         432IPWH5qXInio0m2B2iqJVPRKtdDljditPpLpGSyPXYkFyiI6LDr3kJlokg44Qp/vLs
-         JdtxWraBMRqQyB+xuFABvBnanrAs7eZY+TcrR47jWJsIjdmHR0DeRJ7Nw6ZSZ7yeHQ+9
-         wkFJMG0kYu0HMcXzNQCYsSCkCJ2EZB/lwuv8Wy1ja1aFoX0FdFn+3ayLDHhzaiI9PjJE
-         IYczrd14uOYN/jXTbSO1+mB8TmzR2iumo+E2WNVEmQdm0W1UprPRGa9WNHf5R5giJPFT
-         poOg==
-X-Gm-Message-State: AC+VfDyNQVxRcbKHNFlH4BUdeObdZfcdWGexhi7a3f79Enw2I7uEXHT/
-        I4EPPiUgwAfghj5IUqnIFe46aqQ1P+h2d+g9UlnUlwic1+J4uGal
-X-Google-Smtp-Source: ACHHUZ4g3A8Ho/5ndNryXQpmLu1vYMnDo3U7OPTUNTtRkDJDs/TtPHk0tvFU6g2UWK2DN5PGxRYri4rRpoeNl2oXti8=
-X-Received: by 2002:a1f:4113:0:b0:44f:d1f5:6bec with SMTP id
- o19-20020a1f4113000000b0044fd1f56becmr4252400vka.4.1684831721544; Tue, 23 May
- 2023 01:48:41 -0700 (PDT)
+        bh=UFLTcRy2N0UvPET3C/xFrBjQWyA15WWYRqkz704pwVo=;
+        b=ALyyS1ozbb8wNoyePyJ7P7ubb0W2F8bc2U/cAStSX2zd8nb0KZpV8eXAAzLzsSR14F
+         nvD1SKrbpGvLQUEhhBAC7s5car/W5QAwDdvhcJk124dB4FM6KTPEpx72AIBPjx6fw5ya
+         sftIRIsBQeYLgdSwKn8hzL8M0koinynXK+1OTJkdtCq+FxQgFdfpgGz2oYiDvHnIvMjt
+         GaiceqTCRnSwP3Ija5PmYcHv+zI4BMAw7uOErf0UzuHOGkYmVRGcpo2BoQ6WqCxrXJmr
+         dPtkKqZC8KiqZ9JHXBRY8HmdqEnVPdTDrOc6Em7P3ZrpusgKRCdauLtJAjPUYVqmnay6
+         3lQg==
+X-Gm-Message-State: AC+VfDxo0Y1IsVD/me/NZDyOtXGqnbGJUpZktGHYbOb3FA4DuYx+FtWp
+        e6fRtT7Cev4vs+ep9JPub6mX7m9Fy/kJmQ5XF9uHfg==
+X-Google-Smtp-Source: ACHHUZ4vQgFkWMCHTAv3Gnr0CA7cUJGBS970F6Wx4LxzSKTElNhFu4JuagpwyJaLb4ptGhkvThXj0y0NI0QA+A4rJXY=
+X-Received: by 2002:a67:f949:0:b0:439:4048:8534 with SMTP id
+ u9-20020a67f949000000b0043940488534mr2205256vsq.25.1684832331587; Tue, 23 May
+ 2023 01:58:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230427152055.18380-1-henning.schild@siemens.com>
- <20230427152055.18380-2-henning.schild@siemens.com> <ZEuBMCxeWAx9OilV@76cbfcf04d45>
- <759b2df004e2445e850a01b33e748972@siemens.com> <20230428113332.3a7b9a18@md1za8fc.ad001.siemens.net>
- <CAMRc=Mdfptr0ZXV=fzBE0T+=vTxhL1tOKxRy+ccFLOqinb0w1A@mail.gmail.com> <20230513115326.0a9f669e@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20230513115326.0a9f669e@md1za8fc.ad001.siemens.net>
+References: <2a4dd7e50f7be9d515059f1ac4709eb2fdc7d36d.1684828674.git.viresh.kumar@linaro.org>
+In-Reply-To: <2a4dd7e50f7be9d515059f1ac4709eb2fdc7d36d.1684828674.git.viresh.kumar@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 10:48:30 +0200
-Message-ID: <CAMRc=MegFzyKSW6KAOUHfdMqnZGb3iAqhCbVrn2GFmyEqPTbcw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix chip name and pin count on
- Nuvoton chip
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     "Wu, Xing Tong (DI FA CTR IPC CN PRC4)" <XingTong.Wu@siemens.com>,
-        Simon Guinot <simon.guinot@sequanux.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Tue, 23 May 2023 10:58:40 +0200
+Message-ID: <CAMRc=McVzorp4QUgrDCxxLs-TMc08vwnW9-MqnZ+W+TPJiVxRA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: Fix typo "SPDX-FileCopyrightTest"
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Erik Schilling <erik.schilling@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 13, 2023 at 11:53=E2=80=AFAM Henning Schild
-<henning.schild@siemens.com> wrote:
+On Tue, May 23, 2023 at 9:59=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
 >
-> Am Thu, 11 May 2023 14:52:17 +0200
-> schrieb Bartosz Golaszewski <brgl@bgdev.pl>:
+> It should be SPDX-FileCopyrightText instead. Fix it.
 >
-> > On Fri, Apr 28, 2023 at 11:33=E2=80=AFAM Henning Schild
-> > <henning.schild@siemens.com> wrote:
-> > >
-> > > Am Fri, 28 Apr 2023 10:26:18 +0200
-> > > schrieb "Wu, Xing Tong (DI FA CTR IPC CN PRC4)"
-> > > <XingTong.Wu@siemens.com>:
-> > >
-> > > > Hi all
-> > > >
-> > > > The chip id of NCT6116D is 0XD281, you can refer to
-> > > > NCT6116D_Datasheet_V1_0.pdf, Page 291
-> > >
-> > > Thanks Xing Tong. I think we have come to agree that for now
-> > > NCT6116D 0xD281 will not be supported in the kernel. Maybe until
-> > > someone has access to that very chip and a use-case.
-> > >
-> > > But you managed to somehow get these datasheets, which are still not
-> > > publicly available. Maybe you can use your contacts at Nuvoton to
-> > > kindly ask them to publish those specs on their website for future
-> > > reference. Some specs are there, but not all. That would help
-> > > people to add more chips and avoid mistakes like they happened to
-> > > me.
-> > >
-> > > Henning
-> > >
-> >
-> > Henning, do you plan to respin this with the ID corrected?
->
-> Bart, no this one fixes the name of the chip i have at hand, and fixes
-> the size of its last bank. So it is valid on its own and should IMHO be
-> merged as is.
->
-> Since i do not have a NCT6116D (0xD281) i could basically just guess
-> (not too hard) but not test. And i do not really feel like contributing
-> untested code for which there is no known user/tester.
->
-> Henning
->
-> > Bart
->
+> Reported-by: Erik Schilling <erik.schilling@linaro.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
 
-Fair enough, applied.
+Ha! That's interesting. :)
 
-Bart
+Applied, thanks!
+
+Bartosz
