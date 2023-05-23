@@ -2,130 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B54C70D864
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 11:06:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F0F70D87C
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 May 2023 11:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232887AbjEWJGH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 05:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38116 "EHLO
+        id S232553AbjEWJK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 05:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236306AbjEWJFx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 05:05:53 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26761186
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:05:38 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-456d9652c24so3135501e0c.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:05:38 -0700 (PDT)
+        with ESMTP id S235511AbjEWJK4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 05:10:56 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7E7FF
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:10:54 -0700 (PDT)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-96aae59bbd6so1323920966b.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 02:10:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684832738; x=1687424738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FAmc6Od1z4FYb2Y1E1PZTnwP2lmq1vJ4+K6noBNUSsk=;
-        b=MOKMeBlGTtwubtX6e8wFiX9tuSf/4WTSTS8X0ztj+s8JoBH446qQ/pPowVVxVgPfod
-         +xjYkaZLV58Nlw01Xa9vfBYPbDJvR9GBMsjxY/TAnik/akrcJJ1OAc4sDv+E26FLl2cP
-         KWl3muRjN+fKsXOVQh5SMG1s4A+7fpAwzUAe+all4EdwrJMexr4L344KoV/jsWKh2BlX
-         /vhl+5heaMSOqLXLjbx1gSAgemAlbalu8b/rdxE24UThkXFoUQFUDTGrYKKkbP/tI7z8
-         YZxCeJ4Bmf6S761/izr1f+JIl+bMAVLPXlJy79ajm2juV2+8U08iurWegnlHO65zxB04
-         Y79Q==
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1684832993; x=1687424993;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zoEso63g+0SKeGzDkD1maNgqaaGX52WJnGRxyXGPsc4=;
+        b=FYAUUJhu+cevF0Zg6iafvi/RtW1iniieS1LAaBi9MEVhqlz2zQbYCstnjRu/XTE8Tf
+         acH2KyB0IdWo6ugqPyNwIz21e+g2LeWBYqRvA0GOg0lbQzchwHoUQNzoNNAd7QLVWU07
+         au1DvBzxTw9kUXKLd2247RVQOQfQHmX9VNs2E56xdNsSNFbNUy4gSKZMclU1/+3cLBAF
+         VtMJKIjpxd1kltJ468dOvHZ+pnitvI8oMKRF5I8NcdITJS6SqrFi+DQS62zLPqyvBZjj
+         fEjz8degm1IisEbJokZhmTYZ9ScHgDPiSzCLQUMZJFanPMgXE/lf9aSxV3spPupYJzwb
+         59qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684832738; x=1687424738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FAmc6Od1z4FYb2Y1E1PZTnwP2lmq1vJ4+K6noBNUSsk=;
-        b=GuOlOlB1K0XenO8vJERrllRZtfjF0J/FZ8VmldPf3BY6oNA4Why/IlswiGRurD2GKl
-         u+t1T3sff+lr0UDLGRA3mMMPBpt4a+k8w4wN5vOT+bsSIR7hAvlJ9OL/Mx5d+QWyBWlb
-         o32dgN3JUzzTtZb3FK65zwMdeszfDnMPkLB6kB7dUlsBSRPJt8hmYw8vX2ZCzEBEe4/j
-         lMWZS0Z+e281DJYF8ZUxxXFCze4Mz5LZBcg917suGFUFn46Pzpqwm//d5oPrBO1xXnTw
-         lW2XSfboyIQdkpzLn85Got4F7RjDvuKaI5Yrbu+4Jyx05oHzZlMbjNaNm7nqAMMtfBOi
-         lpHw==
-X-Gm-Message-State: AC+VfDwP2wIB/hKSGRAnFdGeJNFZvrN/R00ElO7mhBMHkCC6VxnZn9bZ
-        09+XjUJ7nJYlDUa19TjZbX0y73Xr8LvRIMydYsXqeD4H5Ki+QrJA
-X-Google-Smtp-Source: ACHHUZ4SdiZwNxOw8AJk8H/5juqGQDSjQIr5AVgthUshO6mxTSwO2RbOL29i7/vz/XpWDB7giSZ0rDhhJrDaiNfZq80=
-X-Received: by 2002:a1f:6006:0:b0:440:4946:fac with SMTP id
- u6-20020a1f6006000000b0044049460facmr4538419vkb.4.1684832737838; Tue, 23 May
- 2023 02:05:37 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684832993; x=1687424993;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zoEso63g+0SKeGzDkD1maNgqaaGX52WJnGRxyXGPsc4=;
+        b=K//NjtKCNdAFgo4XqMm6Bmkd5YKYvf6Zzp3WVaPYvQ9xoRlKAyN7T5PFXmRz+adMwY
+         nuE1QMK1A1p6jHfU4GYMEtZNMR83iSweooYbaxH3oCO96KE/zP8rywUQW1TWzJb5ZT2M
+         +XuYzySPK9xODib1t3hoKcTmJwneWRzvLy75GiJX4N0NuNiFft7t2+cn0aWbgYIG9eNo
+         UguQFps0QDYjpUqO0ICVajDEbqF+CaVZOtXqJq1gkmP4jLdEeC3cVUdMakBObXv9kvB2
+         kiumpBMPOy3gBvWH0IM+YPOyVcNC7cztlrp3UJt0G8wpA/MuNOdzMSlxS4gKCPw4/s7T
+         CZhQ==
+X-Gm-Message-State: AC+VfDwAvxU0lgXigxvedFMfeRcMayxKHuvVXC04d8V8imGCYN9n52xV
+        UMFhVeyUZOEEQB3nzfcuegVFCQ==
+X-Google-Smtp-Source: ACHHUZ5zYnuYGtxhCBEc6UuB0mA8LCTKfqijjVsWcN9D+xkiJ0rEyMKWdCr9Yd6nvdeUbwg/r/Dqxw==
+X-Received: by 2002:a17:907:60cc:b0:96a:580e:bf0f with SMTP id hv12-20020a17090760cc00b0096a580ebf0fmr15054349ejc.14.1684832993139;
+        Tue, 23 May 2023 02:09:53 -0700 (PDT)
+Received: from [10.2.5.18] (abordeaux-655-1-129-86.w90-5.abo.wanadoo.fr. [90.5.10.86])
+        by smtp.gmail.com with ESMTPSA id p26-20020a17090664da00b0096f7105b3a6sm4213801ejn.189.2023.05.23.02.09.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 May 2023 02:09:52 -0700 (PDT)
+Message-ID: <0cf870f1-8cdb-df74-79d6-a4004cdfcc2f@baylibre.com>
+Date:   Tue, 23 May 2023 11:09:51 +0200
 MIME-Version: 1.0
-References: <20230523080334.38971-1-warthog618@gmail.com>
-In-Reply-To: <20230523080334.38971-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 11:05:26 +0200
-Message-ID: <CAMRc=MdLTxePpR2QHM1HZme-pUq2=-tqAKahhk2e0mUzE0DG4Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2] README: provide more info in Contributing
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+References: <20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v2-1-60feb64d649a@baylibre.com>
+ <CAMRc=Md-CzrG3QPtnh0OxYaHTAYZ2aUfMKhkAOeRm2Zn30qE0A@mail.gmail.com>
+ <ZGiWdQcR6Zq6Aw65@surfacebook>
+ <9fa1a6e8-368a-3e22-aa84-8cad09f72a32@baylibre.com>
+ <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
+From:   jerome Neanne <jneanne@baylibre.com>
+In-Reply-To: <CAHp75Vf0hW6sMXeGSVXRVoW1mxFufWmbJNzt7_10xPj_k5SNkA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 23, 2023 at 10:03=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
- wrote:
->
-> Add more detail to Contributing to make it easier for new users to
-> contribute.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
-> Changes v1 -> v2:
->  - add more info on the mailing list and archive.
->
->  README | 24 +++++++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
->
-> diff --git a/README b/README
-> index b71739e..85b6300 100644
-> --- a/README
-> +++ b/README
-> @@ -275,8 +275,26 @@ were selected and help2man is available in the syste=
-m.
->  CONTRIBUTING
->  ------------
->
-> -Contributions are welcome - please send patches and bug reports to
-> -linux-gpio@vger.kernel.org (add the [libgpiod] prefix to the e-mail subj=
-ect
-> -line) and stick to the linux kernel coding style when submitting new cod=
-e.
-> +Contributions are welcome - please send questions, patches and bug repor=
-ts
-> +to the linux-gpio mailing list[2] by e-mailing to linux-gpio@vger.kernel=
-.org
-> +(add the [libgpiod] prefix to the e-mail subject line).
-> +Note that the mailing list quietly drops HTML formatted e-mail, so be su=
-re
-> +to send plain text[3].
-> +
-> +Code submissions should stick to the linux kernel coding style[4] and
-> +follow the kernel patch submission process[5] as applied to the libgpiod
-> +source tree.
-> +
-> +The mailing list archive[6] contains all the historical mails to the lis=
-t,
-> +and is the place to check to ensure your e-mail has been received.
-> +Search for "libgpiod" to filter the list down to relevant messages.
-> +Those also provide examples of the expected formatting.
-> +Allow some time for your e-mail to propagate to the list before retrying=
-,
-> +particularly if there are no e-mails in the list more recent than yours.
->
->  [1] https://github.com/bats-core/bats-core
-> +[2] http://vger.kernel.org/vger-lists.html#linux-gpio
-> +[3] https://docs.kernel.org/process/email-clients.html
-> +[4] https://docs.kernel.org/process/coding-style.html
-> +[5] https://docs.kernel.org/process/submitting-patches.html
-> +[6] https://lore.kernel.org/linux-gpio/
-> --
-> 2.40.1
->
 
-Applied, thanks!
 
-Bart
+On 22/05/2023 13:18, Andy Shevchenko wrote:
+> On Mon, May 22, 2023 at 10:47 AM jerome Neanne <jneanne@baylibre.com> wrote:
+>> On 20/05/2023 11:44, andy.shevchenko@gmail.com wrote:
+>>> Mon, May 15, 2023 at 05:36:46PM +0200, Bartosz Golaszewski kirjoitti:
+>>>> On Thu, May 11, 2023 at 4:09 PM Jerome Neanne <jneanne@baylibre.com> wrote:
+> 
+> ...
+> 
+>>>>> +       gpio->gpio_chip = tps65219_gpio_chip;
+>>>>
+>>>> Aren't you getting any warnings here about dropping the 'const' from
+>>>> the global structure?
+>>>
+>>> But this is a copy of the contents and not the simple pointer.
+> 
+> I commented on Bart's question.
+> 
+>> In many other places where this is done, the struct is declared like:
+>>
+>> static const struct gpio_chip template_chip = {
+>>
+>> After internal review, I changed this to:
+>>
+>> static const struct gpio_chip tps65219_gpio_chip = {
+>>
+>> This is because I didn't want to have this "template" that sounds to me
+>> like "dummy". Maybe I misunderstood and this "template" was used on
+>> purpose because this const struct is just copied once to initialize
+>> tps65219_gpio->gpio_chip during probe.
+>>
+>> Introducing tps65219_gpio_chip name is maybe confusing with
+>> tps65219_gpio struct.
+>>
+>> I think the const should not be a problem here but the naming I used
+>> might be misleading. If you have a suggestion of what is a good practice
+>> to make this piece of code clearer. I'll follow your suggestion (use
+>> template? more_explicit name like ???).
+> 
+> It's up to Bart.
+> 
+Bart, should I keep the code like this or do you suggest a name change 
+so that's it's more appealing?
