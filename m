@@ -2,181 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 930B870E9D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 01:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B03E170EA65
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 02:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233169AbjEWX6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 May 2023 19:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
+        id S231731AbjEXAlp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 May 2023 20:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbjEWX6o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 19:58:44 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0440E5;
-        Tue, 23 May 2023 16:58:42 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b33c72686so176069a12.1;
-        Tue, 23 May 2023 16:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684886322; x=1687478322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7kGogYwbeBpGrkLOt20ejXjOaJrdpOttOMird93sj9w=;
-        b=NdEOGO3k6l7wBWhJ4+HL/Sv/zDh7pgICXiFYQqGANln9esGUDlw4naqTPMyMC3yYT9
-         aTvlCOxmhZ6EWVtnrSsRQ0k2fM7faVnHge/PmuTNLpvWI6SXsXUIrFDDv5Uk0DoIR0lX
-         pi4GBYqo5lRvKWKrUbBbAEK/VGJl5gRYnrM/8KnjgRLyxvLGmY8HMavDJfP/HpP0N8Tq
-         8NdB0hdSFICvUwWu84bjokTr2uG14kUM1OGGLEWj497a13Rf2TIbBzbCqyHP0PjhXT2U
-         htSo7OAHIOKdD9DHO3m1nczKYP4iVqwI2vIo1Y0gbAM4WoYLOltanTDbvlvHg7jpnGE4
-         oHow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684886322; x=1687478322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7kGogYwbeBpGrkLOt20ejXjOaJrdpOttOMird93sj9w=;
-        b=SqGWriyOeYuyzCB7mMmOoFSjJg2gUG+raEG7gt1yFvobxe3co6kkavdVbcjiO8JIvF
-         INmkM/5RZWTqtzK4bPMTOmdqGduQohphvs+cZ+mIk13UdDK44S+sVp1BCRnPo0POn0rj
-         +Hc+nm8Xl9ukq9DpJWB48fIl+o46ujT5hVY5ElBEH70zKvZd/Ai+ZPcchJwbbc5dfSQt
-         6Zkp1zvnlO/7HF+KoAeKS3RkBjClpDZF5P6nQeSz/aeLJF/mWec6eCOtjFGQCgOExZtq
-         O9bOngR+e0rPTtE5YhA/4/SrOVnQCcqxiWMtBBAmy5FsVwOjiRYYsIMc7g9GoY23vAwX
-         j6tQ==
-X-Gm-Message-State: AC+VfDyWtZmJ3AfAtFz0dE98Wh8rJzXYLTY3WGj7oE4waTDZ/egUgQ5B
-        kVMt5G7zxdFv2xr/ewjBnXwMPeicVSk=
-X-Google-Smtp-Source: ACHHUZ4HVcUZT28fltGJKpZZxxCYxUoPVXGHh/AwKO2FS0XZ/wJJn7C6vCcTiZcyvZdxelWxGwY04g==
-X-Received: by 2002:a17:90b:3146:b0:255:8063:c8dd with SMTP id ip6-20020a17090b314600b002558063c8ddmr5932499pjb.18.1684886322009;
-        Tue, 23 May 2023 16:58:42 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id l11-20020a17090a598b00b002532ddc3a00sm118416pji.15.2023.05.23.16.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 16:58:41 -0700 (PDT)
-Date:   Wed, 24 May 2023 07:58:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: cdev: fix a crash on line-request release
-Message-ID: <ZG1TLBsOy4mZQlW3@sol>
-References: <20230523155101.196853-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230523155101.196853-1-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229777AbjEXAlo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 May 2023 20:41:44 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A294B5
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 17:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684888900; x=1716424900;
+  h=date:from:to:cc:subject:message-id;
+  bh=CVfpe6NkO80AXx6f7c2PXdrqhlbjTJ6iJRJtXlMRq/8=;
+  b=EjKmgK37aQwjZqo6CEddf/dk0eD0Kki/k732rpXWaxAudV6pFo1RHBBB
+   Hdbp6NDCKy/BV1JeLu/kwjASO8kgAitOurA5hPLl2QUN7A2AfqMdp4O5A
+   TqwUazPOmtxE5dbFNaZn41M9JVlCLVVlAj2NLEwzCbULMG7MASjQrUoWf
+   wTYMArTsOFXYkMjP69fxOvCTRD0/4vDK+YgXn01dIC+gQNb/HPXjaTexI
+   8J2yBe3nMH0QIBfSz9j/GrYg2E6ykK6HraM9U3LbWV/DEsjcexY0TaztU
+   3Ko2k/36IovFx/ONxm7q2XwuGawtC5xulbBQnVVMiNIgx48hizZVbGkJI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="333772304"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="333772304"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 17:41:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="707245601"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="707245601"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 23 May 2023 17:41:39 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q1cZO-000EEf-1X;
+        Wed, 24 May 2023 00:41:38 +0000
+Date:   Wed, 24 May 2023 08:40:50 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 6d255623d7982df54a8b1bd4eea8a71b21de43fd
+Message-ID: <20230524004050.UeEZj%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 23, 2023 at 05:51:01PM +0200, Bartosz Golaszewski wrote:
-> When a GPIO device is forcefully unregistered, we are left with an
-> inactive object. If user-space kept an open file descriptor to a line
-> request associated with such a structure, upon closing it, we'll see the
-> kernel crash due to freeing unexistent GPIO descriptors.
-> 
+tree/branch: INFO setup_repo_specs: /db/releases/20230524001904/lkp-src/repo/*/brgl
+https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 6d255623d7982df54a8b1bd4eea8a71b21de43fd  gpio: brcmstb: Use devm_platform_get_and_ioremap_resource()
 
-nonexistent
+elapsed time: 729m
 
-But I'm not sure that works - gpiod_free() is null aware, so strictly
-speaking "freeing nonexistent GPIO descriptors" isn't the problem.
-You mean orphaned GPIO descriptors?
+configs tested: 159
+configs skipped: 6
 
-> Fix it by checking if chip is still alive before calling gpiod_free() in
-> release callbacks for both v2 and v1 ABI.
-> 
-> Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The problem is also in v1, so do we want to consider backporting a fix
-for that too?
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r002-20230522   gcc  
+alpha        buildonly-randconfig-r004-20230521   gcc  
+alpha        buildonly-randconfig-r006-20230521   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r004-20230522   gcc  
+alpha                randconfig-r013-20230521   gcc  
+alpha                randconfig-r013-20230523   gcc  
+alpha                randconfig-r014-20230523   gcc  
+alpha                randconfig-r036-20230522   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r015-20230521   gcc  
+arc                  randconfig-r024-20230522   gcc  
+arc                  randconfig-r043-20230521   gcc  
+arc                  randconfig-r043-20230522   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r034-20230522   clang
+arm                  randconfig-r046-20230521   clang
+arm                  randconfig-r046-20230522   gcc  
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r005-20230522   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r004-20230521   clang
+arm64                randconfig-r011-20230523   gcc  
+arm64                randconfig-r021-20230521   gcc  
+arm64                randconfig-r023-20230521   gcc  
+arm64                randconfig-r023-20230522   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r002-20230521   gcc  
+csky                 randconfig-r012-20230521   gcc  
+csky                 randconfig-r024-20230521   gcc  
+csky                 randconfig-r025-20230521   gcc  
+hexagon      buildonly-randconfig-r002-20230521   clang
+hexagon              randconfig-r005-20230521   clang
+hexagon              randconfig-r014-20230522   clang
+hexagon              randconfig-r041-20230521   clang
+hexagon              randconfig-r041-20230522   clang
+hexagon              randconfig-r045-20230521   clang
+hexagon              randconfig-r045-20230522   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a011-20230522   clang
+i386                 randconfig-a012-20230522   clang
+i386                 randconfig-a013-20230522   clang
+i386                 randconfig-a014-20230522   clang
+i386                 randconfig-a015-20230522   clang
+i386                 randconfig-a016-20230522   clang
+i386                 randconfig-r011-20230522   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r003-20230522   gcc  
+ia64                 randconfig-r015-20230523   gcc  
+ia64                 randconfig-r016-20230521   gcc  
+ia64                 randconfig-r031-20230521   gcc  
+ia64                 randconfig-r035-20230522   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r012-20230522   gcc  
+loongarch            randconfig-r012-20230523   gcc  
+loongarch            randconfig-r026-20230521   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r022-20230522   gcc  
+microblaze   buildonly-randconfig-r001-20230522   gcc  
+microblaze           randconfig-r006-20230522   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips         buildonly-randconfig-r004-20230522   clang
+mips                 randconfig-r016-20230523   clang
+mips                 randconfig-r033-20230522   clang
+nios2        buildonly-randconfig-r003-20230522   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r003-20230521   gcc  
+nios2                randconfig-r006-20230521   gcc  
+openrisc             randconfig-r015-20230522   gcc  
+openrisc             randconfig-r021-20230522   gcc  
+openrisc             randconfig-r036-20230521   gcc  
+parisc       buildonly-randconfig-r001-20230521   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r032-20230521   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r013-20230522   clang
+powerpc              randconfig-r034-20230521   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r001-20230521   clang
+riscv                randconfig-r002-20230522   gcc  
+riscv                randconfig-r025-20230522   clang
+riscv                randconfig-r031-20230522   gcc  
+riscv                randconfig-r042-20230521   gcc  
+riscv                randconfig-r042-20230522   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230521   gcc  
+s390                 randconfig-r044-20230522   clang
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r005-20230521   gcc  
+sh                   randconfig-r035-20230521   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r022-20230521   gcc  
+sparc64      buildonly-randconfig-r006-20230522   gcc  
+sparc64              randconfig-r005-20230522   gcc  
+sparc64              randconfig-r026-20230522   gcc  
+sparc64              randconfig-r032-20230522   gcc  
+sparc64              randconfig-r033-20230521   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230522   gcc  
+x86_64               randconfig-a002-20230522   gcc  
+x86_64               randconfig-a003-20230522   gcc  
+x86_64               randconfig-a004-20230522   gcc  
+x86_64               randconfig-a005-20230522   gcc  
+x86_64               randconfig-a006-20230522   gcc  
+x86_64               randconfig-a011-20230522   clang
+x86_64               randconfig-a012-20230522   clang
+x86_64               randconfig-a013-20230522   clang
+x86_64               randconfig-a014-20230522   clang
+x86_64               randconfig-a015-20230522   clang
+x86_64               randconfig-a016-20230522   clang
+x86_64               randconfig-x051-20230522   clang
+x86_64               randconfig-x052-20230522   clang
+x86_64               randconfig-x053-20230522   clang
+x86_64               randconfig-x054-20230522   clang
+x86_64               randconfig-x055-20230522   clang
+x86_64               randconfig-x056-20230522   clang
+x86_64               randconfig-x061-20230522   clang
+x86_64               randconfig-x062-20230522   clang
+x86_64               randconfig-x063-20230522   clang
+x86_64               randconfig-x064-20230522   clang
+x86_64               randconfig-x065-20230522   clang
+x86_64               randconfig-x066-20230522   clang
+x86_64               randconfig-x071-20230522   gcc  
+x86_64               randconfig-x072-20230522   gcc  
+x86_64               randconfig-x073-20230522   gcc  
+x86_64               randconfig-x074-20230522   gcc  
+x86_64               randconfig-x075-20230522   gcc  
+x86_64               randconfig-x076-20230522   gcc  
+x86_64               randconfig-x081-20230522   gcc  
+x86_64               randconfig-x082-20230522   gcc  
+x86_64               randconfig-x083-20230522   gcc  
+x86_64               randconfig-x084-20230522   gcc  
+x86_64               randconfig-x085-20230522   gcc  
+x86_64               randconfig-x086-20230522   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r003-20230521   gcc  
 
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 0a33971c964c..6830f668a1b0 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -315,13 +315,19 @@ static long linehandle_ioctl_compat(struct file *file, unsigned int cmd,
->  
->  static void linehandle_free(struct linehandle_state *lh)
->  {
-> +	struct gpio_device *gdev = lh->gdev;
-
-It isn't clear to me what this is for.
-The flow below now calls gpiod_free() less often, so not that.
-It is there for the normal case??
-
->  	int i;
->  
-> -	for (i = 0; i < lh->num_descs; i++)
-> -		if (lh->descs[i])
-> -			gpiod_free(lh->descs[i]);
-> +	for (i = 0; i < lh->num_descs; i++) {
-> +		if (lh->descs[i]) {
-> +			down_write(&gdev->sem);
-> +			if (gdev->chip)
-> +				gpiod_free(lh->descs[i]);
-> +			up_write(&gdev->sem);
-> +		}
-> +	}
->  	kfree(lh->label);
-> -	gpio_device_put(lh->gdev);
-> +	gpio_device_put(gdev);
->  	kfree(lh);
->  }
->  
-
-lineevent_free() needs the fix too?
-
-> @@ -1565,17 +1571,21 @@ static ssize_t linereq_read(struct file *file, char __user *buf,
->  
->  static void linereq_free(struct linereq *lr)
->  {
-> +	struct gpio_device *gdev = lr->gdev;
->  	unsigned int i;
->  
->  	for (i = 0; i < lr->num_lines; i++) {
->  		if (lr->lines[i].desc) {
->  			edge_detector_stop(&lr->lines[i]);
-> -			gpiod_free(lr->lines[i].desc);
-> +			down_write(&gdev->sem);
-> +			if (gdev->chip)
-> +				gpiod_free(lr->lines[i].desc);
-> +			up_write(&gdev->sem);
->  		}
->  	}
->  	kfifo_free(&lr->events);
->  	kfree(lr->label);
-> -	gpio_device_put(lr->gdev);
-> +	gpio_device_put(gdev);
->  	kfree(lr);
->  }
->  
-
-TBH the fact you have to mess with sems here indicates to me the problem
-lies in gpiolib itself.  As a gpiolib client, cdev should just be able to
-release the desc back to gpiolib and have it cleanup the mess.
-
-Not that I ever got my head around the whole gpiolib object lifecycle here
-- for v2 I just followed what v1 did.
-
-Also, gpiolib still reports an error when forceably removing chips that
-have open requests:
-
-    dev_crit(&gdev->dev,
-			 "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED\n");
-
-Any other gpiolib clients out there that this might impact?
-Else why report that crit error if you expect it is dealt with?
-
-So while this may fix the crash, I can't say I'm happy with it.
-
-Cheers,
-Kent.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
