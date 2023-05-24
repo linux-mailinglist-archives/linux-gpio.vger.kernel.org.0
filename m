@@ -2,70 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B4C870EC95
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 06:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 518F070ECCE
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 07:01:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231276AbjEXEhI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 00:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
+        id S239088AbjEXFBf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 01:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238495AbjEXEhH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 00:37:07 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4269118B
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 21:37:02 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-53404873a19so356936a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 21:37:02 -0700 (PDT)
+        with ESMTP id S229540AbjEXFBe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 01:01:34 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146A013E
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 22:01:31 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-3f6127a476bso3124855e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 May 2023 22:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684903022; x=1687495022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hWZ/LxIXvt/onveWnOMS0K/IVATDg09v2NV1/6mnYdQ=;
-        b=e2VYrLMPT5jEiPEOEQaCxpjkZ1ZQy08gdbBaNuPUpup7AK84snvKg/QeNLgAD5wr1P
-         GtAGyQFrLkofspfTzIQnZp4q7nuEoMR3tbrcdFIoCS1MvuzMF5LP3MvjIVX3Jgyf62Aa
-         lxcvSzfxWX0US59Ncb6blGJan/lvQBdO3XnVX62aN3wNfUGE8BdUjbrWxKxqv305Gn0U
-         Lnx6EF4mPxLS001CygWUiOYTQPqGWfB0YJDUImVQ45SVU9Jo1vH27YmTYn8J0S06uz+M
-         fsyKAL5RrPR/vkYYryvdNpNFKA2r+tTwBWMTDIvHxnks4KtVMHczw9FOegZtyxgYVIaF
-         qGSQ==
+        d=linaro.org; s=google; t=1684904489; x=1687496489;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=efBp8CVo6Amn5nNkyj2qNsRPsoXYkVk1hMpizP8xT7Y=;
+        b=yE1muD8cBG1JDfPJCHzFNl1df/LLcmHdJPqrG4Zl8XxefqqUtlWAwGMyWdfV7P3SHS
+         0bN83TWm+jWk+3DIbrabHaYyyhFHXHZMv3KNeRN8crxWrOJrmP+s8+swGdZ3ik/gzFub
+         gv/9TzqE9JW/i1buyDZPPkv+z7ER7/4oULefWjPU2ROlejVP+fK/k8sqATQNICh/D4w0
+         9Qv1CzMgoAePYGpF47h/Qw21QrjD8fhv7aaDw4tAXtmKJpyxJx8ml6ZgOKpGevC9EY+v
+         16PUurS05qOB/WoF6yJSfLaGUpT6ljzWAqsBJQMyGqbsa4AggbCVwaWudStNejMx8w6A
+         n97A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684903022; x=1687495022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hWZ/LxIXvt/onveWnOMS0K/IVATDg09v2NV1/6mnYdQ=;
-        b=UVbAtSNzpSv6Uyl7UrhcTj5HfraKU0Cq5/1DrnUDVt5YhB2PSQsKh8b9ogd2ZbrL7N
-         6Kd6Ofq6+HMc9U0wxxZIGiWCMN/gwNWCDa6lRpa+FzmFnIRbEeNN+zBvcp68xlXD1CKA
-         SUioyw+sUHFWwsiWhEiImOPGNIDWfgjCOx+bfFJFjZ83s8N1pfZZklssodkoqceLY7SC
-         kfTvZh1XolHE0X0kVVmORGVENL9VSxsr4RSXFgkcIxatLK+AVLeyf+FcKClydBahNYyI
-         0HtYEda2FllZxXyQ0NBTi9xmxDGLYKCLDR9kP88nwO132urt1yIJkLSJRMjGTIoEQSm2
-         KVrw==
-X-Gm-Message-State: AC+VfDyuMXco7tasYRoUivZrFvu4ila51GP/Yzat48oSfz04Q8LDxoYk
-        cd68R7EH51l54QgZRorNTpufAw==
-X-Google-Smtp-Source: ACHHUZ4oIPGFh6cmCKQc0jAYyRSn31lgWkwUNbjr0CpnsZoyE0jvW80qLlj5fpBsu/HprQDlH6x1XA==
-X-Received: by 2002:a05:6a20:c18c:b0:10c:ef18:746e with SMTP id bg12-20020a056a20c18c00b0010cef18746emr1546493pzb.58.1684903021746;
-        Tue, 23 May 2023 21:37:01 -0700 (PDT)
-Received: from localhost ([122.172.87.195])
-        by smtp.gmail.com with ESMTPSA id 25-20020a17090a199900b0024e4f169931sm446070pji.2.2023.05.23.21.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 21:37:01 -0700 (PDT)
-Date:   Wed, 24 May 2023 10:06:59 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: Re: [PATCH libgpiod RFC 2/3] bindings: rust: remove unneeded cc
- dependency
-Message-ID: <20230524043659.mbff7dpkinpxhp7t@vireshk-i7>
-References: <20230522-crates-io-v1-0-42eeee775eb6@linaro.org>
- <20230522-crates-io-v1-2-42eeee775eb6@linaro.org>
+        d=1e100.net; s=20221208; t=1684904489; x=1687496489;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=efBp8CVo6Amn5nNkyj2qNsRPsoXYkVk1hMpizP8xT7Y=;
+        b=MhTIKElwoFM8WIi8mOSGOZLmrXHeK90UlDtkX6WE+2beTbXO+x04tn64notrVzMjeX
+         9IlHJWWZuYrJjKTt9MSEOWOg4IXft0cisky4T9JpTMd8ZEIkOlgOhva8eKqjc2mkzoqs
+         3pEX79mIt4ce3webJZ+TVlf36sKpJ5HMpDimbo3k6C5mYxSdSK35sX/Prqfi85lEIoA7
+         qF8GsyCnB1vS9grzCCa1Gdn2vo0UOX0JDhtbeB0z91UDO5hMjDXc0o4LcGXWxVRMmZKT
+         ulfUeo1iztBhdAdyismXTe3PkCMRaKtX+QihhRgWozlvw3stu7Yv6iW7SHOcvYT6udvh
+         QJRw==
+X-Gm-Message-State: AC+VfDzLAecJekT8PL+QMw0/nYX4KsUccEMvt9veEmP01SAzBz0Gd168
+        /tNdLueNIF3xhB3SoR19Z1q75l4XgtSUIZaXsD0=
+X-Google-Smtp-Source: ACHHUZ6oTbo+0Ru+tH6WujmB0MIkdeKqLBnhLAq34Ojbe0/ZG3zSi9deu/+bKpDaDxkAkHdcGfuYog==
+X-Received: by 2002:a7b:cb0d:0:b0:3f6:a16:4010 with SMTP id u13-20020a7bcb0d000000b003f60a164010mr3419021wmj.1.1684904489455;
+        Tue, 23 May 2023 22:01:29 -0700 (PDT)
+Received: from [192.168.1.149] (i5C7404E8.versanet.de. [92.116.4.232])
+        by smtp.gmail.com with ESMTPSA id f8-20020a7bcd08000000b003f17848673fsm893847wmj.27.2023.05.23.22.01.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 May 2023 22:01:29 -0700 (PDT)
+Message-ID: <880592b3-a83d-00d5-e980-fc4758797cf1@linaro.org>
+Date:   Wed, 24 May 2023 07:01:28 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230522-crates-io-v1-2-42eeee775eb6@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH libgpiod RFC 3/3] bindings: rust: build against pkg-config
+ info
+Content-Language: en-US
+To:     Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>
+References: <20230522-crates-io-v1-0-42eeee775eb6@linaro.org>
+ <20230522-crates-io-v1-3-42eeee775eb6@linaro.org>
+From:   Erik Schilling <erik.schilling@linaro.org>
+In-Reply-To: <20230522-crates-io-v1-3-42eeee775eb6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -74,28 +78,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23-05-23, 13:25, Erik Schilling wrote:
-> It was never used in upstream. The use was dropped during review [1], but
-> this dependency did not get removed.
+
+
+On 5/23/23 13:25, Erik Schilling wrote:
+> This change replaces building against "bundled" headers by always
+> building agains system headers (while following standard conventions to
+> allow users to specify the version to build against).
 > 
-> [1] https://lore.kernel.org/r/cover.1659442066.git.viresh.kumar@linaro.org/
+> Reasoning:
+> 
+> Previously, the code generated the bindings based on the headers, but
+> then links against `-lgpiod` without further specifying where that is
+> coming from.
+> 
+> This results in some challenges and problems:
+> 
+> 1. Packaging a Rust crate with `cargo package` requires the folder
+>     containing the Cargo.toml to be self-contained. Essentially, a tar
+>     ball with all the sources of that folder is created. Building against
+>     that tar ball fails, since the headers files passed to bindgen are
+>     a relative path pointing outside of that folder.
+> 
+> 2. While, for example, the cxx bindings are built AND linked against
+>     the build results, the packaging situation for C++ libraries is a
+>     bit different compared to Rust libs. The C++ libs will likely get
+>     built as part of the larger libgpiod build and published together
+>     with the C variant.
+> 
+>     In Rust, the vast majority of people will want to build the glue-code
+>     during the compilation of the applications that consume this lib.
+> 
+>     This may lead to inconsistencies between the bundled headers and the
+>     libraries shipped by the user's distro. While ABI should hopefully
+>     be forward-compatible within the same MAJOR number of the .so,
+>     using too new headers will likely quickly lead to mismatches with
+>     symbols defined in the lib.
+> 
+> 3. Trying to build the core lib as part of the Rust build quickly runs
+>     into similar packaging issues as the existing solution. The source
+>     code of the C lib would need to become part of some package
+>     (often people opt to pull it in as a submodule under their -sys crate
+>     or even create a separate -src package [1]). This clearly does not
+>     work well with the current setup...
+> 
+> Since building against system libs is probably? what 90%+ of the people
+> want, this change hopefully addresses the problems above. The
+> system-deps dependency honors pkg-config conventions, but also allows
+> users flexible ways to override the defaults [2]. Overall, this keeps
+> things simple while still allowing maximum flexibility.
+> 
+> Since the pkg-config interface is just telling us which include paths to
+> use, we switch back to a wrapper.h file that includes the real gpiod.h.
+> 
+> Once Rust bindings require a lower version floor, the version metadata
+> can also be updated to help telling users that their system library is
+> too old.
+> 
+> Drawback:
+> 
+> People hacking on the Rust bindings, need to either have a reasonably
+> up-to-date system lib, previously install the lib to some folder and
+> specify PKG_CONFIG_PATH or set the relevant SYSTEM_DEPS_* environment
+> variables. Instructions for developers are documented in the README.
+> 
+> [1] https://github.com/alexcrichton/openssl-src-rs
+> [2] https://docs.rs/system-deps/latest/system_deps/#overriding-build-flags
 > 
 > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 > ---
->  bindings/rust/libgpiod-sys/Cargo.toml | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
-> index 3bc3525..cb8dc70 100644
-> --- a/bindings/rust/libgpiod-sys/Cargo.toml
-> +++ b/bindings/rust/libgpiod-sys/Cargo.toml
-> @@ -18,4 +18,3 @@ edition = "2021"
->  
->  [build-dependencies]
->  bindgen = "0.63"
-> -cc = "1.0.46"
+>   README                                | 13 +++++++++++-
+>   bindings/rust/libgpiod-sys/Cargo.toml |  4 ++++
+>   bindings/rust/libgpiod-sys/build.rs   | 40 +++++++++++++++++++++++------------
+>   3 files changed, 42 insertions(+), 15 deletions(-)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Viresh told me on IRC that I forgot the wrapper.h:
 
--- 
-viresh
+diff --git a/bindings/rust/libgpiod-sys/wrapper.h 
+b/bindings/rust/libgpiod-sys/wrapper.h
+new file mode 100644
+index 0000000..8a8bd41
+--- /dev/null
++++ b/bindings/rust/libgpiod-sys/wrapper.h
+@@ -0,0 +1 @@
++#include <gpiod.h>
