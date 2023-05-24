@@ -2,233 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E457101C5
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 01:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA347101D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 01:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbjEXXl2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 19:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57740 "EHLO
+        id S229792AbjEXXxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 19:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbjEXXl2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 19:41:28 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D583512E
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 16:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684971686; x=1716507686;
-  h=date:from:to:cc:subject:message-id;
-  bh=h8uENTaBLJ3SB77Zn4cOi9FNILawwlYJWo1hO597dOU=;
-  b=GYkLPQdHvJSVwrY4CWpzbyvBStl7lvLYD6RoJTMnhuX8atvCJw1KY+uT
-   UpETmIpRhwcXDZ2wLHoLVyWOkaOcaZzuDZqCUl/PYZ0CRRqJY3L6dS0eB
-   uT8GfhcJ8GgN9udq2C75eBoXyPZ9Y9cACulGQMDC6BlOL73NxvkiEhQNY
-   IX96NYwaNW2zt4qQkeiXMnuM+xpzu89mfbj4IibsC7T6HYhWYcxY2xckX
-   VNeGlrxzIQPWWP4WZlUpbinNHCfgjbDkK04C6LAASroSxtINP+gsKOG4r
-   wPai1S0Zkcxcop8djg+l3xEqJ8fp67PUi751vR89yuBCQ/lLqglfb2Bzl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="333345354"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="333345354"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 16:41:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="654987356"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="654987356"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 May 2023 16:41:25 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q1y6e-000FGD-2M;
-        Wed, 24 May 2023 23:41:24 +0000
-Date:   Thu, 25 May 2023 07:40:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 35216718c9ac2aef934ea9cd229572d4996807b2
-Message-ID: <20230524234046.gNSe4%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229527AbjEXXxR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 19:53:17 -0400
+X-Greylist: delayed 95745 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 24 May 2023 16:53:14 PDT
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8066132
+        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 16:53:14 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4161E2C02E0;
+        Thu, 25 May 2023 11:53:13 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1684972393;
+        bh=aZBFDPi6Djr1Z9fNprDllT8CaCwGkXUfyrN/ij0abtg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=X9h4vst3O31GQP4+gnv/vWTL+PUiulzZxWzXWQZckNMLagdTlrjekDkoB0WDk5tQd
+         LBV8pJKzspaXnB2Rc99717UeteMvbEAR2aQqKvjD0VfMIEh7ESSb1QGwRy2qZNcmvh
+         KxxZd4uGboFEQq9/B2dV0JilUE6d0KmzQ4HMA4R/qyOCWh+WH8VHUZSbakGAn9st03
+         hWML25L6QfDJwkyjOEdHlrO6YAHMWfjT0JeC9UvxmHA4DqR2gFTv0Z2Wb7eqvJouDd
+         jhdw41ef0WdZZsYElfbLm7c6SDER1telMy8CI7MgXnoOzsHi/3xO7pfW3kSaZQaNe2
+         4jU+xHEZOGPXw==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B646ea3690001>; Thu, 25 May 2023 11:53:13 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.26; Thu, 25 May 2023 11:53:13 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.48; Thu, 25 May 2023 11:53:12 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.026; Thu, 25 May 2023 11:53:12 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Kent Gibson <warthog618@gmail.com>
+CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib: Avoid
+ side effects in gpio_is_visible())
+Thread-Topic: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
+ Avoid side effects in gpio_is_visible())
+Thread-Index: AQHZjprmqsS+N7nfWEWkADlDhs1wpA==
+Date:   Wed, 24 May 2023 23:53:12 +0000
+Message-ID: <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+References: <ZGzsD_HMbMGhGwcr@surfacebook>
+ <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
+ <ZG2jgwjK+CBmOk3G@sol>
+In-Reply-To: <ZG2jgwjK+CBmOk3G@sol>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.33.22.30]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7DEA3330C4909344AE981403CE311017@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=pGLkceISAAAA:8 a=go7DDdlL3tKfwstDA4MA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230524230549/lkp-src/repo/*/linusw-pinctrl
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 35216718c9ac2aef934ea9cd229572d4996807b2  pinctrl: at91: fix a couple NULL vs IS_ERR() checks
-
-elapsed time: 833m
-
-configs tested: 156
-configs skipped: 8
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230524   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r001-20230524   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230524   clang
-arm                  randconfig-r005-20230524   clang
-arm                  randconfig-r015-20230524   gcc  
-arm                  randconfig-r032-20230524   clang
-arm                  randconfig-r046-20230524   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r004-20230524   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r021-20230524   gcc  
-hexagon              randconfig-r022-20230524   clang
-hexagon              randconfig-r034-20230524   clang
-hexagon              randconfig-r041-20230524   clang
-hexagon              randconfig-r045-20230524   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i051-20230524   gcc  
-i386                 randconfig-i052-20230524   gcc  
-i386                 randconfig-i053-20230524   gcc  
-i386                 randconfig-i054-20230524   gcc  
-i386                 randconfig-i055-20230524   gcc  
-i386                 randconfig-i056-20230524   gcc  
-i386                 randconfig-i061-20230524   gcc  
-i386                 randconfig-i062-20230524   gcc  
-i386                 randconfig-i063-20230524   gcc  
-i386                 randconfig-i064-20230524   gcc  
-i386                 randconfig-i065-20230524   gcc  
-i386                 randconfig-i066-20230524   gcc  
-i386                 randconfig-i071-20230524   clang
-i386                 randconfig-i072-20230524   clang
-i386                 randconfig-i073-20230524   clang
-i386                 randconfig-i074-20230524   clang
-i386                 randconfig-i075-20230524   clang
-i386                 randconfig-i076-20230524   clang
-i386                 randconfig-i081-20230524   clang
-i386                 randconfig-i082-20230524   clang
-i386                 randconfig-i083-20230524   clang
-i386                 randconfig-i084-20230524   clang
-i386                 randconfig-i085-20230524   clang
-i386                 randconfig-i086-20230524   clang
-i386                 randconfig-i091-20230524   gcc  
-i386                 randconfig-i092-20230524   gcc  
-i386                 randconfig-i093-20230524   gcc  
-i386                 randconfig-i094-20230524   gcc  
-i386                 randconfig-i095-20230524   gcc  
-i386                 randconfig-i096-20230524   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r006-20230524   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r004-20230524   gcc  
-loongarch            randconfig-r024-20230524   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r014-20230524   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r016-20230524   gcc  
-mips                 randconfig-r026-20230524   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r002-20230524   gcc  
-openrisc             randconfig-r022-20230524   gcc  
-parisc       buildonly-randconfig-r004-20230524   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r002-20230524   gcc  
-parisc               randconfig-r005-20230524   gcc  
-parisc               randconfig-r006-20230524   gcc  
-parisc               randconfig-r031-20230524   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r001-20230524   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230524   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r033-20230524   gcc  
-s390                 randconfig-r044-20230524   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r015-20230524   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r001-20230524   gcc  
-sparc                randconfig-r012-20230524   gcc  
-sparc                randconfig-r024-20230524   gcc  
-sparc                randconfig-r025-20230524   gcc  
-sparc                randconfig-r035-20230524   gcc  
-sparc64              randconfig-r012-20230524   gcc  
-sparc64              randconfig-r036-20230524   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230524   gcc  
-x86_64               randconfig-a002-20230524   gcc  
-x86_64               randconfig-a003-20230524   gcc  
-x86_64               randconfig-a004-20230524   gcc  
-x86_64               randconfig-a005-20230524   gcc  
-x86_64               randconfig-a006-20230524   gcc  
-x86_64               randconfig-a011-20230524   clang
-x86_64               randconfig-a012-20230524   clang
-x86_64               randconfig-a013-20230524   clang
-x86_64               randconfig-a014-20230524   clang
-x86_64               randconfig-a015-20230524   clang
-x86_64               randconfig-a016-20230524   clang
-x86_64               randconfig-r013-20230524   clang
-x86_64               randconfig-x051-20230524   clang
-x86_64               randconfig-x052-20230524   clang
-x86_64               randconfig-x053-20230524   clang
-x86_64               randconfig-x054-20230524   clang
-x86_64               randconfig-x055-20230524   clang
-x86_64               randconfig-x056-20230524   clang
-x86_64               randconfig-x061-20230524   clang
-x86_64               randconfig-x062-20230524   clang
-x86_64               randconfig-x063-20230524   clang
-x86_64               randconfig-x064-20230524   clang
-x86_64               randconfig-x065-20230524   clang
-x86_64               randconfig-x066-20230524   clang
-x86_64               randconfig-x071-20230524   gcc  
-x86_64               randconfig-x072-20230524   gcc  
-x86_64               randconfig-x073-20230524   gcc  
-x86_64               randconfig-x074-20230524   gcc  
-x86_64               randconfig-x075-20230524   gcc  
-x86_64               randconfig-x076-20230524   gcc  
-x86_64               randconfig-x081-20230524   gcc  
-x86_64               randconfig-x082-20230524   gcc  
-x86_64               randconfig-x083-20230524   gcc  
-x86_64               randconfig-x084-20230524   gcc  
-x86_64               randconfig-x085-20230524   gcc  
-x86_64               randconfig-x086-20230524   gcc  
-x86_64               randconfig-x091-20230524   clang
-x86_64               randconfig-x092-20230524   clang
-x86_64               randconfig-x093-20230524   clang
-x86_64               randconfig-x094-20230524   clang
-x86_64               randconfig-x095-20230524   clang
-x86_64               randconfig-x096-20230524   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r003-20230524   gcc  
-xtensa               randconfig-r013-20230524   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+KGN1bGxlZCB0aGUgQ2MgbGlzdCBidXQgaG9wZWZ1bGx5IHRob3NlIHRoYXQgbWlnaHQgd2FudCB0
+byBjaGltZSBpbiBhcmUgDQpvbiBsaW51eC1ncGlvKQ0KDQpPbiAyNC8wNS8yMyAxNzo0MSwgS2Vu
+dCBHaWJzb24gd3JvdGU6DQo+IE9uIFR1ZSwgTWF5IDIzLCAyMDIzIGF0IDA5OjE3OjI2UE0gKzAw
+MDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+PiBPbiAyNC8wNS8yMyAwNDozOCwgYW5keS5zaGV2
+Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToNCj4+PiBXZWQsIE1heSAxNywgMjAyMyBhdCAwOTozMDo1
+MVBNICswMDAwLCBDaHJpcyBQYWNraGFtIGtpcmpvaXR0aToNCj4+Pj4gT24gMTcvMDUvMjMgMjA6
+NTQsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4+Pj4+IE9uIFdlZCwgTWF5IDE3LCAyMDIzIGF0
+IDI6NTDigK9BTSBDaHJpcyBQYWNraGFtDQo+Pj4+PiA8Q2hyaXMuUGFja2hhbUBhbGxpZWR0ZWxl
+c2lzLmNvLm56PiB3cm90ZToNCj4+Pj4+PiBPbiAxNy8wNS8yMyAxMDo0NywgS2VudCBHaWJzb24g
+d3JvdGU6DQo+Pj4gLi4uDQo+Pj4NCj4+Pj4gQWdhaW4gdGhlIHByb2JsZW0gYm9pbHMgZG93biB0
+byB0aGUgZmFjdCB0aGF0IHdlIGhhdmUgYSB1c2Vyc3BhY2Ugc3dpdGNoDQo+Pj4+IGRyaXZlciAo
+d2hpY2ggdXNlcyBhIHZlbmRvciBzdXBwbGllZCBub24tZnJlZSBTREspLiBTbyBkZXNwaXRlIHRo
+ZQ0KPj4+PiBrZXJuZWwgaGF2aW5nIHF1aXRlIGdvb2Qgc3VwcG9ydCBmb3IgU0ZQcyBJIGNhbid0
+IHVzZSBpdCB3aXRob3V0IGENCj4+Pj4gbmV0ZGV2IHRvIGF0dGFjaCBpdCB0by4NCj4+PiBUaGF0
+IHVzZXIgc3BhY2UgZHJpdmVyIGlzIHVzaW5nIHdoYXQgZnJvbSB0aGUga2VybmVsPyBHUElPIHN5
+c2ZzPw0KPj4gWWVzIEdQSU8gc3lzZnMgYW5kIGV4cG9ydGVkIGxpbmtzIHdpdGgga25vd24gbmFt
+ZXMsIHdoaWNoIGFsbG93cyB0aGluZ3MNCj4+IHRvIGJlIGRvbmUgcGVyLXBvcnQgYnV0IGFsc28g
+d2lsZGNhcmRlZCBmcm9tIHNoZWxsIHNjcmlwdHMgaWYgbmVjZXNzYXJ5Lg0KPj4gSSB0aGluayB0
+aGUga2V5IHBvaW50IGhlcmUgaXMgdGhhdCBpdCBkb2Vzbid0IGNhcmUgYWJvdXQgdGhlIEdQSU8g
+Y2hpcHMNCj4+IGp1c3QgdGhlIGluZGl2aWR1YWwgR1BJTyBsaW5lcy4gQW55dGhpbmcgaW52b2x2
+aW5nIGxpYmdwaW9kIGN1cnJlbnRseQ0KPj4gaGFzIHRvIHN0YXJ0IGNhcmluZyBhYm91dCBHUElP
+IGNoaXBzIChvciBJJ20gbWlzcmVhZGluZyB0aGUgZG9jcykuDQo+Pg0KPiBBcyBwcmV2aW91c2x5
+IG1lbnRpb25lZCwgdGhlIGxpYmdwaW9kIHRvb2xzIG5vdyBzdXBwb3J0IGlkZW50aWZpY2F0aW9u
+IG9mDQo+IGxpbmVzIGJ5IG5hbWUuDQoNClRoZSBsaWJncGlvZCB0b29scyBkbyBidXQgbm90IGxp
+YmdwaW9kIGl0c2VsZi4gVGhlIHRvb2xzIGFyZSByZWFzb25hYmxlIA0KcmVwbGFjZW1lbnRzIGZv
+ciB0aGluZ3MgdGhhdCBhcmUgY3VycmVudGx5IGRvbmUgaW4gc2hlbGwgc2NyaXB0cyBidXQgDQp0
+aGVyZSBpcyBhbHNvIGFwcGxpY2F0aW9uIGNvZGUgdGhhdCBuZWVkcyB0byBjYXJlIGFib3V0IEdQ
+SU8gbGluZXMgYnV0IA0KaWRlYWxseSBpdCBzaG91bGRuJ3QgbmVlZCB0byBjYXJlIGFib3V0IEdQ
+SU8gY2hpcHMuDQoNCj4gQXMgbG9uZyBhcyB5b3VyIGxpbmUgbmFtZXMgYXJlIHVuaXF1ZSBhdCBz
+eXN0ZW0gc2NvcGUgeW91IHNob3VsZCBiZQ0KPiBnb29kLiAgT3RoZXJ3aXNlIHlvdSBoYXZlIG5v
+IG9wdGlvbiBidXQgdG8gaWRlbnRpZnkgYnkgKGNoaXAsb2Zmc2V0KS4NCj4NCj4gV3J0IHRoZSBs
+aWJyYXJ5IGl0c2VsZiwgSSB3YXMgdGhpbmtpbmcgYWJvdXQgcmVsb2NhdGluZyB0aGUgbGluZSBu
+YW1lDQo+IHJlc29sdXRpb24gbG9naWMgZnJvbSB0aGUgdG9vbHMgaW50byB0aGUgbGlicmFyeSBp
+dHNlbGYsIHNvIGl0IHdvdWxkIGJlDQo+IG1vcmUgZ2VuZXJhbGx5IGFjY2Vzc2libGUsIGJ1dCBo
+YXZlbid0IGdvdHRlbiB0aGVyZSB5ZXQuDQoNClllcyBJIHRoaW5rIHRoYXQnZCBoZWxwIG15IHVz
+ZS1jYXNlLiBFdmVuIGlmIHRoZXJlIHdlcmUgQVBJcyB0byBpdGVyYXRlIA0Kb3ZlciBhbGwgcG9z
+c2libGUgR1BJTyBsaW5lcyBhbmQgbGV0IHRoZSBhcHBsaWNhdGlvbiB3b3JyeSBhYm91dCBob3cg
+dG8gDQptYXRjaCB0aGUgbmFtZXMuDQoNCj4gSSdtIGFsc28gb2YgdGhlIG9waW5pb24gdGhhdCBs
+aWJncGlvZCBpcyB0b28gbG93IGxldmVsIGZvciBjb21tb24NCj4gdGFza3MuICBUaGF0IGlzIG5l
+Y2Vzc2FyeSB0byBhY2Nlc3MgYWxsIHRoZSBmZWF0dXJlcyBvZiB0aGUgdUFQSSwgYnV0DQo+IGZv
+ciBiYXNpYyB0YXNrcyBpdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgYSBoaWdoZXIgbGV2ZWwgYWJz
+dHJhY3Rpb24gdG8NCj4gcmVkdWNlIHRoZSBiYXJyaWVyIHRvIGVudHJ5Lg0KPg0KPiBlLmcuIGlu
+IFJ1c3QgSSBjYW4gZG8gdGhpczoNCj4NCj4gICAgICBsZXQgbGVkMCA9IGdwaW9jZGV2OjpmaW5k
+X25hbWVkX2xpbmUoIkxFRDAiKS51bndyYXAoKTsNCj4gICAgICBsZXQgcmVxID0gUmVxdWVzdDo6
+YnVpbGRlcigpDQo+ICAgICAgICAgIC53aXRoX2ZvdW5kX2xpbmUoJmxlZDApDQo+ICAgICAgICAg
+IC5hc19vdXRwdXQoVmFsdWU6OkFjdGl2ZSkNCj4gICAgICAgICAgLnJlcXVlc3QoKT87DQo+DQo+
+ICAgICAgLy8gY2hhbmdlIHZhbHVlIGxhdGVyDQo+ICAgICAgcmVxLnNldF92YWx1ZShsZWQwLm9m
+ZnNldCwgVmFsdWU6OkluYWN0aXZlKQ0KPg0KPiB3aGljaCBpcyB0aGUgZXF1aXZhbGVudCBvZiB0
+aGUgc3lzZnMNCj4NCj4gZWNobyAxID4gL3NvbWUvc3lzZnMvbGluZQ0KPiAuLi4NCj4gZWNobyAw
+ID4gL3NvbWUvc3lzZnMvbGluZQ0KPg0KPiBUaGF0IGlzIGJhZCBlbm91Z2guIEl0IHBhaW5zIG1l
+IHRvIHNlZSBob3cgY29tcGxleCB0aGUgZXF1aXZhbGVudCBpcyB1c2luZw0KPiB0aGUgbGliZ3Bp
+b2QgdjIgQVBJIChvciB2MSksIGFuZCB0aGF0IGlzIG5vdCBwdXR0aW5nIGFueSBzaGFkZSBvbiBC
+YXJ0IG9yDQo+IGFueW9uZSBlbHNlIHdobyB3b3JrZWQgb24gaXQgLSB0aGVyZSBhcmUgYSBsb3Qg
+b2YgY29uc3RyYWludHMgb24gaG93IGl0DQo+IGlzIGRlc2lnbmVkLiAgSXQganVzdCBkb2Vzbid0
+IGZlZWwgY29tcGxldGUgeWV0LCBwYXJ0aWN1bGFybHkgZnJvbSBhDQo+IGNhc3VhbCB1c2VyJ3Mg
+cGVyc3BlY3RpdmUuDQo+DQo+IE9uZSBvZiB0aGUgdGhpbmdzIEkgd291bGQgbGlrZSB0byBzZWUg
+YWRkZWQgdG8gbGliZ3Bpb2QgaXMgYSBzZXQgb2Ygd29ya2luZw0KPiBleGFtcGxlcyBvZiBzaW1w
+bGUgdXNlIGNhc2VzLiAgRm9ybWVybHkgdGhlIHRvb2xzIHRvb2sgZG91YmxlIGR1dHkgdG8NCj4g
+ZmlsbCB0aGF0IHJvbGUsIGJ1dCB0aGV5J3ZlIG5vdyBncm93biB0b28gY29tcGxleC4NCj4gVGhv
+c2UgZXhhbXBsZXMgd291bGQgaGlnaGxpZ2h0IHdoZXJlIHdlIGNvdWxkIHByb3ZpZGUgc2ltcGxp
+ZmllZA0KPiBoaWdoZXIgbGV2ZWwgQVBJcy4NCj4gVGhlbiByaW5zZSBhbmQgcmVwZWF0IHVudGls
+IHRoZSBzaW1wbGUgdXNlIGNhc2VzIGFyZSBzaW1wbGUuDQoNCkkgd2FzIGEgbGl0dGxlIHB1dC1v
+ZmYgd2hlbiBJIG5vdGljZWQgdGhlcmUgd2FzIGFuIGxvb21pbmcgQVBJIGNoYW5nZSANCnRoZSBs
+YXN0IHRpbWUgSSBsb29rZWQgYXQgbGliZ3Bpb2QgYW5kIHVuZm9ydHVuYXRlbHkgYW55IHRpbWUg
+SSBoYWQgdG8gDQpzcGVuZCBvbiB1cGRhdGluZyB0aGUgYXBwbGljYXRpb24gY29kZSBoYXMgbm93
+IHBhc3NlZC4NCg0KSSB0aGluayBtb2R1bG8gdGhlIHByb2JsZW0gb2YgbGluZSBkaXNjb3Zlcnkg
+dGhlIGN1cnJlbnQgQVBJIHdvdWxkIGRvIA0Kd2hhdCBJIG5lZWQuIEFzIHlvdSd2ZSBzYWlkIGhh
+dmluZyBzb21lIGV4YW1wbGVzIGluIHRoZSBkb2NzIHdvdWxkIGdvIGEgDQpsb25nIHdheS4NCg0K
+SXQnZCBhbHNvIGJlIGdyZWF0IGlmIHRoZXJlIHdhcyBzb21lIHdheSBvZiBlbnN1cmluZyB0aGF0
+IGEgbGluZSdzIHN0YXRlIA0KaXMga2VwdCBhZnRlciB0aGUgYXBwbGljYXRpb24gaGFzIHJlbGVh
+c2VkIHRoZSByZXF1ZXN0IChpLmUuIHRoZSB0eGRpcyANCmNhc2UgSSBtZW50aW9uZWQpLiBCdXQg
+dGhhdCBwcm9iYWJseSBuZWVkcyB3b3JrIG9uIHRoZSBrZXJuZWwgc2lkZSB0byANCm1ha2Ugc3Vj
+aCBndWFyYW50ZWVzLg0K
