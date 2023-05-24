@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E6D470F172
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 10:51:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F054070F176
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 10:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239085AbjEXIvO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 04:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        id S240422AbjEXIwG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 04:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240401AbjEXIvN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 04:51:13 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0909F1A4
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 01:51:08 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-561b43fc896so6599497b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 01:51:08 -0700 (PDT)
+        with ESMTP id S240462AbjEXIwE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 04:52:04 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC97184
+        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 01:52:01 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-561bd0d31c1so6515467b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 01:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684918267; x=1687510267;
+        d=linaro.org; s=google; t=1684918321; x=1687510321;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yTHHxaJoMypDJpE/fsiTCCRA1MQ4EfaJk8LPuAmRUjY=;
-        b=WWt1aFUgSK1Ne1Cxs/lfu8qKDGY9W9Y13wFo68wgZy1PwC6Mm36fuTV91X/m7vDu5s
-         MSi9VVvYCz+uvJyy7ZTFObF4p0+QQcUKH44pvNXiUQSOvFQbnt/BtoxpUlXY2Qu41VZ3
-         UiBXWHSSitiqsp4KMFNg9TM7rkywutQ8fNZJKQLrxHrgnZj5yhPDMpm0H3aR5YwsotJm
-         38PMUgD1RCVfKyRIMN6geYUvqNAZMjoyDs4xt/qeiLoUwsfzLMHgcVA0FHSyQof1lYDX
-         mIWu1FDUgm/wGXN72nPPmKFD7dlWxPYND8mezH46xxmUfW+NozrnpNUJoLWzTYNOO4Cc
-         YbzQ==
+        bh=9c9KLlfxZTlVXD1HXgvyCoARTi/rzjAMY1PqK/999Bs=;
+        b=xNhyzd8Hh5jsW6VnCTkKMY/0MwFykvaVmY/zFTT1eRy4NA/FfEkkU5o9vzCA5hhLGr
+         GA0W9VC5LrGAxiUNisXs0kQKwQBhYHYwck18kNX5lsgUixnG/bwgJFMpr8ukldam5Hxi
+         374+NYX+FfWkU81pQmDRN1J4sdgwW6qbOkG7biWqrZrAINAylxYqPVFKUTRr1EgiLOBr
+         14uJ8/J2tAjk0t1qhwwjYtUTrFh+K3ivCDe/rsqODlZGHmCHPWoWh6k3mZv9EhvEstvf
+         DekpnMBQHGQ+5PSkGYTu8NPxhV1IXdRSA4P/zzSSQ0JDZGeflAS+6edE89YwcJ0CLgpy
+         nwUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684918267; x=1687510267;
+        d=1e100.net; s=20221208; t=1684918321; x=1687510321;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yTHHxaJoMypDJpE/fsiTCCRA1MQ4EfaJk8LPuAmRUjY=;
-        b=TWqqJrY02+oVWa4PHI1oDNauqyLG0ZiVvXFV5pR3nzK2C4ekJDen2J6vgznT14JQ8E
-         nBl6iiUs4HvVLq3DNFYQEem3IhM3DsGVxWq6zePX9lDKr1JTHVnrLTqh2stohPPK+9Hs
-         lXk/6JYf32duYvUdFEaYn2qoXD5uSY6vp7RuxQhNxEpYZKniFkrbhoB8K7duDX0yb9Ub
-         ljEbsRO7Cc5KlUlv2jJd6M8rxRbCTh2mjJNfPBYdVMdm60nx71o3bMn3tVBTxHQDMdiM
-         /XYGev8Mw28bj/ofMwC8rcra1qLW6COij6H93JAWpPY4sJcowZHGHh4xwpJN8zXX9Aj2
-         AiGQ==
-X-Gm-Message-State: AC+VfDzyTsb9PzE9gEOeGvetwIzDFh5XyVvSoO7R3P+XNwAD+t1WP8ML
-        rJvuUBKeBPQf99uymixFDFmJnwnUE3Z1yUu7WSpVxw==
-X-Google-Smtp-Source: ACHHUZ5vVK9vagH7aFbtx2YppYrWx9tZs7lNqLziCsJ17rVWYpua6FaBjs1X2V+4pwEhVnpLameEWFYTQofY27fqee8=
-X-Received: by 2002:a0d:d4c7:0:b0:55a:52e3:da37 with SMTP id
- w190-20020a0dd4c7000000b0055a52e3da37mr16454222ywd.10.1684918267794; Wed, 24
- May 2023 01:51:07 -0700 (PDT)
+        bh=9c9KLlfxZTlVXD1HXgvyCoARTi/rzjAMY1PqK/999Bs=;
+        b=IzG5mF03W5ZqSC9z2eu5gJM5Kqhjlq/kokMA5GnPyr1NhD2Ww7j57xKeOlZ2ZZiqRh
+         8S0NtHuCQM3BOsxdSRn0GbuxkXnKKe/TyFSq8+cSv6POImQSNWHf1JAhEeDZZ8cuNv+z
+         /eS0vHiu3ALzc131aK9AWpxPwFfUrmCdAbpJqcWfrbar8F9tNP05Xu6t0h9+ygWf5VRa
+         BGYb6HlQ7G1KzRyWv3knLPlOciR702sQVTJfrvjqn+UGRkjDDqDAJtdlJZZOxbD8vxcA
+         HyaiGhrVbPWo3S+vKBI5yR4UlI8QhCRQRJhzuQukROTe16zTJmLfdLXLE4yQG+K4zoG5
+         9okw==
+X-Gm-Message-State: AC+VfDyhdYG9E2InxxG/OltfG5MtMxwnDrUVcfCdhymsT6KisfbL/SPN
+        VxRIaIi7wYksuhMmu4uU3Pm7Tozfj2RlFDngYb+ccxmaZpI8g9ep
+X-Google-Smtp-Source: ACHHUZ5pfZmOIYQ8mIoyinB0Leuc8SST7V06CxGf85cEY5JraDDuw7yqI8yWVUg9SyytLYDtuMMBiApP9rEhF5IHqjM=
+X-Received: by 2002:a81:5a0a:0:b0:565:3749:c24d with SMTP id
+ o10-20020a815a0a000000b005653749c24dmr6414756ywb.14.1684918320912; Wed, 24
+ May 2023 01:52:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1684313910.git.Ryan.Wanner@microchip.com> <048a41d1dcb3da0e845986a73eaac61a54c69269.1684313910.git.Ryan.Wanner@microchip.com>
-In-Reply-To: <048a41d1dcb3da0e845986a73eaac61a54c69269.1684313910.git.Ryan.Wanner@microchip.com>
+References: <5697980e-f687-47a7-9db8-2af34ae464bd@kili.mountain>
+In-Reply-To: <5697980e-f687-47a7-9db8-2af34ae464bd@kili.mountain>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 24 May 2023 10:50:57 +0200
-Message-ID: <CACRpkdaN=9X_bvYrVF4xoZ1k4hbd+sMx6KtpPPLweKxtrSZ2Dg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: at91-pio4: Add push-pull support
-To:     Ryan.Wanner@microchip.com
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
-        ludovic.desroches@microchip.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+Date:   Wed, 24 May 2023 10:51:50 +0200
+Message-ID: <CACRpkdauaQiuJJy-VxHDixU0MHR9qf8Qd2cRW0m5TbWsKnnAzA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91: fix a couple NULL vs IS_ERR() checks
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,13 +72,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 17, 2023 at 1:54=E2=80=AFPM <Ryan.Wanner@microchip.com> wrote:
+On Mon, May 22, 2023 at 9:45=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> The devm_kasprintf_strarray() function doesn't return NULL on error,
+> it returns error pointers.  Update the checks accordingly.
 >
-> Add generic push-pull support for pio4 driver.
->
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+> Fixes: f494c1913cbb ("pinctrl: at91: use devm_kasprintf() to avoid potent=
+ial leaks (part 2)")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
 Patch applied.
 
