@@ -2,192 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 110EA70FEA4
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 21:42:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06CEF70FEDF
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 May 2023 21:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbjEXTm1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 15:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51278 "EHLO
+        id S233850AbjEXT6e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 15:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjEXTm0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 15:42:26 -0400
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38216B6
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 12:42:25 -0700 (PDT)
-Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-457080dc902so462886e0c.2
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 12:42:25 -0700 (PDT)
+        with ESMTP id S233435AbjEXT6d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 15:58:33 -0400
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AAD6199;
+        Wed, 24 May 2023 12:58:19 -0700 (PDT)
+Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-75b08ceddd1so19101485a.1;
+        Wed, 24 May 2023 12:58:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684957344; x=1687549344;
+        d=gmail.com; s=20221208; t=1684958298; x=1687550298;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BNTJOwky/qCDAD6V6w3Og06bM/WY9gM+YM9PZwHETOg=;
-        b=PYV/PGOyG75ebKOJpa8EjtuywyYgc9adk1CzQFCWSn77/mQHNSCeNVGGbz52Gv5tZr
-         RHRdi1ICmMT+JBXjh++kUCknmTSd/yAL4fohfT18qNfhwlepwypXf9GHlJdnFfw7T6Jl
-         P4PGrcaHFJ8g/IhTM/a7lz5yU1v/GbLCsSnNLWSZzw3Y/qRBtvOElC+MzWQWECKsWILT
-         p+xX7Zvj1zfLAJyPH01ERyMjtvS7Q4o3V1NkJzJW3vSt8y/oGn/cX0eYZllv7C99lrmS
-         OgUwA8jYewZYLx8Tqe/Ail89fdR9ZsPm3cm2M3S7HnWw/iuig7j688ZLQCftoCV8DkET
-         A9OQ==
+        bh=dVXrSa9eps6197mlhDW0wlvhygfqywDXFbK8GDGZ+pM=;
+        b=dfMXzQ7D7gXj0Wg/xJwb7g6XusaR2UShrQkjH9QTED5eN/ocr/Wt31vUZXzr2MTnrH
+         KVA5Qk/SVBX8Cirt0GlaNW/W8N9H/IHjoNnbCOZHYAjg2B1+r//1ykdVJKWMVM4kW2Ir
+         zoTV1CNMxlC20v74mkAph3q3+ErWDSsWmuzE++sfdd4zz6UpHTtl6XI1cPz+ZviBJ1GY
+         l//Q3ZZPx2vfURG+txB/pyif4pgZBVT0l141HD04nP/f0LbphI+6CU1f/kDb5T82ANho
+         9wSoN7DSK60mRnictRdNdMC9w18eC/EEOJr3A4SA4PgBhc2vWcLnalYDmbaZ3vujeyfD
+         sc4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684957344; x=1687549344;
+        d=1e100.net; s=20221208; t=1684958298; x=1687550298;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BNTJOwky/qCDAD6V6w3Og06bM/WY9gM+YM9PZwHETOg=;
-        b=N9O5HhVZYAqUcOoJmRjkR1gKeWXuflGdJC/woYTtn6WNAfC1C3DQNvpvc0weoNI0vG
-         Br+DxNqmpuwYli6aLlGodtgGEbXiRlY1yz+ikJcGE3WI/LFUMSts4mHfxADDYkg8jVkp
-         RM8ApmpNbkADC3g/pzJKRkmtUWCpOXXIJ/AwQicFCnkO+GUsfxibu8rdVrOeaLLrvUjI
-         Kk+hLYH+qk5cDo1TTv86uygA1luLncmkqrnB3QynLLv7ObbXRoWsTYPl5onQovPXQLSO
-         rA/x6TbG0ET9zVWkQS7kPSS+p9QXX1iUBCpwsH9ALkIz2l/xpq7WZlDllzn/UPUPPD3m
-         fSOg==
-X-Gm-Message-State: AC+VfDy9liEJ60Lensy8+Tm4j8eKs2bXRLntSA2+OXdZKDzzPk4d8Jdh
-        wnIouuBWcquax0H8hNBk5nty3bwGm1MfZA/MUlp3CbAWhpG0YDWf
-X-Google-Smtp-Source: ACHHUZ6QVkA/o5/98l+QmdbWky8XuB/nZPjeOrLT7V61vWawnAq8hhwHPsgmbejo7MIUqHlLhQlEwVBk/uw5IPZISMg=
-X-Received: by 2002:a1f:5c4d:0:b0:456:d210:68e2 with SMTP id
- q74-20020a1f5c4d000000b00456d21068e2mr5872901vkb.10.1684957344300; Wed, 24
- May 2023 12:42:24 -0700 (PDT)
+        bh=dVXrSa9eps6197mlhDW0wlvhygfqywDXFbK8GDGZ+pM=;
+        b=Iq9Aj/q3+oiO7fB8p2Qk6wS9nXI5vv9H6f20oN+hYVCjsYHAmRNPLjYzCmicclPrkx
+         93V7cchYy4JKBmXdd361KVEr0sYY92UK4Nj46+k3BysFIcKWTDl9iE9+JGQSJgdcnfKd
+         eWhTDDW4mzKVt5KfgZ6PI8C6SoVThWo89NtUlV7cOiSA3XgWZBl6TYhu2emWhdYuTuLo
+         g/hqJt7gCaP0rtFKMzXgtxoFh5NuF0E3yvOEs6epqqHvAc6m+zufArcg7xF1/UYOCLFc
+         TCSU+9S2ERCA0BSmqryxP60UPimflzJDWZ2Tb9POim6Nxylg2khsHDj98ucciOoI5snz
+         9Sjg==
+X-Gm-Message-State: AC+VfDw+FoP9CsvRWnWFqkb9XInYvz5O2u5EEE8Iu4oLuz1oy+SwekSS
+        AIN35NJAVbhDPTotE0R32sAcAtBmrsNZJh0TkhEVxFUS98SbeA==
+X-Google-Smtp-Source: ACHHUZ4UWO8rC8EKL1W4HzHcpgfDIFX1Cv2ogk0iDhfD0sUuP+4RLj8VpP7+4HLnuo6YqJngGf9x5MfkTqbb3zXJqIE=
+X-Received: by 2002:a05:6214:d02:b0:61b:5afc:d4be with SMTP id
+ 2-20020a0562140d0200b0061b5afcd4bemr31110518qvh.7.1684958298520; Wed, 24 May
+ 2023 12:58:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230523155101.196853-1-brgl@bgdev.pl> <ZG1TLBsOy4mZQlW3@sol>
- <ZG1x5pcyTN2Fio4J@sol> <ZG2USw7TTdFSRZ3E@sol>
-In-Reply-To: <ZG2USw7TTdFSRZ3E@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 24 May 2023 21:42:13 +0200
-Message-ID: <CAMRc=MeRfCoj7bcf-GKrRY3Mp5SEhmb289g=JAHBK-01aERCtw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: cdev: fix a crash on line-request release
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230522200033.2605-1-mario.limonciello@amd.com>
+ <20230522200033.2605-3-mario.limonciello@amd.com> <ZGzwCdTO2LptPeQs@surfacebook>
+ <CAJZ5v0hO4hq=TLZ=tK5vXv_pA4SsAo5Gqr5K9g=EU6bFRPYU6g@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hO4hq=TLZ=tK5vXv_pA4SsAo5Gqr5K9g=EU6bFRPYU6g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 May 2023 22:57:42 +0300
+Message-ID: <CAHp75Vf-0ap+hSeTFUFqaTNsH2+dEodd=E3xPnfRmvMNewfMxg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] pinctrl: amd: Use pm_pr_dbg to show debugging messages
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 24, 2023 at 6:36=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Wed, May 24, 2023 at 10:09:42AM +0800, Kent Gibson wrote:
-> > On Wed, May 24, 2023 at 07:58:36AM +0800, Kent Gibson wrote:
-> > > On Tue, May 23, 2023 at 05:51:01PM +0200, Bartosz Golaszewski wrote:
-> > > > When a GPIO device is forcefully unregistered, we are left with an
-> > > > inactive object. If user-space kept an open file descriptor to a li=
-ne
-> > > > request associated with such a structure, upon closing it, we'll se=
-e the
-> > > > kernel crash due to freeing unexistent GPIO descriptors.
-> > > >
-> > >
-> > > > @@ -1565,17 +1571,21 @@ static ssize_t linereq_read(struct file *fi=
-le, char __user *buf,
-> > > >
-> > > >  static void linereq_free(struct linereq *lr)
-> > > >  {
-> > > > + struct gpio_device *gdev =3D lr->gdev;
-> > > >   unsigned int i;
-> > > >
-> > > >   for (i =3D 0; i < lr->num_lines; i++) {
-> > > >           if (lr->lines[i].desc) {
-> > > >                   edge_detector_stop(&lr->lines[i]);
-> > > > -                 gpiod_free(lr->lines[i].desc);
-> > > > +                 down_write(&gdev->sem);
-> > > > +                 if (gdev->chip)
-> > > > +                         gpiod_free(lr->lines[i].desc);
-> > > > +                 up_write(&gdev->sem);
-> >
-> > Ummm, taking another look at the oops I sent you, the crash actually
-> > occurs in edge_detector_stop():
-> >
-> > May 23 11:47:06 firefly kernel: [ 4216.877056] Call Trace:
-> > May 23 11:47:06 firefly kernel: [ 4216.877512]  <TASK>
-> > May 23 11:47:06 firefly kernel: [ 4216.877924]  irq_domain_deactivate_i=
-rq+0x19/0x30
-> > May 23 11:47:06 firefly kernel: [ 4216.878543]  free_irq+0x257/0x360
-> > May 23 11:47:06 firefly kernel: [ 4216.879056]  linereq_free+0x9b/0xe0
-> > May 23 11:47:06 firefly kernel: [ 4216.879608]  linereq_release+0xc/0x2=
-0
-> > May 23 11:47:06 firefly kernel: [ 4216.880230]  __fput+0x87/0x240
-> > May 23 11:47:06 firefly kernel: [ 4216.880744]  task_work_run+0x54/0x80
-> >
-> > That free_irq() call is in edge_detector_stop() (which apparently is in=
-lined),
-> > not in gpiod_free().
-> >
-> > So pretty sure this patch doesn't even solve my problem, but I will tes=
-t
-> > it to confirm.
-> >
->
-> Yeah, doesn't fix my problem still crashes.
->
-> If the line request doesn't have edge detection enabled (so no
-> irq) then I don't get a crash.
-> i.e. use gpioset to request the line, rather than gpiomon.
->
-> (To provide background for anyone else trying to follow along, the
-> scenario is:
-> 1. create a gpio-sim
-> 2. request a line
-> 3. destroy the gpio-sim
-> 4. release the line.
->
-> 3 triggers this error:
->
-> May 24 11:11:12 firefly kernel: [  200.027280] gpio_stub_drv gpiochip0: R=
-EMOVING GPIOCHIP WITH GPIOS STILL REQUESTED
->
-> and 4 triggers a crash - if the requested line holds an irq.)
->
-> I would point out:
-> /**
->  * gpiochip_remove() - unregister a gpio_chip
->  * @gc: the chip to unregister
->  *
->  * A gpio_chip with any GPIOs still requested may not be removed.
->  */
-> void gpiochip_remove(struct gpio_chip *gc)
->
-> which is where that dev_crit() is, so destroying the gpio-sim has already
-> invalidated that contract.
->
-> Anyway, it seems my problem is the forced removal of the gpiochip invalid=
-ates
-> the irq that the line request is holding.
-> Not sure how best to deal with that.
->
-> Moving the edge_detector_stop() inside the "if (gdev->chip)" check of
-> your patch does prevent crash.
-> But in that case edge_detector_stop() does other cleanup that is no longe=
-r
-> getting done.
-> Perhaps if the chip is gone then zero line->irq prior to calling
-> edge_detector_stop()?
-> Again, this is starting to feel like a hack for gpiolib not being good
-> at telling the client that it has to pull the rug.
-> Though according the the gpiochip_remove() docs, it WONT pull the rug,
-> so you get that.
->
-> Cheers,
-> Kent.
+On Wed, May 24, 2023 at 9:28=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+> On Tue, May 23, 2023 at 6:55=E2=80=AFPM <andy.shevchenko@gmail.com> wrote=
+:
+> > Mon, May 22, 2023 at 03:00:32PM -0500, Mario Limonciello kirjoitti:
 
-Interestingly enough, I did test it just like you and the "fix" seemed
-to address the issue. Upon a further look at the code, it's of course
-clear that the patch is wrong.
+...
 
-I wanted to debug the code to see what's happening exactly but it
-turned out that enabling the generation of DWARF data hid the issue as
-well even without any fix. It means that it's some kind of a memory
-corruption rather than a regular NULL-pointer dereference.
+> > > -                             dev_dbg(&gpio_dev->pdev->dev,
+> > > -                                     "GPIO %d is active: 0x%x",
+> > > -                                     irqnr + i, regval);
+> > > +                             pm_pr_dbg("GPIO %d is active: 0x%x",
+> > > +                                       irqnr + i, regval);
+> >
+> > Regression 1: The device is now omitted from the output.
+>
+> Right.
+>
+> > Regression 2: See https://stackoverflow.com/a/43957671/2511795
+>
+> Care to elaborate?  I'm not sure what you mean exactly.
 
-I'm not yet sure where the crash happens exactly other that it's in
-the irq domain code.
+dev_dbg has 3 cases how it prints its content:
+1/ With dynamic debug when it's enabled.
+2/ With -DDEBUG if it's defined for the certain file(s) in the Makefile.
+3/ No print.
 
-Anyway, I'll be back at it tomorrow.
+pm_pr_dbg relies on CONFIG_PM_SLEEP_DEBUG, pm_debug_messages_on and
+not on -DDEBUG. I haven't checked all relations between those 3, but
+it seems to me that DEBUG is not equivalent to the others.
+CONFIG_PM_SLEEP_DEBUG=3Dn prevents printing with the dynamic debug on.
 
-Bart
+OTOH I dunno how this is relevant to the functionality of the driver
+in question. Maybe it's okay to have such changes.
+
+--=20
+With Best Regards,
+Andy Shevchenko
