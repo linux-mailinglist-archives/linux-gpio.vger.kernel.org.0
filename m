@@ -2,138 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8404D7111EF
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 19:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC567114EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 20:42:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235065AbjEYRVK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 13:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
+        id S242272AbjEYSmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 14:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230129AbjEYRVJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 13:21:09 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A49195;
-        Thu, 25 May 2023 10:21:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=b9Zte/1jFhBuFVD5ydCZfQdpJv9ttP11KPikJhqUxls=; b=AXPlcTFdx9qZlDVeR7WrLfgkZR
-        8oVfKSuX/aewdBSKXqeOW5wDnFjnzXEBBjxe3iBNWEJIRhEks7aVeUdNTuQ1f8p5GJmNNBpbyYKBs
-        uIhxlpQX3BKTy18j4WJTm8XESWyN0IgKrCbhaWZ3nLuV0jkYWZ8yVdXaizUb7TZWcL+g=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:50040 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q2Edr-0001iA-0O; Thu, 25 May 2023 13:20:54 -0400
-Date:   Thu, 25 May 2023 13:20:46 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     andy.shevchenko@gmail.com, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525132046.6c48f2fd9235215f01238a04@hugovil.com>
-In-Reply-To: <20230525113145.35cef67328b63ba4239d2361@hugovil.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <20230525040324.3773741-10-hugo@hugovil.com>
-        <ZG9FBgX2useVeuWl@surfacebook>
-        <20230525113145.35cef67328b63ba4239d2361@hugovil.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S242275AbjEYSlp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 14:41:45 -0400
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B918D1BDD
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 11:38:41 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id 2FqCqufk3dqvJ2FqCqE3j8; Thu, 25 May 2023 20:37:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1685039858;
+        bh=1V5pkMn4BMTp1h5OvBsWdGPSnHQ9uFThzMpgbp/eqHU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=fNy/Ew0TL3Rj/aSaKcjnjwy4CdGuWN2o9IzlX/gRCdScUjpcHCS3nZIOlyXGzdkPN
+         cT9Lkioinz6V03F/4avy10IBr6UBGLKrVBrcTId/D+5TNkZ5AovQpeIWn0ds234rKC
+         y+RVkKechZA0SDSuc8ZJoKpuSNAc1Hfcf6HViSk2bHo74hX5dIGdi7LCpRcVG969a8
+         WHiJp/UuC1+5cQpyeUAkD2YLhXRSe9mEd/KeZsrmx0PHzoIb7lPhSHTp8leA+W8pMj
+         txmVFjlxTuEKp3i7JWyiIVUG2FdUJiVvLSrA2JyLVtW+L1pE/U22YjXljcyy0SB1PN
+         50rOiVTKMkngQ==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 25 May 2023 20:37:38 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <dbb3c0bd-3b09-2b59-8cd1-2838b9880abf@wanadoo.fr>
+Date:   Thu, 25 May 2023 20:37:36 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: RE: [PATCH] pinctrl:sunplus: Add check for kmalloc
+To:     =?UTF-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Wells Lu <wellslutw@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Janitors <kernel-janitors@vger.kernel.org>
+References: <1684836688-9204-1-git-send-email-wellslutw@gmail.com>
+ <ZGztCHNr1jmpFq0A@surfacebook>
+ <1560e9c0e5154802ab020b9da846d65f@sphcmbx02.sunplus.com.tw>
+ <ZG0V6_bUaz3Thy0q@surfacebook>
+ <b9207257-b04f-ee2e-7025-015b0f22358a@wanadoo.fr>
+ <dd0ea27640d2420eb3b521076c643919@sphcmbx02.sunplus.com.tw>
+Content-Language: fr, en-US
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <dd0ea27640d2420eb3b521076c643919@sphcmbx02.sunplus.com.tw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 09/11] serial: sc16is7xx: add I/O register
- translation offset
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 11:31:45 -0400
-Hugo Villeneuve <hugo@hugovil.com> wrote:
-
-> On Thu, 25 May 2023 14:22:46 +0300
-> andy.shevchenko@gmail.com wrote:
+Le 25/05/2023 à 05:22, Wells Lu 呂芳騰 a écrit :
+>> Le 23/05/2023 à 21:37, andy.shevchenko@gmail.com a écrit :
+>>> Tue, May 23, 2023 at 05:39:51PM +0000, Wells Lu 呂芳騰 kirjoitti:
+>>>>>> Fix Smatch static checker warning:
+>>>>>> potential null dereference 'configs'. (kmalloc returns null)
+>>>
+>>> ...
+>>>
+>>>>>>    			configs = kmalloc(sizeof(*configs), GFP_KERNEL);
+>>>>>> +			if (!configs)
+>>>>>
+>>>>>> +				return -ENOMEM;
+>>>>>
+>>>>> "Fixing" by adding a memory leak is not probably a good approach.
+>>>>
+>>>> Do you mean I need to free all memory which are allocated in this
+>>>> subroutine before return -ENOMEM?
+>>>
+>>> This is my understanding of the code. But as I said... (see below)
+>>>
+>>> ...
+>>>
+>>>>>>    			configs = kmalloc(sizeof(*configs), GFP_KERNEL);
+>>>>>> +			if (!configs)
+>>>>>> +				return -ENOMEM;
+>>>>>
+>>>>> Ditto.
+>>>
+>>> ...
+>>>
+>>>>> It might be that I'm mistaken. In this case please add an
+>>>>> explanation why in the commit message.
+>>>
+>>> ^^^
+>>>
+>>
+>> Hmmm, not so sure.
+>>
+>> Should be looked at more carefully, but
+>>     dt_to_map_one_config		(in /drivers/pinctrl/devicetree.c)
+>>       .dt_node_to_map
+>>         --> sppctl_dt_node_to_map
+>>
+>> Should dt_to_map_one_config() fail, pinctrl_dt_free_maps() is called (see
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/drivers/pinctrl/devicetree.c#L281)
+>>
+>> pinctrl_dt_free_maps() calls dt_free_map(), which calls .dt_free_map, so
+>> pinctrl_utils_free_map()
+>> (see
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/drivers/pinctrl/sunplus/sppctl.c#L97
+>> 8)
+>>
+>> Finally the needed kfree seem to be called from here.
+>> (see
+>> https://elixir.bootlin.com/linux/v6.4-rc1/source/drivers/pinctrl/pinctrl-utils.c#L119
+>> )
+>>
+>>
+>> *This should obviously be double checked*, but looks safe to me.
+>>
+>>
+>> BUT, in the same function, the of_get_parent() should be undone in case
+>> of error, as done at the end of the function, in the normal path.
+>> This one seems to be missing, should a memory allocation error occur.
+>>
+>>
+>> Just my 2c,
+>>
+>> CJ
 > 
-> > Thu, May 25, 2023 at 12:03:23AM -0400, Hugo Villeneuve kirjoitti:
-> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > 
-> > > If the shared GPIO pins on a dual port/channel variant like the
-> > > SC16IS752 are configured as GPIOs for port A, and modem control lines
-> > > on port A, we need to translate the Linux GPIO offset to an offset
-> > > that is compatible with the I/O registers of the SC16IS7XX (IOState,
-> > > IODir and IOIntEna).
-> > > 
-> > > Add a new variable to store that offset and set it when we detect that
-> > > special case.
-> > 
-> > ...
-> > 
-> > > +/*
-> > > + * We may need to translate the Linux GPIO offset to a SC16IS7XX offset.
-> > > + * This is needed only for the case where a dual port variant is configured to
-> > > + * have only port B as modem status lines.
-> > > + *
-> > > + * Example for SC16IS752/762 with upper bank (port A) set as GPIOs, and
-> > > + * lower bank (port B) set as modem status lines (special case described above):
-> > > + *
-> > > + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> > > + * name        function     offset         offset
-> > > + * --------------------------------------------------
-> > > + * GPIO7/RIA    GPIO7          3              7
-> > > + * GPIO6/CDA    GPIO6          2              6
-> > > + * GPIO5/DTRA   GPIO5          1              5
-> > > + * GPIO4/DSRA   GPIO4          0              4
-> > > + * GPIO3/RIB    RIB           N/A            N/A
-> > > + * GPIO2/CDB    CDB           N/A            N/A
-> > > + * GPIO1/DTRB   DTRB          N/A            N/A
-> > > + * GPIO0/DSRB   DSRB          N/A            N/A
-> > > + *
-> > > + * Example  for SC16IS750/760 with upper bank (7..4) set as modem status lines,
-> > 
-> > Single space is enough.
+> Thank you for your comments.
 > 
-> Fixed.
+>  From the report of kmemleak, returning -ENOMEM directly causes memory leak. We
+> need to free any memory allocated in this subroutine before returning -ENOMEM.
 > 
->  
-> > > + * and lower bank (3..0) as GPIOs:
-> > > + *
-> > > + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> > > + * name        function     offset         offset
-> > > + * --------------------------------------------------
-> > > + * GPIO7/RI     RI            N/A            N/A
-> > > + * GPIO6/CD     CD            N/A            N/A
-> > > + * GPIO5/DTR    DTR           N/A            N/A
-> > > + * GPIO4/DSR    DSR           N/A            N/A
-> > > + * GPIO3        GPIO3          3              3
-> > > + * GPIO2        GPIO2          2              2
-> > > + * GPIO1        GPIO1          1              1
-> > > + * GPIO0        GPIO0          0              0
-> > > + */
-> > 
-> > Wondering if you can always register 8 pins and use valid mask to define which
-> > one are in use?
-> 
-> I will look into it, I think it may be a good idea and could help to simplify things a bit.
+> I'll send a new patch that will free the allocated memory and call of_node_put()
+> when an error happens.
 
 Hi,
-finally, this was the way to go. The resulting code/patch is much simpler and elegant this way. Thank you for the suggestion.
+(adding Dan in copy because the initial report is related to smatch)
 
-I will submit a V4 with all the changes.
+I don't use kmemleak, but could you share some input about its report?
 
-Hugo.
+
+I've not rechecked my analysis, but it looked promising.
+Maybe Dan could also give a look at it and confirm your finding, or dig 
+further with smatch to make sure that its static analysis was complete 
+enough.
+
+CJ
+
+
+> 
+> 
+> Best regards,
+> Wells Lu
+
