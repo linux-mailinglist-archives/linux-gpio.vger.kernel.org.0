@@ -2,104 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 927D0710344
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 05:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B464710359
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 05:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231596AbjEYDWp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 23:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
+        id S233257AbjEYDha (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 23:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEYDWo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 23:22:44 -0400
-Received: from mg.sunplus.com (unknown [113.196.136.146])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 409CFC5;
-        Wed, 24 May 2023 20:22:40 -0700 (PDT)
-X-MailGates: (flag:3,DYNAMIC,RELAY,NOHOST:PASS)(compute_score:DELIVER,40
-        ,3)
-Received: from 172.17.9.112
-        by mg02.sunplus.com with MailGates ESMTP Server V5.0(55639:0:AUTH_RELAY)
-        (envelope-from <wells.lu@sunplus.com>); Thu, 25 May 2023 11:22:28 +0800 (CST)
-Received: from sphcmbx02.sunplus.com.tw (172.17.9.112) by
- sphcmbx02.sunplus.com.tw (172.17.9.112) with Microsoft SMTP Server (TLS) id
- 15.0.1497.47; Thu, 25 May 2023 11:22:28 +0800
-Received: from sphcmbx02.sunplus.com.tw ([fe80::b840:bb05:862c:855c]) by
- sphcmbx02.sunplus.com.tw ([fe80::15f8:1252:3f23:8595%12]) with mapi id
- 15.00.1497.047; Thu, 25 May 2023 11:22:28 +0800
-From:   =?utf-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-CC:     Wells Lu <wellslutw@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] pinctrl:sunplus: Add check for kmalloc
-Thread-Topic: [PATCH] pinctrl:sunplus: Add check for kmalloc
-Thread-Index: AQHZja4A9WmSM0R1vk23IxEYxkRzTK9nwneAgAKNY0A=
-Date:   Thu, 25 May 2023 03:22:28 +0000
-Message-ID: <dd0ea27640d2420eb3b521076c643919@sphcmbx02.sunplus.com.tw>
-References: <1684836688-9204-1-git-send-email-wellslutw@gmail.com>
- <ZGztCHNr1jmpFq0A@surfacebook>
- <1560e9c0e5154802ab020b9da846d65f@sphcmbx02.sunplus.com.tw>
- <ZG0V6_bUaz3Thy0q@surfacebook>
- <b9207257-b04f-ee2e-7025-015b0f22358a@wanadoo.fr>
-In-Reply-To: <b9207257-b04f-ee2e-7025-015b0f22358a@wanadoo.fr>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.25.108.39]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230174AbjEYDh3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 23:37:29 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C7A186;
+        Wed, 24 May 2023 20:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xlDhquQP7khL3b8wtZ40xgVAOHpND88MK/6+rMuT5pE=; b=WtWe7YNaR6bmOmJzZG2nout/vy
+        9ox+rL0MLVHqrAlkVcPgBsSqRN7YSefQiSTtIFXT+OOzE9eT2jhDEQPcikVDuodpIcjbvyLNDI7Ry
+        dYMk9OWiEo3fN+bOdkTQaGYc49kY9AOSfClKjrQtVdFshfB5vxjn+s1tg8k0EL3romTw=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57496 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q21mu-0001Dv-W9; Wed, 24 May 2023 23:37:17 -0400
+Date:   Wed, 24 May 2023 23:37:16 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Lech Perczak <lech.perczak@camlingroup.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <20230524233716.b433edc0fe4afc519976bcea@hugovil.com>
+In-Reply-To: <1e4e6886-70ed-2db3-23e1-b22bf2f39dc0@camlingroup.com>
+References: <20230518132905.4182265-1-hugo@hugovil.com>
+        <1e4e6886-70ed-2db3-23e1-b22bf2f39dc0@camlingroup.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [RFC PATCH v2 1/2] dt-bindings: sc16is7xx: Add property to
+ change GPIO function
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PiBMZSAyMy8wNS8yMDIzIMOgIDIxOjM3LCBhbmR5LnNoZXZjaGVua29AZ21haWwuY29tIGEgw6lj
-cml0wqA6DQo+ID4gVHVlLCBNYXkgMjMsIDIwMjMgYXQgMDU6Mzk6NTFQTSArMDAwMCwgV2VsbHMg
-THUg5ZGC6Iqz6aiwIGtpcmpvaXR0aToNCj4gPj4+PiBGaXggU21hdGNoIHN0YXRpYyBjaGVja2Vy
-IHdhcm5pbmc6DQo+ID4+Pj4gcG90ZW50aWFsIG51bGwgZGVyZWZlcmVuY2UgJ2NvbmZpZ3MnLiAo
-a21hbGxvYyByZXR1cm5zIG51bGwpDQo+ID4NCj4gPiAuLi4NCj4gPg0KPiA+Pj4+ICAgCQkJY29u
-ZmlncyA9IGttYWxsb2Moc2l6ZW9mKCpjb25maWdzKSwgR0ZQX0tFUk5FTCk7DQo+ID4+Pj4gKwkJ
-CWlmICghY29uZmlncykNCj4gPj4+DQo+ID4+Pj4gKwkJCQlyZXR1cm4gLUVOT01FTTsNCj4gPj4+
-DQo+ID4+PiAiRml4aW5nIiBieSBhZGRpbmcgYSBtZW1vcnkgbGVhayBpcyBub3QgcHJvYmFibHkg
-YSBnb29kIGFwcHJvYWNoLg0KPiA+Pg0KPiA+PiBEbyB5b3UgbWVhbiBJIG5lZWQgdG8gZnJlZSBh
-bGwgbWVtb3J5IHdoaWNoIGFyZSBhbGxvY2F0ZWQgaW4gdGhpcw0KPiA+PiBzdWJyb3V0aW5lIGJl
-Zm9yZSByZXR1cm4gLUVOT01FTT8NCj4gPg0KPiA+IFRoaXMgaXMgbXkgdW5kZXJzdGFuZGluZyBv
-ZiB0aGUgY29kZS4gQnV0IGFzIEkgc2FpZC4uLiAoc2VlIGJlbG93KQ0KPiA+DQo+ID4gLi4uDQo+
-ID4NCj4gPj4+PiAgIAkJCWNvbmZpZ3MgPSBrbWFsbG9jKHNpemVvZigqY29uZmlncyksIEdGUF9L
-RVJORUwpOw0KPiA+Pj4+ICsJCQlpZiAoIWNvbmZpZ3MpDQo+ID4+Pj4gKwkJCQlyZXR1cm4gLUVO
-T01FTTsNCj4gPj4+DQo+ID4+PiBEaXR0by4NCj4gPg0KPiA+IC4uLg0KPiA+DQo+ID4+PiBJdCBt
-aWdodCBiZSB0aGF0IEknbSBtaXN0YWtlbi4gSW4gdGhpcyBjYXNlIHBsZWFzZSBhZGQgYW4NCj4g
-Pj4+IGV4cGxhbmF0aW9uIHdoeSBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4NCj4gPiBeXl4N
-Cj4gPg0KPiANCj4gSG1tbSwgbm90IHNvIHN1cmUuDQo+IA0KPiBTaG91bGQgYmUgbG9va2VkIGF0
-IG1vcmUgY2FyZWZ1bGx5LCBidXQNCj4gICAgZHRfdG9fbWFwX29uZV9jb25maWcJCShpbiAvZHJp
-dmVycy9waW5jdHJsL2RldmljZXRyZWUuYykNCj4gICAgICAuZHRfbm9kZV90b19tYXANCj4gICAg
-ICAgIC0tPiBzcHBjdGxfZHRfbm9kZV90b19tYXANCj4gDQo+IFNob3VsZCBkdF90b19tYXBfb25l
-X2NvbmZpZygpIGZhaWwsIHBpbmN0cmxfZHRfZnJlZV9tYXBzKCkgaXMgY2FsbGVkIChzZWUNCj4g
-aHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjYuNC1yYzEvc291cmNlL2RyaXZlcnMv
-cGluY3RybC9kZXZpY2V0cmVlLmMjTDI4MSkNCj4gDQo+IHBpbmN0cmxfZHRfZnJlZV9tYXBzKCkg
-Y2FsbHMgZHRfZnJlZV9tYXAoKSwgd2hpY2ggY2FsbHMgLmR0X2ZyZWVfbWFwLCBzbw0KPiBwaW5j
-dHJsX3V0aWxzX2ZyZWVfbWFwKCkNCj4gKHNlZQ0KPiBodHRwczovL2VsaXhpci5ib290bGluLmNv
-bS9saW51eC92Ni40LXJjMS9zb3VyY2UvZHJpdmVycy9waW5jdHJsL3N1bnBsdXMvc3BwY3RsLmMj
-TDk3DQo+IDgpDQo+IA0KPiBGaW5hbGx5IHRoZSBuZWVkZWQga2ZyZWUgc2VlbSB0byBiZSBjYWxs
-ZWQgZnJvbSBoZXJlLg0KPiAoc2VlDQo+IGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4
-L3Y2LjQtcmMxL3NvdXJjZS9kcml2ZXJzL3BpbmN0cmwvcGluY3RybC11dGlscy5jI0wxMTkNCj4g
-KQ0KPiANCj4gDQo+ICpUaGlzIHNob3VsZCBvYnZpb3VzbHkgYmUgZG91YmxlIGNoZWNrZWQqLCBi
-dXQgbG9va3Mgc2FmZSB0byBtZS4NCj4gDQo+IA0KPiBCVVQsIGluIHRoZSBzYW1lIGZ1bmN0aW9u
-LCB0aGUgb2ZfZ2V0X3BhcmVudCgpIHNob3VsZCBiZSB1bmRvbmUgaW4gY2FzZQ0KPiBvZiBlcnJv
-ciwgYXMgZG9uZSBhdCB0aGUgZW5kIG9mIHRoZSBmdW5jdGlvbiwgaW4gdGhlIG5vcm1hbCBwYXRo
-Lg0KPiBUaGlzIG9uZSBzZWVtcyB0byBiZSBtaXNzaW5nLCBzaG91bGQgYSBtZW1vcnkgYWxsb2Nh
-dGlvbiBlcnJvciBvY2N1ci4NCj4gDQo+IA0KPiBKdXN0IG15IDJjLA0KPiANCj4gQ0oNCg0KVGhh
-bmsgeW91IGZvciB5b3VyIGNvbW1lbnRzLg0KDQpGcm9tIHRoZSByZXBvcnQgb2Yga21lbWxlYWss
-IHJldHVybmluZyAtRU5PTUVNIGRpcmVjdGx5IGNhdXNlcyBtZW1vcnkgbGVhay4gV2UgDQpuZWVk
-IHRvIGZyZWUgYW55IG1lbW9yeSBhbGxvY2F0ZWQgaW4gdGhpcyBzdWJyb3V0aW5lIGJlZm9yZSBy
-ZXR1cm5pbmcgLUVOT01FTS4NCg0KSSdsbCBzZW5kIGEgbmV3IHBhdGNoIHRoYXQgd2lsbCBmcmVl
-IHRoZSBhbGxvY2F0ZWQgbWVtb3J5IGFuZCBjYWxsIG9mX25vZGVfcHV0KCkgDQp3aGVuIGFuIGVy
-cm9yIGhhcHBlbnMuDQoNCg0KQmVzdCByZWdhcmRzLA0KV2VsbHMgTHUNCg==
+On Fri, 19 May 2023 15:03:37 +0200
+Lech Perczak <lech.perczak@camlingroup.com> wrote:
+
+> Hello Hugo,
+>=20
+> W dniu 18.05.2023 o=A015:29, Hugo Villeneuve pisze:
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >
+> > Some variants in this series of uart controllers have GPIO pins that
+> > are shared between GPIO and modem control lines.
+> >
+> > The pin mux mode (GPIO or modem control lines) can be set for each
+> > ports (channels) supported by the variant.
+> >
+> > This adds a property to the device tree to set the GPIO pin mux to
+> > modem control lines on selected ports if needed.
+> >
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > ---
+> > v1 -> v2: Add nxp vendor prefix
+> >           Add git base-commit
+> >
+> >  .../bindings/serial/nxp,sc16is7xx.txt         | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt=
+ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> > index 0fa8e3e43bf8..23a81c83f012 100644
+> > --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> > +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> > @@ -23,6 +23,9 @@ Optional properties:
+> >      1 =3D active low.
+> >  - irda-mode-ports: An array that lists the indices of the port that
+> >                    should operate in IrDA mode.
+> > +- nxp,modem-control-line-ports: An array that lists the indices of the=
+ port that
+> > +                               should have shared GPIO lines configure=
+d as modem
+> > +                               control lines.
+> >
+> >  Example:
+> >          sc16is750: sc16is750@51 {
+> > @@ -35,6 +38,17 @@ Example:
+> >                  #gpio-cells =3D <2>;
+> >          };
+> >
+> > +       sc16is752: sc16is752@54 {
+> > +               compatible =3D "nxp,sc16is752";
+> > +               reg =3D <0x54>;
+> > +               clocks =3D <&clk20m>;
+> > +               interrupt-parent =3D <&gpio3>;
+> > +               interrupts =3D <7 IRQ_TYPE_EDGE_FALLING>;
+> > +               nxp,modem-control-line-ports =3D <1>; /* Port 1 as mode=
+m control lines */
+> > +               gpio-controller; /* Port 0 as GPIOs */
+> > +               #gpio-cells =3D <2>;
+> > +       };
+> > +
+> >  * spi as bus
+> >
+> >  Required properties:
+> > @@ -59,6 +73,9 @@ Optional properties:
+> >      1 =3D active low.
+> >  - irda-mode-ports: An array that lists the indices of the port that
+> >                    should operate in IrDA mode.
+> > +- nxp,modem-control-line-ports: An array that lists the indices of the=
+ port that
+> > +                               should have shared GPIO lines configure=
+d as modem
+> > +                               control lines.
+> >
+> >  Example:
+> >         sc16is750: sc16is750@0 {
+> > @@ -70,3 +87,14 @@ Example:
+> >                 gpio-controller;
+> >                 #gpio-cells =3D <2>;
+> >         };
+> > +
+> > +       sc16is752: sc16is752@0 {
+> > +               compatible =3D "nxp,sc16is752";
+> > +               reg =3D <0>;
+> > +               clocks =3D <&clk20m>;
+> > +               interrupt-parent =3D <&gpio3>;
+> > +               interrupts =3D <7 IRQ_TYPE_EDGE_FALLING>;
+> > +               nxp,modem-control-line-ports =3D <1>; /* Port 1 as mode=
+m control lines */
+> Just a minor nitpick: an example showing syntax for both ports would be g=
+reat.
+> This can be included here, leaving the previous example intact. Otherwise=
+, LGTM.
+> > +               gpio-controller; /* Port 0 as GPIOs */
+> > +               #gpio-cells =3D <2>;
+
+Hi,
+I have decided to add a separate example, because adding an example for bot=
+h ports also means that the gpio-controller property should be removed.
+
+Hugo.
+
+
+> > +       };
+> >
+> > base-commit: 4d6d4c7f541d7027beed4fb86eb2c451bd8d6fff
+> > --
+> > 2.30.2
+>=20
+> --=20
+> Pozdrawiam/With kind regards,
+> Lech Perczak
+>=20
+> Sr. Software Engineer
+> Camlin Technologies Poland Limited Sp. z o.o.
+> Strzegomska 54,
+> 53-611 Wroclaw
+> Tel:     (+48) 71 75 000 16
+> Email:   lech.perczak@camlingroup.com
+> Website: http://www.camlingroup.com
+>=20
+>=20
