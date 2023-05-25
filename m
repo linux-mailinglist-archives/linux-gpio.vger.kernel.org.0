@@ -2,43 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E7D710BC7
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 14:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D286E710BDD
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 14:17:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241139AbjEYMKJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 08:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
+        id S230054AbjEYMRL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 08:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241132AbjEYMKI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 08:10:08 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4474CE6;
-        Thu, 25 May 2023 05:10:07 -0700 (PDT)
+        with ESMTP id S229603AbjEYMRK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 08:17:10 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5B1A9;
+        Thu, 25 May 2023 05:17:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685016607; x=1716552607;
+  t=1685017029; x=1716553029;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=+wbTcPlTDMlWKSZMtcI8BM7oQvOICFoJz9nitmvrsjY=;
-  b=mlcryji269Ft/ZYTbw1b1ma+1y410n7ctz3Suq7LfE1JFcZZ8dQ837DS
-   2S/SKITnBgXaxj8kpIRtQKPItXdsZ5ns2ZZZaRQAF6KTUxcYbq8obDNs3
-   h6gCnW0CUj7G+KZo+olZdbOXJ9KABCfHxN3HzSXmS94zPTY118VL9e7G6
-   wkN3STkmyhA84GCb4wxCK2DWhbZ0Pgu3rcqKyDJRl+xYqw1Q2q4NPAa0I
-   HIcuV2bwEBWQjrcdZzz0XlkztbBqiQRZ6hopToVxu8pBkE/M56Ul6HBxc
-   xrVvkS7b8uXwT9iLTNAFhTwU8t8DT82cIqDvNQhEbSYp2VLs30eKLzRSH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="419587146"
+  bh=bQ1iL6BsiW9BxzNcM756bUoMHD0bKrBZjPW4yVwoXCU=;
+  b=dgFfOhPQlNaO5yv7W8H9G0lYcOqEgFOV8SIrUHAWz+dqGQtX+WKYGzsf
+   4dydSYz+lEVipxpesrTk43+OLNZPTnYl76sqLSyV8Vjev/I4kRTor0prq
+   Wc2ZSYtN/4lXZBVEWFeKui0RdPaOXYVIBexpK3WuO7kPI6dY+ZEO9Q21Y
+   CEX+Ailz1yv2zjS6+wNIfYU819vGHqc+zjI5NIAQr7YKoHSasO5coonVS
+   c7Y2uEUkmVEuAhjOUkK82OfH6WIvE9UaNpJ5RDfJ45A+YDwp8jAB9ymFe
+   MIL6oBQB7l0X4vIjDkHxivjf9ZCWc01E5bM4jy9mV8I3uUTLoTD6MYXp0
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="357096183"
 X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="419587146"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:10:06 -0700
+   d="scan'208";a="357096183"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:17:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="794619703"
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="1034963147"
 X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="794619703"
+   d="scan'208";a="1034963147"
 Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:10:02 -0700
-Date:   Thu, 25 May 2023 15:10:00 +0300 (EEST)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:17:04 -0700
+Date:   Thu, 25 May 2023 15:17:02 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Hugo Villeneuve <hugo@hugovil.com>
 cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,13 +50,13 @@ cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
         linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v3 09/11] serial: sc16is7xx: add I/O register translation
- offset
-In-Reply-To: <20230525040324.3773741-10-hugo@hugovil.com>
-Message-ID: <73413221-a87c-b619-5171-70cb117cdf@linux.intel.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com> <20230525040324.3773741-10-hugo@hugovil.com>
+Subject: Re: [PATCH v3 10/11] serial: sc16is7xx: add call to get rs485 DT
+ flags and properties
+In-Reply-To: <20230525040324.3773741-11-hugo@hugovil.com>
+Message-ID: <986e2042-6c1d-b87a-ef9-d89a61bc8c@linux.intel.com>
+References: <20230525040324.3773741-1-hugo@hugovil.com> <20230525040324.3773741-11-hugo@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-2137940837-1685017028=:1738"
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
@@ -67,152 +67,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-2137940837-1685017028=:1738
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
 On Thu, 25 May 2023, Hugo Villeneuve wrote:
 
 > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> If the shared GPIO pins on a dual port/channel variant like the
-> SC16IS752 are configured as GPIOs for port A, and modem control lines
-> on port A, we need to translate the Linux GPIO offset to an offset
-> that is compatible with the I/O registers of the SC16IS7XX (IOState,
-> IODir and IOIntEna).
-> 
-> Add a new variable to store that offset and set it when we detect that
-> special case.
+> Add call to uart_get_rs485_mode() to probe for RS485 flags and
+> properties from device tree.
 > 
 > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > ---
->  drivers/tty/serial/sc16is7xx.c | 54 +++++++++++++++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
+>  drivers/tty/serial/sc16is7xx.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index 97ec532a0a19..c2cfd057ed9a 100644
+> index c2cfd057ed9a..03d00b144304 100644
 > --- a/drivers/tty/serial/sc16is7xx.c
 > +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -338,6 +338,7 @@ struct sc16is7xx_port {
->  #ifdef CONFIG_GPIOLIB
->  	struct gpio_chip		gpio;
->  	int				gpio_configured;
-> +	int				gpio_offset;
->  #endif
->  	unsigned char			buf[SC16IS7XX_FIFO_SIZE];
->  	struct kthread_worker		kworker;
-> @@ -1298,12 +1299,50 @@ static const struct uart_ops sc16is7xx_ops = {
->  };
+> @@ -1511,6 +1511,10 @@ static int sc16is7xx_probe(struct device *dev,
+>  			goto out_ports;
+>  		}
 >  
->  #ifdef CONFIG_GPIOLIB
+> +		ret = uart_get_rs485_mode(&s->p[i].port);
+> +		if (ret)
+> +			goto out_ports;
 > +
-> +/*
-> + * We may need to translate the Linux GPIO offset to a SC16IS7XX offset.
-> + * This is needed only for the case where a dual port variant is configured to
-> + * have only port B as modem status lines.
-> + *
-> + * Example for SC16IS752/762 with upper bank (port A) set as GPIOs, and
-> + * lower bank (port B) set as modem status lines (special case described above):
-> + *
-> + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> + * name        function     offset         offset
-> + * --------------------------------------------------
-> + * GPIO7/RIA    GPIO7          3              7
-> + * GPIO6/CDA    GPIO6          2              6
-> + * GPIO5/DTRA   GPIO5          1              5
-> + * GPIO4/DSRA   GPIO4          0              4
-> + * GPIO3/RIB    RIB           N/A            N/A
-> + * GPIO2/CDB    CDB           N/A            N/A
-> + * GPIO1/DTRB   DTRB          N/A            N/A
-> + * GPIO0/DSRB   DSRB          N/A            N/A
-> + *
-> + * Example  for SC16IS750/760 with upper bank (7..4) set as modem status lines,
-> + * and lower bank (3..0) as GPIOs:
-> + *
-> + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> + * name        function     offset         offset
-> + * --------------------------------------------------
-> + * GPIO7/RI     RI            N/A            N/A
-> + * GPIO6/CD     CD            N/A            N/A
-> + * GPIO5/DTR    DTR           N/A            N/A
-> + * GPIO4/DSR    DSR           N/A            N/A
-> + * GPIO3        GPIO3          3              3
-> + * GPIO2        GPIO2          2              2
-> + * GPIO1        GPIO1          1              1
-> + * GPIO0        GPIO0          0              0
-> + */
-> +
->  static int sc16is7xx_gpio_get(struct gpio_chip *chip, unsigned offset)
->  {
->  	unsigned int val;
->  	struct sc16is7xx_port *s = gpiochip_get_data(chip);
->  	struct uart_port *port = &s->p[0].port;
->  
-> +	offset += s->gpio_offset;
->  	val = sc16is7xx_port_read(port, SC16IS7XX_IOSTATE_REG);
->  
->  	return !!(val & BIT(offset));
-> @@ -1314,6 +1353,7 @@ static void sc16is7xx_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
->  	struct sc16is7xx_port *s = gpiochip_get_data(chip);
->  	struct uart_port *port = &s->p[0].port;
->  
-> +	offset += s->gpio_offset;
->  	sc16is7xx_port_update(port, SC16IS7XX_IOSTATE_REG, BIT(offset),
->  			      val ? BIT(offset) : 0);
->  }
-> @@ -1324,6 +1364,7 @@ static int sc16is7xx_gpio_direction_input(struct gpio_chip *chip,
->  	struct sc16is7xx_port *s = gpiochip_get_data(chip);
->  	struct uart_port *port = &s->p[0].port;
->  
-> +	offset += s->gpio_offset;
->  	sc16is7xx_port_update(port, SC16IS7XX_IODIR_REG, BIT(offset), 0);
->  
->  	return 0;
-> @@ -1336,6 +1377,8 @@ static int sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
->  	struct uart_port *port = &s->p[0].port;
->  	u8 state = sc16is7xx_port_read(port, SC16IS7XX_IOSTATE_REG);
->  
-> +	offset += s->gpio_offset;
-> +
->  	if (val)
->  		state |= BIT(offset);
->  	else
-> @@ -1395,6 +1438,7 @@ static int sc16is7xx_probe(struct device *dev,
->  
->  #ifdef CONFIG_GPIOLIB
->  	s->gpio_configured = devtype->nr_gpio;
-> +	s->gpio_offset = 0;
->  #endif /* CONFIG_GPIOLIB */
->  
->  	/* Always ask for fixed clock rate from a property. */
-> @@ -1529,16 +1573,24 @@ static int sc16is7xx_probe(struct device *dev,
->  #endif /* CONFIG_GPIOLIB */
->  			}
->  
-> -		if (val)
-> +		if (val) {
-> +#ifdef CONFIG_GPIOLIB
-> +			/* Additional I/O regs offset. */
-> +			if (val == SC16IS7XX_IOCONTROL_MODEM_B_BIT)
-> +				s->gpio_offset = SC16IS7XX_GPIOS_PER_BANK;
-> +#endif /* CONFIG_GPIOLIB */
-> +
->  			regmap_update_bits(
->  				s->regmap,
->  				SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
->  				SC16IS7XX_IOCONTROL_MODEM_A_BIT |
->  				SC16IS7XX_IOCONTROL_MODEM_B_BIT, val);
-> +		}
->  	}
->  
->  #ifdef CONFIG_GPIOLIB
->  	dev_dbg(dev, "GPIOs to configure: %d\n", s->gpio_configured);
-> +	dev_dbg(dev, "GPIOs offset: %d\n", s->gpio_offset);
->  
->  	if (s->gpio_configured) {
->  		/* Setup GPIO controller */
+>  		/* Disable all interrupts */
+>  		sc16is7xx_port_write(&s->p[i].port, SC16IS7XX_IER_REG, 0);
+>  		/* Disable TX/RX */
 > 
 
-Is the order of this and 8/11 patch correct or should this precede that 
-other patch? That is, is 8/11 alone useful enough or would this also be 
-wanted? (I'm aware that 8/11 has a Fixes tag).
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
  i.
 
+--8323329-2137940837-1685017028=:1738--
