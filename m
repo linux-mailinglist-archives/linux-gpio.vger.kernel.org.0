@@ -2,154 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AA347101D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 01:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEE2710242
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 03:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbjEXXxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 19:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60444 "EHLO
+        id S230261AbjEYBTL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 21:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjEXXxR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 19:53:17 -0400
-X-Greylist: delayed 95745 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 24 May 2023 16:53:14 PDT
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8066132
-        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 16:53:14 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4161E2C02E0;
-        Thu, 25 May 2023 11:53:13 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1684972393;
-        bh=aZBFDPi6Djr1Z9fNprDllT8CaCwGkXUfyrN/ij0abtg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=X9h4vst3O31GQP4+gnv/vWTL+PUiulzZxWzXWQZckNMLagdTlrjekDkoB0WDk5tQd
-         LBV8pJKzspaXnB2Rc99717UeteMvbEAR2aQqKvjD0VfMIEh7ESSb1QGwRy2qZNcmvh
-         KxxZd4uGboFEQq9/B2dV0JilUE6d0KmzQ4HMA4R/qyOCWh+WH8VHUZSbakGAn9st03
-         hWML25L6QfDJwkyjOEdHlrO6YAHMWfjT0JeC9UvxmHA4DqR2gFTv0Z2Wb7eqvJouDd
-         jhdw41ef0WdZZsYElfbLm7c6SDER1telMy8CI7MgXnoOzsHi/3xO7pfW3kSaZQaNe2
-         4jU+xHEZOGPXw==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B646ea3690001>; Thu, 25 May 2023 11:53:13 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.26; Thu, 25 May 2023 11:53:13 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Thu, 25 May 2023 11:53:12 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.026; Thu, 25 May 2023 11:53:12 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Kent Gibson <warthog618@gmail.com>
-CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        with ESMTP id S229451AbjEYBTK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 21:19:10 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEFFBE6;
+        Wed, 24 May 2023 18:19:08 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ae3a5dfa42so6779105ad.0;
+        Wed, 24 May 2023 18:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684977548; x=1687569548;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1o+V55E45CxNz+gKMdCFIHZHJ7htwLBTle0C7Zp+HO4=;
+        b=OOzTp5ElA9ljZFVPtSPjbdW7BEP8KzxGh6zqkRrowYsqFOYrcT8/awzaaxImtkygOD
+         xv1KQlb/ROeatc3tUaJaYSa6oLqv61owjdeDdEDE8B1INLmBXX0FNwWUTIEqqnG5DSPa
+         +PTqfwcFJnt3yLA5ns0l206952qScxR6XRJOEqKJV16woOEkyhreNa8hPMYjsnwUyUOP
+         pOGqa4jn4rjiuk9GaDnDtekj6kaMr/e2BShNo3bgJi0atTLkLME/rORUp6oSRlYXdOdi
+         S94FVP5vIlKPN74eIS+4uFdjK0OlTY0WuQRsN9zlmXI2bFUNI3ATDty2gRjhLcDfztlV
+         VoFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684977548; x=1687569548;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1o+V55E45CxNz+gKMdCFIHZHJ7htwLBTle0C7Zp+HO4=;
+        b=VmdEm+NkuvRM88UnJHy6cBk0SUKXzguFZPNsFKtA3x+Q1G8o42/We2LEIwVYwjFAWk
+         mD2zXNeRaRWP6lNxCliKig0nhbnQtntGTN2EbYT2wlJQ21bj2Odoif/wxSOukNxfLCuQ
+         +shwmVb9fepMcQHppc2QYgO7FcaVCS6z3EDou2LsyNosxMb6ihdvLdZ6jOVDRj8OaL5T
+         6XWwJNQLdLGlLdInmT0IhCJ38lTXj72MTCjG659FQoHfiKkRC4V523qC59htnCLA5OcW
+         luqdGktnOt6QENK1vmkyjIlzvPTUfcl0tQm/ngdrgsc9AubOcFJuDMtTZnGU3h7yLsAB
+         ltUA==
+X-Gm-Message-State: AC+VfDzmsKwmyp1tQERpQXe9CKPNbMAt4THPJHWOPWt8cHAE3WPa9x1q
+        pn1kyNtPVQnGjXp5FD7PSqpaRwDkFa0=
+X-Google-Smtp-Source: ACHHUZ7wPi1P4UA2XyHD1SE/2XBgtSY+M9ipfpcN49OIAlP/FU6BThZV6zlDz+YQNNLk6dU3jCUX2w==
+X-Received: by 2002:a17:902:e80e:b0:1af:a049:45d with SMTP id u14-20020a170902e80e00b001afa049045dmr16673198plg.18.1684977548229;
+        Wed, 24 May 2023 18:19:08 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id h15-20020a170902680f00b001aaec7a2a62sm86042plk.188.2023.05.24.18.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 18:19:07 -0700 (PDT)
+Date:   Thu, 25 May 2023 09:19:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib: Avoid
- side effects in gpio_is_visible())
-Thread-Topic: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
+Subject: Re: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
  Avoid side effects in gpio_is_visible())
-Thread-Index: AQHZjprmqsS+N7nfWEWkADlDhs1wpA==
-Date:   Wed, 24 May 2023 23:53:12 +0000
-Message-ID: <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+Message-ID: <ZG63hiXloQl/YZDX@sol>
 References: <ZGzsD_HMbMGhGwcr@surfacebook>
  <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
  <ZG2jgwjK+CBmOk3G@sol>
-In-Reply-To: <ZG2jgwjK+CBmOk3G@sol>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.33.22.30]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7DEA3330C4909344AE981403CE311017@atlnz.lc>
-Content-Transfer-Encoding: base64
+ <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=pGLkceISAAAA:8 a=go7DDdlL3tKfwstDA4MA:9 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-KGN1bGxlZCB0aGUgQ2MgbGlzdCBidXQgaG9wZWZ1bGx5IHRob3NlIHRoYXQgbWlnaHQgd2FudCB0
-byBjaGltZSBpbiBhcmUgDQpvbiBsaW51eC1ncGlvKQ0KDQpPbiAyNC8wNS8yMyAxNzo0MSwgS2Vu
-dCBHaWJzb24gd3JvdGU6DQo+IE9uIFR1ZSwgTWF5IDIzLCAyMDIzIGF0IDA5OjE3OjI2UE0gKzAw
-MDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+PiBPbiAyNC8wNS8yMyAwNDozOCwgYW5keS5zaGV2
-Y2hlbmtvQGdtYWlsLmNvbSB3cm90ZToNCj4+PiBXZWQsIE1heSAxNywgMjAyMyBhdCAwOTozMDo1
-MVBNICswMDAwLCBDaHJpcyBQYWNraGFtIGtpcmpvaXR0aToNCj4+Pj4gT24gMTcvMDUvMjMgMjA6
-NTQsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4+Pj4+IE9uIFdlZCwgTWF5IDE3LCAyMDIzIGF0
-IDI6NTDigK9BTSBDaHJpcyBQYWNraGFtDQo+Pj4+PiA8Q2hyaXMuUGFja2hhbUBhbGxpZWR0ZWxl
-c2lzLmNvLm56PiB3cm90ZToNCj4+Pj4+PiBPbiAxNy8wNS8yMyAxMDo0NywgS2VudCBHaWJzb24g
-d3JvdGU6DQo+Pj4gLi4uDQo+Pj4NCj4+Pj4gQWdhaW4gdGhlIHByb2JsZW0gYm9pbHMgZG93biB0
-byB0aGUgZmFjdCB0aGF0IHdlIGhhdmUgYSB1c2Vyc3BhY2Ugc3dpdGNoDQo+Pj4+IGRyaXZlciAo
-d2hpY2ggdXNlcyBhIHZlbmRvciBzdXBwbGllZCBub24tZnJlZSBTREspLiBTbyBkZXNwaXRlIHRo
-ZQ0KPj4+PiBrZXJuZWwgaGF2aW5nIHF1aXRlIGdvb2Qgc3VwcG9ydCBmb3IgU0ZQcyBJIGNhbid0
-IHVzZSBpdCB3aXRob3V0IGENCj4+Pj4gbmV0ZGV2IHRvIGF0dGFjaCBpdCB0by4NCj4+PiBUaGF0
-IHVzZXIgc3BhY2UgZHJpdmVyIGlzIHVzaW5nIHdoYXQgZnJvbSB0aGUga2VybmVsPyBHUElPIHN5
-c2ZzPw0KPj4gWWVzIEdQSU8gc3lzZnMgYW5kIGV4cG9ydGVkIGxpbmtzIHdpdGgga25vd24gbmFt
-ZXMsIHdoaWNoIGFsbG93cyB0aGluZ3MNCj4+IHRvIGJlIGRvbmUgcGVyLXBvcnQgYnV0IGFsc28g
-d2lsZGNhcmRlZCBmcm9tIHNoZWxsIHNjcmlwdHMgaWYgbmVjZXNzYXJ5Lg0KPj4gSSB0aGluayB0
-aGUga2V5IHBvaW50IGhlcmUgaXMgdGhhdCBpdCBkb2Vzbid0IGNhcmUgYWJvdXQgdGhlIEdQSU8g
-Y2hpcHMNCj4+IGp1c3QgdGhlIGluZGl2aWR1YWwgR1BJTyBsaW5lcy4gQW55dGhpbmcgaW52b2x2
-aW5nIGxpYmdwaW9kIGN1cnJlbnRseQ0KPj4gaGFzIHRvIHN0YXJ0IGNhcmluZyBhYm91dCBHUElP
-IGNoaXBzIChvciBJJ20gbWlzcmVhZGluZyB0aGUgZG9jcykuDQo+Pg0KPiBBcyBwcmV2aW91c2x5
-IG1lbnRpb25lZCwgdGhlIGxpYmdwaW9kIHRvb2xzIG5vdyBzdXBwb3J0IGlkZW50aWZpY2F0aW9u
-IG9mDQo+IGxpbmVzIGJ5IG5hbWUuDQoNClRoZSBsaWJncGlvZCB0b29scyBkbyBidXQgbm90IGxp
-YmdwaW9kIGl0c2VsZi4gVGhlIHRvb2xzIGFyZSByZWFzb25hYmxlIA0KcmVwbGFjZW1lbnRzIGZv
-ciB0aGluZ3MgdGhhdCBhcmUgY3VycmVudGx5IGRvbmUgaW4gc2hlbGwgc2NyaXB0cyBidXQgDQp0
-aGVyZSBpcyBhbHNvIGFwcGxpY2F0aW9uIGNvZGUgdGhhdCBuZWVkcyB0byBjYXJlIGFib3V0IEdQ
-SU8gbGluZXMgYnV0IA0KaWRlYWxseSBpdCBzaG91bGRuJ3QgbmVlZCB0byBjYXJlIGFib3V0IEdQ
-SU8gY2hpcHMuDQoNCj4gQXMgbG9uZyBhcyB5b3VyIGxpbmUgbmFtZXMgYXJlIHVuaXF1ZSBhdCBz
-eXN0ZW0gc2NvcGUgeW91IHNob3VsZCBiZQ0KPiBnb29kLiAgT3RoZXJ3aXNlIHlvdSBoYXZlIG5v
-IG9wdGlvbiBidXQgdG8gaWRlbnRpZnkgYnkgKGNoaXAsb2Zmc2V0KS4NCj4NCj4gV3J0IHRoZSBs
-aWJyYXJ5IGl0c2VsZiwgSSB3YXMgdGhpbmtpbmcgYWJvdXQgcmVsb2NhdGluZyB0aGUgbGluZSBu
-YW1lDQo+IHJlc29sdXRpb24gbG9naWMgZnJvbSB0aGUgdG9vbHMgaW50byB0aGUgbGlicmFyeSBp
-dHNlbGYsIHNvIGl0IHdvdWxkIGJlDQo+IG1vcmUgZ2VuZXJhbGx5IGFjY2Vzc2libGUsIGJ1dCBo
-YXZlbid0IGdvdHRlbiB0aGVyZSB5ZXQuDQoNClllcyBJIHRoaW5rIHRoYXQnZCBoZWxwIG15IHVz
-ZS1jYXNlLiBFdmVuIGlmIHRoZXJlIHdlcmUgQVBJcyB0byBpdGVyYXRlIA0Kb3ZlciBhbGwgcG9z
-c2libGUgR1BJTyBsaW5lcyBhbmQgbGV0IHRoZSBhcHBsaWNhdGlvbiB3b3JyeSBhYm91dCBob3cg
-dG8gDQptYXRjaCB0aGUgbmFtZXMuDQoNCj4gSSdtIGFsc28gb2YgdGhlIG9waW5pb24gdGhhdCBs
-aWJncGlvZCBpcyB0b28gbG93IGxldmVsIGZvciBjb21tb24NCj4gdGFza3MuICBUaGF0IGlzIG5l
-Y2Vzc2FyeSB0byBhY2Nlc3MgYWxsIHRoZSBmZWF0dXJlcyBvZiB0aGUgdUFQSSwgYnV0DQo+IGZv
-ciBiYXNpYyB0YXNrcyBpdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgYSBoaWdoZXIgbGV2ZWwgYWJz
-dHJhY3Rpb24gdG8NCj4gcmVkdWNlIHRoZSBiYXJyaWVyIHRvIGVudHJ5Lg0KPg0KPiBlLmcuIGlu
-IFJ1c3QgSSBjYW4gZG8gdGhpczoNCj4NCj4gICAgICBsZXQgbGVkMCA9IGdwaW9jZGV2OjpmaW5k
-X25hbWVkX2xpbmUoIkxFRDAiKS51bndyYXAoKTsNCj4gICAgICBsZXQgcmVxID0gUmVxdWVzdDo6
-YnVpbGRlcigpDQo+ICAgICAgICAgIC53aXRoX2ZvdW5kX2xpbmUoJmxlZDApDQo+ICAgICAgICAg
-IC5hc19vdXRwdXQoVmFsdWU6OkFjdGl2ZSkNCj4gICAgICAgICAgLnJlcXVlc3QoKT87DQo+DQo+
-ICAgICAgLy8gY2hhbmdlIHZhbHVlIGxhdGVyDQo+ICAgICAgcmVxLnNldF92YWx1ZShsZWQwLm9m
-ZnNldCwgVmFsdWU6OkluYWN0aXZlKQ0KPg0KPiB3aGljaCBpcyB0aGUgZXF1aXZhbGVudCBvZiB0
-aGUgc3lzZnMNCj4NCj4gZWNobyAxID4gL3NvbWUvc3lzZnMvbGluZQ0KPiAuLi4NCj4gZWNobyAw
-ID4gL3NvbWUvc3lzZnMvbGluZQ0KPg0KPiBUaGF0IGlzIGJhZCBlbm91Z2guIEl0IHBhaW5zIG1l
-IHRvIHNlZSBob3cgY29tcGxleCB0aGUgZXF1aXZhbGVudCBpcyB1c2luZw0KPiB0aGUgbGliZ3Bp
-b2QgdjIgQVBJIChvciB2MSksIGFuZCB0aGF0IGlzIG5vdCBwdXR0aW5nIGFueSBzaGFkZSBvbiBC
-YXJ0IG9yDQo+IGFueW9uZSBlbHNlIHdobyB3b3JrZWQgb24gaXQgLSB0aGVyZSBhcmUgYSBsb3Qg
-b2YgY29uc3RyYWludHMgb24gaG93IGl0DQo+IGlzIGRlc2lnbmVkLiAgSXQganVzdCBkb2Vzbid0
-IGZlZWwgY29tcGxldGUgeWV0LCBwYXJ0aWN1bGFybHkgZnJvbSBhDQo+IGNhc3VhbCB1c2VyJ3Mg
-cGVyc3BlY3RpdmUuDQo+DQo+IE9uZSBvZiB0aGUgdGhpbmdzIEkgd291bGQgbGlrZSB0byBzZWUg
-YWRkZWQgdG8gbGliZ3Bpb2QgaXMgYSBzZXQgb2Ygd29ya2luZw0KPiBleGFtcGxlcyBvZiBzaW1w
-bGUgdXNlIGNhc2VzLiAgRm9ybWVybHkgdGhlIHRvb2xzIHRvb2sgZG91YmxlIGR1dHkgdG8NCj4g
-ZmlsbCB0aGF0IHJvbGUsIGJ1dCB0aGV5J3ZlIG5vdyBncm93biB0b28gY29tcGxleC4NCj4gVGhv
-c2UgZXhhbXBsZXMgd291bGQgaGlnaGxpZ2h0IHdoZXJlIHdlIGNvdWxkIHByb3ZpZGUgc2ltcGxp
-ZmllZA0KPiBoaWdoZXIgbGV2ZWwgQVBJcy4NCj4gVGhlbiByaW5zZSBhbmQgcmVwZWF0IHVudGls
-IHRoZSBzaW1wbGUgdXNlIGNhc2VzIGFyZSBzaW1wbGUuDQoNCkkgd2FzIGEgbGl0dGxlIHB1dC1v
-ZmYgd2hlbiBJIG5vdGljZWQgdGhlcmUgd2FzIGFuIGxvb21pbmcgQVBJIGNoYW5nZSANCnRoZSBs
-YXN0IHRpbWUgSSBsb29rZWQgYXQgbGliZ3Bpb2QgYW5kIHVuZm9ydHVuYXRlbHkgYW55IHRpbWUg
-SSBoYWQgdG8gDQpzcGVuZCBvbiB1cGRhdGluZyB0aGUgYXBwbGljYXRpb24gY29kZSBoYXMgbm93
-IHBhc3NlZC4NCg0KSSB0aGluayBtb2R1bG8gdGhlIHByb2JsZW0gb2YgbGluZSBkaXNjb3Zlcnkg
-dGhlIGN1cnJlbnQgQVBJIHdvdWxkIGRvIA0Kd2hhdCBJIG5lZWQuIEFzIHlvdSd2ZSBzYWlkIGhh
-dmluZyBzb21lIGV4YW1wbGVzIGluIHRoZSBkb2NzIHdvdWxkIGdvIGEgDQpsb25nIHdheS4NCg0K
-SXQnZCBhbHNvIGJlIGdyZWF0IGlmIHRoZXJlIHdhcyBzb21lIHdheSBvZiBlbnN1cmluZyB0aGF0
-IGEgbGluZSdzIHN0YXRlIA0KaXMga2VwdCBhZnRlciB0aGUgYXBwbGljYXRpb24gaGFzIHJlbGVh
-c2VkIHRoZSByZXF1ZXN0IChpLmUuIHRoZSB0eGRpcyANCmNhc2UgSSBtZW50aW9uZWQpLiBCdXQg
-dGhhdCBwcm9iYWJseSBuZWVkcyB3b3JrIG9uIHRoZSBrZXJuZWwgc2lkZSB0byANCm1ha2Ugc3Vj
-aCBndWFyYW50ZWVzLg0K
+On Wed, May 24, 2023 at 11:53:12PM +0000, Chris Packham wrote:
+> (culled the Cc list but hopefully those that might want to chime in are 
+> on linux-gpio)
+> 
+> On 24/05/23 17:41, Kent Gibson wrote:
+> > On Tue, May 23, 2023 at 09:17:26PM +0000, Chris Packham wrote:
+> >> On 24/05/23 04:38, andy.shevchenko@gmail.com wrote:
+> >>> Wed, May 17, 2023 at 09:30:51PM +0000, Chris Packham kirjoitti:
+> >>>> On 17/05/23 20:54, Andy Shevchenko wrote:
+> >>>>> On Wed, May 17, 2023 at 2:50 AM Chris Packham
+> >>>>> <Chris.Packham@alliedtelesis.co.nz> wrote:
+> >>>>>> On 17/05/23 10:47, Kent Gibson wrote:
+> >>> ...
+> >>>
+> >>>> Again the problem boils down to the fact that we have a userspace switch
+> >>>> driver (which uses a vendor supplied non-free SDK). So despite the
+> >>>> kernel having quite good support for SFPs I can't use it without a
+> >>>> netdev to attach it to.
+> >>> That user space driver is using what from the kernel? GPIO sysfs?
+> >> Yes GPIO sysfs and exported links with known names, which allows things
+> >> to be done per-port but also wildcarded from shell scripts if necessary.
+> >> I think the key point here is that it doesn't care about the GPIO chips
+> >> just the individual GPIO lines. Anything involving libgpiod currently
+> >> has to start caring about GPIO chips (or I'm misreading the docs).
+> >>
+> > As previously mentioned, the libgpiod tools now support identification of
+> > lines by name.
+> 
+> The libgpiod tools do but not libgpiod itself. The tools are reasonable 
+> replacements for things that are currently done in shell scripts but 
+> there is also application code that needs to care about GPIO lines but 
+> ideally it shouldn't need to care about GPIO chips.
+> 
+> > As long as your line names are unique at system scope you should be
+> > good.  Otherwise you have no option but to identify by (chip,offset).
+> >
+> > Wrt the library itself, I was thinking about relocating the line name
+> > resolution logic from the tools into the library itself, so it would be
+> > more generally accessible, but haven't gotten there yet.
+> 
+> Yes I think that'd help my use-case. Even if there were APIs to iterate 
+> over all possible GPIO lines and let the application worry about how to 
+> match the names.
+> 
+
+Even that is a bit of a minefield, as there is no guarantee that line
+names are unique across the system.  I'm not even sure they are unique
+across a chip.
+
+So what order do you iterate over all the lines?
+In chip order?  Chip names/numbers aren't deterministic.
+The latest tools go in chip name order - human sorted, which is probably
+the best we can do - it at least makes sense to the casual user.
+
+The big problem being, once we put in the library proper it is etched in
+stone, so we want to get it right and not open any cans of worms.
+
+> > I'm also of the opinion that libgpiod is too low level for common
+> > tasks.  That is necessary to access all the features of the uAPI, but
+> > for basic tasks it would be nice to have a higher level abstraction to
+> > reduce the barrier to entry.
+> >
+> > e.g. in Rust I can do this:
+> >
+> >      let led0 = gpiocdev::find_named_line("LED0").unwrap();
+> >      let req = Request::builder()
+> >          .with_found_line(&led0)
+> >          .as_output(Value::Active)
+> >          .request()?;
+> >
+> >      // change value later
+> >      req.set_value(led0.offset, Value::Inactive)
+> >
+> > which is the equivalent of the sysfs
+> >
+> > echo 1 > /some/sysfs/line
+> > ...
+> > echo 0 > /some/sysfs/line
+> >
+> > That is bad enough. It pains me to see how complex the equivalent is using
+> > the libgpiod v2 API (or v1), and that is not putting any shade on Bart or
+> > anyone else who worked on it - there are a lot of constraints on how it
+> > is designed.  It just doesn't feel complete yet, particularly from a
+> > casual user's perspective.
+> >
+> > One of the things I would like to see added to libgpiod is a set of working
+> > examples of simple use cases.  Formerly the tools took double duty to
+> > fill that role, but they've now grown too complex.
+> > Those examples would highlight where we could provide simplified
+> > higher level APIs.
+> > Then rinse and repeat until the simple use cases are simple.
+> 
+> I was a little put-off when I noticed there was an looming API change 
+> the last time I looked at libgpiod and unfortunately any time I had to 
+> spend on updating the application code has now passed.
+> 
+> I think modulo the problem of line discovery the current API would do 
+> what I need. As you've said having some examples in the docs would go a 
+> long way.
+> 
+
+I don't mean examples in docs, I mean working code examples.
+That beats docs every day in my book.
+
+> It'd also be great if there was some way of ensuring that a line's state 
+> is kept after the application has released the request (i.e. the txdis 
+> case I mentioned). But that probably needs work on the kernel side to 
+> make such guarantees.
+
+To be clear, I am suggesting extensions to the API, not changes to it.
+libgpiod v2 is fixed and the functions therein will remain as-is.
+But v2.1 could get some additional functions to make common tasks easier.
+At least, that is what I would like to see.
+
+Cheers,
+Kent.
