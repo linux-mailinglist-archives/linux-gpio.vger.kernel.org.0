@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F18F7710ACA
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8328F710ADC
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:26:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239258AbjEYLWv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 07:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
+        id S240453AbjEYL0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 07:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233677AbjEYLWu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:22:50 -0400
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E09E7
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 04:22:49 -0700 (PDT)
+        with ESMTP id S240373AbjEYL0r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:26:47 -0400
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19EA13A
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 04:26:46 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-        id 793c14e4-faee-11ed-b972-005056bdfda7;
-        Thu, 25 May 2023 14:22:46 +0300 (EEST)
+        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+        id 07139230-faef-11ed-a9de-005056bdf889;
+        Thu, 25 May 2023 14:26:44 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Thu, 25 May 2023 14:22:46 +0300
+Date:   Thu, 25 May 2023 14:26:43 +0300
 To:     Hugo Villeneuve <hugo@hugovil.com>
 Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -28,15 +28,14 @@ Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v3 09/11] serial: sc16is7xx: add I/O register translation
- offset
-Message-ID: <ZG9FBgX2useVeuWl@surfacebook>
+Subject: Re: [PATCH v3 11/11] serial: sc16is7xx: add dump registers function
+Message-ID: <ZG9F8xsPqs2ZWfED@surfacebook>
 References: <20230525040324.3773741-1-hugo@hugovil.com>
- <20230525040324.3773741-10-hugo@hugovil.com>
+ <20230525040324.3773741-12-hugo@hugovil.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230525040324.3773741-10-hugo@hugovil.com>
+In-Reply-To: <20230525040324.3773741-12-hugo@hugovil.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
         FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
         SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
@@ -47,61 +46,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thu, May 25, 2023 at 12:03:23AM -0400, Hugo Villeneuve kirjoitti:
+Thu, May 25, 2023 at 12:03:25AM -0400, Hugo Villeneuve kirjoitti:
 > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> If the shared GPIO pins on a dual port/channel variant like the
-> SC16IS752 are configured as GPIOs for port A, and modem control lines
-> on port A, we need to translate the Linux GPIO offset to an offset
-> that is compatible with the I/O registers of the SC16IS7XX (IOState,
-> IODir and IOIntEna).
+> With this driver, it is very hard to debug the registers using
+> the /sys/kernel/debug/regmap interface.
 > 
-> Add a new variable to store that offset and set it when we detect that
-> special case.
+> The main reason is that bits 0 and 1 of the register address
+> correspond to the channels bits, so the register address itself starts
+> at bit 2, so we must 'mentally' shift each register address by 2 bits
+> to get its offset.
+> 
+> Also, only channels 0 and 1 are supported, so combinations of bits
+> 0 and 1 being 10b and 11b are invalid, and the display of these
+> registers is useless.
+> 
+> For example:
+> 
+> cat /sys/kernel/debug/regmap/spi0.0/registers
+> 04: 10 -> Port 0, register offset 1
+> 05: 10 -> Port 1, register offset 1
+> 06: 00 -> Port 2, register offset 1 -> invalid
+> 07: 00 -> port 3, register offset 1 -> invalid
+> ...
+> 
+> Add a debug module parameter to call a custom dump function for each
+> port registers after the probe phase to help debug.
 
-...
-
-> +/*
-> + * We may need to translate the Linux GPIO offset to a SC16IS7XX offset.
-> + * This is needed only for the case where a dual port variant is configured to
-> + * have only port B as modem status lines.
-> + *
-> + * Example for SC16IS752/762 with upper bank (port A) set as GPIOs, and
-> + * lower bank (port B) set as modem status lines (special case described above):
-> + *
-> + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> + * name        function     offset         offset
-> + * --------------------------------------------------
-> + * GPIO7/RIA    GPIO7          3              7
-> + * GPIO6/CDA    GPIO6          2              6
-> + * GPIO5/DTRA   GPIO5          1              5
-> + * GPIO4/DSRA   GPIO4          0              4
-> + * GPIO3/RIB    RIB           N/A            N/A
-> + * GPIO2/CDB    CDB           N/A            N/A
-> + * GPIO1/DTRB   DTRB          N/A            N/A
-> + * GPIO0/DSRB   DSRB          N/A            N/A
-> + *
-> + * Example  for SC16IS750/760 with upper bank (7..4) set as modem status lines,
-
-Single space is enough.
-
-> + * and lower bank (3..0) as GPIOs:
-> + *
-> + * Pin         GPIO pin     Linux GPIO     SC16IS7XX
-> + * name        function     offset         offset
-> + * --------------------------------------------------
-> + * GPIO7/RI     RI            N/A            N/A
-> + * GPIO6/CD     CD            N/A            N/A
-> + * GPIO5/DTR    DTR           N/A            N/A
-> + * GPIO4/DSR    DSR           N/A            N/A
-> + * GPIO3        GPIO3          3              3
-> + * GPIO2        GPIO2          2              2
-> + * GPIO1        GPIO1          1              1
-> + * GPIO0        GPIO0          0              0
-> + */
-
-Wondering if you can always register 8 pins and use valid mask to define which
-one are in use?
+Not sure about this. Can we rather create an abstract mapping on regmap?
+(Something like gpio-pca953x.c has)
 
 -- 
 With Best Regards,
