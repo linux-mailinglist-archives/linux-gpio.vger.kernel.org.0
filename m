@@ -2,121 +2,262 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE89710D37
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C4F3710D3F
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:31:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241244AbjEYN0h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 09:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
+        id S234480AbjEYNba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 09:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235319AbjEYN0g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:26:36 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADE8E7;
-        Thu, 25 May 2023 06:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=O+fkr0z/7+sCqRoHFMKwbZJo5J70B+Y4nnwKZDooPGE=; b=H/KcOLrobUmps+UFkAM5r179/p
-        6ztKhXMKtBX1hfVyQtRj3f9RNeUzFnwPTamYK4wQAvMkvOju79Gu6v2JohoCN77KEw56rcl70l7lP
-        KMCA5XoKUj3fZlM2i4eRcbV1Ng5Lm/0WR5S2KZvJjETXXwfVny7aWB6VHv58CS6ulw+A=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:47010 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q2Az6-0007jC-52; Thu, 25 May 2023 09:26:28 -0400
-Date:   Thu, 25 May 2023 09:26:27 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     andy.shevchenko@gmail.com
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525092627.edf4f7f9df4b9b1cf7b568a4@hugovil.com>
-In-Reply-To: <ZG84KCeMIINFVTMh@surfacebook>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <ZG84KCeMIINFVTMh@surfacebook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S230464AbjEYNb3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:31:29 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1818199
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:31:27 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-30950eecc1eso2098186f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685021485; x=1687613485;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SEbZwfd7B8yFINCI/0q4cupNK+9pfV7Mc1Q0t+q/ctc=;
+        b=P5/mqMgEHHcNc60XfnoGVOXYsPQq6TjW86wBuDzumEyWSDaqyCqiVeJ/er0ZA8IgcR
+         NZvGzTcKEpSGVNHJDQQrq6Yyia6Zhjs4KSv49CZ5R2QJaZsdGxH06ppldPypt3JdyUUi
+         tLntYNlpk+z2URwPRT01LklRurUANFcaMUWF/IfP/yoX80cnqdXkVi2Fd6Qpxv8We3q2
+         qbGjvTeOXNTWxXB8h7fdh5jpyHwrVz8hI8TKJksOmmwi6xrVFywz/4eiRFWZs51LDB91
+         OwnS/5+6xSyxA+F9qgzlQfStCFYjcmZhjhC+61+OpKuisxfq2jdqOFAw5fSaMAmnMoZI
+         Ravg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685021485; x=1687613485;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SEbZwfd7B8yFINCI/0q4cupNK+9pfV7Mc1Q0t+q/ctc=;
+        b=UYqZzYWiTgXv+Q/8epmniB4qdbat/SW1PGHvGje2dXyMNgT+XY5UcSRekjImjj+1z2
+         qTs342AFuZtwxyu9KRidg7YJ4Yj7qoGe+jZZiiQ6Hoag7WOilEvUaEgNHfGogFAsRh/h
+         T4TRGxO7o9CTJMzwqf5LPnjadEvMh7pbA6P0On5kpykdBk2o0WaRYr0NFcJ+d+o3XKo2
+         DcUSUnNeyvsTReWPhMy6jBOZX4Ho64Wm0LGSwkzsEBtNDWgSSEuXXUNTj3gLvpq+iCST
+         zWIpAvXgy9PS0CB9cI9zPoIeI7YCoTTGTeo+2ivbEPAF7VCRfZUTC12iGPUbfNxKCRcU
+         vyzQ==
+X-Gm-Message-State: AC+VfDyFpvHsIGPiAyyeygJB3Dv/AzMZz9J8fnHEOh64yuikE3ypkrUT
+        dNvIMmozlD5+I/zF3y968fbKPA==
+X-Google-Smtp-Source: ACHHUZ7T07jZk38SdTY8AxJC7KvFLKiwkj0+nzC5jB/VGQxslVKdtpWa81H95E3pcaT+j/ZnnZZu+A==
+X-Received: by 2002:a5d:4147:0:b0:309:38f4:fb52 with SMTP id c7-20020a5d4147000000b0030938f4fb52mr2023175wrq.9.1685021485495;
+        Thu, 25 May 2023 06:31:25 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f1fe:b5ad:8d14:8475])
+        by smtp.gmail.com with ESMTPSA id z17-20020a5d6551000000b00301a351a8d6sm1784635wrv.84.2023.05.25.06.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 06:31:25 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [libgpiod][PATCH] bindings: python: specify the symbols to export explicitly
+Date:   Thu, 25 May 2023 15:31:22 +0200
+Message-Id: <20230525133122.296025-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 00/11] serial: sc16is7xx: fix GPIO regression and
- rs485 improvements
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 13:27:52 +0300
-andy.shevchenko@gmail.com wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Thu, May 25, 2023 at 12:03:13AM -0400, Hugo Villeneuve kirjoitti:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > Hello,
-> > this patch series mainly fixes a GPIO regression and improve RS485 flags and properties
-> > detection from DT.
-> > 
-> > It now also includes various small fixes and improvements that were previously
-> > sent as separate patches, but that made testing everything difficult.
-> 
-> > Patches 1 and 2 are simple comments fix/improvements.
-> 
-> Usually we put fixes at the beginning of the series, but these patches are
-> missing Fixed tag. Are they really fixes or can be simply moved to the end of
-> the series?
+We're currently unintentionally exporting a bunch of symbols that should
+remain local to sub-modules. Use __all__ where appropriate so that we
+don't re-export standard library functions such as select() etc. in the
+gpiod module.
 
-Hi,
-these are not code fixes, they are comments improvements. I was not aware that you need to put a Fixes tag for correcting syntax errors in comments, or adding comments to improve clarity.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ bindings/python/gpiod/chip.py          |  2 ++
+ bindings/python/gpiod/chip_info.py     |  2 ++
+ bindings/python/gpiod/edge_event.py    |  2 ++
+ bindings/python/gpiod/exception.py     |  2 ++
+ bindings/python/gpiod/ext/module.c     | 15 ++++++++++++++-
+ bindings/python/gpiod/info_event.py    |  2 ++
+ bindings/python/gpiod/internal.py      |  2 ++
+ bindings/python/gpiod/line.py          |  2 ++
+ bindings/python/gpiod/line_info.py     |  2 ++
+ bindings/python/gpiod/line_request.py  |  2 ++
+ bindings/python/gpiod/line_settings.py |  2 ++
+ 11 files changed, 34 insertions(+), 1 deletion(-)
 
-I often submit such comments patches but was never asked to put a Fixes tag before. Seems strange to me...
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
+index 52d0757..da93370 100644
+--- a/bindings/python/gpiod/chip.py
++++ b/bindings/python/gpiod/chip.py
+@@ -17,6 +17,8 @@ from errno import ENOENT
+ from select import select
+ from typing import Union, Optional
+ 
++__all__ = "Chip"
++
+ 
+ class Chip:
+     """
+diff --git a/bindings/python/gpiod/chip_info.py b/bindings/python/gpiod/chip_info.py
+index a506b55..92b5e6f 100644
+--- a/bindings/python/gpiod/chip_info.py
++++ b/bindings/python/gpiod/chip_info.py
+@@ -4,6 +4,8 @@
+ 
+ from dataclasses import dataclass
+ 
++__all__ = "ChipInfo"
++
+ 
+ @dataclass(frozen=True, repr=False)
+ class ChipInfo:
+diff --git a/bindings/python/gpiod/edge_event.py b/bindings/python/gpiod/edge_event.py
+index 88f8e9b..bf258c1 100644
+--- a/bindings/python/gpiod/edge_event.py
++++ b/bindings/python/gpiod/edge_event.py
+@@ -5,6 +5,8 @@ from . import _ext
+ from dataclasses import dataclass
+ from enum import Enum
+ 
++__all__ = "EdgeEvent"
++
+ 
+ @dataclass(frozen=True, init=False, repr=False)
+ class EdgeEvent:
+diff --git a/bindings/python/gpiod/exception.py b/bindings/python/gpiod/exception.py
+index 07ffaa6..f9a83c2 100644
+--- a/bindings/python/gpiod/exception.py
++++ b/bindings/python/gpiod/exception.py
+@@ -1,6 +1,8 @@
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
++__all__ = ["ChipClosedError", "RequestReleasedError"]
++
+ 
+ class ChipClosedError(Exception):
+     """
+diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod/ext/module.c
+index 101d756..25c252a 100644
+--- a/bindings/python/gpiod/ext/module.c
++++ b/bindings/python/gpiod/ext/module.c
+@@ -157,8 +157,8 @@ static PyTypeObject *types[] = {
+ PyMODINIT_FUNC PyInit__ext(void)
+ {
+ 	const struct module_const *modconst;
++	PyObject *module, *all;
+ 	PyTypeObject **type;
+-	PyObject *module;
+ 	int ret;
+ 
+ 	module = PyModule_Create(&module_def);
+@@ -172,6 +172,19 @@ PyMODINIT_FUNC PyInit__ext(void)
+ 		return NULL;
+ 	}
+ 
++	all = PyList_New(0);
++	if (!all) {
++		Py_DECREF(module);
++		return NULL;
++	}
++
++	ret = PyModule_AddObjectRef(module, "__all__", all);
++	Py_DECREF(all);
++	if (ret) {
++		Py_DECREF(module);
++		return NULL;
++	}
++
+ 	for (type = types; *type; type++) {
+ 		ret = PyModule_AddType(module, *type);
+ 		if (ret) {
+diff --git a/bindings/python/gpiod/info_event.py b/bindings/python/gpiod/info_event.py
+index 78b1459..481eae6 100644
+--- a/bindings/python/gpiod/info_event.py
++++ b/bindings/python/gpiod/info_event.py
+@@ -6,6 +6,8 @@ from .line_info import LineInfo
+ from dataclasses import dataclass
+ from enum import Enum
+ 
++__all__ = "InfoEvent"
++
+ 
+ @dataclass(frozen=True, init=False, repr=False)
+ class InfoEvent:
+diff --git a/bindings/python/gpiod/internal.py b/bindings/python/gpiod/internal.py
+index 7b4598c..2dddb65 100644
+--- a/bindings/python/gpiod/internal.py
++++ b/bindings/python/gpiod/internal.py
+@@ -5,6 +5,8 @@ from datetime import timedelta
+ from select import select
+ from typing import Optional, Union
+ 
++__all__ = []
++
+ 
+ def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
+     if isinstance(timeout, timedelta):
+diff --git a/bindings/python/gpiod/line.py b/bindings/python/gpiod/line.py
+index c5d5ddf..1cc512f 100644
+--- a/bindings/python/gpiod/line.py
++++ b/bindings/python/gpiod/line.py
+@@ -5,6 +5,8 @@
+ from . import _ext
+ from enum import Enum
+ 
++__all__ = ["Value", "Direction", "Bias", "Drive", "Edge", "Clock"]
++
+ 
+ class Value(Enum):
+     """Logical line states."""
+diff --git a/bindings/python/gpiod/line_info.py b/bindings/python/gpiod/line_info.py
+index 9a6c9bf..c196a6a 100644
+--- a/bindings/python/gpiod/line_info.py
++++ b/bindings/python/gpiod/line_info.py
+@@ -6,6 +6,8 @@ from dataclasses import dataclass
+ from datetime import timedelta
+ from gpiod.line import Direction, Bias, Drive, Edge, Clock
+ 
++__all__ = "LineInfo"
++
+ 
+ @dataclass(frozen=True, init=False, repr=False)
+ class LineInfo:
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+index 090467c..096bf18 100644
+--- a/bindings/python/gpiod/line_request.py
++++ b/bindings/python/gpiod/line_request.py
+@@ -11,6 +11,8 @@ from collections.abc import Iterable
+ from datetime import timedelta
+ from typing import Optional, Union
+ 
++__all__ = "LineRequest"
++
+ 
+ class LineRequest:
+     """
+diff --git a/bindings/python/gpiod/line_settings.py b/bindings/python/gpiod/line_settings.py
+index e02e932..458fd81 100644
+--- a/bindings/python/gpiod/line_settings.py
++++ b/bindings/python/gpiod/line_settings.py
+@@ -6,6 +6,8 @@ from dataclasses import dataclass
+ from datetime import timedelta
+ from gpiod.line import Direction, Bias, Drive, Edge, Clock, Value
+ 
++__all__ = "LineSettings"
++
+ 
+ @dataclass(repr=False)
+ class LineSettings:
+-- 
+2.39.2
 
-Hugo.
-
-> > Patch 3 fixes an issue when debugging IOcontrol register. After testing the GPIO
-> > regression patches (patches 6 and 7, tests done by Lech Perczak), it appers that
-> > this patch is also necessary for having the correct IOcontrol register values.
-> > 
-> > Patch 4 introduces a delay after a reset operation to respect datasheet
-> > timing recommandations.
-> > 
-> > Patch 5 fixes an issue with init of first port during probing. This commit
-> > brings some questions and I appreciate if people from the serial subsystem could
-> > comment on my proposed solution.
-> > 
-> > Patch 6 fixes a bug with the output value when first setting the GPIO direction.
-> > 
-> > Patch 7, 8 and 9 fix a GPIO regression by (re)allowing to choose GPIO function for
-> > GPIO pins shared with modem status lines.
-> > 
-> > Patch 10 allows to read common rs485 device-tree flags and properties.
-> > 
-> > Patch 11 add a custom dump function as relying on regmal debugfs is not really
-> > practical for this driver.
-> > 
-> > I have tested the changes on a custom board with two SC16IS752 DUART using a
-> > Variscite IMX8MN NANO SOM.
-> 
-> Other comments are per individual emails.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
