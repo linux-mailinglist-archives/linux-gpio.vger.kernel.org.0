@@ -2,44 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C827A710AB6
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:20:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E9C1710ABE
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240877AbjEYLUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 07:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48812 "EHLO
+        id S232250AbjEYLVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 07:21:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235756AbjEYLUA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:20:00 -0400
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3723710B
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 04:19:55 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-        id 1186f88a-faee-11ed-abf4-005056bdd08f;
-        Thu, 25 May 2023 14:19:52 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Thu, 25 May 2023 14:19:52 +0300
+        with ESMTP id S234092AbjEYLVQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:21:16 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E001B4;
+        Thu, 25 May 2023 04:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685013667; x=1716549667;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=Vaf8hbEzW0GiP9VSR1Vgme7i6rbC6bI7GrB1LsNCkw8=;
+  b=hJ5CC3sYRS+kYaMST9e2Q64sL4Jygrlrq1dTlYoLy3scNNvTR9VTLufI
+   bobd5kceytGSPOr0Z7NadE8QNIMtosJl8ZJhKzmyfwbxTMWSyTS8NN/x2
+   tMP60BMcvp2Y2ME+nutFCdoAtzX1fQ+LFN9I5LvldK9hGGVjxDdnUrjLa
+   vSCzPHZwrEI3RkCWhpPiZCeWKVSrbQVX396J+zKg9jZPAgEJKxJPHUOpQ
+   pxHuehLCkd0bx/qujAeQD1FU3FYrd8KVSxE8OAVfVhYvnmFHOwMwF54IM
+   KP2TP3z6N/4CROA/VzLQhVYusSFHCFOthQ4s3T4efH/JlyhwKL+B+4n9A
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="338434389"
+X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
+   d="scan'208";a="338434389"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 04:21:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="849164264"
+X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
+   d="scan'208";a="849164264"
+Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 04:21:02 -0700
+Date:   Thu, 25 May 2023 14:20:59 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Jiri Slaby <jirislaby@kernel.org>,
+        jringle@gridpoint.com, tomasz.mon@camlingroup.com,
+        l.perczak@camlintechnologies.com,
+        linux-serial <linux-serial@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v3 08/11] serial: sc16is7xx: fix regression with GPIO
- configuration
-Message-ID: <ZG9EWEwb077qyBIi@surfacebook>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
- <20230525040324.3773741-9-hugo@hugovil.com>
+Subject: Re: [PATCH v3 05/11] serial: sc16is7xx: fix broken port 0 uart
+ init
+In-Reply-To: <20230525040324.3773741-6-hugo@hugovil.com>
+Message-ID: <2936e18f-44ea-faed-9fa0-2ddefe7c3194@linux.intel.com>
+References: <20230525040324.3773741-1-hugo@hugovil.com> <20230525040324.3773741-6-hugo@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230525040324.3773741-9-hugo@hugovil.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+Content-Type: multipart/mixed; BOUNDARY="8323329-497861732-1685013436=:1738"
+Content-ID: <7ba46da5-da4e-341e-382e-cd7cf39b5cd@linux.intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,88 +68,105 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thu, May 25, 2023 at 12:03:22AM -0400, Hugo Villeneuve kirjoitti:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-497861732-1685013436=:1738
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <b5e661ae-85b6-6dfc-28d2-ef1d35c850b0@linux.intel.com>
+
+On Thu, 25 May 2023, Hugo Villeneuve wrote:
+
 > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> changed the function of the GPIOs pins to act as modem control
-> lines without any possibility of selecting GPIO function.
+> While experimenting with rs485 configuration on a SC16IS752 dual UART,
+
+You can remove this intro, it's not necessary.
+
+> I found that the sc16is7xx_config_rs485() function was called only for
+> the second port (index 1, channel B), causing initialization problems
+> for the first port.
+
+Just start with:
+
+sc16is7xx_config_rs485() function is called only for ...
+
+> For the sc16is7xx driver, port->membase and port->mapbase are not set,
+> and their default values are 0. And we set port->iobase to the device
+> index. This means that when the first device is registered using the
+> uart_add_one_port() function, the following values will be in the port
+> structure:
+>     port->membase = 0
+>     port->mapbase = 0
+>     port->iobase  = 0
 > 
-> As a consequence, applications that depends on GPIO lines configured
-> by default as GPIO pins no longer work as expected.
+> Therefore, the function uart_configure_port() in serial_core.c will
+> exit early because of the following check:
+> 	/*
+> 	 * If there isn't a port here, don't do anything further.
+> 	 */
+> 	if (!port->iobase && !port->mapbase && !port->membase)
+> 		return;
 > 
-> Also, the change to select modem control lines function was done only
-> for channel A of dual UART variants (752/762). This was not documented
-> in the log message.
+> Typically, I2C and SPI drivers do not set port->membase and
+> port->mapbase. But I found that the max310x driver sets
+> port->membase to ~0 (all ones).
 
-> This new patch allows to specify GPIO or modem control line function
-> in the device tree, and for each of the ports (A or B).
+The max310x driver sets port->membase to ~0 (all ones) to solve the same 
+problem.
 
-Imperative mood as stated in documentation, please.
-Like "Allow to specify...".
+> By implementing the same change in our
+> driver, uart_configure_port() is now correctly executed.
 
-> This is done by using the new device-tree property named
-> "modem-control-line-ports" (property added in separate patch).
-> 
-> We also now reduce the number of exported GPIOs according to the
-> modem-status-line-port DT property.
-> 
-> Boards that need to have GPIOS configured as modem control lines
-> should add that property to their device tree. Here is a list of
-> boards using the sc16is7xx driver in their device tree and that may
-> need to be modified:
->     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->     mips/boot/dts/ingenic/cu1830-neo.dts
->     mips/boot/dts/ingenic/cu1000-neo.dts
+our driver -> this driver
 
-...
+This changelog was really well describing the problem! :-)
 
-> +#ifdef CONFIG_GPIOLIB
+> Fixes: dfeae619d781 ("serial: sc16is7xx")
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> ---
+> I am not sure if this change is the best long-term solution to this
+> problem, and maybe uart_configure_port() itself could be modified to
+> take into account the fact that some devices have all three *base
+> values set to zero?
 
-I'm wondering if we can avoid adding new ifdefferies...
+Yeah, some other solution should be devised. Maybe we should add another 
+.iotype for thse kind of devices. But I'm fine with this for this fix.
+After editing the changelog, feel free to add:
 
-> +	s->gpio_configured = devtype->nr_gpio;
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-The name of the variable is a bit vague WRT its content.
-Shouldn't be as simple as the rvalue, i.e. s->nr_gpio?
+> Also, many drivers use port->iobase as an index, is it the correct way
+> to use it?
 
-> +#endif /* CONFIG_GPIOLIB */
-
-...
-
-> +		of_property_for_each_u32(dev->of_node, "nxp,modem-control-line-ports",
-> +					 prop, p, u)
-
-The driver so far is agnostic to property provider. Please keep it that way,
-i.e. no of_ APIs.
-
-> +			if (u < devtype->nr_uart) {
-
-Hmm... What other can it be?
-
-> +				/* Use GPIO lines as modem control lines */
-> +				if (u == 0)
-> +					val |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
-> +				else if (u == 1)
-> +					val |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
-> +
-> +#ifdef CONFIG_GPIOLIB
-> +				if (s->gpio_configured >=
-> +				    SC16IS7XX_GPIOS_PER_BANK)
-
-On one line it will be better to read. Esp. taking into account the above remark.
-
-> +					s->gpio_configured -=
-> +						SC16IS7XX_GPIOS_PER_BANK;
-
-Ditto.
-
-> +#endif /* CONFIG_GPIOLIB */
-> +			}
+"Many" for this and max310x? Besides that, uartlite.c has a comment which 
+says "mark port in use".
 
 -- 
-With Best Regards,
-Andy Shevchenko
+ i.
 
 
+> For example, for our driver, there was
+> commit 5da6b1c079e6 ("sc16is7xx: Set iobase to device index") with the
+> following explanation:
+>     "Set the .iobase value to the relative index within the device to allow
+>     infering the order through sysfs."
+> 
+>  drivers/tty/serial/sc16is7xx.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> index af7e66db54b4..8a2fc6f89d36 100644
+> --- a/drivers/tty/serial/sc16is7xx.c
+> +++ b/drivers/tty/serial/sc16is7xx.c
+> @@ -1443,6 +1443,7 @@ static int sc16is7xx_probe(struct device *dev,
+>  		s->p[i].port.fifosize	= SC16IS7XX_FIFO_SIZE;
+>  		s->p[i].port.flags	= UPF_FIXED_TYPE | UPF_LOW_LATENCY;
+>  		s->p[i].port.iobase	= i;
+> +		s->p[i].port.membase	= (void __iomem *)~0;
+>  		s->p[i].port.iotype	= UPIO_PORT;
+>  		s->p[i].port.uartclk	= freq;
+>  		s->p[i].port.rs485_config = sc16is7xx_config_rs485;
+> 
+--8323329-497861732-1685013436=:1738--
