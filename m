@@ -2,110 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BBFE710DFC
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FD3710E03
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:08:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241546AbjEYOGe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 10:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
+        id S241556AbjEYOIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 10:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241497AbjEYOG3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:06:29 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09716E41;
-        Thu, 25 May 2023 07:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=SVC7JU89Ibvqe/MRZpOcFxuHYUrMm1k3g+sVe4L8ZBU=; b=gv2pVZjzfU8lmN8kiDmrxA2FPp
-        Hs8GB7EJ+p8Y4szzuK/Wwq75bBCn7htDFUqKAB95csz8QWQxojoyjozXu0jb7ow/pky/Xc5f0bKId
-        cJbR7oAgsXVTDTtUYlJEMkVEdWhczVA5Rvn1eKpfCeoq8bun/XH+rMEzqaKFz1DCS6OI=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:48210 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q2Bb2-00084I-0S; Thu, 25 May 2023 10:05:40 -0400
-Date:   Thu, 25 May 2023 10:05:39 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Jiri Slaby <jirislaby@kernel.org>,
-        jringle@gridpoint.com, tomasz.mon@camlingroup.com,
-        l.perczak@camlintechnologies.com,
-        linux-serial <linux-serial@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525100539.b2c0720f35563150334e4bf9@hugovil.com>
-In-Reply-To: <1ae6fb11-6aa8-66e-86a-a9b5a6403f5e@linux.intel.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <20230525040324.3773741-5-hugo@hugovil.com>
-        <1ae6fb11-6aa8-66e-86a-a9b5a6403f5e@linux.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S241519AbjEYOIE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:08:04 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6DCE5F
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 07:07:43 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f60e730bf2so6927105e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 07:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1685023661; x=1687615661;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tF/YLiXt+Wz4pi2y/9855PYbDqln/umnaCm1hvZD/nY=;
+        b=FshkKSklE4mhKDuI6cA8Jo6KkrVTc+5WF31v25PXSvMB1rfjab0/nMv74UstUBhCfU
+         5MtIhSo6Xux7Ezw1l2v1Y2BPsxH+4Zt/6PrKAFVHHQ+3XW8SGHgFxBwo6YZTJP0zCTHr
+         NLdeggUhG/BB9v0f0G9+FXR7gaqibHnL22DUBB7yrt5lOkfaYu5Smu6x3RITL0I7OLlr
+         tOFfnrhOtqGJvlRjuIuxAhOv1OJ+WR/Ce5iIHQHmXrQbfCjHCqp+5gFvHc7i9IiIh+hM
+         Uev0MHBAymDNkVZy42ErzwArl0KTFA37qHyPxU9N81IgDPCsnn6hAI3U1QoJNldvDJo/
+         TGPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685023661; x=1687615661;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tF/YLiXt+Wz4pi2y/9855PYbDqln/umnaCm1hvZD/nY=;
+        b=F3OTuIg5vPZhBJgeG4LCTEcoNVoDrMBLbfE7toaqyeW0noGH6lgCS6YGl4f7JUygmF
+         cDYtpBg0DI3bTl1rPhUPWwDbNEvGHyp2x8gYuLwrhBUdRj69pIkA8b3OD0GhvMDm8ehG
+         0lqBFeiim+KdlPwNbeRVWFfC1XmZQwLXoQEHRJXrEG7NivUR+v4cCUUv6OBZOjj66m2O
+         dvDiMpRdfUEg0OVnDYVVdD+b8Xxe8Ebu7lW3aBHr5Y5/cg+4LqBmEATe8crCjSHsr9F5
+         +JosO2yL3g+r2AGqbPWvyTW08Tf/LySzyOQ+OsamS932bXDBh+hZbr4sDQ/Tl83tVSOn
+         cVDw==
+X-Gm-Message-State: AC+VfDwkibKfuoFmGdPJ3l6oUZ9iK23hmLuwR/WY6eqVerfYgBowb9Wg
+        jLbF2bLSEMKoUmvqg/jbihho2w==
+X-Google-Smtp-Source: ACHHUZ4ixPjz/IrEBqNV7Mpn53Q4wlZCzaDBAs9Ux+XQ1aLD12RR5fr2BMAIeKn7BLlXdlrzhMvtcQ==
+X-Received: by 2002:a5d:58d4:0:b0:309:5029:b075 with SMTP id o20-20020a5d58d4000000b003095029b075mr2584321wrf.13.1685023660991;
+        Thu, 25 May 2023 07:07:40 -0700 (PDT)
+Received: from localhost ([2a01:e0a:28d:66d0:ed59:2d5:ca3d:ee5c])
+        by smtp.gmail.com with ESMTPSA id e7-20020a056000194700b00307bc4e39e5sm1892289wry.117.2023.05.25.07.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 May 2023 07:07:40 -0700 (PDT)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 25 May 2023 16:07:39 +0200
+Message-Id: <CSVF1AQBGQU0.1V5KJP08TCKLT@burritosblues>
+Cc:     <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <a.zummo@towertech.it>,
+        <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <jpanis@baylibre.com>, <jneanne@baylibre.com>,
+        <aseketeli@baylibre.com>, <u-kumar1@ti.com>
+Subject: Re: [PATCH v5 2/3] pinctrl: tps6594: Add driver for TPS6594 pinctrl
+ and GPIOs
+From:   "Esteban Blanc" <eblanc@baylibre.com>
+To:     <andy.shevchenko@gmail.com>
+X-Mailer: aerc 0.14.0
+References: <20230522163115.2592883-1-eblanc@baylibre.com>
+ <20230522163115.2592883-3-eblanc@baylibre.com>
+ <ZG0QmjZwvzWbNwA4@surfacebook>
+In-Reply-To: <ZG0QmjZwvzWbNwA4@surfacebook>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 04/11] serial: sc16is7xx: add post reset delay
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 14:05:35 +0300 (EEST)
-Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
-
-> On Thu, 25 May 2023, Hugo Villeneuve wrote:
->=20
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Tue May 23, 2023 at 9:14 PM CEST,  wrote:
+> Mon, May 22, 2023 at 06:31:14PM +0200, Esteban Blanc kirjoitti:
+> > TI TPS6594 PMIC has 11 GPIOs which can be used
+> > for different functions.
 > >=20
-> > Make sure we wait at least 3us before initiating communication with
-> > the device after reset.
-> >=20
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > ---
-> >  drivers/tty/serial/sc16is7xx.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >=20
-> > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is=
-7xx.c
-> > index a7c4da3cfd2b..af7e66db54b4 100644
-> > --- a/drivers/tty/serial/sc16is7xx.c
-> > +++ b/drivers/tty/serial/sc16is7xx.c
-> > @@ -1428,6 +1428,12 @@ static int sc16is7xx_probe(struct device *dev,
-> >  	regmap_write(s->regmap, SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIF=
-T,
-> >  			SC16IS7XX_IOCONTROL_SRESET_BIT);
-> > =20
-> > +	/*
-> > +	 * After reset, the host must wait at least 3us before initializing a
-> > +	 * communication with the device.
-> > +	 */
-> > +	usleep_range(3, 5);
-> > +
-> >  	for (i =3D 0; i < devtype->nr_uart; ++i) {
-> >  		s->p[i].line		=3D i;
-> >  		/* Initialize port data */
->=20
-> Does this fix a problem? You don't have a Fixes tag nor did you describe
-> a problem that arises if the is not there in the changelog.
+> > This patch adds a pinctrl and GPIO drivers in
+> > order to use those functions.
+>
+> ...
+>
+> > +#define FUNCTION(n, g, v)                                             =
+       \
+> > +	{                                                                    =
+\
+> > +		.pinfunction =3D PINCTRL_PINFUNCTION((n), (g), ARRAY_SIZE(g)), \
+> > +		.muxval =3D v,                                                 \
+> > +	}
+>
+> It seems you have used SPACEs before \, can you move to TABs?
 
-Not for the moment, that is why I didn't put a Fixes tag.
+Once again clang-format is not doing the right thing. Sur I will fix
+this.
 
-A potential problem that can arise is that on a much faster processor, ther=
-e is a chance that we could reach the first instruction that request a read=
-/write before the reset post-delay.
+> > +// Used to compute register address of GPIO1_CONF to GPIO11_CONF
+>
+> This is good.
+>
+> > -#define TPS6594_REG_GPIOX_CONF(gpio_inst)		(0x31 + (gpio_inst))
+> > +#define TPS6594_REG_GPIOX_CONF(gpio_inst)	(0x31 + (gpio_inst))
+>
+> But why this?!
 
-Hugo.
+Once again, clang-format... I will fix this.
+
+Thanks for your help.
+Best regards,
+
+--=20
+Esteban Blanc
+BayLibre
+
