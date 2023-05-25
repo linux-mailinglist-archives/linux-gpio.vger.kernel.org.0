@@ -2,95 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC18710E68
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF431710E70
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241638AbjEYOex (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 10:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
+        id S241654AbjEYOfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 10:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241637AbjEYOew (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:34:52 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512D1101;
-        Thu, 25 May 2023 07:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=dmJE33FZIZmlTmfMzbCfmAi7/ICgaK239XoyyuZANyk=; b=i8QNqmiaxtOqyV5/L9vmwOcddQ
-        X1sPVmGMnt3wycGCbVIGfpG1tmhycIU1UhX0wkxvqfbLiZrw69YmJbSiziMHZPsRkICvXc/xBkaXr
-        ztqGgp3AsJODvGWs85O1yrYWHuIf3j8hWFmPSaibnX9iDmkz480ANeRbbHfu6QlX3smw=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:49690 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q2C3A-0008KV-5y; Thu, 25 May 2023 10:34:44 -0400
-Date:   Thu, 25 May 2023 10:34:43 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     andy.shevchenko@gmail.com
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525103443.d3d31e80221aed1ebceef30e@hugovil.com>
-In-Reply-To: <ZG9CWhiTbLBKjPC9@surfacebook>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <20230525040324.3773741-8-hugo@hugovil.com>
-        <ZG9CWhiTbLBKjPC9@surfacebook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S233825AbjEYOfh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:35:37 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C123187
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 07:35:35 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-456d9652c24so418734e0c.1
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 07:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685025334; x=1687617334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aAogn6dT4b6m8+lLJAd5XLZlUe3QdLu7einTf1A+tIg=;
+        b=olneRNt0QSWwgjhhvV/O7lXmLW+2Z9uuG9ZKZc988z4Tl6cH95KQuo0n9C0Ybbxv7D
+         U9Z6WWaeCLzdQMhyJBfm/h5TCWirx+agFmWwI96Hc0meNcwmmStEpY/yK37l0uNrv/LD
+         VHYKX9atO0lsz8JGcgKcNiUk0910Ur0BIRugXfF6zSXQ3K50r7sBcnfLjJW3gh5Vr4cU
+         SQkVBc6E2nGiw84gGkHHYv4BwVcs9XLkjUHibjOFvAUQgTGL+Jwups8nyiSmG53GnFvJ
+         oZIxh+UkuTiyo2kcpmHPYCEENHva6DjmbQafvJdNE1FhZmev/U/RnKJcJMNfLCZDHpIS
+         5bnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685025334; x=1687617334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aAogn6dT4b6m8+lLJAd5XLZlUe3QdLu7einTf1A+tIg=;
+        b=OztOvGaoRZ8LXG9Fz4BmUbB3SIzvTNqj2oAX9410iYIXAagyfnP4w5kKI8mpr+ZsVT
+         qH8O03btmcnKT1UUmIz3alQGUb5G/I7VKidP1fzQVdyyTcm9bz0Cn6Sh3d4KZqauGAx1
+         Ph2D8YopkH5TiuY0Jq6TWvYT4oYlAXlUI+0h3IA1cKYtNzP+P8FBF8lRMLXEntTITjC3
+         Ug6XOm2fvWGX+f5MmVcFBpLIsZlI02sBaWsbYDnBS4YaqTW2ZDtLG6VEkt2vHNx5DCCX
+         Kt2ajbEn+x4BR3XzHXQ552BomGXIHU42KTVAd+ga0m7yIx/22LLs+0jq/qUqSAjl0MH/
+         8n1Q==
+X-Gm-Message-State: AC+VfDzf3h/ZTDj1Uba5l8jZ3e0t3cgGEjOBdvoe7SE2F4PgwDT8rOfW
+        1Lzlp3sdapZS2F7Z3VKD5pvHO6qQz4M6uubN8KgDQg==
+X-Google-Smtp-Source: ACHHUZ4qjNa/T2reNQHamvgq/FN+8eYf30P46YnDIhAQfq41TQFW6fcyaVASyBQ7p8xhGwBSUypu5WGUmvNEbQxN824=
+X-Received: by 2002:a05:6122:141:b0:457:56a4:19e7 with SMTP id
+ r1-20020a056122014100b0045756a419e7mr1164313vko.0.1685025334463; Thu, 25 May
+ 2023 07:35:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <ZGzsD_HMbMGhGwcr@surfacebook> <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
+ <ZG2jgwjK+CBmOk3G@sol> <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+ <CAHp75VfVr0N4Fv=s_12vcTi8=pGWJgeWoXpxQvqSNWDcZauS=A@mail.gmail.com>
+In-Reply-To: <CAHp75VfVr0N4Fv=s_12vcTi8=pGWJgeWoXpxQvqSNWDcZauS=A@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 25 May 2023 16:35:23 +0200
+Message-ID: <CAMRc=Md2iFVMw14d4v-AjmcBniWF6r65VhcE5+HFsvH=VTdSxA@mail.gmail.com>
+Subject: Re: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
+ Avoid side effects in gpio_is_visible())
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        Kent Gibson <warthog618@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 07/11] dt-bindings: sc16is7xx: Add property to change
- GPIO function
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 14:11:22 +0300
-andy.shevchenko@gmail.com wrote:
+On Thu, May 25, 2023 at 11:13=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, May 25, 2023 at 2:53=E2=80=AFAM Chris Packham
+> <Chris.Packham@alliedtelesis.co.nz> wrote:
+> > On 24/05/23 17:41, Kent Gibson wrote:
+>
+> ...
+>
+> > It'd also be great if there was some way of ensuring that a line's stat=
+e
+> > is kept after the application has released the request (i.e. the txdis
+> > case I mentioned). But that probably needs work on the kernel side to
+> > make such guarantees.
+>
+> Won't happen. It will require too much of strictness to be added into
+> the kernel with likely breakage of the existing code and
+> documentation. What is being discussed is a D-Bus (like?) daemon +
+> Policy in user space that will allow user / process / cgroup / etc to
+> "own" the line and track its state.
+>
 
-> Thu, May 25, 2023 at 12:03:21AM -0400, Hugo Villeneuve kirjoitti:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > Some variants in this series of uart controllers have GPIO pins that
-> 
-> UART
+It's already WiP[1]. I'm trying to keep the footprint minimal with
+only GLib and dbus required at run-time.
 
-Hi,
-fixed.
+Bart
 
-> > are shared between GPIO and modem control lines.
-> > 
-> > The pin mux mode (GPIO or modem control lines) can be set for each
-> > ports (channels) supported by the variant.
-> > 
-> > This adds a property to the device tree to set the GPIO pin mux to
-> > modem control lines on selected ports if needed.
-> 
-> I'm wondering if we can convert this to YAML first and then add a new property.
-
-Hi,
-I also thought about it, then decided to focus on simply adding the new property first since I am not an expert in YAML.
-
-I think it would be best to do it after this patch series. Keep in mind that the original intent of this patch series, and this new property, was to fix a regression related to the GPIOs, and I think that converting to YAML would simply delay and add much noise to the discussion at this point.
-
-If someone wants to do it as a separate patch after this, fine. If not, I an willing to give it a go.
-
-Hugo.
+[1] https://github.com/brgl/libgpiod-private/tree/topic/dbus
