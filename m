@@ -2,108 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3BD71178A
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 21:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF8B7117A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 21:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240865AbjEYTnX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 15:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59564 "EHLO
+        id S241726AbjEYTuI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 15:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240637AbjEYTnV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 15:43:21 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607E2125
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 12:42:56 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f611ccd06eso96585e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 12:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685043755; x=1687635755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NMbT2YdIMrqMQsEZ82lgEO8OSkjFBY3sGV3h+uAcAY=;
-        b=YCO41YRi1ZMzvGGFVVlZPvs6dIRiJRYrCc8vWQdSe+nTL6Fi2am6Rvi2CKPWd5XVom
-         Y88OTW1si93b5Uu4MjcPyp2JjOvV3Vfsd4gIdKp3WFxk6FBwwaf+0EB0snMSgR3IJE33
-         s/cQ5jHIAntOYEAKJ2LitYGJddOWocZXFIdN6zjBZwKSs5RaeqWD5orMJyuEfQ7m4Lrc
-         o+x1zr4dfupuVn1CZpAuFquEnV48tA2SzYn57S2T3c2JRW5/KbkS2kkFyQ/rVF3sL27t
-         fgxNYd6vzZUM7LhnK4pNzA89DpX7das7nO9lsW/OM1rtfAPsioHXUjgNaOKkzsCsFKSk
-         oXbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685043755; x=1687635755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7NMbT2YdIMrqMQsEZ82lgEO8OSkjFBY3sGV3h+uAcAY=;
-        b=TwTjq392ewJWOrPrLv9SsusmF8y9bhlAIlErZFeHIq4b4kKAGYzoY1xIqgjMZGDRkc
-         69BSlN3Pn5DbeA1cffET5GQJmuE/BmHTP6rgqnblUNLjXW2tnEvZTCP0d9JiquglJX07
-         w7ON4AfK3/A1CNRdjFf/2jXumSoB3uttMFvWCddhKg3mhgPnQYOF6H1SS4IP0qyicGKG
-         qmo7pRGmwzMIycancBjPOE6OH7i2rfE+qXoxrOR40lRWijxmK11bdHnbpujwyNaI+F9U
-         j3+iEhZDAdTRZmCF0iNMXucx3I8aYeIF8rPoqRHV0bK6xDbpjFRRdg+H/NGUSsV42uwq
-         cNWg==
-X-Gm-Message-State: AC+VfDxeaEYDlnK8gxlvs3F8n2I18YGI3BoC12rota5lBsw8lCHy8cGv
-        nc2n1jfjtcwoX170Y5aKELnZwg==
-X-Google-Smtp-Source: ACHHUZ7MR4izT0ZwRRpeleq/5bCnFlwjq19+lIxGvN/01yzQePGbdveziISmCJHVwM+aPb2DvwdsLw==
-X-Received: by 2002:a7b:c406:0:b0:3f6:e13:b268 with SMTP id k6-20020a7bc406000000b003f60e13b268mr3832943wmi.22.1685043755591;
-        Thu, 25 May 2023 12:42:35 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id v7-20020a05600c214700b003f4f89bc48dsm6758859wml.15.2023.05.25.12.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 12:42:34 -0700 (PDT)
-Date:   Thu, 25 May 2023 22:42:29 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Wells Lu =?utf-8?B?5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        Wells Lu <wellslutw@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Janitors <kernel-janitors@vger.kernel.org>
-Subject: Re: RE: [PATCH] pinctrl:sunplus: Add check for kmalloc
-Message-ID: <ac995ef4-b9ab-4771-a3a1-46054ba303c6@kili.mountain>
-References: <1684836688-9204-1-git-send-email-wellslutw@gmail.com>
- <ZGztCHNr1jmpFq0A@surfacebook>
- <1560e9c0e5154802ab020b9da846d65f@sphcmbx02.sunplus.com.tw>
- <ZG0V6_bUaz3Thy0q@surfacebook>
- <b9207257-b04f-ee2e-7025-015b0f22358a@wanadoo.fr>
- <dd0ea27640d2420eb3b521076c643919@sphcmbx02.sunplus.com.tw>
- <dbb3c0bd-3b09-2b59-8cd1-2838b9880abf@wanadoo.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbb3c0bd-3b09-2b59-8cd1-2838b9880abf@wanadoo.fr>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S235946AbjEYTuD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 15:50:03 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E35095;
+        Thu, 25 May 2023 12:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=BXuAUuI6O9SQYBQZ05xd3Kxteg3sg/LRhBLPYI5uuRc=; b=s4C/WmJFFzQ1IE4A4s1NkfIrRO
+        tvMFii1XJtYo/bbpGG5hq//WvomUow58EWxLQi2CvvMyw282dRq3jdiBLub03ExRgmC3EQGH8B0FZ
+        qIZV3Iz+/5QaQ1TkiTVxvOs8xzoNp8aWhaG0VOtCNYC5+I/HBfDkqtI7exkmV0q3Asy8=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:54570 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q2Gy2-0003K6-Pr; Thu, 25 May 2023 15:49:47 -0400
+Date:   Thu, 25 May 2023 15:49:46 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     andy.shevchenko@gmail.com
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20230525154946.98829ff5bda64d7c723ed6ff@hugovil.com>
+In-Reply-To: <ZG9F8xsPqs2ZWfED@surfacebook>
+References: <20230525040324.3773741-1-hugo@hugovil.com>
+        <20230525040324.3773741-12-hugo@hugovil.com>
+        <ZG9F8xsPqs2ZWfED@surfacebook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 11/11] serial: sc16is7xx: add dump registers function
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 25, 2023 at 08:37:36PM +0200, Christophe JAILLET wrote:
-> 
-> Hi,
-> (adding Dan in copy because the initial report is related to smatch)
-> 
-> I don't use kmemleak, but could you share some input about its report?
-> 
-> 
-> I've not rechecked my analysis, but it looked promising.
-> Maybe Dan could also give a look at it and confirm your finding, or dig
-> further with smatch to make sure that its static analysis was complete
-> enough.
+On Thu, 25 May 2023 14:26:43 +0300
+andy.shevchenko@gmail.com wrote:
 
-Smatch doesn't really complain about memory leaks.  I wrote that check
-13 years ago and focused more on avoiding false positives instead of
-being thorough.  It turns out that avoiding false positives is
-achievable but pretty useless.
+> Thu, May 25, 2023 at 12:03:25AM -0400, Hugo Villeneuve kirjoitti:
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > 
+> > With this driver, it is very hard to debug the registers using
+> > the /sys/kernel/debug/regmap interface.
+> > 
+> > The main reason is that bits 0 and 1 of the register address
+> > correspond to the channels bits, so the register address itself starts
+> > at bit 2, so we must 'mentally' shift each register address by 2 bits
+> > to get its offset.
+> > 
+> > Also, only channels 0 and 1 are supported, so combinations of bits
+> > 0 and 1 being 10b and 11b are invalid, and the display of these
+> > registers is useless.
+> > 
+> > For example:
+> > 
+> > cat /sys/kernel/debug/regmap/spi0.0/registers
+> > 04: 10 -> Port 0, register offset 1
+> > 05: 10 -> Port 1, register offset 1
+> > 06: 00 -> Port 2, register offset 1 -> invalid
+> > 07: 00 -> port 3, register offset 1 -> invalid
+> > ...
+> > 
+> > Add a debug module parameter to call a custom dump function for each
+> > port registers after the probe phase to help debug.
+> 
+> Not sure about this. Can we rather create an abstract mapping on regmap?
+> (Something like gpio-pca953x.c has)
 
-Checking for the of_get_parent() leaks is probably easier.  I could just
-add it to check_unwind.c or create something custom.  The heuristic for
-the custom check would be to print a warning if the success path
-releases it but the others don't.
+Hi,
+maybe we can, but more like they do in the driver max310x.c (single, dual and quad UART versions).
 
-regards,
-dan carpenter
+I will look into it, but it will probably be a patch that affects a lot of the code, and that I would like to submit separately after this serie, and so I will probably simply drop this current patch (11/11) since it will not be needed anymore.
 
+Hugo.
