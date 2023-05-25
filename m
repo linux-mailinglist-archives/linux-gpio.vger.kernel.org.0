@@ -2,63 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFED1710A8A
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06571710A95
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:10:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234403AbjEYLFn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 07:05:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        id S240565AbjEYLKo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 07:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231605AbjEYLFn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:05:43 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218A7C5;
-        Thu, 25 May 2023 04:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685012742; x=1716548742;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TDUuNhwXDmmjarx2uF6dpg1kUSW8MpUrO3mxIEI6THU=;
-  b=ZZNY7X2kqd9ybfkJhQBa3jppU1Chu6yeRtGyiyDN+ByEzDEm+kYZKbD5
-   MU5CD+yhMnLsPdyg7Jumek907paq+bb0syI1B30Ly3PFz3Gbfne52Xl1L
-   QrugO5BAIAc+3E1stOuOombeMqjcz4sTjOfPZ2Scsl3XBTJZGsTvRfVfh
-   YTwJW60wfHohfTHOliPVNo4GRMOfIAyg7kjMo+tRk0/RHsvoSGhn9k0mX
-   3kvU/CZUyelK9szvXB92prjvSht0j2lG/pvA0mNnZvhjjVd+sx6mTPpOv
-   SPey7YlrrxTCdMTLl1OUv/sAPwJ4Ce4P1s/K3nYAvP7FIrRQlA4Yju6ea
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="357084326"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="357084326"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 04:05:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="1034935055"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="1034935055"
-Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 04:05:37 -0700
-Date:   Thu, 25 May 2023 14:05:35 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S240317AbjEYLKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:10:43 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A48BD1B0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 04:10:30 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id c0ee11ec-faec-11ed-b3cf-005056bd6ce9;
+        Thu, 25 May 2023 14:10:28 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Thu, 25 May 2023 14:10:27 +0300
 To:     Hugo Villeneuve <hugo@hugovil.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Jiri Slaby <jirislaby@kernel.org>,
-        jringle@gridpoint.com, tomasz.mon@camlingroup.com,
-        l.perczak@camlintechnologies.com,
-        linux-serial <linux-serial@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v3 04/11] serial: sc16is7xx: add post reset delay
-In-Reply-To: <20230525040324.3773741-5-hugo@hugovil.com>
-Message-ID: <1ae6fb11-6aa8-66e-86a-a9b5a6403f5e@linux.intel.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com> <20230525040324.3773741-5-hugo@hugovil.com>
+Subject: Re: [PATCH v3 06/11] serial: sc16is7xx: fix bug when first setting
+ GPIO direction
+Message-ID: <ZG9CIww5WbgJ3TUf@surfacebook>
+References: <20230525040324.3773741-1-hugo@hugovil.com>
+ <20230525040324.3773741-7-hugo@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230525040324.3773741-7-hugo@hugovil.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,39 +47,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023, Hugo Villeneuve wrote:
-
+Thu, May 25, 2023 at 12:03:20AM -0400, Hugo Villeneuve kirjoitti:
 > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> Make sure we wait at least 3us before initiating communication with
-> the device after reset.
+> When we want to configure a pin as an output pin with a value of logic
+> 0, we end up as having a value of logic 1 on the output pin. Setting a
+> logic 0 a second time (or more) after that will correctly output a
+> logic 0 on the output pin.
 > 
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
->  drivers/tty/serial/sc16is7xx.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index a7c4da3cfd2b..af7e66db54b4 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -1428,6 +1428,12 @@ static int sc16is7xx_probe(struct device *dev,
->  	regmap_write(s->regmap, SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
->  			SC16IS7XX_IOCONTROL_SRESET_BIT);
->  
-> +	/*
-> +	 * After reset, the host must wait at least 3us before initializing a
-> +	 * communication with the device.
-> +	 */
-> +	usleep_range(3, 5);
-> +
->  	for (i = 0; i < devtype->nr_uart; ++i) {
->  		s->p[i].line		= i;
->  		/* Initialize port data */
+> By default, all GPIO pins are configured as inputs. When we enter
+> c16is7xx_gpio_direction_output() for the first time, we first set the
 
-Does this fix a problem? You don't have a Fixes tag nor did you describe
-a problem that arises if the is not there in the changelog.
+Missing 's'.
+
+> desired value in IOSTATE, and then we configure the pin as an output.
+> The datasheet states that writing to IOSTATE register will trigger a
+> transfer of the value to the I/O pin configured as output, so if the
+> pin is configured as an input, nothing will be transferred.
+> 
+> Therefore, set the direction first in IODIR, and then set the desired
+> value in IOSTATE.
+> 
+> This is what is done in NXP application note AN10587.
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
