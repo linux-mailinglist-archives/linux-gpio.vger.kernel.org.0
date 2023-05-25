@@ -2,262 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C4F3710D3F
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:31:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1759B710D58
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:37:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234480AbjEYNba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 09:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
+        id S241309AbjEYNh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 09:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbjEYNb3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:31:29 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1818199
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:31:27 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-30950eecc1eso2098186f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:31:27 -0700 (PDT)
+        with ESMTP id S241175AbjEYNhz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:37:55 -0400
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A226189;
+        Thu, 25 May 2023 06:37:54 -0700 (PDT)
+Received: by mail-qv1-xf36.google.com with SMTP id 6a1803df08f44-623921866bfso4214936d6.1;
+        Thu, 25 May 2023 06:37:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685021485; x=1687613485;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SEbZwfd7B8yFINCI/0q4cupNK+9pfV7Mc1Q0t+q/ctc=;
-        b=P5/mqMgEHHcNc60XfnoGVOXYsPQq6TjW86wBuDzumEyWSDaqyCqiVeJ/er0ZA8IgcR
-         NZvGzTcKEpSGVNHJDQQrq6Yyia6Zhjs4KSv49CZ5R2QJaZsdGxH06ppldPypt3JdyUUi
-         tLntYNlpk+z2URwPRT01LklRurUANFcaMUWF/IfP/yoX80cnqdXkVi2Fd6Qpxv8We3q2
-         qbGjvTeOXNTWxXB8h7fdh5jpyHwrVz8hI8TKJksOmmwi6xrVFywz/4eiRFWZs51LDB91
-         OwnS/5+6xSyxA+F9qgzlQfStCFYjcmZhjhC+61+OpKuisxfq2jdqOFAw5fSaMAmnMoZI
-         Ravg==
+        d=gmail.com; s=20221208; t=1685021873; x=1687613873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nsSHALAsMKukrtmUiJgckekRC7Xr3Hckq7yajpTmIdM=;
+        b=Z6WDfgLoM9sg8yoUUmKWkOuatboVl1Lf46DaVTQmR84jCP6kdZCgrzPasEsnsupakm
+         Ojuwgr1RCQOZ+DMDJ5zzt5gOFtRzIAz+aiPTd2/CKEwEFXJJ9riktR+PEkEBzexel91T
+         d5DxajXvriNo69hsCjAgwuRWObVOYmV/BiQ/Dd1XcQks/1xsxxZ+VQDFqSMcoRQOXRVC
+         Ll2v3mWTdFF8ShzxIXV0SJxhtWbXInXB14jlwfPEJE6D/GSIs1jJ/6+q4mg7zsaPlc/U
+         sFfd2caKAyLEqBT7ycT3HRseB6KjOrCWb/U7iroUGbA2hgatKM2eQeGw1ACAXsAonN49
+         etoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685021485; x=1687613485;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SEbZwfd7B8yFINCI/0q4cupNK+9pfV7Mc1Q0t+q/ctc=;
-        b=UYqZzYWiTgXv+Q/8epmniB4qdbat/SW1PGHvGje2dXyMNgT+XY5UcSRekjImjj+1z2
-         qTs342AFuZtwxyu9KRidg7YJ4Yj7qoGe+jZZiiQ6Hoag7WOilEvUaEgNHfGogFAsRh/h
-         T4TRGxO7o9CTJMzwqf5LPnjadEvMh7pbA6P0On5kpykdBk2o0WaRYr0NFcJ+d+o3XKo2
-         DcUSUnNeyvsTReWPhMy6jBOZX4Ho64Wm0LGSwkzsEBtNDWgSSEuXXUNTj3gLvpq+iCST
-         zWIpAvXgy9PS0CB9cI9zPoIeI7YCoTTGTeo+2ivbEPAF7VCRfZUTC12iGPUbfNxKCRcU
-         vyzQ==
-X-Gm-Message-State: AC+VfDyFpvHsIGPiAyyeygJB3Dv/AzMZz9J8fnHEOh64yuikE3ypkrUT
-        dNvIMmozlD5+I/zF3y968fbKPA==
-X-Google-Smtp-Source: ACHHUZ7T07jZk38SdTY8AxJC7KvFLKiwkj0+nzC5jB/VGQxslVKdtpWa81H95E3pcaT+j/ZnnZZu+A==
-X-Received: by 2002:a5d:4147:0:b0:309:38f4:fb52 with SMTP id c7-20020a5d4147000000b0030938f4fb52mr2023175wrq.9.1685021485495;
-        Thu, 25 May 2023 06:31:25 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f1fe:b5ad:8d14:8475])
-        by smtp.gmail.com with ESMTPSA id z17-20020a5d6551000000b00301a351a8d6sm1784635wrv.84.2023.05.25.06.31.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 06:31:25 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] bindings: python: specify the symbols to export explicitly
-Date:   Thu, 25 May 2023 15:31:22 +0200
-Message-Id: <20230525133122.296025-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1685021873; x=1687613873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nsSHALAsMKukrtmUiJgckekRC7Xr3Hckq7yajpTmIdM=;
+        b=hKoGOkd7piPW9/E+czPtiQ3rKYeMC0W2ogXSzPb5AIXBKHFX2mHLK58NgCwUta4Eps
+         X+MxwMo+mGh9Xs0514ekhHyvYqfmKTKQMIA7Q/s1g3JoISRFEhAD9fPvzZLzL6CJ1N14
+         Gg3H5Z4KjtjYXlFSZE8M3kKh9r38UD7VnamFN6ChSko8RoFpzMMV6J4Gyyz2a4eLHLam
+         k0SdvrVVZpIRrra9Xt2VFlQCWXOHAhWi/pcgo5itoa+w8vmnOQ9JJ1b/3ac75wz6zqYY
+         +zhdIz/V+Wd0bNnq9ALfqfBtRwxDd/rMAlIAQhXXedxr6ivlx8mLwt0ZbG8JEph9Cj8I
+         ICGw==
+X-Gm-Message-State: AC+VfDyUfB2f1m5igs9nxMd53ljJgguXaP6sKSmz/oXd++UKqPg3qHpn
+        5sg+yY3zFyuhbaNwc7k5ybgqU5BSbDbANRQKLKE85yAysow=
+X-Google-Smtp-Source: ACHHUZ63JuzKH6ZAhBoClRi8mKfFsNB3KpcYNMw7K/05YNYZbeuQi36TcaQJUo8i/MRcAef3k7H3JRwtMKtgwk6bCmI=
+X-Received: by 2002:ad4:5d4e:0:b0:5ef:8ae8:9adb with SMTP id
+ jk14-20020ad45d4e000000b005ef8ae89adbmr1336967qvb.37.1685021873493; Thu, 25
+ May 2023 06:37:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230525040324.3773741-1-hugo@hugovil.com> <ZG84KCeMIINFVTMh@surfacebook>
+ <20230525092627.edf4f7f9df4b9b1cf7b568a4@hugovil.com>
+In-Reply-To: <20230525092627.edf4f7f9df4b9b1cf7b568a4@hugovil.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 May 2023 16:37:17 +0300
+Message-ID: <CAHp75VenvvkC1evsmhSBNT5=V=D92RX1JXnwZWAtsJ2TrADvRA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/11] serial: sc16is7xx: fix GPIO regression and rs485 improvements
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, May 25, 2023 at 4:26=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> =
+wrote:
+> On Thu, 25 May 2023 13:27:52 +0300
+> andy.shevchenko@gmail.com wrote:
+> > Thu, May 25, 2023 at 12:03:13AM -0400, Hugo Villeneuve kirjoitti:
+> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > >
+> > > Hello,
+> > > this patch series mainly fixes a GPIO regression and improve RS485 fl=
+ags and properties
+> > > detection from DT.
+> > >
+> > > It now also includes various small fixes and improvements that were p=
+reviously
+> > > sent as separate patches, but that made testing everything difficult.
+> >
+> > > Patches 1 and 2 are simple comments fix/improvements.
+> >
+> > Usually we put fixes at the beginning of the series, but these patches =
+are
+> > missing Fixed tag. Are they really fixes or can be simply moved to the =
+end of
+> > the series?
+>
+> these are not code fixes, they are comments improvements. I was not aware=
+ that you need to put a Fixes tag for correcting syntax errors in comments,=
+ or adding comments to improve clarity.
+>
+> I often submit such comments patches but was never asked to put a Fixes t=
+ag before. Seems strange to me...
 
-We're currently unintentionally exporting a bunch of symbols that should
-remain local to sub-modules. Use __all__ where appropriate so that we
-don't re-export standard library functions such as select() etc. in the
-gpiod module.
+In this case there are probably no conflicts, but the usual grouping
+of patches is following
+1) fixes that may be backported;
+2) cleanups / refactoring /etc;
+3) new features.
+4) additional light-weit cleanups, such as whitespace cleaning (it's a
+radical, we probably do not accept pure whitespace cleaning patches,
+but you got the idea).
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/gpiod/chip.py          |  2 ++
- bindings/python/gpiod/chip_info.py     |  2 ++
- bindings/python/gpiod/edge_event.py    |  2 ++
- bindings/python/gpiod/exception.py     |  2 ++
- bindings/python/gpiod/ext/module.c     | 15 ++++++++++++++-
- bindings/python/gpiod/info_event.py    |  2 ++
- bindings/python/gpiod/internal.py      |  2 ++
- bindings/python/gpiod/line.py          |  2 ++
- bindings/python/gpiod/line_info.py     |  2 ++
- bindings/python/gpiod/line_request.py  |  2 ++
- bindings/python/gpiod/line_settings.py |  2 ++
- 11 files changed, 34 insertions(+), 1 deletion(-)
+Seems patches 1 and 2 fall into category 4).
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 52d0757..da93370 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -17,6 +17,8 @@ from errno import ENOENT
- from select import select
- from typing import Union, Optional
- 
-+__all__ = "Chip"
-+
- 
- class Chip:
-     """
-diff --git a/bindings/python/gpiod/chip_info.py b/bindings/python/gpiod/chip_info.py
-index a506b55..92b5e6f 100644
---- a/bindings/python/gpiod/chip_info.py
-+++ b/bindings/python/gpiod/chip_info.py
-@@ -4,6 +4,8 @@
- 
- from dataclasses import dataclass
- 
-+__all__ = "ChipInfo"
-+
- 
- @dataclass(frozen=True, repr=False)
- class ChipInfo:
-diff --git a/bindings/python/gpiod/edge_event.py b/bindings/python/gpiod/edge_event.py
-index 88f8e9b..bf258c1 100644
---- a/bindings/python/gpiod/edge_event.py
-+++ b/bindings/python/gpiod/edge_event.py
-@@ -5,6 +5,8 @@ from . import _ext
- from dataclasses import dataclass
- from enum import Enum
- 
-+__all__ = "EdgeEvent"
-+
- 
- @dataclass(frozen=True, init=False, repr=False)
- class EdgeEvent:
-diff --git a/bindings/python/gpiod/exception.py b/bindings/python/gpiod/exception.py
-index 07ffaa6..f9a83c2 100644
---- a/bindings/python/gpiod/exception.py
-+++ b/bindings/python/gpiod/exception.py
-@@ -1,6 +1,8 @@
- # SPDX-License-Identifier: LGPL-2.1-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
-+__all__ = ["ChipClosedError", "RequestReleasedError"]
-+
- 
- class ChipClosedError(Exception):
-     """
-diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod/ext/module.c
-index 101d756..25c252a 100644
---- a/bindings/python/gpiod/ext/module.c
-+++ b/bindings/python/gpiod/ext/module.c
-@@ -157,8 +157,8 @@ static PyTypeObject *types[] = {
- PyMODINIT_FUNC PyInit__ext(void)
- {
- 	const struct module_const *modconst;
-+	PyObject *module, *all;
- 	PyTypeObject **type;
--	PyObject *module;
- 	int ret;
- 
- 	module = PyModule_Create(&module_def);
-@@ -172,6 +172,19 @@ PyMODINIT_FUNC PyInit__ext(void)
- 		return NULL;
- 	}
- 
-+	all = PyList_New(0);
-+	if (!all) {
-+		Py_DECREF(module);
-+		return NULL;
-+	}
-+
-+	ret = PyModule_AddObjectRef(module, "__all__", all);
-+	Py_DECREF(all);
-+	if (ret) {
-+		Py_DECREF(module);
-+		return NULL;
-+	}
-+
- 	for (type = types; *type; type++) {
- 		ret = PyModule_AddType(module, *type);
- 		if (ret) {
-diff --git a/bindings/python/gpiod/info_event.py b/bindings/python/gpiod/info_event.py
-index 78b1459..481eae6 100644
---- a/bindings/python/gpiod/info_event.py
-+++ b/bindings/python/gpiod/info_event.py
-@@ -6,6 +6,8 @@ from .line_info import LineInfo
- from dataclasses import dataclass
- from enum import Enum
- 
-+__all__ = "InfoEvent"
-+
- 
- @dataclass(frozen=True, init=False, repr=False)
- class InfoEvent:
-diff --git a/bindings/python/gpiod/internal.py b/bindings/python/gpiod/internal.py
-index 7b4598c..2dddb65 100644
---- a/bindings/python/gpiod/internal.py
-+++ b/bindings/python/gpiod/internal.py
-@@ -5,6 +5,8 @@ from datetime import timedelta
- from select import select
- from typing import Optional, Union
- 
-+__all__ = []
-+
- 
- def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
-     if isinstance(timeout, timedelta):
-diff --git a/bindings/python/gpiod/line.py b/bindings/python/gpiod/line.py
-index c5d5ddf..1cc512f 100644
---- a/bindings/python/gpiod/line.py
-+++ b/bindings/python/gpiod/line.py
-@@ -5,6 +5,8 @@
- from . import _ext
- from enum import Enum
- 
-+__all__ = ["Value", "Direction", "Bias", "Drive", "Edge", "Clock"]
-+
- 
- class Value(Enum):
-     """Logical line states."""
-diff --git a/bindings/python/gpiod/line_info.py b/bindings/python/gpiod/line_info.py
-index 9a6c9bf..c196a6a 100644
---- a/bindings/python/gpiod/line_info.py
-+++ b/bindings/python/gpiod/line_info.py
-@@ -6,6 +6,8 @@ from dataclasses import dataclass
- from datetime import timedelta
- from gpiod.line import Direction, Bias, Drive, Edge, Clock
- 
-+__all__ = "LineInfo"
-+
- 
- @dataclass(frozen=True, init=False, repr=False)
- class LineInfo:
-diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
-index 090467c..096bf18 100644
---- a/bindings/python/gpiod/line_request.py
-+++ b/bindings/python/gpiod/line_request.py
-@@ -11,6 +11,8 @@ from collections.abc import Iterable
- from datetime import timedelta
- from typing import Optional, Union
- 
-+__all__ = "LineRequest"
-+
- 
- class LineRequest:
-     """
-diff --git a/bindings/python/gpiod/line_settings.py b/bindings/python/gpiod/line_settings.py
-index e02e932..458fd81 100644
---- a/bindings/python/gpiod/line_settings.py
-+++ b/bindings/python/gpiod/line_settings.py
-@@ -6,6 +6,8 @@ from dataclasses import dataclass
- from datetime import timedelta
- from gpiod.line import Direction, Bias, Drive, Edge, Clock, Value
- 
-+__all__ = "LineSettings"
-+
- 
- @dataclass(repr=False)
- class LineSettings:
--- 
-2.39.2
-
+--=20
+With Best Regards,
+Andy Shevchenko
