@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1288710D65
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:40:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99F8A710D80
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:45:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241050AbjEYNkL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 09:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
+        id S234036AbjEYNpQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 09:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241390AbjEYNj4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:39:56 -0400
+        with ESMTP id S233263AbjEYNpP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:45:15 -0400
 Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11541A8;
-        Thu, 25 May 2023 06:39:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A949F186;
+        Thu, 25 May 2023 06:45:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
         ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
         References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=W+USy6ZGPp8IPbp5FM+pZpBNuBUlS21T021RTvaoLFA=; b=EAgWp6toXJH3bL9zL8xioTndpb
-        JqBLZcKt+6hURf5om4beCEu8ZrebHRsCvv19WGVtx7IeT5Kn4CNIu8Y9tNB7pUVkWyNHrhJuxVu+J
-        atN6x0jBNX9F5jdvzWR8aUMA6owL2NZ3HimxylEE8M6CcZ7XL7eO9ezLKKSRvtJPjhL4=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:48718 helo=pettiford)
+        bh=lab8uV6Uad5CeYxT9BC8u1kKhysJLzzYp8wyjAQA9a8=; b=cveGaPMW4bzWesf+afiVBeA8W+
+        g2Zx3flpdZfa29mFg7VT5kbHvqycQTGyJqU8Pb/Eseis9OeW7EeVXThtxIdarhcjnRKV4M3IBUp8/
+        OLdCcG3isRaG6MaP/KJ6hUY9JKG7XGnclrOLqAW8qSCl0rrAAZZN9Zl/wtYiAsMwf5Gg=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:44290 helo=pettiford)
         by mail.hugovil.com with esmtpa (Exim 4.92)
         (envelope-from <hugo@hugovil.com>)
-        id 1q2BBq-0007rR-G7; Thu, 25 May 2023 09:39:39 -0400
-Date:   Thu, 25 May 2023 09:39:37 -0400
+        id 1q2BH9-0007uR-BN; Thu, 25 May 2023 09:45:08 -0400
+Date:   Thu, 25 May 2023 09:45:06 -0400
 From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Jiri Slaby <jirislaby@kernel.org>,
+        jringle@gridpoint.com, tomasz.mon@camlingroup.com,
+        l.perczak@camlintechnologies.com,
+        linux-serial <linux-serial@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525093937.95a5554f99f60ae022e0bf60@hugovil.com>
-In-Reply-To: <CAHp75VenvvkC1evsmhSBNT5=V=D92RX1JXnwZWAtsJ2TrADvRA@mail.gmail.com>
+Message-Id: <20230525094506.21aea1930d2d2a89d18ff7af@hugovil.com>
+In-Reply-To: <751bc02d-d06f-55cb-cb7a-a39871a0775d@linux.intel.com>
 References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <ZG84KCeMIINFVTMh@surfacebook>
-        <20230525092627.edf4f7f9df4b9b1cf7b568a4@hugovil.com>
-        <CAHp75VenvvkC1evsmhSBNT5=V=D92RX1JXnwZWAtsJ2TrADvRA@mail.gmail.com>
+        <20230525040324.3773741-4-hugo@hugovil.com>
+        <751bc02d-d06f-55cb-cb7a-a39871a0775d@linux.intel.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 X-SA-Exim-Connect-IP: 70.80.174.168
 X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,51 +57,59 @@ X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 00/11] serial: sc16is7xx: fix GPIO regression and
- rs485 improvements
+Subject: Re: [PATCH v3 03/11] serial: sc16is7xx: mark IOCONTROL register as
+ volatile
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 16:37:17 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Thu, 25 May 2023 14:02:19 +0300 (EEST)
+Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-> On Thu, May 25, 2023 at 4:26 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > On Thu, 25 May 2023 13:27:52 +0300
-> > andy.shevchenko@gmail.com wrote:
-> > > Thu, May 25, 2023 at 12:03:13AM -0400, Hugo Villeneuve kirjoitti:
-> > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > >
-> > > > Hello,
-> > > > this patch series mainly fixes a GPIO regression and improve RS485 flags and properties
-> > > > detection from DT.
-> > > >
-> > > > It now also includes various small fixes and improvements that were previously
-> > > > sent as separate patches, but that made testing everything difficult.
-> > >
-> > > > Patches 1 and 2 are simple comments fix/improvements.
-> > >
-> > > Usually we put fixes at the beginning of the series, but these patches are
-> > > missing Fixed tag. Are they really fixes or can be simply moved to the end of
-> > > the series?
-> >
-> > these are not code fixes, they are comments improvements. I was not aware that you need to put a Fixes tag for correcting syntax errors in comments, or adding comments to improve clarity.
-> >
-> > I often submit such comments patches but was never asked to put a Fixes tag before. Seems strange to me...
-> 
-> In this case there are probably no conflicts, but the usual grouping
-> of patches is following
-> 1) fixes that may be backported;
-> 2) cleanups / refactoring /etc;
-> 3) new features.
-> 4) additional light-weit cleanups, such as whitespace cleaning (it's a
-> radical, we probably do not accept pure whitespace cleaning patches,
-> but you got the idea).
-> 
-> Seems patches 1 and 2 fall into category 4).
+> On Thu, 25 May 2023, Hugo Villeneuve wrote:
+>=20
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >=20
+> > Bit SRESET (3) is cleared when a reset operation is completed. Having
+> > the IOCONTROL register as non-volatile will always read SRESET as 1.
+> > Therefore mark IOCONTROL register as a volatile register.
+> >=20
+> > Fixes: dfeae619d781 ("serial: sc16is7xx")
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+>=20
+> What is the impact of this problem? That is, what doesn't work? I only se=
+e=20
+> writes to SC16IS7XX_IOCONTROL_REG. If there are no concrete problems=20
+> fixed, don't put Fixes tag.
 
-Ok, I changed the order to put these two patches at the end.
+Hi,
+there is a concrete problem when dumping the registers as the value read fo=
+r bit SRESET is incorrect, but it doesn't impact running code.
+
+I can remove the Fixes.
 
 Hugo.
+
+
+> > ---
+> >  drivers/tty/serial/sc16is7xx.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is=
+7xx.c
+> > index 00054bb49780..a7c4da3cfd2b 100644
+> > --- a/drivers/tty/serial/sc16is7xx.c
+> > +++ b/drivers/tty/serial/sc16is7xx.c
+> > @@ -488,6 +488,7 @@ static bool sc16is7xx_regmap_volatile(struct device=
+ *dev, unsigned int reg)
+> >  	case SC16IS7XX_TXLVL_REG:
+> >  	case SC16IS7XX_RXLVL_REG:
+> >  	case SC16IS7XX_IOSTATE_REG:
+> > +	case SC16IS7XX_IOCONTROL_REG:
+> >  		return true;
+> >  	default:
+> >  		break;
+> >=20
+>=20
