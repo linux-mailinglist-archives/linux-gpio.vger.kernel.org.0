@@ -2,71 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CEE2710242
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 03:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCCFB710307
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 04:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbjEYBTL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 21:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
+        id S230127AbjEYCrZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 22:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjEYBTK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 21:19:10 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEFFBE6;
-        Wed, 24 May 2023 18:19:08 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ae3a5dfa42so6779105ad.0;
-        Wed, 24 May 2023 18:19:08 -0700 (PDT)
+        with ESMTP id S229452AbjEYCrZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 22:47:25 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222BFE6;
+        Wed, 24 May 2023 19:47:24 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ae852a5330so6791135ad.3;
+        Wed, 24 May 2023 19:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684977548; x=1687569548;
+        d=gmail.com; s=20221208; t=1684982843; x=1687574843;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=1o+V55E45CxNz+gKMdCFIHZHJ7htwLBTle0C7Zp+HO4=;
-        b=OOzTp5ElA9ljZFVPtSPjbdW7BEP8KzxGh6zqkRrowYsqFOYrcT8/awzaaxImtkygOD
-         xv1KQlb/ROeatc3tUaJaYSa6oLqv61owjdeDdEDE8B1INLmBXX0FNwWUTIEqqnG5DSPa
-         +PTqfwcFJnt3yLA5ns0l206952qScxR6XRJOEqKJV16woOEkyhreNa8hPMYjsnwUyUOP
-         pOGqa4jn4rjiuk9GaDnDtekj6kaMr/e2BShNo3bgJi0atTLkLME/rORUp6oSRlYXdOdi
-         S94FVP5vIlKPN74eIS+4uFdjK0OlTY0WuQRsN9zlmXI2bFUNI3ATDty2gRjhLcDfztlV
-         VoFA==
+        bh=waGgXS3UilhxJBlU/7X+6sK1z9vQnB/U1MGRAmCqN1U=;
+        b=Z6VM/6aQ4CaXb3UhIWRKxxqadrZU/PjSAmQMG0Euj/39aRbtColTQDq9l5lJSzqnr+
+         5Gnp9gYsvGxLEmCPH2fEtC4ojvd155Z061X2fkjQyxoRLsJQ32uD0hu46pmI/UNhB8T5
+         bLx4NfogNM5iyVzvyIq67q9cFjOlPhjD9J2i/QDjlLh1Bpplvo3lr4UN9XxPeGCnJtqw
+         2Ng3+//sR32my8951juR7XXpgovzu8CE562BIEO8m0KsmOZOiRyZ41FP1Wyavb7EIbUT
+         aSopQc40VsUfE6ttRg7+dCMHJanV8EwkyDlND3VnbAB8S5mBn8ymeqmDq7JVfCGhcemp
+         bn+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684977548; x=1687569548;
+        d=1e100.net; s=20221208; t=1684982843; x=1687574843;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1o+V55E45CxNz+gKMdCFIHZHJ7htwLBTle0C7Zp+HO4=;
-        b=VmdEm+NkuvRM88UnJHy6cBk0SUKXzguFZPNsFKtA3x+Q1G8o42/We2LEIwVYwjFAWk
-         mD2zXNeRaRWP6lNxCliKig0nhbnQtntGTN2EbYT2wlJQ21bj2Odoif/wxSOukNxfLCuQ
-         +shwmVb9fepMcQHppc2QYgO7FcaVCS6z3EDou2LsyNosxMb6ihdvLdZ6jOVDRj8OaL5T
-         6XWwJNQLdLGlLdInmT0IhCJ38lTXj72MTCjG659FQoHfiKkRC4V523qC59htnCLA5OcW
-         luqdGktnOt6QENK1vmkyjIlzvPTUfcl0tQm/ngdrgsc9AubOcFJuDMtTZnGU3h7yLsAB
-         ltUA==
-X-Gm-Message-State: AC+VfDzmsKwmyp1tQERpQXe9CKPNbMAt4THPJHWOPWt8cHAE3WPa9x1q
-        pn1kyNtPVQnGjXp5FD7PSqpaRwDkFa0=
-X-Google-Smtp-Source: ACHHUZ7wPi1P4UA2XyHD1SE/2XBgtSY+M9ipfpcN49OIAlP/FU6BThZV6zlDz+YQNNLk6dU3jCUX2w==
-X-Received: by 2002:a17:902:e80e:b0:1af:a049:45d with SMTP id u14-20020a170902e80e00b001afa049045dmr16673198plg.18.1684977548229;
-        Wed, 24 May 2023 18:19:08 -0700 (PDT)
+        bh=waGgXS3UilhxJBlU/7X+6sK1z9vQnB/U1MGRAmCqN1U=;
+        b=YCVoZAvmOno9qxX+GRjk6WoVSuExGBCIcjH5+f/Zqud8gUc7++nxq3AFZNyN6qp3V/
+         HrLbXA6iX7HN8I2RLylsNRDsXvW2aKkBta1ClRWueQIm7ojjG6w3jONb97jspe80Efm1
+         0WdCPHzAmJvN1Xt523PCUabYF7fRVPcjdVcPP/ATtgjMpgNGw9uBeuI2m1V0ZNJmhRSU
+         i4tN1Kd6RIejwbyALYHITT4de9ueQ0fmnJaXk5Xz1Q2Fn4KV31nY+Xa70ArprFKI1G3H
+         I+/5GzqMDjccnjOca8h8jhrfCoCWdQanGssCfXbgCl/k4u2P1qPXyOya2BSTFDLmm+b+
+         vEyw==
+X-Gm-Message-State: AC+VfDwfm10au/vjR6mV0BhyCp9kt7xQe35Xcq1sb0kN939sct4lVja4
+        PuUmwCLYGDWbquA3+1msNgjPifDZ3Cg=
+X-Google-Smtp-Source: ACHHUZ6230VMPMogqHSv0qMnrQJYuiDguIxh2YUT8IXw91nGsPC8RFkZFjmQKCZ0L4NbXab4Lcioqw==
+X-Received: by 2002:a17:902:a507:b0:1ae:29a8:d6d0 with SMTP id s7-20020a170902a50700b001ae29a8d6d0mr15019plq.59.1684982843510;
+        Wed, 24 May 2023 19:47:23 -0700 (PDT)
 Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id h15-20020a170902680f00b001aaec7a2a62sm86042plk.188.2023.05.24.18.19.05
+        by smtp.gmail.com with ESMTPSA id jj15-20020a170903048f00b001a922d43779sm177603plb.27.2023.05.24.19.47.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 18:19:07 -0700 (PDT)
-Date:   Thu, 25 May 2023 09:19:02 +0800
+        Wed, 24 May 2023 19:47:23 -0700 (PDT)
+Date:   Thu, 25 May 2023 10:47:18 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
- Avoid side effects in gpio_is_visible())
-Message-ID: <ZG63hiXloQl/YZDX@sol>
-References: <ZGzsD_HMbMGhGwcr@surfacebook>
- <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
- <ZG2jgwjK+CBmOk3G@sol>
- <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: cdev: fix a crash on line-request release
+Message-ID: <ZG7MNjYLt6SduWtn@sol>
+References: <20230523155101.196853-1-brgl@bgdev.pl>
+ <ZG1TLBsOy4mZQlW3@sol>
+ <ZG1x5pcyTN2Fio4J@sol>
+ <ZG2USw7TTdFSRZ3E@sol>
+ <CAMRc=MeRfCoj7bcf-GKrRY3Mp5SEhmb289g=JAHBK-01aERCtw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
+In-Reply-To: <CAMRc=MeRfCoj7bcf-GKrRY3Mp5SEhmb289g=JAHBK-01aERCtw@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -77,119 +78,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 24, 2023 at 11:53:12PM +0000, Chris Packham wrote:
-> (culled the Cc list but hopefully those that might want to chime in are 
-> on linux-gpio)
-> 
-> On 24/05/23 17:41, Kent Gibson wrote:
-> > On Tue, May 23, 2023 at 09:17:26PM +0000, Chris Packham wrote:
-> >> On 24/05/23 04:38, andy.shevchenko@gmail.com wrote:
-> >>> Wed, May 17, 2023 at 09:30:51PM +0000, Chris Packham kirjoitti:
-> >>>> On 17/05/23 20:54, Andy Shevchenko wrote:
-> >>>>> On Wed, May 17, 2023 at 2:50 AM Chris Packham
-> >>>>> <Chris.Packham@alliedtelesis.co.nz> wrote:
-> >>>>>> On 17/05/23 10:47, Kent Gibson wrote:
-> >>> ...
-> >>>
-> >>>> Again the problem boils down to the fact that we have a userspace switch
-> >>>> driver (which uses a vendor supplied non-free SDK). So despite the
-> >>>> kernel having quite good support for SFPs I can't use it without a
-> >>>> netdev to attach it to.
-> >>> That user space driver is using what from the kernel? GPIO sysfs?
-> >> Yes GPIO sysfs and exported links with known names, which allows things
-> >> to be done per-port but also wildcarded from shell scripts if necessary.
-> >> I think the key point here is that it doesn't care about the GPIO chips
-> >> just the individual GPIO lines. Anything involving libgpiod currently
-> >> has to start caring about GPIO chips (or I'm misreading the docs).
-> >>
-> > As previously mentioned, the libgpiod tools now support identification of
-> > lines by name.
-> 
-> The libgpiod tools do but not libgpiod itself. The tools are reasonable 
-> replacements for things that are currently done in shell scripts but 
-> there is also application code that needs to care about GPIO lines but 
-> ideally it shouldn't need to care about GPIO chips.
-> 
-> > As long as your line names are unique at system scope you should be
-> > good.  Otherwise you have no option but to identify by (chip,offset).
+On Wed, May 24, 2023 at 09:42:13PM +0200, Bartosz Golaszewski wrote:
+> On Wed, May 24, 2023 at 6:36 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Wrt the library itself, I was thinking about relocating the line name
-> > resolution logic from the tools into the library itself, so it would be
-> > more generally accessible, but haven't gotten there yet.
+> Interestingly enough, I did test it just like you and the "fix" seemed
+> to address the issue. Upon a further look at the code, it's of course
+> clear that the patch is wrong.
 > 
-> Yes I think that'd help my use-case. Even if there were APIs to iterate 
-> over all possible GPIO lines and let the application worry about how to 
-> match the names.
+> I wanted to debug the code to see what's happening exactly but it
+> turned out that enabling the generation of DWARF data hid the issue as
+> well even without any fix. It means that it's some kind of a memory
+> corruption rather than a regular NULL-pointer dereference.
+> 
+> I'm not yet sure where the crash happens exactly other that it's in
+> the irq domain code.
+> 
+> Anyway, I'll be back at it tomorrow.
 > 
 
-Even that is a bit of a minefield, as there is no guarantee that line
-names are unique across the system.  I'm not even sure they are unique
-across a chip.
+I was also playing with a patch for gpiomon to have it add POLLERR to
+its poll() to see if it would notice the chip removal and exit.
+It didn't, it just stayed blocked, but it DID made the crash go away
+when I killed it.  No idea why that would be.  So yeah, weird things.
 
-So what order do you iterate over all the lines?
-In chip order?  Chip names/numbers aren't deterministic.
-The latest tools go in chip name order - human sorted, which is probably
-the best we can do - it at least makes sense to the casual user.
+This was the patch, btw:
 
-The big problem being, once we put in the library proper it is etched in
-stone, so we want to get it right and not open any cans of worms.
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index c2684c2..f4251fc 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -431,7 +431,7 @@ int main(int argc, char **argv)
+                                   resolver->chips[i].path);
+ 
+                pollfds[i].fd = gpiod_line_request_get_fd(requests[i]);
+-               pollfds[i].events = POLLIN;
++               pollfds[i].events = POLLIN | POLLERR;
+                gpiod_chip_close(chip);
+        }
+ 
+@@ -452,6 +452,9 @@ int main(int argc, char **argv)
+                        if (pollfds[i].revents == 0)
+                                continue;
+ 
++                       if (pollfds[i].revents & POLLERR)
++                               die_perror("error polling for events");
++
+                        ret = gpiod_line_request_read_edge_events(requests[i],
+                                         event_buffer, EVENT_BUF_SIZE);
+                        if (ret < 0)
 
-> > I'm also of the opinion that libgpiod is too low level for common
-> > tasks.  That is necessary to access all the features of the uAPI, but
-> > for basic tasks it would be nice to have a higher level abstraction to
-> > reduce the barrier to entry.
-> >
-> > e.g. in Rust I can do this:
-> >
-> >      let led0 = gpiocdev::find_named_line("LED0").unwrap();
-> >      let req = Request::builder()
-> >          .with_found_line(&led0)
-> >          .as_output(Value::Active)
-> >          .request()?;
-> >
-> >      // change value later
-> >      req.set_value(led0.offset, Value::Inactive)
-> >
-> > which is the equivalent of the sysfs
-> >
-> > echo 1 > /some/sysfs/line
-> > ...
-> > echo 0 > /some/sysfs/line
-> >
-> > That is bad enough. It pains me to see how complex the equivalent is using
-> > the libgpiod v2 API (or v1), and that is not putting any shade on Bart or
-> > anyone else who worked on it - there are a lot of constraints on how it
-> > is designed.  It just doesn't feel complete yet, particularly from a
-> > casual user's perspective.
-> >
-> > One of the things I would like to see added to libgpiod is a set of working
-> > examples of simple use cases.  Formerly the tools took double duty to
-> > fill that role, but they've now grown too complex.
-> > Those examples would highlight where we could provide simplified
-> > higher level APIs.
-> > Then rinse and repeat until the simple use cases are simple.
-> 
-> I was a little put-off when I noticed there was an looming API change 
-> the last time I looked at libgpiod and unfortunately any time I had to 
-> spend on updating the application code has now passed.
-> 
-> I think modulo the problem of line discovery the current API would do 
-> what I need. As you've said having some examples in the docs would go a 
-> long way.
-> 
 
-I don't mean examples in docs, I mean working code examples.
-That beats docs every day in my book.
-
-> It'd also be great if there was some way of ensuring that a line's state 
-> is kept after the application has released the request (i.e. the txdis 
-> case I mentioned). But that probably needs work on the kernel side to 
-> make such guarantees.
-
-To be clear, I am suggesting extensions to the API, not changes to it.
-libgpiod v2 is fixed and the functions therein will remain as-is.
-But v2.1 could get some additional functions to make common tasks easier.
-At least, that is what I would like to see.
+I expect to add that, or something along those lines, if hot removal of
+chips from the kernel ever works like it should.
+In the meantime it is just another curiosity.
 
 Cheers,
 Kent.
