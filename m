@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6F5B710E45
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:24:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC18710E68
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 16:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236090AbjEYOYi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 10:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        id S241638AbjEYOex (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 10:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233993AbjEYOYi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:24:38 -0400
+        with ESMTP id S241637AbjEYOew (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 10:34:52 -0400
 Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BAD187;
-        Thu, 25 May 2023 07:24:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512D1101;
+        Thu, 25 May 2023 07:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
         ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
         References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=4EiB2AlR+/z+R1o2De2Qde2ZQ5SW+JoatwDRo240840=; b=vR44fhXQDG6zkr11gJByncTwgc
-        EXPH+B7r/wny2rnUTeVD0cXBofM0ZIeXSjE8ljsYR5A+9k53BZsX+PzzgqTZJoax+5R0EsrX4pfBv
-        YM1BteQXhJQQFCHxPdKg8+t+abRoy0T1Izlrk4cXyk251v09n75RRJegqA3IPUyi0lxw=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:53208 helo=pettiford)
+        bh=dmJE33FZIZmlTmfMzbCfmAi7/ICgaK239XoyyuZANyk=; b=i8QNqmiaxtOqyV5/L9vmwOcddQ
+        X1sPVmGMnt3wycGCbVIGfpG1tmhycIU1UhX0wkxvqfbLiZrw69YmJbSiziMHZPsRkICvXc/xBkaXr
+        ztqGgp3AsJODvGWs85O1yrYWHuIf3j8hWFmPSaibnX9iDmkz480ANeRbbHfu6QlX3smw=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:49690 helo=pettiford)
         by mail.hugovil.com with esmtpa (Exim 4.92)
         (envelope-from <hugo@hugovil.com>)
-        id 1q2BtE-0008F5-8X; Thu, 25 May 2023 10:24:28 -0400
-Date:   Thu, 25 May 2023 10:24:27 -0400
+        id 1q2C3A-0008KV-5y; Thu, 25 May 2023 10:34:44 -0400
+Date:   Thu, 25 May 2023 10:34:43 -0400
 From:   Hugo Villeneuve <hugo@hugovil.com>
 To:     andy.shevchenko@gmail.com
 Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
@@ -37,11 +37,11 @@ Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525102427.dfd362c6a0c68a2f8e99accf@hugovil.com>
-In-Reply-To: <ZG9CIww5WbgJ3TUf@surfacebook>
+Message-Id: <20230525103443.d3d31e80221aed1ebceef30e@hugovil.com>
+In-Reply-To: <ZG9CWhiTbLBKjPC9@surfacebook>
 References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <20230525040324.3773741-7-hugo@hugovil.com>
-        <ZG9CIww5WbgJ3TUf@surfacebook>
+        <20230525040324.3773741-8-hugo@hugovil.com>
+        <ZG9CWhiTbLBKjPC9@surfacebook>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -55,45 +55,42 @@ X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 06/11] serial: sc16is7xx: fix bug when first setting
- GPIO direction
+Subject: Re: [PATCH v3 07/11] dt-bindings: sc16is7xx: Add property to change
+ GPIO function
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 14:10:27 +0300
+On Thu, 25 May 2023 14:11:22 +0300
 andy.shevchenko@gmail.com wrote:
 
-> Thu, May 25, 2023 at 12:03:20AM -0400, Hugo Villeneuve kirjoitti:
+> Thu, May 25, 2023 at 12:03:21AM -0400, Hugo Villeneuve kirjoitti:
 > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > > 
-> > When we want to configure a pin as an output pin with a value of logic
-> > 0, we end up as having a value of logic 1 on the output pin. Setting a
-> > logic 0 a second time (or more) after that will correctly output a
-> > logic 0 on the output pin.
-> > 
-> > By default, all GPIO pins are configured as inputs. When we enter
-> > c16is7xx_gpio_direction_output() for the first time, we first set the
+> > Some variants in this series of uart controllers have GPIO pins that
 > 
-> Missing 's'.
+> UART
 
-Fixed.
+Hi,
+fixed.
 
-> > desired value in IOSTATE, and then we configure the pin as an output.
-> > The datasheet states that writing to IOSTATE register will trigger a
-> > transfer of the value to the I/O pin configured as output, so if the
-> > pin is configured as an input, nothing will be transferred.
+> > are shared between GPIO and modem control lines.
 > > 
-> > Therefore, set the direction first in IODIR, and then set the desired
-> > value in IOSTATE.
+> > The pin mux mode (GPIO or modem control lines) can be set for each
+> > ports (channels) supported by the variant.
 > > 
-> > This is what is done in NXP application note AN10587.
+> > This adds a property to the device tree to set the GPIO pin mux to
+> > modem control lines on selected ports if needed.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
+> I'm wondering if we can convert this to YAML first and then add a new property.
+
+Hi,
+I also thought about it, then decided to focus on simply adding the new property first since I am not an expert in YAML.
+
+I think it would be best to do it after this patch series. Keep in mind that the original intent of this patch series, and this new property, was to fix a regression related to the GPIOs, and I think that converting to YAML would simply delay and add much noise to the discussion at this point.
+
+If someone wants to do it as a separate patch after this, fine. If not, I an willing to give it a go.
+
+Hugo.
