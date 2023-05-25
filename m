@@ -2,92 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83157710874
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 11:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A3B67109A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 12:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233064AbjEYJNu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 05:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
+        id S235297AbjEYKOz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 06:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjEYJNu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 05:13:50 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB5B197;
-        Thu, 25 May 2023 02:13:48 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-75b0f2ce4b7so36248185a.2;
-        Thu, 25 May 2023 02:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685006027; x=1687598027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9dXxRgpCYwYEvO8+viBKaOCvYsHdp+OLwEgKK5Zar84=;
-        b=Ls554U3ah3KLc5ag0G4cR+GTuWgnowKVe2eWj/Eiys8rv5glhbXYEY9fV04gF59JLh
-         9jZhc0Ua/7ZvWvL7R+KdNgXZaz9zqr84HBjHnlHbQMyRkjTCXSCBLGmMTYztMY1sdlbN
-         K1NaU92EtWfRaVJFVNcqBsW64IOO2rKq4cYM/nBP2ybsXMM5B7APjNrY8f6p2fRElRwe
-         U4Bu6JukPUZplBQgQkXsL1h544YfvgWWB3T/R5LGGFgwWaxinNdHRDAmE9/4T5tNPeaq
-         Z+YwUeGwXdoEymEZw67hxXXg4RsGMG4mETL4X/y3aIUa1KYK1y9kZg15EKZZNoODA+PL
-         Yaew==
+        with ESMTP id S240851AbjEYKOk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 06:14:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED87010C4
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 03:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685009600;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3qUwZavWeot6BxoSwWB1BeOsQSAKpT3nzUsF0j/xmbk=;
+        b=JPWA79VuaY21iNhH57xVU+eZwlWo9w16eUJdGxhEXI6Som/j9rmfp6fk9Ca+VL8chUlJx1
+        yLWlJwNsmH+jv7HhFb0VqHVVztECvOe9Y0qP7JDOJaaPYwTrM1GlS4S0r5OXiynDcpQ0Wo
+        UBxVGbqvh5JrqNWAusZrjj45h63SEVk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-nRrQtlx4M-W0EOjgeMfL-g-1; Thu, 25 May 2023 06:13:17 -0400
+X-MC-Unique: nRrQtlx4M-W0EOjgeMfL-g-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-96fe603151eso54411666b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 03:13:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685006027; x=1687598027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dXxRgpCYwYEvO8+viBKaOCvYsHdp+OLwEgKK5Zar84=;
-        b=dBMFEvzUuYis0BLwR1Pjd17pK7iTn3dgflnb7NgZ2m0acfQRZUXQySorzNvcTQHNXg
-         YAGASUf1nhOUFl8Al1pS2P5wAkLtWDmsgeU57wOeZcdSrXdImclKII8IGFjmcPpUBfLB
-         GLT9nmcHMGpopxrC+j1qZMYo43Dh7+1MAuEkxKs4LiLXjwxhaWfcrDVcgGlN6ORjFWBq
-         Ub9jjJbTL/BS/KVum3aanCCWTrBhnn3my9kkS8VqoE21xV913VFWGLKadMaxT63QVYO4
-         jFPIqt6PBCksgmY2RWzCkfamm5HwKXrz2shfmBYU1CWk8KUgbQ9a31EveE64KTA31zs7
-         H+0w==
-X-Gm-Message-State: AC+VfDyDxuMPyMay4nytiCArCgRLnPGOMjAtPrXPx8+z0LDCuesQfCN4
-        VV1Odd4V7N7yZatyHWS8cR2K+KI6tIYh8Kcz09k=
-X-Google-Smtp-Source: ACHHUZ5/PSruSG0Zg49jiTqWBTWANT+/yiun94pxgP+eSbT3w3NfkfztzOx4znxgMQFr25/t/KPxnzbFOMfO9tlaHIM=
-X-Received: by 2002:ad4:5d48:0:b0:616:4c4b:c9b9 with SMTP id
- jk8-20020ad45d48000000b006164c4bc9b9mr734564qvb.37.1685006027396; Thu, 25 May
- 2023 02:13:47 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685009596; x=1687601596;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3qUwZavWeot6BxoSwWB1BeOsQSAKpT3nzUsF0j/xmbk=;
+        b=KSmQs/6dJFWx2qf/nVT2a2/hb5VDcaV3ci7BTEy1hwMsnAJafimtT20GPY1rl5Ml74
+         uANS5N3U8d3OefSy26+NSiyyKpBX0aU4aL8tTlwWH2LQTV4A0HQdkAciHeRCfAe7hkD2
+         vJJzmqM2OWT0AWwyrQVR1RaRWcTmF9aDJLnVw4Ejfy+oeE+B4MIGFBwzKXNb25CTFdDg
+         J1kzn+MK4rwHwxaz5y11bRLP/QajR4bTAgpHoJSSVebpCit9QQtfqHaFTqMu8f0NX0ZN
+         0jw5Z7ISik8BgnO0ACOSNPxGC6Upapu/6tSlShSabiLmOklyLkKOeolXuCCn9Uj7v/VT
+         cJ1Q==
+X-Gm-Message-State: AC+VfDx6eo3nJrdXiSDJ0Pd0+dPLkWRU5vGcf0n3nkwoqKVhiSd+QmkL
+        KnuP2c2zuwMpw9c8VFcfKov5t1jVMJp8ns28OE2IbU/iCKcHrDwAsO5MShtVFqVBuurKDYurHGF
+        E5xheCPpAmtABs8EoXeQdDw==
+X-Received: by 2002:a17:907:720f:b0:972:aa30:203e with SMTP id dr15-20020a170907720f00b00972aa30203emr1112327ejc.34.1685009596736;
+        Thu, 25 May 2023 03:13:16 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4UVuOdKtAJmTw+9/lxOTaN96LepZ+KFwgazTOkVRaQ7goTvLQZICLYaLw7QL++QbWevUCWkA==
+X-Received: by 2002:a17:907:720f:b0:972:aa30:203e with SMTP id dr15-20020a170907720f00b00972aa30203emr1112304ejc.34.1685009596436;
+        Thu, 25 May 2023 03:13:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id kq10-20020a170906abca00b00960005e09a3sm648261ejb.61.2023.05.25.03.13.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 May 2023 03:13:15 -0700 (PDT)
+Message-ID: <dcdb3d12-e0af-5e4d-119e-d4fbe9a9495b@redhat.com>
+Date:   Thu, 25 May 2023 12:13:15 +0200
 MIME-Version: 1.0
-References: <ZGzsD_HMbMGhGwcr@surfacebook> <72990baf-6964-01ad-d891-7090831d0310@alliedtelesis.co.nz>
- <ZG2jgwjK+CBmOk3G@sol> <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
-In-Reply-To: <f9006a57-4c67-c8a0-badc-84b3292aa686@alliedtelesis.co.nz>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 May 2023 12:13:11 +0300
-Message-ID: <CAHp75VfVr0N4Fv=s_12vcTi8=pGWJgeWoXpxQvqSNWDcZauS=A@mail.gmail.com>
-Subject: Re: using libgpiod to replace sysfs ABI (was Re: [PATCH] gpiolib:
- Avoid side effects in gpio_is_visible())
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for suspend
+ related messages
+Content-Language: en-US, nl
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>
+References: <20230522200033.2605-1-mario.limonciello@amd.com>
+ <20230522200033.2605-4-mario.limonciello@amd.com>
+ <e9eb526d-84fe-b814-67a3-6f7977aa0078@redhat.com>
+ <MN0PR12MB6101AF7606A3547EC5AA42A7E2409@MN0PR12MB6101.namprd12.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <MN0PR12MB6101AF7606A3547EC5AA42A7E2409@MN0PR12MB6101.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 25, 2023 at 2:53=E2=80=AFAM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
-> On 24/05/23 17:41, Kent Gibson wrote:
+Hi Mario,
 
-...
+On 5/23/23 18:21, Limonciello, Mario wrote:
+> [AMD Official Use Only - General]
+> 
+>> -----Original Message-----
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Sent: Tuesday, May 23, 2023 6:08 AM
+>> To: Limonciello, Mario <Mario.Limonciello@amd.com>; rafael@kernel.org;
+>> linus.walleij@linaro.org
+>> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>> gpio@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+>> pm@vger.kernel.org; S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>;
+>> Natikar, Basavaraj <Basavaraj.Natikar@amd.com>
+>> Subject: Re: [PATCH v2 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for
+>> suspend related messages
+>>
+>> Hi Mario,
+>>
+>> On 5/22/23 22:00, Mario Limonciello wrote:
+>>> Using pm_pr_dbg() allows users to toggle
+>> `/sys/power/pm_debug_messages`
+>>> as a single knob to turn on messages that amd-pmc can emit to aid in
+>>> any s2idle debugging.
+>>>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>>  drivers/platform/x86/amd/pmc.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/amd/pmc.c
+>> b/drivers/platform/x86/amd/pmc.c
+>>> index 427905714f79..1304cd6f13f6 100644
+>>> --- a/drivers/platform/x86/amd/pmc.c
+>>> +++ b/drivers/platform/x86/amd/pmc.c
+>>> @@ -543,7 +543,7 @@ static int amd_pmc_idlemask_read(struct
+>> amd_pmc_dev *pdev, struct device *dev,
+>>>     }
+>>>
+>>>     if (dev)
+>>> -           dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
+>>> +           pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
+>>>
+>>>     if (s)
+>>>             seq_printf(s, "SMU idlemask : 0x%x\n", val);
+>>
+>> This does not compile, amd/pmc.c may be build as an amd-pmc.ko module
+>> and currently the pm_debug_messages_on flag used by pm_pr_dbg()
+>> is not exported to modules:
+>>
+>>   CC [M]  drivers/platform/x86/amd/pmc.o
+>>   LD [M]  drivers/platform/x86/amd/amd-pmc.o
+>>   MODPOST Module.symvers
+>> ERROR: modpost: "pm_debug_messages_on"
+>> [drivers/platform/x86/amd/amd-pmc.ko] undefined!
+>> make[1]: *** [scripts/Makefile.modpost:136: Module.symvers] Error 1
+>> make: *** [Makefile:1978: modpost] Error 2
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> 
+> My apologies, yes I was compiling in when testing.  Let me ask if this
+> series makes sense and is "generally" agreeable though.
 
-> It'd also be great if there was some way of ensuring that a line's state
-> is kept after the application has released the request (i.e. the txdis
-> case I mentioned). But that probably needs work on the kernel side to
-> make such guarantees.
+I have no objections against this series, otherwise I don't really
+have a strong opinion on this series.
 
-Won't happen. It will require too much of strictness to be added into
-the kernel with likely breakage of the existing code and
-documentation. What is being discussed is a D-Bus (like?) daemon +
-Policy in user space that will allow user / process / cgroup / etc to
-"own" the line and track its state.
+If this makes sense and if exporting pm_debug_messages_on is ok
+is Rafael's call to make IMHO.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Rafael ?
+
+Regards,
+
+Hans
+
+
+
+
