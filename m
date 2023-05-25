@@ -2,149 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18E8D7103D6
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 06:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A070471049D
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 06:55:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238926AbjEYEGx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 00:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
+        id S239240AbjEYEzR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 00:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238226AbjEYEE7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 00:04:59 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE62E65;
-        Wed, 24 May 2023 21:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wtCZaz+ygLc5odu0jyJWVuukps/nAVPXx7PU+/vrFgM=; b=Qbt1LRs+4mv0pRnwxJYbf2ZAB6
-        2UDi3v8PyYf2TGyY8fXk0bcNmATMeSPqqpDWOeKnKRrd+gunR7FhgZ3OSqpe259puDiO1CUxPvgqJ
-        N6+lJEE6ZXipwALuWFPgoMyCXTVOarP2sSNIay4QSLpWLlQzzciypsfiUEOAl8BOyoUE=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:52970 helo=pettiford.lan)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q22DM-0001dB-39; Thu, 25 May 2023 00:04:36 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hugo@hugovil.com,
-        linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Date:   Thu, 25 May 2023 00:03:25 -0400
-Message-Id: <20230525040324.3773741-12-hugo@hugovil.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230525040324.3773741-1-hugo@hugovil.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
+        with ESMTP id S238160AbjEYExl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 00:53:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD5A83;
+        Wed, 24 May 2023 21:51:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AF9E642BD;
+        Thu, 25 May 2023 04:51:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D265C433D2;
+        Thu, 25 May 2023 04:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684990302;
+        bh=YZf72VNbah8S00sNKS32JtZ4PfsEFEbfvpF2uheSpjU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YO2TJ4Kcisim7rOmGF03TFHQNGBYu6FxxSrr4TDStwTGl5iCpBYdWnyDFG7x4HEjG
+         oubigVgG9mHqmX6FZ8Cui2HWxbSCsz45VtNlDW4E4r0GDibPG7GIH2hhrzslilmsoX
+         HTZaXwbIjNvrvCrmgQxgsMEgGjGhB7n21u+8rhIJtZ4RQ+I6gZO1m22URnqGIrg5BI
+         G7zLFClHX+jTWi4cIaEPGcV9/CzwzQi9j7Yb4GLWy77TcezmyoMW+8lI6u4Bl4gfZq
+         sUGFVqLY4IO1nwYkUUtP6vGrftlkMeGuod2At/czVN35HZryELmD2Lh/Bl0fXbYWUw
+         c+hw/IJEmHUnA==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, Luca Weiss <luca@z3ntu.xyz>,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/3] Add GPIO support to PM8953 PMIC
+Date:   Wed, 24 May 2023 21:54:21 -0700
+Message-Id: <168499048184.3998961.10910306353238353863.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230421-pm8953-gpio-v1-0-3d33e2de47e3@z3ntu.xyz>
+References: <20230421-pm8953-gpio-v1-0-3d33e2de47e3@z3ntu.xyz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: [PATCH v3 11/11] serial: sc16is7xx: add dump registers function
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Fri, 21 Apr 2023 23:56:19 +0200, Luca Weiss wrote:
+> Add support for the 8 GPIOs found on the PM8953 PMIC used with msm8953
+> SoC.
+> 
+> 
 
-With this driver, it is very hard to debug the registers using
-the /sys/kernel/debug/regmap interface.
+Applied, thanks!
 
-The main reason is that bits 0 and 1 of the register address
-correspond to the channels bits, so the register address itself starts
-at bit 2, so we must 'mentally' shift each register address by 2 bits
-to get its offset.
+[3/3] arm64: dts: qcom: pm8953: add GPIOs
+      commit: 5a60e72c3eff0747cc779b8067cd795acf6beecd
 
-Also, only channels 0 and 1 are supported, so combinations of bits
-0 and 1 being 10b and 11b are invalid, and the display of these
-registers is useless.
-
-For example:
-
-cat /sys/kernel/debug/regmap/spi0.0/registers
-04: 10 -> Port 0, register offset 1
-05: 10 -> Port 1, register offset 1
-06: 00 -> Port 2, register offset 1 -> invalid
-07: 00 -> port 3, register offset 1 -> invalid
-...
-
-Add a debug module parameter to call a custom dump function for each
-port registers after the probe phase to help debug.
-
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/tty/serial/sc16is7xx.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 03d00b144304..693b6cc371f8 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -347,6 +347,10 @@ struct sc16is7xx_port {
- 	struct sc16is7xx_one		p[];
- };
- 
-+static bool debug;
-+module_param(debug, bool, 0644);
-+MODULE_PARM_DESC(debug, "enable/disable debug messages");
-+
- static unsigned long sc16is7xx_lines;
- 
- static struct uart_driver sc16is7xx_uart = {
-@@ -387,6 +391,28 @@ static void sc16is7xx_port_write(struct uart_port *port, u8 reg, u8 val)
- 	regmap_write(s->regmap, (reg << SC16IS7XX_REG_SHIFT) | line, val);
- }
- 
-+static int sc16is7xx_port_dump(struct uart_port *port)
-+{
-+	int i;
-+	unsigned char *buf;
-+	char name[64];
-+	const int regs_count_per_port = 16;
-+
-+	buf = devm_kzalloc(port->dev, regs_count_per_port, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < regs_count_per_port; i++)
-+		buf[i] = sc16is7xx_port_read(port, i);
-+
-+	snprintf(name, sizeof(name), "sc16is7xx %s%i: dump ",
-+		 sc16is7xx_uart.dev_name, port->line);
-+	print_hex_dump(KERN_ERR, name, DUMP_PREFIX_OFFSET, 16, 1,
-+		       &((u8 *)buf)[0], regs_count_per_port, 1);
-+
-+	return 0;
-+}
-+
- static void sc16is7xx_fifo_read(struct uart_port *port, unsigned int rxlen)
- {
- 	struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
-@@ -1614,6 +1640,10 @@ static int sc16is7xx_probe(struct device *dev,
- 	}
- #endif
- 
-+	if (debug)
-+		for (i = 0; i < devtype->nr_uart; ++i)
-+			sc16is7xx_port_dump(&s->p[i].port);
-+
- 	/*
- 	 * Setup interrupt. We first try to acquire the IRQ line as level IRQ.
- 	 * If that succeeds, we can allow sharing the interrupt as well.
+Best regards,
 -- 
-2.30.2
-
+Bjorn Andersson <andersson@kernel.org>
