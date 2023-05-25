@@ -2,286 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E697710BA6
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 14:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 588F4710BB3
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 14:07:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240858AbjEYMDv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 08:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44694 "EHLO
+        id S241068AbjEYMHD convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 25 May 2023 08:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240999AbjEYMDu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 08:03:50 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F3512F;
-        Thu, 25 May 2023 05:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685016228; x=1716552228;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=V5ddAqCEQX3VA0kkYibfs41pf17kYhAUFUF1wg2QkC4=;
-  b=kAvRiC5GxC75yveAgLJ+n9GN+cG+RLFy9YsfWfH18kuIDxNWP8PzhmOM
-   ejgUuBMz6JrITfv7Gx9t4prRmyqd77xKFI2hLZymuOdBtfrzRg7J7nuUj
-   azfFXG3qzx+RXLBR1/MVOa1Vkbv56HlMn0w8TA5fSyCeUTEqT36N4W3A7
-   Rmu+6z7K87bnXy9dwmnwZ/zeZt3cXdgKu8Kdi8VvPLpCbWcjxFRTJbCiO
-   61S5pX/MLUWIsDJR822pAnmoVgIknzOqaprxY+W7qYVkpfqeq2sm9gtkR
-   lDdtHx9tmV+n9qXiGiZLme0VVfXLivn8DFLOh3hZinyiOTLvvlxadfTvl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="353887166"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="353887166"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:03:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="879076305"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="879076305"
-Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 05:03:43 -0700
-Date:   Thu, 25 May 2023 15:03:41 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Jiri Slaby <jirislaby@kernel.org>,
-        jringle@gridpoint.com, tomasz.mon@camlingroup.com,
-        l.perczak@camlintechnologies.com,
-        linux-serial <linux-serial@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v3 08/11] serial: sc16is7xx: fix regression with GPIO
- configuration
-In-Reply-To: <20230525040324.3773741-9-hugo@hugovil.com>
-Message-ID: <b8b6d3d-6c7b-3a94-4d29-b182f12325d@linux.intel.com>
-References: <20230525040324.3773741-1-hugo@hugovil.com> <20230525040324.3773741-9-hugo@hugovil.com>
+        with ESMTP id S233511AbjEYMHC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 08:07:02 -0400
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4720E7;
+        Thu, 25 May 2023 05:07:00 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9739440b60bso29999766b.0;
+        Thu, 25 May 2023 05:07:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685016419; x=1687608419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hKW6nh3Stu7+N3Kp7mLlmvutOp3dc9cSfF1cRxfu1tI=;
+        b=dbJi4YeDCBVWMp0fZp5TjHNoAK96oqYvbW5U7hLpWC7p/7P5IfxcUlOjRK6/W7uP2G
+         +gWBDfIFoGN5KaxM4+UyaI92yaPUOztuXwuU0xAhZZP/49ttsRebSZ91LObmCb+HKwjO
+         VehSSQVJl/MeL4uLx2K97h/CF4TUvSUT5/kbLX02bbAzAOkyCxWD8SGblLquIVdY4Vah
+         oejrCvIyAvvs0ehjSYJlICjQVIKNzbLsam0I2VYiU+MQtZf2TjDunAOKSBYm4OSpldyv
+         JStpHhZc4u3vbsyahLJQh5lW+0lHCD5lPY48/KQZDfQcaNw+2B+EAajhiZ+Y4i8Ns6hw
+         7Xyw==
+X-Gm-Message-State: AC+VfDwvExtrFkiqSjXDU014hkUNscncI5UNDfkph3gPjltLHyagARm+
+        VyeAtclv7ljagQ+pHHw5X2YHPPP5Vi9NVwQlWFs=
+X-Google-Smtp-Source: ACHHUZ6IRQ/SnBgyfpCgayrSbirvIindZHWRMc+FngvXIzH25Iu+YuHgvlryIKQiaIxUsbTuhF1Hvdfb9QDAWtg1VY4=
+X-Received: by 2002:a17:906:72d4:b0:96f:da08:d451 with SMTP id
+ m20-20020a17090672d400b0096fda08d451mr11519029ejl.6.1685016418720; Thu, 25
+ May 2023 05:06:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230522200033.2605-1-mario.limonciello@amd.com>
+ <20230522200033.2605-4-mario.limonciello@amd.com> <e9eb526d-84fe-b814-67a3-6f7977aa0078@redhat.com>
+ <MN0PR12MB6101AF7606A3547EC5AA42A7E2409@MN0PR12MB6101.namprd12.prod.outlook.com>
+ <dcdb3d12-e0af-5e4d-119e-d4fbe9a9495b@redhat.com>
+In-Reply-To: <dcdb3d12-e0af-5e4d-119e-d4fbe9a9495b@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 May 2023 14:06:46 +0200
+Message-ID: <CAJZ5v0h=tSKjZxQJECZCQqzWDMAwY8cKf7F_xyLQSBG8TPyzrg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for suspend
+ related messages
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023, Hugo Villeneuve wrote:
+On Thu, May 25, 2023 at 12:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Mario,
+>
+> On 5/23/23 18:21, Limonciello, Mario wrote:
+> > [AMD Official Use Only - General]
+> >
+> >> -----Original Message-----
+> >> From: Hans de Goede <hdegoede@redhat.com>
+> >> Sent: Tuesday, May 23, 2023 6:08 AM
+> >> To: Limonciello, Mario <Mario.Limonciello@amd.com>; rafael@kernel.org;
+> >> linus.walleij@linaro.org
+> >> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> >> gpio@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+> >> pm@vger.kernel.org; S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>;
+> >> Natikar, Basavaraj <Basavaraj.Natikar@amd.com>
+> >> Subject: Re: [PATCH v2 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for
+> >> suspend related messages
+> >>
+> >> Hi Mario,
+> >>
+> >> On 5/22/23 22:00, Mario Limonciello wrote:
+> >>> Using pm_pr_dbg() allows users to toggle
+> >> `/sys/power/pm_debug_messages`
+> >>> as a single knob to turn on messages that amd-pmc can emit to aid in
+> >>> any s2idle debugging.
+> >>>
+> >>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >>> ---
+> >>>  drivers/platform/x86/amd/pmc.c | 4 ++--
+> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/amd/pmc.c
+> >> b/drivers/platform/x86/amd/pmc.c
+> >>> index 427905714f79..1304cd6f13f6 100644
+> >>> --- a/drivers/platform/x86/amd/pmc.c
+> >>> +++ b/drivers/platform/x86/amd/pmc.c
+> >>> @@ -543,7 +543,7 @@ static int amd_pmc_idlemask_read(struct
+> >> amd_pmc_dev *pdev, struct device *dev,
+> >>>     }
+> >>>
+> >>>     if (dev)
+> >>> -           dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
+> >>> +           pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
+> >>>
+> >>>     if (s)
+> >>>             seq_printf(s, "SMU idlemask : 0x%x\n", val);
+> >>
+> >> This does not compile, amd/pmc.c may be build as an amd-pmc.ko module
+> >> and currently the pm_debug_messages_on flag used by pm_pr_dbg()
+> >> is not exported to modules:
+> >>
+> >>   CC [M]  drivers/platform/x86/amd/pmc.o
+> >>   LD [M]  drivers/platform/x86/amd/amd-pmc.o
+> >>   MODPOST Module.symvers
+> >> ERROR: modpost: "pm_debug_messages_on"
+> >> [drivers/platform/x86/amd/amd-pmc.ko] undefined!
+> >> make[1]: *** [scripts/Makefile.modpost:136: Module.symvers] Error 1
+> >> make: *** [Makefile:1978: modpost] Error 2
+> >>
+> >> Regards,
+> >>
+> >> Hans
+> >>
+> >
+> > My apologies, yes I was compiling in when testing.  Let me ask if this
+> > series makes sense and is "generally" agreeable though.
+>
+> I have no objections against this series, otherwise I don't really
+> have a strong opinion on this series.
+>
+> If this makes sense and if exporting pm_debug_messages_on is ok
+> is Rafael's call to make IMHO.
+>
+> Rafael ?
 
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> 
-> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> changed the function of the GPIOs pins to act as modem control
-> lines without any possibility of selecting GPIO function.
-> 
-> As a consequence, applications that depends on GPIO lines configured
-> by default as GPIO pins no longer work as expected.
-> 
-> Also, the change to select modem control lines function was done only
-> for channel A of dual UART variants (752/762). This was not documented
-> in the log message.
-> 
-> This new patch allows to specify GPIO or modem control line function
-> in the device tree, and for each of the ports (A or B).
-> 
-> This is done by using the new device-tree property named
-> "modem-control-line-ports" (property added in separate patch).
-> 
-> We also now reduce the number of exported GPIOs according to the
-> modem-status-line-port DT property.
-> 
-> Boards that need to have GPIOS configured as modem control lines
-> should add that property to their device tree. Here is a list of
-> boards using the sc16is7xx driver in their device tree and that may
-> need to be modified:
->     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->     mips/boot/dts/ingenic/cu1830-neo.dts
->     mips/boot/dts/ingenic/cu1000-neo.dts
-> 
-> Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
->  drivers/tty/serial/sc16is7xx.c | 65 +++++++++++++++++++++++-----------
->  1 file changed, 44 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index a5d8af0f6da0..97ec532a0a19 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -236,7 +236,8 @@
->  
->  /* IOControl register bits (Only 75x/76x) */
->  #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
-> -#define SC16IS7XX_IOCONTROL_MODEM_BIT	(1 << 1) /* Enable GPIO[7:4] as modem pins */
-> +#define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
-> +#define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
->  #define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
->  
->  /* EFCR register bits */
-> @@ -301,12 +302,12 @@
->  /* Misc definitions */
->  #define SC16IS7XX_FIFO_SIZE		(64)
->  #define SC16IS7XX_REG_SHIFT		2
-> +#define SC16IS7XX_GPIOS_PER_BANK	4
->  
->  struct sc16is7xx_devtype {
->  	char	name[10];
->  	int	nr_gpio;
->  	int	nr_uart;
-> -	int	has_mctrl;
->  };
->  
->  #define SC16IS7XX_RECONF_MD		(1 << 0)
-> @@ -336,6 +337,7 @@ struct sc16is7xx_port {
->  	struct clk			*clk;
->  #ifdef CONFIG_GPIOLIB
->  	struct gpio_chip		gpio;
-> +	int				gpio_configured;
->  #endif
->  	unsigned char			buf[SC16IS7XX_FIFO_SIZE];
->  	struct kthread_worker		kworker;
-> @@ -447,35 +449,30 @@ static const struct sc16is7xx_devtype sc16is74x_devtype = {
->  	.name		= "SC16IS74X",
->  	.nr_gpio	= 0,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 0,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is750_devtype = {
->  	.name		= "SC16IS750",
-> -	.nr_gpio	= 4,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is752_devtype = {
->  	.name		= "SC16IS752",
-> -	.nr_gpio	= 0,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 2,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is760_devtype = {
->  	.name		= "SC16IS760",
-> -	.nr_gpio	= 4,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is762_devtype = {
->  	.name		= "SC16IS762",
-> -	.nr_gpio	= 0,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 2,
-> -	.has_mctrl	= 1,
->  };
->  
->  static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
-> @@ -1396,6 +1393,10 @@ static int sc16is7xx_probe(struct device *dev,
->  		return -ENOMEM;
->  	}
->  
-> +#ifdef CONFIG_GPIOLIB
-> +	s->gpio_configured = devtype->nr_gpio;
-> +#endif /* CONFIG_GPIOLIB */
-> +
->  	/* Always ask for fixed clock rate from a property. */
->  	device_property_read_u32(dev, "clock-frequency", &uartclk);
->  
-> @@ -1473,12 +1474,6 @@ static int sc16is7xx_probe(struct device *dev,
->  				     SC16IS7XX_EFCR_RXDISABLE_BIT |
->  				     SC16IS7XX_EFCR_TXDISABLE_BIT);
->  
-> -		/* Use GPIO lines as modem status registers */
-> -		if (devtype->has_mctrl)
-> -			sc16is7xx_port_write(&s->p[i].port,
-> -					     SC16IS7XX_IOCONTROL_REG,
-> -					     SC16IS7XX_IOCONTROL_MODEM_BIT);
-> -
->  		/* Initialize kthread work structs */
->  		kthread_init_work(&s->p[i].tx_work, sc16is7xx_tx_proc);
->  		kthread_init_work(&s->p[i].reg_work, sc16is7xx_reg_proc);
-> @@ -1514,10 +1509,38 @@ static int sc16is7xx_probe(struct device *dev,
->  					 prop, p, u)
->  			if (u < devtype->nr_uart)
->  				s->p[u].irda_mode = true;
-> +
-> +		val = 0;
-> +
-> +		of_property_for_each_u32(dev->of_node, "nxp,modem-control-line-ports",
-> +					 prop, p, u)
-> +			if (u < devtype->nr_uart) {
+I have no strong opinion.
 
-Reverse logic + use continue. It will help with the indentation levels.
+I would do it slightly differently as mentioned in my reply to patch
+[1/4] (and then the new function could be used in patch [2/4] I
+think).
 
-> +				/* Use GPIO lines as modem control lines */
-> +				if (u == 0)
-> +					val |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
-> +				else if (u == 1)
-> +					val |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
-> +
-> +#ifdef CONFIG_GPIOLIB
-> +				if (s->gpio_configured >=
-> +				    SC16IS7XX_GPIOS_PER_BANK)
-> +					s->gpio_configured -=
-> +						SC16IS7XX_GPIOS_PER_BANK;
-> +#endif /* CONFIG_GPIOLIB */
-> +			}
-
-Please use braces for of_property_for_each_u32 block.
-
-> +
-> +		if (val)
-> +			regmap_update_bits(
-> +				s->regmap,
-> +				SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
-> +				SC16IS7XX_IOCONTROL_MODEM_A_BIT |
-> +				SC16IS7XX_IOCONTROL_MODEM_B_BIT, val);
->  	}
->  
->  #ifdef CONFIG_GPIOLIB
-> -	if (devtype->nr_gpio) {
-> +	dev_dbg(dev, "GPIOs to configure: %d\n", s->gpio_configured);
-> +
-> +	if (s->gpio_configured) {
->  		/* Setup GPIO controller */
->  		s->gpio.owner		 = THIS_MODULE;
->  		s->gpio.parent		 = dev;
-> @@ -1527,7 +1550,7 @@ static int sc16is7xx_probe(struct device *dev,
->  		s->gpio.direction_output = sc16is7xx_gpio_direction_output;
->  		s->gpio.set		 = sc16is7xx_gpio_set;
->  		s->gpio.base		 = -1;
-> -		s->gpio.ngpio		 = devtype->nr_gpio;
-> +		s->gpio.ngpio		 = s->gpio_configured;
->  		s->gpio.can_sleep	 = 1;
->  		ret = gpiochip_add_data(&s->gpio, s);
->  		if (ret)
-> @@ -1555,7 +1578,7 @@ static int sc16is7xx_probe(struct device *dev,
->  		return 0;
->  
->  #ifdef CONFIG_GPIOLIB
-> -	if (devtype->nr_gpio)
-> +	if (s->gpio_configured)
->  		gpiochip_remove(&s->gpio);
->  
->  out_thread:
-> @@ -1581,7 +1604,7 @@ static void sc16is7xx_remove(struct device *dev)
->  	int i;
->  
->  #ifdef CONFIG_GPIOLIB
-> -	if (s->devtype->nr_gpio)
-> +	if (s->gpio_configured)
->  		gpiochip_remove(&s->gpio);
->  #endif
->  
-> 
-
--- 
- i.
-
+Otherwise this is fine with me if it helps to debug failures in the field.
