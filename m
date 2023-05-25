@@ -2,72 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCCFB710307
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 04:47:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E07710336
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 05:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbjEYCrZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 May 2023 22:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
+        id S238026AbjEYDJ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 May 2023 23:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjEYCrZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 22:47:25 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222BFE6;
-        Wed, 24 May 2023 19:47:24 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ae852a5330so6791135ad.3;
-        Wed, 24 May 2023 19:47:24 -0700 (PDT)
+        with ESMTP id S229459AbjEYDJ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 May 2023 23:09:58 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B3CA9
+        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 20:09:57 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1ae452c2777so3996275ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 24 May 2023 20:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684982843; x=1687574843;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=waGgXS3UilhxJBlU/7X+6sK1z9vQnB/U1MGRAmCqN1U=;
-        b=Z6VM/6aQ4CaXb3UhIWRKxxqadrZU/PjSAmQMG0Euj/39aRbtColTQDq9l5lJSzqnr+
-         5Gnp9gYsvGxLEmCPH2fEtC4ojvd155Z061X2fkjQyxoRLsJQ32uD0hu46pmI/UNhB8T5
-         bLx4NfogNM5iyVzvyIq67q9cFjOlPhjD9J2i/QDjlLh1Bpplvo3lr4UN9XxPeGCnJtqw
-         2Ng3+//sR32my8951juR7XXpgovzu8CE562BIEO8m0KsmOZOiRyZ41FP1Wyavb7EIbUT
-         aSopQc40VsUfE6ttRg7+dCMHJanV8EwkyDlND3VnbAB8S5mBn8ymeqmDq7JVfCGhcemp
-         bn+g==
+        d=gmail.com; s=20221208; t=1684984197; x=1687576197;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6VBxa9VXdZ/wJeHjNtU5vKbO+AGaRJNgDDgmpeETfoU=;
+        b=o+wSkDHbH/eqPOvL9ip2XzzdOWkzmMcE9vTJOOX0U/fM1BPwNXBrtnDo8OymPFhpXR
+         pYfmWhgFNdHKe2CW8VXT5M483emwSyBGqp5fLcVRzF6GPYY46XXnek07fAkN9KsELgoh
+         C9TpdE3fc/X3Wrzsuk3Ohq3h6dRTirQEJws5LR9o8zxSrWl0/6VdSdBkDMfFVCtT+2p6
+         ZgFPZ6zFwfLr51+s5lPB49yJ2sm7Nu0xN94e9roRRKIO/zOMoF6XWYexHv9N4xghUHeN
+         8tXHKjC5syXwRXUk+ohVjRNYX4wqnWgpFeFo3V0pptrnxkTCSShAs4J9wNgh/6symsdD
+         oK3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684982843; x=1687574843;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1684984197; x=1687576197;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=waGgXS3UilhxJBlU/7X+6sK1z9vQnB/U1MGRAmCqN1U=;
-        b=YCVoZAvmOno9qxX+GRjk6WoVSuExGBCIcjH5+f/Zqud8gUc7++nxq3AFZNyN6qp3V/
-         HrLbXA6iX7HN8I2RLylsNRDsXvW2aKkBta1ClRWueQIm7ojjG6w3jONb97jspe80Efm1
-         0WdCPHzAmJvN1Xt523PCUabYF7fRVPcjdVcPP/ATtgjMpgNGw9uBeuI2m1V0ZNJmhRSU
-         i4tN1Kd6RIejwbyALYHITT4de9ueQ0fmnJaXk5Xz1Q2Fn4KV31nY+Xa70ArprFKI1G3H
-         I+/5GzqMDjccnjOca8h8jhrfCoCWdQanGssCfXbgCl/k4u2P1qPXyOya2BSTFDLmm+b+
-         vEyw==
-X-Gm-Message-State: AC+VfDwfm10au/vjR6mV0BhyCp9kt7xQe35Xcq1sb0kN939sct4lVja4
-        PuUmwCLYGDWbquA3+1msNgjPifDZ3Cg=
-X-Google-Smtp-Source: ACHHUZ6230VMPMogqHSv0qMnrQJYuiDguIxh2YUT8IXw91nGsPC8RFkZFjmQKCZ0L4NbXab4Lcioqw==
-X-Received: by 2002:a17:902:a507:b0:1ae:29a8:d6d0 with SMTP id s7-20020a170902a50700b001ae29a8d6d0mr15019plq.59.1684982843510;
-        Wed, 24 May 2023 19:47:23 -0700 (PDT)
+        bh=6VBxa9VXdZ/wJeHjNtU5vKbO+AGaRJNgDDgmpeETfoU=;
+        b=cURJ5Lz5KUn/KGpZmKdS2cPnScWSnlPKhc3NlswnIUylvCxXgj9ZcrfVMUH3XYKdpw
+         3Li+9n0VYmrq8egimzf936k1cO/EFVoib/LnOGprYX0HKTd7PJktq3Qlc+ihaUwGI/Ku
+         pBkI0yJ6cLuPilUB3y3ivKddGj31yYP828KQARGF1oEfC5twjvYFlT7A2NjHIb2CH7GO
+         G4e2jL7haDblOy3UHkEa5j/WwWFj/LSMVAXuC4bPBCCrJz7rKSpDTu57Wul1feHY26uw
+         W7wsXUOb+aWCnhPLnupSy+1jEpfInS6TfYTTC4Y9OnoulOFH/e/4mGW3zZ/AGtmc+bL3
+         RzPA==
+X-Gm-Message-State: AC+VfDxK490WYnRXuuIZIj22iVklqdjRtfnO3b6ciR8NUpxG3ek9R0tE
+        2jWXM+Dcv1CUs83aJsf5yGMmUc1LY+E=
+X-Google-Smtp-Source: ACHHUZ4VIQc6aR4heOj/uhVA0ZAzTLDZtb7SxA3yynBlJSSAIowGC7tah7FCNqvnv3dgy+fcBRVl7g==
+X-Received: by 2002:a17:902:db0a:b0:1a2:a904:c42e with SMTP id m10-20020a170902db0a00b001a2a904c42emr94069plx.24.1684984196701;
+        Wed, 24 May 2023 20:09:56 -0700 (PDT)
 Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id jj15-20020a170903048f00b001a922d43779sm177603plb.27.2023.05.24.19.47.20
+        by smtp.gmail.com with ESMTPSA id u2-20020a170902e5c200b001a9bcedd598sm200506plf.11.2023.05.24.20.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 19:47:23 -0700 (PDT)
-Date:   Thu, 25 May 2023 10:47:18 +0800
+        Wed, 24 May 2023 20:09:56 -0700 (PDT)
+Date:   Thu, 25 May 2023 11:09:52 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: cdev: fix a crash on line-request release
-Message-ID: <ZG7MNjYLt6SduWtn@sol>
-References: <20230523155101.196853-1-brgl@bgdev.pl>
- <ZG1TLBsOy4mZQlW3@sol>
- <ZG1x5pcyTN2Fio4J@sol>
- <ZG2USw7TTdFSRZ3E@sol>
- <CAMRc=MeRfCoj7bcf-GKrRY3Mp5SEhmb289g=JAHBK-01aERCtw@mail.gmail.com>
+To:     brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org
+Subject: [BUG] gpiolib: cdev: can't read RELEASED event for last line
+Message-ID: <ZG7RgGasxXz4/pwl@sol>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeRfCoj7bcf-GKrRY3Mp5SEhmb289g=JAHBK-01aERCtw@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -78,59 +66,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 24, 2023 at 09:42:13PM +0200, Bartosz Golaszewski wrote:
-> On Wed, May 24, 2023 at 6:36 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> Interestingly enough, I did test it just like you and the "fix" seemed
-> to address the issue. Upon a further look at the code, it's of course
-> clear that the patch is wrong.
-> 
-> I wanted to debug the code to see what's happening exactly but it
-> turned out that enabling the generation of DWARF data hid the issue as
-> well even without any fix. It means that it's some kind of a memory
-> corruption rather than a regular NULL-pointer dereference.
-> 
-> I'm not yet sure where the crash happens exactly other that it's in
-> the irq domain code.
-> 
-> Anyway, I'll be back at it tomorrow.
-> 
+Hi Bart,
 
-I was also playing with a patch for gpiomon to have it add POLLERR to
-its poll() to see if it would notice the chip removal and exit.
-It didn't, it just stayed blocked, but it DID made the crash go away
-when I killed it.  No idea why that would be.  So yeah, weird things.
+In testing I'm finding that I can't read the RELEASED event from the
+chip fd when the last line on the chip is released.
+The chip fd becomes readable, but when I try to read it I get ENODEV.
 
-This was the patch, btw:
+I suspect this change is the likely culprit:
 
-diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index c2684c2..f4251fc 100644
---- a/tools/gpiomon.c
-+++ b/tools/gpiomon.c
-@@ -431,7 +431,7 @@ int main(int argc, char **argv)
-                                   resolver->chips[i].path);
- 
-                pollfds[i].fd = gpiod_line_request_get_fd(requests[i]);
--               pollfds[i].events = POLLIN;
-+               pollfds[i].events = POLLIN | POLLERR;
-                gpiod_chip_close(chip);
-        }
- 
-@@ -452,6 +452,9 @@ int main(int argc, char **argv)
-                        if (pollfds[i].revents == 0)
-                                continue;
- 
-+                       if (pollfds[i].revents & POLLERR)
-+                               die_perror("error polling for events");
+533aae7c94db gpiolib: cdev: fix NULL-pointer dereferences
+
+@@ -2425,6 +2449,9 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+        int ret;
+        size_t event_size;
+
++       if (!cdev->gdev->chip)
++               return -ENODEV;
 +
-                        ret = gpiod_line_request_read_edge_events(requests[i],
-                                         event_buffer, EVENT_BUF_SIZE);
-                        if (ret < 0)
 
+though I haven't bisected it yet to be sure.
 
-I expect to add that, or something along those lines, if hot removal of
-chips from the kernel ever works like it should.
-In the meantime it is just another curiosity.
+Btw, that is testing on 6.4.0-rc3 mainline.
 
 Cheers,
 Kent.
