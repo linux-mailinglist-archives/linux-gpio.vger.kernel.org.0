@@ -2,80 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22320710D1A
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40232710D27
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 15:21:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbjEYNTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 09:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50382 "EHLO
+        id S239180AbjEYNVb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 09:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbjEYNTW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:19:22 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9446D99;
-        Thu, 25 May 2023 06:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=BiYBStJNOLDU6CVASAjjdQmOaxZ6ZXmr39+ac65rV2c=; b=xgQlUEJoApDfjNzRhAZ7nyE3w8
-        XU78wFcub24VIs36AQ6Knnp4wy8htPszdMNdCkxvAy89Wj4Jj8gE2EGbhc7e5LSvDhdIkFgn5UcdX
-        sMLInSML3Ay/xFAWVJ8l0j6z+7fp5g2aBp5omZ4Nc7jvjZzLy3oD36O1KX79g4UvQU7M=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:37108 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q2Arp-0007ff-Ub; Thu, 25 May 2023 09:18:58 -0400
-Date:   Thu, 25 May 2023 09:18:57 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     andy.shevchenko@gmail.com
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230525091857.612b591997faa964dfdfe1f6@hugovil.com>
-In-Reply-To: <ZG84rnwh3XTdY-iy@surfacebook>
-References: <20230525040324.3773741-1-hugo@hugovil.com>
-        <20230525040324.3773741-5-hugo@hugovil.com>
-        <ZG84rnwh3XTdY-iy@surfacebook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S233986AbjEYNVa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 09:21:30 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7763EB2
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:21:29 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-253520adb30so1066219a91.1
+        for <linux-gpio@vger.kernel.org>; Thu, 25 May 2023 06:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685020889; x=1687612889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tyZEvrbQZifYY1pau+ThLHjsvCYCtwaSbpjFVFd/8kA=;
+        b=NxnEbYWsGkU2NY4uLQ419fIDV7udjsnyw3bNWVCnFFSA2EGLXgEvIxhIRLeQ2Pu/eG
+         5q2GAsXDY6Ui2tWtCzI6tCWaKfLIud/4ZmZlTxfvPOA4272Q/wWZW3lrdsiNvYyN5Q7t
+         bpiAdwHxNOv+E8kRV5Rw7Ujw01oeApDPkFwOAgk6O+oFkqlUbvjOgjlt1jTF9TXiTHkC
+         700sDuj3VFahcFVQi3/6ycH7XqEGYO5WIcPHNrlYG6XhD4hAy5LC2F0iP34fuoyccvwN
+         GM8IBlkgGMfQNErfZE06DtG/S6FxaMeW2HkT70Xbv4L4QQD56pAwx33Tc2gYESYMCkv3
+         R0fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685020889; x=1687612889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tyZEvrbQZifYY1pau+ThLHjsvCYCtwaSbpjFVFd/8kA=;
+        b=bC87Kvgg+vG9NQaoO4QuMTMFW6j9kddd7JNaA4VL/4PcIJxqBYneSuG5HIo60JCMdV
+         jylBzY6qWMIV8pn8FOpjjlbfGA3zyAmpN13vbBiIH4m8U3aIebJ5EM9irqxLxom9NelA
+         tov+/meh10yAyAt15bmdN+OMOA5r+KEfwz6GWWjKReyJ0BteDsy4ZfNFCP83iY+eIpBH
+         hzAdrAokEeDsM5epxMgOY/laGy3YLN/HkBBtBrMQCs1SElfkY9JmJylxlRty/e7QQg+d
+         cJ4ODt9LYDLaLhpz8a6F2Axo6E7l1mfKTUlyqGLpFbJnpEWAANUo6ODjWMfFyT35LvOE
+         +HGQ==
+X-Gm-Message-State: AC+VfDzuabJGHRlOCVhGttMraUoYWx3IkRGTPzIxEzo+P/0I8ECqf6yF
+        0nLMY9KfNAjEhIlOqWgZ0fAxx1ZaIeI=
+X-Google-Smtp-Source: ACHHUZ4AWfMJUG97svWB2epNxZH3NYmIUaqwfHHmigjh3xbQ+pf7gxKPgd5byJgduDgyDg6Bvnciqw==
+X-Received: by 2002:a17:902:988c:b0:1af:d3b2:4eb7 with SMTP id s12-20020a170902988c00b001afd3b24eb7mr1296642plp.21.1685020888789;
+        Thu, 25 May 2023 06:21:28 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id g23-20020a1709029f9700b001aaf2e8b1eesm1393473plq.248.2023.05.25.06.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 06:21:28 -0700 (PDT)
+Date:   Thu, 25 May 2023 21:21:24 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [BUG] gpiolib: cdev: can't read RELEASED event for last line
+Message-ID: <ZG9g1N1Jbm0aB4ST@sol>
+References: <ZG7RgGasxXz4/pwl@sol>
+ <ZG8Jpjq/N97plOGe@sol>
+ <ZG8SRE9QzBYRspCO@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG8SRE9QzBYRspCO@sol>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v3 04/11] serial: sc16is7xx: add post reset delay
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 25 May 2023 13:30:06 +0300
-andy.shevchenko@gmail.com wrote:
-
-> Thu, May 25, 2023 at 12:03:17AM -0400, Hugo Villeneuve kirjoitti:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Thu, May 25, 2023 at 03:46:12PM +0800, Kent Gibson wrote:
+> On Thu, May 25, 2023 at 03:09:26PM +0800, Kent Gibson wrote:
+> > On Thu, May 25, 2023 at 11:09:52AM +0800, Kent Gibson wrote:
+> > > Hi Bart,
+> > > 
+> > I can also confirm that receiving the event using a blocking read() on the
+> > fd still works, it is a poll() on the fd followed by a read() that fails.
 > > 
-> > Make sure we wait at least 3us before initiating communication with
-> > the device after reset.
 > 
-> ...
+> Hmmm, so it occurred to me that gpionotify does the poll()/read(), so it
+> should exhibit the bug.  But no, it doesn't.
 > 
-> > +	usleep_range(3, 5);
+> So it could be my code doing something boneheaded??
+> Or there is some other variable at play.
+> I'll try to write a test for it with libgpiod and see I can reproduce
+> it.  But I might put it on the back burner - this one isn't terribly
+> high priority.
 > 
-> I would put (5, 10) instead to relax a bit the scheduler.
 
-Hi,
-Ok, done.
+Bisect result:
+
+[bdbbae241a04f387ba910b8609f95fad5f1470c7] gpiolib: protect the GPIO device against being dropped while in use by user-space
+
+So, the semaphores patch.
+The Rust test gets the timings right to hit a race/order of events issue?
+
+Cheers,
+Kent.
+
+
