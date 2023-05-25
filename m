@@ -2,57 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8813B710AE2
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DDCA710B64
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 May 2023 13:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240727AbjEYL2b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 May 2023 07:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+        id S241027AbjEYLsp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 May 2023 07:48:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbjEYL2a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:28:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4DEE7;
-        Thu, 25 May 2023 04:28:29 -0700 (PDT)
+        with ESMTP id S231160AbjEYLso (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 May 2023 07:48:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C68E212F;
+        Thu, 25 May 2023 04:48:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36962644E8;
-        Thu, 25 May 2023 11:28:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A968C433D2;
-        Thu, 25 May 2023 11:28:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 578926451E;
+        Thu, 25 May 2023 11:48:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D35C4339B;
+        Thu, 25 May 2023 11:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685014108;
-        bh=80WjExu69YZ2z4Yx+TkUK0wPnz4HeaoTG1bwDpjeRRA=;
+        s=k20201202; t=1685015314;
+        bh=MExGojQkgxoeIHiIHcvzGSzC19ymT1IWiQQd/Qw53Hw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JlD8ees5bAkKLqFjBq3iW6EmUYXa30dyvHZGzMelEuKFDt3HVxCS7ZhSpNAjfsNrO
-         vvnfts2gv5AnkHr+gMbXj2yNp1brxD+qLu3jcIq5xt3Og8KApYozFl8UWN1oDLWi2+
-         D4R1yvBvWN+4Yb4KMgJ6hxDiJqv+cY0fht6hV62oPJaCxHNP+uIqwah6ySmb0MeN+Z
-         xQxtzcCzQHOSBXrNDTbgViXxAUWA7DWQQKkPiAO/CIIDq9KoBaHuKX0FKRdlOVaX+r
-         mllGzWqvSch7UE14Rt/J0r9+XZ+bvQO1gOfOEbgnaTVfmFud2OYhWOmOajqwwdsCRs
-         xTXPRsLXo0Zjw==
-Date:   Thu, 25 May 2023 12:28:23 +0100
+        b=nxfXio6w5BwU67iRTvPfYGISqfMsH+uaZwNaueJd/7lYUtbkf8EcHroOKtgyIZSRq
+         jROwYmWuM7uS+vebz3BMjavM+MeggRKC1DzgbbtzZx/dKCVLdTJo42Qfams1Wg71hs
+         R++2SypL56h12eek3+PdSgZvaw7gXoFdvhttPflhGalK7Xy5rWu/IsX2IuAsTmdEoD
+         Ul0Mx5hquBDCJ4ZYt0C4ogbYD9DQiNe0gNsPgebY6SzTPEpT8lE6eAIgrOC7pjd9kA
+         RJV3ZFEAM5wTZoenLjAXjRBA6cuTOUg9LdLnmq53PTFo00e1Rz6bziEYYsxInsmhej
+         v9eHV6/jmEgpA==
+Date:   Thu, 25 May 2023 12:48:27 +0100
 From:   Lee Jones <lee@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Remove unneeded checks for valid GPIOs
-Message-ID: <20230525112823.GB423913@google.com>
-References: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Conor Dooley <conor+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] Documentation: leds: Add "rgb:status" path
+Message-ID: <20230525114827.GM423913@google.com>
+References: <20230414-pmi632-v3-0-079d2cada699@z3ntu.xyz>
+ <20230414-pmi632-v3-3-079d2cada699@z3ntu.xyz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230414-pmi632-v3-3-079d2cada699@z3ntu.xyz>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -61,16 +70,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 23 May 2023, Geert Uytterhoeven wrote:
+On Tue, 23 May 2023, Luca Weiss wrote:
 
-> All of gpiod_set_value_cansleep() and gpiod_direction_output() handle
-> NULL GPIO pointers just fine, so there is no need to check for that in
-> the caller.
+> The path /sys/class/leds/rgb:status is already widely used with the
+> qcom-lpg driver and others. Document it.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
->  drivers/video/backlight/pwm_bl.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  Documentation/leds/well-known-leds.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Applied, thanks
 
