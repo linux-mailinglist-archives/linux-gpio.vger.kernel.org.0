@@ -2,114 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDA9712726
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 15:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC8D712742
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 15:13:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237174AbjEZNBP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 09:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47640 "EHLO
+        id S237174AbjEZNM7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 09:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjEZNBO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 09:01:14 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E490116
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:01:13 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7841f18f9f7so222402241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:01:13 -0700 (PDT)
+        with ESMTP id S243546AbjEZNM6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 09:12:58 -0400
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E58B19C
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:12:56 -0700 (PDT)
+Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-457026417ffso194876e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685106072; x=1687698072;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685106775; x=1687698775;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s01y3S+iaFhb6QhGbpp78rHEfgIg+a6LGYlDvW3YBZs=;
-        b=CqYvIK8S4YikC+xy01uu/g+VxtXZBIiIgwDWqByuToj/Yrz78SRY927926g7/Hqhsa
-         1YVpPAIVPggHxtEGdoliT69PMCtLRoMvkdkKT1loMfNdJKPi98it8HUnTVJxb09j28dG
-         VV38WHFiQiP2FTIZkE8ro4PFlqoIyVXBBUv/3yGVb8MbmeX7D5xVbT5QggCI3yXpTibG
-         Qx+KkmZSgjVl4tA2tYx1Aug5ASDnctV5OHGqPTsgG1L0ZvO1XPXxYv+NGyjmt9AcZyJj
-         FD8N3wfNKBOUMuJ2Rpl9Q+Z1ly/f0fIUqDlCtzBBtowiuGSlkRwTSyHPIflQJo3ZSy3I
-         u2Lg==
+        bh=T8WfNbYjQtdKqhbV501fe9vtrkDkYbanF3BpFOEvVck=;
+        b=yqyG72qta2r79hHfhtKEsQGBuGunOd35hSHz3b0TCfsYaXQgZCOckNAVlNJDtbrYfi
+         iz9PEu7wdR8yxVI34ERSDlsTQQ/b0VzVMUiai3M+FOhRGKQcNnwCkPsCZi2ArY7YHWZZ
+         l4FiCmMvHZq15vh7o2fZWLASXG4TauDaD/ACnV5Pshwckf8j5l5K59DQXfTMbCsvUDUw
+         L20+aSIKQ/FGUh30jFY/222nBmCER4n/Vtx2CDBnFfQn1b6fomH+LziDAay4hK9W/esn
+         1XVrUM8U8d2D+ffLeLJEvXa9vOvVBHCbmFUvF+8Jh3sOkjWia1MVsF37y99P3WXi2AT1
+         wLYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685106072; x=1687698072;
+        d=1e100.net; s=20221208; t=1685106775; x=1687698775;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s01y3S+iaFhb6QhGbpp78rHEfgIg+a6LGYlDvW3YBZs=;
-        b=VVQdBuWAXK6FVlqNxvP+HPzHhxgIh/3DygAwPlXDU/yGHTle2jezKc5qqen1Ba1acH
-         N6OKXz1ramwiPcGkq43MRJuz/S6MguofbhGQK089G1CmOlLyCVDSRiRdJzwdF217L+2j
-         OVvJdSyIMsEFrFfrs1M78C8mQTwHOq3LxmK+yb7YEg9QVwI+brL216W1IFzJXlJO7uDe
-         I1/ONKATxAn1wwk6xPQLGQQQ1j1PV+5pZh1VSk/4jW7vvsXQeIApSa6L2E/bnadcbUWZ
-         7LGIYuO7Tp81dzrba0GFg55M7/Fes1ayDw6j3Oh9aHaB12m8bU8gH88q3Ulc42fBmfj9
-         hPvw==
-X-Gm-Message-State: AC+VfDzymsyQUS5Lyr4dtcsZAOcM0SbZ9W5QUG4p9badO6rRy0aeT24j
-        Hm0sxRgHrsy/CDlixAkLa/D9phgNpT+Hu4370AiKJw==
-X-Google-Smtp-Source: ACHHUZ5tzp1xagd4K496ehZWQ6H2POEZT0XrNGbk1ykooZDAUUf3+WluxxWKErS1iacSl4UeoSMwg3VEgp66FiMYwwU=
-X-Received: by 2002:a67:ec51:0:b0:434:82d1:c84 with SMTP id
- z17-20020a67ec51000000b0043482d10c84mr420032vso.15.1685106072307; Fri, 26 May
- 2023 06:01:12 -0700 (PDT)
+        bh=T8WfNbYjQtdKqhbV501fe9vtrkDkYbanF3BpFOEvVck=;
+        b=FG38ISySr7g9WlFdOP6V92DfaTBXikpqOuos2pb4yUA1enJ0ncOofTloIipprBuVrN
+         QAfwYOuJq+skU8YJ5yHzs6ktPmFioFodCzesB3Jo6beyfBLT7RlvZEKMweddBoafVTUr
+         Y3BBinxW5caCzwmO0Brtr7CKue/BdTyTcP13OKJ9f3XuODTUU65m4+DNGz1VexnEtjD4
+         z92EAK0yCQw0lboHNjSQ7yuYPR3WPO/QTgLRZLtvxklzot8Dx26cWD6U8cKrqM6HUfKL
+         E10tjzRLlJtvw92r9gDj4R5W6GeAItUnVtqNILxW/dIavirmbiXydD+WOrzwUHFYcKwy
+         DFlA==
+X-Gm-Message-State: AC+VfDx2r+kx2coauvW9xsd5UCnyIQ+L/GWNazOUQwb3ZfnwmxBBefRk
+        7ZN6ruQGlfB7a+xNhlBlOUle68DFPDUcisqqFaZYAg==
+X-Google-Smtp-Source: ACHHUZ7xMhW0TO6j+s+yWfOAQ6PkrQZ+ULvXzzoNL2XvhjJ7iDF1cU25FIR94NStKsLdlLqb+WLgnQ/p80rTKuiTH4g=
+X-Received: by 2002:a05:6102:3019:b0:439:e3c:8ef8 with SMTP id
+ s25-20020a056102301900b004390e3c8ef8mr426513vsa.28.1685106775067; Fri, 26 May
+ 2023 06:12:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz> <CAHp75Vcd8Q+-XMyfg3Y_hv_AL00PGgqg0jo7Yd7TTC4GrxPOuQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vcd8Q+-XMyfg3Y_hv_AL00PGgqg0jo7Yd7TTC4GrxPOuQ@mail.gmail.com>
+References: <20230506085928.933737-1-haibo.chen@nxp.com> <20230506085928.933737-2-haibo.chen@nxp.com>
+In-Reply-To: <20230506085928.933737-2-haibo.chen@nxp.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 26 May 2023 15:01:01 +0200
-Message-ID: <CAMRc=MdHMiqhcpd2rFwjfKvwMWtTeTxG4fK+7zbzgSq9MHmGew@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, johan@kernel.org, maz@kernel.org,
-        warthog618@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Fri, 26 May 2023 15:12:44 +0200
+Message-ID: <CAMRc=Mc7xq5Psgx8VxkvydS+3bQZKfR6FHOKrifc1uH6p7H6Gw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: mxc: switch to dynamic allocat GPIO base
+To:     haibo.chen@nxp.com
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        christophe.leroy@csgroup.eu
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 19, 2023 at 12:09=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Sat, May 6, 2023 at 10:56=E2=80=AFAM <haibo.chen@nxp.com> wrote:
 >
-> On Fri, May 19, 2023 at 8:07=E2=80=AFAM Chris Packham
-> <chris.packham@alliedtelesis.co.nz> wrote:
-> >
-> > On a system with pca9555 GPIOs that have been exported via sysfs the
-> > following warning could be triggered on kexec().
-> >
-> >   WARNING: CPU: 0 PID: 265 at drivers/gpio/gpiolib.c:3411 gpiochip_disa=
-ble_irq
-> >   Call trace:
-> >    gpiochip_disable_irq
-> >    machine_crash_shutdown
-> >    __crash_kexec
-> >    panic
-> >    sysrq_reset_seq_param_set
-> >    __handle_sysrq
-> >    write_sysrq_trigger
-> >
-> > The warning is triggered because there is an irq_desc for the GPIO but
-> > it does not have the FLAG_USED_AS_IRQ set. This is because when the GPI=
-O
-> > is exported via gpiod_export(), gpio_is_visible() is used to determine
-> > if the "edge" attribute should be provided but in doing so it ends up
-> > calling gpiochip_to_irq() which creates the irq_desc.
-> >
-> > Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
-> > intended creation of the irq_desc comes via edge_store() when requested
-> > by the user.
+> From: Haibo Chen <haibo.chen@nxp.com>
 >
-> To me it still sounds like a hack and the real solution should be done
-> differently/elsewhere.
+> gpiolib want to get completely rid of static gpiobase allocation,
+> so switch to dynamic allocat GPIO base, also can avoid warning
+> message:
 >
-> Also I'm worrying that not having this file visible or not may affect
-> existing user space custom scripts we will never hear about.
+> [    1.529974] gpio gpiochip0: Static allocation of GPIO base
+> is deprecated, use dynamic allocation.
 >
-> P.S. TBH, I don't care much about sysfs, so if this patch finds its
-> way upstream, I won't be unhappy.
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> ---
+>  drivers/gpio/gpio-mxc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 9d0cec4b82a3..abc129a88a62 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -462,8 +462,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>         port->gc.request =3D gpiochip_generic_request;
+>         port->gc.free =3D gpiochip_generic_free;
+>         port->gc.to_irq =3D mxc_gpio_to_irq;
+> -       port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * =
+32 :
+> -                                            pdev->id * 32;
+> +       port->gc.base =3D -1;
+>
+>         err =3D devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
+>         if (err)
+> --
+> 2.34.1
 >
 
-Same. Which is why - if there'll be no more objections, I will apply it.
+This is not the first time we're seeing someone submit this fix[1].
+
+Unfortunately it's been brought to our attention that this breaks
+existing user-space scripts that rely on fixed GPIO numbering in
+sysfs.
 
 Bart
+
+[1] https://lore.kernel.org/lkml/CACRpkdYV3mHNYvBg1nf+12Q2XZH_g4iTrA2YB1SVQ=
+=3DROriRRgg@mail.gmail.com/T/
