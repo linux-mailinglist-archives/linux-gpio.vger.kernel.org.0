@@ -2,200 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD1F37123CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 11:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A96D7123EA
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 11:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242270AbjEZJhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 05:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44242 "EHLO
+        id S236776AbjEZJo1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 05:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjEZJhO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 05:37:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C839B3;
-        Fri, 26 May 2023 02:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lx0ds+NA3xAdktV/+qI+uQjfPSAugxF64sbR87ZVzHk=; b=rSkZTa8PVO25aZ9VHo8dGT4BdR
-        pD+JQ7m3gCrXtuFQ2HT9Z27UNYPc5wwXoqySM9RqPOs33KqBLbu/cU5SPkzJw+r7a3Y4L2tfmxY6z
-        H1H+sQbV/72vqFjDQI4mWg25VtciFObD1uAji1iw1ra2e7erNCfC+4i0yzKwcxj0kk5+SJiXV85EQ
-        XiEdgv/QhOMHyoFtSbYt3lApDyuRqc32dURx1M3hA+7z1OsoN7b6jECFihI6cA6ylWphAW6CIs2lV
-        NGevqKAKJUIjA90dGIoMiT8IKeCIr3J+SFfV47gQIv4TljovH9wzVIWHlNNo98J116SlVHLxDoJca
-        BeZJ3tfg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40724)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q2Tsi-0005Jl-FV; Fri, 26 May 2023 10:37:08 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q2Tse-0003c9-R4; Fri, 26 May 2023 10:37:04 +0100
-Date:   Fri, 26 May 2023 10:37:04 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     'Jakub Kicinski' <kuba@kernel.org>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com
-Subject: Re: [PATCH net-next v9 8/9] net: txgbe: Implement phylink pcs
-Message-ID: <ZHB9wJSgfQctd2aX@shell.armlinux.org.uk>
-References: <20230524091722.522118-1-jiawenwu@trustnetic.com>
- <20230524091722.522118-9-jiawenwu@trustnetic.com>
- <20230525211403.44b5f766@kernel.org>
- <022201d98f9a$4b4ccc00$e1e66400$@trustnetic.com>
- <ZHBxJP4DXevPNpab@shell.armlinux.org.uk>
- <026901d98fb0$b5001d80$1f005880$@trustnetic.com>
- <ZHB2vXBP1B2iHXBl@shell.armlinux.org.uk>
- <026a01d98fb3$97e3d8b0$c7ab8a10$@trustnetic.com>
+        with ESMTP id S230106AbjEZJo1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 05:44:27 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2BCB3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 02:44:25 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-95fde138693so312694566b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 02:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685094264; x=1687686264;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y5VbCUMv/QaS1fw1aanpNMI9gyy0ZMlbKYJ5fMBaDxw=;
+        b=At2fFE+NDDPb+r3FayvGQc+gP0LHCgdMy8pZEjHIrIXlnSnEmST2hVmkmw3zU0JZi/
+         zZpQ7NXqwFKLrCOk+NNkH1qRecWArQ57g8FXhvRQm0tUIZ9PxnvtpGV13AZCYEM/fYCt
+         o7zCvKIZSkRLkNaCKaMXfro1tZDJSr3bCifTUhaY2qf/eD2d0oZLP55Ssg3jxJzGA8n9
+         xP1WwOsb1HpmMxSTUgXbq6MOJ1iX/PTxqFy5BmreasFHghDy0g55OCNIqfhKka9rnooj
+         3rjRGx7QIvcFPZIdBgS5lMRNUp7U+TpYxBOVUDXXorzXWpm9OKr+7cDq5FaJGuMyzupe
+         1VHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685094264; x=1687686264;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y5VbCUMv/QaS1fw1aanpNMI9gyy0ZMlbKYJ5fMBaDxw=;
+        b=FyvG4n5Ns9lxKL8fByVi/k+dOjoO+nTt+XBVQj3K452bvQBgj+oknfZaVhOzGgCn3m
+         loTsPeSonYq4tN6ECzkAzEYERHmARyew1KMmphQh4iv5nhKhJCCBR4AOBw6WgK5eJSqX
+         LlGaFn6bhfpw27bR/3acYBUK90EokBSRUn3Dj/niR3Nu5zlceSNutPHHux0YtU0+HGax
+         B6AMUIo0xBe5cOkjbPMnmLmfAudATrgmx1etzctZ53ZFEGJ2HwK7ap7sCK6mQNr4XBEm
+         h8QB7Z8ddN0LVUUXxmtVHpPM4f9TFOfOCxmALTyqNXRK9Al1v4JiKHUAnIA6AvXbNQfT
+         yKuQ==
+X-Gm-Message-State: AC+VfDyB8c1OypRLlhep16SsyXjAt02t8UW0DDier3Gb0MZRvEde5U6V
+        qHZ7gbg5Fy0pT2QQ+98SrBMvyA==
+X-Google-Smtp-Source: ACHHUZ63gKg6QmbYpIYWbXLcmJozihLs159+/l0rGCrkGLEc9QT6QhvltV1lI8NfHeiNq8p+OGn9mg==
+X-Received: by 2002:a17:907:6e14:b0:94a:653b:ba41 with SMTP id sd20-20020a1709076e1400b0094a653bba41mr1020019ejc.15.1685094264317;
+        Fri, 26 May 2023 02:44:24 -0700 (PDT)
+Received: from [192.168.1.149] (i59F67C10.versanet.de. [89.246.124.16])
+        by smtp.gmail.com with ESMTPSA id j4-20020a170906278400b00966056bd4f4sm1909787ejc.28.2023.05.26.02.44.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 May 2023 02:44:23 -0700 (PDT)
+Message-ID: <4673ba16-a8fb-453d-a80d-bfb7aea7f9d0@linaro.org>
+Date:   Fri, 26 May 2023 11:44:23 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <026a01d98fb3$97e3d8b0$c7ab8a10$@trustnetic.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH libgpiod RFC 0/3] bindings: rust: allow packaging of
+ libgpiod-sys
+Content-Language: en-US
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>
+References: <20230522-crates-io-v1-0-42eeee775eb6@linaro.org>
+ <20230524060341.khmsd2lw32u3jxsc@vireshk-i7>
+ <CSUCSUR6CSH3.NHT0430XGAIO@fedora>
+ <20230524081454.ztcywdhjgw6axvjw@vireshk-i7>
+ <5f782ccd-ccff-67f8-22cf-7b9b1c7e2e3a@linaro.org>
+ <1b9968c1-77f3-6525-af57-a6c7808adb59@linaro.org>
+ <CACMJSevb+-eCe+PPaY-=bXx=5t7+sg8BT+9ZYO=t=OzC3hmwHQ@mail.gmail.com>
+ <c561cadf-50bb-a42b-5454-610179bdb1ee@linaro.org>
+ <20230526093150.5znk6hdxzhhezuhc@vireshk-i7>
+From:   Erik Schilling <erik.schilling@linaro.org>
+In-Reply-To: <20230526093150.5znk6hdxzhhezuhc@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 26, 2023 at 05:22:29PM +0800, Jiawen Wu wrote:
-> On Friday, May 26, 2023 5:07 PM, Russell King (Oracle) wrote:
-> > On Fri, May 26, 2023 at 05:01:49PM +0800, Jiawen Wu wrote:
-> > > On Friday, May 26, 2023 4:43 PM, Russell King (Oracle) wrote:
-> > > > On Fri, May 26, 2023 at 02:21:23PM +0800, Jiawen Wu wrote:
-> > > > > On Friday, May 26, 2023 12:14 PM, Jakub Kicinski wrote:
-> > > > > > On Wed, 24 May 2023 17:17:21 +0800 Jiawen Wu wrote:
-> > > > > > > +	ret = devm_mdiobus_register(&pdev->dev, mii_bus);
-> > > > > > > +	if (ret)
-> > > > > > > +		return ret;
-> > > > > > > +
-> > > > > > > +	mdiodev = mdio_device_create(mii_bus, 0);
-> > > > > > > +	if (IS_ERR(mdiodev))
-> > > > > > > +		return PTR_ERR(mdiodev);
-> > > > > > > +
-> > > > > > > +	xpcs = xpcs_create(mdiodev, PHY_INTERFACE_MODE_10GBASER);
-> > > > > > > +	if (IS_ERR(xpcs)) {
-> > > > > > > +		mdio_device_free(mdiodev);
-> > > > > > > +		return PTR_ERR(xpcs);
-> > > > > > > +	}
-> > > > > >
-> > > > > > How does the mdiodev get destroyed in case of success?
-> > > > > > Seems like either freeing it in case of xpcs error is unnecessary
-> > > > > > or it needs to also be freed when xpcs is destroyed?
-> > > > >
-> > > > > When xpcs is destroyed, that means mdiodev is no longer needed.
-> > > > > I think there is no need to free mdiodev in case of xpcs error,
-> > > > > since devm_* function leads to free it.
-> > > >
-> > > > If you are relying on the devm-ness of devm_mdiobus_register() then
-> > > > it won't. Although mdiobus_unregister() walks bus->mdio_map[], I
-> > > > think you are assuming that the mdio device you've created in
-> > > > mdio_device_create() will be in that array. MDIO devices only get
-> > > > added to that array when mdiobus_register_device() has been called,
-> > > > which must only be called from mdio_device_register().
-> > > >
-> > > > Please arrange to call mdio_device_free() prior to destroying the
-> > > > XPCS in every case.
-> > >
-> > > Get it.
-> > 
-> > It seems this is becoming a pattern, so I think we need to solve it
-> > differently. How about something like this, which means you only have
-> > to care about calling xpcs_create_mdiodev() and xpcs_destroy() ?
-> > 
-> > diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
-> > index b87c69c4cdd7..802222581feb 100644
-> > --- a/drivers/net/pcs/pcs-xpcs.c
-> > +++ b/drivers/net/pcs/pcs-xpcs.c
-> > @@ -1240,6 +1240,7 @@ struct dw_xpcs *xpcs_create(struct mdio_device *mdiodev,
-> >  	if (!xpcs)
-> >  		return ERR_PTR(-ENOMEM);
-> > 
-> > +	mdio_device_get(mdiodev);
-> >  	xpcs->mdiodev = mdiodev;
-> > 
-> >  	xpcs_id = xpcs_get_id(xpcs);
-> > @@ -1272,6 +1273,7 @@ struct dw_xpcs *xpcs_create(struct mdio_device *mdiodev,
-> >  	ret = -ENODEV;
-> > 
-> >  out:
-> > +	mdio_device_put(mdiodev);
-> >  	kfree(xpcs);
-> > 
-> >  	return ERR_PTR(ret);
-> > @@ -1280,8 +1282,33 @@ EXPORT_SYMBOL_GPL(xpcs_create);
-> > 
-> >  void xpcs_destroy(struct dw_xpcs *xpcs)
-> >  {
-> > +	mdio_device_put(mdiodev);
-> >  	kfree(xpcs);
-> >  }
-> >  EXPORT_SYMBOL_GPL(xpcs_destroy);
-> > 
-> > +struct dw_xpcs *xpcs_create_mdiodev(struct mii_bus *bus, int addr,
-> > +				    phy_interface_t interface)
-> > +{
-> > +	struct mdio_device *mdiodev;
-> > +	struct dw_xpcs *xpcs;
-> > +
-> > +	mdiodev = mdio_device_create(bus, addr);
-> > +	if (IS_ERR(mdiodev))
-> > +		return ERR_CAST(mdiodev);
-> > +
-> > +	xpcs = xpcs_create(mdiodev, interface);
-> > +
-> > +	/* xpcs_create() has taken a refcount on the mdiodev if it was
-> > +	 * successful. If xpcs_create() fails, this will free the mdio
-> > +	 * device here. In any case, we don't need to hold our reference
-> > +	 * anymore, and putting it here will allow mdio_device_put() in
-> > +	 * xpcs_destroy() to automatically free the mdio device.
-> > +	 */
-> > +	mdio_device_put(mdiodev);
-> > +
-> > +	return xpcs;
-> > +}
-> > +EXPORT_SYMBOL_GPL(xpcs_create_mdiodev);
-> > +
-> >  MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-> > index 1d7d550bbf1a..537b62330c90 100644
-> > --- a/include/linux/mdio.h
-> > +++ b/include/linux/mdio.h
-> > @@ -108,6 +108,16 @@ int mdio_driver_register(struct mdio_driver *drv);
-> >  void mdio_driver_unregister(struct mdio_driver *drv);
-> >  int mdio_device_bus_match(struct device *dev, struct device_driver *drv);
-> > 
-> > +static inline void mdio_device_get(struct mdio_device *mdiodev)
-> > +{
-> > +	get_device(&mdiodev->dev);
-> > +}
-> > +
-> > +static inline void mdio_device_put(struct mdio_device *mdiodev)
-> > +{
-> > +	mdio_device_free(mdiodev);
-> > +}
-> > +
-> >  static inline bool mdio_phy_id_is_c45(int phy_id)
-> >  {
-> >  	return (phy_id & MDIO_PHY_ID_C45) && !(phy_id & ~MDIO_PHY_ID_C45_MASK);
+
+>> @Viresh: Could you comment on the use-case that you had in mind with gpiosim
+>> being on crates.io? I am not seeing any good options to package it if it is
+>> only intended as an testing tool for in-tree things.
 > 
-> Looks great, it can eliminate to create mdiodev in the ethernet driver, this device
-> only be used in xpcs.
+> I thought vhost-device is already using it for testing, I was wrong :(
+> 
+> So we don't need it via crates.io for now at least.
 
-I'm just creating a patch series for both xpcs and lynx, which this
-morning have had patches identifying similar problems with creation
-and destruction.
+Thanks for checking! I will then just send an updated patch for 
+libgpiod-sys :). If gpiosim becomes part of the public interface we can 
+revisit the situation then.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+- Erik
