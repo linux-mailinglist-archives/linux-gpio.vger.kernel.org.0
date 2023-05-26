@@ -2,83 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86A577125B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 13:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C225A71268B
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 14:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242803AbjEZLhi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 07:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36032 "EHLO
+        id S243452AbjEZMY5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 08:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237023AbjEZLhh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 07:37:37 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744CDE7E;
-        Fri, 26 May 2023 04:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ywhy2jAO16IXVYxg/uoZkSs55CwHUYJT0FTMuMs35PU=; b=q4+Otp1nBzJ872iRk40XDhqVm5
-        Pnaqu/74Mv60CNDyCIQmifA4tZU0wE8FSnDfPgnf3IeOnZY2x3N7vbNjcMevgNwHm2ftr/8NyD9Bg
-        K7fZBVwUkXoYfFSHUfF4CjRwa+G37ztEtwYqsy0eLP06pjb3vXPI/W0N3guJ+GbhtE541DVsWqd9F
-        M3psTja6WodBPTocofwe9E/kJ0EzZpLqcWhxPtaEeEHH1diJr3mjkBubZ64SOehwEcuwMTrK1Dlqd
-        dTONbNltJE8RsuNeqEntz0Cr6pm7WKBn8Ac/A428MjkiW6vogDDg64L883hpiE+4c55md+wuLqJDS
-        laIMQ8zw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34414)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q2Vkf-0005Vs-Ml; Fri, 26 May 2023 12:36:57 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q2VkY-0003h7-BQ; Fri, 26 May 2023 12:36:50 +0100
-Date:   Fri, 26 May 2023 12:36:50 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        oe-kbuild-all@lists.linux.dev, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com,
-        Piotr Raczynski <piotr.raczynski@intel.com>
-Subject: Re: [PATCH net-next v9 5/9] net: txgbe: Add SFP module identify
-Message-ID: <ZHCZ0hLKARXu3xFH@shell.armlinux.org.uk>
-References: <20230524091722.522118-6-jiawenwu@trustnetic.com>
- <202305261959.mnGUW17n-lkp@intel.com>
+        with ESMTP id S243433AbjEZMYy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 08:24:54 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2309116
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 05:24:52 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-437e7088b64so417589137.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 05:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685103892; x=1687695892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kac9+1tgw97t/ZhT9HBMA1F6hwQ8HyeJeKG9Y95z0Z8=;
+        b=Rj2m49t9Gu6u5Dvb9guyp/NpRtEiMTVCA2ZOzuAVxziARXF8Vw8Jr85chjYO45vZbN
+         JHdF3s2zIHuAP3InBuqFoZqVXw3LfEYtLC6UfDhE6CM0SWJImVFE8PrWee5xZFpHoXXM
+         lxMVnHCM9shP17BIMJP6vCbsdBzJ56r4p03YePD2GaMgpAAPFLuSvaEZXUsz4LIyn4OQ
+         j2wTN4EtmoivZMurhUJQ6V5eshnwSkJ5xPCvX99Pjf5plfInPBDIQ4by/TPVSjTCk5Ui
+         xGePMvjUiiWrShWgM+8Grb7OP9xCxWhMEOzxML4QOu/2IMpOabk32EYDv2MdLxIUiVwp
+         K9bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685103892; x=1687695892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kac9+1tgw97t/ZhT9HBMA1F6hwQ8HyeJeKG9Y95z0Z8=;
+        b=joSDgVYbSuaU78CdVo4RZd5r/16aWVkAURP8GUjqa6ssDqus7RC9ozacxff8MbrAFd
+         s4l8m6H04+2lLnMjUnuHQPjq+UQYNyR7OTg2I0D4llv6rLofpHKMZpwhFrLWC7uVKb+V
+         +tzKnfZoBXzWyKJ9BgU30uiAjRXM/VkNgxYfR73KHk12ECVmZPK+9HoBpvYdQ+uykDir
+         3BA8tSMyHgNthwnHxb72PNZTp+w1GIh8wKP891wcEOVKkR7dT907jF/rcoIWon7e+Kmg
+         +fmeypb4/yQEmiMXLUoml50tvtE2uXyHSPvGS4/+USEvsuGbh887qeL3pNt+jeaMvHUp
+         unbw==
+X-Gm-Message-State: AC+VfDw+Djb7LH65lTW8yitBWrGrv/v/ppPeemlZv/jYIgFQcdkafuC6
+        N8nfjnJhjnK08rGI7GeFksa9I2lH+lQf94ouKwZYqQ==
+X-Google-Smtp-Source: ACHHUZ4Vo4ypf1Yrzp9viUHOSDtXH4maYpbjQ0xLEQ39qLDEPhBaR9Ehjieq+52sv0yXRrHFogqdGN2e5yQGMg9FBKQ=
+X-Received: by 2002:a67:ea84:0:b0:439:4c9c:1f00 with SMTP id
+ f4-20020a67ea84000000b004394c9c1f00mr456422vso.30.1685103891955; Fri, 26 May
+ 2023 05:24:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202305261959.mnGUW17n-lkp@intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <cover.1683719613.git.noodles@earth.li> <cover.1684258957.git.noodles@earth.li>
+ <7691a35155cf644c2efb02c282c5ef007a6570fa.1684258957.git.noodles@earth.li>
+In-Reply-To: <7691a35155cf644c2efb02c282c5ef007a6570fa.1684258957.git.noodles@earth.li>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 26 May 2023 14:24:41 +0200
+Message-ID: <CAMRc=MeJHKRYStTSwTCirdQo=f2okN2ys5=V7-ppzCaGYwDkvg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: Add GPIO3 for AXP209 GPIO
+ binding schema
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 26, 2023 at 07:30:45PM +0800, kernel test robot wrote:
-> Kconfig warnings: (for reference only)
->    WARNING: unmet direct dependencies detected for I2C_DESIGNWARE_PLATFORM
->    Depends on [n]: I2C [=n] && HAS_IOMEM [=y] && (ACPI && COMMON_CLK [=y] || !ACPI)
->    Selected by [y]:
->    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
->    WARNING: unmet direct dependencies detected for SFP
->    Depends on [n]: NETDEVICES [=y] && PHYLIB [=y] && I2C [=n] && PHYLINK [=y] && (HWMON [=n] || HWMON [=n]=n)
->    Selected by [y]:
->    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
+On Tue, May 16, 2023 at 7:47=E2=80=AFPM Jonathan McDowell <noodles@earth.li=
+> wrote:
+>
+> The AXP209 has a 4th GPIO, so add it in preparation for support in the
+> driver.
+>
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.=
+yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> index 31906c253940..1638cfe90f1c 100644
+> --- a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+> @@ -44,6 +44,7 @@ patternProperties:
+>              - GPIO0
+>              - GPIO1
+>              - GPIO2
+> +            - GPIO3
+>
+>        function:
+>          enum:
+> --
+> 2.39.2
+>
 
-... and is basically caused by "select SFP". No. Do not do this unless
-you look at the dependencies for SFP and ensure that those are also
-satisfied - because if you don't you create messes like the above
-build errors.
+Applied, thanks!
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Bart
