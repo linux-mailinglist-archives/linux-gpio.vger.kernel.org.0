@@ -2,66 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED4EA71282B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 16:24:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CA53712910
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 17:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237052AbjEZOYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 10:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
+        id S237195AbjEZPGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 11:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbjEZOYQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 10:24:16 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95162187
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 07:24:13 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f6d3f83d0cso8852035e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 07:24:13 -0700 (PDT)
+        with ESMTP id S236220AbjEZPGf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 11:06:35 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793F7125
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 08:06:32 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-30a4ebbda56so773517f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 08:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685111052; x=1687703052;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y7S62GocSLRRtyqgzGIn0AzmW6WJ4QYVH493qeVtDqs=;
-        b=yMGW5IdjQ+134HvRu/YXXxZpF35Yu80wGdtkeJYIjNeq2B7XJ+4/DAnwhtJKRucF00
-         hysX0dR0an/y/twKgOvWkrriKFIPJ/mWXYeDtC0gPR02Skqh18sbh32WGtwqslZBeHwN
-         ATAcAknqGWWob9yORgVm0hNt79ERjbeFf+285RA/gHdWoD7WjaffBijazwdA3yRjmhrU
-         3UUJYEKI8wSJ1ouUmY4w2HL9KPFW5suYxQXuRjW8ljv7CEAMvv0pVwlqtWcr0+RnvVzN
-         5wNJvNkfy4c2MoXFbl+v9m9uEXtB+O8Kg/zONFWC2D1R8Ad1hkdsivkrhsGiJJAXdVP3
-         CVGw==
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1685113591; x=1687705591;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RX3Q6YeXkmJ37HeLtIKdFn9b2zHc6WYH2gkf9X+5m7I=;
+        b=TdolivaKjgNwdAqiffQDUfLmvwGc41ry7WZschgclCq92aezG5MmRiXHO75PsO6GSc
+         VI83FsC+jTJVr23U4ikuVWYioTN4Y7XNv4vGSSU7vDhHrR9bac+n2Hj4VIfvQ3JWguya
+         XIr76/vJMAlDpJuqspx6Aop+3yEShkWH3mSTqACtG+13CebfQUZ4LLbPcpi7OBLWciqe
+         Dqj7UPBMR5yyARp7WPNdCskO6kquJw8LAqc7pAGATon6xsPfXvuirYG3b24FAqoFlH6B
+         P39hKe2gDULoLMZ/wIyCOp++/sO7nmkT+3l+GCLsNxZSExjpY6HQv3gWyjHKr5V9RGta
+         cFdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685111052; x=1687703052;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20221208; t=1685113591; x=1687705591;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=y7S62GocSLRRtyqgzGIn0AzmW6WJ4QYVH493qeVtDqs=;
-        b=kn4aTXCPx1JsuwRhhsQwmzTOYVYLbBZz0ZDpQgLwOJOXMU/aNelLB2r9rzl2V23Jjz
-         Gsja4gQrPUCbmmLoGSv2RjpaL9iKZLvNjri2SNhHY+2e5T1Njf5IwIeV3FuQiKehpZ8n
-         14gxMRdpuUqeTfE4FiTAFX8YK0KmiYFINcTysFtbdk/q9KCSd+eIsZHmbI1fIaMOI9mr
-         HeHdxDWDO3stZ0UBksG1BWNnFHXNm+ge5FOVL3WHAOe9Vd18b75DAaYPOCAVvIREi22W
-         pStEeMi4dXyTQ6mHmz38jpy2wHNsmi3roefO9T8Jyku8lskhOC6tTsvxE9BXwNxEJqZu
-         oKfQ==
-X-Gm-Message-State: AC+VfDy1N4jlhI9S6/x3eEUemSypIgC2CRLsMDnoe++3Jnwt3Ze/jBTK
-        Fl4zHCRuA7bzw7OSTX+j9dlxiA==
-X-Google-Smtp-Source: ACHHUZ79yY2OGpXf/LdoaT5u9sbMjRfE2L926GdHKf+zcYVSPKt0L6kvrnJh7My6C5pHsZeZCF+UBg==
-X-Received: by 2002:a7b:cd15:0:b0:3f6:eff:279a with SMTP id f21-20020a7bcd15000000b003f60eff279amr1630510wmj.9.1685111052072;
-        Fri, 26 May 2023 07:24:12 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:6afe:9c96:4503:ff6b])
-        by smtp.gmail.com with ESMTPSA id q21-20020a1ce915000000b003f421979398sm8929762wmc.26.2023.05.26.07.24.11
+        bh=RX3Q6YeXkmJ37HeLtIKdFn9b2zHc6WYH2gkf9X+5m7I=;
+        b=WfHwkfIXMpUKkD+XjEOHcSgEb+XLOd+wFIZwzXWQ20C7hF+tVMnT/4u0MPwEXbIt64
+         66sCcbB1c43CYZ2071oo3xegoUMRO6ItogeWFU7AGecnS2wqsWzCQQSYfbViUxNS62Pk
+         arWr+EgSIBH7mi1eNTLWIabTwcaZl7kIp8DKR0J5h0HFF8A+ca3xMUi2I5Kh8IeGCYiS
+         D7NdB1AiYLpogqO3tcvQASTA8Q13AIO1b08uXT3GzAN4TrRG1vDh8XJwjhJ3JgMKl1eC
+         /lWaY6QHs+8AEZFSWNayFm8bKlRltMLXlkIFbgr4QMrrajJl57VxwjAtfEM8l7Aml0Ey
+         6BqQ==
+X-Gm-Message-State: AC+VfDwyxVSRT571PpURFfhLRe+j5Foaiz8JktnzmoiHdQHo0l8eahI8
+        3+KTd27P86cZ36Qsi+B7riwGUg==
+X-Google-Smtp-Source: ACHHUZ78LOTmoNR7HLuu0djqZ91cbh6iGpgM+pFuLo+3rh4Js7NGnhbE/xa2qYPWV7MzYLwWtxoqUg==
+X-Received: by 2002:adf:f34f:0:b0:30a:d9e1:ecf6 with SMTP id e15-20020adff34f000000b0030ad9e1ecf6mr1523039wrp.37.1685113590839;
+        Fri, 26 May 2023 08:06:30 -0700 (PDT)
+Received: from [127.0.1.1] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s17-20020a5d69d1000000b00304adbeeabbsm5422146wrw.99.2023.05.26.08.06.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 07:24:11 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.4-rc4
-Date:   Fri, 26 May 2023 16:24:07 +0200
-Message-Id: <20230526142407.67019-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        Fri, 26 May 2023 08:06:30 -0700 (PDT)
+From:   Jerome Neanne <jneanne@baylibre.com>
+Subject: [PATCH v3 0/2] Add support for TI TPS65219 PMIC GPIO interface.
+Date:   Fri, 26 May 2023 17:06:02 +0200
+Message-Id: <20230511-tps65219-add-gpio-support-v3-0-19837a34d820@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANrKcGQC/42PQW7DIBBFrxKx7qQwYBx31XtUWYAZx1Q1ICBWo
+ 8h3D84m6q7LJ/15f/6dFcqeCvs43Fmm1RcfQwP5dmDjbMKFwLvGDDlK3gkBNRXdoRjAOAeX5CO
+ Ua0oxV5CI1llFHIeetXtrCoHNJozzbphrTddUaiazvC+mVMpc8Q7lnk2ZJv/7/OPr3HjKcYE6t
+ +yrHVEJIU+yP556hVqBgO9AJgT6tOb2422m4xiXXTf7UmO+PVetuEv/M2BF4KD5RFYrp9Vg/nr
+ P27Y9AKzZZHAwAQAA
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>,
+        Jerome Neanne <jneanne@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1685113589; l=3113;
+ i=jneanne@baylibre.com; s=20230511; h=from:subject:message-id;
+ bh=cJ8O4BUGDUdWCYcYJpyZ1Azp4xYLHSLYCBDChWb7DIQ=;
+ b=DSrf5fQA/5Z8zmdTMAZo/SYRW6bOlK6pzIfFJBBXJHv5dSzI+nrINzWi5hHOhIU4eUYs9TIE/
+ F9xjUuH9QSBBc4BRou1+KuhSYInZhR/2G64EWwV+La2D6RzBFCYHNai
+X-Developer-Key: i=jneanne@baylibre.com; a=ed25519;
+ pk=5rvbqNoG+28jQjC9/50ToY7TgKWf9rJukuCI8b6jkUo=
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,57 +85,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Changes in v3:
+- Linus Walleij Review:
+	- put test code under IS_ENABLED(DEBUG)
+- Bartosz Golaszewski Review:
+	- nits: alphabetical ordering for includes, newline after
+	  return, 
+	- Add error message on regmap_update_bits failure.
+	- Change variable name in: tps65219_template_chip so that it's
+	  clear that gpio_chip get's a copy of this template structure.
 
-Linus,
+- Link to v2: https://lore.kernel.org/r/20230511-tps65219-add-gpio-support-v2-0-60feb64d649a@baylibre.com
 
-Please pull the following set of GPIO fixes for the next RC.
+Add support for TI TPS65219 PMIC GPIO interface.
 
-Thanks,
-Bartosz Golaszewski
+GPIO interface consist in 3 pins:
+Two GPIOS are output only: GPO1, GPO2.
 
-The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
+GPIO0 is used for multi device support:
+- The input-functionality is only used in multi-PMIC configuration
+- In single-PMIC, it can be used as an output
 
-  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
+The configuration is static and flashed in NVM in factory.
+Description tps65219.pdf chapter 7.3.13
 
-are available in the Git repository at:
+Linux must not change MULTI_DEVICE_ENABLE bit at run time.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.4-rc4
+This was done for test purpose only to check input/output
+correct behavior on EVM board (no access to different NVM config).
 
-for you to fetch changes up to 3002b8642f016d7fe3ff56240dacea1075f6b877:
+Tested on k3-am62x-lp-sk board. This board MULTI_DEVICE_ENABLE=0
 
-  gpio-f7188x: fix chip name and pin count on Nuvoton chip (2023-05-23 10:47:41 +0200)
+Despite the register bits are out of order,
+driver is remapping in natural order:
+GPIO0 is gpiochip line 0
+GPO1/2 are gpiochip line 1/2
 
-----------------------------------------------------------------
-gpio fixes for v6.4-rc4
+Initial version by Jon Cormier on TI Mainline.
+Ported upstream by Jerome Neanne
 
-- fix incorrect output in in-tree gpio tools
-- fix a shell coding issue in gpio-sim selftests
-- correctly set the permissions for debugfs attributes exposed by gpio-mockup
-- fix chip name and pin count in gpio-f7188x for one of the supported models
-- fix numberspace pollution when using dynamically and statically allocated
-  GPIOs together
+PMIC datasheet:
+Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
 
-----------------------------------------------------------------
-Andreas Kemnade (1):
-      gpiolib: fix allocation of mixed dynamic/static GPIOs
+Changes in v2:
+andy.shevchenko review
+- Typo and indentation in commit message.
+- Clarify Co-developer role.
+- Specify name for module.
+- Code simplification for tps65219_gpio_set
+- Put test code into #if 0 ... #endif to make it easier to re-use
+- Formatting for .driver
+- remove dupplicated error management => dead code
 
-Henning Schild (1):
-      gpio-f7188x: fix chip name and pin count on Nuvoton chip
+Previous version:
+v1 - https://lore.kernel.org/all/20230224113837.874264-1-jneanne@baylibre.com/
 
-Milo Spadacini (1):
-      tools: gpio: fix debounce_period_us output of lsgpio
+Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
+Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
+Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
 
-Mirsad Todorovac (1):
-      selftests: gpio: gpio-sim: Fix BUG: test FAILED due to recent change
+Jerome Neanne (2):
+  gpio: tps65219: add GPIO support for TPS65219 PMIC
+  mfd: tps65219: Add gpio cell instance
 
-Zev Weiss (1):
-      gpio: mockup: Fix mode of debugfs files
+ MAINTAINERS                  |   1 +
+ drivers/gpio/Kconfig         |  13 +++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-tps65219.c | 167 +++++++++++++++++++++++++++++++++++
+ drivers/mfd/tps65219.c       |   7 +-
+ 5 files changed, 188 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpio/gpio-tps65219.c
 
- drivers/gpio/Kconfig                     |  2 +-
- drivers/gpio/gpio-f7188x.c               | 28 ++++++++++++++--------------
- drivers/gpio/gpio-mockup.c               |  2 +-
- drivers/gpio/gpiolib.c                   |  2 ++
- tools/gpio/lsgpio.c                      |  2 +-
- tools/testing/selftests/gpio/gpio-sim.sh |  3 +++
- 6 files changed, 22 insertions(+), 17 deletions(-)
+--
+2.34.1
+
+---
+Jerome Neanne (2):
+      gpio: tps65219: add GPIO support for TPS65219 PMIC
+      mfd: tps65219: Add gpio cell instance
+
+ MAINTAINERS                  |   1 +
+ drivers/gpio/Kconfig         |  17 ++++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-tps65219.c | 183 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/mfd/tps65219.c       |   2 +-
+ 5 files changed, 203 insertions(+), 1 deletion(-)
+---
+base-commit: 8ded96e4d9a6da88bdbad61350cc6147b7c0c00c
+change-id: 20230511-tps65219-add-gpio-support-322bdb4e0297
+
+Best regards,
+-- 
+Jerome Neanne <jneanne@baylibre.com>
+
