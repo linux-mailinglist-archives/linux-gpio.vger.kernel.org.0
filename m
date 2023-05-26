@@ -2,86 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9A7712411
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 11:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B35E37124FA
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 12:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236264AbjEZJxf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 05:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50688 "EHLO
+        id S230292AbjEZKmj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 06:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236671AbjEZJxe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 05:53:34 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B524A9
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 02:53:33 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:ae30:9d2b:3228:d21])
-        by albert.telenet-ops.be with bizsmtp
-        id 1MtX2A0074eYoVn06MtXow; Fri, 26 May 2023 11:53:31 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1q2U8I-0038kP-KS;
-        Fri, 26 May 2023 11:53:31 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1q2U8Z-00EFdN-4o;
-        Fri, 26 May 2023 11:53:31 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v6.5
-Date:   Fri, 26 May 2023 11:53:29 +0200
-Message-Id: <cover.1685094670.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S230242AbjEZKmi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 06:42:38 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B97F7;
+        Fri, 26 May 2023 03:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TYBe5AFwuX4MXC+/3wWMZkQ5/KmJbSdQayPMBQLdxS8=; b=rBsiChtclHsPj528BCJQJWA2P7
+        79bIuwrvmxDEuzW7uTbXHUTtru38R+IPEGxDXkSqdWCmpbKbFArCOZWpT3uMigQ/2vzBTEubor04i
+        rCEVJOuH7CPr0kxo5gOKoK+kCu30KwvWtzwI+Nu+Gj/ma58ToW3b6ub8PIFPG0G894HniUlnXC9Ds
+        2EeU3o74LwpK+2LxVlJH6afwrg5YLg/zewpO1nKBCaTAxkECocbt4mlXJV04LMaZJFiBcNQMVE5Og
+        ezZAmB0rI8EiQ1od0m1cSBomPOjLb4Fii2a+7JkQOym14HiDm8f50KDjZYfmOxUxYYXy+ugZDtRdk
+        p1nJgRoQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42072)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1q2Uty-0005Sj-Pq; Fri, 26 May 2023 11:42:30 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1q2Uts-0003fN-6a; Fri, 26 May 2023 11:42:24 +0100
+Date:   Fri, 26 May 2023 11:42:24 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     'Jakub Kicinski' <kuba@kernel.org>, netdev@vger.kernel.org,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, jsd@semihalf.com,
+        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com
+Subject: Re: [PATCH net-next v9 8/9] net: txgbe: Implement phylink pcs
+Message-ID: <ZHCNEACuJB4EkZG9@shell.armlinux.org.uk>
+References: <20230524091722.522118-1-jiawenwu@trustnetic.com>
+ <20230524091722.522118-9-jiawenwu@trustnetic.com>
+ <20230525211403.44b5f766@kernel.org>
+ <022201d98f9a$4b4ccc00$e1e66400$@trustnetic.com>
+ <ZHBxJP4DXevPNpab@shell.armlinux.org.uk>
+ <026901d98fb0$b5001d80$1f005880$@trustnetic.com>
+ <ZHB2vXBP1B2iHXBl@shell.armlinux.org.uk>
+ <026a01d98fb3$97e3d8b0$c7ab8a10$@trustnetic.com>
+ <ZHB9wJSgfQctd2aX@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZHB9wJSgfQctd2aX@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+On Fri, May 26, 2023 at 10:37:04AM +0100, Russell King (Oracle) wrote:
+> I'm just creating a patch series for both xpcs and lynx, which this
+> morning have had patches identifying similar problems with creation
+> and destruction.
 
-The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
+https://lore.kernel.org/all/ZHCGZ8IgAAwr8bla@shell.armlinux.org.uk/
 
-  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.5-tag1
-
-for you to fetch changes up to 5d32cead772c3d074947cb7277dea7532133037b:
-
-  pinctrl: renesas: Fix spaces followed by tabs (2023-05-09 11:51:33 +0200)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v6.5
-
-  - Fix whitespace.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Marek Vasut (1):
-      pinctrl: renesas: Fix spaces followed by tabs
-
- drivers/pinctrl/renesas/pfc-r8a77970.c | 2 +-
- drivers/pinctrl/renesas/pfc-r8a77980.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
