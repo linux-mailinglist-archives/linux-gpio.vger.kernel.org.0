@@ -2,116 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC8D712742
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 15:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 809A1712770
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 May 2023 15:23:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237174AbjEZNM7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 09:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53048 "EHLO
+        id S243672AbjEZNX2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 May 2023 09:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243546AbjEZNM6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 09:12:58 -0400
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E58B19C
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:12:56 -0700 (PDT)
-Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-457026417ffso194876e0c.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 May 2023 06:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685106775; x=1687698775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8WfNbYjQtdKqhbV501fe9vtrkDkYbanF3BpFOEvVck=;
-        b=yqyG72qta2r79hHfhtKEsQGBuGunOd35hSHz3b0TCfsYaXQgZCOckNAVlNJDtbrYfi
-         iz9PEu7wdR8yxVI34ERSDlsTQQ/b0VzVMUiai3M+FOhRGKQcNnwCkPsCZi2ArY7YHWZZ
-         l4FiCmMvHZq15vh7o2fZWLASXG4TauDaD/ACnV5Pshwckf8j5l5K59DQXfTMbCsvUDUw
-         L20+aSIKQ/FGUh30jFY/222nBmCER4n/Vtx2CDBnFfQn1b6fomH+LziDAay4hK9W/esn
-         1XVrUM8U8d2D+ffLeLJEvXa9vOvVBHCbmFUvF+8Jh3sOkjWia1MVsF37y99P3WXi2AT1
-         wLYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685106775; x=1687698775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T8WfNbYjQtdKqhbV501fe9vtrkDkYbanF3BpFOEvVck=;
-        b=FG38ISySr7g9WlFdOP6V92DfaTBXikpqOuos2pb4yUA1enJ0ncOofTloIipprBuVrN
-         QAfwYOuJq+skU8YJ5yHzs6ktPmFioFodCzesB3Jo6beyfBLT7RlvZEKMweddBoafVTUr
-         Y3BBinxW5caCzwmO0Brtr7CKue/BdTyTcP13OKJ9f3XuODTUU65m4+DNGz1VexnEtjD4
-         z92EAK0yCQw0lboHNjSQ7yuYPR3WPO/QTgLRZLtvxklzot8Dx26cWD6U8cKrqM6HUfKL
-         E10tjzRLlJtvw92r9gDj4R5W6GeAItUnVtqNILxW/dIavirmbiXydD+WOrzwUHFYcKwy
-         DFlA==
-X-Gm-Message-State: AC+VfDx2r+kx2coauvW9xsd5UCnyIQ+L/GWNazOUQwb3ZfnwmxBBefRk
-        7ZN6ruQGlfB7a+xNhlBlOUle68DFPDUcisqqFaZYAg==
-X-Google-Smtp-Source: ACHHUZ7xMhW0TO6j+s+yWfOAQ6PkrQZ+ULvXzzoNL2XvhjJ7iDF1cU25FIR94NStKsLdlLqb+WLgnQ/p80rTKuiTH4g=
-X-Received: by 2002:a05:6102:3019:b0:439:e3c:8ef8 with SMTP id
- s25-20020a056102301900b004390e3c8ef8mr426513vsa.28.1685106775067; Fri, 26 May
- 2023 06:12:55 -0700 (PDT)
+        with ESMTP id S243675AbjEZNX1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 09:23:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68D41B0;
+        Fri, 26 May 2023 06:23:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5DEAE64FE8;
+        Fri, 26 May 2023 13:23:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836ADC433D2;
+        Fri, 26 May 2023 13:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685107400;
+        bh=xJ6v8XRzEkgtwI83ON+sz5/7McQNk8B4qGX0hdyjKqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qjr3H3fqi+SVS47haXuIZ7fkCKrAkom5cWvlWv8FraMeNxfr5JcmD7Iry0U5j73bP
+         lxcUDpPzwhzX++4rOV0D+HPh/sLUxLVd8Bmpn5/PnxAymKtyb2+e0c9kDwsLnDDxrN
+         9jKiF0XmmCCeZBjnDkwQ3pZFNIkfKQabZ16K+bYgwPz4z/zM47mm/1/rr0iiEk7Paq
+         GYDOny4fNArHrjgAIZGLbZwZpJNeS8LwZQanT0GXFK0nUNENYJYg2jJT1MnvMKGL3a
+         xz4k1bsCQg9za28FOK1nkvq5KZtNfI7wZ1lF+UJmek2E9cCQAWWftLbsY/WG136C/S
+         B7GopS+SZfPpw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1q2XPo-0007Lg-Jj; Fri, 26 May 2023 15:23:32 +0200
+Date:   Fri, 26 May 2023 15:23:32 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linus.walleij@linaro.org, maz@kernel.org, warthog618@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
+Message-ID: <ZHCy1PhyNAOCsalJ@hovoldconsulting.com>
+References: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz>
+ <CAHp75Vcd8Q+-XMyfg3Y_hv_AL00PGgqg0jo7Yd7TTC4GrxPOuQ@mail.gmail.com>
+ <CAMRc=MdHMiqhcpd2rFwjfKvwMWtTeTxG4fK+7zbzgSq9MHmGew@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230506085928.933737-1-haibo.chen@nxp.com> <20230506085928.933737-2-haibo.chen@nxp.com>
-In-Reply-To: <20230506085928.933737-2-haibo.chen@nxp.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 26 May 2023 15:12:44 +0200
-Message-ID: <CAMRc=Mc7xq5Psgx8VxkvydS+3bQZKfR6FHOKrifc1uH6p7H6Gw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: mxc: switch to dynamic allocat GPIO base
-To:     haibo.chen@nxp.com
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        christophe.leroy@csgroup.eu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdHMiqhcpd2rFwjfKvwMWtTeTxG4fK+7zbzgSq9MHmGew@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 6, 2023 at 10:56=E2=80=AFAM <haibo.chen@nxp.com> wrote:
->
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> gpiolib want to get completely rid of static gpiobase allocation,
-> so switch to dynamic allocat GPIO base, also can avoid warning
-> message:
->
-> [    1.529974] gpio gpiochip0: Static allocation of GPIO base
-> is deprecated, use dynamic allocation.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> ---
->  drivers/gpio/gpio-mxc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 9d0cec4b82a3..abc129a88a62 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -462,8 +462,7 @@ static int mxc_gpio_probe(struct platform_device *pde=
-v)
->         port->gc.request =3D gpiochip_generic_request;
->         port->gc.free =3D gpiochip_generic_free;
->         port->gc.to_irq =3D mxc_gpio_to_irq;
-> -       port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * =
-32 :
-> -                                            pdev->id * 32;
-> +       port->gc.base =3D -1;
->
->         err =3D devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
->         if (err)
-> --
-> 2.34.1
->
+On Fri, May 26, 2023 at 03:01:01PM +0200, Bartosz Golaszewski wrote:
+> On Fri, May 19, 2023 at 12:09 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Fri, May 19, 2023 at 8:07 AM Chris Packham
+> > <chris.packham@alliedtelesis.co.nz> wrote:
+> > >
+> > > On a system with pca9555 GPIOs that have been exported via sysfs the
+> > > following warning could be triggered on kexec().
+> > >
+> > >   WARNING: CPU: 0 PID: 265 at drivers/gpio/gpiolib.c:3411 gpiochip_disable_irq
+> > >   Call trace:
+> > >    gpiochip_disable_irq
+> > >    machine_crash_shutdown
+> > >    __crash_kexec
+> > >    panic
+> > >    sysrq_reset_seq_param_set
+> > >    __handle_sysrq
+> > >    write_sysrq_trigger
+> > >
+> > > The warning is triggered because there is an irq_desc for the GPIO but
+> > > it does not have the FLAG_USED_AS_IRQ set. This is because when the GPIO
+> > > is exported via gpiod_export(), gpio_is_visible() is used to determine
+> > > if the "edge" attribute should be provided but in doing so it ends up
+> > > calling gpiochip_to_irq() which creates the irq_desc.
+> > >
+> > > Remove the call to gpiod_to_irq() from gpio_is_visible(). The actual
+> > > intended creation of the irq_desc comes via edge_store() when requested
+> > > by the user.
+> >
+> > To me it still sounds like a hack and the real solution should be done
+> > differently/elsewhere.
+> >
+> > Also I'm worrying that not having this file visible or not may affect
+> > existing user space custom scripts we will never hear about.
+> >
+> > P.S. TBH, I don't care much about sysfs, so if this patch finds its
+> > way upstream, I won't be unhappy.
+> >
+> 
+> Same. Which is why - if there'll be no more objections, I will apply it.
 
-This is not the first time we're seeing someone submit this fix[1].
+I don't think this should be applied.
 
-Unfortunately it's been brought to our attention that this breaks
-existing user-space scripts that rely on fixed GPIO numbering in
-sysfs.
+It's still not clear from the commit message why gpiochip_disable_irq()
+is called for a line which has not been requested. That seems like what
+should be fixed, not changing some behaviour in the gpio sysfs interface
+which has been there since forever (e.g. do not create the edge
+attributes for gpios that cannot be used as interrupts).
 
-Bart
+There are other ways that mappings can be created (e.g. a gpio that
+requested as as interrupt and then released) which would trigger the
+same warning it seems.
 
-[1] https://lore.kernel.org/lkml/CACRpkdYV3mHNYvBg1nf+12Q2XZH_g4iTrA2YB1SVQ=
-=3DROriRRgg@mail.gmail.com/T/
+Fix the root cause, don't just paper over the symptom.
+
+Johan
