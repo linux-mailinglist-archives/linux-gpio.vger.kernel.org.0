@@ -2,154 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F55713064
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 May 2023 01:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 770DC7132ED
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 May 2023 09:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230370AbjEZXcU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 May 2023 19:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
+        id S231424AbjE0HXP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 May 2023 03:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbjEZXcT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 May 2023 19:32:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAD31B3;
-        Fri, 26 May 2023 16:32:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 81B7E6164E;
-        Fri, 26 May 2023 23:32:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535EAC433EF;
-        Fri, 26 May 2023 23:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685143935;
-        bh=/0vymfkAdw1recl4sGqHGeYrshRrN6p3/WDK2YtCvCA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aJ+Th8bOxPgozXv+iTjvBkK6Db2uNreVnP7bfKVgxSj4o7/SEUk/tEdeWa3cqnFkz
-         URd8F0BqiK9Myw9rRlK6Ry6wPxH1Jf+rsSBWFUIMTqepXw3vyk9IziNY5cLjW+4EQW
-         ieNPtXCcoHljdlKYpkiYQVPjwQtbAlUiVcffUvziHUt3ckgqYJEz5AVJ1hS1K6N0BX
-         jt8nYkzVkpYScxiSDkoCgz/7cN4fVKd98hVsMScgme4eXAdlJ6NiwtKqPLWUdmd9Om
-         r5kYjdlAgPQ5T/AAMHhil0BgTBIdtpG4cH0h9eyW/BMWnm/s8Tu0KqmucxkRb+7bB4
-         A7kdIPT5CZh/w==
-Date:   Fri, 26 May 2023 16:36:04 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     andy.shevchenko@gmail.com
+        with ESMTP id S231304AbjE0HXD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 May 2023 03:23:03 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3939CE59;
+        Sat, 27 May 2023 00:22:51 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f8115ca685so3642651cf.1;
+        Sat, 27 May 2023 00:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685172170; x=1687764170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bx/DAb75BmWuNXNDQ1rY8cIudjVwuu30lJjKuSeJlqc=;
+        b=npExarejaqJFOfFqRRWCyJ7CrKVUBbdXr3ajIhmZjcIBticCEnAhcvmmODxfgqsRYN
+         eKRegheiUnCr62U2YxnPVqxnSWODmTIMxhIj3zUdeyqEKxHfyBSkiqGaiacsIg6I4Aj1
+         m+Az0HNwPSFy9bScE3HaUzkemlNcrQeJXiF0HSNJPl8KxNK99ZWjrqeNVVETaYkxF3Rg
+         ws54dPWKK6oc3eXyRpJW0eB/VY9jTBEG195EKBZBp5dGRUSCM2bo1vwqQV5MSlGMsAyj
+         LLkGikrL2za/jibP1N/tQawUQOve48If+ZP9zKfxxmJDhqnO6QTLQDOH6mcZz0pjXYvX
+         QfdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685172170; x=1687764170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bx/DAb75BmWuNXNDQ1rY8cIudjVwuu30lJjKuSeJlqc=;
+        b=geFt9e6GjuU2zYhBgwLbZnFV450z9/vhwtdzFpdnRdDmXQJk2zD7Ma7Kg7Q9xpn6Ou
+         avl45RrkkCYJC8F99Vm7nUQfEwIA/0LLEnS2hG852QoIHSsIng5l1/YKr+rTZ2LHSSza
+         iTN4P95MQrtwoMYtkuGX5sXuhpqYkYOwn/KTp3St7Dvcba49et6O1LXDFnmlOYJ2sI66
+         mEi01XxlZrkmvC7HVidMXkLVDJ/7uxRkqKNaia4hR3jUJk9uSmxcN04gUQtUx0z7jYh4
+         qwIJesKXUp2ZZcuPG6610/8vAEOEHgGQbxPPxAz4GwI/WLybQOVkXZ/0ieULikVf5Rmj
+         NGiQ==
+X-Gm-Message-State: AC+VfDwOFiRQs5IVepozdI2okKY6qA1SytfOaHf7qwHX27sPd3pbjDZF
+        1lFMLfg4JuJT+aC/akP7WCwxYcRxqY/YStFbWW6Rnz8Q
+X-Google-Smtp-Source: ACHHUZ47LC+rnJutHRaHuYMA6YdyCUdF7xHk5jZFfPhaCiQ7KFpnzQ7XGX94UjuzaOIbz3vue29M5PXDKCQBO9u6JJI=
+X-Received: by 2002:ac8:5a8e:0:b0:3f6:a6a7:706 with SMTP id
+ c14-20020ac85a8e000000b003f6a6a70706mr4173576qtc.7.1685172170448; Sat, 27 May
+ 2023 00:22:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1680076012-10785-1-git-send-email-quic_mojha@quicinc.com>
+ <1680076012-10785-6-git-send-email-quic_mojha@quicinc.com>
+ <ZHEvWpCqg_oyWyZW@surfacebook> <20230526233604.3eiqbfrkecir3ga5@ripper>
+In-Reply-To: <20230526233604.3eiqbfrkecir3ga5@ripper>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 27 May 2023 10:22:13 +0300
+Message-ID: <CAHp75VfcvNpdSP_XvbB42ZUxCik3v-jhR7WFjsaJVr3AZR=nJg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] firmware: qcom_scm: Add multiple download mode support
+To:     Bjorn Andersson <andersson@kernel.org>
 Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
         konrad.dybcio@linaro.org, linus.walleij@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v6 5/5] firmware: qcom_scm: Add multiple download mode
- support
-Message-ID: <20230526233604.3eiqbfrkecir3ga5@ripper>
-References: <1680076012-10785-1-git-send-email-quic_mojha@quicinc.com>
- <1680076012-10785-6-git-send-email-quic_mojha@quicinc.com>
- <ZHEvWpCqg_oyWyZW@surfacebook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZHEvWpCqg_oyWyZW@surfacebook>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 27, 2023 at 01:14:50AM +0300, andy.shevchenko@gmail.com wrote:
-> Wed, Mar 29, 2023 at 01:16:52PM +0530, Mukesh Ojha kirjoitti:
-> > Currently, scm driver only supports full dump when download
-> > mode is selected. Add support to enable minidump as well as
-> > enable it along with fulldump.
-> 
-> ...
-> 
-> >  #define QCOM_DOWNLOAD_MODE_MASK 0x30
-> >  #define QCOM_DOWNLOAD_FULLDUMP	0x1
-> > +#define QCOM_DOWNLOAD_MINIDUMP  0x2
-> > +#define QCOM_DOWNLOAD_BOTHDUMP	(QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
-> 
-> Now order is broken.
-> 
-> >  #define QCOM_DOWNLOAD_NODUMP	0x0
-> 
-> ...
-> 
-> > @@ -1420,13 +1422,16 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> > -
-> 
-> Stray change and ping-pong style at the same time.
-> 
-> ...
-> 
-> >  	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
-> >  		len = sysfs_emit(buffer, "full\n");
-> > +	else if (download_mode == QCOM_DOWNLOAD_MINIDUMP)
-> > +		len = sysfs_emit(buffer, "mini\n");
-> > +	else if (download_mode == QCOM_DOWNLOAD_BOTHDUMP)
-> 
-> > +		len = sysfs_emit(buffer, "full,mini\n");
-> 
-> Why not "both" ?
-> 
+On Sat, May 27, 2023 at 2:32=E2=80=AFAM Bjorn Andersson <andersson@kernel.o=
+rg> wrote:
+> On Sat, May 27, 2023 at 01:14:50AM +0300, andy.shevchenko@gmail.com wrote=
+:
+> > Wed, Mar 29, 2023 at 01:16:52PM +0530, Mukesh Ojha kirjoitti:
 
-"both" isn't very future proof (and I think we've had additional
-variations in the past already), so I asked for this form.
+...
 
-Many thanks for your thorough review, Andy!
+> > >     if (download_mode =3D=3D QCOM_DOWNLOAD_FULLDUMP)
+> > >             len =3D sysfs_emit(buffer, "full\n");
+> > > +   else if (download_mode =3D=3D QCOM_DOWNLOAD_MINIDUMP)
+> > > +           len =3D sysfs_emit(buffer, "mini\n");
+> > > +   else if (download_mode =3D=3D QCOM_DOWNLOAD_BOTHDUMP)
+> >
+> > > +           len =3D sysfs_emit(buffer, "full,mini\n");
+> >
+> > Why not "both" ?
 
-Regards,
-Bjorn
+> "both" isn't very future proof (and I think we've had additional
+> variations in the past already), so I asked for this form.
 
-> >  	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
-> >  		len = sysfs_emit(buffer, "off\n");
-> 
-> 
-> With an array (for streq_match_string() call suggested earlier) this become as
-> simple as
-> 
-> 	if (mode >= ARRAY_SIZE(...))
-> 		return sysfs_emit("Oh heh!\n");
-> 
-> 	return sysfs_emit("%s\n", array[mode]);
-> 
-> ...
-> 
-> > -	if (sysfs_streq(val, "full")) {
-> 
-> Why changing this line?
-> 
-> > +	if (sysfs_streq(val, "full,mini") || sysfs_streq(val, "mini,full")) {
-> > +		download_mode = QCOM_DOWNLOAD_BOTHDUMP;
-> 
-> It's way too hard, esp. taking into account that once user enters wrong order,
-> user can't simply validate this by reading value back.
-> 
-> Use "both" and that's it.
-> 
-> > +	} else if (sysfs_streq(val, "full")) {
-> >  		download_mode = QCOM_DOWNLOAD_FULLDUMP;
-> > +	} else if (sysfs_streq(val, "mini")) {
-> > +		download_mode = QCOM_DOWNLOAD_MINIDUMP;
-> 
-> ...
-> 
-> >  module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
-> >  MODULE_PARM_DESC(download_mode,
-> > -		 "Download mode: off/full or 0/1 for existing users");
-> > +		"download mode: off/full/mini/full,mini or mini,full and 0/1 for existing users");
-> 
-> You really must be consistent with at least a couple of things:
-> 1) capitalization;
-> 2) indentation.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Okay, so this should be the bit flags and we should parse a list of
+the values. In that case I may agree with the approach.
+
+> >       if (mode >=3D ARRAY_SIZE(...))
+> >               return sysfs_emit("Oh heh!\n");
+> >
+> >       return sysfs_emit("%s\n", array[mode]);
+
+...
+
+> > > +   if (sysfs_streq(val, "full,mini") || sysfs_streq(val, "mini,full"=
+)) {
+> > > +           download_mode =3D QCOM_DOWNLOAD_BOTHDUMP;
+> >
+> > It's way too hard, esp. taking into account that once user enters wrong=
+ order,
+> > user can't simply validate this by reading value back.
+> >
+> > Use "both" and that's it.
+> >
+> > > +   } else if (sysfs_streq(val, "full")) {
+> > >             download_mode =3D QCOM_DOWNLOAD_FULLDUMP;
+> > > +   } else if (sysfs_streq(val, "mini")) {
+> > > +           download_mode =3D QCOM_DOWNLOAD_MINIDUMP;
+
+As per above.
+
+--=20
+With Best Regards,
+Andy Shevchenko
