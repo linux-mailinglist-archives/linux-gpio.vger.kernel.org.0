@@ -2,66 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 451BC713373
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 May 2023 10:44:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15378713481
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 May 2023 13:41:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230024AbjE0Iod (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 May 2023 04:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55094 "EHLO
+        id S229637AbjE0LlA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 May 2023 07:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjE0Ioc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 May 2023 04:44:32 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7865FE3;
-        Sat, 27 May 2023 01:44:31 -0700 (PDT)
+        with ESMTP id S229571AbjE0Lk7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 May 2023 07:40:59 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C3412A;
+        Sat, 27 May 2023 04:40:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685177071; x=1716713071;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aL0kr5TSI7kBcksuy1NH51yy/ONbfNHJ9y74kDFI+s8=;
-  b=nozhyB5LZylfDqlMxkucjT3NUcNeySLYt7nxvBTcj9n3N8NtO8LrMrNU
-   CeSWCcs36Y26irqNlYni8WQxGpxq23zVIqtldTT4K7LiBGG7mg/pIIuMJ
-   ug8cR1bkPmkFTZHkHeGuu6b+YTsEYmhdBDE6+ESllzFZOLPLICyoUDOaO
-   7Rfh6cuh89tgjFzRcooxbL15ySngi64lsXGqKJU8cVD9LJJjGcguj68m5
-   UzDOfeoLeYiL+Qcgh0ItYihOW1iHnupAiWgFsRynsnCBo2kgDA1OxeAGV
-   ogrdDhY7Tzjr78REuF6ob7hH9xy3QSHolTJqpyZqNl93QHwySRRb7mvhU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="354391414"
+  t=1685187657; x=1716723657;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QC4EyfXO3AcM4/0Pzq8plC2mDQ7iHdK2qw8lFxVpt48=;
+  b=oF4qMeDoI9PhvN9xgSmqiDN1AJpljJa1367Xs7eOkJ8LRA7jQiX2PXtZ
+   LyvnDJzRN+VkrL0qcrwXB6pkTgV98CnZ2lcS+kFr4qUHubknuIBLBYC9N
+   5t1Lq7azEGaAbpU07vcyfdRWOYDbhBBQj8PSH5EON7YEl3lXvvamq20er
+   scpOsWE71YtWiC2tCAJ8+T/sI1/YGV33gMt4fVmlsdSQmj8YwGLVqEd/W
+   8aw0F20wokPVCHfzEjSyao82prw/lqUaqwudwbjSoWttD0PlUDqrtzGo4
+   ZNhtdCFWt4tDgtToiStBnwJgUHBZYuHVOPOXT6nVcghC0Pbb7y07JClpy
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="420148079"
 X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
-   d="scan'208";a="354391414"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 01:44:31 -0700
+   d="scan'208";a="420148079"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 04:40:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="655905835"
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="699685247"
 X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
-   d="scan'208";a="655905835"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2023 01:44:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q2pXF-000Irb-0R;
-        Sat, 27 May 2023 11:44:25 +0300
-Date:   Sat, 27 May 2023 11:44:24 +0300
+   d="scan'208";a="699685247"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 27 May 2023 04:40:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B293240F; Sat, 27 May 2023 14:40:59 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com,
-        Piotr Raczynski <piotr.raczynski@intel.com>
-Subject: Re: [PATCH net-next v9 1/9] net: txgbe: Add software nodes to
- support phylink
-Message-ID: <ZHHC6OGH9NJZgRfA@smile.fi.intel.com>
-References: <20230524091722.522118-1-jiawenwu@trustnetic.com>
- <20230524091722.522118-2-jiawenwu@trustnetic.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/2] gpiolib: Consolidate the allocated mask freeing APIs
+Date:   Sat, 27 May 2023 14:40:56 +0300
+Message-Id: <20230527114057.36091-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230524091722.522118-2-jiawenwu@trustnetic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -72,48 +62,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+Cc Hans (see below)
+There is a common API to allocate a mask, but more than one duplicative
+counterparts. Consolidate the latter into a single common API beneath.
 
-On Wed, May 24, 2023 at 05:17:14PM +0800, Jiawen Wu wrote:
-> Register software nodes for GPIO, I2C, SFP and PHYLINK. Define the
-> device properties.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-...
-
-> +int txgbe_init_phy(struct txgbe *txgbe)
-> +{
-> +	int ret;
-> +
-> +	ret = txgbe_swnodes_register(txgbe);
-> +	if (ret) {
-> +		wx_err(txgbe->wx, "failed to register software nodes\n");
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-
-These 4 lines can be as simple as
-
-	return ret;
-
-> +}
-
-...
-
-> +#define NODE_PROP(_NAME, _PROP)			\
-> +	(const struct software_node) {		\
-> +		.name = _NAME,			\
-> +		.properties = _PROP,		\
-> +	}
-
-Looking at the amount of drivers that want this, I would declare it in the
-property.h with SOFTWARE_NODE_PROPERTY name. I'll Ack that.
-
-Hans, what do you think?
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e62db4fc85cc..6c8580d2454d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -466,6 +466,12 @@ static unsigned long *gpiochip_allocate_mask(struct gpio_chip *gc)
+ 	return p;
+ }
+ 
++static void gpiochip_free_mask(unsigned long **p)
++{
++	bitmap_free(*p);
++	*p = NULL;
++}
++
+ static unsigned int gpiochip_count_reserved_ranges(struct gpio_chip *gc)
+ {
+ 	struct device *dev = &gc->gpiodev->dev;
+@@ -545,8 +551,7 @@ static int gpiochip_init_valid_mask(struct gpio_chip *gc)
+ 
+ static void gpiochip_free_valid_mask(struct gpio_chip *gc)
+ {
+-	bitmap_free(gc->valid_mask);
+-	gc->valid_mask = NULL;
++	gpiochip_free_mask(&gc->valid_mask);
+ }
+ 
+ static int gpiochip_add_pin_ranges(struct gpio_chip *gc)
+@@ -1090,8 +1095,7 @@ static int gpiochip_irqchip_init_valid_mask(struct gpio_chip *gc)
+ 
+ static void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
+ {
+-	bitmap_free(gc->irq.valid_mask);
+-	gc->irq.valid_mask = NULL;
++	gpiochip_free_mask(&gc->irq.valid_mask);
+ }
+ 
+ bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.40.0.1.gaa8946217a0b
 
