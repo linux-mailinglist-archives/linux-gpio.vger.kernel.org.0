@@ -2,148 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3959871396F
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 May 2023 14:35:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48040713A0A
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 May 2023 16:21:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjE1MfJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 May 2023 08:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        id S229658AbjE1OVi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 May 2023 10:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjE1MfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 May 2023 08:35:08 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934A0B6;
-        Sun, 28 May 2023 05:35:07 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-2564c6a2b7dso538915a91.3;
-        Sun, 28 May 2023 05:35:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685277307; x=1687869307;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cq0gNqj2qfz8g0wb05v2/2uio/8Cx2BLv1ubMI7PTgY=;
-        b=WRpqSqXY2gp0xawIYDhcOV0NSo7IWn27YjEP5sigwtFuuBJK5OrNRcL38V/ZFd7Wc4
-         x66EKYxgjulsfTlXKYLV4bDuYI+TJGVK/QsEaINcsbPYjzLpKFe9DTwgy2a47q5G1ckV
-         U6oHEydEH8I2eLsDNY5RCyIv4n1G4YiTG8rLjb3dFpHzURQC23L2L5sjMRyr+MP+OKfI
-         hmjLI83c+IdoE1qC/OWbv1VvrI42Euq759Ta8bSZ5iIGklkIa2VcdZeWKPrqclTUS/rx
-         L68EEX1yaX+k82lgHYO/OPSL+CBzvdDHiOf4OODzzuNuCBUzvhwoqoYXushJRbrQJZ49
-         tqRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685277307; x=1687869307;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cq0gNqj2qfz8g0wb05v2/2uio/8Cx2BLv1ubMI7PTgY=;
-        b=JaFfTldbuG0jfzmYyva7MS0XUAZk5m6jmTXO5FTU7L8zJQGGbEnmNfVYl4xVTxed0e
-         HwlYKAouinNTF1P54g39+JYXMRT6aJ1VZ/BsuJebPwZfrJ4Kh/NpYZWhPTJkH0RjQ2lY
-         Sg/U/iZ3kBnvPu4wQzwT+0ikr5xE6dTmq/JD4d5i7icn/o94YU+lBChqnUZjXi0BUcoE
-         ATUuBfxlY0iVhAlD9OK5SYbQhSsph/BBvsVgvRVt5JKmigF9Zn2pOdVza6nOfGYIb5jH
-         s/lyGH21+N7T8X34o182OuSOtPt0hr20YjD0SQnJLr8qKBG14pGhX3WLvrSlL92GzPX6
-         cdww==
-X-Gm-Message-State: AC+VfDzlaojNe6MUwFDflWCAOFpKhkcKnSWYYCmDUP9aGXYPUbHOZnCE
-        HbyOMfP3Ao9do09RHL/drCS7Gr3IokY=
-X-Google-Smtp-Source: ACHHUZ6KDLC4tY1ov50bCGq+vxz3AsAbfKWiP0wdEn8GF9zH+MHDaEqPA0k0HBPOFlGFthYyBBhhcg==
-X-Received: by 2002:a17:902:cec8:b0:1af:babd:7b57 with SMTP id d8-20020a170902cec800b001afbabd7b57mr11317937plg.25.1685277306745;
-        Sun, 28 May 2023 05:35:06 -0700 (PDT)
-Received: from localhost.localdomain ([113.196.136.192])
-        by smtp.googlemail.com with ESMTPSA id 9-20020a170902c10900b00186a2274382sm6250352pli.76.2023.05.28.05.35.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 28 May 2023 05:35:06 -0700 (PDT)
-From:   Wells Lu <wellslutw@gmail.com>
-To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wells.lu@sunplus.com, Wells Lu <wellslutw@gmail.com>
-Subject: [PATCH v2] pinctrl:sunplus: Add check for kmalloc
-Date:   Sun, 28 May 2023 20:34:37 +0800
-Message-Id: <1685277277-12209-1-git-send-email-wellslutw@gmail.com>
-X-Mailer: git-send-email 2.7.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229559AbjE1OVg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 May 2023 10:21:36 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3EEC7;
+        Sun, 28 May 2023 07:21:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685283692; x=1716819692;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZTkM6DTM94DRGqgS0Z6YEGqsq7Toa2hLcyOuCPilzRU=;
+  b=E9jdJlVRUlgZcuqYvLWva6ubop3k2zh5sM5ynuri/8LSC9gVUEhS6y7r
+   hQkmGGmOQPNVVlR7pjRtKGPdEr0v0mVEchwpCZGw6zbGoXXbcTXqMBrU+
+   F+nyO8T9dyJY+IIduhD3/5d9Rq4jZ4x9Nq73N4ArzACtMhQQfiE4Awex2
+   M1TKKS6cr0H9qrGdES8sXEd+LwW4Ge2X4txDnt0PXznNxqANdOZl8Ayh3
+   HeVn9FC492bgLT3xD6ULIcpBpfKVwX4OwUSc79EwKAGpUpeR+XRgi1T00
+   7CyKMqrT3qtvigT5qseNzDBVgsNrQXLaziZcwKuJgF0CNZ2RDRcdMpTW/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="357767880"
+X-IronPort-AV: E=Sophos;i="6.00,198,1681196400"; 
+   d="scan'208";a="357767880"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2023 07:21:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="1035915909"
+X-IronPort-AV: E=Sophos;i="6.00,198,1681196400"; 
+   d="scan'208";a="1035915909"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 28 May 2023 07:21:27 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B4FEA24F; Sun, 28 May 2023 17:21:31 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Hu Haowen <src.res@email.cn>
+Subject: [PATCH v1 1/1] gpiolib: Kill unused GPIOF_EXPORT and Co
+Date:   Sun, 28 May 2023 17:21:27 +0300
+Message-Id: <20230528142127.37330-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix Smatch static checker warning:
-potential null dereference 'configs'. (kmalloc returns null)
+There is no use of the  GPIOF_EXPORT in the kernel. Kill it for good.
 
-Changes in v2:
-1. Add free allocated memory before returned -ENOMEM.
-2. Add call of_node_put() before returned -ENOMEM.
-
-Fixes: aa74c44be19c ("pinctrl: Add driver for Sunplus SP7021")
-Signed-off-by: Wells Lu <wellslutw@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/sunplus/sppctl.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ Documentation/driver-api/gpio/legacy.rst                    | 3 ---
+ Documentation/translations/zh_CN/driver-api/gpio/legacy.rst | 3 ---
+ Documentation/translations/zh_TW/gpio.txt                   | 3 ---
+ drivers/gpio/gpiolib-legacy.c                               | 6 ------
+ include/linux/gpio.h                                        | 5 -----
+ 5 files changed, 20 deletions(-)
 
-diff --git a/drivers/pinctrl/sunplus/sppctl.c b/drivers/pinctrl/sunplus/sppctl.c
-index 6bbbab3..e91ce5b 100644
---- a/drivers/pinctrl/sunplus/sppctl.c
-+++ b/drivers/pinctrl/sunplus/sppctl.c
-@@ -834,11 +834,6 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node
- 	int i, size = 0;
+diff --git a/Documentation/driver-api/gpio/legacy.rst b/Documentation/driver-api/gpio/legacy.rst
+index 78372853c6d4..c5f98a78499f 100644
+--- a/Documentation/driver-api/gpio/legacy.rst
++++ b/Documentation/driver-api/gpio/legacy.rst
+@@ -322,9 +322,6 @@ where 'flags' is currently defined to specify the following properties:
+ 	* GPIOF_OPEN_DRAIN	- gpio pin is open drain type.
+ 	* GPIOF_OPEN_SOURCE	- gpio pin is open source type.
  
- 	list = of_get_property(np_config, "sunplus,pins", &size);
+-	* GPIOF_EXPORT_DIR_FIXED	- export gpio to sysfs, keep direction
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- also export, allow changing direction
 -
--	if (nmG <= 0)
--		nmG = 0;
+ since GPIOF_INIT_* are only valid when configured as output, so group valid
+ combinations as:
+ 
+diff --git a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+index 84ce2322fdba..8720970393fb 100644
+--- a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
++++ b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+@@ -297,9 +297,6 @@ gpio_request()前将这类细节配置好，例如使用引脚控制子系统的
+ 	* GPIOF_OPEN_DRAIN	- gpio引脚为开漏信号
+ 	* GPIOF_OPEN_SOURCE	- gpio引脚为源极开路信号
+ 
+-	* GPIOF_EXPORT_DIR_FIXED	- 将 gpio 导出到 sysfs，并保持方向
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- 同样是导出, 但允许改变方向
 -
--	parent = of_get_parent(np_config);
- 	*num_maps = size / sizeof(*list);
+ 因为 GPIOF_INIT_* 仅有在配置为输出的时候才存在,所以有效的组合为:
  
- 	/*
-@@ -866,10 +861,14 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node
- 		}
- 	}
+ 	* GPIOF_IN		- 配置为输入
+diff --git a/Documentation/translations/zh_TW/gpio.txt b/Documentation/translations/zh_TW/gpio.txt
+index 62e560ffe628..e0b96d897fa7 100644
+--- a/Documentation/translations/zh_TW/gpio.txt
++++ b/Documentation/translations/zh_TW/gpio.txt
+@@ -303,9 +303,6 @@ gpio_request()前將這類細節配置好，例如使用 pinctrl 子系統的映
+ 	* GPIOF_OPEN_DRAIN	- gpio引腳爲開漏信號
+ 	* GPIOF_OPEN_SOURCE	- gpio引腳爲源極開路信號
  
-+	if (nmG <= 0)
-+		nmG = 0;
-+
- 	*map = kcalloc(*num_maps + nmG, sizeof(**map), GFP_KERNEL);
--	if (*map == NULL)
-+	if (!(*map))
- 		return -ENOMEM;
+-	* GPIOF_EXPORT_DIR_FIXED	- 將 gpio 導出到 sysfs，並保持方向
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- 同樣是導出, 但允許改變方向
+-
+ 因爲 GPIOF_INIT_* 僅有在配置爲輸出的時候才存在,所以有效的組合爲:
  
-+	parent = of_get_parent(np_config);
- 	for (i = 0; i < (*num_maps); i++) {
- 		dt_pin = be32_to_cpu(list[i]);
- 		pin_num = FIELD_GET(GENMASK(31, 24), dt_pin);
-@@ -883,6 +882,8 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node
- 			(*map)[i].data.configs.num_configs = 1;
- 			(*map)[i].data.configs.group_or_pin = pin_get_name(pctldev, pin_num);
- 			configs = kmalloc(sizeof(*configs), GFP_KERNEL);
-+			if (!configs)
-+				goto sppctl_map_err;
- 			*configs = FIELD_GET(GENMASK(7, 0), dt_pin);
- 			(*map)[i].data.configs.configs = configs;
+ 	* GPIOF_IN		- 配置爲輸入
+diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
+index 028f7f504209..969f737012f6 100644
+--- a/drivers/gpio/gpiolib-legacy.c
++++ b/drivers/gpio/gpiolib-legacy.c
+@@ -50,12 +50,6 @@ int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
+ 	if (err)
+ 		goto free_gpio;
  
-@@ -896,6 +897,8 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node
- 			(*map)[i].data.configs.num_configs = 1;
- 			(*map)[i].data.configs.group_or_pin = pin_get_name(pctldev, pin_num);
- 			configs = kmalloc(sizeof(*configs), GFP_KERNEL);
-+			if (!configs)
-+				goto sppctl_map_err;
- 			*configs = SPPCTL_IOP_CONFIGS;
- 			(*map)[i].data.configs.configs = configs;
- 
-@@ -965,6 +968,15 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, struct device_node
- 	of_node_put(parent);
- 	dev_dbg(pctldev->dev, "%d pins mapped\n", *num_maps);
+-	if (flags & GPIOF_EXPORT) {
+-		err = gpiod_export(desc, flags & GPIOF_EXPORT_CHANGEABLE);
+-		if (err)
+-			goto free_gpio;
+-	}
+-
  	return 0;
-+
-+sppctl_map_err:
-+	for (i = 0; i < (*num_maps); i++)
-+		if (((*map)[i].type == PIN_MAP_TYPE_CONFIGS_PIN) &&
-+		    (*map)[i].data.configs.configs)
-+			kfree((*map)[i].data.configs.configs);
-+	kfree(*map);
-+	of_node_put(parent);
-+	return -ENOMEM;
- }
  
- static const struct pinctrl_ops sppctl_pctl_ops = {
+  free_gpio:
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 8528353e073b..86963a00b018 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -38,11 +38,6 @@ struct device;
+ /* Gpio pin is open source */
+ #define GPIOF_OPEN_SOURCE	(1 << 4)
+ 
+-#define GPIOF_EXPORT		(1 << 5)
+-#define GPIOF_EXPORT_CHANGEABLE	(1 << 6)
+-#define GPIOF_EXPORT_DIR_FIXED	(GPIOF_EXPORT)
+-#define GPIOF_EXPORT_DIR_CHANGEABLE (GPIOF_EXPORT | GPIOF_EXPORT_CHANGEABLE)
+-
+ /**
+  * struct gpio - a structure describing a GPIO with configuration
+  * @gpio:	the GPIO number
 -- 
-2.7.4
+2.40.0.1.gaa8946217a0b
 
