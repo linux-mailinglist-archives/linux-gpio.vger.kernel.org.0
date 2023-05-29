@@ -2,81 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 707817151D3
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 00:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF8DF7151D8
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 00:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjE2WYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 18:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
+        id S229904AbjE2Wbd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 18:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjE2WYh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 18:24:37 -0400
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F29CCD
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 15:24:35 -0700 (PDT)
+        with ESMTP id S229505AbjE2Wbd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 18:31:33 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B70D2
+        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 15:31:31 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-        id 94902ba4-fe6f-11ed-abf4-005056bdd08f;
-        Tue, 30 May 2023 01:24:31 +0300 (EEST)
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 8d9f3b95-fe70-11ed-b3cf-005056bd6ce9;
+        Tue, 30 May 2023 01:31:29 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 30 May 2023 01:24:30 +0300
-To:     simon.guinot@sequanux.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>, xingtong_wu@163.com,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, henning.schild@siemens.com,
-        xingtong.wu@siemens.com
-Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
- gpio pins
-Message-ID: <ZHUmHkbM-l_pRaY3@surfacebook>
-References: <20230529025011.2806-1-xingtong_wu@163.com>
- <20230529025011.2806-2-xingtong_wu@163.com>
- <ZHSZ9cK78qc5QeZD@localhost>
- <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
- <ZHSunJyh2AU1eb0H@localhost>
+Date:   Tue, 30 May 2023 01:31:28 +0300
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
+ improvements
+Message-ID: <ZHUnwNNcU_EnS4bo@surfacebook>
+References: <20230529140711.896830-1-hugo@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZHSunJyh2AU1eb0H@localhost>
+In-Reply-To: <20230529140711.896830-1-hugo@hugovil.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mon, May 29, 2023 at 03:54:36PM +0200, simon.guinot@sequanux.org kirjoitti:
-> On Mon, May 29, 2023 at 03:03:28PM +0200, Linus Walleij wrote:
-> > On Mon, May 29, 2023 at 2:27 PM <simon.guinot@sequanux.org> wrote:
-> > 
-> > > It would be nice if a pin number found in the device datasheet could
-> > > still be converted into a Linux GPIO number by adding the base of the
-> > > first bank.
-> > 
-> > We actively discourage this kind of mapping because of reasons stated
-> > in drivers/gpio/TODO: we want dynamic number allocation to be the
-> > norm.
+Mon, May 29, 2023 at 10:07:02AM -0400, Hugo Villeneuve kirjoitti:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> Sure but it would be nice to have a dynamic base applied to a controller
-> (and not to each chip of this controller), and to respect the interval
-> between the chips (as stated in the controllers datasheets).
+> Hello,
+> this patch series mainly fixes a GPIO regression and improve RS485 flags and
+> properties detection from DT.
+> 
+> It now also includes various small fixes and improvements that were previously
+> sent as separate patches, but that made testing everything difficult.
+> 
+> Patch 1 fixes an issue when debugging IOcontrol register. After testing the GPIO
+> regression patches (patches 6 and 7, tests done by Lech Perczak), it appers that
+> this patch is also necessary for having the correct IOcontrol register values.
+> 
+> Patch 2 introduces a delay after a reset operation to respect datasheet
+> timing recommandations.
 
-What you want is against the architecture. To fix this, you might change
-the architecture of the driver to have one chip for the controller, but
-it's quite questionable change. Also how can you guarantee ordering of
-the enumeration? You probably need to *disable* SMP on the boot time.
-This will still be fragile as long as GPIO chip can be unbound at run
-time. Order can be changed.
+These two patches are w/o Fixes tag, they should be moved in the series further
+as I explained before.
 
-So, the patch is good and the correct way to go.
-
-P.S. The root cause is that hardware engineers and documentation writers
-do not consider their hardware in the multi-tasking, multi-user general
-purpose operating system, such as Linux. I believe the ideal fix is to fix the
-documentation (datasheet).
+> Patch 3 fixes an issue with init of first port during probing.
+> 
+> Patch 4 fixes a bug with the output value when first setting the GPIO direction.
+> 
+> Patch 5 is a refactor of GPIO registration code.
+> 
+> Patches 6 and 7 fix a GPIO regression by (re)allowing to choose GPIO function
+> for GPIO pins shared with modem status lines.
+> 
+> Patch 8 allows to read common rs485 device-tree flags and properties.
+> 
+> Patch 9 improves comments about chip variants.
+> 
+> I have tested the changes on a custom board with two SC16IS752 DUART using a
+> Variscite IMX8MN NANO SOM.
 
 -- 
 With Best Regards,
