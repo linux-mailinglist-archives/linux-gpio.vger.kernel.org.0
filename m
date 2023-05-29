@@ -2,112 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA0B714F36
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 20:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44DE7714F3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 20:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjE2SSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 14:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39048 "EHLO
+        id S229478AbjE2STg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 14:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjE2SSK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 14:18:10 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05B0CF;
-        Mon, 29 May 2023 11:18:03 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-75ce1196bd7so68074685a.3;
-        Mon, 29 May 2023 11:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685384283; x=1687976283;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NtgddjKUKdX/u1ElO6qJQhjwCsTb7fJh8vFO+8kczvM=;
-        b=jdzcOMW6uVCBWZadyZJ14Sbyy/loYrdajjBFc3IlGOOGu1oTHO0CpJ446eycYbvabl
-         T6mDGBkhty3QkwOTHrMC2wBczFpQ1DVGtfd+XQE5TMlVR8HLOPaSESLVRXVc7485ZH5e
-         a3L5IEO3KPVBArQu1KAvMnNoI2jPQ9bOI2qKblIlMtS/lFJnokMI3ZczaWHhaU4PvDsn
-         yCq3jn4HiIzuU2IRqBMfT357DRjmDzREbZ76gWVN06SHkm4lFyt3bVH08IOS1YCmM/Lx
-         lPKETdFx/Glw5IcnbRzeMSaYljI/xt2fmdzkmFAjJOMUFOZW8lPpswIlMBn3hhUo3xNC
-         iSAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685384283; x=1687976283;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NtgddjKUKdX/u1ElO6qJQhjwCsTb7fJh8vFO+8kczvM=;
-        b=MOOFUarltu71b+8QfgXG82UZ3k2l60FDkJ0fmV2dGO4EAaukrwddAfEEQ9LMPpQ0rY
-         aIOYESAiiWNju/XAcoXn7YPe6NZU0kKhwKisdr0mj2Uuf+tf2+nINWokg6Cyt56xKTuX
-         eFR/35gWFSV+OZj4QgWUL6wGy37/7+avOBZk+4esahIxZJMMJ1LHxmzbDetIurVI6Zoa
-         gk0X66WWzExDkKA8e94hW0LlE5hZ0opZFCR8fI7vVWcriEP4/XXCfLgvtz59d24it3RM
-         acoCx8hWqnvt6eJd0VztxDq1lNuzGLE7FYod2Be5W0jFQuV/Yklbe6IIm0jOwhMC+Sw2
-         /wmw==
-X-Gm-Message-State: AC+VfDzQWzIYdItYSHvi0v+Lzn+a/Vk4e++JaYYikbrpjRk+is6/fGZM
-        2L2ZffAlb9DwCZCCTzUC8MBA+wdQTkvblRy0MlM=
-X-Google-Smtp-Source: ACHHUZ45MhHLmjxdYf4ApIgrlmpGNe4YL0/wmcXOVOFWHYL6uVD7sXlEYUG1baU85uQPaGvAq2zjMxJF6rc5gpn4fFk=
-X-Received: by 2002:a05:6214:624:b0:626:16a7:6e41 with SMTP id
- a4-20020a056214062400b0062616a76e41mr7713328qvx.63.1685384282983; Mon, 29 May
- 2023 11:18:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230511-tps65219-add-gpio-support-v3-0-19837a34d820@baylibre.com>
- <20230511-tps65219-add-gpio-support-v3-1-19837a34d820@baylibre.com>
- <ZHD3VtFDYUyy_Std@surfacebook> <2c970ea3-e927-4ea1-f378-a600e834cc9d@baylibre.com>
-In-Reply-To: <2c970ea3-e927-4ea1-f378-a600e834cc9d@baylibre.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 29 May 2023 21:17:27 +0300
-Message-ID: <CAHp75VfNeC=i96-_Pgez1RKTH1_NYX03iYObDk2+hCwtzdpKHg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-To:     jerome Neanne <jneanne@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        with ESMTP id S229459AbjE2STf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 14:19:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8F990;
+        Mon, 29 May 2023 11:19:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5012E61D52;
+        Mon, 29 May 2023 18:19:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6DB9C433EF;
+        Mon, 29 May 2023 18:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685384372;
+        bh=d96MVXdaQIQspJCuju4cldfvgSVoFLjDckwEmO2adaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S+RxkvCt0656mUcXWeUlj0WhCwZ2vnap5Wy0ux7mp0HDHW+p5qEV/wfbD7fskLLbp
+         oCsXe5g4l5DIm0k/HqypfeWWAwKPbbjILoBilvJ0CbHr7Vz2J06WoT3xVWKHFv+7g7
+         +BiQyX3Nq1un8CBosGOeYElaeVSpKH9791Hy3U6lYxPulIgjOZKTtOA+PcMvDSHg6x
+         7F2EkhlZ+1VLJGhYDjwKzMCl8MT1TWdteXchFcaJJXTxsgmUsSvyd3wHFaLUuGfdpT
+         EbIFkCnFM764ykld9+K8HWKFMeI0As6oQVpyefsOU1Pc/n322yzCrpXl4/gxdeOE9W
+         QMLTDBhoXAh+Q==
+Date:   Mon, 29 May 2023 19:19:27 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Subject: Re: [PATCH v4 6/9] dt-bindings: sc16is7xx: Add property to change
+ GPIO function
+Message-ID: <20230529-verify-sympathy-4a486a6cb2c9@spud>
+References: <20230529140711.896830-1-hugo@hugovil.com>
+ <20230529140711.896830-7-hugo@hugovil.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HWnfav14a9y5BMK9"
+Content-Disposition: inline
+In-Reply-To: <20230529140711.896830-7-hugo@hugovil.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 29, 2023 at 6:21=E2=80=AFPM jerome Neanne <jneanne@baylibre.com=
-> wrote:
-> On 26/05/2023 20:15, andy.shevchenko@gmail.com wrote:
 
-...
+--HWnfav14a9y5BMK9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Missing bits.h
-> >
->
-> Thanks for your review.Just to be sure on this particular point:
-> Your recommendation here it to include explicitly bits.h.
->
-> I can see BIT_MASK(n) defined in linux/bits.h
-> BIT(n) is defined in vdso/bits.h
->  From what I can see, BIT(n) is broadly used across kernel but
-> BIT_MASK(n) sounds to be the Linux strict way...
->
-> In current version I'm using BIT(n) macro not BIT_MASK(n).
-> Do you recommend to replace every BIT(n) currently used with BIT_MASK(n)?
+On Mon, May 29, 2023 at 10:07:08AM -0400, Hugo Villeneuve wrote:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+>=20
+> Some variants in this series of UART controllers have GPIO pins that
+> are shared between GPIO and modem control lines.
+>=20
+> The pin mux mode (GPIO or modem control lines) can be set for each
+> ports (channels) supported by the variant.
+>=20
+> This adds a property to the device tree to set the GPIO pin mux to
+> modem control lines on selected ports if needed.
+>=20
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> ---
+>  .../bindings/serial/nxp,sc16is7xx.txt         | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b=
+/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> index 0fa8e3e43bf8..74dfbbf7b2cb 100644
+> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+> @@ -23,6 +23,9 @@ Optional properties:
+>      1 =3D active low.
+>  - irda-mode-ports: An array that lists the indices of the port that
+>  		   should operate in IrDA mode.
+> +- nxp,modem-control-line-ports: An array that lists the indices of the p=
+ort that
+> +				should have shared GPIO lines configured as
+> +				modem control lines.
+> =20
+>  Example:
+>          sc16is750: sc16is750@51 {
+> @@ -35,6 +38,26 @@ Example:
+>                  #gpio-cells =3D <2>;
+>          };
+> =20
+> +	sc16is752: sc16is752@54 {
+> +		compatible =3D "nxp,sc16is752";
+> +		reg =3D <0x54>;
+> +		clocks =3D <&clk20m>;
+> +		interrupt-parent =3D <&gpio3>;
+> +		interrupts =3D <7 IRQ_TYPE_EDGE_FALLING>;
+> +		nxp,modem-control-line-ports =3D <1>; /* Port 1 as modem control lines=
+ */
+> +		gpio-controller; /* Port 0 as GPIOs */
+> +		#gpio-cells =3D <2>;
+> +	};
+> +
+> +	sc16is752: sc16is752@54 {
+> +		compatible =3D "nxp,sc16is752";
+> +		reg =3D <0x54>;
 
-The semantics (if you look into implementations of those two) are different=
-.
+If this were not a txt binding, dt_binding_check would likely complain
+that you have two nodes with the same node address & 3 below.
+If you end up re-submitting, could you change that please?
+Otherwise,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-BIT() is for a single word (your case), while BIT_MASK() is for an
-array of words.
+Thanks,
+Conor.
 
-* word in case of Linux kernel means element of unsigned long type.
+--HWnfav14a9y5BMK9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Sorry for asking dumb questions. Just trying to make sure I
-> correctly/fully understand your feedback... And do it all right for the
-> next iteration.
+-----BEGIN PGP SIGNATURE-----
 
-No problem.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHTsrwAKCRB4tDGHoIJi
+0u0qAQD+oyebwmnbLHw3fMF7xo44CXBt5Kuzc6FqTzYKLleiuwD+PX2NjngRUx6Y
+M1+frhXmkvQeJRAlldSerTUPDb3OVwY=
+=A0bN
+-----END PGP SIGNATURE-----
 
---=20
-With Best Regards,
-Andy Shevchenko
+--HWnfav14a9y5BMK9--
