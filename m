@@ -2,77 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 199E4714CE6
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 17:21:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44AC9714D85
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 17:55:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjE2PVH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 11:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56994 "EHLO
+        id S229499AbjE2Pzg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 11:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbjE2PVG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 11:21:06 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD84FD2
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 08:21:03 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-30a8fa6e6fcso2088315f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 08:21:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1685373662; x=1687965662;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TBUyi7GtvvTumLP5OPVjGqROpV802wvk7yxqnFgwTHY=;
-        b=Msn7AW1khWORLn/oD/9VF15pkuplmldeqTa1sZH7PRTWzL9284dima5XY3ropCTDrd
-         WkoMXDtdqR2n738N6PCPiPJ7E+Q8wE750FrMkHSK3SzZACRvtCw5iA2sX1itxo2rxocV
-         Fryn5uTbDazceFQSQs0WI+0snyV8iQ1u0Lvd1K0VD4vQE+Gpxg5byq/SO/4P3c9QRBMR
-         Tmv9l3R0W2rhDamU+x4TbngiA/DTWk3G47cgTVkWibvno3Ok+m2yBUFrPuNpCjRUbMbq
-         lWtstpgFgaVncvS0Yj0/IPViUMLvBEpXEGMMunEziBT4rQZZ4A4MOaa+Lfxd8h2+fOYq
-         sB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685373662; x=1687965662;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TBUyi7GtvvTumLP5OPVjGqROpV802wvk7yxqnFgwTHY=;
-        b=gjQN5ZAQXeDp6riGe7dQo16TxjX7yoLRWYOYDh0AW1jyhrN6CHhQsa7VwXYVrdg8gN
-         4h7y3aNvfe8aLZannTuL+MiZoJWYDpufzXR1jFNFs9yFNXHm6qIScVgM+E5QL/K5ZkE5
-         6SrOLPVY+LrI5rND0bWy5RJ6FnXL7A9gfxTxCkouo9nJ+iB5hGMjcO5EZ9hFd7CHikZP
-         fDXmV68jMnmM49toTAs0AzOqgo72NADRpvQPc4Ua9tVLp9XysRE+y58mzsFRu7SELvnV
-         w3v6R1XERvJAjeNeZ5J+vEYlbcPmXdpgCyMQW4KmhUk4xDB6mg/AI5D5hg5Qh/FONPj7
-         KNwA==
-X-Gm-Message-State: AC+VfDxBfPp4a3Rx/yrEuEbrBkULJQ4RTAi4OR/ZrDIwNuHbDyCRAy3n
-        JqaAB9jHOZGn29EQ19SCKBFfKWBpUBXC3YPHhuFjYg==
-X-Google-Smtp-Source: ACHHUZ5QsPruAv4u4ZJBUO5E7KlnTJFL6JDOEHss86t1fBqmlCJvSruzkrQftYsvmoGskysj74HOAA==
-X-Received: by 2002:a5d:4e82:0:b0:30a:eadb:791b with SMTP id e2-20020a5d4e82000000b0030aeadb791bmr2551244wru.29.1685373662138;
-        Mon, 29 May 2023 08:21:02 -0700 (PDT)
-Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
-        by smtp.gmail.com with ESMTPSA id y4-20020a056000108400b0030abe7c36b1sm241306wrw.93.2023.05.29.08.21.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 May 2023 08:21:01 -0700 (PDT)
-Message-ID: <2c970ea3-e927-4ea1-f378-a600e834cc9d@baylibre.com>
-Date:   Mon, 29 May 2023 17:21:00 +0200
+        with ESMTP id S229748AbjE2Pzf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 11:55:35 -0400
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73280CF
+        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 08:55:33 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+        id 3ad30867-fe39-11ed-a9de-005056bdf889;
+        Mon, 29 May 2023 18:55:29 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Mon, 29 May 2023 18:55:26 +0300
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robimarko@gmail.com
+Subject: Re: [PATCH V7 4/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
+Message-ID: <ZHTK7uEzO7kcx_cV@surfacebook>
+References: <20230519125409.497439-1-quic_srichara@quicinc.com>
+ <20230519125409.497439-5-quic_srichara@quicinc.com>
+ <CAHp75VfVx+oGYKcija3h9-eWc6jggMx8p5SAQTEHTBEbjTaJKw@mail.gmail.com>
+ <1823419a-6bb4-03f7-d5ae-e32204c5e598@quicinc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-Content-Language: en-US
-To:     andy.shevchenko@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-References: <20230511-tps65219-add-gpio-support-v3-0-19837a34d820@baylibre.com>
- <20230511-tps65219-add-gpio-support-v3-1-19837a34d820@baylibre.com>
- <ZHD3VtFDYUyy_Std@surfacebook>
-From:   jerome Neanne <jneanne@baylibre.com>
-In-Reply-To: <ZHD3VtFDYUyy_Std@surfacebook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1823419a-6bb4-03f7-d5ae-e32204c5e598@quicinc.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,33 +51,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Mon, May 29, 2023 at 03:58:09PM +0530, Sricharan Ramabadhran kirjoitti:
+> On 5/20/2023 12:17 AM, Andy Shevchenko wrote:
+> > On Fri, May 19, 2023 at 3:55 PM Sricharan Ramabadhran
+> > <quic_srichara@quicinc.com> wrote:
 
+...
 
-On 26/05/2023 20:15, andy.shevchenko@gmail.com wrote:
-> ...
+> >    depends on OF || COMPILE_TEST
 > 
-> Missing bits.h
-> 
->> +#include <linux/gpio/driver.h>
->> +#include <linux/mfd/tps65219.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->
+>  Yeah sure. COMPILE_TEST could be standalone. Will fix it and repost.
 
-Thanks for your review.Just to be sure on this particular point:
-Your recommendation here it to include explicitly bits.h.
+Standalone COMPILE_TEST will give you definitely NOT what you want.
+And actually it's strange to have it standalone.
 
-I can see BIT_MASK(n) defined in linux/bits.h
-BIT(n) is defined in vdso/bits.h
- From what I can see, BIT(n) is broadly used across kernel but 
-BIT_MASK(n) sounds to be the Linux strict way...
+-- 
+With Best Regards,
+Andy Shevchenko
 
-In current version I'm using BIT(n) macro not BIT_MASK(n).
-Do you recommend to replace every BIT(n) currently used with BIT_MASK(n)?
-Sorry for asking dumb questions. Just trying to make sure I 
-correctly/fully understand your feedback... And do it all right for the 
-next iteration.
 
-Regards,
-Jerome.
