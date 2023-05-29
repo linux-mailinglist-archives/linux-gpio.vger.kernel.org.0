@@ -2,255 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99AE371422D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 04:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F70571427D
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 06:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjE2Czd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 May 2023 22:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
+        id S230518AbjE2EIV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 00:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbjE2Czd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 May 2023 22:55:33 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BABDAC;
-        Sun, 28 May 2023 19:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=IPBfR
-        OQGAHvO+OIRDKPXfjIBmCUrDAFYHoBeZw4uo3E=; b=EHWRJekNq3yl8z0N2pDf+
-        QItTcwvaGPhhfdEZbmAfh+E5HxQt+hhmG65nAsaDmfGYwGJzr4Xeam6yTZ4Sm5in
-        z5WVnPfnHO+NDsvar5ITpcJNRkfQ+AnYHAhC1/nLEK/UgObXhG+//6Nfq4QJio5G
-        G/V+y0TjDWXup90MEG569E=
-Received: from localhost.localdomain (unknown [39.144.137.9])
-        by zwqz-smtp-mta-g0-1 (Coremail) with SMTP id _____wA36+zmEnRk5hF9Aw--.29114S3;
-        Mon, 29 May 2023 10:54:36 +0800 (CST)
-From:   xingtong_wu@163.com
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     henning.schild@siemens.com, xingtong.wu@siemens.com
-Subject: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other gpio pins
-Date:   Mon, 29 May 2023 10:50:12 +0800
-Message-Id: <20230529025011.2806-2-xingtong_wu@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230529025011.2806-1-xingtong_wu@163.com>
-References: <20230529025011.2806-1-xingtong_wu@163.com>
+        with ESMTP id S229592AbjE2EIT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 00:08:19 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFAB3B1
+        for <linux-gpio@vger.kernel.org>; Sun, 28 May 2023 21:08:16 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 191472C0596;
+        Mon, 29 May 2023 16:08:14 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1685333294;
+        bh=oKlYQC0LT6sfil+DPN2R63ASzsz4+4zowbTWgSU7fY8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=q8eE82hfZHB/48waBxAYHQeP0R0gMP6+Ou/5fjSBck72VnFnYbEwHOyBGCoxsdDE3
+         eRq+i5wIh1ivcURrQP3S9uzqBLSZEHe9cv9PS3J0Mgaok7ds7Wm5LOwacsAtFVEDXb
+         1CBDAbr35lSPNJ3oKAFVcvmtZ3fjpK53Dbij1RZmmUHGP7BrT5f0WhWWj9CrjYhvOa
+         jgm054H0xXjqjJMrN3kJ+uisoMKIybH4snCzUKVgOsW7sjY4e23XplqUlRQXU8ACLR
+         tE4SXRE5f48T+5x9NZhs0yevOhOhO/MBqAPdHeRZ7dCSmq24VPhqyz7oqx9RUQVU5X
+         /LIFIjMxqNlKQ==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B6474252e0000>; Mon, 29 May 2023 16:08:14 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.26; Mon, 29 May 2023 16:08:13 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.48; Mon, 29 May 2023 16:08:13 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.026; Mon, 29 May 2023 16:08:13 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Johan Hovold <johan@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "warthog618@gmail.com" <warthog618@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
+Thread-Topic: [PATCH v2] gpiolib: Avoid side effects in gpio_is_visible()
+Thread-Index: AQHZig/BTFGZ3AxBtUaao6thQCRKf69gloYAgAswboCAAAZKAIADqjcAgABxoIA=
+Date:   Mon, 29 May 2023 04:08:13 +0000
+Message-ID: <f8894ec1-0af4-9566-5836-30b23bf40110@alliedtelesis.co.nz>
+References: <20230519050702.3681791-1-chris.packham@alliedtelesis.co.nz>
+ <CAHp75Vcd8Q+-XMyfg3Y_hv_AL00PGgqg0jo7Yd7TTC4GrxPOuQ@mail.gmail.com>
+ <CAMRc=MdHMiqhcpd2rFwjfKvwMWtTeTxG4fK+7zbzgSq9MHmGew@mail.gmail.com>
+ <ZHCy1PhyNAOCsalJ@hovoldconsulting.com>
+ <47cf842e-5ff5-e185-6f8f-351e886047b6@alliedtelesis.co.nz>
+In-Reply-To: <47cf842e-5ff5-e185-6f8f-351e886047b6@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.33.22.30]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2028263B5443BF45B4A64C2ACC63421F@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wA36+zmEnRk5hF9Aw--.29114S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JrWDJr45Jw17Ww4fJr45Awb_yoW3KFW8pF
-        95Jw4ru3srKr4fArWUKa1kuw1DWFyDJrWft3s5K3yjvF40yr1ftrs8Kr1rZr1Fvr9xJrZa
-        qr90vF1UGr13G37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b-EfrUUUUU=
-X-Originating-IP: [39.144.137.9]
-X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/1tbiMw9+0FXmE5NcvQAAsA
-X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=pGLkceISAAAA:8 a=K8AQLKREUDc6VxAMmqQA:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "xingtong.wu" <xingtong.wu@siemens.com>
-
-switch pin base from static to automatic allocation to
-avoid conflicts and align with other gpio chip drivers
-
-Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
----
- drivers/gpio/gpio-f7188x.c | 138 ++++++++++++++++++-------------------
- 1 file changed, 69 insertions(+), 69 deletions(-)
-
-diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
-index f54ca5a1775e..3875fd940ccb 100644
---- a/drivers/gpio/gpio-f7188x.c
-+++ b/drivers/gpio/gpio-f7188x.c
-@@ -163,7 +163,7 @@ static void f7188x_gpio_set(struct gpio_chip *chip, unsigned offset, int value);
- static int f7188x_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 				  unsigned long config);
- 
--#define F7188X_GPIO_BANK(_base, _ngpio, _regbase, _label)			\
-+#define F7188X_GPIO_BANK(_ngpio, _regbase, _label)			\
- 	{								\
- 		.chip = {						\
- 			.label            = _label,			\
-@@ -174,7 +174,7 @@ static int f7188x_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- 			.direction_output = f7188x_gpio_direction_out,	\
- 			.set              = f7188x_gpio_set,		\
- 			.set_config	  = f7188x_gpio_set_config,	\
--			.base             = _base,			\
-+			.base             = -1,				\
- 			.ngpio            = _ngpio,			\
- 			.can_sleep        = true,			\
- 		},							\
-@@ -191,98 +191,98 @@ static int f7188x_gpio_set_config(struct gpio_chip *chip, unsigned offset,
- #define f7188x_gpio_data_single(type)	((type) == nct6126d)
- 
- static struct f7188x_gpio_bank f71869_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 6, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 6, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(6, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(5, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(6, 0x90, DRVNAME "-6"),
- };
- 
- static struct f7188x_gpio_bank f71869a_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 6, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
--	F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
-+	F7188X_GPIO_BANK(6, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(5, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0x80, DRVNAME "-7"),
- };
- 
- static struct f7188x_gpio_bank f71882_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 4, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 4, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(8, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(4, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(4, 0xB0, DRVNAME "-4"),
- };
- 
- static struct f7188x_gpio_bank f71889a_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 7, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 7, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
--	F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
-+	F7188X_GPIO_BANK(7, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(7, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(5, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0x80, DRVNAME "-7"),
- };
- 
- static struct f7188x_gpio_bank f71889_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 7, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 7, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 5, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
--	F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
-+	F7188X_GPIO_BANK(7, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(7, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(5, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0x80, DRVNAME "-7"),
- };
- 
- static struct f7188x_gpio_bank f81866_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-6"),
--	F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-7"),
--	F7188X_GPIO_BANK(80, 8, 0x88, DRVNAME "-8"),
-+	F7188X_GPIO_BANK(8, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(8, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0x80, DRVNAME "-7"),
-+	F7188X_GPIO_BANK(8, 0x88, DRVNAME "-8"),
- };
- 
- 
- static struct f7188x_gpio_bank f81804_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(60, 8, 0x90, DRVNAME "-4"),
--	F7188X_GPIO_BANK(70, 8, 0x80, DRVNAME "-5"),
--	F7188X_GPIO_BANK(90, 8, 0x98, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xA0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0x90, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(8, 0x80, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0x98, DRVNAME "-6"),
- };
- 
- static struct f7188x_gpio_bank f81865_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 8, 0xF0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE0, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xD0, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xC0, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xB0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 8, 0xA0, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 5, 0x90, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0xF0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xD0, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xC0, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xB0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(8, 0xA0, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(5, 0x90, DRVNAME "-6"),
- };
- 
- static struct f7188x_gpio_bank nct6126d_gpio_bank[] = {
--	F7188X_GPIO_BANK(0, 8, 0xE0, DRVNAME "-0"),
--	F7188X_GPIO_BANK(10, 8, 0xE4, DRVNAME "-1"),
--	F7188X_GPIO_BANK(20, 8, 0xE8, DRVNAME "-2"),
--	F7188X_GPIO_BANK(30, 8, 0xEC, DRVNAME "-3"),
--	F7188X_GPIO_BANK(40, 8, 0xF0, DRVNAME "-4"),
--	F7188X_GPIO_BANK(50, 8, 0xF4, DRVNAME "-5"),
--	F7188X_GPIO_BANK(60, 8, 0xF8, DRVNAME "-6"),
--	F7188X_GPIO_BANK(70, 8, 0xFC, DRVNAME "-7"),
-+	F7188X_GPIO_BANK(8, 0xE0, DRVNAME "-0"),
-+	F7188X_GPIO_BANK(8, 0xE4, DRVNAME "-1"),
-+	F7188X_GPIO_BANK(8, 0xE8, DRVNAME "-2"),
-+	F7188X_GPIO_BANK(8, 0xEC, DRVNAME "-3"),
-+	F7188X_GPIO_BANK(8, 0xF0, DRVNAME "-4"),
-+	F7188X_GPIO_BANK(8, 0xF4, DRVNAME "-5"),
-+	F7188X_GPIO_BANK(8, 0xF8, DRVNAME "-6"),
-+	F7188X_GPIO_BANK(8, 0xFC, DRVNAME "-7"),
- };
- 
- static int f7188x_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
--- 
-2.25.1
-
+DQpPbiAyOS8wNS8yMyAwOToyMSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4NCj4gT24gMjcvMDUv
+MjMgMDE6MjMsIEpvaGFuIEhvdm9sZCB3cm90ZToNCj4+IE9uIEZyaSwgTWF5IDI2LCAyMDIzIGF0
+IDAzOjAxOjAxUE0gKzAyMDAsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6DQo+Pj4gT24gRnJp
+LCBNYXkgMTksIDIwMjMgYXQgMTI6MDnigK9QTSBBbmR5IFNoZXZjaGVua28NCj4+PiA8YW5keS5z
+aGV2Y2hlbmtvQGdtYWlsLmNvbT4gd3JvdGU6DQo+Pj4+IE9uIEZyaSwgTWF5IDE5LCAyMDIzIGF0
+IDg6MDfigK9BTSBDaHJpcyBQYWNraGFtDQo+Pj4+IDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVz
+aXMuY28ubno+IHdyb3RlOg0KPj4+Pj4gT24gYSBzeXN0ZW0gd2l0aCBwY2E5NTU1IEdQSU9zIHRo
+YXQgaGF2ZSBiZWVuIGV4cG9ydGVkIHZpYSBzeXNmcyB0aGUNCj4+Pj4+IGZvbGxvd2luZyB3YXJu
+aW5nIGNvdWxkIGJlIHRyaWdnZXJlZCBvbiBrZXhlYygpLg0KPj4+Pj4NCj4+Pj4+IMKgwqAgV0FS
+TklORzogQ1BVOiAwIFBJRDogMjY1IGF0IGRyaXZlcnMvZ3Bpby9ncGlvbGliLmM6MzQxMSANCj4+
+Pj4+IGdwaW9jaGlwX2Rpc2FibGVfaXJxDQo+Pj4+PiDCoMKgIENhbGwgdHJhY2U6DQo+Pj4+PiDC
+oMKgwqAgZ3Bpb2NoaXBfZGlzYWJsZV9pcnENCj4+Pj4+IMKgwqDCoCBtYWNoaW5lX2NyYXNoX3No
+dXRkb3duDQo+Pj4+PiDCoMKgwqAgX19jcmFzaF9rZXhlYw0KPj4+Pj4gwqDCoMKgIHBhbmljDQo+
+Pj4+PiDCoMKgwqAgc3lzcnFfcmVzZXRfc2VxX3BhcmFtX3NldA0KPj4+Pj4gwqDCoMKgIF9faGFu
+ZGxlX3N5c3JxDQo+Pj4+PiDCoMKgwqAgd3JpdGVfc3lzcnFfdHJpZ2dlcg0KPj4+Pj4NCj4+Pj4+
+IFRoZSB3YXJuaW5nIGlzIHRyaWdnZXJlZCBiZWNhdXNlIHRoZXJlIGlzIGFuIGlycV9kZXNjIGZv
+ciB0aGUgR1BJTyANCj4+Pj4+IGJ1dA0KPj4+Pj4gaXQgZG9lcyBub3QgaGF2ZSB0aGUgRkxBR19V
+U0VEX0FTX0lSUSBzZXQuIFRoaXMgaXMgYmVjYXVzZSB3aGVuIA0KPj4+Pj4gdGhlIEdQSU8NCj4+
+Pj4+IGlzIGV4cG9ydGVkIHZpYSBncGlvZF9leHBvcnQoKSwgZ3Bpb19pc192aXNpYmxlKCkgaXMg
+dXNlZCB0byANCj4+Pj4+IGRldGVybWluZQ0KPj4+Pj4gaWYgdGhlICJlZGdlIiBhdHRyaWJ1dGUg
+c2hvdWxkIGJlIHByb3ZpZGVkIGJ1dCBpbiBkb2luZyBzbyBpdCBlbmRzIHVwDQo+Pj4+PiBjYWxs
+aW5nIGdwaW9jaGlwX3RvX2lycSgpIHdoaWNoIGNyZWF0ZXMgdGhlIGlycV9kZXNjLg0KPj4+Pj4N
+Cj4+Pj4+IFJlbW92ZSB0aGUgY2FsbCB0byBncGlvZF90b19pcnEoKSBmcm9tIGdwaW9faXNfdmlz
+aWJsZSgpLiBUaGUgYWN0dWFsDQo+Pj4+PiBpbnRlbmRlZCBjcmVhdGlvbiBvZiB0aGUgaXJxX2Rl
+c2MgY29tZXMgdmlhIGVkZ2Vfc3RvcmUoKSB3aGVuIA0KPj4+Pj4gcmVxdWVzdGVkDQo+Pj4+PiBi
+eSB0aGUgdXNlci4NCj4+Pj4gVG8gbWUgaXQgc3RpbGwgc291bmRzIGxpa2UgYSBoYWNrIGFuZCB0
+aGUgcmVhbCBzb2x1dGlvbiBzaG91bGQgYmUgZG9uZQ0KPj4+PiBkaWZmZXJlbnRseS9lbHNld2hl
+cmUuDQo+Pj4+DQo+Pj4+IEFsc28gSSdtIHdvcnJ5aW5nIHRoYXQgbm90IGhhdmluZyB0aGlzIGZp
+bGUgdmlzaWJsZSBvciBub3QgbWF5IGFmZmVjdA0KPj4+PiBleGlzdGluZyB1c2VyIHNwYWNlIGN1
+c3RvbSBzY3JpcHRzIHdlIHdpbGwgbmV2ZXIgaGVhciBhYm91dC4NCj4+Pj4NCj4+Pj4gUC5TLiBU
+QkgsIEkgZG9uJ3QgY2FyZSBtdWNoIGFib3V0IHN5c2ZzLCBzbyBpZiB0aGlzIHBhdGNoIGZpbmRz
+IGl0cw0KPj4+PiB3YXkgdXBzdHJlYW0sIEkgd29uJ3QgYmUgdW5oYXBweS4NCj4+Pj4NCj4+PiBT
+YW1lLiBXaGljaCBpcyB3aHkgLSBpZiB0aGVyZSdsbCBiZSBubyBtb3JlIG9iamVjdGlvbnMsIEkg
+d2lsbCBhcHBseSANCj4+PiBpdC4NCj4+IEkgZG9uJ3QgdGhpbmsgdGhpcyBzaG91bGQgYmUgYXBw
+bGllZC4NCj4+DQo+PiBJdCdzIHN0aWxsIG5vdCBjbGVhciBmcm9tIHRoZSBjb21taXQgbWVzc2Fn
+ZSB3aHkgZ3Bpb2NoaXBfZGlzYWJsZV9pcnEoKQ0KPj4gaXMgY2FsbGVkIGZvciBhIGxpbmUgd2hp
+Y2ggaGFzIG5vdCBiZWVuIHJlcXVlc3RlZC4NCj4NCj4gVGhlIGNvZGUgdGhhdCBkb2VzIHRoZSBj
+YWxsaW5nIGlzIGluIG1hY2hpbmVfa2V4ZWNfbWFza19pbnRlcnJ1cHRzKCkuIA0KPiBUaGUgcHJv
+YmxlbSBpcyB0aGF0IGZvciBzb21lIGlycV9jaGlwcyBpcnFfbWFzayBpcyBzZXQgdG8gdGhlIGRp
+c2FibGUgDQo+IGZ1bmN0aW9uLiBUaGUgZGlzYWJsZSBjYWxsIGltbWVkaWF0ZWx5IGFmdGVyIHRo
+ZSBtYXNrIGNhbGwgZG9lcyBjaGVjayANCj4gdG8gc2VlIGlmIHRoZSBpcnEgaXMgbm90IGFscmVh
+ZHkgZGlzYWJsZWQuDQo+DQo+PiDCoCBUaGF0IHNlZW1zIGxpa2Ugd2hhdA0KPj4gc2hvdWxkIGJl
+IGZpeGVkLCBub3QgY2hhbmdpbmcgc29tZSBiZWhhdmlvdXIgaW4gdGhlIGdwaW8gc3lzZnMgaW50
+ZXJmYWNlDQo+PiB3aGljaCBoYXMgYmVlbiB0aGVyZSBzaW5jZSBmb3JldmVyIChlLmcuIGRvIG5v
+dCBjcmVhdGUgdGhlIGVkZ2UNCj4+IGF0dHJpYnV0ZXMgZm9yIGdwaW9zIHRoYXQgY2Fubm90IGJl
+IHVzZWQgYXMgaW50ZXJydXB0cykuDQo+DQo+IEkgZG9uJ3QgZGlzYWdyZWUgd2l0aCB0aGUgc2Vu
+dGltZW50LiBUaGUgcHJvYmxlbSBpcyB0aGVyZSBkb2Vzbid0IA0KPiBhcHBlYXIgdG8gYmUgYW4g
+QVBJIHRoYXQgY2FuIHRlbGwgaWYgYSBHUElPIHBpbiBpcyBjYXBhYmxlIG9mIGJlaW5nIGFuIA0K
+PiBpcnEgd2l0aG91dCBhY3R1YWxseSBjb252ZXJ0aW5nIGl0IGludG8gb25lLg0KPg0KPj4gVGhl
+cmUgYXJlIG90aGVyIHdheXMgdGhhdCBtYXBwaW5ncyBjYW4gYmUgY3JlYXRlZCAoZS5nLiBhIGdw
+aW8gdGhhdA0KPj4gcmVxdWVzdGVkIGFzIGFzIGludGVycnVwdCBhbmQgdGhlbiByZWxlYXNlZCkg
+d2hpY2ggd291bGQgdHJpZ2dlciB0aGUNCj4+IHNhbWUgd2FybmluZyBpdCBzZWVtcy4NCj4gSSd2
+ZSB0cmllZCBhIGZldyBvZiB0aG9zZSBjYXNlcyBhbmQgaGF2ZW4ndCBiZWVuIGFibGUgdG8gcHJv
+dm9rZSB0aGUgDQo+IHNhbWUgd2FybmluZy4gZ3Bpb19zeXNmc19mcmVlX2lycSgpIHNlZW1zIHRv
+IGNsZWFyIHdoYXRldmVyIGZsYWdzIA0KPiBncGlvY2hpcF9kaXNhYmxlX2lycSgpIGlzIGNvbXBs
+YWluaW5nIGFib3V0Lg0KPj4gRml4IHRoZSByb290IGNhdXNlLCBkb24ndCBqdXN0IHBhcGVyIG92
+ZXIgdGhlIHN5bXB0b20uDQo+IEkgdGhpbmsgbWF5YmUgdGhlcmUgaXMgYSBjb21wcm9taXNlIHdo
+ZXJlIEkgZG8gc29tZXRoaW5nIGluIA0KPiBncGlvY2hpcF90b19pcnEoKSBpbnN0ZWFkIG9mIGdw
+aW9faXNfdmlzaWJsZSgpLiBJJ20gbm90IGVudGlyZWx5IHN1cmUgDQo+IHdoYXQgdGhhdCBzb21l
+dGhpbmcgaXMNCj4+DQpJcm9uaWNhbGx5IEkgdHJpZWQgdG8gcmV2aXNpdCBteSBmaXggYnV0IGZv
+dW5kIEkgd2FzIG5vIGxvbmdlciBhYmxlIHRvIA0KcmVwcm9kdWNlIHRoZSBpc3N1ZS4gVHVybnMg
+b3V0IGNvbW1pdCA3ZGQzZDliZDg3M2YgKCJncGlvbGliOiBmaXggDQphbGxvY2F0aW9uIG9mIG1p
+eGVkIGR5bmFtaWMvc3RhdGljIEdQSU9zIikgaGFzIGZpeGVkIGl0IGZvciBtZSBidXQgSSANCmRv
+bid0IGVudGlyZWx5IHVuZGVyc3RhbmQgaG93Lg==
