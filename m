@@ -2,159 +2,315 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9629714DBA
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 18:02:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A0F5714DEA
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 18:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjE2QCQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 12:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48734 "EHLO
+        id S229553AbjE2QKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 12:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjE2QCP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 12:02:15 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B03A3;
-        Mon, 29 May 2023 09:02:13 -0700 (PDT)
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34TBP6U8020334;
-        Mon, 29 May 2023 18:01:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=selector1;
- bh=R7roW/pXBm1AzX1ECpv0Ow4olyyWijd6fAx4mT/U654=;
- b=EKpI+Ml/9CzbSv+0r9wyIwDQkobCJlkxAj3T2qbNKkdtu45oaADa7HeKAOwytpbaZxJZ
- wr/R7yR3q224DGgRlBYGRjxNcSYT20/hYUAjsP6jCn0dH/zRxFixLUy6LKYqHGlkv62A
- sRr8EueSS0ZTvkoUA7P+pkah6TlTw1iaE+dZRuuXwgXjTQubFExgkAInHgXUxocxUaeG
- FSQxCOlBogs/Oo/SlDjC8o2W9bv7oBLRN8fgyGvRPnwWhFpjkaLfKqP/3pjiUhcBsWNy
- W/Fs3/p9sIB4K/TVaQ0kwkA7gQOqE8J/5Wp8OXZtslRRHwJoOttvO02jExEj4sPkecL+ VQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3quakpas41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 May 2023 18:01:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4E7EB10002A;
-        Mon, 29 May 2023 18:01:40 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3F3A2232FF4;
-        Mon, 29 May 2023 18:01:40 +0200 (CEST)
-Received: from localhost (10.201.21.93) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 29 May
- 2023 18:01:39 +0200
-From:   Alexandre Torgue <alexandre.torgue@foss.st.com>
-To:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: [PATCH 00/11] Add STM32MP25 support
-Date:   Mon, 29 May 2023 18:01:19 +0200
-Message-ID: <20230529160130.18940-1-alexandre.torgue@foss.st.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S229486AbjE2QKu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 12:10:50 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA6DA3;
+        Mon, 29 May 2023 09:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685376649; x=1716912649;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=uX5G8j5S3YoVRfqWgQ4v6q8WIzripHxImx8piZ0NEAo=;
+  b=FOeme0cI9qy/E0kKooYTx5IniMXMTK+faXijWeYhabLBVZ5qRPMTvJ/P
+   NUZMGzIi5ovD2xVtis/LjtybOSj17c4izKJMfawUvwwUoOEf23cyr24bT
+   3efdTI+iEiosA7oA+/+NL+kVdlXvE1LSV31n4Rc9m8w/opPIP9hjWFkG7
+   steeo5+dcIoG71smLKG4AwUItjrXnLV9An9esEI2kTATannumEMfpGyGU
+   mQObZ+1Wfu9m+s7kSzAPxCMsB8QJokH8IiUkYpWg1ItXWIgzVR0JohVFi
+   22/HtQDY//y4ntuQOHekjCnvNo7ro5DzK9PScUPgrZjSRux7bXbKda8tt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="352237454"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="352237454"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 09:10:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="952808944"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="952808944"
+Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 09:10:45 -0700
+Date:   Mon, 29 May 2023 19:10:42 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Hugo Villeneuve <hugo@hugovil.com>
+cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Subject: Re: [PATCH v4 7/9] serial: sc16is7xx: fix regression with GPIO
+ configuration
+In-Reply-To: <20230529140711.896830-8-hugo@hugovil.com>
+Message-ID: <27928546-e241-7ff9-5e48-56eabf6c3aaa@linux.intel.com>
+References: <20230529140711.896830-1-hugo@hugovil.com> <20230529140711.896830-8-hugo@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.21.93]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-29_10,2023-05-29_01,2023-05-22_02
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; BOUNDARY="8323329-1968919879-1685376460=:2737"
+Content-ID: <783c8dfd-8370-3f2-699d-4abf8892bc2@linux.intel.com>
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I'm pleased to announce extension of the STM32 MPU family with the addition of
-the STM32MP25 Armv8 based SoCs.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-STM32MP25 family is composed of 4 SoCs defined as following:
+--8323329-1968919879-1685376460=:2737
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <b3f440cd-d687-4e96-1bfd-d69241eb8eb9@linux.intel.com>
 
-  -STM32MP251: common part composed of 1*Cortex-A35, common peripherals like
-   SDMMC, UART, SPI, I2C, PCIe, USB3, parallel and DSI display, 1*ETH ...
+On Mon, 29 May 2023, Hugo Villeneuve wrote:
 
-  -STM32MP253: STM32MP251 + 1*Cortex-A35 (dual CPU), a second ETH, CAN-FD and
-   LVDS display.
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> 
+> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> changed the function of the GPIOs pins to act as modem control
+> lines without any possibility of selecting GPIO function.
+> 
+> As a consequence, applications that depends on GPIO lines configured
+> by default as GPIO pins no longer work as expected.
+> 
+> Also, the change to select modem control lines function was done only
+> for channel A of dual UART variants (752/762). This was not documented
+> in the log message.
+> 
+> Allow to specify GPIO or modem control line function in the device
+> tree, and for each of the ports (A or B).
+> 
+> Do so by using the new device-tree property named
+> "modem-control-line-ports" (property added in separate patch).
+> 
+> When registering GPIO chip controller, mask-out GPIO pins declared as
+> modem control lines according to this new "modem-control-line-ports"
+> DT property.
+> 
+> Boards that need to have GPIOS configured as modem control lines
+> should add that property to their device tree. Here is a list of
+> boards using the sc16is7xx driver in their device tree and that may
+> need to be modified:
+>     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>     mips/boot/dts/ingenic/cu1830-neo.dts
+>     mips/boot/dts/ingenic/cu1000-neo.dts
+> 
+> Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-  -STM32MP255: STM32MP253 + GPU/AI and video encode/decode.
-  -STM32MP257: STM32MP255 + ETH TSN switch (2+1 ports).
-
-  A second diversity layer exists for security features/ A35 frequency:
-  -STM32MP25xY, "Y" gives information:
-    -Y = A means A35@1.2GHz + no cryp IP and no secure boot.
-    -Y = C means A35@1.2GHz + cryp IP and secure boot.
-    -Y = D means A35@1.5GHz + no cryp IP and no secure boot.
-    -Y = F means A35@1.5GHz + cryp IP and secure boot.
-
-This series adds the STM32MP257F EV1 board support. This board embeds a
-STM32MP257FAI SoC, with 4GB of DDR4, TSN switch (2+1 ports), 2*USB typeA,
-1*USB2 typeC, SNOR OctoSPI, mini PCIe, STPMIC2 for power distribution ...
-
-Thanks
-Alex
-
-Alexandre Torgue (10):
-  dt-bindings: pinctrl: stm32: support for stm32mp257 and additional
-    packages
-  pinctrl: stm32: add stm32mp257 pinctrl support
-  dt-bindings: stm32: add st,stm32mp25 compatibles to the stm32 family
-  arm64: introduce STM32 family on Armv8 architecture
-  arm64: dts: st: introduce stm32mp25 SoCs family
-  arm64: dts: st: introduce stm32mp25 pinctrl files
-  dt-bindings: stm32: document stm32mp257f-ev1 board
-  arm64: dts: st: add stm32mp257f-ev1 board support
-  arm64: defconfig: enable ARCH_STM32 and STM32 serial driver
-  MAINTAINERS: add entry for ARM/STM32 ARCHITECTURE
-
-Patrick Delaunay (1):
-  dt-bindings: stm32: add st,stm32mp25-syscfg compatible for syscon
-
- .../bindings/arm/stm32/st,stm32-syscon.yaml   |    1 +
- .../devicetree/bindings/arm/stm32/stm32.yaml  |   12 +
- .../bindings/pinctrl/st,stm32-pinctrl.yaml    |    4 +-
- MAINTAINERS                                   |    1 +
- arch/arm64/Kconfig.platforms                  |   14 +
- arch/arm64/boot/dts/Makefile                  |    1 +
- arch/arm64/boot/dts/st/Makefile               |    2 +
- arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |   38 +
- arch/arm64/boot/dts/st/stm32mp251.dtsi        |  279 ++
- arch/arm64/boot/dts/st/stm32mp253.dtsi        |   23 +
- arch/arm64/boot/dts/st/stm32mp255.dtsi        |    9 +
- arch/arm64/boot/dts/st/stm32mp257.dtsi        |    9 +
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |   50 +
- arch/arm64/boot/dts/st/stm32mp25xc.dtsi       |    8 +
- arch/arm64/boot/dts/st/stm32mp25xf.dtsi       |    8 +
- .../boot/dts/st/stm32mp25xxai-pinctrl.dtsi    |   83 +
- .../boot/dts/st/stm32mp25xxak-pinctrl.dtsi    |   71 +
- .../boot/dts/st/stm32mp25xxal-pinctrl.dtsi    |   71 +
- arch/arm64/configs/defconfig                  |    3 +
- drivers/pinctrl/stm32/Kconfig                 |    6 +
- drivers/pinctrl/stm32/Makefile                |    1 +
- drivers/pinctrl/stm32/pinctrl-stm32.h         |    3 +
- drivers/pinctrl/stm32/pinctrl-stm32mp257.c    | 2581 +++++++++++++++++
- include/dt-bindings/pinctrl/stm32-pinfunc.h   |    3 +
- 24 files changed, 3280 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/st/Makefile
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp251.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp253.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp255.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp257.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xc.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xf.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xxai-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xxak-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/st/stm32mp25xxal-pinctrl.dtsi
- create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32mp257.c
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
-2.17.1
+ i.
 
+
+> ---
+>  drivers/tty/serial/sc16is7xx.c | 82 +++++++++++++++++++++++++---------
+>  1 file changed, 62 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> index 7a993add3f04..34739b31b44b 100644
+> --- a/drivers/tty/serial/sc16is7xx.c
+> +++ b/drivers/tty/serial/sc16is7xx.c
+> @@ -236,7 +236,8 @@
+>  
+>  /* IOControl register bits (Only 750/760) */
+>  #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
+> -#define SC16IS7XX_IOCONTROL_MODEM_BIT	(1 << 1) /* Enable GPIO[7:4] as modem pins */
+> +#define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
+> +#define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
+>  #define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
+>  
+>  /* EFCR register bits */
+> @@ -301,12 +302,12 @@
+>  /* Misc definitions */
+>  #define SC16IS7XX_FIFO_SIZE		(64)
+>  #define SC16IS7XX_REG_SHIFT		2
+> +#define SC16IS7XX_GPIOS_PER_BANK	4
+>  
+>  struct sc16is7xx_devtype {
+>  	char	name[10];
+>  	int	nr_gpio;
+>  	int	nr_uart;
+> -	int	has_mctrl;
+>  };
+>  
+>  #define SC16IS7XX_RECONF_MD		(1 << 0)
+> @@ -336,6 +337,7 @@ struct sc16is7xx_port {
+>  	struct clk			*clk;
+>  #ifdef CONFIG_GPIOLIB
+>  	struct gpio_chip		gpio;
+> +	unsigned long			gpio_valid_mask;
+>  #endif
+>  	unsigned char			buf[SC16IS7XX_FIFO_SIZE];
+>  	struct kthread_worker		kworker;
+> @@ -447,35 +449,30 @@ static const struct sc16is7xx_devtype sc16is74x_devtype = {
+>  	.name		= "SC16IS74X",
+>  	.nr_gpio	= 0,
+>  	.nr_uart	= 1,
+> -	.has_mctrl	= 0,
+>  };
+>  
+>  static const struct sc16is7xx_devtype sc16is750_devtype = {
+>  	.name		= "SC16IS750",
+> -	.nr_gpio	= 4,
+> +	.nr_gpio	= 8,
+>  	.nr_uart	= 1,
+> -	.has_mctrl	= 1,
+>  };
+>  
+>  static const struct sc16is7xx_devtype sc16is752_devtype = {
+>  	.name		= "SC16IS752",
+> -	.nr_gpio	= 0,
+> +	.nr_gpio	= 8,
+>  	.nr_uart	= 2,
+> -	.has_mctrl	= 1,
+>  };
+>  
+>  static const struct sc16is7xx_devtype sc16is760_devtype = {
+>  	.name		= "SC16IS760",
+> -	.nr_gpio	= 4,
+> +	.nr_gpio	= 8,
+>  	.nr_uart	= 1,
+> -	.has_mctrl	= 1,
+>  };
+>  
+>  static const struct sc16is7xx_devtype sc16is762_devtype = {
+>  	.name		= "SC16IS762",
+> -	.nr_gpio	= 0,
+> +	.nr_gpio	= 8,
+>  	.nr_uart	= 2,
+> -	.has_mctrl	= 1,
+>  };
+>  
+>  static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
+> @@ -1359,16 +1356,45 @@ static int sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
+>  	return 0;
+>  }
+>  
+> -static int sc16is7xx_setup_gpio_chip(struct device *dev)
+> +static int sc16is7xx_gpio_init_valid_mask(struct gpio_chip *chip,
+> +					  unsigned long *valid_mask,
+> +					  unsigned int ngpios)
+> +{
+> +	struct sc16is7xx_port *s = gpiochip_get_data(chip);
+> +
+> +	*valid_mask = s->gpio_valid_mask;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sc16is7xx_setup_gpio_chip(struct device *dev, u8 mctrl_mask)
+>  {
+>  	struct sc16is7xx_port *s = dev_get_drvdata(dev);
+>  
+>  	if (!s->devtype->nr_gpio)
+>  		return 0;
+>  
+> +	switch (mctrl_mask) {
+> +	case 0:
+> +		s->gpio_valid_mask = 0xFF;
+> +		break;
+> +	case SC16IS7XX_IOCONTROL_MODEM_A_BIT:
+> +		s->gpio_valid_mask = 0x0F;
+> +		break;
+> +	case SC16IS7XX_IOCONTROL_MODEM_B_BIT:
+> +		s->gpio_valid_mask = 0xF0;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (!s->gpio_valid_mask)
+> +		return 0;
+> +
+>  	s->gpio.owner		 = THIS_MODULE;
+>  	s->gpio.parent		 = dev;
+>  	s->gpio.label		 = dev_name(dev);
+> +	s->gpio.init_valid_mask	 = sc16is7xx_gpio_init_valid_mask;
+>  	s->gpio.direction_input	 = sc16is7xx_gpio_direction_input;
+>  	s->gpio.get		 = sc16is7xx_gpio_get;
+>  	s->gpio.direction_output = sc16is7xx_gpio_direction_output;
+> @@ -1392,6 +1418,7 @@ static int sc16is7xx_probe(struct device *dev,
+>  {
+>  	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
+>  	unsigned int val;
+> +	u8 mctrl_mask = 0;
+>  	u32 uartclk = 0;
+>  	int i, ret;
+>  	struct sc16is7xx_port *s;
+> @@ -1493,12 +1520,6 @@ static int sc16is7xx_probe(struct device *dev,
+>  				     SC16IS7XX_EFCR_RXDISABLE_BIT |
+>  				     SC16IS7XX_EFCR_TXDISABLE_BIT);
+>  
+> -		/* Use GPIO lines as modem status registers */
+> -		if (devtype->has_mctrl)
+> -			sc16is7xx_port_write(&s->p[i].port,
+> -					     SC16IS7XX_IOCONTROL_REG,
+> -					     SC16IS7XX_IOCONTROL_MODEM_BIT);
+> -
+>  		/* Initialize kthread work structs */
+>  		kthread_init_work(&s->p[i].tx_work, sc16is7xx_tx_proc);
+>  		kthread_init_work(&s->p[i].reg_work, sc16is7xx_reg_proc);
+> @@ -1534,6 +1555,27 @@ static int sc16is7xx_probe(struct device *dev,
+>  					 prop, p, u)
+>  			if (u < devtype->nr_uart)
+>  				s->p[u].irda_mode = true;
+> +
+> +		of_property_for_each_u32(dev->of_node, "nxp,modem-control-line-ports",
+> +					 prop, p, u) {
+> +			if (u >= devtype->nr_uart)
+> +				continue;
+> +
+> +			/* Use GPIO lines as modem control lines */
+> +			if (u == 0)
+> +				mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
+> +			else if (u == 1)
+> +				mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
+> +		}
+> +
+> +		if (mctrl_mask) {
+> +			regmap_update_bits(
+> +				s->regmap,
+> +				SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
+> +				SC16IS7XX_IOCONTROL_MODEM_A_BIT |
+> +				SC16IS7XX_IOCONTROL_MODEM_B_BIT,
+> +				mctrl_mask);
+> +		}
+>  	}
+>  
+>  #ifdef CONFIG_GPIOLIB
+> @@ -1562,7 +1604,7 @@ static int sc16is7xx_probe(struct device *dev,
+>  		return 0;
+>  
+>  #ifdef CONFIG_GPIOLIB
+> -	if (devtype->nr_gpio)
+> +	if (s->gpio_valid_mask)
+>  		gpiochip_remove(&s->gpio);
+>  
+>  out_thread:
+> @@ -1588,7 +1630,7 @@ static void sc16is7xx_remove(struct device *dev)
+>  	int i;
+>  
+>  #ifdef CONFIG_GPIOLIB
+> -	if (s->devtype->nr_gpio)
+> +	if (s->gpio_valid_mask)
+>  		gpiochip_remove(&s->gpio);
+>  #endif
+>  
+> 
+--8323329-1968919879-1685376460=:2737--
