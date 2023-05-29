@@ -2,72 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B68714772
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 11:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A71067147E6
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 12:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbjE2Jv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 05:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
+        id S229597AbjE2K2m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 06:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231600AbjE2Jv6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 05:51:58 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9378A3
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 02:51:57 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-565d354b59fso23726267b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 02:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685353917; x=1687945917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=su/Rx3R9SIBQIy8nzLVz8h4unOUxvvoq51HIXg2HVxw=;
-        b=SvgGalIWd4YpI8eO1XbYqYkkltOBsRIAg7aVjdN8kHIzFpwL4etKpQt2zwiS/Na++Y
-         x40/GZ6rKzPbINfTSD746IbsAr8IcQjWFM71bPZxb51lpVQDLlCJIc5DOuKAFkJ357gW
-         EB+RadmpKVbRMCOZI1FiOzWcOpI/YMdo1IogGxCIuUqkGqlmAHJlTN7JrFB7EOejkM0Z
-         TYsH+y4DCN/62wUXm+gJwGVL0sefHaXOvpx5ddoGyR7k+q60FMHU8cGFoudslg1u8BR1
-         vxElZPligfVKNmVHKtzpRR68WYzmcD+ApeT9Lhq9m+8b5p8SPj0zFE7EYREk6IG4Y7+1
-         rqNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685353917; x=1687945917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=su/Rx3R9SIBQIy8nzLVz8h4unOUxvvoq51HIXg2HVxw=;
-        b=OrXEPa8uh+XAvRJ/G59CiEY3GCGU5f6cIXvN/LXOvQhwtg0WMhSldqbGvBR0QwyN4Y
-         eD2+VxUAkt/Tx5lvZUQu2FHGcwuIC4IMuyy20DI0bnRMD81AFk1IJnVYNsVkbix4zeUh
-         krh+/a2iO8tWModS+SwSd9nvJad5IIueTN+h3FdTM/sEZreT4khhmm3pID8qDtP3DXfG
-         fMdfLWAkWXIkMPhKb00kLEPkRul0QDNpHKfI6SUCQkhFuw4Dlalo9fWrgIBnHh6F7iZn
-         2/rkAoTqxCMw0ze9RMFhQcoO92EB2M2g6grJhnh3YDX/CuJVkyRHZpvjLMKA/+cOIBRm
-         /YpQ==
-X-Gm-Message-State: AC+VfDwUHK5/DVfvsoao4GFf81f2cryRv1gyPVCUi8drh/eES4TGItDS
-        g0X3inZpze2+Jgdixdx+/vfSJIkIrfrtnZCpY2RqQA==
-X-Google-Smtp-Source: ACHHUZ7ThBBzG5Zs+36ad76vI5Em4SgJRU6DaA7EJm+LaJAP+r6+CaqDcEkYZqMbcGvrTiWS9Gf9/EIH51/1Z/ln1w8=
-X-Received: by 2002:a81:4a44:0:b0:559:e8c2:6a1a with SMTP id
- x65-20020a814a44000000b00559e8c26a1amr11677406ywa.18.1685353917052; Mon, 29
- May 2023 02:51:57 -0700 (PDT)
+        with ESMTP id S229559AbjE2K2l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 06:28:41 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F0CD2;
+        Mon, 29 May 2023 03:28:39 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34T9rMiu022431;
+        Mon, 29 May 2023 10:28:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Rs1mi9gWmQIfDbvGTLgd04OsxOpZ3oQ8tps4lRW1rrA=;
+ b=oLTzApGh8+OTmsWuT2EW/R6MgqEHEXxCV7zlFCTMFaKBMNJgxlrR7BszbkzD5cWNF879
+ 1KHqJF6WqqsCGZi37YK98YA3ZufEkgQc/ixJikTTPLMluaFktOhMLx9equLR+BZPdyNY
+ q4YbxSM9h8P3XXO4ZXX5c6mZuKkOIVQRM2XqQV9ls//+tQmK/6K3reUj89cX+7p36VDL
+ BO5f6J1y4qh8TR7vH/uT8bkWKTvjiSuE8MHhxaLUMA1UaysrUbFVE+AxBKmmUlFsEzCl
+ 0bFewi1UxTRdYNMqYVmVItbMGvk2bZ/faLp8JiNiAdmNdJR81b7i5zj1xQ5ZyI03r2qk Ig== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3quarb36mq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 May 2023 10:28:23 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34TASMDb005077
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 May 2023 10:28:22 GMT
+Received: from [10.201.203.60] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Mon, 29 May
+ 2023 03:28:15 -0700
+Message-ID: <1823419a-6bb4-03f7-d5ae-e32204c5e598@quicinc.com>
+Date:   Mon, 29 May 2023 15:58:09 +0530
 MIME-Version: 1.0
-References: <cover.1681580558.git.noodles@earth.li> <cover.1683719613.git.noodles@earth.li>
- <f9b643ff0d0ed770f5a841111f213f8481dc920f.1683719613.git.noodles@earth.li>
-In-Reply-To: <f9b643ff0d0ed770f5a841111f213f8481dc920f.1683719613.git.noodles@earth.li>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 May 2023 11:51:46 +0200
-Message-ID: <CACRpkdb-wp2631KphG+iwnVaYk0Sm9JCLpoz1DuSQd4jXvEdAg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] pinctrl: axp209: Add support for GPIO3 on the AXP209
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH V7 4/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>
+References: <20230519125409.497439-1-quic_srichara@quicinc.com>
+ <20230519125409.497439-5-quic_srichara@quicinc.com>
+ <CAHp75VfVx+oGYKcija3h9-eWc6jggMx8p5SAQTEHTBEbjTaJKw@mail.gmail.com>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <CAHp75VfVx+oGYKcija3h9-eWc6jggMx8p5SAQTEHTBEbjTaJKw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ltzP87ZWyRWccROl2ys61M-QiTsFO8-L
+X-Proofpoint-ORIG-GUID: ltzP87ZWyRWccROl2ys61M-QiTsFO8-L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-29_07,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0 adultscore=0
+ bulkscore=0 mlxlogscore=860 phishscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305290090
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,21 +88,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 10, 2023 at 2:01=E2=80=AFPM Jonathan McDowell <noodles@earth.li=
-> wrote:
+Hi Andy,
 
-> The AXP209 device has a 4th GPIO which has a slightly different register
-> setup, where the control + status bits are held in a single register
-> rather than sharing AXP20X_GPIO20_SS with GPIOs 0-2.
->
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+On 5/20/2023 12:17 AM, Andy Shevchenko wrote:
+> On Fri, May 19, 2023 at 3:55 PM Sricharan Ramabadhran
+> <quic_srichara@quicinc.com> wrote:
+>>
+>> Add pinctrl definitions for the TLMM of IPQ5018.
+> 
+> A couple of remarks either for the next version of the series or for
+> the follow ups.
+> 
+> ...
+> 
+>> +config PINCTRL_IPQ5018
+>> +       tristate "Qualcomm Technologies, Inc. IPQ5018 pin controller driver"
+> 
+>> +       depends on GPIOLIB && OF
+> 
+> I'm wondering why OF.
+> If it's a functional dependency (I do not see compile-time one) the
+> compile test can be added, no?
+> 
+>    depends on GPIOLIB
+>    depends on OF || COMPILE_TEST
+> 
 
-This patch 2/5 applied to the pinctrl tree.
+  Yeah sure. COMPILE_TEST could be standalone. Will fix it and repost.
 
-I just assume it is fine to apply this one patch, Bartosz already
-applied the binding patch.
+>> +       select PINCTRL_MSM
+>> +       help
+>> +         This is the pinctrl, pinmux, pinconf and gpiolib driver for
+>> +         the Qualcomm Technologies Inc. TLMM block found on the
+>> +         Qualcomm Technologies Inc. IPQ5018 platform. Select this for
+>> +         IPQ5018.
+> 
+> ...
+> 
+>> +#include <linux/module.h>
+> 
+>> +#include <linux/of.h>
+> 
+> There is a wrong header (the code doesn't use this one).
+> You meant mod_devicetable.h
+> 
 
-Tell me if this works.
+  ho ok, let me check this part.
 
-Yours,
-Linus Walleij
+>> +#include <linux/platform_device.h>
+> 
+> Besides that kernel.h for ARRAY_SIZE() init.h for arch_initcall() and
+> others might be missing.
+> 
+
+  init.h is getting included from module.h. Will check for kernel.h and
+  update accordingly.
+
+Regards,
+  Sricharan
