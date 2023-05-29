@@ -2,85 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1CD3714A1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 15:18:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6152D714B3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 15:57:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjE2NSD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 09:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
+        id S229991AbjE2N5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 09:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbjE2NSA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 09:18:00 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 575C211A
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 06:17:41 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5689335d2b6so8146307b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 06:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685366256; x=1687958256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FkLhgfF7z4VebboFNthWQnJVUl4qCl0xXQ0idChm7qc=;
-        b=yRZOG0Mt73HKtjIOzpwXs1psdJVvjTbMSi+aPnWR9D8L/JU4/+V8Droy7i2XO7Nrln
-         /OMhPdxWNF0x5tuddrsINx46poxGXSWaMUIg52/yVgC/48A6kegjH54q9PTNxusSynrJ
-         dMUEhG9yOrD+fQD8CMilMg1gPGLjcQjC89VHzSdsYwKOgXSTJe9XundLNsgefBteKTvH
-         5uwRvSS7eHstDabc1FI/arnOxp32KrT7G5Gx5689Fr1OwKjXpZWt9bPieOixkdzPsGEk
-         FOy2XHyrST+r80n3KIV80XVodx/9U2/gBy2nXYpM20GUL2n5MeIIJ+/pOnCEXc+eaBh9
-         NKGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685366256; x=1687958256;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FkLhgfF7z4VebboFNthWQnJVUl4qCl0xXQ0idChm7qc=;
-        b=BGrNGZCC5GAhJwyU4b4JMRrZxIKsllucaHLUMh4wAOjclJS6NQaSn7PpWNe9AXXeXP
-         k4YV+WqOF47sLN3hXJagWJ+nkpBdQgenRIXv6o30vNTCVIxsMkmaFCmKKFEyla/iFJ6/
-         TWG+tzJVwD96q2LCy42L+4u/NKOh9n2ZbOFzi92/2ibxpD7pBE+GYZiOV5vpdeSYdAjr
-         W6vAe+RCHFynehgERmvxKFg/W3spUEVAlv6wUVMV+ImLJINSkaNSxlQV5E7nJ1lWBJX6
-         9In5Ma9R4iH6Vs74y0KbsCaG08CNkmMINh9QPBDhbgIYDWeHkVH5TWUfCS0nhXzAd0kK
-         MRCQ==
-X-Gm-Message-State: AC+VfDxxAPQLvhbTzjfL5TD3YMxPnKnoxKSuOEza5tE2Jg9zgChEaGpH
-        Ng47brngnD1jb8jnROWzjejR7MGaUsvfTLbmtEioetePnjhfGgAo
-X-Google-Smtp-Source: ACHHUZ7d32A5nZL6dVR+wJdgn0htVIe9PGZrJh7A5kUG5dSlL6GvvpfzNNi04X/kIlbjQv1yYoLpZBNx8j67AlzkHZU=
-X-Received: by 2002:a0d:fac5:0:b0:565:a6b2:cbd2 with SMTP id
- k188-20020a0dfac5000000b00565a6b2cbd2mr11981816ywf.4.1685366256581; Mon, 29
- May 2023 06:17:36 -0700 (PDT)
+        with ESMTP id S229774AbjE2N5P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 09:57:15 -0400
+Received: from vm3.sequanux.org (static.55.155.9.5.clients.your-server.de [5.9.155.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00D54193;
+        Mon, 29 May 2023 06:56:46 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by vm3.sequanux.org (Postfix) with ESMTP id ADD1410861D;
+        Mon, 29 May 2023 15:55:15 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
+Received: from vm3.sequanux.org ([127.0.0.1])
+        by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id n4Z--l1KX59Q; Mon, 29 May 2023 15:54:50 +0200 (CEST)
+Received: from localhost (ns3093303.ip-145-239-244.eu [145.239.244.120])
+        by vm3.sequanux.org (Postfix) with ESMTPSA id 39FE610861C;
+        Mon, 29 May 2023 15:54:50 +0200 (CEST)
+Date:   Mon, 29 May 2023 15:54:36 +0200
+From:   simon.guinot@sequanux.org
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     xingtong_wu@163.com, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, henning.schild@siemens.com,
+        xingtong.wu@siemens.com
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
+ gpio pins
+Message-ID: <ZHSunJyh2AU1eb0H@localhost>
+References: <20230529025011.2806-1-xingtong_wu@163.com>
+ <20230529025011.2806-2-xingtong_wu@163.com>
+ <ZHSZ9cK78qc5QeZD@localhost>
+ <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230525204258.711186-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20230525204258.711186-1-u.kleine-koenig@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 29 May 2023 15:17:25 +0200
-Message-ID: <CACRpkdb1gfh5wU5J+HSMEmo3h9gcpJyeArJAuO5Q=Puz224V-g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: Switch i2c drivers back to use .probe()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ydUJH2p/CGhrI1Ua"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 25, 2023 at 10:43=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
 
-> After commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
-> call-back type"), all drivers being converted to .probe_new() and then
-> 03c835f498b5 ("i2c: Switch .probe() to not take an id parameter")
-> convert back to (the new) .probe() to be able to eventually drop
-> .probe_new() from struct i2c_driver.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+--ydUJH2p/CGhrI1Ua
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied, thanks for driving this to conclusion.
+On Mon, May 29, 2023 at 03:03:28PM +0200, Linus Walleij wrote:
+> On Mon, May 29, 2023 at 2:27=E2=80=AFPM <simon.guinot@sequanux.org> wrote:
+>=20
+> > It would be nice if a pin number found in the device datasheet could
+> > still be converted into a Linux GPIO number by adding the base of the
+> > first bank.
+>=20
+> We actively discourage this kind of mapping because of reasons stated
+> in drivers/gpio/TODO: we want dynamic number allocation to be the
+> norm.
 
-Yours,
-Linus Walleij
+Hi Linus,
+
+Sure but it would be nice to have a dynamic base applied to a controller
+(and not to each chip of this controller), and to respect the interval
+between the chips (as stated in the controllers datasheets).
+
+This way the assignation would be dynamic and the pin numbers found in
+controller datasheet would be meaningful as well.
+
+Simon
+
+--ydUJH2p/CGhrI1Ua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmR0rpkACgkQzyg/RDPm
+szrjBBAAtzabocRJDXcpxtRjNgPwWSADLDqJKTqz7LeMyON4qw0A7PuE7KQ9dqsH
+rB/+HbJ90TIJWDKl8dcoVoNJnIy3j7XtnE4XzG7/AqZH+Yik1c0ZV7XWlIYZldN/
+LLphcGqcxZUPy9aR8CNflEd83EcJ5rCROnjDPLxEToAydk6ApD/erjQ00pc9emun
+fgavVZktLcIMeHeKZmW8nEUHrJXI3KtTUTZV4mzECCB1PurlcWdaPARksOqQaiBv
+LoIcFahBmXwUN3Lq8Hk5LewLaLGnSKR2R1jU/ga7Xrw+NFN8mk4UIvLJ8ejzIpTE
+jkieRlLvDFZvEIWpzA9X32XsMoMxqNxkam/Zm9bghPTpSVJXoyTHFHt/jMWGdDZR
+BPguRFB8MMLqk4LjMF5Jyhh27Ty1VuSEtXWQWMJL/o/FIECmG/ORyyhDS5g4jJEc
+0j43KmwQUcn7MKb9UKNClI9Qu91MUj4w/TYFinGjyAwZ98ovoDDpaL0bmrLM2/Wx
+AZZq8AluJN/3aQmRsClP3Xwbnh33SBfA8jy77KV3PNqB7lpMdcuacCFKczk9K/aS
+7You6CjspVRosB/BmFmAuNypfW8A4QOKEP4SRsqPOwqXzBknTCX83kXjMYm/ptdn
+bees/wwDn1yNYpzRethm3E2Mq84ec7hpD+gCII7auUDUrqYECJI=
+=ukCq
+-----END PGP SIGNATURE-----
+
+--ydUJH2p/CGhrI1Ua--
