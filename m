@@ -2,112 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FA4D715172
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 00:00:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22FD57151AC
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 00:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjE2WAh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 18:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37576 "EHLO
+        id S229833AbjE2WQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 18:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjE2WAg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 18:00:36 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D576D9
-        for <linux-gpio@vger.kernel.org>; Mon, 29 May 2023 15:00:31 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2A7422C0593;
-        Tue, 30 May 2023 10:00:23 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1685397623;
-        bh=GvLRBj+jIJkhScZafRzWRU78FE7FWC5PGOOtBHRCLIY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ihZI5Xoc+QXfYJciv/tV1AuwQAzQqnwDSOcyF8z++/dcsPIb+EX5nyQnngocKBx9D
-         4dLPE67dnPfw+E38crg5FvK+tcM6PjJN8DGrWmOHVYT22kthNxsyonaA/qVlw40rul
-         lRVhbFbWI1sNoYv9zmxsUJHUGRJtSG80Tzu5HJTINxZrIx/LQzgz92z9dhnEHxFawB
-         NDFNQEgq/NYe2yR4EzjCR9ZG7/wKsORLtMprUBMjUWjiJfS4vHpW4BU2yDs+bgQjOt
-         7x8ndw7xEaxTF+9uJLAj2013GX6SDgx3OGXf1e8n8P0/YZT+1SRgmSgeLhhFgSeNwk
-         uzmr7b/ZH9EjA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B647520770000>; Tue, 30 May 2023 10:00:23 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.26; Tue, 30 May 2023 10:00:22 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Tue, 30 May 2023 10:00:22 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.026; Tue, 30 May 2023 10:00:22 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "johan@kernel.org" <johan@kernel.org>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        Ben Brown <Ben.Brown@alliedtelesis.co.nz>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Topic: [PATCH] gpiolib: Avoid side effects in gpio_is_visible()
-Thread-Index: AQHZhIoofApft8Zm8kuYZtpxH+f53K9VfDeAgAQYHQCAApZDgIAAjA4AgBOROQCAANfRAA==
-Date:   Mon, 29 May 2023 22:00:22 +0000
-Message-ID: <9756c9da-3063-04c8-02b6-79146b81b3cc@alliedtelesis.co.nz>
-References: <20230512042806.3438373-1-chris.packham@alliedtelesis.co.nz>
- <CACRpkdYz9ipNTo2ORXKWy5Q4uCpKL=9Gd+kK76pestX7Onuz-Q@mail.gmail.com>
- <b36fcdf1-45ab-0c06-efe4-237df0612466@alliedtelesis.co.nz>
- <CACRpkdbiSAFoJP_JB1d_6gQ+Xx7Y+mLAh=C6Za+fpyWuRe6Gbw@mail.gmail.com>
- <31a23398-9b0e-4a19-3576-84fcfd3ce4b5@alliedtelesis.co.nz>
- <CACRpkdbqq1=8SeN18V_iyFQQ00bd8Eia5okB1v3f=nZQOnSiTA@mail.gmail.com>
-In-Reply-To: <CACRpkdbqq1=8SeN18V_iyFQQ00bd8Eia5okB1v3f=nZQOnSiTA@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.33.22.30]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9CB69A6E0B1774CA9F7AFA4CB03B0E1@atlnz.lc>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229899AbjE2WQS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 18:16:18 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E5B11B;
+        Mon, 29 May 2023 15:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685398565; x=1716934565;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0gSXcrJw4rVVIbYtKUetrZyc67LpvOlFnbAG461PqkA=;
+  b=WKhKI2X0NJfp0KmVzaCuY3wZzY/avxQcjX4jm2fGTuOh+g7D6+iL9cSa
+   saIWd3iuDLY+XBJAHBgPBSL0NLYUXpu/jUNffS7DtjTWvFMPVW5Ugl/Rw
+   NYHyfbZBU48dZWLFlk7RrodppDAcxHGJv8q06fH9fOZa46rl9NGkrQkGe
+   Rw4n7OJVP4uNeTXJ3b0nxKUOql32q87w0JxwVFjx0I6GxmkrogegrODQM
+   +t4vhd6sHWdtkfx9OYfpro3jb9PYuWXtHzx5mJAylbM7xXgWjVVdoK1bh
+   RwW0PDOGcNGjoIAmyCUNvA/yIAgeh7NkEm3gAn2hiniUag3OM7fsNUq9a
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="353615846"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="353615846"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 15:14:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="700382378"
+X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
+   d="scan'208";a="700382378"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 29 May 2023 15:14:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id E63AC24F; Tue, 30 May 2023 01:14:49 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Hu Haowen <src.res@email.cn>
+Subject: [PATCH v2 1/2] gpiolib: Kill unused GPIOF_EXPORT and Co
+Date:   Tue, 30 May 2023 01:14:45 +0300
+Message-Id: <20230529221446.87785-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=cLieTWWN c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10 a=VwQbUJbxAAAA:8 a=n7lz_p6-F6BW55SpA8IA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-X-SEG-SpamProfiler-Score: 0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiAyOS8wNS8yMyAyMTowNywgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gT24gV2VkLCBNYXkg
-MTcsIDIwMjMgYXQgMTI6MTnigK9BTSBDaHJpcyBQYWNraGFtDQo+IDxDaHJpcy5QYWNraGFtQGFs
-bGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPj4gT24gMTcvMDUvMjMgMDE6NTcsIExpbnVzIFdh
-bGxlaWogd3JvdGU6DQo+Pj4gT24gTW9uLCBNYXkgMTUsIDIwMjMgYXQgMTI6MjfigK9BTSBDaHJp
-cyBQYWNraGFtDQo+Pj4gPENocmlzLlBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4gd3JvdGU6
-DQo+Pj4+IFRoZSBjcnV4IG9mIHRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlIGlycV9kZXNjIGlzIGNy
-ZWF0ZWQgd2hlbiBpdCBoYXNuJ3QNCj4+Pj4gYmVlbiByZXF1ZXN0ZWQuDQo+Pj4gVGhlIHJpZ2h0
-IHNvbHV0aW9uIHRvIG1lIHNlZW1zIHRvIGJlIHRvIG5vdCB1c2UgZ3Bpb2RfZXhwb3J0KCkNCj4+
-PiBhbmQgbm90IHVzZSBzeXNmcyBUQkguDQo+PiBUaGF0J3Mgbm90IHJlYWxseSBhIGZlYXNpYmxl
-IHNvbHV0aW9uLiBJJ20gZGVhbGluZyB3aXRoIGFwcGxpY2F0aW9uIGNvZGUNCj4+IHRoYXQgaGFz
-IGJlZW4gaGFwcGlseSB1c2luZyB0aGUgc3lzZnMgaW50ZXJmYWNlIGZvciBtYW55IHllYXJzLg0K
-PiBJIHdvbmRlciBob3cgbWFueSB5ZWFycy4NCj4NCj4gVGhlIEdQSU8gc3lzZnMgaGFzIGJlZW4g
-ZGVwcmVjYXRlZCBmb3Igc2V2ZW4geWVhcnM6DQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHVi
-L3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvRG9jdW1lbnRh
-dGlvbi9BQkkvb2Jzb2xldGUvc3lzZnMtZ3Bpbz9pZD1mZTk1MDQ2ZTk2MGI0Yjc2ZTczZGMxNDg2
-OTU1ZDkzZjQ3Mjc2MTM0DQo+DQo+IE15IGZlYXIgaXMgdGhhdCBkZXByZWNhdGlvbiBpcyBpZ25v
-cmVkIGFuZCBwZW9wbGUgc3RpbGwgZGV2ZWxvcCBzdHVmZg0KPiBsaWtlIHRoaXMgaWdub3Jpbmcg
-dGhlIGZhY3QgdGhhdCB0aGUgQUJJIGlzIGRlcHJlY2F0ZWQuDQoNCkkgY2FuJ3QgY2xhaW0gdGhh
-dCB0aGUgY29kZSBpcyBlYXJsaWVyIHRoYW4gdGhhdCBkZXByZWNhdGlvbiAobWF5YmUgDQoyLjYu
-MzIgZXJhKSBidXQgd2UgY2VydGFpbmx5IGRpZG4ndCBrbm93IGFib3V0IHRoZSBkZXByZWNhdGlv
-biB3aGVuIHdlIA0Kc3RhcnRlZCB1c2luZyBpdC4gVW5mb3J0dW5hdGVseSB0aGUgaW50ZXJuZXQg
-aGFzIGEgbG9uZyBtZW1vcnkgc28gaWYgeW91IA0Kc2VhcmNoIGZvciBMaW51eCBHUElPcyB5b3Un
-bGwgZmluZCBwbGVudHkgb2YgZXhhbXBsZXMgdGhhdCBwb2ludCB0byB0aGUgDQpzeXNmcyBBQkkg
-YXMgdGhlIHdheSB0aGF0IGl0J3MgZG9uZS4NCg0KU3dpdGNoaW5nIHRvIHRoZSBsaWJncGlvZCBp
-cyB2aWFibGUgZm9yIGEgZmV3IG1pc2NlbGxhbmVvdXMgdXNlcyAoSSdsbCANCnRyeSB0byBwdXNo
-IHRoYXQgZnJvbSBteSBlbmQpLCB0aGVyZSBwcm9iYWJseSB3aWxsIGJlIGEgbG9uZyB0YWlsIG9m
-IA0KY29kZSB0aGF0IHdpbGwgY29udGludWUgdG8gdXNlIHRoZSBzeXNmcyBBQkkuDQoNCj4NCj4g
-WW91cnMsDQo+IExpbnVzIFdhbGxlaWo=
+There is no use of the GPIOF_EXPORT in the kernel. Kill it for good.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v2: added tag (Linus)
+ Documentation/driver-api/gpio/legacy.rst                    | 3 ---
+ Documentation/translations/zh_CN/driver-api/gpio/legacy.rst | 3 ---
+ Documentation/translations/zh_TW/gpio.txt                   | 3 ---
+ drivers/gpio/gpiolib-legacy.c                               | 6 ------
+ include/linux/gpio.h                                        | 5 -----
+ 5 files changed, 20 deletions(-)
+
+diff --git a/Documentation/driver-api/gpio/legacy.rst b/Documentation/driver-api/gpio/legacy.rst
+index 78372853c6d4..c5f98a78499f 100644
+--- a/Documentation/driver-api/gpio/legacy.rst
++++ b/Documentation/driver-api/gpio/legacy.rst
+@@ -322,9 +322,6 @@ where 'flags' is currently defined to specify the following properties:
+ 	* GPIOF_OPEN_DRAIN	- gpio pin is open drain type.
+ 	* GPIOF_OPEN_SOURCE	- gpio pin is open source type.
+ 
+-	* GPIOF_EXPORT_DIR_FIXED	- export gpio to sysfs, keep direction
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- also export, allow changing direction
+-
+ since GPIOF_INIT_* are only valid when configured as output, so group valid
+ combinations as:
+ 
+diff --git a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+index 84ce2322fdba..8720970393fb 100644
+--- a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
++++ b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+@@ -297,9 +297,6 @@ gpio_request()前将这类细节配置好，例如使用引脚控制子系统的
+ 	* GPIOF_OPEN_DRAIN	- gpio引脚为开漏信号
+ 	* GPIOF_OPEN_SOURCE	- gpio引脚为源极开路信号
+ 
+-	* GPIOF_EXPORT_DIR_FIXED	- 将 gpio 导出到 sysfs，并保持方向
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- 同样是导出, 但允许改变方向
+-
+ 因为 GPIOF_INIT_* 仅有在配置为输出的时候才存在,所以有效的组合为:
+ 
+ 	* GPIOF_IN		- 配置为输入
+diff --git a/Documentation/translations/zh_TW/gpio.txt b/Documentation/translations/zh_TW/gpio.txt
+index 62e560ffe628..e0b96d897fa7 100644
+--- a/Documentation/translations/zh_TW/gpio.txt
++++ b/Documentation/translations/zh_TW/gpio.txt
+@@ -303,9 +303,6 @@ gpio_request()前將這類細節配置好，例如使用 pinctrl 子系統的映
+ 	* GPIOF_OPEN_DRAIN	- gpio引腳爲開漏信號
+ 	* GPIOF_OPEN_SOURCE	- gpio引腳爲源極開路信號
+ 
+-	* GPIOF_EXPORT_DIR_FIXED	- 將 gpio 導出到 sysfs，並保持方向
+-	* GPIOF_EXPORT_DIR_CHANGEABLE	- 同樣是導出, 但允許改變方向
+-
+ 因爲 GPIOF_INIT_* 僅有在配置爲輸出的時候才存在,所以有效的組合爲:
+ 
+ 	* GPIOF_IN		- 配置爲輸入
+diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
+index 028f7f504209..969f737012f6 100644
+--- a/drivers/gpio/gpiolib-legacy.c
++++ b/drivers/gpio/gpiolib-legacy.c
+@@ -50,12 +50,6 @@ int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
+ 	if (err)
+ 		goto free_gpio;
+ 
+-	if (flags & GPIOF_EXPORT) {
+-		err = gpiod_export(desc, flags & GPIOF_EXPORT_CHANGEABLE);
+-		if (err)
+-			goto free_gpio;
+-	}
+-
+ 	return 0;
+ 
+  free_gpio:
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 8528353e073b..86963a00b018 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -38,11 +38,6 @@ struct device;
+ /* Gpio pin is open source */
+ #define GPIOF_OPEN_SOURCE	(1 << 4)
+ 
+-#define GPIOF_EXPORT		(1 << 5)
+-#define GPIOF_EXPORT_CHANGEABLE	(1 << 6)
+-#define GPIOF_EXPORT_DIR_FIXED	(GPIOF_EXPORT)
+-#define GPIOF_EXPORT_DIR_CHANGEABLE (GPIOF_EXPORT | GPIOF_EXPORT_CHANGEABLE)
+-
+ /**
+  * struct gpio - a structure describing a GPIO with configuration
+  * @gpio:	the GPIO number
+-- 
+2.40.0.1.gaa8946217a0b
+
