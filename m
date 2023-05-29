@@ -2,115 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF0EC714F29
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 20:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA0B714F36
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 May 2023 20:18:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjE2SJr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 May 2023 14:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37200 "EHLO
+        id S229499AbjE2SSL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 May 2023 14:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjE2SJr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 14:09:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4176BB0;
-        Mon, 29 May 2023 11:09:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CA8406164F;
-        Mon, 29 May 2023 18:09:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528D4C433D2;
-        Mon, 29 May 2023 18:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685383785;
-        bh=DZwkSxqH5CA99S8iqAdJKK2KtULg6w6mwM5CbYx50+I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wypd7QbAHP5aWGDsT0+pYJw4ca0lkr/ETXW+8/dL2nscR6Leu55fFFXNzYU0GBdgL
-         OBbRjwoHvXx5iXZ5g1eodZ3vrdFRQHWugbH6J6MxzJnBuVzAElZEOsEYFReYDI1HHC
-         Yvf1jtsnUJRcjWTYSPoK124f4SavfHfaxvz9PxF7Qd7x3hweTCJ/ZvOn5a4vlyxLzL
-         PhHpkv3XWBW5TjA8WItzhgKmprONIuwPIMDo4I4iWAuUYQpvExrKgouw1ECe7IVD+h
-         L00TXI877V4oxxzrP9kMFplj9bv+UikV9DRkriE8ubEM51hdD3en4F/l28mavBWTGp
-         gQCkAIhfCUBkQ==
-Date:   Mon, 29 May 2023 19:09:39 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: Re: [PATCH v4 6/9] dt-bindings: sc16is7xx: Add property to change
- GPIO function
-Message-ID: <20230529-florist-hardiness-be5de59e660c@spud>
-References: <20230529140711.896830-1-hugo@hugovil.com>
- <20230529140711.896830-7-hugo@hugovil.com>
- <20230529-seventy-stash-0446d9ae02e8@wendy>
- <20230529102601.144e17eccefaedc891e76f3a@hugovil.com>
+        with ESMTP id S229621AbjE2SSK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 May 2023 14:18:10 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05B0CF;
+        Mon, 29 May 2023 11:18:03 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-75ce1196bd7so68074685a.3;
+        Mon, 29 May 2023 11:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685384283; x=1687976283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NtgddjKUKdX/u1ElO6qJQhjwCsTb7fJh8vFO+8kczvM=;
+        b=jdzcOMW6uVCBWZadyZJ14Sbyy/loYrdajjBFc3IlGOOGu1oTHO0CpJ446eycYbvabl
+         T6mDGBkhty3QkwOTHrMC2wBczFpQ1DVGtfd+XQE5TMlVR8HLOPaSESLVRXVc7485ZH5e
+         a3L5IEO3KPVBArQu1KAvMnNoI2jPQ9bOI2qKblIlMtS/lFJnokMI3ZczaWHhaU4PvDsn
+         yCq3jn4HiIzuU2IRqBMfT357DRjmDzREbZ76gWVN06SHkm4lFyt3bVH08IOS1YCmM/Lx
+         lPKETdFx/Glw5IcnbRzeMSaYljI/xt2fmdzkmFAjJOMUFOZW8lPpswIlMBn3hhUo3xNC
+         iSAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685384283; x=1687976283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NtgddjKUKdX/u1ElO6qJQhjwCsTb7fJh8vFO+8kczvM=;
+        b=MOOFUarltu71b+8QfgXG82UZ3k2l60FDkJ0fmV2dGO4EAaukrwddAfEEQ9LMPpQ0rY
+         aIOYESAiiWNju/XAcoXn7YPe6NZU0kKhwKisdr0mj2Uuf+tf2+nINWokg6Cyt56xKTuX
+         eFR/35gWFSV+OZj4QgWUL6wGy37/7+avOBZk+4esahIxZJMMJ1LHxmzbDetIurVI6Zoa
+         gk0X66WWzExDkKA8e94hW0LlE5hZ0opZFCR8fI7vVWcriEP4/XXCfLgvtz59d24it3RM
+         acoCx8hWqnvt6eJd0VztxDq1lNuzGLE7FYod2Be5W0jFQuV/Yklbe6IIm0jOwhMC+Sw2
+         /wmw==
+X-Gm-Message-State: AC+VfDzQWzIYdItYSHvi0v+Lzn+a/Vk4e++JaYYikbrpjRk+is6/fGZM
+        2L2ZffAlb9DwCZCCTzUC8MBA+wdQTkvblRy0MlM=
+X-Google-Smtp-Source: ACHHUZ45MhHLmjxdYf4ApIgrlmpGNe4YL0/wmcXOVOFWHYL6uVD7sXlEYUG1baU85uQPaGvAq2zjMxJF6rc5gpn4fFk=
+X-Received: by 2002:a05:6214:624:b0:626:16a7:6e41 with SMTP id
+ a4-20020a056214062400b0062616a76e41mr7713328qvx.63.1685384282983; Mon, 29 May
+ 2023 11:18:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3m/oGbX7oIKrh9f/"
-Content-Disposition: inline
-In-Reply-To: <20230529102601.144e17eccefaedc891e76f3a@hugovil.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230511-tps65219-add-gpio-support-v3-0-19837a34d820@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v3-1-19837a34d820@baylibre.com>
+ <ZHD3VtFDYUyy_Std@surfacebook> <2c970ea3-e927-4ea1-f378-a600e834cc9d@baylibre.com>
+In-Reply-To: <2c970ea3-e927-4ea1-f378-a600e834cc9d@baylibre.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 29 May 2023 21:17:27 +0300
+Message-ID: <CAHp75VfNeC=i96-_Pgez1RKTH1_NYX03iYObDk2+hCwtzdpKHg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+To:     jerome Neanne <jneanne@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, May 29, 2023 at 6:21=E2=80=AFPM jerome Neanne <jneanne@baylibre.com=
+> wrote:
+> On 26/05/2023 20:15, andy.shevchenko@gmail.com wrote:
 
---3m/oGbX7oIKrh9f/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, May 29, 2023 at 10:26:01AM -0400, Hugo Villeneuve wrote:
-> On Mon, 29 May 2023 15:16:47 +0100
-> Conor Dooley <conor.dooley@microchip.com> wrote:
->=20
-> > Hey Hugo,
-> >=20
-> > On Mon, May 29, 2023 at 10:07:08AM -0400, Hugo Villeneuve wrote:
-> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > >=20
-> > > Some variants in this series of UART controllers have GPIO pins that
-> > > are shared between GPIO and modem control lines.
-> > >=20
-> > > The pin mux mode (GPIO or modem control lines) can be set for each
-> > > ports (channels) supported by the variant.
-> > >=20
-> > > This adds a property to the device tree to set the GPIO pin mux to
-> > > modem control lines on selected ports if needed.
-> > >=20
-> > > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >=20
-> > Did I not ack this in v2? I didn't notice a reason for dropping it
-> > in the cover etc. Was it intentionally dropped, or missed?
+> > Missing bits.h
+> >
+>
+> Thanks for your review.Just to be sure on this particular point:
+> Your recommendation here it to include explicitly bits.h.
+>
+> I can see BIT_MASK(n) defined in linux/bits.h
+> BIT(n) is defined in vdso/bits.h
+>  From what I can see, BIT(n) is broadly used across kernel but
+> BIT_MASK(n) sounds to be the Linux strict way...
+>
+> In current version I'm using BIT(n) macro not BIT_MASK(n).
+> Do you recommend to replace every BIT(n) currently used with BIT_MASK(n)?
 
-> In v3, I slighly modified the example, and that is why I didn't copy your=
- ack.
+The semantics (if you look into implementations of those two) are different=
+.
 
-Ah, I would say that for "slight modifications" when you have an ack,
-you could keep it - but everyone is different and dropping tags is
-likely to piss people off less than keeping them, so I understand
-sticking on the safe side.
+BIT() is for a single word (your case), while BIT_MASK() is for an
+array of words.
 
+* word in case of Linux kernel means element of unsigned long type.
 
---3m/oGbX7oIKrh9f/
-Content-Type: application/pgp-signature; name="signature.asc"
+> Sorry for asking dumb questions. Just trying to make sure I
+> correctly/fully understand your feedback... And do it all right for the
+> next iteration.
 
------BEGIN PGP SIGNATURE-----
+No problem.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHTqYwAKCRB4tDGHoIJi
-0iT6AP9Q185i0OxcOD7GLWmxswpaTvHOufcQOLOWg93VAMiGFAEAuhzLQA7nbEQ5
-Qy+7aOMjI25GLgVmTTGqeAXe2EtCGwM=
-=7KVg
------END PGP SIGNATURE-----
-
---3m/oGbX7oIKrh9f/--
+--=20
+With Best Regards,
+Andy Shevchenko
