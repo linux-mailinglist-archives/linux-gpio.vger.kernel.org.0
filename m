@@ -2,87 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDEE7716016
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 14:41:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B62A716047
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 14:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231882AbjE3Mla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 08:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
+        id S229561AbjE3Mpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 08:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjE3Ml2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 08:41:28 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5F81BE
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 05:41:03 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-568900c331aso24438497b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 05:41:03 -0700 (PDT)
+        with ESMTP id S229540AbjE3Mps (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 08:45:48 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682E2FC
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 05:45:18 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-bacbc7a2998so6253965276.3
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 05:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685450407; x=1688042407;
+        d=linaro.org; s=google; t=1685450716; x=1688042716;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KOtUrb1jXt1YTc92Nx2K8yaF1tV0C2PLHIJDBXMJ1e8=;
-        b=Xzaug7RhDfquxOwHHHTAUcmTCtkuzS5zRcWlYeEfobpHfoMjVlAS/CwdmhocJy+96e
-         GWYVY+IToJWNf9RtM9CIM/4PkuKAlXjNuQvcsVuWPFSx3X7+/JzWNPUl91BQ2ra5ZCl9
-         WONJg0uWUzsOzjrDyIK0shIC3ZgS5EfKxfg2hGcKlFIk5QoOXa0c6mbUMYZXh+tuhlZT
-         /PitNi3wMZcN5EZ+MZKSUEOGbHJh1N3Gc9VcsdvFdffGhb2KSAG9ISFWbZVIgAazwWrD
-         CTGPKjvp6w9IHZGE8jnBotfig/8ctvxCSmFJUU35tgunJYFbWHAKP83CjH6vJNj44Vm2
-         b5MA==
+        bh=79R19rYlxuprBJRyr5z/YlA7zoEUwbCIoncrtvpWbd0=;
+        b=GR7hEh2u3m9oNv36D5Dzgayz9bGii0ew1XKwMOjvdDBDXdPtfey1hM/jCCCHd4yZ03
+         0fBnYKe1tqtjRBQeVT9YOB6MRADJIvVfeyCu+M62uvB3oqy3H8Y6Lt47MDNK+FXsAZ+o
+         4Fp6Vpl2iCoPuScZG++LVYhn4+E9R29d74IKtUdnh4bE3Rz4vXTXo3ahdX8BKdDu2EcT
+         IDc2oQZmI/ZzCmI4XZQHC/ukxIMC8cQ1EKnFwllVkhw7ns3z5YhlEY5h8MPTxUmZQxat
+         v+EQwOBQrfbUX3L/fifWsZg4j4BfZAbf/QZN+Pn4LABJokHJSmyEb/VcCr1AK/fptCQF
+         bSXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685450407; x=1688042407;
+        d=1e100.net; s=20221208; t=1685450716; x=1688042716;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KOtUrb1jXt1YTc92Nx2K8yaF1tV0C2PLHIJDBXMJ1e8=;
-        b=EQDx1EU0OFcLzzsDQeguIYW63mPto5hrGsXfcQo5D84ZrB8H6AuB8FyI8Hye4E3tjJ
-         x5fAAdSRR/piry4O7OetQf65uiq1/qPJvW5Gzn+4+9I/8zyQ9MicrkvBGh7XofAt1jAn
-         O0PcXrItFEH2kDjngd5ndfQZqmCxeqS4Ush81fiv4kHw7nzJkq7xUgRn6OFqMUcm6AAI
-         nHmOawFzkH/29uJAkNmIh1N2xGE4a5tFG0ErF8EZzrgjSxPT2dLYIH9JyvIpGF/MAyqE
-         c/j/0QXxIWbxjHKIOW7zISjqbgW9rvhx2kWJ/K1et/z0Mb2gujz/t8T3mKxTeGQaYyy1
-         yqHQ==
-X-Gm-Message-State: AC+VfDzGc8zshAw9qJnCcti2wYWTFONPz29UiAIjd5pGC5rP8AOajZ0+
-        O+DD5HsRTbKBc7TfcKl3Smg1KKuQv1xlxMbsAQkUSg==
-X-Google-Smtp-Source: ACHHUZ5IRGVEGgUUERDvrDWcgtVuSj/SsOzSJ38VVusLz/5pCio/b35QywJsy1pwoBoZoBBFa8YeImTExOj4H4CgVzs=
-X-Received: by 2002:a81:83d6:0:b0:566:a76a:fcc2 with SMTP id
- t205-20020a8183d6000000b00566a76afcc2mr2345411ywf.4.1685450407354; Tue, 30
- May 2023 05:40:07 -0700 (PDT)
+        bh=79R19rYlxuprBJRyr5z/YlA7zoEUwbCIoncrtvpWbd0=;
+        b=TUuiaYk2hBEIrSgPsfyhT/pcMWBjmclW+UTDZkmGEnS97Wu6XdWhh3m3BQ27Evk+bp
+         r0H6KNkko52nMgCFOjO/NtOjGldjrAmwjomxywFfSm+kGdFLR1tgq/pYFrqW4lCvhK4e
+         3mZ2RlsSvR/GwGOUK0e9QIqNaTeGDl2+/YwtDHh/K6LhQR7jsO3Kij+CyjFh2/GQmFs/
+         SCeFackUvTvgCZmmj8oY1p0DqWaVy1tl9S6OBAstgSEMjBVwjrj3jQPaLrrjDMIG6Xk+
+         3Zt9F9y6WmBct776js4tV+vhp3ylLpTeoKGQrCoEcJhOQkPwK7qRs3jyk4A6r/CZwEHl
+         Dc7w==
+X-Gm-Message-State: AC+VfDwTxJDP3OyJ3m/HR9+i9O79kGYWvMfaOht7k8azIAWw1nPRwoEY
+        eKtDMoBNR0cZTj2kiklOgCySv+ndFToHjXpSWkVfFQ==
+X-Google-Smtp-Source: ACHHUZ5IF0zxpXfP+MK5/l8CKCW0KkcoXfJuyMyMb6GIoIrCyCjPNNuMb7I1dbl6KbQkfIeKFWhqVkrt/krStXPZs2U=
+X-Received: by 2002:a25:ad4f:0:b0:bac:f602:52c3 with SMTP id
+ l15-20020a25ad4f000000b00bacf60252c3mr2638406ybe.28.1685450716419; Tue, 30
+ May 2023 05:45:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
-In-Reply-To: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
+References: <20230529221446.87785-1-andriy.shevchenko@linux.intel.com> <20230529221446.87785-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230529221446.87785-2-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 30 May 2023 14:39:56 +0200
-Message-ID: <CACRpkdboHeg-=thHvZrQXcx_HnecwmuBJskJTPjxFOB9z9R0gw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] Add STM32MP25 support
-To:     Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date:   Tue, 30 May 2023 14:45:05 +0200
+Message-ID: <CACRpkda0Dak-jLLQhWZVx+5rCUbM8TtiBd==uJYXbTG9C4mcdg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: Kill unused GPIOF_OPEN_*
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Hu Haowen <src.res@email.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 29, 2023 at 6:20=E2=80=AFPM Alexandre Torgue
-<alexandre.torgue@foss.st.com> wrote:
+On Tue, May 30, 2023 at 12:14=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Alexandre Torgue (10):
->   dt-bindings: pinctrl: stm32: support for stm32mp257 and additional
->     packages
->   pinctrl: stm32: add stm32mp257 pinctrl support
+> There is no use of the GPIOF_OPEN_* in the kernel. Kill it for good.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Can patch 1 & 2 be applied to the pinctrl tree separately?
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
