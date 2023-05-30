@@ -2,130 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A8EE715E84
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 14:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA2E715EEB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 14:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbjE3MJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 08:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        id S229971AbjE3MVb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 08:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231362AbjE3MJC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 08:09:02 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED61FC5;
-        Tue, 30 May 2023 05:09:00 -0700 (PDT)
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UC4pTN018239;
-        Tue, 30 May 2023 14:08:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=eUMt/DGvSnsVrLlt9wTQ7XbXUJ6l9bqRdAwrT9NXRl4=;
- b=gpY60mVqFAHm5rhYyUhnApTQy+VI+kpHjEhL+RL0V2FdWiHUyjZb48b4pLS6qiNbGX2e
- 8xG4XR6+yUNpNSeUxA4EXa5JjMMkmNjj5IK73Vel8PP7cYDEwSL0b7/tylFqnodu4hur
- fbTNPB4qVeEaXOjcwJERDAbMS+VHSlHWumhHWNtGtSfgWnexxbyY9outi7zR0CxkGOB4
- PPVL1rjtBiY/OfGpBt6JBbHG3PcHaoPvvt9Zf3zcy80AcRq+f+/mewrlw4x+tQTT9vFl
- zWUaCpiAUxiejXCqZ3+nZTRv+EaoIv/xBqq7cZpZoZgOpY4PQaXDVZztTUYO6JQAj1Yq hw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3qwdm5hhgj-1
+        with ESMTP id S229691AbjE3MVa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 08:21:30 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E37C5;
+        Tue, 30 May 2023 05:21:29 -0700 (PDT)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UBAOkI020617;
+        Tue, 30 May 2023 07:21:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PODMain02222019;
+ bh=2GgFwvas2rFXV4McY7VMK9G2VCTdQUXyqwVMLSgXHI8=;
+ b=UA3y3BVM/HgEl3CvdA4HZc2gbM8jFUqQi/CiHcc0ZFNZhofB6Z4XmmYumWJtz5foHWTt
+ BKrnlyvQbPQwV5iz49jSEfT+Q9i1f2500/Suca2P+00WIbeZjJ0Dzpa8hPZSWja6uaSP
+ vv897JhneMBD31sFIKQ6pEQESlXwvsyW0HPzsJw6dO+VKSrVTxMi5mvOedE7Z2DvSEhB
+ ZeGNwSx6Hz1zgd3SWFhxnvog33uNSUBqSlXOCaudeplmUzw2v+7JIs98VR5oUkt6AOCu
+ nCi8gwPIvN09qcOjof8KSdWRBYp2Z/y93qrDEo8qe6Nk3Z8ej3UupkGWAp4dvPEb9IKm IA== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3quf90u2t5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 14:08:32 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5F0C610002A;
-        Tue, 30 May 2023 14:08:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3839E21ED5D;
-        Tue, 30 May 2023 14:08:30 +0200 (CEST)
-Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 30 May
- 2023 14:08:29 +0200
-Message-ID: <4308327f-d2e2-e9a2-6add-5e0352d3f1e2@foss.st.com>
-Date:   Tue, 30 May 2023 14:08:29 +0200
+        Tue, 30 May 2023 07:21:14 -0500
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Tue, 30 May
+ 2023 13:21:12 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.26 via Frontend
+ Transport; Tue, 30 May 2023 13:21:12 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 840C745;
+        Tue, 30 May 2023 12:21:12 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>, <lee@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <conor+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/6] Add cs42l43 PC focused SoundWire CODEC
+Date:   Tue, 30 May 2023 13:21:06 +0100
+Message-ID: <20230530122112.1314458-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 02/11] pinctrl: stm32: add stm32mp257 pinctrl support
-Content-Language: en-US
-To:     Conor Dooley <conor.dooley@microchip.com>
-CC:     Conor Dooley <conor@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
- <20230529162034.20481-3-alexandre.torgue@foss.st.com>
- <20230529-enrich-clammy-14b498baf09f@spud>
- <879b7689-5663-28b5-9431-2fdd243ffff2@foss.st.com>
- <20230530-payday-gravity-45a26bd7f2dc@wendy>
-From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20230530-payday-gravity-45a26bd7f2dc@wendy>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.21.93]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-30_08,2023-05-30_01,2023-05-22_02
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: mDDcEAkFiQSYVCUwRek4aYj5J8slS2_p
+X-Proofpoint-ORIG-GUID: mDDcEAkFiQSYVCUwRek4aYj5J8slS2_p
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 5/30/23 10:56, Conor Dooley wrote:
-> On Tue, May 30, 2023 at 10:38:30AM +0200, Alexandre TORGUE wrote:
->> Hi Conor
->>
->> On 5/29/23 20:04, Conor Dooley wrote:
->>> On Mon, May 29, 2023 at 06:20:25PM +0200, Alexandre Torgue wrote:
->>>> Add stm32mp257 pinctrl support.
->>>> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
->>>> index e0c31c4c8bca..5e5de92ddd58 100644
->>>> --- a/drivers/pinctrl/stm32/pinctrl-stm32.h
->>>> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
->>>> @@ -24,6 +24,9 @@
->>>>    #define STM32MP_PKG_AB		BIT(1)
->>>>    #define STM32MP_PKG_AC		BIT(2)
->>>>    #define STM32MP_PKG_AD		BIT(3)
->>>> +#define STM32MP_PKG_AI		BIT(8)
->>>> +#define STM32MP_PKG_AK		BIT(10)
->>>> +#define STM32MP_PKG_AL		BIT(11)
->>>
->>> Mainly out of curiosity, why have you go duplicate defines for these?
->>
->> Mainly to fit with available packages for various STM32 MPU. Currently MP1
->> SoCs are available with packages AB/AC/AD and MP2 series with AI/AK/AL but
->> in the future we could have package AB/AC/AD/AI available for a particular
->> SoC and then I need to anticipate this case.
-> 
-> Sorry, what I meant was "why have you got defines for these in this
-> header, when there is an existing set in
-> include/dt-bindings/pinctrl/stm32-pinfunc.h?".
+This patch chain adds support for the Cirrus Logic cs42l43 PC focused
+SoundWire CODEC. The chain is currently based of Lee's for-mfd-next
+branch.
 
-Ok, I see. To be honest I do it as we did in the past for STM32 MCU and 
-MP1 products. We had this discussion maybe 5 or 6 years ago about the 
-fact to include or not the "dt-bindings" file in the stm32 drivers. I 
-don't remember exactly the rational behind our choice. It is something 
-that we could improve for all our STM32 products. Sorry for this 
-imprecise answer.
+Change notes are included with each patch, most of the changes are
+trivial, the notable ones are moving the IRQs out of irqchip and into
+the MFD, and moving the DT binding to sound.
 
-Alex
+Thanks,
+Charles
 
+Charles Keepax (4):
+  dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
+  mfd: cs42l43: Add support for cs42l43 core driver
+  pinctrl: cs42l43: Add support for the cs42l43
+  ASoC: cs42l43: Add support for the cs42l43
 
-> 
-> Cheers,
-> Conor.
-> 
+Lucas Tanure (2):
+  soundwire: bus: Allow SoundWire peripherals to register IRQ handlers
+  spi: cs42l43: Add SPI controller support
+
+ .../bindings/sound/cirrus,cs42l43.yaml        |  320 +++
+ MAINTAINERS                                   |    5 +
+ drivers/mfd/Kconfig                           |   23 +
+ drivers/mfd/Makefile                          |    3 +
+ drivers/mfd/cs42l43-i2c.c                     |   86 +
+ drivers/mfd/cs42l43-sdw.c                     |  213 ++
+ drivers/mfd/cs42l43.c                         | 1141 +++++++++
+ drivers/mfd/cs42l43.h                         |   23 +
+ drivers/pinctrl/cirrus/Kconfig                |   11 +
+ drivers/pinctrl/cirrus/Makefile               |    2 +
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c      |  609 +++++
+ drivers/soundwire/bus.c                       |   31 +
+ drivers/soundwire/bus_type.c                  |   12 +
+ drivers/spi/Kconfig                           |    7 +
+ drivers/spi/Makefile                          |    1 +
+ drivers/spi/spi-cs42l43.c                     |  279 ++
+ include/linux/mfd/cs42l43-regs.h              | 1172 +++++++++
+ include/linux/mfd/cs42l43.h                   |  102 +
+ include/linux/soundwire/sdw.h                 |    9 +
+ include/sound/cs42l43.h                       |   17 +
+ sound/soc/codecs/Kconfig                      |   16 +
+ sound/soc/codecs/Makefile                     |    4 +
+ sound/soc/codecs/cs42l43-jack.c               |  951 +++++++
+ sound/soc/codecs/cs42l43-sdw.c                |   75 +
+ sound/soc/codecs/cs42l43.c                    | 2275 +++++++++++++++++
+ sound/soc/codecs/cs42l43.h                    |  126 +
+ 26 files changed, 7513 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l43.yaml
+ create mode 100644 drivers/mfd/cs42l43-i2c.c
+ create mode 100644 drivers/mfd/cs42l43-sdw.c
+ create mode 100644 drivers/mfd/cs42l43.c
+ create mode 100644 drivers/mfd/cs42l43.h
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs42l43.c
+ create mode 100644 drivers/spi/spi-cs42l43.c
+ create mode 100644 include/linux/mfd/cs42l43-regs.h
+ create mode 100644 include/linux/mfd/cs42l43.h
+ create mode 100644 include/sound/cs42l43.h
+ create mode 100644 sound/soc/codecs/cs42l43-jack.c
+ create mode 100644 sound/soc/codecs/cs42l43-sdw.c
+ create mode 100644 sound/soc/codecs/cs42l43.c
+ create mode 100644 sound/soc/codecs/cs42l43.h
+
+-- 
+2.30.2
 
