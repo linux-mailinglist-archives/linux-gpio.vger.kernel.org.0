@@ -2,94 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA1577158E9
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 10:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C64C1715927
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 10:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbjE3Ilo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 04:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
+        id S230188AbjE3I4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 04:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230393AbjE3Ilg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 04:41:36 -0400
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E793BA1;
-        Tue, 30 May 2023 01:41:30 -0700 (PDT)
-X-QQ-mid: Yeas49t1685436037t569t54720
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [183.159.96.128])
-X-QQ-SSF: 00400000000000F0FOF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 9616780576815440517
-To:     "'Russell King \(Oracle\)'" <linux@armlinux.org.uk>,
-        "'kernel test robot'" <lkp@intel.com>
-Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <oe-kbuild-all@lists.linux.dev>,
-        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>,
-        "'Piotr Raczynski'" <piotr.raczynski@intel.com>
-References: <20230524091722.522118-6-jiawenwu@trustnetic.com> <202305261959.mnGUW17n-lkp@intel.com> <ZHCZ0hLKARXu3xFH@shell.armlinux.org.uk> <02dd01d991d2$2120fcf0$6362f6d0$@trustnetic.com>
-In-Reply-To: <02dd01d991d2$2120fcf0$6362f6d0$@trustnetic.com>
-Subject: RE: [PATCH net-next v9 5/9] net: txgbe: Add SFP module identify
-Date:   Tue, 30 May 2023 16:40:36 +0800
-Message-ID: <03ac01d992d2$67c1ec90$3745c5b0$@trustnetic.com>
+        with ESMTP id S229728AbjE3I4i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 04:56:38 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13C1AB;
+        Tue, 30 May 2023 01:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1685436997; x=1716972997;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TwJucBXBGUN+OLdeFJgi+mcuaAx9YZFO5Ndm7y/BYEo=;
+  b=U0qHK9LxiwQZbZ9hCXAD89q06AWmqYSgKCXQZu/mgQM9d40vwWFF/MDO
+   /k0vfi8ShmiHtKhCS6LjY8FC/LDSTqaPerFdk9ovqxWejsUSvpQi3hYUF
+   0fxgx8LufWH02Iei+8qiAc/4Ybce39wl5REtFtCiMipBsQuuJIyONb40U
+   3TxKGJW8qvixspGVtN8xOCXuBXzkR+Y78IgPBFjRyb35ItcFPJ6h7y8QA
+   Xf1pq3aHxhK2yZ/bvV+GPfyNkROnb/0PlLgqSSeKW0dTj1xdQ9hE6A99A
+   JzcqLaS6vUnW5QYzj3nmN8XqQdE/z30XhgNg0Sy5lUnSkvUIC7uZZv93O
+   A==;
+X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
+   d="asc'?scan'208";a="216001309"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 May 2023 01:56:36 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 30 May 2023 01:56:35 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Tue, 30 May 2023 01:56:33 -0700
+Date:   Tue, 30 May 2023 09:56:10 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Alexandre TORGUE <alexandre.torgue@foss.st.com>
+CC:     Conor Dooley <conor@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 02/11] pinctrl: stm32: add stm32mp257 pinctrl support
+Message-ID: <20230530-payday-gravity-45a26bd7f2dc@wendy>
+References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
+ <20230529162034.20481-3-alexandre.torgue@foss.st.com>
+ <20230529-enrich-clammy-14b498baf09f@spud>
+ <879b7689-5663-28b5-9431-2fdd243ffff2@foss.st.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFlCTXCD0V13/nxYaH3lJLB+zCPMgFguorBARt7XSgCWWopnLA04bqA
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nUFaAWKbUup9Ifzb"
+Content-Disposition: inline
+In-Reply-To: <879b7689-5663-28b5-9431-2fdd243ffff2@foss.st.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Monday, May 29, 2023 10:06 AM, Jiawen Wu wrote:
-> On Friday, May 26, 2023 7:37 PM, Russell King (Oracle) wrote:
-> > On Fri, May 26, 2023 at 07:30:45PM +0800, kernel test robot wrote:
-> > > Kconfig warnings: (for reference only)
-> > >    WARNING: unmet direct dependencies detected for I2C_DESIGNWARE_PLATFORM
-> > >    Depends on [n]: I2C [=n] && HAS_IOMEM [=y] && (ACPI && COMMON_CLK [=y] || !ACPI)
-> > >    Selected by [y]:
-> > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
-> > >    WARNING: unmet direct dependencies detected for SFP
-> > >    Depends on [n]: NETDEVICES [=y] && PHYLIB [=y] && I2C [=n] && PHYLINK [=y] && (HWMON [=n] || HWMON [=n]=n)
-> > >    Selected by [y]:
-> > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
-> >
-> > ... and is basically caused by "select SFP". No. Do not do this unless
-> > you look at the dependencies for SFP and ensure that those are also
-> > satisfied - because if you don't you create messes like the above
-> > build errors.
-> 
-> So how do I make sure that the module I need compiles and loads correctly,
-> rely on the user to manually select it?
+--nUFaAWKbUup9Ifzb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When I changed the TXGBE config to:
-...
-	depends on SFP
-	select PCS_XPCS
-...
-the compilation gave an error:
+On Tue, May 30, 2023 at 10:38:30AM +0200, Alexandre TORGUE wrote:
+> Hi Conor
+>=20
+> On 5/29/23 20:04, Conor Dooley wrote:
+> > On Mon, May 29, 2023 at 06:20:25PM +0200, Alexandre Torgue wrote:
+> > > Add stm32mp257 pinctrl support.
+> > > diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/=
+stm32/pinctrl-stm32.h
+> > > index e0c31c4c8bca..5e5de92ddd58 100644
+> > > --- a/drivers/pinctrl/stm32/pinctrl-stm32.h
+> > > +++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
+> > > @@ -24,6 +24,9 @@
+> > >   #define STM32MP_PKG_AB		BIT(1)
+> > >   #define STM32MP_PKG_AC		BIT(2)
+> > >   #define STM32MP_PKG_AD		BIT(3)
+> > > +#define STM32MP_PKG_AI		BIT(8)
+> > > +#define STM32MP_PKG_AK		BIT(10)
+> > > +#define STM32MP_PKG_AL		BIT(11)
+> >=20
+> > Mainly out of curiosity, why have you go duplicate defines for these?
+>=20
+> Mainly to fit with available packages for various STM32 MPU. Currently MP1
+> SoCs are available with packages AB/AC/AD and MP2 series with AI/AK/AL but
+> in the future we could have package AB/AC/AD/AI available for a particular
+> SoC and then I need to anticipate this case.
 
-drivers/net/phy/Kconfig:16:error: recursive dependency detected!
-drivers/net/phy/Kconfig:16:     symbol PHYLIB is selected by PHYLINK
-drivers/net/phy/Kconfig:6:      symbol PHYLINK is selected by PCS_XPCS
-drivers/net/pcs/Kconfig:8:      symbol PCS_XPCS is selected by TXGBE
-drivers/net/ethernet/wangxun/Kconfig:40:        symbol TXGBE depends on SFP
-drivers/net/phy/Kconfig:63:     symbol SFP depends on PHYLIB
-For a resolution refer to Documentation/kbuild/kconfig-language.rst
-subsection "Kconfig recursive dependency limitations"
+Sorry, what I meant was "why have you got defines for these in this
+header, when there is an existing set in
+include/dt-bindings/pinctrl/stm32-pinfunc.h?".
 
-Seems deleting "depends on SFP" is the correct way. But is this normal?
-How do we ensure the dependency between TXGBE and SFP?
+Cheers,
+Conor.
 
+
+--nUFaAWKbUup9Ifzb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHW6KgAKCRB4tDGHoIJi
+0kFZAQDNwlhOAKYKGvOi/CDjWW2Mt/BRKIp/vzjgcMjS9EwGVQD9F29KDtdq+WOs
+LS3PsjPYYdNc61FM+WOSgjb+Z3y1bAc=
+=gjoB
+-----END PGP SIGNATURE-----
+
+--nUFaAWKbUup9Ifzb--
