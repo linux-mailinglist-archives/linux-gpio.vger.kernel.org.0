@@ -2,64 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54ACC717001
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 23:52:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 657E8717009
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 23:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbjE3VwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 17:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34924 "EHLO
+        id S233325AbjE3V5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 17:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231348AbjE3VwM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 17:52:12 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F834AA
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 14:52:11 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-62606e67c0dso39508096d6.2
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 14:52:11 -0700 (PDT)
+        with ESMTP id S231136AbjE3V5r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 17:57:47 -0400
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C35114;
+        Tue, 30 May 2023 14:57:34 -0700 (PDT)
+Received: by mail-qv1-xf2d.google.com with SMTP id 6a1803df08f44-62614a1dd47so17920566d6.2;
+        Tue, 30 May 2023 14:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685483530; x=1688075530;
+        d=gmail.com; s=20221208; t=1685483853; x=1688075853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O/8qz9tb36j8JlorYajJ69Pxgfl62/52yIxA2Qxzx28=;
-        b=Dt7WNAZq60S0MtAeEhh2T/KDHy3F2IpJmqHeR3AYY0aJTnq9wZPVCnfgDAB8m9+FOd
-         gbVHbiPIb6HVWZaD7zb8PrwLd4Fy7qV98J23x30lHkuCKfmcEPL/KVX2G82jZHqnKqK0
-         3o0vUbR8JhXhUEDVubypJdojnCD4nxY7iNgnT3aNccPtCifkAIwcLlwECgCyS4w2z3LT
-         TNCtJkFl7re+JImCSa6E8AMpNYctAL9bTHe11p0E+bEvCrQ0qkbv8mm4TLuKV5gob+LQ
-         pcNNTohnMFKPg9IiUok9/zbbjbXLdDm8HHmdUQEd2L5FTX061arJ78wBA5YjOky7lXKs
-         8Qhw==
+        bh=lYiucnfM0Npgk8Dfcf+Qwmw4paZYUq2wG1w9OkYZvNg=;
+        b=BRtCCLmYybQg/mv9pOtG9hKp/KqNsyfK+9vMxgL5TNYC0QOSkeJjwS5Q2bXk71h07q
+         SnhD2GCtS08dXyG+M0WCr4MHSaqX4WQ53pvatrvMWDvrD/lPNH74QiBhJR9720L2jKLs
+         0kyKye0RCengQPXMLZQfTVAAEssn6Oam/cygCFOE0nbrrqtEzIXYREYnbY6vSlCR84MP
+         MTPBYFIO6lHBxwhnkDdbpwcw/StU612Hmf7zATxGeknGHEmlLWdAFrhCPakMJZCvZOfi
+         Kzm+ZdbnhTPSHvxV5vw5yirbUOBsD+jgFtTTAfdfI+Sz49qZApaKYCCZ/Iat5RxRVPM/
+         76FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685483530; x=1688075530;
+        d=1e100.net; s=20221208; t=1685483853; x=1688075853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O/8qz9tb36j8JlorYajJ69Pxgfl62/52yIxA2Qxzx28=;
-        b=OF9Psl5g3Xbx3Ef/nRVSvdplLi42cP1Gri//qtT/XzGkr2pYQvS3afPrQhNtAbbvup
-         SQw6xZWMuhDNO9Cp8fqu4NThZtoOs2TKgMG6TIvqAPZSSaS2evVCH8g77sNNv5ew9x+V
-         uco9pVHw28NLN6LjbbUsKrFlSKRMa6Y6+4jphE9jtbsuZpMtrfsDEsi+2rVXa5H5zhiE
-         IaTS5SfErHYRo0G6qcUUzyW3UZAsRt/kFVLgPZPAJYCw8iFstCjGeDdht3ShB5Xra3VH
-         5oDipIAZCxAg9Q1AD/R9EnmtuYSi/GXw1QqL1mQTgAPqipBfhkrg6E989llRS7znS1Sn
-         +zWw==
-X-Gm-Message-State: AC+VfDxatieAA+LclfIIYAaGVz/FDGznImV/7CanRnqWIdqUYivaC9g4
-        Yd/nUw7KRFNCe/kg0GUhRGlSOV+jr92HCQ/NMEI=
-X-Google-Smtp-Source: ACHHUZ7i5tMYQqN0sUktrQQv36tTJXqBgKFXYm5+g32ceMpJD87Q1DVIKAMNibii43jpOby3sUpfLIWDua1MIxchY8s=
-X-Received: by 2002:a05:6214:d4d:b0:621:451b:6e1c with SMTP id
- 13-20020a0562140d4d00b00621451b6e1cmr4344405qvr.6.1685483530537; Tue, 30 May
- 2023 14:52:10 -0700 (PDT)
+        bh=lYiucnfM0Npgk8Dfcf+Qwmw4paZYUq2wG1w9OkYZvNg=;
+        b=jry1xPvpoCwHSInAWrvCW22sOlKkK2fi3CD8slOEbIiwlQ0ssu/Pm/hU0Iegnncnoy
+         chRdu3jxKajjBTev0zqM5I7wB6f5PXCMOBu3TeqSrhPW0vGyMyW8qF4a3nGsehr2XC/z
+         K9M7hqUOWYASPoArXUZ+wiGwv13EkpR2eNFpcFcOB735kE4uAENxMrMTaoSgvGQBGNzF
+         8xRAbdtkgwrHo6mYv2tF/XK/0twFuieUM8bU7vFSVxdzHul75vIYNP23sISlB56ZQuiO
+         65+bJKi1c823GXAo/ZW0yrH/6bBZf/PKKpTrDdCxccQxwHRI5XjnPCaIQFGbmB7T0Uat
+         Ry0Q==
+X-Gm-Message-State: AC+VfDytadoBuxNG/Cm5Bpzehy56OnHPxlHL0tNr/kzgZMGgWqSkx+e2
+        nVg3rhxANiPEBEuII95CI9fEEwRHA902snZrw2Y=
+X-Google-Smtp-Source: ACHHUZ5an7ihyJFTYhsnslUfKf7Z5lKrCh1Kw7qDfmfcuNAeno51rCrapfAtR7Cpktpe5lQhKXcA1ZDDfqMvaV9v8Ag=
+X-Received: by 2002:ad4:5f8b:0:b0:623:86a9:7696 with SMTP id
+ jp11-20020ad45f8b000000b0062386a97696mr3918175qvb.5.1685483853670; Tue, 30
+ May 2023 14:57:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de> <20230530151946.2317748-3-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20230530151946.2317748-3-u.kleine-koenig@pengutronix.de>
+References: <20230529140711.896830-1-hugo@hugovil.com> <20230529140711.896830-8-hugo@hugovil.com>
+ <ZHUpWQafRPHW1RJQ@surfacebook> <20230530113649.73f28b9f6ba91f17ace1e12f@hugovil.com>
+In-Reply-To: <20230530113649.73f28b9f6ba91f17ace1e12f@hugovil.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 31 May 2023 00:51:34 +0300
-Message-ID: <CAHp75VegyUL6J-s4W4fHhKu4cNeBA=4J4CmDHmtAfCUr9qGHQg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: use "active" and "inactive" instead of
- "high" and "low" for output hogs
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        Kent Gibson <warthog618@gmail.com>
+Date:   Wed, 31 May 2023 00:56:57 +0300
+Message-ID: <CAHp75Vf35rN93sXFBU0nRZQLpUgQHR2caGC8BmHkEgPZqF=dQg@mail.gmail.com>
+Subject: Re: [PATCH v4 7/9] serial: sc16is7xx: fix regression with GPIO configuration
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,51 +74,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 30, 2023 at 6:19=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> For active-low GPIOs the currently available nomenclature requires
-> regular explaination to the non-enlightened folks, e.g. because a hog
-
-explanation
-
-> defined as:
->
->         someline {
->                 gpio-hog;
->                 gpios =3D <24 GPIO_ACTIVE_LOW>;
->                 output-high;
->         }
->
-> results in the line being set to the physical low level.
->
-> So use the terms "active" and "inactive" which are less ambigous and
-
-ambiguous
-
-> keep the old names as synonyms. The above example can now be written as:
->
->         someline {
->                 gpio-hog;
->                 gpios =3D <24 GPIO_ACTIVE_LOW>;
->                 output-active;
->         }
->
-> where it is less surprising that the output is set to a low level.
-
-As I said before, this does not cover the ACPI case. Consider
-providing an fwnode interface for them and then reuse in OF and/or
-ACPI if necessary.
+On Tue, May 30, 2023 at 6:36=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> =
+wrote:
+> On Tue, 30 May 2023 01:38:17 +0300
+> andy.shevchenko@gmail.com wrote:
+> > Mon, May 29, 2023 at 10:07:09AM -0400, Hugo Villeneuve kirjoitti:
 
 ...
 
-> +       GPIOD_OUT_LOW_OPEN_DRAIN =3D GPIOD_OUT_INACTIVE_OPEN_DRAIN,
-> +       GPIOD_OUT_HIGH_OPEN_DRAIN =3D GPIOD_OUT_ACTIVE_OPEN_DRAIN,
+> > GENMASK()
+>
+> Ok done, altough even if in general I like the bit manipulation macros be=
+cause they make the code easier to read/understand, I find it less obvious =
+by using GENMASK in this case IMMO.
 
-This one is an interesting case, because depending on the transistor
-polarity this may be active GND or VDD. All the same for OPEN_SOURCE
-which seems not defined (but should be equivalent to the opposite to
-the _DRAIN cases).
+GENMASK() was introduced to increase code robustness:
+1) to make sure the bits mentioned are correct
+2) to check the bit boundary.
+
+...
+
+> > > +           of_property_for_each_u32(dev->of_node, "nxp,modem-control=
+-line-ports",
+> > > +                                    prop, p, u) {
+> > > +                   if (u >=3D devtype->nr_uart)
+> > > +                           continue;
+> > > +
+> > > +                   /* Use GPIO lines as modem control lines */
+> > > +                   if (u =3D=3D 0)
+> > > +                           mctrl_mask |=3D SC16IS7XX_IOCONTROL_MODEM=
+_A_BIT;
+> > > +                   else if (u =3D=3D 1)
+> > > +                           mctrl_mask |=3D SC16IS7XX_IOCONTROL_MODEM=
+_B_BIT;
+> > > +           }
+> >
+> > Can we use device properties, please?
+>
+> I have converted this section to use device_property_count_u32() and devi=
+ce_property_read_u32_array(). Is that Ok?
+
+Yes, thank you!
+
+> > If you think about backporting to the earlier kernels (w/o properties i=
+n use in
+> > this driver), perhaps an additional followup for that?
+>
+> I am not sure what you mean by this?
+
+If the device property API was not yet available for this fix being
+backported to the old enough kernel we have to use old OF stuff. In
+that case the device property conversion needs to be done in a
+separate change.
 
 --=20
 With Best Regards,
