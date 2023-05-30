@@ -2,101 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91571716202
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C8C0716221
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230062AbjE3NdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 09:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
+        id S231970AbjE3NhD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 09:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjE3NdS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:33:18 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77081A7;
-        Tue, 30 May 2023 06:33:17 -0700 (PDT)
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UC17fS018195;
-        Tue, 30 May 2023 15:32:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=/vLDIut8DJG9/eudnX+eCqcgRJdHJKKJcvNGCV6EgSY=;
- b=IF0c4aWTvw6kQpygbI7aSAGl8lG61Uovd2rE+eGYHgBEZ+23cf9L7Evwmp3T+Dt725NO
- GuxtfWC10wi93QsbClbeL/M2w7SaYvHlf4ca9FOTI6VS0zA17pXAaIyJRXG1VmxVgzxr
- 2c4ECcQ2qEJ3XeqksAgYT+xjSvu57FRLKnZPJOPi80rFJlJ1/EZ9dRDZfVIHLFyfpFaK
- iQkG4n7rYBcKgO7SoQNdtLmKDxDaCX14s+TbEY7LmqfmOwXnFV28Wn3n8L8/4l/3ALb1
- BVvARjsvG+3irUzOC0k7/4NcQNZWPUZoPrY1P7LFVTzDRIzz8aQslhNglEd3i4WwYr6F kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3qwdm5j20a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 May 2023 15:32:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0E713100038;
-        Tue, 30 May 2023 15:32:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DAECD228A2D;
-        Tue, 30 May 2023 15:32:56 +0200 (CEST)
-Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 30 May
- 2023 15:32:55 +0200
-Message-ID: <78a7cbcd-2fe5-0533-857c-e50f89aa6dd5@foss.st.com>
-Date:   Tue, 30 May 2023 15:32:55 +0200
+        with ESMTP id S231202AbjE3NhC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:37:02 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F86A1;
+        Tue, 30 May 2023 06:37:00 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-514ab6cb529so2529951a12.1;
+        Tue, 30 May 2023 06:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685453819; x=1688045819;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R0IWIqkvCL18T9qeOtu9NAQt+OvEofJMXnjblcNmSjY=;
+        b=IyReP3q8IxnCSaJs0VU0mJ/YfofrvlenASA7XMfhGyL0VL7qiz6RLkDUPFz//scKQj
+         ufIrgg1ZxzFUpRDqlXtkZw7a8MAcsrWbyLhNBxUGF/M5sE8UCKqLFrLcIsMlrvJhadMy
+         tNt89YyHdTniRqYz/baPSmNOpnibtebm2hJ3osqpsTK1+CWJWfDFo8T6cOzs/RIjDFSa
+         8u0FkEIIO4hLHeMvD9ly08rRuLISQ57X+vjXCdKisFreJNwls06r+BtOTZN5SwQ/MEkH
+         UdcilrAxqJXM6OyvnXZBAyzFk7zCTJWx6m8jdT+E3TZJlUxzqun7QclbrwtjSj4qPeZU
+         JY8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685453819; x=1688045819;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R0IWIqkvCL18T9qeOtu9NAQt+OvEofJMXnjblcNmSjY=;
+        b=Q9uTKKfAoXFV9GYEUGmzIAvlPK6+24vMo24IUzr2blUlkSbbRMYMRtW0EVifwgNV1V
+         T13xobj2gWirVqD6QfzoTxmHt1BYTg78N1Db2cbHn0UrCOPob+wI4MzMR1MwrJHZMIDk
+         QyocAwGlFwN+KqqyP3gNY+xP4MOtA0MXOtTgA6qKWQbp+pZ+ro5hC8RfCcgfcj7cp+qD
+         StTvyF/3ZtwSgkIkXbmMCdS5v4egQ6cmcTdsjikAR3jjD5PfTGC8iiTYcq8kLfwdTYVd
+         yiMdq7rxgLxsdd0tcafe7L63DcThMl+ZXW1JPL6FRFab58r1dDfOPXtJ3vtz3e19Lu1/
+         Wq4A==
+X-Gm-Message-State: AC+VfDwibABuneIufoxxCdH+CiGP19rK/2kpN6fhJQzBwjUD0Z+bes7g
+        VWyX/sX5PJAYwKGMBghBRlJ2hT7+S9Y=
+X-Google-Smtp-Source: ACHHUZ7aR6lQs3L4LjqWBy2qx1L3csAHgpKgAoWPIujOHePrHL+ALGRZ9P80yzz/BhEwnNvLzbZYnw==
+X-Received: by 2002:a17:907:9712:b0:94a:4739:bed9 with SMTP id jg18-20020a170907971200b0094a4739bed9mr2374976ejc.13.1685453819127;
+        Tue, 30 May 2023 06:36:59 -0700 (PDT)
+Received: from localhost (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id qt11-20020a170906eceb00b009655eb8be26sm7373130ejb.73.2023.05.30.06.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 06:36:58 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v3 0/3] pinctrl: tegra: Add Tegra234 pinmux driver
+Date:   Tue, 30 May 2023 15:36:51 +0200
+Message-Id: <20230530133654.1296480-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 00/11] Add STM32MP25 support
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
- <CACRpkdboHeg-=thHvZrQXcx_HnecwmuBJskJTPjxFOB9z9R0gw@mail.gmail.com>
-From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <CACRpkdboHeg-=thHvZrQXcx_HnecwmuBJskJTPjxFOB9z9R0gw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.21.93]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-30_10,2023-05-30_01,2023-05-22_02
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus
+From: Thierry Reding <treding@nvidia.com>
 
-On 5/30/23 14:39, Linus Walleij wrote:
-> On Mon, May 29, 2023 at 6:20 PM Alexandre Torgue
-> <alexandre.torgue@foss.st.com> wrote:
-> 
->> Alexandre Torgue (10):
->>    dt-bindings: pinctrl: stm32: support for stm32mp257 and additional
->>      packages
->>    pinctrl: stm32: add stm32mp257 pinctrl support
-> 
-> Can patch 1 & 2 be applied to the pinctrl tree separately?
+Hi,
 
-Yes please. I'll take others directly in my platform tree.
+this is an updated version of Prathamesh's v2 of the series, which can
+be found here:
 
-Thanks
-Alex
+	https://patchwork.ozlabs.org/project/linux-tegra/list/?series=345256
 
-> Yours,
-> Linus Walleij
+The most prominent change is the split of the device tree bindings into
+multiple files to make them more readable, as agreed upon with Krzysztof
+during review.
+
+Changes in v3:
+- split up device tree bindings into multiple files for better
+  readability
+- do not permit underscore in pinmux node names
+- use correct #address-cells and #size-cells for DT nodes
+- fixup a typo in the gpio-ranges property name
+
+Note that the driver patch applies on top of the function table fix that
+I sent out earlier:
+
+	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=357206
+
+Once accepted, patches 1 and 2 can go through the pinctrl tree and I can
+pick up patch 3 into the Tegra tree. Alternatively I can also pick up
+patch 1 into the Tegra tree to help with validation. We're not quite at
+a point yet where the Tegra DTs fully validate, so it doesn't matter
+much which way these get applied.
+
+Thanks,
+Thierry
+
+Prathamesh Shete (3):
+  dt-bindings: pinctrl: Document Tegra234 pin controllers
+  pinctrl: tegra: Add Tegra234 pinmux driver
+  arm64: tegra: Add Tegra234 pin controllers
+
+ .../pinctrl/nvidia,tegra234-pinmux-aon.yaml   |   61 +
+ .../nvidia,tegra234-pinmux-common.yaml        |   65 +
+ .../pinctrl/nvidia,tegra234-pinmux.yaml       |  141 ++
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      |   12 +
+ drivers/pinctrl/tegra/Kconfig                 |    4 +
+ drivers/pinctrl/tegra/Makefile                |    1 +
+ drivers/pinctrl/tegra/pinctrl-tegra234.c      | 1969 +++++++++++++++++
+ drivers/soc/tegra/Kconfig                     |    1 +
+ 8 files changed, 2254 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-common.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
+ create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra234.c
+
+-- 
+2.40.1
 
