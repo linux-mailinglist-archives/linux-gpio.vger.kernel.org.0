@@ -2,85 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D54E7169F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 18:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B6D2716BA6
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 19:55:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232707AbjE3Qne (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 12:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
+        id S230234AbjE3RzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 13:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbjE3Qnd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 12:43:33 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903C313E;
-        Tue, 30 May 2023 09:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xYpmKMQmPPeBdM21QayEVgKLDqZ+OIn6t8tDa7bpcxs=; b=WtHfSpWCRwXoq+kq2JbstX6p/c
-        YX+EIQlMpx2XWHFoCo4ZsG2THm5d1qtR/HPMmPJkuQ6doVJfHCPAeiK3B/xIguMHpyufiuMdDOY0H
-        YoKhAGE6AnMWyg9nRKGQ7jxgIn8rhaK0H0czFxWaZNnJlWCfnZDIs1q2Ac/Pm+MJMeNoVukUiYDuX
-        E7MbdiJYJOJLmMmx/GFQaAtHYAE3qjYaISQl7KkISWpkv7mpXtv7EqKf7crF+9tKkgepP7DTP4wmF
-        kf/UbMoxUapHGc2R1DOG6/zW1BXxqe6uVc6/Efo+UvgiP+ArjQCYcav/8nSOLEB0y3yUj+MoaqZdE
-        /Q/1qS0g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55382)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q42RH-00039H-OL; Tue, 30 May 2023 17:43:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q42RE-0008DR-6J; Tue, 30 May 2023 17:43:12 +0100
-Date:   Tue, 30 May 2023 17:43:12 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Lizhe <sensor1010@163.com>
-Cc:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
-        gregory.clement@bootlin.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of
- IRQ_TYPE_SENSE_MASK
-Message-ID: <ZHYnoHK7YDCC7AMg@shell.armlinux.org.uk>
-References: <20230530162034.4004-1-sensor1010@163.com>
+        with ESMTP id S233352AbjE3RzI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 13:55:08 -0400
+Received: from vm3.sequanux.org (static.55.155.9.5.clients.your-server.de [5.9.155.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 116A18F;
+        Tue, 30 May 2023 10:55:05 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by vm3.sequanux.org (Postfix) with ESMTP id D173D10810A;
+        Tue, 30 May 2023 19:54:46 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
+Received: from vm3.sequanux.org ([127.0.0.1])
+        by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WDJsLisvj2oh; Tue, 30 May 2023 19:54:02 +0200 (CEST)
+Received: from localhost (ns3093303.ip-145-239-244.eu [145.239.244.120])
+        by vm3.sequanux.org (Postfix) with ESMTPSA id 48AD61080DD;
+        Tue, 30 May 2023 19:54:02 +0200 (CEST)
+Date:   Tue, 30 May 2023 19:53:48 +0200
+From:   simon.guinot@sequanux.org
+To:     andy.shevchenko@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>, xingtong_wu@163.com,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, henning.schild@siemens.com,
+        xingtong.wu@siemens.com
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
+ gpio pins
+Message-ID: <ZHY4LFyyIGSMiMbm@localhost>
+References: <20230529025011.2806-1-xingtong_wu@163.com>
+ <20230529025011.2806-2-xingtong_wu@163.com>
+ <ZHSZ9cK78qc5QeZD@localhost>
+ <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
+ <ZHSunJyh2AU1eb0H@localhost>
+ <ZHUmHkbM-l_pRaY3@surfacebook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EvqLGyp/gUyZKEKs"
 Content-Disposition: inline
-In-Reply-To: <20230530162034.4004-1-sensor1010@163.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZHUmHkbM-l_pRaY3@surfacebook>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 31, 2023 at 12:20:34AM +0800, Lizhe wrote:
-> Before executing microchip_sgpio_irq_set_type(),
-> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
-> 
-> Signed-off-by: Lizhe <sensor1010@163.com>
 
-Please do as Bart has requested.
+--EvqLGyp/gUyZKEKs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Your patch touches two files, each of which are managed by *different*
-people via *different* trees. Re-posting your patch will *not* get it
-applied, because the reason it can't be applied is because you have not
-split it as people have asked you to do.
+On Tue, May 30, 2023 at 01:24:30AM +0300, andy.shevchenko@gmail.com wrote:
+> Mon, May 29, 2023 at 03:54:36PM +0200, simon.guinot@sequanux.org kirjoitt=
+i:
+> > On Mon, May 29, 2023 at 03:03:28PM +0200, Linus Walleij wrote:
+> > > On Mon, May 29, 2023 at 2:27=E2=80=AFPM <simon.guinot@sequanux.org> w=
+rote:
+> > >=20
+> > > > It would be nice if a pin number found in the device datasheet could
+> > > > still be converted into a Linux GPIO number by adding the base of t=
+he
+> > > > first bank.
+> > >=20
+> > > We actively discourage this kind of mapping because of reasons stated
+> > > in drivers/gpio/TODO: we want dynamic number allocation to be the
+> > > norm.
+> >=20
+> > Sure but it would be nice to have a dynamic base applied to a controller
+> > (and not to each chip of this controller), and to respect the interval
+> > between the chips (as stated in the controllers datasheets).
+>=20
+> What you want is against the architecture. To fix this, you might change
+> the architecture of the driver to have one chip for the controller, but
+> it's quite questionable change. Also how can you guarantee ordering of
+> the enumeration? You probably need to *disable* SMP on the boot time.
+> This will still be fragile as long as GPIO chip can be unbound at run
+> time. Order can be changed.
+>=20
+> So, the patch is good and the correct way to go.
+>=20
+> P.S. The root cause is that hardware engineers and documentation writers
+> do not consider their hardware in the multi-tasking, multi-user general
+> purpose operating system, such as Linux. I believe the ideal fix is to fi=
+x the
+> documentation (datasheet).
 
-So, there is no point you re-posting it in its current form. You will
-only make people frustrated, and if that continues, you will end up
-being ignored.
+Some GPIO controllers (as Super-I/O) are multifunctional devices and
+pins are multiplexed. Some can be configured to act as GPIOs and some
+cannot. So there are holes. It is an hardware reality and not only an
+issue due to poorly written documents (even if there are issues with
+them too).
 
-Thanks.
+Today we work around these holes by splitting the GPIOs between several
+chips. As a consequence "hardware" GPIO numbers don't exist in Linux. It
+requires some work from a user to first find the chip a GPIO belongs to
+and then compute the number. It is not terrible. But on some machines
+with a lot of GPIO controllers and chips it can be quite challenging
+(especially when ACPI is involved).
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+I am only saying it would be nice for Linux users if they could use
+hardware GPIO numbers (i.e. as read in hardware documents).
+
+But I understand everything that has been said by everyone and I agree.
+
+Simon
+
+--EvqLGyp/gUyZKEKs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmR2OCQACgkQzyg/RDPm
+szpPrw//enZ4mLittCgaLn/8YMFwXMhlnKDLW2YrB6Slv+QFiC7akPgvmtyjUO1q
+MyZiB8O3CGjIY1MFVyqmFgRvpJMINO/6bSqEty4iQwCOD41G9SUM7Bg1XKKvbbfl
+ww0mwpcbLaxFM2bS1cLpVJwVBOjkg3Qt+sU8IhFjfWl3KpRSuNf313iv3DwjiUdM
+iWzwu3H8UXVpPFMfvyu1uV5oA5BrlAyjaFuStzGC98k5KMUcrwvDK6pHeQtD2lc1
+gIghw8LKPYKV0HfPMt7a9bTDDWCBAD4hUrzxnZq6hURFDFkyEfDc7R1FX5WWazCj
+9aCuTnFg1c8zdPuWjBL5vQIRU8da5acjDMDvjoKEZcM0c71U0sPYXv047ZVHOuXD
+OykUQnhCxuMRZqRo24It8NMZ6aZaDFzfAiixo2gw5bBOH99habvTr1dJntnkNzb1
+lF2cAJAwDvPVXDyNrgJx3pUv039znVGvBS8Gdc1WSPhUMqRYZrnn+gNWfIR2HWPh
+NaBR7DWn9XHaZ794HtLUDvi2F4rh+drBuTYWDDUCOL4hiJhShgkJxyRVUzE7456O
+ud4AIyHpI/ROBLNkUuJcICdowM7D3R4+g6JiTpzOqUOO2s58hxDb+tRsbbUdhZ6T
+1FmsehJgwsmnKtW/YehVdtMeCOlMLP8lWvZi4OCa7RyRHqpQbl0=
+=lWq6
+-----END PGP SIGNATURE-----
+
+--EvqLGyp/gUyZKEKs--
