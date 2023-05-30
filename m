@@ -2,105 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FC53716D41
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 21:16:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E46A3716FBB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 23:30:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233273AbjE3TQJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 15:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51630 "EHLO
+        id S229946AbjE3Va4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 17:30:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231374AbjE3TQJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 15:16:09 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258BC102
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 12:16:07 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-437de2001bdso1143335137.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 12:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685474166; x=1688066166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jso9vHih5+6IaxHyoE18jYidSmiugbdBSe011FzYys0=;
-        b=nt3lyA9yKe2IFAX8DzfpyFJjoan1Vkrz6VMvV+KjgPwf532xcV5PWuVUlFBPuO9DEg
-         bCOOl+ojZIDU/sDdv59+RfwEQfC4kchhY2Byt/lcNZSwzhmY9RpuMH1KEUBRvpqbrKPU
-         28cdisGVp8R7ekRvyo6ebXyCbOJbAcdyOkcCQVyxiHUejIiQQbfOy1UwAtE2apJl4Dn8
-         UzDeE0PluyWpOPqlaFulSpTeQJCpAfRQCwW4v+Q5+Zv7pY1YmeA5JSYLuPX0zD00rnDw
-         JjXmS/HtVZsrHyxF6/AwAN7GMwvQyRYgEVsMUZ3VaX9tLrZGCaD+HlTv0iIsxq1nvpps
-         zb5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685474166; x=1688066166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jso9vHih5+6IaxHyoE18jYidSmiugbdBSe011FzYys0=;
-        b=h61rD86Tyr/d+eUnrorBim4I/IiwVXZrtGlTniy9e67vBrfkNBOhkn69u8+EYu7qMn
-         tJUZ3s8DOV0yCIfgxLhw8gTsHhsicXktaGa9v3S8G+Alc8gePQRS9F4ce4Ocb74pCCda
-         MP/BXEQ/Rop0SeeRRdt+/woTnqNd7YmeCsolb/i+/XLlf44tMUSxXsof1rXjqcXxTUQv
-         f6UADJknqnQzpgkhBCo5CevgY8JoGcX4GXBA+Yp3GnZ1wjDiJS6YjzN1YmTr9yjgOLOi
-         pMbftODbAbakzcNw8XloJsV1Bm4Ch+u8oxNJ9IMA8i4WfzBXv9j2hexQtIjyR4hA3Cud
-         msLA==
-X-Gm-Message-State: AC+VfDyOdMAWPlLRHx1ghiBXhk3aYXz00aNmcdUscY4s3GOEidKEPFOg
-        gMfdzW9FlbdLWBBk66PzcLYR+Q1F8Tx9Wf8XPx+mcw==
-X-Google-Smtp-Source: ACHHUZ5N2LwKgso09mwWA+/M63l/0oFgwj9MsQ6//dZ/DMKciaWGSRkV1i4KVZvS8LImOQY9WolzBXCVch4VWL8DUJs=
-X-Received: by 2002:a67:fe84:0:b0:434:6d2e:d0ac with SMTP id
- b4-20020a67fe84000000b004346d2ed0acmr1281192vsr.9.1685474166252; Tue, 30 May
- 2023 12:16:06 -0700 (PDT)
+        with ESMTP id S230045AbjE3Vaz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 17:30:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B4DE8;
+        Tue, 30 May 2023 14:30:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BB7160B74;
+        Tue, 30 May 2023 21:30:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869C2C433EF;
+        Tue, 30 May 2023 21:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685482253;
+        bh=PrlL1qfJ4X4PgO5aGdikpfSveOZTNv2Z4rqYo4OiJts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iBLPvGkJZb7R3XA/E6T8YvG3XN3DGpqP+dWwEAjFyBXDGCduGXbXAq87fVbsr2MLp
+         JCRGsqL8OjIS7OoZJV8H6VAT7RvnFilBArfPFhq2v/H8IECnEiskUYB1tDdwx8Seaq
+         zzjYXil1T7WjAoNC7cVfQTKVQmZMoz42iM4N+mzCxvPPwy48NSWEbUz4NJ6ZJUqXDF
+         rWbjPpjQpkA5/r0r4F8/P1WgC3iPCgGNPbYqM5Mv2u8seoTuyTR9gh72kit3EGIMMX
+         DKOzBWAZNwrqDv73tchVsncDT35LregvMV1mNTFEr3rSan8EnhhEhfRqCBpPkh0HR6
+         4plYDAsXS+qeA==
+Date:   Tue, 30 May 2023 22:30:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     lee@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, vkoul@kernel.org, robh+dt@kernel.org,
+        conor+dt@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] spi: cs42l43: Add SPI controller support
+Message-ID: <171e2054-e41c-46a5-b478-f699909c5bd7@sirena.org.uk>
+References: <20230530122112.1314458-1-ckeepax@opensource.cirrus.com>
+ <20230530122112.1314458-6-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de> <ZHYbnDHgc9ZMc7rj@sol>
-In-Reply-To: <ZHYbnDHgc9ZMc7rj@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 30 May 2023 21:15:55 +0200
-Message-ID: <CAMRc=Md3wCLuiS0tt2_v8Q1peqP+AkSrUNj1jg_8aZfDnj+2SQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: introduce hog properties with less ambiguity
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LUy+8fUc7Rrtf09J"
+Content-Disposition: inline
+In-Reply-To: <20230530122112.1314458-6-ckeepax@opensource.cirrus.com>
+X-Cookie: I've read SEVEN MILLION books!!
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 30, 2023 at 5:52=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Tue, May 30, 2023 at 05:19:44PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > Hello,
-> >
-> > this is another approach after
-> > https://lore.kernel.org/linux-gpio/20210503210526.43455-1-u.kleine-koen=
-ig@pengutronix.de
-> > two years ago. I switched back to "active" and "inactive" from
-> > "asserted" and "deasserted". The poll about the naming is ambigous, but
-> > I think with a slight preference of active/inactive over
-> > asserted/deasserted (with my unbiased self preferring active/inactive,
-> > too :-)
-> >
->
-> FWIW, this makes sense to me too - the active/inactive naming is used in
-> both the GPIO uAPI and libgpiod v2, so it would be consistent with that,
-> if nothing else.
->
-> Bart, just wondering if gpio-sim should support the aliases as well?
-> I realise they don't support active-low, so polarity isn't an issue, and
-> it could even be confusing to support the alias, but just throwing it
-> out there...
->
 
-I'm not sure what you need aliases for? Value is only shown, never
-stored (where you'd need "active", "inactive" strings).
+--LUy+8fUc7Rrtf09J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bart
+On Tue, May 30, 2023 at 01:21:11PM +0100, Charles Keepax wrote:
+
+A couple of small things:
+
+> +static unsigned int cs42l43_clock_divs[16] = {
+> +	2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30
+> +};
+
+Do we need to specify the size of the array?  I just had to count the
+number of initialisers :(   Should probably also be const.
+
+> +		for (; buf < block - (sizeof(u32) - 1); buf += sizeof(u32))
+> +			regmap_write(regmap, CS42L43_TX_DATA, *(const u32 *)buf);
+
+We're passing a byte stream through a u32 here - are you sure this is
+endian safe?
+
+--LUy+8fUc7Rrtf09J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmR2awUACgkQJNaLcl1U
+h9BLMAf7B1to2LkSkIjsJGp1+2cKMbTn+WNW6z2CuH5pGIv8uv6hHT/yakD/DAtD
+xqM8doMGB7ckoPBvhosXpSmd7TODf4nrrADZEB9yL5ZgAyPl9tgk7ZrNldZUr8bV
+KBRZASEbj3MNDA4EzBe8oG7jn3vwgF+Yes6wYzvhiUkQFL1alr7u/7IQ4lJlKWTL
+hnYHrP4S/2ZbZzJO16dLz47zIYMAtERArGEfrKYdQ1rmWazZMGFJ8MwboxkC8ZMQ
+gR2K6dVAAsncxp3ruAEB520UX7td4j1tm2rcJgyNTbgXbJsn7wVZ882YEXAF24L8
+oRslOoGjnPOB9/vkdOYSL79Zyx1Xyg==
+=Yi++
+-----END PGP SIGNATURE-----
+
+--LUy+8fUc7Rrtf09J--
