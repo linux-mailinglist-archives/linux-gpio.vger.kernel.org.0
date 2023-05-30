@@ -2,71 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E06C7168BE
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 18:08:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA9371691B
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 18:22:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbjE3QIn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 12:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
+        id S230433AbjE3QWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 12:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230449AbjE3QIm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 12:08:42 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1BF123
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 09:08:09 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-75afeacb5e4so543023485a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 09:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685462884; x=1688054884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WSjiGePAtUfdfIO+mC/gh9wrhGwSyjXAapryvD0UCP8=;
-        b=jwaEwWe/cLhHvOgYzg0Xs38Vlod3AjV720n698L4kPPHl3+yZrm8XLolBApcMlzMHo
-         J7vMSXN3EH3rI4IbKs1iOymt1U7mK64j2pbEKtccttsCluaujyE8JiEAdUA5nVMMqrlV
-         UN7xDGSa6Eosiu4BagbuWr/msudFtc1vH8acjZtDAsbGp4k4c9Z29XmU0d6tsaW8Ajx8
-         yVcCdjOz6O2dDWmY0KnsBRoYwg1plfiTfXXsODCBHyfeDbh4vNt+Y+LnrL8p+ecG7URS
-         QZRwghjCQYCTAw96/mniIzopKiuKbFytP+1+2S9en5k22QZV81JdLcGn+vW+KoZQzL/m
-         XGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685462884; x=1688054884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WSjiGePAtUfdfIO+mC/gh9wrhGwSyjXAapryvD0UCP8=;
-        b=XTVMuDqq/zhoV7FP8HbgD+Sw5LwY1An3a7Z+qgpbXOfRNj35AL5cI7UWguuuwdmDWF
-         Fg7+MzIbvA9iREw7ffu7Ko2KhI+F8JozGrIVeArpQDyNJ+07ok/cDIJ9p6/VeFhs0Kqm
-         xl7wRfJ8nIV0UE2g/dlIBwBhRdSZpro7K18jY0gcvvMGGwKkX0/Ps0BR29SJF92K1nCX
-         dvsRPV1PImH2CUblPbIGN7sBH7nGyNkVnuPaQPuViis19N0XjhgfdLunhD36I+nFH4rP
-         iQZ1/MbCUABO0XW4CnQR65mvGICvIl1EAHxL7x7PhiWfn2SxU+WGdagIYB/iIF3Uf/ie
-         qLKA==
-X-Gm-Message-State: AC+VfDzWOOoqkUwhx+gWflzG7yx/Y5eFZUHWf8k12KQjzmhYarfzzlKX
-        gudlWuTvwUiUDB0MCMY+0Yvl6NZbnud+P4R5kX6mqp5iogCQ6faA
-X-Google-Smtp-Source: ACHHUZ4QGOMA8NNG4xhmLVm9AgrhnAgWFzqJl7m1CfDxN1CPdxUSycHplvSLexyQcvBT8w22WJx4EG+tyWiNwLzSlIM=
-X-Received: by 2002:a37:513:0:b0:75b:23a1:35f6 with SMTP id
- 19-20020a370513000000b0075b23a135f6mr2571182qkf.7.1685462883836; Tue, 30 May
- 2023 09:08:03 -0700 (PDT)
+        with ESMTP id S230521AbjE3QWB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 12:22:01 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 161C49D;
+        Tue, 30 May 2023 09:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ru5cR
+        PmsF9ZMmZyJkpTmhO87sRRfpND2S5AIZbRneS8=; b=hbgaKTL4OdWrbkFZELrqA
+        mQC+RbpjIo2yYZixv5gmZbNify5YQpkeZt+cg9cV5IK+NliPHjJD4flcoMMImgVw
+        hsuuo72k2wier9iOeZrHLP8Cuwhah41soLks8C5JC12mBN6abVRqVIYsHIYrcNet
+        LnAK/aQMLnnOQTfzYDg5XE=
+Received: from lizhe.. (unknown [120.245.132.246])
+        by zwqz-smtp-mta-g2-2 (Coremail) with SMTP id _____wB39k5TInZkiwMYBA--.49914S4;
+        Wed, 31 May 2023 00:21:06 +0800 (CST)
+From:   Lizhe <sensor1010@163.com>
+To:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, linux@armlinux.org.uk,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Lizhe <sensor1010@163.com>
+Subject: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
+Date:   Wed, 31 May 2023 00:20:34 +0800
+Message-Id: <20230530162034.4004-1-sensor1010@163.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230524210945.4054480-1-joe.slater@windriver.com>
- <ZG7bpE8xRuIeq7J+@sol> <BY5PR11MB3992F8CA5B13108F6310D72A88469@BY5PR11MB3992.namprd11.prod.outlook.com>
- <CAMRc=MeOiCKkn2OqNtSfRrh6_jSgEpWbh5DJNK30FmKP5NfPDg@mail.gmail.com>
- <ZHXKRtJOYSw42BAi@sol> <CAMRc=Md8CSiX4PyoXG-Xy0PktHseLgecRUEC=XZWsQmMRAuWSQ@mail.gmail.com>
- <ZHYHAXLPwX0C7aTK@sol> <CAMRc=MciugO5qS_fzfEipWN7vHBUKWLVkAJFLShZeuK8u9W9Bw@mail.gmail.com>
- <ZHYTqIt+CZOf4XTR@sol>
-In-Reply-To: <ZHYTqIt+CZOf4XTR@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 30 May 2023 18:07:52 +0200
-Message-ID: <CAMRc=MdHTjFeY_ba0o1YcnYp2JvdovBc0LiWY9oRaMNkMLBZqQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/1] gpio-tools-test.bats: modify delays in
- toggle test
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "Slater, Joseph" <joe.slater@windriver.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "MacLeod, Randy" <Randy.MacLeod@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wB39k5TInZkiwMYBA--.49914S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy8uF1xGF4rZF1fZw1fZwb_yoWDKwb_Cw
+        n5Kay3Xw4rtFn8ZrnIka1xZrZFyw4DW3Z5urn5t3ZxArn5Zr13ursrW3WSyFW5Zr4I9FWU
+        tayrCr4avFW7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKGQ6JUUUUU==
+X-Originating-IP: [120.245.132.246]
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBXhN-q1aEBo2lAwAAsm
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,116 +54,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 30, 2023 at 5:18=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Tue, May 30, 2023 at 04:52:36PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, May 30, 2023 at 4:24=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Tue, May 30, 2023 at 04:13:06PM +0200, Bartosz Golaszewski wrote:
-> > > > On Tue, May 30, 2023 at 12:05=E2=80=AFPM Kent Gibson <warthog618@gm=
-ail.com> wrote:
-> > > > >
-> > > > > On Tue, May 30, 2023 at 11:51:05AM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > On Thu, May 25, 2023 at 11:54=E2=80=AFPM Slater, Joseph
-> > > > > > <joe.slater@windriver.com> wrote:
-> > > > > > >
-> > > > > > >
-> > > > > > > [Slater, Joseph] I'll get rid of the comment and try the test=
- with a shorter toggle time.
-> > > > > > > The series of 159 tests takes, maybe, 10-15 minutes for me, s=
-o I don't think saving a
-> > > > > > > second or two here would make much difference, though.
-> > > > > > > Joe
-> > > > > > >
-> > > > > >
-> > > > > > That can't be right, are you running it on a toaster? It takes =
-26
-> > > > > > seconds on my regular lenovo thinkpad laptop which is still lon=
-ger
-> > > > > > than I'd like but quite acceptable for now (though I agree it w=
-ould be
-> > > > > > great to improve it).
-> > > > > >
-> > > > >
-> > > > > Consider yourself blessed.
-> > > > > I just got:
-> > > > >
-> > > > > real    2m25.956s
-> > > > >
-> > > > > on my test VM.
-> > > > > Not sure exactly what the hold up is - it isn't using much CPU, o=
-r any
-> > > > > other resources AFAICT.
-> > > > > Compared to all the other test suites I run, this is far and away=
- the
-> > > > > slowest, especially since switching everything over to gpio-sim.
-> > > >
-> > > > I agree it's too slow - be it 20 seconds or 2 minutes. But similarl=
-y
-> > > > to you - it's very low on my TODO list as I only run it every once =
-in
-> > > > a while. I'd be happy to accept any patches improving the situation=
- of
-> > > > course.
-> > > >
-> > >
-> > > Same.  I already had a go at streamlining the tests when I updated th=
-em
-> > > for v2, so it is somewhat better than it was, but it is still painful=
-ly
-> > > slow for me.
-> > > To improve further I'd have to start digging around to see what bats =
-is
-> > > up to.  Speaking of which, do we need to stick with bats?
-> > > I've driven similar tests with Python in the past, and I'm sure that
-> > > would provide a better experience.
-> > > What constraints do we have?
-> > >
-> >
-> > I went with bats because it looked the fastest to write tests in -
-> > it's shell after all.
-> >
->
-> Really?  I wouldn't write anything of consequence in shell if Python was
-> an option.
->
-> How about Rust?  I've gotten over how spartan the Rust test framework is
-> so I wouldn't have a problem writing it in that either.
->
+Before executing microchip_sgpio_irq_set_type(),
+type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
 
-I have a very strong preference for Python. I am quite bad at Rust.
-Whatever is in bindings/rust/ is Viresh' jurisdiction and I defer to
-him but I would prefer to be able to keep track of what's happening in
-tools/ and work on it myself without too much frustration. And writing
-anything in rust has been pure frustration so far.
+Signed-off-by: Lizhe <sensor1010@163.com>
+---
+ arch/arm/plat-orion/gpio.c | 1 -
+ drivers/gpio/gpio-mvebu.c  | 1 -
+ 2 files changed, 2 deletions(-)
 
-Bartosz
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
+index 595e9cb33c1d..863fa497b1a2 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/plat-orion/gpio.c
+@@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 type)
+ 		return -EINVAL;
+ 	}
+ 
+-	type &= IRQ_TYPE_SENSE_MASK;
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a68f682aec01..34fd007b0308 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	if ((u & BIT(pin)) == 0)
+ 		return -EINVAL;
+ 
+-	type &= IRQ_TYPE_SENSE_MASK;
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+-- 
+2.34.1
 
-> > But I think that we could potentially package whatever python
-> > subprocess code we need into enough helper wrappers that it wouldn't
-> > be much more complex than this.
-> >
->
-> The end result would look similar in terms of test complexity, but
-> should be much easier to write and debug.
-> Not that that counts for much given we have a functional bats test
-> suite.
->
-> > We also already have python wrappers for libgpiosim ready.
-> >
->
-> Exactly.  And Rust bindings too.
->
-> > No objections from my side, it's just that I won't have time to
-> > rewrite the entire thing in Python anytime soon.
-> >
->
-> I'll update my todo list.  No promises - it is low priority given the
-> only real problem with the bats solution is its performance.
->
-> Cheers,
-> Kent.
->
