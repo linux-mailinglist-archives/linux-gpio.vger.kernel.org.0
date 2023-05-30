@@ -2,139 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A61B27166D8
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 17:20:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F214716736
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 17:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232075AbjE3PUC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 11:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51274 "EHLO
+        id S230351AbjE3PhI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 11:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjE3PUB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 11:20:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004F1C7
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 08:19:57 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q418d-0007zo-KT; Tue, 30 May 2023 17:19:55 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q418c-003uGd-Rf; Tue, 30 May 2023 17:19:54 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q418c-009XZr-3I; Tue, 30 May 2023 17:19:54 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 2/2] gpio: use "active" and "inactive" instead of "high" and "low" for output hogs
-Date:   Tue, 30 May 2023 17:19:46 +0200
-Message-Id: <20230530151946.2317748-3-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
-References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3058; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=Yoi9sBfxb0uzWxhgrLD44cP0kUh/d8G1Lh3lvWfk9kE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkdhQIXsP2lYiN07PCH5OhLm2OdSJd/Fkdk2m5z zNUiWcYrouJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZHYUCAAKCRCPgPtYfRL+ TmDICACSpb9nDBVDSD1OGXKa2UcOwpkofum2+A3F9MAMUZdkex09vZ151HsiQ/U4+ujsbFBvIUr kmWsotTNdh2coEmGORPExRzgHxn1NYwZPM4KV2010jq56WdTNq7g8byD5nXJdm3fxI0h3a/wTpE Ic1RmJmaXtvhmEyhQaHKSNb+TVp3OlMqzS9+gHc5de1Mm2oSm4XyrB9NLKm3cVeN5uvi4bRBUvC J3QJFxkl7TKlqh3k3GiB0Zat1ydgZwejnjmRvbvMh8JpR32tUbuvJA2XbapF1SB4sZaIZajz7Dk gIa7Ixj0UWUVrfS6SWZPVa378KjJzQWwDlVmNihzsNSpzwbK
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229524AbjE3PhH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 11:37:07 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD7CC5;
+        Tue, 30 May 2023 08:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7NYITIz6db6snx2MdjRgFoeMdJ74f0BhIRWjC9Mux08=; b=SQ6vmvCfXmyQcAkV4ntcK4044j
+        HWy6/JadIzeVstvBgVCgievGqOjYv6V3ZcaNoD/VFCwH8iQ5sXzBFciehla1WnBLQkVhaMGXHuR3W
+        HFYfJdyJcWst7NePb+JKsnmYGLHHRe0et5XYn6AY1L+6h2QcNfLwU7TwqnH6/Yfztae0=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:39366 helo=debian-acer)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q41P0-0006ul-6l; Tue, 30 May 2023 11:36:50 -0400
+Date:   Tue, 30 May 2023 11:36:49 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     andy.shevchenko@gmail.com
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20230530113649.73f28b9f6ba91f17ace1e12f@hugovil.com>
+In-Reply-To: <ZHUpWQafRPHW1RJQ@surfacebook>
+References: <20230529140711.896830-1-hugo@hugovil.com>
+        <20230529140711.896830-8-hugo@hugovil.com>
+        <ZHUpWQafRPHW1RJQ@surfacebook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v4 7/9] serial: sc16is7xx: fix regression with GPIO
+ configuration
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For active-low GPIOs the currently available nomenclature requires
-regular explaination to the non-enlightened folks, e.g. because a hog
-defined as:
+On Tue, 30 May 2023 01:38:17 +0300
+andy.shevchenko@gmail.com wrote:
 
-	someline {
-		gpio-hog;
-		gpios = <24 GPIO_ACTIVE_LOW>;
-		output-high;
-	}
+> Mon, May 29, 2023 at 10:07:09AM -0400, Hugo Villeneuve kirjoitti:
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > 
+> > Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> > and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> > changed the function of the GPIOs pins to act as modem control
+> > lines without any possibility of selecting GPIO function.
+> > 
+> > As a consequence, applications that depends on GPIO lines configured
+> > by default as GPIO pins no longer work as expected.
+> > 
+> > Also, the change to select modem control lines function was done only
+> > for channel A of dual UART variants (752/762). This was not documented
+> > in the log message.
+> > 
+> > Allow to specify GPIO or modem control line function in the device
+> > tree, and for each of the ports (A or B).
+> > 
+> > Do so by using the new device-tree property named
+> > "modem-control-line-ports" (property added in separate patch).
+> > 
+> > When registering GPIO chip controller, mask-out GPIO pins declared as
+> > modem control lines according to this new "modem-control-line-ports"
+> > DT property.
+> > 
+> > Boards that need to have GPIOS configured as modem control lines
+> > should add that property to their device tree. Here is a list of
+> > boards using the sc16is7xx driver in their device tree and that may
+> > need to be modified:
+> >     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+> >     mips/boot/dts/ingenic/cu1830-neo.dts
+> >     mips/boot/dts/ingenic/cu1000-neo.dts
+> 
+> ...
+> 
+> > Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> > Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> 
+> Don't forget to refer to the dependency patches form this series.
+> (I forgot how it should be done, IIRC the documentation about stable kernel
+> patches can shed a light on this.)
 
-results in the line being set to the physical low level.
+Hi,
+I will look into it.
 
-So use the terms "active" and "inactive" which are less ambigous and
-keep the old names as synonyms. The above example can now be written as:
 
-	someline {
-		gpio-hog;
-		gpios = <24 GPIO_ACTIVE_LOW>;
-		output-active;
-	}
+> ...
+> 
+> > +	switch (mctrl_mask) {
+> > +	case 0:
+> > +		s->gpio_valid_mask = 0xFF;
+> 
+> GENMASK()
+> 
+> > +		break;
+> > +	case SC16IS7XX_IOCONTROL_MODEM_A_BIT:
+> > +		s->gpio_valid_mask = 0x0F;
+> 
+> GENMASK()
+> 
+> > +		break;
+> > +	case SC16IS7XX_IOCONTROL_MODEM_B_BIT:
+> > +		s->gpio_valid_mask = 0xF0;
+> 
+> GENMASK()
 
-where it is less surprising that the output is set to a low level.
+Ok done, altough even if in general I like the bit manipulation macros because they make the code easier to read/understand, I find it less obvious by using GENMASK in this case IMMO.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpiolib-of.c     | 10 ++++++++--
- include/linux/gpio/consumer.h | 14 ++++++++++----
- 2 files changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 1436cdb5fa26..45fc1e4dbc40 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -698,10 +698,16 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 
- 	if (of_property_read_bool(np, "input"))
- 		*dflags |= GPIOD_IN;
-+	else if (of_property_read_bool(np, "output-inactive"))
-+		*dflags |= GPIOD_OUT_INACTIVE;
-+	else if (of_property_read_bool(np, "output-active"))
-+		*dflags |= GPIOD_OUT_ACTIVE;
- 	else if (of_property_read_bool(np, "output-low"))
--		*dflags |= GPIOD_OUT_LOW;
-+		/* misleading alias for output-deasserted */
-+		*dflags |= GPIOD_OUT_INACTIVE;
- 	else if (of_property_read_bool(np, "output-high"))
--		*dflags |= GPIOD_OUT_HIGH;
-+		/* misleading alias for output-asserted */
-+		*dflags |= GPIOD_OUT_ACTIVE;
- 	else {
- 		pr_warn("GPIO line %d (%pOFn): no hogging state specified, bailing out\n",
- 			desc_to_gpio(desc), np);
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 1c4385a00f88..3e953a1960f4 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -47,11 +47,17 @@ struct gpio_descs {
- enum gpiod_flags {
- 	GPIOD_ASIS	= 0,
- 	GPIOD_IN	= GPIOD_FLAGS_BIT_DIR_SET,
--	GPIOD_OUT_LOW	= GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT,
--	GPIOD_OUT_HIGH	= GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT |
-+	GPIOD_OUT_INACTIVE = GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT,
-+	GPIOD_OUT_ACTIVE = GPIOD_FLAGS_BIT_DIR_SET | GPIOD_FLAGS_BIT_DIR_OUT |
- 			  GPIOD_FLAGS_BIT_DIR_VAL,
--	GPIOD_OUT_LOW_OPEN_DRAIN = GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_OPEN_DRAIN,
--	GPIOD_OUT_HIGH_OPEN_DRAIN = GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_OPEN_DRAIN,
-+	GPIOD_OUT_INACTIVE_OPEN_DRAIN = GPIOD_OUT_INACTIVE | GPIOD_FLAGS_BIT_OPEN_DRAIN,
-+	GPIOD_OUT_ACTIVE_OPEN_DRAIN = GPIOD_OUT_ACTIVE | GPIOD_FLAGS_BIT_OPEN_DRAIN,
-+
-+	/* old names that are confusing in combination with active-low GPIOs */
-+	GPIOD_OUT_LOW = GPIOD_OUT_INACTIVE,
-+	GPIOD_OUT_HIGH = GPIOD_OUT_ACTIVE,
-+	GPIOD_OUT_LOW_OPEN_DRAIN = GPIOD_OUT_INACTIVE_OPEN_DRAIN,
-+	GPIOD_OUT_HIGH_OPEN_DRAIN = GPIOD_OUT_ACTIVE_OPEN_DRAIN,
- };
- 
- #ifdef CONFIG_GPIOLIB
--- 
-2.39.2
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> 
+> ...
+> 
+> > +		of_property_for_each_u32(dev->of_node, "nxp,modem-control-line-ports",
+> > +					 prop, p, u) {
+> > +			if (u >= devtype->nr_uart)
+> > +				continue;
+> > +
+> > +			/* Use GPIO lines as modem control lines */
+> > +			if (u == 0)
+> > +				mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
+> > +			else if (u == 1)
+> > +				mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
+> > +		}
+> 
+> Can we use device properties, please?
 
+I have converted this section to use device_property_count_u32() and device_property_read_u32_array(). Is that Ok?
+
+> If you think about backporting to the earlier kernels (w/o properties in use in
+> this driver), perhaps an additional followup for that?
+
+I am not sure what you mean by this?
