@@ -2,142 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 677CE7160F1
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:02:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6AC371611E
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:09:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbjE3NCX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 09:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60504 "EHLO
+        id S232554AbjE3NI7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 09:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232487AbjE3NCU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:02:20 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2058.outbound.protection.outlook.com [40.107.244.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49481185;
-        Tue, 30 May 2023 06:02:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PZmlOtW1m1Z2iVzBSTaDdegK3PufnKEn/6T2Ky0nra3dNSlQifZ6wYcQKcNCM1BFw5wmxjHXR0dtfTW2S5WGzMJIYL1tPM2oGkW0AaqGWb6FAVWOJlJHOsRZrNHYYNEnx+oWVpF+SnIuRLb3xiybYZuq2W1Pm/guIhkAL0BLBlQdCNLVpjKCdwwWhmIj1JmcK5zNy3MRLDI9pdYoG33yhDk7XJyDwG01JKPf06UjWPcjAYyR1kc6shoGIuCJXRYFIJqQZ6FHeX4eCI6pn7vpcvuPsaA5FJlHBZGPpKKfpfr1QBnUEgOCKr2iAaNX0amECSW+gcT3BjL75uX1MVpIww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9GN98fX2M5Ms6cT0ofcdye4cV72uTpRsNtj4AXIybJY=;
- b=YEoSgXUH05V837YTY57pciqoCGwrrwPDW5vdfgdG+RnHArvIMT+pVgda4tnxIjUzzPf7FbbTfaojJCQr2wwdqc/blNnVcvDYcjNBUAo9zb5BoFAuKtnZzKlhCT42CqrDGXPylS7UJirczACgXkPwUA6WF79WJBnaluYsWJAK+9b54C1rR74etsZGEdWHGPcUtyD5OGIL2/DVZDKp2gDHCGqNT6zWSWRa5mvKHYG/f5YYaBZpNEp49c6Hht/FJ0e3ntVlOuZeIpQf+lp+3Xj29nE8Lme8bmQlmpMOvxPL8+l2C7kCmV60NgtBFrcijuI9QJhA4urMAZomoiemKcdd6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9GN98fX2M5Ms6cT0ofcdye4cV72uTpRsNtj4AXIybJY=;
- b=NvWouF8GL2azaPNTvnU5TGrBTs8DYNpvuRWEomjkS+2LKUW6ENRPREF7Vh6WcfYH2C5r/biG6WRoeL3eu1jrfyQbRGAC+3CiT0p4+ws/k9rVmrp8os2v4iSCFHamGLhBS0UlewkHWTLC85/ricl7ZgwRCLMoVNsz6/bRf5h65Wfrp36BDHE7X3K+KYsrvaxj8aubCfDoP2J+ZOfJN1EkMkOkdj0knOpyd8tFrbWLNWCILK2CzOdaMp6jK4nqvc90c2XcIJBSGR5Po2X2PL7Z6i9re3TZ89c6w1VqVEOAVEacWNQBm7pPzDK91daoma0W+KV9fDPiH4gfY8/GrMG0kQ==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by CH3PR12MB7667.namprd12.prod.outlook.com (2603:10b6:610:14f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Tue, 30 May
- 2023 13:01:56 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::331:ede9:286d:2cdf]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::331:ede9:286d:2cdf%5]) with mapi id 15.20.6433.022; Tue, 30 May 2023
- 13:01:56 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH v6 1/2] gpio: mlxbf3: Add gpio driver support
-Thread-Topic: [PATCH v6 1/2] gpio: mlxbf3: Add gpio driver support
-Thread-Index: AQHZV4g0mf0KnjGDfkCNFmKuBrQRha7+8BeAgG4Ro3CABiRSgIAAGKEg
-Date:   Tue, 30 May 2023 13:01:56 +0000
-Message-ID: <CH2PR12MB389563EB951D549A57E9321ED74B9@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20230315215027.30685-1-asmaa@nvidia.com>
- <20230315215027.30685-2-asmaa@nvidia.com>
- <CAHp75VfnNOsfcyLM-UP61CMAF9sLOwMbRkAe5Ljhs2p8F=4Pgw@mail.gmail.com>
- <CH2PR12MB3895BDF9D79D61420A2F2BA8D7479@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdbN3oa=chsoh8ko74xKBPXA_yh1K07MSaghnMMk5PWYYw@mail.gmail.com>
-In-Reply-To: <CACRpkdbN3oa=chsoh8ko74xKBPXA_yh1K07MSaghnMMk5PWYYw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PR12MB3895:EE_|CH3PR12MB7667:EE_
-x-ms-office365-filtering-correlation-id: 8c53a019-0eb1-402a-1c06-08db610e0c2e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4NA2AtP6HRaJFEEYvEusu6fTthmpR6x2ouf1hThkfXYJSLReatb0f4A+f+YoiXOPvqfw99PzqwOKFYRK/CsZMKlgTDNjAz6ue7kge8g31Ga5sC3wkAigjXeBKWsMlJVWqXLZzY/fkfomBJgLxJbktS8UahajNl88YFzMl2guxqBNuJpIZLgjEBsHaXo8ezpoTxoiK84ncHO8CvmyJDrSOjatCgByWvnTELFWTBFN9uED5+o2MNBRLlmWAmrIP3Ck9sPInTX2/UMExqdJ2NTkdWEwJhWxcAFeIkZHFGvHwhnes87Dvly5DTq80IhovB7OsfhjNOqlUS0TDYQ0IHpuqV6cnQaDrTxU7M2R0+0qDLtEu6r2gcdx98xXUaNGvWvLtcLinm4GtQPb+jhlAJObeu5ELk2+Ar6huru0cYmUBOIpFQLN8ZEXcFRh0j7BWU/rpRcBK2uJfsQvgs/SqQtk04GdCrh/SKzdfwyoJdUfnjMQjam5nvx7bydq+R5s2wib51loOrtOLFvKCiReoUzntOtdlaxlSqy3BWg4kRNfBq9rU+uTQ9uK/KUBKkf2iomr5PD7I95QxKjWhRXvZtpPBx4hn8vulYtcHYXvtwauULubjqgOAkPfrT9OKa0gAzKX
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(451199021)(54906003)(478600001)(71200400001)(110136005)(8936002)(64756008)(52536014)(5660300002)(8676002)(38070700005)(2906002)(4744005)(86362001)(33656002)(66476007)(66556008)(76116006)(66946007)(66446008)(4326008)(316002)(122000001)(55016003)(38100700002)(41300700001)(186003)(53546011)(6506007)(26005)(9686003)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZTdTVjN2aW5UZm03aWcvSzExUDF2bCt2NzkvblNrRTBJNU1qNTRQNExEZFVR?=
- =?utf-8?B?dnRzbXNhWll5L05idVV0c3AzVjgwaUlUWjVYV1E4MU1WZldkNUtGQVBaK1c4?=
- =?utf-8?B?c3hZejc0OFlpaW8va2ZkbEdqWFcvZGtVN1hjTHBUOHBSRmxWUFZWcWt1RzdF?=
- =?utf-8?B?THRuOHFjWnBlbURNRjRBM3hPUE55NnE2UUplS1VINDJuKzBidjVIdFhjSWNx?=
- =?utf-8?B?dlFCNmNzZndRTUJXekMzWm9DRjlkQ3JpNWc5UEs3ay8yalJZTDV4RkZYdytJ?=
- =?utf-8?B?c2d1bEpVSk5lSkM1TURuOWUwaEMzcVZnOTQzL2RwaVh6T205NGlsSElmUXdI?=
- =?utf-8?B?cC8vNkhzM0V6SnU5ck03emdVSXp0WTVGK1MwUlhId2dnQTVGODZ6eE9MWVR0?=
- =?utf-8?B?V2hYZHEzK3pOR3gzYXdVa0ZhL3dYckZPY0swbmRJOS9ncFJUdWZIekdKT0c0?=
- =?utf-8?B?ekZCc1htUkVTWnhuTDBPdFRnR3ZleEs1Nmc1cFN5ZWE0QjZpTzJxdmxKUll4?=
- =?utf-8?B?TmdNcG1HZ21PV285QjY1dkczSzJBbmVwM2dIN1k4T2lBeFJFcVVrUjdZNllC?=
- =?utf-8?B?UGppSExLYS9BV2NDSkRIUHBPWFJwUDRXZjVlS3htWUp0d25NMm1HVWhLQXZh?=
- =?utf-8?B?eUM4Qk9yRlhlVlBuRGx3K3YrK205RURUeG1lbEpxK3NvSjFzY2dZSDliRXYy?=
- =?utf-8?B?OXRuQnVHb3BSRW9mZWhBQ21TRndpRHVWRmZTWkpuVk5sQmRJWkF3ZjF6TC9Q?=
- =?utf-8?B?c213VWxEdDRIYW91eWVsZm9FRm9zamoyT1FZRVNiQkJhQkhTc2lXYlkxaG5n?=
- =?utf-8?B?eDRKaEZwOXM1QkN5MytSRWM5M29QWUpSNDFrczZMWkM2d0NST1kvdjhvNkdB?=
- =?utf-8?B?di9rbW01YlZrTUE5S0ZMTWpKdGJDd2d6UXBSa05WRyt0bmpqU3Z5M1lvdWxW?=
- =?utf-8?B?bjZqa1FPd2xOWjdmNVgwV0dFOU84K0VORndIZTlKbjd3bkhQMjVuZCs2b3ZQ?=
- =?utf-8?B?L3dMRFVCMXFSY2hHWTR1WFlJNzllOHFLOVJQdDJQVnBoWU9wbVUySm4rR2k4?=
- =?utf-8?B?VlFLeEdsWTdFbUhRS0FsVExvdTFhOUpTQzBNNkROMXBJUGxJZURHNmUzblly?=
- =?utf-8?B?WUxEdmwxQ21TcEc5RFFjbzFONldHUWtjK0VkYTdNWEt0OGF0OE16RTBMeTVy?=
- =?utf-8?B?bVRpbE8wdVFvZm03cEVzOXhKSkt5VnYwWExZbGhTcEFhcEZWQ2tSWXAxbnJn?=
- =?utf-8?B?UzVwKzFHb1JuaFMzbFhJdEJENU9KaFdCRzBWUE1YUkx4V3RCVkJwZU42eVZC?=
- =?utf-8?B?YXRjZ2FSczRqQnNPdi96OFVId3RORGFESWx4Q0I5emFMTTE2aytnZEVoK2dX?=
- =?utf-8?B?Q1VWNDlvRDlOcE1BWkQ2MXE0WW5PdXViN25YR1QwWHM5YWpIZ25haTF0Ukp2?=
- =?utf-8?B?Q0F6ZzVqb0VaWEpGTWtlcndOcDFVeDNORU5KQUdnbmNCMzZYWTRqaWlsZUVO?=
- =?utf-8?B?eGEwNGRQNXB1RE1zVGp2a0NuWnF2b1gxaHkrMThxeDV5aFdvUmQ2dTd2aHlo?=
- =?utf-8?B?U3NGeFgrc2dEbmJscmZOemVJZXVnZWZQOGpaYlFHRU5MQWZMSXJLYnNoVGlo?=
- =?utf-8?B?NFZ3d05JN2FpNHlGN3cveU9FVGEwaTBUU280amZHb1pQVGRvenVBdk1FRSsw?=
- =?utf-8?B?am9JZDZQM3M5V05BYUpyejZ0Vkgvc2JSNVVCNUNYbVRlWjhqNjNZUTlldDRw?=
- =?utf-8?B?bm10VWk3cm5YbS9xSXhQaEhGUEhWOTZaeGhlTElGdUNRZTg2QldGbkllUUJM?=
- =?utf-8?B?RFMzaUFacHNCS2gyb0h2Zk5NTWxKalpRTVhtRzgreUdBSTM0N1I5LzdZZDJH?=
- =?utf-8?B?VERoNW1nRm9IM0crUkpKWWE1Y2grZ01ja00zNlZwbDFTQUlQRDVybW0yL2Qw?=
- =?utf-8?B?MnJEY2QycUJrUzVsWGlzb3lJb055c0xVS0x3N3JZT1FFelN3QnlqQTY2MVkx?=
- =?utf-8?B?M1RFeE41Q2FCa0k4UkxxeU1JeFdwWFZHQ3VqTnpRa0lzcDY0NWRlT256WVhY?=
- =?utf-8?B?Z2JmcElWQnlmTnFxSUx2V0UzNlVTSG94V1lDYkpYM1FsdFBsZUNRK3o3dk4x?=
- =?utf-8?Q?j4oI=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c53a019-0eb1-402a-1c06-08db610e0c2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2023 13:01:56.4328
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KJZP5Qc324b+dFdRv07xzh3t1SSEBRWK6AHk5g15WVwxmuVpKgkhPjkS8Fou8gIGz0hBQG0fSqOsHV6BSzr2GA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7667
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232042AbjE3NI5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:08:57 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CA592;
+        Tue, 30 May 2023 06:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=X5ARCyzotT4QKjaVW0IeWuI4w9SRg4SsaoEHspvM/io=; b=Gi376FN2FvE4Udx+8/r3wCTWPi
+        /xHfqEFjwuLHHWzcZ3bvWOx9tNmdW85P87xjtrM8kWK7elK8hM3ibmvo2VPNHR5QNGH9SH05nJes4
+        z/5GmYzfggOVYVXItfXS2n5Vh8h1VNXKNBN/u5w2M2gyxq/WzzqzEUy3Dau3z/DjMXhM=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:41434 helo=debian-acer)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q3z5Z-0005zt-Ko; Tue, 30 May 2023 09:08:38 -0400
+Date:   Tue, 30 May 2023 09:08:36 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Lech Perczak <lech.perczak@camlingroup.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20230530090836.27b8d080d6b6c022b303ac9e@hugovil.com>
+In-Reply-To: <c15a90d6-b3c1-e432-9216-c4c1e2c44ce6@camlingroup.com>
+References: <20230529140711.896830-1-hugo@hugovil.com>
+        <c15a90d6-b3c1-e432-9216-c4c1e2c44ce6@camlingroup.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
+ improvements
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-VGhhbmtzIExpbnVzIQ0KDQo+IE9uIEZyaSwgTWF5IDI2LCAyMDIzIGF0IDM6NDnigK9QTSBBc21h
-YSBNbmViaGkgPGFzbWFhQG52aWRpYS5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiBIaSBBbmR5LCBI
-aSBMaW51cywNCj4gPg0KPiA+IEkgc2VlIHRoYXQgdGhlIHBpbmN0bC1tbHhiZjMuYyBpcyBpbiB2
-Ni40IGtlcm5lbCBidXQgSSBhbSBub3Qgc2VlaW5nDQo+ID4gZ3Bpby1tbHhiZjMuYywgbm90IGV2
-ZW4gaW4gTGludXggbmV4dC4gRG8geW91IGtub3cgd2hlbiB0aGlzIGRyaXZlciB3aWxsIGJlDQo+
-IGludGVncmF0ZWQ/DQo+IA0KPiBCYXJ0b3N6IGlzIGFwcGx5aW5nIEdQSU8gcGF0Y2hlcywgSSBh
-bSBzdXJlIGhlIHdpbGwgZ2V0IGFyb3VuZCB0byBpdCBvbmNlIGFsbA0KPiB0aGluZ3MgYXJlIHJl
-dmlld2VkLCBidXQgeW91IG5lZWQgdG8gdXNlIHRoZSByaWdodCBlbWFpbCBhZGRyZXNzIHRvIGhp
-bSAoc2VlDQo+IE1BSU5UQUlORVJTKS4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQo=
+On Tue, 30 May 2023 11:30:07 +0200
+Lech Perczak <lech.perczak@camlingroup.com> wrote:
+
+> W dniu 29.05.2023 o=A016:07, Hugo Villeneuve pisze:
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >
+> > Hello,
+> > this patch series mainly fixes a GPIO regression and improve RS485 flag=
+s and
+> > properties detection from DT.
+> >
+> > It now also includes various small fixes and improvements that were pre=
+viously
+> > sent as separate patches, but that made testing everything difficult.
+> >
+> > Patch 1 fixes an issue when debugging IOcontrol register. After testing=
+ the GPIO
+> > regression patches (patches 6 and 7, tests done by Lech Perczak), it ap=
+pers that
+> > this patch is also necessary for having the correct IOcontrol register =
+values.
+> >
+> > Patch 2 introduces a delay after a reset operation to respect datasheet
+> > timing recommandations.
+> >
+> > Patch 3 fixes an issue with init of first port during probing.
+> >
+> > Patch 4 fixes a bug with the output value when first setting the GPIO d=
+irection.
+> >
+> > Patch 5 is a refactor of GPIO registration code.
+> >
+> > Patches 6 and 7 fix a GPIO regression by (re)allowing to choose GPIO fu=
+nction
+> > for GPIO pins shared with modem status lines.
+> >
+> > Patch 8 allows to read common rs485 device-tree flags and properties.
+> >
+> > Patch 9 improves comments about chip variants.
+> >
+> > I have tested the changes on a custom board with two SC16IS752 DUART us=
+ing a
+> > Variscite IMX8MN NANO SOM.
+> >
+> > Thank you.
+> >
+> > Link: [v1] https://lkml.org/lkml/2023/5/17/967 <https://lkml.org/lkml/2=
+023/5/17/967>
+> > [v1] https://lkml.org/lkml/2023/5/17/777 <https://lkml.org/lkml/2023/5/=
+17/777>
+> > [v1] https://lkml.org/lkml/2023/5/17/780 <https://lkml.org/lkml/2023/5/=
+17/780>
+> > [v1] https://lkml.org/lkml/2023/5/17/785 <https://lkml.org/lkml/2023/5/=
+17/785>
+> > [v1] https://lkml.org/lkml/2023/5/17/1311 <https://lkml.org/lkml/2023/5=
+/17/1311>
+> > [v2] https://lkml.org/lkml/2023/5/18/516 <https://lkml.org/lkml/2023/5/=
+18/516>
+> > [v3] https://lkml.org/lkml/2023/5/25/7 <https://lkml.org/lkml/2023/5/25=
+/7>
+> >
+> > Changes for V3:
+> > - Integrated all patches into single serie to facilitate debugging and =
+tests.
+> > - Reduce number of exported GPIOs depending on new property
+> > nxp,modem-control-line-ports
+> > - Added additional example in DT bindings
+> >
+> > Changes for V4:
+> > - Increase reset post delay to relax scheduler.
+> > - Put comments patches at the end.
+> > - Remove Fixes tag for patch "mark IOCONTROL register as volatile".
+> > - Improve commit messages after reviews.
+> > - Fix coding style issues after reviews.
+> > - Change GPIO registration to always register the maximum number of GPI=
+Os
+> > supported by the chip, but maks-out GPIOs declared as modem control lin=
+es.
+> > - Add patch to refactor GPIO registration.
+> > - Remove patch "serial: sc16is7xx: fix syntax error in comments".
+> > - Remove patch "add dump registers function"
+> >
+> > Hugo Villeneuve (9):
+> > serial: sc16is7xx: mark IOCONTROL register as volatile
+> > serial: sc16is7xx: add post reset delay
+> > serial: sc16is7xx: fix broken port 0 uart init
+> > serial: sc16is7xx: fix bug when first setting GPIO direction
+> > serial: sc16is7xx: refactor GPIO controller registration
+> > dt-bindings: sc16is7xx: Add property to change GPIO function
+> > serial: sc16is7xx: fix regression with GPIO configuration
+> > serial: sc16is7xx: add call to get rs485 DT flags and properties
+> > serial: sc16is7xx: improve comments about variants
+> >
+> > .../bindings/serial/nxp,sc16is7xx.txt | 46 ++++++
+> > drivers/tty/serial/sc16is7xx.c | 150 +++++++++++++-----
+> > 2 files changed, 156 insertions(+), 40 deletions(-)
+> >
+> >
+> > base-commit: 8b817fded42d8fe3a0eb47b1149d907851a3c942
+>=20
+> It would be a lot of sending, to do that for every patch separately, so f=
+or whole series:
+> Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
+>=20
+> And where applicable - for code patches:
+> Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
+>=20
+> I tested whole series at the same time.
+> I did my tests on an i.MX6 board with SC16IS760 over SPI, which differs a=
+ tiny bit from SC16IS752,
+> and everything works as it should.
+> Thank you for fixing this!
+
+Hi Lech,
+thank for your feedback.
+
+You mentioned before that without the patch "mark IOCONTROL register as vol=
+atile", things were not working properly for you. Could you retest by remov=
+ing this patch and see if things are still working?
+
+Thank you, Hugo.
