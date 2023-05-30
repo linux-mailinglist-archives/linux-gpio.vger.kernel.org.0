@@ -2,48 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB69715CB0
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EADED715CC6
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:15:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbjE3LKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 07:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        id S229805AbjE3LPp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 07:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231244AbjE3LKX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:10:23 -0400
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968AC93
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:10:22 -0700 (PDT)
+        with ESMTP id S229551AbjE3LPn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:15:43 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B77A0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:15:42 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-        id 90076a58-feda-11ed-b972-005056bdfda7;
-        Tue, 30 May 2023 14:10:19 +0300 (EEST)
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 4f256f9d-fedb-11ed-b3cf-005056bd6ce9;
+        Tue, 30 May 2023 14:15:40 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 30 May 2023 14:10:19 +0300
-To:     andy.shevchenko@gmail.com
-Cc:     "xingtong.wu" <xingtong_wu@163.com>, simon.guinot@sequanux.org,
-        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        henning.schild@siemens.com, xingtong.wu@siemens.com
-Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
- gpio pins
-Message-ID: <ZHXZmzvE8tWE1J3y@surfacebook>
-References: <20230529025011.2806-1-xingtong_wu@163.com>
- <20230529025011.2806-2-xingtong_wu@163.com>
- <ZHSZ9cK78qc5QeZD@localhost>
- <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
- <ZHSunJyh2AU1eb0H@localhost>
- <ZHUmHkbM-l_pRaY3@surfacebook>
- <5428dcc3-bcaf-2fff-59db-62d3b3b45d17@163.com>
- <ZHXVu-oARZKVOyzm@surfacebook>
+Date:   Tue, 30 May 2023 14:15:39 +0300
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     andy.shevchenko@gmail.com, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
+ improvements
+Message-ID: <ZHXa23WFb9vNG-T2@surfacebook>
+References: <20230529140711.896830-1-hugo@hugovil.com>
+ <ZHUnwNNcU_EnS4bo@surfacebook>
+ <20230529220708.66f7825fed9ee36b181128cf@hugovil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZHXVu-oARZKVOyzm@surfacebook>
+In-Reply-To: <20230529220708.66f7825fed9ee36b181128cf@hugovil.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,60 +48,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tue, May 30, 2023 at 01:53:47PM +0300, andy.shevchenko@gmail.com kirjoitti:
-> Tue, May 30, 2023 at 02:27:09PM +0800, xingtong.wu kirjoitti:
-> > On 2023/5/30 06:24, andy.shevchenko@gmail.com wrote:
-> > > Mon, May 29, 2023 at 03:54:36PM +0200, simon.guinot@sequanux.org kirjoitti:
-> > >> On Mon, May 29, 2023 at 03:03:28PM +0200, Linus Walleij wrote:
-> > >>> On Mon, May 29, 2023 at 2:27 PM <simon.guinot@sequanux.org> wrote:
-> > >>>
-> > >>>> It would be nice if a pin number found in the device datasheet could
-> > >>>> still be converted into a Linux GPIO number by adding the base of the
-> > >>>> first bank.
-> > >>>
-> > >>> We actively discourage this kind of mapping because of reasons stated
-> > >>> in drivers/gpio/TODO: we want dynamic number allocation to be the
-> > >>> norm.
-> > >>
-> > >> Sure but it would be nice to have a dynamic base applied to a controller
-> > >> (and not to each chip of this controller), and to respect the interval
-> > >> between the chips (as stated in the controllers datasheets).
+Mon, May 29, 2023 at 10:07:08PM -0400, Hugo Villeneuve kirjoitti:
+> On Tue, 30 May 2023 01:31:28 +0300
+> andy.shevchenko@gmail.com wrote:
+> > Mon, May 29, 2023 at 10:07:02AM -0400, Hugo Villeneuve kirjoitti:
+> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > > > 
-> > > What you want is against the architecture. To fix this, you might change
-> > > the architecture of the driver to have one chip for the controller, but
-> > > it's quite questionable change. Also how can you guarantee ordering of
-> > > the enumeration? You probably need to *disable* SMP on the boot time.
-> > > This will still be fragile as long as GPIO chip can be unbound at run
-> > > time. Order can be changed.
+> > > Hello,
+> > > this patch series mainly fixes a GPIO regression and improve RS485 flags and
+> > > properties detection from DT.
 > > > 
-> > > So, the patch is good and the correct way to go.
+> > > It now also includes various small fixes and improvements that were previously
+> > > sent as separate patches, but that made testing everything difficult.
 > > > 
-> > > P.S. The root cause is that hardware engineers and documentation writers
-> > > do not consider their hardware in the multi-tasking, multi-user general
-> > > purpose operating system, such as Linux. I believe the ideal fix is to fix the
-> > > documentation (datasheet).
+> > > Patch 1 fixes an issue when debugging IOcontrol register. After testing the GPIO
+> > > regression patches (patches 6 and 7, tests done by Lech Perczak), it appers that
+> > > this patch is also necessary for having the correct IOcontrol register values.
+> > > 
+> > > Patch 2 introduces a delay after a reset operation to respect datasheet
+> > > timing recommandations.
 > > 
-> > Thanks for your review.
-> > 
-> > The direct reason of this patch
+> > These two patches are w/o Fixes tag, they should be moved in the series further
+> > as I explained before.
+> 
+> Your explanation was not clear.
 
-Oh, It seems I misread this as the cause of the patch, please ignore my
-previous reply.
+Sorry if it feels like this. The documentation should have more clarity
+on the matter.
 
-> > is that when "modprobe gpio-f7188x",
-> > it conflicts with INT34C6. I met this issue on an older kernel, but
-> > could not remember which version exactly.
-> 
-> This is interesting. But what I have noticed the v6.3.2 missing this
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpiolib.c?id=7dd3d9bd873f138675cb727eaa51a498d99f0e89
-> change. Can you apply and retest?
-> 
-> If this does not help, please share more details, exact steps of reproducing
-> the issue, including respective `dmesg` output, etc. (maybe via creating a
-> kernel bugzilla report).
-> 
-> > The error message is as the link below:
-> > https://elixir.bootlin.com/linux/v6.3.2/source/drivers/gpio/gpiolib.c#L798
+> Anyway, I moved them in position 7 and 8.
+
+Thank you, but take also what Greg KH replied to you into consideration.
+He is the maintainer and seems other patches needs some additional work
+in the scope of Fixes / backport (see stable kernel patches flow in the
+kernel documentation, which I also mentioned earlier).
 
 -- 
 With Best Regards,
