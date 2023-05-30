@@ -2,184 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AC371611E
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B94D716120
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 15:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232554AbjE3NI7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 09:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
+        id S232561AbjE3NJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 09:09:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232042AbjE3NI5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:08:57 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3CA592;
-        Tue, 30 May 2023 06:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=X5ARCyzotT4QKjaVW0IeWuI4w9SRg4SsaoEHspvM/io=; b=Gi376FN2FvE4Udx+8/r3wCTWPi
-        /xHfqEFjwuLHHWzcZ3bvWOx9tNmdW85P87xjtrM8kWK7elK8hM3ibmvo2VPNHR5QNGH9SH05nJes4
-        z/5GmYzfggOVYVXItfXS2n5Vh8h1VNXKNBN/u5w2M2gyxq/WzzqzEUy3Dau3z/DjMXhM=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:41434 helo=debian-acer)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q3z5Z-0005zt-Ko; Tue, 30 May 2023 09:08:38 -0400
-Date:   Tue, 30 May 2023 09:08:36 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Lech Perczak <lech.perczak@camlingroup.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230530090836.27b8d080d6b6c022b303ac9e@hugovil.com>
-In-Reply-To: <c15a90d6-b3c1-e432-9216-c4c1e2c44ce6@camlingroup.com>
-References: <20230529140711.896830-1-hugo@hugovil.com>
-        <c15a90d6-b3c1-e432-9216-c4c1e2c44ce6@camlingroup.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S232575AbjE3NJK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 09:09:10 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D0211B
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 06:09:06 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1b025d26f4fso28974225ad.1
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 06:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685452146; x=1688044146;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mDN7ZAqb88hoUSTsAscSaRF5CJIoiGgrge6ixHEDX4Q=;
+        b=sbNJc1NUyRibf17mLCE1FplB8iffWbQim8+tWUHbKEaz/PSuGH7xbwe+to3ZkW/45d
+         N5skAoMXs6VgrwYURbKElK5EyaJ+aKcQTbBNu9by2WoN7lYIsTp1a9gshxjQm1g9XGU0
+         ustZ7ODh3/WYW9OMJYCDj1MfVULDMRrZ/+HajFm1KDVRVr/G9hql9J39g/BQZH+iA65W
+         py8fDl+awcGzLFenk5sdYi+OTonB6kAgHdCYIn+BeOQZsmMctd+6pKSXyzUo+EkX1gu9
+         T66JRsFRa5y03SaH6ZI7YDbhaF0rf+EO5mdttny44EaO74MCLczM8xVRdtg+R/Amybir
+         6bng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685452146; x=1688044146;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mDN7ZAqb88hoUSTsAscSaRF5CJIoiGgrge6ixHEDX4Q=;
+        b=CTp3Z0dvEQYc6veiZw7/RSUXlbQc/NPbPj5itCgRaUyQZI+/oDlJvlgln+AI2D1bbw
+         MCxzD2vW21aj61ZmQ3/0z3IfLn5aa9HqOpOahM21l6SxImy9+R/QLp99GNznvRGf5ORS
+         jI8hhKRznCMxQsBM+Jbt/w8cSx38G1Q4MoST3iUcMZoB3MMh5R1qkEIqdxztWYXtkl69
+         570ClqN1g1s4QhdChYvjqtahP0H1eeVz2fcws/u8iQqpnhI1e6DTUJgb4H1N6Jn4EIlD
+         BJtc5LjnTHE7zuNWWEej2tWfmjWXHCnS1JdFvrrlK+GRN4LmUHRgivPyK2Mzscgo91nH
+         tjLg==
+X-Gm-Message-State: AC+VfDy0WWEQGwNagPjagJMjf3aw9DCB6OrsDDXfs0yqDrLD8IEJ6iM/
+        n1Q5quiW4DUdpTzuFtnHCLwzCe1UVBM=
+X-Google-Smtp-Source: ACHHUZ7EzjMCHApZ0HM5/dTZMCUMOAGMM3s8aj9c+Y4w32ObpnvlbzQZP9LQsJ1psXwqfA9vNvV9jw==
+X-Received: by 2002:a17:902:7616:b0:1ad:c736:2090 with SMTP id k22-20020a170902761600b001adc7362090mr1979435pll.3.1685452145793;
+        Tue, 30 May 2023 06:09:05 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id w6-20020a170902e88600b001b050db1894sm2303343plg.36.2023.05.30.06.09.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 06:09:05 -0700 (PDT)
+Date:   Tue, 30 May 2023 21:09:00 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     andy.shevchenko@gmail.com
+Cc:     Gabriel Matni <gabriel.matni@exfo.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][PATCH] tools: gpiomon: add timeout option
+Message-ID: <ZHX1bEThvg8Cq8zD@sol>
+References: <PH8PR11MB71425AE7A35F6E651A5B3425864A9@PH8PR11MB7142.namprd11.prod.outlook.com>
+ <ZHXB83x85Qchv1XJ@sol>
+ <ZHXcLvUNvw75Z-3W@surfacebook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZHXcLvUNvw75Z-3W@surfacebook>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
- improvements
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 30 May 2023 11:30:07 +0200
-Lech Perczak <lech.perczak@camlingroup.com> wrote:
+On Tue, May 30, 2023 at 02:21:18PM +0300, andy.shevchenko@gmail.com wrote:
+> Tue, May 30, 2023 at 05:29:23PM +0800, Kent Gibson kirjoitti:
+> > On Mon, May 29, 2023 at 08:20:44PM +0000, Gabriel Matni wrote:
+> > > From: Gabriel Matni <gabriel.matni@exfo.com>
+> 
+> ...
+> 
+> > My preferred solution is to run gpiomon as a coproc and have the
+> > controlling script perform the timeout. e.g.
+> > 
+> > #!/bin/env bash
+> 
+> Oh, this is too bad.
+> 
+> > coproc gpiomon "$@"
+> > while :
+> > do
+> >         read -t5 -u ${COPROC[0]} event || break
+> >         echo $event
+> > done
+> > kill $COPROC_PID
+> 
+> I'm wondering what coproc is and why it requires bash.
+> 
 
-> W dniu 29.05.2023 o=A016:07, Hugo Villeneuve pisze:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >
-> > Hello,
-> > this patch series mainly fixes a GPIO regression and improve RS485 flag=
-s and
-> > properties detection from DT.
-> >
-> > It now also includes various small fixes and improvements that were pre=
-viously
-> > sent as separate patches, but that made testing everything difficult.
-> >
-> > Patch 1 fixes an issue when debugging IOcontrol register. After testing=
- the GPIO
-> > regression patches (patches 6 and 7, tests done by Lech Perczak), it ap=
-pers that
-> > this patch is also necessary for having the correct IOcontrol register =
-values.
-> >
-> > Patch 2 introduces a delay after a reset operation to respect datasheet
-> > timing recommandations.
-> >
-> > Patch 3 fixes an issue with init of first port during probing.
-> >
-> > Patch 4 fixes a bug with the output value when first setting the GPIO d=
-irection.
-> >
-> > Patch 5 is a refactor of GPIO registration code.
-> >
-> > Patches 6 and 7 fix a GPIO regression by (re)allowing to choose GPIO fu=
-nction
-> > for GPIO pins shared with modem status lines.
-> >
-> > Patch 8 allows to read common rs485 device-tree flags and properties.
-> >
-> > Patch 9 improves comments about chip variants.
-> >
-> > I have tested the changes on a custom board with two SC16IS752 DUART us=
-ing a
-> > Variscite IMX8MN NANO SOM.
-> >
-> > Thank you.
-> >
-> > Link: [v1] https://lkml.org/lkml/2023/5/17/967 <https://lkml.org/lkml/2=
-023/5/17/967>
-> > [v1] https://lkml.org/lkml/2023/5/17/777 <https://lkml.org/lkml/2023/5/=
-17/777>
-> > [v1] https://lkml.org/lkml/2023/5/17/780 <https://lkml.org/lkml/2023/5/=
-17/780>
-> > [v1] https://lkml.org/lkml/2023/5/17/785 <https://lkml.org/lkml/2023/5/=
-17/785>
-> > [v1] https://lkml.org/lkml/2023/5/17/1311 <https://lkml.org/lkml/2023/5=
-/17/1311>
-> > [v2] https://lkml.org/lkml/2023/5/18/516 <https://lkml.org/lkml/2023/5/=
-18/516>
-> > [v3] https://lkml.org/lkml/2023/5/25/7 <https://lkml.org/lkml/2023/5/25=
-/7>
-> >
-> > Changes for V3:
-> > - Integrated all patches into single serie to facilitate debugging and =
-tests.
-> > - Reduce number of exported GPIOs depending on new property
-> > nxp,modem-control-line-ports
-> > - Added additional example in DT bindings
-> >
-> > Changes for V4:
-> > - Increase reset post delay to relax scheduler.
-> > - Put comments patches at the end.
-> > - Remove Fixes tag for patch "mark IOCONTROL register as volatile".
-> > - Improve commit messages after reviews.
-> > - Fix coding style issues after reviews.
-> > - Change GPIO registration to always register the maximum number of GPI=
-Os
-> > supported by the chip, but maks-out GPIOs declared as modem control lin=
-es.
-> > - Add patch to refactor GPIO registration.
-> > - Remove patch "serial: sc16is7xx: fix syntax error in comments".
-> > - Remove patch "add dump registers function"
-> >
-> > Hugo Villeneuve (9):
-> > serial: sc16is7xx: mark IOCONTROL register as volatile
-> > serial: sc16is7xx: add post reset delay
-> > serial: sc16is7xx: fix broken port 0 uart init
-> > serial: sc16is7xx: fix bug when first setting GPIO direction
-> > serial: sc16is7xx: refactor GPIO controller registration
-> > dt-bindings: sc16is7xx: Add property to change GPIO function
-> > serial: sc16is7xx: fix regression with GPIO configuration
-> > serial: sc16is7xx: add call to get rs485 DT flags and properties
-> > serial: sc16is7xx: improve comments about variants
-> >
-> > .../bindings/serial/nxp,sc16is7xx.txt | 46 ++++++
-> > drivers/tty/serial/sc16is7xx.c | 150 +++++++++++++-----
-> > 2 files changed, 156 insertions(+), 40 deletions(-)
-> >
-> >
-> > base-commit: 8b817fded42d8fe3a0eb47b1149d907851a3c942
->=20
-> It would be a lot of sending, to do that for every patch separately, so f=
-or whole series:
-> Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
->=20
-> And where applicable - for code patches:
-> Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
->=20
-> I tested whole series at the same time.
-> I did my tests on an i.MX6 board with SC16IS760 over SPI, which differs a=
- tiny bit from SC16IS752,
-> and everything works as it should.
-> Thank you for fixing this!
+And I'm wondering why your mail got to the list, but not to me directly,
+despite being directly addressed.  It isn't even in my junk folder.
+And it was gmail to gmail.  Now that is weird.
 
-Hi Lech,
-thank for your feedback.
+Anyway, coproc is a feature of many shells, such as bash, zsh, ksh.
+I don't think or ash or dash have coproc, but then you cn always use named
+pipes to similar effect.  It would be similar to the simple gpioset
+daemon I posted the other day, just in reverse.
 
-You mentioned before that without the patch "mark IOCONTROL register as vol=
-atile", things were not working properly for you. Could you retest by remov=
-ing this patch and see if things are still working?
+I did say that coproc was my preferred solution, not that it is the only
+one. 
 
-Thank you, Hugo.
+> What I want to have and keep that working is that all our tools can be run in
+> Busybox environment (embedded application). That's why I'm against seeing bash
+> in any form of the tooling.
+> 
+
+It isn't IN the tooling.  It is in the shell that calls the tooling.
+The tool test suite does require bash, but that is due to the framework we
+use, not coproc.
+
+I take it you would be in favour of an idle timeout option then?
+
+I'm puzzled why no one has ever asked for it before, if it is something
+that is in demand.
+
+Cheers,
+Kent.
