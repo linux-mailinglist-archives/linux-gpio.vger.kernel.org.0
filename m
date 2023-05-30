@@ -2,88 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CEF715D4C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:33:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8CD715D54
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjE3Ldn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 07:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
+        id S231430AbjE3LhK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 07:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbjE3Ldm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:33:42 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23947E5
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:33:41 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-565a63087e9so57313337b3.2
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:33:41 -0700 (PDT)
+        with ESMTP id S230463AbjE3LhJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:37:09 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0121F3
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:37:06 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-565a3cdba71so61118147b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685446420; x=1688038420;
+        d=linaro.org; s=google; t=1685446626; x=1688038626;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zO/hEIm/6vFm+Ve2jfklUx8YwRrMLFv0UwuU9t+2qT8=;
-        b=AMemBWUvnvX0G0MDmnf8f/zVF0q9PNYTQ6bTUriXGy7KkrQEgnontw/Rtf9Mdm+nKw
-         neUaH++nwf7A4ncvxc5inevGIC7S/TnIYxNRnPAHuSAXyfgOp4pgUO+u8Bth0LoTiHcd
-         93M2sORUXM35A4h2G54YotHEcuxq9Z0jmGtIxq5n6F3AMMYVN15L97TB5woGOoQk/dfl
-         Z2ETVLE9UNJ18AvVV6ozW5UcamPts81RLcS8ZaiJt2yrv3nj4LlD/SaxHrChTv4qXCF6
-         aBvSSCdzK+qBAXqwWR89gVfFH0fV44QxViYHFTmWkGvpZVxFVvj86Jw3R89tpkgA/588
-         6mlQ==
+        bh=fipiLZLGfX4/1UxxNAJShfinAkElOTmQ9bvtKEuEuxw=;
+        b=uOh+52nn4q+fLREJIUy7KO06MoLfqAQkv8mOsVNFntA6TzWyQ06Y2BThSyMq3wWhLq
+         zKHYrBOLNFciPFL+72Uz9eRSV5XrJLjOAksd1RdT5og8gKjik+lQ1KfTUgLYLE60IEmd
+         9zp1/8Fm1rhA6YA0IX+CtRsstIZSQZ/cqs3pJJGExe8gdxKRbaPwo6tuayptQlRdrqBD
+         2ZuCw5ZBp4s7fk5ezVtWmyPbe0g2YIQ7jtqxmoH6hZAsHnmK7xYsms6H/1QmRoS9jpVV
+         eV/4miN84WNTnl52fa2MISMlbcZfhKyJRkdJM3UV4mSfIVXpPmkV/rNFje09RhGigWJ7
+         8+qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685446420; x=1688038420;
+        d=1e100.net; s=20221208; t=1685446626; x=1688038626;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zO/hEIm/6vFm+Ve2jfklUx8YwRrMLFv0UwuU9t+2qT8=;
-        b=G0L0ZjYFaKOjTtGfCe6aNPhiqNShtkz/YpWqrwEDyyEouk7BV6wYTVkXTkOCWplV1t
-         R9tkRLtyXUwyEEhNL8THuCMBYSbro8UuyTea68Bgri35JrmYBJzhQdeeRFEpeb5VDSXD
-         uwoCnas0i1pwzs+Wj6uU6MC3ZgqMnNHWC6SR5kjTyM36GOevhSlGhRnyAccFFBxY6KHv
-         B5fVYJ5JjeC3qJL1F8LkyGmvc4EUN2TIHMkWfk+LIFJqakTp8dF2gbjIarjQWSxtouSA
-         bBfkHOSccnNsda52pCeonXlO4LqjJ0shTfiyFO0DjYI6urab3ttw/4uTztvZoVyY/nF9
-         ko9w==
-X-Gm-Message-State: AC+VfDzNajh238uk7IErp71KVVC+7udk/J2IxlOvFrbAEJg9BSOvgB+1
-        RBkuVxREr3/wKT6g/SAYXy7nqggQmyyqsPWiOZnmnA==
-X-Google-Smtp-Source: ACHHUZ5OqCG1+FL/F18LVpp4TSjuAEWgttMpiOAuDfgIrf50Bf1rJPTXcD2dr152yi2w5mvi/Cgzm9bpg7BtykybcCI=
-X-Received: by 2002:a0d:d741:0:b0:565:dff1:d1e2 with SMTP id
- z62-20020a0dd741000000b00565dff1d1e2mr2408888ywd.18.1685446420350; Tue, 30
- May 2023 04:33:40 -0700 (PDT)
+        bh=fipiLZLGfX4/1UxxNAJShfinAkElOTmQ9bvtKEuEuxw=;
+        b=hv8mbBo7y1Mc7IZot7FbHI7TtwxaNaF0CZkwa51Tdv3wuNKwLOnV4awPNLGHzSHlXT
+         L/Dpo/QoKgWs+uQGSjGocux8KFHy6ul+c+YZqEZKD1wjeG/C77RTC2oW/RsofKZ09EeE
+         RNjPO8txn8VD1gKV6Vl45VJy1iEj+JcdPCwZdV0APYp2xzd5ip4Y8SfPEKK6n0JKZ2ba
+         11b7v/2QC+vBQOpe+0oXfeU4vHLnj0z5YrhmvTrhiBG9IVd3IXXA24PbCmIZQJmebI8x
+         319RNbxA9wyXtDV0YHiP8aK5mnkG/fjwB/Z+O+8T8O4UqKOj/l4w4ZYKTS4jifIkts/U
+         c22w==
+X-Gm-Message-State: AC+VfDxthtDz5Kbx4GCnsQLOxsSD7mqfWNIQ6u0A/KS2ksyuItPWD+aL
+        kw9UXZyvKX69r1rFl6zEYr9vFseBWgSGGkIuW4ScOw==
+X-Google-Smtp-Source: ACHHUZ7RV9zV0oEPR8Q7c7k6kqfUUzMEoSzKHD+O0Fj48PMvU5x4Uul6Uh+8k+/1HYAala5Qo0yQtHV5yNCcrwYwjo8=
+X-Received: by 2002:a0d:ed04:0:b0:560:befc:6682 with SMTP id
+ w4-20020a0ded04000000b00560befc6682mr2020042ywe.42.1685446626022; Tue, 30 May
+ 2023 04:37:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230315215027.30685-1-asmaa@nvidia.com> <20230315215027.30685-2-asmaa@nvidia.com>
- <CAHp75VfnNOsfcyLM-UP61CMAF9sLOwMbRkAe5Ljhs2p8F=4Pgw@mail.gmail.com> <CH2PR12MB3895BDF9D79D61420A2F2BA8D7479@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB3895BDF9D79D61420A2F2BA8D7479@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
+In-Reply-To: <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 30 May 2023 13:33:29 +0200
-Message-ID: <CACRpkdbN3oa=chsoh8ko74xKBPXA_yh1K07MSaghnMMk5PWYYw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] gpio: mlxbf3: Add gpio driver support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Date:   Tue, 30 May 2023 13:36:55 +0200
+Message-ID: <CACRpkdZfWF5Bq5id_JyDe2GLc7OojiD7R6g2ZiHswPD3D_UT_w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+To:     Jerome Neanne <jneanne@baylibre.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 26, 2023 at 3:49=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
-te:
+On Tue, May 30, 2023 at 10:00=E2=80=AFAM Jerome Neanne <jneanne@baylibre.co=
+m> wrote:
 
-> Hi Andy, Hi Linus,
+> Add support for TPS65219 PMICs GPIO interface.
 >
-> I see that the pinctl-mlxbf3.c is in v6.4 kernel but I am not seeing gpio=
--mlxbf3.c, not
-> even in Linux next. Do you know when this driver will be integrated?
+> 3 GPIO pins:
+> - GPIO0 only is IO but input mode reserved for MULTI_DEVICE_ENABLE usage
+> - GPIO1 and GPIO2 are Output only and referred as GPO1 and GPO2 in spec
+>
+> GPIO0 is statically configured as input or output prior to Linux boot.
+> it is used for MULTI_DEVICE_ENABLE function.
+> This setting is statically configured by NVM.
+> GPIO0 can't be used as a generic GPIO (specification Table 8-34).
+> It's either a GPO when MULTI_DEVICE_EN=3D0 or a GPI when MULTI_DEVICE_EN=
+=3D1.
+>
+> Datasheet describes specific usage for non standard GPIO.
+> Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
+>
+> Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
+> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
+> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
 
-Bartosz is applying GPIO patches, I am sure he will get around to it once
-all things are reviewed, but you need to use the right email address to
-him (see MAINTAINERS).
+I agree with Andy's review comments, so fix these.
+Once those are fixed you can add my:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
