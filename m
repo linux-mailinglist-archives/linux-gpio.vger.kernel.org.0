@@ -2,207 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 230F7715CA3
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAB69715CB0
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 13:10:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231816AbjE3LH6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 07:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52528 "EHLO
+        id S231387AbjE3LKY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 07:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbjE3LH5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:07:57 -0400
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4863EFE
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:07:52 -0700 (PDT)
+        with ESMTP id S231244AbjE3LKX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 07:10:23 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968AC93
+        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 04:10:22 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-        id 36308c3d-feda-11ed-b3cf-005056bd6ce9;
-        Tue, 30 May 2023 14:07:49 +0300 (EEST)
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id 90076a58-feda-11ed-b972-005056bdfda7;
+        Tue, 30 May 2023 14:10:19 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Tue, 30 May 2023 14:07:48 +0300
-To:     Jerome Neanne <jneanne@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
-Subject: Re: [PATCH v4 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-Message-ID: <ZHXZBCwk6tTu8gjY@surfacebook>
-References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
- <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
+Date:   Tue, 30 May 2023 14:10:19 +0300
+To:     andy.shevchenko@gmail.com
+Cc:     "xingtong.wu" <xingtong_wu@163.com>, simon.guinot@sequanux.org,
+        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        henning.schild@siemens.com, xingtong.wu@siemens.com
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
+ gpio pins
+Message-ID: <ZHXZmzvE8tWE1J3y@surfacebook>
+References: <20230529025011.2806-1-xingtong_wu@163.com>
+ <20230529025011.2806-2-xingtong_wu@163.com>
+ <ZHSZ9cK78qc5QeZD@localhost>
+ <CACRpkdbiRsJqxVZPNLvLPK-MzEhyjSBGffuaTgP7tt40pGGoRw@mail.gmail.com>
+ <ZHSunJyh2AU1eb0H@localhost>
+ <ZHUmHkbM-l_pRaY3@surfacebook>
+ <5428dcc3-bcaf-2fff-59db-62d3b3b45d17@163.com>
+ <ZHXVu-oARZKVOyzm@surfacebook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
+In-Reply-To: <ZHXVu-oARZKVOyzm@surfacebook>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tue, May 30, 2023 at 09:59:59AM +0200, Jerome Neanne kirjoitti:
+Tue, May 30, 2023 at 01:53:47PM +0300, andy.shevchenko@gmail.com kirjoitti:
+> Tue, May 30, 2023 at 02:27:09PM +0800, xingtong.wu kirjoitti:
+> > On 2023/5/30 06:24, andy.shevchenko@gmail.com wrote:
+> > > Mon, May 29, 2023 at 03:54:36PM +0200, simon.guinot@sequanux.org kirjoitti:
+> > >> On Mon, May 29, 2023 at 03:03:28PM +0200, Linus Walleij wrote:
+> > >>> On Mon, May 29, 2023 at 2:27â€¯PM <simon.guinot@sequanux.org> wrote:
+> > >>>
+> > >>>> It would be nice if a pin number found in the device datasheet could
+> > >>>> still be converted into a Linux GPIO number by adding the base of the
+> > >>>> first bank.
+> > >>>
+> > >>> We actively discourage this kind of mapping because of reasons stated
+> > >>> in drivers/gpio/TODO: we want dynamic number allocation to be the
+> > >>> norm.
+> > >>
+> > >> Sure but it would be nice to have a dynamic base applied to a controller
+> > >> (and not to each chip of this controller), and to respect the interval
+> > >> between the chips (as stated in the controllers datasheets).
+> > > 
+> > > What you want is against the architecture. To fix this, you might change
+> > > the architecture of the driver to have one chip for the controller, but
+> > > it's quite questionable change. Also how can you guarantee ordering of
+> > > the enumeration? You probably need to *disable* SMP on the boot time.
+> > > This will still be fragile as long as GPIO chip can be unbound at run
+> > > time. Order can be changed.
+> > > 
+> > > So, the patch is good and the correct way to go.
+> > > 
+> > > P.S. The root cause is that hardware engineers and documentation writers
+> > > do not consider their hardware in the multi-tasking, multi-user general
+> > > purpose operating system, such as Linux. I believe the ideal fix is to fix the
+> > > documentation (datasheet).
+> > 
+> > Thanks for your review.
+> > 
+> > The direct reason of this patch
 
-First of all, I have a bit of déjà vu that I have given already some comments
-that left neither answered nor addressed.
+Oh, It seems I misread this as the cause of the patch, please ignore my
+previous reply.
 
-> Add support for TPS65219 PMICs GPIO interface.
+> > is that when "modprobe gpio-f7188x",
+> > it conflicts with INT34C6. I met this issue on an older kernel, but
+> > could not remember which version exactly.
 > 
-> 3 GPIO pins:
-> - GPIO0 only is IO but input mode reserved for MULTI_DEVICE_ENABLE usage
-> - GPIO1 and GPIO2 are Output only and referred as GPO1 and GPO2 in spec
+> This is interesting. But what I have noticed the v6.3.2 missing this
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpiolib.c?id=7dd3d9bd873f138675cb727eaa51a498d99f0e89
+> change. Can you apply and retest?
 > 
-> GPIO0 is statically configured as input or output prior to Linux boot.
-> it is used for MULTI_DEVICE_ENABLE function.
-> This setting is statically configured by NVM.
-> GPIO0 can't be used as a generic GPIO (specification Table 8-34).
-> It's either a GPO when MULTI_DEVICE_EN=0 or a GPI when MULTI_DEVICE_EN=1.
+> If this does not help, please share more details, exact steps of reproducing
+> the issue, including respective `dmesg` output, etc. (maybe via creating a
+> kernel bugzilla report).
 > 
-> Datasheet describes specific usage for non standard GPIO.
-> Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
-
-Can you convert this to be a Datasheet tag? Currently even Link is *not* a tag
-because there must be no blank lines in the tag block.
-
-> Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
-> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
-> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
-
-...
-
-> +	help
-> +	  Select this option to enable GPIO driver for the TPS65219 chip family.
-> +	  GPIO0 is statically configured as input or output prior to Linux boot.
-> +	  It is used for MULTI_DEVICE_ENABLE function.
-> +	  This setting is statically configured by NVM.
-> +	  GPIO0 can't be used as a generic GPIO.
-> +	  It's either a GPO when MULTI_DEVICE_EN=0 or a GPI when MULTI_DEVICE_EN=1.
-> +
-> +	  This driver can also be built as a module.
-> +	  If so, the module will be called gpio_tps65219.
-
-Random indentation. Can you use as much room as available on each line, please?
-
-> @@ -0,0 +1,181 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * GPIO driver for TI TPS65219 PMICs
-> + *
-> + * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include <linux/bits.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/mfd/tps65219.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-
-...
-
-> +static int tps65219_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
-> +	struct device *dev = gpio->tps->dev;
-> +	int ret, val;
-> +
-> +	if (offset != TPS65219_GPIO0_IDX) {
-> +		dev_err(dev, "GPIO%d is output only, cannot get\n", offset);
-
-> +		return -EOPNOTSUPP;
-
-This seems blind following the checkpatch false warning. The checkpatch does
-not know about subsystem details, i.e. GPIOLIB uses ENOTSUPP in the callbacks.
-The userspace won't see that as GPIOLIB takes care of translating it when
-needed.
-
-> +	}
-> +
-> +	ret = regmap_read(gpio->tps->regmap, TPS65219_REG_MFP_CTRL, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = !!(val & BIT(TPS65219_MFP_GPIO_STATUS_MASK));
-> +	dev_warn(dev, "GPIO%d = %d, MULTI_DEVICE_ENABLE, not a standard GPIO\n", offset, ret);
-> +
-> +	/* depends on NVM config return error if dir output else the GPIO0 status bit */
-
-	/*
-	 * Depending on NVM config, return an error if direction is output,
-	 * otherwise the GPIO0 status bit.
-	 */
-
-> +	if (tps65219_gpio_get_direction(gc, offset) == TPS65219_GPIO_DIR_OUT)
-> +		return -EOPNOTSUPP;
-
-Fix the error code.
-
-> +	return ret;
-> +}
-
-...
-
-> +static int tps65219_gpio_change_direction(struct gpio_chip *gc, unsigned int offset,
-> +					  unsigned int direction)
-> +{
-> +	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
-> +	struct device *dev = gpio->tps->dev;
-> +
-> +	/*
-> +	 * Documentation is stating that GPIO0 direction must not be changed in Linux:
-> +	 * Table 8-34. MFP_1_CONFIG(3): MULTI_DEVICE_ENABLE,
-> +	 * Should only be changed in INITIALIZE state (prior to ON Request).
-> +	 * Set statically by NVM, changing direction in application can cause a hang.
-> +	 * Below can be used for test purpose only:
-> +	 */
-> +
-> +	if (IS_ENABLED(CONFIG_DEBUG_GPIO)) {
-> +		int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
-> +					     TPS65219_GPIO0_DIR_MASK, direction);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"GPIO DEBUG enabled: Fail to change direction to %u for GPIO%d.\n",
-> +				direction, offset);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	dev_err(dev,
-> +		"GPIO%d direction set by NVM, change to %u failed, not allowed by specification\n",
-> +		 offset, direction);
-> +
-> +	return -EOPNOTSUPP;
-
-Ditto.
-
-> +}
-
-...
-
-> +static int tps65219_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
-> +	struct device *dev = gpio->tps->dev;
-> +
-> +	if (offset != TPS65219_GPIO0_IDX) {
-> +		dev_err(dev, "GPIO%d is output only, cannot change to input\n", offset);
-> +		return -EOPNOTSUPP;
-
-Ditto.
-
-> +	}
-> +
-> +	if (tps65219_gpio_get_direction(gc, offset) == TPS65219_GPIO_DIR_IN)
-> +		return 0;
-> +
-> +	return tps65219_gpio_change_direction(gc, offset, TPS65219_GPIO_DIR_IN);
-> +}
+> > The error message is as the link below:
+> > https://elixir.bootlin.com/linux/v6.3.2/source/drivers/gpio/gpiolib.c#L798
 
 -- 
 With Best Regards,
