@@ -2,108 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E34F3716752
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 17:42:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF4BF71680E
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 17:52:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjE3PmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 11:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        id S232909AbjE3Pwt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 11:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbjE3PmI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 11:42:08 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F82E8;
-        Tue, 30 May 2023 08:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=VbQOqV0XO5ZW9VCHB3kU+B3iNrKth4njPt4pnZnKjaU=; b=xPO3dQxdKCjghLReaH3potgFlw
-        Zh0uYhuuX15w6YCNiQTlitVMZ3K/+D9ulFyXwJFiC6ip9SWAlcUyDfq05KUlKIdzMH2y8kugWFhBh
-        ai9LHihHKzGOHfOu8otz66JQ7P4zEw9Utl6BhrRPW1zi3tbImoduRlFdyZZyVaN+GGko=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:33086 helo=debian-acer)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q41Tz-0006z5-Lf; Tue, 30 May 2023 11:42:00 -0400
-Date:   Tue, 30 May 2023 11:41:58 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     andy.shevchenko@gmail.com
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230530114158.f74f014234fbffb1026f06e1@hugovil.com>
-In-Reply-To: <ZHXa23WFb9vNG-T2@surfacebook>
-References: <20230529140711.896830-1-hugo@hugovil.com>
-        <ZHUnwNNcU_EnS4bo@surfacebook>
-        <20230529220708.66f7825fed9ee36b181128cf@hugovil.com>
-        <ZHXa23WFb9vNG-T2@surfacebook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S232124AbjE3Pw0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 11:52:26 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5589B1BB;
+        Tue, 30 May 2023 08:52:04 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-64d1a0d640cso3479542b3a.1;
+        Tue, 30 May 2023 08:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685461924; x=1688053924;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QvjuGnOnuMpHS/8h2nMBHcd349FV9zoUe5mktYfGvK8=;
+        b=HRMltly7dJjLX1TKMHJsfQoVdWBcj3G8rDr0uOTq4Zt+jlbKtyaUP2IfTpqDfbpzuL
+         uNGg3emgSKQYlGKPJ/hOfHPxJK8Ig3cD90Ag81/ThD/WTkFNC0mJ06y4CfvigjOovBWJ
+         AWI6iuPIauT0NJw5m7wVHLjDWlhLaNwNywWneHUfJHGKI+e3Xoj6DF0M6egscTLuPBwx
+         3lSVbp+CWVROJ/r3wu9CZKs0b9LgC8XkxKs/hVHyGPN6mc69ODh4MOQpxup80WDaAOhy
+         jQ64thcI4D7DX4AEtFsFR4bfdzIafdaW8jXvmrsNUUlDYxaNFx8ecY7QlvTthR51pV7u
+         4/+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685461924; x=1688053924;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QvjuGnOnuMpHS/8h2nMBHcd349FV9zoUe5mktYfGvK8=;
+        b=j1skOtIDEXD4tZSpj4IPB6YETzDXPsrfmEfJkdgPCzfFvAhxlODGGOTBYbrKvmyDQ7
+         ubfxaonmWj8Ii8mdNp2WHx/Up09bvD6K6BMyUNkyO+d7QiTzjphx8BKyxddYMinTTG6K
+         DHU3ftiuA4mVGUH/EhsmZNW2fs4RsrSEQxZMTIM0NpfoBSy1Ir0LIJgTXgUcRoELeKFo
+         Vw7QTYVtw/d9GY40dUU6bcjIrWTEe1WL8qdYLgCRgOeamPKQR17H7bdawbqutSNmltMk
+         WgTbhMyRNaQSPoJx4hYqPprviGQoafsPwa3Io9zBcTZ2UiOOtOMqmZ45OXjbCwYP5aAH
+         DdEw==
+X-Gm-Message-State: AC+VfDwDrCBvdd/WN9vUz+Sf4v5Xlw8WEv+DptqOCb87ylzuPdpINX6V
+        M34jw8FwFGAeGpA8/5i3C3c=
+X-Google-Smtp-Source: ACHHUZ6aJ7O8Zwe+9NJNXJ9SUYdgthdaMnKUX27ssWc2qhsxBQDH9E6dZc/7XKVR9x326pS5UKA2cw==
+X-Received: by 2002:a17:90a:17af:b0:23f:83de:7e4a with SMTP id q44-20020a17090a17af00b0023f83de7e4amr2874304pja.7.1685461923581;
+        Tue, 30 May 2023 08:52:03 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id z8-20020a17090abd8800b00256471db12bsm5148323pjr.8.2023.05.30.08.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 08:52:03 -0700 (PDT)
+Date:   Tue, 30 May 2023 23:51:56 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: introduce hog properties with less ambiguity
+Message-ID: <ZHYbnDHgc9ZMc7rj@sol>
+References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
- improvements
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 30 May 2023 14:15:39 +0300
-andy.shevchenko@gmail.com wrote:
-
-> Mon, May 29, 2023 at 10:07:08PM -0400, Hugo Villeneuve kirjoitti:
-> > On Tue, 30 May 2023 01:31:28 +0300
-> > andy.shevchenko@gmail.com wrote:
-> > > Mon, May 29, 2023 at 10:07:02AM -0400, Hugo Villeneuve kirjoitti:
-> > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > > 
-> > > > Hello,
-> > > > this patch series mainly fixes a GPIO regression and improve RS485 flags and
-> > > > properties detection from DT.
-> > > > 
-> > > > It now also includes various small fixes and improvements that were previously
-> > > > sent as separate patches, but that made testing everything difficult.
-> > > > 
-> > > > Patch 1 fixes an issue when debugging IOcontrol register. After testing the GPIO
-> > > > regression patches (patches 6 and 7, tests done by Lech Perczak), it appers that
-> > > > this patch is also necessary for having the correct IOcontrol register values.
-> > > > 
-> > > > Patch 2 introduces a delay after a reset operation to respect datasheet
-> > > > timing recommandations.
-> > > 
-> > > These two patches are w/o Fixes tag, they should be moved in the series further
-> > > as I explained before.
-> > 
-> > Your explanation was not clear.
+On Tue, May 30, 2023 at 05:19:44PM +0200, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Sorry if it feels like this. The documentation should have more clarity
-> on the matter.
+> this is another approach after
+> https://lore.kernel.org/linux-gpio/20210503210526.43455-1-u.kleine-koenig@pengutronix.de
+> two years ago. I switched back to "active" and "inactive" from
+> "asserted" and "deasserted". The poll about the naming is ambigous, but
+> I think with a slight preference of active/inactive over
+> asserted/deasserted (with my unbiased self preferring active/inactive,
+> too :-)
 > 
-> > Anyway, I moved them in position 7 and 8.
-> 
-> Thank you, but take also what Greg KH replied to you into consideration.
-> He is the maintainer and seems other patches needs some additional work
-> in the scope of Fixes / backport (see stable kernel patches flow in the
-> kernel documentation, which I also mentioned earlier).
 
-Hi,
-will do.
+FWIW, this makes sense to me too - the active/inactive naming is used in
+both the GPIO uAPI and libgpiod v2, so it would be consistent with that,
+if nothing else.
 
-Thank you,.
-Hugo.
+Bart, just wondering if gpio-sim should support the aliases as well?
+I realise they don't support active-low, so polarity isn't an issue, and
+it could even be confusing to support the alias, but just throwing it
+out there...
+
+Cheers,
+Kent.
