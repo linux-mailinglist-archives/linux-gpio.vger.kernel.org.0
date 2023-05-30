@@ -2,117 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D08977157CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 10:00:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1837F7158C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 May 2023 10:39:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjE3IAa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 May 2023 04:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
+        id S229739AbjE3Ii7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 May 2023 04:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbjE3IA3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 04:00:29 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA2EC7
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 01:00:27 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3063433fa66so2601190f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 May 2023 01:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1685433626; x=1688025626;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oi5cyxzC3+NP4WFp104cxanaFNMsvwaBhA2yhJz87ao=;
-        b=FKNBr7ODLDGPyplbcdDyuqyYIbMDFMB91lgmUBE8Z8fIM1vdnWCRxK5t+4zSDAxOQe
-         +GysBXe8MItNFn54hUSvIyuORrnaVllTUP7SOPmdcJUz0AbYylXIdcOWX4qR0j+bunS+
-         DivOm121O8Cvb3kmjaeNcXzq1MgfL2Cm7AbasSRaO4rqhBr3+tUhWjO6ckUKBkbqynL2
-         +HQjTOXJYiPJzm9Q0saSZlOlObvXdAYwp9hHnHQoEBcDLKgdIkqXJeotu2nh0MkdTiUq
-         kQJKxflt0RMy21IV+jrA0l+uTuT0r8ylU+iB3IY9md8yKxjZOf9Vk0X+M9WFeS6RjJLB
-         2mAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685433626; x=1688025626;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oi5cyxzC3+NP4WFp104cxanaFNMsvwaBhA2yhJz87ao=;
-        b=KiiHpfBGjVxSkSoQCFDjI8YYdlWiw/fhzzZamJOgOQ/qsnO9CnLj/hLNUywTG3eZ0D
-         EF1yeGCficXoWOTZY7pyIhjcSxcoFgOhzyzbeCoVOirm8OAQp3AHU8dr6qRPZiqXAZXp
-         /ul4ZjogPSppdSvzwhUkwfF3Ntm/DZ0dlMI6TD6CO7GImhZSeVd4WTjgljlvw4okhoxr
-         N+FAAm52IjUe0HgcrDl2bNheCJAEDdTsCBsLonStWSeu3hHD2utck+GMCgAfrmrTaJ9a
-         tnazFABGDHUOM5gy/3zVzjF1L4swWzhVHtonuYcdRzogjnVcGep8I0MTJl9QUZrwcAH9
-         a9ug==
-X-Gm-Message-State: AC+VfDzniG2aly3d8dm7mxGBp8ypQNG9g2/UCsijbADPBgZd6ky2HwYz
-        QET/nzcBSW7V4dkQPSKRpmVXWw==
-X-Google-Smtp-Source: ACHHUZ4sElmQNI9IoZcrEoP6bqPGFkS1UWyATZlwF9CbxAMaju6OiXJvlndUkxmSYQZqW4deOzhaAw==
-X-Received: by 2002:a5d:678f:0:b0:309:4a5b:508f with SMTP id v15-20020a5d678f000000b003094a5b508fmr826416wru.24.1685433626057;
-        Tue, 30 May 2023 01:00:26 -0700 (PDT)
-Received: from [127.0.1.1] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m6-20020a7bce06000000b003f6050d35c9sm16409978wmc.20.2023.05.30.01.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 01:00:25 -0700 (PDT)
-From:   Jerome Neanne <jneanne@baylibre.com>
-Date:   Tue, 30 May 2023 10:00:00 +0200
-Subject: [PATCH v4 2/2] mfd: tps65219: Add gpio cell instance
+        with ESMTP id S229591AbjE3Ii5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 May 2023 04:38:57 -0400
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C56FC9;
+        Tue, 30 May 2023 01:38:56 -0700 (PDT)
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34U8Ri1s011756;
+        Tue, 30 May 2023 10:38:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=6XRVWHAypnu32raoYPkLydBCpQf/QSqdlpI2jgGeJuM=;
+ b=DBIMMx4p7vAigngOucRzM3KQsG5V2Afxd+sxur5VrsCRnoUouWacwqtUPAuqGqLhori+
+ 8hjFtEaPLv4dHnRLT6mfnXoY3aKkhRBkVuM81MdaJoKiKHpjx8uR6eORwJdEUeykUWCh
+ ZmlKdQAV+x0q//GQTGYKzD1aPydi3EIQxlZYhtX5cb8iUX8SDM9eRJa00jQ7YNWbE8S6
+ /PdE2N6tEEhefOboTI50c+LwkEEu+1TfDal2Kg2SMoa6Gz9BT5+XiptWO+XlXh+Rh270
+ qyP8q6cdif2TYT9sUgezFixmSG9WybPXgGAFv+gr3oJHRzcjfGfSHT5qoV/OxmeCoVcv tw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3qvsnnnx46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 May 2023 10:38:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6266410002A;
+        Tue, 30 May 2023 10:38:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39FF321683B;
+        Tue, 30 May 2023 10:38:31 +0200 (CEST)
+Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 30 May
+ 2023 10:38:30 +0200
+Message-ID: <879b7689-5663-28b5-9431-2fdd243ffff2@foss.st.com>
+Date:   Tue, 30 May 2023 10:38:30 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 02/11] pinctrl: stm32: add stm32mp257 pinctrl support
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>
+CC:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
+ <20230529162034.20481-3-alexandre.torgue@foss.st.com>
+ <20230529-enrich-clammy-14b498baf09f@spud>
+From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20230529-enrich-clammy-14b498baf09f@spud>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230511-tps65219-add-gpio-support-v4-2-b5d6a764d722@baylibre.com>
-References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
-In-Reply-To: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>
-Cc:     khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>,
-        Jerome Neanne <jneanne@baylibre.com>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1685433622; l=1009;
- i=jneanne@baylibre.com; s=20230511; h=from:subject:message-id;
- bh=nMeCcxVhE7+un5EdrNfRU6JWVC4UNE7togljBBNu77I=;
- b=CpMbAoke2LTSOlEvyBOPwWQ/t8EJB7RkrlhYL58Ne/IDVV+v7WO9zYk1NSLbdr9YicrxGsimz
- r+eqMMZrvTbD7u+p+JvcHOis13q1EkFHBL6e9+RWoJSeiXecH2qcWjE
-X-Developer-Key: i=jneanne@baylibre.com; a=ed25519;
- pk=5rvbqNoG+28jQjC9/50ToY7TgKWf9rJukuCI8b6jkUo=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.201.21.93]
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-30_05,2023-05-29_02,2023-05-22_02
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tps65219 PMIC GPIOs are exposed in a standard way:
-gpiodetect
-gpiochip0 [tps65219-gpio] (3 lines)
+Hi Conor
 
-tps65219-gpios is incorrect cell name (plural):
-Changed to tps65219-gpio (singular)
+On 5/29/23 20:04, Conor Dooley wrote:
+> On Mon, May 29, 2023 at 06:20:25PM +0200, Alexandre Torgue wrote:
+>> Add stm32mp257 pinctrl support.
+>> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
+>> index e0c31c4c8bca..5e5de92ddd58 100644
+>> --- a/drivers/pinctrl/stm32/pinctrl-stm32.h
+>> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
+>> @@ -24,6 +24,9 @@
+>>   #define STM32MP_PKG_AB		BIT(1)
+>>   #define STM32MP_PKG_AC		BIT(2)
+>>   #define STM32MP_PKG_AD		BIT(3)
+>> +#define STM32MP_PKG_AI		BIT(8)
+>> +#define STM32MP_PKG_AK		BIT(10)
+>> +#define STM32MP_PKG_AL		BIT(11)
+> 
+> Mainly out of curiosity, why have you go duplicate defines for these?
 
-Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
-Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
----
- drivers/mfd/tps65219.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Mainly to fit with available packages for various STM32 MPU. Currently 
+MP1 SoCs are available with packages AB/AC/AD and MP2 series with 
+AI/AK/AL but in the future we could have package AB/AC/AD/AI available 
+for a particular SoC and then I need to anticipate this case.
 
-diff --git a/drivers/mfd/tps65219.c b/drivers/mfd/tps65219.c
-index 0e402fda206b..e1d090ba4258 100644
---- a/drivers/mfd/tps65219.c
-+++ b/drivers/mfd/tps65219.c
-@@ -106,7 +106,7 @@ static const struct mfd_cell tps65219_cells[] = {
- 		.resources = tps65219_regulator_resources,
- 		.num_resources = ARRAY_SIZE(tps65219_regulator_resources),
- 	},
--	{ .name = "tps65219-gpios", },
-+	{ .name = "tps65219-gpio", },
- };
- 
- static const struct mfd_cell tps65219_pwrbutton_cell = {
+Cheers
+Alex
 
--- 
-2.34.1
+> 
+> Cheers,
+> Conor.
 
