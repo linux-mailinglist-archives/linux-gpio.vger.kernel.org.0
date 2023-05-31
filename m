@@ -2,124 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3B8718BB2
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 23:20:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 940B2718F48
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 01:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbjEaVUO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 17:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34350 "EHLO
+        id S229604AbjEaX5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 19:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjEaVUN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 17:20:13 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1DC129;
-        Wed, 31 May 2023 14:20:12 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5147dce372eso370356a12.0;
-        Wed, 31 May 2023 14:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685568010; x=1688160010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DTefpjTnRZwzVlyTq29ijDBrPiJ0xnSJwo8bcfjK+r0=;
-        b=ZFTcDDCB+AImDsN60FrC9VBlEtsMZFDvVnEE5x4/2yTGBPIiWndvUFYAl6tHOi6WIy
-         YieUjYix44EqaB5hUp4ldMGNazarRLkck+YAQf8DViExoqjwYF4ZS+aReuMLn0SY2GtR
-         hdPVtp1IJOwkQ59+zx6g6KN4PzSVy8+4Nb85rJbAUfEtpk1ag+Q1KfFHcwieqYph9BJV
-         NhiflZjBIF9AfS/BsyhTCmjOs9ir4NwE75gyg28zu921bkgsb+KVnAazMybI11s8L+sp
-         2DFGmwd1oXlYdiWZUrxe7i1Lo3XdUiyQ5Fcaf61KhqxahCPiQKk/Q8655i9AHLyOSvV3
-         Qrvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685568010; x=1688160010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DTefpjTnRZwzVlyTq29ijDBrPiJ0xnSJwo8bcfjK+r0=;
-        b=P9xq3/tathTpEYDzQ9z+QQqLKyH5xOAanm9SScip++AMSEIwyFa0YiUDOwbzWfc/iW
-         Z9zQ67TobFVV40VllrHuc3g5aTZMeBX8qlGO4KvCK74u4uuZpgOjyoGmJ0P14ThLv67L
-         hARtEMhB1hqipjD7+x/MiYDy/XjZq7e9If2U0fav+MBaFqJ0XcFRpf0RGWlKuk/Yllgl
-         EVPbGUpesJoWx7VDuxm/m+GEd0vUGoCZhHd/wEtWXh+J8mpNP7sR5QCMqkx7N1KvBT9s
-         wcek/4QdPY9ueGPaRbx8pzvoxYCHpZYgKm8I6dfvBGbgaZ4Alr9AyNDZ1KoOX1zWrz58
-         hnJA==
-X-Gm-Message-State: AC+VfDw9iFYYZYFQjnKm9FZTQ2Jczjn4FD7Jx8bM6rqKadzZPK499PBl
-        C+3YCnoGKF5YtV2H/g+RAHw=
-X-Google-Smtp-Source: ACHHUZ5mr/4sMrKF5T8XZ8TsweV7bGMUcQcBrBBBVN+jEXwVJ5fiLfFcaaqr4tN2QnOP13QcHGC7qA==
-X-Received: by 2002:a17:907:6d23:b0:973:d9ad:273f with SMTP id sa35-20020a1709076d2300b00973d9ad273fmr6055603ejc.46.1685568010061;
-        Wed, 31 May 2023 14:20:10 -0700 (PDT)
-Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
-        by smtp.gmail.com with ESMTPSA id b8-20020a1709064d4800b00965f31ff894sm9472629ejv.137.2023.05.31.14.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 14:20:09 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
-        Jonathan McDowell <noodles@earth.li>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] Minor device-tree additions for C.H.I.P
-Date:   Wed, 31 May 2023 23:20:06 +0200
-Message-ID: <4832198.31r3eYUQgx@jernej-laptop>
-In-Reply-To: <cover.1684258957.git.noodles@earth.li>
-References: <cover.1683719613.git.noodles@earth.li>
- <cover.1684258957.git.noodles@earth.li>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229459AbjEaX5m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 19:57:42 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D924E12F;
+        Wed, 31 May 2023 16:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Y9DD1VKb4vaExY2foglvuHGof5QOUeerkLNIvVZGDEQ=; b=vvnO4y1/YdmDbe57+wazCVR5zN
+        feiztkittz+w93Cd9Epmz/7MBfMJu4mDj3ODNRMY+8POmBVIzR1QCyqmjnEHxy55+X6oAafyy5pHh
+        B3WpJU43jmEN7Z/B7HfAXfOkRbU1IIM8/Y48BqoMOIh7atKhjC15cM/r+ByMzooqa08Y=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:42554 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q4Vgx-0007Zs-JL; Wed, 31 May 2023 19:57:24 -0400
+Date:   Wed, 31 May 2023 19:57:23 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Message-Id: <20230531195723.462b140ac041b790711c1a7f@hugovil.com>
+In-Reply-To: <CAHp75Vf35rN93sXFBU0nRZQLpUgQHR2caGC8BmHkEgPZqF=dQg@mail.gmail.com>
+References: <20230529140711.896830-1-hugo@hugovil.com>
+        <20230529140711.896830-8-hugo@hugovil.com>
+        <ZHUpWQafRPHW1RJQ@surfacebook>
+        <20230530113649.73f28b9f6ba91f17ace1e12f@hugovil.com>
+        <CAHp75Vf35rN93sXFBU0nRZQLpUgQHR2caGC8BmHkEgPZqF=dQg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v4 7/9] serial: sc16is7xx: fix regression with GPIO
+ configuration
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dne torek, 16. maj 2023 ob 19:46:55 CEST je Jonathan McDowell napisal(a):
-> This small patch series adds some improvements for the C.H.I.P DTS,
-> enabling bluetooth, exporting the PMIC temperature details via iio-hwmon
-> and finally adding the appropriate base pinmux info for an external MMC
-> card. As a pre-requisite for the Bluetooth it also adds support to the
-> AXP209 driver for GPIO3, which is the Bluetooth device wakeup line.
+On Wed, 31 May 2023 00:56:57 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Tue, May 30, 2023 at 6:36 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > On Tue, 30 May 2023 01:38:17 +0300
+> > andy.shevchenko@gmail.com wrote:
+> > > Mon, May 29, 2023 at 10:07:09AM -0400, Hugo Villeneuve kirjoitti:
 > 
-> v3:
-> - Add Reviewed-By/Acked-Bys
-> - Drop redundant else
-> - Switch to GENMASK/decimal values for GPIO3 function defs
-> v2:
-> - Fix missing ; on bluetooth stanza in DTS
-> - Add device/host wake GPIOs for Bluetooth device
-> - Add omit-if-no-ref on the port E pinmux stanza
-> - Rename axp20x_temp to pmic-temp
-> - Add AXP209 GPIO3 support
+> ...
 > 
-> Jonathan McDowell (5):
->   dt-bindings: gpio: Add GPIO3 for AXP209 GPIO binding schema
->   pinctrl: axp209: Add support for GPIO3 on the AXP209
->   ARM: dts: sun5i: chip: Enable bluetooth
->   ARM: dts: sun5i: Add port E pinmux settings for mmc2
->   ARM: dts: axp209: Add iio-hwmon node for internal temperature
-
-Patches 3-5 applied to sunxi tree. Thanks!
-
-Best regards,
-Jernej
-
+> > > GENMASK()
+> >
+> > Ok done, altough even if in general I like the bit manipulation macros because they make the code easier to read/understand, I find it less obvious by using GENMASK in this case IMMO.
 > 
->  .../bindings/gpio/x-powers,axp209-gpio.yaml   |  1 +
->  arch/arm/boot/dts/axp209.dtsi                 |  7 ++++
->  arch/arm/boot/dts/sun5i-r8-chip.dts           |  6 +++
->  arch/arm/boot/dts/sun5i.dtsi                  |  9 ++++
->  drivers/pinctrl/pinctrl-axp209.c              | 42 +++++++++++++++++++
->  5 files changed, 65 insertions(+)
+> GENMASK() was introduced to increase code robustness:
+> 1) to make sure the bits mentioned are correct
+> 2) to check the bit boundary.
 > 
+> ...
 > 
+> > > > +           of_property_for_each_u32(dev->of_node, "nxp,modem-control-line-ports",
+> > > > +                                    prop, p, u) {
+> > > > +                   if (u >= devtype->nr_uart)
+> > > > +                           continue;
+> > > > +
+> > > > +                   /* Use GPIO lines as modem control lines */
+> > > > +                   if (u == 0)
+> > > > +                           mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
+> > > > +                   else if (u == 1)
+> > > > +                           mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
+> > > > +           }
+> > >
+> > > Can we use device properties, please?
+> >
+> > I have converted this section to use device_property_count_u32() and device_property_read_u32_array(). Is that Ok?
+> 
+> Yes, thank you!
+
+Hi Andy,
+now that I am using the device property API, I think I no longer have the need to test for "if (dev->of_node)" before reading the new property "nxp,modem-control-line-ports"?
+
+If that is the case, I will leave the test "if (dev->of_node)" only for the "irda-mode-ports" property.
+
+The pseudo code woulk look like this:
+
+	if (dev->of_node) {
+		struct property *prop;
+		const __be32 *p;
+		u32 u;
+
+		of_property_for_each_u32(dev->of_node, "irda-mode-ports",
+					 prop, p, u)
+			if (u < devtype->nr_uart)
+				s->p[u].irda_mode = true;
+	}
+
+        /* Read "nxp,modem-control-line-ports" using device property API. */
+	sc16is7xx_setup_mctrl_ports(dev);
+
+Thank you,
+Hugo.
 
 
-
-
+> > > If you think about backporting to the earlier kernels (w/o properties in use in
+> > > this driver), perhaps an additional followup for that?
+> >
+> > I am not sure what you mean by this?
+> 
+> If the device property API was not yet available for this fix being
+> backported to the old enough kernel we have to use old OF stuff. In
+> that case the device property conversion needs to be done in a
+> separate change.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
