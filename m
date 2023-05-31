@@ -2,270 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1ED717B12
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 11:03:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC74717BAC
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 11:21:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235288AbjEaJDb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 05:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
+        id S235286AbjEaJVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 05:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235270AbjEaJDI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 05:03:08 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5245CE51
-        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 02:02:37 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9707313e32eso1025348166b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 02:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685523747; x=1688115747;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eLGOgCTdN9b0I3RzLK+qTsPeSIXwIOR+lUiYzHLyqkA=;
-        b=hl/FuLnQZIjxtgYC0n4FAzTYUV3krumKQ/xsy+UH7E/f3dgqeMgPN/5AWK3SEAbCIr
-         FI5o6PsmvyimDsqt5v5W0X8JCTWp4IIqZ8x4bJAK1WuGUur4LrMbrSLlB4RyvOnzIWpj
-         UnB3gYbhh4tVYaSM44gFg9i9Vmw/5b+wvnLAVnsq+U/bFznueJbE05QomY6GoS+Thfyi
-         92yxam3PqKLAhtN2FkiFthHuejjWHvOd2bLzYlJhwaQRKPfYLKleciRdi3ZkGUkRYYwx
-         li9VHUt3YJlo2ixD5iK57yOeNvKQ5dkacN1nQ4J0gD5U8MxsmtBUBfgxsazERnuF8oTC
-         IkKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685523747; x=1688115747;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eLGOgCTdN9b0I3RzLK+qTsPeSIXwIOR+lUiYzHLyqkA=;
-        b=QD/BQ6/mJduGsHqHE3P/CnyxN3b9Ywvw/RKYsuuYUzBrOxfnXTRuinrKs4viC/D6R5
-         772+i8R/vLReCmXDIIBT+I/YyUtga8vbB0xB4k1L1D/bahrgXnSLhQ6V/G/vwStQyP1i
-         /lZ9S5oh0CItfhpSHM821L40NQX07isIaCQ5SpZw+APtYcFREDAl9vdCyUTIC5i8dHvc
-         n24m1byZ688L2bjQ0NMiDjUkK6Vj1Om53vnLQWM+xVXK7064JZSUcltMl2iSj56VqrCs
-         BcLACx9y+di9hpXco45DAprb6AprfAms6gZV6lD8sl2D0jb+vLh6BN6mfXQ0DqGkHBl+
-         4GVA==
-X-Gm-Message-State: AC+VfDyVrWuqaj2w0WbvHAMK0O7bxhtmYPi5PVqBlqF3RWWi3pbmKJWO
-        VK4gwmWNYIXsvioRyN14lXhcIQ==
-X-Google-Smtp-Source: ACHHUZ6y49DNKKcWtbOKQ31f6lJ93szs/HfhYKInuhEAs8m2uleiHDoOT2aH1n4H9RrcakuD5WjtOg==
-X-Received: by 2002:a17:907:7da5:b0:966:4d75:4a44 with SMTP id oz37-20020a1709077da500b009664d754a44mr4305321ejc.24.1685523747328;
-        Wed, 31 May 2023 02:02:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id b13-20020a1709065e4d00b00965e9b435dfsm8560598eju.65.2023.05.31.02.02.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 02:02:26 -0700 (PDT)
-Message-ID: <eef819db-4de3-06fe-8fe6-b0fe87ab5d84@linaro.org>
-Date:   Wed, 31 May 2023 11:02:24 +0200
+        with ESMTP id S234937AbjEaJVU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 05:21:20 -0400
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74251BE;
+        Wed, 31 May 2023 02:21:16 -0700 (PDT)
+X-QQ-mid: Yeas44t1685524789t455t56494
+Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [183.159.96.128])
+X-QQ-SSF: 00400000000000F0FOF000000000000
+From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 10707911515186658702
+To:     "'Russell King \(Oracle\)'" <linux@armlinux.org.uk>
+Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
+        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
+        <hkallweit1@gmail.com>, <oe-kbuild-all@lists.linux.dev>,
+        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <mengyuanlou@net-swift.com>,
+        "'Piotr Raczynski'" <piotr.raczynski@intel.com>
+References: <20230524091722.522118-6-jiawenwu@trustnetic.com> <202305261959.mnGUW17n-lkp@intel.com> <ZHCZ0hLKARXu3xFH@shell.armlinux.org.uk> <02dd01d991d2$2120fcf0$6362f6d0$@trustnetic.com> <03ac01d992d2$67c1ec90$3745c5b0$@trustnetic.com>
+In-Reply-To: <03ac01d992d2$67c1ec90$3745c5b0$@trustnetic.com>
+Subject: RE: [PATCH net-next v9 5/9] net: txgbe: Add SFP module identify
+Date:   Wed, 31 May 2023 17:19:47 +0800
+Message-ID: <046e01d993a1$0b8f51e0$22adf5a0$@trustnetic.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 2/6] dt-bindings: sound: cirrus,cs42l43: Add initial DT
- binding
-Content-Language: en-US
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
-        lee@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, vkoul@kernel.org
-Cc:     robh+dt@kernel.org, conor+dt@kernel.org, lgirdwood@gmail.com,
-        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230530122112.1314458-1-ckeepax@opensource.cirrus.com>
- <20230530122112.1314458-3-ckeepax@opensource.cirrus.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230530122112.1314458-3-ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFlCTXCD0V13/nxYaH3lJLB+zCPMgFguorBARt7XSgCWWopnAJhtNzYsCNyvSA=
+Content-Language: zh-cn
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/05/2023 14:21, Charles Keepax wrote:
-> The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
-> (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
-> for portable applications. It provides a high dynamic range, stereo
-> DAC for headphone output, two integrated Class D amplifiers for
-> loudspeakers, and two ADCs for wired headset microphone input or
-> stereo line input. PDM inputs are provided for digital microphones.
+On Tuesday, May 30, 2023 4:41 PM, Jiawen Wu wrote:
+> On Monday, May 29, 2023 10:06 AM, Jiawen Wu wrote:
+> > On Friday, May 26, 2023 7:37 PM, Russell King (Oracle) wrote:
+> > > On Fri, May 26, 2023 at 07:30:45PM +0800, kernel test robot wrote:
+> > > > Kconfig warnings: (for reference only)
+> > > >    WARNING: unmet direct dependencies detected for I2C_DESIGNWARE_PLATFORM
+> > > >    Depends on [n]: I2C [=n] && HAS_IOMEM [=y] && (ACPI && COMMON_CLK [=y] || !ACPI)
+> > > >    Selected by [y]:
+> > > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
+> > > >    WARNING: unmet direct dependencies detected for SFP
+> > > >    Depends on [n]: NETDEVICES [=y] && PHYLIB [=y] && I2C [=n] && PHYLINK [=y] && (HWMON [=n] || HWMON [=n]=n)
+> > > >    Selected by [y]:
+> > > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
+> > >
+> > > ... and is basically caused by "select SFP". No. Do not do this unless
+> > > you look at the dependencies for SFP and ensure that those are also
+> > > satisfied - because if you don't you create messes like the above
+> > > build errors.
+> >
+> > So how do I make sure that the module I need compiles and loads correctly,
+> > rely on the user to manually select it?
 > 
-> Add a YAML DT binding document for this device.
+> When I changed the TXGBE config to:
+> ...
+> 	depends on SFP
+> 	select PCS_XPCS
+> ...
+> the compilation gave an error:
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> drivers/net/phy/Kconfig:16:error: recursive dependency detected!
+> drivers/net/phy/Kconfig:16:     symbol PHYLIB is selected by PHYLINK
+> drivers/net/phy/Kconfig:6:      symbol PHYLINK is selected by PCS_XPCS
+> drivers/net/pcs/Kconfig:8:      symbol PCS_XPCS is selected by TXGBE
+> drivers/net/ethernet/wangxun/Kconfig:40:        symbol TXGBE depends on SFP
+> drivers/net/phy/Kconfig:63:     symbol SFP depends on PHYLIB
+> For a resolution refer to Documentation/kbuild/kconfig-language.rst
+> subsection "Kconfig recursive dependency limitations"
+> 
+> Seems deleting "depends on SFP" is the correct way. But is this normal?
+> How do we ensure the dependency between TXGBE and SFP?
 
-Thank you for your patch. There is something to discuss/improve.
+Hi Russell,
 
+Could you please give me some suggestions?
 
-> +  clocks:
-> +    items:
-> +      - description: Synchronous audio clock provided on mclk_in.
-> +
-> +  clock-names:
-> +    const: mclk
-> +
-> +  cirrus,bias-low:
-> +    type: boolean
-> +    description:
-> +      Select a 1.8V headset micbias rather than 2.8V.
-> +
-> +  cirrus,bias-sense-ua:
-
-"ua" looks like microamp. If so, microamp instead:
-https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/property-units.yaml
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Current at which the headset micbias sense clamp will engage, 0 to
-> +      disable.
-> +    enum: [ 0, 14, 23, 41, 50, 60, 68, 86, 95 ]
-> +    default: 0
-> +
-> +  cirrus,bias-ramp-ms:
-> +    description:
-> +      Time in milliseconds the hardware allows for the headset micbias to
-> +      ramp up.
-> +    enum: [ 10, 40, 90, 170 ]
-> +    default: 170
-> +
-> +  cirrus,detect-us:
-> +    description:
-> +      Time in microseconds the type detection will run for. Long values will
-> +      cause more audible effects, but give more accurate detection.
-> +    enum: [ 20, 100, 1000, 10000, 50000, 75000, 100000, 200000 ]
-> +    default: 10000
-> +
-> +  cirrus,button-automute:
-> +    type: boolean
-> +    description:
-> +      Enable the hardware automuting of decimator 1 when a headset button is
-> +      pressed.
-> +
-> +  cirrus,buttons-ohms:
-> +    description:
-> +      Impedance in Ohms for each headset button, these should be listed in
-> +      ascending order.
-> +    minItems: 1
-> +    maxItems: 6
-> +
-> +  cirrus,tip-debounce-ms:
-> +    description:
-> +      Software debounce on tip sense triggering in milliseconds.
-> +    default: 0
-> +
-> +  cirrus,tip-invert:
-> +    type: boolean
-> +    description:
-> +      Indicates tip detect polarity, inverted implies open-circuit whilst the
-> +      jack is inserted.
-> +
-> +  cirrus,tip-disable-pullup:
-> +    type: boolean
-> +    description:
-> +      Indicates if the internal pullup on the tip detect should be disabled.
-> +
-> +  cirrus,tip-fall-db-ms:
-> +    description:
-> +      Time in milliseconds a falling edge on the tip detect should be hardware
-> +      debounced for. Note the falling edge is considered after the invert.
-> +    enum: [ 0, 125, 250, 500, 750, 1000, 1250, 1500 ]
-> +    default: 500
-> +
-> +  cirrus,tip-rise-db-ms:
-> +    description:
-> +      Time in milliseconds a rising edge on the tip detect should be hardware
-> +      debounced for. Note the rising edge is considered after the invert.
-> +    enum: [ 0, 125, 250, 500, 750, 1000, 1250, 1500 ]
-> +    default: 500
-> +
-> +  cirrus,use-ring-sense:
-> +    type: boolean
-> +    description:
-> +      Indicates if the ring sense should be used.
-> +
-> +  cirrus,ring-invert:
-> +    type: boolean
-> +    description:
-> +      Indicates ring detect polarity, inverted implies open-circuit whilst the
-> +      jack is inserted.
-> +
-> +  cirrus,ring-disable-pullup:
-> +    type: boolean
-> +    description:
-> +      Indicates if the internal pullup on the ring detect should be disabled.
-> +
-> +  cirrus,ring-fall-db-ms:
-> +    description:
-> +      Time in milliseconds a falling edge on the ring detect should be hardware
-> +      debounced for. Note the falling edge is considered after the invert.
-> +    enum: [ 0, 125, 250, 500, 750, 1000, 1250, 1500 ]
-> +    default: 500
-> +
-> +  cirrus,ring-rise-db-ms:
-> +    description:
-> +      Time in milliseconds a rising edge on the ring detect should be hardware
-> +      debounced for. Note the rising edge is considered after the invert.
-> +    enum: [ 0, 125, 250, 500, 750, 1000, 1250, 1500 ]
-> +    default: 500
-> +
-> +  pinctrl:
-> +    type: object
-> +
-> +    allOf:
-
-Drop allOf, just "$ref: ......"
-
-> +      - $ref: /schemas/pinctrl/pinctrl.yaml#
-> +
-> +    additionalProperties: false
-
-Also drop blank lines between these three above.
-
-> +
-> +    properties:
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      gpio-ranges:
-> +        items:
-> +          - description: A phandle to the CODEC pinctrl node
-> +            minimum: 0
-> +          - const: 0
-> +          - const: 0
-> +          - const: 3
-> +
-> +    patternProperties:
-> +      "-state$":
-
-Use consistent quotes, either " or ' everywhere
-
-> +        oneOf:
-> +          - $ref: "#/$defs/cirrus-cs42l43-state"
-> +          - patternProperties:
-> +              "-pins$":
-> +                $ref: "#/$defs/cirrus-cs42l43-state"
-> +            additionalProperties: false
-> +
-> +  spi:
-> +    type: object
-> +
-> +    allOf:
-> +      - $ref: /schemas/spi/spi-controller.yaml#
-> +
-> +    unevaluatedProperties: false
-
-Same comments here.
-
-> +
-> +$defs:
-> +  cirrus-cs42l43-state:
-> +    type: object
-> +
-
-
-
-Best regards,
-Krzysztof
+I checked "kconfig-language" doc, the practical solution is that swap all
+"select FOO" to "depends on FOO" or swap all "depends on FOO" to
+"select FOO". Config PCS_XPCS has to be selected in order to load modules
+properly, so how should I fix the warning?
 
