@@ -2,229 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F52471856E
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 17:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39ECE71861F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 17:23:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233431AbjEaPAQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 11:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59976 "EHLO
+        id S233607AbjEaPXt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 11:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbjEaPAP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 11:00:15 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74341C0;
-        Wed, 31 May 2023 08:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=t8QJwDf3mZID2T9DPgkl1+dJxRUwSZ5+A++Qcf/Rniw=; b=xX61yxXxpOjNlrMJw13F5RNmue
-        8irpmpzggpyfC9GePxX8T4/eRJUYTw80VsHb7r51qBMFINBS8cr24ZVuWpNYhAcDFZKuu2PqXETVy
-        Iy4oWFmbZq/1uvAnc4kn9gMrXsIS758jUs0XvnNpZXwWWh1PpzBLtsFNV8S0JR0dRKwQ=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:34748 helo=debian-acer)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q4NIy-0001AW-O7; Wed, 31 May 2023 11:00:05 -0400
-Date:   Wed, 31 May 2023 11:00:03 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     Lech Perczak <lech.perczak@camlingroup.com>,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Message-Id: <20230531110003.86b96815986db3bef7b72635@hugovil.com>
-In-Reply-To: <20230531095608.e1b4358549562b8e1bdf5cb4@hugovil.com>
-References: <20230529140711.896830-1-hugo@hugovil.com>
-        <c15a90d6-b3c1-e432-9216-c4c1e2c44ce6@camlingroup.com>
-        <20230530090836.27b8d080d6b6c022b303ac9e@hugovil.com>
-        <c691858d-31af-2892-c0a3-89a37b19af86@camlingroup.com>
-        <20230531095608.e1b4358549562b8e1bdf5cb4@hugovil.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S229993AbjEaPXr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 11:23:47 -0400
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E5D125;
+        Wed, 31 May 2023 08:23:37 -0700 (PDT)
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VC585l023966;
+        Wed, 31 May 2023 15:23:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : subject :
+ date : message-id : mime-version; s=pps0720;
+ bh=aQNfR11sepJZ8RJU6OqmdsnQ5GGzoMBtZGXeR4nlGPQ=;
+ b=ifcBknaEurwCmibJPC3hKdfdES6JjHdhcHfGXNFG/spPTEXeTImmA0tEt0NB1UQ5FkB3
+ c4+MAGfWvF/kCjSXJ/HzWP7bzvUwGLbVT4xQMApJzrYCgrAyEIoax1FkG6fUx8lLM5CW
+ C2VDruIxc8EeQsqPow9VTVe+nKG+9KtVld09AfANVngTjTFqn7LWwYuH35KmXbczQlVn
+ 52MH3le4bUwvw4S7ZcIw1ObldGmnYZn2+9nOcoSptEnzIqyWa6sEozAQsG+yG7Y8zS83
+ 0aOYpfpPlwjy8cJVDmVlQ39YCCkxIr3csURJQli3JlUMLiWHAnJXqCOnzqZCPmbAIqKS xg== 
+Received: from p1lg14879.it.hpe.com (p1lg14879.it.hpe.com [16.230.97.200])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3qx5x3hr3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 May 2023 15:23:13 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 30DB914783;
+        Wed, 31 May 2023 15:23:12 +0000 (UTC)
+Received: from hpe.com (unknown [16.231.227.36])
+        by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 2438780B983;
+        Wed, 31 May 2023 15:23:11 +0000 (UTC)
+From:   nick.hawkins@hpe.com
+To:     verdun@hpe.com, nick.hawkins@hpe.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
+        linux@roeck-us.net, andy.shevchenko@gmail.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: [PATCH v2 0/5] ARM: Add GPIO support
+Date:   Wed, 31 May 2023 10:19:13 -0500
+Message-Id: <20230531151918.105223-1-nick.hawkins@hpe.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-ORIG-GUID: 6N2YKcgA2-IR7JYMnVMzyGtSvh7dFV9W
+X-Proofpoint-GUID: 6N2YKcgA2-IR7JYMnVMzyGtSvh7dFV9W
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-31_10,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305310130
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v4 0/9] serial: sc16is7xx: fix GPIO regression and rs485
- improvements
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 31 May 2023 09:56:08 -0400
-Hugo Villeneuve <hugo@hugovil.com> wrote:
+From: Nick Hawkins <nick.hawkins@hpe.com>
 
-> On Wed, 31 May 2023 12:43:48 +0200
-> Lech Perczak <lech.perczak@camlingroup.com> wrote:
->=20
-> > W dniu 30.05.2023 o=A015:08, Hugo Villeneuve pisze:
-> > > On Tue, 30 May 2023 11:30:07 +0200
-> > > Lech Perczak <lech.perczak@camlingroup.com> wrote:
-> > >
-> > > > W dniu 29.05.2023 o=A016:07, Hugo Villeneuve pisze:
-> > > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > > >
-> > > > > Hello,
-> > > > > this patch series mainly fixes a GPIO regression and improve RS48=
-5 flags and
-> > > > > properties detection from DT.
-> > > > >
-> > > > > It now also includes various small fixes and improvements that we=
-re previously
-> > > > > sent as separate patches, but that made testing everything diffic=
-ult.
-> > > > >
-> > > > > Patch 1 fixes an issue when debugging IOcontrol register. After t=
-esting the GPIO
-> > > > > regression patches (patches 6 and 7, tests done by Lech Perczak),=
- it appers that
-> > > > > this patch is also necessary for having the correct IOcontrol reg=
-ister values.
-> > > > >
-> > > > > Patch 2 introduces a delay after a reset operation to respect dat=
-asheet
-> > > > > timing recommandations.
-> > > > >
-> > > > > Patch 3 fixes an issue with init of first port during probing.
-> > > > >
-> > > > > Patch 4 fixes a bug with the output value when first setting the =
-GPIO direction.
-> > > > >
-> > > > > Patch 5 is a refactor of GPIO registration code.
-> > > > >
-> > > > > Patches 6 and 7 fix a GPIO regression by (re)allowing to choose G=
-PIO function
-> > > > > for GPIO pins shared with modem status lines.
-> > > > >
-> > > > > Patch 8 allows to read common rs485 device-tree flags and propert=
-ies.
-> > > > >
-> > > > > Patch 9 improves comments about chip variants.
-> > > > >
-> > > > > I have tested the changes on a custom board with two SC16IS752 DU=
-ART using a
-> > > > > Variscite IMX8MN NANO SOM.
-> > > > >
-> > > > > Thank you.
-> > > > >
-> > > > > Link: [v1] https://lkml.org/lkml/2023/5/17/967 <https://lkml.org/=
-lkml/2023/5/17/967> <https://lkml.org/lkml/2023/5/17/967 <https://lkml.org/=
-lkml/2023/5/17/967>>
-> > > > > [v1] https://lkml.org/lkml/2023/5/17/777 <https://lkml.org/lkml/2=
-023/5/17/777> <https://lkml.org/lkml/2023/5/17/777 <https://lkml.org/lkml/2=
-023/5/17/777>>
-> > > > > [v1] https://lkml.org/lkml/2023/5/17/780 <https://lkml.org/lkml/2=
-023/5/17/780> <https://lkml.org/lkml/2023/5/17/780 <https://lkml.org/lkml/2=
-023/5/17/780>>
-> > > > > [v1] https://lkml.org/lkml/2023/5/17/785 <https://lkml.org/lkml/2=
-023/5/17/785> <https://lkml.org/lkml/2023/5/17/785 <https://lkml.org/lkml/2=
-023/5/17/785>>
-> > > > > [v1] https://lkml.org/lkml/2023/5/17/1311 <https://lkml.org/lkml/=
-2023/5/17/1311> <https://lkml.org/lkml/2023/5/17/1311 <https://lkml.org/lkm=
-l/2023/5/17/1311>>
-> > > > > [v2] https://lkml.org/lkml/2023/5/18/516 <https://lkml.org/lkml/2=
-023/5/18/516> <https://lkml.org/lkml/2023/5/18/516 <https://lkml.org/lkml/2=
-023/5/18/516>>
-> > > > > [v3] https://lkml.org/lkml/2023/5/25/7 <https://lkml.org/lkml/202=
-3/5/25/7> <https://lkml.org/lkml/2023/5/25/7 <https://lkml.org/lkml/2023/5/=
-25/7>>
-> > > > >
-> > > > > Changes for V3:
-> > > > > - Integrated all patches into single serie to facilitate debuggin=
-g and tests.
-> > > > > - Reduce number of exported GPIOs depending on new property
-> > > > > nxp,modem-control-line-ports
-> > > > > - Added additional example in DT bindings
-> > > > >
-> > > > > Changes for V4:
-> > > > > - Increase reset post delay to relax scheduler.
-> > > > > - Put comments patches at the end.
-> > > > > - Remove Fixes tag for patch "mark IOCONTROL register as volatile=
-".
-> > > > > - Improve commit messages after reviews.
-> > > > > - Fix coding style issues after reviews.
-> > > > > - Change GPIO registration to always register the maximum number =
-of GPIOs
-> > > > > supported by the chip, but maks-out GPIOs declared as modem contr=
-ol lines.
-> > > > > - Add patch to refactor GPIO registration.
-> > > > > - Remove patch "serial: sc16is7xx: fix syntax error in comments".
-> > > > > - Remove patch "add dump registers function"
-> > > > >
-> > > > > Hugo Villeneuve (9):
-> > > > > serial: sc16is7xx: mark IOCONTROL register as volatile
-> > > > > serial: sc16is7xx: add post reset delay
-> > > > > serial: sc16is7xx: fix broken port 0 uart init
-> > > > > serial: sc16is7xx: fix bug when first setting GPIO direction
-> > > > > serial: sc16is7xx: refactor GPIO controller registration
-> > > > > dt-bindings: sc16is7xx: Add property to change GPIO function
-> > > > > serial: sc16is7xx: fix regression with GPIO configuration
-> > > > > serial: sc16is7xx: add call to get rs485 DT flags and properties
-> > > > > serial: sc16is7xx: improve comments about variants
-> > > > >
-> > > > > .../bindings/serial/nxp,sc16is7xx.txt | 46 ++++++
-> > > > > drivers/tty/serial/sc16is7xx.c | 150 +++++++++++++-----
-> > > > > 2 files changed, 156 insertions(+), 40 deletions(-)
-> > > > >
-> > > > >
-> > > > > base-commit: 8b817fded42d8fe3a0eb47b1149d907851a3c942
-> > > >
-> > > > It would be a lot of sending, to do that for every patch separately=
-, so for whole series:
-> > > > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > >
-> > > > And where applicable - for code patches:
-> > > > Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > >
-> > > > I tested whole series at the same time.
-> > > > I did my tests on an i.MX6 board with SC16IS760 over SPI, which dif=
-fers a tiny bit from SC16IS752,
-> > > > and everything works as it should.
-> > > > Thank you for fixing this!
-> > >
-> > > Hi Lech,
-> > > thank for your feedback.
-> > >
-> > > You mentioned before that without the patch "mark IOCONTROL register =
-as volatile", things were not working properly for you. Could you retest by=
- removing this patch and see if things are still working?
-> > >
-> > > Thank you, Hugo.
-> >=20
-> > Hello Hugo,
-> >=20
-> > Just checked - this patch is required, reverting it causes things to fa=
-il, so this patch should be marked as a pre-requisite for the actual fix an=
-d included in backports.
-> > Perhaps using direct write to this register made it work, but it was li=
-kely by accident.
->=20
-> Hi Lech,
-> thank you for the test, I will mark it as such in upcoming series V5.
->=20
-> Hugo.
+Note: The previous version of this patchset was titled "Add GPIO and PSU
+support". Based on feedback and in an effort to reduce size PSU has been
+removed. Link:
+https://lore.kernel.org/all/20230418152824.110823-1-nick.hawkins@hpe.com/
 
-Since I reworked a bit patch 5/9 in series 5, I removed your "Tested-by" an=
-d "Reviewed-by" tags only for this patch. Please reconfirm these tags when =
-you have tested series 5.
+The GXP SoC supports GPIO on multiple interfaces. The interfaces are
+CPLD and Host. The GPIOs is a combination of both physical and virtual
+I/O across the interfaces. The gpio-gxp driver specifically covers the
+CSM(physical), FN2(virtual), and VUHC(virtual) which are the host. The
+gpio-gxp-pl driver covers the CPLD which takes physical I/O from the
+board and shares it with GXP via a propriety interface that maps the I/O
+onto a specific register area of the GXP. The drivers both support
+interrupts but from different interrupt parents.
 
-Thank you,
-Hugo.
+There is a need for both the host OpenBMC and the gxp-fan-ctrl driver to
+access the same GPIO information from the CPLD. The OpenBMC stack is
+reacting to changes in GPIOs and taking action. This requires it to hold
+the GPIO which creates a problem where both the host and linux cannot
+have the same GPIO. Thus an attempt to remedy this was to add a shared
+variable between the GPIO driver and the fan control driver to provide
+fan presence and failure information. This is why hwmon has been included
+in this patchset.
 
---=20
-Hugo Villeneuve <hugo@hugovil.com>
+---
+
+Changes since v1:
+ *Removed ARM device tree changes and defconfig changes to reduce
+  patchset size
+ *Removed GXP PSU changes to reduce patchset size
+ *Corrected hpe,gxp-gpio YAML file based on feedback
+ *Created new gpio-gxp-pl file to reduce complexity
+ *Separated code into two files to keep size down: gpio-gxp.c and
+  gpio-gxp-pl.c
+ *Fixed Kconfig indentation as well as add new entry for gpio-gxp-pl
+ *Removed use of linux/of.h and linux/of_device.h
+ *Added mod_devicetable.h and property.h
+ *Fixed indentation of defines and uses consistent number of digits
+ *Corrected defines with improper GPIO_ namespace.
+ *For masks now use BIT()
+ *Added comment for PLREG offsets
+ *Move gpio_chip to be first in structure
+ *Calculate offset for high and low byte GPIO reads instead of having
+  H(High) and L(Low) letters added to the variables.
+ *Removed repeditive use of "? 1 : 0"
+ *Switched to handle_bad_irq()
+ *Removed improper bailout on gpiochip_add_data
+ *Used GENMASK to arm interrupts
+ *Removed use of of_match_device
+ *fixed sizeof in devm_kzalloc
+ *Added COMPILE_TEST to Kconfig
+ *Added dev_err_probe where applicable
+ *Removed unecessary parent and compatible checks
+
+Nick Hawkins (5):
+  dt-bindings: gpio: Add HPE GXP GPIO
+  gpio: gxp: Add HPE GXP GPIO
+  dt-bindings: hwmon: hpe,gxp-fanctrl: remove fn2 and pl regs
+  hwmon: (gxp_fan_ctrl) Provide fan info via gpio
+  MAINTAINERS: hpe: Add GPIO
+
+ .../bindings/gpio/hpe,gxp-gpio.yaml           | 190 ++++++
+ .../bindings/hwmon/hpe,gxp-fan-ctrl.yaml      |  16 +-
+ MAINTAINERS                                   |   2 +
+ drivers/gpio/Kconfig                          |  18 +
+ drivers/gpio/Makefile                         |   2 +
+ drivers/gpio/gpio-gxp-pl.c                    | 536 +++++++++++++++
+ drivers/gpio/gpio-gxp.c                       | 637 ++++++++++++++++++
+ drivers/hwmon/Kconfig                         |   2 +-
+ drivers/hwmon/gxp-fan-ctrl.c                  |  61 +-
+ drivers/hwmon/gxp-gpio.h                      |  13 +
+ 10 files changed, 1409 insertions(+), 68 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-gxp-pl.c
+ create mode 100644 drivers/gpio/gpio-gxp.c
+ create mode 100644 drivers/hwmon/gxp-gpio.h
+
+-- 
+2.17.1
+
