@@ -2,224 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97AA5717F71
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 14:03:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3431D717FC4
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 14:22:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232788AbjEaMDc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 08:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54858 "EHLO
+        id S232620AbjEaMWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 08:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232018AbjEaMDb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 08:03:31 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AA4101;
-        Wed, 31 May 2023 05:03:29 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-6260a07bf3cso27868566d6.0;
-        Wed, 31 May 2023 05:03:29 -0700 (PDT)
+        with ESMTP id S229765AbjEaMW3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 08:22:29 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14012132
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 05:22:26 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-75b0b5c9eb8so363076185a.1
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 05:22:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685534608; x=1688126608;
+        d=gmail.com; s=20221208; t=1685535745; x=1688127745;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XtbVG1YWIEUr+aeV2KwQg50uYk9KnsxMDR8QzyGUeK4=;
-        b=GAiQ6Z0FIgRniNlnMacMNUvm8GthL156aivMM9tVOccU1M9gUCBuu7Qk08iry7Gtz1
-         c0jzb0mqCsMtaMPfXd80xOgUdcTOsWO2/hRAkD+EbtVXorKGzVGEubqDSXKTFLFCvdAM
-         4vTBPsUHuBKZSfQtz+9KzF4r0yJqheUEI8p1ur0SD9HXZGL6VBPuOTXG8tQ/t2EWN/+8
-         9WforMng4vfkXtQ2SJ2yP+/1c8wGnoW6NGLHx6EpCCsVPZFlOZbN82EqKWFqQ4Q+DCeX
-         XHOoyc3QWfrEvZNJq7DI+BZhFctbJQNx+l0iYEi6qGf0yYLRClPtGXc2cZlYYQfJxmgJ
-         T8lw==
+        bh=Lgf483Tity8H9J+afk5eaJBP26v2CodcRllfLsZeDnw=;
+        b=pLR8xiTx8GTs8Hn/jw75lNZzp2lqgrGh/APhHCCwvA3796UKQSJRcUzYQSgt3Iqc9p
+         kUBNsEg+8/2h9JTVBWyymWTu2jwz8iMwwgaVSwm4F9lyjIrq9FL4yPKwdIVh+AR3FtrS
+         0DUe5ilg+Zl+rBn8/l7+Lx+GPFcxj2lRjNkDjPgrwq/Iwj6Bv/lq6JkWPFdQlOs/HBF/
+         HQy4XFzvdy220WoupJby5BdHsG/XHv4dZera916loR//WFySTFMLJvptUIZS8D6ENiDL
+         DnJluETtky3OoQCA0dDdpj74xRgdnSKMXCBmQtMfBTvIyHiBk34wHl8j1L+llIJ5eKF9
+         kUKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685534608; x=1688126608;
+        d=1e100.net; s=20221208; t=1685535745; x=1688127745;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XtbVG1YWIEUr+aeV2KwQg50uYk9KnsxMDR8QzyGUeK4=;
-        b=Nc0+PM41/lnfwwKdQoCBmntSdpU+R+8i4l69JkXE6zgiNI1Z8ZJHE7sIVxU+XqNeQM
-         uQRVMvqZF3FULP2CCr5JMD4Kjqe7VacRamhdMiUmFcJuYNaEZ5E63Qok29Z1sWC/aiKB
-         mTVpNoMjLIAAAZ38gPTUhUlJBrzXVW1epZjieSFua12eMcTGphv5tDTZUITUT7Wrotg2
-         ET81Z2AtqX0qvN83rjhUxPTsCMKO6sachzSxD3mP7Uj1pUZBlWfkxLNdKlFCD99FX/2o
-         z1pogrXRt2BfCH7Ov0zMJBgxvR/rRcWDTnEfyWUYTgx4yUZVTPO+JmkSg63zQmpUsuad
-         Hb/A==
-X-Gm-Message-State: AC+VfDwXvoXdc1Gjzf97W/uk6TUhHqaAPO7ugt7PgkGz+qptHeZfDxEy
-        ZiAX91ifX1aYzqZu8i7biefSr637r7CDK+eIAOY=
-X-Google-Smtp-Source: ACHHUZ5JJFZxtwbIo7hGbzXQyHgik+3QWnbi74aiR8IfM55m4Rdn3onpWvzWyHDNw4I7xgMwJqBOEwm8j5UuzJhLdXE=
-X-Received: by 2002:a05:6214:c61:b0:625:aa48:fb6c with SMTP id
- t1-20020a0562140c6100b00625aa48fb6cmr4512643qvj.54.1685534608559; Wed, 31 May
- 2023 05:03:28 -0700 (PDT)
+        bh=Lgf483Tity8H9J+afk5eaJBP26v2CodcRllfLsZeDnw=;
+        b=WxqPeO4CbqTR2kB5UlExGHr3o0oBy1jMOSLXsvHSrvhMT/ZgrvCOqHSwnUPBUX9xXs
+         8Vbl3Rkm2AEbBwqUv32iBZ29Ed6qIYkOxbqHOvGYrRkbymoXZwj8+0HLOJTnOdcsCeSE
+         bLFC4laLN0YeDAe7pq8oPUVzvM9AT1JZ1S4PimHDeiNyJeiTHN5pygsEj0W3/fdnM5gX
+         X6HNuc+8RFOa8uQa+REVNu6BzUVOK3HdMPdll7jIt2W6GqKQe+dCrVMagvEih8V0gcqL
+         xTGEKsUhfIxYW18RW6EaC4AlSbnGYtBk8Sx37QKgL4DkobDWmS2koZVvQhBt7JgbLMvI
+         bv/Q==
+X-Gm-Message-State: AC+VfDyO7D+56JtY18JhpOX3APFjX1MnYH6eYKC7oN5GPQfq3umVdMc7
+        nKfEX9B7WshNwX5LuDV0QeV9uZ9YPBbLaV3U2H4=
+X-Google-Smtp-Source: ACHHUZ6D2JuHRBwqj0z2I38XtRHatjGNCto5u+ove2w0/QAX0y2kC4P6AGV17+SR7RqFVLr/c3W8HJMOw4lhTo4ZUQ4=
+X-Received: by 2002:a05:6214:e8e:b0:625:aa1a:b6de with SMTP id
+ hf14-20020a0562140e8e00b00625aa1ab6demr5509845qvb.64.1685535745136; Wed, 31
+ May 2023 05:22:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230406093344.917259-1-alexander.stein@ew.tq-group.com>
- <a926837c-8773-1809-0bb3-34d449c5d7a5@linaro.org> <CAHp75VcJMwoG07-d86obSLuPNGRQuRo_oW2JJA50ps--3s0kJA@mail.gmail.com>
- <4810610.GXAFRqVoOG@steina-w>
-In-Reply-To: <4810610.GXAFRqVoOG@steina-w>
+References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
+ <20230530151946.2317748-3-u.kleine-koenig@pengutronix.de> <CAHp75VegyUL6J-s4W4fHhKu4cNeBA=4J4CmDHmtAfCUr9qGHQg@mail.gmail.com>
+ <20230531065829.7qrkv2ivs57aymcz@pengutronix.de> <CAHp75VeNTuQWLqieSyh0djyrBApoZRwKOAnMRd80fVGzfJAnbw@mail.gmail.com>
+ <20230531100655.dedu3udhd4dv7r7j@pengutronix.de>
+In-Reply-To: <20230531100655.dedu3udhd4dv7r7j@pengutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 31 May 2023 15:02:52 +0300
-Message-ID: <CAHp75VdXF2WcF_SGMJRGtePUh7WBPLET1HLLE3aHnV7yBT783w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] gpio: Add gpio-delay support
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Date:   Wed, 31 May 2023 15:21:48 +0300
+Message-ID: <CAHp75Vf0_M-0r9KDf_vg6TcfnaKfyF8P-iwpqnv-WiitUmnCzA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: use "active" and "inactive" instead of
+ "high" and "low" for output hogs
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
+        Kent Gibson <warthog618@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 31, 2023 at 9:53=E2=80=AFAM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
-> Am Sonntag, 16. April 2023, 20:46:43 CEST schrieb Andy Shevchenko:
-> > On Sun, Apr 16, 2023 at 2:42=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > > On 16/04/2023 13:33, Andy Shevchenko wrote:
-> > > > On Sun, Apr 16, 2023 at 2:21=E2=80=AFPM Krzysztof Kozlowski
-> > > > <krzysztof.kozlowski@linaro.org> wrote:
-> > > >> On 16/04/2023 13:14, Andy Shevchenko wrote:
-> > > >>> On Sun, Apr 16, 2023 at 2:04=E2=80=AFPM Krzysztof Kozlowski
-> > > >>> <krzysztof.kozlowski@linaro.org> wrote:
-> > > >>>> On 16/04/2023 11:36, Andy Shevchenko wrote:
-> > > >>>>> On Sun, Apr 16, 2023 at 10:42=E2=80=AFAM Krzysztof Kozlowski
-> > > >>>>> <krzysztof.kozlowski@linaro.org> wrote:
-> > > >>>>>> On 15/04/2023 17:06, Andy Shevchenko wrote:
-> > > >>>>>>> On Fri, Apr 14, 2023 at 9:37=E2=80=AFAM Alexander Stein
-> > > >>>>>>> <alexander.stein@ew.tq-group.com> wrote:
-> > > >>>>>>>> Am Dienstag, 11. April 2023, 11:34:16 CEST schrieb Andy
-> Shevchenko:
-> > > >>>>>>>>> On Tue, Apr 11, 2023 at 10:19=E2=80=AFAM Alexander Stein
-> > > >>>>>>>>> <alexander.stein@ew.tq-group.com> wrote:
+On Wed, May 31, 2023 at 1:06=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Wed, May 31, 2023 at 12:51:15PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 31, 2023 at 9:58=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
 
 ...
 
-> > > >>>>>>>>> So, taking the above into consideration, why is it GPIO pro=
-perty
-> > > >>>>>>>>> to
-> > > >>>>>>>>> begin with? This is PCB property of the certain platform de=
-sign
-> > > >>>>>>>>> that
-> > > >>>>>>>>> needs to be driven by a specific driver, correct?
-> > > >>>>>>>>
-> > > >>>>>>>> True this is induced by the PCB, but this property applies t=
-o the
-> > > >>>>>>>> GPIO,
-> > > >>>>>>>> neither the GPIO controller output, nor the GPIO consumer is
-> > > >>>>>>>> aware of.
-> > > >>>>>>>> So it has to be added in between. The original idea to add a
-> > > >>>>>>>> property for the consumer driver is also rejected, because t=
-his
-> > > >>>>>>>> kind of behavior is not limited to this specific driver.
-> > > >>>>>>>> That's why the delay is inserted in between the GPIO output =
-and
-> > > >>>>>>>> GPIO consumer.> >>>>>>>>
-> > > >>>>>>>>> At the very least this is pin configuration (but external t=
-o the
-> > > >>>>>>>>> SoC),
-> > > >>>>>>>>> so has to be a _separate_ pin control in my opinion.
-> > > >>>>>>>>
-> > > >>>>>>>> Sorry, I don't get what you mean by _separate_ pin control.
-> > > >>>>>>>
-> > > >>>>>>> As you mentioned above this can be applied theoretically to a=
-ny
-> > > >>>>>>> pin of
-> > > >>>>>>> the SoC, That pin may or may not be a GPIO or a pin that can =
-be
-> > > >>>>>>> switched to the GPIO mode. Hence this entire idea shouldn't b=
-e
-> > > >>>>>>> part of
-> > > >>>>>>> the existing _in-SoC_ pin control driver if any. This is a pu=
-rely
-> > > >>>>>>> separate entity, but at the same time it adds a property to a=
- pin,
-> > > >>>>>>> hence pin control.
-> > > >>>>>>> At the same time, it's not an SoC related one, it's a PCB. He=
-nce
-> > > >>>>>>> _separate_.> >>>>>>
-> > > >>>>>> I don't think that anything here is related to pin control. Pi=
-n
-> > > >>>>>> control
-> > > >>>>>> is specific function of some device which allows different
-> > > >>>>>> properties or
-> > > >>>>>> different functions of a pin.
-> > > >>>>>
-> > > >>>>> Sorry, but from a hardware perspective I have to disagree with =
-you.
-> > > >>>>> It's a property of the _pin_ and not of a GPIO. Any pin might h=
-ave
-> > > >>>>> the
-> > > >>>>> same property. That's why it's definitely _not_ a property of G=
-PIO,
-> > > >>>>> but wider than that.
-> > > >>>>
-> > > >>>> I did not say this is a property of GPIO. I said this is nothing=
- to
-> > > >>>> do
-> > > >>>> with pin control, configuration and pinctrl as is.
-> > > >>>
-> > > >>> Ah, I see. But still is a property of the pin on the PCB level.
-> > > >>
-> > > >> No, it is property of a circuit, so property of two pins and a wir=
-e
-> > > >> between them. Not a property of one pin.
-> > > >
-> > > > Electrically speaking -- yes, software speaking, no, this is the
-> > > > property of the one end (platfrom abstraction in the software) and =
-as
-> > > > you said, consumer which may be SoC, or the device connected to the
-> > > > SoC (depending on the signal direction), or both (like pull-up for
-> > > > I2C).
-> > > >
-> > > >>> That's
-> > > >>> why I said that it should be like a "proxy" driver that has to be=
- a
-> > > >>> consumer of the pins on one side and provide the pins with this
-> > > >>> property on the other.
-> > > >>
-> > > >> Not sure, why do you need it for anything else than GPIOs? What is=
- the
-> > > >> real world use case for proxy driver of non-GPIO lines?
-> > > >
-> > > > I2C is an example where we have something in between, which both of
-> > >
-> > > Are you sure you have RC (not just resistor) in I2C?
-> >
-> > I'm talking about an analogue. In principle the pull-up is part of PCB
-> > and not of the SoC.
-> >
-> > > > the ends are using and this is the property of PCB, but luckily we
-> > > > don't need anything special in the software for that, right? But fr=
-om
-> > > > the electrical point of view it's exactly a non-GPIO property. That=
-'s
-> > > > why "proxy".
-> > >
-> > > Still I do not see any reason to call it anything else than GPIO. If =
-you
-> > > think that there is any other usage, please bring it as an real,
-> > > non-theoretical example.
-> >
-> > The first, which one I found, is time-stretched ADC. The idea is that
-> > the portion of the signal is split to the phases and each phase is
-> > passed via time stretcher for the low-speed ADC to be digitized. So,
-> > if we have an SoC with 4+ ADCs, on the PCB one can add an externally
-> > clocked mux and then 4+ time stretching lines and on the SoC side it
-> > will be ADC (note, not a GPIO!).
+> > https://elixir.bootlin.com/linux/v6.4-rc4/source/drivers/gpio/gpiolib-a=
+cpi.c#L1262
 >
-> What do I need to do to get progress on this topic? Without this kind of =
-delay
-> handling the DSI-LVDS bridge on our hardware cannot be used in mainline.
+> Ah, that was the necessary hint. Adding the aliases there would be a
+> third patch in this series, right?
 
-I have looked into the entire thread and found no replies from Linus W and =
-Bart.
-They are GPIO maintainers and should fuel up this discussion.
+No. Just split out that one to gpiolib main code, since it's already
+using fwnode API, update OF code to use it, and modify it and then we
+are done.
 
 --=20
 With Best Regards,
