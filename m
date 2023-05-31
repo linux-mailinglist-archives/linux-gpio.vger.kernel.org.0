@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 628AF718308
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 15:46:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82DDE718338
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 15:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236764AbjEaNqx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 09:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
+        id S237010AbjEaNsr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 09:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236683AbjEaNqN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 09:46:13 -0400
+        with ESMTP id S236972AbjEaNsW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 09:48:22 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CEC1FD6;
-        Wed, 31 May 2023 06:43:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF3C268F;
+        Wed, 31 May 2023 06:44:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48D7C637AA;
-        Wed, 31 May 2023 13:43:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD343C433D2;
-        Wed, 31 May 2023 13:43:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B7BA63B51;
+        Wed, 31 May 2023 13:44:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92FBEC4339B;
+        Wed, 31 May 2023 13:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685540608;
-        bh=e7tWL6wTRy34K2JWIZX6jDI78R1WuLGLxqA768ehrHA=;
+        s=k20201202; t=1685540663;
+        bh=zZz1jc8ubBpVgvTtyr6lb67hGIGys3B+2ipic9l6JS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDlj7JXTtZwy2OyXghhA/JEsjH/O1S13O1oqyN0H7dtNcrGei28wJCxzT/KO3ghtQ
-         /2vWkxATTH4iCaYJewf1IBwoT7OWT0mfVRz0GXTKpQZ/YqTBl7RuphsBnbjf/JXjNy
-         q24mtT2OsVs610QEhI5xi/zQYzH4WCyIpQT0vkQ4akh40i5jOty3QiNHQuoK8NAVsB
-         yk+mfFftHtkOHa+jQSMYVsq/l4k1SGe5k/KOzO+Ze8HdfPNug1baIlCoL+3RoAs1fz
-         HPJPCfTJkqg6g5MU2Bp3JCB3ZUmlB0DBywOPLbEscavCE6t6fMh4bHYyQ1ZR3h11iq
-         6uFs/ne62SKww==
+        b=VLvHfeKivB1YjH2k051KNNVMejUzZHv6M3hNQFt0jBXDb93yclRt5aZVcMdVzT20B
+         nKxjEQfgXYwrVe8807X61iqtuKywkUBxiz9jmBMqdbGXDh+rHYjo98kBkIh7ORsOg4
+         CvGbCzswB1PJkl2PdLd94G0SGG8rou0YBqCBF08/b54xy4rFmh0pN78xWp6e4yXLB8
+         lukvv21sQWCw1JY1dCzCLGe9ZL5imjeayGqMVI7VCz1jnlPquUVUKcQ0+AzsV1ve+h
+         +CsjK0Wrzxtez3BoJoh6u4SDiyaADj76/RiiZH8dj9gcs559hu5YVlp9Gjv/YfNwz9
+         Fprfk5gVX05EQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Milo Spadacini <milo.spadacini@gmail.com>,
@@ -39,12 +39,12 @@ Cc:     Milo Spadacini <milo.spadacini@gmail.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Sasha Levin <sashal@kernel.org>, brgl@bgdev.pl,
         linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 05/24] tools: gpio: fix debounce_period_us output of lsgpio
-Date:   Wed, 31 May 2023 09:43:01 -0400
-Message-Id: <20230531134320.3384102-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 05/21] tools: gpio: fix debounce_period_us output of lsgpio
+Date:   Wed, 31 May 2023 09:43:58 -0400
+Message-Id: <20230531134415.3384458-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531134320.3384102-1-sashal@kernel.org>
-References: <20230531134320.3384102-1-sashal@kernel.org>
+In-Reply-To: <20230531134415.3384458-1-sashal@kernel.org>
+References: <20230531134415.3384458-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -76,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index c61d061247e17..52a0be45410c9 100644
+index 5a05a454d0c97..85a2aa292f5d5 100644
 --- a/tools/gpio/lsgpio.c
 +++ b/tools/gpio/lsgpio.c
-@@ -94,7 +94,7 @@ static void print_attributes(struct gpio_v2_line_info *info)
+@@ -90,7 +90,7 @@ static void print_attributes(struct gpio_v2_line_info *info)
  	for (i = 0; i < info->num_attrs; i++) {
  		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
  			fprintf(stdout, ", debounce_period=%dusec",
