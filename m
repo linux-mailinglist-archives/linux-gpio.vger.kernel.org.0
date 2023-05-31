@@ -2,165 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEB4A717C5A
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 11:47:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64129717C6F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 11:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231981AbjEaJrz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 05:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
+        id S234371AbjEaJvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 05:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231222AbjEaJry (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 05:47:54 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D8AD9;
-        Wed, 31 May 2023 02:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bfZg92z4iIPhpCvBzweOlyp4JZTKSuNewMH/vk9aswM=; b=Hjx1z9+HzkPjEH3xjuSwSvccgV
-        EY1rtgdi8wEJjb4gvbD18v5xYFe6Uo7h+hz5AyKtwU89tE6pPAyzl+HPnb7IAduqcf4z4eOVTRRwP
-        nC384uSNh+ABV4I3roFGfZF9ccCS980eJk7NKAHXmuDLLe9QD+ReWsaBL1Khs8XNRp20UB8/9Tr7G
-        lFP54b3E0P1f9tVdJ5WNzADihEX18fIkiythcK+6E3euvwq7plMtjTuUubOyVtpckimOEp/NaDxf6
-        ftKL/KbTGkhyDuTxDLbLQfTz+K6d/kASylC7LM2aLj0GNh17NiURHe61ugqllN7tJjBbQdhXQJ41f
-        raEg425Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52920)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q4IQj-0004Gx-N5; Wed, 31 May 2023 10:47:45 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q4IQf-0000Zd-0D; Wed, 31 May 2023 10:47:41 +0100
-Date:   Wed, 31 May 2023 10:47:40 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     'kernel test robot' <lkp@intel.com>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        oe-kbuild-all@lists.linux.dev, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com,
-        'Piotr Raczynski' <piotr.raczynski@intel.com>
-Subject: Re: [PATCH net-next v9 5/9] net: txgbe: Add SFP module identify
-Message-ID: <ZHcXvFvR3H8Vmyok@shell.armlinux.org.uk>
-References: <20230524091722.522118-6-jiawenwu@trustnetic.com>
- <202305261959.mnGUW17n-lkp@intel.com>
- <ZHCZ0hLKARXu3xFH@shell.armlinux.org.uk>
- <02dd01d991d2$2120fcf0$6362f6d0$@trustnetic.com>
- <03ac01d992d2$67c1ec90$3745c5b0$@trustnetic.com>
+        with ESMTP id S232261AbjEaJvy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 05:51:54 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DA6E8
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 02:51:52 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-62614f2eee1so22822116d6.0
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 02:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685526712; x=1688118712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K0L/ubhIxKcYKrZuH7yhnKxB1rt/RD4DkwEkLw7cCuw=;
+        b=YHUOlebsn5IidwmRWBnzzluxOxmMUsO536n/ZHpd2wj2N0GdZSAtzdfbvEAS3NY/1e
+         1nZ9Sk3O45lEttS3s1fS0jdAlc6Lfg+s8IyCDjR6OgIDiUB/t0KUXQ8rvFxblTu7hdOF
+         KnkJYyAdQDgpfipRa+kpfVEyG4uo+4mcPolxqgHm43YkzfHvlYxo7HwCY+2MRcLE7Edz
+         so18iRbTKp1zjdd1mfvoT3FHqfyKK5hiLH9IdrfNa5lnArpMWt3FYw9yllmFijgDzg6P
+         Ku+kW1O+aQyIO4XDy9TQDotPOavkty8HxmiWZjgDleK/JxB2NjOQTfyI7OHuNlDYvRGL
+         9tcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685526712; x=1688118712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K0L/ubhIxKcYKrZuH7yhnKxB1rt/RD4DkwEkLw7cCuw=;
+        b=O/YKmeYbX7+ipMGXMxzQkz/IF/lR/sutkHKMX0ATKw2+Ac+H/4YDuvSJ66RZp5Nm21
+         CM4vWXN3SI4av67Sx4/kQ1mJviIVC39qB3JGqiSV/WEOq5nKTrhRkWWKijYdICRttyMe
+         2ApNl9AN3b9Fez1IbAxSh0kMQ4rBc5KEZIeFceIl16v9eG5Gud4gwXkm0BfyhxrNCzqQ
+         bYMiwW3FDcS4A8LrCL4jR+i3IOdFt2JuZt46KPQXtE+1ykIsAlnmuh2J+mdQ1+Gmw4PL
+         etD4eIUrEhIpfxNb+D39EqGfSdV2hknc/utp0ohCp2zey58JJNnDoMcYrW7PW8J3o8GW
+         RfNQ==
+X-Gm-Message-State: AC+VfDx8/9W/f/D3w6egAV32g6dDfq8EoL+GuH58RtsrNzFZetKMEi+Q
+        PIVsfZDHms//LCzpfMc34+wC+AYaJoItgFTS/lA=
+X-Google-Smtp-Source: ACHHUZ6bEWXBJ0E0GHSX+aVupRsCZhFNCupEC/f5jtDcuKRXJ4O+tAtPPykvW28RMNx1uRCTFMEtuBRsGB3VfYl2qN8=
+X-Received: by 2002:a05:6214:5017:b0:626:1589:68e4 with SMTP id
+ jo23-20020a056214501700b00626158968e4mr5747623qvb.43.1685526711782; Wed, 31
+ May 2023 02:51:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03ac01d992d2$67c1ec90$3745c5b0$@trustnetic.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de>
+ <20230530151946.2317748-3-u.kleine-koenig@pengutronix.de> <CAHp75VegyUL6J-s4W4fHhKu4cNeBA=4J4CmDHmtAfCUr9qGHQg@mail.gmail.com>
+ <20230531065829.7qrkv2ivs57aymcz@pengutronix.de>
+In-Reply-To: <20230531065829.7qrkv2ivs57aymcz@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 31 May 2023 12:51:15 +0300
+Message-ID: <CAHp75VeNTuQWLqieSyh0djyrBApoZRwKOAnMRd80fVGzfJAnbw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: use "active" and "inactive" instead of
+ "high" and "low" for output hogs
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 30, 2023 at 04:40:36PM +0800, Jiawen Wu wrote:
-> On Monday, May 29, 2023 10:06 AM, Jiawen Wu wrote:
-> > On Friday, May 26, 2023 7:37 PM, Russell King (Oracle) wrote:
-> > > On Fri, May 26, 2023 at 07:30:45PM +0800, kernel test robot wrote:
-> > > > Kconfig warnings: (for reference only)
-> > > >    WARNING: unmet direct dependencies detected for I2C_DESIGNWARE_PLATFORM
-> > > >    Depends on [n]: I2C [=n] && HAS_IOMEM [=y] && (ACPI && COMMON_CLK [=y] || !ACPI)
-> > > >    Selected by [y]:
-> > > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
-> > > >    WARNING: unmet direct dependencies detected for SFP
-> > > >    Depends on [n]: NETDEVICES [=y] && PHYLIB [=y] && I2C [=n] && PHYLINK [=y] && (HWMON [=n] || HWMON [=n]=n)
-> > > >    Selected by [y]:
-> > > >    - TXGBE [=y] && NETDEVICES [=y] && ETHERNET [=y] && NET_VENDOR_WANGXUN [=y] && PCI [=y]
-> > >
-> > > ... and is basically caused by "select SFP". No. Do not do this unless
-> > > you look at the dependencies for SFP and ensure that those are also
-> > > satisfied - because if you don't you create messes like the above
-> > > build errors.
-> > 
-> > So how do I make sure that the module I need compiles and loads correctly,
-> > rely on the user to manually select it?
-> 
-> When I changed the TXGBE config to:
-> ...
-> 	depends on SFP
-> 	select PCS_XPCS
-> ...
-> the compilation gave an error:
-> 
-> drivers/net/phy/Kconfig:16:error: recursive dependency detected!
-> drivers/net/phy/Kconfig:16:     symbol PHYLIB is selected by PHYLINK
-> drivers/net/phy/Kconfig:6:      symbol PHYLINK is selected by PCS_XPCS
-> drivers/net/pcs/Kconfig:8:      symbol PCS_XPCS is selected by TXGBE
-> drivers/net/ethernet/wangxun/Kconfig:40:        symbol TXGBE depends on SFP
-> drivers/net/phy/Kconfig:63:     symbol SFP depends on PHYLIB
-> For a resolution refer to Documentation/kbuild/kconfig-language.rst
-> subsection "Kconfig recursive dependency limitations"
-> 
-> Seems deleting "depends on SFP" is the correct way. But is this normal?
-> How do we ensure the dependency between TXGBE and SFP?
+On Wed, May 31, 2023 at 9:58=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Wed, May 31, 2023 at 12:51:34AM +0300, Andy Shevchenko wrote:
+> > On Tue, May 30, 2023 at 6:19=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
 
-First, I would do this:
+...
 
-	select PHYLINK
-	select PCS_XPCS
+> > As I said before, this does not cover the ACPI case. Consider
+>
+> I don't understand that concern. Currently there is nothing for ACPI
+> that parses "output-high" et al.
 
-but then I'm principled, and I don't agree that PCS_XPCS should be
-selecting PHYLINK.
+This is not true.
 
-The second thing I don't particularly like is selecting user visible
-symbols, but as I understand it, with TXGBE, the SFP slot is not an
-optional feature, so there's little option.
+> So you want me to introduce support for
+> hogs defined by ACPI to fix the strange semantic for dt-defined hogs?
+> What am I missing?
 
-So, because SFP requires I2C:
+https://elixir.bootlin.com/linux/v6.4-rc4/source/drivers/gpio/gpiolib-acpi.=
+c#L1262
 
-	select I2C
-	select SFP
+...
 
-That is basically what I meant by "you look at the dependencies for
-SFP and ensure that those are also satisfied".
+> > > +       GPIOD_OUT_LOW_OPEN_DRAIN =3D GPIOD_OUT_INACTIVE_OPEN_DRAIN,
+> > > +       GPIOD_OUT_HIGH_OPEN_DRAIN =3D GPIOD_OUT_ACTIVE_OPEN_DRAIN,
+> >
+> > This one is an interesting case, because depending on the transistor
+> > polarity this may be active GND or VDD. All the same for OPEN_SOURCE
+> > which seems not defined (but should be equivalent to the opposite to
+> > the _DRAIN cases).
+>
+> This is (also) orthogonal to my change, right?
 
-Adding that "select I2C" also solves the unmet dependencies for
-I2C_DESIGNWARE_PLATFORM.
+Maybe yes, maybe no. Depends on what we want with this semantics
+regarding OS/OD/OC/OE.
+Strictly speaking all four should be defined. But it brings a lot of
+duplication. I dunno.
 
-However, even with that, we're not done with the evilness of select,
-because there's one more permitted configuration combination that
-will break.
-
-If you build TXGBE into the kernel, that will force SFP=y, I2C=y,
-PHYLINK=y, PHYLIB=y. So far so good. However, if HWMON=m, then things
-will again break. So I would also suggest:
-
-	select HWMON if TXGBE=y
-
-even though you don't require it, it solves the build fallout from
-where HWMON=m but you force SFP=y.
-
-Maybe someone else has better ideas how to do this, but the above is
-the best I can come up with.
-
-
-IMHO, select is nothing but pure evil, and should be used with utmost
-care and a full understanding of its ramifications, and a realisation
-that it *totally* and *utterly* blows away any "depends on" on the
-target of the select statement.
-
-An option that states that it depends on something else generally does
-because... oddly enough, it _depends_ on that other option. So, if
-select forces an option on without its dependencies, then it's not
-surprising that stuff fails to build.
-
-Whenever a select statement is added, one must _always_ look at the
-target symbol and consider any "depends on" there, and how to ensure
-that those dependencies are guaranteed to always be satisfied.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--=20
+With Best Regards,
+Andy Shevchenko
