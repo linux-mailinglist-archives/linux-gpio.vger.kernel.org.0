@@ -2,163 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0EA7176B7
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 08:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E41307176E8
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 May 2023 08:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbjEaGST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 31 May 2023 02:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
+        id S232246AbjEaGeo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 31 May 2023 02:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbjEaGSS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 02:18:18 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D263F9F;
-        Tue, 30 May 2023 23:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1685513897; x=1717049897;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=j0wWi76fQ0wDtCQgiYmR4rSGfexj1RzQ3UKzwhMVl9o=;
-  b=MR5XqYHmBDkDn9JxzV3f6y6mLC5mXbXAhps1szoTYbLAPCqEHCXQdrn2
-   wzvBoipAQHu+eAHs2ISCipSKvsSZBQmrXhKH3XZ/17PABWAGPaDZAS3B0
-   FpHi0oxlopWghFxjkGHDvSDdHSaKZ6UIv17nadPX26LnhrmQvfJj9vuW3
-   +lJWF2Kf0UNFj25BB2o7UG6yQ/1NuwbdiiOoURQm6DKN+4LNrfcKhplot
-   dp51pDMMtoEYgpPqEjEtkWnlZlUNofKiis86I7CfmAlH8jyvWM2YrnRkk
-   ueAELwOT/BV7pbYFoLR7J5CAGVr3pawvx6e1aQKl5dtPVX8rck7JIRhh/
-   A==;
-X-IronPort-AV: E=Sophos;i="6.00,205,1681164000"; 
-   d="scan'208";a="31181399"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 31 May 2023 08:18:14 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 31 May 2023 08:18:15 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 31 May 2023 08:18:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1685513894; x=1717049894;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=j0wWi76fQ0wDtCQgiYmR4rSGfexj1RzQ3UKzwhMVl9o=;
-  b=CefChO4tiUsXU35oRzpwUIB4cQDq0uYx9G4SnqhQqD8Zikuw7e9vls96
-   ZS09B1GSe429NqWPok7/jq61uPLDhTZMq1Ov73j/z2+Ttvvvc3QHP0Qlx
-   3S+WLWBZij4omZOzYle0H+tSXkTK0QqO4zszjuG5rvgO1g9pVnU/z86MT
-   6c/1aH+x+wQSd+XkIMmeKf51X6t5qNL+LxkRcRRLchbbWzhsd2ir/weqO
-   xN51oZ+K17MfL/Kav3wkYn5ggZq4vyHB4CbhisPrxFeRQ8zPKrqCoBIgu
-   cSTecFGEFcOTAbhhc3EPFZ70RWP/ewICyS9mqSgTfILrBnm/D42TfYaD+
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,205,1681164000"; 
-   d="scan'208";a="31181398"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 31 May 2023 08:18:14 +0200
-Received: from steina-w.localnet (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S230001AbjEaGem (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 31 May 2023 02:34:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F7E99;
+        Tue, 30 May 2023 23:34:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 8ADB0280099;
-        Wed, 31 May 2023 08:18:14 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: introduce hog properties with less ambiguity
-Date:   Wed, 31 May 2023 08:18:14 +0200
-Message-ID: <4491320.LvFx2qVVIh@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20230530151946.2317748-2-u.kleine-koenig@pengutronix.de>
-References: <20230530151946.2317748-1-u.kleine-koenig@pengutronix.de> <20230530151946.2317748-2-u.kleine-koenig@pengutronix.de>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 14A2363709;
+        Wed, 31 May 2023 06:34:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F03C4339B;
+        Wed, 31 May 2023 06:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685514880;
+        bh=VbJXJ5zz+WVpnyRQMyry3uFyArPowS0EQwKqrDggAFo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QijCDzcRmZbR2iHcYZtpEYpw6bAFdDHejD9UBEfPcsfUQaOT2Tt/9k/VxjOQbGdxA
+         QDJOoV3DxLF8Vt54AzGdX21lutd/xZParafTh73vV+oSfsHSBfYegP2u43MtzMdh7T
+         oecQFkldm7MpwUtQXBxIVMqWCTm8H6aKcfEFofaRrDbR/1Uw4TtdcONaphzmDXRyWo
+         RppPS1Z2PYrZsAbT/p225lgG8fwFiDplK5sUt3//lMWdXQ8SE4/4sM7D9Jp+t8x4OO
+         15wDxV6BJaKVjOV9VqVi/DHRoXdI0/deofPd9pw5Icn/svT+DQpujic4PwX6f/MJ3z
+         olvSJGHdp3NRw==
+Date:   Tue, 30 May 2023 23:34:38 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Matti Vaittinen <mazziesaccount@gmail.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v7 0/9] fix fwnode_irq_get[_byname()] returnvalue
+Message-ID: <20230530233438.572db3fb@kernel.org>
+In-Reply-To: <cover.1685340157.git.mazziesaccount@gmail.com>
+References: <cover.1685340157.git.mazziesaccount@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, 29 May 2023 09:22:15 +0300 Matti Vaittinen wrote:
+> The fwnode_irq_get() and the fwnode_irq_get_byname() may have returned
+> zero if mapping the IRQ fails. This contradicts the
+> fwnode_irq_get_byname() documentation. Furthermore, returning zero or
+> errno on error is unepected and can easily lead to problems
+> like.
 
-Am Dienstag, 30. Mai 2023, 17:19:45 CEST schrieb Uwe Kleine-K=F6nig:
-> For active low lines the semantic of output-low and output-high is hard
-> to grasp because there is a double negation involved and so output-low
-> is actually a request to drive the line high (aka inactive).
->=20
-> So introduce output-inactive and output-active with the same semantic as
-> output-low and output-high respectively have today, but with a more
-> sensible name.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio.txt | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
-> b/Documentation/devicetree/bindings/gpio/gpio.txt index
-> d82c32217fff..2f037bbd3ffa 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -209,15 +209,21 @@ Required properties:
->  - gpios:      Store the GPIO information (id, flags, ...) for each GPIO =
-to
->  	      affect. Shall contain an integer multiple of the number of=20
-cells
->  	      specified in its parent node (GPIO controller node).
-> +
->  Only one of the following properties scanned in the order shown below.
->  This means that when multiple properties are present they will be search=
-ed
->  in the order presented below and the first match is taken as the intended
->  configuration.
-> -- input:      A property specifying to set the GPIO direction as input.
-> -- output-low  A property specifying to set the GPIO direction as output
-> with -	      the value low.
-> -- output-high A property specifying to set the GPIO direction as output
-> with -	      the value high.
-> +- input:             A property specifying to set the GPIO direction as
-> input. +- output-inactive:   A property specifying to set the GPIO
-> direction as output +		     with the inactive value=20
-(depending on the
-> line's polarity, +		     which is active-high by default)
-> +- output-active:     A property specifying to set the GPIO direction as
-> output +		     with the active value.
-
-I know this is essentially just renaming currently existing properties.
-But these mutual exclusive (boolean) properties make it impossible to chang=
-e=20
-them in DT overlay. Any ideas how to support changing the output level onGP=
-IO=20
-hogs in DT overlay?
-
-Despite that, this change looks sensible to me.
-
-Best regards,
-Alexander
-
-> +For backwards compatibility "output-low" and "output-high" are supported=
- as
-> +aliases for "output-inactive" and "output-active" respectively. Their
-> usage is +misleading for active-low outputs, so their use is discouraged.
->=20
->  Optional properties:
->  - line-name:  The GPIO label name. If not present the node name is used.
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+What's the merging plan? Could patch 1 go to a stable branch 
+and then driver trees can pull it in and apply their respective 
+patches locally?
