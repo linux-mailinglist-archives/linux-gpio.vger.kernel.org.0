@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9749871F4F4
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 23:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA3B671F4F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 23:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232214AbjFAVmy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 17:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58808 "EHLO
+        id S229524AbjFAVpO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 17:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231499AbjFAVmy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 17:42:54 -0400
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C081196
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Jun 2023 14:42:53 -0700 (PDT)
+        with ESMTP id S232071AbjFAVpN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 17:45:13 -0400
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3B7184
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Jun 2023 14:45:11 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-        id 41dcce44-00c5-11ee-abf4-005056bdd08f;
-        Fri, 02 Jun 2023 00:42:51 +0300 (EEST)
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 9420d65d-00c5-11ee-b3cf-005056bd6ce9;
+        Fri, 02 Jun 2023 00:45:09 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Fri, 2 Jun 2023 00:42:50 +0300
+Date:   Fri, 2 Jun 2023 00:45:08 +0300
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -27,56 +27,39 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/8] pinctrl: qcom: qdf2xxx: drop ACPI_PTR
-Message-ID: <ZHkQ2j6axPYGq_Lg@surfacebook>
+Subject: Re: [PATCH 7/8] pinctrl: qcom: organize main SoC drivers in new
+ Kconfig.msm
+Message-ID: <ZHkRZNpYE8fQNfma@surfacebook>
 References: <20230601152026.1182648-1-krzysztof.kozlowski@linaro.org>
+ <20230601152026.1182648-7-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230601152026.1182648-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230601152026.1182648-7-krzysztof.kozlowski@linaro.org>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thu, Jun 01, 2023 at 05:20:19PM +0200, Krzysztof Kozlowski kirjoitti:
-> Driver can bind only via ACPI matching and acpi_device_id is there
-> unconditionally, so drop useless ACPI_PTR() macro.
-
-With this acpi.h becomes unused and has to be replaced with (AFAICT)
-property.h
-mod_devicetable.h
-(maybe others, but I haven't checked deeply)
-
-With that,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Thu, Jun 01, 2023 at 05:20:25PM +0200, Krzysztof Kozlowski kirjoitti:
+> In menuconfig, some entries depending on PINCTRL_MSM are indented and
+> expressed as dependening but some not, because of other Kconfig entries
+> in between,
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-> index b0f1b3dc6831..b5808fcfb13c 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-qdf2xxx.c
-> @@ -142,7 +142,7 @@ MODULE_DEVICE_TABLE(acpi, qdf2xxx_acpi_ids);
->  static struct platform_driver qdf2xxx_pinctrl_driver = {
->  	.driver = {
->  		.name = "qdf2xxx-pinctrl",
-> -		.acpi_match_table = ACPI_PTR(qdf2xxx_acpi_ids),
-> +		.acpi_match_table = qdf2xxx_acpi_ids,
->  	},
->  	.probe = qdf2xxx_pinctrl_probe,
->  	.remove = msm_pinctrl_remove,
-> -- 
-> 2.34.1
+> Move all main Qualcomm SoC pin controller driver entries into new
+> Kconfig.msm file so they will be nicely ordered in Kconfig file (by
+> CONFIG_ name) and properly indented as PINCTRL_MSM dependency in
+> menuconfig.
 > 
+> Functionally this is the same, but since entire file is guarded with "if
+> PINCTRL_MSM" drop this dependency from individual entries.
+
+Cool idea, maybe I need to do the same for Intel case!
 
 -- 
 With Best Regards,
