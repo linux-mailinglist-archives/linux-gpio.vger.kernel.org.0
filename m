@@ -2,79 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB0B371955A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 10:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E3517195A4
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 10:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231995AbjFAIU7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 04:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37324 "EHLO
+        id S232289AbjFAIcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 04:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232108AbjFAIUw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 04:20:52 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EEE126
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Jun 2023 01:20:50 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5147f7d045bso985867a12.2
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Jun 2023 01:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685607648; x=1688199648;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Md0U6+/SKVeb+yyoE/2w2q9WIxgDj78VnRr+rNxliiE=;
-        b=f7IpXtUty+F4U9DsC24oWpabK26KruKEF2LZF++dtr/9oUkQaeeL7FNozNtiW+HK57
-         j6ON6YhJiu4022YuwcWq52MkR8mpC2C0qXQiugdFsYt0xDw0wXPJAOfdoyWsNJOvGijb
-         KPI6ZrMuAzijTrNmliitzJrR3NUGC22qUjaf9dEplBlcxaYRuyvqaNU/+BruvhVgoLH5
-         MXU6K+VfizixMgLhi8j9fWEwl7fCzjpBMqnI39/WbdvREcu4YkosRNVytz5luabmyVOd
-         hnQ70ahEy8s4ITQ1NIoFj8aBEgvLrmI8rwkykQ0hz0xdig8ADqJ5OYbSQWcetLfPs8dZ
-         IdxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685607648; x=1688199648;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Md0U6+/SKVeb+yyoE/2w2q9WIxgDj78VnRr+rNxliiE=;
-        b=Moau4QO9FJyRzYuqug676XXbIOq46t3vyLBVlpe8r1v+6f7i9cH00b5/U4TtFtZGzQ
-         6GYWHUDUHZbGTC2ouVwBrL8dU7+5JuGFuH/pE89a3lBidm4urAFIVc/9yDLGae98qfji
-         /KfthET4hO7gh3C0qnEUU7bGWeq62bqzNN5TY59bskRsbL21iPbwC3cDbTUI2A63Izit
-         Q+Xfi+6CAnQshUNdH+EFsKnBO+g3Ps4xjD8VBmcmN+jGtV3bBHdYufHlPNtQ/q2uFfGm
-         GhFESQKv5coSZyXj98uUNbgZeKecuhjVR5V2ixSqXKxemEjukJXyzRbNDRQDjhCAg90a
-         Sh+Q==
-X-Gm-Message-State: AC+VfDw+vOhYZkjAhXQX1x7BY2D621x4tljk2Ft+OD0vacLjl8nBjalP
-        oiYz6T0QH5vSBd0akdpGSy5KOw==
-X-Google-Smtp-Source: ACHHUZ6Ce2afAmgynQKHdIneIQvfpfY4VrIPBqFOlOLDUEmj1RGEbDL7DFER6Cc3PVrpE8b/1VW62A==
-X-Received: by 2002:a05:6402:322:b0:514:8e6f:66fe with SMTP id q2-20020a056402032200b005148e6f66femr6016179edw.33.1685607648607;
-        Thu, 01 Jun 2023 01:20:48 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id c9-20020aa7df09000000b00515e951cad2sm954076edy.53.2023.06.01.01.20.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 01:20:48 -0700 (PDT)
-Message-ID: <cacd8ea8-f834-4983-20ff-a875fee8011a@linaro.org>
-Date:   Thu, 1 Jun 2023 10:20:46 +0200
+        with ESMTP id S232179AbjFAIbQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 04:31:16 -0400
+X-Greylist: delayed 357 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 01 Jun 2023 01:30:45 PDT
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D4E133;
+        Thu,  1 Jun 2023 01:30:45 -0700 (PDT)
+Received: from localhost.localdomain (unknown [124.16.138.125])
+        by APP-05 (Coremail) with SMTP id zQCowACnrpLJVXhkdUgwCQ--.53814S2;
+        Thu, 01 Jun 2023 16:24:42 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, palmer@dabbelt.com,
+        paul.walmsley@sifive.com
+Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] gpio: sifive: Add missing check for platform_get_irq
+Date:   Thu,  1 Jun 2023 16:24:40 +0800
+Message-Id: <20230601082440.30110-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v1 33/43] dt-bindings: gpio: Add Cirrus EP93xx
-Content-Language: en-US
-To:     Nikita Shubin <nikita.shubin@maquefel.me>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     Michael Peters <mpeters@embeddedTS.com>,
-        Kris Bahnsen <kris@embeddedTS.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
- <20230601054549.10843-15-nikita.shubin@maquefel.me>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230601054549.10843-15-nikita.shubin@maquefel.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: zQCowACnrpLJVXhkdUgwCQ--.53814S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1UtrykKF17Ww43Ww4DJwb_yoWfJFg_Gw
+        1kuFW7X3y0vFn0gF12y3yayr92vF95Wrn3ursakFyftryDu348ur17Xrs5ZFnxXr4UtFy7
+        Gay8uw47Aa13GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhdbbUUUUU=
+X-Originating-IP: [124.16.138.125]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,147 +56,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/06/2023 07:45, Nikita Shubin wrote:
-> Add YAML bindings for ep93xx SoC gpio controller.
-> 
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> ---
->  .../devicetree/bindings/gpio/gpio-ep9301.yaml | 154 ++++++++++++++++++
->  1 file changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml b/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
-> new file mode 100644
-> index 000000000000..daadfb4926c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
+Add missing check for platform_get_irq and return error
+if it fails.
 
-Filename...
+Fixes: f52d6d8b43e5 ("gpio: sifive: To get gpio irq offset from device tree data")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+ drivers/gpio/gpio-sifive.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> @@ -0,0 +1,154 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-ep9301.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: EP93xx GPIO controller
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +  - Bartosz Golaszewski <brgl@bgdev.pl>
-
-Did you choose correct maintainers? Bartosz, Linus, do you take care
-about EP93xx platform?
-
-
-> +  - Nikita Shubin <nikita.shubin@maquefel.me>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: cirrus,ep9301-gpio
-> +      - items:
-> +          - enum:
-> +              - cirrus,ep9302-gpio
-> +              - cirrus,ep9307-gpio
-> +              - cirrus,ep9312-gpio
-> +              - cirrus,ep9315-gpio
-> +          - const: cirrus,ep9301-gpio
-> +
-> +  reg:
-> +    minItems: 2
-> +    items:
-> +      - description: data register
-> +      - description: direction register
-> +      - description: interrupt registers base
-> +
-> +  reg-names:
-> +    minItems: 2
-> +    items:
-> +      - const: data
-> +      - const: dir
-> +      - const: intr
-> +
-> +  gpio-controller: true
-> +
-> +  gpio-ranges: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    oneOf:
-> +      - maxItems: 1
-> +      - description: port F has dedicated irq line for each gpio line
-> +        maxItems: 8
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    gpio@80840000 {
-> +      compatible = "cirrus,ep9301-gpio";
-> +      reg = <0x80840000 0x04>,
-> +            <0x80840010 0x04>,
-> +            <0x80840090 0x1c>;
-> +      reg-names = "data", "dir", "intr";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +        interrupt-controller;
-> +        interrupt-parent = <&vic1>;
-> +        interrupts = <27>;
-> +    };
-> +
-> +    gpio@80840004 {
-> +      compatible = "cirrus,ep9301-gpio";
-> +      reg = <0x80840004 0x04>,
-> +            <0x80840014 0x04>,
-> +            <0x808400ac 0x1c>;
-> +      reg-names = "data", "dir", "intr";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      interrupt-controller;
-> +      interrupt-parent = <&vic1>;
-> +      interrupts = <27>;
-> +    };
-
-Same example as before, drop.
-
-> +
-> +    gpio@80840008 {
-> +      compatible = "cirrus,ep9301-gpio";
-> +      reg = <0x80840008 0x04>,
-> +            <0x80840018 0x04>;
-> +      reg-names = "data", "dir";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +    };
-> +
-> +    gpio@8084000c {
-> +      compatible = "cirrus,ep9301-gpio";
-> +      reg = <0x8084000c 0x04>,
-> +            <0x8084001c 0x04>;
-> +      reg-names = "data", "dir";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +    };
-
-Same as before... Just keep one example for interrupt controller and one
-for non-interrupt-controller.
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index 98939cd4a71e..7bca9c415564 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -221,8 +221,11 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	for (i = 0; i < ngpio; i++)
++	for (i = 0; i < ngpio; i++) {
+ 		chip->irq_number[i] = platform_get_irq(pdev, i);
++		if (chip->irq_number[i] < 0)
++			return -ENODEV;
++	}
+ 
+ 	ret = bgpio_init(&chip->gc, dev, 4,
+ 			 chip->base + SIFIVE_GPIO_INPUT_VAL,
+-- 
+2.25.1
 
