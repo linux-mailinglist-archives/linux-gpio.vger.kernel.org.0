@@ -2,80 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D257F719607
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 10:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C31EC7196D9
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 11:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbjFAIvn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 04:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
+        id S232831AbjFAJZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 05:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbjFAIvn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 04:51:43 -0400
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA479F;
-        Thu,  1 Jun 2023 01:51:41 -0700 (PDT)
-Received: from localhost.localdomain (unknown [124.16.138.125])
-        by APP-05 (Coremail) with SMTP id zQCowADn7IwWXHhkXdQzCQ--.52693S2;
-        Thu, 01 Jun 2023 16:51:35 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     albeu@free.fr, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] gpio: ath79: Add missing check for platform_get_irq
-Date:   Thu,  1 Jun 2023 16:51:32 +0800
-Message-Id: <20230601085132.12508-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232694AbjFAJZU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 05:25:20 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442E611F;
+        Thu,  1 Jun 2023 02:25:19 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-626190df842so8096216d6.0;
+        Thu, 01 Jun 2023 02:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685611518; x=1688203518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dzr0sXs/hmoLYt4Nl0MgN1apN4fZADrfHPGpIhvTR6I=;
+        b=fXcUBky3xVq7/nHzFuvrCdhn1kEZ9DUp1DPAvmxeuqp2bl6bXecWRh9wLDfpaaHKxC
+         WXVr1hkYof/ue5l8CLZzFwJmODcpG3vt+lJynLaIcJzL6LMtnpYOsr3R+zCntlud7xcZ
+         N3hEO+sQMxvtpFpKJajYXy8Kw/TgYz8iPuvd5DDxhaAyxm2iFouNlfLWBc3BYwMp7d9H
+         Hd6z8O/VQ0cufGwePwf86fVHUuJkjAfG2FH+v7BlKc4PMi++t3DTegO964/k/JnrdTTv
+         ktSg7ivDKikHn2wESyUSErvqaGd+DU8/uSyY81f5ge+0lU3ILslolBjykCUFEp3a9ndg
+         Kfjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685611518; x=1688203518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dzr0sXs/hmoLYt4Nl0MgN1apN4fZADrfHPGpIhvTR6I=;
+        b=hCuvduUD8T9sq6fLVp9MEN1qGe7J08yhyLf3qnjmqFrMhAc3BtPz57paOaBIiaSolf
+         IrW5iX1vHPvovvhrJ/1bPhL3XFasHNgIM08yS6aXo6v944livw+O6WJ5M9PPLNDzf9Ku
+         cfzOz70OJLk48wL4KH22itl5ITGv4vQyKFQK5PU9mB+iLiCkpRl2GhJt+DwhdsNGJbus
+         TSXqivS7x2BXfQ+in+4vnUvNB89tsbjDw3JmQ6JAcU5d2xfHTCzQiE3YVMhwrMePRQoN
+         Pj77IuWgIS/QFL1yRf/9eRZRfbUO2RX2QAFyhl+Bulgh/hu4F9mptMlImumqV7qRNVw4
+         0klA==
+X-Gm-Message-State: AC+VfDy4yNI4s6+oJPOPoSlXgfWtOc+3EjXJK6/uc3r1Kbns67bfK5cJ
+        myWWgXbuNbQwHg3qi8RQX7A6DatZGOVncOTVVdI=
+X-Google-Smtp-Source: ACHHUZ5Ib5cta5bQfcho3pVqSqgpqkYTgu4VQXTg9s5YdPIUDBkI01TFMD70U0ZrMZDdCHYrLFEJgZAHJnaY60MbLsQ=
+X-Received: by 2002:a05:6214:485:b0:625:b72a:142c with SMTP id
+ pt5-20020a056214048500b00625b72a142cmr11229290qvb.14.1685611518304; Thu, 01
+ Jun 2023 02:25:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowADn7IwWXHhkXdQzCQ--.52693S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4xtryDtF4rZw1kKFyUKFg_yoW3Crg_Cw
-        n7Xw17Wr48CrnYqr12yw12yrWSyr93urn3Zr4vga1aqr98Arsrur9ruw1rZr17XrWUKFyU
-        Gas2krWjyFs3GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUBWl3UUUUU==
-X-Originating-IP: [124.16.138.125]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230529140711.896830-1-hugo@hugovil.com> <20230529140711.896830-8-hugo@hugovil.com>
+ <ZHUpWQafRPHW1RJQ@surfacebook> <20230530113649.73f28b9f6ba91f17ace1e12f@hugovil.com>
+ <CAHp75Vf35rN93sXFBU0nRZQLpUgQHR2caGC8BmHkEgPZqF=dQg@mail.gmail.com> <20230531195723.462b140ac041b790711c1a7f@hugovil.com>
+In-Reply-To: <20230531195723.462b140ac041b790711c1a7f@hugovil.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 1 Jun 2023 12:24:42 +0300
+Message-ID: <CAHp75VcNihyzn3t8C48w1V+WWRk_zj8Br7shTfbHLU09u4OtcA@mail.gmail.com>
+Subject: Re: [PATCH v4 7/9] serial: sc16is7xx: fix regression with GPIO configuration
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the missing check for platform_get_irq and return error
-if it fails.
+On Thu, Jun 1, 2023 at 2:57=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com> w=
+rote:
+> On Wed, 31 May 2023 00:56:57 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Tue, May 30, 2023 at 6:36=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.c=
+om> wrote:
+> > > On Tue, 30 May 2023 01:38:17 +0300
+> > > andy.shevchenko@gmail.com wrote:
+> > > > Mon, May 29, 2023 at 10:07:09AM -0400, Hugo Villeneuve kirjoitti:
 
-Fixes: 2b8f89e19b6d ("gpio: ath79: Add support for the interrupt controller")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/gpio/gpio-ath79.c | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-index aa0a954b8392..4b67428a8c17 100644
---- a/drivers/gpio/gpio-ath79.c
-+++ b/drivers/gpio/gpio-ath79.c
-@@ -286,6 +286,8 @@ static int ath79_gpio_probe(struct platform_device *pdev)
- 		if (!girq->parents)
- 			return -ENOMEM;
- 		girq->parents[0] = platform_get_irq(pdev, 0);
-+		if (girq->parents[0] < 0)
-+			return -ENODEV;
- 		girq->default_type = IRQ_TYPE_NONE;
- 		girq->handler = handle_simple_irq;
- 	}
--- 
-2.25.1
+> > > > > +           of_property_for_each_u32(dev->of_node, "nxp,modem-con=
+trol-line-ports",
+> > > > > +                                    prop, p, u) {
+> > > > > +                   if (u >=3D devtype->nr_uart)
+> > > > > +                           continue;
+> > > > > +
+> > > > > +                   /* Use GPIO lines as modem control lines */
+> > > > > +                   if (u =3D=3D 0)
+> > > > > +                           mctrl_mask |=3D SC16IS7XX_IOCONTROL_M=
+ODEM_A_BIT;
+> > > > > +                   else if (u =3D=3D 1)
+> > > > > +                           mctrl_mask |=3D SC16IS7XX_IOCONTROL_M=
+ODEM_B_BIT;
+> > > > > +           }
+> > > >
+> > > > Can we use device properties, please?
+> > >
+> > > I have converted this section to use device_property_count_u32() and =
+device_property_read_u32_array(). Is that Ok?
+> >
+> > Yes, thank you!
+>
+> Hi Andy,
+> now that I am using the device property API, I think I no longer have the=
+ need to test for "if (dev->of_node)" before reading the new property "nxp,=
+modem-control-line-ports"?
+>
+> If that is the case, I will leave the test "if (dev->of_node)" only for t=
+he "irda-mode-ports" property.
+>
+> The pseudo code woulk look like this:
+>
+>         if (dev->of_node) {
+>                 struct property *prop;
+>                 const __be32 *p;
+>                 u32 u;
+>
+>                 of_property_for_each_u32(dev->of_node, "irda-mode-ports",
+>                                          prop, p, u)
+>                         if (u < devtype->nr_uart)
+>                                 s->p[u].irda_mode =3D true;
+>         }
+>
+>         /* Read "nxp,modem-control-line-ports" using device property API.=
+ */
+>         sc16is7xx_setup_mctrl_ports(dev);
 
+Looks good to me, thank you for following the advice!
+
+--=20
+With Best Regards,
+Andy Shevchenko
