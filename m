@@ -2,49 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3517195A4
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 10:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D257F719607
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 10:51:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232289AbjFAIcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 04:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
+        id S232262AbjFAIvn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 04:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232179AbjFAIbQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 04:31:16 -0400
-X-Greylist: delayed 357 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 01 Jun 2023 01:30:45 PDT
+        with ESMTP id S230468AbjFAIvn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 04:51:43 -0400
 Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D4E133;
-        Thu,  1 Jun 2023 01:30:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA479F;
+        Thu,  1 Jun 2023 01:51:41 -0700 (PDT)
 Received: from localhost.localdomain (unknown [124.16.138.125])
-        by APP-05 (Coremail) with SMTP id zQCowACnrpLJVXhkdUgwCQ--.53814S2;
-        Thu, 01 Jun 2023 16:24:42 +0800 (CST)
+        by APP-05 (Coremail) with SMTP id zQCowADn7IwWXHhkXdQzCQ--.52693S2;
+        Thu, 01 Jun 2023 16:51:35 +0800 (CST)
 From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, palmer@dabbelt.com,
-        paul.walmsley@sifive.com
-Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] gpio: sifive: Add missing check for platform_get_irq
-Date:   Thu,  1 Jun 2023 16:24:40 +0800
-Message-Id: <20230601082440.30110-1-jiasheng@iscas.ac.cn>
+To:     albeu@free.fr, linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] gpio: ath79: Add missing check for platform_get_irq
+Date:   Thu,  1 Jun 2023 16:51:32 +0800
+Message-Id: <20230601085132.12508-1-jiasheng@iscas.ac.cn>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowACnrpLJVXhkdUgwCQ--.53814S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1UtrykKF17Ww43Ww4DJwb_yoWfJFg_Gw
-        1kuFW7X3y0vFn0gF12y3yayr92vF95Wrn3ursakFyftryDu348ur17Xrs5ZFnxXr4UtFy7
-        Gay8uw47Aa13GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+X-CM-TRANSID: zQCowADn7IwWXHhkXdQzCQ--.52693S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4xtryDtF4rZw1kKFyUKFg_yoW3Crg_Cw
+        n7Xw17Wr48CrnYqr12yw12yrWSyr93urn3Zr4vga1aqr98Arsrur9ruw1rZr17XrWUKFyU
+        Gas2krWjyFs3GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
         6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
-        ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhdbbUUUUU=
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUBWl3UUUUU==
 X-Originating-IP: [124.16.138.125]
 X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -56,32 +54,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add missing check for platform_get_irq and return error
+Add the missing check for platform_get_irq and return error
 if it fails.
 
-Fixes: f52d6d8b43e5 ("gpio: sifive: To get gpio irq offset from device tree data")
+Fixes: 2b8f89e19b6d ("gpio: ath79: Add support for the interrupt controller")
 Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
 ---
- drivers/gpio/gpio-sifive.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-ath79.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-index 98939cd4a71e..7bca9c415564 100644
---- a/drivers/gpio/gpio-sifive.c
-+++ b/drivers/gpio/gpio-sifive.c
-@@ -221,8 +221,11 @@ static int sifive_gpio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	for (i = 0; i < ngpio; i++)
-+	for (i = 0; i < ngpio; i++) {
- 		chip->irq_number[i] = platform_get_irq(pdev, i);
-+		if (chip->irq_number[i] < 0)
+diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
+index aa0a954b8392..4b67428a8c17 100644
+--- a/drivers/gpio/gpio-ath79.c
++++ b/drivers/gpio/gpio-ath79.c
+@@ -286,6 +286,8 @@ static int ath79_gpio_probe(struct platform_device *pdev)
+ 		if (!girq->parents)
+ 			return -ENOMEM;
+ 		girq->parents[0] = platform_get_irq(pdev, 0);
++		if (girq->parents[0] < 0)
 +			return -ENODEV;
-+	}
- 
- 	ret = bgpio_init(&chip->gc, dev, 4,
- 			 chip->base + SIFIVE_GPIO_INPUT_VAL,
+ 		girq->default_type = IRQ_TYPE_NONE;
+ 		girq->handler = handle_simple_irq;
+ 	}
 -- 
 2.25.1
 
