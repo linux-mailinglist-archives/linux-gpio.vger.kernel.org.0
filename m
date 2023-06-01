@@ -2,50 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B770771929F
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 07:47:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEE8719370
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 08:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231638AbjFAFrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 01:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        id S231691AbjFAGmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 02:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231634AbjFAFq6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 01:46:58 -0400
-Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [178.154.239.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B3A10DD;
-        Wed, 31 May 2023 22:46:27 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:5e51:0:640:23ee:0])
-        by forward100a.mail.yandex.net (Yandex) with ESMTP id B2EE546CDA;
-        Thu,  1 Jun 2023 08:46:23 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id pjGDMhnDduQ0-zieECyhD;
-        Thu, 01 Jun 2023 08:46:23 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1685598383;
-        bh=A2FiCkys0aL7RsfnhMzn1bmYZGGoisuSld30oU2VX3Y=;
-        h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-        b=EGnOrp8PGQbb0MIsNhPKsLwLUhMbmVl3+0qqeLSb8CnN70PT7cedgH9vXG3cUAy5S
-         ywUAmMZmEPQRyKd/YdocZXnzEhbhpxWbex5FH1v66MQRNg5Gt43OgJhnios1RHqtDU
-         EgOEazSLyLprVQ4MLtjcEKXoR34rnUWr85ExNwTk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-51.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        with ESMTP id S231301AbjFAGmU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 02:42:20 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13496184
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 23:42:16 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-96fbe7fbdd4so54632966b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 31 May 2023 23:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685601734; x=1688193734;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ANMyuQNsEPiF3QmDOiOhBLvKIIT27fWFnUKpORZrZFw=;
+        b=ggtn9YySWdXvGrl85dcClMiC4+V1v1mqF11/6CQ+6dJ1lklKIHR73dJ7mVcp/QxxIQ
+         /xdx8h+2OS6ricRnu8tSxMMLAzo7rd3Z4G7TB7wyvIlghny2osCznIfUsRl3cFzZpycg
+         8QWJHmeA+RHG3daSf3sppVfBVYNdBAPwyas61MqbUfXvqT84ZmCZEC4127Sc1BCWemD+
+         r/nQr6IsDNQafD79CUDqH4BLGjHQFBmHH/W77T40PrORsTSiBathnYRDYzP7RK2ukaTU
+         +P+HYPylSQf/yfYwwiJVn0BcHvvuxOaoBlXb6pHy+4C9zWR7DsZjk4coKv5AOZ6D7HH0
+         nYiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685601734; x=1688193734;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ANMyuQNsEPiF3QmDOiOhBLvKIIT27fWFnUKpORZrZFw=;
+        b=NQYzMxfD0RM0ICUUgjN9GQgRMTCuOnVyJbWjZBNZ9ZG8uXcZf6gYlYjuhi4hLjg9aR
+         25qtVgJBEr7ZRj7xm8dFLeeLZubTl7d3uDLEB69Ez/mhOwT44/hwN8HzYij/uy81HtD4
+         t9crHrj8L0Sq/5O1nKq3NMf/rWByT8k+PDu1DNn4CRrLGynBwlegtlNnbakeAYYN3upM
+         Ac2ifs7xnVKasiuJK23SxWu0rxaAW6oqKqGHXmSpaN7pI2ehn1sK5Fyj4mP+qu2Jhy0R
+         3lboEOiBTT7VvM/RLbXzEDUXVy31qVH91D2+zZbkkkub+WEd+PWclavUjW140YWsPbZ8
+         vrng==
+X-Gm-Message-State: AC+VfDygv50ZSrfWyIhucaGSdlWso+3pbL02QbjZLkH+/wotVi/yIOi2
+        hrUtsyVb13zjGu/OLqY3pm/6yg==
+X-Google-Smtp-Source: ACHHUZ66nv9NTyqbJPI7nFOnwMxBePXKep1wFvXa6V6HAWyh9Su1v4eq7DXY5+5fNbc53Pd+4P/dGw==
+X-Received: by 2002:a17:907:3f1c:b0:970:d85:59e9 with SMTP id hq28-20020a1709073f1c00b009700d8559e9mr6969993ejc.5.1685601734515;
+        Wed, 31 May 2023 23:42:14 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id f19-20020a170906139300b0095fd0462695sm9994101ejc.5.2023.05.31.23.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 May 2023 23:42:14 -0700 (PDT)
+Message-ID: <14df9815-3c3a-5adf-b8ca-01ea5cf89bfd@linaro.org>
+Date:   Thu, 1 Jun 2023 08:42:12 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v1 06/43] dt-bindings: pinctrl: Add Cirrus EP93xx
+Content-Language: en-US
+To:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
-        Michael Peters <mpeters@embeddedTS.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Michael Peters <mpeters@embeddedTS.com>,
         Kris Bahnsen <kris@embeddedTS.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 34/43] gpio: ep93xx: add DT support for gpio-ep93xx
-Date:   Thu,  1 Jun 2023 08:45:39 +0300
-Message-Id: <20230601054549.10843-16-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.37.4
-In-Reply-To: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+ <20230601053546.9574-7-nikita.shubin@maquefel.me>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230601053546.9574-7-nikita.shubin@maquefel.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,39 +81,108 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add match table.
+On 01/06/2023 07:33, Nikita Shubin wrote:
+> Add YAML bindings for ep93xx SoC pinctrl.
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> 
+> Notes:
+>     v0 -> v1:
+>     
+>     Krzysztof Kozlowski:
+>     - removed wildcards
+>     - use fallback compatible and list all possible compatibles
+>     - fix ident
+>     - dropped bindings in title
+> 
+>  .../pinctrl/cirrus,ep9301-pinctrl.yaml        | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..ff7b30a11bab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/cirrus,ep9301-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cirrus ep93xx pins mux controller
+> +
+> +maintainers:
+> +  - Nikita Shubin <nikita.shubin@maquefel.me>
+> +  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: cirrus,ep9301-pinctrl
+> +      - items:
+> +          - enum:
+> +              - cirrus,ep9302-pinctrl
+> +              - cirrus,ep9307-pinctrl
+> +              - cirrus,ep9312-pinctrl
+> +              - cirrus,ep9315-pinctrl
+> +          - const: cirrus,ep9301-pinctrl
+> +
+> +patternProperties:
+> +  '^pins-':
+> +    type: object
+> +    description: pin node
+> +    $ref: pinmux-node.yaml#
+> +
+> +    properties:
+> +      function:
+> +        enum: [ spi, ac97, i2s, pwm, keypad, pata, lcd, gpio ]
 
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
+Blank line.
 
-Notes:
-    v0 -> v1:
-    
-    - dropped coma in id table
+> +      groups:
+> +        minItems: 1
+> +        maxItems: 2
 
- drivers/gpio/gpio-ep93xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+How one pin can belong to two groups? What does it mean?
 
-diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-index ca508c7c4f2f..5e328e4411cc 100644
---- a/drivers/gpio/gpio-ep93xx.c
-+++ b/drivers/gpio/gpio-ep93xx.c
-@@ -363,9 +363,15 @@ static int ep93xx_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
- }
- 
-+static const struct of_device_id ep93xx_gpio_match[] = {
-+	{ .compatible = "cirrus,ep9301-gpio" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver ep93xx_gpio_driver = {
- 	.driver		= {
- 		.name	= "gpio-ep93xx",
-+		.of_match_table = ep93xx_gpio_match,
- 	},
- 	.probe		= ep93xx_gpio_probe,
- };
--- 
-2.37.4
+> +        items:
+> +          enum: [ ssp, ac97, i2s_on_ssp, i2s_on_ac97, pwm1, gpio1agrp,
+> +                  gpio2agrp, gpio3agrp, gpio4agrp, gpio6agrp, gpio7agrp,
+> +                  rasteronsdram0grp, rasteronsdram3grp, keypadgrp, idegrp]
+> +
+> +    required:
+> +      - function
+> +      - groups
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    syscon@80930000 {
+> +      compatible = "cirrus,ep9301-syscon",
+> +                  "syscon", "simple-mfd";
+
+Weird wrapping.
+
+> +      reg = <0x80930000 0x1000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      pinctrl {
+> +        compatible = "cirrus,ep9312-pinctrl", "cirrus,ep9301-pinctrl";
+> +        spi_default_pins: pins-spi {
+> +          function = "spi";
+> +          groups = "ssp";
+> +        };
+> +      };
+> +    };
+
+Best regards,
+Krzysztof
 
