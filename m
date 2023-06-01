@@ -2,42 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54E8F71F4AB
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 23:30:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A5C271F4E7
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jun 2023 23:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232307AbjFAVa2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 17:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49360 "EHLO
+        id S231600AbjFAVjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 17:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232258AbjFAVa0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 17:30:26 -0400
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13DA719B
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Jun 2023 14:30:23 -0700 (PDT)
+        with ESMTP id S232430AbjFAVjy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 17:39:54 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09591E65
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Jun 2023 14:39:27 -0700 (PDT)
 Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-        id 7eea1b78-00c3-11ee-abf4-005056bdd08f;
-        Fri, 02 Jun 2023 00:30:15 +0300 (EEST)
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id c73ded7f-00c4-11ee-b972-005056bdfda7;
+        Fri, 02 Jun 2023 00:39:25 +0300 (EEST)
 From:   andy.shevchenko@gmail.com
-Date:   Fri, 2 Jun 2023 00:30:14 +0300
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v6 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-Message-ID: <ZHkN5kEa6yqHdDeL@surfacebook>
-References: <20230601201844.3739926-1-hugo@hugovil.com>
- <20230601201844.3739926-6-hugo@hugovil.com>
+Date:   Fri, 2 Jun 2023 00:39:25 +0300
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v8 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <ZHkQDTvk6I2q-9CF@surfacebook>
+References: <20220329091126.4730-1-wsa+renesas@sang-engineering.com>
+ <20220329091126.4730-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230601201844.3739926-6-hugo@hugovil.com>
+In-Reply-To: <20220329091126.4730-2-wsa+renesas@sang-engineering.com>
 X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
         FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
         SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
@@ -48,125 +42,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thu, Jun 01, 2023 at 04:18:40PM -0400, Hugo Villeneuve kirjoitti:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> 
-> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> changed the function of the GPIOs pins to act as modem control
-> lines without any possibility of selecting GPIO function.
-> 
-> As a consequence, applications that depends on GPIO lines configured
-> by default as GPIO pins no longer work as expected.
-> 
-> Also, the change to select modem control lines function was done only
-> for channel A of dual UART variants (752/762). This was not documented
-> in the log message.
-> 
-> Allow to specify GPIO or modem control line function in the device
-> tree, and for each of the ports (A or B).
-> 
-> Do so by using the new device-tree property named
-> "modem-control-line-ports" (property added in separate patch).
-> 
-> When registering GPIO chip controller, mask-out GPIO pins declared as
-> modem control lines according to this new "modem-control-line-ports"
-> DT property.
-> 
-> Boards that need to have GPIOS configured as modem control lines
-> should add that property to their device tree. Here is a list of
-> boards using the sc16is7xx driver in their device tree and that may
-> need to be modified:
->     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->     mips/boot/dts/ingenic/cu1830-neo.dts
->     mips/boot/dts/ingenic/cu1000-neo.dts
+Tue, Mar 29, 2022 at 11:11:26AM +0200, Wolfram Sang kirjoitti:
+> This is a sloppy logic analyzer using GPIOs. It comes with a script to
+> isolate a CPU for polling. While this is definitely not a production
+> level analyzer, it can be a helpful first view when remote debugging.
+> Read the documentation for details.
 
-Almost good, a few remarks and if addressed as suggested,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thank you!
+One note since I have done recent review and realize one issue with debugfs.
 
 ...
 
-> +	if (!s->gpio_valid_mask)
+> +	priv->debug_dir = debugfs_create_dir(devname, gpio_la_poll_debug_dir);
 
-I would use == 0, but it's up to you. Both will work equally.
+If this fails with NULL...
 
-> +		return 0;
+> +	debugfs_create_blob("meta_data", 0400, priv->debug_dir, &priv->meta);
+> +	debugfs_create_ulong("delay_ns", 0600, priv->debug_dir, &priv->delay_ns);
+> +	debugfs_create_ulong("delay_ns_acquisition", 0400, priv->debug_dir, &priv->acq_delay);
+> +	debugfs_create_file_unsafe("buf_size", 0600, priv->debug_dir, priv, &fops_buf_size);
+> +	debugfs_create_file_unsafe("capture", 0200, priv->debug_dir, priv, &fops_capture);
+> +	debugfs_create_file_unsafe("trigger", 0200, priv->debug_dir, priv, &fops_trigger);
+
+...and any of these is not, we will end up with the file in a root folder of debugfs...
+
+> +	dev_info(dev, "initialized");
 
 ...
 
-> +static int sc16is7xx_setup_mctrl_ports(struct device *dev)
-
-Not sure why int if you always return an unsigned value.
-Otherwise return an error code when it's no defined mask
-and check it in the caller.
-
+> +static int gpio_la_poll_remove(struct platform_device *pdev)
 > +{
-> +	struct sc16is7xx_port *s = dev_get_drvdata(dev);
-> +	int i;
-> +	int ret;
-> +	int count;
-> +	u32 mctrl_port[2];
-> +	u8 mctrl_mask = 0;
-
-I would return 0 directly in the first two cases and split an assignment closer
-to the first user.
-
-> +	count = device_property_count_u32(dev, "nxp,modem-control-line-ports");
-> +	if (count < 0 || count > ARRAY_SIZE(mctrl_port))
-> +		return mctrl_mask;
-
-		return 0;
-
-> +	ret = device_property_read_u32_array(dev, "nxp,modem-control-line-ports",
-> +					     mctrl_port, count);
-> +	if (ret)
-> +		return mctrl_mask;
-
-		return 0;
-
-
-	mctrl_mask = 0;
-
-> +	for (i = 0; i < count; i++) {
-> +		/* Use GPIO lines as modem control lines */
-> +		if (mctrl_port[i] == 0)
-> +			mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_A_BIT;
-> +		else if (mctrl_port[i] == 1)
-> +			mctrl_mask |= SC16IS7XX_IOCONTROL_MODEM_B_BIT;
-> +	}
-
-> +	if (!mctrl_mask)
-> +		return mctrl_mask;
-
-Maybe positive one?
-
-	if (mctrl_mask)
-		regmap_update_bits(...);
-
-> +	regmap_update_bits(s->regmap,
-> +			   SC16IS7XX_IOCONTROL_REG << SC16IS7XX_REG_SHIFT,
-> +			   SC16IS7XX_IOCONTROL_MODEM_A_BIT |
-> +			   SC16IS7XX_IOCONTROL_MODEM_B_BIT, mctrl_mask);
+> +	struct gpio_la_poll_priv *priv = platform_get_drvdata(pdev);
 > +
-> +	return mctrl_mask;
+> +	mutex_lock(&priv->lock);
+> +	debugfs_remove_recursive(priv->debug_dir);
+
+...and this one won't remove it.
+
+> +	mutex_unlock(&priv->lock);
+> +	mutex_destroy(&priv->lock);
+> +
+> +	return 0;
 > +}
 
 ...
 
->  	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
->  	unsigned int val;
-> +	u8 mctrl_mask = 0;
-
-This assignment is redundant, so you simply can define it
-
->  	u32 uartclk = 0;
-
-	u8 mctrl_mask;
-
->  	int i, ret;
->  	struct sc16is7xx_port *s;
+However, I haven't checked if it's pure theoretical issue with the current code
+base of debugfs or a potential problem. Easy fix is to check an error code and
+skip the files creation. Not sure if driver will be useful in that case.
 
 -- 
 With Best Regards,
