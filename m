@@ -2,68 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9080371F8DC
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 05:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 978DC71F8E2
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 05:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233483AbjFBDUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 23:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
+        id S233397AbjFBDVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Jun 2023 23:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233542AbjFBDUL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 23:20:11 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F394136;
-        Thu,  1 Jun 2023 20:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685676007; x=1717212007;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tp1pRxIXNV5sIRotnZf5vbQ/Cdchz8UTj+wy3MPNfDo=;
-  b=BMRsMwjj9g/yEPFh94H8/V2vjEaTsOTz6QuKQrfBHJEFdcFyfQW+o0CB
-   El1KF1LclYsUBEENA9jhjrvbfi0QNfmBZ2RdMMeud044+q1uOjE2IUxk/
-   m0yvhMHGmpuXYApll7qOYRoW7wInAjWpvfDqttF7EBQnT3dN2Fic/ei9F
-   OHJ+WS+nWV4FFeHLZJ9WdkrqKF4AMPxqLxAH9L6vsTHwfzB1A3fNFfEXW
-   sn/xxvCJvOmKAdqP2RRh62qfWp5SWJtQ3HJ5Tur45cnCEiwq+62Uw5NTU
-   lDTdN5hRsicZlXMb/kV8oPd1qGCaYvKn0XRanDBDHHxs7Z0uD0GFZTTnr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="442128806"
-X-IronPort-AV: E=Sophos;i="6.00,211,1681196400"; 
-   d="scan'208";a="442128806"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 20:20:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="881886189"
-X-IronPort-AV: E=Sophos;i="6.00,211,1681196400"; 
-   d="scan'208";a="881886189"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 01 Jun 2023 20:20:03 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q4vKd-000013-03;
-        Fri, 02 Jun 2023 03:20:03 +0000
-Date:   Fri, 2 Jun 2023 11:19:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Rafael Wysocki <rafael@kernel.org>, hdegoede@redhat.com,
-        linus.walleij@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 3/4] pinctrl: amd: Use pm_pr_dbg to show debugging
- messages
-Message-ID: <202306021143.5D8Xmq0r-lkp@intel.com>
-References: <20230601232923.1248-3-mario.limonciello@amd.com>
+        with ESMTP id S229598AbjFBDVe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 23:21:34 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D89107;
+        Thu,  1 Jun 2023 20:21:33 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3523DM4L010027;
+        Fri, 2 Jun 2023 03:21:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=qO4SVk1ZImVpFaqBhVfkmc9Z+Cv6JcVlWb/AZgjdGAY=;
+ b=Rt79VxHm9h/JkhR46fQufr4f3kXh7LYUH/bDRenb4KhS4E0IcOPgI1CpDA8E2Naimr1/
+ W5HJUdwLczufIP6KCkT57h7gU8S/rbAUuJvXliUVajwpDO+OOhtoNEXi8ANDDBvi9OnB
+ sZH+agEqeJ4k6SMHANQh0aG44ZP5jaihxz6bZGmPco2turb22WSknc2OH0DVyuh0cc1r
+ 6bcfkOBBS15bibFT/nFeUlzJ7Y7fP4H+yBdtbT1AojAcmKE+CDWPZhFNpCtvAM8Lvzny
+ /RIQB7P7A1Frqr6VP2pj0vBzgnfvomZQKcCjZbXtWitu+RE2usvv65u2OBfZBMiacDuA Sg== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qxugr9nyw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 02 Jun 2023 03:21:18 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3523LHgK012273
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 2 Jun 2023 03:21:17 GMT
+Received: from [10.216.26.36] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 1 Jun 2023
+ 20:21:11 -0700
+Message-ID: <fb95bebd-52ec-eda5-22c3-c3e494e29674@quicinc.com>
+Date:   Fri, 2 Jun 2023 08:51:07 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230601232923.1248-3-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH V7 4/8] pinctrl: qcom: Add IPQ5018 pinctrl driver
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <andy.shevchenko@gmail.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>
+References: <20230519125409.497439-1-quic_srichara@quicinc.com>
+ <20230519125409.497439-5-quic_srichara@quicinc.com>
+ <CAHp75VfVx+oGYKcija3h9-eWc6jggMx8p5SAQTEHTBEbjTaJKw@mail.gmail.com>
+ <1823419a-6bb4-03f7-d5ae-e32204c5e598@quicinc.com>
+ <ZHTK7uEzO7kcx_cV@surfacebook>
+ <aefd0df1-8dfb-1b69-589b-974dea312845@quicinc.com>
+ <664940c3-9ec1-b4bd-9db5-fa3529e3d1ff@linaro.org>
+ <8146f367-c539-bea5-12b6-424213018488@quicinc.com>
+ <eb109116-94eb-5b6d-0049-7bb31feada36@linaro.org>
+ <33979417-2c0c-5474-23e0-7e72add99873@linaro.org>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <33979417-2c0c-5474-23e0-7e72add99873@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vp_2jjG7MS1Kcj8RfbOAJlefqzJHJQEo
+X-Proofpoint-ORIG-GUID: vp_2jjG7MS1Kcj8RfbOAJlefqzJHJQEo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-02_01,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 mlxscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=625 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306020023
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,125 +96,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mario,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 7736c431466abb54a2679dc257f739fddfa84295]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/ACPI-x86-Add-pm_debug_messages-for-LPS0-_DSM-state-tracking/20230602-073044
-base:   7736c431466abb54a2679dc257f739fddfa84295
-patch link:    https://lore.kernel.org/r/20230601232923.1248-3-mario.limonciello%40amd.com
-patch subject: [PATCH v3 3/4] pinctrl: amd: Use pm_pr_dbg to show debugging messages
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20230602/202306021143.5D8Xmq0r-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/61f4d28eda8f5bf19179080626ec4f1276c1cbae
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Mario-Limonciello/ACPI-x86-Add-pm_debug_messages-for-LPS0-_DSM-state-tracking/20230602-073044
-        git checkout 61f4d28eda8f5bf19179080626ec4f1276c1cbae
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/pinctrl/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306021143.5D8Xmq0r-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/pinctrl/pinctrl-amd.c: In function 'do_amd_gpio_irq_handler':
->> drivers/pinctrl/pinctrl-amd.c:639:28: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
-     639 |                         if (regval & PIN_IRQ_PENDING)
-         |                            ^
 
 
-vim +/else +639 drivers/pinctrl/pinctrl-amd.c
+On 6/1/2023 6:57 PM, Krzysztof Kozlowski wrote:
+> On 01/06/2023 13:53, Krzysztof Kozlowski wrote:
+>> On 01/06/2023 13:41, Sricharan Ramabadhran wrote:
+>>>
+>>>
+>>> On 6/1/2023 3:21 PM, Krzysztof Kozlowski wrote:
+>>>> On 01/06/2023 11:50, Sricharan Ramabadhran wrote:
+>>>>>
+>>>>>
+>>>>> On 5/29/2023 9:25 PM, andy.shevchenko@gmail.com wrote:
+>>>>>> Mon, May 29, 2023 at 03:58:09PM +0530, Sricharan Ramabadhran kirjoitti:
+>>>>>>> On 5/20/2023 12:17 AM, Andy Shevchenko wrote:
+>>>>>>>> On Fri, May 19, 2023 at 3:55 PM Sricharan Ramabadhran
+>>>>>>>> <quic_srichara@quicinc.com> wrote:
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>>>>       depends on OF || COMPILE_TEST
+>>>>>>>
+>>>>>>>     Yeah sure. COMPILE_TEST could be standalone. Will fix it and repost.
+>>>>>>
+>>>>>> Standalone COMPILE_TEST will give you definitely NOT what you want.
+>>>>>> And actually it's strange to have it standalone.
+>>>>>>
+>>>>>
+>>>>>     Ho ok, i meant like this, "depends on ARM64 || COMPILE_TEST"
+>>>>
+>>>> Don't do it differently than all other drivers. Open the Kconfig and
+>>>> look at existing entries.
+>>>>
+>>>     The latest added has this below, will use this
+>>>
+>>> 	depends on OF || COMPILE_TEST
+>>
+>> I would even drop this... Lemme check, it looks odd. We depend on
+>> ARCH_QCOM which uses OF. We have few drivers which depend on ACPI, but
+>> that also seems wrong. These are platform drivers so they should expect
+>> platform select proper firmware interface. I think none of other
+>> platform drivers do like this (neither Samsung pinctrl nor other
+>> Qualcomm drivers)).
+>>
+>> I will fix this. For your patch I would just skip OF entirely.
+> 
+> Correction: you need OF :(
 
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  608  
-2d54067fcd23aa Mario Limonciello         2021-10-31  609  static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
-dbad75dd1f25e0 Ken Xue                   2015-03-10  610  {
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  611  	struct amd_gpio *gpio_dev = dev_id;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  612  	struct gpio_chip *gc = &gpio_dev->gc;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  613  	unsigned int i, irqnr;
-dbad75dd1f25e0 Ken Xue                   2015-03-10  614  	unsigned long flags;
-10ff58aa3c2e2a Ben Dooks (Codethink      2019-10-22  615) 	u32 __iomem *regs;
-2d54067fcd23aa Mario Limonciello         2021-10-31  616  	bool ret = false;
-10ff58aa3c2e2a Ben Dooks (Codethink      2019-10-22  617) 	u32  regval;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  618  	u64 status, mask;
-dbad75dd1f25e0 Ken Xue                   2015-03-10  619  
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  620  	/* Read the wake status */
-229710fecdd805 Julia Cartwright          2017-03-09  621  	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  622  	status = readl(gpio_dev->base + WAKE_INT_STATUS_REG1);
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  623  	status <<= 32;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  624  	status |= readl(gpio_dev->base + WAKE_INT_STATUS_REG0);
-229710fecdd805 Julia Cartwright          2017-03-09  625  	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-dbad75dd1f25e0 Ken Xue                   2015-03-10  626  
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  627  	/* Bit 0-45 contain the relevant status bits */
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  628  	status &= (1ULL << 46) - 1;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  629  	regs = gpio_dev->base;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  630  	for (mask = 1, irqnr = 0; status; mask <<= 1, regs += 4, irqnr += 4) {
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  631  		if (!(status & mask))
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  632  			continue;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  633  		status &= ~mask;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  634  
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  635  		/* Each status bit covers four pins */
-dbad75dd1f25e0 Ken Xue                   2015-03-10  636  		for (i = 0; i < 4; i++) {
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  637  			regval = readl(regs + i);
-1d66e379731f79 Mario Limonciello         2022-10-13  638  
-1d66e379731f79 Mario Limonciello         2022-10-13 @639  			if (regval & PIN_IRQ_PENDING)
-61f4d28eda8f5b Mario Limonciello         2023-06-01  640  				pm_pr_dbg("GPIO %d is active: 0x%x",
-2d54067fcd23aa Mario Limonciello         2021-10-31  641  					  irqnr + i, regval);
-1d66e379731f79 Mario Limonciello         2022-10-13  642  
-1d66e379731f79 Mario Limonciello         2022-10-13  643  			/* caused wake on resume context for shared IRQ */
-1d66e379731f79 Mario Limonciello         2022-10-13  644  			if (irq < 0 && (regval & BIT(WAKE_STS_OFF)))
-2d54067fcd23aa Mario Limonciello         2021-10-31  645  				return true;
-2d54067fcd23aa Mario Limonciello         2021-10-31  646  
-8bbed1eef001fd Daniel Kurtz              2018-07-16  647  			if (!(regval & PIN_IRQ_PENDING) ||
-8bbed1eef001fd Daniel Kurtz              2018-07-16  648  			    !(regval & BIT(INTERRUPT_MASK_OFF)))
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  649  				continue;
-f460c70125bcb1 Sebastian Andrzej Siewior 2022-09-19  650  			generic_handle_domain_irq_safe(gc->irq.domain, irqnr + i);
-6afb10267c1692 Daniel Drake              2017-10-02  651  
-6afb10267c1692 Daniel Drake              2017-10-02  652  			/* Clear interrupt.
-6afb10267c1692 Daniel Drake              2017-10-02  653  			 * We must read the pin register again, in case the
-6afb10267c1692 Daniel Drake              2017-10-02  654  			 * value was changed while executing
-a9cb09b7be84a7 Marc Zyngier              2021-05-04  655  			 * generic_handle_domain_irq() above.
-d21b8adbd475db Daniel Drake              2019-08-14  656  			 * If we didn't find a mapping for the interrupt,
-d21b8adbd475db Daniel Drake              2019-08-14  657  			 * disable it in order to avoid a system hang caused
-d21b8adbd475db Daniel Drake              2019-08-14  658  			 * by an interrupt storm.
-6afb10267c1692 Daniel Drake              2017-10-02  659  			 */
-6afb10267c1692 Daniel Drake              2017-10-02  660  			raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-6afb10267c1692 Daniel Drake              2017-10-02  661  			regval = readl(regs + i);
-d21b8adbd475db Daniel Drake              2019-08-14  662  			if (irq == 0) {
-d21b8adbd475db Daniel Drake              2019-08-14  663  				regval &= ~BIT(INTERRUPT_ENABLE_OFF);
-d21b8adbd475db Daniel Drake              2019-08-14  664  				dev_dbg(&gpio_dev->pdev->dev,
-d21b8adbd475db Daniel Drake              2019-08-14  665  					"Disabling spurious GPIO IRQ %d\n",
-d21b8adbd475db Daniel Drake              2019-08-14  666  					irqnr + i);
-d21b8adbd475db Daniel Drake              2019-08-14  667  			}
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  668  			writel(regval, regs + i);
-6afb10267c1692 Daniel Drake              2017-10-02  669  			raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-2d54067fcd23aa Mario Limonciello         2021-10-31  670  			ret = true;
-dbad75dd1f25e0 Ken Xue                   2015-03-10  671  		}
-dbad75dd1f25e0 Ken Xue                   2015-03-10  672  	}
-2d54067fcd23aa Mario Limonciello         2021-10-31  673  	/* did not cause wake on resume context for shared IRQ */
-2d54067fcd23aa Mario Limonciello         2021-10-31  674  	if (irq < 0)
-2d54067fcd23aa Mario Limonciello         2021-10-31  675  		return false;
-dbad75dd1f25e0 Ken Xue                   2015-03-10  676  
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  677  	/* Signal EOI to the GPIO unit */
-229710fecdd805 Julia Cartwright          2017-03-09  678  	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  679  	regval = readl(gpio_dev->base + WAKE_INT_MASTER_REG);
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  680  	regval |= EOI_MASK;
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  681  	writel(regval, gpio_dev->base + WAKE_INT_MASTER_REG);
-229710fecdd805 Julia Cartwright          2017-03-09  682  	raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-dbad75dd1f25e0 Ken Xue                   2015-03-10  683  
-ba714a9c1dea85 Thomas Gleixner           2017-05-23  684  	return ret;
-dbad75dd1f25e0 Ken Xue                   2015-03-10  685  }
-dbad75dd1f25e0 Ken Xue                   2015-03-10  686  
+  yup, will follow the same then.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+  Sricharan
