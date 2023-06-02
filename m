@@ -2,288 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6007771F8F8
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 05:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E46F571F9E5
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 08:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233286AbjFBDcZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Jun 2023 23:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35248 "EHLO
+        id S233746AbjFBGK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 02:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231259AbjFBDcX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Jun 2023 23:32:23 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCB8107;
-        Thu,  1 Jun 2023 20:32:21 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3523RLGS010375;
-        Fri, 2 Jun 2023 03:32:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=qcppdkim1;
- bh=8Fr9E41LV4XYbsh2GbgkeOokUoanLTDOkI7MomT0vNU=;
- b=NegNc5DpxMr0QtCrm2mTlzyyiRYC3Dwqi2AbXCXhZ1WqP0+Lmfts+KMskup3sYQUZaQM
- XAcnmtINS/MLBhS8c6VIjLmctCkZIsPa5YrIwIsP25xYcS4AGkibNWKbPz496G+argoJ
- xIRDQ2P4GAApksvGTW1Lguu45zF8fDmFMUFK4U8yiWc1UURPR5z9+gmSxCsS3eI66+I0
- o9sB1JtgaBxkKKYBYP/GwtKaWduEWhTJSAF8fTFYOzbZghvWhE+WWfOaAaz6hKPDdbnb
- 9GFadXtGLOdlNb6OYHp6C2diZeBQGKimkBlX0S2GcQApsbLPA5KKgDWzfdhTkTzzXBQd ow== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qxugr9p3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Jun 2023 03:32:15 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3523WE2d016825
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 2 Jun 2023 03:32:14 GMT
-Received: from ipa-build-02.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Thu, 1 Jun 2023 20:32:11 -0700
-From:   Minghao Zhang <quic_minghao@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@somainline.org>, <linus.walleij@linaro.org>
-CC:     Minghao Zhang <quic_minghao@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_satyap@quicinc.com>,
-        <quic_tsoni@quicinc.com>
-Subject: [PATCH v2] pinctrl: qcom: Add support to log pin status before suspend for TLMM
-Date:   Fri, 2 Jun 2023 11:31:46 +0800
-Message-ID: <20230602033146.46387-1-quic_minghao@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S233700AbjFBGKZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 02:10:25 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108AA19A;
+        Thu,  1 Jun 2023 23:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685686224; x=1717222224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8MCDzOZf6ynqWV2m8S12QsjH7rgGxvUKD86pDe2odnI=;
+  b=MB/FILjtdC+LvLDhouUHiaZV3nu8PBGISjVTQQ3n4JiOsOVxWabT4Ni8
+   KZ6fiRAroLF+Rh/Z4edx6gffdL8HLmBy4KshDeVVeKkeCpxNcPb4dPtPp
+   qkWmOaWvcJ0dCRKU02USCi75ZhfKawqaph9YQ1tMyyjRH2u2l20y+4M1a
+   98t4Xwa4H4jFnK3SSDfQ1wqJSpwqihX8m+47Kncalo6Lxvl+sTKdunTKN
+   Hz1Cw9NIpezoNzyFgdxJ4K6i6iqXsrSzUcT0PXHtwZJcITDvCC24kcjV1
+   K13WH6F3EHC5gKGtbtrPC282xaiQxdePDiroZQbOC4itiUSFdq7RX/3Cb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="355799797"
+X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
+   d="scan'208";a="355799797"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 23:10:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="772748985"
+X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
+   d="scan'208";a="772748985"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2023 23:10:14 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q4xzJ-00009Z-2I;
+        Fri, 02 Jun 2023 06:10:13 +0000
+Date:   Fri, 2 Jun 2023 14:09:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Rafael Wysocki <rafael@kernel.org>, hdegoede@redhat.com,
+        linus.walleij@linaro.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 1/4] include/linux/suspend.h: Only show pm_pr_dbg
+ messages at suspend/resume
+Message-ID: <202306021344.JymS3JYg-lkp@intel.com>
+References: <20230601232923.1248-1-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UYInF-gqJwn7E7KD2dGbkb_DP5JC-chx
-X-Proofpoint-ORIG-GUID: UYInF-gqJwn7E7KD2dGbkb_DP5JC-chx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-02_01,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 lowpriorityscore=0 mlxlogscore=979 phishscore=0
- bulkscore=0 clxscore=1011 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2304280000 definitions=main-2306020024
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230601232923.1248-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This change supports to print pin status before device suspend
-to debug for TLMM. And expose 2 APIs to enable/disable this
-functionality.
+Hi Mario,
 
-Signed-off-by: Minghao Zhang <quic_minghao@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 133 ++++++++++++++++++++++-------
- drivers/pinctrl/qcom/pinctrl-msm.h |   4 +
- 2 files changed, 108 insertions(+), 29 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index c5f52d4f7781..fbc379c82e4f 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -83,6 +83,21 @@ struct msm_pinctrl {
- 	u32 phys_base[MAX_NR_TILES];
- };
- 
-+static bool pinctrl_msm_log_mask;
-+
-+static const char * const pulls_keeper[] = {
-+	"no pull",
-+	"pull down",
-+	"keeper",
-+	"pull up"
-+};
-+
-+static const char * const pulls_no_keeper[] = {
-+	"no pull",
-+	"pull down",
-+	"pull up",
-+};
-+
- #define MSM_ACCESSOR(name) \
- static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
- 			    const struct msm_pingroup *g) \
-@@ -654,6 +669,29 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
- 
-+static void msm_gpio_pin_status_get(struct msm_pinctrl *pctrl, const struct msm_pingroup *g,
-+				    unsigned int offset, int *is_out, unsigned int *func,
-+				    int *drive, int *pull, int *egpio_enable, int *val)
-+{
-+	u32 ctl_reg, io_reg;
-+
-+	ctl_reg = msm_readl_ctl(pctrl, g);
-+	io_reg = msm_readl_io(pctrl, g);
-+
-+	*is_out = !!(ctl_reg & BIT(g->oe_bit));
-+	*func = (ctl_reg >> g->mux_bit) & 7;
-+	*drive = (ctl_reg >> g->drv_bit) & 7;
-+	*pull = (ctl_reg >> g->pull_bit) & 3;
-+	*egpio_enable = 0;
-+	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
-+		*egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
-+
-+	if (*is_out)
-+		*val = !!(io_reg & BIT(g->out_bit));
-+	else
-+		*val = !!(io_reg & BIT(g->in_bit));
-+}
-+
- #ifdef CONFIG_DEBUG_FS
- 
- static void msm_gpio_dbg_show_one(struct seq_file *s,
-@@ -670,40 +708,13 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 	int pull;
- 	int val;
- 	int egpio_enable;
--	u32 ctl_reg, io_reg;
--
--	static const char * const pulls_keeper[] = {
--		"no pull",
--		"pull down",
--		"keeper",
--		"pull up"
--	};
--
--	static const char * const pulls_no_keeper[] = {
--		"no pull",
--		"pull down",
--		"pull up",
--	};
- 
- 	if (!gpiochip_line_is_valid(chip, offset))
- 		return;
- 
- 	g = &pctrl->soc->groups[offset];
--	ctl_reg = msm_readl_ctl(pctrl, g);
--	io_reg = msm_readl_io(pctrl, g);
--
--	is_out = !!(ctl_reg & BIT(g->oe_bit));
--	func = (ctl_reg >> g->mux_bit) & 7;
--	drive = (ctl_reg >> g->drv_bit) & 7;
--	pull = (ctl_reg >> g->pull_bit) & 3;
--	egpio_enable = 0;
--	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
--		egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
--
--	if (is_out)
--		val = !!(io_reg & BIT(g->out_bit));
--	else
--		val = !!(io_reg & BIT(g->in_bit));
-+	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
-+					&drive, &pull, &egpio_enable, &val);
- 
- 	if (egpio_enable) {
- 		seq_printf(s, " %-8s: egpio\n", g->name);
-@@ -733,6 +744,39 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- #define msm_gpio_dbg_show NULL
- #endif
- 
-+static void msm_gpio_log_pin_status(struct gpio_chip *chip, unsigned int offset)
-+{
-+	const struct msm_pingroup *g;
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
-+	unsigned int func;
-+	int is_out;
-+	int drive;
-+	int pull;
-+	int val;
-+	int egpio_enable;
-+
-+	if (!gpiochip_line_is_valid(chip, offset))
-+		return;
-+
-+	g = &pctrl->soc->groups[offset];
-+	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
-+					&drive, &pull, &egpio_enable, &val);
-+
-+	pr_debug("%s: %s, %s, func%d, %dmA, %s\n",
-+		g->name, is_out ? "out" : "in",
-+		val ? "high" : "low", func,
-+		msm_regval_to_drive(drive),
-+		pctrl->soc->pull_no_keeper ? pulls_no_keeper[pull] : pulls_keeper[pull]);
-+}
-+
-+static void msm_gpios_status(struct gpio_chip *chip)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < chip->ngpio; i++)
-+		msm_gpio_log_pin_status(chip, i);
-+}
-+
- static int msm_gpio_init_valid_mask(struct gpio_chip *gc,
- 				    unsigned long *valid_mask,
- 				    unsigned int ngpios)
-@@ -1476,6 +1520,35 @@ SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops, msm_pinctrl_suspend,
- 
- EXPORT_SYMBOL(msm_pinctrl_dev_pm_ops);
- 
-+void debug_pintctrl_msm_enable(void)
-+{
-+	pinctrl_msm_log_mask = true;
-+}
-+EXPORT_SYMBOL(debug_pintctrl_msm_enable);
-+
-+void debug_pintctrl_msm_disable(void)
-+{
-+	pinctrl_msm_log_mask = false;
-+}
-+EXPORT_SYMBOL(debug_pintctrl_msm_disable);
-+
-+static __maybe_unused int noirq_msm_pinctrl_suspend(struct device *dev)
-+{
-+	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
-+
-+	if (pinctrl_msm_log_mask) {
-+		pr_debug("%s\n", pctrl->chip.label);
-+		msm_gpios_status(&pctrl->chip);
-+	}
-+
-+	return 0;
-+}
-+
-+const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops = {
-+	.suspend_noirq = noirq_msm_pinctrl_suspend,
-+};
-+EXPORT_SYMBOL(noirq_msm_pinctrl_dev_pm_ops);
-+
- int msm_pinctrl_probe(struct platform_device *pdev,
- 		      const struct msm_pinctrl_soc_data *soc_data)
- {
-@@ -1537,6 +1610,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
-+	pinctrl_msm_log_mask = false;
-+
- 	platform_set_drvdata(pdev, pctrl);
- 
- 	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 985eceda2517..faae8a28c8c6 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -155,6 +155,10 @@ struct msm_pinctrl_soc_data {
- };
- 
- extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-+extern const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops;
-+
-+void debug_pintctrl_msm_enable(void);
-+void debug_pintctrl_msm_disable(void);
- 
- int msm_pinctrl_probe(struct platform_device *pdev,
- 		      const struct msm_pinctrl_soc_data *soc_data);
+[auto build test WARNING on 7736c431466abb54a2679dc257f739fddfa84295]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/ACPI-x86-Add-pm_debug_messages-for-LPS0-_DSM-state-tracking/20230602-073044
+base:   7736c431466abb54a2679dc257f739fddfa84295
+patch link:    https://lore.kernel.org/r/20230601232923.1248-1-mario.limonciello%40amd.com
+patch subject: [PATCH v3 1/4] include/linux/suspend.h: Only show pm_pr_dbg messages at suspend/resume
+config: powerpc-randconfig-r035-20230531 (https://download.01.org/0day-ci/archive/20230602/202306021344.JymS3JYg-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 12.3.0
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/5828d770a5f17c4028520050068fd3cdd13b80a1
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Mario-Limonciello/ACPI-x86-Add-pm_debug_messages-for-LPS0-_DSM-state-tracking/20230602-073044
+        git checkout 5828d770a5f17c4028520050068fd3cdd13b80a1
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash drivers/base/power/ kernel/power/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306021344.JymS3JYg-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/base/power/wakeup.c: In function 'pm_print_active_wakeup_sources':
+>> drivers/base/power/wakeup.c:861:12: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
+     861 |         if (!active && last_activity_ws)
+         |            ^
+--
+   kernel/power/hibernate.c: In function 'disk_store':
+>> kernel/power/hibernate.c:1158:12: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
+    1158 |         if (!error)
+         |            ^
+
+
+vim +/else +861 drivers/base/power/wakeup.c
+
+074037ec79bea7 Rafael J. Wysocki  2010-09-22  841  
+bb177fedd348c9 Julius Werner      2013-06-12  842  void pm_print_active_wakeup_sources(void)
+a938da0682c248 Todd Poynor        2012-08-12  843  {
+a938da0682c248 Todd Poynor        2012-08-12  844  	struct wakeup_source *ws;
+ea0212f40c6bc0 Thomas Gleixner    2017-06-25  845  	int srcuidx, active = 0;
+a938da0682c248 Todd Poynor        2012-08-12  846  	struct wakeup_source *last_activity_ws = NULL;
+a938da0682c248 Todd Poynor        2012-08-12  847  
+ea0212f40c6bc0 Thomas Gleixner    2017-06-25  848  	srcuidx = srcu_read_lock(&wakeup_srcu);
+2591e7b17c0d3f Madhuparna Bhowmik 2020-03-04  849  	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry) {
+a938da0682c248 Todd Poynor        2012-08-12  850  		if (ws->active) {
+74a1dd86d1739e Stephen Boyd       2019-03-25  851  			pm_pr_dbg("active wakeup source: %s\n", ws->name);
+a938da0682c248 Todd Poynor        2012-08-12  852  			active = 1;
+a938da0682c248 Todd Poynor        2012-08-12  853  		} else if (!active &&
+a938da0682c248 Todd Poynor        2012-08-12  854  			   (!last_activity_ws ||
+a938da0682c248 Todd Poynor        2012-08-12  855  			    ktime_to_ns(ws->last_time) >
+a938da0682c248 Todd Poynor        2012-08-12  856  			    ktime_to_ns(last_activity_ws->last_time))) {
+a938da0682c248 Todd Poynor        2012-08-12  857  			last_activity_ws = ws;
+a938da0682c248 Todd Poynor        2012-08-12  858  		}
+a938da0682c248 Todd Poynor        2012-08-12  859  	}
+a938da0682c248 Todd Poynor        2012-08-12  860  
+a938da0682c248 Todd Poynor        2012-08-12 @861  	if (!active && last_activity_ws)
+74a1dd86d1739e Stephen Boyd       2019-03-25  862  		pm_pr_dbg("last active wakeup source: %s\n",
+a938da0682c248 Todd Poynor        2012-08-12  863  			last_activity_ws->name);
+ea0212f40c6bc0 Thomas Gleixner    2017-06-25  864  	srcu_read_unlock(&wakeup_srcu, srcuidx);
+a938da0682c248 Todd Poynor        2012-08-12  865  }
+bb177fedd348c9 Julius Werner      2013-06-12  866  EXPORT_SYMBOL_GPL(pm_print_active_wakeup_sources);
+a938da0682c248 Todd Poynor        2012-08-12  867  
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
