@@ -2,63 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB3D71FB19
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 09:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 868E971FB20
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 09:40:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbjFBHht (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 03:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44110 "EHLO
+        id S233825AbjFBHkw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 03:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234439AbjFBHh0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 03:37:26 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E2F1B5
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 00:37:25 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-568928af8f5so27894567b3.1
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 00:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685691444; x=1688283444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zvq6bwMEo7GyPxU0mcZ8WejLPf/Ab7ld+tHMWCid2RA=;
-        b=TwqM4HcEqZ28xLHUV3HMqJVI2hYFsCiDmL4EN0O2raEV8AxESeld3kesoXc0HCw9px
-         nbIAgnWODPpgG2TVoVpsCejVEz1KUsCCS/IYiS/YuatLgRRzIX8LPvzI1/O0txHeVrn/
-         rChiiZmj9ssmstlb/V47IH6TZv2fyqUSvbR8wEDQfGgAh+gSLKe6mvh1VytA/EUHAPS1
-         BRt5llR7HfbF989zqlc+LcoOpLyCFVwg6R4GmBrSbuk8wNcvtxOrLNBDxWMDAXRqbWJm
-         TbziWkgiDPn+oyMJjhrT/TDdnzSvJgGSYruxxnTvR+pyGRUZiNV4Hp5QFiaytHV4AA90
-         +QeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685691444; x=1688283444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zvq6bwMEo7GyPxU0mcZ8WejLPf/Ab7ld+tHMWCid2RA=;
-        b=FNMN/qwK8BsjkDt8+s+nJ6nfNnSOZNYuRQCeOROoeI6g30BjGkpQoVWD/ZEWcRzhQi
-         PEBHH+z70x/52QEUue1Z5Xxo7+F22DV6kNZoBUKr5GEcc5mm1rgphTEGUZM5Pqf1F9Oz
-         JH8AIRW7JEHp4UiGstrrpkfERIIEkH9VQsDTCU0VmRlfVychqrjs3Nu/bl8648Dlughk
-         ytB9fZURuf1hEJnVg96gzE8YVv+aVyb90020YnRqfDqrgJG3WaZpqkRkrf3ERYyd4djh
-         IQy0LJrX1a5D91Gc0kK2tCUyhIaYr21Q1kJrhssYDPDg9ahjGrebkN6EtM/pcDsZhhKu
-         LNJQ==
-X-Gm-Message-State: AC+VfDxUX6/6rRMlrqDKJlwMMgDNv13yQGKhq+N+BajfHSJZW2S2jtgn
-        6n2EzYQQOq32oXY21WvnY5wwjy7mzuxVx2Atezbk1Q==
-X-Google-Smtp-Source: ACHHUZ7M+/92HP6eSeidMwSIWVFM3D7fbOM3XGDDkpnNN0b3sJTc5uF/30IjLNu7lZWpAgVBmQx3ABI40Hrbki1HcXc=
-X-Received: by 2002:a81:8443:0:b0:561:9bcc:6c81 with SMTP id
- u64-20020a818443000000b005619bcc6c81mr5053826ywf.24.1685691444521; Fri, 02
- Jun 2023 00:37:24 -0700 (PDT)
+        with ESMTP id S232239AbjFBHku (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 03:40:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D37E195;
+        Fri,  2 Jun 2023 00:40:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AFE664D00;
+        Fri,  2 Jun 2023 07:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21A1C433EF;
+        Fri,  2 Jun 2023 07:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1685691648;
+        bh=QWLCTnUxuk/bgCq8TXw/6CiD075kLmr0khRTXCmFoDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ia+ogJXFPRRxmNYYif7JFvwThMXOpsbSDPPDX31kmuuHTFWlXqQM31dRsedh0P9+1
+         Nwe0teuf+kbxrzMKrFXNKAPiqlU2KVQhHGD0EbOiKRf/UnP32b8OCFkqDw7W401o6w
+         hUfegvmYvdCE211kxJDqH3J54QRitYAaN845R4Hc=
+Date:   Fri, 2 Jun 2023 08:40:45 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     andy.shevchenko@gmail.com,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v8 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <2023060209-scouts-affection-f54d@gregkh>
+References: <20220329091126.4730-1-wsa+renesas@sang-engineering.com>
+ <20220329091126.4730-2-wsa+renesas@sang-engineering.com>
+ <ZHkQDTvk6I2q-9CF@surfacebook>
+ <CAMuHMdUaugQ5+Zhmg=oe=X2wvhazMiT=K-su0EJYKzD4Hdyn3Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <ZHhRa9FgA5ZWV/sD@linux-8mug>
-In-Reply-To: <ZHhRa9FgA5ZWV/sD@linux-8mug>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 2 Jun 2023 09:37:13 +0200
-Message-ID: <CACRpkdZ05OKQmaueJWhHE6t1Uk1GQ2wEK5x+CoiRjHoPzG8uaw@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: s32: Updates for v6.5
-To:     Chester Lin <clin@suse.com>
-Cc:     linux-gpio@vger.kernel.org, s32@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUaugQ5+Zhmg=oe=X2wvhazMiT=K-su0EJYKzD4Hdyn3Q@mail.gmail.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,15 +57,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 10:06=E2=80=AFAM Chester Lin <clin@suse.com> wrote:
+On Fri, Jun 02, 2023 at 08:51:50AM +0200, Geert Uytterhoeven wrote:
+> Hi Andy,
+> 
+> CC GregKH
+> 
+> On Thu, Jun 1, 2023 at 11:40 PM <andy.shevchenko@gmail.com> wrote:
+> > Tue, Mar 29, 2022 at 11:11:26AM +0200, Wolfram Sang kirjoitti:
+> > > This is a sloppy logic analyzer using GPIOs. It comes with a script to
+> > > isolate a CPU for polling. While this is definitely not a production
+> > > level analyzer, it can be a helpful first view when remote debugging.
+> > > Read the documentation for details.
+> >
+> > One note since I have done recent review and realize one issue with debugfs.
+> >
+> > ...
+> >
+> > > +     priv->debug_dir = debugfs_create_dir(devname, gpio_la_poll_debug_dir);
+> >
+> > If this fails with NULL...
+> >
+> > > +     debugfs_create_blob("meta_data", 0400, priv->debug_dir, &priv->meta);
+> > > +     debugfs_create_ulong("delay_ns", 0600, priv->debug_dir, &priv->delay_ns);
+> > > +     debugfs_create_ulong("delay_ns_acquisition", 0400, priv->debug_dir, &priv->acq_delay);
+> > > +     debugfs_create_file_unsafe("buf_size", 0600, priv->debug_dir, priv, &fops_buf_size);
+> > > +     debugfs_create_file_unsafe("capture", 0200, priv->debug_dir, priv, &fops_capture);
+> > > +     debugfs_create_file_unsafe("trigger", 0200, priv->debug_dir, priv, &fops_trigger);
+> >
+> > ...and any of these is not, we will end up with the file in a root folder of debugfs...
+> >
+> > > +     dev_info(dev, "initialized");
 
-> Please pull the following change for v6.5.
+Nit, please remove this line.  Drivers are quiet when they work
+properly, don't add to a mess in the kernel log.
 
-Complicated with a pull request for a single patch :D
+> > ...
+> >
+> > > +static int gpio_la_poll_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct gpio_la_poll_priv *priv = platform_get_drvdata(pdev);
+> > > +
+> > > +     mutex_lock(&priv->lock);
+> > > +     debugfs_remove_recursive(priv->debug_dir);
+> >
+> > ...and this one won't remove it.
+> >
+> > > +     mutex_unlock(&priv->lock);
+> > > +     mutex_destroy(&priv->lock);
+> > > +
+> > > +     return 0;
+> > > +}
+> >
+> > ...
+> >
+> > However, I haven't checked if it's pure theoretical issue with the current code
+> > base of debugfs or a potential problem. Easy fix is to check an error code and
+> 
+> I think debugfs_create_dir() can only fail reasonably due to OOM.
+> 
+> > skip the files creation. Not sure if driver will be useful in that case.
+> 
+> Having to add such error checks would really be unfortunate, because
+> one of the design principles of debugfs is that there is never a need
+> to check for errors.
 
-But nice to practice.
+If you really want, you can check the return value of the directory
+creation and just return and keep going forward (do NOT propagate an
+error upwards as drivers need to keep working if debugfs is hosed).
 
-I just took the one patch and applied it.
+But really, the only way the call can fail is if you did something wrong
+and tried to create a directory that was already there, so don't even
+worry about checking the return value, all is fine.
 
-Yours,
-Linus Walleij
+thanks,
+
+greg k-h
