@@ -2,118 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA1C7202AB
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:10:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2DAD7202D2
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235940AbjFBNKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 09:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
+        id S235097AbjFBNNE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 09:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235963AbjFBNKc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:10:32 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F24381AB
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 06:10:30 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-439554d9a69so1419571137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 06:10:30 -0700 (PDT)
+        with ESMTP id S234408AbjFBNNC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:13:02 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC3310E9;
+        Fri,  2 Jun 2023 06:12:26 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-6260e771419so12441256d6.1;
+        Fri, 02 Jun 2023 06:12:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685711430; x=1688303430;
+        d=gmail.com; s=20221208; t=1685711518; x=1688303518;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z6MS8CXzMLUh4+5EUZRwRkinpexRI6bzP1Z2eNdS1D4=;
-        b=Nm9TSWU4b1nhQ8AkRU96FpD3Naz/vJfz/Y1AbBC35N3jxuD+Y2Fv+iODicdQY3PoqU
-         c8+F6fFUVwLokGcIBDfVDB33AiP7kWBx4wJ5+r3kKo8oonL54FbUBC/DBORYXvQTnpqe
-         TEYqMrncEVXylf1lz6NtbwQRpjUo0KctGOkvvBvE3FgLfHdA+i+mi8GlB+48RLzh30gT
-         3AJ8LuwFLS4EwDOexEdpHTVUalQi2XK2OAM2DIOwQcN+JP+DBTzUyEXsZ2NYGll2Xhqj
-         wxa7yd0eRlxt9O6p4e+wrwrWCWn3EeuaR35AXOoLVxHAGztDAMdIVfPXV/imnS3tkca+
-         MSLg==
+        bh=ry5f5ak9Sr/bZIbtzTWJKvf8qehHNybuYJDF5N8k3cI=;
+        b=QPHM+5/woE/dOdJELOIwis9yJBOUQoJlPPGRdP02SJqMqHI27rC5crLA6aJ+I+IAyk
+         g8SE/QLLi9KBFI6QVazJnlN1/A75T72fCkc2WD6qXVb+/iEFm8ghzYBFWz00iZ56auMH
+         +Lx304AoJRyE/RsOG8vlL+2XlxxJi8Avc8Gfhbm18Oys/Bbvx+OzVC0gKZo2Is5m1ErA
+         Wx2XlDL+Tn9j7p7GXzEg5NFb5U7eeWBs2cXHHnnWfkA7kTL79BUrztBei2k7C3oKS7Ey
+         3tCQabzh8T47rC/pmtQ45/Xnylb59gvgVMKGQdMLy2VoobHctDpkirlJTdouqsFKEhz4
+         MbRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685711430; x=1688303430;
+        d=1e100.net; s=20221208; t=1685711518; x=1688303518;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z6MS8CXzMLUh4+5EUZRwRkinpexRI6bzP1Z2eNdS1D4=;
-        b=I0cMKP3zCydQYER4QjDF2lqdFo0H7QZclshAZ+OYmc6RFqSoNLxjM36BsycbC4s+2S
-         wQsvG0uO8EKBu/blFS3XR7Ur24tbrholUjqhIqtwb0zL0RktdXMp95qDJDDtkCXMz6ol
-         NMuJvzqoYu84c3vpFkSB9BJyDD75CKYkpF93n52YPv/5u5QS8sN+fBMp+bEefXPUIzM+
-         iUIaKVAit1CH2db8tumx88wVGSD7MoH8gp67zII9R+nnj54qs8yXyl61pQpKOyWWCmFe
-         u6tYs1iAmsQRx63B96If/vdhYOHtmShWTJ/3sSjfpksqUFqvpK7fck/oDWjkdrONgwjv
-         +oBg==
-X-Gm-Message-State: AC+VfDys0VKZhx+dM26PAOmYuzGN8vzgiqmtOLVaMOkZ01tXOVUo+Gj+
-        PmgrYUjTkdyJ00T6uDbCl9tAzLJpJf+IAPnaZcjIDjlrkOP7jGN7xCE=
-X-Google-Smtp-Source: ACHHUZ6zwvo/t8msv25sF/r0DnJ4K69AtgYgnA9l0Kimfdz8nCZqD1/em5vSr7IaBOHxrucBrG8kOSQn+kqZJFIClYI=
-X-Received: by 2002:a05:6102:c01:b0:439:55ed:226c with SMTP id
- x1-20020a0561020c0100b0043955ed226cmr2563736vss.14.1685711430088; Fri, 02 Jun
- 2023 06:10:30 -0700 (PDT)
+        bh=ry5f5ak9Sr/bZIbtzTWJKvf8qehHNybuYJDF5N8k3cI=;
+        b=JEJ4S4m6yVSj4OvZcC0WAjiibqiIGCnqXmt9Kcj2LslpCaZQsn2G3ENnTZ1bJwkuL+
+         XDQ7VzoJDeanAQ5P3wO4Oo06waz7m/9sZk7FPJKEDVaoHWLyN1qknbObKGSXUw3jmD6K
+         edJwVR+/eP9ZjAAOBJemzWCvUD244BS1lvLlff6q6zIQEdFcQaXL73/PxzACkxCq1K03
+         apXGlcw1uPizLPPiRiVx8/QxLTjbjSUeZG3MZuqO5ba8L+Q3vdz0FWaOWEN3zqlR1wot
+         DPHeeIoUL2fhQL/Z7ONRhAYZHGl9hMpC7TO48cQaVQ4wV7SDTb8RKQ+atuedrY2oXdP5
+         2lcA==
+X-Gm-Message-State: AC+VfDym+2Kre7AsobAzAU1qWzefzhXq8fYdLz69XGkxjPFgKju59U2x
+        ctqI+Qi9w60dYPUFrW08qNMzE2Eat4sqY4jyCJe7IjqdIHabOg==
+X-Google-Smtp-Source: ACHHUZ7kMzvAHTkGGwT6hZfhgTh0gjVaS+Sg8f/2ZLTev7/1qspG/QCMLGRPbwovukpVvSzxyIhabkjHVr9LicCFB2s=
+X-Received: by 2002:a05:6214:411b:b0:628:7be8:97b7 with SMTP id
+ kc27-20020a056214411b00b006287be897b7mr2694764qvb.23.1685711518207; Fri, 02
+ Jun 2023 06:11:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230601140950.779453-1-brgl@bgdev.pl> <ZHirBqDkd99qWGX8@sol>
- <ZHjONQW0qVMseySZ@smile.fi.intel.com> <ZHlQT5KeU+7GkYba@sol> <ZHnFxdcZJEd1ta0R@sol>
-In-Reply-To: <ZHnFxdcZJEd1ta0R@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 2 Jun 2023 15:10:18 +0200
-Message-ID: <CAMRc=MeC=H+Qvew3jrwPR6MMa=rO1Ds_5dN_tZZGS_C1zMz+FQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] tools: tests: replace egrep with grep -E
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230602082325.1445261-1-quic_srichara@quicinc.com> <20230602082325.1445261-3-quic_srichara@quicinc.com>
+In-Reply-To: <20230602082325.1445261-3-quic_srichara@quicinc.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 2 Jun 2023 16:11:21 +0300
+Message-ID: <CAHp75Vcfa2cbACEPROuOptPM7c9SOp_TudK-4Rx45OhWPf=iiw@mail.gmail.com>
+Subject: Re: [PATCH V8 2/8] clk: qcom: Add Global Clock controller (GCC)
+ driver for IPQ5018
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robimarko@gmail.com,
+        krzysztof.kozlowski@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 12:34=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Fri, Jun 2, 2023 at 11:24=E2=80=AFAM Sricharan Ramabadhran
+<quic_srichara@quicinc.com> wrote:
 >
-> On Fri, Jun 02, 2023 at 10:13:35AM +0800, Kent Gibson wrote:
-> >
-> > On a related(??) note, I'm occasionally seeing Oopses when testing this
-> > - when creating a basic sim with a shell script, not when deleting it.
-> > In one case after a fresh reboot and on creating the first sim, so it
-> > looks to be purely the construction.  Yay :-(.
-> >
->
-> I had thought it would be difficult to reproduce this and so difficult
-> to bisect.  Fortunately(??) not.  If I run my setup and cleanup scripts[1=
-]
-> in a tight loop it occurs very readily.  Haven't bisected it yet, but did
-> test it on 6.1-rc1 and it Oopsed there too, so I would need to go back
-> further.  What was the initial release containing gpio-sim?
->
-> The sim setp is pretty simple - a couple of banks each with a few lines
-> and hogs.
->
-> Could you confirm that you can repeat the problem?
-> Otherwise I might start thinking there is something broken in my test
-> environment.
->
-> Btw, the loop script is:
->
-> #!/bin/env bash
-> for (( ; ; ))
-> do
->         echo "create sim..."
->         ./basic_sim.sh
->         echo "destroy sim..."
->         ./clean_sims.sh
-> done
->
-> Cheers,
-> Kent.
-> [1] https://github.com/warthog618/gpiosim-rs
->
+> Add support for the global clock controller found on IPQ5018
+> based devices.
 
-With this script I've been able to trigger an issue but it looks
-different from yours: https://pastebin.com/cbsgT2ae
+...
 
-Bart
+>  config IPQ_GCC_5332
+>         tristate "IPQ5332 Global Clock Controller"
+>         depends on ARM64 || COMPILE_TEST
+>         help
+>           Support for the global clock controller on ipq5332 devices.
+> -         Say Y if you want to use peripheral devices such as UART, SPI,
+> -         i2c, USB, SD/eMMC, etc.
+
+Nothing in the commit message about this. Please, elaborate.
+
+...
+
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+
+Why not keep this ordered?
+
+Missing bits.h and maybe others, but in an unordered list it's harder to ch=
+eck.
+
+...
+
+> +                       &gpll4_main.clkr.hw
+
+Can we keep trailing comma here and in similar cases, like
+
+> +                       &ubi32_pll_main.clkr.hw
+> +                       &gpll0_main.clkr.hw
+
+(and many others)?
+
+--=20
+With Best Regards,
+Andy Shevchenko
