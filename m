@@ -2,101 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE985720297
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:06:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CA1C7202AB
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235865AbjFBNGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 09:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54214 "EHLO
+        id S235940AbjFBNKd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 09:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235595AbjFBNGn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:06:43 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B721AB;
-        Fri,  2 Jun 2023 06:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Y84qRq7gqEl7quzGwy5z/2wXIR5WfX6BYU6q3+lFVsw=; b=ekr1xkFlnN0XWid3TIelC3SBQJ
-        lAtTjZp4XsGIxiSvI4FTOCgobli6ncdzPLWXuzuWdpw0ySppH56lLwSrLFod1KU9F1RbZ8t6r3gAf
-        i1X+IfJgK/cYjG7eRhE88hJljwoAjMddvhJl5RMuIVErG6JtQ7nHKua3XdaGS2lEZpYM=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:35388 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q54U9-0006m5-MG; Fri, 02 Jun 2023 09:06:30 -0400
-Date:   Fri, 2 Jun 2023 09:06:29 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org
-Message-Id: <20230602090629.aa1bee802aafae76ce4e1e60@hugovil.com>
-In-Reply-To: <CAHp75VcLNRQyeo4H-auDvk+CxZ0hz+2pysqP3bBgW-uZB_2vPw@mail.gmail.com>
-References: <20230601201844.3739926-1-hugo@hugovil.com>
-        <20230601201844.3739926-6-hugo@hugovil.com>
-        <ZHkN5kEa6yqHdDeL@surfacebook>
-        <20230601204140.3b45c9b97efb36431d058ba7@hugovil.com>
-        <20230601212514.28914aee77ae9a513904ee6b@hugovil.com>
-        <CAHp75VcLNRQyeo4H-auDvk+CxZ0hz+2pysqP3bBgW-uZB_2vPw@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S235963AbjFBNKc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:10:32 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F24381AB
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 06:10:30 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-439554d9a69so1419571137.1
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 06:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685711430; x=1688303430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z6MS8CXzMLUh4+5EUZRwRkinpexRI6bzP1Z2eNdS1D4=;
+        b=Nm9TSWU4b1nhQ8AkRU96FpD3Naz/vJfz/Y1AbBC35N3jxuD+Y2Fv+iODicdQY3PoqU
+         c8+F6fFUVwLokGcIBDfVDB33AiP7kWBx4wJ5+r3kKo8oonL54FbUBC/DBORYXvQTnpqe
+         TEYqMrncEVXylf1lz6NtbwQRpjUo0KctGOkvvBvE3FgLfHdA+i+mi8GlB+48RLzh30gT
+         3AJ8LuwFLS4EwDOexEdpHTVUalQi2XK2OAM2DIOwQcN+JP+DBTzUyEXsZ2NYGll2Xhqj
+         wxa7yd0eRlxt9O6p4e+wrwrWCWn3EeuaR35AXOoLVxHAGztDAMdIVfPXV/imnS3tkca+
+         MSLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685711430; x=1688303430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z6MS8CXzMLUh4+5EUZRwRkinpexRI6bzP1Z2eNdS1D4=;
+        b=I0cMKP3zCydQYER4QjDF2lqdFo0H7QZclshAZ+OYmc6RFqSoNLxjM36BsycbC4s+2S
+         wQsvG0uO8EKBu/blFS3XR7Ur24tbrholUjqhIqtwb0zL0RktdXMp95qDJDDtkCXMz6ol
+         NMuJvzqoYu84c3vpFkSB9BJyDD75CKYkpF93n52YPv/5u5QS8sN+fBMp+bEefXPUIzM+
+         iUIaKVAit1CH2db8tumx88wVGSD7MoH8gp67zII9R+nnj54qs8yXyl61pQpKOyWWCmFe
+         u6tYs1iAmsQRx63B96If/vdhYOHtmShWTJ/3sSjfpksqUFqvpK7fck/oDWjkdrONgwjv
+         +oBg==
+X-Gm-Message-State: AC+VfDys0VKZhx+dM26PAOmYuzGN8vzgiqmtOLVaMOkZ01tXOVUo+Gj+
+        PmgrYUjTkdyJ00T6uDbCl9tAzLJpJf+IAPnaZcjIDjlrkOP7jGN7xCE=
+X-Google-Smtp-Source: ACHHUZ6zwvo/t8msv25sF/r0DnJ4K69AtgYgnA9l0Kimfdz8nCZqD1/em5vSr7IaBOHxrucBrG8kOSQn+kqZJFIClYI=
+X-Received: by 2002:a05:6102:c01:b0:439:55ed:226c with SMTP id
+ x1-20020a0561020c0100b0043955ed226cmr2563736vss.14.1685711430088; Fri, 02 Jun
+ 2023 06:10:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230601140950.779453-1-brgl@bgdev.pl> <ZHirBqDkd99qWGX8@sol>
+ <ZHjONQW0qVMseySZ@smile.fi.intel.com> <ZHlQT5KeU+7GkYba@sol> <ZHnFxdcZJEd1ta0R@sol>
+In-Reply-To: <ZHnFxdcZJEd1ta0R@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 2 Jun 2023 15:10:18 +0200
+Message-ID: <CAMRc=MeC=H+Qvew3jrwPR6MMa=rO1Ds_5dN_tZZGS_C1zMz+FQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] tools: tests: replace egrep with grep -E
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v6 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2 Jun 2023 15:58:43 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Fri, Jun 2, 2023 at 12:34=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Fri, Jun 02, 2023 at 10:13:35AM +0800, Kent Gibson wrote:
+> >
+> > On a related(??) note, I'm occasionally seeing Oopses when testing this
+> > - when creating a basic sim with a shell script, not when deleting it.
+> > In one case after a fresh reboot and on creating the first sim, so it
+> > looks to be purely the construction.  Yay :-(.
+> >
+>
+> I had thought it would be difficult to reproduce this and so difficult
+> to bisect.  Fortunately(??) not.  If I run my setup and cleanup scripts[1=
+]
+> in a tight loop it occurs very readily.  Haven't bisected it yet, but did
+> test it on 6.1-rc1 and it Oopsed there too, so I would need to go back
+> further.  What was the initial release containing gpio-sim?
+>
+> The sim setp is pretty simple - a couple of banks each with a few lines
+> and hogs.
+>
+> Could you confirm that you can repeat the problem?
+> Otherwise I might start thinking there is something broken in my test
+> environment.
+>
+> Btw, the loop script is:
+>
+> #!/bin/env bash
+> for (( ; ; ))
+> do
+>         echo "create sim..."
+>         ./basic_sim.sh
+>         echo "destroy sim..."
+>         ./clean_sims.sh
+> done
+>
+> Cheers,
+> Kent.
+> [1] https://github.com/warthog618/gpiosim-rs
+>
 
-> On Fri, Jun 2, 2023 at 4:25 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > On Thu, 1 Jun 2023 20:41:40 -0400
-> > Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > > On Fri, 2 Jun 2023 00:30:14 +0300
-> > > andy.shevchenko@gmail.com wrote:
-> > > > Thu, Jun 01, 2023 at 04:18:40PM -0400, Hugo Villeneuve kirjoitti:
-> 
-> ...
-> 
-> > > > Maybe positive one?
-> > > >     if (mctrl_mask)
-> > > >             regmap_update_bits(...);
-> > >
-> > > I used negative to save on indentation, but it also fits by converting it to positive, so done.
-> 
-> I understand, but in this case it is slightly more weird to have
-> negative conditional and in either case return the value of the local
-> variable.
+With this script I've been able to trigger an issue but it looks
+different from yours: https://pastebin.com/cbsgT2ae
 
-Yes.
-
-> > Greg did not yet respond to my email about the proposed tags, but if the new order of the patches and the stable tags I added seems ok to you, I will resend V7. It will then probably easier for Greg to comment directly on V7 for the stable tags (Cc:).
-> 
-> They look fine to me, but Greg is the maintainer, he decides if it's
-> really okay or not.
-
-Then I will submit V7 now.
-
-Thank you,
-Hugo.
+Bart
