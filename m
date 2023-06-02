@@ -2,139 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A73DE72020B
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 14:26:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D791720274
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 14:59:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233860AbjFBM0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 08:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
+        id S234833AbjFBM7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 08:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjFBM0i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 08:26:38 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E90E2;
-        Fri,  2 Jun 2023 05:26:36 -0700 (PDT)
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 352CPJga004924;
-        Fri, 2 Jun 2023 14:26:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=7oMSyWiQ47xLyNRigDKbEExVh2FJm9LkeL6T8S2WUxo=;
- b=ejt1nVA8/a1R/uR+rCZ7moocIXr6zbHnPJaA1FdRGVre6Qj8JJmNwGhoJQmx6lQufRMv
- fiAaXsgVLHfglp5qRqB0qs23d3QIUZPn3/UBKYMzi9YKiFlApFg9TGavwsKYnp5ybExU
- 73P5B3ZMA1PYTi5XeoMmAE4lUJNjVBUSu2cUu6RzDswykxrwtryZZ/s/MhZJ4dn5Il7p
- HAQJpgrN7Nb9yaI+k6e8U6+wZeaNrc56OQUH8MIFEHNWrXM9d+3bI9QgqyfaEVfzZilM
- 9qDinZDO0uu28qWjveq7o68MUOiclpENcnrOj5U8lTCYl6z3LUBtz+WT4/SEYtVN7wZw 1g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3qyc519ngh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Jun 2023 14:26:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7DBE310002A;
-        Fri,  2 Jun 2023 14:26:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 75B5023152E;
-        Fri,  2 Jun 2023 14:26:18 +0200 (CEST)
-Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 2 Jun
- 2023 14:26:16 +0200
-Message-ID: <b04c9fa4-6f9c-1011-1326-4d1897404364@foss.st.com>
-Date:   Fri, 2 Jun 2023 14:26:16 +0200
+        with ESMTP id S232201AbjFBM7V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 08:59:21 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8577B180;
+        Fri,  2 Jun 2023 05:59:20 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-6260a2522d9so17539346d6.3;
+        Fri, 02 Jun 2023 05:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685710759; x=1688302759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3QUfce8qvCYzZvATTACM5GanFIR9TxGWV5NW5fx1Uc=;
+        b=doJ3dcsc9mWKT8YTAuerxjrr8h3c0tz3RzYoCZP252gI1cbb59iwC1PrSlqWfd+ZLd
+         wu8X1MayospFP4NQJcezwwmUgbwpTuQVGxppnuJl4g9zaZrnl9FL/3bD62qnXWfvHAER
+         ixdYF0QsoJ3YqMDc2KE0DdS0asKF9/SORqCEvBvXt+4lqaNyWBFNY4HoNt41XyLF+H4i
+         CSQJV/I+2eNuFZF5v0EYw7Gbt4PoFNCG+voH2ApX1j9PL+JbjkBd6YgY8RRN+9ZjnUH8
+         cflzCihvBmxoDXFgZuy+AzNp+9jdvO+NnvPTJKuIiimECms6jUxYo2c7BhOGTZD2OjRe
+         YZeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685710759; x=1688302759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L3QUfce8qvCYzZvATTACM5GanFIR9TxGWV5NW5fx1Uc=;
+        b=SgLEKQTI8T6eV0Pcnx+aCLx/vKv64Kuar04XI3la5wRJM0V6XrZrTtv20OVhHu2sON
+         jwDbqMKXLqOi/Kog/mhze4V/wWMxWQc0++g5XUVShTyQ624unW6C0e02eDvAOHNG7RuE
+         PP9LdSselQskeA2v42TSTNfaUDcQJfzJU4F93w8dunDi/dzeWCoACU2Bfq9dzZFfaT+O
+         IgqrzmljDh/JUyOeljlZnjqR2lspqoMkzTLINMfhxsMFBtKd6hYpeM7K594BmSWrPscR
+         9eT+HilX5XqdFChbzL+4ELjWBlk/qFidBXvTyNhLcuUDnbolNIPN20ev13TgBry7EPtc
+         MTrw==
+X-Gm-Message-State: AC+VfDylYtfpL6gZCQSZxE0EbVhhi3ZJFEOnPY3KWpRnEuiDOHEsoiTb
+        0uqgK7TzCX6eKHaik/x0yo0YRpgvwa5TLiox9USUK3TAXEvX5g==
+X-Google-Smtp-Source: ACHHUZ56t5eDsg4Bk5FefwJatBcex4lr70jUToJngwCOnFYsrPpb472scmS1PBD5ipf40wgvCRRYtHVogx+HNCtfYi8=
+X-Received: by 2002:ad4:5ae4:0:b0:625:aa1a:9384 with SMTP id
+ c4-20020ad45ae4000000b00625aa1a9384mr15516313qvh.64.1685710759620; Fri, 02
+ Jun 2023 05:59:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 04/11] dt-bindings: stm32: add st,stm32mp25 compatibles to
- the stm32 family
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Conor Dooley <conor@kernel.org>
-CC:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
- <20230529162034.20481-5-alexandre.torgue@foss.st.com>
- <20230529-backlit-dealing-b099e4eb5210@spud>
- <c805cd5f-92b1-eb56-d9bc-66814705e848@foss.st.com>
- <25d61668-0b79-8565-0de8-dad7e80e3798@linaro.org>
-From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <25d61668-0b79-8565-0de8-dad7e80e3798@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.21.93]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-02_08,2023-06-02_02,2023-05-22_02
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230601201844.3739926-1-hugo@hugovil.com> <20230601201844.3739926-6-hugo@hugovil.com>
+ <ZHkN5kEa6yqHdDeL@surfacebook> <20230601204140.3b45c9b97efb36431d058ba7@hugovil.com>
+ <20230601212514.28914aee77ae9a513904ee6b@hugovil.com>
+In-Reply-To: <20230601212514.28914aee77ae9a513904ee6b@hugovil.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 2 Jun 2023 15:58:43 +0300
+Message-ID: <CAHp75VcLNRQyeo4H-auDvk+CxZ0hz+2pysqP3bBgW-uZB_2vPw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/9] serial: sc16is7xx: fix regression with GPIO configuration
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof
+On Fri, Jun 2, 2023 at 4:25=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com> w=
+rote:
+> On Thu, 1 Jun 2023 20:41:40 -0400
+> Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > On Fri, 2 Jun 2023 00:30:14 +0300
+> > andy.shevchenko@gmail.com wrote:
+> > > Thu, Jun 01, 2023 at 04:18:40PM -0400, Hugo Villeneuve kirjoitti:
 
-On 5/31/23 20:47, Krzysztof Kozlowski wrote:
-> On 30/05/2023 10:39, Alexandre TORGUE wrote:
->> Hi Conor
->>
->> On 5/29/23 20:05, Conor Dooley wrote:
->>> On Mon, May 29, 2023 at 06:20:27PM +0200, Alexandre Torgue wrote:
->>>> STM32 family is extended by the addition of the STM32MP25 SoCs. It is composed
->>>> of 4 SoCs: STM32MP251, STM32MP253, STM32MP255 and STM32MP257.
->>>>
->>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>>> index 4af5b8f4f803..7d7ca33d2e61 100644
->>>> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>>> @@ -161,6 +161,15 @@ properties:
->>>>              - const: phytec,phycore-stm32mp157c-som
->>>>              - const: st,stm32mp157
->>>>    
->>>> +      - items:
->>>> +          - const: st,stm32mp251
->>>> +      - items:
->>>> +          - const: st,stm32mp253
->>>> +      - items:
->>>> +          - const: st,stm32mp255
->>>> +      - items:
->>>> +          - const: st,stm32mp257
->>>
->>> I assume the slightly odd format is just to avoid churn when adding
->>> the board compatibles.
->>
->> Yes, exactly.
->>
-> 
-> I don't get it. How are you going to extend it? Or rather - what are you
-> documenting here? If these are SoCs, then this is not valid. We do not
-> allow these alone.
-> 
-> No, please drop it.
+...
 
-Ok. I will drop it in V2 and update binding patch which defines the 
-STM32 EV1 board.
+> > > Maybe positive one?
+> > >     if (mctrl_mask)
+> > >             regmap_update_bits(...);
+> >
+> > I used negative to save on indentation, but it also fits by converting =
+it to positive, so done.
 
-Thanks
-Alex
+I understand, but in this case it is slightly more weird to have
+negative conditional and in either case return the value of the local
+variable.
 
-> 
-> Best regards,
-> Krzysztof
-> 
+...
 
+> Greg did not yet respond to my email about the proposed tags, but if the =
+new order of the patches and the stable tags I added seems ok to you, I wil=
+l resend V7. It will then probably easier for Greg to comment directly on V=
+7 for the stable tags (Cc:).
+
+They look fine to me, but Greg is the maintainer, he decides if it's
+really okay or not.
+
+--=20
+With Best Regards,
+Andy Shevchenko
