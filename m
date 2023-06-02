@@ -2,109 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A11720622
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 17:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D15720640
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 17:33:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236624AbjFBP1R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 11:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
+        id S236616AbjFBPdX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 11:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236654AbjFBP0s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 11:26:48 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8145E53;
-        Fri,  2 Jun 2023 08:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LSPzUrj24OeoMmKs7T5Fwr30B3kGDkk3V6m6gcNeguU=; b=YVEAW44arLTlr2B77jk6TS3Fq5
-        8nKMZkNbBjQqC7QaFIVrE5K9gtrP4tyb5HCzBF5iwt0BMGWmMemuwXi4eOL92P2tIQB2eRvdMDuaU
-        1ejgbafcbM/+bHc7+J/Mbw5bVIM6OBjL2ChLYOenZMn6c9GMDgLuajq991XAPashJ8ok=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:50948 helo=pettiford.lan)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q56fr-0008Hq-1A; Fri, 02 Jun 2023 11:26:43 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hugo@hugovil.com,
-        linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>
-Date:   Fri,  2 Jun 2023 11:26:25 -0400
-Message-Id: <20230602152626.284324-10-hugo@hugovil.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230602152626.284324-1-hugo@hugovil.com>
-References: <20230602152626.284324-1-hugo@hugovil.com>
+        with ESMTP id S236706AbjFBPdW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 11:33:22 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE1218D
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 08:33:20 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id ada2fe7eead31-43b27330e51so276739137.3
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 08:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685719999; x=1688311999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vnozPpr9PIN7JWFNjwjsptNuMvRCJkqnXG6boNn6DTU=;
+        b=yYT6R2kC18AiJqxeXIp8Bs0aTXQ738SAPOOvBktUsonDNViAYdp1XQQRgBnmScokLl
+         Od70eOlPvmu/2LmE1/ZULUKv8I75yPK2J7cRmuiuVQ+sh4TTMZsQh/vM7pPMXIzrZDPZ
+         zb8uB8TdG0tf2PassiyzFHFQrtTVLVS4U/8Pq5bZhDqGRF+ZoxvaTxdqgNgsG7wIP0Q1
+         8LTrstMYXj2BuHkaG++yQqYZjm+mg3a7wIh052uU8guC4DjaSim+ZBHctuiPvatX0L7W
+         aqTfHMevNLg860vKjLfbPCZUHhXONI1KQZyOls6gf6TzkvkGWM8h/+rhBKxE/yzMf7iq
+         n4rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685719999; x=1688311999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vnozPpr9PIN7JWFNjwjsptNuMvRCJkqnXG6boNn6DTU=;
+        b=jlKIQNAKEro7tTRcRtisLycEv9mD3075dQWlPPEfcnA5kIv5NA/kBm0iMPMbYls/bB
+         +LyjwXBC8ZdbSg2letg8DNRq5UcvdYCeIk8PQCy5MEN99v9GqroSVGZUe/L+6v8QVIcR
+         w4KxTjkFWcpr7EBHaoRAKjzNzgyQPf7I5Uzj4nBOUhMlZkSk75fE7I8h1dtMg+gHJk/l
+         kRs3Kero2gjAUCwDVDq4mzAeCteL4xfgxSUIlzOur/qKm8qv3KA95yLYAOW6e9AjqLvx
+         e+2UAdDUzHwXGvwIVNoMsWQIx6MF0DwhffHyw4WT0D7/NhwKdTXQmINKD8CDEryN6muq
+         Khrg==
+X-Gm-Message-State: AC+VfDz/GtBoH1QsnR4Vb20ZTby+Vh3eOcG5ss2PKm9O85mvZXv/4xl4
+        vB1lCX3yPvZ9TqgGCCHi6DgQmJIBOOCVAFcL41bFFTwHLNviCRcA6C0=
+X-Google-Smtp-Source: ACHHUZ6BQ2xl7IoQB6bc7WeXCatj+9/L5NNXNMa89H7y9CiWJuAhyHdD04n5o9WAtOJXdVIsdrnkcV9urCFx1uX81H8=
+X-Received: by 2002:a05:6102:134b:b0:434:f277:86ff with SMTP id
+ j11-20020a056102134b00b00434f27786ffmr5857949vsl.29.1685719999354; Fri, 02
+ Jun 2023 08:33:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+References: <20230601140950.779453-1-brgl@bgdev.pl> <ZHirBqDkd99qWGX8@sol>
+ <ZHjONQW0qVMseySZ@smile.fi.intel.com> <ZHlQT5KeU+7GkYba@sol>
+ <ZHnFxdcZJEd1ta0R@sol> <CAMRc=MeC=H+Qvew3jrwPR6MMa=rO1Ds_5dN_tZZGS_C1zMz+FQ@mail.gmail.com>
+ <ZHnuCjd5gDPDoDjq@sol>
+In-Reply-To: <ZHnuCjd5gDPDoDjq@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 2 Jun 2023 17:33:08 +0200
+Message-ID: <CAMRc=MdRiJUURRZxqwm87b7H=DEFuyW5OOqKrqXjrveVNw7BPw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] tools: tests: replace egrep with grep -E
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: [PATCH v7 9/9] serial: sc16is7xx: improve comments about variants
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Fri, Jun 2, 2023 at 3:26=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Fri, Jun 02, 2023 at 03:10:18PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Jun 2, 2023 at 12:34=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > On Fri, Jun 02, 2023 at 10:13:35AM +0800, Kent Gibson wrote:
+> > > >
+> > > > On a related(??) note, I'm occasionally seeing Oopses when testing =
+this
+> > > > - when creating a basic sim with a shell script, not when deleting =
+it.
+> > > > In one case after a fresh reboot and on creating the first sim, so =
+it
+> > > > looks to be purely the construction.  Yay :-(.
+> > > >
+> > >
+> > > I had thought it would be difficult to reproduce this and so difficul=
+t
+> > > to bisect.  Fortunately(??) not.  If I run my setup and cleanup scrip=
+ts[1]
+> > > in a tight loop it occurs very readily.  Haven't bisected it yet, but=
+ did
+> > > test it on 6.1-rc1 and it Oopsed there too, so I would need to go bac=
+k
+> > > further.  What was the initial release containing gpio-sim?
+> > >
+> > > The sim setp is pretty simple - a couple of banks each with a few lin=
+es
+> > > and hogs.
+> > >
+> > > Could you confirm that you can repeat the problem?
+> > > Otherwise I might start thinking there is something broken in my test
+> > > environment.
+> > >
+> > > Btw, the loop script is:
+> > >
+> > > #!/bin/env bash
+> > > for (( ; ; ))
+> > > do
+> > >         echo "create sim..."
+> > >         ./basic_sim.sh
+> > >         echo "destroy sim..."
+> > >         ./clean_sims.sh
+> > > done
+> > >
+> > > Cheers,
+> > > Kent.
+> > > [1] https://github.com/warthog618/gpiosim-rs
+> > >
+> >
+> > With this script I've been able to trigger an issue but it looks
+> > different from yours: https://pastebin.com/cbsgT2ae
+> >
+>
+> Looks similar to me.
+> I would assume that is the same issue - even if the  particulars of the
+> crash differ.  If you can fix that and my problem remains then we can be
+> sure they are distinct.
+>
+> I've been doing a coarse bisect to see how far back this goes -
+> basically looking for a known good.
+> 5.18 crashes, but it crashed hard, so no syslog.  It did run considerably
+> longer before crashing, so that could be different issue masked by the
+> other (later?) one.
+>
+> Moving on to subsequent releases...
+>
+> Cheers,
+> Kent.
 
-Replace 740/750/760 with generic terms like 74x/75x/76x to account for
-variants like 741, 752 and 762.
+I managed to trigger a different crash: https://pastebin.com/6Gx29vHB
 
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
----
- drivers/tty/serial/sc16is7xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This one happened in gpio-sim:
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 6a8d594a90c8..a085f9894b35 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -223,7 +223,7 @@
-  * trigger levels. Trigger levels from 4 characters to 60 characters are
-  * available with a granularity of four.
-  *
-- * When the trigger level setting in TLR is zero, the SC16IS740/750/760 uses the
-+ * When the trigger level setting in TLR is zero, the SC16IS74x/75x/76x uses the
-  * trigger level setting defined in FCR. If TLR has non-zero trigger level value
-  * the trigger level defined in FCR is discarded. This applies to both transmit
-  * FIFO and receive FIFO trigger level setting.
-@@ -234,7 +234,7 @@
- #define SC16IS7XX_TLR_TX_TRIGGER(words)	((((words) / 4) & 0x0f) << 0)
- #define SC16IS7XX_TLR_RX_TRIGGER(words)	((((words) / 4) & 0x0f) << 4)
- 
--/* IOControl register bits (Only 750/760) */
-+/* IOControl register bits (Only 75x/76x) */
- #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
- #define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
- #define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
-@@ -249,9 +249,9 @@
- #define SC16IS7XX_EFCR_RTS_INVERT_BIT	(1 << 5) /* RTS output inversion */
- #define SC16IS7XX_EFCR_IRDA_MODE_BIT	(1 << 7) /* IrDA mode
- 						  * 0 = rate upto 115.2 kbit/s
--						  *   - Only 750/760
-+						  *   - Only 75x/76x
- 						  * 1 = rate upto 1.152 Mbit/s
--						  *   - Only 760
-+						  *   - Only 76x
- 						  */
- 
- /* EFR register bits */
--- 
-2.30.2
+$ ./scripts/faddr2line drivers/gpio/gpio-sim.o
+gpio_sim_make_bank_swnode+0x12f/0x220
+gpio_sim_make_bank_swnode+0x12f/0x220:
+gpio_sim_make_line_names at
+/home/brgl/workspace/yocto-gpio-sim-crash/build/linux/drivers/gpio/gpio-sim=
+.c:725
+(inlined by) gpio_sim_make_bank_swnode at
+/home/brgl/workspace/yocto-gpio-sim-crash/build/linux/drivers/gpio/gpio-sim=
+.c:837
 
+But to me it looks like some memory corruption if the stack traces are
+so random... Where is Rust when you need it? :)
+
+Bart
