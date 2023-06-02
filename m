@@ -2,78 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6D17202E1
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB63F7202E0
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 15:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235254AbjFBNPF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Jun 2023 09:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
+        id S235865AbjFBNPG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 09:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235864AbjFBNOt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:14:49 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D77E66
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 06:14:27 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-51480d3e161so3002345a12.3
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 06:14:27 -0700 (PDT)
+        with ESMTP id S236140AbjFBNO7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 09:14:59 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E573E49
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Jun 2023 06:14:38 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9741caaf9d4so288812266b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jun 2023 06:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685711623; x=1688303623;
+        d=linaro.org; s=google; t=1685711650; x=1688303650;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=57q4TdWvHlrEcIXeoi1W6gK5/9KE0SGJz/XNivOKPnk=;
-        b=m9GaBMggEI20VXMLlKimzmXgfD2tFFpsgnDCnJnAzGBiSIil3R7xyTQsrSZ0tkBKQ2
-         Dan82iwCSen/4Qc7ylIOt8DQXGEvhxbZlViE149oQ6jXGm0iWDn+RXA1eGo8J0vDX3Mc
-         qYGzE3Tb04bFDQ5oz9hGJRnHjVJJgpU6m8ZmOe2V5iTi5SiokNy886+NLJrDVBOK+Wfq
-         YrEoS1xUKfBU4khc/qPtsNsgb8BQAioPYPCu0YnueaAFfAUhR89gr80YqopukdfPwaHg
-         zM4Ev9JbZ3Dtm1Asdwd8VYPDEs3pYrQ8nsOUW3nPQvLoqWmVbKq0aoIjDRmwnTj7Mog5
-         7BPA==
+        bh=NM7E2bhPISEHbBlp1H32wp1Q4VWvkt2UL0EOlnHQmhw=;
+        b=EMRhYGqE0xvmt/e3UTWvucXGuihMx3qxy93kVgcdl0JaBC6zfPxxlaYtyG7CwUnPK2
+         IsW2bmeGb79p0HFI+crVf0iOrCWPNAhG9UOuCkjRL6BvZMYjr/Hb6lCCCG4v61L2/ewA
+         xb1is/o+4n4jOMiVzInw5czw6lMNOK3tQkbgv9IpldCx0bcp5AtRNXpC2l00j5Fu/1/e
+         EGbvr+JPC2XX+1gjobhAKXk1sIQW8c9CWk7dFN5jEWVCLQrDTF5BZOw5TUmxEYP9FbFv
+         7FN1w7pWbEwKqAebcSuJPJMmRFC5mN6YtIm0uKG95FNaYi5DuTPFC57WclQSrrJ2bh8H
+         fgJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685711623; x=1688303623;
+        d=1e100.net; s=20221208; t=1685711650; x=1688303650;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:from:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=57q4TdWvHlrEcIXeoi1W6gK5/9KE0SGJz/XNivOKPnk=;
-        b=c+a5mqaMj5zTLPw0Y8ZD5fIXgpQVPso4gxzgdLTSvG5QRhL8wr3Yk6u02YiBWUzZNY
-         zD37+hBdyZvNClyu3YkpAbd+xIjT14IAbWrLHlHBoI32FMM+9ea803gYp7fLwtXmgyo4
-         Z/KEdd/xZm/Umsz1yjSPo3zOFMiFDrJn6PEygiOcBz3c6pZo/h2DOn7CZvgm2fMiHk2n
-         51PC6tBgffnKU0Nr7fgrhYB7Lp5yf86NnmiHO65nDDFKF02/1sNgxY/mmRMaQxKIUDxN
-         tZm5+bzczRtdKpJ3EZVMEkYhp/pKuAe14NOkgeaOgHWJ2EKvJwAEe40p7V+TnZEJ8nkV
-         u/LA==
-X-Gm-Message-State: AC+VfDwnR5gOFUNyUS57JNWrFMhkDtVxFrBjUVxNiKYvU56bA1BdAf5d
-        Y805t8EMeikMCjXLHWXJsPA4CmzuRqAPrmXB6sU=
-X-Google-Smtp-Source: ACHHUZ43d+sUWltwQzDiB3YR6CO9kaf0tCGFKY31o/sI7+FHsx2VcAbPoNydH2HsLkQ4RBU6XfW+uw==
-X-Received: by 2002:a05:6402:205c:b0:50d:8979:5722 with SMTP id bc28-20020a056402205c00b0050d89795722mr1868357edb.39.1685711622721;
-        Fri, 02 Jun 2023 06:13:42 -0700 (PDT)
+        bh=NM7E2bhPISEHbBlp1H32wp1Q4VWvkt2UL0EOlnHQmhw=;
+        b=K3k5j0hqW6NZ0rzhVzdtFoYoKSQUOhitmJPqGxvGkKiRDDK/B5OVbd6weZxttvJQEu
+         qbjYLRlgl66G2LYoOgMOUXDlwGaJ8APBO4mMunEasjMYaYFCuNwZ/xnpVDNyIIjKyMGk
+         0qA7NxyL4n1MEeekTJnfCJUsbE25HZe+3cH6crVmhFnLqkr0E4qWYPC3GVKEbWjVkRqG
+         AKSJK0lhiaX9k1AImRiJbaKyAs8UHEETduBFC9JylA2oGYLi20isQyzjo4X4NrdvzF2r
+         qGY9I/dmu+KgVfFS0AD+jzISvlgBK9+18/bOv8CvFMXS/HteNfQnSlz2ICGASSlaVqxd
+         jj7g==
+X-Gm-Message-State: AC+VfDw16grudZhVQQs3KtILkEWm7XiYddsF0pHkVyJ6EVB8/Jy6GxhB
+        UOXKi3AHvUBnvWLj60FsAP/Xjw==
+X-Google-Smtp-Source: ACHHUZ4uIIsfu5hfYvBBUXo02QYm4Gt9O+H37x3tBrXc8NtwSrPZ6PnJax9nm8arEBESNAAtPajQbQ==
+X-Received: by 2002:a17:906:fe43:b0:973:e69d:c720 with SMTP id wz3-20020a170906fe4300b00973e69dc720mr10021680ejb.51.1685711650410;
+        Fri, 02 Jun 2023 06:14:10 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id a15-20020a50e70f000000b0050d83a39e6fsm682708edn.4.2023.06.02.06.13.40
+        by smtp.gmail.com with ESMTPSA id bi1-20020a170906a24100b009664cdb3fc5sm737006ejb.138.2023.06.02.06.14.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Jun 2023 06:13:42 -0700 (PDT)
-Message-ID: <955b84da-7d7c-1a30-680f-530c7593643d@linaro.org>
-Date:   Fri, 2 Jun 2023 15:13:39 +0200
+        Fri, 02 Jun 2023 06:14:09 -0700 (PDT)
+Message-ID: <de4aa846-c609-b0c3-a04a-2ad5ffaec815@linaro.org>
+Date:   Fri, 2 Jun 2023 15:14:07 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 04/11] dt-bindings: stm32: add st,stm32mp25 compatibles to
- the stm32 family
-To:     Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-        Conor Dooley <conor@kernel.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+Subject: Re: [PATCH 03/11] dt-bindings: stm32: add st,stm32mp25-syscfg
+ compatible for syscon
+To:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         Conor Dooley <conor+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>, soc@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20230529162034.20481-1-alexandre.torgue@foss.st.com>
- <20230529162034.20481-5-alexandre.torgue@foss.st.com>
- <20230529-backlit-dealing-b099e4eb5210@spud>
- <c805cd5f-92b1-eb56-d9bc-66814705e848@foss.st.com>
+ <20230529162034.20481-4-alexandre.torgue@foss.st.com>
 Content-Language: en-US
-In-Reply-To: <c805cd5f-92b1-eb56-d9bc-66814705e848@foss.st.com>
+In-Reply-To: <20230529162034.20481-4-alexandre.torgue@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -86,44 +83,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/05/2023 10:39, Alexandre TORGUE wrote:
-> Hi Conor
-> 
-> On 5/29/23 20:05, Conor Dooley wrote:
->> On Mon, May 29, 2023 at 06:20:27PM +0200, Alexandre Torgue wrote:
->>> STM32 family is extended by the addition of the STM32MP25 SoCs. It is composed
->>> of 4 SoCs: STM32MP251, STM32MP253, STM32MP255 and STM32MP257.
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>> index 4af5b8f4f803..7d7ca33d2e61 100644
->>> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
->>> @@ -161,6 +161,15 @@ properties:
->>>             - const: phytec,phycore-stm32mp157c-som
->>>             - const: st,stm32mp157
->>>   
->>> +      - items:
->>> +          - const: st,stm32mp251
->>> +      - items:
->>> +          - const: st,stm32mp253
->>> +      - items:
->>> +          - const: st,stm32mp255
->>> +      - items:
->>> +          - const: st,stm32mp257
->>
->> I assume the slightly odd format is just to avoid churn when adding
->> the board compatibles.
-> 
-> Yes, exactly.
-> 
+Resending as my previous email probably got lost. If you got it twice,
+apologies.
 
-I don't get it. How are you going to extend it? Or rather - what are you
-documenting here? If these are SoCs, then this is not valid. We do not
-allow these alone.
+On 29/05/2023 18:20, Alexandre Torgue wrote:
+> From: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> 
+> Add the new syscon compatible for STM32MP25 syscfg = "st,stm32mp25-syscfg".
+> 
+> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml b/Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml
+> index ad8e51aa01b0..9ed5b121cea9 100644
+> --- a/Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml
+> +++ b/Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml
+> @@ -16,6 +16,7 @@ properties:
+>        - items:
+>            - enum:
+>                - st,stm32mp157-syscfg
+> +              - st,stm32mp25-syscfg
 
-No, please drop it.
+You should rather keep some (alphabetical?) order.
+
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
