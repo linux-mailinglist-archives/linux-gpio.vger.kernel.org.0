@@ -2,137 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DE571FA67
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 08:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9177771FAF6
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jun 2023 09:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234044AbjFBG6A convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 2 Jun 2023 02:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
+        id S233985AbjFBH2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Jun 2023 03:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234040AbjFBG56 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 02:57:58 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1356E18C;
-        Thu,  1 Jun 2023 23:57:55 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2af189d323fso38158861fa.1;
-        Thu, 01 Jun 2023 23:57:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685689072; x=1688281072;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3yfrOJnAEtdE9WlO3Gt8PPHN7bIX3lR9BC9c57KaloY=;
-        b=R2rVW+FnkwEdQRMl40aWTxm2z9/O8D4aEgAPIBqFC5+D4cyVKQESmbOdq3x9C8HVpY
-         8xPuLG1VWoVvc42/lxKxvNRwjpF3u/oMun9cFmtyJM0koZGHaU8WFf6vDWw/N6XfqXq9
-         YFbapRkKf0JfvGT0AJSkTKOCnhXdXclbJWo+PwDldnezH6XluEzTvmYsEx2xh4gnripe
-         FBUvkxdrzA/ATxnObD4p5rby3W3tJTksvpDMW8dEEjukPOlFe9yvHJp8PFnyH7kETVkw
-         cCnrlHMgS6ZsoX9slqzzJ/T90lU07rINwmKNhWYvnyfqweGbNCtO5b8IQ8T46Ap54qTQ
-         BJ7Q==
-X-Gm-Message-State: AC+VfDyy6lhhSafTKkg5uGeT5OuZINN0tKGzDEH25j+xZbLQY0ktekD/
-        NuDZHWNh7ajsW3QZQ5YEB793RrJ3F6u1Tb+U
-X-Google-Smtp-Source: ACHHUZ75DCPscSa/X3zlW/WfQIDY02e0JX8sYMVjwdkoNFcgQRiwXeL/JJ/R/fTaidnXMbvXWWlFhQ==
-X-Received: by 2002:a2e:b989:0:b0:2a8:b792:d7cd with SMTP id p9-20020a2eb989000000b002a8b792d7cdmr466562ljp.4.1685689072001;
-        Thu, 01 Jun 2023 23:57:52 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id v11-20020a2e924b000000b002a8e8c776e9sm108023ljg.56.2023.06.01.23.57.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 23:57:51 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f4db9987f8so3751164e87.1;
-        Thu, 01 Jun 2023 23:57:51 -0700 (PDT)
-X-Received: by 2002:a05:6512:131e:b0:4eb:46c2:e771 with SMTP id
- x30-20020a056512131e00b004eb46c2e771mr776194lfu.14.1685689071688; Thu, 01 Jun
- 2023 23:57:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220329091126.4730-1-wsa+renesas@sang-engineering.com>
- <20220329091126.4730-2-wsa+renesas@sang-engineering.com> <ZHkQDTvk6I2q-9CF@surfacebook>
- <CAMuHMdUaugQ5+Zhmg=oe=X2wvhazMiT=K-su0EJYKzD4Hdyn3Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdUaugQ5+Zhmg=oe=X2wvhazMiT=K-su0EJYKzD4Hdyn3Q@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 2 Jun 2023 08:57:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWhtVvA4=vh4imMtL+KssybzB57CNcLaNq9oVKkpeS1iA@mail.gmail.com>
-Message-ID: <CAMuHMdWhtVvA4=vh4imMtL+KssybzB57CNcLaNq9oVKkpeS1iA@mail.gmail.com>
-Subject: Re: [PATCH v8 1/1] gpio: add sloppy logic analyzer using polling
+        with ESMTP id S233986AbjFBH2i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Jun 2023 03:28:38 -0400
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267A419B;
+        Fri,  2 Jun 2023 00:28:35 -0700 (PDT)
+Received: from localhost.localdomain (unknown [124.16.138.125])
+        by APP-03 (Coremail) with SMTP id rQCowACXnCz9mXlkmBV4CQ--.64630S2;
+        Fri, 02 Jun 2023 15:27:58 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
 To:     andy.shevchenko@gmail.com
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH v2] gpio: sifive: Add missing check for platform_get_irq
+Date:   Fri,  2 Jun 2023 15:27:55 +0800
+Message-Id: <20230602072755.7314-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: rQCowACXnCz9mXlkmBV4CQ--.64630S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gr17Ar4rAr43tryrWrW7Arb_yoWfXrX_Gw
+        1kZF43W3y09Fn8uFnFvrWayr92vFykWrn5urs3KFy3t3s8Z348uw4UXrs5ArnxWr17tFyU
+        Ga18uw4xAa13GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUGhFxUUUUU=
+X-Originating-IP: [124.16.138.125]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 8:51 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Jun 1, 2023 at 11:40 PM <andy.shevchenko@gmail.com> wrote:
-> > Tue, Mar 29, 2022 at 11:11:26AM +0200, Wolfram Sang kirjoitti:
-> > > This is a sloppy logic analyzer using GPIOs. It comes with a script to
-> > > isolate a CPU for polling. While this is definitely not a production
-> > > level analyzer, it can be a helpful first view when remote debugging.
-> > > Read the documentation for details.
-> >
-> > One note since I have done recent review and realize one issue with debugfs.
-> >
-> > ...
-> >
-> > > +     priv->debug_dir = debugfs_create_dir(devname, gpio_la_poll_debug_dir);
-> >
-> > If this fails with NULL...
-> >
-> > > +     debugfs_create_blob("meta_data", 0400, priv->debug_dir, &priv->meta);
-> > > +     debugfs_create_ulong("delay_ns", 0600, priv->debug_dir, &priv->delay_ns);
-> > > +     debugfs_create_ulong("delay_ns_acquisition", 0400, priv->debug_dir, &priv->acq_delay);
-> > > +     debugfs_create_file_unsafe("buf_size", 0600, priv->debug_dir, priv, &fops_buf_size);
-> > > +     debugfs_create_file_unsafe("capture", 0200, priv->debug_dir, priv, &fops_capture);
-> > > +     debugfs_create_file_unsafe("trigger", 0200, priv->debug_dir, priv, &fops_trigger);
-> >
-> > ...and any of these is not, we will end up with the file in a root folder of debugfs...
-> >
-> > > +     dev_info(dev, "initialized");
-> >
-> > ...
-> >
-> > > +static int gpio_la_poll_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct gpio_la_poll_priv *priv = platform_get_drvdata(pdev);
-> > > +
-> > > +     mutex_lock(&priv->lock);
-> > > +     debugfs_remove_recursive(priv->debug_dir);
-> >
-> > ...and this one won't remove it.
-> >
-> > > +     mutex_unlock(&priv->lock);
-> > > +     mutex_destroy(&priv->lock);
-> > > +
-> > > +     return 0;
-> > > +}
-> >
-> > ...
-> >
-> > However, I haven't checked if it's pure theoretical issue with the current code
-> > base of debugfs or a potential problem. Easy fix is to check an error code and
->
-> I think debugfs_create_dir() can only fail reasonably due to OOM.
+Add the missing check for platform_get_irq and return error code
+if it fails.
 
-Oops, you were talking about NULL, not an error code.
-I don't think that can ever happen.
-And if I did miss something, it would crash when dereferencing a NULL
-pointer in d_really_is_positive() (as called in start_creating())...
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+Changelog:
 
-Gr{oetje,eeting}s,
+v1 -> v2:
 
-                        Geert
+1. Return "chip->irq_number[i]" instead of "-ENODEV".
+---
+ drivers/gpio/gpio-sifive.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index 98939cd4a71e..7245000fb049 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -221,8 +221,11 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	for (i = 0; i < ngpio; i++)
++	for (i = 0; i < ngpio; i++) {
+ 		chip->irq_number[i] = platform_get_irq(pdev, i);
++		if (chip->irq_number[i] < 0)
++			return chip->irq_number[i];
++	}
+ 
+ 	ret = bgpio_init(&chip->gc, dev, 4,
+ 			 chip->base + SIFIVE_GPIO_INPUT_VAL,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
