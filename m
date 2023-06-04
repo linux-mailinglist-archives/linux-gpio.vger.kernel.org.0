@@ -2,102 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EF0D721677
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 13:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B78A672173C
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 15:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231364AbjFDL6K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jun 2023 07:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39684 "EHLO
+        id S231195AbjFDNMO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Jun 2023 09:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjFDL6J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 07:58:09 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE14A4;
-        Sun,  4 Jun 2023 04:58:08 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3f7f864525fso41959461cf.1;
-        Sun, 04 Jun 2023 04:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685879888; x=1688471888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T18QKAipN8vW8fTZCSkrcFHiXgR2OFXGMISa9G5pUdU=;
-        b=Tf5/QIh10fPABekvmYtfjVYVrCHUeFdeAJhYChgKRxDpBZaBGDVaUTYjZYbelx6gyY
-         /GubRiLI2i04OlgJ7x4oFquj6ehS926hjMqKCij95031EwHkBTfdje0BV2+rwUsVLEun
-         yyXgXWWCPZ8mlTRprYLzr7fGkQcj6SOrF6gj6CEKT9kqynhljWotO9SRlN4dOLRPixJT
-         Dv7AvdmKtTtXU6B3WCtvQ1Iz3MDxG6ghQ6898AmXEYH0LoDY8I41YD3uClKLo8fvpPrK
-         LjRrn1YkteeW/9dnkxipeb0SQgW0QfYeil4VB4wgsY0Ha4GwlOynpmy0xrrY/ahpvGOG
-         HX1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685879888; x=1688471888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T18QKAipN8vW8fTZCSkrcFHiXgR2OFXGMISa9G5pUdU=;
-        b=URJjoCZZZZRYMX+nEqchjTJROO9rrMKRlH6YSb7/oHk5anQeneQqCMidZ4G3EbDFXc
-         ZalxSwuLcGC1WNEMmRlbF7yqhKpu6IUy81omma+gm4iQhsyGyGOJiMWcOzbhXPJw/ToC
-         0m8bcXm2LP213Hf5cFPuy9KH5h2h5TWJNfieVTFAJ6XTjRjDKahudAFSTUx5iJhfHEdB
-         FeBKfLhMjQZ2cQ5nmqKz5BVK8cDmbKXC9KY+3VMpizw2ayW61OFxelURZBAWnuKG+S73
-         u5VwYG5ZBnuuCnON4U/pZr0PXYsYtg5xD70xDMq4gL65lZuPP9Uaf8wd+ikuKHVd6EIv
-         nlrQ==
-X-Gm-Message-State: AC+VfDxYngUo3KFJVtRU33UHLLBhqiT7Q+J/3e+G9Hqv1Nl/V4TUOg7b
-        7kKeFor1s+7eGql+5NJ24FfjwIIWu3iRuo5qAtU=
-X-Google-Smtp-Source: ACHHUZ6fLvXz6Td/lh8jNS6ZNkXReU+YUmxjbGH4qHdHOUzIZfT7IJkWjTozo2wMAONw1IdmQ7ka+PV9zVx13/qOT+c=
-X-Received: by 2002:a05:622a:291:b0:3f8:698b:34a3 with SMTP id
- z17-20020a05622a029100b003f8698b34a3mr3555140qtw.67.1685879887741; Sun, 04
- Jun 2023 04:58:07 -0700 (PDT)
+        with ESMTP id S229788AbjFDNMN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 09:12:13 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1622B8;
+        Sun,  4 Jun 2023 06:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685884332; x=1717420332;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dO9+hudmBeE13l32Rylh0J5QaZhOfbdLqdQbEuq7Ixc=;
+  b=iXAUuG4aunE4Pky+EBDpPBfr+J6bAZFwYXMJ38YAKd4QXpAvDzQCXmxb
+   ZTWvrLuLdPQV8kh5Xln0Ssvmt4mLq12I/5UdeRiKDxAwr36/TFAPdchMI
+   CEkVg3w5N3NXdcyuoImJOuwzGKd3GKUdg5FPNEdJMafHdX98sE33nR9hJ
+   G468H2BSCcafkaLlS0X8Tzd+J52TnerK7ce2AyHiDFw2N4VVr+/k1esQ6
+   PFbhiGIeNGxkZoHMpufXWw2DuOv/N/FKpP/V4z+fYPtXAYRaiWYfiTKJa
+   o4i+m6ik2LV7B36exO+8EDZXp4+a50VjtH04LlnmAPjvLD6vgfU20UzPE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="422008643"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="422008643"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 06:12:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="778251865"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="778251865"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2023 06:12:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2F082204; Sun,  4 Jun 2023 16:12:17 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/2] pinctrl: Duplicate user memory in one go in pinmux_select()
+Date:   Sun,  4 Jun 2023 16:12:14 +0300
+Message-Id: <20230604131215.78847-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-References: <20230602152626.284324-1-hugo@hugovil.com> <20230602152626.284324-6-hugo@hugovil.com>
- <2023060454-cotton-paramount-e33e@gregkh>
-In-Reply-To: <2023060454-cotton-paramount-e33e@gregkh>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 4 Jun 2023 14:57:31 +0300
-Message-ID: <CAHp75Ve6W-hcB4YAeKukgv-uOEzBY7Tx5Sdf3doTRYKzNPcVGw@mail.gmail.com>
-Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO configuration
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Hugo Villeneuve <hugo@hugovil.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 4, 2023 at 10:47=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
-> On Fri, Jun 02, 2023 at 11:26:21AM -0400, Hugo Villeneuve wrote:
+Current code is suboptimal in three ways:
+1) it explicitly terminates the string which is not needed;
+2) it might provoke additional faults, because asked lenght might be
+   bigger than the real one;
+3) it consumes more than needed lines in the source.
 
-...
+Instead of using kmalloc() + strncpy_from_user() + terminating, just
+utilize memdup_user_nul().
 
-> > +static u8 sc16is7xx_setup_mctrl_ports(struct device *dev)
->
-> This returns what, mctrl?  If so, please document that, it doesn't look
-> obvious.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinmux.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-Good suggestion. Because I also stumbled over the returned type.
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 021382632608..2d2f3bd164d5 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -692,14 +692,9 @@ static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
+ 	if (len > PINMUX_SELECT_MAX)
+ 		return -ENOMEM;
+ 
+-	buf = kzalloc(PINMUX_SELECT_MAX, GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
+-
+-	ret = strncpy_from_user(buf, user_buf, PINMUX_SELECT_MAX);
+-	if (ret < 0)
+-		goto exit_free_buf;
+-	buf[len-1] = '\0';
++	buf = memdup_user_nul(user_buf, len);
++	if (IS_ERR(buf))
++		return PTR_ERR(buf);
+ 
+ 	/* remove leading and trailing spaces of input buffer */
+ 	gname = strstrip(buf);
+-- 
+2.40.0.1.gaa8946217a0b
 
->  And as the kernel test robot reported, you do nothing with the
-> return value so why compute it?
-
-It seems that the entire function and respective call has to be moved
-under #ifdef CONFIG_GPIOLIB.
-
-> And you have a real port here, no need to pass in a "raw" struct device,
-> right?
-
-
---=20
-With Best Regards,
-Andy Shevchenko
