@@ -2,54 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C8572155D
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 09:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 797ED72161D
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 12:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbjFDHrt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jun 2023 03:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
+        id S229940AbjFDKca (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Jun 2023 06:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229715AbjFDHrt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 03:47:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9DDB3;
-        Sun,  4 Jun 2023 00:47:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7743560B88;
-        Sun,  4 Jun 2023 07:47:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 606D7C433D2;
-        Sun,  4 Jun 2023 07:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1685864866;
-        bh=D2OVSrVHiAMgPa24HKPA2T314VF7Y1xFCLg2FDyuZAM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qbQLNohmRlqyMmX2ftht6Jnyp6p/YX7fbnG5nMW+JLsPziKoDuVunPx1yvt49nIuF
-         f0LH3bn5z0CLkyK1lpmuM6W27YLY082zEcUm9kVu8iFRJOLKDdIICiWqyc+kkDmJB5
-         HL1UHpjSS+ABSW6UcidJT/VlhSsO8EVMhj2GfXBU=
-Date:   Sun, 4 Jun 2023 09:47:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-Message-ID: <2023060454-cotton-paramount-e33e@gregkh>
-References: <20230602152626.284324-1-hugo@hugovil.com>
- <20230602152626.284324-6-hugo@hugovil.com>
+        with ESMTP id S230385AbjFDKc3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 06:32:29 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D511AF
+        for <linux-gpio@vger.kernel.org>; Sun,  4 Jun 2023 03:32:27 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9741a0fd134so624186766b.0
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Jun 2023 03:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685874745; x=1688466745;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gQUNHUJDoslvptjth9v1DI1C+JDDptVC9mC980ftiRQ=;
+        b=Jxsgc/H04yUrlsLGMFulAj1Y2/UKO5PvwDgl9LNKrYbdZszlCJTvkR0GpAD2146xEF
+         Uv6Wm2/7eOe0dez1+/YNuAT1uOG0DW4SwHivPThafMcWKx9Oy6eERQAJIcI+WRThZopU
+         OCxMQGFQt6fswXYGzmamvDhUmrJb+ulJAU5tfxDtq6KiCViPP/Z1xbkqt7pKkw2EgP7P
+         WtMCD4DP9W6VYQvT9NQ1hp4rgXdF41DpoLSMTxsJbOldbP/NTTu2IcqPWpsBz8B4AyD2
+         0lsyLMjZYZpIAPZWpgFjHr9N2+doOeAEaHt9U+WEoJb5r0uSc8snamUcQuK5yKctsuhj
+         nC7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685874745; x=1688466745;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQUNHUJDoslvptjth9v1DI1C+JDDptVC9mC980ftiRQ=;
+        b=KHsz0ID3IyonHJh1ie+zrYYy/55VV4xREQlfcFHahEIQuNul9vMWs43u3Ve1BxHujZ
+         iU11YM7RUtzg0jh4mWrDwUJHofUF/zQ62gJnMutlUFj23RUWNWGVT70vw+0G4F51ATLj
+         e6j6J+VIb5NBEZlABFloMJbtrwjCvMGMqMw0KJpFWB/sJJ+12qi4JoEzZGZcuNSwNScX
+         vtM87o4teELWXbZ+x9wHPb3zLcdUlAYycCP1tHFDOzuE70EnXJ/yatYThMf9XUioziAe
+         FuyEcoFKsHQuDDodoFjMcI9uQxBUNQBeQrJEhveYhDyWIHB+j6hr72SPBAuZ22dsNfOL
+         EJKg==
+X-Gm-Message-State: AC+VfDzQFJdY8eraM97vNDy+yUSJ2zUdnxh3Y+LN/fBSvUs3f2jHADGn
+        0uFt0R3Kd22QrxfEOn0U8keN/w==
+X-Google-Smtp-Source: ACHHUZ5gOQxAW/KGGTeRoUvUnw5zuV3SROq0N6bXvu/xKhL2M2v0X3R9B7mPqRh6ssbSz1Vht2a1vw==
+X-Received: by 2002:a17:907:745:b0:974:7713:293f with SMTP id xc5-20020a170907074500b009747713293fmr3686547ejb.41.1685874745565;
+        Sun, 04 Jun 2023 03:32:25 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id g6-20020a170906594600b009745e1b6226sm2899904ejr.125.2023.06.04.03.32.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Jun 2023 03:32:25 -0700 (PDT)
+Message-ID: <772cf729-e42d-14ac-f9d5-31cf071bd58d@linaro.org>
+Date:   Sun, 4 Jun 2023 12:32:23 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230602152626.284324-6-hugo@hugovil.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: Document Tegra234 pin
+ controllers
+Content-Language: en-US
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+References: <20230602141445.3012550-1-thierry.reding@gmail.com>
+ <20230602141445.3012550-2-thierry.reding@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230602141445.3012550-2-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,188 +82,103 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 02, 2023 at 11:26:21AM -0400, Hugo Villeneuve wrote:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On 02/06/2023 16:14, Thierry Reding wrote:
+> From: Prathamesh Shete <pshete@nvidia.com>
 > 
-> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> changed the function of the GPIOs pins to act as modem control
-> lines without any possibility of selecting GPIO function.
+> Tegra234 contains two pin controllers. Document their compatible strings
+> and describe the list of pins and functions that they provide.
 > 
-> As a consequence, applications that depends on GPIO lines configured
-> by default as GPIO pins no longer work as expected.
-> 
-> Also, the change to select modem control lines function was done only
-> for channel A of dual UART variants (752/762). This was not documented
-> in the log message.
-> 
-> Allow to specify GPIO or modem control line function in the device
-> tree, and for each of the ports (A or B).
-> 
-> Do so by using the new device-tree property named
-> "modem-control-line-ports" (property added in separate patch).
-> 
-> When registering GPIO chip controller, mask-out GPIO pins declared as
-> modem control lines according to this new "modem-control-line-ports"
-> DT property.
-> 
-> Boards that need to have GPIOS configured as modem control lines
-> should add that property to their device tree. Here is a list of
-> boards using the sc16is7xx driver in their device tree and that may
-> need to be modified:
->     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->     mips/boot/dts/ingenic/cu1830-neo.dts
->     mips/boot/dts/ingenic/cu1000-neo.dts
-> 
-> Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> Cc: <stable@vger.kernel.org> # 6.1.x: 35210b22 dt-bindings: sc16is7xx: Add property to change GPIO function
-> Cc: <stable@vger.kernel.org> # 6.1.x: 7d61ca47 serial: sc16is7xx: refactor GPIO controller registration
-> Cc: <stable@vger.kernel.org> # 6.1.x: 322470ed serial: sc16is7xx: mark IOCONTROL register as volatile
-> Cc: <stable@vger.kernel.org> # 6.1.x: a0077362 serial: sc16is7xx: fix broken port 0 uart init
-> Cc: <stable@vger.kernel.org> # 6.1.x
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/tty/serial/sc16is7xx.c | 103 ++++++++++++++++++++++++++-------
->  1 file changed, 82 insertions(+), 21 deletions(-)
+> Changes in v4:
+> - move "$ref" and "required" properties into more standard locations
+> - use "additionalProperties: true" for common bindings
+> - use unevaluatedProperties for specific bindings
+> - only allow valid per-SoC pin group properties
+> - drop unnecessary or duplicated properties
 > 
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index 7d50674d2d0e..edc83f5f6340 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -236,7 +236,8 @@
->  
->  /* IOControl register bits (Only 750/760) */
->  #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
-> -#define SC16IS7XX_IOCONTROL_MODEM_BIT	(1 << 1) /* Enable GPIO[7:4] as modem pins */
-> +#define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
-> +#define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
->  #define SC16IS7XX_IOCONTROL_SRESET_BIT	(1 << 3) /* Software Reset */
->  
->  /* EFCR register bits */
-> @@ -301,12 +302,12 @@
->  /* Misc definitions */
->  #define SC16IS7XX_FIFO_SIZE		(64)
->  #define SC16IS7XX_REG_SHIFT		2
-> +#define SC16IS7XX_GPIOS_PER_BANK	4
->  
->  struct sc16is7xx_devtype {
->  	char	name[10];
->  	int	nr_gpio;
->  	int	nr_uart;
-> -	int	has_mctrl;
->  };
->  
->  #define SC16IS7XX_RECONF_MD		(1 << 0)
-> @@ -336,6 +337,7 @@ struct sc16is7xx_port {
->  	struct clk			*clk;
->  #ifdef CONFIG_GPIOLIB
->  	struct gpio_chip		gpio;
-> +	unsigned long			gpio_valid_mask;
->  #endif
->  	unsigned char			buf[SC16IS7XX_FIFO_SIZE];
->  	struct kthread_worker		kworker;
-> @@ -447,35 +449,30 @@ static const struct sc16is7xx_devtype sc16is74x_devtype = {
->  	.name		= "SC16IS74X",
->  	.nr_gpio	= 0,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 0,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is750_devtype = {
->  	.name		= "SC16IS750",
-> -	.nr_gpio	= 4,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is752_devtype = {
->  	.name		= "SC16IS752",
-> -	.nr_gpio	= 0,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 2,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is760_devtype = {
->  	.name		= "SC16IS760",
-> -	.nr_gpio	= 4,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 1,
-> -	.has_mctrl	= 1,
->  };
->  
->  static const struct sc16is7xx_devtype sc16is762_devtype = {
->  	.name		= "SC16IS762",
-> -	.nr_gpio	= 0,
-> +	.nr_gpio	= 8,
->  	.nr_uart	= 2,
-> -	.has_mctrl	= 1,
->  };
->  
->  static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
-> @@ -1350,16 +1347,45 @@ static int sc16is7xx_gpio_direction_output(struct gpio_chip *chip,
->  	return 0;
->  }
->  
-> -static int sc16is7xx_setup_gpio_chip(struct device *dev)
-> +static int sc16is7xx_gpio_init_valid_mask(struct gpio_chip *chip,
-> +					  unsigned long *valid_mask,
-> +					  unsigned int ngpios)
-> +{
-> +	struct sc16is7xx_port *s = gpiochip_get_data(chip);
+> Changes in v3:
+> - split up into multiple files (suggested by Krzysztof)
+> - do not permit underscore in pinmux node names
+> - reword commit message
+> 
+>  .../pinctrl/nvidia,tegra234-pinmux-aon.yaml   |  59 ++++++++
+>  .../nvidia,tegra234-pinmux-common.yaml        |  66 +++++++++
+>  .../pinctrl/nvidia,tegra234-pinmux.yaml       | 139 ++++++++++++++++++
+>  3 files changed, 264 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml
+> new file mode 100644
+> index 000000000000..4ec969451eec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nvidia,tegra234-pinmux-aon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	*valid_mask = s->gpio_valid_mask;
+> +title: NVIDIA Tegra234 AON Pinmux Controller
 > +
-> +	return 0;
-> +}
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Jon Hunter <jonathanh@nvidia.com>
 > +
-> +static int sc16is7xx_setup_gpio_chip(struct device *dev, u8 mctrl_mask)
->  {
->  	struct sc16is7xx_port *s = dev_get_drvdata(dev);
->  
->  	if (!s->devtype->nr_gpio)
->  		return 0;
->  
-> +	switch (mctrl_mask) {
-> +	case 0:
-> +		s->gpio_valid_mask = GENMASK(7, 0);
-> +		break;
-> +	case SC16IS7XX_IOCONTROL_MODEM_A_BIT:
-> +		s->gpio_valid_mask = GENMASK(3, 0);
-> +		break;
-> +	case SC16IS7XX_IOCONTROL_MODEM_B_BIT:
-> +		s->gpio_valid_mask = GENMASK(7, 4);
-> +		break;
-> +	default:
-> +		break;
-> +	}
+> +$ref: nvidia,tegra234-pinmux-common.yaml
 > +
-> +	if (s->gpio_valid_mask == 0)
-> +		return 0;
+> +properties:
+> +  compatible:
+> +    const: nvidia,tegra234-pinmux-aon
 > +
->  	s->gpio.owner		 = THIS_MODULE;
->  	s->gpio.parent		 = dev;
->  	s->gpio.label		 = dev_name(dev);
-> +	s->gpio.init_valid_mask	 = sc16is7xx_gpio_init_valid_mask;
->  	s->gpio.direction_input	 = sc16is7xx_gpio_direction_input;
->  	s->gpio.get		 = sc16is7xx_gpio_get;
->  	s->gpio.direction_output = sc16is7xx_gpio_direction_output;
-> @@ -1371,6 +1397,44 @@ static int sc16is7xx_setup_gpio_chip(struct device *dev)
->  }
->  #endif
->  
-> +static u8 sc16is7xx_setup_mctrl_ports(struct device *dev)
+> +patternProperties:
+> +  "^pinmux(-[a-z0-9-]+)?$":
+> +    type: object
+> +
+> +    # pin groups
+> +    additionalProperties:
+> +      properties:
+> +        nvidia,pins:
+> +          items:
+> +            enum: [ can0_dout_paa0, can0_din_paa1, can1_dout_paa2,
+> +                    can1_din_paa3, can0_stb_paa4, can0_en_paa5,
+> +                    soc_gpio49_paa6, can0_err_paa7, can1_stb_pbb0,
+> +                    can1_en_pbb1, soc_gpio50_pbb2, can1_err_pbb3,
+> +                    spi2_sck_pcc0, spi2_miso_pcc1, spi2_mosi_pcc2,
+> +                    spi2_cs0_pcc3, touch_clk_pcc4, uart3_tx_pcc5,
+> +                    uart3_rx_pcc6, gen2_i2c_scl_pcc7, gen2_i2c_sda_pdd0,
+> +                    gen8_i2c_scl_pdd1, gen8_i2c_sda_pdd2,
+> +                    sce_error_pee0, vcomp_alert_pee1,
+> +                    ao_retention_n_pee2, batt_oc_pee3, power_on_pee4,
+> +                    soc_gpio26_pee5, soc_gpio27_pee6, bootv_ctl_n_pee7,
+> +                    hdmi_cec_pgg0,
+> +                    # drive groups
+> +                    drive_touch_clk_pcc4, drive_uart3_rx_pcc6,
+> +                    drive_uart3_tx_pcc5, drive_gen8_i2c_sda_pdd2,
+> +                    drive_gen8_i2c_scl_pdd1, drive_spi2_mosi_pcc2,
+> +                    drive_gen2_i2c_scl_pcc7, drive_spi2_cs0_pcc3,
+> +                    drive_gen2_i2c_sda_pdd0, drive_spi2_sck_pcc0,
+> +                    drive_spi2_miso_pcc1, drive_can1_dout_paa2,
+> +                    drive_can1_din_paa3, drive_can0_dout_paa0,
+> +                    drive_can0_din_paa1, drive_can0_stb_paa4,
+> +                    drive_can0_en_paa5, drive_soc_gpio49_paa6,
+> +                    drive_can0_err_paa7, drive_can1_stb_pbb0,
+> +                    drive_can1_en_pbb1, drive_soc_gpio50_pbb2,
+> +                    drive_can1_err_pbb3, drive_sce_error_pee0,
+> +                    drive_batt_oc_pee3, drive_bootv_ctl_n_pee7,
+> +                    drive_power_on_pee4, drive_soc_gpio26_pee5,
+> +                    drive_soc_gpio27_pee6, drive_ao_retention_n_pee2,
+> +                    drive_vcomp_alert_pee1, drive_hdmi_cec_pgg0 ]
+> +
+> +unevaluatedProperties: false
 
-This returns what, mctrl?  If so, please document that, it doesn't look
-obvious.  And as the kernel test robot reported, you do nothing with the
-return value so why compute it?
+I missed in the previous review, apologies, can you add here example
+DTS? Each device binding (except common parts) is expected to have example.
 
-And you have a real port here, no need to pass in a "raw" struct device,
-right?
+Best regards,
+Krzysztof
 
-thanks,
-
-greg k-h
