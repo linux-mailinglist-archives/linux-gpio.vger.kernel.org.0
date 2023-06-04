@@ -2,117 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F25F72193C
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 20:30:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29BA5721989
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 21:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232251AbjFDSaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jun 2023 14:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38912 "EHLO
+        id S230404AbjFDTbm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Jun 2023 15:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231204AbjFDSaC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 14:30:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AC0AB;
-        Sun,  4 Jun 2023 11:30:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9BE1F60EAB;
-        Sun,  4 Jun 2023 18:30:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88032C433EF;
-        Sun,  4 Jun 2023 18:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1685903401;
-        bh=kxsomFjsOAjnBRkBjyMWAFWDP5rHAxHvBrACL6M2log=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LiYZhJr09wNN2Z3m5zJBGOXol0IkquTe0Y239i4CvEU4oPvGUJWJ097Dr1TM3n/2Y
-         WbiTNydY2FNGqyB9Rkm0H3i5AGoftW0MDFcsDonqCFS2g9Bamcvkby5KlUtwUCgKXa
-         I6YZBV37/vlU6IghSGwKgnThF07K8B9oIixECHeY=
-Date:   Sun, 4 Jun 2023 20:29:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
+        with ESMTP id S229670AbjFDTbm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 15:31:42 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1525EBD;
+        Sun,  4 Jun 2023 12:31:41 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-75d4dd6f012so151999685a.2;
+        Sun, 04 Jun 2023 12:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685907100; x=1688499100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YhHt1Igy5XGokOhDhTq6mJz2pRBSZ6AO9ZY+vSnJL5c=;
+        b=bjReZaID2MFIkZ43YlEG6qrAJCmtsfoggepopslbsdx9KdAg2rtBdb5RaVRMaGuLZp
+         i4ld6ELYnY9l9twnqNvzAIV9jMiphUg0zgIx0NMs1XhwYLP9BURjFysnKIZmEwYQecAY
+         upzxRvvaIhsjhtvi+Xs+iTDSHSCpwhCHY42a1v+g182WMOhOtaeLVD8SUpERWWbR6w4Z
+         WyYnCXf4I3ajvYriMZTuctlU7IcLHWPluALBXQ+N8nJkhOnIghIlzU2Ps/ydfr7RHL+B
+         YbZ8ieT4meKn7qVmsPB7kEivKubzuTx08jhnvqcnM4pG+TJJzgYMSmgL9XqHCv0ho4vV
+         lxTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685907100; x=1688499100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YhHt1Igy5XGokOhDhTq6mJz2pRBSZ6AO9ZY+vSnJL5c=;
+        b=VWXVT2GFdw3ReTKJRd0B5J/fy+0FfaC8fBjpbmhTjp86Qc/PuwpgqdwIjnzU+t/ivp
+         r+dPT7mv7XeF2D9syVrlnjsVsHF+y4xdh6eNi8z90+Vf5x+EBo+J7qctn7z0JxZYbguq
+         drLSO5uG4e3LMnKqcUxLuPLLecJsYGh9mFKN/v5EgFsOUUHxC99CY47Rr5rdbF4GzkGg
+         W/CoqDRc4Xs3smh/LGkbX4VKj1zh5ZlVZHjdTWvcgX2uXgT6PyL7EE4wJA4S59ZV0/Ez
+         fyA0Ku8GNLJzKjgaaM3gEmT/T6aPxs4DSftUuq9y9mdp+mlD2AOD+vgcM6s4KoAOhvmq
+         IqaA==
+X-Gm-Message-State: AC+VfDxQthQjeujordYYeZ+nMZ6xNVs1HPKP4emC6cFtFpbXyFKc4wS/
+        tRimc1RQhwraXeUxxhN+aPyxTf7FzneDp1WoDDs=
+X-Google-Smtp-Source: ACHHUZ6MlIIw7A2FKKKISZs9OPXU4Dcn/MhmC2rODXVKZdRXKFeyPf6aHG+HT2U7NC3LGgFRVY6xoQFh4CvO2DDHJ0k=
+X-Received: by 2002:a05:620a:19a5:b0:75d:a13:ae74 with SMTP id
+ bm37-20020a05620a19a500b0075d0a13ae74mr19736789qkb.36.1685907100148; Sun, 04
+ Jun 2023 12:31:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230602152626.284324-1-hugo@hugovil.com> <20230602152626.284324-6-hugo@hugovil.com>
+ <2023060454-cotton-paramount-e33e@gregkh> <CAHp75Ve6W-hcB4YAeKukgv-uOEzBY7Tx5Sdf3doTRYKzNPcVGw@mail.gmail.com>
+ <20230604134459.3c3844012e9714fa2a61e642@hugovil.com>
+In-Reply-To: <20230604134459.3c3844012e9714fa2a61e642@hugovil.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 4 Jun 2023 22:31:04 +0300
+Message-ID: <CAHp75VeWFPBmsD8zsSAaQGNNXtfgLtQuM9AMGfLPk-6p0VW=Pg@mail.gmail.com>
+Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO configuration
 To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
         tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
         linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-Message-ID: <2023060406-scarcity-clear-cc56@gregkh>
-References: <20230602152626.284324-1-hugo@hugovil.com>
- <20230602152626.284324-6-hugo@hugovil.com>
- <2023060454-cotton-paramount-e33e@gregkh>
- <20230604134344.73dc3cbb57d335d4a0b4b33a@hugovil.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230604134344.73dc3cbb57d335d4a0b4b33a@hugovil.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 04, 2023 at 01:43:44PM -0400, Hugo Villeneuve wrote:
-> Here is what I suggest to silence the warning:
-> 
-> 	mctrl_mask = sc16is7xx_setup_mctrl_ports(dev);
-> 
-> #ifdef CONFIG_GPIOLIB
-> 	ret = sc16is7xx_setup_gpio_chip(dev, mctrl_mask);
-> 	if (ret)
-> 		goto out_thread;
-> #else
-> 	(void) mctrl_mask;
-> #endif
+On Sun, Jun 4, 2023 at 8:45=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> w=
+rote:
+>
+> On Sun, 4 Jun 2023 14:57:31 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> > On Sun, Jun 4, 2023 at 10:47=E2=80=AFAM Greg KH <gregkh@linuxfoundation=
+.org> wrote:
+> > > On Fri, Jun 02, 2023 at 11:26:21AM -0400, Hugo Villeneuve wrote:
+> >
+> > ...
+> >
+> > > > +static u8 sc16is7xx_setup_mctrl_ports(struct device *dev)
+> > >
+> > > This returns what, mctrl?  If so, please document that, it doesn't lo=
+ok
+> > > obvious.
+> >
+> > Good suggestion. Because I also stumbled over the returned type.
+> >
+> > >  And as the kernel test robot reported, you do nothing with the
+> > > return value so why compute it?
+> >
+> > It seems that the entire function and respective call has to be moved
+> > under #ifdef CONFIG_GPIOLIB.
+>
+> Hi,
+> it cannot. See my explanations in response to Greg's comments.
 
-Eeek,  no, please no...
+Then as Greg suggested, store in the structure and make this function
+to return an error code (with int), with this amendment you don't need
+to add a comment about the returned variable anymore.
 
-First off, please don't put #ifdef in .c files if at all possible.
-Secondly, that (void) craziness is just that.  Rework this to not be an
-issue some other way please.
-
-> I could also store (define new variable) mctrl_mask directly inside struct sc16is7xx_port...
-
-Sure, that sounds best.
-
-> > And you have a real port here, no need to pass in a "raw" struct device,
-> > right?
-> 
-> The function operates globally on both ports (or nr_uart), not just a single port. That is why I pass the "raw" struct device, in order to extract the 
-> struct sc16is7xx_port from it:
-> 
->     struct sc16is7xx_port *s = dev_get_drvdata(dev);
-> 
-> Inside the function, I also need the "raw" struc device. If we pass a struct sc16is7xx_port to the function, then I can get the "raw" struc device with this:
-> 
-> static u8 sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s)
-> {
-> 	struct device *dev = &s->p[0].port.dev;
-> 
-> But I find this more obfuscated and hard to understand than to simply pass a "raw" struct device...
-
-You should never need a "raw" struct device for stuff (if so, something
-is really odd).  Except for error messages, but that's not really a big
-deal, right?
-
-Don't pass around struct device in a driver, use the real types as you
-know you have it and it saves odd casting around and it just doesn't
-look safe at all to do so.
-
-And if you have that crazy s->p.... stuff in multiple places, then
-perhaps you might want to rethink the structure somehow?  Or at the very
-least, write an inline function to get it when needed.
-
-Also, meta comment, you might want to use some \n characters in your
-emails, your lines are really long :)
-
-thanks,
-
-greg k-h
+--=20
+With Best Regards,
+Andy Shevchenko
