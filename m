@@ -2,262 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77AC97217A1
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 16:21:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD075721852
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jun 2023 17:54:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbjFDOVh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jun 2023 10:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47938 "EHLO
+        id S231313AbjFDPye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Jun 2023 11:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjFDOVg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 10:21:36 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF88CF
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Jun 2023 07:21:33 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-650c89c7e4fso3834800b3a.0
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jun 2023 07:21:33 -0700 (PDT)
+        with ESMTP id S229904AbjFDPyd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 11:54:33 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1727BB;
+        Sun,  4 Jun 2023 08:54:31 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5147e8972a1so5975198a12.0;
+        Sun, 04 Jun 2023 08:54:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685888492; x=1688480492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W82R9xTXkgWUZyUHrcYJ5Xhh6M0jvmlISbrilJbcZwE=;
-        b=TtYqfHQnJ8KEAaePs7MTZH8Bo/J2ykL9kZg20w5qJCO6vQ9h673b0n1xslp2bL7JY8
-         ST8Csr0uPJurF9jKok7Kjr8YnDcyUbI1o4C9XZdDAS/cVOOpi18jKmiCmuwG6H1Wo8bp
-         XL4Qj9L04bVJKTjLk/Oy4MafORoduIuA97Wl++8Jx5VSMuB1iRWpZg7sH86/cMFibds3
-         N+3pVEVXjvFuSyB9wCKbbAoYnS5zPah8ipYSer3dgHDnQKiVHnBKDnWzhMkp4Bs9Eptp
-         o9zrTm5NfDmhlMaRS9sPuuxqKSiUZtFTctdyBK1FIcyoU51+AQjm86uFLa3c8RtjQakh
-         eIAQ==
+        d=gmail.com; s=20221208; t=1685894070; x=1688486070;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TsvcyukdSS1lKPeAFb0MO21Iif9mAo0wy8+BZHk6XCA=;
+        b=r9RnHmU6Pa0FtsM/qHVFqFiCYlBYyvtIkLeKoNPRIk8smrMsqYFJGWCQjT7VU72eDe
+         BlragftM9BcqClhhfhrjXu+KMSBuqSe+KNwPFU0KBNJlL713GE9o6QJnGFo2MVVjPP+P
+         tQT4bqbQqIIjRH39Ls+d3YC1mLwWHW3tHKnUmfhzbMfPeeq5TIZAMtwSAuYi3ZYPbltW
+         zBx3Pm7HZhbXZBrcB4iAF+MkhkDQusDxPerLMNjJ9M9evb0iQB/WGEScO2q3pwVkwkGJ
+         xiks1hYnTowy+2gYSWDJ+qp4ig7OfRGINcmiTLnuJchPscxcbqDF/ro1Gt8cNoeiUHiy
+         SK0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685888492; x=1688480492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W82R9xTXkgWUZyUHrcYJ5Xhh6M0jvmlISbrilJbcZwE=;
-        b=eQGzGJR0YM40wZOoFHfscsuVBrRBEGby26rwzaf0VBFBMQSsnzCcpSk0bdnPUzgWme
-         P25pBpZFErPPOz5COdqVMEWMNnJXPDCJPIlIyFnQTAyKJwZ8gzg2/G5Msu5bEkTyuri2
-         rbFibWjFAT3Oic3Ce0GcjyKBNFEO/TBVOh5Ui5kGcB8FNxoT7td3LJ6Gd5WUBeq1eCdx
-         DXrqc3pR6NagbfS6iMgIhFKETXguJ6m0/LcmYpqAxHcE2jjRDQ0KIKmHvH6qkI/PGcuc
-         Wa65/IhivOjcvrahBqq5R7Xpim2+UJJ9o3U2lfi8aycPJSJEMH9dEHCU3Hxt6DoM9MOa
-         QvCg==
-X-Gm-Message-State: AC+VfDzKBhH24wQLnc8LgdetpDgNtne/3/fg6/FhD1NoF5Qlg0a1T1sM
-        slFky6Dbil0dM7n0vCDngc+ximZngu0=
-X-Google-Smtp-Source: ACHHUZ5LsQ040mN2/4B/bVxpjcYgA7oCOHMT8HzNRZO5rO1U12+TtzTwAj9NaKA+xKGcsL8DKt4LlQ==
-X-Received: by 2002:a05:6a00:2d1a:b0:652:c336:e63e with SMTP id fa26-20020a056a002d1a00b00652c336e63emr9445948pfb.31.1685888492274;
-        Sun, 04 Jun 2023 07:21:32 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id j9-20020a62e909000000b0065992d334f4sm709356pfh.177.2023.06.04.07.21.30
+        d=1e100.net; s=20221208; t=1685894070; x=1688486070;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TsvcyukdSS1lKPeAFb0MO21Iif9mAo0wy8+BZHk6XCA=;
+        b=QdjS9YW+NB/nZfOXhs5NvVuHKMm+ZsgU88hN7z3SHbZX49pfaJOf/yYd7KX5+ZJjkq
+         DXndWVuz2i+vSckuvlupYlCwVWUfOIJY/KXoHFUTjei9QO1nWUSs9Wgns+ZZ6Wx8ykLt
+         RzmpHIX3ZDUAiADbVtpMJHT0jk0uy1l1aPvSyp4MaFLgqxUob21WxbDbGnJr9zSAS+VI
+         mlWem+Cgp+TuWH1uflprDVuWcJeXnKFDYrwfvMcU9NdsA9QAn7hoDUJAuEvqa6zbow3u
+         PpPQKQdV1E/hm0aqz9nr5m+71BH70okfp6MZ4HDoXnjNwkpX8fyHWsDrSt09KHzSKQK2
+         O5Mg==
+X-Gm-Message-State: AC+VfDytwp4pLZVnnfiRdfjebawSFrLgcsIOaK272Er3P5dwV1A3LPlH
+        7s+jYlBF3kiOuaGQZZrxtwY=
+X-Google-Smtp-Source: ACHHUZ6AHXuZcLeVYAiKN3Lakw7/5eyPw2g9gXmYKU2Z87ULJVZcNauonQPfi8yZtMpFNZvTXucpWg==
+X-Received: by 2002:a17:907:6d08:b0:974:5e2c:8721 with SMTP id sa8-20020a1709076d0800b009745e2c8721mr4687955ejc.38.1685894070095;
+        Sun, 04 Jun 2023 08:54:30 -0700 (PDT)
+Received: from giga-mm.home ([2a02:1210:8629:800:82ee:73ff:feb8:99e3])
+        by smtp.gmail.com with ESMTPSA id h21-20020a170906111500b00974530bd213sm3241020eja.143.2023.06.04.08.54.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jun 2023 07:21:31 -0700 (PDT)
-Date:   Sun, 4 Jun 2023 22:21:27 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Gabriel Matni <gabriel.matni@exfo.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod][PATCH V2] tools: gpiomon/gpionotify: add idle-timeout
- option
-Message-ID: <ZHyd5+7rnRD8OcJU@sol>
-References: <PH8PR11MB714268EC29F5D6A1C1CF6B8A864CA@PH8PR11MB7142.namprd11.prod.outlook.com>
+        Sun, 04 Jun 2023 08:54:29 -0700 (PDT)
+Message-ID: <1492a131cd474c47e2a2b14defd46284f695b0ef.camel@gmail.com>
+Subject: Re: [PATCH v1 00/43] ep93xx device tree conversion
+From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
+To:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Christophe Kerello <christophe.kerello@foss.st.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+        Jean Delvare <jdelvare@suse.de>, Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Le Moal <dlemoal@kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Walker Chen <walker.chen@starfivetech.com>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Michael Peters <mpeters@embeddedTS.com>,
+        Kris Bahnsen <kris@embeddedTS.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, netdev@vger.kernel.org
+Date:   Sun, 04 Jun 2023 17:54:27 +0200
+In-Reply-To: <20230601053546.9574-1-nikita.shubin@maquefel.me>
+References: <20230601053546.9574-1-nikita.shubin@maquefel.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH8PR11MB714268EC29F5D6A1C1CF6B8A864CA@PH8PR11MB7142.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 04, 2023 at 02:04:21PM +0000, Gabriel Matni wrote:
-> From: Gabriel Matni <gabriel.matni@exfo.com>
-> 
-> Add an idle timeout option. It allows the tool to gracefully exit upon
-> expiry.  This option is handy for scripting as it allows the developer to
-> take an action when no event has been detected for a given period.
-> 
+Hi Nikita,
 
-"exit upon expiry" is vague - one of the reasons I wanted the option
-renamed --idle-timeout.
+On Thu, 2023-06-01 at 08:33 +0300, Nikita Shubin wrote:
+> This series aims to convert ep93xx from platform to full device tree supp=
+ort.
+>=20
+> Alexander, Kris - there are some significant changes in clk and pinctrl s=
+o can i ask you to tests all once again.
 
-So maybe just
+I have quickly tested network and sound on EDB9302 and I neither have probl=
+ems with
+these functions, nor did I spot any new error messages, overall looks good =
+to me,
+thanks for your efforts!
 
-"Add an idle timeout option to gpiomon and gpionotify to exit gracefully
-when no event has been detected for a given period."
+--=20
+Alexander Sverdlin.
 
-A few other minor nits below.
-
-Otherwise looks good to me.
-
-Cheers,
-Kent.
-
-> Signed-off-by: Gabriel Matni <gabriel.matni@exfo.com>
-> ---
-> V1 -> V2: Addressed the following review comments:
-> - Renamed timeout option to idle-timeout 
-> - Timeout value is now signed
-> - Reused print_period_help() for idle-timeout option
-> - Added the idle-timeout option to gpionotify for consistency
-> 
->  tools/gpiomon.c    | 15 ++++++++++++++-
->  tools/gpionotify.c | 16 +++++++++++++++-
->  2 files changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-> index c2684c2a4dd4..91e602cdbb5e 100644
-> --- a/tools/gpiomon.c
-> +++ b/tools/gpiomon.c
-> @@ -30,6 +30,7 @@ struct config {
->  	const char *fmt;
->  	enum gpiod_line_clock event_clock;
->  	int timestamp_fmt;
-> +	int timeout;
->  };
->  
->  static void print_help(void)
-> @@ -57,6 +58,8 @@ static void print_help(void)
->  	printf("\t\t\tBy default 'realtime' is formatted as UTC, others as raw u64.\n");
->  	printf("  -h, --help\t\tdisplay this help and exit\n");
->  	printf("  -F, --format <fmt>\tspecify a custom output format\n");
-> +	printf("      --idle-timeout <period>\n");
-> +	printf("\t\t\texit gracefully if no events occurred during the specified period\n");
-
-if no events occur for the period specified
-
->  	printf("  -l, --active-low\ttreat the line as active low, flipping the sense of\n");
->  	printf("\t\t\trising and falling edges\n");
->  	printf("      --localtime\tformat event timestamps as local time\n");
-> @@ -123,6 +126,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  		{ "event-clock", required_argument, NULL,	'E' },
->  		{ "format",	required_argument, NULL,	'F' },
->  		{ "help",	no_argument,	NULL,		'h' },
-> +		{ "idle-timeout",	required_argument,	NULL,		'i' },
->  		{ "localtime",	no_argument,	&cfg->timestamp_fmt,	2 },
->  		{ "num-events",	required_argument, NULL,	'n' },
->  		{ "quiet",	no_argument,	NULL,		'q' },
-> @@ -139,6 +143,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  	memset(cfg, 0, sizeof(*cfg));
->  	cfg->edges = GPIOD_LINE_EDGE_BOTH;
->  	cfg->consumer = "gpiomon";
-> +	cfg->timeout = -1;
->  
->  	for (;;) {
->  		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-> @@ -170,6 +175,9 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  		case 'F':
->  			cfg->fmt = optarg;
->  			break;
-> +		case 'i':
-> +			cfg->timeout = parse_period_or_die(optarg) / 1000;
-> +			break;
->  		case 'l':
->  			cfg->active_low = true;
->  			break;
-> @@ -443,11 +451,16 @@ int main(int argc, char **argv)
->  		print_banner(argc, argv);
->  
->  	for (;;) {
-> +		int ret;
-
-Declare at the top of the function.
-Hang on - there is one there already for gpiomon, so you don't need this at all.
-
->  		fflush(stdout);
->  
-> -		if (poll(pollfds, resolver->num_chips, -1) < 0)
-> +		ret = poll(pollfds, resolver->num_chips, cfg.timeout);
-> +		if (ret < 0)
->  			die_perror("error polling for events");
->  
-> +		if (ret == 0)
-> +			goto done;
-> +
->  		for (i = 0; i < resolver->num_chips; i++) {
->  			if (pollfds[i].revents == 0)
->  				continue;
-> diff --git a/tools/gpionotify.c b/tools/gpionotify.c
-> index 990ca04519b5..863c5d046542 100644
-> --- a/tools/gpionotify.c
-> +++ b/tools/gpionotify.c
-> @@ -23,6 +23,7 @@ struct config {
->  	const char *chip_id;
->  	const char *fmt;
->  	int timestamp_fmt;
-> +	int timeout;
->  };
->  
->  static void print_help(void)
-> @@ -43,6 +44,8 @@ static void print_help(void)
->  	printf("\t\t\t(default is all events)\n");
->  	printf("  -h, --help\t\tdisplay this help and exit\n");
->  	printf("  -F, --format <fmt>\tspecify a custom output format\n");
-> +	printf("      --idle-timeout <period>\n");
-> +	printf("\t\t\texit gracefully if no events occurred during the specified period\n");
-
-as per gpiomon
-
->  	printf("      --localtime\tconvert event timestamps to local time\n");
->  	printf("  -n, --num-events <num>\n");
->  	printf("\t\t\texit after processing num events\n");
-> @@ -52,6 +55,7 @@ static void print_help(void)
->  	printf("      --utc\t\tconvert event timestamps to UTC\n");
->  	printf("  -v, --version\t\toutput version information and exit\n");
->  	print_chip_help();
-> +	print_period_help();
->  	printf("\n");
->  	printf("Format specifiers:\n");
->  	printf("  %%o   GPIO line offset\n");
-> @@ -89,6 +93,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  		{ "event",	required_argument, NULL,	'e' },
->  		{ "format",	required_argument, NULL,	'F' },
->  		{ "help",	no_argument,	NULL,		'h' },
-> +		{ "idle-timeout",	required_argument,	NULL,		'i' },
->  		{ "localtime",	no_argument,	&cfg->timestamp_fmt, 2 },
->  		{ "num-events",	required_argument, NULL,	'n' },
->  		{ "quiet",	no_argument,	NULL,		'q' },
-> @@ -103,6 +108,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  	int opti, optc;
->  
->  	memset(cfg, 0, sizeof(*cfg));
-> +	cfg->timeout = -1;
->  
->  	for (;;) {
->  		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-> @@ -125,6 +131,9 @@ static int parse_config(int argc, char **argv, struct config *cfg)
->  		case 'F':
->  			cfg->fmt = optarg;
->  			break;
-> +		case 'i':
-> +			cfg->timeout = parse_period_or_die(optarg) / 1000;
-> +			break;
->  		case 'n':
->  			cfg->events_wanted = parse_uint_or_die(optarg);
->  			break;
-> @@ -411,11 +420,16 @@ int main(int argc, char **argv)
->  		print_banner(argc, argv);
->  
->  	for (;;) {
-> +		int ret;
-
-Declare at the top of the function.
-
->  		fflush(stdout);
->  
-> -		if (poll(pollfds, resolver->num_chips, -1) < 0)
-> +		ret = poll(pollfds, resolver->num_chips, cfg.timeout);
-> +		if (ret < 0)
->  			die_perror("error polling for events");
->  
-> +		if (ret == 0)
-> +			goto done;
-> +
->  		for (i = 0; i < resolver->num_chips; i++) {
->  			if (pollfds[i].revents == 0)
->  				continue;
-> 
-> base-commit: b10c5b769978412e315507ae07fa554b09ca189f
-> -- 
-> 2.25.1
