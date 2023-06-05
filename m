@@ -2,134 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02534722BA6
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 17:43:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3704A722BBF
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 17:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235087AbjFEPnq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 11:43:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44544 "EHLO
+        id S235135AbjFEPqc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 11:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234338AbjFEPna (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 11:43:30 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AB6171E;
-        Mon,  5 Jun 2023 08:43:10 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b1a7e31dcaso52811041fa.2;
-        Mon, 05 Jun 2023 08:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685979758; x=1688571758;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K9Mq4zTWNZxgXmn77g79M7jiTcegyvnCqH1d/BABQRw=;
-        b=aQX9HeNtpVpdgQ5rkNy9e/6N27UtHbD1pztf3G5AN6CbHwTfHqydU5sPtRCg1rsd4z
-         /hJNEGtUAe2arMvipUml6/O2Y9k2oL5BN7WQtISetrK8aNYY1z+TVGXkPv+WQgGmY3Tz
-         P70wNbzF/J5ZkQi+UnsvLRA4EywEkHb6HqLPrJZEcIkyOqFDr0PYutv9sbVDzIgkkURm
-         8wjc0OsQ+IeYQwUi4k+otpWxE39ZwsgZaI93dcjYopdSKxH+YotxeUIdso8fEonjKOE4
-         pvfn8uIg2wLWneQXwCrvCHAz4FPgvOL8c33+mbrOHTTCsEsquZ5kag7H2aoqolzW2gFA
-         w7wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685979758; x=1688571758;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K9Mq4zTWNZxgXmn77g79M7jiTcegyvnCqH1d/BABQRw=;
-        b=gSkFnnjhqGB7p+KG5zewC1I0dus0FCQWTwzaq/mrLnKS/BmmW7jTR9A+Ulf+8Scf9e
-         DI9NAUxoFEK+UTDRuUymb7Pi/veZCys4HwvFij3rBAtHK0ajehm1T4M79GuiA2m9rUmG
-         1teb1UEZYulqrU0Nonoytfo1wV73j8ONvi+J4ZGb0zo1U9Ohl81xWtj+7j1XGlWgPTtR
-         DrEX7bxpjb9aiIcwlt0Dc1t9OM7jzY1j91j9EmxK7Dt6iUcbJFoSWarywDtY/An4IeUh
-         9qmxlgRKpm80baP/YC5ftxuO3fnwTfT7s0lCfkifDtumQfssfuU3dV5TAtE6rpYi0hnN
-         itdg==
-X-Gm-Message-State: AC+VfDzfs9ZYQeKjLlvmX0SPUnEcyNxKvg5e2aieN2j8CDwRPN5wrvS6
-        SCuUfmWlmbcY5gdpeIdJuO4=
-X-Google-Smtp-Source: ACHHUZ7uSBvK8+Gq54/3tBpKPjqxsA98DAXoC1lr+6bS+RiMtEsjbD/Dyri+Gt+JQE1vDHfM71o6RA==
-X-Received: by 2002:a2e:9d54:0:b0:2b1:bf83:4165 with SMTP id y20-20020a2e9d54000000b002b1bf834165mr3095783ljj.37.1685979758010;
-        Mon, 05 Jun 2023 08:42:38 -0700 (PDT)
-Received: from localhost (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id sd17-20020a170906ce3100b0095fbb1b72c2sm4400844ejb.63.2023.06.05.08.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 08:42:37 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH v5 3/3] arm64: tegra: Add Tegra234 pin controllers
-Date:   Mon,  5 Jun 2023 17:42:30 +0200
-Message-Id: <20230605154230.2910847-4-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230605154230.2910847-1-thierry.reding@gmail.com>
-References: <20230605154230.2910847-1-thierry.reding@gmail.com>
+        with ESMTP id S235083AbjFEPqP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 11:46:15 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA33E54;
+        Mon,  5 Jun 2023 08:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685979950; x=1717515950;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/IVTcr+jzG8u5BML8CWpJRp9glsm0WdjT1NvRtOaRGc=;
+  b=DZV0xBlGtR15f4s32AUbRpkStMNTgwFgtMFE1Y1e/WGmOaray+ANHXhR
+   X2yEYhNmTCviPKDp1PLPSRiJ4aN6kIbGdrdZubX8eY23s83pVoWBZQ68y
+   5cyOKBa68Akfps1Ut5pAD7n29RKHdbckCpsBcZVifYZ8/SloKC8nxaymY
+   HyV8/B/vYdktuIihEovRxhFwGzysWkwOUlFo9/+NRCtYU2RE71cg0HuCw
+   70093amNE0DwXODY69vs9iTgdmVNvP72iwiSNvML5xcVKMZbYt6/iH3X9
+   vJkTKH6Gz4Zw42kAjNFHQcVLcIVlESYdB91PNgOMxwAz6kSSVYjL/YmhP
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="384707604"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="384707604"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 08:45:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="738405451"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="738405451"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 05 Jun 2023 08:45:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 443B3204; Mon,  5 Jun 2023 18:45:10 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/2] pinctrl: merrifield: Fix open-drain pin mode configuration
+Date:   Mon,  5 Jun 2023 18:45:08 +0300
+Message-Id: <20230605154509.11616-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Prathamesh Shete <pshete@nvidia.com>
+Currently the pin may not be configured as open-drain in some
+cases because the argument may be 0 for the boolean types of
+the pin configurations. Fix this by ignoring the argument.
 
-Add the device tree nodes for the MAIN and AON pin controllers found on
-the Tegra234 family of SoCs.
+With that, allow to actually restore pin to the push-pull mode.
 
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-Changes in v3:
-- use correct value for #address-cells and #size-cells
-- correct gpio-ranges property name
+ drivers/pinctrl/intel/pinctrl-merrifield.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index 133b2d32d19b..9dba05be03d2 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -109,6 +109,7 @@ gpio: gpio@2200000 {
- 			interrupt-controller;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinmux 0 0 164>;
- 		};
+diff --git a/drivers/pinctrl/intel/pinctrl-merrifield.c b/drivers/pinctrl/intel/pinctrl-merrifield.c
+index 365c391c97a3..f1d0b7576703 100644
+--- a/drivers/pinctrl/intel/pinctrl-merrifield.c
++++ b/drivers/pinctrl/intel/pinctrl-merrifield.c
+@@ -710,6 +710,11 @@ static int mrfld_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
  
- 		ethernet@2310000 {
-@@ -147,6 +148,11 @@ codec@242c000 {
- 			status = "disabled";
- 		};
+ 		break;
  
-+		pinmux: pinmux@2430000 {
-+			compatible = "nvidia,tegra234-pinmux";
-+			reg = <0x0 0x2430000 0x0 0x19100>;
-+		};
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		if (value & BUFCFG_OD_EN)
++			return -EINVAL;
++		break;
 +
- 		gpcdma: dma-controller@2600000 {
- 			compatible = "nvidia,tegra234-gpcdma",
- 				     "nvidia,tegra186-gpcdma";
-@@ -1805,6 +1811,12 @@ gpio_aon: gpio@c2f0000 {
- 			interrupt-controller;
- 			#gpio-cells = <2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinmux_aon 0 0 32>;
-+		};
-+
-+		pinmux_aon: pinmux@c300000 {
-+			compatible = "nvidia,tegra234-pinmux-aon";
-+			reg = <0x0 0xc300000 0x0 0x4000>;
- 		};
+ 	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+ 		if (!(value & BUFCFG_OD_EN))
+ 			return -EINVAL;
+@@ -791,10 +796,14 @@ static int mrfld_config_set_pin(struct mrfld_pinctrl *mp, unsigned int pin,
  
- 		pwm4: pwm@c340000 {
+ 		break;
+ 
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		mask |= BUFCFG_OD_EN;
++		bits &= ~BUFCFG_OD_EN;
++		break;
++
+ 	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+ 		mask |= BUFCFG_OD_EN;
+-		if (arg)
+-			bits |= BUFCFG_OD_EN;
++		bits |= BUFCFG_OD_EN;
+ 		break;
+ 
+ 	case PIN_CONFIG_SLEW_RATE:
+@@ -826,6 +835,7 @@ static int mrfld_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
+ 		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+ 		case PIN_CONFIG_SLEW_RATE:
+ 			ret = mrfld_config_set_pin(mp, pin, configs[i]);
 -- 
-2.40.1
+2.40.0.1.gaa8946217a0b
 
