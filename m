@@ -2,93 +2,325 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E518A721E22
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 08:31:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD7F2721E9D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 08:59:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbjFEGbT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 02:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
+        id S229645AbjFEG7b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 02:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbjFEGbS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 02:31:18 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79780EA
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Jun 2023 23:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=lQQH6nOriBLlbTU7J9bMgPN2Mir2
-        iDnU+BuOVKAXjy0=; b=qfE5nxbBktFeAPemijTKQLVC/WhI1TyzMVksR92CwnXV
-        sTR2tBiYMpNX0fZ7wuzMg1EDHigABIVIF1FDgSUsf0mNf/5dotbZyWhu1c2K7wDx
-        VaEtvsG8ePDStqc7Q+61X0GpuMhHI84aw+q7oJ4/6GhBLg5fUC9XltrWU9HPnX8=
-Received: (qmail 2911557 invoked from network); 5 Jun 2023 08:31:12 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Jun 2023 08:31:12 +0200
-X-UD-Smtp-Session: l3s3148p1@mSVEDFz98tMujnt4
-Date:   Mon, 5 Jun 2023 08:31:07 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v8 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <ZH2BKzvk/1vS/tZE@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20220329091126.4730-1-wsa+renesas@sang-engineering.com>
- <20220329091126.4730-2-wsa+renesas@sang-engineering.com>
- <YkRuXtTzd11R9IrY@smile.fi.intel.com>
- <Yo5GO5RkBC3PQLTg@shikoro>
- <ZHjAF6xg1fAaJhQV@smile.fi.intel.com>
+        with ESMTP id S229484AbjFEG7a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 02:59:30 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DCB9F
+        for <linux-gpio@vger.kernel.org>; Sun,  4 Jun 2023 23:59:28 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-514924ca903so6415609a12.2
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Jun 2023 23:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685948367; x=1688540367;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b3gf39J0e6Ug9xwuUlT/0gU+hrC/12pzramCbbQjL4A=;
+        b=mW8GZA+Rq9gwuGiJ7l2Yb5V80S2yfzyuh6nK4EWOKRupfjPPHyNDnyqkR0dwHq/k5N
+         iXODZH/q07+nwXtrznbS9anb5dS3YIMEhAzhSYIqGotN8rj2Z9EYwAFXDTCH9OAWO3NW
+         dOVbnS0derytPK206OQnEvrNc99hO5vsoftQI3TInD10V9bibtst8nFxGujnWdcZg5a/
+         fdIMnVD48tuh2YmSHW3PnOEosdAWBU+CHDcYBkaAhyyZ+5b16hit9OxsDGuHFkEphxuB
+         C8iZlXL1KXTvGU3ON8o7Oi/ACNjCHctgUxuYwZ2y65UStqAPmfeTgtbJM+76nywbVEOE
+         Hi2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685948367; x=1688540367;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b3gf39J0e6Ug9xwuUlT/0gU+hrC/12pzramCbbQjL4A=;
+        b=kxSF4XeZpW7uUuqWgqZR/uSrkOJtfyLJ33OkIygSw78yr19qMNOP31gpXN1pWjOjdG
+         qZevtJmoFiiU0dCGxtTP3ZZENXIPq9PspzzNa/mogc63Qo6n3jcUWkOq4gDg4z/LVNUi
+         IlEL4DyUCApPwST7slprz51pGVJqZxqTAu57XbWYmz61B4e4J4jLzoTyUZQaIdUbB1nX
+         Y/zTaDX4p9HFS0bL08vZy/oQrFbpQLpf0h+dxCg0hwu0SuvKvAXpmV/Vdcc+ZgP9925A
+         Sj+ahlLi64wwlI9RDuhhY9wmLXyg6S0ak123cESI2hvg8EbeFN027F1SgJBQZSiAgB3E
+         TZIA==
+X-Gm-Message-State: AC+VfDxhjEnCdRMUcKD+p2WLNNKUoZ0r4Xlq9QgT3/BZH35a9XNchnpc
+        Zc4wTSthypukitbsG97FUKSJ4Q==
+X-Google-Smtp-Source: ACHHUZ62BEmn8WrMHA3fsRSPnPX/q78d2QO6HDOam1Lb/CZYXyD8ch0G6LozIIUyy+8egmqzEdKcKw==
+X-Received: by 2002:a05:6402:54e:b0:514:8e4a:7e8f with SMTP id i14-20020a056402054e00b005148e4a7e8fmr6426564edx.32.1685948367246;
+        Sun, 04 Jun 2023 23:59:27 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id l9-20020aa7c3c9000000b005105f002fd1sm3509006edr.66.2023.06.04.23.59.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Jun 2023 23:59:26 -0700 (PDT)
+Message-ID: <b9baf188-6ee3-40ed-27e9-66a08c8de7f6@linaro.org>
+Date:   Mon, 5 Jun 2023 08:59:24 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/4+wwdBOblFw+Mmz"
-Content-Disposition: inline
-In-Reply-To: <ZHjAF6xg1fAaJhQV@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v5 1/1] dt-bindings: pinctrl: Update pinctrl-single to use
+ yaml
+Content-Language: en-US
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20230523092038.55677-1-tony@atomide.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230523092038.55677-1-tony@atomide.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---/4+wwdBOblFw+Mmz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Year passed. Any news here?
-
-Well, the issue is that Steven Rostedt told me last years at Kernel
-Recipes that disabling the RCU stall detector was bad. He gave me a
-pointer where to look for a potentially better solution but I forgot to
-note it. When I asked him by mail again for that pointer, he was too
-busy to answer and since then I had other things to do. But Steve is at
-EOSS end of June as well as me. Asking him again there is big on my
-list. Nice you remembered this patch :)
+On 23/05/2023 11:20, Tony Lindgren wrote:
+> Update binding for yaml and remove the old related txt bindings. Note that
+> we are also adding the undocumented pinctrl-single,slew-rate property. And
+> we only use the first example from the old binding.
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
 
---/4+wwdBOblFw+Mmz
-Content-Type: application/pgp-signature; name="signature.asc"
+Thank you for your patch. There is something to discuss/improve.
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmR9gScACgkQFA3kzBSg
-KbamSw/9EuKJgRnQIB+TX2ue826riRURYNY5DIp9nNjjI1R0yUcMW+VfojMIPSo+
-bhyGyqxUqg8wOwEQWQkDn5q7cAdmiX8v+Cvqt50phQIRVrU5z3kpawio0GLv4x/b
-P3Su4iosPtZ2rhBX000Eukha/oc4Z+x+06T1iktnq3DZ/lzPrIPlC5FrU/JNDirW
-yKwwS9TYgHBL5v0AdrdGacSBEsz4q34ndqeAXU8MUsBD3U9jWAUikRUP7kF5bbWa
-+FbBLLibp1Bk9McMXojPkj9KIsHng/u+o3BsW90+H8e4/EWR92uZLugzESkDxGX0
-WbGPleN8laTc1F9aFrArqRuNbKaJVFiy9uIFSTBS6QfxKScaXvvcLBQCi62Zcl8a
-SgWIltedUEEDplnvo3/Nbd1RuYLfQ4mZgsm4883cfwwZsNS/eBCjr1ztUS4YtCIK
-jF56jMxhgzoTBr4/vlJ+63OtUjggcoVENOuOFr3M7Z8xZoCodi2GguuP/2LGeN7X
-vc7j84qkVxwz5wvcqnlS8NVvWU05cdBb8R98M86vLwJtkKIpGACAhm1BMT14Beq7
-TVDkOz8XSpW3OLvWgtEy3PLmtCrKWImRZNvD14T03XsreJDusxuscPchawPdVNjS
-wKPTCzRaHGSrg5C7oU1mB8N+eTZNSfv5ZQSVEIi9nxD7een9QNE=
-=zyfx
------END PGP SIGNATURE-----
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+> @@ -0,0 +1,201 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-single.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: One-register-per-pin type device tree based pinctrl driver
 
---/4+wwdBOblFw+Mmz--
+Drop "device tree based pinctrl driver" and describe the hardware.
+
+> +
+> +maintainers:
+> +  - Tony Lindgren <tony@atomide.com>
+> +
+> +description:
+> +  This binding describes pinctrl devices that use one hardware register to
+> +  configure each pin.
+
+Drop "This binding describes" and just say what is the hardware here.
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+
+Drop items, you have just an enum.
+
+> +          - enum:
+> +              - pinctrl-single
+> +              - pinconf-single
+> +      - items:
+> +          - enum:
+> +              - ti,am437-padconf
+> +              - ti,dra7-padconf
+> +              - ti,omap2420-padconf
+> +              - ti,omap2430-padconf
+> +              - ti,omap3-padconf
+> +              - ti,omap4-padconf
+> +              - ti,omap5-padconf
+> +          - const: pinctrl-single
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  '#pinctrl-cells':
+> +    enum: [ 1, 2 ]
+
+Describe in description what are the arguments. Old binding had it.
+
+> +
+> +  pinctrl-single,bit-per-mux:
+> +    description: Optional flag to indicate register controls more than one pin
+> +    type: boolean
+> +
+> +  pinctrl-single,function-mask:
+> +    description: Mask of the allowed register bits
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  pinctrl-single,function-off:
+> +    description: Optional function off mode for disabled state
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  pinctrl-single,register-width:
+> +    description: Width of pin specific bits in the register
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 8, 16, 32 ]
+> +
+> +  pinctrl-single,gpio-range:
+> +    description: Optional list of pin base, nr pins & gpio function
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle of a gpio-range node
+> +          - description: pin base
+> +          - description: number of pins
+> +          - description: gpio function
+> +
+> +  '#gpio-range-cells':
+> +    description: No longer needed, may exist in older files for gpio-ranges
+> +    deprecated: true
+> +    const: 3
+> +
+> +  gpio-range:
+> +    description: Optional node for gpio range cells
+> +    type: object
+
+On this level of indentation:
+additionalProperties: false
+
+> +    properties:
+> +      '#pinctrl-single,gpio-range-cells':
+> +        description: Number of gpio range cells
+> +        const: 3
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +patternProperties:
+> +  '-pins((.*)?)$|-pin':
+
+Why do you need outer ()?
+-pin$
+
+> +    description: Pin group node name using pins or pin naming
+> +    type: object
+> +    $ref: pinmux-node.yaml#
+
+You don't use anything from this ref. Drop it, unless you plan to
+deprecate old properties and use generic from pinmux-node.
+
+> +
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      pinctrl-single,pins:
+> +        description:
+> +          Array of pins as described in pinmux-node.yaml for pinctrl-pin-array
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +      pinctrl-single,bits:
+> +        description: Register bit configuration for pinctrl-single,bit-per-mux
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: register offset
+> +          - description: value
+> +          - description: pin bitmask in the register
+> +
+> +      pinctrl-single,bias-pullup:
+> +        description: Optional bias pull up configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: input
+> +          - description: enabled pull up bits
+> +          - description: disabled pull up bits
+> +          - description: bias pull up mask
+> +
+> +      pinctrl-single,bias-pulldown:
+> +        description: Optional bias pull down configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: input
+> +          - description: enabled pull down bits
+> +          - description: disabled pull down bits
+> +          - description: bias pull down mask
+> +
+> +      pinctrl-single,drive-strength:
+> +        description: Optional drive strength configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: drive strength current
+> +          - description: drive strength mask
+> +
+> +      pinctrl-single,input-schmitt:
+> +        description: Optional input schmitt configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: input
+> +          - description: enable bits
+> +          - description: disable bits
+> +          - description: input schmitt mask
+> +
+> +      pinctrl-single,low-power-mode:
+> +        description: Optional low power mode configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: low power mode value
+> +          - description: low power mode mask
+> +
+> +      pinctrl-single,slew-rate:
+> +        description: Optional slew rate configuration
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: slew rate
+> +          - description: slew rate mask
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - pinctrl-single,register-width
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc {
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +        pinmux@4a100040 {
+
+Mixed up indentation.
+
+> +          compatible = "pinctrl-single";
+> +          reg = <0x4a100040 0x0196>;
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          #pinctrl-cells = <2>;
+> +          #interrupt-cells = <1>;
+> +          interrupt-controller;
+> +          pinctrl-single,register-width = <16>;
+> +          pinctrl-single,function-mask = <0xffff>;
+> +          pinctrl-single,gpio-range = <&range 0 3 0>;
+> +          range: gpio-range {
+> +            #pinctrl-single,gpio-range-cells = <3>;
+> +          };
+> +
+> +          uart2-pins {
+
+
+Best regards,
+Krzysztof
+
