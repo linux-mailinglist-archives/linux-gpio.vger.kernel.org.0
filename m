@@ -2,113 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44D9A7226AF
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 14:59:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A81D7226B0
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 14:59:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbjFEM7C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 08:59:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
+        id S230029AbjFEM7L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 08:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbjFEM7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 08:59:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87ADCE5A;
-        Mon,  5 Jun 2023 05:58:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 159C5623E3;
-        Mon,  5 Jun 2023 12:57:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB62C4339B;
-        Mon,  5 Jun 2023 12:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685969860;
-        bh=w92Xq6xwU5/tyThn8NVIB3i/bx1EhmWfmR3FDBXsqiI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WPLqx9yAHdkBL4uvM5Ns002jO7Ug2gxugUe3OdAwbeVP+gpok4HXguKE14tv/zHYh
-         S7JNmXEGKdVjA5caaEeShelM6u/U1zZo6Ujxf8NBYT3BiR5iKU3w0CdvXgjNKmNnZ7
-         Ua6xBMLmlpcyj9TzGtcv8zitVZtvE+AG8+vyAw46p2AJQ30fQoThFxAPkOZAUUUxdX
-         CA54BL6zR6yuRFSohefdIJ8HO1hL4SqFiTWV/b1pdEPSNGR3BBRtHigODHGRbKHNnq
-         hAwQFuV3S9Qeiwiqsx4sd46GW9tPmkdJORrbILAWPdBeh2EWyBr5gnXq/GyfoiqVxs
-         wQt99bkaNXRRA==
-Date:   Mon, 5 Jun 2023 14:57:36 +0200
-From:   'Wolfram Sang' <wsa@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com,
-        'Piotr Raczynski' <piotr.raczynski@intel.com>
-Subject: Re: [PATCH net-next v11 2/9] i2c: designware: Add driver support for
- Wangxun 10Gb NIC
-Message-ID: <ZH3bwBZvjyIoFaVv@shikoro>
-Mail-Followup-To: 'Wolfram Sang' <wsa@kernel.org>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com,
-        'Piotr Raczynski' <piotr.raczynski@intel.com>
-References: <20230605025211.743823-1-jiawenwu@trustnetic.com>
- <20230605025211.743823-3-jiawenwu@trustnetic.com>
- <ZH2IaM86ei2gQkfA@shikoro>
- <00c901d9977e$af0dc910$0d295b30$@trustnetic.com>
- <ZH2UT55SRNwN15t7@shikoro>
- <00eb01d99785$8059beb0$810d3c10$@trustnetic.com>
- <ZH2zb7smT/HbFx9k@shikoro>
- <ZH22jS7KPPBEVS2a@shell.armlinux.org.uk>
+        with ESMTP id S229625AbjFEM7K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 08:59:10 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED33FE;
+        Mon,  5 Jun 2023 05:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685969924; x=1717505924;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MEgj/vZSUbGWWbHpadQGpjjG8bL7wedFUW38lNf/E18=;
+  b=CfrTuHpJSvspT0vkEl95OEKv7UvgfrTaJRt1W64IXIGVDfLGM3shrGFb
+   56v460ZRJ7xhFUJTSLl8hMzLSBR0r++GHyeQnS4VsH0f420Aex0HlgN/F
+   Mp3r7K68OPTrmd4crs9+PoJnPpStZYtF41VY1G4+Qh/ZU4scYDcDNFo8R
+   FDtygqxn/0Dz7iWE4wJYSjEsZPDqEW8ZzjlKSoAb4p50RnEO5hcVSNCHN
+   +E9HaVlmgyaiAMsqvCKgWNVlT0+plSttJp6VVB/lWdRxMbB0agMpd+RzJ
+   OcUPM9qft1hYC5rnOKUrtxJm/s7Qevsi734N85HKSTv21BBFuwMUTkjW5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="356369588"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="356369588"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 05:58:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="832798144"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="832798144"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2023 05:58:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 0A75C2A6; Mon,  5 Jun 2023 15:58:11 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2 1/1] gpiolib: Do not unexport GPIO on freeing
+Date:   Mon,  5 Jun 2023 15:58:10 +0300
+Message-Id: <20230605125810.61456-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4vJFpEDhy/jzD6wj"
-Content-Disposition: inline
-In-Reply-To: <ZH22jS7KPPBEVS2a@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Since the legacy exporting is gone with 2f804aca4832 ("gpiolib:
+Kill unused GPIOF_EXPORT and Co") there is no need to unexport
+GPIO on freeing. Remove that call.
 
---4vJFpEDhy/jzD6wj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Note, the other users of this functionality do that explicitly,
+except one SH and one OMAP boardfile which don't free GPIO anyways,
+so it is safe to drop the call.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: mentioned OMAP boardfile as well
+ drivers/gpio/gpiolib.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> Be careful... net-next uses patchwork, and I suspect as this is posted
-> as a series which the subject line states as being destined by the
-> author for the "net-next" tree, the entire series will end up being
-> slurped into the net-next tree.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a8da38ee721a..7a9c9934365a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2117,8 +2117,6 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 
+ 	might_sleep();
+ 
+-	gpiod_unexport(desc);
+-
+ 	spin_lock_irqsave(&gpio_lock, flags);
+ 
+ 	gc = desc->gdev->chip;
+-- 
+2.40.0.1.gaa8946217a0b
 
-Thanks for the pointer. Jiawen Wu, would you kindly send a v12 of the
-series (without the I2C patch)?
-
-
---4vJFpEDhy/jzD6wj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmR928AACgkQFA3kzBSg
-KbYAlQ/8CsD/+N2Zcc03AXNNyePkY7YwqKQ89NT9H0P05i639jHKWOzocHyZ9J8j
-OGqeKxao+GUCgv+nODspUJgt+2j8rTlE7Ael8zMpvEJYWckVeryzaaNAo+EcE3jq
-VWZHkRM0PFrl9Wpb94xuWFzilN9dzwjT4rT5TOA6axIwYlGMcedv3Ngjx7a37RUi
-aeX11lLHlbdkz2SUEc11TtSBAgak6pGrJX4hD3Ffntg3s3w5gkHghcHkkXGMfavX
-J9cqm89YJg3sKzEIU9NYhGMYvvHfZ/68MbLZDgnAMXhKenpVvJoXKR8IUiehmbW9
-ih28X9F/XJ0jzqIVOPJ1NkYvkMaEFiejHtCwiLTnDmvkNjCqfysjJ0RLg6ZGuN+C
-04Aafq4tpGSKhnvGNROHN7DIyZxuzlt9811kmJKBT96U71artA28+rysHyCuiujf
-eeBMvU11//308vd9TsTfNYFlaaLQoPmy8aK0C+xo3/dQ6aTQWKpMZ4oJwehnO/yz
-n4JFsfzSYfsybTWVzlus2V4TFySbKRS0RlZ83ugmaMSgLuYeyezfo9ZmV548iJdR
-GNelCyktqDCOLDA/3ZxelNEoBfwfzTcg7nNM/FQYU6QjQ4sx7KDM/uGe4EqsYvNb
-V/jzLOsok3oB4y2F0an0el0xSxq4Tenyg5GDRV2KJZ+yLH5AygM=
-=iCS4
------END PGP SIGNATURE-----
-
---4vJFpEDhy/jzD6wj--
