@@ -2,180 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E91087222F2
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 12:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B74AD722343
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 12:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231719AbjFEKJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 06:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39652 "EHLO
+        id S230515AbjFEKTL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 06:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjFEKJH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 06:09:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC008E3;
-        Mon,  5 Jun 2023 03:09:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7165B6142D;
-        Mon,  5 Jun 2023 10:09:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A84C433EF;
-        Mon,  5 Jun 2023 10:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685959745;
-        bh=vR126awxcUVwkB+vDMvPtCpzsX4o/jUNFWue4cfisK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jGzB5Lk8x9cx95oG26XZOnRJk3ecWXQXEE07nQpVPtV0ldNyjBH+HF+PE67Y7BaJJ
-         Rr3ULQyt++0jpBkQcUB6dtzHGzTjv3M2ialKNinB+zPSqHMhJHjuOXl09E3kIINcDr
-         ainCX7TdvicCZowvSKu0Imjn3a2HSe+PaHRV5wCbfibFHwmjxecOKX/pBzY6MMJVH9
-         PRUd1U94/aMQLLs6h2roaIwCi2wKw54+JxUdln3ex3j1eeHU3sfXSFSi3sNId2DTA1
-         A9TVGDCBa3pkug7NMMjLVIV38slENc59CTNhjtBV91E1BeYMtSxuqGpEoGjEOJorUU
-         t+ravi9eHQa2Q==
-Date:   Mon, 5 Jun 2023 12:09:02 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Michal Simek <michal.simek@amd.com>
-Cc:     piyush.mehta@amd.com, nava.kishore.manne@amd.com,
-        sai.krishna.potthuri@amd.com, shubhrajyoti.datta@amd.com,
-        vishal.sagar@amd.com, kalyani.akula@amd.com,
-        bharat.kumar.gogada@amd.com, linux-kernel@vger.kernel.org,
-        monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
-Message-ID: <ZH20PkU1WAqQ0rap@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Michal Simek <michal.simek@amd.com>, piyush.mehta@amd.com,
-        nava.kishore.manne@amd.com, sai.krishna.potthuri@amd.com,
-        shubhrajyoti.datta@amd.com, vishal.sagar@amd.com,
-        kalyani.akula@amd.com, bharat.kumar.gogada@amd.com,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Moritz Fischer <mdf@kernel.org>, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Tom Rix <trix@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
+        with ESMTP id S230084AbjFEKTL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 06:19:11 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AF0F7;
+        Mon,  5 Jun 2023 03:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=p/ThtqXlxQtrcnrvqmZOqjpuo/YqpptOZz7Fr421+9o=; b=uiqRJYRejBbo8oUNmEKoivRBGk
+        5C6UoHwgaStNtX0g7f7P0U0RxE7CghBgwP5I1CTYn7ypl1yYpkk/ipN2JlYGu5YeYkACMIAiT5Q9Z
+        I6vgUeEM10braPk+cVSB+rGF4xpTLX9+opofMWteWJHhORzbPdO8QYgf1ySHtmkHcPTagzCGVoewl
+        Raf/wC0Nrkb7XDipb+ZPDxG+2R5AVQ6ytPF5Ntrwosrk6mswHN0pSt7v0Cq3lqjdX4Y2dWG/QuNzz
+        XUQHlA5PaVbb363pG4tphHnPOEdiq6ztW1EFFSzwzZaAdOko1zKGI+YmU3nhn6WZ9hUAUcoGun97h
+        lbCKZ7xw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48754)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1q67Ij-0003mx-1r; Mon, 05 Jun 2023 11:19:01 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1q67Ib-000611-Kh; Mon, 05 Jun 2023 11:18:53 +0100
+Date:   Mon, 5 Jun 2023 11:18:53 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     'Wolfram Sang' <wsa@kernel.org>
+Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, jsd@semihalf.com,
+        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com,
+        'Piotr Raczynski' <piotr.raczynski@intel.com>
+Subject: Re: [PATCH net-next v11 2/9] i2c: designware: Add driver support for
+ Wangxun 10Gb NIC
+Message-ID: <ZH22jS7KPPBEVS2a@shell.armlinux.org.uk>
+References: <20230605025211.743823-1-jiawenwu@trustnetic.com>
+ <20230605025211.743823-3-jiawenwu@trustnetic.com>
+ <ZH2IaM86ei2gQkfA@shikoro>
+ <00c901d9977e$af0dc910$0d295b30$@trustnetic.com>
+ <ZH2UT55SRNwN15t7@shikoro>
+ <00eb01d99785$8059beb0$810d3c10$@trustnetic.com>
+ <ZH2zb7smT/HbFx9k@shikoro>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="m1s0pAgPK6Y5qfq2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZH2zb7smT/HbFx9k@shikoro>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Jun 05, 2023 at 12:05:35PM +0200, 'Wolfram Sang' wrote:
+> 
+> > Yes, other patches will build even without this patch. But SFP will not work.
+> > This patch series implement I2C, GPIO, SFP and PHYLINK. The support of SFP
+> > is dependent on I2C and GPIO. If these patches will be end up merging in the
+> > same upstream version, it's not a problem to merge them in different trees,
+> > I think.
+> 
+> That's how I saw it as well.
+> 
+> Applied to for-next, thanks!
 
---m1s0pAgPK6Y5qfq2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Be careful... net-next uses patchwork, and I suspect as this is posted
+as a series which the subject line states as being destined by the
+author for the "net-next" tree, the entire series will end up being
+slurped into the net-next tree.
 
-On Tue, May 16, 2023 at 03:51:08PM +0200, Michal Simek wrote:
-> @xilinx.com is still working but better to switch to new amd.com after
-> AMD/Xilinx acquisition.
->=20
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+https://www.kernel.org/doc/html/v5.10/networking/netdev-FAQ.html#q-how-do-i-indicate-which-tree-net-vs-net-next-my-patch-should-be-in
 
-Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
+This patch is still marked as "new" in patchwork:
 
+https://patchwork.kernel.org/project/netdevbpf/patch/20230605025211.743823-3-jiawenwu@trustnetic.com/
 
---m1s0pAgPK6Y5qfq2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmR9tD4ACgkQFA3kzBSg
-KbYxkhAAr/KV+7eVEy7Tyr1buRUjnSFHfeoi92WwdiRkwD3KEgGd3CGm8RFiHEH3
-xVJnR47Ii6/IU9NidYLsuN6WTYlCdGoQqY6ncEpZui1rIIZpJPEbHbw4IRrDEu+o
-/wd/3S/y3VvGjvsnBK2sbBpTOb8N10Xw084aSJTmFz8Ztzy9mZU9ub6TFxMZhWK2
-w0Unv2I6q+Yl0kEy05PAoEID7mXf33aFnz+j3iz0LtUU6nMQilQHdkfYSsec5c04
-jirw6YLgK+VBRncT55L3XKpAamfUKU7o3DY20/pPw8fSlDj2Z0aQkHM1P22cKwNF
-C1Q0epu85vIJVBW45SEBY7ccPLZuwjFNMl5Do8hRZGBtHJOxhqmRjOA3SWc0u4lx
-txwo97w+Ux9dMlS+UJhD5rWGFfF+HHqxg+M71SCOa94kg2Drs+WLHXd1NgG1YEcb
-FoHsGkzv0nvkBf0O6X3hd8tAdkks9l1370YbDSBvSXUUHxIefUNzEjvQVTdJUj0J
-y+X6CigfCUyYdoscjH8rCdA7fwbxnbeX5zSSXKKp2coIAwEl7ItMx8h8QwwQzZB2
-z/05V/3n4FekryCdpDn5/YH7k2rO6WgSN4L7n+8yDhjWtTwXPRB0XeomogN5CpGj
-T+DR5iqEdJHfmWETr4Pn7ttnc/rvH5ak5U9raBF2+SYA5p/XQGU=
-=PkRp
------END PGP SIGNATURE-----
-
---m1s0pAgPK6Y5qfq2--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
