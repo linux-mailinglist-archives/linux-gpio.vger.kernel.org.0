@@ -2,96 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B74AD722343
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 12:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99702722416
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 13:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230515AbjFEKTL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 06:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
+        id S229576AbjFELCJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 07:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbjFEKTL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 06:19:11 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AF0F7;
-        Mon,  5 Jun 2023 03:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=p/ThtqXlxQtrcnrvqmZOqjpuo/YqpptOZz7Fr421+9o=; b=uiqRJYRejBbo8oUNmEKoivRBGk
-        5C6UoHwgaStNtX0g7f7P0U0RxE7CghBgwP5I1CTYn7ypl1yYpkk/ipN2JlYGu5YeYkACMIAiT5Q9Z
-        I6vgUeEM10braPk+cVSB+rGF4xpTLX9+opofMWteWJHhORzbPdO8QYgf1ySHtmkHcPTagzCGVoewl
-        Raf/wC0Nrkb7XDipb+ZPDxG+2R5AVQ6ytPF5Ntrwosrk6mswHN0pSt7v0Cq3lqjdX4Y2dWG/QuNzz
-        XUQHlA5PaVbb363pG4tphHnPOEdiq6ztW1EFFSzwzZaAdOko1zKGI+YmU3nhn6WZ9hUAUcoGun97h
-        lbCKZ7xw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48754)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q67Ij-0003mx-1r; Mon, 05 Jun 2023 11:19:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q67Ib-000611-Kh; Mon, 05 Jun 2023 11:18:53 +0100
-Date:   Mon, 5 Jun 2023 11:18:53 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     'Wolfram Sang' <wsa@kernel.org>
-Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, jsd@semihalf.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com,
-        'Piotr Raczynski' <piotr.raczynski@intel.com>
-Subject: Re: [PATCH net-next v11 2/9] i2c: designware: Add driver support for
- Wangxun 10Gb NIC
-Message-ID: <ZH22jS7KPPBEVS2a@shell.armlinux.org.uk>
-References: <20230605025211.743823-1-jiawenwu@trustnetic.com>
- <20230605025211.743823-3-jiawenwu@trustnetic.com>
- <ZH2IaM86ei2gQkfA@shikoro>
- <00c901d9977e$af0dc910$0d295b30$@trustnetic.com>
- <ZH2UT55SRNwN15t7@shikoro>
- <00eb01d99785$8059beb0$810d3c10$@trustnetic.com>
- <ZH2zb7smT/HbFx9k@shikoro>
+        with ESMTP id S229572AbjFELCI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 07:02:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBA6BD;
+        Mon,  5 Jun 2023 04:02:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A3AA060FC8;
+        Mon,  5 Jun 2023 11:02:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44120C433EF;
+        Mon,  5 Jun 2023 11:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685962927;
+        bh=Spag55BNJ6GIbM2EesmCkqQ4wATuyGuMUTAykQx1tJM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VF45WZWxdo8SOPaqLG1NLCOEfjtPDck7Bu+LHOSyZ6q09/3w0OgZTlovqc08Pw+vw
+         IWwLob5uw8wUR0zoXZpCJCJ1PS5wr2bNanLwEBCKqERqjR4KxSG7uAJMD/760fYcMv
+         tYnzPwawCeWF3f7uXrIjfE/lDeayhBDB82mznrKU0vuwFBbQFWmnnXMzcaM+I0wdGg
+         51yyDo5L1M8RVgSmAHXUct9mGPJFWYkgpLWLSyittqXqogNGy52myGd34kJNrm1Ojo
+         safK9t/bfPLG1WtoikfXuydBMW0BqegsTrxrJQpnW8RXoU17H/1oOSn9sAIYQZ+Wic
+         DzbwzxcnjkDVQ==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Pandith N <pandith.n@intel.com>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: delay: add OF_GPIO dependency
+Date:   Mon,  5 Jun 2023 13:01:56 +0200
+Message-Id: <20230605110200.938902-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZH2zb7smT/HbFx9k@shikoro>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 12:05:35PM +0200, 'Wolfram Sang' wrote:
-> 
-> > Yes, other patches will build even without this patch. But SFP will not work.
-> > This patch series implement I2C, GPIO, SFP and PHYLINK. The support of SFP
-> > is dependent on I2C and GPIO. If these patches will be end up merging in the
-> > same upstream version, it's not a problem to merge them in different trees,
-> > I think.
-> 
-> That's how I saw it as well.
-> 
-> Applied to for-next, thanks!
+From: Arnd Bergmann <arnd@arndb.de>
 
-Be careful... net-next uses patchwork, and I suspect as this is posted
-as a series which the subject line states as being destined by the
-author for the "net-next" tree, the entire series will end up being
-slurped into the net-next tree.
+The new driver fails to build when OF_GPIO is disabled:
 
-https://www.kernel.org/doc/html/v5.10/networking/netdev-FAQ.html#q-how-do-i-indicate-which-tree-net-vs-net-next-my-patch-should-be-in
+drivers/gpio/gpio-delay.c: In function 'gpio_delay_of_xlate':
+drivers/gpio/gpio-delay.c:79:39: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
 
-This patch is still marked as "new" in patchwork:
+Fixes: cf5dec80c4e23 ("gpio: Add gpio delay driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://patchwork.kernel.org/project/netdevbpf/patch/20230605025211.743823-3-jiawenwu@trustnetic.com/
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index a1dac1345f60f..006abaedcae82 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1735,6 +1735,7 @@ config GPIO_AGGREGATOR
+ 
+ config GPIO_DELAY
+ 	tristate "GPIO delay"
++	depends on OF_GPIO
+ 	help
+ 	  Say yes here to enable the GPIO delay, which provides a way to
+ 	  configure platform specific delays for GPIO ramp-up or ramp-down
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.2
+
