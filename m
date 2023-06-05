@@ -2,166 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE216721B03
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 01:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47506721B68
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 03:18:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231316AbjFDXQZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Jun 2023 19:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        id S229449AbjFEBSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Jun 2023 21:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjFDXQZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 19:16:25 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF158A9;
-        Sun,  4 Jun 2023 16:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=hJhugzfcI+7CDRUGK0Ajees/mgMNPJIh2H0o1K86D4k=; b=C+IeKdScF5v2GD97F/m6ZtMTX/
-        z15kRDbwivWCuM9rcPMu+egUtWokTzXMyGcBsjRB62p13jNCd8HSmjz48ZJ4jyxehVUt51BwSlIZv
-        tcILVrz1Tuqcw9lSc0gsTenJqAD/ICsGmoiHuDHN50JqwPO45HcMa3wNkIX/Q/CB6eYo=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:49848 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1q5wxK-0000Mo-HS; Sun, 04 Jun 2023 19:16:15 -0400
-Date:   Sun, 4 Jun 2023 19:16:13 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Message-Id: <20230604191613.ea95fa9a1bc508525fe3bbd5@hugovil.com>
-In-Reply-To: <2023060406-scarcity-clear-cc56@gregkh>
-References: <20230602152626.284324-1-hugo@hugovil.com>
-        <20230602152626.284324-6-hugo@hugovil.com>
-        <2023060454-cotton-paramount-e33e@gregkh>
-        <20230604134344.73dc3cbb57d335d4a0b4b33a@hugovil.com>
-        <2023060406-scarcity-clear-cc56@gregkh>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        with ESMTP id S230193AbjFEBSF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Jun 2023 21:18:05 -0400
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF03BD;
+        Sun,  4 Jun 2023 18:18:03 -0700 (PDT)
+Received: from ed3e173716be.home.arpa (unknown [124.16.138.125])
+        by APP-03 (Coremail) with SMTP id rQCowADX3i6eN31kn3EDCw--.9557S2;
+        Mon, 05 Jun 2023 09:17:18 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     andy.shevchenko@gmail.com
+Cc:     oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
+        brgl@bgdev.pl, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: Re: [PATCH v2] gpio: sifive: Add missing check for platform_get_irq
+Date:   Mon,  5 Jun 2023 09:17:10 +0800
+Message-Id: <20230605011710.52-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: rQCowADX3i6eN31kn3EDCw--.9557S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYf7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
+        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
+        xwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2
+        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+        6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+        0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VU1ItC7UUUUU==
+X-Originating-IP: [124.16.138.125]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
-Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 4 Jun 2023 20:29:58 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Sun, Jun 04, 2023 at 01:43:44PM -0400, Hugo Villeneuve wrote:
-> > Here is what I suggest to silence the warning:
-> > 
-> > 	mctrl_mask = sc16is7xx_setup_mctrl_ports(dev);
-> > 
-> > #ifdef CONFIG_GPIOLIB
-> > 	ret = sc16is7xx_setup_gpio_chip(dev, mctrl_mask);
-> > 	if (ret)
-> > 		goto out_thread;
-> > #else
-> > 	(void) mctrl_mask;
-> > #endif
+On Sun, 4 Jun 2023 04:59:46 +0800 Andy Shevchenko wrote:
+>>    224          for (i = 0; i < ngpio; i++) {
+>>    225                  chip->irq_number[i] = platform_get_irq(pdev, i);
+>>  > 226                  if (chip->irq_number[i] < 0)
+>>    227                          return chip->irq_number[i];
 > 
-> Eeek,  no, please no...
+> So, this should be
 > 
-> First off, please don't put #ifdef in .c files if at all possible.
-
-Hi Greg,
-Andy also made a similar comment, but couldn't suggest a valid
-alternative when I asked him what to do about that.
-
-Just as a sidenote, I didn't add those #ifdef, they were already
-present in the driver in multiple places.
-
-What would be your suggestion to get rid of those #ifdef, simply delete
-them all?
-
-If you suggest me what to do, I will be happy to submit a
-future patch after this series is finalized to clean that aspect.
-
-
-> Secondly, that (void) craziness is just that.  Rework this to not be an
-> issue some other way please.
+>   ret = ...
+>   if (ret < 0)
+>     return ret;
+>   irq_number = ret;
 > 
-> > I could also store (define new variable) mctrl_mask directly inside struct sc16is7xx_port...
-> 
-> Sure, that sounds best.
+>>    228          }
 
-Ok, I will do that.
+I will submit a v3 to fix it.
+Also, the same goes for the other patch
+"gpio: ath79: Add missing check for platform_get_irq".
 
+Thanks,
+Jiasheng
 
-> > > And you have a real port here, no need to pass in a "raw" struct device,
-> > > right?
-> > 
-> > The function operates globally on both ports (or nr_uart), not just a single port. That is why I pass the "raw" struct device, in order to extract the 
-> > struct sc16is7xx_port from it:
-> > 
-> >     struct sc16is7xx_port *s = dev_get_drvdata(dev);
-> > 
-> > Inside the function, I also need the "raw" struc device. If we pass a struct sc16is7xx_port to the function, then I can get the "raw" struc device with this:
-> > 
-> > static u8 sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s)
-> > {
-> > 	struct device *dev = &s->p[0].port.dev;
-> > 
-> > But I find this more obfuscated and hard to understand than to simply pass a "raw" struct device...
-> 
-> You should never need a "raw" struct device for stuff (if so, something
-> is really odd).  Except for error messages, but that's not really a big
-> deal, right?
-
-> Don't pass around struct device in a driver, use the real types as you
-> know you have it and it saves odd casting around and it just doesn't
-> look safe at all to do so.
-
-If you look at the patch, you will see that I need "struct device *dev"
-at two places in the sc16is7xx_setup_mctrl_ports() function to read the
-device properties:
-
-...
-+static u8 sc16is7xx_setup_mctrl_ports(struct device *dev)
-...
-+	count = device_property_count_u32(dev,...
-...
-+	ret = device_property_read_u32_array(dev,
-...
-
-I do not understand why this is odd?
-
-
-> And if you have that crazy s->p.... stuff in multiple places, the
-> perhaps you might want to rethink the structure somehow?  Or at the very
-> least, write an inline function to get it when needed.
-
-I am not sure what you mean by that, since again that "crazy" stuff is
-already used everywhere in this driver?
-
-
-> Also, meta comment, you might want to use some \n characters in your
-> emails, your lines are really long :)
-
-Strange, I use sylpheed as a mail client, and the option "Wrap lines at
-72 characters" is enabled by default, but somehow you must also check
-the box "Wrap on input" for it to work, not very intuitive :) Thanks for
-pointing that to me.
-
-Hugo.
