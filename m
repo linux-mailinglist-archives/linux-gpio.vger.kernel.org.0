@@ -2,76 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD7F2721E9D
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 08:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73933721EDA
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 09:03:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbjFEG7b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 02:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
+        id S230296AbjFEHDb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 03:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjFEG7a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 02:59:30 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DCB9F
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Jun 2023 23:59:28 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-514924ca903so6415609a12.2
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jun 2023 23:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685948367; x=1688540367;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b3gf39J0e6Ug9xwuUlT/0gU+hrC/12pzramCbbQjL4A=;
-        b=mW8GZA+Rq9gwuGiJ7l2Yb5V80S2yfzyuh6nK4EWOKRupfjPPHyNDnyqkR0dwHq/k5N
-         iXODZH/q07+nwXtrznbS9anb5dS3YIMEhAzhSYIqGotN8rj2Z9EYwAFXDTCH9OAWO3NW
-         dOVbnS0derytPK206OQnEvrNc99hO5vsoftQI3TInD10V9bibtst8nFxGujnWdcZg5a/
-         fdIMnVD48tuh2YmSHW3PnOEosdAWBU+CHDcYBkaAhyyZ+5b16hit9OxsDGuHFkEphxuB
-         C8iZlXL1KXTvGU3ON8o7Oi/ACNjCHctgUxuYwZ2y65UStqAPmfeTgtbJM+76nywbVEOE
-         Hi2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685948367; x=1688540367;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b3gf39J0e6Ug9xwuUlT/0gU+hrC/12pzramCbbQjL4A=;
-        b=kxSF4XeZpW7uUuqWgqZR/uSrkOJtfyLJ33OkIygSw78yr19qMNOP31gpXN1pWjOjdG
-         qZevtJmoFiiU0dCGxtTP3ZZENXIPq9PspzzNa/mogc63Qo6n3jcUWkOq4gDg4z/LVNUi
-         IlEL4DyUCApPwST7slprz51pGVJqZxqTAu57XbWYmz61B4e4J4jLzoTyUZQaIdUbB1nX
-         Y/zTaDX4p9HFS0bL08vZy/oQrFbpQLpf0h+dxCg0hwu0SuvKvAXpmV/Vdcc+ZgP9925A
-         Sj+ahlLi64wwlI9RDuhhY9wmLXyg6S0ak123cESI2hvg8EbeFN027F1SgJBQZSiAgB3E
-         TZIA==
-X-Gm-Message-State: AC+VfDxhjEnCdRMUcKD+p2WLNNKUoZ0r4Xlq9QgT3/BZH35a9XNchnpc
-        Zc4wTSthypukitbsG97FUKSJ4Q==
-X-Google-Smtp-Source: ACHHUZ62BEmn8WrMHA3fsRSPnPX/q78d2QO6HDOam1Lb/CZYXyD8ch0G6LozIIUyy+8egmqzEdKcKw==
-X-Received: by 2002:a05:6402:54e:b0:514:8e4a:7e8f with SMTP id i14-20020a056402054e00b005148e4a7e8fmr6426564edx.32.1685948367246;
-        Sun, 04 Jun 2023 23:59:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id l9-20020aa7c3c9000000b005105f002fd1sm3509006edr.66.2023.06.04.23.59.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Jun 2023 23:59:26 -0700 (PDT)
-Message-ID: <b9baf188-6ee3-40ed-27e9-66a08c8de7f6@linaro.org>
-Date:   Mon, 5 Jun 2023 08:59:24 +0200
+        with ESMTP id S230291AbjFEHDF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 03:03:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6191706;
+        Mon,  5 Jun 2023 00:02:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B92C861F9E;
+        Mon,  5 Jun 2023 07:02:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F522C433EF;
+        Mon,  5 Jun 2023 07:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685948524;
+        bh=UY3nLgx5ktjqstws5tU2oB1vOZhXh6L50Bolq73FYzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NjQVjTBw6Rf8UlLW8WTLW3bXDKiDFhS2c9HwJmdPwNLS/oTlipVqQu7dnj7tnt8tF
+         Q13nE97Xf7UFskZt0KEZaUBYbolmeQVMkRgUEf7oisbmZf1nL4mbUPkSbXiTQZnrtI
+         iZGuWovK6+7d6zqJD1q4TargREutBqctvZ6nKX6GwPuULvATlI++pclzsYMOMsme/r
+         NDaWIRUYekDHCMF2RxSJVQgV1UetbNyQLdBVhgWU3ctuhmOMJfCZWMk8/VEKiz8Ct2
+         fyhlxqo89DZ/o6JQnN/n9WekduA3xGjoam4meOUL+Eb7haV7WwH5EQ5tKTX7BwxxIe
+         d82v55d1BB35Q==
+Date:   Mon, 5 Jun 2023 09:02:00 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     netdev@vger.kernel.org, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        jsd@semihalf.com, Jose.Abreu@synopsys.com, andrew@lunn.ch,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mengyuanlou@net-swift.com,
+        Piotr Raczynski <piotr.raczynski@intel.com>
+Subject: Re: [PATCH net-next v11 2/9] i2c: designware: Add driver support for
+ Wangxun 10Gb NIC
+Message-ID: <ZH2IaM86ei2gQkfA@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, jsd@semihalf.com,
+        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mengyuanlou@net-swift.com,
+        Piotr Raczynski <piotr.raczynski@intel.com>
+References: <20230605025211.743823-1-jiawenwu@trustnetic.com>
+ <20230605025211.743823-3-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v5 1/1] dt-bindings: pinctrl: Update pinctrl-single to use
- yaml
-Content-Language: en-US
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20230523092038.55677-1-tony@atomide.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230523092038.55677-1-tony@atomide.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C7Kg18qcwmutGUSx"
+Content-Disposition: inline
+In-Reply-To: <20230605025211.743823-3-jiawenwu@trustnetic.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -80,247 +69,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/05/2023 11:20, Tony Lindgren wrote:
-> Update binding for yaml and remove the old related txt bindings. Note that
-> we are also adding the undocumented pinctrl-single,slew-rate property. And
-> we only use the first example from the old binding.
-> 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+--C7Kg18qcwmutGUSx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Jun 05, 2023 at 10:52:04AM +0800, Jiawen Wu wrote:
+> Wangxun 10Gb ethernet chip is connected to Designware I2C, to communicate
+> with SFP.
+>=20
+> Introduce the property "wx,i2c-snps-model" to match device data for Wangx=
+un
+
+Does this not need some binding documentation somewhere?
+
+> in software node case. Since IO resource was mapped on the ethernet drive=
+r,
+> add a model quirk to get regmap from parent device.
+
+All the best,
+
+   Wolfram
 
 
-Thank you for your patch. There is something to discuss/improve.
+--C7Kg18qcwmutGUSx
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> @@ -0,0 +1,201 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-single.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: One-register-per-pin type device tree based pinctrl driver
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmR9iGUACgkQFA3kzBSg
+KbbYrQ/9FEyXD3uaVkL6TjkfZKbPWVKFYOJxtDnXR8jyBwK1G41bCdSggGp7ShSF
+tcF1YqIbZmDRiElwRDWgeYYvHfWETGFvAx+Jn5njZWOQSp1FeFNZh3//MTBd9Mv2
+weVom24lGR07d61JbAsei3ax3lqGCjkbvOUHXjeQWSAYWA5e6bK/KL3ZkrjJUmjx
+CglJFynmsXdbPMZ/oIFYON7xEJo2LXsd8MfLSoNYyscRA53ntezaOlKRiPd7ASe8
+3LW9y3dYAccZGrEenxoV3CPdCICt8AhE8bZa7/xJOaqjzvHDMOsxr58ptzw6HIRM
+rMAvt7RBiSv6IPBzUWAYh1JOpfjqmKXAi4rL5b6QVjpmxofB2M57kR/imueOHWx9
+12F/CbZj28seONdyDGDzhnwsxXQi6YOslB46b5D/g+K7s8znqmzRqPeN78j0TFoM
+5dUJQqvt/o8BlE9fGawb06rDn3VwDuMLq4+viHsCbQ1ZrTsXA9AtwCpXvaUFS++M
+i/qiUFnClmXtrYmb0PUCaLshQAsDttb1upNzbtzwPo3zDgrscB41tcl9tsZaZeNf
+vpGlPr3gQhk7c3hLCO8lLYfq/q7VtMkVYhQdpDZNHXsVUOEYexiW16Pzphv7kSwz
+LBdgLkNFgSUJaW+jCyX6GxzUMEqlIpfx3q1JFopfbfJJNzI630w=
+=/Ntz
+-----END PGP SIGNATURE-----
 
-Drop "device tree based pinctrl driver" and describe the hardware.
-
-> +
-> +maintainers:
-> +  - Tony Lindgren <tony@atomide.com>
-> +
-> +description:
-> +  This binding describes pinctrl devices that use one hardware register to
-> +  configure each pin.
-
-Drop "This binding describes" and just say what is the hardware here.
-
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-
-Drop items, you have just an enum.
-
-> +          - enum:
-> +              - pinctrl-single
-> +              - pinconf-single
-> +      - items:
-> +          - enum:
-> +              - ti,am437-padconf
-> +              - ti,dra7-padconf
-> +              - ti,omap2420-padconf
-> +              - ti,omap2430-padconf
-> +              - ti,omap3-padconf
-> +              - ti,omap4-padconf
-> +              - ti,omap5-padconf
-> +          - const: pinctrl-single
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  '#pinctrl-cells':
-> +    enum: [ 1, 2 ]
-
-Describe in description what are the arguments. Old binding had it.
-
-> +
-> +  pinctrl-single,bit-per-mux:
-> +    description: Optional flag to indicate register controls more than one pin
-> +    type: boolean
-> +
-> +  pinctrl-single,function-mask:
-> +    description: Mask of the allowed register bits
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  pinctrl-single,function-off:
-> +    description: Optional function off mode for disabled state
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  pinctrl-single,register-width:
-> +    description: Width of pin specific bits in the register
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [ 8, 16, 32 ]
-> +
-> +  pinctrl-single,gpio-range:
-> +    description: Optional list of pin base, nr pins & gpio function
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: phandle of a gpio-range node
-> +          - description: pin base
-> +          - description: number of pins
-> +          - description: gpio function
-> +
-> +  '#gpio-range-cells':
-> +    description: No longer needed, may exist in older files for gpio-ranges
-> +    deprecated: true
-> +    const: 3
-> +
-> +  gpio-range:
-> +    description: Optional node for gpio range cells
-> +    type: object
-
-On this level of indentation:
-additionalProperties: false
-
-> +    properties:
-> +      '#pinctrl-single,gpio-range-cells':
-> +        description: Number of gpio range cells
-> +        const: 3
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +patternProperties:
-> +  '-pins((.*)?)$|-pin':
-
-Why do you need outer ()?
--pin$
-
-> +    description: Pin group node name using pins or pin naming
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-
-You don't use anything from this ref. Drop it, unless you plan to
-deprecate old properties and use generic from pinmux-node.
-
-> +
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      pinctrl-single,pins:
-> +        description:
-> +          Array of pins as described in pinmux-node.yaml for pinctrl-pin-array
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +      pinctrl-single,bits:
-> +        description: Register bit configuration for pinctrl-single,bit-per-mux
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: register offset
-> +          - description: value
-> +          - description: pin bitmask in the register
-> +
-> +      pinctrl-single,bias-pullup:
-> +        description: Optional bias pull up configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: input
-> +          - description: enabled pull up bits
-> +          - description: disabled pull up bits
-> +          - description: bias pull up mask
-> +
-> +      pinctrl-single,bias-pulldown:
-> +        description: Optional bias pull down configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: input
-> +          - description: enabled pull down bits
-> +          - description: disabled pull down bits
-> +          - description: bias pull down mask
-> +
-> +      pinctrl-single,drive-strength:
-> +        description: Optional drive strength configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: drive strength current
-> +          - description: drive strength mask
-> +
-> +      pinctrl-single,input-schmitt:
-> +        description: Optional input schmitt configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: input
-> +          - description: enable bits
-> +          - description: disable bits
-> +          - description: input schmitt mask
-> +
-> +      pinctrl-single,low-power-mode:
-> +        description: Optional low power mode configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: low power mode value
-> +          - description: low power mode mask
-> +
-> +      pinctrl-single,slew-rate:
-> +        description: Optional slew rate configuration
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: slew rate
-> +          - description: slew rate mask
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - pinctrl-single,register-width
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc {
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +        pinmux@4a100040 {
-
-Mixed up indentation.
-
-> +          compatible = "pinctrl-single";
-> +          reg = <0x4a100040 0x0196>;
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          #pinctrl-cells = <2>;
-> +          #interrupt-cells = <1>;
-> +          interrupt-controller;
-> +          pinctrl-single,register-width = <16>;
-> +          pinctrl-single,function-mask = <0xffff>;
-> +          pinctrl-single,gpio-range = <&range 0 3 0>;
-> +          range: gpio-range {
-> +            #pinctrl-single,gpio-range-cells = <3>;
-> +          };
-> +
-> +          uart2-pins {
-
-
-Best regards,
-Krzysztof
-
+--C7Kg18qcwmutGUSx--
