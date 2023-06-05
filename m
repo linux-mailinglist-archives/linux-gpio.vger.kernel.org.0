@@ -2,72 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D12EB7220B7
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 10:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99C437221CA
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 11:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbjFEIOa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 04:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S230282AbjFEJOg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 05:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229902AbjFEIO3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 04:14:29 -0400
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCFECA1;
-        Mon,  5 Jun 2023 01:14:25 -0700 (PDT)
-X-QQ-mid: Yeas50t1685952763t318t21946
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [60.177.99.31])
-X-QQ-SSF: 00400000000000F0FPF000000000000
-From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 11751809325026712248
-To:     "'Wolfram Sang'" <wsa@kernel.org>
-Cc:     <netdev@vger.kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <mika.westerberg@linux.intel.com>, <jsd@semihalf.com>,
-        <Jose.Abreu@synopsys.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-        <linux-i2c@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <mengyuanlou@net-swift.com>,
-        "'Piotr Raczynski'" <piotr.raczynski@intel.com>
-References: <20230605025211.743823-1-jiawenwu@trustnetic.com> <20230605025211.743823-3-jiawenwu@trustnetic.com> <ZH2IaM86ei2gQkfA@shikoro> <00c901d9977e$af0dc910$0d295b30$@trustnetic.com> <ZH2UT55SRNwN15t7@shikoro>
-In-Reply-To: <ZH2UT55SRNwN15t7@shikoro>
-Subject: RE: [PATCH net-next v11 2/9] i2c: designware: Add driver support for Wangxun 10Gb NIC
-Date:   Mon, 5 Jun 2023 16:12:42 +0800
-Message-ID: <00eb01d99785$8059beb0$810d3c10$@trustnetic.com>
+        with ESMTP id S229473AbjFEJOf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 05:14:35 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DE7D2;
+        Mon,  5 Jun 2023 02:14:34 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-75d461fde66so171900285a.1;
+        Mon, 05 Jun 2023 02:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685956473; x=1688548473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rE0xssBXcK9nZ+e8wfDpCxReNmG+e30YEh+xZMobuHQ=;
+        b=PIAoC/LhkYM27nDo4SJJQNhcXu9rNI7W+He0InIiRvpP6PNh+TDH0z4fD881+7/isH
+         KAAjqxuWkn3poO5jCFCS3L5KEZwcXXjiRoXVJ23LmiX2Yf1UljB1Eg5MmjqDHEbTwKRX
+         bOhUFeBDWeIqMYjlM18TqumVEaAqWmgh3m1cYt0J3gnVtvDxw0z8LJF0Nhq7+eufHVWv
+         B5i7i6eHHyzO5lsRKE1+ILa2n5IaCJW/Sk8vBAdk9v6hcljHeOrHSG7eLoPjelaFNmfb
+         YQhfC6xgY/BZaoQKSGTR9bPxSwQqlHbE3hE9zpyX49DjOLUg3O9o+LbxJCCRqs+J96sD
+         GUIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685956473; x=1688548473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rE0xssBXcK9nZ+e8wfDpCxReNmG+e30YEh+xZMobuHQ=;
+        b=RItnRttZ+xrPvXRRzySsx9DFA1IfZ7r+0wrTGETj+v47+BXQ08Fm20ukMHueFCveZX
+         M1YJh4rRlzZSbYJp90cGvbHkW6C1PygbCXHuMUHLsF7dtfe7Ewe1sEvaaChCeRWQemo4
+         ZkFVnim13zJQ+mAnxr69/UPrwXBPqobcaGE6ceeGxtlI1PedLHOR5zKQTh9pB29j/1Nt
+         neh7qBNgeITkhz6zX+lD3W+hid/wuHu85XyLjlhlKbYS9xcoXORmvFdbPMjsevstIBrf
+         /4K8DcYxqNl1+1uXWC88gm49vfK7eevdDeWLHHqUacuFpIVOA1spwBipLTvRDrNm0KV8
+         V7MQ==
+X-Gm-Message-State: AC+VfDwYdu15ycBmLMQYyNhiNauZX2z/h4a5Vm3Glwu139FkT/8rs4aV
+        Cs1IsLQtHzVj4lTISEO+3Xa2YeMaRIutRAzoZhWwWclavU8=
+X-Google-Smtp-Source: ACHHUZ44ZC3HtizNbif0Pd3vZlP2LsWIeHXWBfYc4IZjIR0M7aQKnZ0bfR9VTq7NXsjtd03zjdTQCpOVOBIRqPK97Yw=
+X-Received: by 2002:a05:620a:8b87:b0:75b:23a0:e7a0 with SMTP id
+ qx7-20020a05620a8b8700b0075b23a0e7a0mr18512831qkn.1.1685956473319; Mon, 05
+ Jun 2023 02:14:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQKoIYpMsU3pQxi84WWC4YPAy6bqVAIyHk5AAe8WB/YDFYJsZwGgoPRlrZgJMUA=
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230605014850.9591-1-jiasheng@iscas.ac.cn>
+In-Reply-To: <20230605014850.9591-1-jiasheng@iscas.ac.cn>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 5 Jun 2023 12:13:57 +0300
+Message-ID: <CAHp75VdZct58EiLDL0ebCvcQBVMzuZxJZ8z=bs8D2UDaCsuo9A@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sifive: Add missing check for platform_get_irq
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Cc:     oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
+        brgl@bgdev.pl, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Monday, June 5, 2023 3:53 PM, Wolfram Sang wrote:
-> > Do you mean the device tree binding? This property in only used in case of software
-> > node, for wangxun Soc, which has no device tree structure.
-> 
-> I see, thanks.
-> 
-> How is the dependency of these patches? I'd like to take this patch via
-> the i2c tree if possible. I guess the other patches will build even if
-> this patch is not in the net-tree? Or do we need an immutable branch? Or
-> is it really better if all goes in via net? We might get merge conflicts
-> then, though. There are other designware patches pending.
+On Mon, Jun 5, 2023 at 4:49=E2=80=AFAM Jiasheng Jiang <jiasheng@iscas.ac.cn=
+> wrote:
+>
+> Add the missing check for platform_get_irq() and return error code
+> if it fails.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Fixes: f52d6d8b43e5 ("gpio: sifive: To get gpio irq offset from device tr=
+ee data")
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+> ---
+> Changelog:
+>
+> v2 -> v3:
+>
+> 1. Check before assigning values.
+>
+> v1 -> v2:
+>
+> 1. Return "girq->parents[0]" instead of "-ENODEV".
+> ---
+>  drivers/gpio/gpio-sifive.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 98939cd4a71e..745e5f67254e 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -221,8 +221,12 @@ static int sifive_gpio_probe(struct platform_device =
+*pdev)
+>                 return -ENODEV;
+>         }
+>
+> -       for (i =3D 0; i < ngpio; i++)
+> -               chip->irq_number[i] =3D platform_get_irq(pdev, i);
+> +       for (i =3D 0; i < ngpio; i++) {
+> +               ret =3D platform_get_irq(pdev, i);
+> +               if (ret < 0)
+> +                       return ret;
+> +               chip->irq_number[i] =3D ret;
+> +       }
+>
+>         ret =3D bgpio_init(&chip->gc, dev, 4,
+>                          chip->base + SIFIVE_GPIO_INPUT_VAL,
+> --
+> 2.25.1
+>
 
 
-Yes, other patches will build even without this patch. But SFP will not work.
-This patch series implement I2C, GPIO, SFP and PHYLINK. The support of SFP
-is dependent on I2C and GPIO. If these patches will be end up merging in the
-same upstream version, it's not a problem to merge them in different trees,
-I think.
-
+--=20
+With Best Regards,
+Andy Shevchenko
