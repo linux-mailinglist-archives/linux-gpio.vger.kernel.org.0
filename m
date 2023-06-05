@@ -2,78 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A19E72246A
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 13:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6D82722661
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 14:52:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232073AbjFELSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 07:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42694 "EHLO
+        id S232968AbjFEMwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 08:52:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjFELSE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 07:18:04 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6194ACD
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Jun 2023 04:17:53 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f6d38a140bso33430545e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Jun 2023 04:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20221208.gappssmtp.com; s=20221208; t=1685963872; x=1688555872;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cE1s1SBRasCQ26tTjz3vS7kkfu8oXf1VV0juiyMiwK8=;
-        b=m4HZI5EmdHgPw2WGHg9wxlsh0bqAzRSeSWrByjeIZHspybo++CFpucOhCtrbQtUODD
-         9TBeM5JPTmg36p+B598Y2AbG7LEmYvEsYEp8wEUR+E63eUmw3eOzgjuLldwAF+E5/Szp
-         Sp0cuf+F9OXFAmEJJ35HpkN1YXcPhUUOBzsZrx1ARJbFOMxti0vkHNUQRyqhzPsEvbeZ
-         qcqbWjEdwx6pttTbEXm8StNP3/EEHdmfOS7lx+tCmT7aERdvtotUE53ADc6Qp5k+69Zj
-         LLxkcmwD/CujrADXyXCEenYEtwNM+V5s3TKQe8eVKXTtghV2G8lTFmVKazMF52hLDVYW
-         SdUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685963872; x=1688555872;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cE1s1SBRasCQ26tTjz3vS7kkfu8oXf1VV0juiyMiwK8=;
-        b=N4Xsfq2km7sq3rejhu9toHotwEVxElPvo1vy7Ruro+6q5KDTIIkBHB1Ivc2+fG2cJV
-         LIsakVkNisRrgoYNycma2zUcuEUGWN3gPUbvrwes/XL4Ii2Rg9fDxIADfmI8H1WCqVKZ
-         kYnUrCd7NlSthNXh4ddmyeGk6+EsPu5K09rfon/yNxTw58THB05/IiRTHoeG57MDcbdq
-         mrUtLgWGQXbZiJyRAHXvxt+429EH9o286GMZtYZeo6YNMmFQ6q7gnhO1Nl/daEGCZWku
-         LaLRzTFRjjE73I9x2AW/vQytK4sl4P0xcyXlbBN5ncmD3g5bdglBMqpzBMB73xuCWAMS
-         MITA==
-X-Gm-Message-State: AC+VfDyhh1BYq2EM66sElLxIW+w+df0reIGFvNYr0X38z9aI6LeXJ+Q0
-        IMbzNiwBXZytVeTL56lGpWmJpA==
-X-Google-Smtp-Source: ACHHUZ6aLiqxnvjM26ak+7OYnd6YE8gM65tnKeFRHFkgrmqIUL8IWqvKo9CzWSj59s0bV3Yu6lPdJg==
-X-Received: by 2002:a1c:f305:0:b0:3f7:148b:c310 with SMTP id q5-20020a1cf305000000b003f7148bc310mr7496069wmq.13.1685963871878;
-        Mon, 05 Jun 2023 04:17:51 -0700 (PDT)
-Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id o10-20020a1c750a000000b003f60101074dsm14129919wmc.33.2023.06.05.04.17.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Jun 2023 04:17:51 -0700 (PDT)
-Message-ID: <54ee38d1-5924-8305-0da8-0a2d35ff80a7@monstr.eu>
-Date:   Mon, 5 Jun 2023 13:17:50 +0200
+        with ESMTP id S232827AbjFEMwk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 08:52:40 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7EAFA1;
+        Mon,  5 Jun 2023 05:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685969557; x=1717505557;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gr9FU0HsXW4j6iFAuKnKLc7ghOPdKZNL52m0iUuheIY=;
+  b=A30ZL6KRktmNztWZoetcMdIlgvonLlo//yU15CLlWFP0ipTiZBzzcSMD
+   oe0h6S3YxRiz330dZgLAUjZcNhFNTZpoPTAUCN0dxjnLYhDGsNzvByaK2
+   8nQst8rTZNdkbGuzCIr4MlY89tjaFU6taUMK78+vbPSWhhUlOzD/87nzG
+   891CE/UdIb0Xw8Zsx1YWRwbFWtaM0EzfQC2B1Wgw3W5gdMWyp5B+i5sG6
+   C4wDiaycVEbpMOt6vJMcxSqdOQRJvJsk57Hlr9DxUAD1sgTpy//LaxL62
+   tHVXABCA4qK2wP+rRHBjPXD3mUxZkljb7nnFJD3DMGo0F58DM/0zZSVeW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="358806227"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="358806227"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 05:52:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="773729801"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="773729801"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Jun 2023 05:52:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q69hH-001NFH-0K;
+        Mon, 05 Jun 2023 15:52:31 +0300
+Date:   Mon, 5 Jun 2023 15:52:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yanteng Si <siyanteng@loongson.cn>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+        Hu Haowen <src.res@email.cn>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: Re: [PATCH v1 1/1] gpiolib: Remove unused gpio_cansleep()
+Message-ID: <ZH3ajj/tGc3VYvHT@smile.fi.intel.com>
+References: <20230602150106.47783-1-andriy.shevchenko@linux.intel.com>
+ <2fad9d11-ecc6-aa3d-8c0b-14b1f196ce74@loongson.cn>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] dt-bindings: xilinx: Remove Rajan, Jolly and Manish
-Content-Language: en-US
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Conor Dooley <conor+dt@kernel.org>,
-        Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <9b252dd71c82593fa6b137eca2174d9ab6e57f7a.1684828606.git.michal.simek@amd.com>
-From:   Michal Simek <monstr@monstr.eu>
-In-Reply-To: <9b252dd71c82593fa6b137eca2174d9ab6e57f7a.1684828606.git.michal.simek@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fad9d11-ecc6-aa3d-8c0b-14b1f196ce74@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,78 +74,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 5/23/23 09:56, Michal Simek wrote:
-> Rajan, Jolly and Manish are no longer work for AMD/Xilinx and there is no
-> activity from them to continue to maintain bindings that's why remove them.
+On Mon, Jun 05, 2023 at 10:27:44AM +0800, Yanteng Si wrote:
+> Hi andy,
 > 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
-> 
->   Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml    | 2 --
->   .../bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml        | 1 -
->   .../bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml         | 1 -
->   .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml        | 1 -
->   4 files changed, 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> index 93ae349cf9e9..5cbb34d0b61b 100644
-> --- a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml
-> @@ -8,8 +8,6 @@ title: Xilinx Versal clock controller
->   
->   maintainers:
->     - Michal Simek <michal.simek@amd.com>
-> -  - Jolly Shah <jolly.shah@xilinx.com>
-> -  - Rajan Vaja <rajan.vaja@xilinx.com>
->   
->   description: |
->     The clock controller is a hardware block of Xilinx versal clock tree. It
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml b/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-> index 6b62d5d83476..87ff9ee098f5 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-> +++ b/Documentation/devicetree/bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml
-> @@ -8,7 +8,6 @@ title: Synopsys DesignWare Universal Multi-Protocol Memory Controller
->   
->   maintainers:
->     - Krzysztof Kozlowski <krzk@kernel.org>
-> -  - Manish Narani <manish.narani@xilinx.com>
->     - Michal Simek <michal.simek@amd.com>
->   
->   description: |
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml b/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-> index 7864a1c994eb..75143db51411 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-> +++ b/Documentation/devicetree/bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml
-> @@ -8,7 +8,6 @@ title: Zynq A05 DDR Memory Controller
->   
->   maintainers:
->     - Krzysztof Kozlowski <krzk@kernel.org>
-> -  - Manish Narani <manish.narani@xilinx.com>
->     - Michal Simek <michal.simek@amd.com>
->   
->   description:
-> diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> index cdebfa991e06..24ad0614e61b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> @@ -8,7 +8,6 @@ title: Xilinx ZynqMP Pinctrl
->   
->   maintainers:
->     - Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-> -  - Rajan Vaja <rajan.vaja@xilinx.com>
->   
->   description: |
->     Please refer to pinctrl-bindings.txt in this directory for details of the
+> On 2023/6/2 23:01, Andy Shevchenko wrote:
 
-Applied.
-M
+Thank you, I have incorporated the proposed amendments and it will be available
+in v2 of this patch.
 
 -- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP/Versal ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal/Versal NET SoCs
-TF-A maintainer - Xilinx ZynqMP/Versal/Versal NET SoCs
+With Best Regards,
+Andy Shevchenko
+
+
