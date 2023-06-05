@@ -2,105 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F95E721F7B
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 09:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9515721FB5
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jun 2023 09:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbjFEHZ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 03:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53268 "EHLO
+        id S229772AbjFEHha (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 03:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231513AbjFEHZW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 03:25:22 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01F698
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Jun 2023 00:25:20 -0700 (PDT)
+        with ESMTP id S229634AbjFEHha (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 03:37:30 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1223AD
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Jun 2023 00:37:28 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-45d59140bbdso1375875e0c.1
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jun 2023 00:37:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1685949921; x=1717485921;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7ogy+u5MEFDEv6i2xU5Lgl9mTV2t6utYQR6f88rhVTQ=;
-  b=plc+QBWDaGXWxmtJaEVlbRWCZSgFrannKX9LWL1Mo+Nz+MU25vbRfbL9
-   8rcHXEzlOswIYdtOfjd5LHOHJNOZutlfIuYB+B0ZrnoqMZFS3BkEbui2y
-   nL3TMvd8PUA+sfNYs8SbZS9qpeM8rXIn2/qLWbGD4PoNZhKa+uPwGX84J
-   tHzvCCL+qwLcr1PIGddIcPsz7cdDUsM651dQ4CqwbHnGtFC68kCbTGTF9
-   L4XcapKccP5feP7JtqCM4cAkcdHIQ6tFCModfrqUQZuYxucY1qGinFKii
-   +X2gnxu2bJLNXhGhvZPFHXKEvjYhBGtblxVy0ThoUGXsIQ7cRf/2RLIai
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,217,1681164000"; 
-   d="scan'208";a="31265845"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 05 Jun 2023 09:25:18 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 05 Jun 2023 09:25:19 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 05 Jun 2023 09:25:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1685949918; x=1717485918;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7ogy+u5MEFDEv6i2xU5Lgl9mTV2t6utYQR6f88rhVTQ=;
-  b=oLNtXt7YpOaH4PujfYXHTkktId04h8G0+3QP3OBulVTfWpoOJ75WgsFy
-   prBlCaW16jS7K6SKb6/UtI2AZY2MIfLvqmIVLIkLCcBXnJmXxxsZ0bOVo
-   VjpCx9RKA9JYeRh7zTtFKY9x+vUuMbnOGj0oX4NlsrXapmmrUbTPNjC15
-   4efOxUn1Y7XqaoPbTX4pf5AWu/DNJHLbdrtUfji7ZX2AmRCuFDtyOp4vS
-   7LmKxOgMoGMooi1Lejo3XBhef/j8y3b1S82KlubH84pt4JKcz39HdSQkK
-   VM1dFq0Bn3/x+x69YVMcD+wx9M22T9ALY7nltISrMu8vTtPIZzaHmxvnH
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.00,217,1681164000"; 
-   d="scan'208";a="31265844"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 05 Jun 2023 09:25:18 +0200
-Received: from steina-w.tq-net.de (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id AF5D6280086;
-        Mon,  5 Jun 2023 09:25:18 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 1/1] gpio: Fix dependency for gpio-delay
-Date:   Mon,  5 Jun 2023 09:25:18 +0200
-Message-Id: <20230605072518.256568-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685950648; x=1688542648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QLlv5F9PbP429U6eYshsTx78m78vhx/Ni3+OMaDrDuk=;
+        b=REkHffHSXoVYKHNpcr655dKQDxSFAIT620s2L+deY+q7nt0470LuLeKxnOfBexH5c3
+         pVlNLw4k1NSZtRo4hSYvcNqwxY1qX+Y/MY3zaRXilvwR+3e8GsqM+E05pb2jENLgv9lE
+         lk/01M7/h9Viq4RxlglN/vfGnkfmQhLvSCK44eqXHCvWl/UUdFvL7lvWNAyaEM8isy47
+         yt1U5ESY9KJ7iLt1PwLXaHkFoHsr+oTbMzqUn9rR16y5KO7DUVwSuh/UzWjBJ3CqmxMj
+         GgJy2pQGqr7TxnMIBEI2YztODahJ45Evys0vVq7PzRZAjG+nrihXioI5aFf4ZsfCiBF9
+         dLAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685950648; x=1688542648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QLlv5F9PbP429U6eYshsTx78m78vhx/Ni3+OMaDrDuk=;
+        b=ecSqYVKu07dyKr0sJeowY0nxL1NlPA5BQ32vgKtIO0Qd08raaqlCPm8GJef+hap8Lw
+         6sY/yutjojUsgrqBg3VG35QlQpWCFj0sUojjdNveKCGtlsJv9AZjhmmE83eggu0E/EPr
+         0nR/OB93cKOVqXPE0dDTQtwnE9lyQWyySpDGpHlm7CdqZH4aJLQ7b6akpqHmOT/5v4L6
+         1X+rJgJEHDqc9VrUjhmyN9Kp/NgDiJColbwKBCZmlI6Kwf7lqygtt8YgG209RmkRJfpP
+         pNd+F+l4aBqpWJl46jzFxbl9sVgZyNY1nc3Mq4I1uLaRviQ4oQFbDprqUILY+SxMmYDU
+         u07A==
+X-Gm-Message-State: AC+VfDzNP31/P5G71H7ZiEeagic0xNMgoQ0oKFmUs5/U1FMdgHqM0ecF
+        CdytyqZZ1h06JNedoo5vLTb57/qem1RuZDXTFQn2Vrl0gKqazUy1
+X-Google-Smtp-Source: ACHHUZ7ZubEyARGwHdK96qaOxrsiyj3Mv6QWhjS4pvPnK42f4OvbQdz/XiwAWoai/EIQ6MJYtCFW/UEYIbwyBzvQ/lA=
+X-Received: by 2002:a1f:5404:0:b0:44f:eb0a:77db with SMTP id
+ i4-20020a1f5404000000b0044feb0a77dbmr5060931vkb.11.1685950647819; Mon, 05 Jun
+ 2023 00:37:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230605072518.256568-1-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20230605072518.256568-1-alexander.stein@ew.tq-group.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Jun 2023 09:37:16 +0200
+Message-ID: <CAMRc=MeWy=zp1fU0hraX7cEegAEzNOOxv5jYCWC8ZcNDmOTOYg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: Fix dependency for gpio-delay
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver relies on OF_GPIO features, add a dependency to Kconfig.
+On Mon, Jun 5, 2023 at 9:25=E2=80=AFAM Alexander Stein
+<alexander.stein@ew.tq-group.com> wrote:
+>
+> This driver relies on OF_GPIO features, add a dependency to Kconfig.
+>
+> Fixes: cf5dec80c4e2 ("gpio: Add gpio delay driver")
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> This was undetected on my machine as CONFIG_OF_GPIO was already enabled.
+>
+>  drivers/gpio/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index a1dac1345f60f..006abaedcae82 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1735,6 +1735,7 @@ config GPIO_AGGREGATOR
+>
+>  config GPIO_DELAY
+>         tristate "GPIO delay"
+> +       depends on OF_GPIO
+>         help
+>           Say yes here to enable the GPIO delay, which provides a way to
+>           configure platform specific delays for GPIO ramp-up or ramp-dow=
+n
+> --
+> 2.34.1
+>
 
-Fixes: cf5dec80c4e2 ("gpio: Add gpio delay driver")
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-This was undetected on my machine as CONFIG_OF_GPIO was already enabled.
+Thanks, applied, just noticed the regression report too.
 
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a1dac1345f60f..006abaedcae82 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1735,6 +1735,7 @@ config GPIO_AGGREGATOR
- 
- config GPIO_DELAY
- 	tristate "GPIO delay"
-+	depends on OF_GPIO
- 	help
- 	  Say yes here to enable the GPIO delay, which provides a way to
- 	  configure platform specific delays for GPIO ramp-up or ramp-down
--- 
-2.34.1
-
+Bart
