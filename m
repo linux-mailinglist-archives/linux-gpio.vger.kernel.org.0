@@ -2,97 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB9C723D71
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 11:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C420E723DA1
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 11:34:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237480AbjFFJai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 05:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        id S232131AbjFFJe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 05:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237483AbjFFJah (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 05:30:37 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34150E6B
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 02:30:36 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9745d99cfccso766171366b.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 02:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686043834; x=1688635834;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Viw2nnC3blVpFheYhKwW1SwUvlOAxxKbFIk15YR13+4=;
-        b=iAvxqBnRDuRNkFhMY3ewJC9P2lhEKxRz324FjO6zeK/KY651tgVn7BoO5V5fwmFTtQ
-         blC17RmSvJiHZVu3bXFMVYCNrh098iGaUS5YDKvi9CZtjGxYXo3Nd/5MW9zGXOl4asQi
-         APZextAn486ja74pKSH5qzABJRa0auE+7DKNuGeoYA7l5PrG1VfRJ6d7XsmhVJRa7BFc
-         2qP30/7kWN/L3/a4p68RQ0mNZXxEAnWyUlMYqru+IVMxdVSmFEOFJXE1Rz5Eoli99GDG
-         LjseRROx4TAoAZIXIUK/q/sNnN9lOncYs07HTOQ82ODkbZSTItM7OvtKHMfeWS8Ef0oo
-         xBlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686043834; x=1688635834;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Viw2nnC3blVpFheYhKwW1SwUvlOAxxKbFIk15YR13+4=;
-        b=Qr/Lt6wgWHtKBoV+qWnoeSQ3sqgfy+OJ97E5vtaE8u5cJWQaf9gjj+fgKV4OblOig/
-         NQ6CWVXfJa84B9ywmhe/lwirE0vDoQtWKViE3/fSf9X5bmOHdzKPtPQSn2M1iBcFNgQK
-         JYnxh589612v60By0z+qNcPiNdZkpPlyIYDRIfvONJEj1Wb8W4QLUiT3mW3tB32ginhV
-         IZyKE/aNY2HdN1me1H0b0+remoLbykRwvBdUuyPMq6LvA7E7w+EOkL+0nSd0ULam4x/j
-         /SEcpsmIqN0kZfjhTOUdATCHqJDM3393Qp39scVe3lZcOwm5Qnc11FoGcKi674OMIs+x
-         XM/A==
-X-Gm-Message-State: AC+VfDxGGhBeg5UYWv7x6TnlWbBQooH51wJKGHTo63b3GwKeFUy0lQLx
-        hnli/UY1BcbgxeGRCF9/kY5soQ==
-X-Google-Smtp-Source: ACHHUZ4a+/ZNlYDmzxmu1Y0WAyG8+M0Hzk6ETn1y1AsC8i39wQZKOqxfBRxJU9LuTUQ/xoSd+mwu7w==
-X-Received: by 2002:a17:907:3e9e:b0:974:1eb9:f74e with SMTP id hs30-20020a1709073e9e00b009741eb9f74emr2392102ejc.3.1686043834607;
-        Tue, 06 Jun 2023 02:30:34 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id gw14-20020a170906f14e00b00977d194bf42sm3015926ejb.161.2023.06.06.02.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 02:30:34 -0700 (PDT)
-Message-ID: <f00f0d38-0685-f9d5-9537-4ea09aa170a0@linaro.org>
-Date:   Tue, 6 Jun 2023 11:30:32 +0200
+        with ESMTP id S235265AbjFFJeN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 05:34:13 -0400
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D3910F4
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 02:33:50 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+        id 3cf5f6e5-044d-11ee-abf4-005056bdd08f;
+        Tue, 06 Jun 2023 12:33:48 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Tue, 6 Jun 2023 12:33:47 +0300
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/2] pinctrl: moorefield: Fix open-drain pin mode
+ configuration
+Message-ID: <ZH79e1hglvJxGZhf@surfacebook>
+References: <20230605154523.11799-1-andriy.shevchenko@linux.intel.com>
+ <20230606051547.GX45886@black.fi.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v3 3/5] dt-bindings: hwmon: hpe,gxp-fan-ctrl: remove fn2
- and pl registers
-Content-Language: en-US
-To:     nick.hawkins@hpe.com, verdun@hpe.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20230606014234.29491-1-nick.hawkins@hpe.com>
- <20230606014234.29491-4-nick.hawkins@hpe.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230606014234.29491-4-nick.hawkins@hpe.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230606051547.GX45886@black.fi.intel.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/06/2023 03:42, nick.hawkins@hpe.com wrote:
-> From: Nick Hawkins <nick.hawkins@hpe.com>
+Tue, Jun 06, 2023 at 08:15:47AM +0300, Mika Westerberg kirjoitti:
+> On Mon, Jun 05, 2023 at 06:45:22PM +0300, Andy Shevchenko wrote:
+> > Currently the pin may not be configured as open-drain in some
+> > cases because the argument may be 0 for the boolean types of
+> > the pin configurations. Fix this by ignoring the argument.
+> > 
+> > With that, allow to actually restore pin to the push-pull mode.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Reduce the hpe,gxp-fan-ctrl register references from 3 to 1. The
-> function2 (fn2) and programmable logic (pl) references are removed.
-> The purpose of removal being their functionality will be consumed by a
-> new GPIO driver.
-> 
-> Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
-> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
+Thank you!
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> BTW, looking at the two drivers they seem to have a lot of
+> commonalities. Perhaps it makes sense to consolidate?
 
-Best regards,
-Krzysztof
+Yes, that's the plan, perhaps for the next cycle.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
