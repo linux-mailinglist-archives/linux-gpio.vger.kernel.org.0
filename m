@@ -2,144 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15882723B29
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 10:18:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F479723C22
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 10:47:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235716AbjFFISF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 04:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        id S237256AbjFFIru (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 04:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235898AbjFFISC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 04:18:02 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931D518E
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 01:17:58 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-30aeee7c8a0so4151043f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 01:17:58 -0700 (PDT)
+        with ESMTP id S234742AbjFFIrt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 04:47:49 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CC4FA
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 01:47:48 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5148f299105so11979012a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 01:47:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686039477; x=1688631477;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cSpRJEPqPVqhoSAFcxKLrdKHmoUN6BNCQfphia1KCDc=;
-        b=Mpc+MQI1MneytiHZlBGaFATUvZ2D7UN1Dd8CesjFWTyP49rsZyjD8jnaaR2NWOdDYa
-         ipHtgV6xxEWHjDPiqr2vBbciA3+K0fJJ7K1xXjC7+LEEVocVIIUJi94ZOqHXXoTSgzrG
-         mxeqOJel8vvWWKD6+i5csIDgelH/jVykDsjgcbudQFFfZ7CAf/f920BH4IoknBSQ53hq
-         hYHtrf7a3GRFH2D0iZ/WCyHV6yJHs8gv/lj4ehZmceJwESSII8vcD1ixg8gZhNul0KKy
-         68n7AIGGrWW/DnIWzedWWopU6PP+9paqpLoKdw2Qdi7FG3cHOBeBfAZJZ1pCvU6/Hl6d
-         tABg==
+        d=linaro.org; s=google; t=1686041267; x=1688633267;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MqvLNtzOcoA6lE0OUx3cxAki4G4TTRB/eUS1eKn5IiQ=;
+        b=mGUB4rRPLreji445pbvUUQlFZLEeEODhkx7liEznPzs3HTP5I6/lVqmEc/EgrVP5gU
+         CJ40AEdvYbTKgeL7WfqH/8rBVsVwhHg0c8w++9SCPVIfQXxE2/uiNACAZhdUzMTQ2XE0
+         6Bfe9bGzoHF0BreZQCJMTJ0n5N7lSqJR5ZFUax6tE2b2hWVsSV5BqrHrOEYR8HKw6JHC
+         IwDMgLhURJu3IqLYGkUY4nQ/XsAFje6gTFnbIv1A1FQ1EnjxkaVrI4Ph2ms7zeDK+e9B
+         D/KdacfMbvEbTa/dZjnVjU/s4eRZGc0unCPVRdskMdyaVLn8UBU2a2mmjNQeagGUeABV
+         FKNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686039477; x=1688631477;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1686041267; x=1688633267;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cSpRJEPqPVqhoSAFcxKLrdKHmoUN6BNCQfphia1KCDc=;
-        b=MAUR7zqtRcp8F1GGiBGuJ4XsqS4wvMTqaddwgbMv0IXauz1RGZeA1INXDW30FqD9E6
-         lybcAQlwjRthWgnPMxhj0UJfnk/tJeUjkv96vPVUYARoXtdd0csVVujK3VMJVg0WJMHg
-         klqDQ5EnoOydOEJRkZ4u2zR4noX2+ytLOWKuG7dbsTHn+jcRn/DoTIjjzYc+Mp/lBxZ2
-         I4ZyLA/0mgUbQgOQNhdVU/R5q+12GG261caamHWMWWHY9lKN6FbxBWd+XGBlMgZ9BoSx
-         EfikTYWI5RIw4DtZ+kxUfAbH6YjDIGBhazJo6VgwJlO0QamO/TjXtLT3itYni8ulTj8+
-         5x6A==
-X-Gm-Message-State: AC+VfDyMhsrDItCVXu9dckLg8IS2+S+SA7WcLgoqocWzT+teNmQbDpxX
-        uxGjNXTZSQtbg2IAXsXysmvxmQ==
-X-Google-Smtp-Source: ACHHUZ7IXBOZigfcocE6Us3xOMsMk/mjRsDKCskt5eDsJGA9seSXJvit+vkIb+CpvRFtcFD997m2jg==
-X-Received: by 2002:adf:e446:0:b0:2fe:e455:666c with SMTP id t6-20020adfe446000000b002fee455666cmr8811328wrm.33.1686039476965;
-        Tue, 06 Jun 2023 01:17:56 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id c1-20020a5d4cc1000000b002fda1b12a0bsm11907760wrt.2.2023.06.06.01.17.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 01:17:56 -0700 (PDT)
-Date:   Tue, 6 Jun 2023 09:17:54 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v1 1/1] backlight: hx8357: Convert to agnostic GPIO API
-Message-ID: <20230606081754.GA218497@aspen.lan>
-References: <20230317185230.46189-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYXTk2pzXEM9MTjt=oT-CbhENABSLeb9dN7ZvEy8oqiag@mail.gmail.com>
- <ZBhJctqSkdtoUmBi@smile.fi.intel.com>
- <ZH4IPJuPoX3gi5Ga@smile.fi.intel.com>
+        bh=MqvLNtzOcoA6lE0OUx3cxAki4G4TTRB/eUS1eKn5IiQ=;
+        b=Z90HbVvGt2UpfK/f/zhWeqjBB6P+/JOcik2yHfx1w7FbPhMayhGpDIn/op9+P8tcEw
+         utcpmpdqgy8/iTZDa3Khm5L8hbWjglH6FZJnAVYt04WsLVRq/0Zvgp88mQ9MyzQGxgOW
+         PRPkR084VNj2g3lBnpuFKKbF9cTvZXOMV40hR/vjodWIKolk+UPBlwGqiZcxBqvUvDTp
+         u8WBnR3BfU2r3vR4GyZ9wc10y2BXmauI/cOUWOYr+4fiEcJDXzUqzur6ZTckyZ12u3xu
+         gceo7/U0j1g75V/PYrMZWLipg+iuerX1sRD51A0ga2/GRwQDR1i7on0j8yBtSc2oR4bu
+         ETXA==
+X-Gm-Message-State: AC+VfDw4stOsbqZzZ9wLUFac5JPe0PIHuFArmIo6UZ3wzNXSnlVpFLTA
+        K1cwjVQ8x6m0+S/SNuIqO7eWOQnRk0XuFgKTy/Xn1A==
+X-Google-Smtp-Source: ACHHUZ5Wn8CYpvBevllVEGv2YBS/ROGEmwALvyAp1heG4h3t31HB6N+lHW2q/tZnpOHN2538kq91XA==
+X-Received: by 2002:aa7:da41:0:b0:514:a669:d064 with SMTP id w1-20020aa7da41000000b00514a669d064mr1683373eds.16.1686041266848;
+        Tue, 06 Jun 2023 01:47:46 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id f22-20020a056402161600b00514aef7daacsm4775336edv.76.2023.06.06.01.47.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 01:47:46 -0700 (PDT)
+Message-ID: <1b7829bf-698e-a076-849e-403bb9938955@linaro.org>
+Date:   Tue, 6 Jun 2023 10:47:44 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZH4IPJuPoX3gi5Ga@smile.fi.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: Document Tegra234 pin
+ controllers
+Content-Language: en-US
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+References: <20230605154230.2910847-1-thierry.reding@gmail.com>
+ <20230605154230.2910847-2-thierry.reding@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230605154230.2910847-2-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 07:07:24PM +0300, Andy Shevchenko wrote:
-> On Mon, Mar 20, 2023 at 01:54:26PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 17, 2023 at 09:53:40PM +0100, Linus Walleij wrote:
-> > > On Fri, Mar 17, 2023 at 7:51 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > > The of_gpio.h is going to be removed. In preparation of that convert
-> > > > the driver to the agnostic API.
-> > > >
-> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >
-> > > Thanks for fixing this Andy!
-> > >
-> > > > -#if !IS_ENABLED(CONFIG_LCD_HX8357)
-> > > > +#if IS_ENABLED(CONFIG_LCD_HX8357)
-> > > >                 /*
-> > > >                  * Himax LCD controllers used incorrectly named
-> > > >                  * "gpios-reset" property and also specified wrong
-> > > > @@ -452,7 +452,7 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
-> > > >                  */
-> > > >                 const char *compatible;
-> > > >         } gpios[] = {
-> > > > -#if !IS_ENABLED(CONFIG_LCD_HX8357)
-> > > > +#if IS_ENABLED(CONFIG_LCD_HX8357)
-> > > >                 /* Himax LCD controllers used "gpios-reset" */
-> > > >                 { "reset",      "gpios-reset",  "himax,hx8357" },
-> > > >                 { "reset",      "gpios-reset",  "himax,hx8369" },
-> > >
-> > > Eh what happened here .. it's even intuitively wrong.
-> >
-> > I believe it had to be something  like
-> >
-> > 	#if 0 && IS_ENABLED()
-> >
-> > to show that this change is for the future.
-> > Currently it does something unneeded for the kernels with that option off.
-> >
-> > > I would add
-> > > Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
-> > > with legacy bindings")
-> >
-> > I'm not sure. But it's fine, I can add it. Just want to double confirm
-> > you really want this Fixes tag.
-> >
-> > > It wasn't used until now it seems so not a regression and no
-> > > need for a separate patch.
-> >
-> > Exactly why I'm not sure about the tag :-)
-> >
-> > > Other than that it looks correct.
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Thank you!
->
-> Lee, is anything I can do here to move this forward?
+On 05/06/2023 17:42, Thierry Reding wrote:
+> From: Prathamesh Shete <pshete@nvidia.com>
+> 
+> Tegra234 contains two pin controllers. Document their compatible strings
+> and describe the list of pins and functions that they provide.
+> 
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v5:
+> - add missing example for AON controller
+> 
 
-Backlight code looks OK to me (although I might regard the Fixes:
-discussion as unresolved)there is an unresolved):
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+Best regards,
+Krzysztof
 
-Daniel.
