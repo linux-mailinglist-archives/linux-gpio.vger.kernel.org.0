@@ -2,116 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 686CA7246F1
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 16:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20BB724720
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 17:00:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238422AbjFFOzi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 10:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
+        id S233338AbjFFPAS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 11:00:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238611AbjFFOz2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 10:55:28 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4994BE6C
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 07:55:25 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-76d846a4b85so1826784241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 07:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686063324; x=1688655324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ws86mjN6O54EDU7t1GkNhUYlC38l988WAEd1DMCAbhI=;
-        b=eO+W7Mq0zK5D2+S3M0PZFEFoEZvyWCmPbEtyT8JKBRxejnZL7d3sJk2emMqgdHr5qz
-         zm16bKaEcFcmwZ65ngVKCniQQ3SyNtMc+MrVOm1Huv2cnNvJUUHDaGqGVr3FevPsWv8h
-         9P6Rkshoktt/NMmHcwONV+9+6dvVXhp1OYlP9fB15jYnp8ap7vmiW7dvpCChmrZsW/jU
-         JN2KaJ40YKPgT9Ml3PkHOVl8AApt6iePlZaDqJbUf9huhMoXN1jS7tbO5Dr36bbacW5o
-         l1DKZ/iX9bXePZAfE/2cLaTtmQqgiSDZSH0WRt2rggrgfZ5ThKekR6tm50jugTA+QLm1
-         rHXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686063324; x=1688655324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ws86mjN6O54EDU7t1GkNhUYlC38l988WAEd1DMCAbhI=;
-        b=QnEPukYfkTX8Fm/DAj6OuFqJCR6CQMV20WSOQybud96kOZCb6uKgGF+/CChgkBu9Sy
-         6BZcauDWZUi4oGmoIVdlZwnKUs+lfofsh69d6k84A/kJjErmc9LOWvGO+J0x2Eh9UBTQ
-         YYcIDtN8CHvGLtTkOd9IwUoCBm5S0Oq6uD5Gncu8Crwg5bB01XEAPUkQtIXucFFKWDh7
-         /PcWsqCt1YTBqkjbcXNlprlB6tNvEM8AHjvDA8hyuAOyWjkj3njGxYi2Pj15qW+jU4HC
-         J22vWw4ZWisElvsako3LIvcvy24MkZlP+xir65EXK8UqQoe6gw4cUwZiGTmV+GuPhBOc
-         d3jA==
-X-Gm-Message-State: AC+VfDwFMFu9Rt3b+BmFVU/WAbk3CHDgfZrDtjRrk4t2CBmO7UDxM/FX
-        gJ89O++e+w5+puB1iWGCkspRcJuVm9lqw7CuUM+YRgMZ0RcmfYzD
-X-Google-Smtp-Source: ACHHUZ5te+wuMxylkrnDN0f7XVtqk2LRg7Ket/I+JDU1fizxzRw5rrlY7i/lKIyIWQIHRVHdHwZKfDt8E9eP9wD4QsI=
-X-Received: by 2002:a05:6102:284f:b0:43b:4872:f619 with SMTP id
- az15-20020a056102284f00b0043b4872f619mr3432vsb.2.1686063324436; Tue, 06 Jun
- 2023 07:55:24 -0700 (PDT)
+        with ESMTP id S237003AbjFFPAN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 11:00:13 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F397B10D4;
+        Tue,  6 Jun 2023 07:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686063587; x=1717599587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M4igqU7hiOeVhMOHNl6mFZsrtA/dJjpfywViepYmzqc=;
+  b=lB8B2hTskR1DnarZx5y1aoGO8vBcdtRHwPKDaFByZ75u+Gk3ULk//UDG
+   bKiaBp9aw5XsDyMsze+VU4H5GvcC1rLwi0gos9NAD6ceCHDteYuOVu68z
+   v/dgdy3XC13GS873RWeprGzd8JBidrBZiUat6UrfKyHlT5nyBjbzDqWca
+   H2jwkUfhcKYvF75+ITD3boutXHbyEW56D1meAdZrkNDi27wEL+Poka9xC
+   RnZbwnGaLY4LkXvi6s5MwiaYG9NVtETdK12Uc1RACxqQayk+5pe3CxsqM
+   Wf5vljkQHhC0MjR/xPcZ9GKHZA8lvblhMJm3VHfoVVX322vjnrofwsK6g
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="336323500"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="336323500"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 07:57:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="712237651"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="712237651"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2023 07:57:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q6Y89-001gOW-1Y;
+        Tue, 06 Jun 2023 17:57:53 +0300
+Date:   Tue, 6 Jun 2023 17:57:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: demote the hogging log messages to debug
+Message-ID: <ZH9JcR2gS6n67eHX@smile.fi.intel.com>
+References: <20230605125248.279921-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20230606120034.42904-1-warthog618@gmail.com>
-In-Reply-To: <20230606120034.42904-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 6 Jun 2023 16:55:13 +0200
-Message-ID: <CAMRc=MfoGFCztoQc5GL3pzWyJUnXz_eYjydQ4wvp2xg3zW8ArA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: sim: fix memory corruption when adding named
- lines and unnamed hogs
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605125248.279921-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 6, 2023 at 2:01=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> When constructing the sim, gpio-sim constructs an array of named lines,
-> sized based on the largest offset of any named line, and then initializes
-> that array with the names of all lines, including unnamed hogs with highe=
-r
-> offsets.  In doing so it writes NULLs beyond the extent of the array.
->
-> Add a check that only named lines are used to initialize the array.
->
-> Fixes: cb8c474e79be ("gpio: sim: new testing module")
-> Signed-off-by: Kent Gibson<warthog618@gmail.com>
+On Mon, Jun 05, 2023 at 02:52:48PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Drivers should be silent when they work correctly. There's no reason to
+> emit info messages when GPIO lines are hogged. Demote the message to
+> debug.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Suggested-by: Kent Gibson <warthog618@gmail.com>
 > ---
->
-> changes v1 -> v2:
->  - check offset as well to make the purpose of the check clearer
->
->  drivers/gpio/gpio-sim.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index e5dfd636c63c..09aa0b64859b 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -721,8 +721,10 @@ static char **gpio_sim_make_line_names(struct gpio_s=
-im_bank *bank,
->         if (!line_names)
->                 return ERR_PTR(-ENOMEM);
->
-> -       list_for_each_entry(line, &bank->line_list, siblings)
-> -               line_names[line->offset] =3D line->name;
-> +       list_for_each_entry(line, &bank->line_list, siblings) {
-> +               if (line->name && (line->offset <=3D max_offset))
-> +                       line_names[line->offset] =3D line->name;
-> +       }
->
->         return line_names;
->  }
-> --
-> 2.40.1
->
+>  drivers/gpio/gpiolib.c |  2 +-
+>  drivers/of/unittest.c  | 16 ++++++++--------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index a7220e04a93e..e4515bda8915 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -4243,7 +4243,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+>  	/* Mark GPIO as hogged so it can be identified and removed later */
+>  	set_bit(FLAG_IS_HOGGED, &desc->flags);
+>  
+> -	gpiod_info(desc, "hogged as %s%s\n",
+> +	gpiod_dbg(desc, "hogged as %s%s\n",
+>  		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
+>  		(dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
+>  		  (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low" : "");
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 2191c0136531..0060334a98a7 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -1849,19 +1849,19 @@ static void __init of_unittest_overlay_gpio(void)
+>  	 * driver is registered
+>  	 */
+>  
+> -	EXPECT_BEGIN(KERN_INFO,
+> +	EXPECT_BEGIN(KERN_DEBUG,
+>  		     "gpio-<<int>> (line-B-input): hogged as input\n");
+>  
+> -	EXPECT_BEGIN(KERN_INFO,
+> +	EXPECT_BEGIN(KERN_DEBUG,
+>  		     "gpio-<<int>> (line-A-input): hogged as input\n");
+>  
+>  	ret = platform_driver_register(&unittest_gpio_driver);
+>  	if (unittest(ret == 0, "could not register unittest gpio driver\n"))
+>  		return;
+>  
+> -	EXPECT_END(KERN_INFO,
+> +	EXPECT_END(KERN_DEBUG,
+>  		   "gpio-<<int>> (line-A-input): hogged as input\n");
+> -	EXPECT_END(KERN_INFO,
+> +	EXPECT_END(KERN_DEBUG,
+>  		   "gpio-<<int>> (line-B-input): hogged as input\n");
+>  
+>  	unittest(probe_pass_count + 2 == unittest_gpio_probe_pass_count,
+> @@ -1888,7 +1888,7 @@ static void __init of_unittest_overlay_gpio(void)
+>  	probe_pass_count = unittest_gpio_probe_pass_count;
+>  	chip_request_count = unittest_gpio_chip_request_count;
+>  
+> -	EXPECT_BEGIN(KERN_INFO,
+> +	EXPECT_BEGIN(KERN_DEBUG,
+>  		     "gpio-<<int>> (line-D-input): hogged as input\n");
+>  
+>  	/* overlay_gpio_03 contains gpio node and child gpio hog node */
+> @@ -1896,7 +1896,7 @@ static void __init of_unittest_overlay_gpio(void)
+>  	unittest(overlay_data_apply("overlay_gpio_03", NULL),
+>  		 "Adding overlay 'overlay_gpio_03' failed\n");
+>  
+> -	EXPECT_END(KERN_INFO,
+> +	EXPECT_END(KERN_DEBUG,
+>  		   "gpio-<<int>> (line-D-input): hogged as input\n");
+>  
+>  	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+> @@ -1935,7 +1935,7 @@ static void __init of_unittest_overlay_gpio(void)
+>  	 *   - processing gpio for overlay_gpio_04b
+>  	 */
+>  
+> -	EXPECT_BEGIN(KERN_INFO,
+> +	EXPECT_BEGIN(KERN_DEBUG,
+>  		     "gpio-<<int>> (line-C-input): hogged as input\n");
+>  
+>  	/* overlay_gpio_04b contains child gpio hog node */
+> @@ -1943,7 +1943,7 @@ static void __init of_unittest_overlay_gpio(void)
+>  	unittest(overlay_data_apply("overlay_gpio_04b", NULL),
+>  		 "Adding overlay 'overlay_gpio_04b' failed\n");
+>  
+> -	EXPECT_END(KERN_INFO,
+> +	EXPECT_END(KERN_DEBUG,
+>  		   "gpio-<<int>> (line-C-input): hogged as input\n");
+>  
+>  	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+> -- 
+> 2.39.2
+> 
 
-Thanks for figuring that out, queued for fixes.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bart
+
