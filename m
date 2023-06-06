@@ -2,108 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78B14724648
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 16:37:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 588D072468C
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 16:42:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236071AbjFFOg6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 10:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
+        id S238403AbjFFOmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 10:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233693AbjFFOg5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 10:36:57 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F3D10CA;
-        Tue,  6 Jun 2023 07:36:51 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-75e4497597cso235658885a.2;
-        Tue, 06 Jun 2023 07:36:50 -0700 (PDT)
+        with ESMTP id S238340AbjFFOmT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 10:42:19 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4756E1FE0;
+        Tue,  6 Jun 2023 07:40:16 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-6260e8a1424so43329276d6.2;
+        Tue, 06 Jun 2023 07:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686062210; x=1688654210;
+        d=gmail.com; s=20221208; t=1686062379; x=1688654379;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/pHfhgJpmyYHKAj9H1AH6OpEbFEZgptlDbr8iBk/Wos=;
-        b=j/8Muj0Jskxwh51gbdolgS/TzJHxJvOle6Tp5pRV7vUCGcGOIMNG6xLwme6+/jK9ex
-         +D2dg8WZI5bHLjrBk0p2Jceg5hQ9toCaLE5PywYI8al7dIqlzc1+70PorZp2XMA6tEMZ
-         6aO3yX+uID2xVnGZjkjeSS7BUKPeiRR9eUYBsdw3/U/Af2xSFj4byHVp8WeMChKubBSV
-         rjdKQpWNWtQpVe0OvWugf7VkrKPG5texNqHMHsSW8523EaXTM5Nec+Y/6OR3sVDVwNyp
-         sFdGQQ/4kPkqsT/E5jOxa4RSkcHYuaHH/u1R35heqljtviIc7+nrC+Z7ZYGlExGBT1r0
-         EHMw==
+        bh=lvZ4XsTsTufzOmDccsqLlYK7JaxQyIdNHpPkr+8WCVU=;
+        b=dbsKKzlSqCxKNp0/8WqjVhH0METcILEAuzsthzhm/cPsREUocAj7XviIGDyr3X0a/R
+         3mwLkv0bs09MK66ezSojrCwgtaGqClR/TWa4ba8m+VdPuaJsG4a48TreBWjRqKRDb78g
+         dWWAHowWoODwiV983zWmKsrqLxWsKOwS3PEr831YQX00EhiHGYdz7Q7BjLJ9D6g0tSX8
+         smWJGLG09JprEpKEN1AE0oAmIk2XO2t8DLOSyNDb9jVvZrqbbnecERzh6rMDawRxJ5jf
+         047Hn+K5ixMP8ou6gMxuBqiODDshPfYOqfM7WUSJ0G/tODZIZA5Ry8w4ijazb/U1eS9H
+         cI6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686062210; x=1688654210;
+        d=1e100.net; s=20221208; t=1686062379; x=1688654379;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/pHfhgJpmyYHKAj9H1AH6OpEbFEZgptlDbr8iBk/Wos=;
-        b=LuHymNYuyFxaRDLSVfB9BVfrXcPYcKhEKXYwZKjadtqzqR1QPQmaE78GZtQAAotEzo
-         +VOPVJ0EdOGzrQAbChaLeKN05uOc0P+AjRhmQJwNXsvaen/jZ16IBKNnAKxybazGOj7A
-         R0T9R4w8NLonQ0253qJcaI8SXaMfzpmBV86KC1kOMRweZce1p4pZewwaAzl4fOQHiRDc
-         BSzXdhptagwe8x/3MuE2pxdPUIaTTjpY8PGXcXWSxHZvCVay4eim57rSdiqwNmmmKHON
-         8fRd6pnfGFYr+di2Ke+SK59WjGwTnJOKehIp8EbNFpx8Gi+79IS/3g/AjnujhgC/UxRU
-         V0jw==
-X-Gm-Message-State: AC+VfDwjPlfmw9ONM29nyMKgfVaMLwQQskSJEfTA8nWj3sROSA9hERwZ
-        93Xfy5wc3DxqF9duUUrrHK2yGbOUm1gipH+Z/dk=
-X-Google-Smtp-Source: ACHHUZ5hPolR27BbcFXkbeEHThpkvtUWrhy6uOFaajbFQCLbRF+UBSxD82ZTDoQp4Mw84aLjYdUGp8gv+mBI32zJvGg=
-X-Received: by 2002:a05:6214:1c8e:b0:56a:d94d:6deb with SMTP id
- ib14-20020a0562141c8e00b0056ad94d6debmr2510370qvb.25.1686062210042; Tue, 06
- Jun 2023 07:36:50 -0700 (PDT)
+        bh=lvZ4XsTsTufzOmDccsqLlYK7JaxQyIdNHpPkr+8WCVU=;
+        b=ZTv5emT4vZ7u0hrUdNQRtNjj+su37t7WXcTK/h5X7YApJIlui86pz8KwB1TpGNmh5N
+         MnDfUTTLmAhT4y+cwCIgIUjaa1DUtmbgassPVRjcA87nJXl2N1mo6HpCrdQSO1b7ZwQk
+         UVTU99DJbM1r0u4SuKo2CBivtOir7jX5rRgfxp4Q9SUjbMB5R4wQ/pkuAljC5Nk2fdrp
+         vBqwrGvohX2phDrgt1mSZXWu5qFbWZLBuMF91LhiWX6faZP3zfx+r/0hamSL/YQNdluG
+         8KwwuCL4gCN5QSHpOH28S1A10F04KgPb6KY80EYYs9K9QQZd33aToN+1y1UEwwsy3aFo
+         7Q5Q==
+X-Gm-Message-State: AC+VfDwzJPWdBSjm+RwBeHkjVYXRm+fztyjC38pPyaWzXSoCTSE4G0A2
+        XJn8ZPBR/C/hRnAOqPxe7d6wgbmO3iw3caNgHBU=
+X-Google-Smtp-Source: ACHHUZ7oc/MKr57w4wxuuavVhcIsODwhsyxixYvZ2V/E5O5qvmNSSbMjRVQoesIRP/0hf+v6UteQHJdPwgPVkoddCsc=
+X-Received: by 2002:a05:6214:401:b0:626:2870:7dee with SMTP id
+ z1-20020a056214040100b0062628707deemr2664588qvx.42.1686062378686; Tue, 06 Jun
+ 2023 07:39:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
- <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
- <ZHXZBCwk6tTu8gjY@surfacebook> <e487f966-aafb-7d21-935d-b1d0ac7c21ac@baylibre.com>
-In-Reply-To: <e487f966-aafb-7d21-935d-b1d0ac7c21ac@baylibre.com>
+References: <1685277277-12209-1-git-send-email-wellslutw@gmail.com> <9ace5c4c-5e17-4207-5a02-6a47ba0aee22@web.de>
+In-Reply-To: <9ace5c4c-5e17-4207-5a02-6a47ba0aee22@web.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 6 Jun 2023 17:36:14 +0300
-Message-ID: <CAHp75Vfu0V_nqy-0tdOM31onZn-P+mGDXJO5CnC4GkuVqYvvdQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
-To:     jerome Neanne <jneanne@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
-        khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jonathan Cormier <jcormier@criticallink.com>
+Date:   Tue, 6 Jun 2023 17:39:02 +0300
+Message-ID: <CAHp75VeMKtHfVVtH+xGSYrt+SSVgVkhCs29jVqfnnoihvhSj4w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sunplus: Delete an unnecessary check before
+ kfree() in sppctl_dt_node_to_map()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     kernel-janitors@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wells Lu <wellslutw@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr,
+        Wells Lu <wells.lu@sunplus.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 6, 2023 at 3:45=E2=80=AFPM jerome Neanne <jneanne@baylibre.com>=
- wrote:
-> On 30/05/2023 13:07, andy.shevchenko@gmail.com wrote:
-> > Tue, May 30, 2023 at 09:59:59AM +0200, Jerome Neanne kirjoitti:
+On Tue, Jun 6, 2023 at 4:26=E2=80=AFPM Markus Elfring <Markus.Elfring@web.d=
+e> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 6 Jun 2023 15:00:18 +0200
 
-...
+You need to utilize what MAINTAINERS file has.
 
-> >> Datasheet describes specific usage for non standard GPIO.
-> >> Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
-> >
-> > Can you convert this to be a Datasheet tag? Currently even Link is *not=
-* a tag
-> > because there must be no blank lines in the tag block.
-> >
-> >> Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
-> >> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
-> >> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
-> >
-> I misinterpreted this comment. I looked at wrong examples but I think I
-> understand now that the right usage is to have all the tags grouped
-> together into one block which is delimited by blank lines before and
-> after the whole block.
+> It can be known that the function =E2=80=9Ckfree=E2=80=9D performs a null=
+ pointer check
+> for its input parameter.
+> It is therefore not needed to repeat such a check before its call.
+>
+> Thus remove a redundant pointer check.
 
-(Note, there is no "after", tag block is the last in the commit message)
+Seems reasonable to me.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> I'll then do this and put all the Datasheet/Link into the tag block.
-> Stop putting Links inside the commit message right after I refer to it.
-> https://www.kernel.org/doc/html/latest/process/5.Posting.html#patch-forma=
-tting-and-changelogs
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/pinctrl/sunplus/sppctl.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/sunplus/sppctl.c b/drivers/pinctrl/sunplus/s=
+ppctl.c
+> index e91ce5b5d559..150996949ede 100644
+> --- a/drivers/pinctrl/sunplus/sppctl.c
+> +++ b/drivers/pinctrl/sunplus/sppctl.c
+> @@ -971,8 +971,7 @@ static int sppctl_dt_node_to_map(struct pinctrl_dev *=
+pctldev, struct device_node
+>
+>  sppctl_map_err:
+>         for (i =3D 0; i < (*num_maps); i++)
+> -               if (((*map)[i].type =3D=3D PIN_MAP_TYPE_CONFIGS_PIN) &&
+> -                   (*map)[i].data.configs.configs)
+> +               if ((*map)[i].type =3D=3D PIN_MAP_TYPE_CONFIGS_PIN)
+>                         kfree((*map)[i].data.configs.configs);
+>         kfree(*map);
+>         of_node_put(parent);
+> --
+> 2.40.1
+>
+
 
 --=20
 With Best Regards,
