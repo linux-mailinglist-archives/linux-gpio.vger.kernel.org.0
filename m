@@ -2,96 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3DFF724596
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 16:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78B14724648
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 16:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237778AbjFFOSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 10:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
+        id S236071AbjFFOg6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 10:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbjFFOSe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 10:18:34 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A430E18B;
-        Tue,  6 Jun 2023 07:18:33 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b02d0942caso28854185ad.1;
-        Tue, 06 Jun 2023 07:18:33 -0700 (PDT)
+        with ESMTP id S233693AbjFFOg5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 10:36:57 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F3D10CA;
+        Tue,  6 Jun 2023 07:36:51 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-75e4497597cso235658885a.2;
+        Tue, 06 Jun 2023 07:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686061113; x=1688653113;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+JU5bs373RCUOgXJLUDTSML0K5+ZCRMog9EmfC27Cho=;
-        b=TgULhQk1Qffs+vjFYJckFp6sI812uCDLS3xBoVRd+823Rwwpi8mxXSngSIqM1/Rrts
-         Rcdqu+pv8MeCxsLVZsDm5mQJ6aYN24vL2LMNIGRTo7Sds1IZxnNNOaErqHSImCJslcMx
-         zlBdkPLZfIlyc0Hrjal3QWcM5AtB4MAUZ7XndMvLWhKUFReX0qzqTdn0KZAPl/ZsryvT
-         foJQ6LejTAOIqtwmy7r8hdpCZGslzDWaGJkwyIIS9i+fSb0mhZhi6j2icU+CwpcQ1vKh
-         XHm+89z3ooeHKCFPhuenknZAiUoc4CyUUqLzk8kgiS0t/cFfCicDnIkkqroC0pPa5Me+
-         sGiQ==
+        d=gmail.com; s=20221208; t=1686062210; x=1688654210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/pHfhgJpmyYHKAj9H1AH6OpEbFEZgptlDbr8iBk/Wos=;
+        b=j/8Muj0Jskxwh51gbdolgS/TzJHxJvOle6Tp5pRV7vUCGcGOIMNG6xLwme6+/jK9ex
+         +D2dg8WZI5bHLjrBk0p2Jceg5hQ9toCaLE5PywYI8al7dIqlzc1+70PorZp2XMA6tEMZ
+         6aO3yX+uID2xVnGZjkjeSS7BUKPeiRR9eUYBsdw3/U/Af2xSFj4byHVp8WeMChKubBSV
+         rjdKQpWNWtQpVe0OvWugf7VkrKPG5texNqHMHsSW8523EaXTM5Nec+Y/6OR3sVDVwNyp
+         sFdGQQ/4kPkqsT/E5jOxa4RSkcHYuaHH/u1R35heqljtviIc7+nrC+Z7ZYGlExGBT1r0
+         EHMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686061113; x=1688653113;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1686062210; x=1688654210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+JU5bs373RCUOgXJLUDTSML0K5+ZCRMog9EmfC27Cho=;
-        b=jNQYFtN93+qlQ0GCSTCOlE21QXeEjfpq7+QhQ2NrjbDzW1uxmdy//p+oTOcSmCE3+O
-         xNTv9XYVuzNmSbf4ueTESAs3FyYJL5e/wfCTQr4MVnzIJFGcdU/cS5f0p+tRbGujVgRx
-         33alg4r6dD8jxuVcVAItKnF3rjaL4tD9o1IENU7kRm4XATls8AEZ8YQ9o9CCF7LigwmJ
-         f1/byLnTpsv+TwzOrD1vB2PSTpevSQJ6GUXH41IU5/09PRoCps4l8IYSxCqi8y7yzrIJ
-         LxEgr8ghVTKZrPwuweJcL9d7tQCtyiJc18S6J17xHXv2NGOqtq1nsh8j4q2n3j1Xllim
-         6olw==
-X-Gm-Message-State: AC+VfDwO6u2hKohD/W9sTzx3NY74JxZ7k6I9clvqqg6jlctYvigV+h8L
-        LHD6KfmioZ/uNVEHLo+aG68=
-X-Google-Smtp-Source: ACHHUZ5UKJgO5MIyr1LCARXSsR3GdPMcC2rCTCQhTsMaHYFgMYIhNslpRd7axkM5nWnCaY7+s7D04g==
-X-Received: by 2002:a17:902:c412:b0:1b0:34c6:3be2 with SMTP id k18-20020a170902c41200b001b034c63be2mr1421801plk.1.1686061113033;
-        Tue, 06 Jun 2023 07:18:33 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q1-20020a170902b10100b001a6a6169d45sm8596280plr.168.2023.06.06.07.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 07:18:32 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 6 Jun 2023 07:18:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     nick.hawkins@hpe.com
-Cc:     verdun@hpe.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jdelvare@suse.com, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] hwmon: (gxp_fan_ctrl) Provide fan info via gpio
-Message-ID: <22d5f12e-578b-4484-a90e-6e81289ed458@roeck-us.net>
-References: <20230606014234.29491-1-nick.hawkins@hpe.com>
- <20230606014234.29491-5-nick.hawkins@hpe.com>
+        bh=/pHfhgJpmyYHKAj9H1AH6OpEbFEZgptlDbr8iBk/Wos=;
+        b=LuHymNYuyFxaRDLSVfB9BVfrXcPYcKhEKXYwZKjadtqzqR1QPQmaE78GZtQAAotEzo
+         +VOPVJ0EdOGzrQAbChaLeKN05uOc0P+AjRhmQJwNXsvaen/jZ16IBKNnAKxybazGOj7A
+         R0T9R4w8NLonQ0253qJcaI8SXaMfzpmBV86KC1kOMRweZce1p4pZewwaAzl4fOQHiRDc
+         BSzXdhptagwe8x/3MuE2pxdPUIaTTjpY8PGXcXWSxHZvCVay4eim57rSdiqwNmmmKHON
+         8fRd6pnfGFYr+di2Ke+SK59WjGwTnJOKehIp8EbNFpx8Gi+79IS/3g/AjnujhgC/UxRU
+         V0jw==
+X-Gm-Message-State: AC+VfDwjPlfmw9ONM29nyMKgfVaMLwQQskSJEfTA8nWj3sROSA9hERwZ
+        93Xfy5wc3DxqF9duUUrrHK2yGbOUm1gipH+Z/dk=
+X-Google-Smtp-Source: ACHHUZ5hPolR27BbcFXkbeEHThpkvtUWrhy6uOFaajbFQCLbRF+UBSxD82ZTDoQp4Mw84aLjYdUGp8gv+mBI32zJvGg=
+X-Received: by 2002:a05:6214:1c8e:b0:56a:d94d:6deb with SMTP id
+ ib14-20020a0562141c8e00b0056ad94d6debmr2510370qvb.25.1686062210042; Tue, 06
+ Jun 2023 07:36:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230606014234.29491-5-nick.hawkins@hpe.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
+ <ZHXZBCwk6tTu8gjY@surfacebook> <e487f966-aafb-7d21-935d-b1d0ac7c21ac@baylibre.com>
+In-Reply-To: <e487f966-aafb-7d21-935d-b1d0ac7c21ac@baylibre.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 6 Jun 2023 17:36:14 +0300
+Message-ID: <CAHp75Vfu0V_nqy-0tdOM31onZn-P+mGDXJO5CnC4GkuVqYvvdQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+To:     jerome Neanne <jneanne@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 08:42:33PM -0500, nick.hawkins@hpe.com wrote:
-> From: Nick Hawkins <nick.hawkins@hpe.com>
-> 
-> The fan driver now is independent of the fan plreg GPIO information.
-> Therefore there will no longer be presence or fail information available
-> from the driver. Part of the changes includes removing a system power check
-> as the GPIO driver needs it to report power state to host.
-> 
-> Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
+On Tue, Jun 6, 2023 at 3:45=E2=80=AFPM jerome Neanne <jneanne@baylibre.com>=
+ wrote:
+> On 30/05/2023 13:07, andy.shevchenko@gmail.com wrote:
+> > Tue, May 30, 2023 at 09:59:59AM +0200, Jerome Neanne kirjoitti:
 
-For my reference:
+...
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> >> Datasheet describes specific usage for non standard GPIO.
+> >> Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
+> >
+> > Can you convert this to be a Datasheet tag? Currently even Link is *not=
+* a tag
+> > because there must be no blank lines in the tag block.
+> >
+> >> Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
+> >> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
+> >> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
+> >
+> I misinterpreted this comment. I looked at wrong examples but I think I
+> understand now that the right usage is to have all the tags grouped
+> together into one block which is delimited by blank lines before and
+> after the whole block.
 
-Let me know if you want me to apply this patch now or if I should wait
-for the gpio patches to be accepted.
+(Note, there is no "after", tag block is the last in the commit message)
 
-Guenter
+> I'll then do this and put all the Datasheet/Link into the tag block.
+> Stop putting Links inside the commit message right after I refer to it.
+> https://www.kernel.org/doc/html/latest/process/5.Posting.html#patch-forma=
+tting-and-changelogs
+
+--=20
+With Best Regards,
+Andy Shevchenko
