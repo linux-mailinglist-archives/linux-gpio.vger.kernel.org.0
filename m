@@ -2,138 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2E0724060
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 13:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DCE87240AD
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 13:17:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbjFFLDS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 07:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41602 "EHLO
+        id S232450AbjFFLRo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 07:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234860AbjFFLC2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 07:02:28 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7207212B;
-        Tue,  6 Jun 2023 03:59:42 -0700 (PDT)
+        with ESMTP id S229803AbjFFLRn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 07:17:43 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03ADEB1
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 04:17:42 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-97000a039b2so948222066b.2
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 04:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1686049183; x=1717585183;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NlcsB2aUjrZ1GJIhbfkglEErq14m0qVOrwEcSKW5nQ8=;
-  b=aG79oPRiPT0jD9/2vRi9XTsk1jOM1dgUE2TlfrQWgxTOhzOy/giqe/vO
-   GCD6sZSHys4hW6Rwwv00qKrwphM/Z+UtpW8cM0DTBjKI/47Zu8L8GDttM
-   PufwIbEQ2zdSEqU+zzmIkDZUjU/nrOfRQ4sHGIRKBGvBSSsenmNJmKwnU
-   569JJA1biTqw+CIVJe+KG2M5P/dyz4moYjF0mccZ13xo+CxR+8f+MJi7S
-   nHZxfVAgihhdCYbblOdVzLQ9aTiQV8s6MQLYHB3kFXcYDgg3mcIi3zYRs
-   vMJ3tbsaSnkcyXCJdM/jWkypz4lnt4DL9HwHGQn8beri+xu+JoVOOWjOR
-   A==;
-X-IronPort-AV: E=Sophos;i="6.00,221,1681164000"; 
-   d="scan'208";a="31300378"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 06 Jun 2023 12:59:33 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 06 Jun 2023 12:59:33 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 06 Jun 2023 12:59:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1686049173; x=1717585173;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NlcsB2aUjrZ1GJIhbfkglEErq14m0qVOrwEcSKW5nQ8=;
-  b=H5yAyxcM7DhUL5CN3WTqPNQQmXMXmlHsmZmqMcG1rJIIwMQJWFJpC1kk
-   +aGzwPrS7ynANhszKH3etVvWHHi8eWhBChKTAe9kh6YonkvqnDoW5qe3j
-   kZqQOpk7rgz1D/mJAhmGPHR+kX1DgRMHXtLbtfhcTvndKmdUHxrT98Sry
-   3USGEP1CY/XWAITVOdWOOSAIItQf+02OXWN+MKBiLVAVA41brMmVV8EEI
-   OO8+lTXyqSVn2tARWTHrTSYdSHoWWiXdq/0oXMHJNCFO4RtzYcPE8EXJP
-   /tz/UJrQnlmo2JrdNfSq8ro4SJ19H+yGkh5d2jiurtHDGIvEO9eEu7saX
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,221,1681164000"; 
-   d="scan'208";a="31300376"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 06 Jun 2023 12:59:33 +0200
-Received: from steina-w.localnet (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 683EF280090;
-        Tue,  6 Jun 2023 12:59:33 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        d=linaro.org; s=google; t=1686050260; x=1688642260;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=puWSxyEb8/Kw716+h9Vpnt9V9aCiUnXQS7Vne/6ny8Y=;
+        b=rG6XJSNeW3aZCKyvUVceGTviLzac47fRGA/d2aezsBh3Qj9NGoPf2r4gUiZZNJYgc6
+         A3zm1hUz33nzNFwFVpE+JoKF2Cn3JaJot1o+jrQiyZcuYbs+AmBWwwpVN4KCl9hHrSQs
+         myr/Yl9QL5l5zNNM7gw4fccsvlW7BTo11y2YXfYq7Bvt8540RkRdnkRw00H9w4OV5UoV
+         o76SZUG+NgdKKMwmAvtJO6+rBTRaYu8wozhDnsA3TL1c/hWEtA3Uo6V9bGvDe/IOJUo/
+         RPvrLUoppR+UoaMt+LEsALwafN9v/USiJrhQiS309nK7LhoIu1C0p7vZzkcUy6lF9ply
+         BSRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686050260; x=1688642260;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=puWSxyEb8/Kw716+h9Vpnt9V9aCiUnXQS7Vne/6ny8Y=;
+        b=jITsR/X6RwmMsZmqaBNwDo9bfa4r6O1mjm9WDjn2ZXBRBcVuXveZFfk9Ne08FmNQjl
+         +RU5ciDzAbMZD9OxqyrpjcZpZcxjQEN0kTP/RXOq5Pcn2qgLY226JCA3TDlSSwT21D7t
+         FcDuA5iRHGj4dyYqEx1eImnWfIWXZIi9CPWaCkXN5dU1vHE1Ikwy0LIBl2GHVJMsifA0
+         ZW96Cs/NdpVELcD1GVqi7nVcf0Gddj2TBxY38A0yozgMXg41BmeggI0pefLIwV9ZhjaK
+         hfKSCl5aa17DPkZPZJwiK7trzxN1by+lgAb+uT3CugpnYoy2H7DMec2ktOlBc76Hr8PZ
+         GxWQ==
+X-Gm-Message-State: AC+VfDwKnXjedoBiaH+lfz8gNuS+mlhonhh1BtJmd0dl62HrGJ4UyyZo
+        F9RyQQgC/Psd8/dzB/Mv37zqlg==
+X-Google-Smtp-Source: ACHHUZ5i7YgYO/xWZPq9YEpkGCBLgexJR2WSHXqHVhEbLQmTBSNPTCghveNnHHv5JmJLxeIAAa1g0w==
+X-Received: by 2002:a17:907:6eaa:b0:94a:5819:5a2b with SMTP id sh42-20020a1709076eaa00b0094a58195a2bmr2706639ejc.33.1686050257590;
+        Tue, 06 Jun 2023 04:17:37 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id sa25-20020a170906edb900b00965f98eefc1sm5342726ejb.116.2023.06.06.04.17.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 04:17:37 -0700 (PDT)
+Message-ID: <1285e0d8-17ee-cb40-f188-31bd815b8054@linaro.org>
+Date:   Tue, 6 Jun 2023 13:17:34 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-delay: Spelling
+ s/curcuit/circuit/
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Alexander Stein <linux@ew.tq-group.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-delay: Spelling s/curcuit/circuit/
-Date:   Tue, 06 Jun 2023 12:59:34 +0200
-Message-ID: <6194803.lOV4Wx5bFT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <ab68df6b056a3b381d1d53cf1502e814812c4f96.1686045675.git.geert+renesas@glider.be>
+        Alexander Stein <linux@ew.tq-group.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 References: <ab68df6b056a3b381d1d53cf1502e814812c4f96.1686045675.git.geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ab68df6b056a3b381d1d53cf1502e814812c4f96.1686045675.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
-
-thanks for the fix.
-
-Am Dienstag, 6. Juni 2023, 12:01:40 CEST schrieb Geert Uytterhoeven:
+On 06/06/2023 12:01, Geert Uytterhoeven wrote:
 > Fix misspellings of "circuit".
->=20
-> Fixes: c7239a3da1628767 ("dt-bindings: gpio: Add gpio-delay binding
-> document") Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-delay.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml index
-> 7c16a4e1a768ef72..1cebc4058e272660 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> @@ -11,7 +11,7 @@ maintainers:
->=20
->  description: |
->    This binding describes an electrical setup where setting an GPIO output
-> -  is delayed by some external setup, e.g. RC curcuit.
-> +  is delayed by some external setup, e.g. RC circuit.
->=20
->    +----------+                    +-----------+
->=20
->    |          |             VCC_B  |           |
->=20
-> @@ -30,7 +30,7 @@ description: |
->                             GND
->=20
->    If the input on the consumer is controlled by an open-drain signal
-> -  attached to an RC curcuit the ramp-up delay is not under control
-> +  attached to an RC circuit the ramp-up delay is not under control
->    of the GPIO controller.
->=20
->  properties:
+> 
+> Fixes: c7239a3da1628767 ("dt-bindings: gpio: Add gpio-delay binding document")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+Best regards,
+Krzysztof
 
