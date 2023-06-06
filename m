@@ -2,163 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93D9A723853
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 09:02:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CAFD7238C8
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 09:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235265AbjFFHCV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 03:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56614 "EHLO
+        id S236258AbjFFHSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 03:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232832AbjFFHCR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 03:02:17 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2097.outbound.protection.outlook.com [40.107.215.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEA8E48;
-        Tue,  6 Jun 2023 00:02:15 -0700 (PDT)
+        with ESMTP id S236167AbjFFHSG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 03:18:06 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2050.outbound.protection.outlook.com [40.107.101.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F929E7C;
+        Tue,  6 Jun 2023 00:17:40 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nxozMmrZrkM/m8MmqffZqWQtrRKAUePpU8gqlR9mS7nkZFMGw9ovLAa2EMu+6LEnxSL2j06HvDwfc9LyP+XV7XCVHUbNSj2T4+lH7ADAM8PJH9CJuaRM8h/AtrsGXPy92rnWeq7gRx5lS8ESZHkmRp603mEw85rBg96S1VUuM6XM2eclPBJgW3sjl8Jw9kPebFzqno7PQs7CErdr0vMnpZa69h4npM0JhPwHGprwYTwy1b9G1NF8k0NJjjRn6gqH+XEKyOGNGnzzBdJqPqLcPEl8lMamSsXu20UoCuNxaBR0063tRyjvxGmjC/klebQAbDx+6xOJe1rouf+WVt9Jhg==
+ b=dnN4NWRLa61xhCjpmU1NKYD/i1mPfXC6c2NK4uP85IhdZU+MFO5NaZahzbBT9srbOv126W4uqWJIJf1ZgkKWat2Ci+kDJQ8wJcb5bbQLZo7PlYsYtuNWXnVTEn+cEgmqDJLDQGVrPPZpOAKBbzFkDthmqR3YhHp+6IOqq258RXZbOGtoGBU9wK7ulu4Cx3/87HvkWHT1uII/6z0ubXeueQvvHXDmNdQnDFLuOhKjgg0l0+Fsda0wsWDWedboKmCXxO+o9nsrc9aO+BgapYYQiEUAJ2yjESC4nNSh0WxlKzmNwvv1MbffjEIBigKNUV9e/6eJFjhliGCiG3Hf2KsVBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mAyxCOQIjRBwWK4kiwwUZuCsHpkyTF2FZI+1hw3Gk/Q=;
- b=kTFmjJSoSW5V5pcw0JgMDWMg0SaPlTXjiVIHDQi5lJyqRvMXK0V2Wpoe6FGHHXZ1VV4XpbDLZYd9m9112wPyFAarJj9OnqFL9zcOE8G8dfBWW7B8Mhq8CeFwE7EybAjUgmJdzk0CEfrDDh/0cdgmVEGeNaK5/KGxCIe+34F2EKHSINoXNCl6ztJm6PD3zx4e2NmMyvpmvQ9bjnGFx9H0a7vQS0avqzSeAGaJQL05yDTOgpQxGh97+hnsJOb0NT9SBLPPdkB0M14R+E4art7SaNDubdrTXYOM42iUKYmqb8CFKbSkwj8ANVuTpxOtX3XbOMjOGBxU5wuangUWQZxJ6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ bh=M5trypg3Bl1eCB1K4LKqR9nKEOn51CwCSFnFfOf/kUI=;
+ b=j0knZiNRsJQz4/EqV8Pmjlj/CVE9iGue3Cj7JJW/PmF5/7DJHedb2ViGgmBM42AzMZJ/tIzPBJKb5ahXM7xP5hxbaBMeZEWzOpNKlKM03T3SJSw1f/4nKFsC0E+6JX9hZtU67xhOiCFYZdPkuUKVZKDER9S+nCXCtUgigwScPf/vc0ntp2xfTvU2VJ4qDhX3sJi7QlV9wzR3egdByZopA+6wYLMzRcoptgIrmiRLUPe56sydsbZ3k1W/jqzXBf2KNFWkIh4TRuRDtvUU7yrbq3qXLUmcQCyJj3vsOZqyFUjxeXLe9KP0OEt7/MWlPgq6WI9xrzErEhRcd7Z+oAEZEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mAyxCOQIjRBwWK4kiwwUZuCsHpkyTF2FZI+1hw3Gk/Q=;
- b=KBG4oQZEmzg+bgB2s/leT3YGl7SWvKL5k7I6gX6/zxEIzYoT07RwMXVeQQ6F83ViVuG7nsm8x/+mBnUniE6GkTTgk/rYQPIXeo0kwiSzZWwBfBGBODGPC98LQHwV3LBVrV8HGqfxWGVucZO493ozuWaQx1eKun2YpHKDsdDGNt3MGOQ6/q4/Ji5r4DbEV6mM9UaEYGYgg36UruumgmccGy3esfZb0NdqNHcosBmvgmZu0a8GThVnGo+2ZMmJWW6KtRYu4fh2TrvwDN5QKwOp0751GwftMUNys1u8yb34v0XfuSQdC4b1/FTyuLMSUZN8SVwiPIlwiTZN46+dsUtc6g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB6697.apcprd06.prod.outlook.com (2603:1096:400:451::6)
- by TYUPR06MB6151.apcprd06.prod.outlook.com (2603:1096:400:350::5) with
+ bh=M5trypg3Bl1eCB1K4LKqR9nKEOn51CwCSFnFfOf/kUI=;
+ b=bUSOa3WUsSEqcnn8X6LURyRJIUK7NanCWf8gF/8Ud4PfXMDxb/U0NItKy2FJ+hXG/9wq05/sm2PtZb5qn/KVBHDz1mDvv4c18dTfNkVdHcJNyjDN05G4LzJBmcefH8WWhQWgePo3P1YnrDdRKQuCacBPw72FRLeA3nrZhtekgzyqsLeRUIRwvJqMSVfYNP5VyCvcLJ/SiEbX63C/pijBsUlhd38509SXzj4nVq9FtO8N0d3W+3VvB9ZLNSU2eWWtG/ywEZfc32rldXTDMGAoO9d2Ye48QwOoGYLgs8wY7XHYlmUBMGB9gYVK7f9Wu7V2IVG+U85XF5IPOtmootCYcw==
+Received: from DS7PR03CA0150.namprd03.prod.outlook.com (2603:10b6:5:3b4::35)
+ by DM4PR12MB6301.namprd12.prod.outlook.com (2603:10b6:8:a5::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.24; Tue, 6 Jun
- 2023 07:02:12 +0000
-Received: from TYZPR06MB6697.apcprd06.prod.outlook.com
- ([fe80::f652:a96b:482:409e]) by TYZPR06MB6697.apcprd06.prod.outlook.com
- ([fe80::f652:a96b:482:409e%5]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
- 07:02:12 +0000
-From:   Lu Hongfei <luhongfei@vivo.com>
-To:     Chester Lin <clin@suse.com>, NXP S32 Linux Team <s32@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROLLER - NXP S32),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     opensource.kernel@vivo.com, luhongfei@vivo.com
-Subject: [PATCH] pinctrl: nxp: Fix resource leaks in for_each_child_of_node() loops
-Date:   Tue,  6 Jun 2023 15:02:01 +0800
-Message-Id: <20230606070201.14249-1-luhongfei@vivo.com>
-X-Mailer: git-send-email 2.39.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCPR01CA0129.jpnprd01.prod.outlook.com
- (2603:1096:400:26d::16) To TYZPR06MB6697.apcprd06.prod.outlook.com
- (2603:1096:400:451::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Tue, 6 Jun
+ 2023 07:17:38 +0000
+Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
+ (2603:10b6:5:3b4:cafe::4f) by DS7PR03CA0150.outlook.office365.com
+ (2603:10b6:5:3b4::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33 via Frontend
+ Transport; Tue, 6 Jun 2023 07:17:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6477.13 via Frontend Transport; Tue, 6 Jun 2023 07:17:37 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 6 Jun 2023
+ 00:17:28 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Tue, 6 Jun 2023 00:17:27 -0700
+Received: from pshete-ubuntu.nvidia.com (10.127.8.13) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.37 via Frontend
+ Transport; Tue, 6 Jun 2023 00:17:24 -0700
+From:   Prathamesh Shete <pshete@nvidia.com>
+To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <smangipudi@nvidia.com>, <pshete@nvidia.com>,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: [PATCH] gpio: tegra186: Check PMC driver status before any request
+Date:   Tue, 6 Jun 2023 12:47:17 +0530
+Message-ID: <20230606071717.8088-1-pshete@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB6697:EE_|TYUPR06MB6151:EE_
-X-MS-Office365-Filtering-Correlation-Id: 601a781a-9099-4fd6-800a-08db665bf39b
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|DM4PR12MB6301:EE_
+X-MS-Office365-Filtering-Correlation-Id: 30ce5e62-005f-4c33-80a7-08db665e1bb3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: F1C2zKZvZ9m4pp2aTfCSsaOBS+pdjB+7C5YiMZwyUlmzivhDpSy2bqbprpluVRPlWs0PTDdV8SKdhJyH7DyFlNkwk/BxS1yHDFoH+fux5tJFsGsL2Obh8+r9qGm99sJkCfdtWBXExiXe5k/4Ikz6hZk8YV1DqO/XlfdFNYpdVhCKZY2GjgFDxHtLUC1Y42tKIXkVI5SQH+w6eht0+QirQCVBcbkYW+2Z+EvXjKppqQigbbGnVNtqTS/apiBVGRuSET7g7PmIorTPGiqr8O0pYmJUI5+jUXiAQT9i9A2yLpPSRo5AecYLpp8yhHfut0RfnU6EmO2WTeyPWGvfo62N7IY4nKeM/yLgrtZ3QcrKwUXlNvN8UiL0i81UCUJhc+jtrXD5JSxYxTlllVo+ASz8C8rUhIe37y4tTHkeyFpUIWDK1v+ToKtXBEkvRxdaCHGFOyDLz5uLeoz9FmwuqMl5OMRYBVOjM67CRq1Vy9XrVv9zZ8X76r4FU/ViBLMONX6aSh6UzvaLA4KYcuyGh3FS471Pai0omcaCvlk2kP8hM5uv5p5dKfduRlkCX4Aq7HUkSbvOoTHlUeC+4J3fMNTrzlEuyZGOOW+kdg5wlotP1zn5Qm74+0xAyYzZWvNDBSgy
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6697.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(366004)(346002)(396003)(451199021)(8676002)(478600001)(66556008)(110136005)(5660300002)(8936002)(86362001)(2906002)(66476007)(36756003)(316002)(4326008)(66946007)(38100700002)(38350700002)(186003)(41300700001)(2616005)(52116002)(107886003)(6486002)(6506007)(26005)(6512007)(1076003)(6666004)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uT4cn0Whw0mhQ7mBS2QRsJOHh8lDJFuMbU5NuG+sWigxG13jsfvTTrXXIm9c?=
- =?us-ascii?Q?Zsfh5bH2WKLYnTScundb+lNSoCMtDpuZVPOK8t4oJ99RRUpwaX6f4mD+q2uJ?=
- =?us-ascii?Q?iiXdzSu6veDg5IVb4FuAZeNb3ts/y2EGzdvaDm02iOklAGBqrTJ0eNg2x2zt?=
- =?us-ascii?Q?TVb/JBMM5WFltnQIE3iKAaBjlHKdpIVAGaMEcidyLv2lDIaXgJJfVEewCC/9?=
- =?us-ascii?Q?ooqgCawFSVZpVfyAKTrblNmQPPQ5YHHI5E8gNwWel+uhtYmaZQaJ4M6Lig/p?=
- =?us-ascii?Q?Wu6ueVfXYH4+rqqLyyCWNiIjh59Vwml/TsRX82oBdStYK/66GR6ow/H+cfqh?=
- =?us-ascii?Q?KTR6Zp+McScj4ylqoR1PkmKVhVxpudODRN3hwhS+UrmLVC/p4DUa7xkdklHp?=
- =?us-ascii?Q?jbUXFvMRZNEuDrFG3Mi45/36dRSjznHo9YclmDNUVbP8SsmQak8HsijnOFVu?=
- =?us-ascii?Q?r6I0o0Tvmf3AtEI7mLj9oj7215ztWAVpUrXoNnfhKaadfAVtnKQc2aVjPDHh?=
- =?us-ascii?Q?aQtCHblHKYUDu98dofiK7MEoNkTOVCb/YgutKmgMqqrmP9HNIzKVPHrS4xSv?=
- =?us-ascii?Q?dCvETMjr9rHvd8S4FIxThDkF4+J8/5vAHnQeca+/73fMzEJ9xLXedMd5H0NM?=
- =?us-ascii?Q?qx792nR3OrKYvID2yZBwnKxJ9kVf57yPlQKk0PS4CpyoVvC4SXvYxZXrAKsY?=
- =?us-ascii?Q?6NCgSBUTkJbfleFaxf656k4xZeMl5qGI7BkOx16pAgyuPHe4DCwpaPrLF3Gb?=
- =?us-ascii?Q?TIp7X8Rs4EM+s7qIClx6RcMMIvj9dcvZtt8IbS9uoKjcofOUUhrtQQLLvIuK?=
- =?us-ascii?Q?p78F/ozuv8BOEjbCxoDuSXcHcZhvX4MW8+C9HbRkb/HgRPlKebGxHvQQ5u6J?=
- =?us-ascii?Q?W//5cU2S8qkPIFe7zd2ZeghyFEwkbj1AdiGOFOHuj9HSYo/NjscKjwQldnHf?=
- =?us-ascii?Q?vQmzYSEuxutBEtv81TpPB/HdnKWrcT2WzGaXlyX6A58S+2u5vL1vzPJfKudS?=
- =?us-ascii?Q?1UPw9BO3lG1wQubMpO7WtNpoddajqwtPCYqvi67x4/qAcG38GWtchbrKdmD5?=
- =?us-ascii?Q?4iYJVoOuhUmxSxXAYIWXlB4Q2YI+xmYjCDqVLZie4e27t9wzKvtRGfwxcWPE?=
- =?us-ascii?Q?l3TFTPkYu4MsCSwiP4ACn1zp9v329AT+zPETTBCg2dV3NHiE+pbbpTb/c30U?=
- =?us-ascii?Q?y1gTrcX5+Ts5NXpFpXdyPICJffuIpNC7vPzSyTZCEvodmaaLrRKru6NdGi9/?=
- =?us-ascii?Q?ivin7m3xohWtY9z9Dtixj+sDbO98oHzcTh4W25jzaMMuAgcRTaEw9Cv/YNLJ?=
- =?us-ascii?Q?cm5xz/FsgsNqDjK0ylWmvzzY37heVNHe4FbIghKBVm3sIbzTB8kCu/XFVgA8?=
- =?us-ascii?Q?xIBp7bO/Q/hdcskIdBTojrOr6UYSZ1gzDbToVwrtT9HmCzrRqlVFfUWV75lP?=
- =?us-ascii?Q?QEEmAK8vx+sI7CqMJce8XmaV7m8VZRpU4fb9jU2UnloNFc3pbcneY0kHkLHU?=
- =?us-ascii?Q?lKHDCta9d6kU6fZzMZ+OAhE8R3f+lvNxGUOIpHjvHauGZCmW4qHcZyqMlHwt?=
- =?us-ascii?Q?lZhs7HBXxfoXm18NL2YPcgE6F61GeIzH+MWMINSo?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 601a781a-9099-4fd6-800a-08db665bf39b
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6697.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 07:02:12.0335
+X-Microsoft-Antispam-Message-Info: 5T4KY6d/hr/fAHBPOeKTSaxDvmN9I7gA534+0Qi+LaNoM81ZtZGARRh/6JgYQjQtl3EYFE/sTeX9kkk/PQd0uC9PYLbl1KmGu8ZENGAyd+w4HnVAfTAQZ6aRo2YGAK9pbflqTRs3jPrZgSMZyZENU7YLQg5IBtavEdjMgsD0WTRvjUxa6guQoA5STv4G0tHsd/GtUaLQU2v4km26Qtg8ngb4xLNEBs9u6Lp8raM7+jbNzReop9xKUnRMjy4UAinqBrMS/ryrCh2T7ABK8Nok923TDl1wLtxLFbpQpgB1lAqFdqaorMMAP2naC35/5mDhYG1jq/WgLEoY2c35kKjFN7zmo0EAo8PRLTgmrsJOqLu+ESMG1HK3A7k+wC7ByxfJvHkca13Ei/pkT4rL2ifBKpKprwvYXasLZB1f0ozE++5l9hgg4xng6QY1rF77pTNiPJ9llR+L3XBaa6tBzUWDREDYjj2dR6GcMAot03nCcAa4cwh8qUqGe8bLcqEFYBJ4h9sP+FLeE9OEyfAizc1SICMjdDyuthhmx0+O41jCT6Ke90Dzm0bJdDc2tEu4YdoQNGEgWSbzJVxnJn4l2lx4/yPekPfNovZLGK5PS7l9lewVpjjjVybp0Z/yo3NOagkJ7q1vHVhVvNtQs+C9Ij4A1EthVcUz0zo5TK+j2R6Kes78nhYJD9CwheRps9jxHZ9L19Srd6R256kY7GfG3txcZZzBEsW62mOgvyh9zL2ElVk=
+X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(396003)(39860400002)(376002)(451199021)(36840700001)(46966006)(40470700004)(8936002)(8676002)(107886003)(7696005)(478600001)(110136005)(54906003)(41300700001)(5660300002)(6666004)(316002)(1076003)(26005)(70586007)(70206006)(4326008)(2616005)(186003)(83380400001)(40460700003)(2906002)(47076005)(426003)(336012)(7636003)(82740400003)(40480700001)(356005)(36860700001)(86362001)(82310400005)(36756003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 07:17:37.8733
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /w/Kt3JzaiMeD/G7rgNAgPpWmACdLmB3/cPAbwtVp/f9gEjgsUpLmXrHUauyQkeXmxtr/0Y/zO2XPH5VzU3vUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6151
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30ce5e62-005f-4c33-80a7-08db665e1bb3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE33.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6301
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Ensure child node references are decremented properly in the error path.
+This patch fixes the issue where even if PMC driver status is
+disabled still we are trying to look up for the IRQ domain
+that PMC driver would've registered if it had been enabled.
 
-Signed-off-by: Lu Hongfei <luhongfei@vivo.com>
+Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 ---
- drivers/pinctrl/nxp/pinctrl-s32cc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-tegra186.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-index 41e024160f36..3ae043b27463
---- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
-+++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-@@ -279,8 +279,10 @@ static int s32_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		ret = s32_dt_group_node_to_map(pctldev, np, map,
- 					       &reserved_maps, num_maps,
- 					       np_config->name);
--		if (ret < 0)
-+		if (ret < 0) {
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index 464b0ea3b6f1..80d08ddde40e 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -964,11 +964,15 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 
+ 	np = of_find_matching_node(NULL, tegra186_pmc_of_match);
+ 	if (np) {
+-		irq->parent_domain = irq_find_host(np);
+-		of_node_put(np);
+-
+-		if (!irq->parent_domain)
+-			return -EPROBE_DEFER;
++		if (of_device_is_available(np)) {
++			irq->parent_domain = irq_find_host(np);
 +			of_node_put(np);
- 			break;
++
++			if (!irq->parent_domain)
++				return -EPROBE_DEFER;
++		} else {
++			of_node_put(np);
 +		}
  	}
  
- 	if (ret)
-@@ -812,8 +814,10 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
- 		groups[i] = child->name;
- 		grp = &info->groups[info->grp_index++];
- 		ret = s32_pinctrl_parse_groups(child, grp, info);
--		if (ret)
-+		if (ret) {
-+			of_node_put(child);
- 			return ret;
-+		}
- 		i++;
- 	}
- 
-@@ -896,8 +900,10 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
- 	i = 0;
- 	for_each_child_of_node(np, child) {
- 		ret = s32_pinctrl_parse_functions(child, info, i++);
--		if (ret)
-+		if (ret) {
-+			of_node_put(child);
- 			return ret;
-+		}
- 	}
- 
- 	return 0;
+ 	irq->map = devm_kcalloc(&pdev->dev, gpio->gpio.ngpio,
 -- 
-2.39.0
+2.17.1
 
