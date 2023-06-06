@@ -2,100 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB560724283
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 506497242E9
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236000AbjFFMml (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 08:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
+        id S233317AbjFFMrK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 08:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236548AbjFFMmi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:42:38 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593BC10CE
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 05:42:12 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-652d76be8c2so5337464b3a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 05:42:12 -0700 (PDT)
+        with ESMTP id S237708AbjFFMq6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:46:58 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC7C1733
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 05:46:26 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-978345f3798so203676166b.3
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 05:46:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686055332; x=1688647332;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MZV0E7R5FU29cIXSk0zEoN7A092W0ZibYxk4uM2ILyk=;
-        b=jQBlHiAeI93rSbIW5MNmNFHCxKlkYZgGYEgvIL++PIS5dgeV/KVr74DFZ4rXAoYDz2
-         be6hec3S5JBXlYbCJmCoM7Tvmd7FAmQJ5Yq/7vZJuJERL27xDLHoZtomonAN1TTsYD/z
-         GjJJR9yJADp+lHk3Y5D8ZFvcU44BdBKg4u7phNT/sVjG2M+v8lv1Vdi+kh+fCmyF24gQ
-         8nBhs4saLo7bxgG4ydaKHxBMIXmhQKiaAf36OjfpVo3pI24WUJVanWzeUQmSnpAs1fEp
-         scVWoJ29vYDaBGOjcHcxncrdCGZp0kpQMRoL164L/Fr+an0jIVRcDkM5yUDRnqvFDwUO
-         sCeg==
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1686055553; x=1688647553;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YacwtbnUno0IGNzrMAEltE3NymQuYjNoVttmwVMJWAM=;
+        b=ZlqhXZ+5hvJZyt81cQ47SzdYh7TH5Bq/KejcuVjBkAQQd8xffF80kYVHwn0ym1SEgK
+         W7txtUblLRMywAwK4tjH6N0jvjFXskKYA2/02RudaMyqMM3Wtk5Iacyol7+QQHN5nZG1
+         mCFgHniUKLMyL6kYE57KeedzCsmTXQy4Azm1kn49BGpsyzO1KdvMJl8N/tn8HKTXNb4E
+         42rQwEktOQG1BCmKp8Q2ZqjGLO/irSD2Hn1H1gbQMKgF6Q2dtd7LT6z2MGPNUkz9zB2x
+         vr0WnaCpaqUoRdBCKiEy+UMOUmIYZXtHP3GlVvOtNaC0aEc5rLdoFANkaxteBnN5psVC
+         5QdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686055332; x=1688647332;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1686055553; x=1688647553;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MZV0E7R5FU29cIXSk0zEoN7A092W0ZibYxk4uM2ILyk=;
-        b=j3/m5ZnxDOxSRVfBIAjchhdB5Kn+0b6SnLaNHwYxs5KiIxZejJ4jnAtPoqu0t5Mh1w
-         WIDnTvaIKc+wTE392Z0ALBb6lJbKBaB5tMe44O/XtTu/hNr50yTTiSTECQrBLd1K1Coj
-         ongch8YBVLqHwdbpbuOeJJaztP09/dkZNXd1M/TU4VLPYztdC+m/8BFCyDrDdikJgahN
-         a9deyFxzW4XC/sh/Tf3ngwdrFCFQfNXtPfbbJxZ6FMjDYJmpWOcV71/VhE7vnnXxIwIT
-         oCHqrHaeJhS1CGRYj73qqvqp/Sx2rcotO/oyudOECGW8UQtzIMDYjdmH5QKfKA37v1w8
-         kqAg==
-X-Gm-Message-State: AC+VfDw0Gf1egTjlAfkgD09BDpmdGJ1M043JmzBnONY1svuVTD9yCYRy
-        IMAsaGjLBthDBM0HuiHETSGTmpW/9rc=
-X-Google-Smtp-Source: ACHHUZ430PNDECzEalamPa5PFf9lmCKvkG5+RjsZff0LNlFWagKomvTW5amYoVnVcJFcNsDYsbIYKg==
-X-Received: by 2002:aa7:88c3:0:b0:64d:5f1d:3d77 with SMTP id k3-20020aa788c3000000b0064d5f1d3d77mr2111164pff.34.1686055331750;
-        Tue, 06 Jun 2023 05:42:11 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id p20-20020a62ab14000000b0064d1d8fd24asm5179947pff.60.2023.06.06.05.42.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 05:42:11 -0700 (PDT)
-Date:   Tue, 6 Jun 2023 20:42:07 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     joe.slater@windriver.com, linux-gpio@vger.kernel.org,
-        randy.macleod@windriver.com
-Subject: Re: [v3][libgpiod][PATCH 1/1] gpio-tools-test.bats: modify delays in
- toggle test
-Message-ID: <ZH8pnxccmgSPnb+9@sol>
-References: <20230605204335.4060789-1-joe.slater@windriver.com>
- <ZH6rRD5B2hNyXcuV@sol>
- <CAMRc=MfAjiJhc5qpuHu_=Zb7NhAnw4GFNXEFN8Gh9ZfV8NOWLw@mail.gmail.com>
+        bh=YacwtbnUno0IGNzrMAEltE3NymQuYjNoVttmwVMJWAM=;
+        b=Mg3LAX/CHwLY9PkMyJiHldZN7mQwWW0RB7PTzJWGZ5lUukUhsj7xwOmMwxMJvBYC42
+         ch1+y2Icgqr+kRYloHrQopTmQtb+gP4wWxlZHMalIrSIVFIFHYOnCkayQrC/yjmFUUmB
+         ffoW/2k8U1wkmJCVahSu+H40vRpV+hFKtn0/ww2hA94UBV/KoduyZS9eCqvFZ3cG1UjG
+         Hf7/xk9LylPk8ua4hu9fv+JVYpBaehIwfsS3vh0+mH6Q3Ndxj5glMEra4DLz8/5E0rKc
+         NhfC/EHZ0jKk2+pkvc5xxs4+SJhiyDhDvBJlgVsns9WnnZiqXolfoj4diZjlzRBuDuJ/
+         pG9g==
+X-Gm-Message-State: AC+VfDwOilq7dK/9W1LE3GM+gXkWjbNYijpeXdDMjHBrkYf90F4+jfZH
+        cYBqvwrfE8+mejAb1/fOOOB5hw==
+X-Google-Smtp-Source: ACHHUZ42tTvaNTNY9stNfznY3znrSbX7YjVIa6+KTc8of1bQ6mBRCp2PWliXxn95o6oyVMRqW8Qykw==
+X-Received: by 2002:a17:906:58d4:b0:977:d53e:4055 with SMTP id e20-20020a17090658d400b00977d53e4055mr2433962ejs.58.1686055553367;
+        Tue, 06 Jun 2023 05:45:53 -0700 (PDT)
+Received: from [10.2.5.28] (abordeaux-655-1-129-86.w90-5.abo.wanadoo.fr. [90.5.10.86])
+        by smtp.gmail.com with ESMTPSA id g19-20020a170906869300b0097461a7ebdcsm5500768ejx.82.2023.06.06.05.45.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 05:45:52 -0700 (PDT)
+Message-ID: <e487f966-aafb-7d21-935d-b1d0ac7c21ac@baylibre.com>
+Date:   Tue, 6 Jun 2023 14:45:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v4 1/2] gpio: tps65219: add GPIO support for TPS65219 PMIC
+Content-Language: en-US
+To:     andy.shevchenko@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Tony Lindgren <tony@atomide.com>, Lee Jones <lee@kernel.org>,
+        khilman@baylibre.com, msp@baylibre.com, francesco@dolcini.it,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Jonathan Cormier <jcormier@criticallink.com>
+References: <20230511-tps65219-add-gpio-support-v4-0-b5d6a764d722@baylibre.com>
+ <20230511-tps65219-add-gpio-support-v4-1-b5d6a764d722@baylibre.com>
+ <ZHXZBCwk6tTu8gjY@surfacebook>
+From:   jerome Neanne <jneanne@baylibre.com>
+In-Reply-To: <ZHXZBCwk6tTu8gjY@surfacebook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfAjiJhc5qpuHu_=Zb7NhAnw4GFNXEFN8Gh9ZfV8NOWLw@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 02:32:37PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Jun 6, 2023 at 5:43 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Mon, Jun 05, 2023 at 01:43:35PM -0700, joe.slater@windriver.com wrote:
-> > > From: Joe Slater <joe.slater@windriver.com>
-> > >
+
+
+On 30/05/2023 13:07, andy.shevchenko@gmail.com wrote:
+> Tue, May 30, 2023 at 09:59:59AM +0200, Jerome Neanne kirjoitti:
 > 
-> Patch looks fine but interestingly, I'm not seeing any improvement in
-> terms of execution times. Is this to be expected?
+> First of all, I have a bit of déjà vu that I have given already some comments
+> that left neither answered nor addressed.
+Sorry for that. I did not realized that some comments on the cover 
+letter also apply to commit message.
 > 
+>> Add support for TPS65219 PMICs GPIO interface.
+>>
+>> 3 GPIO pins:
+>> - GPIO0 only is IO but input mode reserved for MULTI_DEVICE_ENABLE usage
+>> - GPIO1 and GPIO2 are Output only and referred as GPO1 and GPO2 in spec
+>>
+>> GPIO0 is statically configured as input or output prior to Linux boot.
+>> it is used for MULTI_DEVICE_ENABLE function.
+>> This setting is statically configured by NVM.
+>> GPIO0 can't be used as a generic GPIO (specification Table 8-34).
+>> It's either a GPO when MULTI_DEVICE_EN=0 or a GPI when MULTI_DEVICE_EN=1.
+>>
+>> Datasheet describes specific usage for non standard GPIO.
+>> Link: https://www.ti.com/lit/ds/symlink/tps65219.pdf
+> 
+> Can you convert this to be a Datasheet tag? Currently even Link is *not* a tag
+> because there must be no blank lines in the tag block.
+> 
+>> Co-developed-by: Jonathan Cormier <jcormier@criticallink.com>
+>> Signed-off-by: Jonathan Cormier <jcormier@criticallink.com>
+>> Signed-off-by: Jerome Neanne <jneanne@baylibre.com>
+> 
+I misinterpreted this comment. I looked at wrong examples but I think I 
+understand now that the right usage is to have all the tags grouped 
+together into one block which is delimited by blank lines before and 
+after the whole block.
+I'll then do this and put all the Datasheet/Link into the tag block. 
+Stop putting Links inside the commit message right after I refer to it.
+https://www.kernel.org/doc/html/latest/process/5.Posting.html#patch-formatting-and-changelogs
 
-This patch, as it stands, doesn't address execution times, it addresses
-the possibility of some delay throwing the test script and gpiomon out of
-sync and making the test fail.  So making the test more robust.
+> ...
+> 
+>> +	help
+>> +	  Select this option to enable GPIO driver for the TPS65219 chip family.
+>> +	  GPIO0 is statically configured as input or output prior to Linux boot.
+>> +	  It is used for MULTI_DEVICE_ENABLE function.
+>> +	  This setting is statically configured by NVM.
+>> +	  GPIO0 can't be used as a generic GPIO.
+>> +	  It's either a GPO when MULTI_DEVICE_EN=0 or a GPI when MULTI_DEVICE_EN=1.
+>> +
+>> +	  This driver can also be built as a module.
+>> +	  If so, the module will be called gpio_tps65219.
+> 
+> Random indentation. Can you use as much room as available on each line, please?
+Sure for next iteration, I choosed 80 columns here to stay consistent 
+with other configs. I kept a carriage return after the first sentence 
+like it is done for other descriptions.
+This driver can also be built as a module... is separated with a blank 
+line as it is done in all other configs.
+For all the other lines, I now keep the same line until last word 
+strictly exceed column 80.
 
-The toggle rate of the test is slow to reduce the likelyhood of sync
-loss.  With this change it should be possible to increase the toggle
-rate and so reduce the test duration, without impacting test reliabilty,
-but that has not been done (yet).  And even then it would only reduce
-the run time by a second or so.
+> 
+>> @@ -0,0 +1,181 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * GPIO driver for TI TPS65219 PMICs
+>> + *
+>> + * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+>> +
+>> +#include <linux/bits.h>
+>> +#include <linux/gpio/driver.h>
+>> +#include <linux/mfd/tps65219.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+> 
+> ...
+> 
+>> +static int tps65219_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>> +{
+>> +	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
+>> +	struct device *dev = gpio->tps->dev;
+>> +	int ret, val;
+>> +
+>> +	if (offset != TPS65219_GPIO0_IDX) {
+>> +		dev_err(dev, "GPIO%d is output only, cannot get\n", offset);
+> 
+>> +		return -EOPNOTSUPP;
+> 
+> This seems blind following the checkpatch false warning. The checkpatch does
+> not know about subsystem details, i.e. GPIOLIB uses ENOTSUPP in the callbacks.
+> The userspace won't see that as GPIOLIB takes care of translating it when
+> needed.
+> 
+Thanks for explaining, I'm often in trouble for choosing the error code. 
+I'll replace here and all other places where it's used with EOPNOTSUPP.
 
-Cheers,
-Kent.
-
+Regards,
+Jerome
