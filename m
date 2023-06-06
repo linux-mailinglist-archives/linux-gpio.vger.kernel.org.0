@@ -2,99 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F479723C22
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 10:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B604723C2B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 10:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237256AbjFFIru (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 04:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
+        id S236256AbjFFIuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 04:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234742AbjFFIrt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 04:47:49 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CC4FA
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 01:47:48 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5148f299105so11979012a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 01:47:48 -0700 (PDT)
+        with ESMTP id S237271AbjFFIuE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 04:50:04 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E46A411B
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 01:50:02 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5147f7d045bso8446155a12.2
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 01:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686041267; x=1688633267;
+        d=linaro.org; s=google; t=1686041401; x=1688633401;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MqvLNtzOcoA6lE0OUx3cxAki4G4TTRB/eUS1eKn5IiQ=;
-        b=mGUB4rRPLreji445pbvUUQlFZLEeEODhkx7liEznPzs3HTP5I6/lVqmEc/EgrVP5gU
-         CJ40AEdvYbTKgeL7WfqH/8rBVsVwhHg0c8w++9SCPVIfQXxE2/uiNACAZhdUzMTQ2XE0
-         6Bfe9bGzoHF0BreZQCJMTJ0n5N7lSqJR5ZFUax6tE2b2hWVsSV5BqrHrOEYR8HKw6JHC
-         IwDMgLhURJu3IqLYGkUY4nQ/XsAFje6gTFnbIv1A1FQ1EnjxkaVrI4Ph2ms7zeDK+e9B
-         D/KdacfMbvEbTa/dZjnVjU/s4eRZGc0unCPVRdskMdyaVLn8UBU2a2mmjNQeagGUeABV
-         FKNA==
+        bh=cNZJwJJab4riyWzRmpxdXxKEkTNWOTzLRUWxg/pAFSY=;
+        b=aLvKZIU5TqSFa1zhPezixfLlsmrQkKNGC3lTXwz0C+RZ9Q6Rbrmo2jh3tl0NWqtZcY
+         JrNnUQxZB/UK4mlOdh2zu/rM69SiIfIVyjDw8DyG+pFj3VeFj1WGOcf9fl7eRrZydTpI
+         32pZDDkxVaCV8Pd1koFk4yslxsRxCGPc6iXuYBqApBYIrLwsleXXJZ+8Vv+jpnGjDfOm
+         QAo+46p3+ZYCcfZFm2lDSFwv9eRXZnc0N4vuMV2/FQEBb6d8StIRC9gvZxKXl+Tqt8X/
+         UnK0CuOfgrhthyys29o6eyBeKD1ogvwgmNaF7MArj3kR9m8S9l6RYMiuODX6/vApswT3
+         iJ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686041267; x=1688633267;
+        d=1e100.net; s=20221208; t=1686041401; x=1688633401;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MqvLNtzOcoA6lE0OUx3cxAki4G4TTRB/eUS1eKn5IiQ=;
-        b=Z90HbVvGt2UpfK/f/zhWeqjBB6P+/JOcik2yHfx1w7FbPhMayhGpDIn/op9+P8tcEw
-         utcpmpdqgy8/iTZDa3Khm5L8hbWjglH6FZJnAVYt04WsLVRq/0Zvgp88mQ9MyzQGxgOW
-         PRPkR084VNj2g3lBnpuFKKbF9cTvZXOMV40hR/vjodWIKolk+UPBlwGqiZcxBqvUvDTp
-         u8WBnR3BfU2r3vR4GyZ9wc10y2BXmauI/cOUWOYr+4fiEcJDXzUqzur6ZTckyZ12u3xu
-         gceo7/U0j1g75V/PYrMZWLipg+iuerX1sRD51A0ga2/GRwQDR1i7on0j8yBtSc2oR4bu
-         ETXA==
-X-Gm-Message-State: AC+VfDw4stOsbqZzZ9wLUFac5JPe0PIHuFArmIo6UZ3wzNXSnlVpFLTA
-        K1cwjVQ8x6m0+S/SNuIqO7eWOQnRk0XuFgKTy/Xn1A==
-X-Google-Smtp-Source: ACHHUZ5Wn8CYpvBevllVEGv2YBS/ROGEmwALvyAp1heG4h3t31HB6N+lHW2q/tZnpOHN2538kq91XA==
-X-Received: by 2002:aa7:da41:0:b0:514:a669:d064 with SMTP id w1-20020aa7da41000000b00514a669d064mr1683373eds.16.1686041266848;
-        Tue, 06 Jun 2023 01:47:46 -0700 (PDT)
+        bh=cNZJwJJab4riyWzRmpxdXxKEkTNWOTzLRUWxg/pAFSY=;
+        b=IM4/pAXFOIRC2CG1Cl0FUbfsXl6U8AEq0YACnl2w6BHEBMgfcO7O95IiiyBlJDI4zg
+         jZsNFMA0BObtvPvmlwZ1WxW9BWKql2Ucb2334jVmILOkBgGYZjGyECRiDmWr2fzkaJYD
+         lZ69oB0z7Nk3V8pB4E3/9Bv27RztqDVTnAFLGbsbprnPKJXlcgS0QcAMu6pZrSzU/3GH
+         N3B3s7yOX6IVJAJt3KbHrLNnaqD5XdKvY7vkI5a3d+Gr+IQ2MK3jyWM5JYxZH5FrvhNy
+         KyK6aLx71SXUS/jXxuwj+r4Q5GhfERDFtVJ+kAmBqi3nkGfboaXW81OQU97gNeep/RAC
+         mJog==
+X-Gm-Message-State: AC+VfDwut0N1QRJrbhWiL0viUdzh5d77r1r9+vGg+Vn0t8AB0c2wsO5j
+        WHhOAVwZsh3f3FADnLEv3oImyQ==
+X-Google-Smtp-Source: ACHHUZ5qfbjnN0Azzp06pyc+xpWkkoFfHsGFQYdoABfaisKDIJy8fV7JRYu+LYE590p8hBCyRIDnkg==
+X-Received: by 2002:a05:6402:897:b0:50d:89c9:6387 with SMTP id e23-20020a056402089700b0050d89c96387mr1610786edy.27.1686041401433;
+        Tue, 06 Jun 2023 01:50:01 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id f22-20020a056402161600b00514aef7daacsm4775336edv.76.2023.06.06.01.47.44
+        by smtp.gmail.com with ESMTPSA id b11-20020a05640202cb00b005147f604965sm4840471edx.24.2023.06.06.01.49.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 01:47:46 -0700 (PDT)
-Message-ID: <1b7829bf-698e-a076-849e-403bb9938955@linaro.org>
-Date:   Tue, 6 Jun 2023 10:47:44 +0200
+        Tue, 06 Jun 2023 01:50:00 -0700 (PDT)
+Message-ID: <66a83118-4f16-a636-4372-95df2570f339@linaro.org>
+Date:   Tue, 6 Jun 2023 10:49:58 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
-Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: Document Tegra234 pin
- controllers
+Subject: Re: [PATCH v3 2/6] dt-bindings: mfd: cirrus,cs42l43: Add initial DT
+ binding
 Content-Language: en-US
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-References: <20230605154230.2910847-1-thierry.reding@gmail.com>
- <20230605154230.2910847-2-thierry.reding@gmail.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
+        lee@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, vkoul@kernel.org
+Cc:     robh+dt@kernel.org, conor+dt@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230605125504.2570158-1-ckeepax@opensource.cirrus.com>
+ <20230605125504.2570158-3-ckeepax@opensource.cirrus.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230605154230.2910847-2-thierry.reding@gmail.com>
+In-Reply-To: <20230605125504.2570158-3-ckeepax@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05/06/2023 17:42, Thierry Reding wrote:
-> From: Prathamesh Shete <pshete@nvidia.com>
+On 05/06/2023 14:55, Charles Keepax wrote:
+> The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
+> (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
+> for portable applications. It provides a high dynamic range, stereo
+> DAC for headphone output, two integrated Class D amplifiers for
+> loudspeakers, and two ADCs for wired headset microphone input or
+> stereo line input. PDM inputs are provided for digital microphones.
 > 
-> Tegra234 contains two pin controllers. Document their compatible strings
-> and describe the list of pins and functions that they provide.
+> Add a YAML DT binding document for this device.
 > 
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v5:
-> - add missing example for AON controller
-> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
