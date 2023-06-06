@@ -2,65 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC36F724196
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:01:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E27E724234
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:32:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237376AbjFFMBc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 08:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        id S233201AbjFFMcy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 08:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237422AbjFFMBY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:01:24 -0400
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712A210FE;
-        Tue,  6 Jun 2023 05:01:02 -0700 (PDT)
-Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-39810ce3e13so5316312b6e.2;
-        Tue, 06 Jun 2023 05:01:02 -0700 (PDT)
+        with ESMTP id S237197AbjFFMcu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:32:50 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C96AE62
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 05:32:49 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-784f7f7deddso1949137241.3
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jun 2023 05:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686052861; x=1688644861;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AhrfkRC2d1Nzu0rFUFmWucm1SEXL2rGUMQoBfN9aZzY=;
-        b=iHvkabwU4JKGe8CglZWMOgqSzh8iYE0TdPuAjrDuLowg8lus7vPfB3P3gB4Yl1Hxhq
-         i+ZWhLXhQW3Oo1E9c6zlyIRqS1FIjkiyqds/IclnFRyFY9HysSVUf9fzzRQbn5kiqkS1
-         +1FORx+bOeJBExergOlw1RhziKnLqPG9ox0qK9kVCbKiC1Hzrq2AW6bbfamPXv4WWNtz
-         73xatfGvBLdmXT5DUtGDBZmFya3wgPTBIEFAtKwosN3N1P800/lAMTMwW1O4XcC7r6vd
-         x+ZqsiacLBYuRfEqZZOXn/bp8pqOVhf3V/xwXckxtsMJcMJby7g1TnbCQkaKtKqaZAB1
-         ssBw==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686054768; x=1688646768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xEoeXO1zkgrgimWkT9oSBlvMMJVHa5gs9I3y6+HDeD4=;
+        b=MhKFEtcH7h9ywU499AkZaFhK7smgHfqt5cLUS8t8T7ZldeUmqFNqWAuy75K4pl85Yw
+         Oizd948DHSeBU68jMmyOt0gY8maFvUmXvVdz55nIPvHMBycSd60k/SaDC1W5e+UAt7jU
+         qr3ZYqoY93y4adLrgEhD9EbzQh1isfNeK3bjMFawGWXX+v+IfJfz+wW+tqyvxv/y2fV2
+         zxjGb2P/5i4moDRq/8RxFR/118c5ghyQl6q/xUR+ahQ302euJDdhPU0VIgmWq/V33qIp
+         1pWKd/95+3u/xIczwJlCYZeD4ABYenv1J8I/E62ToXOiLoQDAYgqlxoypKqmmr719Q0n
+         sYOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686052861; x=1688644861;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AhrfkRC2d1Nzu0rFUFmWucm1SEXL2rGUMQoBfN9aZzY=;
-        b=jO522hkSUdH7s0C2T19vG+qKQ3gbq8qg4T5epaZrrW21wjUVIJK8vN/5R72VhipjpV
-         a60MqEKGNLWUlJJsKpLw4cMZDARWSPwdTM3TOeg8quwoeKidD8jzGrBA5mZcPeDKdPWb
-         67eWgpZf4gQk9GrNY5t4gH0nidfG84MP/KcAXDqy7U23rSRd/DEH5ATRsZYuZkzh7jMy
-         Qk20Ah+g2RzjsLO5liqALD/kjRJ6qvT1KpFjX0dw/h6YuOASPB0lhsfNlnvCAsikDeeH
-         qLig01JE7feuYQURGJYYe6Hue7pv8o0zx+DIYF9ur0Dx88cBqBP6eHoSmlUX5KdMnGLr
-         k31A==
-X-Gm-Message-State: AC+VfDxn/nOYhwZqTjOxoN/opDl6p7m1rl/hrMlgghYdpO/qoXED7+s8
-        yLdDdjo9ykHtMgBoz7MrrvsIAWymor0=
-X-Google-Smtp-Source: ACHHUZ6NpuKk0Y4F2GEqXu30GWz9/oqv638NhXJF31o1PR5PqRJkOydZSeF4hBMw67ab0/QD15rGwQ==
-X-Received: by 2002:a05:6808:250:b0:39a:bc5c:f265 with SMTP id m16-20020a056808025000b0039abc5cf265mr1905409oie.28.1686052861478;
-        Tue, 06 Jun 2023 05:01:01 -0700 (PDT)
-Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id z8-20020aa791c8000000b0063d2989d5b4sm1330427pfa.45.2023.06.06.05.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 05:01:01 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2] gpio: sim: fix memory corruption when adding named lines and unnamed hogs
-Date:   Tue,  6 Jun 2023 20:00:34 +0800
-Message-Id: <20230606120034.42904-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20221208; t=1686054768; x=1688646768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xEoeXO1zkgrgimWkT9oSBlvMMJVHa5gs9I3y6+HDeD4=;
+        b=Mma7J5+7qqGMBWdVLrSFjCkUBppe1P8PFi4we09mqJYOkWdG+xmwWBDATVEK+W7H2g
+         O8l/Rp2ahFnPcnklItDL9rwKcjmzQMlNJ4RhfIb8m1R2G7dAKbFTSxNhGb6BIwrFCV0F
+         q/qqF4iBNA0ZPQ/EpdNZwtG5ThcQPro6IFKAEgKHliwilcuIC/QGz5mWDCxnQ0zkU7Xj
+         wOKOi/AnEsj6wMo42FOHND14IDPBRBYvmAl83bskDsMbyru7TJkXMIgWO6sDsffM3GCa
+         9/me9OATT5++r4cEYJ40V0C6f1xNQ+e4Cg3wihUMB0+I/jHMxq1iUzPg5cUd12XFyrKK
+         i0ug==
+X-Gm-Message-State: AC+VfDwqEvFyb1o6R4lWUTND/LRPq59ZNB5pYEdqGJdJJPjntCuigpGN
+        +dVxABlCMLC8blBpA87SNiuMko1wpGSbZ6AuMS5MGkLa3qu5Nxbm
+X-Google-Smtp-Source: ACHHUZ5+2QS8OjrGRiSFSO9Jtbo+NJ3qUJ34i4WpjpubKFEjhu5Hcu4sNc+tetUp555vaV4LejFDQWKRqLw1ZHp4FTc=
+X-Received: by 2002:a67:d013:0:b0:43b:24e9:a742 with SMTP id
+ r19-20020a67d013000000b0043b24e9a742mr981751vsi.22.1686054768735; Tue, 06 Jun
+ 2023 05:32:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230605204335.4060789-1-joe.slater@windriver.com> <ZH6rRD5B2hNyXcuV@sol>
+In-Reply-To: <ZH6rRD5B2hNyXcuV@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 6 Jun 2023 14:32:37 +0200
+Message-ID: <CAMRc=MfAjiJhc5qpuHu_=Zb7NhAnw4GFNXEFN8Gh9ZfV8NOWLw@mail.gmail.com>
+Subject: Re: [v3][libgpiod][PATCH 1/1] gpio-tools-test.bats: modify delays in
+ toggle test
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     joe.slater@windriver.com, linux-gpio@vger.kernel.org,
+        randy.macleod@windriver.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,40 +68,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When constructing the sim, gpio-sim constructs an array of named lines,
-sized based on the largest offset of any named line, and then initializes
-that array with the names of all lines, including unnamed hogs with higher
-offsets.  In doing so it writes NULLs beyond the extent of the array.
+On Tue, Jun 6, 2023 at 5:43=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Mon, Jun 05, 2023 at 01:43:35PM -0700, joe.slater@windriver.com wrote:
+> > From: Joe Slater <joe.slater@windriver.com>
+> >
+> > The test "gpioset: toggle (continuous)" uses fixed delays to test
+> > toggling values.  This is not reliable, so we switch to looking
+> > for transitions from one value to another.
+> >
+> > We wait for a transition up to 1.5 seconds.
+> >
+>
+> For future reference, the subject line should've been
+> "[libgpiod][PATCH v3]".
+> The version goes within the [PATCH], and 1/1 is optional unless you have
+> a cover letter.
+>
+> > Signed-off-by: Joe Slater <joe.slater@windriver.com>
+> > ---
+>
+> Here you would normally list the changes between revisions.
+> So I'm not sure what has actually changed since v1.
+> The loop limit went from 10 to 15?
+>
+> >  tools/gpio-tools-test.bats | 24 +++++++++++++++++++-----
+> >  1 file changed, 19 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
+> > index c83ca7d..05d7138 100755
+> > --- a/tools/gpio-tools-test.bats
+> > +++ b/tools/gpio-tools-test.bats
+> > @@ -141,6 +141,20 @@ gpiosim_check_value() {
+> >       [ "$VAL" =3D "$EXPECTED" ]
+> >  }
+> >
+> > +gpiosim_wait_value() {
+> > +     local OFFSET=3D$2
+> > +     local EXPECTED=3D$3
+> > +     local DEVNAME=3D${GPIOSIM_DEV_NAME[$1]}
+> > +     local CHIPNAME=3D${GPIOSIM_CHIP_NAME[$1]}
+> > +     local PORT=3D$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/va=
+lue
+> > +
+> > +     for i in {1..15}; do
+> > +             [ "$(<$PORT)" =3D "$EXPECTED" ] && return
+> > +             sleep 0.1
+> > +     done
+> > +     return 1
+> > +}
+> > +
+> >  gpiosim_cleanup() {
+> >       for CHIP in ${!GPIOSIM_CHIP_NAME[@]}
+> >       do
+> > @@ -1567,15 +1581,15 @@ request_release_line() {
+> >       gpiosim_check_value sim0 4 0
+> >       gpiosim_check_value sim0 7 0
+> >
+> > -     sleep 1
+> > -
+> > -     gpiosim_check_value sim0 1 0
+> > +     # sleeping fixed amounts can be unreliable, so we
+> > +     # sync to the toggles
+> > +     #
+>
+> You said you would get rid of this comment.
+>
+>
+> The patch works for me, so I'm otherwise fine with it.
+>
+> Cheers,
+> Kent.
 
-Add a check that only named lines are used to initialize the array.
+Patch looks fine but interestingly, I'm not seeing any improvement in
+terms of execution times. Is this to be expected?
 
-Fixes: cb8c474e79be ("gpio: sim: new testing module")
-Signed-off-by: Kent Gibson<warthog618@gmail.com>
----
-
-changes v1 -> v2:
- - check offset as well to make the purpose of the check clearer
-
- drivers/gpio/gpio-sim.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index e5dfd636c63c..09aa0b64859b 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -721,8 +721,10 @@ static char **gpio_sim_make_line_names(struct gpio_sim_bank *bank,
- 	if (!line_names)
- 		return ERR_PTR(-ENOMEM);
- 
--	list_for_each_entry(line, &bank->line_list, siblings)
--		line_names[line->offset] = line->name;
-+	list_for_each_entry(line, &bank->line_list, siblings) {
-+		if (line->name && (line->offset <= max_offset))
-+			line_names[line->offset] = line->name;
-+	}
- 
- 	return line_names;
- }
--- 
-2.40.1
-
+Bart
