@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B668F7242A2
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:44:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E148724290
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 14:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232371AbjFFMo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 08:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        id S236547AbjFFMny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 08:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237162AbjFFMo2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:44:28 -0400
+        with ESMTP id S233610AbjFFMnx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 08:43:53 -0400
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5550110EC;
-        Tue,  6 Jun 2023 05:44:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 059F510CC;
+        Tue,  6 Jun 2023 05:43:27 -0700 (PDT)
 Received: from loongson.cn (unknown [223.106.25.146])
         by gateway (Coremail) with SMTP id _____8Bxb+usKH9kkCoAAA--.782S3;
         Tue, 06 Jun 2023 20:38:04 +0800 (CST)
