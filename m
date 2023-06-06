@@ -2,99 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C1E47235AC
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 05:19:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40A427235DB
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 05:43:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbjFFDT1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Jun 2023 23:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
+        id S231391AbjFFDnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Jun 2023 23:43:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230362AbjFFDT0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 23:19:26 -0400
-Received: from cstnet.cn (smtp80.cstnet.cn [159.226.251.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94032118;
-        Mon,  5 Jun 2023 20:19:24 -0700 (PDT)
-Received: from ed3e173716be.home.arpa (unknown [124.16.138.125])
-        by APP-01 (Coremail) with SMTP id qwCowAA3PJiTpX5keCo0DA--.2532S2;
-        Tue, 06 Jun 2023 11:18:45 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     andy.shevchenko@gmail.com
-Cc:     oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-        brgl@bgdev.pl, palmer@dabbelt.com, paul.walmsley@sifive.com,
-        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH v3] gpio: ath79: Add missing check for platform_get_irq
-Date:   Tue,  6 Jun 2023 11:18:41 +0800
-Message-Id: <20230606031841.38665-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229681AbjFFDnG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Jun 2023 23:43:06 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83D812A
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Jun 2023 20:43:05 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-64d24136685so4064360b3a.1
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jun 2023 20:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686022985; x=1688614985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QADTxHquHQMEXIX89yHgS7wSSCKy/V+wCYWQDKZ9iDA=;
+        b=e7RmnByhDSw1zSeZJ0OSg0n7ZnGHJgT9TKyPsGfhf0T2iK8K3BKHNGf+hfGAAMMa2j
+         XodSn7P0kAMizIHtASQ24e3yHyTF1ukRURk3vVtgNBYTTqApV98TmTienedhIx0eJX8X
+         CPq/a/k3huMb/ziL35PhiDTbkvRXgUr2Yj5zCRX53j0ycMIAb8hBk1DQeyPhXqafoPKj
+         SvgR2SJnQ1EVvtbvD+mEcPyMw4mBqxiVsJIqTExCWiQWp01q3Sk9rSBR3xW8GhAFE94e
+         420W1WDOAXrFB2Beakl3u2vMv+CP/0/8HVp1yEeL+KqfKiuiLvltMPPUCf50zg84SFAD
+         wuwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686022985; x=1688614985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QADTxHquHQMEXIX89yHgS7wSSCKy/V+wCYWQDKZ9iDA=;
+        b=fli4jDWhBctpaf+ySpOclJxk7R8ChEmMRLGrj8Std31OaUCnFN9XWvdGXkmgPGndfR
+         0zAg/mX59iGjxSWEoFVrkhZ1DTwD/dXRWIZrhDk+e2od8206GcXuqvQEHgwsIay+66lO
+         HSTiJBYQS4eh5G/7kdfeTHPTnJ0Lub6LpYnNv0m9J5yQm1GewOHWVyQ4wZnJR1yL3D5j
+         Kzl5TRvovGc8UL288ea/Hn7XOTPG8xMoiirzxP47CjmyP2xeL1qpwPKY6Hc8VZQnjsWS
+         QhEJZw7SUGFO+vEOOknjtK9UIJplEMB/38eC8ktdijYyVDCyXHTYV9xvoM6mpFverdKB
+         s2hg==
+X-Gm-Message-State: AC+VfDwEg5hHCqOa1XlDoge42UEos/F50w3+iJjiZWe7xO8VFbFN+38f
+        46245KdiTnWTHNQHX78VmH96Hwc0DWU=
+X-Google-Smtp-Source: ACHHUZ6OBXgM1b5SBL9cL16Pru3qfY7v5AQBX5BkrugsOMyQPa8nTYWeERY+gXqwARTRni7hmNI1hQ==
+X-Received: by 2002:a05:6a00:16d1:b0:64f:ad7c:70fb with SMTP id l17-20020a056a0016d100b0064fad7c70fbmr1124783pfc.17.1686022985227;
+        Mon, 05 Jun 2023 20:43:05 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id n15-20020aa7904f000000b0064ff1f1df65sm5887933pfo.61.2023.06.05.20.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jun 2023 20:43:04 -0700 (PDT)
+Date:   Tue, 6 Jun 2023 11:43:00 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     joe.slater@windriver.com
+Cc:     linux-gpio@vger.kernel.org, randy.macleod@windriver.com
+Subject: Re: [v3][libgpiod][PATCH 1/1] gpio-tools-test.bats: modify delays in
+ toggle test
+Message-ID: <ZH6rRD5B2hNyXcuV@sol>
+References: <20230605204335.4060789-1-joe.slater@windriver.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: qwCowAA3PJiTpX5keCo0DA--.2532S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFyfuF1rXr43tw43Cry5XFb_yoWkWrc_Cw
-        1kXw17Cr48ur9IqF17Aw1ayrWSyr97urn3Zr4vqa1aqr98Z397ur9rur4rZrnrWr18KFyD
-        G34kCrWavFsxGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-        8cxan2IY04v7MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-        67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-        VjvjDU0xZFpf9x0JUk3ktUUUUU=
-X-Originating-IP: [124.16.138.125]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605204335.4060789-1-joe.slater@windriver.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the missing check for platform_get_irq() and return error
-if it fails.
-The returned error code will be dealed with in
-module_platform_driver(ath79_gpio_driver) and the driver will not
-be registered.
+On Mon, Jun 05, 2023 at 01:43:35PM -0700, joe.slater@windriver.com wrote:
+> From: Joe Slater <joe.slater@windriver.com>
+> 
+> The test "gpioset: toggle (continuous)" uses fixed delays to test
+> toggling values.  This is not reliable, so we switch to looking
+> for transitions from one value to another.
+> 
+> We wait for a transition up to 1.5 seconds.
+> 
 
-Fixes: 2b8f89e19b6d ("gpio: ath79: Add support for the interrupt controller")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
-Changelog:
+For future reference, the subject line should've been
+"[libgpiod][PATCH v3]".
+The version goes within the [PATCH], and 1/1 is optional unless you have
+a cover letter.
 
-v2 -> v3:
+> Signed-off-by: Joe Slater <joe.slater@windriver.com>
+> ---
 
-1. Check before assigning values.
+Here you would normally list the changes between revisions.
+So I'm not sure what has actually changed since v1.
+The loop limit went from 10 to 15?
 
-v1 -> v2:
+>  tools/gpio-tools-test.bats | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
+> index c83ca7d..05d7138 100755
+> --- a/tools/gpio-tools-test.bats
+> +++ b/tools/gpio-tools-test.bats
+> @@ -141,6 +141,20 @@ gpiosim_check_value() {
+>  	[ "$VAL" = "$EXPECTED" ]
+>  }
+>  
+> +gpiosim_wait_value() {
+> +	local OFFSET=$2
+> +	local EXPECTED=$3
+> +	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
+> +	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
+> +	local PORT=$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value
+> +
+> +	for i in {1..15}; do
+> +		[ "$(<$PORT)" = "$EXPECTED" ] && return
+> +		sleep 0.1
+> +	done
+> +	return 1
+> +}
+> +
+>  gpiosim_cleanup() {
+>  	for CHIP in ${!GPIOSIM_CHIP_NAME[@]}
+>  	do
+> @@ -1567,15 +1581,15 @@ request_release_line() {
+>  	gpiosim_check_value sim0 4 0
+>  	gpiosim_check_value sim0 7 0
+>  
+> -	sleep 1
+> -
+> -	gpiosim_check_value sim0 1 0
+> +	# sleeping fixed amounts can be unreliable, so we
+> +	# sync to the toggles
+> +	#
 
-1. Return "girq->parents[0]" instead of "-ENODEV".
----
- drivers/gpio/gpio-ath79.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+You said you would get rid of this comment.
 
-diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-index aa0a954b8392..d2d838ad33bb 100644
---- a/drivers/gpio/gpio-ath79.c
-+++ b/drivers/gpio/gpio-ath79.c
-@@ -285,7 +285,10 @@ static int ath79_gpio_probe(struct platform_device *pdev)
- 					     GFP_KERNEL);
- 		if (!girq->parents)
- 			return -ENOMEM;
--		girq->parents[0] = platform_get_irq(pdev, 0);
-+		err = platform_get_irq(pdev, 0);
-+		if (err < 0)
-+			return err;
-+		girq->parents[0] = err;
- 		girq->default_type = IRQ_TYPE_NONE;
- 		girq->handler = handle_simple_irq;
- 	}
--- 
-2.25.1
 
+The patch works for me, so I'm otherwise fine with it.
+
+Cheers,
+Kent.
