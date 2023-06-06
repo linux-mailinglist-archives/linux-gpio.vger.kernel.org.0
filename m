@@ -2,58 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 538C3723E2C
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 11:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B35723ECB
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jun 2023 12:01:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236548AbjFFJsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Jun 2023 05:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        id S233361AbjFFKBy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Jun 2023 06:01:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237031AbjFFJsM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 05:48:12 -0400
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA76A10CC
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 02:48:04 -0700 (PDT)
-Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
-        by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-        id 3a7ec564-044f-11ee-a9de-005056bdf889;
-        Tue, 06 Jun 2023 12:48:02 +0300 (EEST)
-From:   andy.shevchenko@gmail.com
-Date:   Tue, 6 Jun 2023 12:48:02 +0300
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
-Subject: Re: [PATCH] gpio: tegra186: Check PMC driver status before any
- request
-Message-ID: <ZH8A0nmXrEyY0zu1@surfacebook>
-References: <20230606071717.8088-1-pshete@nvidia.com>
+        with ESMTP id S234860AbjFFKBs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Jun 2023 06:01:48 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FE010D7
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Jun 2023 03:01:45 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:a3e8:6562:a823:d832])
+        by albert.telenet-ops.be with bizsmtp
+        id 5m1j2A00L1Tjf1k06m1jxG; Tue, 06 Jun 2023 12:01:44 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q6TVC-005IKf-UG;
+        Tue, 06 Jun 2023 12:01:43 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q6TVX-00Bh5i-NE;
+        Tue, 06 Jun 2023 12:01:43 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexander Stein <linux@ew.tq-group.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: gpio: gpio-delay: Spelling s/curcuit/circuit/
+Date:   Tue,  6 Jun 2023 12:01:40 +0200
+Message-Id: <ab68df6b056a3b381d1d53cf1502e814812c4f96.1686045675.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230606071717.8088-1-pshete@nvidia.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tue, Jun 06, 2023 at 12:47:17PM +0530, Prathamesh Shete kirjoitti:
-> This patch fixes the issue where even if PMC driver status is
-> disabled still we are trying to look up for the IRQ domain
-> that PMC driver would've registered if it had been enabled.
+Fix misspellings of "circuit".
 
--ENOPARSE.
+Fixes: c7239a3da1628767 ("dt-bindings: gpio: Add gpio-delay binding document")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/gpio/gpio-delay.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Also mind grammar punctuation.
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+index 7c16a4e1a768ef72..1cebc4058e272660 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+@@ -11,7 +11,7 @@ maintainers:
+ 
+ description: |
+   This binding describes an electrical setup where setting an GPIO output
+-  is delayed by some external setup, e.g. RC curcuit.
++  is delayed by some external setup, e.g. RC circuit.
+ 
+   +----------+                    +-----------+
+   |          |             VCC_B  |           |
+@@ -30,7 +30,7 @@ description: |
+                            GND
+ 
+   If the input on the consumer is controlled by an open-drain signal
+-  attached to an RC curcuit the ramp-up delay is not under control
++  attached to an RC circuit the ramp-up delay is not under control
+   of the GPIO controller.
+ 
+ properties:
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
