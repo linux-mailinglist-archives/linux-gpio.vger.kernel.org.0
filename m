@@ -2,103 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D73725D24
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 13:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B956D725D80
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 13:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235218AbjFGLbZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Jun 2023 07:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33604 "EHLO
+        id S233859AbjFGLpE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Jun 2023 07:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234384AbjFGLbY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 07:31:24 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2084.outbound.protection.outlook.com [40.107.220.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B6B5198B;
-        Wed,  7 Jun 2023 04:31:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BZxT4dUQnvjz5GwaqA6W5tfdhNeDAeNZY0d1W3qTP9jmTaSZhSz5rUhQzHLORtiEu8/2Gu95xUn2c+PGrb+i2rxXVT9NGcC/eLbJhqlrz0kyCWQMZoTNGR+Xh+u1QM3s11md5PcAuCESx2i/WG555wPBKRFGuuqKmSxYEzP2FgD4GAe8DfjI96uWTO8J0VO92PIr0JxgNCJbIKv8/yopXmZ/ACFTrrlEQEBOZlgkWE+FQkAJDFuyl9dmPWuW43nsgOtqfuWpDY8RVlA3L3G8Sq39WQCcdkfugKZ943heOa5/hro6pxAHCTokVWY4GZKqKafdvhdsU+VAm/2+TYdE+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cvMIMul0HsrsZ0b+8E/XrqW70XklPovbUMCBCC05cGU=;
- b=N6lAguNerz+3mwuZqo1Z6Vssa0vJTOQQcmSjrNNXpbc8stxobrHBpt25DY+N3v1Jq/DXImvK8wHTcB1IjY+BJ8vtugSsa7SqjqdZ1obuloZqKrVZPuJqUVfZS6lje8Iazz1tjZAS6GtdwCodvRSZON2caSljDlFzV0E5tnHNSn41PDo5Nt3uAJ3qk4JyewBqvMFOY/e77UQg+lFvQglrE+ezbQS55xPi9f+jyL3d9a66fe3eEupK2MN5+ErY73bpM13SDbUY55DJP5gxkVohoI+Xuuj/+D5wt77BBQJxu3otZAQC+MbvEcLS7TMdQTVJXxuOioavyRyNsaxQBuJE/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cvMIMul0HsrsZ0b+8E/XrqW70XklPovbUMCBCC05cGU=;
- b=BWCq5jSMLt6nN5D+mGg60vY2oZEi4NtRlPcNMZzDollOUlyIDtoei20W52hVdmztIGHJA8GAeJ6jKwnQv0HuC6uqSGLSkxKpllxXBOGHAbuUeVtUsZ8XXoo0bDi9ioJekUa8dexo/b5qHZK9R++IiQ00aA2mqb2UCyZwFDZERBAz5wlX7omwCw8yF/4axW0yO0tS5uAh7R5gIkaShwck5nXg+JGKJXm0blEduZKcWw470l21beigyqCZnUGDlKHMPUDDHfb5+82xjr8PUhOOBcOjfaba3Zinxbk5zAkMmu0e4NpPgz5+R3zcyrIutnDhJ3mXlT7ZnwXxiVevROU6bg==
-Received: from BN9PR03CA0066.namprd03.prod.outlook.com (2603:10b6:408:fc::11)
- by MW4PR12MB6803.namprd12.prod.outlook.com (2603:10b6:303:20e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Wed, 7 Jun
- 2023 11:31:21 +0000
-Received: from BN8NAM11FT076.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:fc:cafe::81) by BN9PR03CA0066.outlook.office365.com
- (2603:10b6:408:fc::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.19 via Frontend
- Transport; Wed, 7 Jun 2023 11:31:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- BN8NAM11FT076.mail.protection.outlook.com (10.13.176.174) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6477.24 via Frontend Transport; Wed, 7 Jun 2023 11:31:20 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 7 Jun 2023
- 04:31:09 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Wed, 7 Jun 2023 04:31:08 -0700
-Received: from pshete-ubuntu.nvidia.com (10.127.8.13) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Wed, 7 Jun 2023 04:31:06 -0700
-From:   Prathamesh Shete <pshete@nvidia.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <smangipudi@nvidia.com>, <pshete@nvidia.com>,
-        Manish Bhardwaj <mbhardwaj@nvidia.com>
-Subject: [PATCH v2] gpio: tegra186: Check PMC driver status before any request
-Date:   Wed, 7 Jun 2023 17:01:04 +0530
-Message-ID: <20230607113104.11761-1-pshete@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <496889ff-dd61-51af-c716-b9b9e2300be7@nvidia.com>
-References: <496889ff-dd61-51af-c716-b9b9e2300be7@nvidia.com>
+        with ESMTP id S240159AbjFGLow (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 07:44:52 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6001BCE
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Jun 2023 04:44:49 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-30e3caa6aa7so4318136f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Jun 2023 04:44:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1686138287; x=1688730287;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pZF0bWbVqQomN3DSZfJF9QrCWL0o2iDr9KrxQLP2Njw=;
+        b=3RBQjFfyDmBSo1AlYjKhIdm1beEdbNpeWKrKMomP7swI46B5yjDO5BHhe1tyU1q8ky
+         t1CWplL20m0oi2y9YZQhsRKLhqNOV8jqzD8AdgCtLZSYm8GaahtxsNiV6+093izidZOc
+         sDjlMaU18OGfEobAFY9ZhXQMQu8vcx4i4pxIx0eHAc4xmC1VDgVQNxvtHYGYLQfJUiF/
+         QwuIQvmqz5jeI2Xrq3QtoGIG3MoKh+ZsizZHQESghrYuyfnjsEveUYtFwNYgPIELhx+F
+         pwQ7zAVRDv8r6l7rv6rtyfVBq9ZfWcnQY+3VXW4YVXU/C10L3zvHPz1MXI+obInazKwJ
+         EHnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686138287; x=1688730287;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pZF0bWbVqQomN3DSZfJF9QrCWL0o2iDr9KrxQLP2Njw=;
+        b=kkxfWrCcv8dxStfg3W036k3+1JMoVA13i5w2ZhfYaI9aKiFP1ggwTL591zzV77yqX7
+         g0RT7dDgYRjEyfGpbtlreTOoqnYqUoTTDUasE6yb3KumqrpFRud3R2/HjseipMzp5fFi
+         5wY7X1IK0Heq1GAKcHkr/njvkeppAw++yc9pBsbvGv0zP9nvrWZzscLmCOZslX23hjEx
+         d8n2kyLeInyknEyHksm4DcgJ+BJrE2RbDGUjO3GspeBgpU1jldakja1+Wwd/+Hi4e0TR
+         mzUGovvI8UM95/ky9wXTMXq8zz8e9A5sWQwZ4uiDLvWiSrCbUEIqbPDUF8vjozPxMRC5
+         SgMA==
+X-Gm-Message-State: AC+VfDztvEI6bJ/HidWzsLia6OuUOSmYl+w46zm/2Rf++6HjXdKrwEaE
+        V9tUtKhQS9vTEmPR8bgjhLRmMw==
+X-Google-Smtp-Source: ACHHUZ4ag2NB29YmYf2NEyem1AS1fBVfRnebEHbs1kVzFKODnpHwBnsEXbEBUs2kQ3ajwzKCBP//Cg==
+X-Received: by 2002:adf:efc7:0:b0:306:26d1:230a with SMTP id i7-20020adfefc7000000b0030626d1230amr3860283wrp.65.1686138287554;
+        Wed, 07 Jun 2023 04:44:47 -0700 (PDT)
+Received: from [192.168.1.91] (192.201.68.85.rev.sfr.net. [85.68.201.192])
+        by smtp.gmail.com with ESMTPSA id n18-20020a5d4c52000000b0030ae901bc54sm15135507wrt.62.2023.06.07.04.44.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Jun 2023 04:44:47 -0700 (PDT)
+Message-ID: <613601c2-cc98-526b-a9e3-2ad2abc68e1d@baylibre.com>
+Date:   Wed, 7 Jun 2023 13:44:46 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT076:EE_|MW4PR12MB6803:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1234b539-34e3-4b11-ae3d-08db674ab7bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EqIhoryHZGaf5XPFaIGOKL8lGYtx5XZKHIeenp+J/hqlPmVqLP7j0sGrfIpQcOMBvux7Nqz2xTkYwQOLN+KHbHHVR2WIirbHK8gUPsHrC9hRm93RO/7xIq9JRr9Iy1PPgFZel4hRtes1iEex++MZjfXWLrz91Yif2G+H/visauKfo0rNYgbEWcSAsKkzMoByTZKx4mYK0NfzfDSSMKPDcWW9gsjR7pSJEOhVccGx0cuHB6cXX8JLIYDKlvYC4Jacwc+dk1zrfczwcaqEsdLFk1eokNAabkyPRMZjJQhd66UoUPnO4v8RS2cLDsRfhWWd44OwiAhLoLoE6xgd2D1rkfevz/4qUj3KkMMw90W0/93ecE9kDhi2p1bSJUpuAtsA3Ze6aTkoeZmfMR0g38WHPkPmAz8Rn8MAgXsTchnK0Vd1QytwrE+UUOgFGkyMxUNrs51n2XR7GQlKVBLeHliCUQVdERKqr0SIfqY0wbwpWXumAEtCvj6rMNPy8G7wbIiJevoOfWq+sNarQWAO139tAzXWm12AxcEMofRfSv2mJ5YuFDyWFeR0yrfcN2scY+I/h+t5dywm7DAClNTpPILnqBkYEhJnJ/Wetr0ldR0YNwTBK96MYLti7LDQOl5dITCOwoZlCBxfoDArRze/cTuJBt+5oOZW7PGyXavo64ZRUM0ZDVDuQs4N/66SbzqzSDAGL3u0S0/6f90kSvqsXyLr7oC0FSGRLrdsq6fRqx8KXybaIF23SI58sX22Io9IXx7H
-X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(39860400002)(376002)(396003)(451199021)(40470700004)(46966006)(36840700001)(54906003)(110136005)(40460700003)(478600001)(40480700001)(5660300002)(8936002)(8676002)(36756003)(86362001)(2906002)(70206006)(82740400003)(70586007)(316002)(82310400005)(356005)(7636003)(4326008)(7696005)(41300700001)(2616005)(107886003)(1076003)(36860700001)(47076005)(26005)(83380400001)(186003)(336012)(426003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2023 11:31:20.8953
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1234b539-34e3-4b11-ae3d-08db674ab7bb
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT076.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6803
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v5 3/3] regulator: tps6594-regulator: Add driver for TI
+ TPS6594 regulators
+Content-Language: en-US
+To:     andy.shevchenko@gmail.com, Esteban Blanc <eblanc@baylibre.com>
+Cc:     linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, jpanis@baylibre.com,
+        aseketeli@baylibre.com, u-kumar1@ti.com
+References: <20230522163115.2592883-1-eblanc@baylibre.com>
+ <20230522163115.2592883-4-eblanc@baylibre.com> <ZG0VHnEByyMW9i4a@surfacebook>
+From:   jerome Neanne <jneanne@baylibre.com>
+In-Reply-To: <ZG0VHnEByyMW9i4a@surfacebook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -106,44 +79,76 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When the PMC device is disabled, probing of the Tegra186 GPIO driver
-fails because the IRQ domain that is registered by the PMC driver is
-not found. The PMC IRQ domain is only used for wake-up and does not
-impact GPIO functionality in general. Therefore, if the PMC device is
-disabled, skip looking up the PMC IRQ domain to allow the GPIO driver
-to be probed.
 
-Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
----
- drivers/gpio/gpio-tegra186.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+>> +	enum {
+>> +		MULTI_BUCK12,
+>> +		MULTI_BUCK123,
+>> +		MULTI_BUCK1234,
+>> +		MULTI_BUCK12_34,
+> 
+>> +		MULTI_FIRST = MULTI_BUCK12,
+>> +		MULTI_LAST = MULTI_BUCK12_34,
+>> +		MULTI_NUM = MULTI_LAST - MULTI_FIRST + 1
+> 
+> 		MULT_NUM
+> 
+> will suffice instead all this.
+> 
+>> +	};
+> 
+> But why enum at all? See below.
+Just for the switch case readability.
+I have to iterate across the multiphases array for look up name into 
+device tree and evaluate in that order.
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 464b0ea3b6f1..80d08ddde40e 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -964,11 +964,15 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 
- 	np = of_find_matching_node(NULL, tegra186_pmc_of_match);
- 	if (np) {
--		irq->parent_domain = irq_find_host(np);
--		of_node_put(np);
--
--		if (!irq->parent_domain)
--			return -EPROBE_DEFER;
-+		if (of_device_is_available(np)) {
-+			irq->parent_domain = irq_find_host(np);
-+			of_node_put(np);
-+
-+			if (!irq->parent_domain)
-+				return -EPROBE_DEFER;
-+		} else {
-+			of_node_put(np);
-+		}
- 	}
- 
- 	irq->map = devm_kcalloc(&pdev->dev, gpio->gpio.ngpio,
--- 
-2.17.1
+This can be reduced to:
+	enum {
+		MULTI_BUCK12,
+		MULTI_BUCK123,
+		MULTI_BUCK1234,
+		MULTI_BUCK12_34,
+		MULTI_NUM = MULTI_BUCK12_34 - MULTI_BUCK12 + 1
+	};
 
+> 
+> ...
+> 
+>> +	/*
+>> +	 * Switch case defines different possible multi phase config
+>> +	 * This is based on dts buck node name.
+>> +	 * Buck node name must be chosen accordingly.
+>> +	 * Default case is no Multiphase buck.
+>> +	 * In case of Multiphase configuration, value should be defined for
+>> +	 * buck_configured to avoid creating bucks for every buck in multiphase
+>> +	 */
+>> +	for (multi = MULTI_FIRST; multi < MULTI_NUM; multi++) {
+>> +		np = of_find_node_by_name(tps->dev->of_node, multiphases[multi]);
+>> +		npname = of_node_full_name(np);
+>> +		np_pmic_parent = of_get_parent(of_get_parent(np));
+>> +		if (of_node_cmp(of_node_full_name(np_pmic_parent), tps->dev->of_node->full_name))
+> 
+> Why not of_node_full_name() in the second case?
+Sure.
+> 
+> 
+>> +			continue;
+>> +		delta = strcmp(npname, multiphases[multi]);
+>> +		if (!delta) {
+>> +			switch (multi) {
+>> +			case MULTI_BUCK12:
+> 
+> This all looks like match_string() reinvention.
+I can go with match_string but this is not significantly changing the game:
+
+index = match_string(multiphases, ARRAY_SIZE(multiphases), npname);
+if (index >= 0) {
+	switch (index) {
+
+No question on all your other feedback. Just wondering if I missed 
+something with match_string use. Looks like a good idea indeed but this 
+is not drastically changing the code as you seem to expect... Let me 
+know if you think I'm doing it in a wrong way.
+
+Regards,
+Jerome.
