@@ -2,98 +2,346 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABFFA72550D
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 09:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A70E0725518
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 09:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234608AbjFGHJP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Jun 2023 03:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45450 "EHLO
+        id S238744AbjFGHKv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Jun 2023 03:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234052AbjFGHJO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 03:09:14 -0400
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6251A7;
-        Wed,  7 Jun 2023 00:09:11 -0700 (PDT)
-Received: from ed3e173716be.home.arpa (unknown [124.16.138.125])
-        by APP-05 (Coremail) with SMTP id zQCowAA3P4vlLIBk8SHQDA--.699S2;
-        Wed, 07 Jun 2023 15:08:22 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     andy.shevchenko@gmail.com
-Cc:     oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-        brgl@bgdev.pl, palmer@dabbelt.com, paul.walmsley@sifive.com,
-        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: Re: [PATCH v3] gpio: ath79: Add missing check for platform_get_irq
-Date:   Wed,  7 Jun 2023 15:08:19 +0800
-Message-Id: <20230607070819.48553-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S238721AbjFGHKu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 03:10:50 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21AE19B6
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Jun 2023 00:10:47 -0700 (PDT)
+Received: from localhost (88-113-26-95.elisa-laajakaista.fi [88.113.26.95])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id 6b8f1cc4-0502-11ee-b972-005056bdfda7;
+        Wed, 07 Jun 2023 10:10:45 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Wed, 7 Jun 2023 10:10:44 +0300
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZIAtdLTvM6qh4r9W@surfacebook>
+References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
+ <d388c7af3f72fd47baffe0de8c6fec8074cb483c.1686063941.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowAA3P4vlLIBk8SHQDA--.699S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF15Gw4kWr4kGrWxAF1fJFb_yoW8Gw17pF
-        W5KFWvka1kGa1j9wn7ZrWruFW0yan3KryrArWrta45Kwn8ZF9a9r4fKw4Y9FyxCry8Awn2
-        vw4ruan0gF9rZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUjGXdUUUUUU==
-X-Originating-IP: [124.16.138.125]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d388c7af3f72fd47baffe0de8c6fec8074cb483c.1686063941.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 6 Jun 2023 17:46:36 +0800 Andy Shevchenko wrote:
-> Tue, Jun 06, 2023 at 12:28:17PM +0300, andy.shevchenko@gmail.com kirjoitti:
->> Tue, Jun 06, 2023 at 11:18:41AM +0800, Jiasheng Jiang kirjoitti:
->> 
->> Is this v4?
->>
+Tue, Jun 06, 2023 at 04:22:27PM +0000, Oleksii Moisieiev kirjoitti:
+> scmi: Introduce pinctrl SCMI protocol driver
 
-I will submit a v4.
+Seems like you forgot to remove previous line(s) in the commit message and
+the above has to be the Subject here.
+
+> Add basic implementation of the SCMI v3.2 pincontrol protocol
+> excluding GPIO support. All pinctrl related callbacks and operations
+> are exposed in the include/linux/scmi_protocol.h
+
+drop include/ part, everybody will understand that. Also mind the grammar
+period.
+
+...
+
+> -scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+> +scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o pinctrl.o
+
+Why not splitting it and make it ordered?
+
+...
+
+Missing headers:
+
+	bitfield.h
+	bits.h
+	byteorder/
+	types.h
+
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+
+Missing
+
+	asm/unaligned.h
+
+...
+
+> +struct scmi_group_info { 
+> +       bool present; 
+> +       char name[SCMI_MAX_STR_SIZE]; 
+> +       unsigned int *group_pins; 
+> +       unsigned int nr_pins; 
+> +}; 
  
->> > Add the missing check for platform_get_irq() and return error
->> > if it fails.
->> > The returned error code will be dealed with in
->> > module_platform_driver(ath79_gpio_driver) and the driver will not
->> > be registered.
->> 
->> No, this functional change and has not to be for the fixes unless _this_ is the
->> regression you are fixing. Did the driver work before at some point as after
->> this change?
+So, why struct pingroup can't be embeded here?
 
-I will remove the fixes tag in v4.
+> +struct scmi_function_info {
+> +	bool present;
+> +	char name[SCMI_MAX_STR_SIZE];
+> +	unsigned int *groups;
+> +	unsigned int nr_groups;
+> +};
 
-> 
-> To be more clear, answer to the following questions:
-> 1) does driver work with wrong DT configuration?
-> 2a) if yes, does it make sense, i.e. the hardware functioning usefully?
-> 2b) if yes, can we guarantee there are no broken configurations in the wild?
-> 
-> Depending on the answers correct your code and/or commit message.
-> 
->> Otherwise you have to _justify_ that this functional change won't break
->> existing setups (with broked IRQ in Device Tree, for example).
+So, why and struct pinfunction can't be embedded here (yes, you would need a
+duplication of groups as here they are integers)?
 
-Sorry, I do not quite understand what you mean.
-I have no idea how these questions are related to my patch.
-Do you mean I should not fail the ->probe() if there is wrong IRQ numbering in the DT?
-Please tell me the relationship between these questions and my patch.
+As far as I understand these data structures are not part of any ABI (otherwise
+the wrong type(s) / padding might be in use) and hence don't see the impediments
+to use them, but would be nice to have a comment on top of each.
 
-Thanks,
-Jiasheng
+...
+
+> +struct scmi_pin_info {
+> +	bool present;
+> +	char name[SCMI_MAX_STR_SIZE];
+
+Swapping order might help compiler to generate a better code.
+Also this applies to the _group_info and _function_info.
+
+> +};
+
+...
+
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+
+Can you rather follow the usual pattern, i.e. checking for the errors?
+
+	if (ret)
+		goto out_put_xfer;
+
+> +		pi->nr_functions = GET_FUNCTIONS_NR(attr->attributes_high);
+> +		pi->nr_groups = GET_GROUPS_NR(attr->attributes_low);
+> +		pi->nr_pins = GET_PINS_NR(attr->attributes_low);
+> +	}
+
+out_put_xfer:
+
+> +	ph->xops->xfer_put(ph, t);
+> +	return ret;
+
+...
+
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+
+Ditto.
+
+> +		if (n_elems)
+> +			*n_elems = NUM_ELEMS(rx->attributes);
+> +
+> +		strscpy(name, rx->name, SCMI_SHORT_NAME_MAX_SIZE);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	/*
+> +	 * If supported overwrite short name with the extended one;
+> +	 * on error just carry on and use already provided short name.
+> +	 */
+> +	if (!ret && EXT_NAME_FLAG(rx->attributes))
+
+	if (ret)
+		return ret;
+
+> +		ph->hops->extended_name_get(ph, PINCTRL_NAME_GET, selector,
+> +					    (u32 *)&type, name,
+> +					    SCMI_MAX_STR_SIZE);
+> +	return ret;
+
+	return 0;
+
+> +}
+
+...
+
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret)
+
+	if (ret)
+		goto out_put_xfer;
+
+(but in this and similar, aka one line, cases the current wouldn't be bad, just
+matter of the consistency with the rest of the code)
+
+> +		*config_value = get_unaligned_le32(t->rx.buf);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +	return ret;
+
+...
+
+> +	ret = ph->xops->xfer_get_init(ph, PINCTRL_RELEASE,
+> +				      sizeof(*tx), 0, &t);
+
+This is perfectly one line. Please also check entire code for such an unneeded
+wrap.
+
+...
+
+> +static int scmi_pinctrl_get_group_info(const struct scmi_protocol_handle *ph,
+> +				       u32 selector,
+> +				       struct scmi_group_info *group)
+> +{
+> +	int ret;
+> +
+> +	if (!group)
+> +		return -EINVAL;
+> +
+> +	ret = scmi_pinctrl_attributes(ph, GROUP_TYPE, selector,
+> +				      group->name,
+> +				      &group->nr_pins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!group->nr_pins) {
+> +		dev_err(ph->dev, "Group %d has 0 elements", selector);
+> +		return -ENODATA;
+> +	}
+> +
+> +	group->group_pins = devm_kmalloc_array(ph->dev, group->nr_pins,
+> +					       sizeof(*group->group_pins),
+> +					       GFP_KERNEL);
+> +	if (!group->group_pins)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_pinctrl_list_associations(ph, selector, GROUP_TYPE,
+> +					     group->nr_pins, group->group_pins);
+> +	if (ret) {
+> +		devm_kfree(ph->dev, group->group_pins);
+
+This is a red flag. Is this function is solely used at the ->probe() stage?
+I do not think so. Why then the devm_*() is being used to begin with?
+
+Also what are the object lifetimes for device here and the _group_info
+instances?
+
+> +		return ret;
+> +	}
+> +
+> +	group->present = true;
+> +	return 0;
+> +}
+
+...
+
+> +static int scmi_pinctrl_get_function_info(const struct scmi_protocol_handle *ph,
+> +					  u32 selector,
+> +					  struct scmi_function_info *func)
+> +{
+
+As per above.
+
+> +}
+
+...
+
+> +static const struct scmi_pinctrl_proto_ops pinctrl_proto_ops = {
+> +	.get_count = scmi_pinctrl_get_count,
+> +	.get_name = scmi_pinctrl_get_name,
+> +	.get_group_pins = scmi_pinctrl_get_group_pins,
+> +	.get_function_groups = scmi_pinctrl_get_function_groups,
+> +	.set_mux = scmi_pinctrl_set_mux,
+> +	.get_config = scmi_pinctrl_get_config,
+> +	.set_config = scmi_pinctrl_set_config,
+> +	.request_pin = scmi_pinctrl_request_pin,
+> +	.free_pin = scmi_pinctrl_free_pin
+
+It's not a terminator item, so leave trailing comma. It will reduce the burden
+in case of update of this.
+
+> +};
+
+...
+
+> +static int scmi_pinctrl_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+
+> +	pinfo = devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
+> +	if (!pinfo)
+> +		return -ENOMEM;
+
+All the same, why devm_*() is in use and what are the object lifetimes?
+
+> +}
+
+...
+
+> +	for (i = 0; i < pi->nr_groups; i++)
+> +		if (pi->groups[i].present) {
+> +			devm_kfree(ph->dev, pi->groups[i].group_pins);
+> +			pi->groups[i].present = false;
+> +		}
+> +
+> +	for (i = 0; i < pi->nr_functions; i++)
+> +		if (pi->functions[i].present) {
+> +			devm_kfree(ph->dev, pi->functions[i].groups);
+> +			pi->functions[i].present = false;
+> +		}
+
+Missing outer {}, but see above as well.
+
+...
+
+> +static const struct scmi_protocol scmi_pinctrl = {
+> +	.id = SCMI_PROTOCOL_PINCTRL,
+
+> +	.owner = THIS_MODULE,
+
+This is not needed if you use a trick from ~15 years back...
+
+> +	.instance_init = &scmi_pinctrl_protocol_init,
+> +	.instance_deinit = &scmi_pinctrl_protocol_deinit,
+> +	.ops = &pinctrl_proto_ops,
+> +};
+> +
+
+Redundant blank line.
+
+> +DEFINE_SCMI_PROTOCOL_REGISTER_UNREGISTER(pinctrl, scmi_pinctrl)
+
+...i.e. initializing the owner by this macro.
+
+It might require some update to the above macro and its users.
+
+...
+
+
+> +enum scmi_pinctrl_selector_type {
+> +	PIN_TYPE = 0,
+> +	GROUP_TYPE,
+> +	FUNCTION_TYPE
+
+Leave trailing comma.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
