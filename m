@@ -2,96 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58552726168
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 15:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADD4E726241
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jun 2023 16:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238787AbjFGNgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Jun 2023 09:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
+        id S241017AbjFGOGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Jun 2023 10:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240467AbjFGNgT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 09:36:19 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FF41FE0
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Jun 2023 06:36:11 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3f9baa69682so5243811cf.3
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Jun 2023 06:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686144970; x=1688736970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f4sf5qH8tH2f0lLXDyzC4ZbN3gKOaTXNp3tb8kTl5K8=;
-        b=EooWi7y4sBjLFetA5+uP0JX2xp9ku4bqRUaJAKbXPvq+mtBBwVjr1GtGLqOsKdUMtJ
-         rAYnwOue3AWuFKZvSp+WyVpJJZhQF0KWlBdH1GuXpBtDxj9ZFr2hb8p+4aqMBN676S7i
-         PmoVRvz03U9QknFpxpnAIa3n17TScErEnNUbNX65kSoy3ECsTp2/UJ+EcMHBK5wpTAf/
-         oCQyA0h9UwhSgclZXBC/n0F09JfK9BsIlNuiYzQyGPdFQ3kaSsjVkGJ1zTxpOUx6/Ruw
-         QmtsI6waWJujBbb1WjCL87KeWzO6wsQoehfOn2US/USupieI0b7lQNMdPGvHtH56PQHk
-         3qNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686144970; x=1688736970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f4sf5qH8tH2f0lLXDyzC4ZbN3gKOaTXNp3tb8kTl5K8=;
-        b=SfIlNpolnkP8ZBBwfkdf5QFMmocNTM3midJmg4j5eQs6mb0eKkdmUrHU/IvsWRiXpX
-         u1FxBhZFe8Tf3fDqTBvesROwIH3YIsAJe7PZjOKk4u+imKJrkdaQ4LziHPYtGshFIVRp
-         GUES/jYvkajn2suCU4qI8V537Gfj/Kwki1MIzx/fBVwuTOxheAXx7m+sd/qyk1gCBL+h
-         LsRTnc1eYnQvC+7UEBn5zc33wgr4dT21imxTUw/fckNAakVuzBtzuqBpjPXKi7EQo0V0
-         6uIftfA+XbIejzosPshv2To2ZN5IE7K/U2VxxzbtqwVbzxbONqn/RlVZd3LjrShjTNaj
-         oTUA==
-X-Gm-Message-State: AC+VfDzeU+dcwcb+YfGC1rwJEUSpL5a7opeoMX778q/xBK97kYIdR7OA
-        XjBQhyOj+8NKXjbo3yfJ2TthPnpkCjI3g5/s+TrcKA==
-X-Google-Smtp-Source: ACHHUZ7dErdQjWWo/zzM+X1ukuNViiUc9NhOGiU+BR7hrkZ96r6EzX/r+/wFOKgqACIGCOV2UiccEqzeRVS65zHaJJA=
-X-Received: by 2002:a05:6214:d8a:b0:61b:5e9b:a15d with SMTP id
- e10-20020a0562140d8a00b0061b5e9ba15dmr2495870qve.36.1686144970243; Wed, 07
- Jun 2023 06:36:10 -0700 (PDT)
+        with ESMTP id S240830AbjFGOGb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Jun 2023 10:06:31 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F551FD8;
+        Wed,  7 Jun 2023 07:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:MIME-Version:
+        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RjILqyo6Pm+1+5Bm6J1R2tqjfoDi1hW1WpsiHeD9ku0=; b=b9Cz7dkKjXIlEEHUqgf6c248BW
+        GR8+KFSxc6A7uBpOdimpKNvyNV16tq1wwqpXbs+2w9qgp94tQYuzz1qQVPNadbmkvXltn9gkIjHWI
+        /2w+fdj0itjHVLA0K4EIKxv39BYwOW/Gu+/+O9Tyy1BDlaCYlObhcjgxCzbRQXGWDaD4=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:57832 helo=pettiford.lan)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1q6tn0-0005dF-T0; Wed, 07 Jun 2023 10:05:31 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        jesse.sung@canonical.com, isaac.true@canonical.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hugo@hugovil.com,
+        linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date:   Wed,  7 Jun 2023 10:05:14 -0400
+Message-Id: <20230607140525.833982-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20230607065004.37112-1-warthog618@gmail.com> <CAMRc=Mf9K=_a=UzmazHF1Qc7XxWfP_qJH2gftPAT0Y=e_3FtyQ@mail.gmail.com>
- <ZIB+GUaa934A4sq6@sol>
-In-Reply-To: <ZIB+GUaa934A4sq6@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 7 Jun 2023 15:35:59 +0200
-Message-ID: <CAMRc=Me_UKGtkJCfWx9DjyzmvTxRvbDBnZDRHCnFteg5gbgtgA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: quietly ignore configured lines outside the bank
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: [PATCH v8 00/10] serial: sc16is7xx: fix GPIO regression and rs485 improvements
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 7, 2023 at 2:54=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Wed, Jun 07, 2023 at 02:50:43PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Jun 7, 2023 at 8:50=E2=80=AFAM Kent Gibson <warthog618@gmail.co=
-m> wrote:
-> > >
-> > >
-> > > base-commit: ba65c79fbb813423e7d42d99375e2045b27958a6
-> > > prerequisite-patch-id: d89da2e3b7511c5b8132a379b12e4996256ac214
-> > > --
-> > > 2.40.1
-> > >
-> >
-> > I queued this for fixes, thanks!
-> >
->
-> Oh, ok.  I didn't think it was serious enough for fixes, or I would've
-> made the two patches a series.  And included a Fixes on this one.
->
-> Cheers,
-> Kent.
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-It fixes a problem and is fairly small. Works as a fix for me.
+Hello,
+this patch series mainly fixes a GPIO regression and improve RS485 flags and
+properties detection from DT.
 
-Bart
+It now also includes various small fixes and improvements that were previously
+sent as separate patches, but that made testing everything difficult.
+
+Patch 1 fixes an issue with init of first port during probing.
+
+Patch 2 fixes an issue when debugging IOcontrol register, but it is also
+necessary for patch "fix regression with GPIO configuration" to work.
+
+Patch 3 fixes an incorrect label in sc16is7xx_probe() cleanup code.
+
+Patch 4 is a refactor of GPIO registration code in preparation for patch 5.
+
+Patches 5 and 6 fix a GPIO regression by (re)allowing to choose GPIO function
+for GPIO pins shared with modem status lines.
+
+Patch 7 fixes a bug with the output value when first setting the GPIO direction.
+
+Patch 8 allows to read common rs485 device-tree flags and properties.
+
+Patch 9 introduces a delay after a reset operation to respect datasheet
+timing recommandations.
+
+Patch 10 improves comments about chip variants.
+
+I have tested the changes on a custom board with two SC16IS752 DUART using a
+Variscite IMX8MN NANO SOM.
+
+Thank you.
+
+Link: [v1] https://lkml.org/lkml/2023/5/17/967
+      [v1] https://lkml.org/lkml/2023/5/17/777
+      [v1] https://lkml.org/lkml/2023/5/17/780
+      [v1] https://lkml.org/lkml/2023/5/17/785
+      [v1] https://lkml.org/lkml/2023/5/17/1311
+      [v2] https://lkml.org/lkml/2023/5/18/516
+      [v3] https://lkml.org/lkml/2023/5/25/7
+      [v4] https://lkml.org/lkml/2023/5/29/656
+      [v5] https://lkml.org/lkml/2023/6/1/1046
+      [v6] https://lkml.org/lkml/2023/6/1/1328
+      [v7] https://lkml.org/lkml/2023/6/2/861
+
+Changes for V3:
+- Integrated all patches into single serie to facilitate debugging and tests.
+- Reduce number of exported GPIOs depending on new property
+  nxp,modem-control-line-ports
+- Added additional example in DT bindings
+
+Changes for V4:
+- Increase reset post delay to relax scheduler.
+- Put comments patches at the end.
+- Remove Fixes tag for patch "mark IOCONTROL register as volatile".
+- Improve commit messages after reviews.
+- Fix coding style issues after reviews.
+- Change GPIO registration to always register the maximum number of GPIOs
+  supported by the chip, but maks-out GPIOs declared as modem control lines.
+- Add patch to refactor GPIO registration.
+- Remove patch "serial: sc16is7xx: fix syntax error in comments".
+- Remove patch "add dump registers function"
+
+Changes for V5:
+- Change patch order to facilitate stable backport(s).
+- Change duplicate device addresses in DT binding examples.
+- Use GENMASK for bit masks.
+- Replace of_property_for_each_u32() with device_property_read_u32_array
+- Add "Cc: stable..." tags
+
+Changes for V6:
+- Fix compilation bug introduced by patch 3
+
+Changes for V7:
+- Minor changes and coding style fixes after review for
+  patch 5 "fix regression with GPIO configuration".
+
+Changes for V8:
+- Move mctrl_mask to "struct sc16is7xx_port" to avoid compiler warning when
+  CONFIG_GPIOLIB is undefined.
+- Add "struct device" member to "struct sc16is7xx_port", in order to avoid
+  passing a raw "struct device" to called functions from sc16is7xx_probe().
+- Add new patch "serial: sc16is7xx: remove obsolete out_thread label"
+
+Hugo Villeneuve (10):
+  serial: sc16is7xx: fix broken port 0 uart init
+  serial: sc16is7xx: mark IOCONTROL register as volatile
+  serial: sc16is7xx: remove obsolete out_thread label
+  serial: sc16is7xx: refactor GPIO controller registration
+  dt-bindings: sc16is7xx: Add property to change GPIO function
+  serial: sc16is7xx: fix regression with GPIO configuration
+  serial: sc16is7xx: fix bug when first setting GPIO direction
+  serial: sc16is7xx: add call to get rs485 DT flags and properties
+  serial: sc16is7xx: add post reset delay
+  serial: sc16is7xx: improve comments about variants
+
+ .../bindings/serial/nxp,sc16is7xx.txt         |  46 +++++
+ drivers/tty/serial/sc16is7xx.c                | 177 +++++++++++++-----
+ 2 files changed, 181 insertions(+), 42 deletions(-)
+
+
+base-commit: a4d7d701121981e3c3fe69ade376fe9f26324161
+-- 
+2.30.2
+
