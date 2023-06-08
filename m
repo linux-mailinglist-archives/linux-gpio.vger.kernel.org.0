@@ -2,100 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F8D727EFD
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 13:40:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B14727FC1
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 14:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236305AbjFHLkb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Jun 2023 07:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
+        id S235563AbjFHMXO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Jun 2023 08:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236315AbjFHLk1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 07:40:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C283B2719
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Jun 2023 04:40:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5ECE664C99
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Jun 2023 11:40:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE0B8C4339C;
-        Thu,  8 Jun 2023 11:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686224422;
-        bh=Xb0c2eFPQSfWbZXxVY/N3wmksxoTmIIHFKUhff2jICE=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=BBu8USMJ20dP1CD7K2ZnyXZUilBZnlOM+rh7UtLT2Sye0EXfSKnCJiZLxbLwcMtRl
-         G/06g+wIvJTRjYC+zJIuMK08hT1k1oZiBjJVtuFEYlPuMCVAmnHZvHkl4s9tkDxeX5
-         bD+IoHi1F7tJefG6Cat4lmr6H48SF9C1D54JMlTynpitbE9Af5DfBRQU3LYVz0Zin7
-         kaYdiU8PLRudC1M2ImykmcO6iRw9TyYCyOAfMe8RJ2N0JzXOIG5wvL0Pqp2I5XkqSd
-         3qgAhuBlVz6hrYtDkunZA5DtwiAA+UisHyLQTlQWX748zi2MJtD+cDz2r+e2jVM09p
-         fDd3z93uexxZQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D015E4D015;
-        Thu,  8 Jun 2023 11:40:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S236385AbjFHMXN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 08:23:13 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494FA2709;
+        Thu,  8 Jun 2023 05:23:11 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 358BmcYK025325;
+        Thu, 8 Jun 2023 12:22:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=Z3dtTpcLrKlX9a6O3bdPA6tBkwCgqW/PWM0vugx9GK4=;
+ b=DcWsioU3oJyO0SplO5KgeYmA0+T3bYRdS0Cn1HlOf5i93amP5poOMxQyAvpoox9SuUc2
+ 4R+kUug2PkUYYBYWWE0eRofGuzIsd1CUMMfOVYdDmPFWw+I4utzBKzftVwn0Ts7UINkk
+ RHxjrrqYx11tdtIf8gAWeGMSZppDPpsFNKSl3cmZy15OTPzD2H/UhLc7ilcqcbpJJLl9
+ zBNjvFkzn/7/nciTyPXSXOeDJ7My9eC7cFDZmAW2cTHVr3EEo7ojODGb+4rmxqUVymwq
+ CqVygCeKBMXVDgzjjK7dYZsEyK5GsGBfo9/yBqiNoWm9h77sXbU19ieKPI3ZZQ6hymaG Nw== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3r38rbrrrf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Jun 2023 12:22:54 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 358CMriT023508
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 8 Jun 2023 12:22:53 GMT
+Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Thu, 8 Jun 2023 05:22:45 -0700
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
+        <krzysztof.kozlowski@linaro.org>, <andy.shevchenko@gmail.com>,
+        <quic_srichara@quicinc.com>
+Subject: [v9 0/8] Add minimal boot support for IPQ5018
+Date:   Thu, 8 Jun 2023 17:51:44 +0530
+Message-ID: <20230608122152.3930377-1-quic_srichara@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v12 0/8] TXGBE PHYLINK support
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168622442263.17370.16554373092861552237.git-patchwork-notify@kernel.org>
-Date:   Thu, 08 Jun 2023 11:40:22 +0000
-References: <20230606092107.764621-1-jiawenwu@trustnetic.com>
-In-Reply-To: <20230606092107.764621-1-jiawenwu@trustnetic.com>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     netdev@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        Jose.Abreu@synopsys.com, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-gpio@vger.kernel.org,
-        mengyuanlou@net-swift.com
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vCb5KSgza61xVw0Hm-Kd5Xh5uSMRTbu_
+X-Proofpoint-ORIG-GUID: vCb5KSgza61xVw0Hm-Kd5Xh5uSMRTbu_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-08_08,2023-06-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=728 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306080107
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello:
+The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+This series adds minimal board boot support for ipq5018-rdp432-c2 board.
 
-On Tue,  6 Jun 2023 17:20:59 +0800 you wrote:
-> Implement I2C, SFP, GPIO and PHYLINK to setup TXGBE link.
-> 
-> Because our I2C and PCS are based on Synopsys Designware IP-core, extend
-> the i2c-designware and pcs-xpcs driver to realize our functions.
-> 
-> v11 -> v12:
-> - split I2C designware patch (2/9) to I2C tree, repost remaining 8
->   patches
-> 
-> [...]
+[v9]   Change only in patch 2/8
+	   Sorted the headers and cleaned the unwanted ones
+ 	   Added trailing comma for .parent_hws member
+	   Removed the hunk touching ipq5332 kconfig  (unintentionally)
 
-Here is the summary with links:
-  - [net-next,v12,1/8] net: txgbe: Add software nodes to support phylink
-    https://git.kernel.org/netdev/net-next/c/c3e382ad6d15
-  - [net-next,v12,2/8] net: txgbe: Register fixed rate clock
-    https://git.kernel.org/netdev/net-next/c/b63f20485e43
-  - [net-next,v12,3/8] net: txgbe: Register I2C platform device
-    https://git.kernel.org/netdev/net-next/c/c625e72561f6
-  - [net-next,v12,4/8] net: txgbe: Add SFP module identify
-    https://git.kernel.org/netdev/net-next/c/04d94236182e
-  - [net-next,v12,5/8] net: txgbe: Support GPIO to SFP socket
-    https://git.kernel.org/netdev/net-next/c/b83c37315a62
-  - [net-next,v12,6/8] net: pcs: Add 10GBASE-R mode for Synopsys Designware XPCS
-    https://git.kernel.org/netdev/net-next/c/af8de1e307bf
-  - [net-next,v12,7/8] net: txgbe: Implement phylink pcs
-    https://git.kernel.org/netdev/net-next/c/854cace61387
-  - [net-next,v12,8/8] net: txgbe: Support phylink MAC layer
-    https://git.kernel.org/netdev/net-next/c/08f08f9390e4
+[v8]   Changed only in patch 4/8
+                Fixed Kconfig to add COMPILE_TEST and removed header of.h.
+                Instead using mod_devicetable.h. Added Linus reviewed-by
 
-You are awesome, thank you!
+[v7]   Fixed tz reserved region size in patch 7/8
+
+[v6]   Fixed patch [4/8] pinctrl driver for rebase issue.
+
+[v5]
+       Added Reviewed-by tags from Krzysztof Kozlowski.
+       Changed patch [6/8] with [1] since its already Acked
+       Rebased patch [4/8] on top of [2] and fixed other comments
+       Fixed commit log for patch [7/8]
+       Fixed comments for patch [2/8]
+
+[1] https://patchwork.kernel.org/project/linux-arm-msm/patch/1678164097-13247-4-git-send-email-quic_mmanikan@quicinc.com/
+[2] https://lore.kernel.org/r/1683718725-14869-1-git-send-email-quic_rohiagar@quicinc.com
+
+[v4]
+       Fixed all comments for clocks, schema, dts
+       Added Reviewed-by tags.
+
+[v3]
+        Fixed all comments for clocks, schema fixes
+        Picked up Reviewed-by from Bjorn for pinctrl driver
+
+[v2]
+        Fixed all comments and rebased for TOT.
+
+Manikanta Mylavarapu (1):
+  dt-bindings: scm: Add compatible for IPQ5018
+
+Sricharan Ramabadhran (7):
+  dt-bindings: arm64: Add IPQ5018 clock and reset
+  clk: qcom: Add Global Clock controller (GCC) driver for IPQ5018
+  dt-bindings: pinctrl: qcom: Add support for ipq5018
+  pinctrl: qcom: Add IPQ5018 pinctrl driver
+  dt-bindings: qcom: Add ipq5018 bindings
+  arm64: dts: Add ipq5018 SoC and rdp432-c2 board support
+  arm64: defconfig: Enable IPQ5018 SoC base configs
+
+ .../devicetree/bindings/arm/qcom.yaml         |    7 +
+ .../bindings/clock/qcom,ipq5018-gcc.yaml      |   63 +
+ .../bindings/firmware/qcom,scm.yaml           |    1 +
+ .../bindings/pinctrl/qcom,ipq5018-tlmm.yaml   |  127 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |   72 +
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi         |  250 ++
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-ipq5018.c                | 3724 +++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   11 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq5018.c        |  783 ++++
+ include/dt-bindings/clock/qcom,gcc-ipq5018.h  |  183 +
+ include/dt-bindings/reset/qcom,gcc-ipq5018.h  |  122 +
+ 16 files changed, 5357 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5018-gcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-tlmm.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5018.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq5018.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq5018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq5018.h
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
