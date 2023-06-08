@@ -2,59 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 830C97279B8
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 10:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EBFA727A8D
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 10:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233640AbjFHIMW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Jun 2023 04:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
+        id S234950AbjFHIzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Jun 2023 04:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233756AbjFHIMV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 04:12:21 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B1F2685;
-        Thu,  8 Jun 2023 01:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686211940; x=1717747940;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=X/RTbyMVicLbRVeWuGjHA4QHLACYgCSRCJ4gsWFDNRw=;
-  b=SOtEeoEU/YZxPxbr2ydszlfyDX5v55C4MWC4q9YZh06Q79g4nwBecZAd
-   JOQQOVdBATu3yAorLy+CNhK7VYnVVaKHnWLIi9cZWsrXE9A6hZV+xuFOs
-   qLYc97Vsx3mPl9s7RjMA0/Q/bNLmNiucwUZk3cPz0INshSY0IVtwN/YT2
-   lCp3KOsqr/jdSdAwWSHw7bDfjB2NDRpq4Asz5LPFUJAQe4iMvgLnvgNut
-   vXjqNSa4qzlP2iztK7Qhrvhwi/1A1hj+DBlJmRR+q/iNh5GA85xxMcuR0
-   UV3hUhv1OWNT3kCknhresCxGVROeWv+aT8vuEKgWwgCGLkh/dKzeGkrfe
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="354732271"
-X-IronPort-AV: E=Sophos;i="6.00,226,1681196400"; 
-   d="scan'208";a="354732271"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 01:12:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="703984658"
-X-IronPort-AV: E=Sophos;i="6.00,226,1681196400"; 
-   d="scan'208";a="703984658"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jun 2023 01:12:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 78A9434F; Thu,  8 Jun 2023 11:12:25 +0300 (EEST)
-Date:   Thu, 8 Jun 2023 11:12:25 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v1 0/2] Minor optimizations for Cherryview pinctrl
-Message-ID: <20230608081225.GI45886@black.fi.intel.com>
-References: <20230608071903.19170-1-raag.jadav@intel.com>
+        with ESMTP id S234760AbjFHIzh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 04:55:37 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 550309E;
+        Thu,  8 Jun 2023 01:55:36 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5A7C780E0;
+        Thu,  8 Jun 2023 08:55:35 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 11:55:34 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v6 1/1] dt-bindings: pinctrl: Update pinctrl-single to
+ use yaml
+Message-ID: <20230608085534.GE14287@atomide.com>
+References: <20230605095216.18864-1-tony@atomide.com>
+ <a4134777-e43c-4b74-58d8-bff0c0d1a6f6@linaro.org>
+ <20230608063639.GD14287@atomide.com>
+ <19710587-533c-f6df-9842-06a8e2db263c@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230608071903.19170-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+In-Reply-To: <19710587-533c-f6df-9842-06a8e2db263c@linaro.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,10 +48,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 12:49:01PM +0530, Raag Jadav wrote:
-> This series implements minor optimizations for Cherryview pinctrl driver.
+* Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> [230608 06:57]:
+> On 08/06/2023 08:36, Tony Lindgren wrote:
+> > * Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> [230607 18:17]:
+> >> On 05/06/2023 11:52, Tony Lindgren wrote:
+> >>> +patternProperties:
+> >>> +  '-pins$|-pin':
+> >>
+> >> you did not implement my comments fully, probably we misunderstood each
+> >> other. Why do you allow anything after '-pin'? Let's make it pure suffix
+> >> for both cases: '-pins?$'
+> > 
+> > I'll check what kind of node renaming that would cause. At least TI
+> > arm64 SoCs use naming like -pins-default and -pins-wakeup. Is your
+> > preference to rename all those nodes to -default-pins and -wakeup-pins?
 > 
-> The numbers are as tested with gcc 7.5.0 and may vary with newer versions.
+> No, pattern matching TI SoC is fine, but your current also doesn't. Or
+> rather - matches by mistake. You do not allow anything after -pins.
 
-Exactly they may vary and also depending on which compiler options you
-pass. Same comments to this series as I gave for the previous one.
+So after the earlier dts node name clean-up, looks like it's only few hundred
+TI pins to rename. Not sure I want to add SoC specific handling for TI. Folks
+will try to use -pins-default, -pins-sleep, -pins-idle etc..
+
+How about let's just fix the remaining dts files and then we can only
+allow -pin or -pins suffix? The match would be just '-pins$|-pin$ with a
+preference for -pins as it's a group that might get more pins added to it
+later on.
+
+Regards,
+
+Tony
