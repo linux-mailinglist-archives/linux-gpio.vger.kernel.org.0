@@ -2,137 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 970FC728334
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 17:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49622728484
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 18:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236696AbjFHPBz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Jun 2023 11:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44198 "EHLO
+        id S229488AbjFHQCw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Jun 2023 12:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234352AbjFHPBy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 11:01:54 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B02E43;
-        Thu,  8 Jun 2023 08:01:51 -0700 (PDT)
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 358DjZ7E007815;
-        Thu, 8 Jun 2023 17:01:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=6Et4cvFIq/pKVgDeMHIzyzLsDRyen07hsz6FgsksPLs=;
- b=0PfqoVX20UfGueEXgB40GQuDTAo+PnF6KJtQYLQB+4AN0ZTzWj19x8eAoHzdrE2qsJ0G
- gGe/v+iBeTYLPs8WSVLDTL6WhinZPYJh5WacS6Z0pSEsXhGeWIqI5jpgEskW7AfQmAz8
- YS5EkICuVaHjijs9ojTV+YAUlkJ4qevrDGOGWS2LysWI6TCFtOjTNP77DJ3NRnGnNWb3
- cGktge5Ls6LNH8opY9SdG8VrAmr36A2z4fui0DsJtldL8ncS06ATEtaZcDY2lIAMUl/v
- z0EgRY4ojd8YMzFMQ9hLJ6QdAEXKbwLRWJc2TLNR1aWbH2nF7oMPKIcNM0EpBu3JQT1d Eg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3r3cax27g3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Jun 2023 17:01:35 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5DC0D10003A;
-        Thu,  8 Jun 2023 17:01:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3D16B23695F;
-        Thu,  8 Jun 2023 17:01:34 +0200 (CEST)
-Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Thu, 8 Jun
- 2023 17:01:32 +0200
-Message-ID: <59f4a900-34ee-d991-c350-265d38e7c862@foss.st.com>
-Date:   Thu, 8 Jun 2023 17:01:32 +0200
+        with ESMTP id S231643AbjFHQC0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 12:02:26 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA18D2D69;
+        Thu,  8 Jun 2023 09:02:24 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f122ff663eso939602e87.2;
+        Thu, 08 Jun 2023 09:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686240143; x=1688832143;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3wC0K+zv5AaMummE4d3P8YjDZk92NoISkCSAunXVGk4=;
+        b=sSmdcvdTIKcbbWpE2/GUSdX3TbsaPEe0R9RRWqwIy/hanhX+Z/mQuGCPScaej4+i6k
+         kc/PMWRMTxJfMt1zprPQRUtcZOs6GrE3GSQ88x1+vheuTIB69V90L2Y/JkOQr8Fqm9z/
+         PvJdRqUVKwZ2uHAC8U2yFndha8vwswH8BzqDUxc5s0K28tKdwpsJpgIQzMcIZffPY+N1
+         B4TLEOFacaVwe2BKuQW12TKRkTEWpPDyEWFqKg4tYXe/dttLuTTH5UPTMNwmLykvDZtI
+         oSItoC9R/icV1J0gMkil+CfqiaxMn9Qu+jeoeicvFcLV82jSuD1u67aRl/UfsZzzs2AB
+         yOig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686240143; x=1688832143;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3wC0K+zv5AaMummE4d3P8YjDZk92NoISkCSAunXVGk4=;
+        b=jlHSgbyrRM5O8AoLAv5Pp+GCTNL9FE5vKbrAZdWV/1W/4gTAX1BK1IoY0p55J9oVB3
+         MagRvgIeKKPPT4Jn85T9yZ9Jl2QzRK1fpo7A5/zGA3+17g074yyl3gEOttswnADF2rw+
+         Bo6mdfgNzlgWkSIrzDW6I6NueQNySMdh+md6BjWoWn7iVfy06alRGXrVYFU3UeP8467O
+         H1ZIN5HSIFOepFtAOTn3hwCAu4Qe4LVQJ0XioZ3mML7UhTCSEgT8yY4n1B90FDE+O4pT
+         IFMlbWBfbOcTftCuljiCXSDM4Hjg8jaKHGEsj1Pu1LiY0DzhZg9UHfgxfjLfX+yM7dUU
+         8QTQ==
+X-Gm-Message-State: AC+VfDyJhxM6f0h232ECSVUIykGVEurhSm8c3cQO9U5X1XGvSoqZ5/5d
+        Sv00nYLT4UwJrbLFILf5pRk=
+X-Google-Smtp-Source: ACHHUZ5w3YwBhbIgXFXo2/U07gaxhtG8s+1zMFwADmxGA6MszF00HIz+sGxVpjrgliIAOGYzkGHgLg==
+X-Received: by 2002:ac2:5445:0:b0:4f1:26f5:77fb with SMTP id d5-20020ac25445000000b004f126f577fbmr2777125lfn.28.1686240142422;
+        Thu, 08 Jun 2023 09:02:22 -0700 (PDT)
+Received: from orome (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id a12-20020aa7cf0c000000b00514b8d5eb29sm698757edy.43.2023.06.08.09.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jun 2023 09:02:21 -0700 (PDT)
+Date:   Thu, 8 Jun 2023 18:02:20 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, smangipudi@nvidia.com,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: Re: [PATCH v2] gpio: tegra186: Check PMC driver status before any
+ request
+Message-ID: <ZIH7jH09-Y7BIFPH@orome>
+References: <496889ff-dd61-51af-c716-b9b9e2300be7@nvidia.com>
+ <20230607113104.11761-1-pshete@nvidia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 00/10] Add STM32MP25 support
-Content-Language: en-US
-To:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>, <soc@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20230602132859.16442-1-alexandre.torgue@foss.st.com>
-From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20230602132859.16442-1-alexandre.torgue@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.201.21.93]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-08_10,2023-06-08_01,2023-05-22_02
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Jrqh871mn6iBEVvD"
+Content-Disposition: inline
+In-Reply-To: <20230607113104.11761-1-pshete@nvidia.com>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi
 
-On 6/2/23 15:28, Alexandre Torgue wrote:
-> I'm pleased to announce extension of the STM32 MPU family with the addition of
-> the STM32MP25 Armv8 based SoCs.
-> 
-> STM32MP25 family is composed of 4 SoCs defined as following:
-> 
->    -STM32MP251: common part composed of 1*Cortex-A35, common peripherals like
->     SDMMC, UART, SPI, I2C, PCIe, USB3, parallel and DSI display, 1*ETH ...
-> 
->    -STM32MP253: STM32MP251 + 1*Cortex-A35 (dual CPU), a second ETH, CAN-FD and
->     LVDS display.
-> 
->    -STM32MP255: STM32MP253 + GPU/AI and video encode/decode.
->    -STM32MP257: STM32MP255 + ETH TSN switch (2+1 ports).
-> 
->    A second diversity layer exists for security features/ A35 frequency:
->    -STM32MP25xY, "Y" gives information:
->      -Y = A means A35@1.2GHz + no cryp IP and no secure boot.
->      -Y = C means A35@1.2GHz + cryp IP and secure boot.
->      -Y = D means A35@1.5GHz + no cryp IP and no secure boot.
->      -Y = F means A35@1.5GHz + cryp IP and secure boot.
-> 
-> This series adds the STM32MP257F EV1 board support. This board embeds a
-> STM32MP257FAI SoC, with 4GB of DDR4, TSN switch (2+1 ports), 2*USB typeA,
-> 1*USB2 typeC, SNOR OctoSPI, mini PCIe, STPMIC2 for power distribution ...
-> 
-> Changes since v1:
-> 
-> -Add Conor "reviewed-by".
-> -Drop patch[4] of initial series to not define SoC without board in stm32,yaml.
-> -Add Krzysztof "Acked-by" after reordering enum in st,stm32-syscon.yaml
-> 
-> Thanks
-> Alex
-> 
-> Alexandre Torgue (9):
->    dt-bindings: pinctrl: stm32: support for stm32mp257 and additional
->      packages
->    pinctrl: stm32: add stm32mp257 pinctrl support
->    arm64: introduce STM32 family on Armv8 architecture
->    arm64: dts: st: introduce stm32mp25 SoCs family
->    arm64: dts: st: introduce stm32mp25 pinctrl files
->    dt-bindings: stm32: document stm32mp257f-ev1 board
->    arm64: dts: st: add stm32mp257f-ev1 board support
->    arm64: defconfig: enable ARCH_STM32 and STM32 serial driver
->    MAINTAINERS: add entry for ARM/STM32 ARCHITECTURE
-> 
-> Patrick Delaunay (1):
->    dt-bindings: stm32: add st,stm32mp25-syscfg compatible for syscon
-> 
+--Jrqh871mn6iBEVvD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Series applied on stm32-next.
+On Wed, Jun 07, 2023 at 05:01:04PM +0530, Prathamesh Shete wrote:
+> When the PMC device is disabled, probing of the Tegra186 GPIO driver
+> fails because the IRQ domain that is registered by the PMC driver is
+> not found. The PMC IRQ domain is only used for wake-up and does not
+> impact GPIO functionality in general. Therefore, if the PMC device is
+> disabled, skip looking up the PMC IRQ domain to allow the GPIO driver
+> to be probed.
+>=20
+> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 
-Regards
-Alex
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+--Jrqh871mn6iBEVvD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmSB+4sACgkQ3SOs138+
+s6HCdg//Qt5jiYtxE2B83Jj7uqx28hS+mfupMUfd7f7S0LWBG0WYLliSEg//PI6e
+s2EhsZckyZMpm323A05W3eO7DEA3iWHLa20Zw/fRSj6I4dRLoXWS4KEMQDkKEOeg
+0s0klJoxSx5bCfy5TiEgwqpk1uh3cIjItVoDj4inAF4cR38UDJwJlx9OgUmUaeBb
+n5xVj0JbWlyLJCw91wWnyPgWFYsVseG3n1isThfvUTRyG33TdezA7zlrsDh9CKi2
+Uas0BbA+HHbrgukdYVHXH+HUhXSmQOc+YK+HHTQMB/zbKx8mCAql4La1elK5PD1C
+DDJ5ys8mNdpE3HjvjEqxNNqWP+RTaPiiAelPa7qiw1bNHy8klaBCxLlqVLUB5d/h
+73tzNuNinWo4TzJ20gov93MbWOuK/7/7KuZUEIBrXMrLFD7G60D5aX/AhAfBe0sK
+GK+o7/k5EbXM/2UxWICOCkCQL0rp3Bxz68FtamaipMlQeeHffOQggQFlDxYKnTTT
+yQhdwJEFpGWhkrL3ArdyGkjnlESDAbznKd86LwEWQddRRmw8YLMeQ1rjiMKbrIJ+
+bTRe2imL6LEdjq57ZqV7DMabvnj86AIwpMvw8KLXbx7dSe8GZv4w9ny9IQmt/xVB
+smfy39RIQDNJXk7tf2rinqHPpq8DDk2hJpvsuYTmsEKBBaO/fhs=
+=LNUG
+-----END PGP SIGNATURE-----
+
+--Jrqh871mn6iBEVvD--
