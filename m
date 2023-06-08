@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 588117288A5
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 21:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B72B7288E2
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jun 2023 21:44:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235698AbjFHTdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Jun 2023 15:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        id S231846AbjFHTos (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Jun 2023 15:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235941AbjFHTdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 15:33:50 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9113B1FEB;
-        Thu,  8 Jun 2023 12:33:46 -0700 (PDT)
+        with ESMTP id S230100AbjFHTor (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Jun 2023 15:44:47 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3EA210C;
+        Thu,  8 Jun 2023 12:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686252828; x=1717788828;
+  t=1686253485; x=1717789485;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=r6tYbiS2x3QByAMznRR6XCD3rucMbK8zjcQwHztF1x8=;
-  b=cWqcW9dzfiOwkEByIdbXN5fBET+0HJTrGRrRGpkxS4QPHi7fqqN1y0pz
-   qUuuBQmnHuGqps1TaJ0giblxJ+DPSQlcXNqerLBqR2oZtwZVLTguo46d3
-   7/vfpJKA2qO/Hk4xSXJKnR5drBHgwCOQA0vSot++btewK4iOsl26Z+9vA
-   VYQY4iCnjbszQaDZ0tMw7lhVQzipQENbqKBiTTHULT68NGgR1giubqm2V
-   PrhFzy3QzZWWp+Xt2i0LexvTHjHsxVLDIci3TpR4935P/xB5IVKClj5vI
-   z7bAOOm+mmfY4jgKhBF8k+yuid3qcbe5VoRqgmMNo6Fw+AdWZxzBI7OLw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="420997995"
+  bh=VxXoH67dsmpaHt3OmDmsDM54npgIe5Q392w5Z0/YsUI=;
+  b=AD3aLi8SpkM8t0j1bpOIB5NShvl3Bs7qNxYo7I9DKoUWxlgU/GhK2klP
+   SuHasoX0Jv5K2i+8lF71EGjYBVdsW6060iOUAKIlWNAPTfXuj3FNufIP5
+   IQG+F5PWsQKsq0asMCA6Hf+pVvVUVIhOUlH4lSr1dsPVqA5ddYu7jbgnP
+   ehaxns8k/NHEjT2WjWqjecffF741nH3sYfHSYMewlfzY9EfthE/es52MR
+   7IJkEqafegjPJAjRzyDGUf1jMHxeU+OW2XuFGQ5lFdde8ufPL3E6wyO7a
+   wgoFnaXr3Fzj6AHijrm7jRR674B8D5GRL/peabk36v5VK54G0YfsPsW9w
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="356288957"
 X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="420997995"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 12:33:44 -0700
+   d="scan'208";a="356288957"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 12:44:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="854468969"
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="822754649"
 X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="854468969"
+   d="scan'208";a="822754649"
 Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Jun 2023 12:33:42 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2023 12:44:42 -0700
 Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1q7LO9-0008CC-20;
-        Thu, 08 Jun 2023 19:33:41 +0000
-Date:   Fri, 9 Jun 2023 03:32:51 +0800
+        id 1q7LYo-0008Cq-0a;
+        Thu, 08 Jun 2023 19:44:42 +0000
+Date:   Fri, 9 Jun 2023 03:43:56 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Alexander Stein <linux@ew.tq-group.com>
 Subject: Re: [rfc, rft, PATCH v1 1/1] gpio: aggregator: Introduce delay
  support for individual output pins
-Message-ID: <202306090307.hZlCud1x-lkp@intel.com>
+Message-ID: <202306090344.UJNc4HFx-lkp@intel.com>
 References: <20230608162130.55015-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -83,36 +83,80 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpio-aggr
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
 patch link:    https://lore.kernel.org/r/20230608162130.55015-1-andriy.shevchenko%40linux.intel.com
 patch subject: [rfc, rft, PATCH v1 1/1] gpio: aggregator: Introduce delay support for individual output pins
-config: i386-randconfig-i051-20230608 (https://download.01.org/0day-ci/archive/20230609/202306090307.hZlCud1x-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+config: hexagon-randconfig-r023-20230608 (https://download.01.org/0day-ci/archive/20230609/202306090344.UJNc4HFx-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
 reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
         git remote add brgl https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
         git fetch brgl gpio/for-next
         git checkout brgl/gpio/for-next
         b4 shazam https://lore.kernel.org/r/20230608162130.55015-1-andriy.shevchenko@linux.intel.com
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/gpio/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/gpio/
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306090307.hZlCud1x-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306090344.UJNc4HFx-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   drivers/gpio/gpio-aggregator.c: In function 'gpiochip_fwd_delay_of_xlate':
->> drivers/gpio/gpio-aggregator.c:426:41: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
+   In file included from drivers/gpio/gpio-aggregator.c:26:
+   In file included from include/linux/gpio/driver.h:6:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/gpio/gpio-aggregator.c:26:
+   In file included from include/linux/gpio/driver.h:6:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/gpio/gpio-aggregator.c:26:
+   In file included from include/linux/gpio/driver.h:6:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+>> drivers/gpio/gpio-aggregator.c:426:36: error: no member named 'of_gpio_n_cells' in 'struct gpio_chip'
      426 |         if (gpiospec->args_count != chip->of_gpio_n_cells)
-         |                                         ^~
-   drivers/gpio/gpio-aggregator.c: In function 'gpiochip_fwd_create':
->> drivers/gpio/gpio-aggregator.c:518:21: error: 'struct gpio_chip' has no member named 'of_xlate'
+         |                                     ~~~~  ^
+>> drivers/gpio/gpio-aggregator.c:518:9: error: no member named 'of_xlate' in 'struct gpio_chip'
      518 |                 chip->of_xlate = gpiochip_fwd_delay_of_xlate;
-         |                     ^~
-   drivers/gpio/gpio-aggregator.c:519:21: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
+         |                 ~~~~  ^
+   drivers/gpio/gpio-aggregator.c:519:9: error: no member named 'of_gpio_n_cells' in 'struct gpio_chip'
      519 |                 chip->of_gpio_n_cells = 3;
-         |                     ^~
+         |                 ~~~~  ^
+   6 warnings and 3 errors generated.
 
 
 vim +426 drivers/gpio/gpio-aggregator.c
