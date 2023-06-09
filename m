@@ -2,132 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1553729306
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 10:27:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3769072934F
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 10:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240590AbjFII0p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 04:26:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
+        id S240815AbjFIIgA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 04:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241661AbjFII0S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 04:26:18 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37C13AAC;
-        Fri,  9 Jun 2023 01:26:04 -0700 (PDT)
+        with ESMTP id S240740AbjFIIfy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 04:35:54 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196BC2712;
+        Fri,  9 Jun 2023 01:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686299164; x=1717835164;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=Jca4VwCHycfBasare1YXUgyB4DjUVfYUbAfgEFuOdug=;
-  b=AzRoxGvAQWIIA9vj9fLauuCcevWPwNIyHCiFwkRfN3tJ9Zs3t7oGs4v/
-   UPtkstMVhDOvzrmQG7+ndb8Kpc5INN0Op3kjbohOjd371/C0yM4rp7MUr
-   /k/s5wBQXm01/mVKyvcFQCwZC5SDKC/NEtkQ87d0JokXqAqcoXoOyHHpQ
-   gLMnoPhnle1QiLP1QnkUyuz4aTdAGVGw3X+PRxPA3VlSkRBvZkvok9n2Y
-   GPPy+HmMi6Z6gvH+yJmTgblW/LUnDCYIaBniYn4URVANtROM5TfGmX/5X
-   4o1CL7AJ5GXHJr2Ss5HOYcjU7ZZvWDZVTTf8GKdgg1aqnPyCxVaDm469H
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="342222305"
+  t=1686299735; x=1717835735;
+  h=from:to:cc:subject:date:message-id;
+  bh=L+c/KWYlHq0/2ccQsnp0j8wUQJh9tHwhKAkllrU2WJg=;
+  b=DSvd64wvp/q0abNjV8bEk34AYd96ngwaLsnG5yzvy9SkMd2bBLgOWyjb
+   /hQemFapH5rXKci+/7e8VpzPvII8Jix+S/+XCiSnAoxcvBVePZUcZABqE
+   SlvHhF4NN9zaepAGtIsi3tzbTnGJgeDC4MLuaSAgq+e2eO/+McUkkFJCz
+   1ipZIz8oku0anuLZvPxMIpAW0P9bk8MqVKtjhQX8jcw2DECV0HzmBKM9f
+   YPe+t3A0b1OF4x0iKuWqSWIMKIsNLO1RoSAnNqNH5NM10VBEPMvP66JYk
+   86gchEN1l2vj6v4ZlCdUlgh2Sy1lgiMfvTb4+U+c5BAGqHMPjCa/abhIh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="355041497"
 X-IronPort-AV: E=Sophos;i="6.00,228,1681196400"; 
-   d="scan'208";a="342222305"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 01:26:02 -0700
+   d="scan'208";a="355041497"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 01:35:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="713424282"
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="660690487"
 X-IronPort-AV: E=Sophos;i="6.00,228,1681196400"; 
-   d="scan'208";a="713424282"
+   d="scan'208";a="660690487"
 Received: from inesxmail01.iind.intel.com ([10.223.154.20])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Jun 2023 01:25:59 -0700
+  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2023 01:35:07 -0700
 Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-        by inesxmail01.iind.intel.com (Postfix) with ESMTP id 0C0F119742;
-        Fri,  9 Jun 2023 13:55:59 +0530 (IST)
+        by inesxmail01.iind.intel.com (Postfix) with ESMTP id AB139911E7;
+        Fri,  9 Jun 2023 14:05:06 +0530 (IST)
 Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-        id 08E3F17C; Fri,  9 Jun 2023 13:55:59 +0530 (IST)
+        id A5267B6; Fri,  9 Jun 2023 14:05:06 +0530 (IST)
 From:   Raag Jadav <raag.jadav@intel.com>
 To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
         andriy.shevchenko@linux.intel.com
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
         Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 4/4] pinctrl: intel: simplify exit path of gpio_request_enable hook
-Date:   Fri,  9 Jun 2023 13:55:39 +0530
-Message-Id: <20230609082539.24311-5-raag.jadav@intel.com>
+Subject: [PATCH v2 0/2] Minor improvements for Cherryview pinctrl
+Date:   Fri,  9 Jun 2023 14:03:54 +0530
+Message-Id: <20230609083356.24849-1-raag.jadav@intel.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230609082539.24311-1-raag.jadav@intel.com>
-References: <20230609082539.24311-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Simplify exit path of ->gpio_request_enable() hook and save a few bytes.
+This series implements minor improvements for Cherryview pinctrl driver.
 
-add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-36 (-36)
-Function                                     old     new   delta
-intel_gpio_request_enable                    186     150     -36
-Total: Before=10431, After=10395, chg -0.35%
+The optimizations are as tested with gcc 7.5.0 with default -O2.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Raag Jadav (2):
+  pinctrl: cherryview: simplify exit path of set_mux hook
+  pinctrl: cherryview: simplify exit path of gpio_request_enable hook
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 2338e84615cc..12b994fa2aad 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -486,20 +486,19 @@ static int intel_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 	void __iomem *padcfg0;
- 	unsigned long flags;
-+	int ret = 0;
- 
- 	padcfg0 = intel_get_padcfg(pctrl, pin, PADCFG0);
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
- 	if (!intel_pad_owned_by_host(pctrl, pin)) {
--		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--		return -EBUSY;
-+		ret = -EBUSY;
-+		goto out_unlock;
- 	}
- 
--	if (!intel_pad_is_unlocked(pctrl, pin)) {
--		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--		return 0;
--	}
-+	if (!intel_pad_is_unlocked(pctrl, pin))
-+		goto out_unlock;
- 
- 	/*
- 	 * If pin is already configured in GPIO mode, we assume that
-@@ -507,16 +506,15 @@ static int intel_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	 * potential glitches on the pin. Otherwise, for the pin in
- 	 * alternative mode, consumer has to supply respective flags.
- 	 */
--	if (intel_gpio_get_gpio_mode(padcfg0) == PADCFG0_PMODE_GPIO) {
--		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--		return 0;
--	}
-+	if (intel_gpio_get_gpio_mode(padcfg0) == PADCFG0_PMODE_GPIO)
-+		goto out_unlock;
- 
- 	intel_gpio_set_gpio_mode(padcfg0);
- 
-+out_unlock:
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
--	return 0;
-+	return ret;
- }
- 
- static int intel_gpio_set_direction(struct pinctrl_dev *pctldev,
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
 -- 
 2.17.1
 
