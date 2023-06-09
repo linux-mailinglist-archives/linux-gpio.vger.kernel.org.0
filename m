@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6053F729159
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 09:40:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B5372915A
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 09:40:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230443AbjFIHjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 03:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        id S238915AbjFIHkL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 03:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238968AbjFIHjC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 03:39:02 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2181430ED
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 00:38:51 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-43b2fb0afa6so519996137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 00:38:51 -0700 (PDT)
+        with ESMTP id S239318AbjFIHkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 03:40:08 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E004518C
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 00:40:06 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-651f2f38634so1503600b3a.0
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 00:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686296330; x=1688888330;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wB8WjDXTk2h7c/l1vYkUseN4Mt6sYXToAOj6YlRUkeo=;
-        b=MFQdUCI37XQUP5nwZijzg3/ldogw/iDxBgmdrZpqeUXaqHCPZkUFNI1zm9GOApoFxe
-         6/kOsm3FGrNUTDP9n97LY6kkDRbhgKpT/Y+zt9zt0u7gG9vIiwk6VWM47XkchO20qti0
-         g/HIx4BAB+t2rgtrCx//z/gsc78srBuZkowFBSd2Jcy2ygiWb7TxLtnNcUEVuDZa3PaI
-         FUPh4KWhLe24Ln5NdXIjNewv2Tr0Me1H/ZiQuzhOZdCAHRVpP/ipv0+IEX7DBX6xrMEr
-         QKfG7gmpSTJ80YRknBOdE0Ddq5w4PFQJuCePzbuoAC3C+NgRP2vLljLofsox1RintkwS
-         5RHg==
+        d=gmail.com; s=20221208; t=1686296406; x=1688888406;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fBCdQYrpr47OLLHZj7Ukq4rq1bI3hy/qiWAm98qVBFI=;
+        b=aT7WJc/qfox0M0WRsGlRn3BVhtEiTLPxYzSiqWFNiw7ML9XlZO9JzIAPd7DxnxUTOW
+         PjqhvXa5asjK5pnALePg3wLrSkqLrtQduRbV/xhP+K2yz5UoqO5JYAkG06w31m0w/QS1
+         vb1/glUTGEmnV6ea3QHI5Go/RBlX4i9hCa999Egf3Fe2YXVWWreY8C+5YJ3rA4VWz0nD
+         6FBn7R1j7kOx0tQkl/rp+SZG70L1eFOpGIrXdFtfM0SYEbx3dg2vw/M9Y0QSz6qIVz8c
+         afdP5vAn/V5sp5k1m6tUig8nS0yhlMePb9b6yrXjPzpxEzkKoefE3NteexNNgbbB+4C0
+         Q7iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686296330; x=1688888330;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wB8WjDXTk2h7c/l1vYkUseN4Mt6sYXToAOj6YlRUkeo=;
-        b=iy3lUgixGR9d2IeF24QUU4SFyqRpuKAAWEBP+BXaNCSc4/8wcoTfMbXYa1OmIQdFVg
-         xu7ix9cWfnKJZWSbmyKVaePYoKbHbp9mq1sOqRn3a/AWYrOnSxqS5MPHPMpcumP//51B
-         OnzShuB6WpTYI9jAEFbDkDZFRVG7/S+gYNdSfNdQ74yDlzfp8Nqyf07YzvpvpGmK6ki8
-         oW/8AWygCqY527e5Yhd0NOvtgSQvrl05HivmTi4eV0mtqGtus88L/WohRGMhRVQq1q3x
-         jAcNtZCXnb1vyXTXMC1PO8O9RaAGcJi+/+2eMRviK2oBxsLSIumio+wxyHU7IguivjVD
-         JRNA==
-X-Gm-Message-State: AC+VfDzDWld6jIRfC3v9sC/w6tE+h4uFcnPHgp4n/1fDiZBB5A0mHt+R
-        Cmnpwc8eox1YLd84Q3vKEWD6MuOZUrbtEivWuMR9tA==
-X-Google-Smtp-Source: ACHHUZ7KdtdBkn2RWPy4qsUG1+8jHnRgLjXMPYzF9RgRMW2DxTq9RaS3wc0OkRy3pYo1waq0CbkxP/fdzWg+N5Q50qo=
-X-Received: by 2002:a05:6102:7b8:b0:43d:2223:f5fd with SMTP id
- x24-20020a05610207b800b0043d2223f5fdmr409908vsg.32.1686296330267; Fri, 09 Jun
- 2023 00:38:50 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686296406; x=1688888406;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fBCdQYrpr47OLLHZj7Ukq4rq1bI3hy/qiWAm98qVBFI=;
+        b=TPrNSL3Ss+w5L8FdGId1buDI1DTh8/BskUMxgR2Auaggjx4nt1HdF+PJK+Z2MvC1Yl
+         3zrq7yxX4SX/2yq2tpy/Jbshz/lFw3rdwATzwwXfqz8WK8EPmUmce4vyQ/yhdxsagTbU
+         BO7d/W4MC9P3/FfWCRV0Uo4H1lyb9BUDfuJl4xIH00DXISWW2Hz5jr7/+lW+4i1BJ9oJ
+         w7FVHg0fuLs2PaAmsz2VobNvmc+NHY7Ljuho8vYgN66fHUztrFxW/JojW+rm+eHLgUM5
+         3YCJQfXbhmXt7BWIZriG/OaERQ2LYSQ64I/eTcm0fNkb2WHkYp6OTOkdSIDQiico+sdj
+         otCQ==
+X-Gm-Message-State: AC+VfDxoyBpabuOBv5UvSJR+WI8xsSa6DAP1IyR4ztqtHCnM4x0CvfC8
+        31GI0Je+S+4Mn0W4Rwgljdr0ym1sZu0=
+X-Google-Smtp-Source: ACHHUZ7ntjYCjya7CJ585Y6/iJDLd751RwETcPxbs5hSEwXPj+fGNuIV/yZnLAmFiFURhZwmnCkqMw==
+X-Received: by 2002:a05:6a21:6808:b0:118:b2e1:9adb with SMTP id wr8-20020a056a21680800b00118b2e19adbmr490665pzb.61.1686296406109;
+        Fri, 09 Jun 2023 00:40:06 -0700 (PDT)
+Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id b123-20020a636781000000b0050f85ef50d1sm2348400pgc.26.2023.06.09.00.40.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 00:40:05 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] core: doc: add doc for opaque structs to link to the relevant page
+Date:   Fri,  9 Jun 2023 15:39:57 +0800
+Message-Id: <20230609073957.72418-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20230609040737.25666-1-warthog618@gmail.com>
-In-Reply-To: <20230609040737.25666-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 9 Jun 2023 09:38:39 +0200
-Message-ID: <CAMRc=MdQyJu0EjzSpy3GWRNLHNnjwBc43+n398JLKqmxgfUW9Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] core: doc: fix line_config documentation generation
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,49 +67,123 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 9, 2023 at 6:07=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> The line configuration is missing from the generated documentation as the
-> comment for the defgroup is a normal comment, not a doc comment.
->
-> Add the asterisk to make the section a doc comment.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> I took the liberty of patching and updating the rtd documentation, so it
-> is already fixed there.
->
-> It would be nice if the generated documentation would provide links from
-> the "struct gpiod_line_config" to the corresponding page.  But not sure
-> how to do that, or if it is even possible.
->
-> Cheers,
-> Kent.
->
->  include/gpiod.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/gpiod.h b/include/gpiod.h
-> index d1833de..5d4b6af 100644
-> --- a/include/gpiod.h
-> +++ b/include/gpiod.h
-> @@ -715,7 +715,7 @@ int gpiod_line_settings_set_output_value(struct gpiod=
-_line_settings *settings,
->  enum gpiod_line_value
->  gpiod_line_settings_get_output_value(struct gpiod_line_settings *setting=
-s);
->
-> -/*
-> +/**
->   * @}
->   *
->   * @defgroup line_config Line configuration objects
-> --
-> 2.40.1
->
+The C doxygen documentation is difficult to navigate as the opaque types
+do not get linked to anything.
 
-Applied, thanks!
+Add doc for each opaque struct that references the relevant page.
 
-Bart
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+
+There might be a better way to do this, but this the best I've run
+across so far.  At least the generated doc is navigable without having to
+return to the modules page and perform mental gymnastics.
+
+Along the way, also renamed the request_request group to line_request as
+that makes more sense.
+
+Haven't pushed this one to rtd yet, as this is a more significant
+change - not just fixing a typo.
+
+Cheers,
+Kent.
+
+ include/gpiod.h | 66 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/include/gpiod.h b/include/gpiod.h
+index d1833de..d459151 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -44,15 +44,79 @@ extern "C" {
+  * handling it, ignoring it or returning an error.
+  */
+ 
++/**
++ * @struct gpiod_chip
++ * @{
++ *  Refer to @ref chips for functions that operate on gpiod_chip.
++ * @}
++*/
+ struct gpiod_chip;
++/**
++ * @struct gpiod_chip_info
++ * @{
++ *  Refer to @ref chip_info for functions that operate on gpiod_chip_info.
++ * @}
++*/
+ struct gpiod_chip_info;
++/**
++ * @struct gpiod_line_info
++ * @{
++ *  Refer to @ref line_info for functions that operate on gpiod_line_info.
++ * @}
++*/
+ struct gpiod_line_info;
++/**
++ * @struct gpiod_line_settings
++ * @{
++ *  Refer to @ref line_settings for functions that operate on
++ *  gpiod_line_settings.
++ * @}
++*/
+ struct gpiod_line_settings;
++/**
++ * @struct gpiod_line_config
++ * @{
++ *  Refer to  @ref line_config for functions that operate on gpiod_line_config.
++ * @}
++*/
+ struct gpiod_line_config;
++/**
++ * @struct gpiod_request_config
++ * @{
++ *  Refer to  @ref request_config for functions that operate on
++ *  gpiod_request_config.
++ * @}
++*/
+ struct gpiod_request_config;
++/**
++ * @struct gpiod_line_request
++ * @{
++ *  Refer to  @ref line_request for functions that operate on
++ *  gpiod_line_request.
++ * @}
++*/
+ struct gpiod_line_request;
++/**
++ * @struct gpiod_info_event
++ * @{
++ *  Refer to  @ref line_watch for functions that operate on gpiod_info_event.
++ * @}
++*/
+ struct gpiod_info_event;
++/**
++ * @struct gpiod_edge_event
++ * @{
++ *  Refer to  @ref edge_event for functions that operate on gpiod_edge_event.
++ * @}
++*/
+ struct gpiod_edge_event;
++/**
++ * @struct gpiod_edge_event_buffer
++ * @{
++ *  Refer to  @ref edge_event for functions that operate on
++ *  gpiod_edge_event_buffer.
++ * @}
++*/
+ struct gpiod_edge_event_buffer;
+ 
+ /**
+@@ -902,7 +966,7 @@ gpiod_request_config_get_event_buffer_size(struct gpiod_request_config *config);
+ /**
+  * @}
+  *
+- * @defgroup request_request Line request operations
++ * @defgroup line_request Line request operations
+  * @{
+  *
+  * Functions allowing interactions with requested lines.
+-- 
+2.40.1
+
