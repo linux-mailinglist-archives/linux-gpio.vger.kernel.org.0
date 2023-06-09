@@ -2,111 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A33B0729D34
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 16:46:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6760729EA9
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 17:36:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241332AbjFIOqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 10:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
+        id S238515AbjFIPg3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 11:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239898AbjFIOqS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 10:46:18 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7722E26B1
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 07:46:17 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f7368126a6so14460125e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 07:46:17 -0700 (PDT)
+        with ESMTP id S231748AbjFIPg2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 11:36:28 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDF826B3
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 08:36:26 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-662f0feafb2so1483354b3a.1
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 08:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686321976; x=1688913976;
+        d=gmail.com; s=20221208; t=1686324986; x=1688916986;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SKybWJA6J6xdDI7z3TOrYffOqQFqmrVYd0ZUpWFWByU=;
-        b=C4exMc1ePl3tkLE8lxBsKwPmMFO2oYKAbFzDUmKPyIXBIGSM3IJPMR/mO94Rody0RG
-         FRXzQB1ZfqVTvOlTKyo+6cjRHy4uZ6vPL6JNzmwlSZbgMWGOrNQL8E5HJMaaKzdKaNJw
-         0HglCD8ilwfQcN4BbCQ7dA4QVspLU4G/v2Oq9iFkhH/457TcU8Rk0Cqg51WXxmUF9ao4
-         bunBcP3WddsX9XOgMYP9NtedC+NkIAccGuDnNVeBf46aiK7nDQl0NGt9qCDo6NJ9O7k6
-         PnD4+Ot8zj72zVque4nGjv/kbWnfttcG5lpkjsbNYCq8ggmd7INCfcy+rmRX+ElYHuGL
-         w/Ow==
+        bh=Rr/b2Wi7ApfDyv4OLEzKOoRxhdboVK21GxdL66JxQUA=;
+        b=l+uTps51AMSzUGmrvrzOzD3TLR3Bgi8nU4lZ8sxsO0kQF3lAIJU45ZQK/HOirX8huM
+         L9JX4BU9WevW8IiVvtou43pWq2LyGcx6pirJeDMHcn2ZpSqPvxl2/CwBdPpZvxUjfq8C
+         9LnN6lc3IWt//lqOLEW4KxejfGosa00xMZzOag74BpcTmKSjmwUkNVmSFc7uy0UBpLBU
+         pIbwQ34GenW1hpSHrgneYGFLYJ6BDWcIq/YaSTosU8AcS14pRV+IvRtooWbjcYnEBjvH
+         SoltYzQfnxJGNG7/eCbTtdoEYURnnYkRYjFfGwWJ5gYWfSXr1quQEarHhuB+ya8s6KXk
+         qhbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686321976; x=1688913976;
+        d=1e100.net; s=20221208; t=1686324986; x=1688916986;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SKybWJA6J6xdDI7z3TOrYffOqQFqmrVYd0ZUpWFWByU=;
-        b=XneXWhJ/0my6esLsIE6qDqFkFPr7c2NWVmL82AAlBNvEJaeTNAVz3pIAiDdJt8RIjM
-         58QwQymj9wSty6WBG1EGbb7DiiPOwlPBgcQn/pCip6s0hjKrm72VmC9pKTM8K3aZ1ROa
-         2jJ2HEDJ8AdZ9oJKAtM/jvTXWsqOXx8gUyzHabAUkX7ckWZqF0B3v3aWf0tPxGZI5rJT
-         4p3pqnizCH5nQhCv+xFH06JcB3HbMV2pYNfhDILt5gsFtTA99iq8cjgq3jFb2JOWDnZS
-         WDxMTu3wg8jv2KF4ilatBZ/MmQkSFkk0+0mKNY+W5E7PuzM++gjEzlJ0e3JY2QMtwrTF
-         TBmg==
-X-Gm-Message-State: AC+VfDyb6DtHXWAxx46uLHHTavMoi8CbFyLIe01YpM6I9LazfyuQtcz5
-        hIScJ/n1tfRRpUra/1yOSm3kmA==
-X-Google-Smtp-Source: ACHHUZ5FQm/TD6jlxpm7CHhY9BIQL21YfMNUqdUD9EsHzg+rHjJ77DIjhxQ65kvNEjZIslX7y5pPDA==
-X-Received: by 2002:a1c:4b14:0:b0:3f7:f2d0:b8fc with SMTP id y20-20020a1c4b14000000b003f7f2d0b8fcmr1122791wma.34.1686321975895;
-        Fri, 09 Jun 2023 07:46:15 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5cfb:aa74:b923:261b])
-        by smtp.gmail.com with ESMTPSA id v12-20020a05600c214c00b003f7ffbe5fd1sm2881825wml.40.2023.06.09.07.46.15
+        bh=Rr/b2Wi7ApfDyv4OLEzKOoRxhdboVK21GxdL66JxQUA=;
+        b=R/kj3nQNgILjdbf/9A0FGIQtcJ7PENxp3fjxAHCorvKyDtcze12Y4lHzYdGOfUgrzL
+         /kTzqewpMjxV8E7iEBMf5IJeumv1mIYziNULkGAYA0ErKNtZmUfgrDW3BmCcfoY5xIAm
+         E6brdMrkhlld55jXghq+snVJnef+sZgcQsmxovDE/SRXRexFeFtXPg+Zp62WT7lKzwsL
+         wBODQ7Mo1FN9L/BF5uKcWjtYILu5YNDsQvjg8EGPQB5yIZ96SJsLUiBk9FtHHboleBmW
+         VXqu2PRAOkwx6CwY1geCmfp+nfjClCuqfwXc8ZSaWyCn2P/rJ2Albgh2NfpCyKJTQKKm
+         DMwg==
+X-Gm-Message-State: AC+VfDxNinfp2FLusuis9Rz/rPveikWtgWtES5T9Yj+q0UxqYmmwgxUD
+        RllKZNH6/+gr/MDlePFmFKMIWl5gEKY=
+X-Google-Smtp-Source: ACHHUZ7FcEUt+mUsoIDQRUS4UEdSWKZ8w5pyBcrG2SfwWwEQI1S11I8yxmTRIOnhvhaP4oGO+eSPvA==
+X-Received: by 2002:a05:6a00:994:b0:656:5182:5e61 with SMTP id u20-20020a056a00099400b0065651825e61mr2449434pfg.2.1686324985575;
+        Fri, 09 Jun 2023 08:36:25 -0700 (PDT)
+Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id z11-20020a6552cb000000b0053051d50a48sm2850288pgp.79.2023.06.09.08.36.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 07:46:15 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.4-rc6
-Date:   Fri,  9 Jun 2023 16:46:13 +0200
-Message-Id: <20230609144613.210272-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        Fri, 09 Jun 2023 08:36:25 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH 0/2] fix potential glitches in bindings example gpiosets
+Date:   Fri,  9 Jun 2023 23:36:05 +0800
+Message-Id: <20230609153607.133379-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+A couple of minor fixes to the bindings examples.
+Noticed the python one in passing, and fixed that, then checked the
+other bindings to see if they had the same problem.
 
-Linus,
+The rust example is ok, but the cxx example has the same issue, so
+fixed that as well.
 
-Please pull the following fixes for the next RC. There are two fixes for
-the GPIO testing module and one commit making Andy a reviewer for the
-GPIO subsystem.
+The checkin comments are virtually identical, as they fix the same thing
+for each of the bindings, but the alternative of combining them in one
+patch seemed weird.
 
-Thanks
-Bartosz
-
-The following changes since commit 9561de3a55bed6bdd44a12820ba81ec416e705a7:
-
-  Linux 6.4-rc5 (2023-06-04 14:04:27 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.4-rc6
-
-for you to fetch changes up to d1f11f41eb746a33816695f1b6b6719826cc532c:
-
-  MAINTAINERS: add Andy Shevchenko as reviewer for the GPIO subsystem (2023-06-07 15:03:29 +0200)
-
-----------------------------------------------------------------
-gpio: fixes for v6.4-rc6
-
-- fix a memory corruption bug in gpio-sim
-- fix inconsistencies in user-space configuration of gpio-sim
-- make Andy Shevchenko a reviewer for the GPIO subsystem
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      MAINTAINERS: add Andy Shevchenko as reviewer for the GPIO subsystem
+Cheers,
+Kent.
 
 Kent Gibson (2):
-      gpio: sim: fix memory corruption when adding named lines and unnamed hogs
-      gpio: sim: quietly ignore configured lines outside the bank
+  bindings: python: examples: fix potential glitch in gpioset.py
+  bindings: cxx: examples: fix potential glitch in gpiosetcxx
 
- MAINTAINERS             |  1 +
- drivers/gpio/gpio-sim.c | 18 ++++++++++++++++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ bindings/cxx/examples/gpiosetcxx.cpp | 25 ++++++++++---------------
+ bindings/python/examples/gpioset.py  | 10 +++++-----
+ 2 files changed, 15 insertions(+), 20 deletions(-)
+
+-- 
+2.40.1
+
