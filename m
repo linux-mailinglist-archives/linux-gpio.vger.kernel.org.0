@@ -2,80 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70FC6729375
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 10:41:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 574647293F0
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 10:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239131AbjFIIlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 04:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
+        id S241140AbjFII4h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 04:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239375AbjFIIl3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 04:41:29 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E059EB;
-        Fri,  9 Jun 2023 01:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686300088; x=1717836088;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pzhTaeScbQmK/XTZZyOGV5CmQjygnx9/45Vh51ZbOqo=;
-  b=cJ/nXdtaHe1yeMVGCS1+rHSfCnNVapvaxWacWgiLRMTg9VVspb41Crta
-   1EhTG46RlwhUUW2hJXp/qxYNO/ivejIJ0AVxxnEoeB953bB7KTnpSAvyf
-   96+kcYEVTn1bX9GUVW0dMQbiQH+9Y5Rpsi6Mzp1WXoUQnyxt/WACW29np
-   8A3S1u9sQpIXcSTWd1+Qt+9zyrfw32Tvxmz+hhxfpfb0l6SY2hBIbWrRx
-   5uvILnZLN40BlJug8VJ6iMSeVPP+i79DdF8pPgEwQ0PpwNaxQs+nmNF3x
-   SGN59DXPiu86SLr4do+KSFNIv0ot8+NY5ue8nECDJniFF3wUvpYMHroBi
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="356442541"
-X-IronPort-AV: E=Sophos;i="6.00,228,1681196400"; 
-   d="scan'208";a="356442541"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 01:41:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="822978077"
-X-IronPort-AV: E=Sophos;i="6.00,228,1681196400"; 
-   d="scan'208";a="822978077"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2023 01:41:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 26C6934C; Fri,  9 Jun 2023 11:41:33 +0300 (EEST)
-Date:   Fri, 9 Jun 2023 11:41:33 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v2 2/2] pinctrl: cherryview: simplify exit path of
- gpio_request_enable hook
-Message-ID: <20230609084133.GO45886@black.fi.intel.com>
-References: <20230609083356.24849-1-raag.jadav@intel.com>
- <20230609083356.24849-3-raag.jadav@intel.com>
+        with ESMTP id S241195AbjFIIz4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 04:55:56 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B215146A5
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 01:54:48 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-565c7399afaso14325447b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 01:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686300874; x=1688892874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=isGRI57abFTSmMxuS25eHokD96Z3GdYwa9dpc4Kssx4=;
+        b=Iu1GCCLOrif/BHp9FDKqfy9yiMqyfzHGVY+jsx9g8ssylaQyUT8og48R7HciG34z7r
+         PaYLhyDBGSAD6oF5C6fWSOi4e1QWO+XqObftQy5+o+D1tJ1buQtL7LkjD7WM5s72VQUc
+         lwcZJgKVghfOWNQlGbHjDkKmjsyGkUTyNlupTwh+DpYm8rBdFKkaHs02bwB3j/PNMEEx
+         zOzUaQzshFup6aqoj1SuOxsvWP46GSWVy0ezaqNy1eHBKSBy5yZcjEocuvg7DM2NAfV9
+         7o86rQ6zx7rFyo2y8rL2HuHIJsZtFV/sVGfCYYtAg58/11KkJkENmhlWpVgSHtRQMBtM
+         XcHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686300874; x=1688892874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=isGRI57abFTSmMxuS25eHokD96Z3GdYwa9dpc4Kssx4=;
+        b=al9rN75iNOO9ISOmujcPonaHBUFpH5XyP1X0gAzDi2DjFvREp3N+9YwhMnth5diYVO
+         E381VLtwfJjK59WdgyEgJQaAXeFTh+Nj79Xz9N134/nqFtGPo6tjTznwun40CxghPNm8
+         lw1mToDw/90xhBQrMaHeh02VIlsh8kJ6cQvv7tIxoVwiz5RYrCx1zG7kjDGJGGoWdxzP
+         zEwTAgeOMhRHx+m9W6eHLigfj4kPka1uk18t1c7IcvzK7j+d0vRjJRoaYfopOi0Re7bp
+         mdHJEhjahkpYr4gUhJiH/HcjeRre6xm/9sWwYjiaGc4yhRADtf+boQGn/CbKqDwxP3dK
+         juVQ==
+X-Gm-Message-State: AC+VfDxOypVrGsHVrWyC3uDeTT9+CwBgamsnwu0HHtyIdMIxmA5HIEV7
+        3O5OT9+F6Dqm82Thw6AbRPf/UAQvE7Xu1bp46G92uDbm+kjnABhWAzo=
+X-Google-Smtp-Source: ACHHUZ5zDWfO6N1U5NQqvAMibPOX2lX0OgH4TMaLHfMbiizukKMFPoR9Dqb9TNr7WchihMaBZlXa98pcYB02NUrAMiU=
+X-Received: by 2002:a25:20d4:0:b0:bb3:912d:60bc with SMTP id
+ g203-20020a2520d4000000b00bb3912d60bcmr478687ybg.64.1686300874447; Fri, 09
+ Jun 2023 01:54:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230609083356.24849-3-raag.jadav@intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 9 Jun 2023 10:54:23 +0200
+Message-ID: <CACRpkdbUZ=V+C+kyu40hCtgtzDRVfKwdwaZ4uJhDPSuhwRrgEA@mail.gmail.com>
+Subject: [GIT PULL] pin control fix for v6.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 02:03:56PM +0530, Raag Jadav wrote:
-> Simplify exit path of ->gpio_request_enable() hook and save a few bytes.
-> 
-> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-10 (-10)
-> Function                                     old     new   delta
-> chv_gpio_request_enable                      296     286     -10
-> Total: Before=19199, After=19189, chg -0.05%
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->  drivers/pinctrl/intel/pinctrl-cherryview.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+Hi Linus,
 
-and here.
+just a single patch for a driver so far this cycle.
+Not much to say about it.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b=
+:
+
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.4-2
+
+for you to fetch changes up to 5b10ff013e8a57f8845615ac2cc37edf7f6eef05:
+
+  pinctrl: meson-axg: add missing GPIOA_18 gpio group (2023-05-16
+15:02:01 +0200)
+
+----------------------------------------------------------------
+A single fix for the Meson driver, nothing else has surfaced
+so far this cycle.
+
+----------------------------------------------------------------
+Martin Hundeb=C3=B8ll (1):
+      pinctrl: meson-axg: add missing GPIOA_18 gpio group
+
+ drivers/pinctrl/meson/pinctrl-meson-axg.c | 1 +
+ 1 file changed, 1 insertion(+)
