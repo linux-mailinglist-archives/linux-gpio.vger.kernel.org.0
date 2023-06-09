@@ -2,67 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A31729CA2
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 16:20:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE37729CFF
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 16:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239209AbjFIOUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 10:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
+        id S240981AbjFIOg1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 10:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239481AbjFIOUu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 10:20:50 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB0430E5
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 07:20:48 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-43dc17feb22so603905137.3
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 07:20:48 -0700 (PDT)
+        with ESMTP id S241224AbjFIOg0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 10:36:26 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4A52D55
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 07:36:25 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f70fc4682aso14311445e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 07:36:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686320447; x=1688912447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gk3Y9EY/4G9t9554iAhtE5UPK2oRaV2wjbMFQgOsj4I=;
-        b=VKe7oCjq3SxEv/zxvpmeCPEMsVzpU/uXXB32eR3nP/Q54+eWPv5yW519jwdlM8eCAW
-         I9/CNthU03pURfKTkT7dAj+3lzCmw671scd6Bg+6EwVwar2zO5/G5pht0YNjyE2FWJ1r
-         PcRZKFGInC3Rw3AS+YUHer6TKXOvhx1ZouNW+PR9lkn3g1O6PqijaO1yMrYoELDpAto3
-         L8O5yViC5H+WD9njoPNSIV4m9xoyhQbOhxfWYRnOlN+EukFCEfd9JzFuDMbFgsHphNho
-         SXHHhZ7AscKG+5oae0vR/hV7cOUsZrJnzvHFhi+6MkRhEt3LtUZQHGz+HcyvxynYj2AT
-         KbvQ==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686321384; x=1688913384;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=43lTEtC/Bem8EYdjWbDkZc2zL5sUKt+AnLwz2BmdcmA=;
+        b=0VtrKRdmhXWitBnXXF9xDeRNJ3dweVRkZQaaW10r1f0KP4Hpi3sYGLH6KEEVr5K5t6
+         A22S3HrjE9KSXK9a0Pv/x6Zxv2VE6FUh2ws7S/3bd/6mceOURlef2UKBgd/I/2c8mVVt
+         JgchTX64J+kjV5VvsefMOR77eTSF1dyr/+AaV61VWx2GuwJN+FaXL7PgtRYgJ/M94SUN
+         HzZXrF3GNhDmG1Wq8PLGAnzUq8X14hSQNjVgBQNmyJSpVtQKQKRm+GrOLX5p7d83I6SZ
+         jQ+a4f0AcCJAKbK+Xfo/ou6603k1Dq102Q8cIpsG7GtdkUGUDVzAgOVH02l8z+0ldbOQ
+         bdeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686320447; x=1688912447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gk3Y9EY/4G9t9554iAhtE5UPK2oRaV2wjbMFQgOsj4I=;
-        b=FzfZK6JJHoRjJGOjyWp/ir5CE81mGbMFgzYGXoBi/RMDA06stRBdSg3lrf0sXD4teX
-         esiL4oC+NV8NBZoWPuLQ0PQUZ23NPd8fs70einPf1nqmL/2rkV8578heKnbGT/h8rnkH
-         tmwvGbbprg7CMyq3vIdGy6mYmgO0hw4GXD05jn3TKRdzQ6Py3pKNHeMQnHyyKd5KFU91
-         z7Sw7BH74TTF7fSbbsv3TKKTuNJTQWPgmyLVwoMHsXCp4HwhYhk1oczJ927R6243SzvI
-         wREfNkqUs6X21wjro6a8tNHxnCkMcOCUvWcj8z9WM+1pfNqlTwfB9hjObkeI4gRfZY/m
-         qo+Q==
-X-Gm-Message-State: AC+VfDxxX7PkQ5s/0Dy4uz2Ml8M0rgpdN5x8w5398+jNR4NjO2MgH/fy
-        RufSYnafhbGUWLoBfRQKfJ4AhdmaH40IVwFIH7v3SA==
-X-Google-Smtp-Source: ACHHUZ6jGX+k4hnv6McRoA+4AoD6fg4EicSO/DxfodOR/w9eMQZrCgZHfLQJJwAgIcFLs2P71TEEP8r839ZKblOhrTQ=
-X-Received: by 2002:a67:f794:0:b0:436:4da:8d63 with SMTP id
- j20-20020a67f794000000b0043604da8d63mr953067vso.27.1686320447446; Fri, 09 Jun
- 2023 07:20:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230605125248.279921-1-brgl@bgdev.pl> <CAL_JsqKczF9yYHWjqneBv-y+Qv+O7AkX4gwVG87+aPPazKxtDw@mail.gmail.com>
-In-Reply-To: <CAL_JsqKczF9yYHWjqneBv-y+Qv+O7AkX4gwVG87+aPPazKxtDw@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1686321384; x=1688913384;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=43lTEtC/Bem8EYdjWbDkZc2zL5sUKt+AnLwz2BmdcmA=;
+        b=EgzwmN5TiboVcbVcIx27gXoVfXnq3oZZcc4RalrexRX6Nf6MmURIiKXgqqYdyezX7v
+         KF5mRTKRNdcTLpPBVQyOAf6N/eA0IH9Y0kZyiJmvKuyH/VHwDILLwvrFMEihpZ+8uMlt
+         hhqJoPflIIDDCrRfwTWWUoLtCi/uTFsH3d4stxjIUUOcaQl7+U/qDd+kdOvY2WEt2LH/
+         e173cUcRE3cik7u/N9SbG3+3bdsZMWO1dLxd3qEjQHfwxMuse7V5GalzOu6l0O6KcjA1
+         +vDKK89Fo5urG4a28BoORoZBibrpaL3uVSgJQ3s3GO4v0JwCIAkLtHBFNMCiDU01NwUF
+         FzqQ==
+X-Gm-Message-State: AC+VfDyCBuBNNUeXB/v5+qRIa8FoWhnD/h0ODznXAg87FP9PAIZ8W/hD
+        Pk99MnL3w9xA1p5JaiKhkGZyRw==
+X-Google-Smtp-Source: ACHHUZ7PPK8je+1Y843D8izrp8IMhUWniL8Kr9ObTugoAauPwa+/VxLbPXj+/eteriBXrheYSONA5g==
+X-Received: by 2002:a7b:c40b:0:b0:3f4:27ff:7d48 with SMTP id k11-20020a7bc40b000000b003f427ff7d48mr1105081wmi.19.1686321383949;
+        Fri, 09 Jun 2023 07:36:23 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5cfb:aa74:b923:261b])
+        by smtp.gmail.com with ESMTPSA id m19-20020a7bcb93000000b003f7f4b7f286sm2911846wmi.12.2023.06.09.07.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 07:36:23 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 9 Jun 2023 16:20:36 +0200
-Message-ID: <CAMRc=MfD1Ju-QCZbr87nP987RMSDko=t1R2cXGmSjdJhdPR5hw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: demote the hogging log messages to debug
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH] of: unittest: drop assertions for GPIO hog messages
+Date:   Fri,  9 Jun 2023 16:36:09 +0200
+Message-Id: <20230609143609.209373-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -72,59 +72,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 9, 2023 at 3:47=E2=80=AFPM Rob Herring <robh+dt@kernel.org> wro=
-te:
->
-> On Mon, Jun 5, 2023 at 6:53=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Drivers should be silent when they work correctly. There's no reason to
-> > emit info messages when GPIO lines are hogged. Demote the message to
-> > debug.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Suggested-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  drivers/gpio/gpiolib.c |  2 +-
-> >  drivers/of/unittest.c  | 16 ++++++++--------
-> >  2 files changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index a7220e04a93e..e4515bda8915 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -4243,7 +4243,7 @@ int gpiod_hog(struct gpio_desc *desc, const char =
-*name,
-> >         /* Mark GPIO as hogged so it can be identified and removed late=
-r */
-> >         set_bit(FLAG_IS_HOGGED, &desc->flags);
-> >
-> > -       gpiod_info(desc, "hogged as %s%s\n",
-> > +       gpiod_dbg(desc, "hogged as %s%s\n",
-> >                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input"=
-,
-> >                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
-> >                   (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low"=
- : "");
-> > diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> > index 2191c0136531..0060334a98a7 100644
-> > --- a/drivers/of/unittest.c
-> > +++ b/drivers/of/unittest.c
-> > @@ -1849,19 +1849,19 @@ static void __init of_unittest_overlay_gpio(voi=
-d)
-> >          * driver is registered
-> >          */
-> >
-> > -       EXPECT_BEGIN(KERN_INFO,
-> > +       EXPECT_BEGIN(KERN_DEBUG,
-> >                      "gpio-<<int>> (line-B-input): hogged as input\n");
->
-> As debug messages are normally off, I think you can just remove these.
->
-> Rob
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I will send a follow-up.
+These have now been demoted to debug and are normally hidden. Drop the
+assertions entirely.
 
-Bart
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/of/unittest.c | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 0060334a98a7..5386efeaf710 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1844,26 +1844,10 @@ static void __init of_unittest_overlay_gpio(void)
+ 	unittest(overlay_data_apply("overlay_gpio_02b", NULL),
+ 		 "Adding overlay 'overlay_gpio_02b' failed\n");
+ 
+-	/*
+-	 * messages are the result of the probes, after the
+-	 * driver is registered
+-	 */
+-
+-	EXPECT_BEGIN(KERN_DEBUG,
+-		     "gpio-<<int>> (line-B-input): hogged as input\n");
+-
+-	EXPECT_BEGIN(KERN_DEBUG,
+-		     "gpio-<<int>> (line-A-input): hogged as input\n");
+-
+ 	ret = platform_driver_register(&unittest_gpio_driver);
+ 	if (unittest(ret == 0, "could not register unittest gpio driver\n"))
+ 		return;
+ 
+-	EXPECT_END(KERN_DEBUG,
+-		   "gpio-<<int>> (line-A-input): hogged as input\n");
+-	EXPECT_END(KERN_DEBUG,
+-		   "gpio-<<int>> (line-B-input): hogged as input\n");
+-
+ 	unittest(probe_pass_count + 2 == unittest_gpio_probe_pass_count,
+ 		 "unittest_gpio_probe() failed or not called\n");
+ 
+@@ -1888,17 +1872,11 @@ static void __init of_unittest_overlay_gpio(void)
+ 	probe_pass_count = unittest_gpio_probe_pass_count;
+ 	chip_request_count = unittest_gpio_chip_request_count;
+ 
+-	EXPECT_BEGIN(KERN_DEBUG,
+-		     "gpio-<<int>> (line-D-input): hogged as input\n");
+-
+ 	/* overlay_gpio_03 contains gpio node and child gpio hog node */
+ 
+ 	unittest(overlay_data_apply("overlay_gpio_03", NULL),
+ 		 "Adding overlay 'overlay_gpio_03' failed\n");
+ 
+-	EXPECT_END(KERN_DEBUG,
+-		   "gpio-<<int>> (line-D-input): hogged as input\n");
+-
+ 	unittest(probe_pass_count + 1 == unittest_gpio_probe_pass_count,
+ 		 "unittest_gpio_probe() failed or not called\n");
+ 
+@@ -1935,17 +1913,11 @@ static void __init of_unittest_overlay_gpio(void)
+ 	 *   - processing gpio for overlay_gpio_04b
+ 	 */
+ 
+-	EXPECT_BEGIN(KERN_DEBUG,
+-		     "gpio-<<int>> (line-C-input): hogged as input\n");
+-
+ 	/* overlay_gpio_04b contains child gpio hog node */
+ 
+ 	unittest(overlay_data_apply("overlay_gpio_04b", NULL),
+ 		 "Adding overlay 'overlay_gpio_04b' failed\n");
+ 
+-	EXPECT_END(KERN_DEBUG,
+-		   "gpio-<<int>> (line-C-input): hogged as input\n");
+-
+ 	unittest(chip_request_count + 1 == unittest_gpio_chip_request_count,
+ 		 "unittest_gpio_chip_request() called %d times (expected 1 time)\n",
+ 		 unittest_gpio_chip_request_count - chip_request_count);
+-- 
+2.39.2
+
