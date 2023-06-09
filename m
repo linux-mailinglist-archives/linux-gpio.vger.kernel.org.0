@@ -2,131 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A0D72A566
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 23:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD75672A69D
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 01:12:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232315AbjFIVec (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 17:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
+        id S231938AbjFIXMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 19:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232488AbjFIVeb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 17:34:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACA03A82;
-        Fri,  9 Jun 2023 14:34:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3DDF661152;
-        Fri,  9 Jun 2023 21:34:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB97C433EF;
-        Fri,  9 Jun 2023 21:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686346465;
-        bh=wvXsR8YYzupk8QUsKM9+U5BzFl/Mjd2yhSrjz7bgQiY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZtEGLpd0MdzhXbqB+JPymo/6uJHdLjNcnqgs8Iznb2MQtONrGx3vo+N9ubCPrCuql
-         tPrnFetQfSVGdIkOuAo+4FIxcfpA00VqzyFCKCRz1SzvmZP5wVca8ZZvJqaJlNAyDu
-         xma4qYH4ZPY5gbNvY1v0PgAejAu3+b1ijOsHGdeh3GXH6kE1zkYK3LnRdM9KzYG+P3
-         W2xbKDNIWdtOtjq3AfzOX2uW/6WHqf4cvtTUGd9gafhnLB/ZTYVOYwAo7hgT/UhuZX
-         nfETW8N6N+HHB8ivgVFYWnuhfddV9ij1Vlwxc0MKMvUyBGW97fsXbITJPZNGSAiMA+
-         eKuPQKh2qqXqA==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b219ed9915so24917361fa.3;
-        Fri, 09 Jun 2023 14:34:25 -0700 (PDT)
-X-Gm-Message-State: AC+VfDzrwPa+3J8Tt7wxSX+qCQfJwW1Kv42xwKekWfuBDzvvc/i+7a6H
-        SGtUon9/SXKxA4syE3NJIeVIGrxcB2oW76q4dQ==
-X-Google-Smtp-Source: ACHHUZ7/YFvr2vQobTtmfQT0oSRk3YiQczXyx7x0ELd+xNr3yIUtzF53BXzTULyGxFje82VegTxIYmK9TO41ea233kE=
-X-Received: by 2002:a2e:b0cc:0:b0:2ac:8262:322a with SMTP id
- g12-20020a2eb0cc000000b002ac8262322amr20945ljl.13.1686346463631; Fri, 09 Jun
- 2023 14:34:23 -0700 (PDT)
+        with ESMTP id S229586AbjFIXMg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 19:12:36 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75732D52
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 16:12:35 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b1a66e71f9so25446401fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 16:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686352354; x=1688944354;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eQjQSjkrQHB8YEvYb7HNEzeDeLUIuyVyvTL/DW+V3ac=;
+        b=lVSXJqDy66m5M7/4+FmDKj+zA5uEGy7KBLgXZEcPh4ldtiVJVAfyHEe0C2CavHG58Y
+         oB918G1Mp453YPNy/4k1V5tEa5LOh9W/Ge0XAMfSqMp84TQBDMf0ZM+7S1cjKoIeGhI0
+         wT0XPs91RQavoTzuoQZIL32T8wqcIawffj4DY5z5VObIKzuFJeaqkeZbzcTOm0cEkhED
+         ErJsX/aBDTqTqxpVqgTcbuvwo5ZhwjwDNJVQ7I9S0gUqNnGuB/F77TWUg+pIos9McNDX
+         x74oPk4FWASsUo1a1tCxp+QSl3K1bqNYf5XRn/h8VT2l4onELdyLMdK+u+NUjmuzA+0n
+         rjpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686352354; x=1688944354;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eQjQSjkrQHB8YEvYb7HNEzeDeLUIuyVyvTL/DW+V3ac=;
+        b=GBD7HAIbr/Vp0p7si7Oa36JAAp+3AMpi4HJC9FCpcVfERfB8mWfN9bjbTdKm4+1hZ7
+         qU+GM9VAdlrWavt8CKtKLBYum2++3jJWLlzqdDnUr9LK1vfNLcWTrBwgHGh9sgm/Zi5Q
+         utDiAafz4Qvoro4nDUFlPH6IGaYBfzVc1hYrbV/LFisb6B9M3WqH9CL0H+WC/2en6mJM
+         Xa2phs74qo8otgRrVraamaOaFe2572cFq3cUkXvNkcgvm5HXU+ec0a8VriCnFTHiOAFr
+         198Mbfx0d6fPtkZ2qy5kIIA/YtuvPNreKHl3ZukUo75/PGTQoFDxJkVKs3ai4WHbBt8k
+         Tc2w==
+X-Gm-Message-State: AC+VfDzc07hwgLhj9S5ihuEcw9/nSDgkk4jkRck1HD6HWmAFBA2RTe2S
+        bqQobwr0rBXfiqsnDkCuoHA3Jlx3fkR/0U/MuZE=
+X-Google-Smtp-Source: ACHHUZ6Zf6loPawGgygTCMFmmJH0+BHv/EFiSTUjYrLk01PCUQHKn4vNdQFs9U8k4QrpqcsKZ+4T2y/xJwu/V36LeWE=
+X-Received: by 2002:a19:2d01:0:b0:4ec:844e:7b85 with SMTP id
+ k1-20020a192d01000000b004ec844e7b85mr1597422lfj.25.1686352353651; Fri, 09 Jun
+ 2023 16:12:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230418150606.1528107-1-robh@kernel.org> <9543f619-88fa-8e54-6e9a-4334750e51b4@linaro.org>
- <CAL_Jsq+ZVAZc1nYJVLPQt=KM1qOZrZCrRC4q_o8XQjDdo_NuKA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+ZVAZc1nYJVLPQt=KM1qOZrZCrRC4q_o8XQjDdo_NuKA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 9 Jun 2023 15:34:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJMpjW6a4Q6xUX6TEZ+vyLJJn5bDtwEdf_-E=BeA-Z_tA@mail.gmail.com>
-Message-ID: <CAL_JsqJMpjW6a4Q6xUX6TEZ+vyLJJn5bDtwEdf_-E=BeA-Z_tA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: Fix schema for "qcom,paired"
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: pavlovivanov2@gmail.com
+Received: by 2002:ab3:7545:0:b0:233:65ad:9827 with HTTP; Fri, 9 Jun 2023
+ 16:12:33 -0700 (PDT)
+From:   United Nation <un.office.turkey@gmail.com>
+Date:   Fri, 9 Jun 2023 16:12:33 -0700
+X-Google-Sender-Auth: AQSP9qE0IyqG0SjEzk6-5nLbcnM
+Message-ID: <CAJaMezeqRJ9Sc3jdB0yjXQ4nNvokdvYr=iqWsbouqq_S_4eANA@mail.gmail.com>
+Subject: Congratulations
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DEAR_FRIEND,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 1:48=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Wed, Apr 19, 2023 at 2:56=E2=80=AFPM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
-> >
-> > On 18/04/2023 17:06, Rob Herring wrote:
-> > > The "qcom,paired" schema is all wrong. First, it's a list rather than=
- an
-> > > object(dictionary). Second, it is missing a required type. The meta-s=
-chema
-> > > normally catches this, but schemas under "$defs" was not getting chec=
-ked.
-> > > A fix for that is pending.
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 5 +++=
---
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.=
-yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-> > > index 9412b9362328..4c3e9ff82105 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-> > > @@ -144,8 +144,9 @@ $defs:
-> > >          enum: [0, 1, 2, 3, 4, 5, 6, 7]
-> > >
-> > >        qcom,paired:
-> > > -        - description:
-> > > -            Indicates that the pin should be operating in paired mod=
-e.
-> > > +        type: boolean
-> > > +        description:
-> > > +          Indicates that the pin should be operating in paired mode.
-> >
-> > Current Linux implementation uses it as a generic pinconf param
-> > pinconf_generic_params which is parsed by:
-> >
-> > pinconf_generic_parse_dt_config() -> parse_dt_cfg() ->
-> > of_property_read_u32()
-> >
-> >
-> > The pinctrl-spmi-mpp.c driver, using this schema, treat it as a bool,
-> > but I still wonder how the code will parse bool with
-> > of_property_read_u32(). Maybe it should be uint32 with value of 0 and 1=
-?
->
-> That should be an error because the length is too short so it should
-> go with some default from the code.
->
-> Looks like there is no user, though no property could mean keep the
-> default/bootloader setting. Can you sort out which type is really
-> desired here and hopefully we can get rid of the other type. It's not
-> the first case of pinctrl properties with multiple types, but we don't
-> really need more.
-
-Still an issue here. Please sort out what functionality QCom wants here.
-
-dtschema (main br) will now throw a warning on it.
-
-Rob
+Dear friend congratulations there is a good news for you
+ my name is Mr. Kenny Frank. from United Nations
+ kindly get back to us as soon as possible
+official Email:(un.office.turkey@gmail.com)
