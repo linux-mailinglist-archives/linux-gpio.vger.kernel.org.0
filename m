@@ -2,87 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7CD8729070
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 08:56:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2672E729074
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jun 2023 08:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238687AbjFIG4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 02:56:41 -0400
+        id S231580AbjFIG5X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 02:57:23 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231580AbjFIG40 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 02:56:26 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E47C272A
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Jun 2023 23:55:56 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-bab8f66d3a2so1411200276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jun 2023 23:55:56 -0700 (PDT)
+        with ESMTP id S238660AbjFIG5G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 02:57:06 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBAB3A96
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Jun 2023 23:56:59 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-b9a6eec8611so3730163276.0
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jun 2023 23:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686293747; x=1688885747;
+        d=linaro.org; s=google; t=1686293818; x=1688885818;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XZUFecL2O9/GZEN1hKmxyv/duFaVrRit7bbN2Zt7pr4=;
-        b=qyfcFmQFLMByJcnxqXDdxeSb/MNFQeAXc1wPdxjpYjXQzj9rOlzIZyboOdvsOJu9so
-         x+n1m8djqBu2kiZjDdWumE6EYw/lEtjgEUGeap4fJH4hFNuTlvlP6fe6AjgjmKyPviir
-         GLYffRr/ZIKq3jWb7BYWtOW8WN8M3O8scfI009yCXOWPNv2WtMhTFOaN2tHH7Yn7TcYL
-         nDBJzBisAlm93BYhM+Q4Wy9ogenG2bFR0b1C+Rmcl6xuCclrBt8wN9Wb/2Q62CK4Zhpo
-         A+nHe4Im6G9KG7KBGcMriGfdWL1qqWcgIEZzHkiyDJmEg3VgB2R08a09EKyz61uKCtSc
-         +Hiw==
+        bh=EPnqXMOZVL6sTkCADxUPTqWs/TKz+PEnmIF/0BFjH8Q=;
+        b=mzFSM/gnMPcPABMe+P7vONS3ZNBzFZ9yP/J/Kr8qWjXAfWXj9lFRm4Yq5/znbHMaWX
+         xa4OS/lQHkFrz2nfYSXYiYy3orqqgjwZKo5yrQXNxWb73VSA5KzWr+QN1yf4Kq1ghL/J
+         9Ccjx9032BjHefkUrpu6AZrB5c3oKZX04WJs+3IDQYMldxlmefymp3XWso0HIvfnRkvA
+         JM2W9KMPJzbH9r7LPO0+vj+3i4N1F5IXtIDzl0LJ2fI3VES6vCs964litPxtkO4+S5aB
+         KMxYJRmNiIiUJipGFNW3tfV+VYH93p2PzrqIvxzh0OO9Wo6GlXn3Oi+pJ1JLC9zZQBIK
+         CIvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686293747; x=1688885747;
+        d=1e100.net; s=20221208; t=1686293818; x=1688885818;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XZUFecL2O9/GZEN1hKmxyv/duFaVrRit7bbN2Zt7pr4=;
-        b=CP3Xmi7QCV8VV3Z6hlJdGTYx7zG3fOR6orONaZa0SO4t31j+Yfizd8S6e79lMMVxfs
-         crjOFO6de1CDZjL6EovkjW0PIXW2Z2eHXbL2HXjs72virAheKB/a9Ykv6lX+VxIydbOt
-         r8IFVh5SWRAfHlcuCdm/jhD6kmyULxFsEnEK0O6Q23H0IkdIZY6WFRsOfVHBO06hjh/i
-         RY+SuleEBBvVBQnSwVIREXoGsgmExb3/OK+F0WCJzxoI9ozUgxe955CvweqIkkHoGTbm
-         v1vwgJT3lPSQZQkdS3zwAGpXMXVMJq05R/pAeKN6fIL1iWWrs2sOQKfHOXvktKuT91sf
-         IiHQ==
-X-Gm-Message-State: AC+VfDzvClFxGrL7m71IJMv2Auy8AZ94Ivkl9MBLvMxQXWJDpvWOd1T8
-        WQSVS5VEPiriD/Eh1f4qFExvVb5UHVowGoFFj7iJew==
-X-Google-Smtp-Source: ACHHUZ5vQLrbvAK4LANdhCpIwv+QOEXpNH+EWL8HamiNOTDPfSaHPkHL1fwjMU3qEMq3LNmnQmyOQwm0D0Hp66yTLlo=
-X-Received: by 2002:a25:f804:0:b0:ba8:32c9:dfa1 with SMTP id
- u4-20020a25f804000000b00ba832c9dfa1mr350415ybd.60.1686293747188; Thu, 08 Jun
- 2023 23:55:47 -0700 (PDT)
+        bh=EPnqXMOZVL6sTkCADxUPTqWs/TKz+PEnmIF/0BFjH8Q=;
+        b=Zw0huLoD1EH2MJ/x7X4b6v7h+yfIH2W83KwVblqTkB3QcmqIbKCz/aNTSK87AXJ3d7
+         LkujE57Dn+WR0JjE1cWjLyhukesc3znNHLw5cwLNceLa8xgjdTS1BF556WDWxXmMBoPV
+         qrRwJ1YaL1vVIm4AarvrsZNY7pBQjwjFwQ7jKgPpDYKDjHdQjx9ttrZdQ3fq1ng9peO0
+         8pmZwRjvMTdQ0bonVReUhHlOvJ+OgnvvtAWEtdhTqCAbR8qkOl52I/T1EaqffIVWFxW2
+         b3j47ZdrQaw1+MthHoPz3zJeKQqG9M2pPxUqpMCiqEbfnf4siUyBATcVNeuKMNbhQyZD
+         Tkcw==
+X-Gm-Message-State: AC+VfDwS/Bt63n5lzhHJceqKSx4TY5JkwCqaTDYdddAETbZmIearqY7n
+        7yKzFi/D5itj8xAcp3PTkvPJJKDbKaf8+zDgw54PPXgS7C2PWUj+
+X-Google-Smtp-Source: ACHHUZ5X127VTzj4zOV1xeRhWkNtYt3iBIPKSBWOTbrgngPPTDrQ5epKwgsmZoP+K3u1v9n+9tto9vaqGSEX4/wb7mQ=
+X-Received: by 2002:a25:54f:0:b0:bac:46f2:8d0f with SMTP id
+ 76-20020a25054f000000b00bac46f28d0fmr2700548ybf.3.1686293818393; Thu, 08 Jun
+ 2023 23:56:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230602033146.46387-1-quic_minghao@quicinc.com>
-In-Reply-To: <20230602033146.46387-1-quic_minghao@quicinc.com>
+References: <20230601173831.982429-1-nm@ti.com>
+In-Reply-To: <20230601173831.982429-1-nm@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 9 Jun 2023 08:55:35 +0200
-Message-ID: <CACRpkdaxuSW+4yL_b3iTKacAedYxrjcZ4YFy+sYU__THX3zDsA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: Add support to log pin status before
- suspend for TLMM
-To:     Minghao Zhang <quic_minghao@quicinc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     agross@kernel.org, konrad.dybcio@somainline.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_satyap@quicinc.com,
-        quic_tsoni@quicinc.com
+Date:   Fri, 9 Jun 2023 08:56:47 +0200
+Message-ID: <CACRpkdawgFtSt3wEGz5MC9apFiLgUbta4TRc6YhOrEGbT6Okvg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Drop k3
+To:     Nishanth Menon <nm@ti.com>
+Cc:     Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 5:32=E2=80=AFAM Minghao Zhang <quic_minghao@quicinc.=
-com> wrote:
+On Thu, Jun 1, 2023 at 7:38=E2=80=AFPM Nishanth Menon <nm@ti.com> wrote:
 
-> This change supports to print pin status before device suspend
-> to debug for TLMM. And expose 2 APIs to enable/disable this
-> functionality.
->
-> Signed-off-by: Minghao Zhang <quic_minghao@quicinc.com>
+> If you could pick this up for the next 6.5 kernel window now that we have=
+ kept the
+> old header around for one cycle.
 
-I'm waiting for a review from the maintainers on this one.
+Patch applied!
 
 Yours,
 Linus Walleij
