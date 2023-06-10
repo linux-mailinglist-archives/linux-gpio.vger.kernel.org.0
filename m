@@ -2,111 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2F1872A928
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 07:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6F3072A930
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 07:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbjFJF1P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Jun 2023 01:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
+        id S229512AbjFJFmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Jun 2023 01:42:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjFJF1O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 01:27:14 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A95F430F6
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 22:27:12 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b00ecabdf2so14868155ad.2
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 22:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686374832; x=1688966832;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiREeJQSPK0Ib5BdXtBr4j43RW3yO8gWoQ+7JNso2nQ=;
-        b=UFBxydWze2BdTM62mmW/Ws/zyEHM4j+Wfot2UJ6zXU/HWXKn0FQM8/6NqXJqWgxV/d
-         SFVjKOSL3cY0NW+wWLQI9LixHx3EjRw/vI4xUDOSrVKG4QdwloyWuiRsQL7LHX64Gcon
-         h3UcQdhsgA/00nagNgftA2MMMbtPv9jTEhN374UPFa4DPBz7QT29r6YY5nyDeWrasBuh
-         xdtL5yclnwKZgtiS0bouXB689pIO70ysCnM564wNivoYN+ijczqjwd/++Rh8t2srFN4r
-         JdFQk64uwLhrxPxJeDRdtn8T0AO0QsSiYuk6xyE53vfWvPbJYGkd3sycFtfBsXNr6VXq
-         7IWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686374832; x=1688966832;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yiREeJQSPK0Ib5BdXtBr4j43RW3yO8gWoQ+7JNso2nQ=;
-        b=b1UfJt5P/TgUUO4yfIZI12+tlCNc4U6Qu+higyaX7UzskHCzO7LtaJJKqUIByu9Mu+
-         Unr1/fyGqiQO0tREQHNzSKA1B4Ebwo6dK2RG8xUGxBzvZ940j/4W8CqjjSUUWfnDN/QO
-         ykQEqg/krx9amjo8UVpLttKO8N51F5b7aHb2hIpde10E3JIgEfFa/Vz58uiA09abPnAH
-         uCysdpyMNvJMOnw+/MalaUJLeCcanWQSoRh/6dlOGYHcnsleeGiBqMX/pDret03HO6xM
-         GNuUYzzJbtjaM7pIEbXqWNEyEmv8FlsIs406yw1ZyPNaSACTOlNSxtrhKFoHl6jIlLpZ
-         XNpw==
-X-Gm-Message-State: AC+VfDzhy4weCIF6LjrIXY4OrCvt1GwHuMTxlBz9rBmDx8L76MVFFzhm
-        I7Qcoe4UkwQJaEBGatOzc0mSYNZhhOs=
-X-Google-Smtp-Source: ACHHUZ6sqbeQ98fj/BynygJwNu2aczSyqsrpyYOVHPJ68i4AUP/EWAuIIgy/K8+BYZUsNl0IsXqR9w==
-X-Received: by 2002:a17:902:ce8a:b0:1b1:a0bb:4c75 with SMTP id f10-20020a170902ce8a00b001b1a0bb4c75mr1083573plg.53.1686374832041;
-        Fri, 09 Jun 2023 22:27:12 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id jg1-20020a17090326c100b001ab0b2dad2fsm4087906plb.211.2023.06.09.22.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 22:27:11 -0700 (PDT)
-Date:   Sat, 10 Jun 2023 13:27:06 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        erik.schilling@linaro.org
-Subject: Re: [libgpiod][bug] building rust bindings requires clang headers
-Message-ID: <ZIQJquwzNacp1Nuh@sol>
-References: <ZIKQVol59uXI5PyI@sol>
- <20230609061812.4haoqdyinsp47zet@vireshk-i7>
- <ZILE258m92XrBvNP@sol>
- <20230609062456.fqw3mqvtcactx2zj@vireshk-i7>
+        with ESMTP id S229441AbjFJFmV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 01:42:21 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521133AA3
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 22:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686375739; x=1717911739;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eOxlApEkyVU78Sff7O6cqmjIz15M8xtiRNJIcBgjdc4=;
+  b=jB5CuVzsoTV2K7eeY1ZoJAi2h1PqX13yKGWiJlR6dfRshEq5aScTlkyS
+   AOISDFwwMy9pM1J5l0vSuLK2octaupazqpbTRNv7NH0bjj7L9245+DoG9
+   Xql4xJas4CnHZZR3mL6Jd5LavTiBCYlOZqMSFjHdW7P//CDeCR5AOU7C/
+   HVTpjrQhM243unOOPZVSeqopXInwYGxWPIkWrUIFjufrEozSGmyezLlN+
+   BnPcG9CCFhqPXyD5UENjWJ5naGkMIKtoSgQDDiFtpk2rWKadd5lSAg4r9
+   kcSV7HCKC7jnQjwg3ENbmCgmHePfaBa0irRVP5eJ7PH9vqKR/ThAUBljk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="342412460"
+X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
+   d="scan'208";a="342412460"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 22:42:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="884812673"
+X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
+   d="scan'208";a="884812673"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 09 Jun 2023 22:42:17 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q7rMe-0009mg-1e;
+        Sat, 10 Jun 2023 05:42:16 +0000
+Date:   Sat, 10 Jun 2023 13:42:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        brgl@bgdev.pl
+Cc:     oe-kbuild-all@lists.linux.dev, Kent Gibson <warthog618@gmail.com>
+Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
+ documentation on readthedocs.
+Message-ID: <202306101333.92BOpai5-lkp@intel.com>
+References: <20230610020148.8973-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230609062456.fqw3mqvtcactx2zj@vireshk-i7>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230610020148.8973-1-warthog618@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 11:54:56AM +0530, Viresh Kumar wrote:
-> On 09-06-23, 14:21, Kent Gibson wrote:
-> > I think that is what the AC_HEADER_STDBOOL already does - but that
-> > detects the gcc header, and the additional check needs to be for the clang
-> > header.
-> > 
-> > Unless you can convince clang to use the gcc headers?
-> 
-> Ahh, my bad :(
-> 
+Hi Kent,
 
-On a relate note, how do you run clippy now?
+kernel test robot noticed the following build warnings:
 
-When I tried `cargo clippy` I got an error about pkg-config not finding
-libgpiod. Fixed that by pointing PKG_CONFIG_PATH at my local libgpiod
-build.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.4-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-But now I get:
+url:    https://github.com/intel-lab-lkp/linux/commits/Kent-Gibson/doc-add-configuration-to-generate-doxygen-documentation-on-readthedocs/20230610-100330
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230610020148.8973-1-warthog618%40gmail.com
+patch subject: [libgpiod][PATCH] doc: add configuration to generate doxygen documentation on readthedocs.
+config: arm-randconfig-r046-20230608 (https://download.01.org/0day-ci/archive/20230610/202306101333.92BOpai5-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.3.0
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout linus/master
+        b4 shazam https://lore.kernel.org/r/20230610020148.8973-1-warthog618@gmail.com
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
 
---- stderr
-  wrapper.h:1:10: fatal error: 'gpiod.h' file not found
-  thread 'main' panicked at 'Unable to generate bindings: ClangDiagnostic("wrapper.h:1:10: fatal error: 'gpiod.h' file not found\n")', libgpiod-sys/build.rs:44:10
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306101333.92BOpai5-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
-so I guess bindgen/clang needs to be pointed at the include directory,
-but not sure how to do that without emulating whatever `make` is doing.
+>> .readthedocs.yaml: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/.gitignore: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/Makefile: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/run_tags_test.sh: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/tags_test.c: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/.gitignore: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/Makefile: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/config: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/settings: warning: ignored by one of the .gitignore files
 
-Same goes for `cargo build`, come think of it - now you have to build
-using `make`.
-
-How are you supposed to tell if your code is sub-par without clippy to
-tell you?  Or, more generally, how does the development process for the
-rust bindings work now?
-
-Cheers,
-Kent.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
