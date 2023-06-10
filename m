@@ -2,72 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD75672A69D
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 01:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1742172A703
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 02:28:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbjFIXMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Jun 2023 19:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        id S229939AbjFJA2B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Jun 2023 20:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjFIXMg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 19:12:36 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75732D52
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 16:12:35 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b1a66e71f9so25446401fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 16:12:35 -0700 (PDT)
+        with ESMTP id S229480AbjFJA2A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Jun 2023 20:28:00 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED11EBF
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 17:27:59 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-652dd220d67so2426258b3a.3
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 17:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686352354; x=1688944354;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eQjQSjkrQHB8YEvYb7HNEzeDeLUIuyVyvTL/DW+V3ac=;
-        b=lVSXJqDy66m5M7/4+FmDKj+zA5uEGy7KBLgXZEcPh4ldtiVJVAfyHEe0C2CavHG58Y
-         oB918G1Mp453YPNy/4k1V5tEa5LOh9W/Ge0XAMfSqMp84TQBDMf0ZM+7S1cjKoIeGhI0
-         wT0XPs91RQavoTzuoQZIL32T8wqcIawffj4DY5z5VObIKzuFJeaqkeZbzcTOm0cEkhED
-         ErJsX/aBDTqTqxpVqgTcbuvwo5ZhwjwDNJVQ7I9S0gUqNnGuB/F77TWUg+pIos9McNDX
-         x74oPk4FWASsUo1a1tCxp+QSl3K1bqNYf5XRn/h8VT2l4onELdyLMdK+u+NUjmuzA+0n
-         rjpQ==
+        d=gmail.com; s=20221208; t=1686356879; x=1688948879;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VpAvbUm+yHm48cQ94ALRhA6XR04ymUkBJGIEesW2BHI=;
+        b=Zo+nNyfjaZsyn4CL99oqBQNtvup6+oaKCsiZCnSGnaDaaAPEpay5esCyGgh/qQoVnZ
+         x86SPbF2oO473zsgVTYO1QICLa2RmdjDif5nj9AZFmmDPy+N17cbLs0qICxlnW2pjtYq
+         O/oHIQO18CDE6+8K+9CNUbxZcLaiRw8sFKQ/J1hKlOczz85EdVcXuhtyH8QaRUQgnrHL
+         BiPt7zZyhfcBQI+TUNfT9hiDZgmQssbCHobH3+DhM/090kfjEYl/TJQRSlNVXq1+xwoH
+         56EDhD29t01mKYe4/QmVkN0qMoxkd7tBTXL2JtS/0hWN+vMvVZROfc9JpZX39orgRGex
+         XksQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686352354; x=1688944354;
-        h=to:subject:message-id:date:from:sender:mime-version
+        d=1e100.net; s=20221208; t=1686356879; x=1688948879;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eQjQSjkrQHB8YEvYb7HNEzeDeLUIuyVyvTL/DW+V3ac=;
-        b=GBD7HAIbr/Vp0p7si7Oa36JAAp+3AMpi4HJC9FCpcVfERfB8mWfN9bjbTdKm4+1hZ7
-         qU+GM9VAdlrWavt8CKtKLBYum2++3jJWLlzqdDnUr9LK1vfNLcWTrBwgHGh9sgm/Zi5Q
-         utDiAafz4Qvoro4nDUFlPH6IGaYBfzVc1hYrbV/LFisb6B9M3WqH9CL0H+WC/2en6mJM
-         Xa2phs74qo8otgRrVraamaOaFe2572cFq3cUkXvNkcgvm5HXU+ec0a8VriCnFTHiOAFr
-         198Mbfx0d6fPtkZ2qy5kIIA/YtuvPNreKHl3ZukUo75/PGTQoFDxJkVKs3ai4WHbBt8k
-         Tc2w==
-X-Gm-Message-State: AC+VfDzc07hwgLhj9S5ihuEcw9/nSDgkk4jkRck1HD6HWmAFBA2RTe2S
-        bqQobwr0rBXfiqsnDkCuoHA3Jlx3fkR/0U/MuZE=
-X-Google-Smtp-Source: ACHHUZ6Zf6loPawGgygTCMFmmJH0+BHv/EFiSTUjYrLk01PCUQHKn4vNdQFs9U8k4QrpqcsKZ+4T2y/xJwu/V36LeWE=
-X-Received: by 2002:a19:2d01:0:b0:4ec:844e:7b85 with SMTP id
- k1-20020a192d01000000b004ec844e7b85mr1597422lfj.25.1686352353651; Fri, 09 Jun
- 2023 16:12:33 -0700 (PDT)
+        bh=VpAvbUm+yHm48cQ94ALRhA6XR04ymUkBJGIEesW2BHI=;
+        b=HxruBucTotyeWnLu5VEGTpojMF5x7quNwpwsCQ6LLOFIB+oDcWH68g2uS2Oh5dscA2
+         hSFj1lj9txP2WUs7aFlxYojzN1ZIzT4GKUoacRbj4JV7R+ruR4QlsKJDDByLGsz6oUZK
+         QJVv3OwoOAJFadVmwk5/v6A5fbg5ARbxMQmFMXiT5XVOHHg2tYfloR0sRc4t5GVUCRub
+         MU3YpNb2fKECRcBOtzRMtee13rGaig1PpZaGva3raOqdDrzGFvs1OUEoQ/GExFuk0u4s
+         r5kwV01oF2PDiQPPvJcBa1PEzihYxyGopra+Jl7bQa7kL5PQY30rK21gyD0ekAWkyshx
+         +gsQ==
+X-Gm-Message-State: AC+VfDzvyMpaNLSTdd8zt5+8GmDQL1Ddnyx4bawlNZ9/uX8QjE9jVbg9
+        NI9aRJSYlKQArdnDVdZ5EWa+O47dedA=
+X-Google-Smtp-Source: ACHHUZ7GKuLfGIrDiFAxs+ICnVmJAlczsKO44r8hXaq0xcNB/fcfiSqPep8+bjS3RYMZXRwgEc/ecw==
+X-Received: by 2002:a05:6a00:1951:b0:65c:1170:6cd4 with SMTP id s17-20020a056a00195100b0065c11706cd4mr3197733pfk.30.1686356879314;
+        Fri, 09 Jun 2023 17:27:59 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id j24-20020a62b618000000b00643889e30c2sm3145337pff.180.2023.06.09.17.27.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 17:27:58 -0700 (PDT)
+Date:   Sat, 10 Jun 2023 08:27:54 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH] core: doc: add doc for opaque structs to link
+ to the relevant page
+Message-ID: <ZIPDivT7dh/IXX/L@sol>
+References: <20230609073957.72418-1-warthog618@gmail.com>
+ <CAMRc=MeX2Pc1vNc_p0WLfQoBx-UfHFA5W0Z=3r8-Ocy9bDNXfw@mail.gmail.com>
 MIME-Version: 1.0
-Sender: pavlovivanov2@gmail.com
-Received: by 2002:ab3:7545:0:b0:233:65ad:9827 with HTTP; Fri, 9 Jun 2023
- 16:12:33 -0700 (PDT)
-From:   United Nation <un.office.turkey@gmail.com>
-Date:   Fri, 9 Jun 2023 16:12:33 -0700
-X-Google-Sender-Auth: AQSP9qE0IyqG0SjEzk6-5nLbcnM
-Message-ID: <CAJaMezeqRJ9Sc3jdB0yjXQ4nNvokdvYr=iqWsbouqq_S_4eANA@mail.gmail.com>
-Subject: Congratulations
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DEAR_FRIEND,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeX2Pc1vNc_p0WLfQoBx-UfHFA5W0Z=3r8-Ocy9bDNXfw@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear friend congratulations there is a good news for you
- my name is Mr. Kenny Frank. from United Nations
- kindly get back to us as soon as possible
-official Email:(un.office.turkey@gmail.com)
+On Fri, Jun 09, 2023 at 10:17:13PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Jun 9, 2023 at 9:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> 
+> Thanks for doing this. I tweaked the patch a little bit and applied to master.
+> 
+
+rtd updated with those two doc patches applied to v2.0.1.
+
+Cheers,
+Kent.
