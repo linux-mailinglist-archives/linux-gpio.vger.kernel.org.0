@@ -2,169 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 895B272A989
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 08:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D733F72AA80
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 11:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjFJGzY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Jun 2023 02:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60032 "EHLO
+        id S230339AbjFJJNF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Jun 2023 05:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjFJGzX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 02:55:23 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F04AE3A89
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 23:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686380122; x=1717916122;
-  h=date:from:to:cc:subject:message-id;
-  bh=hOs17fjua4U83KvJOlGWrgIluIbLywO2isHwxL1j2yM=;
-  b=nX35HrtVYsicoiFsqxoQ/9D2nhyXSJWNc1xhxk7RSC6s7PBIegZwQPxu
-   a3nJ+jFmyh601cTnTwEBuhtnoWycO0HkULx2skkXs7Wx3l0np6bSUgULV
-   nBQ0CUygMf8lg0oPcY+Z0Hqbq/8+G3b9gu+v62PN2Bknjqc2fh+DHFRHx
-   4ma2mQY0tXxqkwPI01KWTEvJhUUsUmBlqR1pY+DjrYjehGlUP+pMHlo7Q
-   5HV80e+hzOQZChG23bfnNLv7iY3pRi2QlJiEFl87j6whgUCuMDUCVVduq
-   bMJN97vZO+uf6RFDoNb2K3E35j2UvkFoE6lY0+zbjtik/QYwMA+7Wo73S
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="360220434"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="360220434"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 23:55:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="1040714220"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="1040714220"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Jun 2023 23:55:21 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q7sVM-0009q3-24;
-        Sat, 10 Jun 2023 06:55:20 +0000
-Date:   Sat, 10 Jun 2023 14:55:09 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- b0ce9ce408b6cfbce6c720c7eb084e6d81a04434
-Message-ID: <202306101407.1tFFCxQC-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229809AbjFJJNE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 05:13:04 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5905B3A9B
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Jun 2023 02:13:03 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-514ab6cb529so7537604a12.1
+        for <linux-gpio@vger.kernel.org>; Sat, 10 Jun 2023 02:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686388382; x=1688980382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=el5t90CX0KZg71r46Aq58k54+iI17+shn/UMUNopsqg=;
+        b=vyZHYGkzfoQFiksS2nO9MCLsI4oWI8oIDoMCiYbDQBfFmuFFn4A6OtLOy+DaTw8W6K
+         /jQURkeJNjvHhzUzaF+4Mntf/OsbwSdLEqt6U5alv05OJxgvqZRQbMliqb2NUF2/nRpo
+         qq36oSJhzCuqd2byp4w4TEFqx/5nsR+fQVsmMYPo2MijngwnxtwCdoCYSFIrCpMXhwe4
+         nStfU0z/j4rcTy/J61LeJxtBgoHFUR2TWIaAQkLxMevFdBgDj7bKv9DA7MLmxwyfr2UQ
+         TpC97pYtzE39afHUviXBsKzPB9vg+w88NrX7ecG1RCs9j4o9uE+S/DA9yP17ADNcwj32
+         7pGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686388382; x=1688980382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=el5t90CX0KZg71r46Aq58k54+iI17+shn/UMUNopsqg=;
+        b=Ea6uJ79tkYY3298TMQzryY9cNclbtDEzFhxnjL1CGOKDgwdEr/6aINI6vGWjhdwIRx
+         dLTusUdXCz3WNuSyar1Y9ud8+MxJFIm1ypTr4XE0w3qQrUcPM5CeVnywsHZU0nawclhr
+         LDgZZ0Whj4VVbTm7NJMMHyg09UaojNTPFQDx/Y3/65YochO8cDtFra3EjEw/yf/XrZrz
+         y44S87T2URcUrJcV6p20xPKg919XRtfcXpNVhiW6JY+bxQ+1EOO6GiE378TkbP2AfJrP
+         Y5+2Ex55k2TNPw5TIbvGZck2Gel/GQxisx7XNRKNezV1HVvBtuYJmZjVHbg/JPdtYOhD
+         da4g==
+X-Gm-Message-State: AC+VfDzOuB8Ka8fxl32VCWkNH6w9wTYcfiTGbcjtZ1tRuQXm/7WvaGWt
+        9maDCzScVus1f+F/H2Vfdyownw==
+X-Google-Smtp-Source: ACHHUZ4Dv2xzIY5s4ZpE8GvaEA/T+zxaJeqRlsL+nIBhW18zrjRMuyKw4lwlg0Drr7r2jioTo7bLpg==
+X-Received: by 2002:a17:907:7202:b0:970:28c:f960 with SMTP id dr2-20020a170907720200b00970028cf960mr4219760ejc.17.1686388381629;
+        Sat, 10 Jun 2023 02:13:01 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id b7-20020a170906038700b009787b18c253sm2347012eja.181.2023.06.10.02.13.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Jun 2023 02:13:01 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] pinctrl: dt-bindings: qcom: for v6.5
+Date:   Sat, 10 Jun 2023 11:12:58 +0200
+Message-Id: <20230610091258.4903-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: b0ce9ce408b6cfbce6c720c7eb084e6d81a04434  gpiolib: Do not unexport GPIO on freeing
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
 
-elapsed time: 846m
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
 
-configs tested: 91
-configs skipped: 4
+are available in the Git repository at:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.5
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r012-20230608   gcc  
-alpha                randconfig-r025-20230608   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r033-20230608   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          moxart_defconfig   clang
-arm                          pxa168_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r013-20230608   clang
-hexagon              randconfig-r023-20230608   clang
-i386                             alldefconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i051-20230608   gcc  
-i386                 randconfig-i052-20230608   gcc  
-i386                 randconfig-i053-20230608   gcc  
-i386                 randconfig-i054-20230608   gcc  
-i386                 randconfig-i055-20230608   gcc  
-i386                 randconfig-i056-20230608   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r034-20230608   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      bmips_stb_defconfig   clang
-mips                            gpr_defconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc             randconfig-r021-20230608   gcc  
-openrisc             randconfig-r022-20230608   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                   lite5200b_defconfig   clang
-powerpc                     skiroot_defconfig   clang
-powerpc                     tqm8560_defconfig   clang
-riscv                            alldefconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r015-20230608   clang
-riscv                randconfig-r032-20230608   gcc  
-riscv                randconfig-r036-20230608   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r014-20230608   clang
-s390                 randconfig-r026-20230608   clang
-sh                               allmodconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r024-20230608   gcc  
-sparc                randconfig-r031-20230608   gcc  
-sparc                randconfig-r035-20230608   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230608   gcc  
-x86_64               randconfig-a002-20230608   gcc  
-x86_64               randconfig-a003-20230608   gcc  
-x86_64               randconfig-a004-20230608   gcc  
-x86_64               randconfig-a005-20230608   gcc  
-x86_64               randconfig-a006-20230608   gcc  
-x86_64               randconfig-a011-20230608   clang
-x86_64               randconfig-a012-20230608   clang
-x86_64               randconfig-a013-20230608   clang
-x86_64               randconfig-a014-20230608   clang
-x86_64               randconfig-a015-20230608   clang
-x86_64               randconfig-a016-20230608   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+for you to fetch changes up to 647c16ac7b15fc8fe6ab679690ac2ffe7c53abd3:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  dt-bindings: pinctrl: qcom,sm7150-tlmm: simplify with unevaluatedProperties (2023-05-12 18:23:51 +0200)
+
+----------------------------------------------------------------
+Qualcomm pinctrl Devicetree bindings changes for v6.5
+
+Simplify remaining bindings with usage of unevaluatedProperties.  This
+will have the same functional effect with less code.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (4):
+      dt-bindings: pinctrl: qcom,ipq9574-tlmm: simplify with unevaluatedProperties
+      dt-bindings: pinctrl: qcom,sc8280xp-tlmm: simplify with unevaluatedProperties
+      dt-bindings: pinctrl: qcom,qcm2290-tlmm: simplify with unevaluatedProperties
+      dt-bindings: pinctrl: qcom,sm7150-tlmm: simplify with unevaluatedProperties
+
+ .../devicetree/bindings/pinctrl/qcom,ipq9574-tlmm.yaml       | 11 +----------
+ .../devicetree/bindings/pinctrl/qcom,qcm2290-tlmm.yaml       | 11 +----------
+ .../devicetree/bindings/pinctrl/qcom,sc8280xp-tlmm.yaml      | 12 +-----------
+ .../devicetree/bindings/pinctrl/qcom,sm7150-tlmm.yaml        | 11 +----------
+ 4 files changed, 4 insertions(+), 41 deletions(-)
