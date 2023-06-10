@@ -2,113 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6F3072A930
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 07:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E821C72A93B
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jun 2023 07:43:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbjFJFmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Jun 2023 01:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        id S232505AbjFJFnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Jun 2023 01:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjFJFmV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 01:42:21 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521133AA3
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 22:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686375739; x=1717911739;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eOxlApEkyVU78Sff7O6cqmjIz15M8xtiRNJIcBgjdc4=;
-  b=jB5CuVzsoTV2K7eeY1ZoJAi2h1PqX13yKGWiJlR6dfRshEq5aScTlkyS
-   AOISDFwwMy9pM1J5l0vSuLK2octaupazqpbTRNv7NH0bjj7L9245+DoG9
-   Xql4xJas4CnHZZR3mL6Jd5LavTiBCYlOZqMSFjHdW7P//CDeCR5AOU7C/
-   HVTpjrQhM243unOOPZVSeqopXInwYGxWPIkWrUIFjufrEozSGmyezLlN+
-   BnPcG9CCFhqPXyD5UENjWJ5naGkMIKtoSgQDDiFtpk2rWKadd5lSAg4r9
-   kcSV7HCKC7jnQjwg3ENbmCgmHePfaBa0irRVP5eJ7PH9vqKR/ThAUBljk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="342412460"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="342412460"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 22:42:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="884812673"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="884812673"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jun 2023 22:42:17 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q7rMe-0009mg-1e;
-        Sat, 10 Jun 2023 05:42:16 +0000
-Date:   Sat, 10 Jun 2023 13:42:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl
-Cc:     oe-kbuild-all@lists.linux.dev, Kent Gibson <warthog618@gmail.com>
+        with ESMTP id S232262AbjFJFnP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 01:43:15 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6513AA5
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Jun 2023 22:43:14 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1b3a82c8887so828515ad.2
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jun 2023 22:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686375794; x=1688967794;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=S0E9TqPlClkIkHO+5O6SHOK2wGvqw8vvKKZgxDdIA58=;
+        b=ehxZ2tJJ+t7XM0Wd0ZMB4vbxxGKlA95yzAAydTbIhcnAKMxqoyCHq3ui1wJzZASSqH
+         3eqG6Z2krUc2SB8KvKVErAhrUHD0sAQtXSlXANHay5xwP8jN7rmR/lZIDKpSJIT7Tqh1
+         +JYJXs50J8bJzUlPGsWEPSK7UuQfEkaX897U6v6U6qmbqa3Wh20oga9vJnBX+FnJMjYt
+         M6AUKH+PssFLRJBhmzgRNBaoxv0HjiymvNUB+mydsDMxToMlO1qvx+ByzjuH8beuvu4X
+         sObK0Km4n+gNnuOlUcmXEjnaIjxsk6ZpUKQiJfA+NZVZXCSIk8xx9YbIYFZRdpkzsKZR
+         tNIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686375794; x=1688967794;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S0E9TqPlClkIkHO+5O6SHOK2wGvqw8vvKKZgxDdIA58=;
+        b=BsDRUIB4uyRnwBIAcwk82RO+fRo+/FqXcX0fH4N5f9nH35eEor1TlaGorxdmuRU7f4
+         lxNXPd/nKf6CJnpVtbGCkpvwzONGd6ecJ3lckjiK8wpSUKWuJGlP4XAcHcOFaNTgOBgs
+         fiXwRJWgJo1CChFquhOEzryhKRA9m7ilg7oJVuV3B9zi/SnUXw4sFvFN3AQGhjhsJG4N
+         nYYxfXmDnI1q+xbqhEQ+NV5m2Aq4jW26YeJxzXrXpddCyiv2qaHGxJcTYMMJS0KRVZM6
+         rJXqjktAG8l5S0ufcIZBqp8OHhs+K7/qY38oyRLjtlWSG9YadyZmTx7S00kTGeZf7jB+
+         gUWw==
+X-Gm-Message-State: AC+VfDzvZ+MbR+FPCcSjoTRbchZXr3hRvLI+R5lVAA+JsjhYT4QkOFuU
+        V+RJkywpYbsPTPcx/+a9AXruNwKAFP4=
+X-Google-Smtp-Source: ACHHUZ4GUhjjnA5tTtq4uGyTDpp5RIaHFVnK+jzOcUyACTrvCYSY+6NtuP2l+uJHTJDXH4DeFtsFjA==
+X-Received: by 2002:a17:903:244a:b0:1b2:409a:3099 with SMTP id l10-20020a170903244a00b001b2409a3099mr1076360pls.58.1686375794211;
+        Fri, 09 Jun 2023 22:43:14 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id z24-20020a1709028f9800b001b016313b1esm4151970plo.82.2023.06.09.22.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 22:43:13 -0700 (PDT)
+Date:   Sat, 10 Jun 2023 13:43:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev
 Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
  documentation on readthedocs.
-Message-ID: <202306101333.92BOpai5-lkp@intel.com>
+Message-ID: <ZIQNbB30BUsirOr1@sol>
 References: <20230610020148.8973-1-warthog618@gmail.com>
+ <202306101327.8CQ451FM-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230610020148.8973-1-warthog618@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <202306101327.8CQ451FM-lkp@intel.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Kent,
+On Sat, Jun 10, 2023 at 01:20:47PM +0800, kernel test robot wrote:
+> Hi Kent,
+> 
+> kernel test robot noticed the following build warnings:
+> 
 
-kernel test robot noticed the following build warnings:
+Ok, not sure what to make of that - why is the test robot concerned with
+libgpiod patches?
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.4-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The files in the patch aren't ignored by the .gitignores in the libgpiod
+tree, so it must've applied the patch to the linux tree - which doesn't
+like dot-files. That wont end well either way.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kent-Gibson/doc-add-configuration-to-generate-doxygen-documentation-on-readthedocs/20230610-100330
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230610020148.8973-1-warthog618%40gmail.com
-patch subject: [libgpiod][PATCH] doc: add configuration to generate doxygen documentation on readthedocs.
-config: arm-randconfig-r046-20230608 (https://download.01.org/0day-ci/archive/20230610/202306101333.92BOpai5-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout linus/master
-        b4 shazam https://lore.kernel.org/r/20230610020148.8973-1-warthog618@gmail.com
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+Can we tell the test robot not to try paddling around in the libgpiod
+pool, e.g. ignore patches with the [libgpiod] prefix?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306101333.92BOpai5-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> .readthedocs.yaml: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/.gitignore: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/Makefile: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/run_tags_test.sh: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/tags_test.c: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/.gitignore: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/Makefile: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/config: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/settings: warning: ignored by one of the .gitignore files
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Kent.
