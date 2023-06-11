@@ -2,214 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4D172B1A4
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jun 2023 13:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A313472B1E1
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jun 2023 14:40:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbjFKLWF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Jun 2023 07:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37880 "EHLO
+        id S232733AbjFKMj7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Jun 2023 08:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233606AbjFKLWE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Jun 2023 07:22:04 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7831730
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Jun 2023 04:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686482523; x=1718018523;
-  h=date:from:to:cc:subject:message-id;
-  bh=wD56mfUjMwYUL/WrIr3Kc2nHf4ffnBNKgvZOgts+bug=;
-  b=O2i1uyHH/tB+slyzqzbckcMGIR8w2v1pvSAyQTEMPFH/FJW9nVJYOwHp
-   RWuLWIHmHaky4sX6fLzC/2PH2GdyBEi5bHXxdz1v4fJRbsj4MvSe0bsHq
-   hnAnPtYeccQ+0xo2STc8ZK0Lz5UoS+ybZYaMGZhwqBG3n5DUEWpIJeJb0
-   l20fO/TaAieyx8VbX1rmDlR2AOj6RsME4JxmKPJ25rF4tt8C7EJr3D5G0
-   7QVGqprND1j3I/xQa8Bo8YFUQSuPCZwCXuO8FWJujzDBQrU5p/y3rLfya
-   ucvGEugmFrkpIl3mUBzHQ3TK3RkhnHqSrq9umBPnjmtsDRe0qWkl+7Kgg
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10737"; a="444220838"
-X-IronPort-AV: E=Sophos;i="6.00,234,1681196400"; 
-   d="scan'208";a="444220838"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 04:22:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10737"; a="885095456"
-X-IronPort-AV: E=Sophos;i="6.00,234,1681196400"; 
-   d="scan'208";a="885095456"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2023 04:22:01 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q8J8y-000ApY-2T;
-        Sun, 11 Jun 2023 11:22:00 +0000
-Date:   Sun, 11 Jun 2023 19:21:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 4e739807ca96e56d0a7f6256f13c4ff416850ef9
-Message-ID: <202306111944.H7YCtAiA-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229624AbjFKMj6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Jun 2023 08:39:58 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE342E63;
+        Sun, 11 Jun 2023 05:39:57 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3f9e36e5ea8so11065451cf.3;
+        Sun, 11 Jun 2023 05:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686487197; x=1689079197;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ddaw/98usWKqo9LXEQ3oXd23WqC3x1yMaUSTSAxj6Po=;
+        b=Alqi4glh/pcDbLn8cBdVsqXSqxuuGz6qLo270zjsz4o29HCxIoCgO3RIwwgtv9RWY8
+         pQQpBXFj6TOJlg23zFA5dp4dt2bauW8iMO5gq6bXMZo0cuWb/viGOIyavT1rZx/XOQik
+         +S/G35jELWmBs0/4xZ1jjMwKXhnTEpxZwIWZcnTLT2rDNAOl3PkQhjsiPS44Gt1Kw3Bp
+         XiGno0wZuw+HkwsAGYtIU2qR4L4SVMd29+rzqmPqcUUhQuk5BRybXc3lkY/bNBfj95FO
+         hdLE7Pl+DIZ0hFjXz8+4BqsPa8elh8nEqyacA/HCM85WmqaOg0dwSmxPckSek2qiIQ7h
+         fYSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686487197; x=1689079197;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ddaw/98usWKqo9LXEQ3oXd23WqC3x1yMaUSTSAxj6Po=;
+        b=X+hIFeAppT97AMcBwY8CRw9QExx7XIpW+MeZelYSj5RP+s1Uw2+LfK2ugaceTg+TZB
+         JRcjSD9xg2gBPzbFZsG1VhaWAPq+iQHRKqnnYVG6k/ieKV2Z6FtG0H2hljCgJXD+Lrgw
+         OH6kx8sznzWNDEk4HBidPz1Ejxv+ToiX47m3wjCIOMYPOeQw39UK88nO9OAM7VfFUict
+         5x0cTpjzV8z0NzNTfMN/MrbORWpsL3DtQcRdNvgcSRX/9LIij82eiPLk8baBw2wAuMQ0
+         7rfgFb4aU1FsnGHdXIzKfibRI9I3fwCnNurBkkc3nEwfDEbWuL13sOVw5qlEclyFSuV8
+         7TYA==
+X-Gm-Message-State: AC+VfDyjs72/VhwropdHOxNsOcPIWS3t8L2Cq7BJXtOPuUU0u/1sf747
+        UNXtPl0K8Yq0zsjz3mCLq3A=
+X-Google-Smtp-Source: ACHHUZ5dYz6T2L3E4eMVDIjz2tj7aIB3Oi16Wg+I1xH70IOUG8m+FjkltpD5kBNTc3DA9c2pfSNfbA==
+X-Received: by 2002:ac8:7f03:0:b0:3f9:cb01:9da9 with SMTP id f3-20020ac87f03000000b003f9cb019da9mr7941277qtk.38.1686487196880;
+        Sun, 11 Jun 2023 05:39:56 -0700 (PDT)
+Received: from [10.1.97.4] (rrcs-24-39-76-222.nys.biz.rr.com. [24.39.76.222])
+        by smtp.gmail.com with ESMTPSA id bq13-20020a05622a1c0d00b003f872332a9asm2603444qtb.64.2023.06.11.05.39.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Jun 2023 05:39:56 -0700 (PDT)
+Message-ID: <22a21176-f2e2-bce5-2223-97cb095162c5@gmail.com>
+Date:   Sun, 11 Jun 2023 07:39:54 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] gpiolib: demote the hogging log messages to debug
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230605125248.279921-1-brgl@bgdev.pl>
+ <CAL_JsqKczF9yYHWjqneBv-y+Qv+O7AkX4gwVG87+aPPazKxtDw@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <CAL_JsqKczF9yYHWjqneBv-y+Qv+O7AkX4gwVG87+aPPazKxtDw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 4e739807ca96e56d0a7f6256f13c4ff416850ef9  Merge tag 'qcom-pinctrl-6.5' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt into devel
+On 6/9/23 08:47, Rob Herring wrote:
+> On Mon, Jun 5, 2023 at 6:53 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> Drivers should be silent when they work correctly. There's no reason to
+>> emit info messages when GPIO lines are hogged. Demote the message to
+>> debug.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> Suggested-by: Kent Gibson <warthog618@gmail.com>
+>> ---
+>>  drivers/gpio/gpiolib.c |  2 +-
+>>  drivers/of/unittest.c  | 16 ++++++++--------
+>>  2 files changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index a7220e04a93e..e4515bda8915 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -4243,7 +4243,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+>>         /* Mark GPIO as hogged so it can be identified and removed later */
+>>         set_bit(FLAG_IS_HOGGED, &desc->flags);
+>>
+>> -       gpiod_info(desc, "hogged as %s%s\n",
+>> +       gpiod_dbg(desc, "hogged as %s%s\n",
+>>                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
+>>                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
+>>                   (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low" : "");
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 2191c0136531..0060334a98a7 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -1849,19 +1849,19 @@ static void __init of_unittest_overlay_gpio(void)
+>>          * driver is registered
+>>          */
+>>
+>> -       EXPECT_BEGIN(KERN_INFO,
+>> +       EXPECT_BEGIN(KERN_DEBUG,
+>>                      "gpio-<<int>> (line-B-input): hogged as input\n");
+> 
+> As debug messages are normally off, I think you can just remove these.
 
-elapsed time: 971m
+This patch is an example of exactly why the message level is the first parameter
+passed to EXPECT_*().  The test results are then _always_ valid, not just
+_normally_.
 
-configs tested: 136
-configs skipped: 9
+-Frank
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> 
+> Rob
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r016-20230611   gcc  
-alpha                randconfig-r035-20230611   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     nsimosci_hs_defconfig   gcc  
-arc                  randconfig-r031-20230611   gcc  
-arc                  randconfig-r036-20230611   gcc  
-arc                  randconfig-r043-20230611   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                                 defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                        keystone_defconfig   gcc  
-arm                         lpc32xx_defconfig   clang
-arm                            mmp2_defconfig   clang
-arm                             mxs_defconfig   clang
-arm                          pxa3xx_defconfig   gcc  
-arm                            qcom_defconfig   gcc  
-arm                  randconfig-r046-20230611   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r005-20230611   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r001-20230611   clang
-hexagon              randconfig-r041-20230611   clang
-hexagon              randconfig-r045-20230611   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230611   gcc  
-i386                 randconfig-i002-20230611   gcc  
-i386                 randconfig-i003-20230611   gcc  
-i386                 randconfig-i004-20230611   gcc  
-i386                 randconfig-i005-20230611   gcc  
-i386                 randconfig-i006-20230611   gcc  
-i386                 randconfig-i011-20230611   clang
-i386                 randconfig-i012-20230611   clang
-i386                 randconfig-i013-20230611   clang
-i386                 randconfig-i014-20230611   clang
-i386                 randconfig-i015-20230611   clang
-i386                 randconfig-i016-20230611   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch                 loongson3_defconfig   gcc  
-loongarch            randconfig-r012-20230611   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                          hp300_defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                 randconfig-r003-20230611   gcc  
-m68k                           sun3_defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r001-20230611   clang
-mips                     decstation_defconfig   gcc  
-mips                           ip32_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
-mips                    maltaup_xpa_defconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2        buildonly-randconfig-r002-20230611   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r004-20230611   gcc  
-nios2                randconfig-r025-20230611   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc             randconfig-r006-20230611   gcc  
-openrisc             randconfig-r013-20230611   gcc  
-openrisc             randconfig-r024-20230611   gcc  
-openrisc                 simple_smp_defconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc       buildonly-randconfig-r003-20230611   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r011-20230611   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 canyonlands_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                       ppc64_defconfig   gcc  
-powerpc              randconfig-r023-20230611   clang
-powerpc              randconfig-r026-20230611   clang
-powerpc                      tqm8xx_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv        buildonly-randconfig-r005-20230611   clang
-riscv                               defconfig   gcc  
-riscv                    nommu_k210_defconfig   gcc  
-riscv                randconfig-r021-20230611   clang
-riscv                randconfig-r042-20230611   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230611   clang
-sh                               allmodconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                           se7712_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r002-20230611   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r006-20230611   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230611   gcc  
-x86_64               randconfig-a002-20230611   gcc  
-x86_64               randconfig-a003-20230611   gcc  
-x86_64               randconfig-a004-20230611   gcc  
-x86_64               randconfig-a005-20230611   gcc  
-x86_64               randconfig-a006-20230611   gcc  
-x86_64               randconfig-a011-20230611   clang
-x86_64               randconfig-a012-20230611   clang
-x86_64               randconfig-a013-20230611   clang
-x86_64               randconfig-a014-20230611   clang
-x86_64               randconfig-a015-20230611   clang
-x86_64               randconfig-a016-20230611   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r033-20230611   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
