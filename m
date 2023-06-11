@@ -2,161 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2879272AF76
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jun 2023 00:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0648772B043
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jun 2023 06:50:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbjFJWVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Jun 2023 18:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
+        id S229583AbjFKEuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Jun 2023 00:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjFJWVc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Jun 2023 18:21:32 -0400
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2052.outbound.protection.outlook.com [40.107.105.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EB435A9;
-        Sat, 10 Jun 2023 15:21:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CHUPoe26JP4KKeYEAqUju3M8UgysECKZgH2ZJxFktRgNNJyjIsqwgfXUN3hZZNjiSwfDAT/2BLCzGnutexLUeTRZoMut3ubGSEzyuaiG/HrE+1U4nN4rhE4xzpxeHQ9sNd69zoCpwj1y0+WTNNKFJZWrOuNN5V5TXKwCquhiO2Sl6XrCdMfqsNcDbxBELHzETpknLUCINH472EOmEdNPoXMlwp9a2kOZTfuL14qJWZ6d1ZisA6QnAyhuiFy89iZ/3LjMlx3JPpU/59lOerIxtc2QWPEZyCxPw6lqh4sa65kkys6lth1gDXdAoU0PG+MEYHvrhrmfTjltcEws408vRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WKSZO/0Qi5yRSL/CE20ZtCxT6d4ihwnB8xx0vBz0nME=;
- b=hZ8ySEBba+mM3U/rY2J00mr7RS3eJ/u+LOp9X0lH/c5UFM5mpEPWYSiUm2HtvGyHP2CkWh1Wjt2hUE9C8k/EHPnixMzXzTk50rxbczlABwD+ulucPplMz+sw3XUnC1kt8/3qM6Ddl6TR/1eT/hi7k2ZoqRXU522/jkqA6LoUaep30aqwtBsCnaB2SgfbxEYoVrf+DOWpeh1z0s7iiDCfSl1ecBbGcidbsRgMnTSVZBsNqBmvUzDA6RCeFx3JVRkmwQedGA2WBUX8KMLWdk5OqFnDKpc4T6XskQwZl/2NGT8zZ0QhmUiNLHRv0cMnKfW0xpU4BWOeHuVzToLdr3XbQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WKSZO/0Qi5yRSL/CE20ZtCxT6d4ihwnB8xx0vBz0nME=;
- b=RoDL4XiIn7u9sWubX5Tv9b9JhwdyzZQ+DjWlylErVP/sZGtZ7S8ZhWWHQY/faLbe5ty01hEvQ3DYMIqfx73FGQJQW74bm1LZVhsognmvJmOM63lguu4qv12bBMm0QL8qm9OvYD+fAQpZyCw0D8eX9/1YAH1vX3LJLqeXYOApBW8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by AS8PR04MB7509.eurprd04.prod.outlook.com (2603:10a6:20b:23e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.29; Sat, 10 Jun
- 2023 22:21:25 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::c40e:d76:fd88:f460]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::c40e:d76:fd88:f460%4]) with mapi id 15.20.6455.030; Sat, 10 Jun 2023
- 22:21:24 +0000
-Date:   Sun, 11 Jun 2023 01:21:23 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?utf-8?B?RmVybuKUnMOtbmRleg==?= Rojas <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
-Message-ID: <20230610222123.mzmfjx7zfw4nh2lo@skbuf>
-References: <20230425195002.fls5cmwolyrslpad@skbuf>
- <b7779674-c3ac-e0ab-3ca8-db1ec5953a97@seco.com>
- <20230426105140.t4yqv6irtjcwptm5@skbuf>
- <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
- <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
- <20230429172422.vc35tnwkekfieoru@skbuf>
- <c81d23b6-ed22-0b37-d71b-ddce9d5d58eb@seco.com>
- <c2f928d2-25f6-0e31-9ab3-9d585968df1b@seco.com>
- <20230522150010.q5zndfwcuvrb6pg2@skbuf>
- <22a28a6f-2c84-a6b1-bb57-a269af34c993@seco.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22a28a6f-2c84-a6b1-bb57-a269af34c993@seco.com>
-X-ClientProxiedBy: FR2P281CA0154.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:98::9) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
+        with ESMTP id S229500AbjFKEun (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Jun 2023 00:50:43 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980A426AD;
+        Sat, 10 Jun 2023 21:50:40 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35B4h4KM009524;
+        Sun, 11 Jun 2023 04:50:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=0CNloHrquHQMvmc+4hDQ+f1JhsN0G1wIV9bJDTOOqQs=;
+ b=HayVU8gJor39utzAXsJYRHY1iPVlDbuo3ddgqxLXYYCX3Ql8cWmPedcoltOFDhptXlg+
+ vjuqREoCk23Rs7gPdMcJWfkj4O2ZTpdYoMvfsza2c7Ahu2bW6jKGbdNr+gLIuT+E2dGi
+ eGAZJdh4rWEnokwDidi8mgGUctGux1B8UDdO8f7yoHnru8uZjgUzmgSNQ1x2Dx2IyWOM
+ B5XkoGk0BMEGgCvoK1fiYB9yXvI4iyr9muPJopZHT7U5+MJ8OA/6Dkp8XgLWGUORPohL
+ DqtIxeBeW4+yhH84sJO4Zqv/N7UhDpwnfFbiw0leOQDcn8D7Ef2fquRbFWuKpX+VhB+4 bQ== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3r4hxns6mw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 11 Jun 2023 04:50:07 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35B4o6OJ005158
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 11 Jun 2023 04:50:06 GMT
+Received: from [10.216.24.161] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sat, 10 Jun
+ 2023 21:49:59 -0700
+Message-ID: <d073f2de-559e-7e76-2c38-114cda2d9948@quicinc.com>
+Date:   Sun, 11 Jun 2023 10:19:56 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|AS8PR04MB7509:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4dd344d-f310-4ceb-450b-08db6a0106c1
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cxfts+6W42RNPe6jlSWqAJGTudt6/0I/GD3Hva0Bh/KuSt7l3jvoWPjhsJEEmk7ycggr8QnLPSvtx3dmU5w+oeOnEi6Md+Vut4yizvsWIU3J74CiTCvyk7/zFPc6L1bh7iNZaAMVnHotvsk7vL4NijccXvWRQwHe1VJmvWmD72DrTWEaeBhwGyjMd6fuH6fhc1jBpcmlN4tGAUCNWsmN4DTia68nx3qoWASphEe6X+Z69EL4ksed48tUpzhxHAuxN5/AjifOjVK5v5d1owjH8s8bs6QpcbTqQSvisYIkKIXYEqEndrn/p6g8UY890pjJLQdXU3I+RS9kxm+B3EMf8izRiHrvuwPdUwRJk1WzeiHErhR6/4TJ1yyr3JF8Vz8sxVZmUsM2BsdlRxkt1B1KKxgm+vjmMP05NmoLXYyQhOWmyP8Gb+VLgXj8HhTqxlSCuK8ErKVCeLLKaosalCuvjyDK5Ji4kHeN4Wh50vgktim9UdNOqBN0L5HZzt8vY5fDp82ga26Ni1i4QN2SWKLG+zB7CfPX1alALmTsjhBzjyb5RkSiFA0lderf55Kz2iYZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(376002)(396003)(39860400002)(136003)(366004)(346002)(451199021)(6916009)(4326008)(66946007)(66476007)(66556008)(186003)(478600001)(54906003)(4744005)(2906002)(33716001)(8676002)(316002)(41300700001)(86362001)(6486002)(7416002)(6506007)(1076003)(9686003)(53546011)(44832011)(8936002)(5660300002)(26005)(38100700002)(6512007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1K0qZT4SWw85bGNlvihoVn81pfaLjs3/EsQ91pwf+VwWYnuzKiVw3n/Rgq5c?=
- =?us-ascii?Q?k1NKttIl0Dw7PUSfEFUiI8s48ekx8dbHzeXmhETf/rM27bt2SenI9Ktzf2Wk?=
- =?us-ascii?Q?Pcru1IlauYstm66X9vQKY3nppMPznbV7WLBY5N1EqK6MSCDowgbvVt5s5UJk?=
- =?us-ascii?Q?QpcH9xQlwy7SmklcbT3NsBgk7AATekEOxkNjKWEhFZw3bBi8g713sHadOwYv?=
- =?us-ascii?Q?2UOin/A6GN6gh00BgB05nxSgB5W7LAwXfnVEqEzUf5XpgQ98EDwIaFD+gnjl?=
- =?us-ascii?Q?3Ji7xku/KqTt8cOxsLoxdOcRSlOmbM7jZsz6aL4Iw9tT+uhlNEPZulJTJ0po?=
- =?us-ascii?Q?id0xiSw+UrqI52ut7avrl9ZNpLyxBXdqKFpHcgyg9WJcbO4iXXO4UffwDcUT?=
- =?us-ascii?Q?vnGL07zb3OsWPmHarCh1Txt5+s2jpZsvAyKkTA8Jdfh3KTsh+jxLI9XY8gTM?=
- =?us-ascii?Q?fhndONoqkChdUA5+7oDN5SO0mZ+sQdEMBqBV9nemasDfBKkWkDUfAoMncEZ9?=
- =?us-ascii?Q?6ZIN5zyDcAbtzzS+pOLTXqW3xx/jmVB2owXNjFL6x9hCUf8B8r9PAhYcV3SZ?=
- =?us-ascii?Q?RZC6+ccAr5Eke+Zik/Bc1pU9x+bE6FnxT4xSL4+qWaXTK/v4TDt7MAQTMvWs?=
- =?us-ascii?Q?jQPhWJKopZp70Ir+wuQaImOTmz1RbnkBkvPXCTVA4ym32vcsZ+HUP76BcUGm?=
- =?us-ascii?Q?+2wOBUsPnRhKinqU3bSyFB4uHN0XZqtllAh4tSBl652NxJDqCJ/M13eYVnZN?=
- =?us-ascii?Q?bvMXVpyP09EQf+f8tezT5/tRN5tT4PUgo6YnGjnJO8MT4l12iA3xbPXPkAUg?=
- =?us-ascii?Q?1n5LVNuUOD6AYJv5yyVofXwV+VBJOTZWV2t7T03pGg4NZ4j/5tYZBujej6/L?=
- =?us-ascii?Q?GdqvjEiM2XQLZ6GoJdWjDl8UpPLExkqXgo9Ygr5H0+rUF03TZ3B0Ur8ad0oj?=
- =?us-ascii?Q?nGyyivymSkhHE9qHGgtAWG/OfBzPb/bBE1xwjndCW50ggE2DTDhZWm5jybpk?=
- =?us-ascii?Q?UpYBG1JvkIw3ddS1ueA0mzQwUxXs82d+f3dhTzuQ9d7oyYWdsXHPB/nzvW/s?=
- =?us-ascii?Q?uS1iALC5Ev2M9PR1Up7ylNLwiMsYx90hlI6apY8Gyk3N7rcmBe2GfaVMaIoE?=
- =?us-ascii?Q?sfCeNyZeFdYbB6zkqElA+HJ8le5gOPUkpUp27mHJPhUPuTWfJ2+KHqCJWZC8?=
- =?us-ascii?Q?ux4Q3gl+dEsyqKqKo4UHrykjIZ6fNxM8J4FxQ2w1wKHHOpk2EKPiJ0fWJzdU?=
- =?us-ascii?Q?dT0jdAspd61n5dZ5Ipvi+5HOiW3gI23ZSmUU5Aqx7h8zIJfslGoEjgjiVb7e?=
- =?us-ascii?Q?oIaHUNJ40EQkI+kOQ0kmXYLRRaMQGSOKKLki3LsFuILRegWfp3tpTjpvYCzA?=
- =?us-ascii?Q?9QQprOv/92w2SGuBFLyHyEWUtc7F30cgSEyeBWFwGYcK2CSg55IkZyq6mF5S?=
- =?us-ascii?Q?h9UaAMlpcmnTEeL0gb9d68RBjZKV5mv/Aa7AxanRzFBD+Iid08CyPBhstnbK?=
- =?us-ascii?Q?CFoXgjZjeIVmCY7/GNYhj+x1mMQ9OyOZM3zZ5ZYUTYF/+j7NFPJ5ja3D2g1K?=
- =?us-ascii?Q?xyqjwaGnNDUUDVOmICaw1wKE04IkjT0OfV36WmoqDC1XQbQym8XrODoTmvSP?=
- =?us-ascii?Q?xQ=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4dd344d-f310-4ceb-450b-08db6a0106c1
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2023 22:21:24.7154
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2Y5AMagOdMBQtrKet/e6fYJHrZIedqOJJ2l6rlV1LXHf0PJkNyrFO5YrxTxLcCU/8ixHaqa3tKoqBkzDElQAWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7509
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [v9 2/8] clk: qcom: Add Global Clock controller (GCC) driver for
+ IPQ5018
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
+        <krzysztof.kozlowski@linaro.org>, <andy.shevchenko@gmail.com>
+References: <20230608122152.3930377-1-quic_srichara@quicinc.com>
+ <20230608122152.3930377-3-quic_srichara@quicinc.com>
+ <7e915a4b-d2e8-c162-2e45-d08aced5a5d1@linaro.org>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <7e915a4b-d2e8-c162-2e45-d08aced5a5d1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: SFyXHq_2eFwcKahelHTQytglkQvjhxIw
+X-Proofpoint-GUID: SFyXHq_2eFwcKahelHTQytglkQvjhxIw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-11_02,2023-06-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ mlxlogscore=455 priorityscore=1501 spamscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2305260000 definitions=main-2306110044
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Sean,
 
-On Fri, Jun 09, 2023 at 03:19:22PM -0400, Sean Anderson wrote:
-> On 5/22/23 11:00, Vladimir Oltean wrote:
-> > On Mon, May 22, 2023 at 10:42:04AM -0400, Sean Anderson wrote:
-> >> Have you had a chance to review this driver?
-> > 
-> > Partially / too little (and no, I don't have an answer yet). I am
-> > debugging a SERDES protocol change procedure from XFI to SGMII.
-> 
-> I'd just like to reiterate that, like I said in the cover letter, I
-> believe this driver still has value even if it cannot yet perform
-> protocol switching.
-> 
-> Please send me your feedback, and I will try and incorporate it into the
-> next revision. Previously, you said you had major objections to the
-> contents of this series, but you still have not listed them.
 
-And if SERDES protocol switching was not physically possible, would this
-patch set still have value?
+On 6/9/2023 7:22 PM, Konrad Dybcio wrote:
+> 
+> 
+> On 8.06.2023 14:21, Sricharan Ramabadhran wrote:
+>> Add support for the global clock controller found on IPQ5018
+>> based devices.
+>>
+>> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+>> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>> ---
+>> [v9]       Sorted the headers and cleaned the unwanted ones
+>>             Added trailing comma for .parent_hws member
+>>             Removed the hunk touching ipq5332 kconfig  (unintentionally)
+>>
+> You did not address the comments I made in v4.
+> 
+> https://lore.kernel.org/linux-arm-msm/21a5642c-e6e5-9323-7db1-383a18616ac0@linaro.org/
+
+  oops, sorry, i guess, missed it, will send with fixed.
+
+Regards,
+  Sricharan
