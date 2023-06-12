@@ -2,105 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 247E672CCEC
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A74F72CCED
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236885AbjFLReQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 13:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
+        id S236449AbjFLRft (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 13:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235126AbjFLRd5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:33:57 -0400
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7A12D74
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 10:31:05 -0700 (PDT)
-Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-78a03acc52aso47504241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 10:31:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686591041; x=1689183041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=72REXKyRvB2hUg8itJ544H91wzgvR4XtcD6murg8e+0=;
-        b=3zpmA0GSaPuAjdfPArP5lc8CbK7XhqtsERH8HGZ3cL1FCzFbodPTElgoHLAjBEm8xv
-         rcTWF5jXgBSPaqAg9o3S/A8EkQe4/AsG+EjHLiCb7ZyNQ9NucRvGbqOaE5ECCzHkcuiG
-         I4o2b8bC2XbA3zcP0ULVVAp2GznV8vdCe8aBbuyVMR66DU6cyR/w+Jx/msgyaAWrVUFl
-         tb3LDA7xTRLQapPkEgfE0e+F2WTKwOJF/tJp8QKmJy55ft1bwwa5wMPZBL0foSDsXbip
-         7PMErJb+KflAgn3EF6XxHMaKAVIHhcs8J93XwVd4gdXlXPJkppMrkoD9XCdAMs3H4zQa
-         wRLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686591041; x=1689183041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=72REXKyRvB2hUg8itJ544H91wzgvR4XtcD6murg8e+0=;
-        b=DRKyCYmInRquatdPDCK7776BoHdite9GYvb/RPcToecfphfaE0/RxuwZSQv9Qg4OXC
-         d55qQPf6q5bv/K9/WYR7Uk/x/W0TsaKTvb06JdPtwKcumGjlkuqKxIixiCfUye5DRTaQ
-         zFKdv1vcG1fF9eKZDGCcSiSEP1Hq1lcmVrha0Cehdpl8X359XqGYzHmB/76jYNnTmuu4
-         A1VgHy1w+P0yhcorK4dkURTwTBX8tW4Om8Qr1lx4heFoLKhHuUwdgOhAdf7sS1vNiXQ3
-         HO/jzf42ojZhBWJZToeEg4szcWypxL8/N98Q8uR1wAah3QpmM3Bx//Xo7N8gCWKlmgAI
-         T3wA==
-X-Gm-Message-State: AC+VfDwZqlEVEd0d51Lgsh3RzaM80O8dUVb61RbyX4vSuLZEhyx5/Vlw
-        +2LUldlXrYx1iw2MoQFmuCFLlBMDtc1jbPbj+Q9c21QlrJWfg/8/
-X-Google-Smtp-Source: ACHHUZ4cd+EHaAzHjZ4e0Qfuj401J+YyzeSA5jOniMVZlH/poJ5eBGhGFxCfeKS8HPWyBthcutKdry+Ao9xZOz4BkUs=
-X-Received: by 2002:a67:f60c:0:b0:43d:c290:bac with SMTP id
- k12-20020a67f60c000000b0043dc2900bacmr4329912vso.15.1686591041117; Mon, 12
- Jun 2023 10:30:41 -0700 (PDT)
+        with ESMTP id S236559AbjFLReg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:34:36 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6CA4497;
+        Mon, 12 Jun 2023 10:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686591145; x=1718127145;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bVDfAUTAXFV5BfIrJ9ItRq/i2wyOxOvXPgprmaXrves=;
+  b=ZMiIjCS5brL9o0viDla8XGuzBSEy0CyZaijcwfnkTOsGiUFdGv38ODs+
+   rBWaEhPvGR1GmWb9fDPDor+9e1l5QFM9lBdQ9pqxBW6RJUuEADgvY1sh1
+   pfjaWqHmLZV51BQPNHa0VWNQ4Uj/cE0dK1/1J97gBTgkj8SUTYy8Raa3Q
+   4LwBXW9TTKWjNfRb53F5VhdPEI9d3rWjyz4uY/5hwJ6YTYqPwSEW8++OH
+   EDoDWY97XZte47wFtkg2VaMc6g/Xu4mfMCQnmMegt2iEff5tuVKNUzZ2/
+   qIHkm8r+u9Mxfs9Z0Tg58XWkb/WeRDw20CEBCnILSgiyZTsKs/btNBNEq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="338475232"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="338475232"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 10:30:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="744397459"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="744397459"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2023 10:30:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q8lNW-003GWA-2L;
+        Mon, 12 Jun 2023 20:30:54 +0300
+Date:   Mon, 12 Jun 2023 20:30:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux@ew.tq-group.com" <linux@ew.tq-group.com>
+Subject: Re: [rfc, rft, PATCH v1 1/1] gpio: aggregator: Introduce delay
+ support for individual output pins
+Message-ID: <ZIdWTvOWQrMWuy39@smile.fi.intel.com>
+References: <20230608162130.55015-1-andriy.shevchenko@linux.intel.com>
+ <4808746.GXAFRqVoOG@steina-w>
 MIME-Version: 1.0
-References: <20230610020148.8973-1-warthog618@gmail.com> <CAMRc=Mct7uByAbiHxQJRQTXnGEkty28keX1wjhR+aHgpOa1EQA@mail.gmail.com>
- <ZIdKh3kAEZVrOYIL@sol>
-In-Reply-To: <ZIdKh3kAEZVrOYIL@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 12 Jun 2023 19:30:30 +0200
-Message-ID: <CAMRc=Mc8S7ynaZXaMO4izWBccT8DmCTDP3pSjvuiob2rhTsCqg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
- documentation on readthedocs.
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4808746.GXAFRqVoOG@steina-w>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 6:40=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Mon, Jun 12, 2023 at 06:27:42PM +0200, Bartosz Golaszewski wrote:
-> > On Sat, Jun 10, 2023 at 4:01=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > +# Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-> >
-> > I would stick with regular SPDX-FileCopyrightText line that we use
-> > everywhere else and - while I understand that I maintain the project -
-> > this file is authored by you so it's only right to have your copyright
-> > here.
-> >
->
-> Yeah, this is an old patch prior to that change and I haven't updated
-> it - just sent it as is since that is what has been used to generate the
-> rtd to date, and you mentioned you wanted to look into updating the
-> docs.
->
->
-> > This works well with sphinx-build, thank you for doing that. I'm
-> > actually looking into using the breathe[1] and exhale[2] extensions
-> > for sphinx for translating doxygen into nice sphinx docs. This is a
-> > good fundament to build upon.
-> >
->
-> That was the idea.  I thought I had posted it back during v2
-> development, but apparently not.
->
-> So you want the copyright headers updated?
->
+On Fri, Jun 09, 2023 at 08:40:15AM +0200, Alexander Stein wrote:
+> Am Donnerstag, 8. Juni 2023, 18:23:08 CEST schrieb Andy Shevchenko:
+> > The aggregator mode can also handle properties of the platform, that
+> > do not belong to the GPIO controller itself. One of such a property
+> > is signal delay line. Intdoduce support of it.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > 
+> > I don't like the idea of gpio-delay or similar. We have already GPIO
+> > aggregator that incorporates the GPIO proxy / forwarder functionality.
+> > 
+> > This one is RFC because:
+> > 1) just compile tested;
+> > 2) has obvious issues with CONFIG_OF_GPIO;
+> > 3) contains ~5 patches in a single change for now;
+> > 4) requires additional work with blocking sysfs for this;
+> > 5) requires some DT bindings work;
+> > 6) ...whatever I forgot...
+> > 
+> > Any comments are appreciated, and tests are esp. welcome!
+> 
+> FWIW: Replacing CONFIG_GPIO_DELAY=m with CONFIG_GPIO_AGGREGATOR=m works as 
+> well on my platform.
 
-Yes, please.
+Thank you for testing!
 
-Bart
+> But I'm not sure if it's worth the additional complexity for gpio-aggregator 
+> to replace gpio-delay.
+
+The (main) problem is that it does not scale. Today we have RC chain, tomorrow
+(hypothetically) LC or LRC. Are we going to create (repeat) the similar approach
+for each single case?
+
+I would probably tolerate the existence of the gpio-delay, but we already have
+GPIO forwarder, which implements 70% (?) percent of gpio-delay already.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
