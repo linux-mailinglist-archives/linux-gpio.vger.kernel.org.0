@@ -2,67 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A74F72CCED
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E18C472CCF5
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:36:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236449AbjFLRft (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 13:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
+        id S235816AbjFLRg2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 13:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236559AbjFLReg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:34:36 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6CA4497;
-        Mon, 12 Jun 2023 10:32:25 -0700 (PDT)
+        with ESMTP id S230165AbjFLRgF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:36:05 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A163AA5;
+        Mon, 12 Jun 2023 10:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686591145; x=1718127145;
+  t=1686591307; x=1718127307;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bVDfAUTAXFV5BfIrJ9ItRq/i2wyOxOvXPgprmaXrves=;
-  b=ZMiIjCS5brL9o0viDla8XGuzBSEy0CyZaijcwfnkTOsGiUFdGv38ODs+
-   rBWaEhPvGR1GmWb9fDPDor+9e1l5QFM9lBdQ9pqxBW6RJUuEADgvY1sh1
-   pfjaWqHmLZV51BQPNHa0VWNQ4Uj/cE0dK1/1J97gBTgkj8SUTYy8Raa3Q
-   4LwBXW9TTKWjNfRb53F5VhdPEI9d3rWjyz4uY/5hwJ6YTYqPwSEW8++OH
-   EDoDWY97XZte47wFtkg2VaMc6g/Xu4mfMCQnmMegt2iEff5tuVKNUzZ2/
-   qIHkm8r+u9Mxfs9Z0Tg58XWkb/WeRDw20CEBCnILSgiyZTsKs/btNBNEq
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5WMQQbOARw55yzbpOK/Pk6hobT1SHUO/FQ3x65ntFcQ=;
+  b=j2RxsKNG1eZMS+lULufT1KUkd+JB+Uy804emRn+Mai3nJF4P+C/GQVzm
+   x42GpnMir6nrEGEVfV4dpqYLyi4FQHC4NcV+4bp5MAsuvm8sESupq0GAD
+   vH971/LPpRHL2CACtX4N0fMO9rxa6hJAfM8a0CCBe/BvMMWY+QWwhfFCG
+   h/0nhjsBWoGhyWCJUC6TkO4r4NobyRZ9C9ZLEzg185I4sHnzlVCAgxwml
+   oXXY845CNhlFfYl9N1J6noXWVpJGLhzm/23Q0Mgv+CpUC3ayxEM+Nel4A
+   xKzxWumlnOggIkfWxJJfJmpdUak3EyYlu4+5PkdwYMq9sJQek/xWMGe4+
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="338475232"
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="337749672"
 X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="338475232"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 10:30:58 -0700
+   d="scan'208";a="337749672"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 10:32:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="744397459"
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="776474295"
 X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="744397459"
+   d="scan'208";a="776474295"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2023 10:30:56 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 12 Jun 2023 10:32:38 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q8lNW-003GWA-2L;
-        Mon, 12 Jun 2023 20:30:54 +0300
-Date:   Mon, 12 Jun 2023 20:30:54 +0300
+        id 1q8lPB-003GXT-0L;
+        Mon, 12 Jun 2023 20:32:37 +0300
+Date:   Mon, 12 Jun 2023 20:32:36 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@glider.be>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux@ew.tq-group.com" <linux@ew.tq-group.com>
+        Alexander Stein <linux@ew.tq-group.com>
 Subject: Re: [rfc, rft, PATCH v1 1/1] gpio: aggregator: Introduce delay
  support for individual output pins
-Message-ID: <ZIdWTvOWQrMWuy39@smile.fi.intel.com>
+Message-ID: <ZIdWtBXLl2iJtWVF@smile.fi.intel.com>
 References: <20230608162130.55015-1-andriy.shevchenko@linux.intel.com>
- <4808746.GXAFRqVoOG@steina-w>
+ <CAMuHMdXhcR0MTVVpm-2PiSZkCc+BnU6oEp_aVRj+rqvBbWLHMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4808746.GXAFRqVoOG@steina-w>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdXhcR0MTVVpm-2PiSZkCc+BnU6oEp_aVRj+rqvBbWLHMA@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,42 +70,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 08:40:15AM +0200, Alexander Stein wrote:
-> Am Donnerstag, 8. Juni 2023, 18:23:08 CEST schrieb Andy Shevchenko:
+On Fri, Jun 09, 2023 at 09:11:04AM +0200, Geert Uytterhoeven wrote:
+> On Thu, Jun 8, 2023 at 6:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > > The aggregator mode can also handle properties of the platform, that
 > > do not belong to the GPIO controller itself. One of such a property
 > > is signal delay line. Intdoduce support of it.
-> > 
+> >
 > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > ---
-> > 
+> >
 > > I don't like the idea of gpio-delay or similar. We have already GPIO
 > > aggregator that incorporates the GPIO proxy / forwarder functionality.
-> > 
-> > This one is RFC because:
-> > 1) just compile tested;
-> > 2) has obvious issues with CONFIG_OF_GPIO;
-> > 3) contains ~5 patches in a single change for now;
-> > 4) requires additional work with blocking sysfs for this;
-> > 5) requires some DT bindings work;
-> > 6) ...whatever I forgot...
-> > 
-> > Any comments are appreciated, and tests are esp. welcome!
 > 
-> FWIW: Replacing CONFIG_GPIO_DELAY=m with CONFIG_GPIO_AGGREGATOR=m works as 
-> well on my platform.
+> I think this makes sense.
 
-Thank you for testing!
+Thank you for the support of the idea.
 
-> But I'm not sure if it's worth the additional complexity for gpio-aggregator 
-> to replace gpio-delay.
+...
 
-The (main) problem is that it does not scale. Today we have RC chain, tomorrow
-(hypothetically) LC or LRC. Are we going to create (repeat) the similar approach
-for each single case?
+> I hope no one ever needs to use the values from the example in the
+> bindings
+> 
+>     enable-gpios = <&enable_delay 0 130000 30000>;
+> 
+> on a non-sleepable GPIO. Not only is a looping delay of 130 ms very bad
+> for system responsiveness, such large delays may not even be supported
+> on all systems (e.g. ARM implementation says < 2 ms).
+> So for large values, this should use mdelay().
+> 
+> This also applies to gpio-delay, of course.
 
-I would probably tolerate the existence of the gpio-delay, but we already have
-GPIO forwarder, which implements 70% (?) percent of gpio-delay already.
+Thank you for pointing this out. I will think about better approach.
+Shan't we add a comment into DT bindings to warn users about this?
 
 -- 
 With Best Regards,
