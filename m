@@ -2,78 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3E9A72C2F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 13:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC19A72C2F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 13:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237518AbjFLLhK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 07:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52736 "EHLO
+        id S233724AbjFLLhU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 07:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234230AbjFLLg3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 07:36:29 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6964518B
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 04:15:04 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-977cc662f62so618219266b.3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 04:15:04 -0700 (PDT)
+        with ESMTP id S235764AbjFLLgp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 07:36:45 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636FE1AD
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 04:16:12 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51492ae66a4so6055530a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 04:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686568503; x=1689160503;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zJCE+1fuWVtMaz9EHfnAWHnNiUanDidN3rc+6SvJYoE=;
-        b=jXu8XXOgqJG1c/2BqwMLw86Ptg7hVbDxyNG0g1G0tO+pJ93tpMm3njhqQh6HwSSRt/
-         cmBl+UVI4sljrorJxRirIjqDEOKRH33tHfuOcSgSM5/mLqkJT621AZGCRF50N5M4dXhI
-         NxuN61qRJpVnWSzrJci7PoYZ5CYk1ioso+KWAV0wsEeXtC872DyJDtdhhhj39hsaTyEx
-         faUdINyn7WKAV4Jw0OKgDAsgwDpQTNfAA/O2fwW0q5if6Q+LVa/42N4CSKHJo5DbQ5Yd
-         8QfRd+Dz0p14Tsmluty+WqROH6zc5DkCjevfyzazJfFUuXlcJxaR0IOM+jhrApuxHHIY
-         lwIg==
+        d=linaro.org; s=google; t=1686568571; x=1689160571;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yWxn6vUtkVwYw+y3kU8jXVUyj9FC3I+OBESgDZY4lc4=;
+        b=ao0J5J7IBAhYPGnM+CJE6fNx8inU7BceLlZ+Z+ZJI/qtkzwaXF1p7wHUDikICE3fTg
+         HIIHRvxE1Eh6geyL1C7QlEiv2eyKZPrGa1JmSHO69fdlw1fqIxhD6IAavTqUXrhTvJ8V
+         Dxf57gOM3X0yneKGGScTM/dsGh8ykkk+6oWTG3oRPa9ueksVt5LZbawKRhEt6NbHffyv
+         2A3MNOe/DprckbBzzfH54mXwDmJ2hxyb7NeH6uGcmHli8i0FcOF6vXgMjwTWpxdu7+t5
+         xET6MuG1QRoWVgjphivpLtJ1xPbjz16i+j5QofYLlj0bPRhQkD9OEUjou7COFAKZ7JGy
+         wHWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686568503; x=1689160503;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJCE+1fuWVtMaz9EHfnAWHnNiUanDidN3rc+6SvJYoE=;
-        b=WEm4fEWBX24oQt2A3fLknLCBQOtz/LmD9bRTJslI7owLwi+jAsv+kPoaDhC16549ui
-         E3Fa3Qju3rxZqTqTNtHiCNfKdCZ32yHa+0uMfCR5RsvxM45+mZ7yL91NnoKP/Ym3oyjd
-         Cq0eBizk6CfsqQVnElD5R3lwuWkzjB5XAntorp0mKljHjwp7HbcxDYAuuvrZqEB7hMYW
-         zXxeArKRPaPCFhRJ6KHLlNgEg+YVThqcJwU6oUNem1iwtiN9qc2dtdUmvcBn4Gq1LrUs
-         82q0Lhier6v/2ybouPNpVS4dqcXf657q9ZU52XnB8c1kDKxTsDfjE9cNdLyMmPWpZlkf
-         bZDQ==
-X-Gm-Message-State: AC+VfDwLOfOkOunl4ne4kqY07SPiQeB6mv5gdgExsY/itupaoGsBsiTr
-        u5g9Lm+GgejO3042qB/ur3PevtSawIoQ20aSyr0=
-X-Google-Smtp-Source: ACHHUZ47gyrJoZge2mlr2jmFuPxoz12hCkx3cc854GFgU74O8T/xqVtPoU/Xd/OevOGA6P2rDadXuQ==
-X-Received: by 2002:a17:907:9728:b0:97d:f8db:601 with SMTP id jg40-20020a170907972800b0097df8db0601mr6079097ejc.62.1686568502845;
-        Mon, 12 Jun 2023 04:15:02 -0700 (PDT)
-Received: from [192.168.1.149] (i5C74066A.versanet.de. [92.116.6.106])
-        by smtp.gmail.com with ESMTPSA id g12-20020a1709064e4c00b00965e1be3002sm3463054ejw.166.2023.06.12.04.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 04:15:02 -0700 (PDT)
-From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Mon, 12 Jun 2023 13:14:50 +0200
-Subject: [PATCH libgpiod 3/3] bindings: rust: document build without
- install
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230612-crates_io_publish-v1-3-70988ee9a655@linaro.org>
-References: <20230612-crates_io_publish-v1-0-70988ee9a655@linaro.org>
-In-Reply-To: <20230612-crates_io_publish-v1-0-70988ee9a655@linaro.org>
-To:     Linux-GPIO <linux-gpio@vger.kernel.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-        =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1686568499; l=1340;
- i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=9hj92/J4aEKe6yjLkwxtY/de6Oko13n5mW+Lz9nN/VU=;
- b=2z6B877xz3/ypfjoRmABE7KGa+AdfftaE9DWUowe2Ii2wEsrG0bNMm/gQ2vF9y/4FwWgY9Ti/
- KPvLPuDfDvLB15PdmUwZOk3clHGVEUPD4y9be+MT8caSANESdilf/BA
-X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
- pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+        d=1e100.net; s=20221208; t=1686568571; x=1689160571;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yWxn6vUtkVwYw+y3kU8jXVUyj9FC3I+OBESgDZY4lc4=;
+        b=DwNh3FI0rZno0KifLktXWlHqkeNz/NVvBWFiMIiZ11ARIlbuSF5FLtqsGA7CluzGYL
+         9ufWiyuB2FDaLlUi3nbP6/9KD+8q56LvDughR41W2otdJV/qXZxhYhEwB9ZBI9bPwx/k
+         LO5DCtmJzW0X5KZ9sBV0VInKjNgAdXK8NIJI6M47kPrfV0EiO/73kYX6jDPUTykI44aW
+         X2/SpwbVZfAZ/XJenI1qwBxT/bPBBZbYF05+c9MHiMlg0qw/7YwZRVgoID/TX0kvIvE7
+         5dctPKZXYSUomfDn6Thi4C6OrdDhGWraSUWO+sKq9MRcNYoJeEW2m7y0vFNHSh7IsDQj
+         SCqw==
+X-Gm-Message-State: AC+VfDyAdznbi7GuNKWpwc4WAuD0ikW9sybhSJOpdYfY5+GJo4wz34Gg
+        LI6Gmm8uAOczWKAuO76FSjR2WLdBb8MZIYbYEMk=
+X-Google-Smtp-Source: ACHHUZ4o0Dy4yUZjncPcYbu7qSYjaRAlKmcSEdZPZTw3dBltiecniGPKnXT9igPgzitTtNVteJpdVw==
+X-Received: by 2002:a05:6402:31f3:b0:514:9eae:b0a7 with SMTP id dy19-20020a05640231f300b005149eaeb0a7mr4103738edb.17.1686568570899;
+        Mon, 12 Jun 2023 04:16:10 -0700 (PDT)
+Received: from localhost (i5C74066A.versanet.de. [92.116.6.106])
+        by smtp.gmail.com with ESMTPSA id n21-20020aa7c795000000b0050dfd7de30dsm4910057eds.94.2023.06.12.04.16.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jun 2023 04:16:10 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 12 Jun 2023 13:16:09 +0200
+Message-Id: <CTAMNSQLDDKK.3Q7FW6IVJQ26U@fedora>
+To:     "Kent Gibson" <warthog618@gmail.com>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][bug] building rust bindings requires clang headers
+Cc:     "Viresh Kumar" <viresh.kumar@linaro.org>,
+        <linux-gpio@vger.kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>
+X-Mailer: aerc 0.14.0
+References: <ZIKQVol59uXI5PyI@sol>
+ <20230609061812.4haoqdyinsp47zet@vireshk-i7> <ZILE258m92XrBvNP@sol>
+ <20230609062456.fqw3mqvtcactx2zj@vireshk-i7> <ZIQJquwzNacp1Nuh@sol>
+ <CTAF85GP5JIH.308KO3L1T9153@fedora> <ZIbJ9yM9zdfcj0kO@sol>
+In-Reply-To: <ZIbJ9yM9zdfcj0kO@sol>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -84,37 +75,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-While the Makefile does this automatically, a user may want to do
-something similar for other cargo commands.
+> > Setting PKG_CONFIG_PATH will only work if you point it at the install
+> > folder of libgpiod.
+>
+> Correct - that is exactly what I did.
+>
+> > If you do not want to install, you will need to set
+>
+> Yeah, I don't install on my dev machine - I deploy to separate machines
+> for testing.  For dev I just want to be able to use the same workflow I
+> would use for a general rust project, so cargo XXX, and purely in the
+> code tree.  At least that is what I was doing previously.
 
-Reported-by: Kent Gibson <warthog618@gmail.com>
-Link: https://lore.kernel.org/r/ZIQJquwzNacp1Nuh@sol/
-Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
----
- bindings/rust/libgpiod-sys/README.md | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I agree that there is _some_ friction, but I did not come up with a way
+to preserve the old behavior without the risk of being confusing for
+consumers of the lib (or even people attempting to compile things where
+libgpiod-sys is just a transitive dependency).
 
-diff --git a/bindings/rust/libgpiod-sys/README.md b/bindings/rust/libgpiod-sys/README.md
-index 90198d8..f9db496 100644
---- a/bindings/rust/libgpiod-sys/README.md
-+++ b/bindings/rust/libgpiod-sys/README.md
-@@ -16,6 +16,15 @@ libs and headers by setting environment variables. The mechanism for that is
- documented in the
- [system_deps crate documentation](https://docs.rs/system-deps/6.1.0/system_deps/#overriding-build-flags).
- 
-+If installing libgpiod is undesired, one can set the following environent
-+variables in order to build against the intermediate build results of a `make`
-+build of the C lib (paths are relative to the Cargo.toml):
-+
-+	export SYSTEM_DEPS_LIBGPIOD_NO_PKG_CONFIG=1
-+	export SYSTEM_DEPS_LIBGPIOD_SEARCH_NATIVE="<PATH-TO-LIBGPIOD>/lib/.libs/"
-+	export SYSTEM_DEPS_LIBGPIOD_LIB=gpiod
-+	export SYSTEM_DEPS_LIBGPIOD_INCLUDE="<PATH-TO-LIBGPIOD>/include/"
-+
- ## License
- 
- This project is licensed under either of
+The current solution mostly resembles how most of the Rust bindings
+that I know work. But I acknowledge that those bindings are usually
+developed in repositories separate from the underlying lib. Are there
+good examples how other libs are solving this problem?
 
--- 
-2.40.1
+> > See https://lore.kernel.org/r/20230522-crates-io-v2-2-d8de75e7f584@lina=
+ro.org/
+> > on why it had to become a little bit ugly for rust bindings hackers.
+>
+> I understand why you might be changing things to be able to package the
+> crates, but in an ideal world that wouldn't impact normal workflow.
+> Or it would be simple to switch.
 
+I fear the ideal world where there is no impact may be hard to achieve.
+When building with make, we _know_ that the C lib is also built, but
+when building from cargo, there is no good way (that I know of) to
+differ between a build that just happens because someone is building
+from crates.io or a developer invoking cargo sub-commands. Ideally, a
+build from local source should also show identical behavior compared to
+a build from the registry.
+
+Also, we will (at least in the future) need an easy way to build against
+different versions of the C lib. For me the easiest way seems to be to
+install different libgpiod versions to some non-system path and then
+use PKG_CONFIG_PATH to switch... That just allows us to use standard
+mechanisms without requiring to reinvent any wheels.
+
+> > Maybe we should put that example back to the README.md (or into the top=
+-
+> > level README?)
+> >=20
+>
+> Sounds like a plan to me.  I would go with the rust specific README.
+> Or add a file that can be sourced to setup the build environment to get
+> cargo working from the command line.
+
+I started with the README. Sent as part of my series of last crates.io
+publishing tweaks:
+
+https://lore.kernel.org/r/20230612-crates_io_publish-v1-0-70988ee9a655@lina=
+ro.org
+
+- Erik
