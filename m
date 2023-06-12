@@ -2,153 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5082A72BB3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 10:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E16572B8DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 09:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233750AbjFLIwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 04:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
+        id S234941AbjFLHlr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 03:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233746AbjFLIwO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 04:52:14 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E4F183;
-        Mon, 12 Jun 2023 01:52:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686559924; x=1718095924;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=sv8jPudsYYuoyUnFeDU1qpcbJT0NJCPylpgsN7IGqK4=;
-  b=C6TixzzPA5fQ3qkvMpsPrJ04LfDNZteltNTlfDAXJDqPyJ/IdfLtNND5
-   2oIiFdMPGmBKtg2K3N25YumInAKHkB8jsJRGHl81FogvxpUIDcn/DpigC
-   Gq6HpCdcZdV+N1XJZyr8Z9O9yLBqbu49IKGvEOKioBoB9y8GgJvXaKr4d
-   tWsvzHzWiZEfMSqogxPZgT0IGk8NNy+5rVr/MKvBnq8hcD7zTXT3nw5qZ
-   MHUsXOLXjaYojpqdynbcS3f+eRs2ZF56tZdqF9ZBNj75M8HlKikeL5gQw
-   LZ0AC9wG7/Nondv7eTiIz5cWSUQdoP4+26R02zQ7COWRs+ZKl8o8kH5jC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="347616690"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="347616690"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 00:16:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="835371658"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="835371658"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2023 00:16:02 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 12 Jun 2023 00:16:02 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 12 Jun 2023 00:16:01 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 12 Jun 2023 00:16:01 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 12 Jun 2023 00:16:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aQlYfroRAGJELq9G0njbArL+B5gbqrvWFJTTp7ZzRzchdWk7gQ7QuZSQQzIQquY4q7uVX37R4ieICfV77sOxJX5DJXZTMOdiQb1uVfDaCMdMA4f+bGJ0QlSNciG9VD7jiktKpHN7lMlht3WWuYiKQoD/u9GG9mtvo/82XD2hyZbM4okDQmVkKSvVqjcW8UK4eh2FHCQBIbpfQyfwFyDidhXE2Vdymyb7ucM16vl0atnhA9d7K83oB+gSlmL0N9Mte445VVPnaJcHU+45L37B2me1AsXZPoaCIPHITSBWBBVHj+hWMC23eQfrCklX5+UD1jUTG3bNNXk0qlRF7pGDcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sv8jPudsYYuoyUnFeDU1qpcbJT0NJCPylpgsN7IGqK4=;
- b=UFBuztpAulGadY84oHHBxma0z3AnrtpkCGzegOhn8J+BnuEQKsxIUUUXUkA32mTaTrJomhE4AY4GwcS9xLDXV4pjiFlxZgjuHsAsu/UL15mL/QF3XHwF47ciGXjbqFkyuwtQJX0G1zroNqbVU1P6OkxnXWOxcNnMZwISKO6EhjWQVskVyZKhN4x4ufJ0N/7dp/EFwsTeiAozd/NhU2+mpCnShGRYk+PeDpirdmwGC3c8TuYs4bOJZNlyGDGXknYSOozIYyVL68sZAjHPgRDa4bdTDevBph54xwCcST0NGNikGf5T70shA/cqco0KzasDo/hHrAnjjiG1FOWM225bTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM6PR11MB2779.namprd11.prod.outlook.com (2603:10b6:5:c6::26) by
- DS7PR11MB7807.namprd11.prod.outlook.com (2603:10b6:8:e3::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6455.38; Mon, 12 Jun 2023 07:15:59 +0000
-Received: from DM6PR11MB2779.namprd11.prod.outlook.com
- ([fe80::5c56:cdad:30cb:c3de]) by DM6PR11MB2779.namprd11.prod.outlook.com
- ([fe80::5c56:cdad:30cb:c3de%4]) with mapi id 15.20.6455.030; Mon, 12 Jun 2023
- 07:15:59 +0000
-From:   "Jadav, Raag" <raag.jadav@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sangannavar, Mallikarjunappa" 
-        <mallikarjunappa.sangannavar@intel.com>,
-        "N, Pandith" <pandith.n@intel.com>
-Subject: RE: [PATCH v2 1/4] pinctrl: intel: refine set_mux hook
-Thread-Topic: [PATCH v2 1/4] pinctrl: intel: refine set_mux hook
-Thread-Index: AQHZmqwQk81x1AfkEUm0gPLuEgZK3K+CrSKAgAQYSqA=
-Date:   Mon, 12 Jun 2023 07:15:59 +0000
-Message-ID: <DM6PR11MB2779679A4AF6023180B942248C54A@DM6PR11MB2779.namprd11.prod.outlook.com>
-References: <20230609082539.24311-1-raag.jadav@intel.com>
- <20230609082539.24311-2-raag.jadav@intel.com>
- <ZINWOWLjyZk2Gj3j@smile.fi.intel.com>
-In-Reply-To: <ZINWOWLjyZk2Gj3j@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR11MB2779:EE_|DS7PR11MB7807:EE_
-x-ms-office365-filtering-correlation-id: 0af09e44-34ae-46fd-1b75-08db6b14df82
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GTJp9rLQkjh2smXtrUhq97TxTRWGgbYm6eRRFX2t6qG6Af7foAgYojQMsPCJJm70P/ao8VhIXTQE//zN+bk75w9e29rAUcSgIBnszdSafmSXISWy5RpHk2GsTBzNnv1u2kMmlO/Mq6abwZ9uLAWruASsFtbzriV40rznxW9wPAhqzja8K6sBGcDzXdao2m0IAkDXT5LWiVQo+bjutzus63WC2WeMbznUGGl/VBrCygOr/pNODnu3fmE/8yAK4hKkL/p8g5DahT1XkT5RbPt2I0vPwbtDYzUIGTZ3Kk387jQoH5PUHIVrJbeHzVKKvw7nr18B17mJm+Esgbli5XAvwbcKhbtkqFk41dHf0LXC62otb2vC0R9v99Sj11sLMy3a4PnsvitYIZi3vZK9Fz70JFICEXmlWtbD8TrAlo6YwgFJqFn93lChqGsU3lymhrEBaE7KcOuYZLX9GNxUT0RkQ/4m4NrdpyJHPvZgyltOo47899Rblp1mOC+DehOpdNA/ARmYvtS8chmIFfjESy7SCG0XVEOU14YpmaAbDaCdm9NNWdaIKJRNLT5KRoZgXWpIXVNJXco3d4rb/KxcRVb5bSCVteS6kLNrDr019AnXe8k=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2779.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(376002)(366004)(136003)(346002)(396003)(451199021)(41300700001)(71200400001)(8676002)(8936002)(5660300002)(52536014)(54906003)(64756008)(4326008)(66476007)(66556008)(66446008)(66946007)(76116006)(6916009)(316002)(4744005)(86362001)(2906002)(55016003)(38100700002)(7696005)(478600001)(6506007)(26005)(9686003)(33656002)(186003)(83380400001)(38070700005)(122000001)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tOsf7QEaCqn4IzZ8mKV4uH7HDm7ufFZkIjaqvOL/aogsxzaIyy/GsOrMFhXN?=
- =?us-ascii?Q?ylXKwzb/VuBxlog0PjEBZHjjFgI4gvhY8S7b3ysAX60j+O/8j20ijKYb5hU/?=
- =?us-ascii?Q?OuK7j5nwd6m4cJoHC8UquqVljH9J2XWx4OuQAiKHDQcJKXHynYcPeQEZ1SlR?=
- =?us-ascii?Q?9CzXeV3vNceL+P+V2/5UjUt0wezhmGWv6BrZpQ8ELKaWZqKnZGeRFkfSiu/t?=
- =?us-ascii?Q?4O+7Ubw/1kqF8+jDUkgtxD8qENg3a5K0q9bPPTA7tM3BxGustIlKHeZ4pG3W?=
- =?us-ascii?Q?0x96IDJuG2PX6IW7rz7Q3lTP/HH5urJr2WiK+/lGjI1cVRlx171jk8Y7KShm?=
- =?us-ascii?Q?kP5wv6p50jxmDhRG5Lp2tTNRAWcWRq55QnmpjbVCVoiOyCuL8ag6CtAeiAAA?=
- =?us-ascii?Q?r0J+XZtbKTlfE1YrW2FRC+a00urWWYNvxMmn0Xyawbr+hXIfpm0um8BJeYzS?=
- =?us-ascii?Q?8ikRc3BcRI4uhsO511F0iyCHROfgxp2kQKsL3/TIF59Id8vijoP0vQC4fWg/?=
- =?us-ascii?Q?yVuH1DgiXWYnHLk2smKrvgSvO3I6NvO5mOEBNOWorIc1E9VUHqiorgHlN8qB?=
- =?us-ascii?Q?b9DvtLW397OT1KepNkg85W0a4FKpN8CGZdmWvHnD6u2PCoBeY5XCVEsTRdBp?=
- =?us-ascii?Q?jOoETFdsl4lwlN/H8aCo3pGFFkJEAeGuWR/FIZ0iOzYtZ2T+1g1bHB9ldhFt?=
- =?us-ascii?Q?KV3sNLt9MyETancCXy2cJOq1zl06h0htFzwAAwou7DAO3m0OH7YCbxMQtMcK?=
- =?us-ascii?Q?/XCvc4fcZksbWurdz0Tb3QXdD41ign0G/VDzxf2ffNTInzKok1IygrtUkZUP?=
- =?us-ascii?Q?MqnWFbLSybIMOXhVhJ8M1wrGCSZ622lh7Cy/jjOL9lmwyKS1YCHwZx97JrQ9?=
- =?us-ascii?Q?lylHNItTnY66IlXE4cMqJiD4akO1+F/Dl2Sm/2KaNaW/yam7j8o9ldMaJ35G?=
- =?us-ascii?Q?JcOW6CX/hMYT7OKcZU6ZEwp6HgPKta/xI7y7bPC9dvuC+gkSciuOFXnEtwt3?=
- =?us-ascii?Q?0wiVeyHzoQRPOfoEn8TXUAhjaaYHsoBRgx9c2cmrLmQ3DArWY1JwI5nLx1+U?=
- =?us-ascii?Q?RvJqi0yz51P/fECEYtKshRLm95xEoHw18w54GsNgHgAb4RtIbgj/LxR9yVLt?=
- =?us-ascii?Q?4PbFN4IbEuMnIDFod3hiZpPqawEtAkMFMKn8ySip/JD3qDreaqPiITa4CpdA?=
- =?us-ascii?Q?0gwoQG53X1tfg4T+ucwinwCahmRtG+01EpVHFCEZ9hzsKd2oIVGc6DlQu1Ew?=
- =?us-ascii?Q?LRswyNyxu/2OKH/uhdqmSugR7q5yJe0bZGJXG5YC0rZc7jVKnrt1oPqNfkDD?=
- =?us-ascii?Q?UL86DG8hJK1NWIMZc9B5KyaMBCYMH2OwyLhpu3Hd/xs+/WmG2poR7GVKUau2?=
- =?us-ascii?Q?Ec3wgLZDMb8COaPjcnxd0meRjo044iMXo8NVuvl9SCkZhA/wcu0Nsvp3WEnf?=
- =?us-ascii?Q?JhhMNt67GbP9UJZLbd3eHi4kt++l3GaZDonXZ72OgAoXERdB32oDcSaM+ei7?=
- =?us-ascii?Q?qfHRSNBh97NyS/i5AWL8JiRQpqRlvnJeE7qA/dRPHj7jkWAA9TFzszyNJc1u?=
- =?us-ascii?Q?nlzrEnkqt0GOOk+ryJc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S234972AbjFLHlj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 03:41:39 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE8F99
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 00:40:58 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-33e75ca0a8bso19164435ab.0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 00:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686555574; x=1689147574;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oUKpV9vfyk7GrgyZDVSJBZxFDYaJcmjInhV4WwDC8EQ=;
+        b=AV5rRNwqtctWMxEDxiVlvKAVy6XpfoRdPat+2RuxsLsfOFlyQs6Mvf6NUGUNetDmad
+         /mBWmDNgQkdtbQ6ZgFa75/lBbyHFfGMSUsWCRhHvY3yrXLSrgn7JbydCBqI2qKwpjo4X
+         EWF5D3z6fx+WEkjDUOdNIPlRWIVJjt++clYvN+guRwJRPI+tlarlUFqb5R1SFLaS5Lxe
+         WeSFcDxRYqa9R1yBwZAKcOJUSxs9PfItRWsV0HUX8PKzQgN6nOi10xEYfhZGMhjsVftl
+         cheYpAGJbhKUIsvNwpaunXW3ae/5i/zqbemU/w2xZSK3d/xXqd+RGMv4DBLlRxgN4Zv4
+         ieRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686555574; x=1689147574;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oUKpV9vfyk7GrgyZDVSJBZxFDYaJcmjInhV4WwDC8EQ=;
+        b=ZxccJNC0eOYLx865tjzMxvtWQQBPpaOl//LtJBeDbW1L2AZak822Q1/sXSoVer8SDx
+         StmZrtw28wABMNLVMHtZGayYzdHy/CiNTkGwxAfMtbyClbOV5MRcBGstLu+lsxwrpD0/
+         7a/E1+SUGzco94TBlz2CBKsaFR8iSwQgKHPwZGhbb6y1RbxVs+juwcctEtXA79wX43aq
+         7bVpPkQVraT0f0rgGajO54z5rS2WY8zJ367TxF5PZ+L9OSp+KvbLQf3U4qK7y3jy9t+U
+         0eze5Hzkg4MTNqOOAALTvGC/izUb6S2sIUJ/72eGx5Jc5MvrufycYr0LYNpTuhwmaKcM
+         bz+A==
+X-Gm-Message-State: AC+VfDwkGP8dA6DU9as9JE5vk/anoPrAIuPw0UGa8gknQ7i+qDv4UZW2
+        DfsMXLLKIbbBZFhTRjf9884aKojsgUk=
+X-Google-Smtp-Source: ACHHUZ7aZo362sq6FboOozRzQIhlr7yhD28Sx3Bj4n/I3EDxgoKWf0Y9fQ1c+k/R/UnAQSx9+CkwjQ==
+X-Received: by 2002:a17:902:c20b:b0:1ac:8ad0:1707 with SMTP id 11-20020a170902c20b00b001ac8ad01707mr6375319pll.1.1686555132549;
+        Mon, 12 Jun 2023 00:32:12 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id d5-20020a170902cec500b001ac381f1ce9sm7520488plg.185.2023.06.12.00.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 00:32:12 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 15:32:07 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [libgpiod][bug] building rust bindings requires clang headers
+Message-ID: <ZIbJ9yM9zdfcj0kO@sol>
+References: <ZIKQVol59uXI5PyI@sol>
+ <20230609061812.4haoqdyinsp47zet@vireshk-i7>
+ <ZILE258m92XrBvNP@sol>
+ <20230609062456.fqw3mqvtcactx2zj@vireshk-i7>
+ <ZIQJquwzNacp1Nuh@sol>
+ <CTAF85GP5JIH.308KO3L1T9153@fedora>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2779.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0af09e44-34ae-46fd-1b75-08db6b14df82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2023 07:15:59.6385
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: scdwKs/FlR+39F/97Y0fhNA+h9INJlupbmxLGzaZDSQCA9UpeB6uEaDhjQ7SoGq5jshetN9HLOKfHNy6iZE+DA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7807
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CTAF85GP5JIH.308KO3L1T9153@fedora>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -156,12 +75,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> On Fri, Jun 09, 2023 at 01:55:36PM +0530, Raag Jadav wrote:
-> > Utilize a temporary variable for common shift operation inside
-> > ->set_mux() hook and improve readability.
->=20
-> Seems the bloat-o-meter statistics is missing here.
+On Mon, Jun 12, 2023 at 07:26:35AM +0200, Erik Schilling wrote:
+> > On a relate note, how do you run clippy now?
+> >
+> > When I tried `cargo clippy` I got an error about pkg-config not finding
+> > libgpiod. Fixed that by pointing PKG_CONFIG_PATH at my local libgpiod
+> > build.
+> >
+> > But now I get:
+> >
+> > --- stderr
+> >   wrapper.h:1:10: fatal error: 'gpiod.h' file not found
+> >   thread 'main' panicked at 'Unable to generate bindings: ClangDiagnostic("wrapper.h:1:10: fatal error: 'gpiod.h' file not found\n")', libgpiod-sys/build.rs:44:10
+> >
+> >
+> > so I guess bindgen/clang needs to be pointed at the include directory,
+> > but not sure how to do that without emulating whatever `make` is doing.
+> >
+> > Same goes for `cargo build`, come think of it - now you have to build
+> > using `make`.
+> >
+> > How are you supposed to tell if your code is sub-par without clippy to
+> > tell you?  Or, more generally, how does the development process for the
+> > rust bindings work now?
+> 
+> Setting PKG_CONFIG_PATH will only work if you point it at the install
+> folder of libgpiod.
 
-I changed the commit message as pointed out by Mika in v1.
-Do I change it back?
+Correct - that is exactly what I did.
 
+> If you do not want to install, you will need to set
+
+Yeah, I don't install on my dev machine - I deploy to separate machines
+for testing.  For dev I just want to be able to use the same workflow I
+would use for a general rust project, so cargo XXX, and purely in the
+code tree.  At least that is what I was doing previously.
+
+> something like this (taken from the Makefile):
+> 
+>     SYSTEM_DEPS_LIBGPIOD_NO_PKG_CONFIG=1 \
+>     SYSTEM_DEPS_LIBGPIOD_SEARCH_NATIVE="${PWD}/../../../lib/.libs/" \
+>     SYSTEM_DEPS_LIBGPIOD_LIB=gpiod \
+>     SYSTEM_DEPS_LIBGPIOD_INCLUDE="${PWD}/../../../include/"  \
+>     cargo clippy
+> 
+
+Something like that?
+That works for me when called from the rust/xxx sub-directories - I
+assume that is the correct level for the relative paths to work.
+
+> See https://lore.kernel.org/r/20230522-crates-io-v2-2-d8de75e7f584@linaro.org/
+> on why it had to become a little bit ugly for rust bindings hackers.
+> 
+
+I understand why you might be changing things to be able to package the
+crates, but in an ideal world that wouldn't impact normal workflow.
+Or it would be simple to switch.
+
+> Maybe we should put that example back to the README.md (or into the top-
+> level README?)
+> 
+
+Sounds like a plan to me.  I would go with the rust specific README.
+Or add a file that can be sourced to setup the build environment to get
+cargo working from the command line.
+
+Cheers,
+Kent.
