@@ -2,67 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51D1672CCF7
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:36:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0382172CD55
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 19:58:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236796AbjFLRgn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 13:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
+        id S235018AbjFLR6y convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 12 Jun 2023 13:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236860AbjFLRgW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:36:22 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69A51BC5;
-        Mon, 12 Jun 2023 10:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686591319; x=1718127319;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=WukTNRen46NQ+J1/agJdZz6fX5veY5abkQR/wVmN5ec=;
-  b=PZ8E0pbqivhM1J/K+H5Q613i5seEZ2hQJamG+Rapoz2mssybPr+7QW+z
-   KhXYlbJCbqD7mRRmn/acaeyiRvmph+s4sMON7+5LLfPqyMsySxQzF7eVH
-   bA9jGSWFJuo7grJB9SY+u/0bcC/L/uLUSQ1pHXUZC8oANBfq/kDu8o/dL
-   /jHJvYibar+PHofD+i2cNF9q6afn5n3j7BcBORYVU8O41+3lMKaBBo63f
-   3cJtZeX9YfvV0RuSEEH1HibBL/KkXrfPcDdisN/01hazkTK6h/dV/3IyT
-   u4XJDACYGovr3nyS2MZWVvk0HTClxfCmST9k3utkBE4HgU12o7jSgk3ra
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="338476749"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="338476749"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 10:34:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="744400263"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="744400263"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2023 10:34:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q8lR9-003GYj-2h;
-        Mon, 12 Jun 2023 20:34:39 +0300
-Date:   Mon, 12 Jun 2023 20:34:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Alexander Stein <linux@ew.tq-group.com>
-Subject: Re: [rfc, rft, PATCH v1 1/1] gpio: aggregator: Introduce delay
- support for individual output pins
-Message-ID: <ZIdXL2Net/5ttmXB@smile.fi.intel.com>
-References: <20230608162130.55015-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbaf3UzW+x6emER5J5KJUQoJmdipwY_RQp0Ovj2N6RnsA@mail.gmail.com>
+        with ESMTP id S234058AbjFLR6x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 13:58:53 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17951E52;
+        Mon, 12 Jun 2023 10:58:51 -0700 (PDT)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-974539fd9f0so90926366b.0;
+        Mon, 12 Jun 2023 10:58:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686592729; x=1689184729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A3eCuUugtCHCIvJfGUvpouutW/MqpB73NWLtQIoZsdg=;
+        b=ABMTXPLeGVnMnJf5hFuW7jME3oGWPTANcDRfpzRsFaNQlM8Qe4ziMVYy5SFdv6NYw/
+         LT5ytckvWPXtZCCEY3qDfin62hSjaZTosg4E+PvnKwwAMElQDimai7zf6gqX/opSSfc7
+         sM3NEN+g7ml0XbbBsh2v8gYDQ6AZEjzG5zAVFGOXU0pZKqq8MdcrQNa+f2H8wqRhKBRE
+         LmmtP44i200gtLBFstNVkjWvxiBom7N1OR2yp+ZQPAZbYJbsu/6k7GhwVlnyuD52jNVC
+         S+bI8baKZzwFJatz66ofh8M2DtnTlM/2IQV4hFYlGx4Flc2LhNRyGhjlWZcxi+JNND0e
+         pt8g==
+X-Gm-Message-State: AC+VfDzbm4J7I+tJBrBoj3FoAtKAPuH/RxPGRpW/aMNknFh1ZssDM2eP
+        0JLQBeiLZhy4lm0SvWUxWsYPFIKcRHz5rzqGxCiR0gk2
+X-Google-Smtp-Source: ACHHUZ7wTZfe+gmfVbQ8l5SUY8x+JfLN3gDKcmQL4KZgtE2TObrzL1rqflSKY3Pe3gZzuI2GA8PsUQ45F7+1n6Zdhtk=
+X-Received: by 2002:a17:906:5185:b0:974:5480:6270 with SMTP id
+ y5-20020a170906518500b0097454806270mr8020315ejk.0.1686592729377; Mon, 12 Jun
+ 2023 10:58:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbaf3UzW+x6emER5J5KJUQoJmdipwY_RQp0Ovj2N6RnsA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+References: <20230602073025.22884-1-mario.limonciello@amd.com>
+ <20230602073025.22884-2-mario.limonciello@amd.com> <CAJZ5v0jNn1wHtF7c0XYKpM=XzZasdu3OwksUdqRFO3TyZwrPOg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jNn1wHtF7c0XYKpM=XzZasdu3OwksUdqRFO3TyZwrPOg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 12 Jun 2023 19:58:38 +0200
+Message-ID: <CAJZ5v0gdY93OidC=on3LsmO4+eT8e3bT8XJwrim2BrQ5AoG+vg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM
+ state tracking
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,26 +62,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 09:50:37AM +0200, Linus Walleij wrote:
-> On Thu, Jun 8, 2023 at 6:22 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > The aggregator mode can also handle properties of the platform, that
-> > do not belong to the GPIO controller itself. One of such a property
-> > is signal delay line. Intdoduce support of it.
-> (...)
-> > I don't like the idea of gpio-delay or similar. We have already GPIO
-> > aggregator that incorporates the GPIO proxy / forwarder functionality.
-> 
-> You are right. This is the right solution going forward IMO.
+On Sun, Jun 4, 2023 at 6:04 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Fri, Jun 2, 2023 at 9:32 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+> >
+> > Enabling debugging messages for the state requires turning on dynamic
+> > debugging for the file. To make it more accessible, use
+> > `pm_debug_messages` and clearer strings for what is happening.
+> >
+> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+> I'm inclined to apply this one and the [1/4] at this point.
+>
+> I can also apply the 2 remaining patches in this series if I get ACKs
+> for them from the respective subsystem maintainers.
 
-Thank you for the support.
-
-Take into consideration 1 kinda neutral and 2 for votes, I'll going to split
-and improve the patch (series).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+The ACKs were provided, so the entire series has been applied as 6.5
+material, thanks!
