@@ -2,71 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BAB672C955
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 17:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46A0F72C9AC
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 17:19:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239186AbjFLPG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 11:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
+        id S233394AbjFLPT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 11:19:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239179AbjFLPG5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 11:06:57 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E25378F
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 08:06:55 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-65242634690so3340030b3a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 08:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686582415; x=1689174415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FL8dxR5TDr8y6Mkkv3QoyYcz+phUqrWBz1FXzYM2Zd8=;
-        b=Gr2CexkYne8guS4gpuLX4lDY9/UTabC2AyN0UIkI/p56bE4j5RaegVq+RSd+qzvMjO
-         5vtJ+jBB5opmp7nHTE2vsaFOzPqYpYolPgduqegGhlIqpdlQO9siuVSIrMg2NUGZGYz2
-         7cbxQh1oJF/yxjvQWBkKqwqOKzoWmkhHuciJYcnUvaCuHmfnF6Lnac16TqILemVDwXKd
-         jeRVLgCIiaFMHqMMKn09QXd1OQGwOkKtjyEF5SRcszZAJnsfRPUaf4tlGgUILtOLABwi
-         /dFN83U3hPipkmhVcamqqjgA0KYEhHsghwsr9ayQXANFuwjuiggNxoQiNea8giH2noKN
-         OtdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686582415; x=1689174415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FL8dxR5TDr8y6Mkkv3QoyYcz+phUqrWBz1FXzYM2Zd8=;
-        b=U5w9eKn+vXHowSoxZ+KGMCcVfTq9KltPM5zyb3D6bxDAUs5KmXqPFIW0DzUcWudZRD
-         g9Nta8nCMAnIfLWc/pYCuXcyoU/2jEtUi0bQhpM9LomJLSmoiQwvXc75P/z2Aj9DmmYA
-         D9z3cS4iF8dagyEq7serAas6gEXQAyaVlTpApw29zj5eghOBhEmpwyCilR7DuR3Oj25c
-         fN2oJoWIksQxki0eE+deMVbo5L6hwWUJQPPdUyYX9Yk/wli++uUDYIdGxwNLvn9bbtsH
-         1sGy/2hXnYiwwOeC+SR+M9wodq1jNZzFzz5Otc8RT90GPvxOvg9mzUJ/hi2wn/P6QEi1
-         3Pyg==
-X-Gm-Message-State: AC+VfDwzZ2Bk9sunPzarRZk2qwX4MsorGtyN+syS4uOZKH2N1CYrmC8/
-        pm0ppF15mnch9LPvlJcYIK/pRhnc78I=
-X-Google-Smtp-Source: ACHHUZ4XKy5w/HuEsW+ruCvYvkNsdbO6hUrTTLhisKi1XYeHf/1L+HGBkOtDE6RkOEeWYXd85Wc4hA==
-X-Received: by 2002:a05:6a00:14d0:b0:64c:c5f9:1533 with SMTP id w16-20020a056a0014d000b0064cc5f91533mr11679467pfu.33.1686582414714;
-        Mon, 12 Jun 2023 08:06:54 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id b17-20020aa78111000000b006542e358721sm7007938pfi.186.2023.06.12.08.06.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 08:06:54 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 23:06:49 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 0/2] bindings: cxx: fix potential glitch in
- gpiosetcxx
-Message-ID: <ZIc0iZayMhyRRGiM@sol>
-References: <20230612145653.138615-1-brgl@bgdev.pl>
+        with ESMTP id S236919AbjFLPTZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 11:19:25 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FC88F;
+        Mon, 12 Jun 2023 08:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686583165; x=1718119165;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1sgzFhQxmvhrN3umsru5+GWkNd3ZRhO9C6+hJ6QEhj4=;
+  b=jUy7Xb2SRxVS523yNaX7xsIVs5llSZiWEmVrVMdXxCJ/xjbHuJHdeiiC
+   MS+WUOpUUxcgOjcSsdzuYSfVN4bm3NMiha9iAHW9AyC1EPnzu2mqt7JOC
+   2rbo+vHMTD9F5eYXsZ5EZLMAv/ps1D7zP/IU9rDOM/wHi6sS4EQL9OQq5
+   U4jkJ8Zicf2Dwb4G01z6tv0Xl2m7w7RAxM0sjWE7JgXH5T2+yExSPVBM0
+   AwI3fNINRvOJAbRXUa5x0GYHNfoZ4BBsTjsmWBY8xMcViWpvaRsLJ4rVA
+   iiZE3wJEcBILclnRoYwX0b6+5DwXNAOBqA9yUSO9UHZOsXFV0IwPa2QZF
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="342758783"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="342758783"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 08:17:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="885470177"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="885470177"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2023 08:17:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q8jHz-00395g-2D;
+        Mon, 12 Jun 2023 18:17:03 +0300
+Date:   Mon, 12 Jun 2023 18:17:03 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Jadav, Raag" <raag.jadav@intel.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "N, Pandith" <pandith.n@intel.com>
+Subject: Re: [PATCH v2 1/4] pinctrl: intel: refine set_mux hook
+Message-ID: <ZIc279PMCz/Pn6fU@smile.fi.intel.com>
+References: <20230609082539.24311-1-raag.jadav@intel.com>
+ <20230609082539.24311-2-raag.jadav@intel.com>
+ <ZINWOWLjyZk2Gj3j@smile.fi.intel.com>
+ <DM6PR11MB2779679A4AF6023180B942248C54A@DM6PR11MB2779.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230612145653.138615-1-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+In-Reply-To: <DM6PR11MB2779679A4AF6023180B942248C54A@DM6PR11MB2779.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,30 +72,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 04:56:51PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 12, 2023 at 07:15:59AM +0000, Jadav, Raag wrote:
+> > On Fri, Jun 09, 2023 at 01:55:36PM +0530, Raag Jadav wrote:
+> > > Utilize a temporary variable for common shift operation inside
+> > > ->set_mux() hook and improve readability.
+> > 
+> > Seems the bloat-o-meter statistics is missing here.
 > 
-> Kent,
-> 
-> This is an alternative approach to the problem you raised with your gpioset
-> patches. It adds a new helper method that allows to set all output values at
-> request-time using the line_config's set_output_values() method.
-> 
-> Please take a look and let me know what you think.
-> 
+> I changed the commit message as pointed out by Mika in v1.
+> Do I change it back?
 
-That works for me - it is waaaay less painful than the per-line approach.
+No back, only forward!
 
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
+I.e. you need to update Subject to follow the pattern, ->set_mux()
+in this case) and add a note that the change makes code smaller.
+It will be two selling points.
 
-for the series.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Though come to think of it, it could use tests as well.
-But you can always add some subsequently.
 
-Btw, this is also an example of the outcome I expected to see from
-expanding the examples - identify common pain points and extend the API
-to address them.
-
-Cheers,
-Kent.
