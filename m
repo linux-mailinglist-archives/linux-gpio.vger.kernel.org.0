@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E846D72B58B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 04:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 401DB72B58C
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 04:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233116AbjFLC5f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Jun 2023 22:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        id S233725AbjFLC5r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Jun 2023 22:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjFLC5e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Jun 2023 22:57:34 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBFCE42
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Jun 2023 19:57:33 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1b24cd75989so19532405ad.1
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Jun 2023 19:57:33 -0700 (PDT)
+        with ESMTP id S229476AbjFLC5q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Jun 2023 22:57:46 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6111E44
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Jun 2023 19:57:45 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-65311774e52so2926811b3a.3
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Jun 2023 19:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686538653; x=1689130653;
+        d=gmail.com; s=20221208; t=1686538665; x=1689130665;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xNJQLbLjUoBG6g4pKvrv2qTKtL+SnSDIeMUWzTK01R0=;
-        b=aix/vpL9Cc3QspnGg6FztGr+wpJtBWG1iLO7Td9zHZjqWGBC/g2hem203+lgArLEhC
-         yoLE0EzinnJBAu8an1JjtVWW9GQqP5fsd64PNPRJYJreTEgv4qba5sZ2XrXowZuAw/wt
-         cLlqS5vn6TRVDFr0CnlperGBy59TEsiwhSPvyBueFCFvVZqkXFqTVCASbx7aAmrPUdka
-         hsnaPFmfenfAbT489pHgYlK7L/5ObNKExXfsNTFQJVJWsBPsvDiW1XYuBt7APO5a1nN4
-         4zx0FYK/c1iFBaRrED0kQdy06cyiq4sYcDm6CWUfR/3VxhxGNHMy3Sw1qZxLwCGE4raf
-         h8Yg==
+        bh=a61e9pb6myCg/Irl98/s7srinV9PfhfA5Lc7nVYELq0=;
+        b=DRDMkQAFgCSMArfNBTu8BEf3GT/FlgTiwNWPBn35r11PnXCbDzvh/5mpkbgMAF54rX
+         pZElMVImp/rowhySi31RQJceBuBriUzFa6gkUsvJJFoILRTJaZrsId8wsjIpytuEPood
+         5+VIEOsv84cIwdGz3cisku1RdkRwQvw3lrAUIm9sF/JhfldjUOWj3LAkpmNhBRDq23eu
+         VMwq693D0QGq1C3wGM/BjJ/4c9HgSxZBXsZZS1cilLilt/7kDx/CUOUB2QqallO0+SdB
+         D7FXmZV7RB9ffSr4fpcKiJUl1SKARH4tUq+82qhDb3HjTCGueM0epvANAbNy8HFpre1m
+         +gnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686538653; x=1689130653;
+        d=1e100.net; s=20221208; t=1686538665; x=1689130665;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xNJQLbLjUoBG6g4pKvrv2qTKtL+SnSDIeMUWzTK01R0=;
-        b=btNi04oX7jfp2uUzD8dEaYU+l4g7+8ALhGT7WTrw+XFgeGvMA0pOzVZCcqwCChNf2f
-         tHL7eNXVKPqRZCSaYTtuyDxPmwgonn2sBKc8YiRDBnTAeKEAG+Y7/z/k/BnimbYumRBq
-         lxDUsyZ9fN2scTmBKy75xm/E3Ax0zpoe13r+9bM5jkxK4MADVyUDOnJDgp088C5OgcRt
-         hARxtrb69MLpirfQpSpmojLn3Q+V0YFh6RI4YrNypiSncG5KxDWW+0TMDbLVWH0Ew3rB
-         cQH/5WK+39ySSH/Wd2s2jLWgk7kZKwxX6HC0CThfjpZV0a4Cbbk5C8RZ9OyAc+HzyzcG
-         sx+w==
-X-Gm-Message-State: AC+VfDxNiwwOLHsEX97JReTqDToPBsXQFXAK3tyVKg6Mys/UIgeF3Ujo
-        w9c8p4LLkckp+NykL/wt6kGmYI7NqJY=
-X-Google-Smtp-Source: ACHHUZ7xDmTFGK1veylVFWFLTRxzwbjaSQ/GIoLKFu6sEYiX2V6NZl+EgYlADGPf5X2xr8aB96LCLg==
-X-Received: by 2002:a17:903:22c6:b0:1b3:d25a:5ece with SMTP id y6-20020a17090322c600b001b3d25a5ecemr1451967plg.31.1686538652915;
-        Sun, 11 Jun 2023 19:57:32 -0700 (PDT)
+        bh=a61e9pb6myCg/Irl98/s7srinV9PfhfA5Lc7nVYELq0=;
+        b=P0+RTqcQLBic5PHo8jNH1UVVL012477K8CJbaPxDPcRE8Wb8i2pwiy2RX43p+aQE9M
+         I66SVP28kRxcClAEj+HYV4Oq4hDNH1LJ0yzk6V/L6Kq+ZBT22stqrh2CRYaGcAWO1tnr
+         7SGS3FuVTojCy5ZP8RlhOyazvlJTrjCyqIhLmOrF6L0IWnun1AqkJEr20LlQvI8xNYwe
+         tqkiCcBur9xD1Dp/S4aWS7DUCofKhH2HwAJiwJ7j9ieOFwaY8y6s3uf7RS+aQnh8Y6wK
+         h3inVnRXlklYQevTPw7yvzwuvY+04Fs9FD9dEQqJOfNidcE44hrVBQQgcbyAJv7qaEfN
+         STgw==
+X-Gm-Message-State: AC+VfDzvOns0DWdgCG/HctvwY8NBFsBiTvB1BxJPezU+VhGwwxLKa7Xz
+        F04s4Z23OvAYq8bQxtxPBDiUU2tc0v0=
+X-Google-Smtp-Source: ACHHUZ6gSSOVkKTC/8S+T1PDCswlREBMp+Wt8igFX/0m6r1uS1RMp6ocIMYVj+pP6ovqcvDPntEWrQ==
+X-Received: by 2002:a05:6a20:835e:b0:10b:8bc7:e112 with SMTP id z30-20020a056a20835e00b0010b8bc7e112mr7682858pzc.10.1686538665125;
+        Sun, 11 Jun 2023 19:57:45 -0700 (PDT)
 Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id jm18-20020a17090304d200b001a1d553de0fsm6980992plb.271.2023.06.11.19.57.30
+        by smtp.gmail.com with ESMTPSA id jm18-20020a17090304d200b001a1d553de0fsm6980992plb.271.2023.06.11.19.57.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jun 2023 19:57:32 -0700 (PDT)
+        Sun, 11 Jun 2023 19:57:44 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH 2/3] tools: tests: speed up continuous toggle test
-Date:   Mon, 12 Jun 2023 10:56:41 +0800
-Message-Id: <20230612025642.11554-3-warthog618@gmail.com>
+Subject: [libgpiod][PATCH 3/3] tools: tests: force bats to use tap output format to remove indirect dependency on ncurses
+Date:   Mon, 12 Jun 2023 10:56:42 +0800
+Message-Id: <20230612025642.11554-4-warthog618@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230612025642.11554-1-warthog618@gmail.com>
 References: <20230612025642.11554-1-warthog618@gmail.com>
@@ -70,56 +70,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The continuous toggle test was recently changed to poll the line to
-check for toggles, and so increase test reliability.
-Tighten up the test timings so the test can now also run in a
-significantly shorter time.
-And, as it is now faster, add an extra edge just to be sure.
-
-Note that the test does not need to catch every edge, it only has to
-check that the line is in fact toggling.
+bats has an implicit depencency on ncurses, as I found when trying to
+run the tests on a minimal install that lacked ncurses.
+Rather than make the dependency explicit, force the output formatting to
+use the TAP format which does not require ncurses.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tools/gpio-tools-test.bats | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/gpio-tools-test | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
-index a1100ec..cc28f1b 100755
---- a/tools/gpio-tools-test.bats
-+++ b/tools/gpio-tools-test.bats
-@@ -148,9 +148,9 @@ gpiosim_wait_value() {
- 	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
- 	local PORT=$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value
+diff --git a/tools/gpio-tools-test b/tools/gpio-tools-test
+index ed39ed5..441ec66 100755
+--- a/tools/gpio-tools-test
++++ b/tools/gpio-tools-test
+@@ -54,4 +54,4 @@ modprobe gpio-sim || die "unable to load the gpio-sim module"
+ mountpoint /sys/kernel/config/ > /dev/null 2> /dev/null || \
+ 	die "configfs not mounted at /sys/kernel/config/"
  
--	for i in {1..15}; do
-+	for i in {1..30}; do
- 		[ "$(<$PORT)" = "$EXPECTED" ] && return
--		sleep 0.1
-+		sleep 0.01
- 	done
- 	return 1
- }
-@@ -1575,7 +1575,7 @@ request_release_line() {
- 	gpiosim_set_pull sim0 4 pull-up
- 	gpiosim_set_pull sim0 7 pull-up
- 
--	dut_run gpioset --banner --toggle 1s foo=1 bar=0 baz=0
-+	dut_run gpioset --banner --toggle 100ms foo=1 bar=0 baz=0
- 
- 	gpiosim_check_value sim0 1 1
- 	gpiosim_check_value sim0 4 0
-@@ -1589,6 +1589,10 @@ request_release_line() {
- 	gpiosim_wait_value sim0 1 1
- 	gpiosim_check_value sim0 4 0
- 	gpiosim_check_value sim0 7 0
-+
-+	gpiosim_wait_value sim0 1 0
-+	gpiosim_check_value sim0 4 1
-+	gpiosim_check_value sim0 7 1
- }
- 
- @test "gpioset: toggle (terminated)" {
+-exec $BATS_PATH $SOURCE_DIR/$BATS_SCRIPT ${1+"$@"}
++exec $BATS_PATH -F tap $SOURCE_DIR/$BATS_SCRIPT ${1+"$@"}
 -- 
 2.40.1
 
