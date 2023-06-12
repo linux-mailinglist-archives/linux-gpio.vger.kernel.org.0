@@ -2,371 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F196A72CA72
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 17:41:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D86C972CA7D
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 17:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237707AbjFLPlL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 11:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
+        id S238148AbjFLPnB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 11:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237685AbjFLPlJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 11:41:09 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D96F10D3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 08:41:07 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b3be39e35dso14905425ad.0
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 08:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686584467; x=1689176467;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KIQm8Xzmjf8cEBhagbjyGsjbZPmpYTORKVofimi7QMM=;
-        b=AMaHSJnv5tcRXjSc35tkbvHkG+52esBiWMHEe5iCkj9ifQgTgj+p5c+e25j9bdOrjW
-         CrWnIVRXAVWi5Z7r0R7T1xsyPF23iCXyInNxEv5WRfHqOrs4lTNM77FACvjUIHRP8uUn
-         W521041kMam1EK73C8jS5NOI+OvrtThbnHsmT+AEtEM58Slw/SKi25VJJxYsVvgw4n/A
-         bR5/aO7m1kBNZAVJzPHq1DHXAshD7TBKcOZBkCXBBpTaIdMDI8M+uC8M509uK9J+eylW
-         0TYTH+wt5TNTSwTgOTg0hMpq+JGX6F8VmpMOZ6bj3ZFvZ7Rd/nIUyqacpuqeqESXo6lq
-         28qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686584467; x=1689176467;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KIQm8Xzmjf8cEBhagbjyGsjbZPmpYTORKVofimi7QMM=;
-        b=Qdc20QoL7JkAF07058JGvL69V7s7fDQPjPPqZa/D3kM7UtDVv0Aik6W99KZnmrRMIp
-         3PpQNwZc70lrakOz1JpiP0yFkT0wrHFaw75cSN8MUH4RZ8CzcmTxb9o7hLYn6ypycXvG
-         jHI8fMZzU1ibj88xe+DxWIb9zwjE//BF4u6ntQgOEL3BXsOpW/R6UZ6o97XPCCyApB89
-         ysr2IJOGJuD9UEl1xM0AsBdANLA7UOQ1jrraXQqvKCfPLNoyPAi18MlgofC29wdUhCGe
-         C/a28uLTZdX0nqAP+BgO3MiGODKEmQJZbRab3ul0YMBYAK93VU5l+BcI6f+3elpm+LdD
-         0KEg==
-X-Gm-Message-State: AC+VfDw5kiymUgSmikirHuMRzA/MeATs1kS59h2ErRGGWSRM8sFd2vSV
-        M+6sbgAq+ZENKXLH/9E9UWW0BmtrUtc=
-X-Google-Smtp-Source: ACHHUZ7ApOTc4lhUcCLUHHfLzDnZMEBu91U27vMMzTHn9var5hnIR5t05ckViTNYd3LPiFZChXGJZQ==
-X-Received: by 2002:a17:902:ec8a:b0:1af:d750:10cb with SMTP id x10-20020a170902ec8a00b001afd75010cbmr8224615plg.63.1686584466553;
-        Mon, 12 Jun 2023 08:41:06 -0700 (PDT)
-Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id bf5-20020a170902b90500b001a6a6169d45sm8414093plb.168.2023.06.12.08.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 08:41:05 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
-Date:   Mon, 12 Jun 2023 23:40:55 +0800
-Message-Id: <20230612154055.56556-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S233394AbjFLPnA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 11:43:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2422610C7;
+        Mon, 12 Jun 2023 08:42:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD27B60C78;
+        Mon, 12 Jun 2023 15:42:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E05C433A0;
+        Mon, 12 Jun 2023 15:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686584578;
+        bh=V+v277y/LQOz1Bd9zPL2sVCJjEZLpKCmRiZipD29G+Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nV8jgN32EqcJ+FTLKjKQrdO+6UGgsibH0hBgFrN3I6uszPhudDY8fexRMZ/07CnjD
+         lw3+Zkm13jI3yKUkZjoMGfJ5pOyDmBMs5gf3zBW4D+b/N9gPaFIlklW/M1AXPbIuHi
+         lVO0uJpbVnBMPt0l1oOh8+Mn4xkaXfq7/BZ/WA2gDZ+YKD/68mkWciuq/aAA1ZQC8Z
+         XNXVERcMaX8v7+avRuFwq04OcQYlfy+QWbhL1dCi9y3fTIaweLBKD4Km0w0kHhGqJc
+         zkHM8IZbVti8WBdKOmSeBxI3JVIYXsaBs6M07c2k182ldn5Jb1SPHTdNQ+TRETs3PE
+         3hUWZDrc3poZg==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-4f642a24555so5375902e87.3;
+        Mon, 12 Jun 2023 08:42:57 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwaeYwc9Fybhw004xuKb5HGn8yzJ0n57AtvcvcmH+FiT7NCNhPg
+        SiHS+kb9Smf9gyOuoEOEXkQ021rqlupQPIZEPA==
+X-Google-Smtp-Source: ACHHUZ6nK/lGP80l1yVoeQh4mg6RqY5XjAR5DaGsogZyrQ2YZ6G1K4uViCXSD8gcr66iTuqg+9qD1vtGZ+/MAR57VpI=
+X-Received: by 2002:a2e:b618:0:b0:2a8:eee0:59f3 with SMTP id
+ r24-20020a2eb618000000b002a8eee059f3mr3172291ljn.41.1686584576044; Mon, 12
+ Jun 2023 08:42:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230605125248.279921-1-brgl@bgdev.pl> <CAL_JsqKczF9yYHWjqneBv-y+Qv+O7AkX4gwVG87+aPPazKxtDw@mail.gmail.com>
+ <22a21176-f2e2-bce5-2223-97cb095162c5@gmail.com> <98a35030-6dd3-795c-4381-1db4e94a18e4@gmail.com>
+In-Reply-To: <98a35030-6dd3-795c-4381-1db4e94a18e4@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 12 Jun 2023 09:42:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKDQy+tq7uDJ9impTr+uetkb7vz-K4BYX8bZBkpvZ=8uQ@mail.gmail.com>
+Message-ID: <CAL_JsqKDQy+tq7uDJ9impTr+uetkb7vz-K4BYX8bZBkpvZ=8uQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: demote the hogging log messages to debug
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-clippy from Rust 1.70 reports a host of warnings due to casting and type
-conversions across the FFI interface to libgpiod.
-These casts and conversions are required to support old versions of Rust
-that do not support recent Rust FFI extensions.
+On Sun, Jun 11, 2023 at 6:48=E2=80=AFAM Frank Rowand <frowand.list@gmail.co=
+m> wrote:
+>
+> On 6/11/23 07:39, Frank Rowand wrote:
+> > On 6/9/23 08:47, Rob Herring wrote:
+> >> On Mon, Jun 5, 2023 at 6:53=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> >>>
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> Drivers should be silent when they work correctly. There's no reason =
+to
+> >>> emit info messages when GPIO lines are hogged. Demote the message to
+> >>> debug.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>> Suggested-by: Kent Gibson <warthog618@gmail.com>
+> >>> ---
+> >>>  drivers/gpio/gpiolib.c |  2 +-
+> >>>  drivers/of/unittest.c  | 16 ++++++++--------
+> >>>  2 files changed, 9 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> >>> index a7220e04a93e..e4515bda8915 100644
+> >>> --- a/drivers/gpio/gpiolib.c
+> >>> +++ b/drivers/gpio/gpiolib.c
+> >>> @@ -4243,7 +4243,7 @@ int gpiod_hog(struct gpio_desc *desc, const cha=
+r *name,
+> >>>         /* Mark GPIO as hogged so it can be identified and removed la=
+ter */
+> >>>         set_bit(FLAG_IS_HOGGED, &desc->flags);
+> >>>
+> >>> -       gpiod_info(desc, "hogged as %s%s\n",
+> >>> +       gpiod_dbg(desc, "hogged as %s%s\n",
+> >>>                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "inpu=
+t",
+> >>>                 (dflags & GPIOD_FLAGS_BIT_DIR_OUT) ?
+> >>>                   (dflags & GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/lo=
+w" : "");
+> >>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> >>> index 2191c0136531..0060334a98a7 100644
+> >>> --- a/drivers/of/unittest.c
+> >>> +++ b/drivers/of/unittest.c
+> >>> @@ -1849,19 +1849,19 @@ static void __init of_unittest_overlay_gpio(v=
+oid)
+> >>>          * driver is registered
+> >>>          */
+> >>>
+> >>> -       EXPECT_BEGIN(KERN_INFO,
+> >>> +       EXPECT_BEGIN(KERN_DEBUG,
+> >>>                      "gpio-<<int>> (line-B-input): hogged as input\n"=
+);
+> >>
+> >> As debug messages are normally off, I think you can just remove these.
+> >
+> > This patch is an example of exactly why the message level is the first =
+parameter
+> > passed to EXPECT_*().  The test results are then _always_ valid, not ju=
+st
+> > _normally_.
+>
+> One should never say never.  One should never say always. :-)
+>
+> Yes, there is still the exception where debug can be enabled independentl=
+y
+> for drivers/gpio/gpiolib.c  vs for drivers/of/unittest.c.  And dynamic
+> debug can make things even more wonky.
 
-Disable the warnings on a case by case basis, and move
-casting/conversion inside the corresponding unsafe section where
-appropriate to highlight that the FFI conversion is the cause.
+If we turned on debug messages for drivers/of/, the unittest would be
+hopelessly broken.
 
-clippy also finds a couple of genuine uneccessary casts, so remove
-those too.
+Debug messages are special compared to all the other levels as they
+are normally off whereas the rest are always on. For the unittest we
+should assume they are off.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-
-There is also at least one instance of reformatting by rustfmt,
-but that seems appropriate too.
-
-Cheers,
-Kent.
-
- bindings/rust/gpiosim-sys/src/lib.rs         |  1 +
- bindings/rust/gpiosim-sys/src/sim.rs         |  6 ++++--
- bindings/rust/libgpiod/src/chip.rs           |  5 ++++-
- bindings/rust/libgpiod/src/edge_event.rs     |  1 +
- bindings/rust/libgpiod/src/event_buffer.rs   |  3 +++
- bindings/rust/libgpiod/src/info_event.rs     |  1 +
- bindings/rust/libgpiod/src/lib.rs            |  1 +
- bindings/rust/libgpiod/src/line_config.rs    | 11 +++++++----
- bindings/rust/libgpiod/src/line_info.rs      |  1 +
- bindings/rust/libgpiod/src/line_request.rs   | 14 +++++++++-----
- bindings/rust/libgpiod/src/line_settings.rs  |  2 ++
- bindings/rust/libgpiod/src/request_config.rs |  5 ++++-
- bindings/rust/libgpiod/tests/chip.rs         |  2 +-
- 13 files changed, 39 insertions(+), 14 deletions(-)
-
-diff --git a/bindings/rust/gpiosim-sys/src/lib.rs b/bindings/rust/gpiosim-sys/src/lib.rs
-index eed2a42..0360333 100644
---- a/bindings/rust/gpiosim-sys/src/lib.rs
-+++ b/bindings/rust/gpiosim-sys/src/lib.rs
-@@ -37,6 +37,7 @@ pub enum Value {
- 
- impl Value {
-     pub(crate) fn new(val: gpiosim_value) -> Result<Self> {
-+        #[allow(clippy::unnecessary_cast)]
-         Ok(match val {
-             GPIOSIM_VALUE_INACTIVE => Value::InActive,
-             GPIOSIM_VALUE_ACTIVE => Value::Active,
-diff --git a/bindings/rust/gpiosim-sys/src/sim.rs b/bindings/rust/gpiosim-sys/src/sim.rs
-index 896596f..cac5659 100644
---- a/bindings/rust/gpiosim-sys/src/sim.rs
-+++ b/bindings/rust/gpiosim-sys/src/sim.rs
-@@ -155,8 +155,9 @@ impl SimBank {
-     }
- 
-     fn val(&self, offset: Offset) -> Result<Value> {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiosim_bank` is guaranteed to be valid here.
--        let ret = unsafe { gpiosim_bank_get_value(self.bank, offset) };
-+        let ret = unsafe { gpiosim_bank_get_value(self.bank, offset) as i32};
- 
-         if ret == -1 {
-             Err(Error::OperationFailed(
-@@ -164,7 +165,7 @@ impl SimBank {
-                 errno::errno(),
-             ))
-         } else {
--            Value::new(ret as i32)
-+            Value::new(ret)
-         }
-     }
- 
-@@ -185,6 +186,7 @@ impl SimBank {
-     }
- 
-     fn set_num_lines(&self, num: usize) -> Result<()> {
-+        #[allow(clippy::useless_conversion)]
-         // SAFETY: `gpiosim_bank` is guaranteed to be valid here.
-         let ret = unsafe { gpiosim_bank_set_num_lines(self.bank, num.try_into().unwrap()) };
-         if ret == -1 {
-diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
-index f4de008..f160d23 100644
---- a/bindings/rust/libgpiod/src/chip.rs
-+++ b/bindings/rust/libgpiod/src/chip.rs
-@@ -278,8 +278,11 @@ impl Info {
- 
-     /// Get the number of GPIO lines exposed by the chip.
-     pub fn num_lines(&self) -> usize {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_chip` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_chip_info_get_num_lines(self.info) as usize }
-+        unsafe {
-+            gpiod::gpiod_chip_info_get_num_lines(self.info) as usize
-+        }
-     }
- }
- 
-diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
-index d324ce6..64d20e2 100644
---- a/bindings/rust/libgpiod/src/edge_event.rs
-+++ b/bindings/rust/libgpiod/src/edge_event.rs
-@@ -40,6 +40,7 @@ impl Event {
- 
-     /// Get the event type.
-     pub fn event_type(&self) -> Result<EdgeKind> {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
-         EdgeKind::new(unsafe { gpiod::gpiod_edge_event_get_event_type(self.0) } as u32)
-     }
-diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-index 1deaf2b..89611bc 100644
---- a/bindings/rust/libgpiod/src/event_buffer.rs
-+++ b/bindings/rust/libgpiod/src/event_buffer.rs
-@@ -54,6 +54,7 @@ impl<'a> Iterator for Events<'a> {
-     }
- 
-     fn next(&mut self) -> Option<Self::Item> {
-+        #[allow(clippy::iter_nth_zero)] // as using next() is self referential
-         self.nth(0)
-     }
- }
-@@ -81,6 +82,7 @@ impl Buffer {
-             ));
-         }
- 
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_edge_event_buffer` is guaranteed to be valid here.
-         let capacity = unsafe { gpiod::gpiod_edge_event_buffer_get_capacity(buffer) as usize };
- 
-@@ -103,6 +105,7 @@ impl Buffer {
-             self.events[i] = ptr::null_mut();
-         }
- 
-+        #[allow(clippy::useless_conversion)]
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
-         let ret = unsafe {
-             gpiod::gpiod_line_request_read_edge_events(
-diff --git a/bindings/rust/libgpiod/src/info_event.rs b/bindings/rust/libgpiod/src/info_event.rs
-index b0ceb3b..7651f1c 100644
---- a/bindings/rust/libgpiod/src/info_event.rs
-+++ b/bindings/rust/libgpiod/src/info_event.rs
-@@ -33,6 +33,7 @@ impl Event {
- 
-     /// Get the event type of the status change event.
-     pub fn event_type(&self) -> Result<InfoChangeKind> {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_info_event` is guaranteed to be valid here.
-         InfoChangeKind::new(unsafe { gpiod::gpiod_info_event_get_event_type(self.event) } as u32)
-     }
-diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
-index 26354e5..314e157 100644
---- a/bindings/rust/libgpiod/src/lib.rs
-+++ b/bindings/rust/libgpiod/src/lib.rs
-@@ -184,6 +184,7 @@ pub mod line {
- 
-     impl Value {
-         pub fn new(val: gpiod::gpiod_line_value) -> Result<Self> {
-+            #[allow(clippy::unnecessary_cast)]
-             Ok(match val {
-                 GPIOD_LINE_VALUE_INACTIVE => Value::InActive,
-                 GPIOD_LINE_VALUE_ACTIVE => Value::Active,
-diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-index e973cde..405e675 100644
---- a/bindings/rust/libgpiod/src/line_config.rs
-+++ b/bindings/rust/libgpiod/src/line_config.rs
-@@ -106,20 +106,23 @@ impl Config {
-     /// Get a mapping of offsets to line settings stored by this object.
-     pub fn line_settings(&self) -> Result<SettingsMap> {
-         let mut map = SettingsMap::new();
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: gpiod_line_config is guaranteed to be valid here
--        let num_lines = unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) };
--        let mut offsets = vec![0; num_lines as usize];
-+        let num_lines =
-+            unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) as usize };
-+        let mut offsets = vec![0; num_lines];
- 
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: gpiod_line_config is guaranteed to be valid here.
-         let num_stored = unsafe {
-             gpiod::gpiod_line_config_get_configured_offsets(
-                 self.config,
-                 offsets.as_mut_ptr(),
-                 num_lines,
--            )
-+            ) as usize
-         };
- 
--        for offset in &offsets[0..num_stored as usize] {
-+        for offset in &offsets[0..num_stored] {
-             // SAFETY: `gpiod_line_config` is guaranteed to be valid here.
-             let settings =
-                 unsafe { gpiod::gpiod_line_config_get_line_settings(self.config, *offset) };
-diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libgpiod/src/line_info.rs
-index 702f1b4..bff9ece 100644
---- a/bindings/rust/libgpiod/src/line_info.rs
-+++ b/bindings/rust/libgpiod/src/line_info.rs
-@@ -142,6 +142,7 @@ impl Info {
- 
-     /// Get the debounce period of the line.
-     pub fn debounce_period(&self) -> Duration {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
-         Duration::from_micros(unsafe {
-             gpiod::gpiod_line_info_get_debounce_period_us(self.info) as u64
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index b175eea..51cc7cd 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -27,23 +27,27 @@ impl Request {
- 
-     /// Get the number of lines in the request.
-     pub fn num_lines(&self) -> usize {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_request_get_num_requested_lines(self.request) as usize }
-+        unsafe {
-+            gpiod::gpiod_line_request_get_num_requested_lines(self.request) as usize
-+        }
-     }
- 
-     /// Get the offsets of lines in the request.
-     pub fn offsets(&self) -> Vec<Offset> {
--        let mut offsets = vec![0; self.num_lines() as usize];
-+        let mut offsets = vec![0; self.num_lines()];
- 
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
-         let num_offsets = unsafe {
-             gpiod::gpiod_line_request_get_requested_offsets(
-                 self.request,
-                 offsets.as_mut_ptr(),
-                 self.num_lines(),
--            )
-+            ) as usize
-         };
--        offsets.shrink_to(num_offsets as usize);
-+        offsets.shrink_to(num_offsets);
-         offsets
-     }
- 
-@@ -145,7 +149,7 @@ impl Request {
- 
-     /// Set values of all lines associated with the request.
-     pub fn set_values(&mut self, values: &[Value]) -> Result<&mut Self> {
--        if values.len() != self.num_lines() as usize {
-+        if values.len() != self.num_lines() {
-             return Err(Error::InvalidArguments);
-         }
- 
-diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
-index 918d6c2..3b1d2b6 100644
---- a/bindings/rust/libgpiod/src/line_settings.rs
-+++ b/bindings/rust/libgpiod/src/line_settings.rs
-@@ -218,6 +218,7 @@ impl Settings {
- 
-     /// Get the debounce period.
-     pub fn debounce_period(&self) -> Result<Duration> {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
-         Ok(Duration::from_micros(unsafe {
-             gpiod::gpiod_line_settings_get_debounce_period_us(self.settings) as u64
-@@ -243,6 +244,7 @@ impl Settings {
- 
-     /// Get the event clock setting.
-     pub fn event_clock(&self) -> Result<EventClock> {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
-         EventClock::new(unsafe { gpiod::gpiod_line_settings_get_event_clock(self.settings) } as u32)
-     }
-diff --git a/bindings/rust/libgpiod/src/request_config.rs b/bindings/rust/libgpiod/src/request_config.rs
-index 0c6c5c1..48edfaf 100644
---- a/bindings/rust/libgpiod/src/request_config.rs
-+++ b/bindings/rust/libgpiod/src/request_config.rs
-@@ -82,8 +82,11 @@ impl Config {
- 
-     /// Get the edge event buffer size setting for the request config.
-     pub fn event_buffer_size(&self) -> usize {
-+        #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_request_config` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_request_config_get_event_buffer_size(self.config) as usize }
-+        unsafe {
-+            gpiod::gpiod_request_config_get_event_buffer_size(self.config) as usize
-+        }
-     }
- }
- 
-diff --git a/bindings/rust/libgpiod/tests/chip.rs b/bindings/rust/libgpiod/tests/chip.rs
-index f264708..60b4ecc 100644
---- a/bindings/rust/libgpiod/tests/chip.rs
-+++ b/bindings/rust/libgpiod/tests/chip.rs
-@@ -59,7 +59,7 @@ mod chip {
-             assert_eq!(info.label().unwrap(), LABEL);
-             assert_eq!(info.name().unwrap(), sim.chip_name());
-             assert_eq!(chip.path().unwrap(), sim.dev_path().to_str().unwrap());
--            assert_eq!(info.num_lines(), NGPIO as usize);
-+            assert_eq!(info.num_lines(), NGPIO);
-         }
- 
-         #[test]
--- 
-2.40.1
-
+Rob
