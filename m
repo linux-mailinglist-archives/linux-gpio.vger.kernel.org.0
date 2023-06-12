@@ -2,103 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D821272CED6
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 20:58:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E969372D112
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jun 2023 22:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237397AbjFLS61 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 14:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38162 "EHLO
+        id S237529AbjFLUul (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 16:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236888AbjFLS6Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 14:58:25 -0400
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9016F11B
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 11:58:21 -0700 (PDT)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7870821d9a1so120574241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 11:58:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686596300; x=1689188300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XdQsPEv+w7G5ZisB7HtQdHauL9jfw1bgHjHj9mlXIwc=;
-        b=vLnDYWRzk8fV45xgoNyeVo5EHen2Jmhzmk0Ur4MjdxNa6YY66GzeIpI7hW8HavNIg1
-         K1edsaAcrQxHm7UAyOORg2Qi2aloK1kIEY8oNuV7P3DWb5HIiiMqAfGGsxE60zQDY14J
-         PA7ZHCgkKunm0drchOIFerFBrXQTTy8tVtKwTnZZgXQafIfySvJqk5Q0O8oy9LcVmaDZ
-         O3g1kl/iyUhUpw4tnLBSCXafktd8eq5jJx5Kt/vzl/TUNVNUNl2MtInsTHOy00FD9iOy
-         GC0LRQc3w2pfebnG8F173IkM+4fHDRuuWz0aTptiOu6Ht4KIjZQH3qMOdR5h2RfEiyzQ
-         h5nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686596300; x=1689188300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XdQsPEv+w7G5ZisB7HtQdHauL9jfw1bgHjHj9mlXIwc=;
-        b=M4K+SQI1d6dQvSIgAyM93w6EfKuZDFo51Pm1tA3TFAyUX+egZKFOCgLCJFwduhW8YW
-         Z02shPORCGCUu3+IFSslGtBOAPA0KvG/utbGVIXM1atJnX7gdasiLuuFMOoAiKtRaj1g
-         4RSpjNTjI4CNzS6Gr9fE2fk6K/VL4mWm8h3horBLLKNRFa918921CTOsVvveFmfkAmaT
-         1T55QdkB72y6nACfDLoN7hirWYGdKMHmcHHHUzPahIQ2bhyvDz9H5fXeKr6TmqRlum1M
-         NfF618X57kger7q1FFEiDZXDuykGkr6mST31/H36V371n9q43q5ytPuIjUBAmAx2ZuxS
-         hDAQ==
-X-Gm-Message-State: AC+VfDzFBhGZsR+jhO1Yrq+3X6IPIzgwVfsOBnKWer9dcstJrLIaaiNn
-        ylvaOqGoDJjbLpLnjt8Iii4GsTWd6yYNq/GwtJo2Tw==
-X-Google-Smtp-Source: ACHHUZ5PVvXANSG/YY15RXC3Pvs+GVN/nBgeM5pagzu9/j2KNY1BZzEtdGXI4cPSJfXNAqy8kxF8nuHGoJIXkqltfcY=
-X-Received: by 2002:a05:6102:c53:b0:434:8540:377 with SMTP id
- y19-20020a0561020c5300b0043485400377mr6044968vss.17.1686596300671; Mon, 12
- Jun 2023 11:58:20 -0700 (PDT)
+        with ESMTP id S238003AbjFLUsY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 16:48:24 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05hn2205.outbound.protection.outlook.com [52.100.175.205])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABC919B7;
+        Mon, 12 Jun 2023 13:46:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7WZU4NJiEeTIJcT5/NpobxXlKuSOf9QTCkRWtL0wIgc=;
+ b=Tc48mo7/ZFbGX/eFyHHQzkNSWu0aFCy7Y2o2PnjiJnEIueMvZo81iOXRomAEmsiiic5RUI5ibEWBcBZQ4hvKbSG2QPvsLaiftuQ0Tn8eAca09n+6n8uxc3Tzm3ngErhyX49BC4IzAxeEX31aR9D/kq+09PPNgHl8tJfYiVvxI762MP7BbOKtsbI/c/zaATULeXV2I7nEhdCoTup8PrJ6BnSX2KWnu+i2JkOk7MLGAS7AQiPV4EKhoeQ8QyB+MAWrH8Opx7+OXH/oDO8b+IuOAK0+M5cFNdi4GyqtBQ26qCUKT3J6C3RVJEyxcwe9hvgT+Rjyw85Eq0SqPinjfefU2A==
+Received: from AS9PR05CA0328.eurprd05.prod.outlook.com (2603:10a6:20b:491::33)
+ by AM9PR03MB7169.eurprd03.prod.outlook.com (2603:10a6:20b:266::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.44; Mon, 12 Jun
+ 2023 20:46:31 +0000
+Received: from AM6EUR05FT025.eop-eur05.prod.protection.outlook.com
+ (2603:10a6:20b:491:cafe::3) by AS9PR05CA0328.outlook.office365.com
+ (2603:10a6:20b:491::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.34 via Frontend
+ Transport; Mon, 12 Jun 2023 20:46:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.86)
+ smtp.mailfrom=seco.com; dkim=pass (signature was verified)
+ header.d=seco.com;dmarc=pass action=none header.from=seco.com;
+Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
+ 20.160.56.86 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.160.56.86; helo=inpost-eu.tmcas.trendmicro.com; pr=C
+Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.86) by
+ AM6EUR05FT025.mail.protection.outlook.com (10.233.240.185) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6500.22 via Frontend Transport; Mon, 12 Jun 2023 20:46:30 +0000
+Received: from outmta (unknown [192.168.82.133])
+        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id 58D2220080091;
+        Mon, 12 Jun 2023 20:46:30 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (unknown [104.47.17.169])
+        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 017C720080073;
+        Mon, 12 Jun 2023 20:50:17 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fgVQWPC9f8Hn5+iijQit0ZuwcRzeuRXj9cPshQ6T0XY0BPiv0IzLMijap853wq5gc3kcMQ8bbmT1CaU6iUFSYxfK4divPCiss0IHorVKIolUMEdLpNwcVTDacRYOcn9SGiJLuhHULY08tqDJUPgLHIijXXDcE/y3tvxSjakxO7Nbrpwy4kB4NcGPQP5yjEXGwVUeoNhcqCW4XrSSemrk+vs1GQfc0Ude/yAW35gsff85W2y/h01pvU5f7t87jmCTzLJmtLfW/4Z/YbNohFtwPEQHtm4auSktFng5gf+OE3xJoHmAF29LeNHkCo0Xj5SSnFvWu/2S32x8Am8BrhxOxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7WZU4NJiEeTIJcT5/NpobxXlKuSOf9QTCkRWtL0wIgc=;
+ b=Ly44mz+slmfVl4f8GA3SP3Wvok7y6b217WJ7TsVXXUG2YKPusCRUHm9JGcnbpBdD74K4M3re8Tuf0T4qGFOS0daZJ6sPbUlPfEde2i0T/HxbC9fqylivt3pEYjIiDVrHts0QEPfbqErD9UFUa3u+WlKeHtJ2Cgu/kr88KxsYAUhyZBYFWja1hNGeAMWAa8xOmdFuAHnl+cS5etiWkRU2iKAOaVMm2ozW6Ly2wMnwazNKaPEQ2ev8M7SJHJxGOwGzgvidg9vA3Pg4eDZimn8Mm1uj4jncLAA9ZxNf0zRoGzCd/Y5xTtjPKbAChsyi/chlDxMNDcYNQV348rDBe7LiEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7WZU4NJiEeTIJcT5/NpobxXlKuSOf9QTCkRWtL0wIgc=;
+ b=Tc48mo7/ZFbGX/eFyHHQzkNSWu0aFCy7Y2o2PnjiJnEIueMvZo81iOXRomAEmsiiic5RUI5ibEWBcBZQ4hvKbSG2QPvsLaiftuQ0Tn8eAca09n+6n8uxc3Tzm3ngErhyX49BC4IzAxeEX31aR9D/kq+09PPNgHl8tJfYiVvxI762MP7BbOKtsbI/c/zaATULeXV2I7nEhdCoTup8PrJ6BnSX2KWnu+i2JkOk7MLGAS7AQiPV4EKhoeQ8QyB+MAWrH8Opx7+OXH/oDO8b+IuOAK0+M5cFNdi4GyqtBQ26qCUKT3J6C3RVJEyxcwe9hvgT+Rjyw85Eq0SqPinjfefU2A==
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
+ by PAXPR03MB7548.eurprd03.prod.outlook.com (2603:10a6:102:1db::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.29; Mon, 12 Jun
+ 2023 20:46:22 +0000
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::d632:8122:75f7:7b0e]) by DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::d632:8122:75f7:7b0e%3]) with mapi id 15.20.6455.045; Mon, 12 Jun 2023
+ 20:46:21 +0000
+Message-ID: <1dd01fe2-08a8-ec2f-1184-a58b2f55ba85@seco.com>
+Date:   Mon, 12 Jun 2023 16:46:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
+Content-Language: en-US
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?B?RmVybuKUnMOtbmRleiBSb2phcw==?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20230426105140.t4yqv6irtjcwptm5@skbuf>
+ <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
+ <7c7ab84b-3c4a-4e44-b5b5-4acf733a0246@seco.com>
+ <20230429172422.vc35tnwkekfieoru@skbuf>
+ <c81d23b6-ed22-0b37-d71b-ddce9d5d58eb@seco.com>
+ <c2f928d2-25f6-0e31-9ab3-9d585968df1b@seco.com>
+ <20230522150010.q5zndfwcuvrb6pg2@skbuf>
+ <22a28a6f-2c84-a6b1-bb57-a269af34c993@seco.com>
+ <20230610222123.mzmfjx7zfw4nh2lo@skbuf>
+ <c702e2b6-cb0f-4ac9-86fe-a220284d45aa@seco.com>
+ <20230612163353.dwouatvqbuo6h4ea@skbuf>
+From:   Sean Anderson <sean.anderson@seco.com>
+In-Reply-To: <20230612163353.dwouatvqbuo6h4ea@skbuf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL0PR01CA0001.prod.exchangelabs.com (2603:10b6:208:71::14)
+ To DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
 MIME-Version: 1.0
-References: <20230612025642.11554-1-warthog618@gmail.com> <20230612025642.11554-4-warthog618@gmail.com>
-In-Reply-To: <20230612025642.11554-4-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 12 Jun 2023 20:58:09 +0200
-Message-ID: <CAMRc=MdypMBAoWNj6Q4A7y2j2619vceGf_EmnstZa3HMszZ6eA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 3/3] tools: tests: force bats to use tap output
- format to remove indirect dependency on ncurses
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|PAXPR03MB7548:EE_|AM6EUR05FT025:EE_|AM9PR03MB7169:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d57c4d5-9fe1-400d-a7fd-08db6b8619dd
+X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: yG1q7L0l7oznMaSKWRKnF3rtdsluiuP1mylk+HTUGMno0sfPBbTVBKNnYs+EMIbxZLQyQXksyKMkq5XUDpTi1fIn3RshOzNj97iGn9Ev39WyKk6kcg7RFLA4cMGsrdQJJ9hO3UQqaj+WzXPAy6viI5U7YBjxhcGC5QSZggmP14ubZGx3V5ycY9CUYdI+Ub8E4ULP/PNJooZrzxJjeyejEMluFqQc0JyJBDPIWrscv0FYt4+Xz9PbVzTkUMvQI2R7CaZGhQU76ihwXyo8sLa8zpnGP69cRZzdr87xyn2oLIChC/IwirkcKBGVsoKDeqQL+TEfFVyqTAvyy/K695nvXrWaZ0v7p5GNBM8rChF0uSa6ETeQGlZqfKZSXhwsrCnEK64w+0JK3fYwAem8r6newS6CIzB+9O7SK1mu/0Y7lDe25cfDKvn2+2dAn1OnyIbBTfVVml4o7UeMPp4pJ2w/is1GJi0AXy+xuOZJCitZQAdbsHbPsUV4DITUxwF+vQSa481UHorL9nXnmpNtrhDlipbdcJ6U9gRi6gi+OYpwVpyoBT3idyMgYrG0Sa87oeFeWri4fq8sugwN9rOM+mx7eUKfcDZTW/5u4V26yZXCm6lSRIaI2/G5QjJ2JO0mdGA1D5bujJh/tp5qWGEvQRNJnr6sUE5T/kFg8ozctGH9BtPBcB22pqroAasbDDZuqAIV
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(39850400004)(136003)(376002)(396003)(451199021)(52116002)(6486002)(6666004)(36756003)(83380400001)(2616005)(38350700002)(31696002)(38100700002)(86362001)(6506007)(53546011)(6512007)(26005)(186003)(2906002)(54906003)(66476007)(4326008)(44832011)(316002)(7416002)(6916009)(66556008)(31686004)(41300700001)(5660300002)(478600001)(66946007)(8936002)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR03MB7548
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM6EUR05FT025.eop-eur05.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 05a29540-3560-4880-6556-08db6b861464
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0Z2XC+ceVo9ELcdMdE2tCD7pTL8elkK28UMCjeLKN0WhRADQouwI13GaebuhbGuBWnMH4dyp/xI3R9X2KZrza74L8CR7lfB81EhdE96eefkWTOimPLX1VnmCwU5skf7PB4JCC7A2f2bLfFDI90E92bBDllFW+8+fxRd4BIWfi1scng5hL2aA7ECr5U7jcUxJWpdBAvcO7LGo9FqNXNybORYeO86yzoyKIE5Vuq+UPjMUVERuguG4YjL6bRu4y31AtkaKXf1XMqCZ0WROecMmn3ZpTWoUtlEd1qjF1TvYb1XzvAwrB5AExZmBf+r4XR+xZs6ZSN+c2nbDZsH/L4Ewvuksa2Ihd646MjKAHlB+q+475zr77L0RTW6S30hdsY3EiK+0/RechjTERJ7JrO2T1Ycm/6I5jUl12Od6+AbiNcWM82xtwMGUkc9JjdH92BI5kSICB+AymgFiHdfJV7VE8Q/jWih28zXmtdv0ODZmNDtFyjI+ye5hRTOw/9HMCBGwtPdRCfEQCA4z7uuhblrXQkyLKEhrUQjYriezjZ8WuWB2jfWC7u2tYxpBWw7oYGy3KqyyoP7z8mKUsQTFY5AdO50EDGGcLED2VoWomhqpN5wdP9orZNRfIQqm4/XSPouKM2+aosfpEGNXg+d2MMVhizVj0/JV57Jb43X9YGZjCZx2GSpuCl6MLLggbQo00dunbVUwycgYJfOUe1XiIq9kgO9dVmELcfmoQuC9+bgNGhc08CWITZwltYf4MubTGxg4tryXL8gNUwDTJzrde51AUY9c4d5wvE78dm49WXS8clz6B2J/x60njljlc7sbiZJ/5AN1sHv/+Y52vx0/aIjuIA==
+X-Forefront-Antispam-Report: CIP:20.160.56.86;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230028)(136003)(346002)(39850400004)(396003)(376002)(5400799015)(451199021)(40470700004)(36840700001)(46966006)(5660300002)(40480700001)(6486002)(54906003)(7636003)(82740400003)(7596003)(356005)(6916009)(41300700001)(8936002)(8676002)(4326008)(70586007)(70206006)(316002)(2616005)(478600001)(186003)(36860700001)(83380400001)(6666004)(6512007)(336012)(6506007)(26005)(53546011)(34070700002)(47076005)(40460700003)(31696002)(86362001)(82310400005)(7416002)(44832011)(2906002)(36756003)(31686004)(43740500002)(12100799033);DIR:OUT;SFP:1501;
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2023 20:46:30.6334
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d57c4d5-9fe1-400d-a7fd-08db6b8619dd
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.86];Helo=[inpost-eu.tmcas.trendmicro.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM6EUR05FT025.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR03MB7169
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 4:57=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> bats has an implicit depencency on ncurses, as I found when trying to
-> run the tests on a minimal install that lacked ncurses.
-> Rather than make the dependency explicit, force the output formatting to
-> use the TAP format which does not require ncurses.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  tools/gpio-tools-test | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/gpio-tools-test b/tools/gpio-tools-test
-> index ed39ed5..441ec66 100755
-> --- a/tools/gpio-tools-test
-> +++ b/tools/gpio-tools-test
-> @@ -54,4 +54,4 @@ modprobe gpio-sim || die "unable to load the gpio-sim m=
-odule"
->  mountpoint /sys/kernel/config/ > /dev/null 2> /dev/null || \
->         die "configfs not mounted at /sys/kernel/config/"
->
-> -exec $BATS_PATH $SOURCE_DIR/$BATS_SCRIPT ${1+"$@"}
-> +exec $BATS_PATH -F tap $SOURCE_DIR/$BATS_SCRIPT ${1+"$@"}
-> --
-> 2.40.1
->
+On 6/12/23 12:33, Vladimir Oltean wrote:
+> On Mon, Jun 12, 2023 at 10:35:21AM -0400, Sean Anderson wrote:
+>> > And if SERDES protocol switching was not physically possible, would this
+>> > patch set still have value?
 
-That's interesting. I will backport it as this affects the recipe in
-meta-openembedded an every distro that wants to package it with
-run-time dependencies satisfied.
+More to the point, did you make any progress in this area?
 
-Thanks. I applied all three patches.
+>> Yes. To e.g. set up SGMII25 or to fix the clocking situation.
+> 
+> Let me analyze the reasons one by one.
+> 
+> The clocking situation only exists due to a hope that protocol changing
+> would be possible. If you were sure it wasn't possible, your board would
+> have had refclks set up for protocol 3333 via the supported PLL mapping 2222.
+> In essence, I consider this almost a non-argument, as it fixes a
+> self-inflicted problem.
 
-Bart
+2222 also does not work, as outlined above.
+
+The clocking is incompatible, and must be fixed by software.
+
+The only thing self-inflicted is NXP's conflicting design.
+
+> Have you actually tested changing individual lanes from SGMII to SGMII 2.5?
+> I know it works on LS1028A, but I don't know if that's also true on LS1046A.
+> Your comments do say "LYNX_PROTO_SGMII25, /* Not tested */".
+
+Not yet. 
+
+This driver would also be a good place to add the KR link training with
+NXP tried to upstream a few years ago.
+
+> Assuming a start from SERDES protocol 3333 with PLL mapping 2222,
+> this protocol change implies powering on PLL 1 (reset state machine
+> wants it to be disabled) and moving those lanes from PLL 2 to PLL 1.
+> 
+> At first sight you might appear to have a point related to the fact that
+> PLL register writes are necessary, and thus this whole shebang is necessary.
+> But this can all be done using PBI commands, with the added benefit that
+> U-Boot can also use those SERDES networking ports, and not just Linux.
+> You can use the RCW+PBL specific to your board to inform the SoC that
+> your platform's refclk 1 is 156 MHz (something which the reset state
+> machine seems unable to learn, with protocol 0x3333). You don't have to
+> put that in the device tree. You don't have to push code to any open
+> source project to expose your platform specific details. Then, just like
+> in the case of the Lynx 28G driver on LX2160, the SERDES driver could
+> just treat the PLL configuration as read-only, which would greatly
+> simplify things and eliminate the need for a clk driver.
+> 
+> Here is an illustrative example (sorry, I don't have a board with the
+> right refclk on that PLL, to verify all the way):
+> 
+> ... snip ...
+
+(which of course complicates the process of building the PBIs...)
+
+> In short, I believe the reasons you have cited do not justify the
+> complexity of the solution that you propose.
+
+The work is done, and it is certainly more flexible than what you
+propose. E.g. imagine a clock which needs to be configured before it has
+the correct frequency. Such a thing is difficult to do in a PBI solution,
+but is trivial in Linux.
+
+--Sean
