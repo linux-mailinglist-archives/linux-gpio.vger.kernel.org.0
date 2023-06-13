@@ -2,94 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEEDD72D746
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 04:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4097872D843
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 05:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjFMCM6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Jun 2023 22:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38506 "EHLO
+        id S238135AbjFMD46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Jun 2023 23:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjFMCM5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 22:12:57 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA651718;
-        Mon, 12 Jun 2023 19:12:56 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QgBsc2QNyz4f3tP1;
-        Tue, 13 Jun 2023 10:12:52 +0800 (CST)
-Received: from ubuntu20.huawei.com (unknown [10.67.174.33])
-        by APP1 (Coremail) with SMTP id cCh0CgBXxS+j0IdkeBHAKw--.56443S2;
-        Tue, 13 Jun 2023 10:12:53 +0800 (CST)
-From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gongruiqi1@huawei.com
-Subject: [PATCH] pinctrl: renesas: remove checker warnings: x | !y
-Date:   Tue, 13 Jun 2023 10:16:43 +0800
-Message-Id: <20230613021643.3330661-1-gongruiqi@huaweicloud.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229602AbjFMD4s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Jun 2023 23:56:48 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B412C191
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 20:56:46 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b3b56dcf1bso22291745ad.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jun 2023 20:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686628606; x=1689220606;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tUstb4R2NOia7NzgcIeGZFYpDPlFfq4YwMbMwKZUid0=;
+        b=vWStrVq0drp/nZCbsJA0nEFY5sUI/ieLpyjgIVb2VigU37rT9qciUiwJffUjS+ZycB
+         U2niYvabukuKmxFTyenmTVV8SVkD+mPH7ArSE3U4DeIDcK7YoCRgo6XxPG+fgKEQvMcu
+         HYpS+UGEeSmi7BEZ1PYkAgWvBbnjvloYVO66X79JPfcImvIHElDTEQ2jfxZleg1zKox1
+         UKC9lsAIiKx5x6Y9JeCQpb41vpGHyEl7OYfziRpcSe6SV11WGmnVIy0OW9GLcrtEB9/f
+         YNjrj8lMqsee34adv0U+QwLId8m3jeDQvB6uO+PEjC7tT0tOUBtC8ICs+bPIneXfjuDj
+         Pg7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686628606; x=1689220606;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tUstb4R2NOia7NzgcIeGZFYpDPlFfq4YwMbMwKZUid0=;
+        b=C1JTHPSOwVR02k9pIfSmyYLbYXjImR7ydEb1GkukX75EDKn8PrycMXa+jMZJXd44cS
+         G1g6CceNfSqpFFvT2YL2pfAJil00EmjknjqKDcsVpbx62Dqr1PlXgi5x1SUOuN80qgo6
+         39es5+6CigxgpfqaQVtj3Z2LVCacmr7b0yk6FpUrDTS/k/uoBK7BG97rTyPDOCtjZVth
+         qwx+heyBFeOvVJ/AnMq8OmXZ6wPZI0YjJY+37FhD5nNRt0R1WAlHeVYOSLUx1NZTue17
+         DATzmkOxuL8ZQfEMuu5a5J+qXSJAvSPlrv2e7MRGKcy4wIHuk78EPAdWglP1JESfmDMx
+         nfMQ==
+X-Gm-Message-State: AC+VfDzWh/RELRWKf1KCtsOf1b3RUXeVcU0Jmm+rCYvQkniOyPN3O+2K
+        c/vkoA98NI+TQEg9cEOs97EgfwYhUYThfCb57MM=
+X-Google-Smtp-Source: ACHHUZ4XGIEEyEjhmSZ06wRafxz5xkeVwflaN1O5M9AOmgJx1bBoosr6w8R+btlgp0MmMEqI8tO7Ig==
+X-Received: by 2002:a17:903:1208:b0:1b0:25d2:6f11 with SMTP id l8-20020a170903120800b001b025d26f11mr9554062plh.17.1686628606164;
+        Mon, 12 Jun 2023 20:56:46 -0700 (PDT)
+Received: from localhost ([122.172.87.195])
+        by smtp.gmail.com with ESMTPSA id h11-20020a170902f54b00b001b3e6bbcb19sm587812plf.50.2023.06.12.20.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 20:56:45 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 09:26:43 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+Subject: Re: [PATCH libgpiod 0/3] bindings: rust: prepare for crates.io
+ publish
+Message-ID: <20230613035643.6mnwtu5jelp6xvt5@vireshk-i7>
+References: <20230612-crates_io_publish-v1-0-70988ee9a655@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBXxS+j0IdkeBHAKw--.56443S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1DWry5AFW5GFWDGF1ftFb_yoWkKFc_CF
-        1UXrnxCr9rC3W5ury0qayfWrWvkan2q34vvwn2va43Cr9xAw12yF9YkrZ8Cwn7Wa17tF9x
-        CrnFvrW0yF17AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbokYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-        Y4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-        67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-        IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
-        0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
-        vfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230612-crates_io_publish-v1-0-70988ee9a655@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Eliminate the following Sparse reports when building with C=1:
+On 12-06-23, 13:14, Erik Schilling wrote:
+> After libgpiod-sys is published [1]. This series does a little bit of
+> cleanup and prepares libgpiod for publishing.
+> 
+> [1] https://crates.io/crates/libgpiod-sys
+> 
+> To: Linux-GPIO <linux-gpio@vger.kernel.org>
+> Cc: Kent Gibson <warthog618@gmail.com>
+> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+> Cc: Alex Bennée <alex.bennee@linaro.org>
+> 
+> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 
-drivers/pinctrl/renesas/pinctrl-rzn1.c:187:52: warning: dubious: x | !y
-drivers/pinctrl/renesas/pinctrl-rzn1.c:193:52: warning: dubious: x | !y
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
----
- drivers/pinctrl/renesas/pinctrl-rzn1.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzn1.c b/drivers/pinctrl/renesas/pinctrl-rzn1.c
-index 374b9f281324..2391a316d5c5 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzn1.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzn1.c
-@@ -184,13 +184,15 @@ static void rzn1_hw_set_lock(struct rzn1_pinctrl *ipctl, u8 lock, u8 value)
- 	 * address | 1.
- 	 */
- 	if (lock & LOCK_LEVEL1) {
--		u32 val = ipctl->lev1_protect_phys | !(value & LOCK_LEVEL1);
-+		u32 val = ipctl->lev1_protect_phys |
-+			(value & LOCK_LEVEL1 ? 0 : 1);
- 
- 		writel(val, &ipctl->lev1->status_protect);
- 	}
- 
- 	if (lock & LOCK_LEVEL2) {
--		u32 val = ipctl->lev2_protect_phys | !(value & LOCK_LEVEL2);
-+		u32 val = ipctl->lev2_protect_phys |
-+			(value & LOCK_LEVEL2 ? 0 : 1);
- 
- 		writel(val, &ipctl->lev2->status_protect);
- 	}
 -- 
-2.25.1
-
+viresh
