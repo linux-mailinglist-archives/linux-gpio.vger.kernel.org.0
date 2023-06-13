@@ -2,105 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83D4672DAF4
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 09:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18D9572DB1D
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 09:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240301AbjFMHbz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jun 2023 03:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34102 "EHLO
+        id S234604AbjFMHif convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 13 Jun 2023 03:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240534AbjFMHbl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 03:31:41 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCE02111
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 00:31:01 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-bd20beffda6so466945276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 00:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686641460; x=1689233460;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IrfjpCdUT+kJUVd/WfU6skEI8CHNuU1srBMbNYG+uok=;
-        b=XYJAiihlg3FLbwdMgngS8I2khiQD6zsmuNJj3FTTSOWFZkUMeuO3R3goecehdCav88
-         CEQEr9L5CEP6M2OlVB6VlM3e/xR+o6jl4sizAQUChloCqxMUuWjmar+4UScJoeRDXyMg
-         mnErASYvLHu77Fh9Zes4jdqvcbnUgmv3sIzVVU602D18hJ2aI1zW39eURvPL8PKmGVKX
-         eMiLSs8NmSp9lWNEB0wa+shhgakLxsNPGOlTSiuGscInzBGoECvYDCJqX4883BXqTxui
-         /bMsgbG6deZ7LMBBdhGnQM7PNjzaiITisgKZnRwYUhhjg1qMr9Fkx/xKEAu+nUcS5Vcg
-         MOcQ==
+        with ESMTP id S234472AbjFMHie (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 03:38:34 -0400
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7E3AA;
+        Tue, 13 Jun 2023 00:38:33 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-56d5492850dso6764397b3.0;
+        Tue, 13 Jun 2023 00:38:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686641460; x=1689233460;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IrfjpCdUT+kJUVd/WfU6skEI8CHNuU1srBMbNYG+uok=;
-        b=Kbe/AaHaq5RrR/Fkqtk3rsTFic07fT3sC/dLTo7mqevo+/kJj6fpGJuT+DCVghJZds
-         v2JQOqVyJbYvd6gLjXUJB3ZkwWRd6ejWueASX1jLKc3fBJSx7FYrBSYAfA8MkeT5JpU/
-         Iql4TcQ8JVtfTzF1kbVBfNbeR4+rxcJfeLP0oO8m9k84sn4RobO5x3nyujGmceTjh+9T
-         h4uYWrGmDsI/HyJ1U1DtLdSCKKaIkse5gmLTO0Ez2U/1+7KfPbCJSYgf9A+M6wyDjm5S
-         7uQhTyHolZfy38l0cMcJK0gxF3GbhSdUbrmjo1rInmcxeuoHjUWn56xXOl825g2G3cNu
-         0MWw==
-X-Gm-Message-State: AC+VfDwHXu5e9K9XJu6dOSmorTkTZA/kpnfbfsDwWG3oGohbS0d4WeC4
-        unAKnAhV1pDTB/vi19ly+jy9xgv8hNCG84NFc+oQiA==
-X-Google-Smtp-Source: ACHHUZ6202vqCdMtoVR6sC5FsJ9/o6i+pMm06jUG/HM+YdmLIm8A0M1vsPtX5lZNel6Kxw/QlKdMQdHf0WA9DHsVTnA=
-X-Received: by 2002:a25:9085:0:b0:bca:7cd:7f32 with SMTP id
- t5-20020a259085000000b00bca07cd7f32mr1124109ybl.48.1686641460116; Tue, 13 Jun
- 2023 00:31:00 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686641912; x=1689233912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5HYSRhDPwRoW06pJwnVk/r95T6M6w1GodDXdJDLZ7hw=;
+        b=ErTBJHcVFLs7fU0t/WS8JU/lWBKznx7RfhF6qFEZ8Mzwf/SU2w2i1gPeK9nEePwyYK
+         0O46g2jbCe27596CJMeQpACBJtUEZZAqKrDyCkEbC7sWHdgfM7sQXfyeFABqXAiW6vVI
+         bn19WtZNg8YMqV62sr8OjzDogN4Nm71KrzZtCptZ2bptbWlCe6zE+j0n2nNYkEQnSlXH
+         Ybu00AsNs6thwz97zcHDI5QyhicemJLbwQsfCQ/sJQCNmXRSjSQqHn3VYf1dDNQ0iPyB
+         mhJCWvS2hDuSwm5mB7A5rQg2SJAj2qBMEx7LPZCvIbnnSM/BzVv0NWHzfNr+15VQn9Xi
+         +uZg==
+X-Gm-Message-State: AC+VfDw8Q07fQh8YZLYGWdyJsuinzEGW1zC0KOcQRifEXz/e+SVrOLUl
+        Stq5web72+MTSJNDtSIpwLLalouC9V7NxA==
+X-Google-Smtp-Source: ACHHUZ5Xy96REM2G8fMuYRpTXaL0Tx08J209KzAHyTv/iamcC284Vmx7eV+yhc2IHk03D3kppazIwA==
+X-Received: by 2002:a25:cf8a:0:b0:ba6:b00d:b865 with SMTP id f132-20020a25cf8a000000b00ba6b00db865mr779527ybg.56.1686641912378;
+        Tue, 13 Jun 2023 00:38:32 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id e72-20020a25e74b000000b00bc8f984984asm1258554ybh.35.2023.06.13.00.38.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jun 2023 00:38:32 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-bc4e167c4b2so3115260276.3;
+        Tue, 13 Jun 2023 00:38:32 -0700 (PDT)
+X-Received: by 2002:a25:4245:0:b0:ba8:1ebe:9b96 with SMTP id
+ p66-20020a254245000000b00ba81ebe9b96mr762286yba.1.1686641911996; Tue, 13 Jun
+ 2023 00:38:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613072643.105576-1-brgl@bgdev.pl> <20230613072817.s4zcdkvtkqownkvu@vireshk-i7>
-In-Reply-To: <20230613072817.s4zcdkvtkqownkvu@vireshk-i7>
-From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date:   Tue, 13 Jun 2023 09:30:49 +0200
-Message-ID: <CACMJSeu97ftDjarB8830_5tvvGbqRJ-84X1NpFTC3KdFu4DWVg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: rust: add missing license and
- copyright boilerplate
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Erik Schilling <erik.schilling@linaro.org>,
-        linux-gpio@vger.kernel.org
+References: <20230613021643.3330661-1-gongruiqi@huaweicloud.com>
+In-Reply-To: <20230613021643.3330661-1-gongruiqi@huaweicloud.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 13 Jun 2023 09:38:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXGG2xu+nXJt6CSTfV6aM=U=hMW+DiDgP3RhOw8+O8y=A@mail.gmail.com>
+Message-ID: <CAMuHMdXGG2xu+nXJt6CSTfV6aM=U=hMW+DiDgP3RhOw8+O8y=A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: remove checker warnings: x | !y
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gongruiqi1@huawei.com,
+        linux-sparse@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 13 Jun 2023 at 09:28, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 13-06-23, 09:26, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Make reuse happy again by adding appropriate license and copyright info.
-> >
-> > Fixes: 1f8085953086 ("bindings: rust: build against pkg-config info")
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  bindings/rust/libgpiod-sys/wrapper.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/bindings/rust/libgpiod-sys/wrapper.h b/bindings/rust/libgpiod-sys/wrapper.h
-> > index 8a8bd41..e5cdfa0 100644
-> > --- a/bindings/rust/libgpiod-sys/wrapper.h
-> > +++ b/bindings/rust/libgpiod-sys/wrapper.h
-> > @@ -1 +1,5 @@
-> > +// SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
-> > +// SPDX-FileCopyrightText: 2023 Linaro Ltd.
-> > +// SPDX-FileCopyrightText: 2023 Erik Schilling <erik.schilling@linaro.org>
-> > +
-> >  #include <gpiod.h>
->
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->
-> --
-> viresh
+Hi Gong,
 
-Ah C headers should use /* */ comments for SPDX stuff. I'll fix it
-when applying.
+On Tue, Jun 13, 2023 at 4:13 AM GONG, Ruiqi <gongruiqi@huaweicloud.com> wrote:
+> Eliminate the following Sparse reports when building with C=1:
+>
+> drivers/pinctrl/renesas/pinctrl-rzn1.c:187:52: warning: dubious: x | !y
+> drivers/pinctrl/renesas/pinctrl-rzn1.c:193:52: warning: dubious: x | !y
+>
+> Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
 
-Bart
+Thanks for your patch!
+
+Looks like sparse needs to be taught the "|" is not used in a boolean
+context here?
+
+> --- a/drivers/pinctrl/renesas/pinctrl-rzn1.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzn1.c
+> @@ -184,13 +184,15 @@ static void rzn1_hw_set_lock(struct rzn1_pinctrl *ipctl, u8 lock, u8 value)
+>          * address | 1.
+>          */
+>         if (lock & LOCK_LEVEL1) {
+> -               u32 val = ipctl->lev1_protect_phys | !(value & LOCK_LEVEL1);
+> +               u32 val = ipctl->lev1_protect_phys |
+> +                       (value & LOCK_LEVEL1 ? 0 : 1);
+>
+>                 writel(val, &ipctl->lev1->status_protect);
+>         }
+>
+>         if (lock & LOCK_LEVEL2) {
+> -               u32 val = ipctl->lev2_protect_phys | !(value & LOCK_LEVEL2);
+> +               u32 val = ipctl->lev2_protect_phys |
+> +                       (value & LOCK_LEVEL2 ? 0 : 1);
+>
+>                 writel(val, &ipctl->lev2->status_protect);
+>         }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
