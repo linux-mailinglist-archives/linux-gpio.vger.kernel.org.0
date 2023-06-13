@@ -2,103 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ABD872E485
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 15:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0394472E59C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 16:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242492AbjFMNqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jun 2023 09:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
+        id S242782AbjFMOW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jun 2023 10:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240124AbjFMNqV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 09:46:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CCBAC;
-        Tue, 13 Jun 2023 06:46:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 43DEC62E96;
-        Tue, 13 Jun 2023 13:46:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59D1C433F0;
-        Tue, 13 Jun 2023 13:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686663978;
-        bh=0rLyJ7Um8xHPNMu03OwaG3r7b8np6OjbkMb9kt0aihQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iM+rcbROLB5JB/ybOayIqTBFWRea5VRToEaYbL7v/gTfVtFBx+lzMIaSVUSe/fcml
-         mDgb6VM1iRjtbcjMLqXsnSVO9LkEZmDlmiC3YZ2W05mijUgwOCvovA4SjuQHwFKM3Y
-         Jv9yrcViXVcndpEEH8y2D5oByRKcU1Qju4ILu1rOw/dePVRdDfb0fj6QfIMzsQJMG+
-         xLrGpqTC2Zz2kFpnNFbAniPV6W8fqPA6q6c5gDMBsR5wV+Qh6MYLQxSQp6GKhBta8C
-         i2XbGrCRBn0+WJIDynCpUNjIZtsrhfTHUkUKePbADlUAsC1phPYqi/JHHe1Xq+5Xc2
-         Hhs2pnXa8zStA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b2f9f47256so42792081fa.1;
-        Tue, 13 Jun 2023 06:46:18 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxicfrVknVkrozVwQvQvYdGmSruaz8wmpjRgpFK7ANpqeEw5jcK
-        VxBzbu23sz9f3nBEkVNubc7sBstWHpMl5OoXYg==
-X-Google-Smtp-Source: ACHHUZ6WmyAIhsvQmsDE0BVCAxrCpRVVRL5HwS87Mu9fv5OxAQFMDCIxNRznw/fOYZNggQvJaqHC522pRJwlOweV5/A=
-X-Received: by 2002:a2e:3c0c:0:b0:2af:25cf:92ae with SMTP id
- j12-20020a2e3c0c000000b002af25cf92aemr5357006lja.22.1686663976708; Tue, 13
- Jun 2023 06:46:16 -0700 (PDT)
+        with ESMTP id S242735AbjFMOW5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 10:22:57 -0400
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8FB19B
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 07:22:55 -0700 (PDT)
+Received: by mail-ua1-x92c.google.com with SMTP id a1e0cc1a2514c-78775a5a84eso443251241.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 07:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686666173; x=1689258173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1gWIF6WfXGGLV7wV95q+Bs7ONpfkMQ74yIFAAdWgckU=;
+        b=a/BBVjmaMQ4W6Uh57UzU2yX7l6o8M8VmaUrobFylrp2Lj1e8Zk4i1JsD2rhJGFOGj7
+         LxDaeAiMscWxru8mlDYV+lxikYRK9FwFcFn8f+TTir+jo+Qie32VNdKSUx8pDD+ZKUb8
+         dN9/VheT2T5upyliDSFeUcOABFpv242h0NutbQBIyyfuyYPSvqSpQgxvPcMU6lWLbkL9
+         gBJ9VH0NT1H8dBe5UP+rm7EakoA5vVCJ1Xf5GshvGP3rnuzEPcWtoKxMkwvpNOtmvYMR
+         oosmUI7srWEIx77rEfNqbHTwIl6ltzIjWmI1kK4Yj7PZAgT01zkcszpmUt76ZeuVqzr7
+         qY0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686666173; x=1689258173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1gWIF6WfXGGLV7wV95q+Bs7ONpfkMQ74yIFAAdWgckU=;
+        b=BOWB2PQrhEL4gZg2fPIs/8BkYF5hOkc5lSVaMrtsrmOYQn0rIxMe0DOIc+IXUGY5T7
+         aQvtgLm9BalIDypECkEpXBPczproD4d4cY79mLmO2YxU63RQw7BW4UzQLFyhmksAD+/T
+         pa1Jn0ZYwcvxkoIdp6u3kgh1atPiVGRgWd4VSu4QUEi/jKZ+4NnrvY0My6LUSCp84Zcm
+         zl57I802iqEqeylrPE3d2pUVztxpqU5RfV6myh1p0QP4Uj62skBGbuHmyCDsZWs16yAD
+         QpEk4gBVLlznKKdq9ZejzXG4zcfGgRR/E2mr6xEo4QvE3e89RMmE33IhrRuyq8ic0lEc
+         2AdA==
+X-Gm-Message-State: AC+VfDxc/HNXpQMXMCdgC7WSNHbKLZVkvXSnifg8vKgE1cZ6WHOv9l9R
+        c1x2myPuTSPObFHS9hqW6xcBMxvq/HeHDW+O6BQVfQ==
+X-Google-Smtp-Source: ACHHUZ5vP+V+IYfx+6K3RQdpyB8TtZRAxKeKOoDh1dO34vqqR5jmKqETRZ2YfFdpKic4CFmIUYOgjxbDQldWhsZkLD8=
+X-Received: by 2002:a05:6102:408:b0:430:e0:ac2e with SMTP id
+ d8-20020a056102040800b0043000e0ac2emr5618052vsq.15.1686666172953; Tue, 13 Jun
+ 2023 07:22:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230418150606.1528107-1-robh@kernel.org> <b8a062a0-10e9-bf17-c109-f6986f9dd02c@linaro.org>
-In-Reply-To: <b8a062a0-10e9-bf17-c109-f6986f9dd02c@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 13 Jun 2023 07:46:04 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJvmN7824Q0vnWpnO3a_Fdo5Ybc2tcGnJZAfDLM=-1Apg@mail.gmail.com>
-Message-ID: <CAL_JsqJvmN7824Q0vnWpnO3a_Fdo5Ybc2tcGnJZAfDLM=-1Apg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: Fix schema for "qcom,paired"
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230606031159.38246-1-jiasheng@iscas.ac.cn>
+In-Reply-To: <20230606031159.38246-1-jiasheng@iscas.ac.cn>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 13 Jun 2023 16:22:42 +0200
+Message-ID: <CAMRc=McoDu4jsy4pWnu=T1+q_FfnYa8bfqWb39ZZXM_YmaGpXw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sifive: Add missing check for platform_get_irq
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Cc:     andy.shevchenko@gmail.com, oe-kbuild-all@lists.linux.dev,
+        linus.walleij@linaro.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, linux-gpio@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 12:50=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Tue, Jun 6, 2023 at 5:12=E2=80=AFAM Jiasheng Jiang <jiasheng@iscas.ac.cn=
+> wrote:
 >
-> On 18/04/2023 17:06, Rob Herring wrote:
-> > The "qcom,paired" schema is all wrong. First, it's a list rather than a=
-n
-> > object(dictionary). Second, it is missing a required type. The meta-sch=
-ema
-> > normally catches this, but schemas under "$defs" was not getting checke=
-d.
-> > A fix for that is pending.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
+> Add the missing check for platform_get_irq() and return error code
+> if it fails.
+> The returned error code will be dealed with in
+> builtin_platform_driver(sifive_gpio_driver) and the driver will not
+> be registered.
 >
-> Linus,
-> Could you take it for current fixes? The code was wrong and dtschema is
-> warning now about this.
+> Fixes: f52d6d8b43e5 ("gpio: sifive: To get gpio irq offset from device tr=
+ee data")
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+> ---
+> Changelog:
+>
+> v2 -> v3:
+>
+> 1. Check before assigning values.
+>
+> v1 -> v2:
+>
+> 1. Return "girq->parents[0]" instead of "-ENODEV".
+> ---
+>  drivers/gpio/gpio-sifive.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 98939cd4a71e..745e5f67254e 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -221,8 +221,12 @@ static int sifive_gpio_probe(struct platform_device =
+*pdev)
+>                 return -ENODEV;
+>         }
+>
+> -       for (i =3D 0; i < ngpio; i++)
+> -               chip->irq_number[i] =3D platform_get_irq(pdev, i);
+> +       for (i =3D 0; i < ngpio; i++) {
+> +               ret =3D platform_get_irq(pdev, i);
+> +               if (ret < 0)
+> +                       return ret;
+> +               chip->irq_number[i] =3D ret;
+> +       }
+>
+>         ret =3D bgpio_init(&chip->gc, dev, 4,
+>                          chip->base + SIFIVE_GPIO_INPUT_VAL,
+> --
+> 2.25.1
+>
 
-I have other things ready for 6.4, so I'll add this one.
+Applied, thanks!
 
-Thanks,
-Rob
-
->
-> Fixes: f9a06b810951 ("dt-bindings: pinctrl: qcom,pmic-mpp: Convert qcom
-> pmic mpp bindings to YAML")
->
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
->
-> Best regards,
-> Krzysztof
->
+Bart
