@@ -2,92 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61AAC72E471
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 15:45:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ABD872E485
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 15:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242612AbjFMNoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jun 2023 09:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
+        id S242492AbjFMNqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jun 2023 09:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242584AbjFMNoN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 09:44:13 -0400
-Received: from mail-oo1-xc33.google.com (mail-oo1-xc33.google.com [IPv6:2607:f8b0:4864:20::c33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D95B19B7
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 06:43:53 -0700 (PDT)
-Received: by mail-oo1-xc33.google.com with SMTP id 006d021491bc7-55ab0f7778cso4064438eaf.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 06:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686663832; x=1689255832;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yDrvwaQgdFmBVJZsBTXqxF7u2xhBw6LQghRHQtjodbM=;
-        b=h/gcx6qhYs5PgeZ4O49mfTn/Ts4gvVsy9crx01eaAuH5iC1vAApIwGdbLGrXqwlnRx
-         Nt9VXvBLLLrMRb5cndzeIIWtvH9vx8SbtVdNVHNXuFwO5k9EaECHac3koTrxdbhtKlp7
-         LYaKRdjT5k9KetRBHres50yXOFU8hV+CcUnnvkJJCgLG0s9mSIQOzDzn5yNhBTSTJYAp
-         1Ff/k0ePGUR3odpidKKThrgizSvV9e2BCjbLCUvPg3XsoctaMjInUCX+izs61FMjqXc/
-         eAsq1LWiiZyCQZIuK4nCky3JXmlx41k4RZxNIbl5/W5CZiedQeFIChY1ByBnLEP6xPpj
-         yC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686663832; x=1689255832;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDrvwaQgdFmBVJZsBTXqxF7u2xhBw6LQghRHQtjodbM=;
-        b=f63J1iFY5Y8jRDxq0c0OstqyXpqxt/NqNDP9/dNCXRbKRNdyz3s5G7FskqKHRv8WW9
-         cH78OFMdOU9811jPb/GxBOt2jUc0tp39BqZDWkODPebIKuYt5V0L0FcSuWmgNqjybC5c
-         0ukhpzarcGZx6sMkeGDiRaT/GhahQFpoxOi85s9cemO0h2JOdRjYUYdl5MRdskjzz8mh
-         vo4iJVl8fotEZAbeTH+5VT1PufmFbOGYkvFdYdrv0x3YeAork4HWTTUhlkTTm7E+sNfe
-         YHI04yKXiRPyFdyt0trH7iHZwCtxkL50YoH0CNshKQgM3qLPSMuX0zTrbovVPYBmpPS3
-         Bfgw==
-X-Gm-Message-State: AC+VfDzLCAu/+kjfB+gkoi66jJW4s3Pa12aKl6fHwEROEMQXGVE/MlVS
-        wsfvPURr8DbaoloCYUUwTqi+Orno4vOFUVhtybU=
-X-Google-Smtp-Source: ACHHUZ7//AZNZpxu9A194nk8uA3FJBpd/49GXrVqqFg9V2uYXthePNxHA4nfnYb/fH48blPbdmC/SAiyr+RAbMdGdM4=
-X-Received: by 2002:a4a:a746:0:b0:55a:f44b:43cd with SMTP id
- h6-20020a4aa746000000b0055af44b43cdmr7471461oom.7.1686663832544; Tue, 13 Jun
- 2023 06:43:52 -0700 (PDT)
+        with ESMTP id S240124AbjFMNqV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 09:46:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CCBAC;
+        Tue, 13 Jun 2023 06:46:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 43DEC62E96;
+        Tue, 13 Jun 2023 13:46:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59D1C433F0;
+        Tue, 13 Jun 2023 13:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686663978;
+        bh=0rLyJ7Um8xHPNMu03OwaG3r7b8np6OjbkMb9kt0aihQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iM+rcbROLB5JB/ybOayIqTBFWRea5VRToEaYbL7v/gTfVtFBx+lzMIaSVUSe/fcml
+         mDgb6VM1iRjtbcjMLqXsnSVO9LkEZmDlmiC3YZ2W05mijUgwOCvovA4SjuQHwFKM3Y
+         Jv9yrcViXVcndpEEH8y2D5oByRKcU1Qju4ILu1rOw/dePVRdDfb0fj6QfIMzsQJMG+
+         xLrGpqTC2Zz2kFpnNFbAniPV6W8fqPA6q6c5gDMBsR5wV+Qh6MYLQxSQp6GKhBta8C
+         i2XbGrCRBn0+WJIDynCpUNjIZtsrhfTHUkUKePbADlUAsC1phPYqi/JHHe1Xq+5Xc2
+         Hhs2pnXa8zStA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b2f9f47256so42792081fa.1;
+        Tue, 13 Jun 2023 06:46:18 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxicfrVknVkrozVwQvQvYdGmSruaz8wmpjRgpFK7ANpqeEw5jcK
+        VxBzbu23sz9f3nBEkVNubc7sBstWHpMl5OoXYg==
+X-Google-Smtp-Source: ACHHUZ6WmyAIhsvQmsDE0BVCAxrCpRVVRL5HwS87Mu9fv5OxAQFMDCIxNRznw/fOYZNggQvJaqHC522pRJwlOweV5/A=
+X-Received: by 2002:a2e:3c0c:0:b0:2af:25cf:92ae with SMTP id
+ j12-20020a2e3c0c000000b002af25cf92aemr5357006lja.22.1686663976708; Tue, 13
+ Jun 2023 06:46:16 -0700 (PDT)
 MIME-Version: 1.0
-Sender: koussistella@gmail.com
-Received: by 2002:a05:6850:39c6:b0:4a8:fa1:d600 with HTTP; Tue, 13 Jun 2023
- 06:43:52 -0700 (PDT)
-From:   United Nation <turkey.un.info@gmail.com>
-Date:   Tue, 13 Jun 2023 06:43:52 -0700
-X-Google-Sender-Auth: Smk7lY4oXKPUuEGMLSx9navVwKI
-Message-ID: <CAEGKinK3D4op69BQ+j5WqPoHxFFDAtemfL+7S9yAZ+avFL6jgA@mail.gmail.com>
-Subject: United Nation Compensation
-To:     undisclosed-recipients:;
+References: <20230418150606.1528107-1-robh@kernel.org> <b8a062a0-10e9-bf17-c109-f6986f9dd02c@linaro.org>
+In-Reply-To: <b8a062a0-10e9-bf17-c109-f6986f9dd02c@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 13 Jun 2023 07:46:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJvmN7824Q0vnWpnO3a_Fdo5Ybc2tcGnJZAfDLM=-1Apg@mail.gmail.com>
+Message-ID: <CAL_JsqJvmN7824Q0vnWpnO3a_Fdo5Ybc2tcGnJZAfDLM=-1Apg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: Fix schema for "qcom,paired"
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.1 required=5.0 tests=BAYES_50,DEAR_FRIEND,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:c33 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [koussistella[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear friend congratulations there is a good news for you
- my name is Mr. Kenny Frank. from United Nations
- kindly get back to us as soon as possible
-official Email:(turkey.un.info@gmail.com)
+On Tue, Jun 13, 2023 at 12:50=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 18/04/2023 17:06, Rob Herring wrote:
+> > The "qcom,paired" schema is all wrong. First, it's a list rather than a=
+n
+> > object(dictionary). Second, it is missing a required type. The meta-sch=
+ema
+> > normally catches this, but schemas under "$defs" was not getting checke=
+d.
+> > A fix for that is pending.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+>
+> Linus,
+> Could you take it for current fixes? The code was wrong and dtschema is
+> warning now about this.
+
+I have other things ready for 6.4, so I'll add this one.
+
+Thanks,
+Rob
+
+>
+> Fixes: f9a06b810951 ("dt-bindings: pinctrl: qcom,pmic-mpp: Convert qcom
+> pmic mpp bindings to YAML")
+>
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+>
+> Best regards,
+> Krzysztof
+>
