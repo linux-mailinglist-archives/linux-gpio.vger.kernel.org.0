@@ -2,86 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91E6C72E749
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 17:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7807372E764
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 17:37:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242375AbjFMPdw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jun 2023 11:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
+        id S243031AbjFMPfm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jun 2023 11:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239278AbjFMPdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 11:33:50 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8FF1BF5;
-        Tue, 13 Jun 2023 08:33:36 -0700 (PDT)
+        with ESMTP id S243007AbjFMPfg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 11:35:36 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F89F1BF4;
+        Tue, 13 Jun 2023 08:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686670417; x=1718206417;
+  t=1686670517; x=1718206517;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OJLCl5j2fnbCKOJmS3WpzNGl7C0daKs5FfuZDCveZmM=;
-  b=MjrEHrQ+g/xQmR6JzqoN/KV6rXsM/+nbLDItiWtu69TXKmcqIQUuBDVs
-   lb5HALNoHl0rfJz6lYsPN6J+LA6Jh57g2RQbZA84UaxL6JCdbqnIV5CxB
-   AQI29D/o+B1rxt7gu2rarAp9NI8YMrtRAEdOJmUMa0pKak8Z/MkGbYxZG
-   WBobKHARtd0whiYrZZBUaBPaoRfADBledSP3tKzeJJPrjMC/uxNXHCaXU
-   I28XTT2QOuQ/di0y8I6IdnoFwMvE8wJgUO2Fq8YacLbS/6NoJb/ReeLeR
-   nv3ppNvgSBDWPSLUs6nYgr+hIxstwUJjzAONA1f5T9Ebr0RauXiffHBNJ
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=BVwhD+woB9Rn4GIdKM9eg1WlU/5Y0ujWetNDpXzpdzk=;
+  b=QIaW3szZIvx1yrHqPKQr3W3DABt76QvLnshX3sIO/TAknaI69kQr5rHx
+   jcpKI3KqMJkqDGHjapfQ8KgUn3jIq7dtRyBtJMUB2qYlWgkwXemLzAkwT
+   7SDM8OjMGtq6xhTq44/vJGdWYCBoh6YZjS6wYcDzG3bSuKEo9gXNhBTOI
+   oP3urIwbDVZM8lz/Y17Yu+KTRj/+2KiAQbfg5VkpGYgGgVaG+kVxirEeR
+   Fqid7kQIxGSMwSAvemv9Fb5upRT7jOM0iWHjZJ17o3pij6ozy5CryI4pZ
+   8ir/dJJZg7c3qbzlQAr3HorSA1+OLodw7LAOHE7v3uIgTvFsjNSVxBhzn
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="386769296"
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="361739619"
 X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
-   d="scan'208";a="386769296"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 08:33:36 -0700
+   d="scan'208";a="361739619"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 08:35:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="711704575"
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="705849507"
 X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
-   d="scan'208";a="711704575"
+   d="scan'208";a="705849507"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2023 08:33:33 -0700
+  by orsmga007.jf.intel.com with ESMTP; 13 Jun 2023 08:35:15 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q961U-003UJI-1P;
-        Tue, 13 Jun 2023 18:33:32 +0300
-Date:   Tue, 13 Jun 2023 18:33:32 +0300
+        id 1q9637-003UKV-32;
+        Tue, 13 Jun 2023 18:35:13 +0300
+Date:   Tue, 13 Jun 2023 18:35:13 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Markus Elfring <Markus.Elfring@web.de>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] pinctrl: Relax user input size in pinmux_select()
-Message-ID: <ZIiMTGaUNMKQCkfC@smile.fi.intel.com>
-References: <20230604131215.78847-2-andriy.shevchenko@linux.intel.com>
- <24d8898b-1e3b-8180-e96b-a3296de178a9@web.de>
+Subject: Re: [PATCH 1/2] pinctrl: Duplicate user memory in one go in
+ pinmux_select()
+Message-ID: <ZIiMsUmhwRYcQaXu@smile.fi.intel.com>
+References: <20230604131215.78847-1-andriy.shevchenko@linux.intel.com>
+ <39569326-6b1c-39b1-0eb2-f1c1d11251ec@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <24d8898b-1e3b-8180-e96b-a3296de178a9@web.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <39569326-6b1c-39b1-0eb2-f1c1d11251ec@web.de>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 04:38:17PM +0200, Markus Elfring wrote:
-> > This is debugfs and there is no much sense to strict the user from
-> > sending as much data as they can. The memdup_user_nul() will anyway
-> > fail if there is not enough memory.
-> >
-> > Relax the user input size by removing an artificial limitaion.
+On Tue, Jun 13, 2023 at 04:30:44PM +0200, Markus Elfring wrote:
+> > …, because asked lenght …
 > 
-> How are the chances to avoid typos also in such a change description?
+> * Are there any chances to avoid a typo in such a change description?
 
-Almost 0. This is now part of the non-rebased branch. It can be fixed
-if and only if
-- something really wrong happened before this patch in the tree and has
-  to be fixed, and
-- maintainer will remember to fix the typo.
+Not anymore as explained in the other email, but thanks for pointing this out.
+
+> * Was a cover letter accidentally omitted?
+
+What do you want to see in such cover letter? How can it be helpful?
+(Note that these are rhetorical towards this change, as it's already
+ in the non-rebased branch)
 
 -- 
 With Best Regards,
