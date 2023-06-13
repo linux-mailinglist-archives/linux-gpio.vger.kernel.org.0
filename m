@@ -2,98 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3034B72E65C
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 16:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4606172E70E
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jun 2023 17:23:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241194AbjFMOzt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Jun 2023 10:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33642 "EHLO
+        id S242664AbjFMPXj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Jun 2023 11:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239870AbjFMOzs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 10:55:48 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEE310FC
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 07:55:47 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-43b4b5378ecso469322137.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 07:55:47 -0700 (PDT)
+        with ESMTP id S240291AbjFMPXi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Jun 2023 11:23:38 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010581BE6
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 08:23:13 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4f62d93f38aso7132474e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Jun 2023 08:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686668147; x=1689260147;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eUjBNQR3ayKs+c7PtNJMktv7NPrLUhbz12wWwvQ4mnE=;
-        b=zBmRFI3G1eexEjmXLDT7CdfJ8PPO20byDmYp9SBqqUFGFdsVzlotKgIwWK5JEYLN5h
-         LTX71RchE7A6EJ0cDhvVRxamsPqv9+FPOEtzIpvtyJ1j9xFT2kRDnjOGUTpT2TeUFj9a
-         3q7Lno/PlspWCdt04VG0dCZnmg/6r2NFiojbkc/J4EWU2GGLLlk83kxUY2XwZPiD4rF0
-         WOofcJdfGjbXdiVuvgye14FzFK8qrsO5oirRN2rp9bs6DjaNXKHvGSZhQfCvJpd6xtrp
-         Tbp8UtblfHOK0Gby+lnmksuCRgotre8zfyt2lGSs4zbabXR81ZgSHoXFLKu/lPLJwqAF
-         whSA==
+        d=linaro.org; s=google; t=1686669792; x=1689261792;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZObq3QdQreREeU4NfsEue/+eYyb1HX3Nq35VP0wnSHk=;
+        b=O5I1KTQM9ahis2CVWCWapMP4B1w+V782LooA28aPXu+f8RIsABsAEG6HoMaXraby7g
+         HdDN1qziUtNinucVrcJwTyTcagUZEjEtlexo+8OnfziVbDulrBUnbj57VWTQ4d+L5ock
+         oQWQTGvpQ45Mo6I0heqUBJee7CgGQKuWJcd21ToX04OGSr3pIsy5fFoJsrGIL4GlVH6B
+         jDKNaixXYaNX/BSg+6fNh0NUDzkhC5NRZ7mbGe+fZxJPb5JkvWT/wArUzro3LFWPjgeu
+         RRUrLjCF6+45XGPMzKXCQ0Who0jYHmOH0H5ZC6BRaoe0ZG4Spgrr53phfK1cSjPWEzAQ
+         JhIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686668147; x=1689260147;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eUjBNQR3ayKs+c7PtNJMktv7NPrLUhbz12wWwvQ4mnE=;
-        b=ghcgV2EjPGfzOobCSDcAlP2FoSkMU8G6Jqy2Cm5MQVZvLvmqfjkREWT7Ttslsk0Zwa
-         heK13DeypmHz+ZMbF6WToXG3Y9kLCcPRO2ywGSluocpioV42LzM7s43sx5A7kHuQDWcZ
-         sqiY2pcYUcZaX7V3rhaJPOUWrzS08rR6t5rRjYYElHPd9qlgCCWWpzYKxGtU4rEct/H3
-         NovVA1cI86JaUscPQmewzcejZ7YSbecicDwXvrAb/3Z/2Pa9TT2Q1PH+ZBBrzh9t1OM9
-         G3I3P5c+PN7cgLude5QIRpuZUyvGTZcmw0l2bUrULkd69Zpj18qrMjxQdnDlrVsUPdBy
-         Q5Dg==
-X-Gm-Message-State: AC+VfDxlipWvWRUkpt40JX8UYHAbmlU541ckWwns/9Bx94nWQaFG3iTV
-        QO2hbwbyzVSOHjY1ndwTbRRBTbKqUTtwrCsZsE36yg==
-X-Google-Smtp-Source: ACHHUZ6zGp2wWUBczZ3EZNkyAM/WjSHCJx+x6suhmZczY/H+a7+tSuxScOYQkbuwQxm7A/Mg2w5Oem1IJtilPRj83Mg=
-X-Received: by 2002:a05:6102:e4b:b0:43b:431d:8d51 with SMTP id
- p11-20020a0561020e4b00b0043b431d8d51mr6882544vst.8.1686668146887; Tue, 13 Jun
- 2023 07:55:46 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686669792; x=1689261792;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZObq3QdQreREeU4NfsEue/+eYyb1HX3Nq35VP0wnSHk=;
+        b=QfVvwer1vmUO6hPx7dpu4MtiHeU6VUjf/X4Uj/iwZ5nH9eUObQMqbk8THmSV09Zj+n
+         RWqWyordpXzT/pE0Ig6i0h5Ck4zDEYz4VPywTwrhAWLicCKy5/0B3Qsn8kOoYltB0+05
+         BIrPTe0cAlgEICZDA2+Uzh5IbLgljVoFByLvSWXsOqmUHofpOa6CxXIlWR/TDWw7Kxq+
+         ojHT3rJoKTs6m7XFB/Jl1UWwY0rGeWsogEOSLO4yY3qt717TFfyIprZnRa7XVFWhO8XZ
+         Bj0QKWxiGnaj06J4CahGOLXfjsuF+YBO41c53ReERe5uAUS5YimBhN+UUIgCjLJCz0Dw
+         aXHg==
+X-Gm-Message-State: AC+VfDyKRSz/P48QmNctdGfRGD4OagjqSr5nYQMJWgEF09/fe/9UFAtB
+        xU9JaYjXC/d7k/d3mH6RJBb5iA==
+X-Google-Smtp-Source: ACHHUZ5MGoSPdfOcevVLsn6Xp9mNELJ81EH8SncxQ2LkVo3Gx9bg3gEgGWSOLoOA3+r4muPayrH13w==
+X-Received: by 2002:a19:6601:0:b0:4f6:5bf2:63bc with SMTP id a1-20020a196601000000b004f65bf263bcmr5593106lfc.3.1686669792155;
+        Tue, 13 Jun 2023 08:23:12 -0700 (PDT)
+Received: from [192.168.1.101] (abyj190.neoplus.adsl.tpnet.pl. [83.9.29.190])
+        by smtp.gmail.com with ESMTPSA id 7-20020ac24847000000b004f60be0c685sm1809673lfy.123.2023.06.13.08.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jun 2023 08:23:11 -0700 (PDT)
+Message-ID: <1631b3cd-dc24-0024-5291-fa9bdacc82bc@linaro.org>
+Date:   Tue, 13 Jun 2023 17:23:06 +0200
 MIME-Version: 1.0
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
- <20230601054549.10843-15-nikita.shubin@maquefel.me> <cacd8ea8-f834-4983-20ff-a875fee8011a@linaro.org>
- <CACRpkdZVhwsoHg3jOWuXtdL5kqbnbHjEYJOGsBCTcfLrVKbX3w@mail.gmail.com>
-In-Reply-To: <CACRpkdZVhwsoHg3jOWuXtdL5kqbnbHjEYJOGsBCTcfLrVKbX3w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Jun 2023 16:55:35 +0200
-Message-ID: <CAMRc=MfgBAnSwLTKuCZ9WgbX_oWoB2xLk=J86QCo9YkcfWaq_Q@mail.gmail.com>
-Subject: Re: [PATCH v1 33/43] dt-bindings: gpio: Add Cirrus EP93xx
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Nikita Shubin <nikita.shubin@maquefel.me>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v4 2/8] clk: qcom: Add Global Clock controller (GCC)
+ driver for IPQ5018
+Content-Language: en-US
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20230510134121.1232286-1-quic_srichara@quicinc.com>
+ <20230510134121.1232286-3-quic_srichara@quicinc.com>
+ <21a5642c-e6e5-9323-7db1-383a18616ac0@linaro.org>
+ <410b0991-30b6-c87d-9b25-5f51f6c08671@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <410b0991-30b6-c87d-9b25-5f51f6c08671@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 9:41=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Thu, Jun 1, 2023 at 10:20=E2=80=AFAM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->
-> > > +title: EP93xx GPIO controller
-> > > +
-> > > +maintainers:
-> > > +  - Linus Walleij <linus.walleij@linaro.org>
-> > > +  - Bartosz Golaszewski <brgl@bgdev.pl>
-> >
-> > Did you choose correct maintainers? Bartosz, Linus, do you take care
-> > about EP93xx platform?
->
-> I'm fine with it (I have a platform).
 
-I don't but I'm actually not sure how DT bindings maintainership works
-- do GPIO bindings all fall under the GPIO jurisdiction automatically?
 
-Bart
+On 13.06.2023 15:16, Sricharan Ramabadhran wrote:
+> Hi Konrad,
+> 
+> On 5/27/2023 12:47 AM, Konrad Dybcio wrote:
+>>
+>>
+>> On 10.05.2023 15:41, Sricharan Ramabadhran wrote:
+>>> Add support for the global clock controller found on IPQ5018
+>>> based devices.
+>>>
+>>> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>>> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+>>> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+>>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>>> ---
+>>>   [v4] Fixed to use ARRAY_SIZE() wherever parent_data was used
+>>>        Changed GPL v2 to GPL as per comments
+>>>
+>>>   drivers/clk/qcom/Kconfig       |   10 +-
+>>>   drivers/clk/qcom/Makefile      |    1 +
+>>>   drivers/clk/qcom/gcc-ipq5018.c | 3731 ++++++++++++++++++++++++++++++++
+>>>   3 files changed, 3740 insertions(+), 2 deletions(-)
+>>>   create mode 100644 drivers/clk/qcom/gcc-ipq5018.c
+>>>
+>> [...]
+>>
+>>> +struct clk_rcg2 lpass_axim_clk_src = {
+>>> +    .cmd_rcgr = 0x2E028,
+>> Please use lowercase hex for non-macro-defines, all throughout the file.
+>>
+> 
+>  ok. Will fix this in V10.
+> 
+>> [...]
+>>
+>>> +static struct clk_rcg2 system_noc_bfdcd_clk_src = {
+>> Drop clocks that are managed in RPM, they will conflict.
+>>
+> 
+>   IPQ5018 does not have RPM.
+Oh that's new. I suppose you'll be interested in clk-interconnect for
+voting on bus resources then.
+
+Konrad
+> 
+> Regards,
+>  Sricharan
