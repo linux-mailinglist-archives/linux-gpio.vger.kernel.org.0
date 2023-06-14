@@ -2,125 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED368730471
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jun 2023 18:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 077147304CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jun 2023 18:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244283AbjFNQAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Jun 2023 12:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
+        id S230297AbjFNQVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Jun 2023 12:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245126AbjFNQAj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 12:00:39 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5881FE5
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Jun 2023 09:00:34 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6667643e4b3so363819b3a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Jun 2023 09:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686758434; x=1689350434;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+vWR6wIsuqaE+Rcb7D5u1DbpqrVExg8wJesoUAC7zUw=;
-        b=n0xJIp1fsHBhRUbd/WEMlCuTbo9KGsP/F7HDJadyhvEEGgKyRehhMG/q2J5Ym8hlw2
-         eVuOszZjkzkLZVwbFjGfr/oooZ22L45sgSaErcuXSpoozT4xj/KmXf4tM63a7LdJodiV
-         +8d5cGwaW/nxBUbFR6V2RtOul1uiAE/BABf6H/7m1zCn3/XJLdz6JbjbgQU+VbaPivV0
-         kc3DjMyxRXN5uB63fTTYxKkGyrFkA53obAkaNLhig/OVZ4VgqAdOupv31R0HA83aiDgZ
-         0dbGnYOT6B7umivb2Q7fXgFYRQmDl1+zADbdXPbSJ1xNXjuRuzijF+ljySEgki9ZHAQH
-         gVmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686758434; x=1689350434;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+vWR6wIsuqaE+Rcb7D5u1DbpqrVExg8wJesoUAC7zUw=;
-        b=SUCIEZJDR7DPuKTztZ6qHGQuvH+VgDdXwfEQGWuv1CTqTOiAkqFz9dIeuMHVE4lpjq
-         6Ecuot4HgmmiJs69VyumL0qv6gEJYVkfDMU2uD6XsZu21Pjx5/bSW68IRp03L70PBgX1
-         Z+ns7p+wZ8c3ixqbMDtg+9G81FuKJf26YBKs+EWE2m+ksm9Q07lSjvZJ9JklmNMJVcmK
-         cwTQoiWbT4n41r9FrTayyCwm0FWkMLMF9useXp/RIOb9Tw/t32cjKS1sneTLrak/oJf6
-         aeGLf9evr6NQMYcAdwmuQJmZW0xpZuDgO4sfj+yKm4qMdguQXG+WcvGV37U+ecCbeuPu
-         DGZw==
-X-Gm-Message-State: AC+VfDwItnZ++SgNTDUgNCvPCRimaPdzX6rG9oo636zEDLRIw0aQ5KLV
-        XN3BWqukOuCu3IvtHVEYQ+ayGbbbBKU=
-X-Google-Smtp-Source: ACHHUZ4AWClLgcnTyM/V94/ful+WD1Zavs5LnYea28uV277o//ao3WMd+kGLq3aBVi3sswZTaehGsg==
-X-Received: by 2002:a05:6a20:8f27:b0:119:d964:54f9 with SMTP id b39-20020a056a208f2700b00119d96454f9mr1967993pzk.37.1686758434212;
-        Wed, 14 Jun 2023 09:00:34 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id s24-20020aa78d58000000b00654228f9e93sm10523136pfe.120.2023.06.14.09.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 09:00:33 -0700 (PDT)
-Date:   Thu, 15 Jun 2023 00:00:29 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][PATCH 0/4] dedicated examples
-Message-ID: <ZInkHSGf/HeBttPc@sol>
-References: <20230614035426.15097-1-warthog618@gmail.com>
- <CAMRc=Mf3vtfUyprLcJ7g8Y_Jt0k4=FoKMjjxqRA__YNmqeCDLQ@mail.gmail.com>
- <ZIm+4qmSUgFrVzLc@sol>
- <CAMRc=Mc3-SfvYYYvocMyjLtbPk=f=EyAOHXcKj+eFWvVWrGurQ@mail.gmail.com>
- <ZInHSgsfALvbTmAX@sol>
- <CAMRc=McCKjU9NbarB-0awfUXwECMFna5aKi9yB68pwxHEebUhA@mail.gmail.com>
+        with ESMTP id S229958AbjFNQVD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 12:21:03 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3393FED;
+        Wed, 14 Jun 2023 09:21:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686759662; x=1718295662;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ujj+LC2NWuOH1ScXla01RImuDgdOMSBH6AvYcKggIWE=;
+  b=TR+7oV96K6i7ScVAAEzqSHWlL23hRx931+VISi7azfopfyj3/WgLBg4d
+   ZsUO+V1st1ReVI2sPng9c6XJxiuMh+oBq6+TZXeZQD0yfjIL+EBiB4EC5
+   H/C6QOx/wSZTFZgNvC5OqJMApB7Zs+ydFDZ5va0Odu/zmjYwFe1b9p+Ne
+   Lpc04ArbaeyeZjvl8vhN00WAu49WeBnQOekz5FiOO+nIFc55aNV47Z4Fu
+   mHZCmY7sIFB3wmq+dbWR5KbJIjz38vHvCW1Bokj4kORv+bpenlrsFrznI
+   N7PNW1vwkddwcdswiabgSbK5cYlMVstmi9AfEln32OSBsJPz5nNjVcAUn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="362035606"
+X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
+   d="scan'208";a="362035606"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 09:20:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="712117456"
+X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
+   d="scan'208";a="712117456"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2023 09:20:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q9TEO-003jnU-05;
+        Wed, 14 Jun 2023 19:20:24 +0300
+Date:   Wed, 14 Jun 2023 19:20:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
+Subject: Re: [PATCH v3 1/3] pinctrl: intel: refine ->set_mux() hook
+Message-ID: <ZInox22WohL8GW8B@smile.fi.intel.com>
+References: <20230613085054.10976-1-raag.jadav@intel.com>
+ <20230613085054.10976-2-raag.jadav@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McCKjU9NbarB-0awfUXwECMFna5aKi9yB68pwxHEebUhA@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230613085054.10976-2-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 05:11:32PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Jun 14, 2023 at 3:57 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Any functionality to add to libgpiod?
-> >
+On Tue, Jun 13, 2023 at 02:20:52PM +0530, Raag Jadav wrote:
+> Utilize a temporary variable for common shift operation in
+> ->set_mux() hook and improve readability while saving a few bytes.
 > 
-> I don't think so at the moment. Do you see anything obvious? I know,
-> we spoke about putting the line resolver into libgpiod but I'm not
-> sure we really want it. At least in the core library anyway. The GLib
-> layer on top of libgpiod is a place that would be a good target for
-> such a functionality IMO.
-> 
+> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-3 (-3)
+> Function                                     old     new   delta
+> intel_pinmux_set_mux                         245     242      -3
+> Total: Before=10472, After=10469, chg -0.03%
 
-Yeah, making the line resolver generally available is a can of worms.
-Not prepared to take that one on at the moment.
-I'm reasonably content to leave that to the user - as long as they can
-readily iterate over the chips and lines themselves.
-Maybe provide an iterator for all the lines in the system
-available to the user?
+Pushed to my review and testing queue, thanks!
 
-> Other than that, I think libgpiod now has everything it needs to cover
-> all use-cases for the uAPI.
-> 
-
-The point isn't that coverage is missing, it is to find ways to make
-common tasks simpler.
-
-The ones that spring to mind so far are:
- - C: requesting a single line as output
- - C: requesting a single line as input
- - providing a toggle function for line_value, as it is an enum which is
-   a bit awkward.
- - the chip iterator in the python tools helpers.py
- - streaming operators for the enums where they are not automatically
-   provided
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-The C ones are specifically for simple sysfs-like equivalence, as telling
-users they need to replace a single write to a file with ~100 lines of C
-is really hard to sell.
-The config options would be as minimal as possible.
-I was going to suggest the user could always reconfigure the line later
-if they need extra features, but there is no function to return the
-existing line config :-(.
-
-Cheers,
-Kent.
