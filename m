@@ -2,69 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18AEE72F8DA
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jun 2023 11:16:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB43572FBD1
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jun 2023 13:00:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243707AbjFNJQy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Jun 2023 05:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
+        id S235014AbjFNLAv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Jun 2023 07:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243186AbjFNJQy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 05:16:54 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D87F1FC7
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Jun 2023 02:16:53 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f8cc04c287so3641515e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Jun 2023 02:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686734211; x=1689326211;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+bIW1Xo9RTCl8RhQy8Z1sloli6+QlNF8nqmC6pmHEvM=;
-        b=llca+bsBWCsyn2aUpx3iE86g/QmfgE55NTogZ1k9nVuBRwjgHhllksegpuiKzLZEcu
-         VhLtrB59bgPQVmmprG1MmyFtKWAZH32ijYvBXdD1jYaaaOUxVRKpXyFCVlQKfXwU6fhv
-         c0fWzgUu+nFzb/E4outM6RxpHX1j1ZRKPGnGhd05IbvCWuP5rGZJEFOfvUw4fgOagbYq
-         5UZ2B2kQVpCth6MMSzEnhWdX6nFynnFoiHOqlByWnmokIrUrspuOX8ROPZBggcCE1ckW
-         eTPWW+RComZzR4ZqPwEuVRMf3SKptcUq7nEbddu9eA5qxF26pVZko9mRegj+VdaKttkP
-         /okw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686734211; x=1689326211;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+bIW1Xo9RTCl8RhQy8Z1sloli6+QlNF8nqmC6pmHEvM=;
-        b=MVns9vq22NNEha4qDTLa3/n9XyXMmlJFS2W8kXiTLhnYYkDyfEnym4KNBzNEFB9a88
-         fpYeMeu+UvfyhASes8ZJA4DLSrWNo24dA2MAOYt/NllYLNsf8lb6jvICjDb2/SV8zapR
-         V0emYtxNqNnbsHLy5sR2U934Na2Qe3YQ8KhIvc//nqvuLuRKgj3ERlFeQbxqGCDhVYgk
-         x0Fxxi3WbObnRiMMfh+9wkdAGDYiUmdGgYM8idoJ/i0OhjQP31s4oYscr4nNztutSElM
-         O4N03XSBRbr/KNEnRKa82wrQ29Ld0cPRvyIR6Jd/AlkjTXyikjFS8541MKO+OxGtF0Ms
-         ERfQ==
-X-Gm-Message-State: AC+VfDzsyaxVoJ5GPLUgO49bRnUAEBR3zqiMd9c1mwrgGQanQuWWv/hb
-        DBC6HwI49I6MwlmEfUFhTEdPDA==
-X-Google-Smtp-Source: ACHHUZ4w1D1TLNmUidFGU+alHBI+O6fHdy/K3ZvelwvEW7Yp6jhAIwvk9yYV+Tm8T/ATNuw8o8MygA==
-X-Received: by 2002:a1c:6a18:0:b0:3f7:19f9:4c4f with SMTP id f24-20020a1c6a18000000b003f719f94c4fmr10263680wmc.21.1686734211028;
-        Wed, 14 Jun 2023 02:16:51 -0700 (PDT)
-Received: from localhost (i5C740811.versanet.de. [92.116.8.17])
-        by smtp.gmail.com with ESMTPSA id q9-20020a7bce89000000b003f858ae8f9dsm6516242wmj.31.2023.06.14.02.16.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jun 2023 02:16:50 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 14 Jun 2023 11:16:50 +0200
-Message-Id: <CTC9DIU5X5C2.1M6232L22HH9K@fedora>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
-Cc:     <linux-gpio@vger.kernel.org>, <brgl@bgdev.pl>
-To:     "Kent Gibson" <warthog618@gmail.com>
-X-Mailer: aerc 0.14.0
-References: <20230612154055.56556-1-warthog618@gmail.com>
- <CTC81IMWHW2L.28NQLXAIFP60L@fedora> <ZIl6X8YAUHS/n5s8@sol>
- <CTC8M1AAQDLI.DNPMW5PQHFNK@fedora> <ZImDFS2ATTxeFxDK@sol>
-In-Reply-To: <ZImDFS2ATTxeFxDK@sol>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S234949AbjFNLAv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 07:00:51 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8681196;
+        Wed, 14 Jun 2023 04:00:49 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35E6Wl37022607;
+        Wed, 14 Jun 2023 11:00:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=E8OorCLE5pARt682KCgnv74eOmD6JT0PXLSavXYfH4A=;
+ b=COPkixyUB+QN7nM6tRHoER5HgrNTacA5A0AkgR9n2SYMkP8yqsiy1zpbCC6qvv3ItzgO
+ 3BYPZ6hEtrI0FB3WFzioGE5wy7vg55k1JVcSZ7SM9KUFyIxUxmzAVAnwdobeRPAbC3Ut
+ d8Nq0BzHEOobD0b6FAVlmccnUFhFLKOV5uRba3QrjuRzKWatJbr2bAgFuJ47CPaQdfZM
+ RipgRZ8Znj/9bF6C5N65RODCZ5y7hzncEJYDXLXXLdovQ5QUmOKAsnr83c/oG57JxWq1
+ VwqqxUENvRStc8QmP1jRsL9fYiE1E8dMNCQ1P36lNb5pHzqddlRwn9bAbQOgVsLrvOG7 8w== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3r78c78na1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Jun 2023 11:00:38 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35EB0brU024905
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Jun 2023 11:00:37 GMT
+Received: from [10.201.3.182] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 14 Jun
+ 2023 04:00:32 -0700
+Message-ID: <1e83efba-5fce-f149-6022-c1893866fcca@quicinc.com>
+Date:   Wed, 14 Jun 2023 16:30:29 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v4 2/8] clk: qcom: Add Global Clock controller (GCC)
+ driver for IPQ5018
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20230510134121.1232286-1-quic_srichara@quicinc.com>
+ <20230510134121.1232286-3-quic_srichara@quicinc.com>
+ <21a5642c-e6e5-9323-7db1-383a18616ac0@linaro.org>
+ <410b0991-30b6-c87d-9b25-5f51f6c08671@quicinc.com>
+ <1631b3cd-dc24-0024-5291-fa9bdacc82bc@linaro.org>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <1631b3cd-dc24-0024-5291-fa9bdacc82bc@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: plBM_xd3QxqhnsvFbfV-5q7rLM4mZury
+X-Proofpoint-ORIG-GUID: plBM_xd3QxqhnsvFbfV-5q7rLM4mZury
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-14_07,2023-06-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 clxscore=1015 adultscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=870 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306140094
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -73,53 +90,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Jun 14, 2023 at 11:06 AM CEST, Kent Gibson wrote:
-> On Wed, Jun 14, 2023 at 10:40:56AM +0200, Erik Schilling wrote:
-> > On Wed Jun 14, 2023 at 10:29 AM CEST, Kent Gibson wrote:
-> > > On Wed, Jun 14, 2023 at 10:14:08AM +0200, Erik Schilling wrote:
-> > > > On Mon Jun 12, 2023 at 5:40 PM CEST, Kent Gibson wrote:
-> > > > > clippy from Rust 1.70 reports a host of warnings due to casting a=
-nd type
-> > > > > conversions across the FFI interface to libgpiod.
-> > > > > These casts and conversions are required to support old versions =
-of Rust
-> > > > > that do not support recent Rust FFI extensions.
-> > > >=20
-> > > > Could you elaborate which extensions are relevant here? Would it be
-> > > > realistic to just update the minimum Rust version instead of needin=
-g
-> > > > to include these suppression directives?
-> > > >=20
-> > >
-> > > Types were added in core::ffi[1] in 1.64 for just this purpose.
-> > > e.g. c_uint[2]
-> > > Though c_size_t[3] still remains in Experimental.
-> > >
-> > > And I guess the clippy lints followed soon after.
-> > >
-> > > Wrt setting the MSRV, but I assumed not, hence the allows.
-> >=20
-> > For me bindgen seems to generate usize of size_t, thats why I asked.
-> > Does that depend on the Rust version somehow? Or more concretely:
-> > When will things like `gpiod_line_config_get_num_configured_offsets`
-> > not get translated to `usize` so that we need a cast?
-> >=20
->
-> No idea - outside my area.
->
-> > On my end (with latest toolchain and nightly), I do not see any
-> > clippy warnings with `cargo clippy`. How exactly did you produce those
-> > warnings?
-> >=20
->
-> Interesting.  With stable on libgpiod master in the rust/libgpiod
-> directory, and with these in my environment:
+Hi Konrad,
 
-Oh... My fault... I saw the -sys somewhere and tried to run things in
-libgpiod-sys (after inspecting the generated bindings). Need to revisit
-this in a calm moment.
+On 6/13/2023 8:53 PM, Konrad Dybcio wrote:
+> Oh that's new. I suppose you'll be interested in clk-interconnect for
+> voting on bus resources then.
 
-Thanks for the additional detail!
+  Yeah, its there in the plan to add the interconnect data.
+  So is this good to get this clk data merged before that now ?
 
-- Erik
-
+Regards,
+  Sricharan
