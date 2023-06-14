@@ -2,120 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A237304D3
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jun 2023 18:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5983730ACE
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 00:36:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231612AbjFNQWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Jun 2023 12:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39820 "EHLO
+        id S232748AbjFNWgq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Jun 2023 18:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbjFNQWo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 12:22:44 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EB1ED;
-        Wed, 14 Jun 2023 09:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686759763; x=1718295763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=li6GYo+wwMWYVTIEewqCORPcFr5mex3K6+KDY2sj2uw=;
-  b=dp8UBQeMhSIZrvlZzLWP4V1QRetd1rrXT/aU+YXyjybWLNzIFikWk8U8
-   1Vj03sdF2wyHU23fNewKqTkFoLZMQ8ZCGHicn5dVCknxs89IglxKxyqXQ
-   08HnwCDzcyq9r1pt9U+f1HHdu+5e+zumVakXiVq2C3NkC25n3v7Plc1O7
-   /HnkqgwqZKYFX6U1H9/NedA2Vv/Lj4va00nosIzdxpDxtciYEE4sO0hn2
-   F0Mj8wNsUAruPXywtHTRzAFw1LtAaWA9tdKX0jx/VIHK+cMdOlOp0sKdt
-   co52NRlEBwIPjbi5h3etb656ZOU9QoOg3XxAQ59wCp+N0uR+E6ctNArgf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="424549372"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="424549372"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 09:22:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="824876952"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="824876952"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2023 09:22:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q9TGZ-003jp9-1Y;
-        Wed, 14 Jun 2023 19:22:39 +0300
-Date:   Wed, 14 Jun 2023 19:22:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v3 2/3] pinctrl: intel: refine ->irq_set_type() hook
-Message-ID: <ZInpT0dUUVUcKdqv@smile.fi.intel.com>
-References: <20230613085054.10976-1-raag.jadav@intel.com>
- <20230613085054.10976-3-raag.jadav@intel.com>
+        with ESMTP id S229864AbjFNWgp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Jun 2023 18:36:45 -0400
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E24F1715;
+        Wed, 14 Jun 2023 15:36:44 -0700 (PDT)
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-33dae9244a1so554985ab.0;
+        Wed, 14 Jun 2023 15:36:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686782203; x=1689374203;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a8Zf94E7WQ/9wcsLl9Q+QIwfy+59Ul0REJcdYnckuKU=;
+        b=LKSRwJHFNOgKNBLdmm73cfTAN9FPD7FFI9hTl1mew1ZcgrXR6W6GWcefVTSUNzCSHO
+         NVMPj6vWJk/ytRC1uKLbXoq0KQQt0U01rLZJouLZNfniWcBz5SySU/l+4shsYyb9Ivh0
+         LigYNZW2CVgmnwmLnEDnmeDThEvpNLA/O/0OepMpxFPXQ9jUe/oInj3vL/I4ZsO0gSdB
+         JyzpbTFuBlPj3qP/40xGzlvnx+uQLnkomXCoBNSjq80L2ZZIb+wetxSqpcyYxUb8t2OQ
+         byAp8VPBY8GD34HckaikPaAF4XpDKY7AN4KqOBgInyPzijkX7HXijYCWrv6FhQPPI4Xh
+         K6CQ==
+X-Gm-Message-State: AC+VfDxDKpeXh3w5X1hD28p0tVizyNc2Qr1rOECGyax3G+GE3V+Y5lWX
+        yfTTT9QoPmD7c4vuUnW/hhzMH1GkKw==
+X-Google-Smtp-Source: ACHHUZ6JU7DCDYGAQ8/JWSyyuSrxrSNxeLDGbGaZcPHrcCorHY6KxNRpZMeRV9tKTmRrIK4JA7KNIg==
+X-Received: by 2002:a92:d6c8:0:b0:33f:c2f8:e503 with SMTP id z8-20020a92d6c8000000b0033fc2f8e503mr2224864ilp.5.1686782203533;
+        Wed, 14 Jun 2023 15:36:43 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id o27-20020a02c6bb000000b004186badba5esm5136264jan.36.2023.06.14.15.36.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jun 2023 15:36:42 -0700 (PDT)
+Received: (nullmailer pid 2990560 invoked by uid 1000);
+        Wed, 14 Jun 2023 22:36:40 -0000
+Date:   Wed, 14 Jun 2023 16:36:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
+Message-ID: <20230614223640.GA2980828-robh@kernel.org>
+References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
+ <a2be28c0aec04fdc3684f56801c78bcc498c3471.1686063941.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230613085054.10976-3-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <a2be28c0aec04fdc3684f56801c78bcc498c3471.1686063941.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 02:20:53PM +0530, Raag Jadav wrote:
-> Utilize a temporary variable for common shift operation
-> in ->irq_set_type() hook and improve readability.
-> While at it, simplify if-else-if chain and save a few bytes.
+On Tue, Jun 06, 2023 at 04:22:28PM +0000, Oleksii Moisieiev wrote:
+> Add new SCMI v3.2 pinctrl protocol bindings definitions and example.
 > 
-> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-16 (-16)
-> Function                                     old     new   delta
-> intel_gpio_irq_type                          317     301     -16
-> Total: Before=10469, After=10453, chg -0.15%
-
-...
-
->  	value = readl(reg);
-> -
->  	value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> ---
+>  .../bindings/firmware/arm,scmi.yaml           | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> index 5824c43e9893..a19aa184bbd1 100644
+> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> @@ -233,6 +233,39 @@ properties:
+>        reg:
+>          const: 0x18
 >  
->  	if ((type & IRQ_TYPE_EDGE_BOTH) == IRQ_TYPE_EDGE_BOTH) {
-> -		value |= PADCFG0_RXEVCFG_EDGE_BOTH << PADCFG0_RXEVCFG_SHIFT;
-> +		rxevcfg = PADCFG0_RXEVCFG_EDGE_BOTH;
->  	} else if (type & IRQ_TYPE_EDGE_FALLING) {
-> -		value |= PADCFG0_RXEVCFG_EDGE << PADCFG0_RXEVCFG_SHIFT;
-> -		value |= PADCFG0_RXINV;
-> +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
->  	} else if (type & IRQ_TYPE_EDGE_RISING) {
-> -		value |= PADCFG0_RXEVCFG_EDGE << PADCFG0_RXEVCFG_SHIFT;
-> +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
->  	} else if (type & IRQ_TYPE_LEVEL_MASK) {
-> -		if (type & IRQ_TYPE_LEVEL_LOW)
-> -			value |= PADCFG0_RXINV;
-> +		rxevcfg = PADCFG0_RXEVCFG_LEVEL;
->  	} else {
-> -		value |= PADCFG0_RXEVCFG_DISABLED << PADCFG0_RXEVCFG_SHIFT;
-> +		rxevcfg = PADCFG0_RXEVCFG_DISABLED;
->  	}
->  
-> +	if (type == IRQ_TYPE_EDGE_FALLING || type == IRQ_TYPE_LEVEL_LOW)
-> +		value |= PADCFG0_RXINV;
+> +  protocol@19:
+> +    $ref: '#/$defs/protocol-node'
+
+       unevaluatedProperties: false
+
 > +
-> +	value |= rxevcfg << PADCFG0_RXEVCFG_SHIFT;
->  	writel(value, reg);
+> +    properties:
+> +      reg:
+> +        const: 0x19
+> +
+> +      '#pinctrl-cells':
+> +        const: 0
+> +
+> +    allOf:
+> +      - $ref: /schemas/pinctrl/pinctrl.yaml#
 
-Looking at this I realized that entire temporary variable assignments can be
-done outside of spin lock. You probably would need another one for keeping
-rxinv value.
+Group this and the '#/$defs/protocol-node' $ref under allOf.
 
-Will it give us any memory reduction in comparison to the current code?
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties:
+> +      anyOf:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Don't need anyOf with only 1 entry.
 
+But the use of additionalProperties is usually for existing cases where 
+the pin config nodes had no naming convention. For new bindings, define 
+a node name pattern (under patternProperties). I'd suggest '-pins$' as 
+used elsewhere.
 
+> +        - type: object
+> +          allOf:
+> +            - $ref: /schemas/pinctrl/pincfg-node.yaml#
+> +            - $ref: /schemas/pinctrl/pinmux-node.yaml#
+> +
+> +          description:
+> +            A pin multiplexing sub-node describe how to configure a
+> +            set of pins is some desired function.
+> +            A single sub-node may define several pin configurations.
+> +            This sub-node is using default pinctrl bindings to configure
+> +            pin multiplexing and using SCMI protocol to apply specified
+> +            configuration using SCMI protocol.
+> +
+> +          unevaluatedProperties: false
+> +
+>  additionalProperties: false
+>  
+>  $defs:
+> @@ -384,6 +417,26 @@ examples:
+>              scmi_powercap: protocol@18 {
+>                  reg = <0x18>;
+>              };
+> +
+> +            scmi_pinctrl: protocol@19 {
+> +                reg = <0x19>;
+> +                #pinctrl-cells = <0>;
+> +
+> +                i2c2 {
+> +                    groups = "i2c2_a", "i2c2_b";
+> +                    function = "i2c2";
+> +                };
+> +
+> +                pins_mdio {
+> +                    groups = "avb_mdio";
+> +                    drive-strength = <24>;
+> +                };
+> +
+> +                keys_pins: keys {
+> +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> +                    bias-pull-up;
+> +                };
+> +            };
+>          };
+>      };
+>  
+> -- 
+> 2.25.1
