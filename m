@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A6973160B
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 13:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 218FE73160D
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 13:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238757AbjFOLEo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 07:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35332 "EHLO
+        id S241955AbjFOLFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 07:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241955AbjFOLEn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 07:04:43 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70502949;
-        Thu, 15 Jun 2023 04:04:41 -0700 (PDT)
+        with ESMTP id S1343800AbjFOLFF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 07:05:05 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DF8270B;
+        Thu, 15 Jun 2023 04:05:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686827081; x=1718363081;
+  t=1686827104; x=1718363104;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=H57pO/CEX076YrnRSou7G/dJnvK+TLW2RxUg15snHvk=;
-  b=U4VOXo2RwCfIegJF5pSmdAWjmWtPjvekpTWZmFkYn1uBMwZRCCIqbTFz
-   DFp7jTyBhIIS/oVVp7aFSuxTaTsBndcdNGLwUFBeAWId494fqZx0Zc6vV
-   ZmESZui1VsPg9oa3AMq7rykvnAELLEVZZVydneyKToRcmBnOpeNmwigxe
-   uMflVmlGMA0KmI48HDoH5YNh0CLbTO9X3JOq2sKMtULHY/0Q2jKb9zGVO
-   itorUHQDbU582HAf5Xdi6tnBsKzWgWKNRHv96SK/eirOdvk2iGSt9Q4ku
-   ZcaOYjAk3LyTtFl/PcqhWkRK0BP1MbOTfco4w+0HtRlpTrTB64i5+fUWV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="362262543"
+  bh=qfEAhnudYzkVSbuLjZT1BqT67D+oNWgnEV4GkiNwhPU=;
+  b=I1bbIL9q6bTlLyKOFsLMxPS3k6gvggO50UpSKwRHEdhjT1i8k85/xBX3
+   E+/4vUn2SalyAyNnxgNuYNc47necm87WqiQm2DuZgKP3BkaB9xqM93cS1
+   8fImWTiMgfZJIiLAJMx+4l3G5CFz+q1hPnWapjoCw3q0dL2Z/uNgSnJM/
+   Mwdlmt1mpcniuGN0EknUlAQoL6OAtr81FipGO3cbyr3MvuyP6EpxF8BcN
+   sdsBPnxHc5hHhxcEEAGi/4NMKmc6hqCpoNwIQnfV6DSB6zWJWd6WlwOkx
+   8PTOVj3mBu2lhJTEpPa+QqIGrx9c0LZIFUebtjCbrImL5BiMy4v0e6w/i
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338506450"
 X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
-   d="scan'208";a="362262543"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 04:04:14 -0700
+   d="scan'208";a="338506450"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 04:04:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="689747450"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="856908300"
 X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
-   d="scan'208";a="689747450"
+   d="scan'208";a="856908300"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 15 Jun 2023 04:04:11 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2023 04:04:49 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q9klt-003vLk-2f;
-        Thu, 15 Jun 2023 14:04:09 +0300
-Date:   Thu, 15 Jun 2023 14:04:09 +0300
+        id 1q9kmV-003vM8-2n;
+        Thu, 15 Jun 2023 14:04:47 +0300
+Date:   Thu, 15 Jun 2023 14:04:47 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc:     ludovic.desroches@microchip.com, linus.walleij@linaro.org,
@@ -51,18 +51,18 @@ Cc:     ludovic.desroches@microchip.com, linus.walleij@linaro.org,
         daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] pinctrl: microchip-sgpio: check return value of
+Subject: Re: [PATCH 3/3] pinctrl: at91-pio4: check return value of
  devm_kasprintf()
-Message-ID: <ZIrwKaNwEuO/Wgxs@smile.fi.intel.com>
+Message-ID: <ZIrwT6ib13SneacJ@smile.fi.intel.com>
 References: <20230615105333.585304-1-claudiu.beznea@microchip.com>
- <20230615105333.585304-3-claudiu.beznea@microchip.com>
+ <20230615105333.585304-4-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230615105333.585304-3-claudiu.beznea@microchip.com>
+In-Reply-To: <20230615105333.585304-4-claudiu.beznea@microchip.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,33 +71,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 01:53:32PM +0300, Claudiu Beznea wrote:
+On Thu, Jun 15, 2023 at 01:53:33PM +0300, Claudiu Beznea wrote:
 > devm_kasprintf() returns a pointer to dynamically allocated memory.
 > Pointer could be NULL in case allocation fails. Check pointer validity.
 > Identified with coccinelle (kmerr.cocci script).
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Fixes: 7e5ea974e61c ("pinctrl: pinctrl-microchip-sgpio: Add pinctrl driver for Microsemi Serial GPIO")
+> Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller")
+> Depends-on: 1c4e5c470a56 ("pinctrl: at91: use devm_kasprintf() to avoid potential leaks")
+> Depends-on: 5a8f9cf269e8 ("pinctrl: at91-pio4: use proper format specifier for unsigned int")
 > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  drivers/pinctrl/pinctrl-microchip-sgpio.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/pinctrl/pinctrl-at91-pio4.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> index 4794602316e7..666d8b7cdbad 100644
-> --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> @@ -818,6 +818,9 @@ static int microchip_sgpio_register_bank(struct device *dev,
->  	pctl_desc->name = devm_kasprintf(dev, GFP_KERNEL, "%s-%sput",
->  					 dev_name(dev),
->  					 bank->is_input ? "in" : "out");
-> +	if (!pctl_desc->name)
-> +		return -ENOMEM;
-> +
->  	pctl_desc->pctlops = &sgpio_pctl_ops;
->  	pctl_desc->pmxops = &sgpio_pmx_ops;
->  	pctl_desc->confops = &sgpio_confops;
+> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+> index e40487be2038..fc7d7155bb8d 100644
+> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
+> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+> @@ -1146,6 +1146,8 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+>  		/* Pin naming convention: P(bank_name)(bank_pin_number). */
+>  		pin_desc[i].name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "P%c%u",
+>  						  bank + 'A', line);
+> +		if (!pin_desc[i].name)
+> +			return -ENOMEM;
+>  
+>  		group->name = group_names[i] = pin_desc[i].name;
+>  		group->pin = pin_desc[i].number;
 > -- 
 > 2.34.1
 > 
