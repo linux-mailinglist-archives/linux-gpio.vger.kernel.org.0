@@ -2,107 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 019BE731949
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 14:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69AB07319B2
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 15:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241642AbjFOM4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 08:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
+        id S240673AbjFONPW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 09:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240542AbjFOMzy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 08:55:54 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9042684
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 05:55:53 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4f60a27c4a2so9952421e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 05:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686833751; x=1689425751;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hr+C4HV3ypYhMAH5p+tz4TJXh2rByBSODsfmyqqfM3o=;
-        b=Ix+HXY8lKizE+F/v9G5aOrSdAwCUUPO3rC5F22k4R8aUIph0mG19vve1xPug+9DdRb
-         EhVfImlBBTz3KHcBCs/FVDcF4s18euAZMEXNNGWJaZdTYVPo7GAwKezYf000qbO4P5IJ
-         /nIpu0ZHAqYiqYbsKwbtR1R3OpX8r0Hth+2c2RSA/sepTHT+LABrrk3FFL44W/CEquEs
-         nZTyeZSTdy9PoWlYB5PUWppt0pgx/iXJvPhOW4+8eqBEcjjCHqX4++5PsCFOo3G2FxLp
-         PamKcUhhjm8AhIUuMqpr+gyCFZlqkl3SmIQr2lI2eG5mEH4oqpnltkTtHCuyStR4sRVU
-         A7+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686833751; x=1689425751;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hr+C4HV3ypYhMAH5p+tz4TJXh2rByBSODsfmyqqfM3o=;
-        b=KSEHWOr4/CpbXYzl8PhY+MHHiK4kv6vCYgkOJYjoFQi8c8RCL+zvbFz/JUUfkNp69M
-         0EJhIwRr31sY17rJrMOnu9iFjYNmKYWiDR+iV6ZQgPVQ5aY+HdLdzt8n4UypKUd8lwR8
-         SmLXpm8uAWlBhr3m9hNwztpCAWHdjGE5cuDfD/Gx4cf6q/ARrUYZk+EIvKyHvGN7zB2r
-         TwSk0HFLlHwRoX8WCO10syAKqwXjnZAi/IO8JqIQxBheRI4lihTezRAP+ApKOVW6Niw+
-         SB02vD2Mv+br2K+Ucgz1sQmif7g/o8D/lxHZXcPQeirc8PJAGhE4ibejblPzANvUdRDr
-         5FlA==
-X-Gm-Message-State: AC+VfDypueo+lDP0YpDSYwxyiqVuiUztIHLqjCW5XmSqfAN8bQQhaIuo
-        KPg4gALDzmtjrMwM+T2X5Zixvw==
-X-Google-Smtp-Source: ACHHUZ5r5g0/EdaBgh3ItbXCv7EHaR9YYHxAHfFr/UG529fhS2cSFA7JJ0Qe09gXlXkN1fN/RsAUhg==
-X-Received: by 2002:a19:da12:0:b0:4f7:669f:7da8 with SMTP id r18-20020a19da12000000b004f7669f7da8mr3474493lfg.7.1686833751155;
-        Thu, 15 Jun 2023 05:55:51 -0700 (PDT)
-Received: from [192.168.1.101] (abyj190.neoplus.adsl.tpnet.pl. [83.9.29.190])
-        by smtp.gmail.com with ESMTPSA id c26-20020a19761a000000b004f14ea05895sm2550319lff.213.2023.06.15.05.55.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 05:55:50 -0700 (PDT)
-Message-ID: <1d1756c6-b79f-7f8f-2f00-6fcb3657295a@linaro.org>
-Date:   Thu, 15 Jun 2023 14:55:49 +0200
+        with ESMTP id S1343697AbjFONPF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 09:15:05 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2052D49;
+        Thu, 15 Jun 2023 06:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686834881; x=1718370881;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dSdnIrqkytXoK4h1PEhPHBhTw26jP5/ExIfFAh92pC4=;
+  b=lcA2p9sOezWFJYw+SB44bIIC2Oa19POVSX+IMhbFIsbDV16XaG+hqAzp
+   Q7+QfKZ/h2vhJvWOHgi39idDOx69bZO4I6F/tSmhNofhxQ1BGiV5eKpow
+   w5YOjOnxQOne32bFKGH6YTEtWq1kCmWHWYK3roG8Q2QL2yC6yiA0WrkIn
+   DBZpLyVBwKH2ds15Tc0UCfMhfE9Zz6hYpP7JYfE0xz/TeXckpBqQr8fMe
+   XvRLCo7y7eS7xVDsdC2u2WgCu4SHpj2rd75yKdq+wmMkKFx4OowMHnlcO
+   CkR5dyYnNH28Q9urdkRBWhhVCmYYtqDiHqzhHeH/vXDurQ05jbfhV6WEm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="356402056"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="356402056"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 06:14:40 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="745544435"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="745544435"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 15 Jun 2023 06:14:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q9mo8-003wjU-2m;
+        Thu, 15 Jun 2023 16:14:36 +0300
+Date:   Thu, 15 Jun 2023 16:14:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
+Subject: Re: [PATCH v4] pinctrl: intel: refine ->irq_set_type() hook
+Message-ID: <ZIsOvBGLJTCo45jp@smile.fi.intel.com>
+References: <20230615125022.27421-1-raag.jadav@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [v10 2/6] clk: qcom: Add Global Clock controller (GCC) driver for
- IPQ5018
-Content-Language: en-US
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robimarko@gmail.com, krzysztof.kozlowski@linaro.org,
-        andy.shevchenko@gmail.com
-References: <20230615090638.1771245-1-quic_srichara@quicinc.com>
- <20230615090638.1771245-3-quic_srichara@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230615090638.1771245-3-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615125022.27421-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15.06.2023 11:06, Sricharan Ramabadhran wrote:
-> Add support for the global clock controller found on IPQ5018
-> based devices.
+On Thu, Jun 15, 2023 at 06:20:22PM +0530, Raag Jadav wrote:
+> Refine ->irq_set_type() hook and improve its readability by:
 > 
-> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> - Reducing scope of spinlock by moving unneeded operations out of it.
+> - Dropping redundant PADCFG0_RXEVCFG_SHIFT and including it directly
+>   into PADCFG0_RXEVCFG_* definitions.
+> - Utilizing temporary variables for common operations.
+> - Simplifying if-else-if chain.
+
+Two questions out of curiosity.
+Do we gain or lose bytes with this?
+
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 > ---
-
+>  drivers/pinctrl/intel/pinctrl-intel.c | 45 ++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index e8adf2580321..036eae74c479 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -55,12 +55,11 @@
+>  
+>  /* Offset from pad_regs */
+>  #define PADCFG0				0x000
+> -#define PADCFG0_RXEVCFG_SHIFT		25
+>  #define PADCFG0_RXEVCFG_MASK		GENMASK(26, 25)
+> -#define PADCFG0_RXEVCFG_LEVEL		0
+> -#define PADCFG0_RXEVCFG_EDGE		1
+> -#define PADCFG0_RXEVCFG_DISABLED	2
+> -#define PADCFG0_RXEVCFG_EDGE_BOTH	3
+> +#define PADCFG0_RXEVCFG_LEVEL		(0 << 25)
+> +#define PADCFG0_RXEVCFG_EDGE		(1 << 25)
+> +#define PADCFG0_RXEVCFG_DISABLED	(2 << 25)
+> +#define PADCFG0_RXEVCFG_EDGE_BOTH	(3 << 25)
+>  #define PADCFG0_PREGFRXSEL		BIT(24)
+>  #define PADCFG0_RXINV			BIT(23)
+>  #define PADCFG0_GPIROUTIOXAPIC		BIT(20)
+> @@ -1127,9 +1126,9 @@ static int intel_gpio_irq_type(struct irq_data *d, unsigned int type)
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>  	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+>  	unsigned int pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), NULL, NULL);
+> +	u32 rxevcfg, rxinv, value;
+>  	unsigned long flags;
+>  	void __iomem *reg;
+> -	u32 value;
+>  
+>  	reg = intel_get_padcfg(pctrl, pin, PADCFG0);
+>  	if (!reg)
+> @@ -1145,28 +1144,32 @@ static int intel_gpio_irq_type(struct irq_data *d, unsigned int type)
+>  		return -EPERM;
+>  	}
+>  
+> -	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> -
+> -	intel_gpio_set_gpio_mode(reg);
+> -
+> -	value = readl(reg);
+> -
+> -	value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+> -
+>  	if ((type & IRQ_TYPE_EDGE_BOTH) == IRQ_TYPE_EDGE_BOTH) {
+> -		value |= PADCFG0_RXEVCFG_EDGE_BOTH << PADCFG0_RXEVCFG_SHIFT;
+> +		rxevcfg = PADCFG0_RXEVCFG_EDGE_BOTH;
+>  	} else if (type & IRQ_TYPE_EDGE_FALLING) {
+> -		value |= PADCFG0_RXEVCFG_EDGE << PADCFG0_RXEVCFG_SHIFT;
+> -		value |= PADCFG0_RXINV;
+> +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
+>  	} else if (type & IRQ_TYPE_EDGE_RISING) {
+> -		value |= PADCFG0_RXEVCFG_EDGE << PADCFG0_RXEVCFG_SHIFT;
+> +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
+>  	} else if (type & IRQ_TYPE_LEVEL_MASK) {
+> -		if (type & IRQ_TYPE_LEVEL_LOW)
+> -			value |= PADCFG0_RXINV;
+> +		rxevcfg = PADCFG0_RXEVCFG_LEVEL;
+>  	} else {
+> -		value |= PADCFG0_RXEVCFG_DISABLED << PADCFG0_RXEVCFG_SHIFT;
+> +		rxevcfg = PADCFG0_RXEVCFG_DISABLED;
+>  	}
+>  
+> +	if (type == IRQ_TYPE_EDGE_FALLING || type == IRQ_TYPE_LEVEL_LOW)
+> +		rxinv = PADCFG0_RXINV;
+> +	else
+> +		rxinv = 0;
 > +
-> +static const struct freq_tbl ftbl_apss_axi_clk_src[] = {
-> +	F(400000000, P_GPLL0, 2, 0, 0),
-> +	{ }
-> +};
-This is weirdly far away from its use.
+> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +	intel_gpio_set_gpio_mode(reg);
+> +
+> +	value = readl(reg);
 
-With that fixed:
+> +	value = (value & ~PADCFG0_RXINV) | rxinv;
+> +	value = (value & ~PADCFG0_RXEVCFG_MASK) | rxevcfg;
 
-Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Same question if we change this to be similar to the current code, i.e.
 
-Konrad
+	value = readl(reg);
+
+	value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+	value |= rxevcfg;
+	value |= rxinv;
+
+And I would keep blank lines after readl() and before writel() since we have
+more than a single line in between.
+
+>  	writel(value, reg);
+>  
+>  	if (type & IRQ_TYPE_EDGE_BOTH)
+> 
+> base-commit: e95433c367e681dc6d4613706bd74f483a25acd8
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
