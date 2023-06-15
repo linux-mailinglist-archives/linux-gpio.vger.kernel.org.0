@@ -2,66 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8796B731331
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 11:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC54C73133D
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 11:11:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245461AbjFOJIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 05:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
+        id S238268AbjFOJLQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 05:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245480AbjFOJIY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 05:08:24 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D1E1FFF;
-        Thu, 15 Jun 2023 02:08:20 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-62de1a3e354so26723426d6.3;
-        Thu, 15 Jun 2023 02:08:20 -0700 (PDT)
+        with ESMTP id S241318AbjFOJLF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 05:11:05 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEA7119;
+        Thu, 15 Jun 2023 02:11:04 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-62de85dd962so24272536d6.0;
+        Thu, 15 Jun 2023 02:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686820099; x=1689412099;
+        d=gmail.com; s=20221208; t=1686820262; x=1689412262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8WSj6TQv3vBLARHOJ2yajyVkw7AyFI4ZOe0aw/IQH/U=;
-        b=gzpdtC2oKKSvAsSSSE13exp+rXvu3PBiXTLFtAKaYq193Y/8RSJZnKbaXGDk6dxo2A
-         PUSxk9O9XQkz+uMXnaaMj4TpHz7EMYnxeuyd/mSlubKRO7GAomC+A1tL0Sow1iUKB3Ve
-         K3z4/TT25npQrPHqf4VIUwvR/feBumlutzCPzJyQSDRRK9T2mWacPvNrjh0T8KfIbwnW
-         e/NA00WqHPQTrc+GYqTm7f+edo3wwE4l9VhIcur91O1ZfHbeqIw7lfCVCXElD+PE6lf/
-         9XGiU3BpYuCm+u8INmZ02UolC7nESMTWGsnDa5cx5wBQHpHDsaCfnga5sfScHA0wZi/+
-         acaA==
+        bh=MNteFUMG147OS3F5BgxkDPUNMVGTpgJpe9t7GN7PzjE=;
+        b=jRNqhGxZtltVFI9nLYVaPJGDzIrCf+HMXB/p2NEnni76H4Zujmr6gVM07cVW/AytEq
+         Ato9uUa8UgNPfZkKD9yJu3/wWvq+pzBZC9jQ5WPfqXzQfjErFb5SxVXCYxynMoSWyW6a
+         empI41p5t+ynrHHLSnLm9nvOrGVXLlR5PViWEnmBWL7hTWxYceNXRMmFAGxTdz7gIqox
+         n33xWxtU/1sejIAdW3NvBU2XO6I/3QYzG2Tm0sFwk8aqzyIUTW0CZCyVTdev54nkS4Ln
+         9Oi1XbZxAdBB5UnGJ1Xt4AxfWlYq6hg16BbOXAEpbFYQVVhnHvaaXi4dM9lS5LJ+vP+B
+         b2zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686820099; x=1689412099;
+        d=1e100.net; s=20221208; t=1686820262; x=1689412262;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8WSj6TQv3vBLARHOJ2yajyVkw7AyFI4ZOe0aw/IQH/U=;
-        b=PwNQxxSmHeO1nBk3+dMmYJyGcvHzDJjtsSmQ1TERI5O7VOi4+VCBlI7W5GVEbwfUmU
-         D+LteAI26lSjhhKYIaBZQEaXqwFX6Wk+W709XKnfd12N4ua7UKfair0mI12dWWVYK58N
-         r1oGC8ItF/A1zr8aghWL1V7vK82vvqst5BWtQZ5GRIRBmNUf7gKjeYDndNGx78gGEHC+
-         oMuu8EgUdtnU220fg4A77acob/dCTR6i4+FtOPsWmCGGb7ipu+aGjeOsh9MABP47Xtlx
-         ajqZjW3wPDoCXudpBMh2QN8jjr6yEMFIHf9HqAkSE6IsJGKkFUfiiRIT155JONaxh3zT
-         fMsA==
-X-Gm-Message-State: AC+VfDwOdIp6Tp3bHwEY5A6Uva4jw5Nmr3QFVYNP51mTRtSGFWQVDgST
-        dGk5rtXAWwEvkSPYOKdu1J5dUYOMF7E7mln2sdM=
-X-Google-Smtp-Source: ACHHUZ4MqjM7aqb2JoPXfjP85vyJdTQhybQ+drvfyMGnQ1feLcHLP7kZDLFOW8WAUd9M+dglkx2J3aXb9UauUAeh0Ds=
-X-Received: by 2002:a05:6214:21ed:b0:61b:6a71:e741 with SMTP id
- p13-20020a05621421ed00b0061b6a71e741mr18837605qvj.23.1686820099334; Thu, 15
- Jun 2023 02:08:19 -0700 (PDT)
+        bh=MNteFUMG147OS3F5BgxkDPUNMVGTpgJpe9t7GN7PzjE=;
+        b=C5o7F8TsUoMBjn6BvCWq+tabj7bxH3C+tINcZ5QmHqfRTiJiXlnD7aR8T6BBv8dB+W
+         x79CE5NfVnIPskukod7MFeEii3lQK3crP0xALq7QNKAHYlKfnyYUiZh2lreVD42xRVgF
+         8RlON5or1peXTfsyscC1MYcv0ssYO4R9pJPsWVuO0DoU241m3YCKvbFosEK4imtVK4ql
+         VLaUrUUUO3RIAfR6xphaunCSJwYeDvqOwtj/8ZfFdnPFZoUYVoqXWpZEStAfdO8sOHkN
+         PhCynfYLpYfL1vASiCKQBu50N9qLQbkbgUjpPHorZGP6Q1/F0RyBUfkHwAK1zAdDyPhY
+         OY6g==
+X-Gm-Message-State: AC+VfDwSK5SprE/3aKy9r8NOvl/VNygjzdzvsVCfFD/iYEPyXS4B9v8w
+        CdYXAERenviADeog6cA6X7sXMCIiEqPZxyMNiETYC+pYLME=
+X-Google-Smtp-Source: ACHHUZ6lmxA+bhKpAGl3hrH2CTN9vuyhP2Vxr5rgT+8GP7FZxUqMNPnH26camjpK2uPJhgFdtzDLLiRyNrmmThzeHHk=
+X-Received: by 2002:a05:6214:1c4a:b0:62d:f48c:cee7 with SMTP id
+ if10-20020a0562141c4a00b0062df48ccee7mr8978518qvb.64.1686820262529; Thu, 15
+ Jun 2023 02:11:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com>
- <20230614231446.3687-4-andriy.shevchenko@linux.intel.com> <CAMuHMdVaJ2Fqc5+YFCO9isUebUaeZE31T3C+SXDeVXOii=Ra4A@mail.gmail.com>
-In-Reply-To: <CAMuHMdVaJ2Fqc5+YFCO9isUebUaeZE31T3C+SXDeVXOii=Ra4A@mail.gmail.com>
+In-Reply-To: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 15 Jun 2023 12:07:43 +0300
-Message-ID: <CAHp75VezU_GN-C_ZARmLZ-WyLcz_rxqicwnAjvSu6fnv-y4Mkg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: aggregator: Set up a parser of delay line parameters
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+Date:   Thu, 15 Jun 2023 12:10:26 +0300
+Message-ID: <CAHp75VfVF3giovZ=qA423rZNEP_m2bpD_dmBvdGp2UrueKOs4g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] gpio: aggregator: Incorporate gpio-delay functionality
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Alexander Stein <alexander.stein@ew.tq-group.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
+        Andy Shevchenko <andy@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -74,25 +73,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 10:48=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Thu, Jun 15, 2023 at 1:14=E2=80=AFAM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > The aggregator mode can also handle properties of the platform,
-> > that do not belong to the GPIO controller itself. One of such
-> > a property is a signal delay line. Set up a parser to support it.
-
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, Jun 15, 2023 at 2:14=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Thanks for your patch!
+> The newly appeared gpio-delay module enables external signal delay lines
+> that may be connected to the GPIOs. But at the same time it copies the
+> GPIO forwarder functionality. Besides that the approach does not scale.
+> If we would have another external component, we would need yet another
+> driver. That's why I think, and seems others support me, better to
+> enable such a functionality inside GPIO aggregator driver.
 >
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Patch 1 is a cleanup that may be applied independently on the decision
+> about the rest.
+>
+> Please, test and comment!
 
-Thank you!
-
-> One suggestion for improvement below...
-
-Sure, for v3!
+Alexander, I have slightly changed the code, can you test this and
+give your formal Tested-by tag?
 
 --=20
 With Best Regards,
