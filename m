@@ -2,119 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5A5731B22
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 16:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E87C731ADC
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 16:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344991AbjFOORq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 10:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S239165AbjFOOKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 10:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344987AbjFOORo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 10:17:44 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5E62D51;
-        Thu, 15 Jun 2023 07:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686838620; x=1718374620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IZs3+IpTIl6TXY3NHA88Szi8RXaR0RScjuDF4WCYJC0=;
-  b=X1aI454rl7PcLc9H4NXGXh3b8QKcpX8LZp4f2di0elHJEVRkeFPlj5bw
-   99qZN3DgqIQoIr+E9UPstW4Q6u56knSosSgdFA3HPr8m7FlfxpTeF5ztl
-   5/1TAdn+H/tE3rAFFWrpqmHweCQT5+9kF2zl50i3gpVQxE3ycNx3yoHKv
-   1IhTKTjV5lQjAOol+y7fCKYfOTFpv0dbU2Dln+huM7PIZ424KflcxVRJ8
-   2yq7RkxJ+sRGg61v/fHPUbOdiPllgfygvIOjTUVwAXwdh8fhCqpra4fev
-   fsjZquCiYCuY/RS8Ys0tgFEFR57LbBu5QY1jS/2jrg0+uY8hFSlYKiP4X
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="338548468"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="338548468"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 07:09:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825294984"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="825294984"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Jun 2023 07:09:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q9net-003xUF-2V;
-        Thu, 15 Jun 2023 17:09:07 +0300
-Date:   Thu, 15 Jun 2023 17:09:07 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Jadav, Raag" <raag.jadav@intel.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sangannavar, Mallikarjunappa" 
-        <mallikarjunappa.sangannavar@intel.com>,
-        "N, Pandith" <pandith.n@intel.com>
-Subject: Re: [PATCH v4] pinctrl: intel: refine ->irq_set_type() hook
-Message-ID: <ZIsbg2h0u93tCQiz@smile.fi.intel.com>
-References: <20230615125022.27421-1-raag.jadav@intel.com>
- <ZIsOvBGLJTCo45jp@smile.fi.intel.com>
- <DM6PR11MB2779FD7F6DF3A0126DB85E4B8C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+        with ESMTP id S230500AbjFOOKl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 10:10:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B7A171C;
+        Thu, 15 Jun 2023 07:10:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE5B86208A;
+        Thu, 15 Jun 2023 14:10:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C07DC433C0;
+        Thu, 15 Jun 2023 14:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686838239;
+        bh=8FbUCp9ZN3V8nlIJvTpnnVtxiR20eH47E6H/M2tQXMQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ASgQIRayntAdT97tBYFV9Ia7GNoIxKYG1PmGtj1z29/XtQ1cFGks3JP6Gc1QuA8ZW
+         jqh4SEPBCCnBi13+uima4zmtEXPLeXG16Pu/BYmnu2fBl8IyvgcNDPxfnp+ZVOsEuj
+         PrYR40AjuV571ldWvTe27VbZ0AUPxNU0BLMf4URYRzdbPVyMFWMk4qNtzLTkO70/kw
+         cjhJhkEDVx7R0p8s7LA4vsbFFmzq+7rreZV93cVBMBI/TuzCbO1nTm9Dt1y/6aKwII
+         REpbMHZiVdLnG7cH12EXCg4fyvBe0frVGsMuNKiP3LoxsUpwsNzcP+92tN2DFM2O9a
+         bclXr1gEv3t+g==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b3451b3ea9so29594721fa.1;
+        Thu, 15 Jun 2023 07:10:39 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxr03xU8bwlboPRXgqEjzsU1vnJLPAWJR/9QlvxGR6Bam19n05P
+        m813F5mpGNYNunELvT1umMqXTN9HMcwfgP8IHw==
+X-Google-Smtp-Source: ACHHUZ5l1G1VXSMGnsvMpM+q5vZFcFP4B+j6zelO+XbNie7OI/xbiGaNMzhkpNcb442P88SlAscXmNvERfy9/U37uAE=
+X-Received: by 2002:a2e:9846:0:b0:2b1:ac82:296 with SMTP id
+ e6-20020a2e9846000000b002b1ac820296mr9302682ljj.34.1686838237226; Thu, 15 Jun
+ 2023 07:10:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB2779FD7F6DF3A0126DB85E4B8C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230609143609.209373-1-brgl@bgdev.pl> <CAL_JsqK77OW3n0PW6zP3FNdmuQHnDp9=wfX4E3ga-VW0_LRHHA@mail.gmail.com>
+ <CAMRc=Mc7bbaDA1g3gn79XJZL6bTPGf9xZsB3=A4oiMUggzb4kA@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc7bbaDA1g3gn79XJZL6bTPGf9xZsB3=A4oiMUggzb4kA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 15 Jun 2023 08:10:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLAC8oLLyNKMCOcMDjVpuMGK9E3zoYBejwuGGu4p9SDEA@mail.gmail.com>
+Message-ID: <CAL_JsqLAC8oLLyNKMCOcMDjVpuMGK9E3zoYBejwuGGu4p9SDEA@mail.gmail.com>
+Subject: Re: [PATCH] of: unittest: drop assertions for GPIO hog messages
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 01:35:19PM +0000, Jadav, Raag wrote:
-> > On Thu, Jun 15, 2023 at 06:20:22PM +0530, Raag Jadav wrote:
-> > > Refine ->irq_set_type() hook and improve its readability by:
+On Fri, Jun 9, 2023 at 2:15=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Fri, Jun 9, 2023 at 7:01=E2=80=AFPM Rob Herring <robh+dt@kernel.org> w=
+rote:
+> >
+> > On Fri, Jun 9, 2023 at 8:36=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
 > > >
-> > > - Reducing scope of spinlock by moving unneeded operations out of it.
-> > > - Dropping redundant PADCFG0_RXEVCFG_SHIFT and including it directly
-> > >   into PADCFG0_RXEVCFG_* definitions.
-> > > - Utilizing temporary variables for common operations.
-> > > - Simplifying if-else-if chain.
-> > 
-> > Two questions out of curiosity.
-> > Do we gain or lose bytes with this?
-> 
-> add/remove: 0/0 grow/shrink: 1/0 up/down: 33/0 (33)
-> Function                                     old     new   delta
-> intel_gpio_irq_type                          317     350     +33
-> Total: Before=10469, After=10502, chg +0.32%
-> 
-> > > +	value = readl(reg);
-> > 
-> > > +	value = (value & ~PADCFG0_RXINV) | rxinv;
-> > > +	value = (value & ~PADCFG0_RXEVCFG_MASK) | rxevcfg;
-> > 
-> > Same question if we change this to be similar to the current code, i.e.
-> > 
-> > 	value = readl(reg);
-> > 
-> > 	value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
-> > 	value |= rxevcfg;
-> > 	value |= rxinv;
-> > 
-> > And I would keep blank lines after readl() and before writel() since we have
-> > more than a single line in between.
-> 
-> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-9 (-9)
-> Function                                     old     new   delta
-> intel_gpio_irq_type                          317     308      -9
-> Total: Before=10469, After=10460, chg -0.09%
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > These have now been demoted to debug and are normally hidden. Drop th=
+e
+> > > assertions entirely.
+> > >
+> > > Suggested-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> > >  drivers/of/unittest.c | 28 ----------------------------
+> > >  1 file changed, 28 deletions(-)
+> >
+> > Why is this a separate patch? Don't I get at least 5 days to
+> > review/ack changes in drivers/of/?
+> >
+>
+> Sorry, my bad, I queued the previous one through the GPIO tree after
+> it was reviewed here thinking the unittests bits are trivial. I can
+> back it out if you insist or you can ack this one and the end effect
+> is the same? I will pay attention in the future.
 
-Do I understand correctly that this is your patch + suggested above?
+I'd prefer it to be squashed, but either way:
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Rob Herring <robh@kernel.org>
