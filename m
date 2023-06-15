@@ -2,126 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9521F731BDF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 16:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E16731C9B
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 17:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344199AbjFOOyf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 10:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37016 "EHLO
+        id S1345303AbjFOP1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 11:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344980AbjFOOya (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 10:54:30 -0400
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CD0273D;
-        Thu, 15 Jun 2023 07:54:29 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-bb167972cffso1825933276.1;
-        Thu, 15 Jun 2023 07:54:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686840868; x=1689432868;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pSYZW9Ic0ZUjs7I0R7WkG+kButHO3oEwKmEXzQ8pRqY=;
-        b=k7UtgOpcgLzMTA6nB8gRrHmYHidsuUhknM0yVsqeoum24+qmkpoRBFhEYdw53joGav
-         hs5fW88/1/B4Ez/FKjCFCXBZ9Lw9EzBNY3jv9fSnTFwyJn+vaJ5hAvhtuaD6tf65Jgq+
-         YwRcgPpHBAaZlK0a2ROr0BnEgWDnTyo5uCJ0AyQhwGmBJR9VNHAR3NJAlhwZtqfA/L9P
-         +0NeGRz+ohDQkScPkDWyNPpI+K7N3Vfb1NAqAoZaempyLdiQY1GUwIidoYu2M1ahDPcR
-         YtC0bznxzSTLqp15qsB1I340Na8F/WLrrJv+OkTYVDcjQWWuIV9Txu1cOt1KEpknLWQF
-         1acA==
-X-Gm-Message-State: AC+VfDyYvYUd9OPSPWT7lOJjGtfjoxJfWupRj86TmiFjNE1NA4CQt40R
-        sTVtlGxeRhKIp/0d6w+oeFqFKzOEkez4ig==
-X-Google-Smtp-Source: ACHHUZ4P3Cv+HaI+1JkcQ7Bq0adMusjtvhtlT/9+7HGkS8on9LM3vKfcDlRW7kZqjMI7Nq41w1YQRg==
-X-Received: by 2002:a25:e056:0:b0:bc2:b993:848f with SMTP id x83-20020a25e056000000b00bc2b993848fmr5145534ybg.35.1686840868448;
-        Thu, 15 Jun 2023 07:54:28 -0700 (PDT)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id d17-20020a258891000000b00b99768e3b83sm3982828ybl.25.2023.06.15.07.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 07:54:28 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-57045429f76so4856297b3.0;
-        Thu, 15 Jun 2023 07:54:27 -0700 (PDT)
-X-Received: by 2002:a81:d34f:0:b0:56d:2bab:947e with SMTP id
- d15-20020a81d34f000000b0056d2bab947emr5000726ywl.43.1686840867726; Thu, 15
- Jun 2023 07:54:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230615132023.13801-1-andriy.shevchenko@linux.intel.com> <20230615132023.13801-4-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230615132023.13801-4-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 15 Jun 2023 16:54:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVAwKCUnOeuz_PE6ijtfTVf8a3rTQZ=JvThOmqytu5HCA@mail.gmail.com>
-Message-ID: <CAMuHMdVAwKCUnOeuz_PE6ijtfTVf8a3rTQZ=JvThOmqytu5HCA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] gpio: aggregator: Prevent collisions between DT
- and user device IDs
+        with ESMTP id S1345237AbjFOP1a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 11:27:30 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D34F2964;
+        Thu, 15 Jun 2023 08:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686842847; x=1718378847;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Bh2NlQhryCZVuhCAfINmC0KI+n1Ar4Mbm7WVoW9I23o=;
+  b=Pn2vospciDpTMtWf6Y7IeJywXSNgKo5C+S8onE6NnRvWVkEQEuGjo5pV
+   4VugPQvpGF44MfOxHzsq4oYSgHiuAPkI1nyiEFbtc/TbuuQ8vNb2ZnsdO
+   4F5oIuTclPu1LUMAGePzEfgpIaOAh8OMmxYSs+8u2XZLkBL7lQwjpG2Wp
+   KtzsuK2UdN1ennP2dqrRClRGPYUbylgVSsaXBCs5kI5MuK4Xyxn9Is2Rt
+   gC2rpb+m66k6wVc0x8WCSRW4jduBRawausC9/Oc23MbpcFJaaLyMl8wjU
+   ZC0DFyKttXFo4jkAOUNbXK2z7rfM5IyjJ9bNI2q73msuECgFfvLs65Jds
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="348638250"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="348638250"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 08:07:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="802409615"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="802409615"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Jun 2023 08:05:48 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 08:05:47 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 08:05:46 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 15 Jun 2023 08:05:46 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 15 Jun 2023 08:05:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H5wjtu4RGJhFXT07U3pumTy/L10R+MgSfNvVwxiXsZJ4FOMQYYzP/NNp7Ws/CN1v5EU5F6BqSCnP/56dvoiRJvP9tXpIuOvnOzRuX5zMY3iYkbcGJW5hPsDvtrgK+E4gQ9rNa53r8CUfc66g7anMR9hq8IVgpLdgT7iXN9HE+hUQWBAQFAy1BqDrJsLIbgqe3nnVXugq24YYPaGaUfVWemkOR2hWruMXnuNLWtr/EYHIX3caupmd3sDRyjmrckWxfbqHnrc92Vb7t6vd+jTagUyNVEj8VOTubF+Iz9SU99qvFNlpUxmFfMPYJknSbg3c1gr7UVoN4qZO7WOqfsQv3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sRffppm8KD0z5tbvvMZtOOjzdDbYn0fBk/kKMqiEFgU=;
+ b=gGVB09WuzLGrjXeHyIahc/ibtWQgKhSfCY9R1d6OQOQ28yGG7fHCMsaT7YG1hd1ZdHJx70vxiUhKf4cJbt/v8C+u6WeA+2aN5VvrBYqzZgkH2hLUzFz32trzkZlnn2fwE3FhWhaIow6BEPtlNlbffshbbKlU8Hc3ZXME+8YlF6T1E43rw84oKiulcyW4md1hO8xVabrJMgzNXbXuzZmTcEYNPP3XOxcUMnxbCfys2KQdwT0iGdmDRAGVjikJoFy9/sO5Qb5uY/3+VSy9x3j8NvUNLwHz36AZ5DX3jZ/VnK0Pqrhb2MIfi1x5LsQL8PyP+rvleeubdxM5doaxbriX0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM6PR11MB2779.namprd11.prod.outlook.com (2603:10b6:5:c6::26) by
+ SA1PR11MB6784.namprd11.prod.outlook.com (2603:10b6:806:24c::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.27; Thu, 15 Jun 2023 15:05:43 +0000
+Received: from DM6PR11MB2779.namprd11.prod.outlook.com
+ ([fe80::5c56:cdad:30cb:c3de]) by DM6PR11MB2779.namprd11.prod.outlook.com
+ ([fe80::5c56:cdad:30cb:c3de%4]) with mapi id 15.20.6455.030; Thu, 15 Jun 2023
+ 15:05:43 +0000
+From:   "Jadav, Raag" <raag.jadav@intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "N, Pandith" <pandith.n@intel.com>
+Subject: RE: [PATCH v4] pinctrl: intel: refine ->irq_set_type() hook
+Thread-Topic: [PATCH v4] pinctrl: intel: refine ->irq_set_type() hook
+Thread-Index: AQHZn4gBPXOZzjOwf0Shiugls1EKsK+L15oAgAACIqCAAA0ZgIAADlVg
+Date:   Thu, 15 Jun 2023 15:05:42 +0000
+Message-ID: <DM6PR11MB2779545C0ACBF833E857EBD28C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+References: <20230615125022.27421-1-raag.jadav@intel.com>
+ <ZIsOvBGLJTCo45jp@smile.fi.intel.com>
+ <DM6PR11MB2779FD7F6DF3A0126DB85E4B8C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+ <ZIsbg2h0u93tCQiz@smile.fi.intel.com>
+In-Reply-To: <ZIsbg2h0u93tCQiz@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR11MB2779:EE_|SA1PR11MB6784:EE_
+x-ms-office365-filtering-correlation-id: 3cc2d4cd-7008-4d74-b5a3-08db6db1fd1a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mQT+PD6Ge6VE3sP66DqTxpTPJTp+FlLzYVQyeUdsueWCjUvixyPPZL10PVOBEqOVVtQ9h2DPggEisfSULv9Gf5w3wQiBD5Cn7a//Ccqb0NLPLtdSyromm8Go1GugNS8TSQGIl0XT2fqSRU0lTox/HXGT9zwSboYrnlCEuoZV0pR+VNXfYo5psHH1LD3FNOTZ5R7C5Fka8zG/dGkdbRI8s+RBRw3cDUvuNd8Pf1vPfn3sJJ1zFhaZT/TwLdD053FFWJfVTCiFRWsmAbaHmWJPis4fbYMlXOQ0kNhVOQjOa0fqcmifQY8uUw0DeSMu2EbkkHQFZxMX73SADFYT0/XHH2RM1MDFuOoa6N9BQ4hg1TMTC1MB8kbvJu9ODmQtX2Y+pU1GT87f9REDffrz6DTxVNl4fNfSDNlHuQZOXK20O+SvXm8HFTJWem3m2VL9CKfgjcla41JwTFMMCvLR9LCyg3KHj44K61q31KeALZRpS9gvqeSf5c78eh37Bf041O5CceG4/E0NshpVT3NDzSRweqkou+WTyFieKJmBZFRdhNTbWaUB9hBsVqtFrd54jXRcBe4AOgINI1JE484R66ImcppG2j2Ab7FYjYMm+jRBEstNuhQM6Ba93ZTj5aaCO4Pc
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2779.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(39860400002)(366004)(136003)(346002)(451199021)(76116006)(7696005)(66556008)(33656002)(41300700001)(4326008)(316002)(478600001)(6916009)(86362001)(6506007)(8936002)(66946007)(64756008)(9686003)(122000001)(26005)(66446008)(71200400001)(66476007)(8676002)(38100700002)(54906003)(52536014)(83380400001)(55016003)(186003)(38070700005)(5660300002)(82960400001)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0IBNbLXMncwxDpJxbCpr9KqSW2IucPdwNE6Abpnq4qV7ooX6ubvHnmBQWpyh?=
+ =?us-ascii?Q?fryLLhxRedPIyY4YtzkhW6l7P/AhV9K2gK9MLFmWwrHp5z3BWoN+JZ58EXX8?=
+ =?us-ascii?Q?NBW9/s1llbpzLiJb0us+lN7P+cK69cFi8PKgs0HqYmaIwBpsQrhfe7h+MpFJ?=
+ =?us-ascii?Q?bXGSNauue5Uc7dH0tvNZsnY5W02tpVJNsiamLM3qv3wsc5ZKtQaOxRInDvEU?=
+ =?us-ascii?Q?dx7P+q4eON2XR1d/2/PizSRXunKuKR+YPjEACUR2enGmMVU16JCJLJEy2KND?=
+ =?us-ascii?Q?ehXKTJ4oqoLtjJqudgAdILgyt8VVtO3pikkYqkZ7T+r04b1cTi0rGPXFn+ee?=
+ =?us-ascii?Q?CWqgsqLYCm4MrOMZAD9uecENJWOUezieY/Y0qgnklAMvZ87Tsv2PF7/e736K?=
+ =?us-ascii?Q?+a/+xLzAo1Woc7hsZ+bWj8ioM72DVikBQVSs4WPTL/RIIVFR8/6TE/TNTNPs?=
+ =?us-ascii?Q?pRtObhmTd4LWncFxp5NMd1iXRvwm72SclUrhw4Yd8V+CRuaQwk61/sdYKg25?=
+ =?us-ascii?Q?Te4pcIQ2PQl9BL0yGM9GJytgrNauHm44qA95gEHsdd5pEGVutSZIZqvJAEZR?=
+ =?us-ascii?Q?QRBWQw3aHiic23Z25PadeeHlqhxiNiqm+9Q/0QGsLT8aZYwGyM2Zg1NcJhpW?=
+ =?us-ascii?Q?J+4mw4tVn9uVnzzwUcdJ7yoVTEgmIJwsu6jxJZwWHXvRHFOIkO6Oks8p2/+Q?=
+ =?us-ascii?Q?3Ej06EtPaHehv1JBHpBkXLDH1rsaC+HL5qQY5Mn+9rpOSg1yXA0hviAowfUG?=
+ =?us-ascii?Q?DOeAs3aPAZWMWETVoYE5fK23NzwGe/LpiVS1OP94QdfHJgmC5Yh3MzwJnhx+?=
+ =?us-ascii?Q?UXPtf5h/JMkxHkav/DYr0QXwhfmMAHxbrBOSIBlBSmf0enISgppJYWNJjccD?=
+ =?us-ascii?Q?qYcC0x15FEQMdJIRJzXijju8q7A7OyCqhslxC0g4tBnLsphZF24UMRpl8cBF?=
+ =?us-ascii?Q?xkEWOGXUJLelRj5S/VGdIdlBc69RxJ22ryLSQeZo6hChb/Z5QAVzUXs6nAnP?=
+ =?us-ascii?Q?shq4yTv5tNRSxakhmmLd47lqbmFFTyr1uhSypNxtNHiMT40kVulGAgIsqDli?=
+ =?us-ascii?Q?hmkI7LsgkKKEpT7pyGPKx6wgZvmDcAGm9XoELWDog3qnNEDNJuEmtIgB59o3?=
+ =?us-ascii?Q?MTAdjFB4qkRmy3VwuyznJ4rQnl6lUPw+aGZZBcDc1Q4kIx+4mFdaIEcRaDgP?=
+ =?us-ascii?Q?LeIQBkmc801QTJ/quB5kSEJey++tsNUF6AJeRJUckzyUnkihdaeGPrhj5UUx?=
+ =?us-ascii?Q?WDEcCldW4KDenppzg3KFdwqNkkyg23E0dBmcUIK1iKofPutUQA7ARIOzfExA?=
+ =?us-ascii?Q?pBoHdWCkT7K47V8xERlr7rwwWF+S4GublBw6qUeNN+VDpoaW3KF5bpS5ebdr?=
+ =?us-ascii?Q?Ef+O+GS7koqB6ylI4q6afKJui5wBHnzSIoNxz138yeNgkduDySAGlEy4naS+?=
+ =?us-ascii?Q?oFKco54gBjl9xTjk55scazarkl3drPCmofSXwRXR967lpyL+i1U9QNx9k9zf?=
+ =?us-ascii?Q?+uHvmrsELCvKqV47NJwi/WbG0O9ksj6w9NPwDXHTLtPRGeywg2fOQA6ONNR2?=
+ =?us-ascii?Q?MukUjKgEf8quSN71tj4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2779.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cc2d4cd-7008-4d74-b5a3-08db6db1fd1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2023 15:05:42.5556
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nrL8sxrgqKm9q1VG/LuaDv9YkhylOhmeSFvsBBxrCOAUGh7qNsL1XMGlhjy8ha/uDr86GTNPaAG1gmf/jOjJcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6784
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+> On Thu, Jun 15, 2023 at 01:35:19PM +0000, Jadav, Raag wrote:
+> > > On Thu, Jun 15, 2023 at 06:20:22PM +0530, Raag Jadav wrote:
+> > > > Refine ->irq_set_type() hook and improve its readability by:
+> > > >
+> > > > - Reducing scope of spinlock by moving unneeded operations out of i=
+t.
+> > > > - Dropping redundant PADCFG0_RXEVCFG_SHIFT and including it
+> directly
+> > > >   into PADCFG0_RXEVCFG_* definitions.
+> > > > - Utilizing temporary variables for common operations.
+> > > > - Simplifying if-else-if chain.
+> > >
+> > > Two questions out of curiosity.
+> > > Do we gain or lose bytes with this?
+> >
+> > add/remove: 0/0 grow/shrink: 1/0 up/down: 33/0 (33)
+> > Function                                     old     new   delta
+> > intel_gpio_irq_type                          317     350     +33
+> > Total: Before=3D10469, After=3D10502, chg +0.32%
+> >
+> > > > +	value =3D readl(reg);
+> > >
+> > > > +	value =3D (value & ~PADCFG0_RXINV) | rxinv;
+> > > > +	value =3D (value & ~PADCFG0_RXEVCFG_MASK) | rxevcfg;
+> > >
+> > > Same question if we change this to be similar to the current code, i.=
+e.
+> > >
+> > > 	value =3D readl(reg);
+> > >
+> > > 	value &=3D ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+> > > 	value |=3D rxevcfg;
+> > > 	value |=3D rxinv;
+> > >
+> > > And I would keep blank lines after readl() and before writel() since
+> > > we have more than a single line in between.
+> >
+> > add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-9 (-9)
+> > Function                                     old     new   delta
+> > intel_gpio_irq_type                          317     308      -9
+> > Total: Before=3D10469, After=3D10460, chg -0.09%
+>=20
+> Do I understand correctly that this is your patch + suggested above?
 
-Thanks for your patch!
+Yes, this is tested with gcc 7.5.0 with default -O2.
+I see some reordering in disassembly even with this simple change,
+and I'm not entirely sure what kind of weird tricks gcc is pulling here.
 
-On Thu, Jun 15, 2023 at 3:51 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> In case we have a device instantiated via DT or other means than
-> via new_device sysfs node, the collision with the latter is possible.
-> Prevent such collisions by allocating user instantiated devices with
-> higher IDs, currently set to 1024.
-
-Can you please elaborate? How exactly is this possible?
-
-Aggregators instantiated through sysfs are named "gpio-aggregator.<n>",
-and are IDR-based.
-Aggregators instantiated from DT are named "<unit-address>.<node-name>".
-How can this conflict? When instantiated from ACPI?
-What am I missing?
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> --- a/drivers/gpio/gpio-aggregator.c
-> +++ b/drivers/gpio/gpio-aggregator.c
-> @@ -26,6 +26,7 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/machine.h>
->
-> +#define AGGREGATOR_MIN_DEVID 1024
->  #define AGGREGATOR_MAX_GPIOS 512
->
->  /*
-> @@ -135,7 +136,7 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
->         }
->
->         mutex_lock(&gpio_aggregator_lock);
-> -       id = idr_alloc(&gpio_aggregator_idr, aggr, 0, 0, GFP_KERNEL);
-> +       id = idr_alloc(&gpio_aggregator_idr, aggr, AGGREGATOR_MIN_DEVID, 0, GFP_KERNEL);
-
-Iff this would solve an issue, it would be only temporarily, until someone
-instantiates 1024 aggregators through some other means ;-)
-
->         mutex_unlock(&gpio_aggregator_lock);
->
->         if (id < 0) {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
