@@ -2,80 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D677731CDC
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 17:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BE43731D11
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 17:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239165AbjFOPmZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 11:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38058 "EHLO
+        id S240937AbjFOPuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 11:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238814AbjFOPmZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 11:42:25 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712F6123;
-        Thu, 15 Jun 2023 08:42:24 -0700 (PDT)
+        with ESMTP id S1344086AbjFOPtm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 11:49:42 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9A1DF;
+        Thu, 15 Jun 2023 08:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686843744; x=1718379744;
+  t=1686844178; x=1718380178;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1esU+W96PtNXw+8kc/bDUrIBmwX+Wv8g4LjSnrvzNiM=;
-  b=DAtiTbCdFcr3Ha5tFNevmMnMClwecDlZciBepv2eEKubO6Ec2T6+4uzp
-   c/6TIqxMXFwtrxZdJzdoJzhmnDdhlZl4nxabE5+L13j+kscwmumWF3ST1
-   su2PNmpEhna/CX3ebYiJH9nWwwWkldwWfUOsQicy9M4DFmSZ4DgYHBI+Z
-   d0g37ZQ2nw9mgUjgR4w3vdtqp4fd4g1kNP8G7Wj93aex9goaVlYQyinm1
-   w0vZ5Swbn+cgPOCqtIvdjEdyhnGsN1GKcYlZW9WVzaKW8ufy1ke+NidVS
-   LlQ5SbLJ7LtKeUVFJQyvVgV9V4YF3ffJK5aHecFapyDy3/X60q4WIeBwI
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=PFBtTtmWe3T3OLLflnk8WWM5W5odQPoBX/I7JOJDbQE=;
+  b=dVXUZEjNZGynz3mqarh0IYhioTOFuJgFqzyHmguVsDgQ6e6ciik0g5CK
+   RbVBRgmS0VKiHJII5dsmmaag6o+VyLNUHHit3d4om7yGOOZxhNDRRMevq
+   pD/+ynPdrR67+SPxT47naStNAU2EihV7fDUgK9zGNbnGGlaQ9Tq0xSoHh
+   Ga/wwzhAktfTM6iJaHXYT9FS1WOH9lLmo4ZHpQuasrA49vM2WozfYJLhA
+   qDJ0/LFrVIWgvhPvxnBSvVqtcpPfAd756s+zLx8mLaOz+YoNeiB7jMF+w
+   nxbbbSlDpHDpjwMKGQ1w4dKAx3roTLERfnW27H7LCYeVAhmtVNh7xONIf
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="361456083"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="424868043"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="361456083"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 08:28:36 -0700
+   d="scan'208";a="424868043"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 08:36:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="959247177"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="857019779"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="959247177"
+   d="scan'208";a="857019779"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Jun 2023 08:28:34 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2023 08:36:09 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q9otl-003yOe-0z;
-        Thu, 15 Jun 2023 18:28:33 +0300
-Date:   Thu, 15 Jun 2023 18:28:33 +0300
+        id 1q9p15-003yU3-1z;
+        Thu, 15 Jun 2023 18:36:07 +0300
+Date:   Thu, 15 Jun 2023 18:36:07 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v4] pinctrl: intel: refine ->irq_set_type() hook
-Message-ID: <ZIsuIQ1OUffgSfqP@smile.fi.intel.com>
-References: <20230615125022.27421-1-raag.jadav@intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v3 3/5] gpio: aggregator: Prevent collisions between DT
+ and user device IDs
+Message-ID: <ZIsv51766AXAiQ7E@smile.fi.intel.com>
+References: <20230615132023.13801-1-andriy.shevchenko@linux.intel.com>
+ <20230615132023.13801-4-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdVAwKCUnOeuz_PE6ijtfTVf8a3rTQZ=JvThOmqytu5HCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230615125022.27421-1-raag.jadav@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdVAwKCUnOeuz_PE6ijtfTVf8a3rTQZ=JvThOmqytu5HCA@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 06:20:22PM +0530, Raag Jadav wrote:
-> Refine ->irq_set_type() hook and improve its readability by:
+On Thu, Jun 15, 2023 at 04:54:14PM +0200, Geert Uytterhoeven wrote:
+> On Thu, Jun 15, 2023 at 3:51 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > In case we have a device instantiated via DT or other means than
+> > via new_device sysfs node, the collision with the latter is possible.
+> > Prevent such collisions by allocating user instantiated devices with
+> > higher IDs, currently set to 1024.
 > 
-> - Reducing scope of spinlock by moving unneeded operations out of it.
-> - Dropping redundant PADCFG0_RXEVCFG_SHIFT and including it directly
->   into PADCFG0_RXEVCFG_* definitions.
-> - Utilizing temporary variables for common operations.
-> - Simplifying if-else-if chain.
+> Can you please elaborate? How exactly is this possible?
+> 
+> Aggregators instantiated through sysfs are named "gpio-aggregator.<n>",
+> and are IDR-based.
+> Aggregators instantiated from DT are named "<unit-address>.<node-name>".
+> How can this conflict? When instantiated from ACPI?
+> What am I missing?
 
-Pushed to my review and testing queue, thanks!
+Nothing. It's me who misunderstood how OF platform device naming schema works.
+
+So this patch can be discarded as we never will have gpio-delay available for
+removal via delete_device sysfs node.
+
+Bart, tell me if you need a new version w/o this patch (but note that b4 can
+handle this case with
+
+	b4 -slt -P1,2,4,5 ...
+
+).
 
 -- 
 With Best Regards,
