@@ -2,207 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7207314A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 11:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F157314A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 11:55:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241149AbjFOJzm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 05:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
+        id S243836AbjFOJzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 05:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343711AbjFOJzD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 05:55:03 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021A01BF9
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 02:54:41 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-783eef15004so953295241.3
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 02:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686822880; x=1689414880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DpwovHR7HJGNYdjbRYtxCDbrsDT7wxTAXPgBl1sajvU=;
-        b=y5I6Ry4tFKZswJrlNyiqebDT/OLQnYs05Kr0vXdzDqrAlAJDYau/SxdB6drwQ4dtAf
-         eTf/HDng/kvRsouLH+o0L41zlGAofg4PrtGAHchvY04SZxJmCNTMNVLQun0mYujPRrcX
-         qXQvNW9zhAeyVzopBUfriovens40uxwOtJ6c3Z6XxKg+bjqgkjO5A1uhVN0z9NnqrARp
-         bq7RB0PLWHvBXBb7p2DucirOEiYrFBhpn/Pjl15FQQp4ke6D4FQIU+4Sagxm9VHZD5t7
-         3cWYWhFNqQG5y8q6nmq9KHUw9dH3wunDvPeLi/CYlPCprDrMEEOCdhgnJ6ANonGL6MPQ
-         fMkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686822880; x=1689414880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DpwovHR7HJGNYdjbRYtxCDbrsDT7wxTAXPgBl1sajvU=;
-        b=O7IV37u0k7CpbnFM5S07Nl8eg/P6nszO5VgLRBwUvS7CXvsqsDk5LgsPO/kAnvLpiJ
-         0yh8KBLsjhBabv+yS1bU2G/Z3KP9O2sr0ihjCTF0H089WfX39qIin5yWjrBaXUVDAtap
-         YE44POrcPy+VD2zbd3QiAUkvptAv0g0V2PtAC+t9Ss0f1FZ1BxVtsgJvoZbBJEW02cpm
-         /M824MWd6JRfCMbBYsZUM2dbzui+OPCjwY+c++iz0nEbw6+gHWRCykhAqosA5vhcu2Hm
-         qi5CmEIJlax4IwB+IcGHrsiDcKy9doTrVFj3h2bJbMX8q7ZWaYI+OXjfX5v9JfJTRwVP
-         xZpw==
-X-Gm-Message-State: AC+VfDxhGMVTIaAgyzMnxuyUya3iNCV8oI1JwZFnhiGM6Ee+v+bubAgD
-        PgrJ/cY3G3oq3TJxs+2+XCXZ67j0r/DgM4kxp0X0eA==
-X-Google-Smtp-Source: ACHHUZ4wiVAujNN/W976T+f+ds9TIEa99DMA9Y8x4BCxYMsU8a+FLD6trohzarOm+sOAd+zApiQ2wmF+d6NgeI7uSBc=
-X-Received: by 2002:a1f:4b82:0:b0:46d:9170:4c54 with SMTP id
- y124-20020a1f4b82000000b0046d91704c54mr3947216vka.13.1686822879658; Thu, 15
- Jun 2023 02:54:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230605204335.4060789-1-joe.slater@windriver.com>
- <ZH6rRD5B2hNyXcuV@sol> <BY5PR11MB3992BFAFD3714C8247BCA2E98852A@BY5PR11MB3992.namprd11.prod.outlook.com>
- <CAMRc=MccW=n+WDXdu2sBP+dn+kfStg9o7yxdkVJfi8sBdqWUJQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MccW=n+WDXdu2sBP+dn+kfStg9o7yxdkVJfi8sBdqWUJQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 15 Jun 2023 11:54:28 +0200
-Message-ID: <CAMRc=Md8OWUHVSV4qK1uq+Xa+JH+kJuZFWo-rHbkCeVEw5zH6A@mail.gmail.com>
-Subject: Re: [v3][libgpiod][PATCH 1/1] gpio-tools-test.bats: modify delays in
- toggle test
-To:     "Slater, Joseph" <joe.slater@windriver.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        with ESMTP id S1343787AbjFOJzP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 05:55:15 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564E326B8;
+        Thu, 15 Jun 2023 02:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686822911; x=1718358911;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tgLchCQOCm3NxEtP7yRUXwmiZkL4G/bjAirc8TrgyEY=;
+  b=QwNF9fBHEY2EapsOvVGDhwdjERdA5zB/Tl3iixCWWt6WMgLzGkpyMgev
+   CfKEu59Iqdq4M5x/wjIMZa6mFMoNd/EAu16aEBhxQ27dhNMUut0l2TgRB
+   gXKdfQqAlNKkdakkTE1f+TfFu+YOUSPu+FCeBEArm7KkiZxR9XGDl9uvn
+   XvGv8WI5B3TAj/kqlZvezSd8xnAN0j9rrCQzmOYua2U7d2WyRaQ23cArW
+   Adghvj820Qc8bIN++vFyat4zfhV18ZPGjtXqEMQ9ckQ6NRH9+LYA8XAm/
+   RsuHXFKcy05iFM3A2NJOjYfzeL5Ob7FYSV0qqkPfgTckiqbLbG/NQHbCP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="357746579"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="357746579"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 02:55:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="706598947"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="706598947"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jun 2023 02:55:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 7769D403; Thu, 15 Jun 2023 12:55:17 +0300 (EEST)
+Date:   Thu, 15 Jun 2023 12:55:17 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     "Jadav, Raag" <raag.jadav@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "MacLeod, Randy" <Randy.MacLeod@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "N, Pandith" <pandith.n@intel.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: intel: refine ->irq_set_type() hook
+Message-ID: <20230615095517.GV45886@black.fi.intel.com>
+References: <20230613085054.10976-1-raag.jadav@intel.com>
+ <20230613085054.10976-3-raag.jadav@intel.com>
+ <ZInpT0dUUVUcKdqv@smile.fi.intel.com>
+ <DM6PR11MB2779F9C28712D7C25F9FB3768C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB2779F9C28712D7C25F9FB3768C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 6, 2023 at 5:12=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> On Tue, Jun 6, 2023 at 5:11=E2=80=AFPM Slater, Joseph <joe.slater@windriv=
-er.com> wrote:
-> >
-> > I finally (I hope) got rid of the "sleep" comment.
-> >
-> > I have not used bats before, but I gather that the bats file will get p=
-arsed 160 times since you have 159 tests.  Breaking the file up into pieces=
- might help, but that's only a guess.  For me, the bats tests take about 4 =
-minutes in qemu.
-> >
-> > Joe
-> >
->
-> FYI, I've opened an issue[1] on bats-core github as strace output for
-> -c -f switches was right after all.
->
-> Bart
->
-> [1] https://github.com/bats-core/bats-core/issues/733
->
+On Thu, Jun 15, 2023 at 09:48:12AM +0000, Jadav, Raag wrote:
+> > On Tue, Jun 13, 2023 at 02:20:53PM +0530, Raag Jadav wrote:
+> > > Utilize a temporary variable for common shift operation in
+> > > ->irq_set_type() hook and improve readability.
+> > > While at it, simplify if-else-if chain and save a few bytes.
+> > >
+> > > add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-16 (-16)
+> > > Function                                     old     new   delta
+> > > intel_gpio_irq_type                          317     301     -16
+> > > Total: Before=10469, After=10453, chg -0.15%
+> > 
+> > ...
+> > 
+> > >  	value = readl(reg);
+> > > -
+> > >  	value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+> > >
+> > >  	if ((type & IRQ_TYPE_EDGE_BOTH) == IRQ_TYPE_EDGE_BOTH) {
+> > > -		value |= PADCFG0_RXEVCFG_EDGE_BOTH <<
+> > PADCFG0_RXEVCFG_SHIFT;
+> > > +		rxevcfg = PADCFG0_RXEVCFG_EDGE_BOTH;
+> > >  	} else if (type & IRQ_TYPE_EDGE_FALLING) {
+> > > -		value |= PADCFG0_RXEVCFG_EDGE <<
+> > PADCFG0_RXEVCFG_SHIFT;
+> > > -		value |= PADCFG0_RXINV;
+> > > +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
+> > >  	} else if (type & IRQ_TYPE_EDGE_RISING) {
+> > > -		value |= PADCFG0_RXEVCFG_EDGE <<
+> > PADCFG0_RXEVCFG_SHIFT;
+> > > +		rxevcfg = PADCFG0_RXEVCFG_EDGE;
+> > >  	} else if (type & IRQ_TYPE_LEVEL_MASK) {
+> > > -		if (type & IRQ_TYPE_LEVEL_LOW)
+> > > -			value |= PADCFG0_RXINV;
+> > > +		rxevcfg = PADCFG0_RXEVCFG_LEVEL;
+> > >  	} else {
+> > > -		value |= PADCFG0_RXEVCFG_DISABLED <<
+> > PADCFG0_RXEVCFG_SHIFT;
+> > > +		rxevcfg = PADCFG0_RXEVCFG_DISABLED;
+> > >  	}
+> > >
+> > > +	if (type == IRQ_TYPE_EDGE_FALLING || type ==
+> > IRQ_TYPE_LEVEL_LOW)
+> > > +		value |= PADCFG0_RXINV;
+> > > +
+> > > +	value |= rxevcfg << PADCFG0_RXEVCFG_SHIFT;
+> > >  	writel(value, reg);
+> > 
+> > Looking at this I realized that entire temporary variable assignments can be
+> > done outside of spin lock. You probably would need another one for keeping
+> > rxinv value.
+> 
+> Something like this?
+> 
+>         u32 value, rxevcfg;
+>         u32 rxinv = 0;
+> 
+>         if ((type & IRQ_TYPE_EDGE_BOTH) == IRQ_TYPE_EDGE_BOTH) {
+>                 rxevcfg = PADCFG0_RXEVCFG_EDGE_BOTH;
+>         } else if (type & IRQ_TYPE_EDGE_FALLING) {
+>                 rxevcfg = PADCFG0_RXEVCFG_EDGE;
+>         } else if (type & IRQ_TYPE_EDGE_RISING) {
+>                 rxevcfg = PADCFG0_RXEVCFG_EDGE;
+>         } else if (type & IRQ_TYPE_LEVEL_MASK) {
+>                 rxevcfg = PADCFG0_RXEVCFG_LEVEL;
+>         } else {
+>                 rxevcfg = PADCFG0_RXEVCFG_DISABLED;
+>         }
+> 
+>         if (type == IRQ_TYPE_EDGE_FALLING || type == IRQ_TYPE_LEVEL_LOW)
+>                 rxinv = PADCFG0_RXINV;
+> 
+>         raw_spin_lock_irqsave(&pctrl->lock, flags);
+> 
+>         intel_gpio_set_gpio_mode(reg);
+> 
+>         value = readl(reg);
+> 
+>         value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+>         value |= rxinv;
+>         value |= rxevcfg << PADCFG0_RXEVCFG_SHIFT;
+> 
+>         writel(value, reg);
 
-I'm afraid this is just how bats works - I'm getting similar output
-when running bats' own test-suite:
+This one looks better.
 
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ------------------
- 94,78   87,937096        2697     32603     14298 wait4
-  1,20    1,117514           0   1695481           rt_sigprocmask
-  1,09    1,008525           0   1045150        27 read
-  0,66    0,608701          36     16741           clone
-  0,48    0,441647          11     37725     23464 execve
-  0,21    0,199233           0    274617    107718 newfstatat
-  0,20    0,182347           1     98627      4962 openat
-  0,18    0,165625           0    169950           mmap
-  0,15    0,134789           0    184782    162361 ioctl
-  0,14    0,129233           3     40735           write
-  0,12    0,113985           0    198739      4196 close
-  0,10    0,095850           0    139639      3159 fcntl
-  0,09    0,086048           0    312173           rt_sigaction
-  0,08    0,070505           0     95010     34204 lseek
-  0,06    0,053366           0     56400           dup2
-  0,06    0,052509           1     51470           mprotect
-  0,05    0,045429           7      5704      3457 mkdir
+> > Will it give us any memory reduction in comparison to the current code?
+> 
+> add/remove: 0/0 grow/shrink: 1/0 up/down: 4/0 (4)
+> Function                                     old     new   delta
+> intel_gpio_irq_type                          317     321      +4
+> Total: Before=10469, After=10473, chg +0.04%
+> 
+> Unfortunately gcc doesn't seem to consider this as best of the sequence,
+> and I'm not entirely sure why.
 
-When the tests are running, bats spawns a tree of 6 subprocesses for
-every test-case and each parent waits for its child to exit which adds
-up and shows up as spending most time in wait4().
-
-Bart
-
-> > > -----Original Message-----
-> > > From: Kent Gibson <warthog618@gmail.com>
-> > > Sent: Monday, June 5, 2023 8:43 PM
-> > > To: Slater, Joseph <joe.slater@windriver.com>
-> > > Cc: linux-gpio@vger.kernel.org; MacLeod, Randy
-> > > <Randy.MacLeod@windriver.com>
-> > > Subject: Re: [v3][libgpiod][PATCH 1/1] gpio-tools-test.bats: modify d=
-elays in
-> > > toggle test
-> > >
-> > > On Mon, Jun 05, 2023 at 01:43:35PM -0700, joe.slater@windriver.com wr=
-ote:
-> > > > From: Joe Slater <joe.slater@windriver.com>
-> > > >
-> > > > The test "gpioset: toggle (continuous)" uses fixed delays to test
-> > > > toggling values.  This is not reliable, so we switch to looking for
-> > > > transitions from one value to another.
-> > > >
-> > > > We wait for a transition up to 1.5 seconds.
-> > > >
-> > >
-> > > For future reference, the subject line should've been "[libgpiod][PAT=
-CH v3]".
-> > > The version goes within the [PATCH], and 1/1 is optional unless you h=
-ave a cover
-> > > letter.
-> > >
-> > > > Signed-off-by: Joe Slater <joe.slater@windriver.com>
-> > > > ---
-> > >
-> > > Here you would normally list the changes between revisions.
-> > > So I'm not sure what has actually changed since v1.
-> > > The loop limit went from 10 to 15?
-> > >
-> > > >  tools/gpio-tools-test.bats | 24 +++++++++++++++++++-----
-> > > >  1 file changed, 19 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bat=
-s
-> > > > index c83ca7d..05d7138 100755
-> > > > --- a/tools/gpio-tools-test.bats
-> > > > +++ b/tools/gpio-tools-test.bats
-> > > > @@ -141,6 +141,20 @@ gpiosim_check_value() {
-> > > >     [ "$VAL" =3D "$EXPECTED" ]
-> > > >  }
-> > > >
-> > > > +gpiosim_wait_value() {
-> > > > +   local OFFSET=3D$2
-> > > > +   local EXPECTED=3D$3
-> > > > +   local DEVNAME=3D${GPIOSIM_DEV_NAME[$1]}
-> > > > +   local CHIPNAME=3D${GPIOSIM_CHIP_NAME[$1]}
-> > > > +   local
-> > > PORT=3D$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value
-> > > > +
-> > > > +   for i in {1..15}; do
-> > > > +           [ "$(<$PORT)" =3D "$EXPECTED" ] && return
-> > > > +           sleep 0.1
-> > > > +   done
-> > > > +   return 1
-> > > > +}
-> > > > +
-> > > >  gpiosim_cleanup() {
-> > > >     for CHIP in ${!GPIOSIM_CHIP_NAME[@]}
-> > > >     do
-> > > > @@ -1567,15 +1581,15 @@ request_release_line() {
-> > > >     gpiosim_check_value sim0 4 0
-> > > >     gpiosim_check_value sim0 7 0
-> > > >
-> > > > -   sleep 1
-> > > > -
-> > > > -   gpiosim_check_value sim0 1 0
-> > > > +   # sleeping fixed amounts can be unreliable, so we
-> > > > +   # sync to the toggles
-> > > > +   #
-> > >
-> > > You said you would get rid of this comment.
-> > >
-> > >
-> > > The patch works for me, so I'm otherwise fine with it.
-> > >
-> > > Cheers,
-> > > Kent.
+It's fine as is, readability counts more than few bytes here.
