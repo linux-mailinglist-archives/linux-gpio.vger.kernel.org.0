@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E78D731111
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 09:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60AF4731148
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 09:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbjFOHnO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 03:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
+        id S237024AbjFOHti convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 03:49:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243616AbjFOHnN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 03:43:13 -0400
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A3BC7;
-        Thu, 15 Jun 2023 00:43:10 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bcd0226607bso774808276.1;
-        Thu, 15 Jun 2023 00:43:10 -0700 (PDT)
+        with ESMTP id S245282AbjFOHtL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 03:49:11 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3C630FD;
+        Thu, 15 Jun 2023 00:48:41 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bd729434fa0so1528930276.1;
+        Thu, 15 Jun 2023 00:48:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686814989; x=1689406989;
+        d=1e100.net; s=20221208; t=1686815321; x=1689407321;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=177lHBIsC10let9ZIn43z1ulzQ4KlS1gYZFsJnXrgOA=;
-        b=S5LETFWiE1qSMRh8wLneZcEl3+bVylv7Ot1Y1Y3VfvB0ve9El7ZoWF7ZjtXN4fGTg+
-         nJ8Dl+iFyiG83/2SsGQgHpvCRFTxPXFX4suPld9YiDrcSGw/Eq101nDxFrhn1TE0TrgE
-         jxfENM3I5BB9roHXKOKrS8lV5FHvIsJB3kStCe5OXPx5wKLBmU00LJET4yDR830IETu2
-         SnIxqVQMF7ATbvN8RvgAcQv7xY6dcyLMgS01mjNX1oh+MMKdwahWkCSM2S4CcwACMivH
-         ey4E3B9xSMfR2muxyVmiBBQVflkt+m7ZDg75ii0A8E/0OVqaPkha8t6oeaW8RgE6P6ZG
-         yfAA==
-X-Gm-Message-State: AC+VfDzWoDkmvfOv1oftwv6Eid2g4h+9yXt1/cYSmKJuil9lmO49X4/l
-        4xFI33Xp/s6SXmT/+aU+MdFOHRj+tSvblw==
-X-Google-Smtp-Source: ACHHUZ78UHNS0DTJx6FfPrQBUJ9f6ZQwiK+MNNFrWXhgthja2I0koq/pfW1PZtlnSUfTCx2d093jmA==
-X-Received: by 2002:a25:588:0:b0:b8f:3990:636d with SMTP id 130-20020a250588000000b00b8f3990636dmr4655265ybf.23.1686814989101;
-        Thu, 15 Jun 2023 00:43:09 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id s7-20020a5b0447000000b00bd232859d10sm1185086ybp.33.2023.06.15.00.43.08
+        bh=LdjFuszznIUW8xr9SCUVhRejLGTT8nUEiVZj8JgCoLQ=;
+        b=CPvqqvyaCylwhejObkvScfL467ADgaAAcz1DQDkHCrfHBuamcKrZdNH0pG4+WNp7QK
+         mfG6sCA9oGmQ70z33Nf3rQSC2tmo2VbfnGpZ+Qrmbu9bhgrXvZKqicAyAptN9ypjzTB1
+         vqjJnIK+OxUkzk/6DdyuKUZo1kYXWMxSMgy/9wBfq6P8EMPCxSQmBO6Q9ex3VOV0jprv
+         B/SibivuXIgevuzcOS3g3ra9VkSv2eUz5Zg3ledgxDAi3WDD/YtNgy0a9rRCCbPonWR6
+         y1KijH/X1KnqWyukp/BoOAY19KSXY5EpkuysLpGtFMAKz2gG9vFCXrlaOe984NsTgR5b
+         lP+w==
+X-Gm-Message-State: AC+VfDwGkrQ5pEcFkWLSWrrtqVnKXcxExelFBA0wt1hTDYB+YfcNIb43
+        DcbdhpAHeYh23X/5ZGDcpFY6IPpQ8Hfq/A==
+X-Google-Smtp-Source: ACHHUZ7buAO8cuqEpR6YWYLfcPX6YkCggNHXA7cTcomIuQinjB9i+ZcfdRfyET+txBJmx6vVsNwMpA==
+X-Received: by 2002:a25:b106:0:b0:bce:f883:e0b2 with SMTP id g6-20020a25b106000000b00bcef883e0b2mr4339177ybj.42.1686815320709;
+        Thu, 15 Jun 2023 00:48:40 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id d12-20020a25bc4c000000b00ba8c2f3e1a4sm3850077ybk.56.2023.06.15.00.48.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 00:43:08 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bc43a73ab22so815613276.0;
-        Thu, 15 Jun 2023 00:43:08 -0700 (PDT)
-X-Received: by 2002:a25:abaf:0:b0:bc4:4d17:75e1 with SMTP id
- v44-20020a25abaf000000b00bc44d1775e1mr4967743ybi.8.1686814988667; Thu, 15 Jun
- 2023 00:43:08 -0700 (PDT)
+        Thu, 15 Jun 2023 00:48:40 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-bd77424c886so1539610276.0;
+        Thu, 15 Jun 2023 00:48:40 -0700 (PDT)
+X-Received: by 2002:a25:e086:0:b0:ba8:3613:76a8 with SMTP id
+ x128-20020a25e086000000b00ba8361376a8mr5120255ybg.41.1686815320379; Thu, 15
+ Jun 2023 00:48:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com> <20230614231446.3687-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230614231446.3687-3-andriy.shevchenko@linux.intel.com>
+References: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com> <20230614231446.3687-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230614231446.3687-4-andriy.shevchenko@linux.intel.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 15 Jun 2023 09:42:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXOcQhK9KAwm-oSWvzD2axpwz+rcbSPDe-yrC=u+=Zz0w@mail.gmail.com>
-Message-ID: <CAMuHMdXOcQhK9KAwm-oSWvzD2axpwz+rcbSPDe-yrC=u+=Zz0w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] gpio: aggregator: Support delay for setting up
- individual GPIOs
+Date:   Thu, 15 Jun 2023 09:48:27 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVaJ2Fqc5+YFCO9isUebUaeZE31T3C+SXDeVXOii=Ra4A@mail.gmail.com>
+Message-ID: <CAMuHMdVaJ2Fqc5+YFCO9isUebUaeZE31T3C+SXDeVXOii=Ra4A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: aggregator: Set up a parser of delay line parameters
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Alexander Stein <alexander.stein@ew.tq-group.com>,
@@ -70,22 +69,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy,
+
 On Thu, Jun 15, 2023 at 1:14 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> In some cases the GPIO may require an additional delay after setting
-> its value. Add support for that into the GPIO forwarder code.
->
-> This will be fully enabled for use in the following changes.
+> The aggregator mode can also handle properties of the platform,
+> that do not belong to the GPIO controller itself. One of such
+> a property is a signal delay line. Set up a parser to support it.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Thanks for your patch!
+
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+One suggestion for improvement below...
+
+> --- a/drivers/gpio/gpio-aggregator.c
+> +++ b/drivers/gpio/gpio-aggregator.c
+> @@ -525,7 +580,9 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
+>                         return PTR_ERR(descs[i]);
+>         }
+>
+> -       fwd = gpiochip_fwd_create(dev, n, descs);
+> +       delay_line = fwnode_device_is_compatible(dev_fwnode(dev), "gpio-delay");
+
+Please do not use explicit checks for compatible values in .probe()
+methods.  Instead, use device_get_match_data() to get the feature
+flag(s).  This will also make it easier to scale to other external
+components later.
+
+> +
+> +       fwd = gpiochip_fwd_create(dev, n, descs, delay_line);
+>         if (IS_ERR(fwd))
+>                 return PTR_ERR(fwd);
+>
+> @@ -534,6 +591,15 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
+>  }
+>
+>  static const struct of_device_id gpio_aggregator_dt_ids[] = {
+> +       /*
+> +        * The GPIO delay provides a way to configure platform specific delays
+> +        * for GPIO ramp-up or ramp-down delays. This can serve the following
+> +        * purposes:
+> +        * - Open-drain output using an RC filter
+> +        */
+> +       {
+> +               .compatible = "gpio-delay",
+
+.data = (void *)FWD_FEATURE_DELAY,
+
+> +       },
+>         /*
+>          * Add GPIO-operated devices controlled from userspace below,
+>          * or use "driver_override" in sysfs.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
--- 
+
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
