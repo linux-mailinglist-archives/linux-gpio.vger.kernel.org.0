@@ -2,71 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D994731C30
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 17:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D366731C42
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 17:16:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjFOPKt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 11:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
+        id S1345041AbjFOPQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 11:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236166AbjFOPKs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 11:10:48 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 943E62946
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 08:10:45 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6664e4d8fb4so1517750b3a.3
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 08:10:45 -0700 (PDT)
+        with ESMTP id S1345153AbjFOPQW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 11:16:22 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CD72976
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 08:16:16 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-43b2da5b307so1539966137.2
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jun 2023 08:16:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686841845; x=1689433845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sq0rXvRXD89P+fJf8HGkMBIJWaX+qZYWeNDtnQb/zWI=;
-        b=Ex3qYUDyZE9QASEPoANTQw9G16rWNmCnI6fHZyq2OlV+MYz8IuNZn/7E23tD5DObDt
-         94rChQqHBjXecEc6HaT7i9DbAJ4pgeUpN/OUV2fnGn3BSNTBa7tvkLn37VrKQNBLJ6zn
-         fm3OSvXHG34UR4Q3EjDYq5I/0aYIQty4xQ+62W/kdlGLzeoNGRr7LP2WRjhp83Ky7cq2
-         tbRJknK9GIoYPzxyyb0n7Z62B4aq+pQ/p/BEeXm5U8wDvbTUfex2y+ruXjoEZJN1zgG8
-         IAZAnXhjJIVM9HSwySzeLLginNh3AJSG7A5KILZK8nwp+YSGWQ5MLPk2z72L8vHwtwlC
-         E7IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686841845; x=1689433845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1686842175; x=1689434175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Sq0rXvRXD89P+fJf8HGkMBIJWaX+qZYWeNDtnQb/zWI=;
-        b=iBfxozhZqdJDJx1lU2gP+FBGdLNV2xxxBMi/jb/brQTUZm69Q+eFLlNctP5r5zk3no
-         00G7vatgfOZBmcrH9nLnvl4GHSNx7PHXjUYdmNRK6vJTyP6QWaD2EW4NZZ9rs485qPca
-         +d7GEMJdmPJsZ1LiDH2jvkZ1qKN+N33+OiS9v3UZyxhHIlY3cuqsnz8ylddHwbyavvBA
-         3+c20Redgj8N96tu6X9SblIdeaTDrUqF+hxhKRCNjH3eS1UyW9LNhSsxABtf/LQziOdW
-         n5hpgsxHsOljwtQb5Qfp3b1s0y46ozUEvbJAV5dVP1NJjizxkq8TjhIO62fYf9pI03NP
-         u5tA==
-X-Gm-Message-State: AC+VfDwDp5U0z0gIOtvwoDSJDGayE+PK5d/0HiHxqfNyJ87P1SP1Ti+B
-        SE6uJhnwJnaeP3lo+WIKjtk=
-X-Google-Smtp-Source: ACHHUZ7gtY2sswHLB6qnupI1pg4yJ1Bi2Px7zRCpNJfJnQq63ORtt2rLfpGmVw/BCzZbz5KEDBoEUQ==
-X-Received: by 2002:a05:6a20:1584:b0:10b:e54f:1c00 with SMTP id h4-20020a056a20158400b0010be54f1c00mr5024464pzj.57.1686841844921;
-        Thu, 15 Jun 2023 08:10:44 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id w5-20020a1709029a8500b001ab0a30c895sm14175758plp.202.2023.06.15.08.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jun 2023 08:10:44 -0700 (PDT)
-Date:   Thu, 15 Jun 2023 23:10:37 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Joe Slater <joe.slater@windriver.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][RFC/RFT PATCH] tools: tests: port tests to shunit2
-Message-ID: <ZIsp7SU8RotOPvB+@sol>
-References: <20230615143810.225755-1-brgl@bgdev.pl>
+        bh=nejLt+j3NI9UoP/V3uRsCESQ4X/EGxNfYPhszkdwFQQ=;
+        b=Hp94mG2f7QmdaINhQWl/9XXUes5snbUGaxOyYY1Xybk2j37gNaREB6+AjMNMqNq8pa
+         oI8MW2NuhoQtxngnZYkeEGNRUulwG/pDTBbFiUsiNyG4ZEQ2drxoe+3DBvIhVLo3EHBu
+         P64ncp4g+INPMvYHIIEILDdJMJ3Jy9vzvhCOAPpd5TwojKRInMAyL6RPfr5728iI9zFY
+         dG1i6vyPwwo66+LnevNzmxq/CY7W/oJJ0os+I3B3BBXs3fYS5wZvVisH0cwNgMR6uvlt
+         aVyGgmpxfIXrcg2vUnTPKAZo65b9wHlgrXGGhnfy1j8BOAjpSKppjX+39B15w+qLOjYp
+         +i0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686842175; x=1689434175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nejLt+j3NI9UoP/V3uRsCESQ4X/EGxNfYPhszkdwFQQ=;
+        b=FzEN8KC6mPt5N2ANXH7KOU5Qgb5ShB8MRGSuZoOI9E/b12OFOTEXleDBWCtbgHDqqD
+         NEg7CCOB7r0R8yzxzJRWB11AFklnatzcD2isRAFnIWHg9D0cqdGHVw4iaXvPdf5O/7lv
+         Yaz7+zZXaLr+MfdHw5caCGO8elp6q6nfSMjsw9iqiMthRGigPaFk/rCdaa3rkSg+CpTe
+         uNKWWWWf8EpXLQdowKQFZtlgBCKqY+eo7jzEyrVYsud7oXARfrxvXnXYJq1kQmjZdglD
+         /PR2Q5lb5ujEVEgkj0T9bZnBKCQ2MpwFdB+QtKFwAq+5fXwtQk9uLSNglpQT5579qC9Y
+         2XMw==
+X-Gm-Message-State: AC+VfDx/Lfzd5Ts631Jcz2eoZQFpudBjuIKAz3Px5Q94U9fOoMVeLn/H
+        UKZBRdS+KHMUbzuEtXa8S2mcvJ1xBPCk3KzGWMDodQ==
+X-Google-Smtp-Source: ACHHUZ65s4WGozXX4Kf7H9y2EaF4dZ6dua5mx3jven7map3aM1IXSbQKUY+DN8mmulaWpwJoIx39VmgyNiBMGCe1oow=
+X-Received: by 2002:a67:ff9a:0:b0:43f:5fc4:fc64 with SMTP id
+ v26-20020a67ff9a000000b0043f5fc4fc64mr712779vsq.8.1686842175233; Thu, 15 Jun
+ 2023 08:16:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230615143810.225755-1-brgl@bgdev.pl>
+References: <20230614035426.15097-1-warthog618@gmail.com> <CAMRc=Mf3vtfUyprLcJ7g8Y_Jt0k4=FoKMjjxqRA__YNmqeCDLQ@mail.gmail.com>
+ <ZIm+4qmSUgFrVzLc@sol> <CAMRc=Mc3-SfvYYYvocMyjLtbPk=f=EyAOHXcKj+eFWvVWrGurQ@mail.gmail.com>
+ <ZInHSgsfALvbTmAX@sol> <CAMRc=McCKjU9NbarB-0awfUXwECMFna5aKi9yB68pwxHEebUhA@mail.gmail.com>
+ <ZInkHSGf/HeBttPc@sol>
+In-Reply-To: <ZInkHSGf/HeBttPc@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 15 Jun 2023 17:16:04 +0200
+Message-ID: <CAMRc=MdqZtqnBuMjGLKo6FOSfAAanGsYu9aAWiZuhnTgzEVaDA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/4] dedicated examples
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,43 +69,81 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 04:38:10PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> BATS seems to run pretty slowly. Part of it may be the n+1 time parsing
-> the test files mentioned in the BATS docs.
-> 
-> This is a quick and dirty port of test cases to shunit2 - a different
-> testing framework for shell scripts. It sped up test execution for me
-> by ~40%.
-> 
+On Wed, Jun 14, 2023 at 6:00=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Wed, Jun 14, 2023 at 05:11:32PM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Jun 14, 2023 at 3:57=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > Any functionality to add to libgpiod?
+> > >
+> >
+> > I don't think so at the moment. Do you see anything obvious? I know,
+> > we spoke about putting the line resolver into libgpiod but I'm not
+> > sure we really want it. At least in the core library anyway. The GLib
+> > layer on top of libgpiod is a place that would be a good target for
+> > such a functionality IMO.
+> >
+>
+> Yeah, making the line resolver generally available is a can of worms.
+> Not prepared to take that one on at the moment.
+> I'm reasonably content to leave that to the user - as long as they can
+> readily iterate over the chips and lines themselves.
+> Maybe provide an iterator for all the lines in the system
+> available to the user?
+>
+> > Other than that, I think libgpiod now has everything it needs to cover
+> > all use-cases for the uAPI.
+> >
+>
+> The point isn't that coverage is missing, it is to find ways to make
+> common tasks simpler.
+>
+> The ones that spring to mind so far are:
+>  - C: requesting a single line as output
+>  - C: requesting a single line as input
+>  - providing a toggle function for line_value, as it is an enum which is
+>    a bit awkward.
+>  - the chip iterator in the python tools helpers.py
+>  - streaming operators for the enums where they are not automatically
+>    provided
+>
+>
+> The C ones are specifically for simple sysfs-like equivalence, as telling
+> users they need to replace a single write to a file with ~100 lines of C
+> is really hard to sell.
 
-That is a lot faster for me too:
+You don't really need 100 LOC for a trivial request in C (it's a bit
+over-dramatic :) ) but my thinking is: whether it's 5 lines or 10 or
+100 - it doesn't change the fact that it is a fundamental change from
+sysfs in that you need to write the code, compile it, link it against
+the right libraries etc. etc. It will be so much more work no matter
+how much you simplify the API and that is already enough to scare away
+a lot of folks used to just writing to a bunch of files.
 
-Ran 165 tests.
+This is why I'm proposing the DBus API as a way of replacing several
+features of sysfs that are so beloved by users: central authority over
+GPIOs, easy to use from shell scripts (just replace "echo 223 >
+export; echo output > 223/direction" etc. with "gdbus call --system
+--dest io.gpiod1 --object-path /io/gpiod1/gpiochip2 --method
+io.gpiod1.Chip.RequestLines <args>" which is just a tiny bit more
+verbose but achieves the same goal and exposes all uAPI v2 features)
+and only requires including the dbus daemon in your system which would
+be packaged by most distros shipping libgpiod eventually. DBus has the
+advantage of being usable from any language you fancy and still being
+relatively fast.
 
-OK
+In other words, I'm thinking that packing a lot of "helper" features
+into libgpiod will only lead to feature creep but not achieve the goal
+of pulling people away from sysfs.
 
-real	0m41.300s
-user	0m10.122s
-sys	0m22.926s
+Bart
 
-while it is > 2m30 with bats, so ~75% speedup.
-
-Though I get these errors on some tests:
-
-test_gpiodetect_all_chips
-./gpio-tools-test.bash: line 40: assertContains: command not found
-./gpio-tools-test.bash: line 40: assertContains: command not found
-./gpio-tools-test.bash: line 40: assertContains: command not found
-test_gpiodetect_a_chip
-
-and the overall test suite still passed, which is a bit of a worry.
-
-Hmmm, seems assertContains was added in 2.1.8 and I'm still on 2.1.6.
-I'll have to update.
-
-Overall looks promising.
-
-Cheers,
-Kent.
+> The config options would be as minimal as possible.
+> I was going to suggest the user could always reconfigure the line later
+> if they need extra features, but there is no function to return the
+> existing line config :-(.
+>
+> Cheers,
+> Kent.
