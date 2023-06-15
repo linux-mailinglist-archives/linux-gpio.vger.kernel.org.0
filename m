@@ -2,88 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BC237315AC
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 12:45:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42DB77315BF
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 12:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241180AbjFOKpN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 06:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51632 "EHLO
+        id S245417AbjFOKuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Jun 2023 06:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343866AbjFOKpG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 06:45:06 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9326272D;
-        Thu, 15 Jun 2023 03:45:04 -0700 (PDT)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 2C0C79F4;
-        Thu, 15 Jun 2023 12:45:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1686825903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DsSe8Z4wb+yZPV3lYchso8fbKXcEJA7soRNtTWuoUl4=;
-        b=U9M4bli+yI8shcz26ZIVVq6foqMB1TiQRgi7EMXlIh0Ym1N8LT036SI9Rz05qxFKNfEroM
-        VnHbgEdd8aBuZN5fby0nQkZrCYbsSAjfcoa7lnzC5tGoutTFYqcjJxJPLdg8zRvLUvKDkP
-        dDABhIUXKq8EYnKg1dOAdzf3zCCKdiUQs3MerUQaQmn6Txl8ENL7F7XxysQwqiHRrRSJd8
-        9L6PABWQB/nvge7jyXQwLEj7+RsBDZbkivmjOrCX8pabYCMDadzByR18VSY9ZWK1nES3Z4
-        2TOvSwpl1Lu8YcgmFF5pVuUJluYvfBHrQzehmD8ud8BCb1kIs3eeK8h/Zh5gOA==
+        with ESMTP id S241086AbjFOKuG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 06:50:06 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918BB1FDD;
+        Thu, 15 Jun 2023 03:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686826205; x=1718362205;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FcyhqzTeBGjztjLAE0WN1NbITmzLPl03bzOZHHHLy7k=;
+  b=UsGQIXF2VuJNR0yBd6qHBkLpbhE7rppWosq6poJhbFPIAX6fIYASfzYw
+   38wZVJAn/4MHKTtVByfI7PWI+oECvmweSUkz0bQ/toVK6ho1W+grBEzBc
+   hehXEwCW1Qqv9qeZPI/56YA6DoPlmIkNhgy8wLRXoHjAWKz9651So0wVV
+   Rrb6sOLLC8IQm+im8vZLn/br4dDSGf6ZcCvZIiQTwsOIYnRLZiJ+choQQ
+   fT/7eXHpw9a5BsZUaplMEnGhgfmsJdZEwQzWMPoiF4Gx5ERVreTLGyCEN
+   A2d+rO5MUmTeeyhkDGRdockNwvSf/yqGXNfWVRRjabdtQPHURvkgvuK5z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="339222895"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="339222895"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 03:50:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="802292007"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="802292007"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Jun 2023 03:50:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q9kYD-003vAx-2v;
+        Thu, 15 Jun 2023 13:50:01 +0300
+Date:   Thu, 15 Jun 2023 13:50:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+Cc:     "Jadav, Raag" <raag.jadav@intel.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "N, Pandith" <pandith.n@intel.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: intel: refine ->irq_set_type() hook
+Message-ID: <ZIrs2YSEUbPyvZWE@smile.fi.intel.com>
+References: <20230613085054.10976-1-raag.jadav@intel.com>
+ <20230613085054.10976-3-raag.jadav@intel.com>
+ <ZInpT0dUUVUcKdqv@smile.fi.intel.com>
+ <DM6PR11MB2779F9C28712D7C25F9FB3768C5BA@DM6PR11MB2779.namprd11.prod.outlook.com>
+ <20230615095517.GV45886@black.fi.intel.com>
 MIME-Version: 1.0
-Date:   Thu, 15 Jun 2023 12:45:02 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Jiawen Wu <jiawenwu@trustnetic.com>
-Cc:     'Andy Shevchenko' <andy.shevchenko@gmail.com>,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        shreeya.patel@collabora.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpiolib: Fix GPIO chip IRQ initialization restriction
-In-Reply-To: <010401d99f6f$26d41600$747c4200$@trustnetic.com>
-References: <20230607081803.778223-1-jiawenwu@trustnetic.com>
- <CAHp75Vdbq3uHOyrfT-KFYRSj6v+s9GgOQjQ9a8mGn-4HSCpB9Q@mail.gmail.com>
- <15e2fc098a1e63317368f4812290ca35@walle.cc>
- <010401d99f6f$26d41600$747c4200$@trustnetic.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <b9af98d801d2808de3460c9e4fec8bdd@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615095517.GV45886@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Thu, Jun 15, 2023 at 12:55:17PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Thu, Jun 15, 2023 at 09:48:12AM +0000, Jadav, Raag wrote:
+> > > On Tue, Jun 13, 2023 at 02:20:53PM +0530, Raag Jadav wrote:
 
-> BTW, I wonder if it has problems when unregistering gpio-regmap.
-> Call Trace of irq_domain_remove() always exits in my test:
-> https://lore.kernel.org/all/011c01d98d3d$99e6c6e0$cdb454a0$@trustnetic.com/
+...
+
+> > > Looking at this I realized that entire temporary variable assignments can be
+> > > done outside of spin lock. You probably would need another one for keeping
+> > > rxinv value.
+> > 
+> > Something like this?
+
+Almost, see below.
+
+> >         u32 value, rxevcfg;
+> >         u32 rxinv = 0;
+
+No assignment here.
+
+         u32 rxinv, rxevcfg;
+         u32 value;
+
+> >         if ((type & IRQ_TYPE_EDGE_BOTH) == IRQ_TYPE_EDGE_BOTH) {
+> >                 rxevcfg = PADCFG0_RXEVCFG_EDGE_BOTH;
+> >         } else if (type & IRQ_TYPE_EDGE_FALLING) {
+> >                 rxevcfg = PADCFG0_RXEVCFG_EDGE;
+> >         } else if (type & IRQ_TYPE_EDGE_RISING) {
+> >                 rxevcfg = PADCFG0_RXEVCFG_EDGE;
+> >         } else if (type & IRQ_TYPE_LEVEL_MASK) {
+> >                 rxevcfg = PADCFG0_RXEVCFG_LEVEL;
+> >         } else {
+> >                 rxevcfg = PADCFG0_RXEVCFG_DISABLED;
+> >         }
+
+Now, if it's fully included in the diff (even with --patience parameter),
+then you may drop {}.
+
+> >         if (type == IRQ_TYPE_EDGE_FALLING || type == IRQ_TYPE_LEVEL_LOW)
+> >                 rxinv = PADCFG0_RXINV;
+
+		else
+			rxinv = 0;
+
+> >         raw_spin_lock_irqsave(&pctrl->lock, flags);
+> > 
+> >         intel_gpio_set_gpio_mode(reg);
+> > 
+> >         value = readl(reg);
+> > 
+> >         value &= ~(PADCFG0_RXEVCFG_MASK | PADCFG0_RXINV);
+> >         value |= rxinv;
+> >         value |= rxevcfg << PADCFG0_RXEVCFG_SHIFT;
+
+And I would rewrite these to the standard patterns:
+
+         value = (value & ~PADCFG0_RXINV) | rxinv;
+         value = (value & ~PADCFG0_RXEVCFG_MASK) | (rxevcfg << PADCFG0_RXEVCFG_SHIFT);
+
+And looking at this, perhaps do shift also outside the lock:
+
+         } else {
+                 rxevcfg = PADCFG0_RXEVCFG_DISABLED;
+         }
+         rxevcfg <<= PADCFG0_RXEVCFG_SHIFT;
+
+But, taking into account scope of the _RXEVCFG_*, I would add shift directly to
+the definitions and kill that SHIFT entirely:
+
+#define PADCFG0_RXEVCFG_LEVEL           (0 << 25)
+#define PADCFG0_RXEVCFG_EDGE            (1 << 25)
+#define PADCFG0_RXEVCFG_DISABLED        (2 << 25)
+#define PADCFG0_RXEVCFG_EDGE_BOTH       (3 << 25)
+
+	 ...
+
+         value = (value & ~PADCFG0_RXINV) | rxinv;
+         value = (value & ~PADCFG0_RXEVCFG_MASK) | rxevcfg;
+
+Try that one and look if it looks better. It might even save bytes after all.
+
+> >         writel(value, reg);
 > 
-> Of course, it could be because there was something wrong with my
-> test code. But I want to be clear about this.
+> This one looks better.
+> 
+> > > Will it give us any memory reduction in comparison to the current code?
+> > 
+> > add/remove: 0/0 grow/shrink: 1/0 up/down: 4/0 (4)
+> > Function                                     old     new   delta
+> > intel_gpio_irq_type                          317     321      +4
+> > Total: Before=10469, After=10473, chg +0.04%
+> > 
+> > Unfortunately gcc doesn't seem to consider this as best of the sequence,
+> > and I'm not entirely sure why.
+> 
+> It's fine as is, readability counts more than few bytes here.
 
-Mh, you've said you don't use the devm_ variant of 
-regmap_add_irq_chip(),
-correct? Do you call regmap_del_irq_chip() yourself?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-It seems that gpiolib is already removing the domain itself. Mh.
-I guess if the the domain is set via gpiochip_irqchip_add_domain()
-gpiolib must not call irq_domain_remove() because the domain resource
-is handled externally (i.e. gpiolib doesn't allocate the domain
-itself) in our case.
 
-Nice finding! Looks like it has been broken since the beginning
-when I've introduced the gpiochip_irqchip_add_domain(). Will you
-do another fixes patch for that? I'm not sure where to store
-that information though. Maybe a new bool "no_domain_free"
-in struct gpio_irq_chip?
-
--michael
