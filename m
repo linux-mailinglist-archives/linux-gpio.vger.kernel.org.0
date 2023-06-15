@@ -2,63 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A1C173108A
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 09:28:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E78D731111
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jun 2023 09:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237555AbjFOH2c convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 03:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46824 "EHLO
+        id S229511AbjFOHnO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 03:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244871AbjFOH2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 03:28:23 -0400
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE2F2103;
-        Thu, 15 Jun 2023 00:28:19 -0700 (PDT)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-56fff21c2ebso16985527b3.3;
-        Thu, 15 Jun 2023 00:28:19 -0700 (PDT)
+        with ESMTP id S243616AbjFOHnN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 03:43:13 -0400
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A3BC7;
+        Thu, 15 Jun 2023 00:43:10 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bcd0226607bso774808276.1;
+        Thu, 15 Jun 2023 00:43:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686814099; x=1689406099;
+        d=1e100.net; s=20221208; t=1686814989; x=1689406989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6aCgTd1AzVYLSiaL/ArGFi9KO5j9jyzv9oqgVd3/+u8=;
-        b=aQUnwV8sOf/n7KJmsbvAqfL4no9hE0k50BO9py1v4RnZ8z3hN1/tgeyKo9o5n6E6hV
-         oL1cHnN+Ese6NBZa76+bja84ft/2ZlwkrjPswHzoPbxNjmydiGtFUzBdkTDaOfhehGnU
-         SQOfCYTROD/oFrXNeYm/gB3ttkkLDbVRWY19XfY+RXChr902zqdS1HbTjerIN429nBYh
-         Hewk8ED9WouwcQ6lg5/crpGNQ70S3Iouiky0x20yfxvpPwxJ2D9CuMmwcDRDZCBH9QFA
-         6tjtxYkoYHdDY/H6xxCuL9AwkaP9nZouc7bOoPsr+ra9E/M+dGXUmv9L28Z4P06umMLs
-         NHcw==
-X-Gm-Message-State: AC+VfDxNKDXm8rjvj6xrpXqVm/xpMujKI3/p10kxrb31f6/XBVAlIDo6
-        7m6vRucuKzREIZ1h/xkvDmNLjMunAwBQIg==
-X-Google-Smtp-Source: ACHHUZ5Htnp4g0kXIRRG3EoKEriLEYU3UJZFEVXz/nUjtoyJevKiU1mfY5BYZbV1QMGUq9ktdAfs5g==
-X-Received: by 2002:a81:6b87:0:b0:569:82b1:2ba5 with SMTP id g129-20020a816b87000000b0056982b12ba5mr4596677ywc.20.1686814098919;
-        Thu, 15 Jun 2023 00:28:18 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id z22-20020a0dd716000000b00568c1c919d2sm3088825ywd.29.2023.06.15.00.28.18
+        bh=177lHBIsC10let9ZIn43z1ulzQ4KlS1gYZFsJnXrgOA=;
+        b=S5LETFWiE1qSMRh8wLneZcEl3+bVylv7Ot1Y1Y3VfvB0ve9El7ZoWF7ZjtXN4fGTg+
+         nJ8Dl+iFyiG83/2SsGQgHpvCRFTxPXFX4suPld9YiDrcSGw/Eq101nDxFrhn1TE0TrgE
+         jxfENM3I5BB9roHXKOKrS8lV5FHvIsJB3kStCe5OXPx5wKLBmU00LJET4yDR830IETu2
+         SnIxqVQMF7ATbvN8RvgAcQv7xY6dcyLMgS01mjNX1oh+MMKdwahWkCSM2S4CcwACMivH
+         ey4E3B9xSMfR2muxyVmiBBQVflkt+m7ZDg75ii0A8E/0OVqaPkha8t6oeaW8RgE6P6ZG
+         yfAA==
+X-Gm-Message-State: AC+VfDzWoDkmvfOv1oftwv6Eid2g4h+9yXt1/cYSmKJuil9lmO49X4/l
+        4xFI33Xp/s6SXmT/+aU+MdFOHRj+tSvblw==
+X-Google-Smtp-Source: ACHHUZ78UHNS0DTJx6FfPrQBUJ9f6ZQwiK+MNNFrWXhgthja2I0koq/pfW1PZtlnSUfTCx2d093jmA==
+X-Received: by 2002:a25:588:0:b0:b8f:3990:636d with SMTP id 130-20020a250588000000b00b8f3990636dmr4655265ybf.23.1686814989101;
+        Thu, 15 Jun 2023 00:43:09 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id s7-20020a5b0447000000b00bd232859d10sm1185086ybp.33.2023.06.15.00.43.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 00:28:18 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bc4e41b7bc9so1432686276.2;
-        Thu, 15 Jun 2023 00:28:18 -0700 (PDT)
-X-Received: by 2002:a25:664a:0:b0:bc1:dfa5:83a4 with SMTP id
- z10-20020a25664a000000b00bc1dfa583a4mr4026240ybm.13.1686814098492; Thu, 15
- Jun 2023 00:28:18 -0700 (PDT)
+        Thu, 15 Jun 2023 00:43:08 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-bc43a73ab22so815613276.0;
+        Thu, 15 Jun 2023 00:43:08 -0700 (PDT)
+X-Received: by 2002:a25:abaf:0:b0:bc4:4d17:75e1 with SMTP id
+ v44-20020a25abaf000000b00bc44d1775e1mr4967743ybi.8.1686814988667; Thu, 15 Jun
+ 2023 00:43:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com> <20230614231446.3687-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230614231446.3687-2-andriy.shevchenko@linux.intel.com>
+References: <20230614231446.3687-1-andriy.shevchenko@linux.intel.com> <20230614231446.3687-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230614231446.3687-3-andriy.shevchenko@linux.intel.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 15 Jun 2023 09:28:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVo=fm6LSPODQVLTOZORD3BGpzR6_+mDEm-U5H8jsfDpw@mail.gmail.com>
-Message-ID: <CAMuHMdVo=fm6LSPODQVLTOZORD3BGpzR6_+mDEm-U5H8jsfDpw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] gpio: aggregator: Remove CONFIG_OF and
- of_match_ptr() protections
+Date:   Thu, 15 Jun 2023 09:42:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXOcQhK9KAwm-oSWvzD2axpwz+rcbSPDe-yrC=u+=Zz0w@mail.gmail.com>
+Message-ID: <CAMuHMdXOcQhK9KAwm-oSWvzD2axpwz+rcbSPDe-yrC=u+=Zz0w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] gpio: aggregator: Support delay for setting up
+ individual GPIOs
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Alexander Stein <alexander.stein@ew.tq-group.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+        Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -73,9 +72,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Jun 15, 2023 at 1:14 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> They stop the driver being used with ACPI PRP0001 and are something
-> I want to avoid being cut and paste into new drivers. Also include
-> mod_devicetable.h as we struct of_device_id is defined in there.
+> In some cases the GPIO may require an additional delay after setting
+> its value. Add support for that into the GPIO forwarder code.
+>
+> This will be fully enabled for use in the following changes.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
