@@ -2,118 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72634732D6C
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 12:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD250733048
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 13:45:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344043AbjFPKUu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jun 2023 06:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44516 "EHLO
+        id S1344638AbjFPLpc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jun 2023 07:45:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344059AbjFPKUE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 06:20:04 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DECD35A4;
-        Fri, 16 Jun 2023 03:19:13 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35G8QCl6012606;
-        Fri, 16 Jun 2023 10:19:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=4/O20YBgTkoVlsk082BfVWNGW0SZtdAgY1OLJ8YrguQ=;
- b=U+ZVW4wlBG4z+xbhNGqc+AkZMgwxeOoT05Vlc/mMEjbfeITXtKhprnls114a9AEbe9ka
- 558Sq5s3xTYWjiGBfRi0Tc+a+WUl7wQBIIsz0UbQeiUR3TDexvsYVNls5APf9/vBKVaD
- WCbUCzQrfyVYLJ7Gp4l1buiaIvP5RdIZfdHxLgkQ1XDk0lAlT4We5kF8Bs0h+7oKr1Xd
- dFHfF3QQZ3DXc0cgnqk+CiUojGYfUZ45U6N8XlfFjxuwxzsz6+dxM3ixVhIhpGQZNVsx
- /jD9HeoQemCXkieB9fGUwIi/m1VE+PMiVTLiJyx8Z562TlzFB30JnObPGZL9eCNHGNqw 9g== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3r8abb15j2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Jun 2023 10:19:05 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35GAJ20k029587
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Jun 2023 10:19:02 GMT
-Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Fri, 16 Jun 2023 03:18:55 -0700
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
-        <krzysztof.kozlowski@linaro.org>, <andy.shevchenko@gmail.com>,
-        <quic_srichara@quicinc.com>
-Subject: [v11 6/6] arm64: defconfig: Enable IPQ5018 SoC base configs
-Date:   Fri, 16 Jun 2023 15:47:49 +0530
-Message-ID: <20230616101749.2083974-7-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230616101749.2083974-1-quic_srichara@quicinc.com>
-References: <20230616101749.2083974-1-quic_srichara@quicinc.com>
+        with ESMTP id S1344859AbjFPLpX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 07:45:23 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54AD359D;
+        Fri, 16 Jun 2023 04:45:10 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2b41e700103so7441931fa.2;
+        Fri, 16 Jun 2023 04:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686915909; x=1689507909;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rPm5ARXV5BWgDp1lXKxZSY+Q/UaoNS0kZY5vjJcwDOE=;
+        b=csvzXr9sxrsEhmtl/f/VnHzabemiaF1sQuQcYkZUW1KFtpaBGsZvTu2wEj5z3fmQV7
+         XI2pZ/LySZqysZ7+KB17tTjAz4CsvyutOwJ9BjKOiAfxtf4Ex/FC2m/McWDhvSydOYeK
+         xZMW/AeU671DDhe4cpcTU2hGtMA617Y3ZhzMV97reasPuWmYTrzavjANcP/T31g9tlqO
+         Pgfdvn3J6jFePmMN+GnO44+e6nUvaC//BJfpP3aAVsfxgaQhvGk4MWJ1BQjJvAQVS+Ho
+         t7rEepKY0iZdmj3jy190snVpsdNQOJHP1T6vtktW23QWfv/r1Slt5hM63fv2151wUjjf
+         srlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686915909; x=1689507909;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPm5ARXV5BWgDp1lXKxZSY+Q/UaoNS0kZY5vjJcwDOE=;
+        b=GgQ+CULVQXxEHQ+7vbLm3MCF+qrBIa8Kt2oZoVSVoy030+l1PShogwz+wH1ALAj7gp
+         nrfQUcnndPq/2p3D4ETgjl4/b0jIdBLw+5lIIoAB6r7f8VGS8aZt/C5cBZbTlgwtel8Z
+         Nz3BbKk7BP9oPSwgF+rSPxiZOSXcaH5sZB76dkj1OOJ1NUZbApICcG7361YFQcY7g+oI
+         PKnK4UlwmOtZl9EFpcXY5znjZ1YvfWyE9v15vH26ZxZrVWxAGLfzcRQs57w3QQGvwxtj
+         19dcYa5rNYRF0VRO83nhW+lgprlIbexJvA8SUY9AiOqYtTaRgtyDHInZfHmz32asdTxR
+         180Q==
+X-Gm-Message-State: AC+VfDzFF1E8RTmZNEW0inGNLjrAhDJ2ihY3UW3lEjejxvnkDZl0Q+Xm
+        fKFCWGQStLT1LdOmhmO4lhA=
+X-Google-Smtp-Source: ACHHUZ6EqaR+4qrPwwPEnY7bruplRUt/KImSo1+8sT1eJTNzk2+7vjhqwAvCam0CTFxoWfPkaXH0/w==
+X-Received: by 2002:a2e:9bd8:0:b0:2b4:5c1a:dd7c with SMTP id w24-20020a2e9bd8000000b002b45c1add7cmr690747ljj.41.1686915908820;
+        Fri, 16 Jun 2023 04:45:08 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:16f8:1500::1? (dc78bmyyyyyyyyyyyyyyt-3.rev.dnainternet.fi. [2001:14ba:16f8:1500::1])
+        by smtp.gmail.com with ESMTPSA id y22-20020a2e3216000000b002a8e8c776e9sm3599447ljy.56.2023.06.16.04.45.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Jun 2023 04:45:08 -0700 (PDT)
+Message-ID: <fb7241d3-d1d1-1c37-919b-488d6d007484@gmail.com>
+Date:   Fri, 16 Jun 2023 14:45:06 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jX5K4CWLk0JqPKX9C3Fa8O17vgYNsUSI
-X-Proofpoint-GUID: jX5K4CWLk0JqPKX9C3Fa8O17vgYNsUSI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-16_06,2023-06-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0 mlxlogscore=752
- impostorscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306160092
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v7 0/9] fix fwnode_irq_get[_byname()] returnvalue
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <cover.1685340157.git.mazziesaccount@gmail.com>
+ <20230530233438.572db3fb@kernel.org>
+ <2023061553-urging-collision-32f8@gregkh>
+Content-Language: en-US, en-GB
+From:   Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <2023061553-urging-collision-32f8@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enables clk & pinctrl related configs
+On 6/15/23 14:37, Greg Kroah-Hartman wrote:
+> On Tue, May 30, 2023 at 11:34:38PM -0700, Jakub Kicinski wrote:
+>> On Mon, 29 May 2023 09:22:15 +0300 Matti Vaittinen wrote:
+>>> The fwnode_irq_get() and the fwnode_irq_get_byname() may have returned
+>>> zero if mapping the IRQ fails. This contradicts the
+>>> fwnode_irq_get_byname() documentation. Furthermore, returning zero or
+>>> errno on error is unepected and can easily lead to problems
+>>> like.
+>>
+>> What's the merging plan? Could patch 1 go to a stable branch
+>> and then driver trees can pull it in and apply their respective
+>> patches locally?
+> 
+> I'll take patch 1 now, and then after 6.5-rc1, Matti, can you send the
+> cleanup patches to the respective subsystems?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Yes. I can re-spin the rest of the patches.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8d850be05835..5b5a4ea51373 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -560,6 +560,7 @@ CONFIG_PINCTRL_IMX8ULP=y
- CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_MSM=y
- CONFIG_PINCTRL_IPQ8074=y
-+CONFIG_PINCTRL_IPQ5018=y
- CONFIG_PINCTRL_IPQ5332=y
- CONFIG_PINCTRL_IPQ6018=y
- CONFIG_PINCTRL_IPQ9574=y
-@@ -1171,6 +1172,8 @@ CONFIG_QCOM_CLK_SMD_RPM=y
- CONFIG_QCOM_CLK_RPMH=y
- CONFIG_IPQ_APSS_6018=y
- CONFIG_IPQ_GCC_5332=y
-+CONFIG_IPQ_APSS_5018=y
-+CONFIG_IPQ_GCC_5018=y
- CONFIG_IPQ_GCC_6018=y
- CONFIG_IPQ_GCC_8074=y
- CONFIG_IPQ_GCC_9574=y
+Yours,
+	-- Matti
+
+> 
+> thanks,
+> 
+> greg k-h
+
 -- 
-2.34.1
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
