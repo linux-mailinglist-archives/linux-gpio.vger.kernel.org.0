@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57DA97331C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 15:00:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE227331CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 15:03:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344273AbjFPNAb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jun 2023 09:00:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51700 "EHLO
+        id S1344779AbjFPNDC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jun 2023 09:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344818AbjFPNA2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 09:00:28 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458F235A4
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:00:26 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-bc4651e3838so569979276.2
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:00:26 -0700 (PDT)
+        with ESMTP id S229739AbjFPNDB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 09:03:01 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5032D77
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:03:00 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-57026f4bccaso7828697b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686920425; x=1689512425;
+        d=linaro.org; s=google; t=1686920579; x=1689512579;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qvdWMVWle3D0jO0S4SA/HhQT1FHM2fbq6dlchswpFvQ=;
-        b=Hx0wJI5o0/Ql3BsLN/+xlaxPAaYG1vT0wNGM833HXlLHTV4nFSvJwjL06xrMfUDkaE
-         +qawKe3EliuGv8MhIVu6FQQmnth06j73ZoHKjhT7xs6bhghiawdCS6VzLvoM1JVuA+IM
-         xlPVWcxgYcGtwgDXG1yJJJMKAEQNLFmP+ub+1s9H4tyepnPk9ze6+PMEOHyaLEChBe0a
-         f5E5TraslYewcPNlC6i3U7waaJQnW2nenVfaixr8AWZPMGoVgbCJfUSh+M62KSc40xBQ
-         +jxsA/5DhAF3DPJl+XbTUPGH1rRnKa7tMIbMe2gv663TVs7hIoyJhLDe73LgRonnmRqQ
-         afNg==
+        bh=Hqh0ctcZSSNyRLU8FT9+ClAUkk1xdpX2MQLPP/RnayY=;
+        b=MG+hTnXbncvoRz+RslD756hmGsI9/fqykFQTy5fbp1tlF1qi+rqV4AmAIqlg1ObZnf
+         E3+Lr0rsmac4Ia424Mzgn3mZjwsZj+GCBgWkoAbVN/vl56kuQPJF6C6W/sfMqnM3XPRk
+         byvVqHqtcM8kylTJPORWCFe88lkV8GsTPnUCaZiM14ur5BIlNuyt2qiVo13Sf1mlmdWp
+         gpR/6b7kYn8UkPcZyq8s0UEgkrRgCutNUWxVo3kAkc/gRefTZZjcQjevSlqi08lYDAZX
+         bP9UaFyfjz/CdKJG13M2tPs02KHVeaFG0sPmhzOzDqGDgAvb+hAPAXuNRy+ux5tAC7ub
+         XBmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686920425; x=1689512425;
+        d=1e100.net; s=20221208; t=1686920579; x=1689512579;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qvdWMVWle3D0jO0S4SA/HhQT1FHM2fbq6dlchswpFvQ=;
-        b=QYMZkWfRQQxBdBSRqWhm8GP70pYjCUOg/rNNaNsaApI8FGK6GYhRU/ymCZdMMnfaE5
-         xjSL4tbYA6jZLKckJVLIR9kWIjPy6YkWJB6PO6kth0tk750n975dui5ab71DifR7lSma
-         dpyNG39JuJJ2AmNHqEaTzWtGhZ29/HiF0XD2L84PLITPVTXWvj3lZPt9nrHW2NUIY7g+
-         wX8Hke4TrhmPMtC69+SoLWPkxH6QVe90NAtiKWrt/NhPyVFVkh0YLexg+bPI78ki9dOy
-         vltlVaIBKlHMO3ubYyxIgzWHUSoJNm5b67CzGRliQeeBk/NFXEeOIWZTXqJXH7+7cQ9X
-         YHEQ==
-X-Gm-Message-State: AC+VfDx6GjJbSPJOss0BAIMkQgB+Q3oLaRRu6VT3WxpS3/+zPUvw3eeG
-        HWMTkcCJp6jXCu9VJTzrmQALUYKRCDkOCq/t9nxgEG5JqU+v+p1d
-X-Google-Smtp-Source: ACHHUZ7qjLee8UemepLrygtLsZQpGNhbY9ZvMJVXMC8Mih33ncS0FsCdggjbyBeUEMLxw22yEeijYtiXPtuxj6l8ehU=
-X-Received: by 2002:a25:8908:0:b0:bd4:e6d6:2b8e with SMTP id
- e8-20020a258908000000b00bd4e6d62b8emr1267863ybl.50.1686920425258; Fri, 16 Jun
- 2023 06:00:25 -0700 (PDT)
+        bh=Hqh0ctcZSSNyRLU8FT9+ClAUkk1xdpX2MQLPP/RnayY=;
+        b=hlxdhoKCvb84052uTOgxvq2I7PEY/nLZ0VG27i2NM84x5x7Wuj8a5KJSx32ZBbHecD
+         mNmGS/3pHNC62rW7z0HCPMiK5VQlHP5Q1NrdM5QZeC4EAmJU1viuQrtLRKAcpvMqVzD4
+         Rlbgx0j/Vy+qOR1NgZzuqeB2zxgvpb26ystpdZHEPE94mv9xGYEVSgKGxuh2EakGaUrz
+         DvmlLDymXpZ1sBYwQ+kn/czTONXmc6KhgEZXuVgv4iK+tpdzBLc5F16M8R8oO9PYz2GT
+         /2q5sNPsiaQgn33NwQ1zOtD2ZqdvFB9wXdUG2dg9hoD6D6LP75bAn4z5QcptQb+bfnV4
+         0EcQ==
+X-Gm-Message-State: AC+VfDz8GHbW6ZgkYI0+mfDT6rrEd0r7E4u7lmqGj+CESkEBuAg5ora/
+        Ey9M96Ltvo79l7FSbJZfiG9rn5jPCpMuQEjYZslUgg==
+X-Google-Smtp-Source: ACHHUZ59gNYfqxe5wJoZ5aeX4/NRY0zwtgWn80m7CZIDDHhc+6i/AOmOKSKeO/cec1lNrwDw7sPggb4LRnOvt1mVU2E=
+X-Received: by 2002:a25:26d0:0:b0:ba7:86c2:d95c with SMTP id
+ m199-20020a2526d0000000b00ba786c2d95cmr1656110ybm.64.1686920579272; Fri, 16
+ Jun 2023 06:02:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230504233736.3766296-1-xiaolei.wang@windriver.com>
-In-Reply-To: <20230504233736.3766296-1-xiaolei.wang@windriver.com>
+References: <20230615105333.585304-1-claudiu.beznea@microchip.com>
+In-Reply-To: <20230615105333.585304-1-claudiu.beznea@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 16 Jun 2023 15:00:14 +0200
-Message-ID: <CACRpkdbHzO-Tc7s0aGMy7QxHMQ1NhN0tXF5U_ZdnVcUGn8rjwg@mail.gmail.com>
-Subject: Re: [v4][PATCH] pinctrl: freescale: Fix a memory out of bounds when
- num_configs is 1
-To:     Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        ping.bai@nxp.com, kernel@pengutronix.de, peng.fan@nxp.com,
-        shenwei.wang@nxp.com, bartosz.golaszewski@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 16 Jun 2023 15:02:48 +0200
+Message-ID: <CACRpkdat1MLPfsosci2anWSsr80PLCJXN1=jTfKUi4QYnwBbSw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: check memory returned by devm_kasprintf()
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, lars.povlsen@microchip.com,
+        Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
+        UNGLinuxDriver@microchip.com, andriy.shevchenko@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,24 +72,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 5, 2023 at 1:38=E2=80=AFAM Xiaolei Wang <xiaolei.wang@windriver=
-.com> wrote:
+Hi Claudiu,
 
-> The config passed in by pad wakeup is 1, when num_configs is 1,
-> Configuration [1] should not be fetched, which will be detected
-> by KASAN as a memory out of bounds condition. Modify to get
-> configs[1] when num_configs is 2.
->
-> Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x platforms")
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
-> ---
-> Changes since  v3:
->  - update commit log, delete call trace
+thanks for your patches!
 
-Patch applied.
+On Thu, Jun 15, 2023 at 12:53=E2=80=AFPM Claudiu Beznea
+<claudiu.beznea@microchip.com> wrote:
 
-Right now I have applied it for the merge window for kernel v6.5,
-tell me if it is really urgent and should rather go in for fixes.
+> While browsing some code I noticed that there are places where pointer
+> returned by devm_kasprintf() or kasprintf() is not checked. Thus I've
+> tooked the chance and fixed this (by updating kmerr.cocci script,
+> changes published at [1]).
+
+I applied patch 2/3 and 3/3 you only need to resent the first patch
+after looking into the comments from Andy.
 
 Yours,
 Linus Walleij
