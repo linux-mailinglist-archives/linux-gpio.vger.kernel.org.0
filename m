@@ -2,92 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9347331DC
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 15:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0112A73323F
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 15:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235243AbjFPNHx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jun 2023 09:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
+        id S245688AbjFPNdz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jun 2023 09:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229839AbjFPNHw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 09:07:52 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A0712B
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:07:51 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-bcad7f7dabcso580550276.0
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jun 2023 06:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686920871; x=1689512871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0kyLPSg7lW2woOKm7c3P9mBg/EYKVo5C6C3A7VsM0oE=;
-        b=X0YElBsxjc5tOW2JHzbsJ/cX95ZvII2wewHODfJ3nVk4A6FxM3TYOipyutD1uwwa9O
-         gNzGvHOBdyPeiufgXx2WQgWAsI7a7BzOH8LCGsU9snXtE79K31IlNwWBdtNCd8Gamkib
-         5CNOjAj1/me0vijRzAr7rey5jckmMSSNE9ksJqJG0HhYWQB4f4m69Ai/MOtkRIVzdrPu
-         BQlC25cFQLzz43ljwXfexQJOjsHZm4qmYNcEVgu2JImEZ/fJ5y/7iGeN8+ofzNXIkoUf
-         hnc1VQcatmi73FxopUvxpUjvoduIaR7EIJwJbYRviStEiKBRR3E9UWQZUR48LPW3m5Bn
-         jXuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686920871; x=1689512871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0kyLPSg7lW2woOKm7c3P9mBg/EYKVo5C6C3A7VsM0oE=;
-        b=aRYV6vOt6gBW/yHIBBBsvKkBnrsrjsfRonM1g17XnTv4/Gk8g1C7aTSI9o/TjB4E14
-         URWj2gqryz2x+Unh9nzOBIFkyoaqBmRqV8gI9Uhpa9ygzhhaWltBSw5IsEGNU3wC1dD7
-         3i1Z1glicakPxtA0q4YGPB+EWzOytdFi+3CrIgTDCS4doos9I+qp/Yp7ll1F+hvj9URk
-         7S8/2puTJ9CjrR3HVgBrxH0ibDUkxbQO0WjwGd0RJAsnGLnJ03iKvgqoRvz7q9Wmbc7m
-         c8rOpmysugA/7hYCmPomt/IWfGvUryPeqtQnTjqLQc0ZB9O1GYh/8iMWH9aK7+SsmptQ
-         ve0Q==
-X-Gm-Message-State: AC+VfDz7kiZXgvlUkWG5Nj0XJJk7bMvQmwMr8TkvwcFErmhvoyOj3Tmx
-        yUGIhCCoXtZRG0S+q0v+Z9M9WJBsz7Npa+eHIVPgoQ==
-X-Google-Smtp-Source: ACHHUZ4UNXZmzz9+z8ONXfEmulc4fpjKnnRYyxP6hWCr/X3HKLKSe/AXXDCS4gqZ5n4gqF5eKvHKJQuaabFDaKOhaJY=
-X-Received: by 2002:a25:2e51:0:b0:bac:42d1:3ca0 with SMTP id
- b17-20020a252e51000000b00bac42d13ca0mr1299896ybn.48.1686920871103; Fri, 16
- Jun 2023 06:07:51 -0700 (PDT)
+        with ESMTP id S1344043AbjFPNdy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 09:33:54 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5245A359E;
+        Fri, 16 Jun 2023 06:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686922432; x=1718458432;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4rPdsxf+B69gRS+K2VE3MCran6ryOKf8Z1G6PlTJ9XE=;
+  b=dO+s58PQKkD4hBg16McNM2n4anwEIqwWqjbwZJAzkFhIlfSjmGaI4TyZ
+   CK3LtKs7uSU/SyotxExEFiyK3szG2PZ6GUZrMPiEeCDrrFfPHUCGJBSSb
+   yNzOEcM8aQ3vvfRaXK8/BPeQjzWx9rVmvl0trjBX22ileDoPyw6OtvG0O
+   PaLBzzEr1B+0OTP7r0wfq9a3tfBbt+d4BPPqqi9n+D3TNb6BzKbFss60i
+   LcVsj8hY7FvTbFQAZnR1EKzgyoW7uuGiQYm1A6mJjpK2gXpRg9tFw/7B6
+   tNoDRr3/7xs+kPoxV9YMp9e0WD58msRFxGRFj/rLGyGe30JpHnNFhpfYH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="361745297"
+X-IronPort-AV: E=Sophos;i="6.00,247,1681196400"; 
+   d="scan'208";a="361745297"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 06:33:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825748967"
+X-IronPort-AV: E=Sophos;i="6.00,247,1681196400"; 
+   d="scan'208";a="825748967"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jun 2023 06:33:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qA9aF-004FzL-2J;
+        Fri, 16 Jun 2023 16:33:47 +0300
+Date:   Fri, 16 Jun 2023 16:33:47 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v3 0/5] gpio: aggregator: Incorporate gpio-delay
+ functionality
+Message-ID: <ZIxku9jFT9tOY7cY@smile.fi.intel.com>
+References: <20230615132023.13801-1-andriy.shevchenko@linux.intel.com>
+ <4392854.e9J7NaK4W3@steina-w>
 MIME-Version: 1.0
-References: <20230616-fixes-gpiolib-irq-domain-v1-1-27fe870db961@kernel.org>
-In-Reply-To: <20230616-fixes-gpiolib-irq-domain-v1-1-27fe870db961@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 16 Jun 2023 15:07:39 +0200
-Message-ID: <CACRpkdbkzAmwgzfL=dkHCynPFvYP-5Fcp4qQiBfbZ4649Ntn+A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Fix irq_domain resource tracking for gpiochip_irqchip_add_domain()
-To:     Michael Walle <mwalle@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiawen Wu <jiawenwu@trustnetic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4392854.e9J7NaK4W3@steina-w>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 9:30=E2=80=AFAM Michael Walle <mwalle@kernel.org> w=
-rote:
+On Fri, Jun 16, 2023 at 11:01:17AM +0200, Alexander Stein wrote:
+> Am Donnerstag, 15. Juni 2023, 15:20:18 CEST schrieb Andy Shevchenko:
+> > The newly appeared gpio-delay module enables external signal delay lines
+> > that may be connected to the GPIOs. But at the same time it copies the
+> > GPIO forwarder functionality. Besides that the approach does not scale.
+> > If we would have another external component, we would need yet another
+> > driver. That's why I think, and seems others support me, better to
+> > enable such a functionality inside GPIO aggregator driver.
+> > 
+> > Patch 1 is a cleanup that may be applied independently on the decision
+> > about the rest.
+> > 
+> > Please, test and comment! Alexander, I would appreciate your tag.
+> 
+> This works on my platform:
+> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-> Up until commit 6a45b0e2589f ("gpiolib: Introduce
-> gpiochip_irqchip_add_domain()") all irq_domains were allocated
-> by gpiolib itself and thus gpiolib also takes care of freeing it.
->
-> With gpiochip_irqchip_add_domain() a user of gpiolib can associate an
-> irq_domain with the gpio_chip. This irq_domain is not managed by
-> gpiolib and therefore must not be freed by gpiolib.
->
-> Fixes: 6a45b0e2589f ("gpiolib: Introduce gpiochip_irqchip_add_domain()")
-> Reported-by: Jiawen Wu <jiawenwu@trustnetic.com>
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+Thank you!
 
-Oh right.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I guess we can't devres it some way...
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yours,
-Linus Walleij
