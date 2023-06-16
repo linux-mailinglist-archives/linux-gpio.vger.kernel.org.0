@@ -2,83 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CC637323C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 01:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7702C73250F
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 04:12:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbjFOXpe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Jun 2023 19:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59534 "EHLO
+        id S229653AbjFPCM3 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 15 Jun 2023 22:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229991AbjFOXpd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 19:45:33 -0400
-X-Greylist: delayed 456 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Jun 2023 16:45:32 PDT
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8252944;
-        Thu, 15 Jun 2023 16:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-        t=1686872275; bh=A6u4x3jb4/LgEVxlUE3uiaMkSr1fIxiRRK9Z09fHPs0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=cgQ+IxqM9hQOpJGD4SPGH7AjRTFcxnmYJG8UnJ8d24xHf7XplBzVmnxcfBtf6T+gA
-         rFqNQZnbIxRXB4bYsblXlg5ppkBfjpYHvHiVmwe4grj6Yd5hNXT1VEBFK0z0Mn+ZVq
-         YLzEJXhQn1aF9Y8ZhfE9mcd/uul2jbPAtPcThihGBr5FmEYSyb3x44sZlUTwQA+G1h
-         2+5sF7GVjGGCnZiFxK62fwsyk7FEABEk3AC67w3jTXbzOrR+X9CavmW2ckoKetNal8
-         s8fHuoPbNXXNzw03aihH8KqtdnbbQEw8yweGHlHzoYINVYAIM3JvxifFkZjePhtbhW
-         royYMB/E7xveg==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 15DF142C531;
-        Thu, 15 Jun 2023 23:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-        t=1686872275; bh=A6u4x3jb4/LgEVxlUE3uiaMkSr1fIxiRRK9Z09fHPs0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=cgQ+IxqM9hQOpJGD4SPGH7AjRTFcxnmYJG8UnJ8d24xHf7XplBzVmnxcfBtf6T+gA
-         rFqNQZnbIxRXB4bYsblXlg5ppkBfjpYHvHiVmwe4grj6Yd5hNXT1VEBFK0z0Mn+ZVq
-         YLzEJXhQn1aF9Y8ZhfE9mcd/uul2jbPAtPcThihGBr5FmEYSyb3x44sZlUTwQA+G1h
-         2+5sF7GVjGGCnZiFxK62fwsyk7FEABEk3AC67w3jTXbzOrR+X9CavmW2ckoKetNal8
-         s8fHuoPbNXXNzw03aihH8KqtdnbbQEw8yweGHlHzoYINVYAIM3JvxifFkZjePhtbhW
-         royYMB/E7xveg==
-Message-ID: <ee48b34f-b948-0008-63ae-a6b2b396446a@mleia.com>
-Date:   Fri, 16 Jun 2023 02:37:52 +0300
+        with ESMTP id S229588AbjFPCM2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Jun 2023 22:12:28 -0400
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC372965;
+        Thu, 15 Jun 2023 19:12:24 -0700 (PDT)
+X-QQ-mid: Yeas50t1686881504t089t25183
+Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [183.159.171.58])
+X-QQ-SSF: 00400000000000F0FPF000000000000
+From:   =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 6584627287116177339
+To:     "'Andy Shevchenko'" <andy.shevchenko@gmail.com>,
+        "'Michael Walle'" <michael@walle.cc>
+Cc:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <shreeya.patel@collabora.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230607081803.778223-1-jiawenwu@trustnetic.com> <CAHp75Vdbq3uHOyrfT-KFYRSj6v+s9GgOQjQ9a8mGn-4HSCpB9Q@mail.gmail.com> <15e2fc098a1e63317368f4812290ca35@walle.cc> <010401d99f6f$26d41600$747c4200$@trustnetic.com> <b9af98d801d2808de3460c9e4fec8bdd@walle.cc> <CAHp75VcgAhaSARXMnRzsDE3x57AjnwS6Ep25Mz7SnizUccG6BA@mail.gmail.com>
+In-Reply-To: <CAHp75VcgAhaSARXMnRzsDE3x57AjnwS6Ep25Mz7SnizUccG6BA@mail.gmail.com>
+Subject: RE: [PATCH v2] gpiolib: Fix GPIO chip IRQ initialization restriction
+Date:   Fri, 16 Jun 2023 10:11:43 +0800
+Message-ID: <012b01d99ff7$e51075e0$af3161a0$@trustnetic.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.0.2
-Subject: Re: [PATCH v1 1/1] gpio: lpc18xx: Remove unused of_gpio.h inclusion
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-References: <20230615162519.21244-1-andriy.shevchenko@linux.intel.com>
-From:   Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20230615162519.21244-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20230615_233755_113557_A2856BF7 
-X-CRM114-Status: UNSURE (   6.83  )
-X-CRM114-Notice: Please train this message. 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: zh-cn
+Thread-Index: AQJryWnquP8Y9u98p8GNjzLx69HVGQGrRNiSAZtbv08BxPTBjAH/YNofAf5b6aOuIA5BEA==
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FROM_EXCESS_BASE64,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/15/23 19:25, Andy Shevchenko wrote:
-> The of_gpio.h is not and shouldn't be used in the GPIO drivers.
-> Remove it.
+On Thursday, June 15, 2023 9:56 PM, Andy Shevchenko wrote:
+> On Thu, Jun 15, 2023 at 1:45 PM Michael Walle <michael@walle.cc> wrote:
+> > > BTW, I wonder if it has problems when unregistering gpio-regmap.
+> > > Call Trace of irq_domain_remove() always exits in my test:
+> > > https://lore.kernel.org/all/011c01d98d3d$99e6c6e0$cdb454a0$@trustnetic.com/
+> > >
+> > > Of course, it could be because there was something wrong with my
+> > > test code. But I want to be clear about this.
+> >
+> > Mh, you've said you don't use the devm_ variant of
+> > regmap_add_irq_chip(),
+> > correct? Do you call regmap_del_irq_chip() yourself?
+
+Yes, devm_regmap_del_irq_chip() also led to a call trace. I thought it
+might be the order of release, so I called it myself without devm_.
+
+> > It seems that gpiolib is already removing the domain itself. Mh.
+> > I guess if the the domain is set via gpiochip_irqchip_add_domain()
+> > gpiolib must not call irq_domain_remove() because the domain resource
+> > is handled externally (i.e. gpiolib doesn't allocate the domain
+> > itself) in our case.
+> >
+> > Nice finding! Looks like it has been broken since the beginning
+> > when I've introduced the gpiochip_irqchip_add_domain(). Will you
+> > do another fixes patch for that? 
+
+I used to be rough at fixing in my test, I tried to set gc->irq.domain = NULL
+after calling irq_domain_remove() in gpiochip_irqchip_remove(). But
+there seemed to be some other issue that was causing my device to not
+work, so I didn't go further. I wonder what risks such fix introduces.
+
+Sorry I may not be able to do the fix patch for a while. I'm working on
+other patches, this test will disrupt my work.
+
+> > I'm not sure where to store
+> > that information though. Maybe a new bool "no_domain_free"
+> > in struct gpio_irq_chip?
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+> While reading this I also thought about flag, but please use positive
+> notation, e.g. "irq_domain_is_ext".
 
-Thank you for the correct change.
 
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-
---
-Best wishes,
-Vladimir
