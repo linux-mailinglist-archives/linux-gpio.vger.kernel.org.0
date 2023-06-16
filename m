@@ -2,125 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EF13732951
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 09:54:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51ACB7329EB
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 10:34:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241423AbjFPHx4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jun 2023 03:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
+        id S234405AbjFPIeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jun 2023 04:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242175AbjFPHxv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 03:53:51 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2055.outbound.protection.outlook.com [40.107.8.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFBE295B;
-        Fri, 16 Jun 2023 00:53:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LGG6RyxLMJUAB1p16oNiPeQP+KvfL55pa7PRQTPfHz6PeXa2wwZjc688U9i/Lkxx6wBBoCyt14bN3vVDTxVXjB99u0v3qeKal1khztNRmXhWYBle+dXkUORQUKiyA/O9tpEwOd/RSF1spKHFs/Q6U03v3vUUohPT6YAp6Thg/VjTmcdAVqOrrFSN75wT15qDyeouLD94nFzql/sTlLSviLV/oBTidJQKOqYHLRMb2LLTMZ9bvTLUis+2BTXeHySNE9YUEa18napQb1PskYdmlSlaPIbzbaKivlfK6XopERUrEGIP13DJbGbORzGknAwLZ4sJYIQz/Js8SEDUuokzPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NGEXzEzxwdunMX4iGGcMtP0CsRNRSvky6h6S/UoGF8Y=;
- b=ReJWANz0jYFDbUMf9Bo/tJkLlkuRFdA8Sdp+180NJG+1/w7d6mBeNhSV+gax67LNdWuxXXnBK4nKRzzbaO6uXEGmRBIGlNYttoF2B1lYrny4rnGpACmiSGPQG7ZXwc4TcF4bvcf6al2zKh922qGv2BPfKxE/x3w5ru2NlnzCXUWsWuvIIToLyDbDxNolmbv1xZLdr82qrXmczXtA69oX46g+mq5EjwbENeWbgM5g8AHBORlJYJMWlVseQD5M6bdFf/hBc14AohlFYLq9UwpGT2JLlkzNWhIrBbIpN7/LFZy+yd5Cltp6KHYSm6lDaQXbgsg6qhP5bQ16GCo6x1qO5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NGEXzEzxwdunMX4iGGcMtP0CsRNRSvky6h6S/UoGF8Y=;
- b=RLOjtbT47ysV2P60zrv+5HVhvNQ+jJdKRz6vAqlVeg6y2+a+7hrTaFNZbRox59ZL1xihDfdwFbHzQJkAHEFanje0ILSvl26RRwafk6rr4KEqeHK60e14kUA4JLQhrZ83OiyGZJ5u3YJXsdl4gQ22PIXES20EV9RSG4vkUF4NHbmtpNZsfH1cl0tc90bXthXBfvq/BJ7QObeUlKT/lcDYHRHN23S4mfPT5zSC2Dnynw3MZ08gcwj53BbUhi7Zk4S9266liYZwcGJBb+ZZKEFfDRBLroBecF8R+k94veHysH7h51KtlApvZHCmEuJ9LqvnohIQQ1cs/Fu+3UMImXSUPw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by VI1PR10MB7736.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:1bd::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.27; Fri, 16 Jun
- 2023 07:53:45 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29%6]) with mapi id 15.20.6500.029; Fri, 16 Jun 2023
- 07:53:45 +0000
-Date:   Fri, 16 Jun 2023 09:53:35 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     xingtong_wu@163.com, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xingtong.wu@siemens.com
-Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with
- other gpio pins
-Message-ID: <20230616095335.3a35d1a5@md1za8fc.ad001.siemens.net>
-In-Reply-To: <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com>
-References: <20230529025011.2806-1-xingtong_wu@163.com>
-        <20230529025011.2806-2-xingtong_wu@163.com>
-        <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: CH0PR03CA0023.namprd03.prod.outlook.com
- (2603:10b6:610:b0::28) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
+        with ESMTP id S245747AbjFPIeX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 04:34:23 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02EF30C6;
+        Fri, 16 Jun 2023 01:34:19 -0700 (PDT)
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35G8AL9l005003;
+        Fri, 16 Jun 2023 03:34:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=2dz9DgNzyWe3yiG4rHa+kXpGJErXQgVqdkaqIVGndHc=;
+ b=KS9gAvulVnsMKFjUZvhRoqUNld3TfblP0Q4uTXJ4Ny4t477RJ94kUMNWOET9x76+6/rH
+ Bb+mdwFQa2NH8IVxnJprNohBeJINvOKPB1QECIMEPZXEQReY0SMZdl2FCcnjTMLEWZEJ
+ QJlMsVAzbH48+DMV01YQn9k7TkMa9MCDdY481Dbjt5MV6IMH0VAobqGFUmWIqMxvx3lM
+ 0u1UPt/8Gn7D3zqqJvNEgUfgDQz5vjetN2FVmWcK6SvbXtoFhN8Q4Cpa640bVN/n7nM2
+ xKCeRfqhQM8NnoQABAXRSwzX4p1aX8x/+b/z29hFdN5RiMcqeZ7il91NXBJAdZ8DfEGQ cA== 
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3r75nub1h7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Jun 2023 03:34:06 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Fri, 16 Jun
+ 2023 09:34:05 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 16 Jun 2023 09:34:05 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id F2A09468;
+        Fri, 16 Jun 2023 08:34:04 +0000 (UTC)
+Date:   Fri, 16 Jun 2023 08:34:04 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Lee Jones <lee@kernel.org>
+CC:     <broonie@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linus.walleij@linaro.org>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <conor+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] mfd: cs42l43: Add support for cs42l43 core driver
+Message-ID: <20230616083404.GR68926@ediswmail.ad.cirrus.com>
+References: <20230605125504.2570158-1-ckeepax@opensource.cirrus.com>
+ <20230605125504.2570158-4-ckeepax@opensource.cirrus.com>
+ <20230615171124.GL3635807@google.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|VI1PR10MB7736:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03a32997-0f9b-40a7-67b3-08db6e3ecf4c
-X-LD-Processed: 38ae3bcd-9579-4fd4-adda-b42e1495d55a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3wVFRZ3SOMR1J/LrvsTiRbIy/3TtmnnLqW2pOnRtd9t4v5OQn/G+Nl/xvef3LscahRq/iapP7HWQWDRt5RBZmKMSFWxUubf/F545mzJosmvqApSWcyEKU/b0HiY7aSyDsL5QcEO6GM/NLGnsm8cn/M+BCO9XexgITBnUkrs2XWAXvqHWBt8c5564rprbnzVyLyEJdywVPg1TlQlVagD+FPUFepPfUBBXwA1j6wnwZmDy4ha7hSf9th5uM5u4lBnFQpFjDlKFMjqa3HN5w1CDW3jEWrsRfL1myuygqsGjOu/jKuRrPbld9UXRul+JaJDcwrU0YCYeMkjMn9mhBi5FaDPxydAWMdUeaAMnh9A4+z6AEYAXGqH9p9qAihz8pKjhJSRW8DqanoqSH3WLG/3rjVKCHGp8lhBZi99rWKT5p/119fjUD6EDYs8iAzlPaLH8ztkYscT4uMy9hLk4o6YBzl2iL2Fu1oBMDYn9sPn2BwwC1G4fVQhV9oOxiMeAvgAdqN+Bz/UXEyyn7ZEGq5z1xqR203IEAplo+OtApU6st3MNXPyquPUhkb2g1OnjbM2Y
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(451199021)(5660300002)(478600001)(8936002)(41300700001)(316002)(107886003)(8676002)(6486002)(1076003)(44832011)(186003)(6506007)(4326008)(6916009)(66946007)(66476007)(6666004)(66556008)(26005)(9686003)(6512007)(53546011)(4744005)(2906002)(38100700002)(82960400001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MmdrRmdveE1uVDRwdUtKcHNEeHpSM2RVTDFzVGU2cDV6R1lXL243TFplcW4x?=
- =?utf-8?B?MXlpcXE4UmZLS2tlRTBEdXN0Q1puM2NpOHBESlp0dC9hdCttckxqd0J3OUZy?=
- =?utf-8?B?L1I5b21yQU9XZExiVnRDalhheUxJdmFsQVNsTHQ3UTRmNlNwZ1R1TnAwNjNU?=
- =?utf-8?B?MWoxY0NES3RpRXgwdW9WRFI0SERlMmFhL0tEbG92RmlZa3NzODc2aFBGZ1pJ?=
- =?utf-8?B?VXNralZwNytQcW0yb0hpMm12dDIyV2lZclFUaWZMSk1wYUZGdE9kU0VYeW5x?=
- =?utf-8?B?S0YvaGJrc2xMY2xBd1pNc0FQdFhrdUl0WGVieWp2clhvVUp0RmtDZE5CWmts?=
- =?utf-8?B?Z1pBVEZOMnlPanZLckg3akd0QWl3aktxVTdRT1JaYXpZWFYxVFZiK3VoalJL?=
- =?utf-8?B?ZU9wc3RlVjVpUnhDNlJhRy9nRUo4VmcrZFdLOU1VaUFyTWxEZ0g2UUk0aFN1?=
- =?utf-8?B?aG14RktaMVBJMGZoL2ZyWEgwczI5blRIZDZwRFgrQjVjMS9SSThxZUhJSmU2?=
- =?utf-8?B?c08wZHphYk1OdEd3emp0dWRzYmlzSURQUksxV0EzRnlPa1pmS3dzMGxWQ2s4?=
- =?utf-8?B?dGZHRWIzSDIyVWFVclB5a0c3RkkrcEFtWGc0ZkkxcGR1M0Y5dUduVnVLRHh0?=
- =?utf-8?B?d3FOUU9DZEhrMDdnVXZDaldINExPa1g0ejBta3MrUVJQeWpwamZoNVNpZVJ2?=
- =?utf-8?B?NjJUZzh4K2tremlhUkxGZlpoczUydVpkcDJkb0JrbDdNbUZ4YVRqMmVsN0lE?=
- =?utf-8?B?Y0QxZStmcUN1cStmRi8yem1ZeDZaZ1d4SVBHN3VQaWxTOHk0MHRHVXRYNWtN?=
- =?utf-8?B?cW9QUHRualpJMVZHamdQc2FLbkhvR1NESlltT0VoVEZPUTdLU0Urb2xZYnRv?=
- =?utf-8?B?eTByZTBGOUhrTFVObGo0UUxiTVduVmZxaDQ3NTArVVpMNXRhWWplUHRKSElk?=
- =?utf-8?B?S3VLcVBVc0NKZHhxVHlGUlhrUWJwL21KZkQ1TUlMM1o4NlhEZGFYckZKcHBE?=
- =?utf-8?B?TG9OVzBOYktKZFhoSHpkbUFUcEVrZHdDOVlnZEM3dU9nQ1I1N2Z2azVJREF1?=
- =?utf-8?B?bEJleVFjVzJ4Zm0wN1RIUzN6RUJsLzFWcHRQUHlQeWlhaU41YXFnbkh1SU4r?=
- =?utf-8?B?UDZ4eVBwYndHR1k3cThxNE1mbkZ1UzZUenRXRm1CZ21sZTlsM1VKSnFJT3ln?=
- =?utf-8?B?MFVQODlaZ2t4bWZkRVRXVWVjRGNxZDA4VTlUK2ZNYk93dVU0QUVmdUV3NUtH?=
- =?utf-8?B?UVVFaE56VlZEOG81TUxVMzZxekpETUdtMlVKRWk1NzlBVmM0VDJmZ21SUWd6?=
- =?utf-8?B?U1N6UnFZTUpnVVM1L05JSWFFdlJvbmJtR1FUTzBhRDN2eHhyV21WZW9uMkpH?=
- =?utf-8?B?enZYTWtOaE1uQ2hBd0dBWWFPUExUYVRQUWtTNzhYbmQzZlp2MUlsZU9xVFZL?=
- =?utf-8?B?OGJOUWorWFp2K2Jsb2JIQ0dFNGFwcG9TeUFJREhlMkhwN2ExMlRMbnM4RFRl?=
- =?utf-8?B?a0hPMlVxU0t1S2oyODVoSU42aTc3V3BnblAvdlkvTHUyZ2IyL3AxNWM2SFlm?=
- =?utf-8?B?N2orWHNLMlZ5ZHJBNzZORnFFZ3pzc3h5NWRNMjBTdTJjdHFoV1ovTlZCbDRO?=
- =?utf-8?B?azYrN2lqTkwvMmpNdEptZlluWXR2YjlOSG1JZys0Njg4QTQrMkl1MEtBbnFU?=
- =?utf-8?B?dFVFa3FKMXdIeFBzSXlCQ01nb0xNYzE4T3FjZkRXemYzTGtpelRaWUEyRXlR?=
- =?utf-8?B?TEp5aFZlOExMeC91Y3ZUY3pteHkxb2RIM1RXMXN3Ukw3WDcybGhRNW5zcnBu?=
- =?utf-8?B?QVdmSmcxUjRsakp0YXNHVzBiVFkvWDZYYWhTc2dGR1dvUkNaTjFrK3p3d2lG?=
- =?utf-8?B?K1Vpd2tYTDVjS2hWeFNMV252bE92UFpiTXV6d2lsc3RKUkgrdXJxRXFJZVZ1?=
- =?utf-8?B?WGMrZ1NTYXdZcGFlL2FNYkNSa3c5KzBzait1Kzk4SFZuR2o3d1dDM1VzYzBC?=
- =?utf-8?B?L3NPL1h6aHlUV3VkMERRbDh3d1B3UUlZZllVbmp1UDBMcVhLN25adE1Gdlpw?=
- =?utf-8?B?R1FHeTBIWXF1NDgxMUtCaFJaUHVLNHR1STRMY09aRnVCVkhlVXcxYnNaY0RV?=
- =?utf-8?B?N3ByR2YySTlaVHlqbU9rYzloT3g1aTJhanpxYnp1R2xZNEpPd2lOWFNCYUlI?=
- =?utf-8?B?NEE9PQ==?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03a32997-0f9b-40a7-67b3-08db6e3ecf4c
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 07:53:45.1080
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wCoStxAkStYhwOnHhLG5P/xQ1fBh/AVUPQ8nCg7NmUevmmp2M4m3EmfFTM99Z30gNsUia905KUXnA4jNHTx8xuJC8p4Xfi3vnHh0VIpimJI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB7736
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230615171124.GL3635807@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-ORIG-GUID: QHC_Qh8S3mj10330FjaGceC4g3StgGJg
+X-Proofpoint-GUID: QHC_Qh8S3mj10330FjaGceC4g3StgGJg
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -128,29 +74,162 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Mon, 29 May 2023 15:02:08 +0200
-schrieb Linus Walleij <linus.walleij@linaro.org>:
+On Thu, Jun 15, 2023 at 06:11:24PM +0100, Lee Jones wrote:
+> On Mon, 05 Jun 2023, Charles Keepax wrote:
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +//
+> > +// CS42L43 I2C driver
+> > +//
+> > +// Copyright (C) 2022-2023 Cirrus Logic, Inc. and
+> > +//                         Cirrus Logic International Semiconductor Ltd.
+> > +
+> 
+> I realise there is some precedent for this already in MFD.
+> 
+> However, I'd rather headers used C style multi-line comments.
+> 
 
-> On Mon, May 29, 2023 at 4:55=E2=80=AFAM <xingtong_wu@163.com> wrote:
->=20
-> > From: "xingtong.wu" <xingtong.wu@siemens.com>
-> >
-> > switch pin base from static to automatic allocation to
-> > avoid conflicts and align with other gpio chip drivers
-> >
-> > Signed-off-by: xingtong.wu <xingtong.wu@siemens.com> =20
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> If this platform does not have a ton of userspace using the obsolete
-> sysfs this should be fine to apply. I say let's apply and see what
-> happens.
+Apologies but just to be super clear you want this to look like:
 
-Seems after some discussion we concluded to merge this. I guess it
-might already be a little late for 6.4.
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * CS42L43 I2C driver
+ *
+ * Copyright (C) 2022-2023 Cirrus Logic, Inc. and
+ *                         Cirrus Logic International Semiconductor Ltd.
+ */
 
-Henning
+Just clarifying since you want to get rid of all the // comments,
+but the SPDX stuff specifically requires one according to
+Documentation/process/license-rules.rst.
 
-> Yours,
-> Linus Walleij
+> > +	// I2C is always attached by definition
+> 
+> C please.  And everywhere else.
+> 
 
+Can do.
+
+> > +static struct i2c_device_id cs42l43_i2c_id[] = {
+> > +	{ "cs42l43", 0 },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, cs42l43_i2c_id);
+> 
+> Is this required anymore?
+> 
+
+I was not aware of it not being required, I think it will still
+be used for the purposes of module naming. Perhaps someone more
+knowledgable than me can comment?
+
+> > +#if IS_ENABLED(CONFIG_MFD_CS42L43_I2C)
+> > +const struct regmap_config cs42l43_i2c_regmap = {
+> > +	.reg_bits		= 32,
+> > +	.reg_stride		= 4,
+> > +	.val_bits		= 32,
+> > +	.reg_format_endian	= REGMAP_ENDIAN_BIG,
+> > +	.val_format_endian	= REGMAP_ENDIAN_BIG,
+> > +
+> > +	.max_register		= CS42L43_MCU_RAM_MAX,
+> > +	.readable_reg		= cs42l43_readable_register,
+> > +	.volatile_reg		= cs42l43_volatile_register,
+> > +	.precious_reg		= cs42l43_precious_register,
+> > +
+> > +	.cache_type		= REGCACHE_RBTREE,
+> > +	.reg_defaults		= cs42l43_reg_default,
+> > +	.num_reg_defaults	= ARRAY_SIZE(cs42l43_reg_default),
+> > +};
+> > +EXPORT_SYMBOL_NS_GPL(cs42l43_i2c_regmap, MFD_CS42L43);
+> > +#endif
+> 
+> We don't tend to like #ifery in C files.
+> 
+> Why is it required?
+> 
+> And why not just put them were they're consumed?
+
+The trouble is the cs42l43_reg_default array and the array size.
+There is no good way to statically initialise those two fields
+from a single array in both the I2C and SDW modules.
+
+> > +static int cs42l43_soft_reset(struct cs42l43 *cs42l43)
+> > +{
+> > +	static const struct reg_sequence reset[] = {
+> > +		{ CS42L43_SFT_RESET, 0x5A000000 },
+> > +	};
+> > +	unsigned long time;
+> > +
+> > +	dev_dbg(cs42l43->dev, "Soft resetting\n");
+> 
+> How often are you realistically going to enable these?  Can you do
+> without them and just add some printks when debugging?  Seems a shame to
+> dirty the code-base with seldom used / questionably helpful LoC.
+
+I mean I use them all the time they are very helpful. But yeah I
+can just add them each time I need them its just a pain, but I
+guess since you are the second person to comment I will accept
+that wanting to easily turn on debug is not a feature we are keen
+on.
+
+> > +	reinit_completion(&cs42l43->device_detach);
+> > +
+> > +	/* apply cache only as the device will also fall off the soundwire bus */
+> 
+> Grammar please.  Some capital letters missing there.
+> 
+
+No problem.
+
+> > +	regcache_cache_only(cs42l43->regmap, true);
+> > +	regmap_multi_reg_write_bypassed(cs42l43->regmap, reset, ARRAY_SIZE(reset));
+> > +
+> > +	msleep(20);
+> 
+> Why 20?
+> 
+
+Because that is what the hardware needs, I assume this will be
+covered when I turn all number in to defines.
+
+> > +static int cs42l43_mcu_stage_2_3(struct cs42l43 *cs42l43, bool shadow)
+> > +{
+> > +	unsigned int need_reg = CS42L43_NEED_CONFIGS;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	if (shadow)
+> 
+> What's shadow?  Comment please.
+> 
+
+Yeah can add a comment for that.
+
+> > +		need_reg = CS42L43_FW_SH_BOOT_CFG_NEED_CONFIGS;
+> > +
+> > +	regmap_write(cs42l43->regmap, need_reg, 0x0);
+> > +
+> > +	ret = regmap_read_poll_timeout(cs42l43->regmap, CS42L43_BOOT_STATUS,
+> > +				       val, (val == 3), 5000, 20000);
+> 
+> Defines are easier to read than magic numbers.
+> 
+
+Can do.
+
+> > +	if (ret) {
+> > +		dev_err(cs42l43->dev, "Failed to move to stage 3: %d, 0x%x\n", ret, val);
+> 
+> Stage 3 what?
+> 
+
+Of the MCU boot.
+
+> Perhaps some simple function headers would help?
+> 
+
+You mean add some kernel doc for these functions, right? Assuming
+that is what you mean, will do.
+
+Thanks,
+Charles
