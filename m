@@ -2,142 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA82D7333F9
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 16:50:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEAC573355C
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jun 2023 18:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345748AbjFPOuv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Jun 2023 10:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        id S234405AbjFPQCn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Jun 2023 12:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345755AbjFPOuo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 10:50:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A13330FB;
-        Fri, 16 Jun 2023 07:50:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B9E3763E14;
-        Fri, 16 Jun 2023 14:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 761F6C433C8;
-        Fri, 16 Jun 2023 14:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686927041;
-        bh=iuzlJEXzgeFTJGc5anLsg53cYdFe9bM3LmN+rmOZxp0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cbYt5RWImunf6NH1W7o6L6MOYTWCXbHE/y+qRRmQKVcaPhRW2HX5icfdniiamszNn
-         VMaXGYtz8Q/kfO0k3bxBEuLoQyFreRK03b4zybq7hib5/jhb3VtQ6nD1DGojhstaFN
-         m67cJvqgqZnColKg3JhSiJRjaBo7ImapUF2D6RDJDkUSpZK3+IQfAK8DFCG1YgseoJ
-         bjHap2/fnSC2IJOjoBFqyaPjQ0rNuE4YeSmgcQ89ePVYXTk8ct+1xuXDy6ehrFvoJT
-         SDZ6iEOs6F8MGlBrpaOXWGLH68VGKzUsRIJVHygovxkm4qUECH/OchC4gzagqAEoaf
-         T8tWnZWrz09/A==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Michal Simek <michal.simek@amd.com>,
-        Manikanta Guntupalli <manikanta.guntupalli@amd.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: synq: remove unused zynq_gpio_irq_reqres/zynq_gpio_irq_relres
-Date:   Fri, 16 Jun 2023 16:50:33 +0200
-Message-Id: <20230616145036.3910153-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S245660AbjFPQCf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Jun 2023 12:02:35 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA344204;
+        Fri, 16 Jun 2023 09:02:16 -0700 (PDT)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35GBVHcm018156;
+        Fri, 16 Jun 2023 11:01:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=aM4qTlg66psxyt7MvUaMTfjlMOxNt1M83BDXPCVlrdE=;
+ b=Gh3KuXRDek8q+xUxmtZtD1eBuOoymuBv7/v6TC3Q3rw9DjPFyFWQfxvt14FXP35N7ocU
+ IJzdxdCW/niSf4ilGW4rwaXVqv8impUnXd41HsmIyLPn5/O+qevvEWZma6Qc8YUbULUg
+ +2zO0FYvO7g3USZ4F4bnEjct8yrT/3exot0scjSqDSHq6bBzS+1MugdrLA/3ZjZZq0XI
+ /vKqk/l8UENa4vl3YPGB80AG19ukpvTAoAjkCO6jKUI2Sd6+N1p7Qo/jr6HRCPDduKMt
+ ETh9dJ+cdkEROG/CtJ44Mn1KG+2wSP9c8CHiZnK8XeY39bJKr0VG82wZPKhjNYH8rmCS uw== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3r4pk0ejjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Jun 2023 11:01:58 -0500
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Fri, 16 Jun
+ 2023 17:01:56 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.26 via Frontend
+ Transport; Fri, 16 Jun 2023 17:01:56 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id AEE3615A4;
+        Fri, 16 Jun 2023 16:01:56 +0000 (UTC)
+Date:   Fri, 16 Jun 2023 16:01:56 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <andy.shevchenko@gmail.com>
+CC:     <broonie@kernel.org>, <lee@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <vkoul@kernel.org>, <robh+dt@kernel.org>, <conor+dt@kernel.org>,
+        <lgirdwood@gmail.com>, <yung-chuan.liao@linux.intel.com>,
+        <sanyog.r.kale@intel.com>, <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/6] soundwire: bus: Allow SoundWire peripherals to
+ register IRQ handlers
+Message-ID: <20230616160156.GT68926@ediswmail.ad.cirrus.com>
+References: <20230605125504.2570158-1-ckeepax@opensource.cirrus.com>
+ <20230605125504.2570158-2-ckeepax@opensource.cirrus.com>
+ <ZIuNXQIB3j6YjYa7@surfacebook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZIuNXQIB3j6YjYa7@surfacebook>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-ORIG-GUID: g_ZbuS0378fNogebm1OeP16CyalPar6e
+X-Proofpoint-GUID: g_ZbuS0378fNogebm1OeP16CyalPar6e
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Jun 16, 2023 at 01:14:53AM +0300, andy.shevchenko@gmail.com wrote:
+> Mon, Jun 05, 2023 at 01:54:59PM +0100, Charles Keepax kirjoitti:
+> > From: Lucas Tanure <tanureal@opensource.cirrus.com>
+> > +	bus->irq_chip.name = dev_name(bus->dev);
+> > +	bus->domain = irq_domain_add_linear(NULL, SDW_MAX_DEVICES, &sdw_domain_ops, bus);
+> 
+> I'm wondering why you are not using existing fwnode, if any
+> (e.g. from parent device).
 
-The driver now uses the generic request/release callbacks, so the custom
-ones are no longer called. When building with -Woverride-init, gcc produces
-a warning about the duplicate entries:
+I think that is just an oversight, I will fixup for the next
+version.
 
-In file included from drivers/gpio/gpio-zynq.c:10:
-include/linux/gpio/driver.h:621:43: error: initialized field overwritten [-Werror=override-init]
-  621 |                 .irq_request_resources  = gpiochip_irq_reqres,          \
-      |                                           ^~~~~~~~~~~~~~~~~~~
-drivers/gpio/gpio-zynq.c:611:9: note: in expansion of macro 'GPIOCHIP_IRQ_RESOURCE_HELPERS'
-  611 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/gpio/driver.h:621:43: note: (near initialization for 'zynq_gpio_level_irqchip.irq_request_resources')
-  621 |                 .irq_request_resources  = gpiochip_irq_reqres,          \
-      |                                           ^~~~~~~~~~~~~~~~~~~
-drivers/gpio/gpio-zynq.c:625:9: note: in expansion of macro 'GPIOCHIP_IRQ_RESOURCE_HELPERS'
-  625 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/gpio/driver.h:622:43: error: initialized field overwritten [-Werror=override-init]
-  622 |                 .irq_release_resources  = gpiochip_irq_relres
-      |                                           ^~~~~~~~~~~~~~~~~~~
-
-Removing the old ones has no effect on the driver but avoids the warnings.
-
-Fixes: f569143935378 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/gpio-zynq.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
-
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index c334e46033bae..0a7264aabe488 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -575,26 +575,6 @@ static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
- 	return 0;
- }
- 
--static int zynq_gpio_irq_reqres(struct irq_data *d)
--{
--	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
--	int ret;
--
--	ret = pm_runtime_resume_and_get(chip->parent);
--	if (ret < 0)
--		return ret;
--
--	return gpiochip_reqres_irq(chip, d->hwirq);
--}
--
--static void zynq_gpio_irq_relres(struct irq_data *d)
--{
--	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
--
--	gpiochip_relres_irq(chip, d->hwirq);
--	pm_runtime_put(chip->parent);
--}
--
- /* irq chip descriptor */
- static const struct irq_chip zynq_gpio_level_irqchip = {
- 	.name		= DRIVER_NAME,
-@@ -604,8 +584,6 @@ static const struct irq_chip zynq_gpio_level_irqchip = {
- 	.irq_unmask	= zynq_gpio_irq_unmask,
- 	.irq_set_type	= zynq_gpio_set_irq_type,
- 	.irq_set_wake	= zynq_gpio_set_wake,
--	.irq_request_resources = zynq_gpio_irq_reqres,
--	.irq_release_resources = zynq_gpio_irq_relres,
- 	.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
- 			  IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-@@ -619,8 +597,6 @@ static const struct irq_chip zynq_gpio_edge_irqchip = {
- 	.irq_unmask	= zynq_gpio_irq_unmask,
- 	.irq_set_type	= zynq_gpio_set_irq_type,
- 	.irq_set_wake	= zynq_gpio_set_wake,
--	.irq_request_resources = zynq_gpio_irq_reqres,
--	.irq_release_resources = zynq_gpio_irq_relres,
- 	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
--- 
-2.39.2
-
+Thanks,
+Charles
