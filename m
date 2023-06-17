@@ -2,96 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C157733FD4
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 11:08:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6486D734017
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 12:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233558AbjFQJIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Jun 2023 05:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42676 "EHLO
+        id S234272AbjFQKXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Jun 2023 06:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbjFQJIX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 05:08:23 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665152139
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 02:08:22 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-bd790f26791so1567169276.1
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 02:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686992901; x=1689584901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=37w9RvtsspKKQvjpNoOQ2181ixYDa9kxnvKdFl+QGaE=;
-        b=SdVp3/F/IFK4rHxuA6ZPm5ESvkKRiXqgzuMKRc+LS5JyOQlxtOfYvwSEghQBi8ncaS
-         FSj5CIXbphSTBappIe+fSJo8as0k1n0KxOcg7mOE8S4NONpAoAhPFglbOBcau7Y6cJUz
-         kWkpk1XjEWFg/vmi1TRB5f5Kt0cTsY79nrvV+6bQeiSUg0YAIr6SBhEuas5dNSqzklHG
-         vU38c/ZhYy2J0wVoE45qIemAxQ8vs95jDiSMsgwcBxkT3gz502KDRmWsaWcsaKNyYh+E
-         RHLXUIsJw1yxygwtSnlPPofrbMqMElyIiwV10S3SJ0+JQyhRjPW50Zp3pPjns33l6zSy
-         uFaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686992901; x=1689584901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=37w9RvtsspKKQvjpNoOQ2181ixYDa9kxnvKdFl+QGaE=;
-        b=itnxt1u9Q/4ZB/6xFGt5Hst7zqXwIqc/Gu1/ewXsCMXs3pFHcLujf2OmPgZHv5fGWp
-         yMsX+8Oe/S7KQ0/JWiBJbtIkpc3/++tUV01Aoc8v1HZyj6fzQeMo+A0n+XOEspD4+7oV
-         gvFbPgmyRr1XEe/wVFU2jV7FSIJfyMJFRQw5FAncNS7hjOMzZ15vhPL6qjKJb8LAl6QP
-         gAnzRw+jF3/wo4z8oxlru3lvKtgFYod7GMSw8WwNp7GViIfZoEL2/CK4q+VVXhzaPU8T
-         R4Psm2W8CJy72qt0bSBUah0g9b3FvWP+x6X27jhBfhv1Mm2Ea837VSKVV7EnTPlKD851
-         ofOg==
-X-Gm-Message-State: AC+VfDwJha7SAWXm1jrmsBVXzJ1CokXjHm8ZXVledafHljfnl6e+qXsd
-        X6Pk7ti1ccZ/v9PlLnLnWf2jMmEq2adv3Uuiu9x5qA==
-X-Google-Smtp-Source: ACHHUZ5EEpIHhlrSGrwjFq2jgi8s4t5Onr0qinzP12iMzkKe+3SnEWkn2D/viO9B3Y0kTsqWdJcyyP7nP26sDfYvzJQ=
-X-Received: by 2002:a05:6902:510:b0:bb3:8f5d:23f9 with SMTP id
- x16-20020a056902051000b00bb38f5d23f9mr1255390ybs.22.1686992901356; Sat, 17
- Jun 2023 02:08:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230616135313.76338-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230616135313.76338-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 17 Jun 2023 11:08:10 +0200
-Message-ID: <CACRpkdbPEvVvaehB521gdjkkzh+wFnFxsCNm36PD-hnTb1Na_w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Drop unused domain_ops memeber of GPIO
- IRQ chip
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        with ESMTP id S233330AbjFQKXX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 06:23:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6F31FF7;
+        Sat, 17 Jun 2023 03:23:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D10B6090A;
+        Sat, 17 Jun 2023 10:23:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E6CC433C8;
+        Sat, 17 Jun 2023 10:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686997400;
+        bh=48DNRdGhwlp2Rq1rRI6gQW+WFVFFmBcKDdyEK86n294=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JoWBtk7Js0E7rBJRtpGJgSzeNbnPh0jGo1zuQB3tlHhQot6mzbzdkp2zxUqVVETVI
+         45yyFSv8hWM9Oke1Ua1IaZgaSHwfkXZNZgv72oTxIcz3618o9+oBNWkdWYOq8LHvMv
+         nm/Uj2xZ22/YuWmKiLeXZ+rH6zlwVwwj5U+5l5MJerEBF0cl95QPparsv57LtQdI2Y
+         0Wz0u/vf5qusM+M/4TEmDpaLAtjydC96R/6Yb6JdNb8V7NKUgHIQQOG+PWdmjQaxdO
+         CUr/Qv1seDGPvTVpKK+05euarkQ9tJSsz0Cmn64hgEAU0kmIozH2nqVw5T9FcPpON+
+         DD2oWcTBaY62A==
+Received: from 82-132-214-193.dab.02.net ([82.132.214.193] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qAT5S-0064hw-29;
+        Sat, 17 Jun 2023 11:23:18 +0100
+Date:   Sat, 17 Jun 2023 11:23:17 +0100
+Message-ID: <87y1kipeui.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 1/1] gpiolib: Drop unused domain_ops memeber of GPIO IRQ chip
+In-Reply-To: <CACRpkdbPEvVvaehB521gdjkkzh+wFnFxsCNm36PD-hnTb1Na_w@mail.gmail.com>
+References: <20230616135313.76338-1-andriy.shevchenko@linux.intel.com>
+        <CACRpkdbPEvVvaehB521gdjkkzh+wFnFxsCNm36PD-hnTb1Na_w@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 82.132.214.193
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com, treding@nvidia.com, bartosz.golaszewski@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, brgl@bgdev.pl, andy@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 3:53=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sat, 17 Jun 2023 10:08:10 +0100,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+>=20
+> On Fri, Jun 16, 2023 at 3:53=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>=20
+> > It seems there is no driver that requires custom IRQ chip
+> > domain options. Drop the member and respective code.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> (...)
+> > -               /* Some drivers provide custom irqdomain ops */
+> >                 gc->irq.domain =3D irq_domain_create_simple(fwnode,
+> >                         gc->ngpio,
+> >                         gc->irq.first,
+> > -                       gc->irq.domain_ops ?: &gpiochip_domain_ops,
+> > +                       &gpiochip_domain_ops,
+>=20
+> We better run this by Marc Zyngier, and Thierry who introduced it.
+>=20
+> But some grepping and looking seems to conclude you are righ!
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> It seems there is no driver that requires custom IRQ chip
-> domain options. Drop the member and respective code.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-(...)
-> -               /* Some drivers provide custom irqdomain ops */
->                 gc->irq.domain =3D irq_domain_create_simple(fwnode,
->                         gc->ngpio,
->                         gc->irq.first,
-> -                       gc->irq.domain_ops ?: &gpiochip_domain_ops,
-> +                       &gpiochip_domain_ops,
+No objection from my end. If this is unused, let's kill it.
 
-We better run this by Marc Zyngier, and Thierry who introduced it.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-But some grepping and looking seems to conclude you are righ!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+	M.
 
-Yours,
-Linus Walleij
+--=20
+Without deviation from the norm, progress is not possible.
