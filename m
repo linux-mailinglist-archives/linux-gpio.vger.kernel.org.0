@@ -2,105 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7A4E733F10
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 09:15:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C157733FD4
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 11:08:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbjFQHP4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Jun 2023 03:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
+        id S233558AbjFQJIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Jun 2023 05:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbjFQHPz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 03:15:55 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 368C626BE
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 00:15:53 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-986864cfe5dso216059166b.1
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 00:15:53 -0700 (PDT)
+        with ESMTP id S232380AbjFQJIX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 05:08:23 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665152139
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 02:08:22 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-bd790f26791so1567169276.1
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 02:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686986151; x=1689578151;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DncxBWQlcUNpstw3Uyqlpb1LlZypTxxD12g/hHvOzGg=;
-        b=usmhpaEw3Au+u5l4p88p0tzi7rBdur4h7/4BSAv/vKf4stAq6YID+vZD+0HazLjd+D
-         2QoqkUYvXt6OObrisr8IhlK0rcdvVWOCgobynsAlFif8RnLRopiLQtXtb/jaaZuleGd5
-         Q4fV6ynClFUUMKWCveoUGJhj3tf8zl1B6RRnzMuoiZtAMPbbJC6bVSlxIhUNoIdxKZEC
-         ji76lxFBmMia7R71uyiv1+bvB1jgjQWC76rbMPHBO+ReMzg8Oi5ngt8qDYYVZpJGCF1t
-         dlQhyq3dg+OubbPXBa67J/sIYT09TzdZ2BwAkAa07g6IAFWU3xzcUUJw+IlNfVa5ZyvY
-         aNVw==
+        d=linaro.org; s=google; t=1686992901; x=1689584901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=37w9RvtsspKKQvjpNoOQ2181ixYDa9kxnvKdFl+QGaE=;
+        b=SdVp3/F/IFK4rHxuA6ZPm5ESvkKRiXqgzuMKRc+LS5JyOQlxtOfYvwSEghQBi8ncaS
+         FSj5CIXbphSTBappIe+fSJo8as0k1n0KxOcg7mOE8S4NONpAoAhPFglbOBcau7Y6cJUz
+         kWkpk1XjEWFg/vmi1TRB5f5Kt0cTsY79nrvV+6bQeiSUg0YAIr6SBhEuas5dNSqzklHG
+         vU38c/ZhYy2J0wVoE45qIemAxQ8vs95jDiSMsgwcBxkT3gz502KDRmWsaWcsaKNyYh+E
+         RHLXUIsJw1yxygwtSnlPPofrbMqMElyIiwV10S3SJ0+JQyhRjPW50Zp3pPjns33l6zSy
+         uFaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686986151; x=1689578151;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DncxBWQlcUNpstw3Uyqlpb1LlZypTxxD12g/hHvOzGg=;
-        b=HBFR2PMevPA5c2+dEbSbuCY9Zvn8PDz8SKOCAXBIMQoQ7TLXd9REsbYNnijR99xF3r
-         uC3QSNy24aFgONC4b33OqnpZwtP8kATsgEXmojKhEDxe9WbpopRBNGZD+lsnMI+u4nhs
-         4BIYl7pH63JOc7kcLcRN/4nZhDoeIqGzqBLxuRORH1FZLIO6d2BMwSIZkxGXJj1w8JEF
-         CbJi0uct8e333EG9xxZUJX12NAOI0811cPZ2LoVT2khJl/rC0skKF+JBizGMz/kY8Zcr
-         S3L5DoW3WiiI9cYKskFDH7LOrKdxyhxZ3VaOyBkSRqrrjiF9hYzmfPp3v6yjyjorY9Qo
-         ZLBw==
-X-Gm-Message-State: AC+VfDxFAV6T7bHW8dS313f65zH1MWInH1hvnXmfN7Ty6gE4EVDaFiCp
-        YCjo1KdCFEZFrQSPWUozsaykcw==
-X-Google-Smtp-Source: ACHHUZ7/jJE3fjrBXvzZKqNsxyzq7Um/rwbMXpWiWfxwRf6F9pBJ/5MEXt8jFSfbW6NgzWNeepqWAA==
-X-Received: by 2002:a17:907:72ce:b0:96f:a412:8b03 with SMTP id du14-20020a17090772ce00b0096fa4128b03mr4071741ejc.5.1686986151441;
-        Sat, 17 Jun 2023 00:15:51 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id x10-20020a1709060eea00b009745edfb7cbsm11620540eji.45.2023.06.17.00.15.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Jun 2023 00:15:51 -0700 (PDT)
-Message-ID: <cefbb542-e9c3-8e4f-a3fa-542414ab8dc0@linaro.org>
-Date:   Sat, 17 Jun 2023 09:15:48 +0200
+        d=1e100.net; s=20221208; t=1686992901; x=1689584901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=37w9RvtsspKKQvjpNoOQ2181ixYDa9kxnvKdFl+QGaE=;
+        b=itnxt1u9Q/4ZB/6xFGt5Hst7zqXwIqc/Gu1/ewXsCMXs3pFHcLujf2OmPgZHv5fGWp
+         yMsX+8Oe/S7KQ0/JWiBJbtIkpc3/++tUV01Aoc8v1HZyj6fzQeMo+A0n+XOEspD4+7oV
+         gvFbPgmyRr1XEe/wVFU2jV7FSIJfyMJFRQw5FAncNS7hjOMzZ15vhPL6qjKJb8LAl6QP
+         gAnzRw+jF3/wo4z8oxlru3lvKtgFYod7GMSw8WwNp7GViIfZoEL2/CK4q+VVXhzaPU8T
+         R4Psm2W8CJy72qt0bSBUah0g9b3FvWP+x6X27jhBfhv1Mm2Ea837VSKVV7EnTPlKD851
+         ofOg==
+X-Gm-Message-State: AC+VfDwJha7SAWXm1jrmsBVXzJ1CokXjHm8ZXVledafHljfnl6e+qXsd
+        X6Pk7ti1ccZ/v9PlLnLnWf2jMmEq2adv3Uuiu9x5qA==
+X-Google-Smtp-Source: ACHHUZ5EEpIHhlrSGrwjFq2jgi8s4t5Onr0qinzP12iMzkKe+3SnEWkn2D/viO9B3Y0kTsqWdJcyyP7nP26sDfYvzJQ=
+X-Received: by 2002:a05:6902:510:b0:bb3:8f5d:23f9 with SMTP id
+ x16-20020a056902051000b00bb38f5d23f9mr1255390ybs.22.1686992901356; Sat, 17
+ Jun 2023 02:08:21 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 2/3] pinctrl: qcom: sm8350-lpass-lpi: add SM8350 LPASS
- TLMM
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230616185742.2250452-1-krzysztof.kozlowski@linaro.org>
- <20230616185742.2250452-2-krzysztof.kozlowski@linaro.org>
- <835bc0c9-0218-80e3-f64f-bd4116ad02e8@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <835bc0c9-0218-80e3-f64f-bd4116ad02e8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20230616135313.76338-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230616135313.76338-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 17 Jun 2023 11:08:10 +0200
+Message-ID: <CACRpkdbPEvVvaehB521gdjkkzh+wFnFxsCNm36PD-hnTb1Na_w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Drop unused domain_ops memeber of GPIO
+ IRQ chip
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/06/2023 01:36, Konrad Dybcio wrote:
-> On 16.06.2023 20:57, Krzysztof Kozlowski wrote:
->> Add driver for pin controller in Low Power Audio SubSystem (LPASS).  The
->> driver is similar to SM8450 LPASS pin controller, with difference in one
->> new pin (gpio14).
-> 8250*
-> 
-> 8450 has a whole lot more!
-> 
-> The 8250 in fact does look almost identical.. Perhaps in this case it
-> would be sane to combine the two?
+On Fri, Jun 16, 2023 at 3:53=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-It meant to be 8250 as I copied that one. I'll fix it.
+> It seems there is no driver that requires custom IRQ chip
+> domain options. Drop the member and respective code.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+(...)
+> -               /* Some drivers provide custom irqdomain ops */
+>                 gc->irq.domain =3D irq_domain_create_simple(fwnode,
+>                         gc->ngpio,
+>                         gc->irq.first,
+> -                       gc->irq.domain_ops ?: &gpiochip_domain_ops,
+> +                       &gpiochip_domain_ops,
 
-Best regards,
-Krzysztof
+We better run this by Marc Zyngier, and Thierry who introduced it.
 
+But some grepping and looking seems to conclude you are righ!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
