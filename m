@@ -2,100 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A36707341A4
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 16:25:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C370734254
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 18:55:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbjFQOZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Jun 2023 10:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53908 "EHLO
+        id S230404AbjFQQzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Jun 2023 12:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232091AbjFQOZY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 10:25:24 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BE21BF0;
-        Sat, 17 Jun 2023 07:25:23 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-76238f9fa19so123596285a.3;
-        Sat, 17 Jun 2023 07:25:23 -0700 (PDT)
+        with ESMTP id S230473AbjFQQzJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 12:55:09 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318EA19B5
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 09:55:07 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5186a157b85so2738327a12.0
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 09:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687011922; x=1689603922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d/hW4KrzlulcIit7yOnqhzpsxVw/HtKrLUEkP+c5o+0=;
-        b=STZQ0UtUqsqcQoYRs5+e6p13UGsIcu4y9cnmZD9Cigc96PRDs4kQayzr0GGvEfP4Ak
-         uxuewRFMRN7OuvxNTEfXgXwD8k2mqozRkw6yEE/0/pivEVvecTwfcKkTkMM6GK0XXRaQ
-         XAl+GwYy3A7KAKIjg7gbfc7T4Rw67pxuzfqQpUrXoaZ0M1PzH7t4SkiSh/vhzgVvTsAV
-         CEsAP3gs0VhCMFp0oj10Vom0ETWoxiPxlLzyXwCJS3H9iNwDWexc5XmZ+F6vpfnAd+/7
-         x6QCbLvn7vk2iXKHDIM5aR6a4f1UjnsZm251pOCRiicx3KEd7fAPMG+Uj3FyZTYX7nev
-         x3eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687011922; x=1689603922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=gmail.com; s=20221208; t=1687020905; x=1689612905;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d/hW4KrzlulcIit7yOnqhzpsxVw/HtKrLUEkP+c5o+0=;
-        b=Pm05UoJqgkeSyrNjoqPQGxgC14aY6nP0G02DhHFBkHelWLi91pwX1OuB+a40jsZRRO
-         Q7CmQRjISc4Y2YPaTVkxm7yXEETk+GGYD2ntSLk3jhF67iek86NXVcg/mR8e77J190lc
-         tYbcza4u0q8hXEnWZPRlOcWhAMc5x1jtKOyHVZumFFwbMNCsoNNP83POcGP0knz/EYFK
-         eat13YMwS0tie1Ht9QJCRd7yGM5+6j8mx876tFfbdF0q5JwQMCTdvlzbCHhfqT5MGJKi
-         vDedOEu9JfmO1XtroNISs4FUcbwBp+Syh5VTnEQssqZti3PVe8vtpVfb25VuiUMnt0lb
-         /pfw==
-X-Gm-Message-State: AC+VfDwyB/isxenhxlbZ/mIjAWDv8Gki/9L17g1qVx2ZzP+y37gvSOJN
-        yqM78K055deYMOYJk8Bujsl6JmkMZrCKgROPLgzfpI8BDqg=
-X-Google-Smtp-Source: ACHHUZ7fhx/qRuEbZx4DH9s3pO2OCJ7PMQcbZHGZ6W0bEjdi1+0whZNmPbHN1lBZ4l0jzT9MT9nqmQEb8ROE76mJMYs=
-X-Received: by 2002:ad4:5c68:0:b0:62f:fc16:4037 with SMTP id
- i8-20020ad45c68000000b0062ffc164037mr6628152qvh.14.1687011922617; Sat, 17 Jun
- 2023 07:25:22 -0700 (PDT)
+        bh=YgsQjPYSA4x9EUAST26pLIMgzwk5/fmUNEDBBVE+P4A=;
+        b=B7G7BepedhNo6t13ST6j2exw0x1ZwmPLVEEL3yxeHecRh038gzTrDkWWrtQmqVS3YY
+         /TF2soaIOjayutNM5vRnbbrURmOkTvG32YHkiqOWlSlrgOt0PPfJfcsthvrEP0taYCRD
+         gQlq1vPdNotdIXCMXJjmnfl2ndziy0omZ3xjLY/A8lmvOJCTX6mNudyTMnmGPXYlsNGa
+         SFUlVFLDM9TDGIDCuURZ749AA75BYPM1yqy/zFBZM/bEBkNs/TzoywCUI9GBsl+7knrf
+         ALRzVNGxJiZwybeZpbktw/E5jAWOAcdBl/UdW1eAcnu2hyYNRyekxtuBwVr/9vK1lvC8
+         gWdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687020905; x=1689612905;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YgsQjPYSA4x9EUAST26pLIMgzwk5/fmUNEDBBVE+P4A=;
+        b=aGfPKk+t/6xUgzHvlt1F2r0Fn6iuy2acJUH2GMgDt9PiInU8RscA+CXhBMuf4+uqV2
+         yRTsenF37HJBSdteTYKEwAMa2bzMJp1FAE1l2tyXP8vhaO3GawH0tNBB4OvOX1SlZwwC
+         QDYblDaLXytQZvqP84+44uFYU/eTS+5MNxpjd8laGeSXsNbEp9cxYniOl1NzJGKTaBKH
+         06nrhVSa6YxZAMm2dlQoW2qA3W1XBHbC3K3+AKHufMOqCs/1apGfgYFqpxUIZ579gF7h
+         QvZz1248JM2no9o/Uto0DAi2pXfs7SvZ2mVoR5i3XZ4pvXsT8T2sJAX7heZbZLkyfCZu
+         uh2Q==
+X-Gm-Message-State: AC+VfDzS6kd31LhZW+geBBtzNhJsKZuoyT03Lxo+nPJCgYvYfPeGWqux
+        9pMu4cibXji/sx8FXv+xW6bZXqm+w9FGfKQ08Wo=
+X-Google-Smtp-Source: ACHHUZ4vEX+inrtqwHd+bRSNE4Vl63pRotTdLXX6y1F+F4HxtrUIYCthBlskJGvNksHnytK6olEOfYgR6VPBeamEGlI=
+X-Received: by 2002:a17:906:da8b:b0:982:26c5:6525 with SMTP id
+ xh11-20020a170906da8b00b0098226c56525mr5401200ejb.60.1687020904881; Sat, 17
+ Jun 2023 09:55:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230616-fixes-gpiolib-irq-domain-v1-1-27fe870db961@kernel.org>
- <ZIxuExRypHsUejFI@smile.fi.intel.com> <4b55afe91d2a704c0229340c5ea4885e@walle.cc>
-In-Reply-To: <4b55afe91d2a704c0229340c5ea4885e@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 17 Jun 2023 17:24:46 +0300
-Message-ID: <CAHp75VfJ4vB2yWY6rFQrRh3Sbz9bg-fgKXXH-_-YFHMHuM=ZLw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Fix irq_domain resource tracking for gpiochip_irqchip_add_domain()
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiawen Wu <jiawenwu@trustnetic.com>
+Sender: princeeminentunuebholo@gmail.com
+Received: by 2002:a50:718d:0:b0:21d:e168:6561 with HTTP; Sat, 17 Jun 2023
+ 09:55:04 -0700 (PDT)
+From:   Dr Lisa Williams <lw4666555@gmail.com>
+Date:   Sat, 17 Jun 2023 09:55:04 -0700
+X-Google-Sender-Auth: EL0NkoyJdlUROZ0VFp0rOFL_6dY
+Message-ID: <CAK0EZHQuR_Fh7-p5pqVzqbQd=4OLJtJJthAQUxoV08CqbXwgzw@mail.gmail.com>
+Subject: Hi,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_40,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 9:02=E2=80=AFPM Michael Walle <michael@walle.cc> wr=
-ote:
-> Am 2023-06-16 16:13, schrieb Andy Shevchenko:
-> > On Fri, Jun 16, 2023 at 09:30:06AM +0200, Michael Walle wrote:
+Hi,
 
-...
+My name is Dr. Lisa Williams, from the United States, currently living
+in the United Kingdom.
 
-> >>      /* Remove all IRQ mappings and delete the domain */
-> >> -    if (gc->irq.domain) {
-> >> +    if (!gc->irq.domain_is_ext && gc->irq.domain) {
-> >
-> > Looking at this, perhaps positive about allocation?
-> >
-> >       domain_is_allocated?
->
-> I mean all domains are allocated ;)
->
-> domain_is_allocated_externally? I'm bad with short and concise
-> names..
+I hope you consider my friend request. I will share some of my photos
+and more details about me when I get your reply.
 
-Naming is one of the hardest problems in software...
-Your variant is long, but conscious. I dunno. Bart, Linus, do you have
-any ideas?
-
---=20
-With Best Regards,
-Andy Shevchenko
+With love
+Lisa
