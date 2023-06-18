@@ -2,126 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E27B7343C8
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Jun 2023 22:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA7647344D1
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Jun 2023 05:40:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232284AbjFQUmf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Jun 2023 16:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        id S229492AbjFRDkB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Jun 2023 23:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233644AbjFQUmd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 16:42:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603EA1717;
-        Sat, 17 Jun 2023 13:42:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0CDE6130D;
-        Sat, 17 Jun 2023 20:42:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70350C433C8;
-        Sat, 17 Jun 2023 20:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687034532;
-        bh=WX/ny3bQSc/mSYEm1J1YzU7+UYxZ9RPhpjwAi58MXH4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MXVs55UrLapO907ehdg+amsoikUNM51FImBIRMT57u8WClBi6VnI4k3LFIt0docBw
-         xpmioIJbuGM5NBuzEsBmwTMD6Hmhi+dA8huMnn8vOgvhvMmO3PyM9WLAswHnCa5wQt
-         8ZqWWTckq1H5tkpqi8AiIRie83a7I/B6fYHEsf+9qWb1wfRr2iCixGziOaNJqto8H7
-         uf20rsugiFsAqBSBtsVur79sSxQwKpm6PcCGTNzL2W1hNIPIgVrR5L1E+XjpyWydks
-         qxfuOWcF3IxLQQBoyJz6IN2oFBoXkC5eo0TGOPHD08xszk4eMBGDed3K7YXUouK9jR
-         YnVTx8dSUtovQ==
-Date:   Sat, 17 Jun 2023 21:42:06 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        krishna Lanka <quic_vamslank@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sdx65-tlmm: add pcie_clkreq
- function
-Message-ID: <20230617-untimed-huskiness-fd212e6dca96@spud>
-References: <20230617111809.129232-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229468AbjFRDkA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Jun 2023 23:40:00 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A3F1987
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 20:39:58 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-341daf315b3so11516575ab.0
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Jun 2023 20:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687059597; x=1689651597;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
+        b=MS58pmUqBMhwOojW/rEqbOtsSErOz3ww0rXm+W+03miki0UYxV72yot6eJJOkhhcix
+         mjIkdWmIMeadYoLrHCQKwASWodweWj5hATdc1lkBKejgY/n8v6NURv+aRvRMPOZeBIJ8
+         fImxZcpiL/VdU1Yea5IiCmk1ablobFUYLsVZaMb19Jyqw3h5HnreQfKPjJ4AdDHc6Qgh
+         wVMXlk0CEZyAeFPrsZY5J/yE63RvPYCCYqe5mpZPzZtkCHm3jlMXiVbalJZyA6fG5K5l
+         5/D1prl3NHMSWE+eVucTsulchcMuPnGLFhfn7qvOJ4L4npS6QAxV5a+PfwHZz/ZZI3Zs
+         Li+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687059597; x=1689651597;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
+        b=P9rE5vN/qjOsOslolKkXKk6vxn7v6TEw2NQOBVD0vCzAMsTWyW63WxUr07mbQCCu7t
+         2OnYxjIF9aIjjZtHdx9/7CKc3AEQqHQZ2m5phZfkNBF7kF0vokU7ufGi23CBjT9r5K9F
+         hMDmKUcm0kIT5xbnEpDMupq3FPveqxAezTwQjF1pesevEXnoKJxcq76/J0M5TQkSpJdp
+         scJQLlWeJT54LLfxEt5TprRNs+arkNckL33RN64ZMD2l1UUCS3KLGWOIlSv2+y1wzSCp
+         T8TAHeUK7R2+EQsXprnFAQfEgwFnuqV5vQkQpgDwThC3o5gZiNaoG8+oPcvVxz1Hm+PR
+         zgKg==
+X-Gm-Message-State: AC+VfDx/tO3Gy3dlyojm7IrOtzgaOS3pzhSTxzXmbM7VIqkWD2/xaVBe
+        0fDvHxDw7f18tQ+0pYpyb5Djuq7eBuwx4OKg2+E=
+X-Google-Smtp-Source: ACHHUZ6jOcev/JRjqxHPWavgQ13qYoAVjVXRmkIC5sxX9/SxZ6VH0dWznntc9svs1D7wNvmgHCv5piGRu8+DlUlUOWM=
+X-Received: by 2002:a92:d309:0:b0:33d:3b69:2d23 with SMTP id
+ x9-20020a92d309000000b0033d3b692d23mr2013988ila.19.1687059597619; Sat, 17 Jun
+ 2023 20:39:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="itG2DWeY27fGdIw0"
-Content-Disposition: inline
-In-Reply-To: <20230617111809.129232-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Sender: ciissouf34@gmail.com
+Received: by 2002:ac0:d884:0:b0:2dc:5e5d:14a6 with HTTP; Sat, 17 Jun 2023
+ 20:39:57 -0700 (PDT)
+From:   "Mrs. Ruth Roberto" <robertoruth48@gmail.com>
+Date:   Sat, 17 Jun 2023 19:39:57 -0800
+X-Google-Sender-Auth: W5Dt6JfxFofwIjj_K9UB4hDpmFo
+Message-ID: <CAFA2CT=KTsZwxS+bcrxAaCxvQPXY4Hj1GuXDz5NpfsVD=JxSdw@mail.gmail.com>
+Subject: I trust in God
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_3,NA_DOLLARS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---itG2DWeY27fGdIw0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jun 17, 2023 at 01:18:09PM +0200, Krzysztof Kozlowski wrote:
-> DTS and driver already support pcie_clkreq function for a pin.  Add it
-> to fix dtbs_check warning:
->=20
->   qcom-sdx65-mtp.dtb: pinctrl@f100000: pcie-ep-clkreq-default-state: 'one=
-Of' conditional failed, one must be fixed:
->     'bias-disable', 'drive-strength', 'function', 'pins' do not match any=
- of the regexes: '-pins$', 'pinctrl-[0-9]+'
->     'pcie_clkreq' is not one of ['blsp_uart1', 'blsp_spi1', ... 'gpio']
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.ya=
-ml b/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.yaml
-> index 2ef793ae4038..27319782d94b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-tlmm.yaml
-> @@ -85,7 +85,7 @@ $defs:
->                  qdss_tracectl_a, dac_calib13, qdss_traceclk_a, dac_calib=
-14,
->                  dac_calib15, hdmi_rcv, dac_calib16, hdmi_cec, pwr_modem,
->                  dac_calib17, hdmi_ddc, pwr_nav, dac_calib18, pwr_crypto,
-> -                dac_calib19, hdmi_hot, dac_calib20, dac_calib21, pci_e0,
-> +                dac_calib19, hdmi_hot, dac_calib20, dac_calib21, pci_e0,=
- pcie_clkreq,
->                  dac_calib22, dac_calib23, dac_calib24, tsif1_sync, dac_c=
-alib25,
->                  sd_write, tsif1_error, blsp_spi2, blsp_uart2, blsp_uim2,
->                  qdss_cti, blsp_i2c2, blsp_spi3, blsp_uart3, blsp_uim3, b=
-lsp_i2c3,
-> --=20
-> 2.34.1
->=20
-
---itG2DWeY27fGdIw0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZI4angAKCRB4tDGHoIJi
-0g1gAQDv2kVJcPxiEhVhKgwUNwWJ7WdK+ExNYXrzNZTq/SemVgEAhdmDEE8h1h26
-TEL4XR+3KBwp/wYgJO0Ah1FoMCqT4g0=
-=UpIb
------END PGP SIGNATURE-----
-
---itG2DWeY27fGdIw0--
+Dear,
+It is true we do not know each other before but please bear with me,
+I=E2=80=99m writing you this mail from a Hospital bed. My name is Mrs.
+Ruth Roberto. I am a widow and very sick now. I am suffering from
+Endometrial Cancer which my doctor has confirmed that I will not
+survive it because of some damages. Now because of the condition of my
+health I have decided to donate out my late husband hard earn money
+the sum of ($3, 500,000.00) Three Million, Five Hundred Thousand Us
+Dollars on Charity Purpose through your help.if you are interested get
+back for more details.
+Mrs. Ruth Roberto
